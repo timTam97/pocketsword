@@ -52,6 +52,9 @@
 		activeBuildConfigurationName = Debug;
 		activeExecutable = 0739B64F0FA55ABF0035D1E5 /* PocketSword */;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* PocketSword */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* PocketSword */,
+		);
 		codeSenseManager = 0739B6650FA55AD00035D1E5 /* Code sense */;
 		executables = (
 			0739B64F0FA55ABF0035D1E5 /* PocketSword */,
@@ -64,7 +67,7 @@
 					20,
 					490,
 					20,
-					48.16259765625,
+					48,
 					43,
 					43,
 					20,
@@ -79,8 +82,8 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 262494911;
-			PBXWorkspaceStateSaveDate = 262494911;
+			PBXPerProjectTemplateStateSaveDate = 262498497;
+			PBXWorkspaceStateSaveDate = 262498497;
 		};
 		sourceControlManager = 0739B6640FA55AD00035D1E5 /* Source Control */;
 		userBuildSettings = {
@@ -91,6 +94,13 @@
 			sepNavIntBoundsRect = "{{0, 0}, {894, 1274}}";
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRange = "{0, 2361}";
+		};
+	};
+	E9BD1D530ED34003006A60E9 /* LICENSE.txt */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {668, 4802}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1850}";
 		};
 	};
 }

@@ -271,11 +271,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
+								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>4</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -380,9 +382,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>0739B6610FA55AD00035D1E5</string>
+				<string>0739B6880FA568BA0035D1E5</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>0739B6620FA55AD00035D1E5</string>
+				<string>0739B6890FA568BA0035D1E5</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -516,7 +518,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>/Users/dctrotz/Desktop/PocketSword/PocketSword.xcodeproj</string>
+		<string>/Users/dctrotz/tmp/pocketsword_co/PocketSword.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>446 151 937 772 0 0 1680 1028 </string>

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07E878D80FA56926009B3338 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 07E878D60FA56926009B3338 /* Icon.png */; };
+		07E878D90FA56926009B3338 /* List.png in Resources */ = {isa = PBXBuildFile; fileRef = 07E878D70FA56926009B3338 /* List.png */; };
 		1D3623260D0F684500981E51 /* PocketSwordAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PocketSwordAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -277,14 +279,14 @@
 		E94014E40EFDD2D400DA9B7F /* ThreadLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013EC0EFDD2D400DA9B7F /* ThreadLocal.cpp */; };
 		E98B80130EF7218C000C3E8D /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E98B80120EF7218C000C3E8D /* Settings.bundle */; };
 		E996E5240ED70C6E0034DAF6 /* ModuleManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* ModuleManager.mm */; };
-		E9BACCD30F898A08007AC4B3 /* List.png in Resources */ = {isa = PBXBuildFile; fileRef = E9BACCD20F898A08007AC4B3 /* List.png */; };
 		E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
 		E9C1DA470ED9DC1E009F76D2 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
-		E9D540F30FA415BA00AD011C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D540F20FA415BA00AD011C /* Icon.png */; };
 		E9FE342F0EE8A76B007E663A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD73870D9D96C1002E5188 /* MainWindow.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07E878D60FA56926009B3338 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = resources/Icon.png; sourceTree = "<group>"; };
+		07E878D70FA56926009B3338 /* List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = List.png; path = resources/List.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSwordAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* PocketSwordAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketSwordAppDelegate.m; sourceTree = "<group>"; };
@@ -868,10 +870,8 @@
 		E98B80120EF7218C000C3E8D /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E996E5220ED70C6E0034DAF6 /* ModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManager.h; sourceTree = "<group>"; };
 		E996E5230ED70C6E0034DAF6 /* ModuleManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModuleManager.mm; sourceTree = "<group>"; };
-		E9BACCD20F898A08007AC4B3 /* List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = List.png; sourceTree = "<group>"; };
 		E9BD1D530ED34003006A60E9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
-		E9D540F20FA415BA00AD011C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -940,8 +940,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E9D540F20FA415BA00AD011C /* Icon.png */,
-				E9BACCD20F898A08007AC4B3 /* List.png */,
+				07E878D60FA56926009B3338 /* Icon.png */,
+				07E878D70FA56926009B3338 /* List.png */,
 				E9BD1D530ED34003006A60E9 /* LICENSE.txt */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -1928,8 +1928,8 @@
 				E922696F0EECBDF700FC7ED5 /* swcomprs.doc in Resources */,
 				E92269D00EECBDF700FC7ED5 /* readme in Resources */,
 				E98B80130EF7218C000C3E8D /* Settings.bundle in Resources */,
-				E9BACCD30F898A08007AC4B3 /* List.png in Resources */,
-				E9D540F30FA415BA00AD011C /* Icon.png in Resources */,
+				07E878D80FA56926009B3338 /* Icon.png in Resources */,
+				07E878D90FA56926009B3338 /* List.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
