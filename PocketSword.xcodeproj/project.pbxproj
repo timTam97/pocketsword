@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0723FD470FA582C100BBED30 /* swlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723FD390FA582C100BBED30 /* swlog.cpp */; };
+		0723FD4D0FA5831C00BBED30 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723FD4C0FA5831C00BBED30 /* swdisp.cpp */; };
 		07467F7E0FA571CF0056D0C3 /* AnalysisHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E700FA571CF0056D0C3 /* AnalysisHeader.cpp */; };
 		07467F7F0FA571CF0056D0C3 /* Analyzers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E720FA571CF0056D0C3 /* Analyzers.cpp */; };
 		07467F800FA571CF0056D0C3 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 07467E740FA571CF0056D0C3 /* Makefile.am */; };
@@ -14,9 +16,6 @@
 		07467F820FA571CF0056D0C3 /* StandardAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E770FA571CF0056D0C3 /* StandardAnalyzer.cpp */; };
 		07467F830FA571CF0056D0C3 /* StandardFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E790FA571CF0056D0C3 /* StandardFilter.cpp */; };
 		07467F840FA571CF0056D0C3 /* StandardTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E7B0FA571CF0056D0C3 /* StandardTokenizer.cpp */; };
-		07467F850FA571CF0056D0C3 /* CLMonolithic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E800FA571CF0056D0C3 /* CLMonolithic.cpp */; };
-		07467F860FA571CF0056D0C3 /* clucene-config.h.cmake in Resources */ = {isa = PBXBuildFile; fileRef = 07467E810FA571CF0056D0C3 /* clucene-config.h.cmake */; };
-		07467F870FA571CF0056D0C3 /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 07467E820FA571CF0056D0C3 /* CMakeLists.txt */; };
 		07467F880FA571CF0056D0C3 /* gunichartables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E890FA571CF0056D0C3 /* gunichartables.cpp */; };
 		07467F890FA571CF0056D0C3 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 07467E8B0FA571CF0056D0C3 /* Makefile.am */; };
 		07467F8A0FA571CF0056D0C3 /* repl_lltot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467E8F0FA571CF0056D0C3 /* repl_lltot.cpp */; };
@@ -113,7 +112,6 @@
 		07467FE50FA571CF0056D0C3 /* RAMDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F470FA571CF0056D0C3 /* RAMDirectory.cpp */; };
 		07467FE60FA571CF0056D0C3 /* TransactionalRAMDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F490FA571CF0056D0C3 /* TransactionalRAMDirectory.cpp */; };
 		07467FE70FA571CF0056D0C3 /* BitSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F4D0FA571CF0056D0C3 /* BitSet.cpp */; };
-		07467FE80FA571CF0056D0C3 /* dirent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F500FA571CF0056D0C3 /* dirent.cpp */; };
 		07467FE90FA571CF0056D0C3 /* Equators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F520FA571CF0056D0C3 /* Equators.cpp */; };
 		07467FEA0FA571CF0056D0C3 /* FastCharStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F540FA571CF0056D0C3 /* FastCharStream.cpp */; };
 		07467FEB0FA571CF0056D0C3 /* fileinputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07467F560FA571CF0056D0C3 /* fileinputstream.cpp */; };
@@ -127,7 +125,6 @@
 		077ABFBA0FA56D0000AA67C0 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 077ABF440FA56D0000AA67C0 /* Makefile */; };
 		077ABFBB0FA56D0000AA67C0 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 077ABF450FA56D0000AA67C0 /* Makefile.am */; };
 		077ABFBC0FA56D0000AA67C0 /* SwordAPI.pas in Sources */ = {isa = PBXBuildFile; fileRef = 077ABF830FA56D0000AA67C0 /* SwordAPI.pas */; };
-		077AC0CD0FA56D6800AA67C0 /* genarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 077ABFD20FA56D6800AA67C0 /* genarray.c */; };
 		077AC0CE0FA56D6800AA67C0 /* listkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 077ABFD30FA56D6800AA67C0 /* listkey.cpp */; };
 		077AC0CF0FA56D6800AA67C0 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 077ABFD40FA56D6800AA67C0 /* Makefile */; };
 		077AC0D00FA56D6800AA67C0 /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = 077ABFD50FA56D6800AA67C0 /* Makefile.am */; };
@@ -296,7 +293,6 @@
 		077AC1860FA56D6800AA67C0 /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0A10FA56D6800AA67C0 /* url.cpp */; };
 		077AC1870FA56D6800AA67C0 /* utilstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0A20FA56D6800AA67C0 /* utilstr.cpp */; };
 		077AC1880FA56D6800AA67C0 /* utilxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0A30FA56D6800AA67C0 /* utilxml.cpp */; };
-		077AC1890FA56D6800AA67C0 /* dirent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0A50FA56D6800AA67C0 /* dirent.cpp */; };
 		077AC18A0FA56D6800AA67C0 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0A80FA56D6800AA67C0 /* adler32.c */; };
 		077AC18B0FA56D6800AA67C0 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0A90FA56D6800AA67C0 /* compress.c */; };
 		077AC18C0FA56D6800AA67C0 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0AA0FA56D6800AA67C0 /* crc32.c */; };
@@ -308,7 +304,6 @@
 		077AC1920FA56D6800AA67C0 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0B50FA56D6800AA67C0 /* inflate.c */; };
 		077AC1930FA56D6800AA67C0 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0B60FA56D6800AA67C0 /* inftrees.c */; };
 		077AC1940FA56D6800AA67C0 /* infutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0B80FA56D6800AA67C0 /* infutil.c */; };
-		077AC1950FA56D6800AA67C0 /* maketree.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0BA0FA56D6800AA67C0 /* maketree.c */; };
 		077AC1960FA56D6800AA67C0 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0BB0FA56D6800AA67C0 /* trees.c */; };
 		077AC1970FA56D6800AA67C0 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0BD0FA56D6800AA67C0 /* uncompr.c */; };
 		077AC1980FA56D6800AA67C0 /* untgz.c in Sources */ = {isa = PBXBuildFile; fileRef = 077AC0BE0FA56D6800AA67C0 /* untgz.c */; };
@@ -347,6 +342,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0723FD390FA582C100BBED30 /* swlog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swlog.cpp; sourceTree = "<group>"; };
+		0723FD4C0FA5831C00BBED30 /* swdisp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swdisp.cpp; sourceTree = "<group>"; };
 		07467E700FA571CF0056D0C3 /* AnalysisHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisHeader.cpp; sourceTree = "<group>"; };
 		07467E710FA571CF0056D0C3 /* AnalysisHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisHeader.h; sourceTree = "<group>"; };
 		07467E720FA571CF0056D0C3 /* Analyzers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Analyzers.cpp; sourceTree = "<group>"; };
@@ -362,9 +359,6 @@
 		07467E7D0FA571CF0056D0C3 /* StandardTokenizerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardTokenizerConstants.h; sourceTree = "<group>"; };
 		07467E7E0FA571CF0056D0C3 /* CLBackwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLBackwards.h; sourceTree = "<group>"; };
 		07467E7F0FA571CF0056D0C3 /* CLConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLConfig.h; sourceTree = "<group>"; };
-		07467E800FA571CF0056D0C3 /* CLMonolithic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLMonolithic.cpp; sourceTree = "<group>"; };
-		07467E810FA571CF0056D0C3 /* clucene-config.h.cmake */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clucene-config.h.cmake"; sourceTree = "<group>"; };
-		07467E820FA571CF0056D0C3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		07467E840FA571CF0056D0C3 /* compiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
 		07467E850FA571CF0056D0C3 /* CompilerBcb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompilerBcb.h; sourceTree = "<group>"; };
 		07467E860FA571CF0056D0C3 /* CompilerGcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompilerGcc.h; sourceTree = "<group>"; };
@@ -562,8 +556,6 @@
 		07467F4D0FA571CF0056D0C3 /* BitSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BitSet.cpp; sourceTree = "<group>"; };
 		07467F4E0FA571CF0056D0C3 /* BitSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitSet.h; sourceTree = "<group>"; };
 		07467F4F0FA571CF0056D0C3 /* bufferedstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bufferedstream.h; sourceTree = "<group>"; };
-		07467F500FA571CF0056D0C3 /* dirent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dirent.cpp; sourceTree = "<group>"; };
-		07467F510FA571CF0056D0C3 /* dirent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dirent.h; sourceTree = "<group>"; };
 		07467F520FA571CF0056D0C3 /* Equators.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Equators.cpp; sourceTree = "<group>"; };
 		07467F530FA571CF0056D0C3 /* Equators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equators.h; sourceTree = "<group>"; };
 		07467F540FA571CF0056D0C3 /* FastCharStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FastCharStream.cpp; sourceTree = "<group>"; };
@@ -753,7 +745,6 @@
 		077ABFB70FA56D0000AA67C0 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		077ABFB80FA56D0000AA67C0 /* ztext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ztext.h; sourceTree = "<group>"; };
 		077ABFB90FA56D0000AA67C0 /* zverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zverse.h; sourceTree = "<group>"; };
-		077ABFD20FA56D6800AA67C0 /* genarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = genarray.c; sourceTree = "<group>"; };
 		077ABFD30FA56D6800AA67C0 /* listkey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = listkey.cpp; sourceTree = "<group>"; };
 		077ABFD40FA56D6800AA67C0 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		077ABFD50FA56D6800AA67C0 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
@@ -922,8 +913,6 @@
 		077AC0A10FA56D6800AA67C0 /* url.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = url.cpp; sourceTree = "<group>"; };
 		077AC0A20FA56D6800AA67C0 /* utilstr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilstr.cpp; sourceTree = "<group>"; };
 		077AC0A30FA56D6800AA67C0 /* utilxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilxml.cpp; sourceTree = "<group>"; };
-		077AC0A50FA56D6800AA67C0 /* dirent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dirent.cpp; sourceTree = "<group>"; };
-		077AC0A60FA56D6800AA67C0 /* dirent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dirent.h; sourceTree = "<group>"; };
 		077AC0A80FA56D6800AA67C0 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
 		077AC0A90FA56D6800AA67C0 /* compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress.c; sourceTree = "<group>"; };
 		077AC0AA0FA56D6800AA67C0 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
@@ -942,7 +931,6 @@
 		077AC0B70FA56D6800AA67C0 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inftrees.h; sourceTree = "<group>"; };
 		077AC0B80FA56D6800AA67C0 /* infutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = infutil.c; sourceTree = "<group>"; };
 		077AC0B90FA56D6800AA67C0 /* infutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = infutil.h; sourceTree = "<group>"; };
-		077AC0BA0FA56D6800AA67C0 /* maketree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = maketree.c; sourceTree = "<group>"; };
 		077AC0BB0FA56D6800AA67C0 /* trees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trees.c; sourceTree = "<group>"; };
 		077AC0BC0FA56D6800AA67C0 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trees.h; sourceTree = "<group>"; };
 		077AC0BD0FA56D6800AA67C0 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uncompr.c; sourceTree = "<group>"; };
@@ -1003,6 +991,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0723FD2D0FA582C100BBED30 /* frontend */ = {
+			isa = PBXGroup;
+			children = (
+				0723FD4C0FA5831C00BBED30 /* swdisp.cpp */,
+				0723FD390FA582C100BBED30 /* swlog.cpp */,
+			);
+			path = frontend;
+			sourceTree = "<group>";
+		};
 		07467E6D0FA571CF0056D0C3 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -1019,9 +1016,6 @@
 				07467E6F0FA571CF0056D0C3 /* analysis */,
 				07467E7E0FA571CF0056D0C3 /* CLBackwards.h */,
 				07467E7F0FA571CF0056D0C3 /* CLConfig.h */,
-				07467E800FA571CF0056D0C3 /* CLMonolithic.cpp */,
-				07467E810FA571CF0056D0C3 /* clucene-config.h.cmake */,
-				07467E820FA571CF0056D0C3 /* CMakeLists.txt */,
 				07467E830FA571CF0056D0C3 /* config */,
 				07467E9B0FA571CF0056D0C3 /* debug */,
 				07467EA40FA571CF0056D0C3 /* document */,
@@ -1311,8 +1305,6 @@
 				07467F4D0FA571CF0056D0C3 /* BitSet.cpp */,
 				07467F4E0FA571CF0056D0C3 /* BitSet.h */,
 				07467F4F0FA571CF0056D0C3 /* bufferedstream.h */,
-				07467F500FA571CF0056D0C3 /* dirent.cpp */,
-				07467F510FA571CF0056D0C3 /* dirent.h */,
 				07467F520FA571CF0056D0C3 /* Equators.cpp */,
 				07467F530FA571CF0056D0C3 /* Equators.h */,
 				07467F540FA571CF0056D0C3 /* FastCharStream.cpp */,
@@ -1542,6 +1534,7 @@
 		077ABFBF0FA56D6800AA67C0 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				0723FD2D0FA582C100BBED30 /* frontend */,
 				07D81DA20FA5743E0003C36B /* mgr */,
 				077ABFD10FA56D6800AA67C0 /* keys */,
 				077ABFE00FA56D6800AA67C0 /* Makefile */,
@@ -1555,7 +1548,6 @@
 		077ABFD10FA56D6800AA67C0 /* keys */ = {
 			isa = PBXGroup;
 			children = (
-				077ABFD20FA56D6800AA67C0 /* genarray.c */,
 				077ABFD30FA56D6800AA67C0 /* listkey.cpp */,
 				077ABFD40FA56D6800AA67C0 /* Makefile */,
 				077ABFD50FA56D6800AA67C0 /* Makefile.am */,
@@ -1889,19 +1881,9 @@
 				077AC0A10FA56D6800AA67C0 /* url.cpp */,
 				077AC0A20FA56D6800AA67C0 /* utilstr.cpp */,
 				077AC0A30FA56D6800AA67C0 /* utilxml.cpp */,
-				077AC0A40FA56D6800AA67C0 /* win32 */,
 				077AC0A70FA56D6800AA67C0 /* zlib */,
 			);
 			path = utilfuns;
-			sourceTree = "<group>";
-		};
-		077AC0A40FA56D6800AA67C0 /* win32 */ = {
-			isa = PBXGroup;
-			children = (
-				077AC0A50FA56D6800AA67C0 /* dirent.cpp */,
-				077AC0A60FA56D6800AA67C0 /* dirent.h */,
-			);
-			path = win32;
 			sourceTree = "<group>";
 		};
 		077AC0A70FA56D6800AA67C0 /* zlib */ = {
@@ -1925,7 +1907,6 @@
 				077AC0B70FA56D6800AA67C0 /* inftrees.h */,
 				077AC0B80FA56D6800AA67C0 /* infutil.c */,
 				077AC0B90FA56D6800AA67C0 /* infutil.h */,
-				077AC0BA0FA56D6800AA67C0 /* maketree.c */,
 				077AC0BB0FA56D6800AA67C0 /* trees.c */,
 				077AC0BC0FA56D6800AA67C0 /* trees.h */,
 				077AC0BD0FA56D6800AA67C0 /* uncompr.c */,
@@ -2108,8 +2089,6 @@
 				077AC17F0FA56D6800AA67C0 /* Makefile.am in Resources */,
 				07467F800FA571CF0056D0C3 /* Makefile.am in Resources */,
 				07467F810FA571CF0056D0C3 /* Makefile.am in Resources */,
-				07467F860FA571CF0056D0C3 /* clucene-config.h.cmake in Resources */,
-				07467F870FA571CF0056D0C3 /* CMakeLists.txt in Resources */,
 				07467F890FA571CF0056D0C3 /* Makefile.am in Resources */,
 				07467F940FA571CF0056D0C3 /* Makefile.am in Resources */,
 				07467F990FA571CF0056D0C3 /* Makefile.am in Resources */,
@@ -2137,7 +2116,6 @@
 				E92217550F0687340089A794 /* DataController.mm in Sources */,
 				077ABFBA0FA56D0000AA67C0 /* Makefile in Sources */,
 				077ABFBC0FA56D0000AA67C0 /* SwordAPI.pas in Sources */,
-				077AC0CD0FA56D6800AA67C0 /* genarray.c in Sources */,
 				077AC0CE0FA56D6800AA67C0 /* listkey.cpp in Sources */,
 				077AC0CF0FA56D6800AA67C0 /* Makefile in Sources */,
 				077AC0D50FA56D6800AA67C0 /* strkey.cpp in Sources */,
@@ -2278,7 +2256,6 @@
 				077AC1860FA56D6800AA67C0 /* url.cpp in Sources */,
 				077AC1870FA56D6800AA67C0 /* utilstr.cpp in Sources */,
 				077AC1880FA56D6800AA67C0 /* utilxml.cpp in Sources */,
-				077AC1890FA56D6800AA67C0 /* dirent.cpp in Sources */,
 				077AC18A0FA56D6800AA67C0 /* adler32.c in Sources */,
 				077AC18B0FA56D6800AA67C0 /* compress.c in Sources */,
 				077AC18C0FA56D6800AA67C0 /* crc32.c in Sources */,
@@ -2290,7 +2267,6 @@
 				077AC1920FA56D6800AA67C0 /* inflate.c in Sources */,
 				077AC1930FA56D6800AA67C0 /* inftrees.c in Sources */,
 				077AC1940FA56D6800AA67C0 /* infutil.c in Sources */,
-				077AC1950FA56D6800AA67C0 /* maketree.c in Sources */,
 				077AC1960FA56D6800AA67C0 /* trees.c in Sources */,
 				077AC1970FA56D6800AA67C0 /* uncompr.c in Sources */,
 				077AC1980FA56D6800AA67C0 /* untgz.c in Sources */,
@@ -2300,7 +2276,6 @@
 				07467F820FA571CF0056D0C3 /* StandardAnalyzer.cpp in Sources */,
 				07467F830FA571CF0056D0C3 /* StandardFilter.cpp in Sources */,
 				07467F840FA571CF0056D0C3 /* StandardTokenizer.cpp in Sources */,
-				07467F850FA571CF0056D0C3 /* CLMonolithic.cpp in Sources */,
 				07467F880FA571CF0056D0C3 /* gunichartables.cpp in Sources */,
 				07467F8A0FA571CF0056D0C3 /* repl_lltot.cpp in Sources */,
 				07467F8B0FA571CF0056D0C3 /* repl_tcscasecmp.cpp in Sources */,
@@ -2389,7 +2364,6 @@
 				07467FE50FA571CF0056D0C3 /* RAMDirectory.cpp in Sources */,
 				07467FE60FA571CF0056D0C3 /* TransactionalRAMDirectory.cpp in Sources */,
 				07467FE70FA571CF0056D0C3 /* BitSet.cpp in Sources */,
-				07467FE80FA571CF0056D0C3 /* dirent.cpp in Sources */,
 				07467FE90FA571CF0056D0C3 /* Equators.cpp in Sources */,
 				07467FEA0FA571CF0056D0C3 /* FastCharStream.cpp in Sources */,
 				07467FEB0FA571CF0056D0C3 /* fileinputstream.cpp in Sources */,
@@ -2415,6 +2389,8 @@
 				07D81DC60FA5743E0003C36B /* swmgr.cpp in Sources */,
 				07D81DC70FA5743E0003C36B /* swsearchable.cpp in Sources */,
 				07D81DC80FA5743E0003C36B /* versemgr.cpp in Sources */,
+				0723FD470FA582C100BBED30 /* swlog.cpp in Sources */,
+				0723FD4D0FA5831C00BBED30 /* swdisp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
