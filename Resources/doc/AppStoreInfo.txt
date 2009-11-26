@@ -1,0 +1,38 @@
+Keywords:
+
+bible, reader, kjv, commentary, offline, crosswire, multilingual, greek, hebrew, free, av11n
+
+Description:
+
+PocketSword is a new Bible reader for the iPhone & iPod Touch (OS 3.0 and above) that is built upon the powerful SWORD backend developed by CrossWire (see http://CrossWire.org/sword/).
+
+It should be stressed that PocketSword is free and will always remain so.  All the modules available are for download (offline use) within the app and are free, with permission granted by the various copyright holders to CrossWire to distribute them for use in its apps.  When you download this app, it comes with the KJV & Matthew Henry's Concise Commentary on the Whole Bible pre-installed, but you can use the downloader within PocketSword to choose which additional modules you wish to download from CrossWire and have available for offline use.
+
+MODULES
+
+There are free modules (both Bible translations and commentaries) available in over 60 languages, including (but not limited to):
+English, Greek (modern and ancient), Hebrew, German, Dutch, French, Italian, Spanish, Japanese, Chinese (simplified & traditional), Arabic, Afrikaans, Latin, Russian, Tagalog, Thai, Vietnamese and many more.
+
+Popular Bible translations available in the English language include:
+KJV, AKJV, ASV, ESV, NET, Tyndale, WEB and Young's Literal Translation.
+Popular Commentaries available in the English language include:
+Matthew Henry's Complete Commentary on the Whole Bible (as well as the "Concise" version), Treasury of Scripture Knowledge, John Wesley's Notes on the Bible, Abbot, Barnes, Geneva, Luther and more...
+(See http://crosswire.org/sword/modules/ for a fuller list of the modules).
+
+You can also choose to create your own modules, using the tools available from Crosswire, and install your modules directly from your computer to your iPhone.
+
+FEATURES
+
+The SWORD backend to PocketSword is very powerful and allows for a rich experience for the end user.  Currently implemented are:
+- Built-in module downloader of modules in many different languages (both Bibles & Commentaries)
+- Separate Bible & Commentary tabs for quick reference from one to the other: jump to a verse in one and it jumps to the same verse in the other
+- Choose your font & font size for ease of reading
+- Bookmark support
+- Red Letter support & choice of reading Verse-Per-Line or using paragraphs.
+- Night mode for easier reading in the dark
+- Install custom-made modules (including av11n)
+
+The next version of PocketSword is already in the works with support for:
+Searching, Strong's numbers, footnotes, i18n of book names, UI localisation in  Dutch, French, German, Italian, Spanish & Japanese
+Dictionary and GenBook support
+And much, much more...

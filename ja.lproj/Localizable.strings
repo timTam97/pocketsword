@@ -1,0 +1,90 @@
+﻿/*
+	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
+	Copyright (C) 2008-2009 Ian Wagner
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License along
+	with this program; if not, write to the Free Software Foundation, Inc.,
+	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+"Edit" = "編集";
+"Done" = "完了";
+"Module Download" = "モジュールのダウンロード";
+"Installing" = "インストール中:";
+"Yes" = "はい";
+"No" = "いいえ";
+"ConfirmInstall" = "このモジュールをインストールしますか？";
+"Next" = "次へ";
+"Previous" = "前へ";
+
+"Ok" = "Ok";
+"Cancel" = "Cancel";
+"Error" = "Error";
+
+// Module About
+"AboutModuleName" = "Module name: ";
+"AboutModuleDescription" = "Description: ";
+"AboutModuleType" = "Type: ";
+"AboutModuleLang" = "Language: ";
+"AboutModuleVersion" = "Version: ";
+"AboutModuleVersionUnspecified" = "(unspecified)";
+"AboutModuleAboutText" = "About: ";
+"AboutModuleLicence" = "Distribution Licence: ";
+
+"Disclaimer" = "Disclaimer";
+"DisclaimerMsg" = "      -=+* WARNING *+=-\n
+			Although Install Manager provides a convenient way for installing 
+			and upgrading SWORD components, it also uses a systematic method 
+			for accessing sites which gives packet sniffers a target to lock 
+			into for singling out users. \n
+			IF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, 
+			YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \n
+			Also, Remote Sources other than CrossWire may contain less than 
+			quality modules, modules with unorthodox content, or even modules 
+			which are not legitimately distributable.  Many repositories 
+			contain wonderfully useful content.  These repositories simply 
+			are not reviewed or maintained by CrossWire and CrossWire 
+			cannot be held responsible for their content. CAVEAT EMPTOR.\n
+			Do you understand this and are you willing to enable remote source features?";
+
+"WebNoIP" = "Web: Unable to determine external IP\n";
+"WiFiNoConnection" = "Wifi: No Connection\n";
+"NoNetworkConnection" = "No network connection available.";
+
+"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there.  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
+"InstallManagerDisabled" = "disabled...";
+"InstallTitle" = "Install?";
+"files" = "files";
+"InstallProblem" = "A problem occurred during the installation.";
+"InstalledButtonTitle" = "Installed";
+"InstallButtonTitle" = "Install";
+"RefreshProblem" = "A problem occurred during the refresh.";
+"RefreshingModuleSource" = "Refreshing Module Source";
+"NoModulesRefresh" = "No modules here. Try a refresh.";
+"NoModulesInstalled" = "No modules installed.";
+
+"InstallSourcesTitle" = "Sources";
+"PreferencesTitle" = "Preferences";
+"PreferencesDisplayPreferencesTitle" = "Display Preferences";
+"PreferencesDevicePreferencesTitle" = "Device Preferences";
+"PreferencesFontSizeTitle" = "Font Size";
+"PreferencesNightModeTitle" = "Night Mode";
+"PreferencesVPLTitle" = "Verse Per Line";
+"PreferencesFontTitle" = "Font";
+"PreferencesRedLetterTitle" = "Red Letter";
+"PreferencesRedLetterNote" = "Note that Red Letter mode is only available for certain modules";
+"PreferencesDisableAutoLockTitle" = "Disable auto-lock";
+"PreferencesModuleMaintainerModeTitle" = "Module Maintainer Mode";
+"PreferencesModuleMaintainerModeNote" = "Note that Module Maintainer Mode is for those users who create their own modules & require a method to manually install their own modules.  For all other users, it is suggested that you use the built-in module downloader to access official modules provided by CrossWire.";
+
+"AboutTitle" = "About";

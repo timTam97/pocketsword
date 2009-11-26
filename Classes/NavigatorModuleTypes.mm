@@ -1,0 +1,206 @@
+//
+//  NavigatorLevel2.mm
+//  PocketSword
+//
+//  Created by Nic Carter on 9/10/09.
+//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//
+
+#import "NavigatorModuleTypes.h"
+#import "PSModuleType.h"
+
+// displaying the Module Types
+
+@implementation NavigatorModuleTypes
+
+@synthesize dataArray;
+
+NSTimer *refreshTimer;
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	//[table reloadData];	// populate our table's data
+	
+	self.navigationItem.rightBarButtonItem = nil;
+	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
+	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
+	[refreshBarButtonItem release];
+	
+	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
+	[table deselectRowAtIndexPath:tableSelection animated:YES];
+}
+
+- (void)reloadTable {
+	[table reloadData];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
+	[[siNavigationController viewController] hideBusyIndicator];
+}
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+
+
+// the InstallSource probably has downloadable modules that aren't supported in PocketSword yet,
+//   so we don't display all categories available, but instead only the categories supported by SwordManager.
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	if ([dataArray count] == 0)
+		return 0;
+	else
+		return [[SwordManager moduleTypes] count];
+	//return [dataArray count];
+}
+
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if ([dataArray count] == 0) {
+		((UITableView*)table).sectionHeaderHeight = 40.5;
+		return NSLocalizedString(@"NoModulesRefresh", @"No modules here. Try a refresh.");
+	}
+	else
+		return @"";
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"lvl2-id"];
+	if (!cell)
+	{
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"lvl2-id"] autorelease];
+	}
+	
+	cell.textLabel.text = [[dataArray objectAtIndex:indexPath.row] moduleType];
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
+	return cell;
+	
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[((NavigatorModuleLanguages*)navigatorModuleLanguages) setData:[dataArray objectAtIndex:indexPath.row]];
+	((NavigatorModuleLanguages*)navigatorModuleLanguages).title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
+	[((NavigatorModuleLanguages*)navigatorModuleLanguages) reloadTable];
+	[tabController.moreNavigationController pushViewController:navigatorModuleLanguages animated:YES];
+	
+}
+
+
+- (IBAction)refreshDownloadSource:(id)sender {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	if(![ModuleManager checkNetworkConnection]) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		[pool release];
+		return;
+	}
+	
+	[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
+	
+	SEL method = @selector(updateRefreshStatus);
+	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
+	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
+	[invocation setTarget: self];
+	[invocation setSelector: method];
+	
+	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+	
+	[pool release];
+}
+
+- (void)runRefreshDownloadSource {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	[[moduleManager swordInstallManager] resetInstallationProgress];
+	
+	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
+	
+	//SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
+	
+	[moduleManager performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+	//[[moduleManager swordInstallManager] refreshInstallSource: is];
+	
+	[self updateRefreshStatus];
+	
+	[pool release];
+}
+
+- (void)showRefreshStatus {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	//[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
+	[statusTitle setText: NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source")];
+	[statusOverallText setText: @""];
+	//[statusBar setHidden: YES];
+	[statusOverallBar setHidden: YES];
+	//SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
+	//NSString *sText = [NSString stringWithFormat: @"Source: %@", [is caption]];
+	
+	[statusText setText: @""];
+	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
+	//[navController setNavigationBarHidden: YES];
+	//[navigationController presentModalViewController: navController animated: YES];
+	[tabController.moreNavigationController presentModalViewController: statusController animated: YES];
+	
+	[pool release];
+}
+
+- (void)updateRefreshStatus {
+	PocketSwordStatusReporter *reporter = [moduleManager getInstallationProgress];
+	BOOL failed = YES;
+	float progress = reporter->fileProgress;
+	[statusBar setProgress: reporter->fileProgress];
+	//[statusOverallBar setProgress: reporter->overallProgress];
+	//NSString *desc = [[NSString alloc] initWithCString: reporter->getDescription() encoding: [NSString defaultCStringEncoding]];
+	//[statusOverallText setText: desc];
+	//[desc release];
+	
+	//DLog(@"updateRefreshStatus: Progress: %f", progress);
+	
+	if (progress == 1.0) {
+		//[dataController reloadModuleList];
+		//[moduleTable reloadData];
+		//[downloadableModulesTable reloadData];
+		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+		
+		failed = NO;
+	}
+	else if (progress == -1.0) {
+		failed = YES;
+	} else {
+		failed = NO;
+	}
+	if (failed) {
+		//[dataController reloadModuleList];
+		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+		//[moduleTable reloadData];
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+	}
+}
+
+- (void)hideOperationStatus {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	[tabController.moreNavigationController dismissModalViewControllerAnimated: YES];
+	if(refreshTimer)
+		[refreshTimer invalidate];
+	
+	[statusText setText: @""];
+	[statusOverallText setText: @""];
+	[statusBar setProgress: 0.0];
+	[statusOverallBar setProgress: 0.0];
+	[tabController.moreNavigationController popViewControllerAnimated:YES];
+	[pool release];
+}
+
+- (void)dealloc {
+	[dataArray release];
+	[super dealloc];
+}
+@end
