@@ -96,7 +96,7 @@ NSTimer *refreshTimer;
 - (IBAction)refreshDownloadSource:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	if(![ModuleManager checkNetworkConnection]) {
+	if(![PSModuleController checkNetworkConnection]) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
 		[pool release];
@@ -152,7 +152,7 @@ NSTimer *refreshTimer;
 }
 
 - (void)updateRefreshStatus {
-	PocketSwordStatusReporter *reporter = [moduleManager getInstallationProgress];
+	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->fileProgress;
 	[statusBar setProgress: reporter->fileProgress];

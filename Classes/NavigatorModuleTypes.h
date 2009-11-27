@@ -10,7 +10,7 @@
 
 #import "NavigatorModuleLanguages.h"
 #import "ViewController.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 
 
 @interface NavigatorModuleTypes : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {

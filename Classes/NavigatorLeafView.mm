@@ -31,7 +31,7 @@ NSTimer *downloadTimer;
 	}
 	self.navigationItem.rightBarButtonItem = installBarButtonItem;
 	[installBarButtonItem release];
-	NSString *about = [ModuleManager createHTMLString:[module fullAboutText] usingPreferences:YES withJS:@""];
+	NSString *about = [PSModuleController createHTMLString:[module fullAboutText] usingPreferences:YES withJS:@""];
 	//DLog(@"%@", about);
 	[detailsView loadHTMLString:about baseURL:nil];
 }
@@ -43,7 +43,7 @@ NSTimer *downloadTimer;
 - (void)confirmInstall {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	if(![ModuleManager checkNetworkConnection]) {
+	if(![PSModuleController checkNetworkConnection]) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
 		[pool release];
@@ -126,7 +126,7 @@ NSTimer *downloadTimer;
 
 - (void)updateInstallationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	PocketSwordStatusReporter *reporter = [moduleManager getInstallationProgress];
+	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->overallProgress;
 	[statusBar setProgress: reporter->fileProgress];

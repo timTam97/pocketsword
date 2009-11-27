@@ -1,5 +1,5 @@
 /*
- *  PocketSwordStatusReporter.cpp
+ *  PSStatusReporter.cpp
  *  PocketSword
  *
  *  Created by Nic Carter on 26/09/09.
@@ -8,9 +8,9 @@
  */
 
 #include <swlog.h>
-#include "PocketSwordStatusReporter.h"
+#include "PSStatusReporter.h"
 
-PocketSwordStatusReporter::PocketSwordStatusReporter() {
+PSStatusReporter::PSStatusReporter() {
 	overallProgress = 0.0;
 	fileProgress = 0.0;
 	totalBytesReported = 0.0;
@@ -19,7 +19,7 @@ PocketSwordStatusReporter::PocketSwordStatusReporter() {
 }
 	
 /** called before stages of a batch download */
-void PocketSwordStatusReporter::preStatus(long totalBytes, long completedBytes, const char *message) {
+void PSStatusReporter::preStatus(long totalBytes, long completedBytes, const char *message) {
 	completedBytesReported = completedBytes;
 	totalBytesReported = totalBytes;
 	overallProgress = (float)completedBytes / (float)totalBytes;
@@ -31,7 +31,7 @@ void PocketSwordStatusReporter::preStatus(long totalBytes, long completedBytes, 
 }
 	
 /** frequently called throughout a download, to report status */
-void PocketSwordStatusReporter::statusUpdate(double dtTotal, double dlNow) {
+void PSStatusReporter::statusUpdate(double dtTotal, double dlNow) {
 	fileProgress = dlNow / dtTotal;
 	if(fileProgress >= 1.0) {
 		fileProgress = 0.9999;
@@ -43,7 +43,7 @@ void PocketSwordStatusReporter::statusUpdate(double dtTotal, double dlNow) {
 	//sword::SWLog::getSystemLog()->logError("==========STATUSUPDATE(dtTotal = %f, dlNow = %f) = %f==========", dtTotal, dlNow, fileProgress);
 }
 
-const char* PocketSwordStatusReporter::getDescription() {
+const char* PSStatusReporter::getDescription() {
 	return description->c_str();
 }
 

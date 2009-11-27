@@ -19,7 +19,7 @@
 
 #import "PocketSwordAppDelegate.h"
 #import "PSLanguageCode.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 
 @implementation PocketSwordAppDelegate
 

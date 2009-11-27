@@ -1,15 +1,15 @@
 //
-//  SwordInstallNavigationController.m
+//  NavigatorSources.m
 //  PocketSword
 //
 //  Created by Nic Carter on 8/10/09.
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "SwordInstallNavigationController.h"
+#import "NavigatorSources.h"
 
 
-@implementation SwordInstallNavigationController
+@implementation NavigatorSources
 
 // displaying the Install Sources
 
@@ -59,7 +59,7 @@
 		[self performSelectorOnMainThread:@selector(resetTableSelection) withObject:nil waitUntilDone:YES];
 	}
 	//if(tabController.moreNavigationController) {
-	//	DLog(@"\n-SwordInstallNavigationController:  has a nav controller");
+	//	DLog(@"\n-NavigatorSources:  has a nav controller");
 	//}
 }
 

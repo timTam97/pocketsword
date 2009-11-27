@@ -7,7 +7,7 @@
 //
 
 #import "PSAboutScreenController.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 
 
 @implementation PSAboutScreenController

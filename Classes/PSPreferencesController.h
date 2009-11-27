@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "PSAboutScreenController.h"
 //#import "PSPreferencesFontTableViewController.h"
 
@@ -17,7 +17,7 @@
 	
 	IBOutlet UITableView *preferencesTable;
 	IBOutlet ViewController *viewController;
-	IBOutlet ModuleManager *moduleManager;
+	IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet id fontTableViewController;
 	IBOutlet PSAboutScreenController *aboutScreenController;

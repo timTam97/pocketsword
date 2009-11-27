@@ -22,7 +22,7 @@
 
 #import "DataController.h"
 #import "SwordManager.h"
-#import "SwordInstallSourceController.h"
+#import "SwordInstallManager.h"
 #import "globals.h"
 #import "SwordInstallSource.h"
 #import "SwordModule.h"
@@ -31,7 +31,7 @@
 #include <swmodule.h>
 #include <markupfiltmgr.h>
 
-@interface ModuleManager : NSObject {
+@interface PSModuleController : NSObject {
 	// IB Outlets
 	IBOutlet id statusBar;
 	IBOutlet id statusText;
@@ -54,14 +54,14 @@
 	SwordModule *primaryCommentary;
 	
 	SwordManager *swordManager;
-	SwordInstallSourceController *swordInstallManager;
+	SwordInstallManager *swordInstallManager;
 	SwordInstallSource *currentInstallSource;
 	sword::SWKey currentLocation;
 }
 
 @property (assign) SwordModule *primaryBible;
 @property (assign) SwordModule *primaryCommentary;
-@property (assign) SwordInstallSourceController *swordInstallManager;
+@property (assign) SwordInstallManager *swordInstallManager;
 @property (assign) SwordManager *swordManager;
 @property (retain, readwrite) SwordInstallSource *currentInstallSource;
 
@@ -69,7 +69,7 @@
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript;
 + (BOOL)checkNetworkConnection;
 
-- (ModuleManager *)init;
+- (PSModuleController *)init;
 - (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType;
 - (BOOL)isLoaded:(NSString *)module;
 - (NSString *)getCurrentBibleRef;
@@ -78,7 +78,7 @@
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (void)reload;
-- (PocketSwordStatusReporter*)getInstallationProgress;
+- (PSStatusReporter*)getInstallationProgress;
 - (BOOL)installModule:(NSString *)name;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule;
 - (BOOL)removeModule:(NSString *)name;

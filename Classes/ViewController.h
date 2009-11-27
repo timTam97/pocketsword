@@ -18,9 +18,9 @@
 */
 
 #import <UIKit/UIKit.h>
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "DataController.h"
-#import "SwordInstallNavigationController.h"
+#import "NavigatorSources.h"
 
 #include <swmgr.h>
 #include <swmodule.h>

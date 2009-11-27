@@ -17,7 +17,7 @@
 #import "SwordManager.h"
 #import "globals.h"
 //#import "MBPreferenceController.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "PSLanguageCode.h"
 
 @interface SwordModule (/* Private, class continuation */)
@@ -873,7 +873,7 @@
 					</script>\n", i, i, i, i, extraJS];
 	
 	
-	NSString *text = [ModuleManager createHTMLString: verses withJS: js];
+	NSString *text = [PSModuleController createHTMLString: verses withJS: js];
 	[verses release];
 	if (swModule->Direction() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];

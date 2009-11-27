@@ -9,7 +9,7 @@
 #import "localhostAddresses.h"
 
 #import "ZipArchive.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 
 @implementation iPhoneHTTPServerDelegate
 

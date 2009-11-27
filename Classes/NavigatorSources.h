@@ -1,5 +1,5 @@
 //
-//  SwordInstallNavigationController.h
+//  NavigatorSources.h
 //  PocketSword
 //
 //  Created by Nic Carter on 8/10/09.
@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "NavigatorModuleTypes.h"
 #import "NavigatorModules.h"
 #import "PocketSwordAppDelegate.h"
 #import "iPhoneHTTPServerDelegate.h"
 
-@interface SwordInstallNavigationController : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 
 	IBOutlet id table;
 	IBOutlet id refreshButton;

@@ -8,7 +8,7 @@
 
 #import "PSBibleViewController.h"
 #import "SwordModule.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 
 
 @implementation PSBibleViewController

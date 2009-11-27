@@ -18,12 +18,14 @@
 */
 
 #import <UIKit/UIKit.h>
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "ViewController.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
 
-/*#define BOOKS [NSArray arrayWithObjects: @"Genesis", @"Exodus", @"Leviticus", @"Numbers", @"Deuteronomy", \
+/*
+ 
+ #define BOOKS [NSArray arrayWithObjects: @"Genesis", @"Exodus", @"Leviticus", @"Numbers", @"Deuteronomy", \
 			@"Joshua", @"Judges", @"Ruth", @"1 Samuel", @"2 Samuel", @"1 Kings", @"2 Kings", @"1 Chronicles", \
 			@"2 Chronicles", @"Ezra", @"Nehemiah", @"Esther", @"Job", @"Psalms", @"Proverbs", @"Ecclesiastes", \
 			@"Song of Solomon", @"Isaiah", @"Jeremiah", @"Lamentations", @"Ezekiel", @"Daniel", @"Hosea", \
@@ -55,7 +57,9 @@
 			[NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 13], [NSNumber numberWithInteger: 5], \
 			[NSNumber numberWithInteger: 5], [NSNumber numberWithInteger: 3], [NSNumber numberWithInteger: 5], \
 			[NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 1], \
-			[NSNumber numberWithInteger: 22], nil]*/
+			[NSNumber numberWithInteger: 22], nil]
+ 
+ */
 
 // we can add more to this enum as we're required to dynamically show those tabs
 typedef enum {

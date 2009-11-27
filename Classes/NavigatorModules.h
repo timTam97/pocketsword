@@ -6,7 +6,7 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import <Foundation/Foundation.h>
 #import "NavigatorLeafView.h"
 #import "SwordModule.h"

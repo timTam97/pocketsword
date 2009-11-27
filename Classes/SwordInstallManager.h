@@ -13,7 +13,7 @@
 #include <installmgr.h>
 #include <swconfig.h>
 #include <multimapwdef.h>
-#include "PocketSwordStatusReporter.h";
+#include "PSStatusReporter.h";
 class sword::SWModule;
 class sword::InstallMgr;
 using sword::SWModule;
@@ -34,13 +34,13 @@ typedef enum _ModuleStatusConst {
     ModStatCipheredKeyPresent = 0x020
 }ModuleStatusConst;
 
-@interface SwordInstallSourceController : NSObject
+@interface SwordInstallManager : NSObject
 {
 @private
 	//#ifdef __cplusplus
     sword::InstallMgr *swInstallMgr;
 	//#endif
-	PocketSwordStatusReporter *statusReporter;
+	PSStatusReporter *statusReporter;
     
     BOOL createPath;
     
@@ -63,7 +63,7 @@ typedef enum _ModuleStatusConst {
 // -------------------- methods --------------------
 
 // initialization
-+ (SwordInstallSourceController *)defaultController;
++ (SwordInstallManager *)defaultController;
 
 /**
 base path of the module installation
@@ -84,7 +84,7 @@ base path of the module installation
 - (void)removeInstallSource:(SwordInstallSource *)is withReinitialize:(BOOL)performReinitialize;
 - (void)updateInstallSource:(SwordInstallSource *)is;
 - (int)refreshMasterRemoteInstallSourceList;
-- (PocketSwordStatusReporter *)getInstallationProgress;
+- (PSStatusReporter *)getInstallationProgress;
 - (void)resetInstallationProgress;
 
 // disclaimer

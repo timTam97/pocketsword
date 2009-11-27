@@ -29,71 +29,34 @@ bool initialized = false, waitingForInstall = false;
 NSTimer *timer;
 BOOL refSelectorShown = NO;
 
-/*- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-	[searchBar resignFirstResponder];
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[searchBar resignFirstResponder];
-	
-	// Check if we have a lucene search framework
-	sword::SWModule *primaryText = [moduleManager getPrimaryText];
-	sword::SWBuf dir = primaryText->getConfigEntry("AbsoluteDataPath");
-	char ch = dir.c_str()[strlen(dir.c_str())-1];
-	if ((ch != '/') && (ch != '\\'))
-		dir.append('/');
-	dir.append("lucene");
-	char isIndexed = sword::FileMgr::existsFile(dir.c_str(), "segments");
-	if (isIndexed != 1) {
-		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"You must download an index before you can search this module. Would you like to download it it now?"
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
-		
-	}
-	[dataController performSearch: [searchBar text]];
-	[resultsTable reloadData];
-	[pool release];
-}*/
-
-/*- (void)confirmInstall:(NSString *)name {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	int isi = [dataController sourceInstallSourceView];//the install source index
-	SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: isi];
-	
-	//NSString *desc = [moduleManager getDescription: name fromSource: is];
-	// TODO change this code to not use getDescription:fromSource:
-	NSString *desc = [[[is swordManager] moduleWithName: name] descr];
-	if (!desc) {
-		desc = @"";
-	} else {
-		desc = [desc stringByAppendingString:@"\n"];
-	}
-	
-	//Is it already installed?
-	BOOL installedAlready = [[moduleManager swordManager] isModuleInstalled: name];
-	
-	NSString *question = NSLocalizedString(@"ConfirmInstall", "Would you like to install this module?");
-	NSString *messageTitle = @"Install?";
-	if(installedAlready) {
-		question = @"This module is already installed, do you wish to download it again?";
-		messageTitle = @"Download again?";
-	}
-	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@[Source: %@]", name, desc, [is caption]];
-	[[[UIAlertView alloc] initWithTitle: messageTitle message: message
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
-	if(installModule)
-		[installModule release];
-	installModule = [name copy];
-	installModuleInstallSource = isi;
-	waitingForInstall = true;
-	if(installModuleDescription)
-		[installModuleDescription release];
-	installModuleDescription = [desc copy];
-	[pool release];
-}*/
-
+ 
+//- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+//	[searchBar resignFirstResponder];
+//}
+//
+//- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	
+//	[searchBar resignFirstResponder];
+//	
+//	// Check if we have a lucene search framework
+//	sword::SWModule *primaryText = [moduleManager getPrimaryText];
+//	sword::SWBuf dir = primaryText->getConfigEntry("AbsoluteDataPath");
+//	char ch = dir.c_str()[strlen(dir.c_str())-1];
+//	if ((ch != '/') && (ch != '\\'))
+//		dir.append('/');
+//	dir.append("lucene");
+//	char isIndexed = sword::FileMgr::existsFile(dir.c_str(), "segments");
+//	if (isIndexed != 1) {
+//		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"You must download an index before you can search this module. Would you like to download it it now?"
+//								   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+//		
+//	}
+//	[dataController performSearch: [searchBar text]];
+//	[resultsTable reloadData];
+//	[pool release];
+//}
+ 
 - (void)showDownloadStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
@@ -127,7 +90,7 @@ BOOL refSelectorShown = NO;
 
 - (void)updateInstallationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	PocketSwordStatusReporter *reporter = [moduleManager getInstallationProgress];
+	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->overallProgress;
 	[statusBar setProgress: reporter->fileProgress];
@@ -626,7 +589,7 @@ BOOL refSelectorShown = NO;
 }
 
 - (void)updateRefreshStatus {
-	PocketSwordStatusReporter *reporter = [moduleManager getInstallationProgress];
+	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->fileProgress;
 	[statusBar setProgress: reporter->fileProgress];

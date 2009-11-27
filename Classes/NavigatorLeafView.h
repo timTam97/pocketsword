@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "SwordModule.h"
 
 

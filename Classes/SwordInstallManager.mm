@@ -6,7 +6,7 @@
 //  Copyright 2007 __MyCompanyName__. All rights reserved.
 //
 
-#import "SwordInstallSourceController.h"
+#import "SwordInstallManager.h"
 #import "SwordInstallSource.h"
 #import "SwordManager.h"
 #import "SwordModule.h"
@@ -24,7 +24,7 @@ typedef sword::multimapwithdefault<sword::SWBuf, sword::SWBuf, std::less <sword:
 #define INSTALLSOURCE_SECTION_TYPE_FTP  "FTPSource"
 #define INSTALLSOURCE_SECTION_TYPE_HTTP	"HTTPSource"
 
-@implementation SwordInstallSourceController
+@implementation SwordInstallManager
 
 @dynamic configPath;
 @synthesize configFilePath;
@@ -39,7 +39,7 @@ float status;
 }
 
 - (void)setConfigPath:(NSString *)value {
-    //DLog(@"[SwordInstallSourceController -setConfigPath:]");
+    //DLog(@"[SwordInstallManager -setConfigPath:]");
     
     if(configPath != value) {
         [configPath release];
@@ -107,10 +107,10 @@ float status;
 // -------------------- methods --------------------
 
 // initialization
-+ (SwordInstallSourceController *)defaultController {
-    static SwordInstallSourceController *singleton;
++ (SwordInstallManager *)defaultController {
+    static SwordInstallManager *singleton;
     if(singleton == nil) {
-        singleton = [[SwordInstallSourceController alloc] init];
+        singleton = [[SwordInstallManager alloc] init];
     }
     
     return singleton;
@@ -120,7 +120,7 @@ float status;
 base path of the module installation
  */
 - (id)init {
-    //DLog(@"[SwordInstallSourceController -init]");
+    //DLog(@"[SwordInstallManager -init]");
 
     self = [super init];
     if(self) {
@@ -140,7 +140,7 @@ base path of the module installation
  */
 - (id)initWithPath:(NSString *)aPath createPath:(BOOL)create {
     
-    //DLog(@"[SwordInstallSourceController -initWithPath:]");
+    //DLog(@"[SwordInstallManager -initWithPath:]");
     
     self = [self init];
     if(self) {
@@ -168,7 +168,7 @@ base path of the module installation
 	//	InstallMgr::InstallMgr(const char *privatePath, StatusReporter *sr, SWBuf u, SWBuf p) {
 	if(statusReporter != nil)
 		delete statusReporter;
-	statusReporter = new PocketSwordStatusReporter();
+	statusReporter = new PSStatusReporter();
 	if(swInstallMgr != nil)
 		delete swInstallMgr;
 	swInstallMgr = new sword::InstallMgr([configPath UTF8String], statusReporter, "ftp", "installmgr@pocketsword.iphone.com");
@@ -201,7 +201,7 @@ base path of the module installation
 }
 
 - (void)dealloc {
-    DLog(@"[SwordInstallSourceController -finalize]");
+    DLog(@"[SwordInstallManager -finalize]");
 
     if(swInstallMgr != nil) {
         delete swInstallMgr;
@@ -341,7 +341,7 @@ base path of the module installation
 }
 
 
-- (PocketSwordStatusReporter *)getInstallationProgress {
+- (PSStatusReporter *)getInstallationProgress {
 	if (status == 1.0) {
 		statusReporter->fileProgress = 1.0;
 	}
@@ -377,7 +377,7 @@ base path of the module installation
 			[self updateInstallSource: is];
         } else {
 			[self updateInstallSource: is];
-            DLog(@"[SwordInstallSourceController -refreshInstallSource:] not refreshing, DIR source");
+            DLog(@"[SwordInstallManager -refreshInstallSource:] not refreshing, DIR source");
         }
     }
 	application.networkActivityIndicatorVisible = NO;

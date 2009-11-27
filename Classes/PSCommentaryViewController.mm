@@ -7,7 +7,7 @@
 //
 
 #import "PSCommentaryViewController.h"
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 
 
 @implementation PSCommentaryViewController

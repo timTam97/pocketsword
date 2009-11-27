@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		050E37C1106D1806001FCC17 /* PocketSwordStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PocketSwordStatusReporter.cpp */; };
+		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
+		0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0513ACB010BF74FC00E414D9 /* google-analytics.txt */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
@@ -169,7 +170,7 @@
 		05275B7C10884F72004FB0E0 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
 		0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 05D461E8108EEB00006BFBB1 /* iTunesArtwork */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
-		0545E23D10638D8400DD7F06 /* SwordInstallSourceController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallSourceController.mm */; };
+		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
 		05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
@@ -177,7 +178,7 @@
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		05B3D61710BB7A92000F8A48 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
 		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
-		05B52A29107DB0D100826AFE /* SwordInstallNavigationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* SwordInstallNavigationController.mm */; };
+		05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
 		05B52BDF107EEB7500826AFE /* NavigatorModules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDE107EEB7500826AFE /* NavigatorModules.mm */; };
 		05BA072A10BBC91E00FC9668 /* PocketSword-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */; };
@@ -328,7 +329,7 @@
 		E9617A330FF566F300690108 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
 		E9617A350FF566FF00690108 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
 		E96C139C0FFFC6390019B69E /* Read.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Read.png */; };
-		E996E5240ED70C6E0034DAF6 /* ModuleManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* ModuleManager.mm */; };
+		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		E9A6CFAA0FF560EA00399E78 /* MainWindow.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA80FF560EA00399E78 /* MainWindow.strings */; };
@@ -338,8 +339,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		050E37BF106D1806001FCC17 /* PocketSwordStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSwordStatusReporter.h; sourceTree = "<group>"; };
-		050E37C0106D1806001FCC17 /* PocketSwordStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PocketSwordStatusReporter.cpp; sourceTree = "<group>"; };
+		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
+		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
+		0513ACB010BF74FC00E414D9 /* google-analytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "google-analytics.txt"; path = "Resources/doc/google-analytics.txt"; sourceTree = "<group>"; };
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -696,8 +698,8 @@
 		0542F6D510BE770C0088A721 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		0545E23810638D8400DD7F06 /* SwordInstallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallSource.h; sourceTree = "<group>"; };
 		0545E23910638D8400DD7F06 /* SwordInstallSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordInstallSource.mm; sourceTree = "<group>"; };
-		0545E23A10638D8400DD7F06 /* SwordInstallSourceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallSourceController.h; sourceTree = "<group>"; };
-		0545E23B10638D8400DD7F06 /* SwordInstallSourceController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordInstallSourceController.mm; sourceTree = "<group>"; };
+		0545E23A10638D8400DD7F06 /* SwordInstallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallManager.h; sourceTree = "<group>"; };
+		0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordInstallManager.mm; sourceTree = "<group>"; };
 		0545E2421063908C00DD7F06 /* SwordModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModule.h; sourceTree = "<group>"; };
 		0545E2431063908C00DD7F06 /* SwordModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordModule.mm; sourceTree = "<group>"; };
 		0545E26410639A4A00DD7F06 /* SwordManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordManager.h; sourceTree = "<group>"; };
@@ -712,8 +714,8 @@
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
 		05B5295B107C529000826AFE /* PSModuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleType.h; sourceTree = "<group>"; };
 		05B5295C107C529000826AFE /* PSModuleType.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSModuleType.mm; sourceTree = "<group>"; };
-		05B52A27107DB0D100826AFE /* SwordInstallNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallNavigationController.h; sourceTree = "<group>"; };
-		05B52A28107DB0D100826AFE /* SwordInstallNavigationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordInstallNavigationController.mm; sourceTree = "<group>"; };
+		05B52A27107DB0D100826AFE /* NavigatorSources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorSources.h; sourceTree = "<group>"; };
+		05B52A28107DB0D100826AFE /* NavigatorSources.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorSources.mm; sourceTree = "<group>"; };
 		05B52BDA107EEB5B00826AFE /* NavigatorModuleTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModuleTypes.h; sourceTree = "<group>"; };
 		05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModuleTypes.mm; sourceTree = "<group>"; };
 		05B52BDD107EEB7500826AFE /* NavigatorModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModules.h; sourceTree = "<group>"; };
@@ -722,8 +724,8 @@
 		05BADF6410B79EA50026BFBF /* BiblicaCommunication.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BiblicaCommunication.txt; path = Resources/doc/BiblicaCommunication.txt; sourceTree = "<group>"; };
 		05CD44C0109E92C900853E48 /* PSPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesController.h; sourceTree = "<group>"; };
 		05CD44C1109E92C900853E48 /* PSPreferencesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesController.mm; sourceTree = "<group>"; };
-		05CD4552109FFA0A00853E48 /* PSBibleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSBibleViewController.h; sourceTree = "<group>"; };
-		05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSBibleViewController.mm; sourceTree = "<group>"; };
+		05CD4552109FFA0A00853E48 /* PSBibleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBibleViewController.h; path = Classes/PSBibleViewController.h; sourceTree = "<group>"; };
+		05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBibleViewController.mm; path = Classes/PSBibleViewController.mm; sourceTree = "<group>"; };
 		05CD458210A013DD00853E48 /* gear-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear-24.png"; path = "Resources/gear-24.png"; sourceTree = "<group>"; };
 		05D461E8108EEB00006BFBB1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
 		05D46213108FFF22006BFBB1 /* NavigatorModuleLanguages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModuleLanguages.h; sourceTree = "<group>"; };
@@ -779,8 +781,8 @@
 		05E37CA410B2AD9000C2F1F5 /* AppStoreInfo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AppStoreInfo.txt; path = Resources/doc/AppStoreInfo.txt; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
-		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCommentaryViewController.h; sourceTree = "<group>"; };
-		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSCommentaryViewController.mm; sourceTree = "<group>"; };
+		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
+		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
 		05F8E5FF10B1098600570141 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = back.png; path = Resources/back.png; sourceTree = "<group>"; };
 		05F8E60010B1098600570141 /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forward.png; path = Resources/forward.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -788,15 +790,15 @@
 		1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PocketSwordAppDelegate.mm; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		28216C950DB411BC00E5133A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		28216C960DB411BC00E5133A /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
+		28216C950DB411BC00E5133A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = Classes/ViewController.h; sourceTree = "<group>"; };
+		28216C960DB411BC00E5133A /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ViewController.mm; path = Classes/ViewController.mm; sourceTree = "<group>"; };
 		288765070DF74369002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSword_Prefix.pch; sourceTree = "<group>"; };
 		28AD73870D9D96C1002E5188 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E92217530F0687340089A794 /* DataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataController.h; sourceTree = "<group>"; };
-		E92217540F0687340089A794 /* DataController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DataController.mm; sourceTree = "<group>"; };
+		E92217530F0687340089A794 /* DataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataController.h; path = Classes/DataController.h; sourceTree = "<group>"; };
+		E92217540F0687340089A794 /* DataController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DataController.mm; path = Classes/DataController.mm; sourceTree = "<group>"; };
 		E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisHeader.cpp; sourceTree = "<group>"; };
 		E94012F20EFDD2D200DA9B7F /* AnalysisHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisHeader.h; sourceTree = "<group>"; };
 		E94012F30EFDD2D200DA9B7F /* Analyzers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Analyzers.cpp; sourceTree = "<group>"; };
@@ -1037,8 +1039,8 @@
 		E9617A840FF56E1800690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		E9617A850FF56E2100690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E96C139B0FFFC6390019B69E /* Read.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Read.png; path = Resources/Read.png; sourceTree = "<group>"; };
-		E996E5220ED70C6E0034DAF6 /* ModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManager.h; sourceTree = "<group>"; };
-		E996E5230ED70C6E0034DAF6 /* ModuleManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModuleManager.mm; sourceTree = "<group>"; };
+		E996E5220ED70C6E0034DAF6 /* PSModuleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleController.h; path = Classes/PSModuleController.h; sourceTree = "<group>"; };
+		E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleController.mm; path = Classes/PSModuleController.mm; sourceTree = "<group>"; };
 		E9A6CF9A0FF54CC100399E78 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9A6CF9E0FF5508C00399E78 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9A6CFA90FF560EA00399E78 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/MainWindow.strings; sourceTree = "<group>"; };
@@ -1075,6 +1077,63 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0513ACBA10BFAD2100E414D9 /* Sword obj-c wrappers */ = {
+			isa = PBXGroup;
+			children = (
+				0545E23810638D8400DD7F06 /* SwordInstallSource.h */,
+				0545E23910638D8400DD7F06 /* SwordInstallSource.mm */,
+				0545E23A10638D8400DD7F06 /* SwordInstallManager.h */,
+				0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */,
+				0545E2421063908C00DD7F06 /* SwordModule.h */,
+				0545E2431063908C00DD7F06 /* SwordModule.mm */,
+				0545E26410639A4A00DD7F06 /* SwordManager.h */,
+				0545E26510639A4A00DD7F06 /* SwordManager.mm */,
+				05DF558D10AA9123007CB847 /* SwordBook.h */,
+				05DF558E10AA9123007CB847 /* SwordBook.mm */,
+			);
+			name = "Sword obj-c wrappers";
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		0513ACBB10BFADC400E414D9 /* PS-preferences */ = {
+			isa = PBXGroup;
+			children = (
+				05CD44C0109E92C900853E48 /* PSPreferencesController.h */,
+				05CD44C1109E92C900853E48 /* PSPreferencesController.mm */,
+				05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */,
+				05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */,
+			);
+			name = "PS-preferences";
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		0513ACBC10BFADD600E414D9 /* PS-about */ = {
+			isa = PBXGroup;
+			children = (
+				05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */,
+				05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */,
+			);
+			name = "PS-about";
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		0513AD0710BFB57300E414D9 /* PS-controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E996E5220ED70C6E0034DAF6 /* PSModuleController.h */,
+				E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */,
+				E92217530F0687340089A794 /* DataController.h */,
+				E92217540F0687340089A794 /* DataController.mm */,
+				28216C950DB411BC00E5133A /* ViewController.h */,
+				28216C960DB411BC00E5133A /* ViewController.mm */,
+				05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */,
+				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
+				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
+				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
+			);
+			name = "PS-controllers";
+			sourceTree = "<group>";
+		};
 		0527595E10884F64004FB0E0 /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -1717,6 +1776,7 @@
 				E9BD1D530ED34003006A60E9 /* LICENSE.txt */,
 				05BADF6410B79EA50026BFBF /* BiblicaCommunication.txt */,
 				05E37CA410B2AD9000C2F1F5 /* AppStoreInfo.txt */,
+				0513ACB010BF74FC00E414D9 /* google-analytics.txt */,
 			);
 			name = doc;
 			sourceTree = "<group>";
@@ -1724,6 +1784,11 @@
 		0545E32710654A8500DD7F06 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0513AD0710BFB57300E414D9 /* PS-controllers */,
+				0513ACBC10BFADD600E414D9 /* PS-about */,
+				0513ACBB10BFADC400E414D9 /* PS-preferences */,
+				0513ACBA10BFAD2100E414D9 /* Sword obj-c wrappers */,
+				05D6ABE21097F76B00A5026E /* PS-install */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 			);
 			name = Source;
@@ -1769,17 +1834,14 @@
 			path = iPhoneHTTPServer;
 			sourceTree = "<group>";
 		};
-		05D6ABE21097F76B00A5026E /* Install */ = {
+		05D6ABE21097F76B00A5026E /* PS-install */ = {
 			isa = PBXGroup;
 			children = (
-				050E37BF106D1806001FCC17 /* PocketSwordStatusReporter.h */,
-				050E37C0106D1806001FCC17 /* PocketSwordStatusReporter.cpp */,
-				0545E23810638D8400DD7F06 /* SwordInstallSource.h */,
-				0545E23910638D8400DD7F06 /* SwordInstallSource.mm */,
-				0545E23A10638D8400DD7F06 /* SwordInstallSourceController.h */,
-				0545E23B10638D8400DD7F06 /* SwordInstallSourceController.mm */,
-				05B52A27107DB0D100826AFE /* SwordInstallNavigationController.h */,
-				05B52A28107DB0D100826AFE /* SwordInstallNavigationController.mm */,
+				05D6ABB81097EAF300A5026E /* iPhoneHTTPServer */,
+				050E37BF106D1806001FCC17 /* PSStatusReporter.h */,
+				050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */,
+				05B52A27107DB0D100826AFE /* NavigatorSources.h */,
+				05B52A28107DB0D100826AFE /* NavigatorSources.mm */,
 				05D46213108FFF22006BFBB1 /* NavigatorModuleLanguages.h */,
 				05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */,
 				051CF1871084199400154E44 /* NavigatorLeafView.h */,
@@ -1789,7 +1851,8 @@
 				05B52BDA107EEB5B00826AFE /* NavigatorModuleTypes.h */,
 				05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */,
 			);
-			name = Install;
+			name = "PS-install";
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		05D6ACEF109830ED00A5026E /* ZipFile */ = {
@@ -1832,37 +1895,13 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				05DF558D10AA9123007CB847 /* SwordBook.h */,
-				05DF558E10AA9123007CB847 /* SwordBook.mm */,
 				05DF546710A93E69007CB847 /* SnoopWindow */,
-				05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */,
-				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
-				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
-				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
-				05CD44C0109E92C900853E48 /* PSPreferencesController.h */,
-				05CD44C1109E92C900853E48 /* PSPreferencesController.mm */,
-				05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */,
-				05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */,
-				05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */,
-				05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */,
-				05D6ABE21097F76B00A5026E /* Install */,
-				05D6ABB81097EAF300A5026E /* iPhoneHTTPServer */,
 				05D4629E10907130006BFBB1 /* PSLanguageCode.h */,
 				05D4629F10907130006BFBB1 /* PSLanguageCode.m */,
 				05B5295B107C529000826AFE /* PSModuleType.h */,
 				05B5295C107C529000826AFE /* PSModuleType.mm */,
 				0545E28510639DC400DD7F06 /* utils.h */,
-				0545E2421063908C00DD7F06 /* SwordModule.h */,
-				0545E2431063908C00DD7F06 /* SwordModule.mm */,
-				0545E26410639A4A00DD7F06 /* SwordManager.h */,
 				0545E29A1063A09500DD7F06 /* globals.h */,
-				0545E26510639A4A00DD7F06 /* SwordManager.mm */,
-				E92217530F0687340089A794 /* DataController.h */,
-				E92217540F0687340089A794 /* DataController.mm */,
-				E996E5220ED70C6E0034DAF6 /* ModuleManager.h */,
-				E996E5230ED70C6E0034DAF6 /* ModuleManager.mm */,
-				28216C950DB411BC00E5133A /* ViewController.h */,
-				28216C960DB411BC00E5133A /* ViewController.mm */,
 				1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */,
 				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
 			);
@@ -2352,6 +2391,7 @@
 				05B3D61710BB7A92000F8A48 /* MMM.png in Resources */,
 				05BA072A10BBC91E00FC9668 /* PocketSword-Icon.png in Resources */,
 				0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */,
+				0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2382,7 +2422,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */,
 				28216C970DB411BC00E5133A /* ViewController.mm in Sources */,
-				E996E5240ED70C6E0034DAF6 /* ModuleManager.mm in Sources */,
+				E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */,
 				E94014700EFDD2D400DA9B7F /* AnalysisHeader.cpp in Sources */,
 				E94014710EFDD2D400DA9B7F /* Analyzers.cpp in Sources */,
 				E94014740EFDD2D400DA9B7F /* StandardAnalyzer.cpp in Sources */,
@@ -2488,12 +2528,12 @@
 				E92217550F0687340089A794 /* DataController.mm in Sources */,
 				E92B85040F1410C9003183CA /* dirent.cpp in Sources */,
 				0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */,
-				0545E23D10638D8400DD7F06 /* SwordInstallSourceController.mm in Sources */,
+				0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */,
 				0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */,
 				0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */,
-				050E37C1106D1806001FCC17 /* PocketSwordStatusReporter.cpp in Sources */,
+				050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */,
 				05B5295D107C529000826AFE /* PSModuleType.mm in Sources */,
-				05B52A29107DB0D100826AFE /* SwordInstallNavigationController.mm in Sources */,
+				05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */,
 				05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */,
 				05B52BDF107EEB7500826AFE /* NavigatorModules.mm in Sources */,
 				051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */,

@@ -17,10 +17,10 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "ModuleManager.h"
+#import "PSModuleController.h"
 #import "ZipArchive.h"
 
-@implementation ModuleManager
+@implementation PSModuleController
 
 @synthesize primaryBible;
 @synthesize primaryCommentary;
@@ -68,7 +68,7 @@ float installationProgress;
 	
 }
 
-- (ModuleManager *)init {
+- (PSModuleController *)init {
 	self = [super init];
 	installationProgress = 0.0;
 
@@ -79,7 +79,7 @@ float installationProgress;
 		ALog(@"Couldn't create mods.d");
 	}
 	swordManager = [[SwordManager defaultManager] retain];
-	swordInstallManager = [[[SwordInstallSourceController alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES] retain];
+	swordInstallManager = [[[SwordInstallManager alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES] retain];
 
 	BOOL userDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey: @"userDisclaimerAccepted"];
 	if (userDisclaimer) {
@@ -268,8 +268,8 @@ float installationProgress;
 	}
 }
 
-- (PocketSwordStatusReporter*)getInstallationProgress {
-	PocketSwordStatusReporter *reporter = [swordInstallManager getInstallationProgress];
+- (PSStatusReporter*)getInstallationProgress {
+	PSStatusReporter *reporter = [swordInstallManager getInstallationProgress];
 	if(installationProgress == -1 || installationProgress == 1) {
 		reporter->overallProgress = installationProgress;
 	}
@@ -362,7 +362,7 @@ float installationProgress;
 
 - (BOOL)installModule:(NSString *)name {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	DLog(@"[ModuleManager -installModule: %@ fromSource: %@]", name, [[self currentInstallSource] caption]);
+	DLog(@"[PSModuleController -installModule: %@ fromSource: %@]", name, [[self currentInstallSource] caption]);
 
 	installationProgress = 0.01;
 	SwordInstallSource *sIS = currentInstallSource;
@@ -440,7 +440,7 @@ float installationProgress;
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!
 		[bibleNavBtn setTitle: @"PocketSword"];
-		[bibleWebView loadHTMLString: [ModuleManager createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
+		[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		[bookmarkAddButton setEnabled:NO];
 		[bibleNextBtn setEnabled:NO];
 		[biblePrevBtn setEnabled:NO];
@@ -449,7 +449,7 @@ float installationProgress;
 	if (numberOfCommentaries == 1 && primaryCommentary == nil) {
 		//no commentaries left...
 		[commentaryNavBtn setTitle: @"PocketSword"];
-		[commentaryWebView loadHTMLString: [ModuleManager createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
+		[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		//[bookmarkAddButton setEnabled:NO];
 		[commentaryNextBtn setEnabled:NO];
 		[commentaryPrevBtn setEnabled:NO];
@@ -561,7 +561,7 @@ float installationProgress;
 			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 		else if (!primaryBible) {
-			return [ModuleManager createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
+			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
 	
@@ -595,7 +595,7 @@ float installationProgress;
 			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 		else if (!primaryCommentary) {
-			return [ModuleManager createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
+			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
 	
@@ -615,7 +615,7 @@ float installationProgress;
 }
 
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript {
-	return [ModuleManager createHTMLString:body usingPreferences:YES withJS:javascript];
+	return [PSModuleController createHTMLString:body usingPreferences:YES withJS:javascript];
 }
 
 // allows you to add extra javascript into the <head> html object.
