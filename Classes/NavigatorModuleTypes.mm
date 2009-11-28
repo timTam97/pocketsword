@@ -76,7 +76,7 @@ NSTimer *refreshTimer;
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"lvl2-id"] autorelease];
 	}
 	
-	cell.textLabel.text = [[dataArray objectAtIndex:indexPath.row] moduleType];
+	cell.textLabel.text = NSLocalizedString([[dataArray objectAtIndex:indexPath.row] moduleType], @"");
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	return cell;

@@ -49,6 +49,7 @@ typedef enum {
 	IBOutlet UIBarButtonItem *biblePrevBtn;
 	IBOutlet UIBarButtonItem *bibleNextBtn;
 	IBOutlet UIActivityIndicatorView *bibleActivity;
+	IBOutlet UITabBarItem *bibleTabBarItem;
 	
 	// Commentary tab
 	IBOutlet UIWebView *commentaryWebView;
@@ -56,6 +57,7 @@ typedef enum {
 	IBOutlet UIBarButtonItem *commentaryPrevBtn;
 	IBOutlet UIBarButtonItem *commentaryNextBtn;
 	IBOutlet UIActivityIndicatorView *commentaryActivity;
+	IBOutlet UITabBarItem *commentaryTabBarItem;
 	
 	// Bible & Commentary tab
 	IBOutlet id refSelector;
@@ -65,6 +67,7 @@ typedef enum {
 	// Module tab
 	IBOutlet id moduleTable;
 	IBOutlet id moduleEditBtn;
+	IBOutlet UITabBarItem *moduleTabBarItem;
 	
 	// Search tab
 	//IBOutlet id progressBar;
@@ -73,6 +76,12 @@ typedef enum {
 	// Bookmarks tab
 	IBOutlet id bookmarksTable;
 	IBOutlet id bookmarksEditBtn;
+	
+	// Preferences tab
+	IBOutlet UITabBarItem *preferencesTabBarItem;
+	
+	// About tab
+	IBOutlet UITabBarItem *aboutTabBarItem;
 	
 	// Status view
 	IBOutlet id statusController;
@@ -84,7 +93,8 @@ typedef enum {
 	
 	// Busy Indicator
 	IBOutlet UIViewController *activityController;
-	IBOutlet id activityIndicator;
+	IBOutlet UIActivityIndicatorView *activityIndicator;
+	IBOutlet UILabel *activityLoadingLabel;
 	
 	IBOutlet id moduleManager;
 	IBOutlet id dataController;

@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>PocketSword-Icon.png</string>
+	<string>Icon2-small.png</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.Crosswire.PocketSword</string>
 	<key>CFBundleInfoDictionaryVersion</key>

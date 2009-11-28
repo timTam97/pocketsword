@@ -205,8 +205,16 @@ BOOL refSelectorShown = NO;
 - (void)awakeFromNib {
 	if (!initialized) {
 		NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+		//localize the tab bar titles
+		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
+		commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
+		moduleTabBarItem.title = NSLocalizedString(@"TabBarTitleModules", @"Modules");
+		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
+		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
+		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
+		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-		[bibleWebView loadHTMLString: black baseURL: nil];	// Get the chapter text
+		[bibleWebView loadHTMLString: black baseURL: nil];
 		[commentaryWebView loadHTMLString: black baseURL: nil];
 
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

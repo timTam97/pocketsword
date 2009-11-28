@@ -34,7 +34,11 @@
 	{
 		ALog(@"Error starting HTTP Server: %@", error);
 	}
-	[self displayInfoUpdate:nil];
+	//[self displayInfoUpdate:nil];
+	bonjourInfo.text = NSLocalizedString(@"MMMBonjourLoading", @"Bonjour Loading...");
+	ipInfo.text = NSLocalizedString(@"MMMIPLoading", @"IP Loading...");
+	[doneButton setTitle:NSLocalizedString(@"Done", @"Done") forState:UIControlStateNormal]; 
+	[doneButton setTitle:NSLocalizedString(@"Done", @"Done") forState:UIControlStateHighlighted]; 
 }
 
 -(void)relistAddresses:(NSNotification *) notification
@@ -105,7 +109,7 @@
 	NSString *wwwIP = [addresses objectForKey:@"www"];
 
 	if (wwwIP)
-		wwwInfo.text = [NSString stringWithFormat:@"Web: %@:%d\n", wwwIP, port];
+		wwwInfo.text = [NSString stringWithFormat:@"Web: http://%@:%d\n", wwwIP, port];
 	else
 		wwwInfo.text = NSLocalizedString(@"WebNoIP", @"");
 

@@ -15,7 +15,8 @@
 	IBOutlet UILabel *bonjourInfo;
 	IBOutlet UILabel *ipInfo;
 	IBOutlet UILabel *wwwInfo;
-	IBOutlet id moduleTable;
+	IBOutlet UIButton *doneButton;
+	IBOutlet UITableView *moduleTable;
 	
 	IBOutlet id moduleManager;
 	

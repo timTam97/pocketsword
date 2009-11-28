@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
 		0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0513ACB010BF74FC00E414D9 /* google-analytics.txt */; };
+		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
+		0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
@@ -342,6 +344,9 @@
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
 		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
 		0513ACB010BF74FC00E414D9 /* google-analytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "google-analytics.txt"; path = "Resources/doc/google-analytics.txt"; sourceTree = "<group>"; };
+		0513AE1810C0C43600E414D9 /* Default.acorn */ = {isa = PBXFileReference; lastKnownFileType = file; name = Default.acorn; path = Resources/Default.acorn; sourceTree = "<group>"; };
+		0513AE1910C0C43600E414D9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
+		0513AE2B10C0CD5300E414D9 /* Icon2-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon2-small.png"; path = "Resources/Icon2-small.png"; sourceTree = "<group>"; };
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -1077,7 +1082,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0513ACBA10BFAD2100E414D9 /* Sword obj-c wrappers */ = {
+		0513ACBA10BFAD2100E414D9 /* Sword */ = {
 			isa = PBXGroup;
 			children = (
 				0545E23810638D8400DD7F06 /* SwordInstallSource.h */,
@@ -1091,7 +1096,7 @@
 				05DF558D10AA9123007CB847 /* SwordBook.h */,
 				05DF558E10AA9123007CB847 /* SwordBook.mm */,
 			);
-			name = "Sword obj-c wrappers";
+			name = Sword;
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -1784,12 +1789,12 @@
 		0545E32710654A8500DD7F06 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0513ACBA10BFAD2100E414D9 /* Sword */,
 				0513AD0710BFB57300E414D9 /* PS-controllers */,
 				0513ACBC10BFADD600E414D9 /* PS-about */,
 				0513ACBB10BFADC400E414D9 /* PS-preferences */,
-				0513ACBA10BFAD2100E414D9 /* Sword obj-c wrappers */,
 				05D6ABE21097F76B00A5026E /* PS-install */,
-				080E96DDFE201D6D7F000001 /* Classes */,
+				080E96DDFE201D6D7F000001 /* PS-other */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -1892,7 +1897,7 @@
 			path = SnoopWindow;
 			sourceTree = "<group>";
 		};
-		080E96DDFE201D6D7F000001 /* Classes */ = {
+		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
 				05DF546710A93E69007CB847 /* SnoopWindow */,
@@ -1905,6 +1910,7 @@
 				1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */,
 				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
 			);
+			name = "PS-other";
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -1945,6 +1951,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0513AE2B10C0CD5300E414D9 /* Icon2-small.png */,
+				0513AE1810C0C43600E414D9 /* Default.acorn */,
+				0513AE1910C0C43600E414D9 /* Default.png */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */,
 				05B3D61610BB7A92000F8A48 /* MMM.png */,
@@ -2392,6 +2401,8 @@
 				05BA072A10BBC91E00FC9668 /* PocketSword-Icon.png in Resources */,
 				0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */,
 				0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */,
+				0513AE1B10C0C43600E414D9 /* Default.png in Resources */,
+				0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
