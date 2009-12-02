@@ -36,16 +36,15 @@
 	IBOutlet id statusBar;
 	IBOutlet id statusText;
 	IBOutlet id moduleTable;
-	IBOutlet UIBarButtonItem *bibleNavBtn;
+	//IBOutlet UIBarButtonItem *bibleNavBtn;
+	//IBOutlet UIBarButtonItem *commentaryNavBtn;
 	IBOutlet UIWebView *bibleWebView;
 	IBOutlet UIWebView *commentaryWebView;
-	IBOutlet UIBarButtonItem *commentaryNavBtn;
+	
+	IBOutlet UIBarButtonItem *bibleTitle;
+	IBOutlet UIBarButtonItem *commentaryTitle;
 	
 	IBOutlet id bookmarkAddButton;
-	IBOutlet UIBarButtonItem *biblePrevBtn;
-	IBOutlet UIBarButtonItem *bibleNextBtn;
-	IBOutlet UIBarButtonItem *commentaryPrevBtn;
-	IBOutlet UIBarButtonItem *commentaryNextBtn;
 	
 	IBOutlet id dataController;
 	IBOutlet id viewController;

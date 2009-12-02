@@ -20,6 +20,7 @@
 #import "DataController.h"
 #import <versemgr.h>
 #import "SwordBook.h"
+#import "ViewController.h"
 
 @implementation DataController
 
@@ -27,6 +28,7 @@
 @synthesize refSelectorChapter;
 @synthesize refSelectorBook;
 @synthesize refSelectorBooks;
+@synthesize modulesListType;
 //@synthesize sourceInstallSourceView;
 //@synthesize installedModuleGroups;
 
@@ -190,8 +192,7 @@ sword::ListKey results;
 	if (tag == MODULE_TABLE) {
 		NSUInteger modCount = [[[moduleManager swordManager] moduleListByType] count];
 		return modCount > 0 ? modCount : 1;
-	}
-	else {
+	} else {
 		return 1;
 	}
 }
@@ -211,8 +212,7 @@ sword::ListKey results;
 		@catch (id except) {
 			return NSLocalizedString(@"NoModulesInstalled", @"");
 		}
-	}
-	else if (tag == SEARCH_TABLE) {
+	} else if (tag == SEARCH_TABLE) {
 		return [NSString stringWithFormat: @"Search Results (%d)", results.Count()];
 	}
 	return @"";
@@ -229,11 +229,19 @@ sword::ListKey results;
 		@catch (id except) {
 			return 0;
 		}
-	}
-	else if (tag == SEARCH_TABLE) {
+	} else if (tag == MODULES_LIST_TABLE) {
+		switch (modulesListType) {
+			case BibleTab:
+				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
+				break;
+			case CommentaryTab:
+				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
+				break;
+		}
+		return 0;
+	} else if (tag == SEARCH_TABLE) {
 		return results.Count();
-	}
-	else if (tag == BOOKMARK_TABLE) {
+	} else if (tag == BOOKMARK_TABLE) {
 		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
 		return [bookmarks count];
 	}
@@ -255,7 +263,7 @@ sword::ListKey results;
 	
 	// If no cell is available, create a new one using the given identifier - 
 	if (cell == nil) {
-		if (tag == MODULE_TABLE)
+		if (tag == MODULE_TABLE || tag == MODULES_LIST_TABLE)
 			cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 		else 
 			cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: theIdentifier] autorelease];
@@ -271,20 +279,33 @@ sword::ListKey results;
 		} catch (...) {
 			cell.textLabel.text = @"";
 		}
-		
 		if ([moduleManager isLoaded:cell.textLabel.text]) {
 			cell.accessoryType = UITableViewCellAccessoryCheckmark;
 		} else {
 			cell.accessoryType = UITableViewCellAccessoryNone;
 		}
-		
 		return cell;
-	}
-	else if (tag == SEARCH_TABLE) {
+	} else if (tag == MODULES_LIST_TABLE) {
+		switch (modulesListType) {
+			case BibleTab:
+				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
+				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
+				break;
+			case CommentaryTab:
+				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
+				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
+				break;
+		}
+		if ([moduleManager isLoaded:cell.textLabel.text]) {
+			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		} else {
+			cell.accessoryType = UITableViewCellAccessoryNone;
+		}
+		return cell;
+	} else if (tag == SEARCH_TABLE) {
 		cell.textLabel.text = [NSString stringWithUTF8String: results.getElement([indexPath indexAtPosition: 1])->getText()];
 		return cell;
-	}
-	else if (tag == BOOKMARK_TABLE) {
+	} else if (tag == BOOKMARK_TABLE) {
 		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
 		cell.textLabel.text = [bookmarks objectAtIndex: indexPath.row];
 		// TODO:  add the first bit of the chapter to the detailLabel:
@@ -305,11 +326,6 @@ sword::ListKey results;
 		// TODO: Make this whole function work with multiple module types
 		NSString *ref = [moduleManager getCurrentBibleRef];
 
-		if (!ref) {
-			ref = @"Genesis 1";
-			[bibleNavBtn setTitle: @"Genesis 1"];
-		}
-		
 		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]])) {
 			[tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -319,13 +335,9 @@ sword::ListKey results;
 		BOOL bibleModule = ([[mod typeString] isEqualToString:SWMOD_CATEGORY_BIBLES]);
 		if (bibleModule) {
 			[moduleManager loadPrimaryBible: newModule];
-			[[NSUserDefaults standardUserDefaults] setObject: newModule forKey: @"lastBible"];
-			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 		else {
 			[moduleManager loadPrimaryCommentary:newModule];
-			[[NSUserDefaults standardUserDefaults] setObject: newModule forKey: @"lastCommentary"];
-			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 		
 		
@@ -340,8 +352,27 @@ sword::ListKey results;
 			[self setShownTabTo:CommentaryTab];
 			[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		}
-	}
-	else if (tag == SEARCH_TABLE || tag == BOOKMARK_TABLE) {
+	} else if (tag == MODULES_LIST_TABLE) {
+		NSString *ref = [moduleManager getCurrentBibleRef];
+		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+		if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]])) {
+			[tableView deselectRowAtIndexPath:indexPath animated:YES];
+			return; // do nothing if we select the currently loaded module.
+		}
+		// Update the module list to reflect the current translation
+		[tableView reloadData];
+		switch (modulesListType) {
+			case BibleTab:
+				[moduleManager loadPrimaryBible: newModule];
+				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+				break;
+			case CommentaryTab:
+				[moduleManager loadPrimaryCommentary:newModule];
+				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+				break;
+		}
+		[viewController toggleModulesList: nil];
+	} else if (tag == SEARCH_TABLE || tag == BOOKMARK_TABLE) {
 		[self setShownTabTo:BibleTab];
 		if (![[[moduleManager swordManager] moduleNames] count] == 0) {
 			NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];

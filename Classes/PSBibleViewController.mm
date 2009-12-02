@@ -7,8 +7,9 @@
 //
 
 #import "PSBibleViewController.h"
-#import "SwordModule.h"
+//#import "SwordModule.h"
 #import "PSModuleController.h"
+#import "ViewController.h"
 
 
 @implementation PSBibleViewController
@@ -89,7 +90,8 @@
 			//[commentaryWebView stringByEvaluatingJavaScriptFromString:javascript];
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			[bibleNavBtn setTitle: ref];
+			//[bibleNavBtn setTitle: ref];
+			[viewController setTabTitle: ref ofTab:BibleTab];
 		}
 		load = NO;
 	}

@@ -736,6 +736,7 @@
 	swModule->RenderText();
 	sword::SWKey curKey;
 	NSString *ch = [[[NSString stringWithUTF8String: swModule->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	//nicc crash here with "ch" being 'nil'
 	NSString *ref = [NSString stringWithString: ch];
 	
 	// Move to the previous chapter

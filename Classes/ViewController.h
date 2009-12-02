@@ -26,6 +26,7 @@
 #include <swmodule.h>
 #include <markupfiltmgr.h>
 #include <filemgr.h>
+#include <localemgr.h>
 
 typedef enum {
     RestoreScrollPosition = 1,
@@ -50,6 +51,8 @@ typedef enum {
 	IBOutlet UIBarButtonItem *bibleNextBtn;
 	IBOutlet UIActivityIndicatorView *bibleActivity;
 	IBOutlet UITabBarItem *bibleTabBarItem;
+	IBOutlet UISegmentedControl *bibleSegmentedControl;
+	IBOutlet UIBarButtonItem *bibleSearchButton;
 	
 	// Commentary tab
 	IBOutlet UIWebView *commentaryWebView;
@@ -58,16 +61,23 @@ typedef enum {
 	IBOutlet UIBarButtonItem *commentaryNextBtn;
 	IBOutlet UIActivityIndicatorView *commentaryActivity;
 	IBOutlet UITabBarItem *commentaryTabBarItem;
+	IBOutlet UISegmentedControl *commentarySegmentedControl;
+	IBOutlet UIBarButtonItem *commentarySearchButton;
 	
 	// Bible & Commentary tab
-	IBOutlet id refSelector;
-	IBOutlet id refSelectorView;
-	IBOutlet id refSelectorTitle;
+	IBOutlet UIPickerView *refSelector;
+	IBOutlet UIView *refSelectorView;
+	IBOutlet UIBarButtonItem *refSelectorTitle;
+	
+	IBOutlet UIView *modulesListView;
+	IBOutlet UITableView *modulesListTable;
+	IBOutlet UINavigationItem *modulesNavigationItem;
 	
 	// Module tab
 	IBOutlet id moduleTable;
 	IBOutlet id moduleEditBtn;
 	IBOutlet UITabBarItem *moduleTabBarItem;
+	IBOutlet UINavigationItem *moduleNavBar;
 	
 	// Search tab
 	//IBOutlet id progressBar;
@@ -76,6 +86,7 @@ typedef enum {
 	// Bookmarks tab
 	IBOutlet id bookmarksTable;
 	IBOutlet id bookmarksEditBtn;
+	IBOutlet UINavigationItem *bookmarksNavBar;
 	
 	// Preferences tab
 	IBOutlet UITabBarItem *preferencesTabBarItem;
@@ -98,7 +109,7 @@ typedef enum {
 	
 	IBOutlet id moduleManager;
 	IBOutlet id dataController;
-	
+		
 }
 
 //- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
@@ -113,6 +124,9 @@ typedef enum {
 - (IBAction)addBookmark:(id)sender;
 - (IBAction)moveToModulesTab:(id)sender;
 
+- (IBAction)toggleModulesList:(id)sender;
+
+- (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
 - (void)redisplayChapter:(PollingType)pollingType restore:(RestorePositionType)position;
 
@@ -123,5 +137,9 @@ typedef enum {
 - (void)hideBusyIndicator;
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
+- (void)setEnabledBibleNextButton:(BOOL)enabled;
+- (void)setEnabledBiblePreviousButton:(BOOL)enabled;
+- (void)setEnabledCommentaryNextButton:(BOOL)enabled;
+- (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
 
 @end

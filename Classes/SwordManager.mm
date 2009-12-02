@@ -177,9 +177,11 @@ using std::list;
 
 + (void)initLocale {
     // set locale swManager
-    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *localePath = [resourcePath stringByAppendingPathComponent:@"locales.d"];
-    sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+    NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
+
+    
+	sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
     lManager->loadConfigDir([localePath UTF8String]);
     
     //get the language
@@ -200,6 +202,7 @@ using std::list;
         for(it = localelist.begin(); it != localelist.end(); ++it) {
             locale = *it;
             NSString *swLoc = [NSString stringWithCString:locale.c_str() encoding:NSUTF8StringEncoding];
+			NSLog(@"loc: %@   swLoc: %@", loc, swLoc);
             if([swLoc hasPrefix:loc]) {
                 haveLocale = YES;
                 lang = loc;

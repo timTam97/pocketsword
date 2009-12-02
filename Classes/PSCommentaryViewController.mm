@@ -8,6 +8,7 @@
 
 #import "PSCommentaryViewController.h"
 #import "PSModuleController.h"
+#import "ViewController.h"
 
 
 @implementation PSCommentaryViewController
@@ -53,7 +54,8 @@
 			//[bibleWebView stringByEvaluatingJavaScriptFromString:javascript];
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			[commentaryNavBtn setTitle: ref];
+			//[commentaryNavBtn setTitle: ref];
+			[viewController setTabTitle: ref ofTab:CommentaryTab];
 		}
 		load = NO;
 	}

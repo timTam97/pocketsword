@@ -45,6 +45,7 @@ public:
 	static void setSystemLog(SWLog *newLogger);
 
 	SWLog() { logLevel = 1;	/*default to show only errors*/}
+	//SWLog() { logLevel = 5;	/*default to show only errors*/}
 	virtual ~SWLog() {};
 
 	void setLogLevel(char level) { logLevel = level; }

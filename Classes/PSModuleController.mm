@@ -19,6 +19,7 @@
 
 #import "PSModuleController.h"
 #import "ZipArchive.h"
+#import "ViewController.h"
 
 @implementation PSModuleController
 
@@ -60,8 +61,6 @@ float installationProgress;
 	
 	if((!primaryBible && (modType == bible)) || (!primaryCommentary && (modType == commentary))) {
 		NSString *ref = [self getCurrentBibleRef];
-		if(!ref)
-			ref = @"Genesis 1";
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		[bookmarkAddButton setEnabled:YES];
 	}
@@ -179,21 +178,26 @@ float installationProgress;
 		ref = [[[NSString stringWithUTF8String: ([primaryBible swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	else if(primaryCommentary)
 		ref = [[[NSString stringWithUTF8String: ([primaryCommentary swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	if(ref)
+	if(ref) {
 		return [[[[ref stringByReplacingOccurrencesOfString: @"III " withString: @"3 "]
 				  stringByReplacingOccurrencesOfString: @"II " withString: @"2 "]
 				 stringByReplacingOccurrencesOfString: @"I " withString: @"1 "]
 				stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
-	else
-		return nil;
+	} else {
+		return @"Genesis 1"; // hard code to return a default valid result
+	}
 }
 
 - (void)loadPrimaryBible:(NSString *)newText {
 	primaryBible = [swordManager moduleWithName:newText];
+	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastBible"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)loadPrimaryCommentary:(NSString *)newText {
 	primaryCommentary = [swordManager moduleWithName:newText];
+	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastCommentary"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSString *)setToNextChapter {
@@ -328,8 +332,6 @@ float installationProgress;
 	}
 	if((!primaryBible && ([swordModule type] == bible)) || (!primaryCommentary && [swordModule type] == commentary)) {
 		NSString *ref = [self getCurrentBibleRef];
-		if(!ref)
-			ref = @"Genesis 1";
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		[bookmarkAddButton setEnabled:YES];
 	}
@@ -439,20 +441,22 @@ float installationProgress;
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!
-		[bibleNavBtn setTitle: @"PocketSword"];
+		//[bibleNavBtn setTitle: @"PocketSword"];
+		[viewController setTabTitle: @"PocketSword" ofTab:BibleTab];
 		[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		[bookmarkAddButton setEnabled:NO];
-		[bibleNextBtn setEnabled:NO];
-		[biblePrevBtn setEnabled:NO];
+		[viewController setEnabledBibleNextButton: NO];
+		[viewController setEnabledBiblePreviousButton: NO];
 	}
 	
 	if (numberOfCommentaries == 1 && primaryCommentary == nil) {
 		//no commentaries left...
-		[commentaryNavBtn setTitle: @"PocketSword"];
+		//[commentaryNavBtn setTitle: @"PocketSword"];
+		[viewController setTabTitle: @"PocketSword" ofTab:CommentaryTab];
 		[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		//[bookmarkAddButton setEnabled:NO];
-		[commentaryNextBtn setEnabled:NO];
-		[commentaryPrevBtn setEnabled:NO];
+		[viewController setEnabledCommentaryNextButton: NO];
+		[viewController setEnabledCommentaryPreviousButton: NO];
 	}
 	
 	[pool release];
@@ -564,7 +568,9 @@ float installationProgress;
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
-	
+	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
+	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
+	[bibleTitle setTitle: title];
 	NSString *text = [primaryBible getChapter:chapter withExtraJS:extraJS];
 	
 	//NSLog(@"%@", text);
@@ -598,7 +604,9 @@ float installationProgress;
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
-	
+	int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
+	NSString *title = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
+	[commentaryTitle setTitle: title];
 	NSString *text = [primaryCommentary getChapter:chapter withExtraJS:extraJS];
 	
 	//NSLog(@"%@", text);

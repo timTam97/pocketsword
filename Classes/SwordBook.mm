@@ -7,6 +7,7 @@
 //
 
 #import "SwordBook.h"
+#include <localemgr.h>
 
 
 @implementation SwordBook
@@ -15,11 +16,23 @@
     self = [super init];
 	if(self) {
 		book = aBook;
-		name = [[NSString stringWithCString:aBook->getLongName() encoding:NSUTF8StringEncoding] retain];
+
+		// get system localemgr to be able to translate the english bookname
+        sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
+		
+		// set localized book name
+		name = [NSString stringWithCString:lmgr->translate(aBook->getLongName()) encoding:NSUTF8StringEncoding];
+		if(!name) {
+			name = [NSString stringWithCString:lmgr->translate(aBook->getLongName()) encoding:NSISOLatin1StringEncoding];
+		}
+        [name retain];
+		
+		//name = [[NSString stringWithCString:aBook->getLongName() encoding:NSUTF8StringEncoding] retain];
 		chapters = aBook->getChapterMax();
 		//NSString *osisName = [NSString stringWithCString:aBook->getOSISName() encoding:NSUTF8StringEncoding];
 		//NSString *prefAbbrev = [NSString stringWithCString:aBook->getPreferredAbbreviation() encoding:NSUTF8StringEncoding];
-		//NSLog(@"%@::%@::%@", [self name], osisName, prefAbbrev);
+		//NSString *rawName = [NSString stringWithCString:aBook->getLongName() encoding:NSUTF8StringEncoding];
+		//NSLog(@"%@::%@::%@", rawName, osisName, name);
 	}
 	return self;
 }

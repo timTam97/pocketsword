@@ -19,47 +19,9 @@
 
 #import <UIKit/UIKit.h>
 #import "PSModuleController.h"
-#import "ViewController.h"
+//#import "ViewController.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
-
-/*
- 
- #define BOOKS [NSArray arrayWithObjects: @"Genesis", @"Exodus", @"Leviticus", @"Numbers", @"Deuteronomy", \
-			@"Joshua", @"Judges", @"Ruth", @"1 Samuel", @"2 Samuel", @"1 Kings", @"2 Kings", @"1 Chronicles", \
-			@"2 Chronicles", @"Ezra", @"Nehemiah", @"Esther", @"Job", @"Psalms", @"Proverbs", @"Ecclesiastes", \
-			@"Song of Solomon", @"Isaiah", @"Jeremiah", @"Lamentations", @"Ezekiel", @"Daniel", @"Hosea", \
-			@"Joel", @"Amos", @"Obadiah", @"Jonah", @"Micah", @"Nahum", @"Habakkuk", @"Zephaniah", @"Haggai", \
-			@"Zechariah", @"Malachi", @"Matthew", @"Mark", @"Luke", @"John", @"Acts", @"Romans", @"1 Corinthians", \
-			@"2 Corinthians", @"Galatians", @"Ephesians", @"Philippians", @"Colossians", @"1 Thessalonians", \
-			@"2 Thessalonians", @"1 Timothy", @"2 Timothy", @"Titus", @"Philemon", @"Hebrews", @"James", @"1 Peter", \
-			@"2 Peter", @"1 John", @"2 John", @"3 John", @"Jude", @"Revelation", nil]
-
-#define CHAPTERS [NSArray arrayWithObjects: [NSNumber numberWithInteger: 50], [NSNumber numberWithInteger: 40], \
-			[NSNumber numberWithInteger: 27], [NSNumber numberWithInteger: 36], [NSNumber numberWithInteger: 34], \
-			[NSNumber numberWithInteger: 24], [NSNumber numberWithInteger: 21], [NSNumber numberWithInteger: 4], \
-			[NSNumber numberWithInteger: 31], [NSNumber numberWithInteger: 24], [NSNumber numberWithInteger: 22], \
-			[NSNumber numberWithInteger: 25], [NSNumber numberWithInteger: 29], [NSNumber numberWithInteger: 36], \
-			[NSNumber numberWithInteger: 10], [NSNumber numberWithInteger: 13], [NSNumber numberWithInteger: 10], \
-			[NSNumber numberWithInteger: 42], [NSNumber numberWithInteger: 150], [NSNumber numberWithInteger: 31], \
-			[NSNumber numberWithInteger: 12], [NSNumber numberWithInteger: 8], [NSNumber numberWithInteger: 66], \
-			[NSNumber numberWithInteger: 52], [NSNumber numberWithInteger: 5], [NSNumber numberWithInteger: 48], \
-			[NSNumber numberWithInteger: 12], [NSNumber numberWithInteger: 14], [NSNumber numberWithInteger: 3], \
-			[NSNumber numberWithInteger: 9], [NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 4], \
-			[NSNumber numberWithInteger: 7], [NSNumber numberWithInteger: 3], [NSNumber numberWithInteger: 3], \
-			[NSNumber numberWithInteger: 3], [NSNumber numberWithInteger: 2], [NSNumber numberWithInteger: 14], \
-			[NSNumber numberWithInteger: 4], [NSNumber numberWithInteger: 28], [NSNumber numberWithInteger: 16], \
-			[NSNumber numberWithInteger: 24], [NSNumber numberWithInteger: 21], [NSNumber numberWithInteger: 28], \
-			[NSNumber numberWithInteger: 16], [NSNumber numberWithInteger: 16], [NSNumber numberWithInteger: 13], \
-			[NSNumber numberWithInteger: 6], [NSNumber numberWithInteger: 6], [NSNumber numberWithInteger: 4], \
-			[NSNumber numberWithInteger: 4], [NSNumber numberWithInteger: 5], [NSNumber numberWithInteger: 3], \
-			[NSNumber numberWithInteger: 6], [NSNumber numberWithInteger: 4], [NSNumber numberWithInteger: 3], \
-			[NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 13], [NSNumber numberWithInteger: 5], \
-			[NSNumber numberWithInteger: 5], [NSNumber numberWithInteger: 3], [NSNumber numberWithInteger: 5], \
-			[NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 1], [NSNumber numberWithInteger: 1], \
-			[NSNumber numberWithInteger: 22], nil]
- 
- */
 
 // we can add more to this enum as we're required to dynamically show those tabs
 typedef enum {
@@ -69,10 +31,12 @@ typedef enum {
 }ShownTab;
 
 
-#define MODULE_TABLE		1
-#define SEARCH_TABLE		2
-//#define DOWNLOAD_TABLE	3
-#define BOOKMARK_TABLE		4
+#define MODULE_TABLE			1
+#define SEARCH_TABLE			2
+//#define DOWNLOAD_TABLE		3
+#define BOOKMARK_TABLE			4
+
+#define MODULES_LIST_TABLE		7
 
 
 
@@ -89,6 +53,7 @@ typedef enum {
 	//NSInteger numChapters;
 	NSInteger refSelectorBook;
 	NSInteger refSelectorChapter;
+	ShownTab modulesListType;
 
 	//NSInteger sourceInstallSourceView;
 	//NSMutableArray *installedModuleGroups;
@@ -100,6 +65,7 @@ typedef enum {
 @property (assign) NSInteger refSelectorBook;
 @property (assign) NSInteger refSelectorChapter;
 @property (retain, readwrite) NSArray *refSelectorBooks;
+@property (assign) ShownTab modulesListType;
 //@property (assign) NSMutableArray *installedModuleGroups;
 //@property (assign) NSInteger sourceInstallSourceView;
 

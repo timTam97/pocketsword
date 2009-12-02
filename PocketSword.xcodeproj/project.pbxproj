@@ -11,6 +11,8 @@
 		0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0513ACB010BF74FC00E414D9 /* google-analytics.txt */; };
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
+		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
+		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
@@ -183,7 +185,6 @@
 		05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
 		05B52BDF107EEB7500826AFE /* NavigatorModules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDE107EEB7500826AFE /* NavigatorModules.mm */; };
-		05BA072A10BBC91E00FC9668 /* PocketSword-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */; };
 		05CD44C2109E92C900853E48 /* PSPreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD44C1109E92C900853E48 /* PSPreferencesController.mm */; };
 		05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
@@ -347,6 +348,8 @@
 		0513AE1810C0C43600E414D9 /* Default.acorn */ = {isa = PBXFileReference; lastKnownFileType = file; name = Default.acorn; path = Resources/Default.acorn; sourceTree = "<group>"; };
 		0513AE1910C0C43600E414D9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0513AE2B10C0CD5300E414D9 /* Icon2-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon2-small.png"; path = "Resources/Icon2-small.png"; sourceTree = "<group>"; };
+		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
+		0513AE8310C0DC3900E414D9 /* forward-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "forward-white.png"; path = "Resources/forward-white.png"; sourceTree = "<group>"; };
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -1951,6 +1954,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0513AE8210C0DC3900E414D9 /* back-white.png */,
+				0513AE8310C0DC3900E414D9 /* forward-white.png */,
 				0513AE2B10C0CD5300E414D9 /* Icon2-small.png */,
 				0513AE1810C0C43600E414D9 /* Default.acorn */,
 				0513AE1910C0C43600E414D9 /* Default.png */,
@@ -2398,11 +2403,12 @@
 				05F8E60110B1098600570141 /* back.png in Resources */,
 				05F8E60210B1098600570141 /* forward.png in Resources */,
 				05B3D61710BB7A92000F8A48 /* MMM.png in Resources */,
-				05BA072A10BBC91E00FC9668 /* PocketSword-Icon.png in Resources */,
 				0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */,
 				0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */,
 				0513AE1B10C0C43600E414D9 /* Default.png in Resources */,
 				0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */,
+				0513AE8410C0DC3900E414D9 /* back-white.png in Resources */,
+				0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -88,3 +88,28 @@
 "PreferencesModuleMaintainerModeNote" = "Note that Module Maintainer Mode is for those users who create their own modules & require a method to manually install their own modules.  For all other users, it is suggested that you use the built-in module downloader to access official modules provided by CrossWire.";
 
 "AboutTitle" = "About";
+
+"TabBarTitleBible" = "Bible";
+"TabBarTitleCommentary" = "Commentary";
+"TabBarTitleModules" = "Modules";
+"TabBarTitlePreferences" = "Preferences";
+"TabBarTitleAbout" = "About";
+
+"ModulesTitle" = "Modules";
+"BookmarksTitle" = "Bookmarks";
+
+"ActivityLabelLoading" = "Loading...";
+"MMMBonjourLoading" = "Bonjour Loading...";
+"MMMIPLoading" = "IP Loading...";
+
+"Biblical Texts" = "Biblical Texts";
+"Commentaries" = "Commentaries";
+"Lexicons / Dictionaries" = "Lexicons / Dictionaries";
+"Generic Books" = "Generic Books";
+"Daily Devotional" = "Daily Devotional";
+"Glossaries" = "Glossaries";
+"Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
+"Essays" = "Essays";
+"Maps" = "Maps";
+"Images" = "Images";
+
