@@ -34,7 +34,7 @@
     
 	BOOL kjv = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedBundledKJV"];
 	BOOL mhcc = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedBundledMHCC"];
-	BOOL loadedLocales = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedSWORDLocales-v1"];
+//	BOOL loadedLocales = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedSWORDLocales-v1"];
 	
 	if(!kjv) {
 		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedBundledKJV"];

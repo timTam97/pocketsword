@@ -6,22 +6,16 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
-#import "NavigatorModuleLanguages.h"
-#import "ViewController.h"
 #import "PSModuleController.h"
-
+#import "NavigatorSources.h"
 
 @interface NavigatorModuleTypes : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 	IBOutlet id table;
 	IBOutlet id navigatorModuleLanguages;
 	NSArray *dataArray;
-	//IBOutlet id navigationController;
-	IBOutlet UITabBarController *tabController;
-	IBOutlet id viewController;
-	IBOutlet id moduleManager;
-	IBOutlet id siNavigationController;
+	IBOutlet NavigatorSources *navigatorSources;
+	//IBOutlet UITabBarController *tabController;
+	//IBOutlet id moduleManager;
 
 	// Status view
 	IBOutlet id statusController;

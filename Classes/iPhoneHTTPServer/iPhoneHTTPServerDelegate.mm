@@ -7,9 +7,10 @@
 #import "HTTPServer.h"
 #import "MyHTTPConnection.h"
 #import "localhostAddresses.h"
-
 #import "ZipArchive.h"
+
 #import "PSModuleController.h"
+#import "ViewController.h"
 
 @implementation iPhoneHTTPServerDelegate
 
@@ -141,11 +142,12 @@
 	[arch release];
 	
 	//install the module/s contained in the archive:
-	[[moduleManager swordManager] installModulesFromPath:outfile];
-	[moduleManager reload];
+	[[[navigatorSources moduleManager] swordManager] installModulesFromPath:outfile];
+	[[navigatorSources moduleManager] reload];
 	
 	//reload the moduleTable
-	[moduleTable reloadData];
+	//[moduleTable reloadData];
+	[[[navigatorSources moduleManager] viewController] reloadModuleTable];
 	
 	//remove the tmp files...
 	NSFileManager *fileManager = [NSFileManager defaultManager];

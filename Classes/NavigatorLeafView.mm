@@ -7,6 +7,7 @@
 //
 
 #import "NavigatorLeafView.h"
+#import "ViewController.h"
 
 
 @implementation NavigatorLeafView
@@ -22,7 +23,7 @@ NSTimer *downloadTimer;
 	[detailsView setBackgroundColor:backgroundColor];
 	
 	UIBarButtonItem *installBarButtonItem;
-	if ([[moduleManager swordManager] isModuleInstalled:module.name]) {
+	if ([[[navigatorSources moduleManager] swordManager] isModuleInstalled:module.name]) {
 		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstalledButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:nil];
 		[installBarButtonItem setEnabled:NO];
 	} else {
@@ -52,7 +53,7 @@ NSTimer *downloadTimer;
 
 	//Is it already installed?
 	//BOOL installedAlready = [[moduleManager swordManager] isModuleInstalled: module.name];
-	SwordInstallSource *sIS = [moduleManager currentInstallSource];
+	SwordInstallSource *sIS = [[navigatorSources moduleManager] currentInstallSource];
 	
 	NSString *question = NSLocalizedString(@"ConfirmInstall", @"Would you like to install this module?");
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
@@ -103,7 +104,7 @@ NSTimer *downloadTimer;
 	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
 	//[navController setNavigationBarHidden: YES];
 	//[navigationController presentModalViewController: navController animated: YES];
-	[tabController.moreNavigationController presentModalViewController: statusController animated: YES];
+	[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
 	
 	[pool release];
 }
@@ -111,9 +112,9 @@ NSTimer *downloadTimer;
 - (void)runInstallation {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	[[moduleManager swordInstallManager] resetInstallationProgress];
+	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
 	
-	[moduleManager performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
+	[[navigatorSources moduleManager] performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
 
 	[self performSelectorOnMainThread: @selector(showDownloadStatus) withObject: nil waitUntilDone: NO];
 	//[self showDownloadStatus];
@@ -126,7 +127,7 @@ NSTimer *downloadTimer;
 
 - (void)updateInstallationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
+	PSStatusReporter *reporter = [[navigatorSources moduleManager] getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->overallProgress;
 	[statusBar setProgress: reporter->fileProgress];
@@ -145,8 +146,9 @@ NSTimer *downloadTimer;
 	//DLog(@"updateInstallationStatus: Progress: %f", progress);
 	
 	if (progress == 1.0) {
-		[moduleManager reload];
-		[moduleTable reloadData];
+		[[navigatorSources moduleManager] reload];
+		[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+		//[moduleTable reloadData];
 		//[downloadableModulesTable reloadData];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
 		failed = NO;
@@ -157,9 +159,10 @@ NSTimer *downloadTimer;
 		failed = NO;
 	}
 	if (failed) {
-		[moduleManager reload];
+		[[navigatorSources moduleManager] reload];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
-		[moduleTable reloadData];
+		[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+		//[moduleTable reloadData];
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
 	}
@@ -170,7 +173,7 @@ NSTimer *downloadTimer;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	//[tabController dismissModalViewControllerAnimated: YES];
-	[tabController.moreNavigationController dismissModalViewControllerAnimated: YES];
+	[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
 	[downloadTimer invalidate];
 	
 	[statusText setText: @""];

@@ -26,6 +26,7 @@
 #import "globals.h"
 #import "SwordInstallSource.h"
 #import "SwordModule.h"
+#import "PSModuleType.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -35,7 +36,7 @@
 	// IB Outlets
 	IBOutlet id statusBar;
 	IBOutlet id statusText;
-	IBOutlet id moduleTable;
+	//IBOutlet id moduleTable;
 	//IBOutlet UIBarButtonItem *bibleNavBtn;
 	//IBOutlet UIBarButtonItem *commentaryNavBtn;
 	IBOutlet UIWebView *bibleWebView;
@@ -69,6 +70,7 @@
 + (BOOL)checkNetworkConnection;
 
 - (PSModuleController *)init;
+- (id)viewController;
 - (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType;
 - (BOOL)isLoaded:(NSString *)module;
 - (NSString *)getCurrentBibleRef;
@@ -81,13 +83,16 @@
 - (BOOL)installModule:(NSString *)name;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule;
 - (BOOL)removeModule:(NSString *)name;
-- (BOOL)installSearchIndex;
+- (BOOL)installSearchIndexForModule:(NSString *)module;
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraCode;
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (void)dealloc;
 - (NSString *)getDescription:(NSString *)name fromSource:(SwordInstallSource *)source;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
 //- (void)readSwordInstallSourceModuleConfigFiles;
+
+- (void)displayBusyIndicator;
+- (void)hideBusyIndicator;
 
 
 @end

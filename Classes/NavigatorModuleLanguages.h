@@ -6,17 +6,15 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "PSModuleType.h"
-#import "NavigatorModules.h"
+#import "NavigatorSources.h"
 
 @interface NavigatorModuleLanguages : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 	IBOutlet id table;
 	IBOutlet id navigatorModules;
 	PSModuleType *data;
-	IBOutlet UITabBarController *tabController;
-	//IBOutlet id navigationController;
-	IBOutlet id moduleManager;
+	//IBOutlet UITabBarController *tabController;
+	//IBOutlet id moduleManager;
+	IBOutlet NavigatorSources *navigatorSources;
 }
 
 @property (retain, readwrite) PSModuleType *data;

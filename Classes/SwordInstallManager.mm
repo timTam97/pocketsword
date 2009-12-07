@@ -67,14 +67,14 @@ float status;
 					
                     // create default HTTP Install source
                     SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
-                    [is setCaption:@"CrossWire (http)"];
+                    [is setCaption:@"CrossWire 1 (http)"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/raw"];
 					[is setUID:@"crosswire-http"];
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
-                    [is setCaption:@"CrossWire Beta (http)"];
+                    [is setCaption:@"CrossWire 2 (http)"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/betaraw"];                    
 					[is setUID:@"crosswire-beta-http"];

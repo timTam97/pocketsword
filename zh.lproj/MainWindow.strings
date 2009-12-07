@@ -11,9 +11,6 @@
 /* Class = "IBUIBarButtonItem"; title = "Next"; ObjectID = "222"; */
 //"222.title" = "下一个";
 
-/* Class = "IBUIBarButtonItem"; title = "Chapter"; ObjectID = "232"; */
-"232.title" = "";
-
 /* Class = "IBUINavigationItem"; title = "Bookmarks"; ObjectID = "271"; */
 "271.title" = "书签";
 

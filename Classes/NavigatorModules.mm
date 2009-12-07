@@ -7,6 +7,7 @@
 //
 
 #import "NavigatorModules.h"
+#import "NavigatorLeafView.h"
 
 
 @implementation NavigatorModules
@@ -54,7 +55,7 @@
 	cell.textLabel.text = [(SwordModule*)[dataArray objectAtIndex:indexPath.row] name];
 	cell.detailTextLabel.text = [(SwordModule*)[dataArray objectAtIndex:indexPath.row] descr];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	if ([[moduleManager swordManager] isModuleInstalled: cell.textLabel.text]) {
+	if ([[[navigatorSources moduleManager] swordManager] isModuleInstalled: cell.textLabel.text]) {
 		cell.textLabel.textColor = [UIColor blueColor];
 		cell.detailTextLabel.textColor = [UIColor blueColor];
 	} else {
@@ -70,7 +71,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	[((NavigatorLeafView*)navigatorLeafView) setModule:(SwordModule*)[dataArray objectAtIndex:indexPath.row]];
-	[tabController.moreNavigationController pushViewController:navigatorLeafView animated:YES];
+	[[navigatorSources tabController].moreNavigationController pushViewController:navigatorLeafView animated:YES];
 	
 }
 

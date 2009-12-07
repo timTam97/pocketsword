@@ -7,6 +7,7 @@
 //
 
 #import "NavigatorModuleLanguages.h"
+#import "NavigatorModules.h"
 
 
 @implementation NavigatorModuleLanguages
@@ -63,7 +64,7 @@
 	[((NavigatorModules*)navigatorModules) setDataArray:[data.modules objectAtIndex:indexPath.row]];
 	((NavigatorModules*)navigatorModules).title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
 	[((NavigatorModules*)navigatorModules) reloadTable];
-	[tabController.moreNavigationController pushViewController:navigatorModules animated:YES];
+	[[navigatorSources tabController].moreNavigationController pushViewController:navigatorModules animated:YES];
 	
 }
 

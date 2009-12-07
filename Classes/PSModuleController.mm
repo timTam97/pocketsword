@@ -21,6 +21,8 @@
 #import "ZipArchive.h"
 #import "ViewController.h"
 
+#import "PSIndexController.h"
+
 @implementation PSModuleController
 
 @synthesize primaryBible;
@@ -53,7 +55,9 @@ float installationProgress;
 	[self reload];
 	
 	//reload the moduleTable
-	[moduleTable reloadData];
+	//[moduleTable reloadData];
+	[viewController reloadModuleTable];
+
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	[fileManager removeItemAtPath:zippedModule error:NULL];//this won't remove the zip file on the iPhone device.............
@@ -85,20 +89,6 @@ float installationProgress;
 		[swordInstallManager setUserDisclainerConfirmed: YES];
 	}
 	
-//	BOOL kjv = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedBundledKJV"];
-//	BOOL mhcc = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedBundledMHCC"];
-//	
-//	if(!kjv) {
-//		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedBundledKJV"];
-//		[[NSUserDefaults standardUserDefaults] synchronize];
-//		[self loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible];
-//	}
-//	if(!mhcc) {
-//		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedBundledMHCC"];
-//		[[NSUserDefaults standardUserDefaults] synchronize];
-//		[self loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary];
-//	}
-//		
 	// This seems to sometimes cause a crash on start-up in the SWORD-lib code.  removing this line fixes it...
 	//[self performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
 	
@@ -119,10 +109,20 @@ float installationProgress;
 	
 	 */
 	
+//	PSIndexController *ic = [[PSIndexController alloc] init];
+//	ic.moduleManager = self;
+//	[ic updateInstalledIndexListWithRemoteIndices];
+//	[self installSearchIndexForModule: @"KJV"];
+//	[ic updateInstalledIndexListWithRemoteIndices];
+	
 	
 	[self setPreferences];
 	
 	return self;
+}
+
+- (id)viewController {
+	return viewController;
 }
 
 // This method was written to speed up access of the downloads tab.
@@ -321,7 +321,8 @@ float installationProgress;
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 	
 	[self reload];
-	[moduleTable reloadData];
+	[viewController reloadModuleTable];
+	//[moduleTable reloadData];
 	
 	if (status != 0) {
 		ALog(@"Couldn't install module (%@)!\n", [swordModule name]);
@@ -437,7 +438,8 @@ float installationProgress;
 	
 	// move these outside of this method & these are called by the caller after -removeModule is called.
 	[self reload];
-	[moduleTable reloadData];
+	//[moduleTable reloadData];
+	[viewController reloadModuleTable];
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!
@@ -464,78 +466,49 @@ float installationProgress;
 }
 
 // Installs the search index for the primary text
-- (BOOL)installSearchIndex {
-	DLog(@"installSearchIndex:");
-	if (!primaryBible) {
+- (BOOL)installSearchIndexForModule:(NSString *)module {
+	SwordModule *mod = [swordManager moduleWithName:module];
+	if (!mod) {
 		return NO;
 	}
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//NSString *dataDir = [NSString stringWithUTF8String: primaryText->getConfigEntry("AbsoluteDataPath")];
-	NSString *dataDir = [primaryBible configEntryForKey:@"AbsoluteDataPath"];
-	NSArray *components = [dataDir componentsSeparatedByString: @"/"];
-	NSString *indexDir = [dataDir stringByAppendingPathComponent: @"lucene"];
-	NSString *modName = [components objectAtIndex: [components count] - 2];
-	NSString *remoteDir = [NSString stringWithFormat: @"http://pocketsword.net/indices/%@/", modName];
+	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
+	NSString *zippedIndex = [outfileDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.zip", module]];
+	NSString *cluceneDir = [outfileDir stringByAppendingPathComponent: @"lucene"];
+
+	NSString *filename = [NSString stringWithFormat: @"http://pocketsword.net/indices/%@.zip", [module lowercaseString]];
 	
-	// Get the index directory listing
-	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
-											 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-	NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
-	if (!responseData) {
-		DLog(@"Couldn't list remote directory");
-		[pool release];
-		return NO;
-	}
-	
-	NSString *dataString = [[NSString alloc] initWithData: responseData encoding: [NSString defaultCStringEncoding]];
-	NSMutableArray *files = [NSMutableArray arrayWithObjects: nil];
-	NSRange dataRange;
-	
-	while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
-		dataString = [dataString substringFromIndex: dataRange.location + dataRange.length];
-		dataRange = [dataString rangeOfString: @"\""];
-		if (dataRange.location != NSNotFound) {
-			NSString *item = [dataString substringToIndex: dataRange.location];
-			if ([item UTF8String][0] != '/') {
-				[files addObject: item];
-			}
-		}
-	}
 	
 	installationProgress = 0.01;
 	
-	[[NSFileManager defaultManager] createDirectoryAtPath: indexDir withIntermediateDirectories: NO attributes: NULL error: NULL];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: indexDir] != YES) {
-		ALog(@"Couldn't create index directory");
+	
+	// Download the data file
+	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
+	NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
+	if (!responseData) {
+		ALog(@"Couldn't retrieve file: %@", filename);
 		installationProgress = -1.0;
 		[pool release];
 		return NO;
 	}
 	
-	// Download the data files
-	NSUInteger numFiles = [files count];
-	for (NSUInteger i = 0; i < numFiles; ++i) {
-		NSString *filename = [files objectAtIndex: i];
-		NSString *link = [remoteDir stringByAppendingString: filename];
-		request = [NSURLRequest requestWithURL: [NSURL URLWithString: link] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-		responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
-		if (!responseData) {
-			ALog(@"Couldn't retrieve file: %@", link);
-			installationProgress = -1.0;
-			[pool release];
-			return NO;
-		}
-		if (![responseData writeToFile: [indexDir stringByAppendingPathComponent: filename] atomically: YES]) {
-			ALog(@"Couldn't write file: %@", [indexDir stringByAppendingPathComponent: filename]);
-			installationProgress = -1.0;
-			[pool release];
-			return NO;
-		}
-		
-		installationProgress = (((float)i / numFiles) - 0.01);
+	if (![responseData writeToFile: zippedIndex atomically: NO]) {
+		ALog(@"Couldn't write file: %@", zippedIndex);
+		installationProgress = -1.0;
+		[pool release];
+		return NO;
 	}
 	
-	DLog(@"Indices installed successfully");
+	ZipArchive *arch = [[ZipArchive alloc] init];
+	[arch UnzipOpenFile:zippedIndex];
+	[arch UnzipFileTo:cluceneDir overWrite:YES];
+	[arch UnzipCloseFile];
+	[arch release];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	[fileManager removeItemAtPath:zippedIndex error:NULL];
+
+	DLog(@"Index (%@) installed successfully", module);
 	
 	installationProgress = 1.0;
 	[pool release];
@@ -568,6 +541,7 @@ float installationProgress;
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
+	[primaryBible hasSearchIndex];
 	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
 	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
 	[bibleTitle setTitle: title];
@@ -708,8 +682,7 @@ float installationProgress;
 			retVal = NO;
 			DLog(@"target host is not reachable");
 		}
-		
-		if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
+		else if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
 		{
 			// if target host is reachable and no connection is required
 			//  then we'll assume (for now) that your on Wi-Fi
@@ -747,6 +720,16 @@ float installationProgress;
 	CFRelease(reachability);
 	application.networkActivityIndicatorVisible = NO;
 	return retVal;
+}
+
+- (void)displayBusyIndicator
+{
+	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+}
+
+- (void)hideBusyIndicator
+{
+	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 }
 
 @end

@@ -37,6 +37,7 @@ typedef enum {
 #define BOOKMARK_TABLE			4
 
 #define MODULES_LIST_TABLE		7
+#define HISTORY_LIST_TABLE		8
 
 
 
@@ -45,7 +46,7 @@ typedef enum {
 	IBOutlet id resultsTable;
 	IBOutlet id bookmarksTable;
 	IBOutlet UITabBarController *tabController;
-	IBOutlet id bibleNavBtn;
+	//IBOutlet id bibleNavBtn;
 	IBOutlet PSBibleViewController *bibleTabController;
 	IBOutlet PSCommentaryViewController *commentaryTabController;
 	
@@ -53,7 +54,7 @@ typedef enum {
 	//NSInteger numChapters;
 	NSInteger refSelectorBook;
 	NSInteger refSelectorChapter;
-	ShownTab modulesListType;
+	ShownTab listType;
 
 	//NSInteger sourceInstallSourceView;
 	//NSMutableArray *installedModuleGroups;
@@ -65,7 +66,7 @@ typedef enum {
 @property (assign) NSInteger refSelectorBook;
 @property (assign) NSInteger refSelectorChapter;
 @property (retain, readwrite) NSArray *refSelectorBooks;
-@property (assign) ShownTab modulesListType;
+@property (assign) ShownTab listType;
 //@property (assign) NSMutableArray *installedModuleGroups;
 //@property (assign) NSInteger sourceInstallSourceView;
 

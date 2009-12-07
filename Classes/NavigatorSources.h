@@ -9,26 +9,21 @@
 #import <UIKit/UIKit.h>
 
 #import "PSModuleController.h"
-#import "NavigatorModuleTypes.h"
-#import "NavigatorModules.h"
-#import "PocketSwordAppDelegate.h"
-#import "iPhoneHTTPServerDelegate.h"
 
 @interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 
 	IBOutlet id table;
 	IBOutlet id refreshButton;
-	IBOutlet id moduleManager;
+	IBOutlet PSModuleController *moduleManager;
 	IBOutlet id navigatorModuleTypes;
 	IBOutlet UITabBarController *tabController;
-	
-	IBOutlet id viewController;
-	
-	IBOutlet iPhoneHTTPServerDelegate* manualInstallViewController;
+		
+	IBOutlet id manualInstallViewController;
 	
 }
 
-- (id)viewController;
+@property (readonly) PSModuleController *moduleManager;
+@property (readonly) UITabBarController *tabController;
 
 - (IBAction)manualAddModule:(id)sender;
 - (void)viewWillAppear:(BOOL)animated;

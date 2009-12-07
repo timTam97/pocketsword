@@ -77,10 +77,11 @@
 		[outdata appendString:@"</label>\n"];
 		[outdata appendString:@"</form>\n"];
 	}
-	[outdata appendString:@"<p>The format of the raw zipped module expected is the same format as can be found in the <a href=\"http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/\">Crosswire repository</a>.</p>\n"];
-	[outdata appendString:@"<p>If the upload and install is successful, the new module will be added to the above list.  If it fails, it will fail silently.  This may be modified in the future if there are enough requests for improved functionality, but it is hoped and assumed that users will use the inbuilt module installer.</p>\n"];
-	
-	[outdata appendString:@"</body>\n</html>\n"];
+	[outdata appendString:@"<p>The format of the raw zipped module expected is the same format as can be found in the <a href=\"http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/\">Crosswire repository</a>.</p>\n\
+	 <p>However, if you wish to be able to search in any modules installed in this way, you need to create the clucene indexes yourself & place them in the correct location within the zip file.</p>\n\
+	 <p>If you haven't realised that this method of installing modules isn't for the faint of heart and is only suggested for those who know what they're doing.  It is provided as a courtesy for Module Maintainers.</p>\n\
+	 <p>If the upload and install is successful, the new module will be added to the above list.  If it fails, it will fail silently.  This may be modified in the future if there are enough requests for improved functionality, but it is hoped and assumed that users will use the inbuilt module installer.</p>\n\
+	 </body>\n</html>\n"];
     
 	//DLog(@"outData: %@", outdata);
     return [outdata autorelease];

@@ -6,9 +6,8 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
+#import "NavigatorSources.h"
 #import "PSModuleController.h"
-#import <Foundation/Foundation.h>
-#import "NavigatorLeafView.h"
 #import "SwordModule.h"
 
 
@@ -16,9 +15,9 @@
 	IBOutlet id table;
 	IBOutlet id navigatorLeafView;
 	NSArray *dataArray;
-	IBOutlet UITabBarController *tabController;
-	//IBOutlet id navigationController;
-	IBOutlet id moduleManager;
+	//IBOutlet UITabBarController *tabController;
+	IBOutlet NavigatorSources *navigatorSources;
+	//IBOutlet id moduleManager;
 }
 
 @property (retain, readwrite) NSArray *dataArray;

@@ -359,17 +359,4 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ModuleMaintainerModeChanged" object:nil];
 }
 
-//- (IBAction)infoButtonPressed:(id)sender {
-//	
-//	[UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-//                           forView:tabController.moreNavigationController.view
-//                             cache:YES];
-//	
-//    [UIView setAnimationDuration:1];
-//	[tabController.moreNavigationController.view addSubview:aboutScreenController.view];
-//    [UIView commitAnimations];
-//	
-//}
-
 @end

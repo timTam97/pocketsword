@@ -135,9 +135,17 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 416)];
+	
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
-
+	aboutWebView.delegate = self;
+	
+	[self.view addSubview:aboutWebView];
+	[aboutWebView release];
+	
+	
 	self.navigationItem.rightBarButtonItem = nil;
 	//UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
 	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Email Us" style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];

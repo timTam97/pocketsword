@@ -28,7 +28,7 @@
 @synthesize refSelectorChapter;
 @synthesize refSelectorBook;
 @synthesize refSelectorBooks;
-@synthesize modulesListType;
+@synthesize listType;
 //@synthesize sourceInstallSourceView;
 //@synthesize installedModuleGroups;
 
@@ -230,12 +230,31 @@ sword::ListKey results;
 			return 0;
 		}
 	} else if (tag == MODULES_LIST_TABLE) {
-		switch (modulesListType) {
+		switch (listType) {
 			case BibleTab:
 				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
 				break;
 			case CommentaryTab:
 				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
+				break;
+		}
+		return 0;
+	} else if (tag == HISTORY_LIST_TABLE) {
+		NSArray *history;
+		switch (listType) {
+			case BibleTab:
+				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
+				if(history)
+					return [history count];
+				else
+					return 0;
+				break;
+			case CommentaryTab:
+				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
+				if(history)
+					return [history count];
+				else
+					return 0;
 				break;
 		}
 		return 0;
@@ -253,7 +272,7 @@ sword::ListKey results;
 	
 	NSString *theIdentifier;
 	
-	if (tag == MODULE_TABLE)
+	if (tag == MODULE_TABLE || tag == MODULES_LIST_TABLE || tag == HISTORY_LIST_TABLE)
 		theIdentifier = @"id-mod";
 	else 
 		theIdentifier = @"id-book";
@@ -263,7 +282,7 @@ sword::ListKey results;
 	
 	// If no cell is available, create a new one using the given identifier - 
 	if (cell == nil) {
-		if (tag == MODULE_TABLE || tag == MODULES_LIST_TABLE)
+		if (tag == MODULE_TABLE || tag == MODULES_LIST_TABLE || tag == HISTORY_LIST_TABLE)
 			cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 		else 
 			cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: theIdentifier] autorelease];
@@ -280,13 +299,19 @@ sword::ListKey results;
 			cell.textLabel.text = @"";
 		}
 		if ([moduleManager isLoaded:cell.textLabel.text]) {
-			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+			cell.textLabel.textColor = [UIColor blueColor];
+			cell.detailTextLabel.textColor = [UIColor blueColor];
 		} else {
-			cell.accessoryType = UITableViewCellAccessoryNone;
+			cell.textLabel.textColor = [UIColor blackColor];
+			cell.detailTextLabel.textColor = [UIColor blackColor];
 		}
+//			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//		} else {
+//			cell.accessoryType = UITableViewCellAccessoryNone;
+//		}
 		return cell;
 	} else if (tag == MODULES_LIST_TABLE) {
-		switch (modulesListType) {
+		switch (listType) {
 			case BibleTab:
 				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
 				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
@@ -297,9 +322,32 @@ sword::ListKey results;
 				break;
 		}
 		if ([moduleManager isLoaded:cell.textLabel.text]) {
-			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+			cell.textLabel.textColor = [UIColor blueColor];
+			cell.detailTextLabel.textColor = [UIColor blueColor];
 		} else {
-			cell.accessoryType = UITableViewCellAccessoryNone;
+			cell.textLabel.textColor = [UIColor blackColor];
+			cell.detailTextLabel.textColor = [UIColor blackColor];
+		}
+//			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//		} else {
+//			cell.accessoryType = UITableViewCellAccessoryNone;
+//		}
+		return cell;
+	} else if (tag == HISTORY_LIST_TABLE) {
+		NSArray *history;
+		switch (listType) {
+			case BibleTab:
+				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
+				cell.textLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 0];
+				cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
+				break;
+			case CommentaryTab:
+				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
+				cell.textLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 0];
+				cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
+				break;
 		}
 		return cell;
 	} else if (tag == SEARCH_TABLE) {
@@ -323,7 +371,7 @@ sword::ListKey results;
 	
 	NSInteger tag = [tableView tag];
 	if (tag == MODULE_TABLE) {
-		// TODO: Make this whole function work with multiple module types
+		// TODO: module table should be removed in favour of modules list table...
 		NSString *ref = [moduleManager getCurrentBibleRef];
 
 		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
@@ -334,9 +382,11 @@ sword::ListKey results;
 		SwordModule *mod = [[moduleManager swordManager] moduleWithName:newModule];
 		BOOL bibleModule = ([[mod typeString] isEqualToString:SWMOD_CATEGORY_BIBLES]);
 		if (bibleModule) {
+			[viewController addHistoryItem: BibleTab];
 			[moduleManager loadPrimaryBible: newModule];
 		}
 		else {
+			[viewController addHistoryItem: CommentaryTab];
 			[moduleManager loadPrimaryCommentary:newModule];
 		}
 		
@@ -361,23 +411,56 @@ sword::ListKey results;
 		}
 		// Update the module list to reflect the current translation
 		[tableView reloadData];
-		switch (modulesListType) {
+		switch (listType) {
 			case BibleTab:
+				[viewController addHistoryItem: BibleTab];
 				[moduleManager loadPrimaryBible: newModule];
 				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 				break;
 			case CommentaryTab:
+				[viewController addHistoryItem: CommentaryTab];
 				[moduleManager loadPrimaryCommentary:newModule];
 				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 				break;
 		}
 		[viewController toggleModulesList: nil];
+	} else if (tag == HISTORY_LIST_TABLE) {
+		NSArray *history;
+		NSString *ref;
+		NSString *scroll;
+		NSString *mod;
+		switch (listType) {
+			case BibleTab:
+				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
+				ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
+				scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
+				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				[viewController addHistoryItem: BibleTab];
+				[moduleManager loadPrimaryBible: mod];
+				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+				break;
+			case CommentaryTab:
+				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
+				ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
+				scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
+				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				[viewController addHistoryItem: CommentaryTab];
+				[moduleManager loadPrimaryCommentary: mod];
+				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
+				break;
+		}
+		[viewController toggleMultiList: nil];
 	} else if (tag == SEARCH_TABLE || tag == BOOKMARK_TABLE) {
 		[self setShownTabTo:BibleTab];
 		if (![[[moduleManager swordManager] moduleNames] count] == 0) {
 			NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
 			NSString *ref = [fullRef objectAtIndex: 0];
 			NSString *verse = [fullRef objectAtIndex: 1];
+			[viewController addHistoryItem: BibleTab];
 			if(verse) {
 				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];

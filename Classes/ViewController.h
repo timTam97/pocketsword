@@ -20,7 +20,8 @@
 #import <UIKit/UIKit.h>
 #import "PSModuleController.h"
 #import "DataController.h"
-#import "NavigatorSources.h"
+#import "PocketSwordAppDelegate.h"
+//#import "NavigatorSources.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -45,39 +46,45 @@ typedef enum {
 	IBOutlet UITabBarController *tabController;
 	
 	// Read tab
-	IBOutlet UIWebView *bibleWebView;
-	IBOutlet UIBarButtonItem *bibleNavBtn;
-	IBOutlet UIBarButtonItem *biblePrevBtn;
-	IBOutlet UIBarButtonItem *bibleNextBtn;
+	IBOutlet UIWebView			*bibleWebView;
+//	IBOutlet UIBarButtonItem	*bibleNavBtn;
+//	IBOutlet UIBarButtonItem	*biblePrevBtn;
+//	IBOutlet UIBarButtonItem	*bibleNextBtn;
 	IBOutlet UIActivityIndicatorView *bibleActivity;
-	IBOutlet UITabBarItem *bibleTabBarItem;
+	IBOutlet UITabBarItem		*bibleTabBarItem;
 	IBOutlet UISegmentedControl *bibleSegmentedControl;
-	IBOutlet UIBarButtonItem *bibleSearchButton;
+	IBOutlet UIBarButtonItem	*bibleSearchButton;
 	
 	// Commentary tab
-	IBOutlet UIWebView *commentaryWebView;
-	IBOutlet UIBarButtonItem *commentaryNavBtn;
-	IBOutlet UIBarButtonItem *commentaryPrevBtn;
-	IBOutlet UIBarButtonItem *commentaryNextBtn;
+	IBOutlet UIWebView			*commentaryWebView;
+//	IBOutlet UIBarButtonItem	*commentaryNavBtn;
+//	IBOutlet UIBarButtonItem	*commentaryPrevBtn;
+//	IBOutlet UIBarButtonItem	*commentaryNextBtn;
 	IBOutlet UIActivityIndicatorView *commentaryActivity;
-	IBOutlet UITabBarItem *commentaryTabBarItem;
+	IBOutlet UITabBarItem		*commentaryTabBarItem;
 	IBOutlet UISegmentedControl *commentarySegmentedControl;
-	IBOutlet UIBarButtonItem *commentarySearchButton;
+	IBOutlet UIBarButtonItem	*commentarySearchButton;
 	
 	// Bible & Commentary tab
-	IBOutlet UIPickerView *refSelector;
-	IBOutlet UIView *refSelectorView;
-	IBOutlet UIBarButtonItem *refSelectorTitle;
+	IBOutlet UIPickerView		*refSelector;
+	IBOutlet UIView				*refSelectorView;
+	IBOutlet UIBarButtonItem	*refSelectorTitle;
 	
-	IBOutlet UIView *modulesListView;
-	IBOutlet UITableView *modulesListTable;
-	IBOutlet UINavigationItem *modulesNavigationItem;
+	// MultiList
+	IBOutlet UITabBarController *multiListController;
+	IBOutlet UIView				*modulesListView;
+	IBOutlet UITableView		*modulesListTable;
+	IBOutlet UINavigationItem	*modulesNavigationItem;
+	
+	IBOutlet UIView				*historyListView;
+	IBOutlet UITableView		*historyListTable;
+	IBOutlet UINavigationItem	*historyNavigationItem;
 	
 	// Module tab
-	IBOutlet id moduleTable;
-	IBOutlet id moduleEditBtn;
-	IBOutlet UITabBarItem *moduleTabBarItem;
-	IBOutlet UINavigationItem *moduleNavBar;
+	IBOutlet id					moduleTable;
+	IBOutlet id					moduleEditBtn;
+	IBOutlet UITabBarItem		*moduleTabBarItem;
+	IBOutlet UINavigationItem	*moduleNavBar;
 	
 	// Search tab
 	//IBOutlet id progressBar;
@@ -107,10 +114,14 @@ typedef enum {
 	IBOutlet UIActivityIndicatorView *activityIndicator;
 	IBOutlet UILabel *activityLoadingLabel;
 	
+	NSLock *toolbarLock;
+	
 	IBOutlet id moduleManager;
 	IBOutlet id dataController;
 		
 }
+
+
 
 //- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
 //- (void)confirmInstall:(NSString *)name;
@@ -122,9 +133,11 @@ typedef enum {
 - (IBAction)toggleModuleTableEditing:(id)sender;
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;
+- (IBAction)addHistoryItem:(ShownTab)tabForHistory;
 - (IBAction)moveToModulesTab:(id)sender;
 
 - (IBAction)toggleModulesList:(id)sender;
+- (IBAction)toggleMultiList:(id)sender;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
@@ -141,5 +154,7 @@ typedef enum {
 - (void)setEnabledBiblePreviousButton:(BOOL)enabled;
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled;
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
+
+- (void)reloadModuleTable;
 
 @end

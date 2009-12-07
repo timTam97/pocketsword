@@ -7,15 +7,16 @@
 //
 
 #import "NavigatorSources.h"
-
+#import "NavigatorModuleTypes.h"
+#import "NavigatorModules.h"
+#import "iPhoneHTTPServerDelegate.h"
 
 @implementation NavigatorSources
 
-// displaying the Install Sources
+@synthesize moduleManager;
+@synthesize tabController;
 
-- (id)viewController {
-	return viewController;
-}
+// displaying the Install Sources
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -63,9 +64,9 @@
 	//}
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-}
+//- (void)viewDidAppear:(BOOL)animated
+//{
+//}
 
 - (IBAction)manualAddModule:(id)sender {
     [UIView beginAnimations:nil context:nil];
@@ -74,7 +75,7 @@
                              cache:YES];
 	
     [UIView setAnimationDuration:1];
-	[tabController.moreNavigationController.view addSubview:manualInstallViewController.view];
+	[tabController.moreNavigationController.view addSubview:[manualInstallViewController view]];
     [UIView commitAnimations];
 
 	[manualInstallViewController startServer];
@@ -124,11 +125,11 @@
 	SwordInstallSource *sIS = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex:indexPath.row];
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
-		[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+		[moduleManager displayBusyIndicator];
 
 		[sIS swordManager];
 
-		[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+		[moduleManager hideBusyIndicator];
 	}
 	[((NavigatorModuleTypes*)navigatorModuleTypes) setDataArray:[sIS moduleListByType]];
 	((NavigatorModuleTypes*)navigatorModuleTypes).title = [sIS caption];

@@ -162,6 +162,7 @@ typedef enum {
 
 - (BOOL)hasFeature:(NSString *)feature;
 - (NSString *)configEntryForKey:(NSString *)entryKey;
+- (BOOL)hasSearchIndex;
 
 /**
  returns attribute values from the engine for notes, cross-refs and such for the given link type

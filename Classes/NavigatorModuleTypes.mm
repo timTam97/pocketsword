@@ -8,6 +8,7 @@
 
 #import "NavigatorModuleTypes.h"
 #import "PSModuleType.h"
+#import "NavigatorModuleLanguages.h"
 
 // displaying the Module Types
 
@@ -38,7 +39,7 @@ NSTimer *refreshTimer;
 
 - (void)viewDidAppear:(BOOL)animated {
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
-	[[siNavigationController viewController] hideBusyIndicator];
+	[[navigatorSources moduleManager] hideBusyIndicator];
 }
 
 
@@ -88,7 +89,7 @@ NSTimer *refreshTimer;
 	[((NavigatorModuleLanguages*)navigatorModuleLanguages) setData:[dataArray objectAtIndex:indexPath.row]];
 	((NavigatorModuleLanguages*)navigatorModuleLanguages).title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
 	[((NavigatorModuleLanguages*)navigatorModuleLanguages) reloadTable];
-	[tabController.moreNavigationController pushViewController:navigatorModuleLanguages animated:YES];
+	[[navigatorSources tabController].moreNavigationController pushViewController:navigatorModuleLanguages animated:YES];
 	
 }
 
@@ -118,13 +119,13 @@ NSTimer *refreshTimer;
 
 - (void)runRefreshDownloadSource {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[[moduleManager swordInstallManager] resetInstallationProgress];
+	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
 	
 	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
 	
 	//SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
 	
-	[moduleManager performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
 	//[[moduleManager swordInstallManager] refreshInstallSource: is];
 	
 	[self updateRefreshStatus];
@@ -146,13 +147,13 @@ NSTimer *refreshTimer;
 	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
 	//[navController setNavigationBarHidden: YES];
 	//[navigationController presentModalViewController: navController animated: YES];
-	[tabController.moreNavigationController presentModalViewController: statusController animated: YES];
+	[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
 	
 	[pool release];
 }
 
 - (void)updateRefreshStatus {
-	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
+	PSStatusReporter *reporter = [[navigatorSources moduleManager] getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->fileProgress;
 	[statusBar setProgress: reporter->fileProgress];
@@ -187,7 +188,7 @@ NSTimer *refreshTimer;
 
 - (void)hideOperationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[tabController.moreNavigationController dismissModalViewControllerAnimated: YES];
+	[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
 	if(refreshTimer)
 		[refreshTimer invalidate];
 	
@@ -195,7 +196,7 @@ NSTimer *refreshTimer;
 	[statusOverallText setText: @""];
 	[statusBar setProgress: 0.0];
 	[statusOverallBar setProgress: 0.0];
-	[tabController.moreNavigationController popViewControllerAnimated:YES];
+	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated:YES];
 	[pool release];
 }
 

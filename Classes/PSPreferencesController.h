@@ -20,7 +20,6 @@
 	IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet id fontTableViewController;
-	IBOutlet PSAboutScreenController *aboutScreenController;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;

@@ -13,6 +13,7 @@
 		0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
 		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
+		0515E2D310C8E32900F58382 /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
@@ -173,6 +174,8 @@
 		05275B7B10884F72004FB0E0 /* untgz.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD210884F72004FB0E0 /* untgz.c */; };
 		05275B7C10884F72004FB0E0 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
 		0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 05D461E8108EEB00006BFBB1 /* iTunesArtwork */; };
+		0545546510CA385100EE11EC /* Downloader.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0545546310CA385100EE11EC /* Downloader.strings */; };
+		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
@@ -350,6 +353,7 @@
 		0513AE2B10C0CD5300E414D9 /* Icon2-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon2-small.png"; path = "Resources/Icon2-small.png"; sourceTree = "<group>"; };
 		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
 		0513AE8310C0DC3900E414D9 /* forward-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "forward-white.png"; path = "Resources/forward-white.png"; sourceTree = "<group>"; };
+		0515E2D210C8E32900F58382 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Downloader.xib; sourceTree = "<group>"; };
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -704,6 +708,19 @@
 		0542F6D310BE770C0088A721 /* stdcheaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdcheaders.h; sourceTree = "<group>"; };
 		0542F6D410BE770C0088A721 /* typecheck-gcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "typecheck-gcc.h"; sourceTree = "<group>"; };
 		0542F6D510BE770C0088A721 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		0545545410CA37ED00EE11EC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0545545510CA381700EE11EC /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0545545610CA381D00EE11EC /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0545545710CA382900EE11EC /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0545545810CA383100EE11EC /* zh */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh; path = zh.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0545546410CA385100EE11EC /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Downloader.strings; sourceTree = "<group>"; };
+		0545546610CA39F900EE11EC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Downloader.strings; sourceTree = "<group>"; };
+		0545546710CA39FF00EE11EC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Downloader.strings; sourceTree = "<group>"; };
+		0545546810CA3A0E00EE11EC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Downloader.strings; sourceTree = "<group>"; };
+		0545546910CA3A1800EE11EC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Downloader.strings; sourceTree = "<group>"; };
+		0545546A10CA3A2000EE11EC /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/Downloader.strings; sourceTree = "<group>"; };
+		0545549610CA4D8000EE11EC /* PSIndexController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSIndexController.h; path = Classes/PSIndexController.h; sourceTree = "<group>"; };
+		0545549710CA4D8000EE11EC /* PSIndexController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSIndexController.mm; path = Classes/PSIndexController.mm; sourceTree = "<group>"; };
 		0545E23810638D8400DD7F06 /* SwordInstallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallSource.h; sourceTree = "<group>"; };
 		0545E23910638D8400DD7F06 /* SwordInstallSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordInstallSource.mm; sourceTree = "<group>"; };
 		0545E23A10638D8400DD7F06 /* SwordInstallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallManager.h; sourceTree = "<group>"; };
@@ -1138,6 +1155,8 @@
 				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
 				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
+				0545549610CA4D8000EE11EC /* PSIndexController.h */,
+				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -1954,12 +1973,15 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0542F70F10BE7C0B0088A721 /* doc */,
+				0545546310CA385100EE11EC /* Downloader.strings */,
+				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
+				E9A6CFA80FF560EA00399E78 /* MainWindow.strings */,
 				0513AE8210C0DC3900E414D9 /* back-white.png */,
 				0513AE8310C0DC3900E414D9 /* forward-white.png */,
 				0513AE2B10C0CD5300E414D9 /* Icon2-small.png */,
 				0513AE1810C0C43600E414D9 /* Default.acorn */,
 				0513AE1910C0C43600E414D9 /* Default.png */,
-				0542F70F10BE7C0B0088A721 /* doc */,
 				05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */,
 				05B3D61610BB7A92000F8A48 /* MMM.png */,
 				05E37CDA10B32F8700C2F1F5 /* KJV.zip */,
@@ -1973,11 +1995,10 @@
 				05CD458210A013DD00853E48 /* gear-24.png */,
 				05D461E8108EEB00006BFBB1 /* iTunesArtwork */,
 				E96C139B0FFFC6390019B69E /* Read.png */,
-				E9A6CFA80FF560EA00399E78 /* MainWindow.strings */,
 				E9D540F20FA415BA00AD011C /* Icon.png */,
 				E9BACCD20F898A08007AC4B3 /* List.png */,
 				E9A6CFA10FF559F700399E78 /* MainWindow.xib */,
-				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
+				0515E2D110C8E32900F58382 /* Downloader.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2409,6 +2430,8 @@
 				0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */,
 				0513AE8410C0DC3900E414D9 /* back-white.png in Resources */,
 				0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */,
+				0515E2D310C8E32900F58382 /* Downloader.xib in Resources */,
+				0545546510CA385100EE11EC /* Downloader.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2733,12 +2756,39 @@
 				05DF546A10A93E69007CB847 /* SnoopWindow.m in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
+				0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		0515E2D110C8E32900F58382 /* Downloader.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0515E2D210C8E32900F58382 /* English */,
+				0545545410CA37ED00EE11EC /* es */,
+				0545545510CA381700EE11EC /* ja */,
+				0545545610CA381D00EE11EC /* ko */,
+				0545545710CA382900EE11EC /* sv */,
+				0545545810CA383100EE11EC /* zh */,
+			);
+			name = Downloader.xib;
+			sourceTree = "<group>";
+		};
+		0545546310CA385100EE11EC /* Downloader.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0545546410CA385100EE11EC /* English */,
+				0545546610CA39F900EE11EC /* es */,
+				0545546710CA39FF00EE11EC /* ja */,
+				0545546810CA3A0E00EE11EC /* ko */,
+				0545546910CA3A1800EE11EC /* sv */,
+				0545546A10CA3A2000EE11EC /* zh */,
+			);
+			name = Downloader.strings;
+			sourceTree = "<group>";
+		};
 		E9A6CF9C0FF5508400399E78 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

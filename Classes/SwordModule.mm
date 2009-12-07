@@ -691,6 +691,19 @@
 	return has;
 }
 
+- (BOOL)hasSearchIndex {
+
+	NSString *test = [self configEntryForKey:@"AbsoluteDataPath"];
+	test = [test stringByAppendingPathComponent: @"lucene"];
+	test = [test stringByAppendingPathComponent: @"segments"];
+
+	if ([[NSFileManager defaultManager] fileExistsAtPath: test]) {
+		return YES;
+	} else {
+		return NO;
+	}
+}
+
 /** wrapper around getConfigEntry() */
 - (NSString *)configEntryForKey:(NSString *)entryKey {
 	NSString *result = nil;	

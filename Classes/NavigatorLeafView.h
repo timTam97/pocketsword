@@ -6,17 +6,15 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "PSModuleController.h"
 #import "SwordModule.h"
-
+#import "NavigatorSources.h"
 
 @interface NavigatorLeafView : UIViewController <UINavigationBarDelegate> {
-	IBOutlet UITabBarController *tabController;
-	//IBOutlet id navigationController;
-	IBOutlet id moduleManager;
+	//IBOutlet UITabBarController *tabController;
+	//IBOutlet id moduleManager;
 	IBOutlet id detailsView;
+	IBOutlet NavigatorSources *navigatorSources;
 
 	// Status view
 	IBOutlet id statusController;
@@ -25,9 +23,7 @@
 	IBOutlet id statusOverallText;
 	IBOutlet id statusBar;
 	IBOutlet id statusOverallBar;
-	
-	IBOutlet id moduleTable;//table of modules on the module tab.
-	
+		
 	SwordModule *module;
 }
 

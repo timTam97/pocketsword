@@ -29,6 +29,7 @@ bool initialized = false, waitingForInstall = false;
 NSTimer *timer;
 BOOL refSelectorShown = NO;
 BOOL modulesListShown = NO;
+BOOL multiListShown = NO;
 
  
 //- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -205,41 +206,39 @@ BOOL modulesListShown = NO;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
 {
-	// get system localemgr to be able to translate the english bookname
-	//sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
-	// set localized book name
-	//self.localizedName = [NSString stringWithUTF8String:lmgr->translate("")];
+	[toolbarLock lock];
 	if(tab == BibleTab) {
-		[bibleNavBtn setTitle: newTitle];
+		//[bibleNavBtn setTitle: newTitle];
 		[bibleSegmentedControl setTitle: newTitle forSegmentAtIndex: 1];
 	} else if(tab == CommentaryTab) {
-		[commentaryNavBtn setTitle: newTitle];
+		//[commentaryNavBtn setTitle: newTitle];
 		[commentarySegmentedControl setTitle: newTitle forSegmentAtIndex: 1];
 	}
+	[toolbarLock unlock];
 }
 
 - (void)setEnabledBibleNextButton:(BOOL)enabled
 {
 	[bibleSegmentedControl setEnabled: enabled forSegmentAtIndex: 2];
-	[bibleNextBtn setEnabled: enabled];
+	//[bibleNextBtn setEnabled: enabled];
 }
 
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled
 {
 	[commentarySegmentedControl setEnabled: enabled forSegmentAtIndex: 2];
-	[commentaryNextBtn setEnabled: enabled];
+	//[commentaryNextBtn setEnabled: enabled];
 }
 
 - (void)setEnabledBiblePreviousButton:(BOOL)enabled
 {
 	[bibleSegmentedControl setEnabled: enabled forSegmentAtIndex: 0];
-	[biblePrevBtn setEnabled: enabled];
+	//[biblePrevBtn setEnabled: enabled];
 }
 
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled
 {
 	[commentarySegmentedControl setEnabled: enabled forSegmentAtIndex: 0];
-	[commentaryPrevBtn setEnabled: enabled];
+	//[commentaryPrevBtn setEnabled: enabled];
 }
 
 - (IBAction)segmentedControlAction:(id)sender
@@ -268,6 +267,7 @@ BOOL modulesListShown = NO;
 
 - (void)awakeFromNib {
 	if (!initialized) {
+		toolbarLock = [[NSLock alloc] init];
 		NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 		//localize the tab bar titles
 		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
@@ -358,25 +358,30 @@ BOOL modulesListShown = NO;
 
 // Loads the next chapter into the Web View
 - (IBAction)nextChapter:(id)sender {
-	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[moduleManager getCurrentBibleRef] isEqualToString: @"Revelation 22"]) {
-		return;
-	}
+//	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[moduleManager getCurrentBibleRef] isEqualToString: @"Revelation 22"]) {
+//		return;
+//	}
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 	
-	NSString *ref = [moduleManager setToNextChapter];
-	if(!ref) {
-		//oops
-	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: BibleTab];
+		NSString *ref = [moduleManager setToNextChapter];
+		if(ref)
+			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: CommentaryTab];
+		NSString *ref = [moduleManager setToNextChapter];
+		if(ref)
+			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 	} else {
 		// weird & undefined
-		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
+		NSString *ref = [moduleManager setToNextChapter];
+		if(ref)
+			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
 	}
 	
 	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
@@ -385,56 +390,83 @@ BOOL modulesListShown = NO;
 
 // Loads the previous chapter into the Web View
 - (IBAction)prevChapter:(id)sender {
-	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[moduleManager getCurrentBibleRef] isEqualToString: @"Genesis 1"]) {
-		return;
-	}
-	
+//	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[moduleManager getCurrentBibleRef] isEqualToString: @"Genesis 1"]) {
+//		return;
+//	}
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 	
-	NSString *ref = [moduleManager setToPreviousChapter];
-	if(!ref) {
-		//oops
-	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: BibleTab];
+		NSString *ref = [moduleManager setToPreviousChapter];
+		if(ref)
+			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: CommentaryTab];
+		NSString *ref = [moduleManager setToPreviousChapter];
+		if(ref)
+			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 	} else {
 		// weird & undefined
-		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
+		NSString *ref = [moduleManager setToPreviousChapter];
+		if(ref)
+			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
 	}
 	
 	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
 	[pool release];
 }
 
-- (IBAction)moveToModulesTab:(id)sender {
+- (IBAction)moveToModulesTab:(id)sender
+{
 	if(refSelectorShown) {
 		[self toggleNavigation:sender];
 	}
 	[dataController setShownTabTo: ModuleTab];
 }
 
-- (IBAction)toggleModulesList:(id)sender
+- (IBAction)toggleMultiList:(id)sender
 {
-	BOOL showingBibleTab = NO;
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		showingBibleTab = YES;
+		[dataController setListType: BibleTab];
+		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
+	} else {
+		[dataController setListType: CommentaryTab];
+		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
+	}
+	
+	if(multiListShown) {
+		//[self hideModal:historyListView withTiming:0.7];
+		[self hideModal:multiListController.view withTiming:0.7];
+		multiListShown = NO;
+	} else {
+		[historyListTable reloadData];
+		//[self showModal:historyListView withTiming:0.5];
+		[self showModal:multiListController.view withTiming:0.5];
+		multiListShown = YES;
+	}
+	
+}
+
+- (IBAction)toggleModulesList:(id)sender
+{
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		// bible tab
+		[dataController setListType: BibleTab];
+	} else {
+		[dataController setListType: CommentaryTab];
 	}
 	
 	if(modulesListShown) {
-		[self hideModal:modulesListView withTiming:0.8];
+		[self hideModal:modulesListView withTiming:0.7];
 		modulesListShown = NO;
 	} else {
-		
-		
 		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];//default value
-		if(showingBibleTab) {
+		if([dataController listType] == BibleTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
-			[dataController setModulesListType: BibleTab];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
 			int pos = 0;
 			for(; pos < [array count]; pos++) {
@@ -447,7 +479,6 @@ BOOL modulesListShown = NO;
 			}			
 		} else {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
-			[dataController setModulesListType: CommentaryTab];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
 			int pos = 0;
 			for(; pos < [array count]; pos++) {
@@ -568,18 +599,26 @@ BOOL modulesListShown = NO;
 	else
 	{
 		[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
-		[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
-		[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// bible tab
+			[self addHistoryItem: BibleTab];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
+			[self addHistoryItem: CommentaryTab];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		} else {
 			//something tab???
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		}
 		[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
@@ -616,6 +655,77 @@ BOOL modulesListShown = NO;
 	}
 }
 
+// This should be called just before:
+//    "nextChapter".
+//    or "prevChapter".
+//    or navigation to a new ref from the refPicker.
+//    or when the user selects a new module to view.
+//    or when the user selects a bookmark.
+- (IBAction)addHistoryItem:(ShownTab)tabForHistory
+{
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSString *verse;
+	NSString *scroll;
+	NSString *mod;
+	NSMutableArray *history;
+	NSString *historyName;
+	BOOL valid = NO;
+	
+	if(tabForHistory == BibleTab) {
+		verse = [defaults stringForKey: @"bibleVersePosition"];
+		scroll = [defaults stringForKey: @"bibleScrollPosition"];
+		if([moduleManager primaryBible]) {
+			valid = YES;
+			mod = [[moduleManager primaryBible] name];
+		}
+		historyName = @"bibleHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else if(tabForHistory == CommentaryTab) {
+		verse = [defaults stringForKey: @"commentaryVersePosition"];
+		scroll = [defaults stringForKey: @"commentaryScrollPosition"];
+		if([moduleManager primaryCommentary]) {
+			valid = YES;
+			mod = [[moduleManager primaryCommentary] name];
+		}
+		historyName = @"commentaryHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else {
+		ALog(@"\nWe don't know which tab we're on!  :(");
+	}
+	
+	if(valid) {
+		NSString *ref = [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse];
+		
+		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
+		
+		if (history == nil) {
+			history = [[NSMutableArray alloc] initWithObjects: nil];
+			
+			NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+			[prefs setObject: history forKey: historyName];
+			
+			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
+			[prefs release];
+		}
+		
+		[history insertObject: historyItem atIndex: 0];
+		//[historyItem release];
+		if([history count] >= 15) {
+			[history removeLastObject];
+		}
+		
+		[defaults setObject: history forKey: historyName];
+		[defaults synchronize];
+	}
+	if(history)
+		[history release];
+	
+	[pool release];
+	
+}
+
 - (IBAction)addBookmark:(id)sender {
 	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
 	[dataController addBookmark: [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse]];
@@ -646,6 +756,7 @@ BOOL modulesListShown = NO;
 
 
 - (void)dealloc {
+	[toolbarLock release];
     [super dealloc];
 }
 
@@ -776,20 +887,30 @@ BOOL modulesListShown = NO;
 - (void)startAnimateChapterChange
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[bibleSearchButton setEnabled: NO];
-	[bibleActivity startAnimating];
-	[commentarySearchButton setEnabled: NO];
-	[commentaryActivity startAnimating];
+	[toolbarLock lock];
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+//		[bibleSearchButton setEnabled: NO];
+		[bibleActivity startAnimating];
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+//		[commentarySearchButton setEnabled: NO];
+		[commentaryActivity startAnimating];
+	}
+	[toolbarLock unlock];
 	[pool release];
 }
 
 - (void)stopAnimateChapterChange
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[bibleActivity stopAnimating];
-	[bibleSearchButton setEnabled: YES];
-	[commentaryActivity stopAnimating];
-	[commentarySearchButton setEnabled: YES];
+	[toolbarLock lock];
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		[bibleActivity stopAnimating];
+//		[bibleSearchButton setEnabled: YES];
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		[commentaryActivity stopAnimating];
+//		[commentarySearchButton setEnabled: YES];
+	}
+	[toolbarLock unlock];
 	[pool release];
 }
 
@@ -1009,5 +1130,8 @@ BOOL modulesListShown = NO;
 	[activityController.view removeFromSuperview];
 }
 
+- (void)reloadModuleTable {
+	[moduleTable reloadData];
+}
 
 @end

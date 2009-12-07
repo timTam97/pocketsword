@@ -3,7 +3,8 @@
 //  who graciously decided to share it with the CocoaHTTPServer community.
 //
 
-#import <UIKit/UIKit.h>
+#import "NavigatorSources.h"
+
 @class   HTTPServer;
 
 @interface iPhoneHTTPServerDelegate : UIViewController
@@ -16,10 +17,8 @@
 	IBOutlet UILabel *ipInfo;
 	IBOutlet UILabel *wwwInfo;
 	IBOutlet UIButton *doneButton;
-	IBOutlet UITableView *moduleTable;
-	
-	IBOutlet id moduleManager;
-	
+	IBOutlet NavigatorSources *navigatorSources;
+		
 }
 
 - (void)startServer;
