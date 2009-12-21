@@ -19,16 +19,11 @@
 
 #import <UIKit/UIKit.h>
 #import "PSModuleController.h"
-//#import "ViewController.h"
+#import "ViewController.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
+#import "globals.h"
 
-// we can add more to this enum as we're required to dynamically show those tabs
-typedef enum {
-    BibleTab = 1,
-    CommentaryTab,
-	ModuleTab
-}ShownTab;
 
 
 #define MODULE_TABLE			1

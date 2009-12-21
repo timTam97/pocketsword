@@ -26,6 +26,7 @@
 #import "globals.h"
 #import "SwordInstallSource.h"
 #import "SwordModule.h"
+#import "SwordDictionary.h"
 #import "PSModuleType.h"
 
 #include <swmgr.h>
@@ -34,8 +35,8 @@
 
 @interface PSModuleController : NSObject {
 	// IB Outlets
-	IBOutlet id statusBar;
-	IBOutlet id statusText;
+	//IBOutlet id statusBar;
+	//IBOutlet id statusText;
 	//IBOutlet id moduleTable;
 	//IBOutlet UIBarButtonItem *bibleNavBtn;
 	//IBOutlet UIBarButtonItem *commentaryNavBtn;
@@ -44,7 +45,9 @@
 	
 	IBOutlet UIBarButtonItem *bibleTitle;
 	IBOutlet UIBarButtonItem *commentaryTitle;
-	
+	IBOutlet UIBarButtonItem *dictionaryTitle;
+//	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
+
 	IBOutlet id bookmarkAddButton;
 	
 	IBOutlet id dataController;
@@ -52,6 +55,7 @@
 	
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;
+	SwordDictionary *primaryDictionary;
 	
 	SwordManager *swordManager;
 	SwordInstallManager *swordInstallManager;
@@ -61,6 +65,7 @@
 
 @property (assign) SwordModule *primaryBible;
 @property (assign) SwordModule *primaryCommentary;
+@property (assign) SwordDictionary *primaryDictionary;
 @property (assign) SwordInstallManager *swordInstallManager;
 @property (assign) SwordManager *swordManager;
 @property (retain, readwrite) SwordInstallSource *currentInstallSource;
@@ -76,6 +81,7 @@
 - (NSString *)getCurrentBibleRef;
 - (void)loadPrimaryBible:(NSString *)newText;
 - (void)loadPrimaryCommentary:(NSString *)newText;
+- (void)loadPrimaryDictionary:(NSString *)newText;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (void)reload;
@@ -83,11 +89,10 @@
 - (BOOL)installModule:(NSString *)name;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule;
 - (BOOL)removeModule:(NSString *)name;
-- (BOOL)installSearchIndexForModule:(NSString *)module;
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraCode;
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (void)dealloc;
-- (NSString *)getDescription:(NSString *)name fromSource:(SwordInstallSource *)source;
+//- (NSString *)getDescription:(NSString *)name fromSource:(SwordInstallSource *)source;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
 //- (void)readSwordInstallSourceModuleConfigFiles;
 

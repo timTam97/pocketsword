@@ -580,39 +580,29 @@
     return ret;
 }
 
-/**
- return a dictionary with key and text
- type can be: "rendered" or "stripped"
- */
-- (NSDictionary *)textForSingleKey:(NSString *)aKey textType:(TextPullType)aType {
-    NSMutableDictionary *ret = nil;
+- (SwordModuleTextEntry *)textEntryForKey:(NSString *)aKey textType:(TextPullType)aType {
+    SwordModuleTextEntry *ret = nil;
     
-    if(aKey) {
-        swModule->setKey([aKey UTF8String]);
+    if(aKey && [aKey length] > 0) {
+        [self setPositionFromKeyString:aKey];
         if(![self error]) {
-            const char *keyCStr = swModule->getKeyText();
+            //const char *keyCStr = swModule->getKeyText();
             const char *txtCStr = NULL;
             if(aType == TextTypeRendered) {
-               txtCStr = swModule->RenderText();            
+				txtCStr = swModule->RenderText();
             } else {
                 txtCStr = swModule->StripText();
             }
-            NSString *key = @"";
+            NSString *key = aKey;
             NSString *txt = @"";
             txt = [NSString stringWithUTF8String:txtCStr];
-            key = [NSString stringWithUTF8String:keyCStr];
+            //key = [NSString stringWithUTF8String:keyCStr];
             
             // add to dict
-            if(key) {
-                ret = [NSMutableDictionary dictionaryWithCapacity:2];
-                [ret setObject:key forKey:SW_OUTPUT_REF_KEY];
-                if(txt) {
-                    [ret setObject:txt forKey:SW_OUTPUT_TEXT_KEY];
-                } else {
-                    ALog(@"[SwordModule -textForSingleKey::] nil txt");                
-                }
+            if(key && txt) {
+                ret = [SwordModuleTextEntry textEntryForKey:key andText:txt];
             } else {
-                ALog(@"[SwordModule -textForSingleKey::] nil key");
+                ALog(@"nil key");
             }            
         }        
     }
@@ -630,26 +620,26 @@
     return 0;
 }
 
-- (NSArray *)stripedTextForRef:(NSString *)reference {
+- (NSArray *)strippedTextEntriesForRef:(NSString *)reference {
     NSArray *ret = nil;
     
     [moduleLock lock];
-    NSDictionary *dict = [self textForSingleKey:reference textType:TextTypeStripped];
-    if(dict) {
-        ret = [NSArray arrayWithObject:dict];    
+    SwordModuleTextEntry *entry = [self textEntryForKey:reference textType:TextTypeStripped];
+    if(entry) {
+        ret = [NSArray arrayWithObject:entry];
     }
     [moduleLock unlock];    
     
     return ret;    
 }
 
-- (NSArray *)renderedTextForRef:(NSString *)reference {
+- (NSArray *)renderedTextEntriesForRef:(NSString *)reference {
     NSArray *ret = nil;
     
     [moduleLock lock];
-    NSDictionary *dict = [self textForSingleKey:reference textType:TextTypeRendered];
-    if(dict) {
-        ret = [NSArray arrayWithObject:dict];
+    SwordModuleTextEntry *entry = [self textEntryForKey:reference textType:TextTypeRendered];
+    if(entry) {
+        ret = [NSArray arrayWithObject:entry];
     }
     [moduleLock unlock];
     
@@ -894,6 +884,15 @@
 	}
 	return text;
 }
+
+- (void)setPositionFromKeyString:(NSString *)aKeyString {
+    swModule->setKey([aKeyString UTF8String]);        
+}
+
+//- (void)setPositionFromVerseKey:(SwordVerseKey *)aVerseKey {
+//    swModule->setKey([aVerseKey swVerseKey]);
+//}
+
 
 
 @end

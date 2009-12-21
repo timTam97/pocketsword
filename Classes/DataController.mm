@@ -229,16 +229,16 @@ sword::ListKey results;
 		@catch (id except) {
 			return 0;
 		}
-	} else if (tag == MODULES_LIST_TABLE) {
-		switch (listType) {
-			case BibleTab:
-				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
-				break;
-			case CommentaryTab:
-				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
-				break;
-		}
-		return 0;
+//	} else if (tag == MODULES_LIST_TABLE) {
+//		switch (listType) {
+//			case BibleTab:
+//				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
+//				break;
+//			case CommentaryTab:
+//				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
+//				break;
+//		}
+//		return 0;
 	} else if (tag == HISTORY_LIST_TABLE) {
 		NSArray *history;
 		switch (listType) {
@@ -310,29 +310,25 @@ sword::ListKey results;
 //			cell.accessoryType = UITableViewCellAccessoryNone;
 //		}
 		return cell;
-	} else if (tag == MODULES_LIST_TABLE) {
-		switch (listType) {
-			case BibleTab:
-				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
-				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
-				break;
-			case CommentaryTab:
-				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
-				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
-				break;
-		}
-		if ([moduleManager isLoaded:cell.textLabel.text]) {
-			cell.textLabel.textColor = [UIColor blueColor];
-			cell.detailTextLabel.textColor = [UIColor blueColor];
-		} else {
-			cell.textLabel.textColor = [UIColor blackColor];
-			cell.detailTextLabel.textColor = [UIColor blackColor];
-		}
-//			cell.accessoryType = UITableViewCellAccessoryCheckmark;
-//		} else {
-//			cell.accessoryType = UITableViewCellAccessoryNone;
+//	} else if (tag == MODULES_LIST_TABLE) {
+//		switch (listType) {
+//			case BibleTab:
+//				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
+//				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
+//				break;
+//			case CommentaryTab:
+//				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
+//				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
+//				break;
 //		}
-		return cell;
+//		if ([moduleManager isLoaded:cell.textLabel.text]) {
+//			cell.textLabel.textColor = [UIColor blueColor];
+//			cell.detailTextLabel.textColor = [UIColor blueColor];
+//		} else {
+//			cell.textLabel.textColor = [UIColor blackColor];
+//			cell.detailTextLabel.textColor = [UIColor blackColor];
+//		}
+//		return cell;
 	} else if (tag == HISTORY_LIST_TABLE) {
 		NSArray *history;
 		switch (listType) {
@@ -382,11 +378,9 @@ sword::ListKey results;
 		SwordModule *mod = [[moduleManager swordManager] moduleWithName:newModule];
 		BOOL bibleModule = ([[mod typeString] isEqualToString:SWMOD_CATEGORY_BIBLES]);
 		if (bibleModule) {
-			[viewController addHistoryItem: BibleTab];
 			[moduleManager loadPrimaryBible: newModule];
 		}
 		else {
-			[viewController addHistoryItem: CommentaryTab];
 			[moduleManager loadPrimaryCommentary:newModule];
 		}
 		
@@ -397,33 +391,35 @@ sword::ListKey results;
 			//[tabController setSelectedIndex: BIBLE_TAB];
 			[self setShownTabTo:BibleTab];
 			[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[viewController addHistoryItem: BibleTab];
 		} else {
 			//[tabController setSelectedIndex: COMMENTARY_TAB];
 			[self setShownTabTo:CommentaryTab];
 			[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[viewController addHistoryItem: CommentaryTab];
 		}
-	} else if (tag == MODULES_LIST_TABLE) {
-		NSString *ref = [moduleManager getCurrentBibleRef];
-		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]])) {
-			[tableView deselectRowAtIndexPath:indexPath animated:YES];
-			return; // do nothing if we select the currently loaded module.
-		}
-		// Update the module list to reflect the current translation
-		[tableView reloadData];
-		switch (listType) {
-			case BibleTab:
-				[viewController addHistoryItem: BibleTab];
-				[moduleManager loadPrimaryBible: newModule];
-				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-				break;
-			case CommentaryTab:
-				[viewController addHistoryItem: CommentaryTab];
-				[moduleManager loadPrimaryCommentary:newModule];
-				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-				break;
-		}
-		[viewController toggleModulesList: nil];
+//	} else if (tag == MODULES_LIST_TABLE) {
+//		NSString *ref = [moduleManager getCurrentBibleRef];
+//		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+//		if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]])) {
+//			[tableView deselectRowAtIndexPath:indexPath animated:YES];
+//			return; // do nothing if we select the currently loaded module.
+//		}
+//		// Update the module list to reflect the current translation
+//		[tableView reloadData];
+//		switch (listType) {
+//			case BibleTab:
+//				[moduleManager loadPrimaryBible: newModule];
+//				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+//				[viewController addHistoryItem: BibleTab];
+//				break;
+//			case CommentaryTab:
+//				[moduleManager loadPrimaryCommentary:newModule];
+//				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+//				[viewController addHistoryItem: CommentaryTab];
+//				break;
+//		}
+//		[viewController toggleModulesList: nil];
 	} else if (tag == HISTORY_LIST_TABLE) {
 		NSArray *history;
 		NSString *ref;
@@ -435,22 +431,22 @@ sword::ListKey results;
 				ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
 				scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
 				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-				[viewController addHistoryItem: BibleTab];
 				[moduleManager loadPrimaryBible: mod];
 				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
 				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+				[viewController addHistoryItem: BibleTab];
 				break;
 			case CommentaryTab:
 				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
 				ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
 				scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
 				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-				[viewController addHistoryItem: CommentaryTab];
 				[moduleManager loadPrimaryCommentary: mod];
 				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
 				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
+				[viewController addHistoryItem: CommentaryTab];
 				break;
 		}
 		[viewController toggleMultiList: nil];
@@ -460,7 +456,6 @@ sword::ListKey results;
 			NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
 			NSString *ref = [fullRef objectAtIndex: 0];
 			NSString *verse = [fullRef objectAtIndex: 1];
-			[viewController addHistoryItem: BibleTab];
 			if(verse) {
 				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
@@ -468,6 +463,7 @@ sword::ListKey results;
 			} else {
 				[viewController displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
+			[viewController addHistoryItem: BibleTab];
 		}
 		
 		[tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -524,15 +520,15 @@ sword::ListKey results;
 			}
 		}
 			break;
-		case ModuleTab:
-		{
-			for(UIViewController* uivc in tabController.viewControllers) {
-				if([moduleTable isDescendantOfView: uivc.view]) {
-					tabController.selectedViewController = uivc;
-				}
-			}
-		}
-			break;
+//		case ModuleTab:
+//		{
+//			for(UIViewController* uivc in tabController.viewControllers) {
+//				if([moduleTable isDescendantOfView: uivc.view]) {
+//					tabController.selectedViewController = uivc;
+//				}
+//			}
+//		}
+//			break;
 	}
 }
 

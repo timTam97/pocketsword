@@ -21,7 +21,8 @@
 #import "PSModuleController.h"
 #import "DataController.h"
 #import "PocketSwordAppDelegate.h"
-//#import "NavigatorSources.h"
+#import "globals.h"
+#import "PSDictionaryViewController.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -80,6 +81,10 @@ typedef enum {
 	IBOutlet UITableView		*historyListTable;
 	IBOutlet UINavigationItem	*historyNavigationItem;
 	
+	// Dictionary tab
+	IBOutlet UITabBarItem		*dictionaryTabBarItem;
+	IBOutlet PSDictionaryViewController *dictionaryViewController;
+	
 	// Module tab
 	IBOutlet id					moduleTable;
 	IBOutlet id					moduleEditBtn;
@@ -118,6 +123,7 @@ typedef enum {
 	
 	IBOutlet id moduleManager;
 	IBOutlet id dataController;
+	IBOutlet id moduleSelector;
 		
 }
 
@@ -134,7 +140,7 @@ typedef enum {
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;
 - (IBAction)addHistoryItem:(ShownTab)tabForHistory;
-- (IBAction)moveToModulesTab:(id)sender;
+//- (IBAction)moveToModulesTab:(id)sender;
 
 - (IBAction)toggleModulesList:(id)sender;
 - (IBAction)toggleMultiList:(id)sender;
@@ -146,6 +152,8 @@ typedef enum {
 - (void) showModal:(UIView*)modalView withTiming:(float)time;
 - (void) hideModal:(UIView*) modalView withTiming:(float)time;
 - (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
+- (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
+- (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
@@ -156,5 +164,6 @@ typedef enum {
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
 
 - (void)reloadModuleTable;
+- (void)reloadDictionaryData;
 
 @end

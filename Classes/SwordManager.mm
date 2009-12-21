@@ -21,14 +21,12 @@
 #include "thmlplain.h"
 #include "osisplain.h"
 //#include "msstringmgr.h"
-//#import "IndexingManager.h"
 #import "globals.h"
 #import "utils.h"
 //#import "SwordBook.h"
-#import "SwordModule.h"
 //#import "SwordBible.h"
 //#import "SwordCommentary.h"
-//#import "SwordDictionary.h"
+#import "SwordDictionary.h"
 //#import "SwordListKey.h"
 //#import "SwordVerseKey.h"
 #include <installmgr.h>
@@ -75,25 +73,28 @@ using std::list;
 		//	[langs insertObject: mLang atIndex: [langs count]];
 		//}
         
-        SwordModule *sm = [[SwordModule alloc] initWithSWModule:mod swordManager:self];
+        SwordModule *sm;// = [[SwordModule alloc] initWithSWModule:mod swordManager:self];
 		//we may want to incorporate this code at a later point, so I'm leaving this in here atm...
-        /* 
-		if([type isEqualToString:SWMOD_CATEGORY_BIBLES]) {
-            sm = [[SwordBible alloc] initWithSWModule:mod swordManager:self];
-        } else if([type isEqualToString:SWMOD_CATEGORY_COMMENTARIES]) {
-            sm = [[SwordCommentary alloc] initWithSWModule:mod swordManager:self];
-        } else if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES]) {
+//		if([type isEqualToString:SWMOD_CATEGORY_BIBLES]) {
+//            sm = [[SwordBible alloc] initWithSWModule:mod swordManager:self];
+//        } else if([type isEqualToString:SWMOD_CATEGORY_COMMENTARIES]) {
+//            sm = [[SwordCommentary alloc] initWithSWModule:mod swordManager:self];
+        /*} else*/ if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES]) {
+			//mod->AddRenderFilter(new sword::PLAINHTML());
+			
             sm = [[SwordDictionary alloc] initWithSWModule:mod swordManager:self];
-        } else if([type isEqualToString:SWMOD_CATEGORY_GENBOOKS]) {
-            sm = [[SwordGenBook alloc] initWithSWModule:mod swordManager:self];
+//        } else if([type isEqualToString:SWMOD_CATEGORY_GENBOOKS]) {
+//            sm = [[SwordGenBook alloc] initWithSWModule:mod swordManager:self];
         } else {
             sm = [[SwordModule alloc] initWithSWModule:mod swordManager:self];
-        }*/
+        }
 		
 		// at this point I want to manually exclude "cult" texts until there is a disclaimer about them in there!
 		ModuleCategory cat = [sm cat];
 		if((cat & cult) == cult) {
 			//this is a questionable/cult module & we're currently not allowing these!
+		} else if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES] && ![SwordManager moduleCategoryAllowed: cat]) {
+			//we currently don't handle all dictionary types...
 		} else {
 			[dict setObject:sm forKey:[sm name]];
 		}
@@ -148,10 +149,12 @@ using std::list;
     [self setModules:dict];
 	NSMutableArray *arrayList = [[[NSMutableArray alloc] initWithCapacity: [moduleTypes count]] autorelease];
 	for (int i = 0; i < [moduleTypes count]; i++) {
-		PSModuleType *smt = [[PSModuleType alloc] initWithModules:[self modulesForType: [moduleTypes objectAtIndex: i]] withModuleType:[moduleTypes objectAtIndex: i]];
-		[arrayList addObject: smt];
-		[smt release];
-		//DLog(@"\nfound a moduleType: %@", [moduleTypes objectAtIndex: i]);
+		if([[SwordManager moduleTypes] containsObject: [moduleTypes objectAtIndex: i]]) {
+			PSModuleType *smt = [[PSModuleType alloc] initWithModules:[self modulesForType: [moduleTypes objectAtIndex: i]] withModuleType:[moduleTypes objectAtIndex: i]];
+			[arrayList addObject: smt];
+			[smt release];
+			//DLog(@"\nfound a moduleType: %@", [moduleTypes objectAtIndex: i]);
+		}
 	}
 	//alphabetically sort the arrayList by "name"
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"moduleType" ascending:YES];
@@ -224,10 +227,26 @@ using std::list;
     return [NSArray arrayWithObjects:
             SWMOD_CATEGORY_BIBLES, 
             SWMOD_CATEGORY_COMMENTARIES,
-            //SWMOD_CATEGORY_DICTIONARIES,
+            SWMOD_CATEGORY_DICTIONARIES,
             //SWMOD_CATEGORY_GENBOOKS, 
 			nil];
 }
+
++ (BOOL)moduleCategoryAllowed:(ModuleCategory)cat {
+	switch (cat) {
+		case undefinedCategory:
+			return YES;
+		case glossary:
+			return NO;
+		case essay:
+			return NO;
+		case devotional:
+			return NO;
+		default:
+			return NO;
+	}
+}
+
 
 /**
  return a manager for the specified path

@@ -16,12 +16,20 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+// we can add more to this enum as we're required to dynamically show those tabs
+typedef enum {
+    BibleTab = 1,
+    CommentaryTab,
+	DictionaryTab
+} ShownTab;
 
 #define DefaultsModuleCipherKeysKey                 @"DefaultsModuleCipherKeysKey"
 //#define DEFAULT_MODULE_PATH         [@"~/Library/Application Support/Sword" stringByExpandingTildeInPath]
 #define DEFAULT_MODULE_PATH         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
+#define DEFAULT_APPSUPPORT_PATH     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
+
 #define DEFAULT_INSTALLER_PATH		[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/"]
-#define FTP_TMP_FILE				[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/swftplib.tmp"]
+//#define FTP_TMP_FILE				[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/swftplib.tmp"]
 // define for userdefaults
 #define userDefaults [NSUserDefaults standardUserDefaults]
 // define for default SwordManager
@@ -87,7 +95,6 @@
 #define BUNDLEVERSION               CFBundleGetVersionNumber(CFBundleGetMainBundle())
 #define BUNDLEVERSIONSTRING         CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey)
 #define APPNAME                     @"MacSword"
-#define DEFAULT_APPSUPPORT_PATH     [@"~/Library/Application Support/MacSword" stringByExpandingTildeInPath]
 #define OLD_BOOKMARK_PATH           [@"~/Library/Application Support/MacSword/Bookmarks.plist" stringByExpandingTildeInPath]
 #define DEFAULT_BOOKMARK_PATH       [@"~/Library/Application Support/MacSword/Bookmarklist.plist" stringByExpandingTildeInPath]
 #define DEFAULT_SESSION_PATH        [@"~/Library/Application Support/MacSword/DefaultSession.plist" stringByExpandingTildeInPath]

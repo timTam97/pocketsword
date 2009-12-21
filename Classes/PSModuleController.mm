@@ -21,12 +21,12 @@
 #import "ZipArchive.h"
 #import "ViewController.h"
 
-#import "PSIndexController.h"
 
 @implementation PSModuleController
 
 @synthesize primaryBible;
 @synthesize primaryCommentary;
+@synthesize primaryDictionary;
 @synthesize swordInstallManager;
 @synthesize swordManager;
 @synthesize currentInstallSource;
@@ -109,19 +109,12 @@ float installationProgress;
 	
 	 */
 	
-//	PSIndexController *ic = [[PSIndexController alloc] init];
-//	ic.moduleManager = self;
-//	[ic updateInstalledIndexListWithRemoteIndices];
-//	[self installSearchIndexForModule: @"KJV"];
-//	[ic updateInstalledIndexListWithRemoteIndices];
-	
-	
 	[self setPreferences];
 	
 	return self;
 }
 
-- (id)viewController {
+- (ViewController *)viewController {
 	return viewController;
 }
 
@@ -140,7 +133,7 @@ float installationProgress;
 	if(swordManager) {
 		BOOL redLetter = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
 		
-		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_OFF];
+		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_ON];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: SW_OFF ];
@@ -168,6 +161,8 @@ float installationProgress;
 	if (primaryBible && [[primaryBible name] isEqualToString:module])
 		return YES;
 	else if (primaryCommentary && [[primaryCommentary name] isEqualToString:module])
+		return YES;
+	else if (primaryDictionary && [[primaryDictionary name] isEqualToString:module])
 		return YES;
 	return NO;
 }
@@ -200,6 +195,17 @@ float installationProgress;
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)loadPrimaryDictionary:(NSString *)newText {
+	primaryDictionary = (SwordDictionary *)[swordManager moduleWithName:newText];
+	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastDictionary"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	int i = ([newText length] > 8) ? 8 : [newText length];
+	NSString *title = ([newText length] > i) ? [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]] : [newText substringToIndex:i];
+	[dictionaryTitle setTitle: title];
+//	[dictionaryDescriptionTitle setTitle: title];
+}
+
 - (NSString *)setToNextChapter {
 	NSString *ret = nil;
 	if(primaryBible) {
@@ -223,20 +229,23 @@ float installationProgress;
 }
 
 // Returns the description for a given text name.
-- (NSString *)getDescription:(NSString *)name fromSource:(SwordInstallSource *)source {
-	NSString *ret = @"";
-	if ([[source swordManager] isModuleInstalled: name]) {
-		ret = [[[source swordManager] moduleWithName: name] descr];
-	}
-	return ret;
-}
+//- (NSString *)getDescription:(NSString *)name fromSource:(SwordInstallSource *)source {
+//	NSString *ret = @"";
+//	if ([[source swordManager] isModuleInstalled: name]) {
+//		ret = [[[source swordManager] moduleWithName: name] descr];
+//	}
+//	return ret;
+//}
 
 - (void)reload {
 	BOOL restoreBible = NO;
 	BOOL restoreCommentary = NO;
+	BOOL restoreDictionary = NO;
 	sword::SWKey loc;
+	sword::SWKey dictLoc;
 	NSString *bibleName;
 	NSString *commentaryName;
+	NSString *dictionaryName;
 	
 	if (primaryBible) {
 		restoreBible = YES;
@@ -248,6 +257,12 @@ float installationProgress;
 		restoreCommentary = YES;
 		loc = ([primaryCommentary swModule])->getKeyText();//doesn't matter that we may write over loc, they'll be the same.
 		commentaryName = [primaryCommentary name];
+	}
+	
+	if (primaryDictionary) {
+		restoreDictionary = YES;
+		dictLoc = ([primaryDictionary swModule])->getKeyText();
+		dictionaryName = [primaryDictionary name];
 	}
 	
 	[swordManager reInit];
@@ -265,6 +280,12 @@ float installationProgress;
 		primaryCommentary = [swordManager moduleWithName: commentaryName];
 		if (primaryCommentary)
 			([primaryCommentary swModule])->setKey(loc);
+	}
+	
+	if (restoreDictionary) {
+		primaryDictionary = (SwordDictionary *)[swordManager moduleWithName: dictionaryName];
+		if (primaryDictionary)
+			([primaryDictionary swModule])->setKey(dictLoc);
 	}
 	
 	if([[swordManager moduleNames] count] == 0) {
@@ -404,6 +425,7 @@ float installationProgress;
 
 	NSString *primaryBibleName = nil;
 	NSString *primaryCommentaryName = nil;
+	NSString *primaryDictionaryName = nil;
 	if (primaryBible) {
 		primaryBibleName = [primaryBible name];
 		loc = ([primaryBible swModule])->getKeyText();
@@ -411,6 +433,9 @@ float installationProgress;
 	if (primaryCommentary) {
 		primaryCommentaryName = [primaryCommentary name];
 		loc = ([primaryCommentary swModule])->getKeyText();
+	}
+	if (primaryDictionary) {
+		primaryDictionaryName = [primaryDictionary name];
 	}
 	int numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
 	int numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
@@ -434,7 +459,11 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
 		[commentaryWebView loadHTMLString: [self getCommentaryChapter: nsLoc withExtraJS: @""] baseURL: nil];
-	}
+	} else if([name isEqualToString: primaryDictionaryName]) {
+		primaryDictionary = nil;
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastDictionary"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}		
 	
 	// move these outside of this method & these are called by the caller after -removeModule is called.
 	[self reload];
@@ -463,56 +492,6 @@ float installationProgress;
 	
 	[pool release];
 	return success;
-}
-
-// Installs the search index for the primary text
-- (BOOL)installSearchIndexForModule:(NSString *)module {
-	SwordModule *mod = [swordManager moduleWithName:module];
-	if (!mod) {
-		return NO;
-	}
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
-	NSString *zippedIndex = [outfileDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.zip", module]];
-	NSString *cluceneDir = [outfileDir stringByAppendingPathComponent: @"lucene"];
-
-	NSString *filename = [NSString stringWithFormat: @"http://pocketsword.net/indices/%@.zip", [module lowercaseString]];
-	
-	
-	installationProgress = 0.01;
-	
-	
-	// Download the data file
-	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-	NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
-	if (!responseData) {
-		ALog(@"Couldn't retrieve file: %@", filename);
-		installationProgress = -1.0;
-		[pool release];
-		return NO;
-	}
-	
-	if (![responseData writeToFile: zippedIndex atomically: NO]) {
-		ALog(@"Couldn't write file: %@", zippedIndex);
-		installationProgress = -1.0;
-		[pool release];
-		return NO;
-	}
-	
-	ZipArchive *arch = [[ZipArchive alloc] init];
-	[arch UnzipOpenFile:zippedIndex];
-	[arch UnzipFileTo:cluceneDir overWrite:YES];
-	[arch UnzipCloseFile];
-	[arch release];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	[fileManager removeItemAtPath:zippedIndex error:NULL];
-
-	DLog(@"Index (%@) installed successfully", module);
-	
-	installationProgress = 1.0;
-	[pool release];
-	return YES;
 }
 
 // Grabs the bible text for a given chapter (e.g. "Gen 1")

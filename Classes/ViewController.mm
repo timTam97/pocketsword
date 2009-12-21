@@ -19,6 +19,7 @@
 
 #import "ViewController.h"
 //#import <dlfcn.h> -- needed for the loadFonts() code, but it doesn't currently work!
+#import "PSIndexController.h"
 
 
 @implementation ViewController
@@ -272,13 +273,16 @@ BOOL multiListShown = NO;
 		//localize the tab bar titles
 		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
 		commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
+		dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 		moduleTabBarItem.title = NSLocalizedString(@"TabBarTitleModules", @"Modules");
 		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
+		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
 		moduleNavBar.title = NSLocalizedString(@"ModulesTitle", @"Modules");
 		bookmarksNavBar.title = NSLocalizedString(@"BookmarksTitle", @"Bookmarks");
+		
 		
 		//configure the Bible & commentary segmented controls.
 		[bibleSegmentedControl setWidth: 30  forSegmentAtIndex:0];
@@ -331,6 +335,11 @@ BOOL multiListShown = NO;
 		[pool release];
 		initialized = true;
 	}
+	//	PSIndexController *ic = [[PSIndexController alloc] init];
+	//	ic.moduleManager = self;
+	//	[ic updateInstalledIndexListWithRemoteIndices:nil];
+	//	[ic installSearchIndexForModule: @"KJV"];
+	
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
@@ -367,16 +376,16 @@ BOOL multiListShown = NO;
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[self addHistoryItem: BibleTab];
 		NSString *ref = [moduleManager setToNextChapter];
 		if(ref)
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		[self addHistoryItem: CommentaryTab];
 		NSString *ref = [moduleManager setToNextChapter];
 		if(ref)
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: CommentaryTab];
 	} else {
 		// weird & undefined
 		NSString *ref = [moduleManager setToNextChapter];
@@ -398,16 +407,16 @@ BOOL multiListShown = NO;
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[self addHistoryItem: BibleTab];
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref)
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		[self addHistoryItem: CommentaryTab];
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref)
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+		[self addHistoryItem: CommentaryTab];
 	} else {
 		// weird & undefined
 		NSString *ref = [moduleManager setToPreviousChapter];
@@ -419,16 +428,20 @@ BOOL multiListShown = NO;
 	[pool release];
 }
 
-- (IBAction)moveToModulesTab:(id)sender
-{
-	if(refSelectorShown) {
-		[self toggleNavigation:sender];
-	}
-	[dataController setShownTabTo: ModuleTab];
-}
-
+//- (IBAction)moveToModulesTab:(id)sender
+//{
+//	if(refSelectorShown) {
+//		[self toggleNavigation:sender];
+//	}
+//	[dataController setShownTabTo: ModuleTab];
+//}
+//
 - (IBAction)toggleMultiList:(id)sender
 {
+//	PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
+//	[indexC setModuleManager:moduleManager];
+//	[self showModal:indexC.view withTiming:0.7];
+	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[dataController setListType: BibleTab];
@@ -440,12 +453,14 @@ BOOL multiListShown = NO;
 	
 	if(multiListShown) {
 		//[self hideModal:historyListView withTiming:0.7];
-		[self hideModal:multiListController.view withTiming:0.7];
+		[self hideModal:multiListController.view withTiming:0.3];
 		multiListShown = NO;
 	} else {
 		[historyListTable reloadData];
-		//[self showModal:historyListView withTiming:0.5];
-		[self showModal:multiListController.view withTiming:0.5];
+		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
+		if(ip)
+			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
+		[self showModal:multiListController.view withTiming:0.3];
 		multiListShown = YES;
 	}
 	
@@ -455,17 +470,19 @@ BOOL multiListShown = NO;
 {
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[dataController setListType: BibleTab];
+		[moduleSelector setListType: BibleTab];
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		[moduleSelector setListType: CommentaryTab];
 	} else {
-		[dataController setListType: CommentaryTab];
+		[moduleSelector setListType: DictionaryTab];
 	}
 	
 	if(modulesListShown) {
-		[self hideModal:modulesListView withTiming:0.7];
+		[self hideModal:modulesListView withTiming:0.3];
 		modulesListShown = NO;
 	} else {
-		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];//default value
-		if([dataController listType] == BibleTab) {
+		NSIndexPath *ip = nil;//default value
+		if([moduleSelector listType] == BibleTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
 			int pos = 0;
@@ -477,7 +494,7 @@ BOOL multiListShown = NO;
 			if (pos < [array count]) {
 				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 			}			
-		} else {
+		} else if([moduleSelector listType] == BibleTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
 			int pos = 0;
@@ -490,11 +507,12 @@ BOOL multiListShown = NO;
 				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 			}			
 			
+		} else {
 		}
 		[modulesListTable reloadData];
 		if(ip)
 			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
-		[self showModal:modulesListView withTiming:0.5];
+		[self showModal:modulesListView withTiming:0.3];
 		modulesListShown = YES;
 	}
 }
@@ -516,7 +534,7 @@ BOOL multiListShown = NO;
 	
 	if(refSelectorShown) {
 		//hide the refSelector
-		[self hideModal:refSelectorView withTiming:0.5];
+		[self hideModal:refSelectorView withTiming:0.3];
 		refSelectorShown = NO;
 		[dataController setRefSelectorBooks: nil];
 	} else {
@@ -527,7 +545,7 @@ BOOL multiListShown = NO;
 			[refSelectorTitle setTitle:[[moduleManager primaryCommentary] name]];
 		}
 		[dataController updateRefSelectorBooks];
-		[self showModal:refSelectorView withTiming:0.4];
+		[self showModal:refSelectorView withTiming:0.3];
 		refSelectorShown = YES;
 
 		NSRange range = [[moduleManager getCurrentBibleRef] rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
@@ -602,18 +620,18 @@ BOOL multiListShown = NO;
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// bible tab
-			[self addHistoryItem: BibleTab];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[self addHistoryItem: BibleTab];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
-			[self addHistoryItem: CommentaryTab];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[self addHistoryItem: CommentaryTab];
 		} else {
 			//something tab???
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
@@ -636,9 +654,9 @@ BOOL multiListShown = NO;
 		[moduleEditBtn setStyle: UIBarButtonItemStyleBordered];
 	}
 	else {
-		[moduleTable setEditing: YES animated: YES];
 		[moduleEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
 		[moduleEditBtn setStyle: UIBarButtonItemStyleDone];
+		[moduleTable setEditing: YES animated: YES];
 	}
 }
 
@@ -649,13 +667,13 @@ BOOL multiListShown = NO;
 		[bookmarksEditBtn setStyle: UIBarButtonItemStyleBordered];
 	}
 	else {
-		[bookmarksTable setEditing: YES animated: YES];
 		[bookmarksEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
 		[bookmarksEditBtn setStyle: UIBarButtonItemStyleDone];
+		[bookmarksTable setEditing: YES animated: YES];
 	}
 }
 
-// This should be called just before:
+// This should be called just AFTER:
 //    "nextChapter".
 //    or "prevChapter".
 //    or navigation to a new ref from the refPicker.
@@ -1095,6 +1113,26 @@ BOOL multiListShown = NO;
 	//[modalView release];
 }
 
+// Use this to slide the semi-modal view back down.
+- (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time
+{
+	CGSize offSize = [UIScreen mainScreen].bounds.size;
+	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+	[UIView beginAnimations:nil context:modalView];
+	[UIView setAnimationDuration:time];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(hideModalAndReleaseEnded:finished:context:)];
+	modalView.center = offScreenCenter;
+	[UIView commitAnimations];
+}
+
+- (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
+{
+	UIView* modalView = (UIView *)context;
+	[modalView removeFromSuperview];
+	[modalView release];
+}
+
 - (void)displayBusyIndicator {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -1132,6 +1170,10 @@ BOOL multiListShown = NO;
 
 - (void)reloadModuleTable {
 	[moduleTable reloadData];
+}
+
+- (void)reloadDictionaryData {
+	[dictionaryViewController reloadDictionaryData:YES];
 }
 
 @end

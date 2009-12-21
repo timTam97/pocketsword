@@ -13,6 +13,8 @@
 
 //#import <Foundation/Foundation.h>
 
+#import "SwordModule.h"
+
 //#ifdef __cplusplus
 #include <swmgr.h>		// C++ Sword API
 #include <localemgr.h>
@@ -137,6 +139,7 @@ class sword::SWModule;
 //+ (void)initStringManager;
 + (void)initLocale;
 + (NSArray *)moduleTypes;
++ (BOOL)moduleCategoryAllowed:(ModuleCategory)cat;
 
 /** Constructor */
 - (id)initWithPath:(NSString *)path;

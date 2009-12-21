@@ -11,7 +11,7 @@
 	General Public License for more details. (http://www.gnu.org/licenses/gpl.html)
 */
 
-#import <UIKit/UIKit.h>
+#import "SwordModuleTextEntry.h"
 
 //#ifdef __cplusplus
 #include <swtext.h>
@@ -68,17 +68,17 @@ typedef enum {
  abstract method, override in subclass
  This method generates stripped text string for a given reference.
  @param[in] reference bible reference
- @return dictionary with key = reference, value = stripped text
+ @return Array of SwordModuleTextEntry instances
  */
-- (NSDictionary *)stripedTextForRef:(NSString *)reference;
+- (NSArray *)strippedTextEntriesForRef:(NSString *)reference;
 
 /** 
  abstract method, override in subclass
  This method generates HTML string for a given reference.
  @param[in] reference bible reference
- @return dictionary with key = reference, value = rendered text
+ @return Array of SwordModuleTextEntry instances
  */
-- (NSDictionary *)renderedTextForRef:(NSString *)reference;
+- (NSArray *)renderedTextEntriesForRef:(NSString *)reference;
 
 /** 
  write value to reference 
@@ -171,19 +171,19 @@ typedef enum {
  */
 - (id)attributeValueForEntryData:(NSDictionary *)data;
 
-/**
- return a dictionary with key and text
- type can be: "rendered" or "stripped"
- */
-- (NSDictionary *)textForSingleKey:(NSString *)aKey textType:(TextPullType)aType;
+- (SwordModuleTextEntry *)textEntryForKey:(NSString *)aKey textType:(TextPullType)aType;
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 
 // ------- SwordModuleAccess ---------
-- (NSArray *)stripedTextForRef:(NSString *)reference;
-- (NSArray *)renderedTextForRef:(NSString *)reference;
+- (NSArray *)strippedTextEntriesForRef:(NSString *)reference;
+- (NSArray *)renderedTextEntriesForRef:(NSString *)reference;
 - (long)entryCount;
 - (void)writeEntry:(NSString *)value forRef:(NSString *)reference;
+
+- (void)setPositionFromKeyString:(NSString *)aKeyString;
+//- (void)setPositionFromVerseKey:(SwordVerseKey *)aVerseKey;
+
 
 @end

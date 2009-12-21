@@ -180,6 +180,11 @@
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
+		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
+		0546D59D10CF725F00799DCB /* SWORD-HOWTO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */; };
+		054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
+		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
+		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
 		05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
@@ -219,6 +224,8 @@
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
+		05E3FCC910CF535E00DFEB77 /* PSMultiListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSMultiListController.mm */; };
+		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
 		05F8E60110B1098600570141 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F8E5FF10B1098600570141 /* back.png */; };
 		05F8E60210B1098600570141 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F8E60010B1098600570141 /* forward.png */; };
@@ -731,6 +738,14 @@
 		0545E26510639A4A00DD7F06 /* SwordManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordManager.mm; sourceTree = "<group>"; };
 		0545E28510639DC400DD7F06 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		0545E29A1063A09500DD7F06 /* globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
+		0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModuleTextEntry.h; sourceTree = "<group>"; };
+		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
+		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
+		054EF62310CD0EAF0091D269 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleSelectorController.h; path = Classes/PSModuleSelectorController.h; sourceTree = "<group>"; };
+		055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleSelectorController.mm; path = Classes/PSModuleSelectorController.mm; sourceTree = "<group>"; };
+		0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryViewController.h; path = Classes/PSDictionaryViewController.h; sourceTree = "<group>"; };
+		0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSDictionaryViewController.mm; path = Classes/PSDictionaryViewController.mm; sourceTree = "<group>"; };
 		05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesFontTableViewController.h; sourceTree = "<group>"; };
 		05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesFontTableViewController.mm; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
@@ -806,6 +821,10 @@
 		05E37CA410B2AD9000C2F1F5 /* AppStoreInfo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AppStoreInfo.txt; path = Resources/doc/AppStoreInfo.txt; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
+		05E3FCC710CF535E00DFEB77 /* PSMultiListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMultiListController.h; path = Classes/PSMultiListController.h; sourceTree = "<group>"; };
+		05E3FCC810CF535E00DFEB77 /* PSMultiListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSMultiListController.mm; path = Classes/PSMultiListController.mm; sourceTree = "<group>"; };
+		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
+		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
 		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
 		05F8E5FF10B1098600570141 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = back.png; path = Resources/back.png; sourceTree = "<group>"; };
@@ -1105,6 +1124,10 @@
 		0513ACBA10BFAD2100E414D9 /* Sword */ = {
 			isa = PBXGroup;
 			children = (
+				0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */,
+				0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */,
+				05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */,
+				05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */,
 				0545E23810638D8400DD7F06 /* SwordInstallSource.h */,
 				0545E23910638D8400DD7F06 /* SwordInstallSource.mm */,
 				0545E23A10638D8400DD7F06 /* SwordInstallManager.h */,
@@ -1155,8 +1178,14 @@
 				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
 				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
+				05E3FCC710CF535E00DFEB77 /* PSMultiListController.h */,
+				05E3FCC810CF535E00DFEB77 /* PSMultiListController.mm */,
 				0545549610CA4D8000EE11EC /* PSIndexController.h */,
 				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
+				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
+				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
+				0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */,
+				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -1800,6 +1829,7 @@
 		0542F70F10BE7C0B0088A721 /* doc */ = {
 			isa = PBXGroup;
 			children = (
+				0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */,
 				E9BD1D530ED34003006A60E9 /* LICENSE.txt */,
 				05BADF6410B79EA50026BFBF /* BiblicaCommunication.txt */,
 				05E37CA410B2AD9000C2F1F5 /* AppStoreInfo.txt */,
@@ -1999,6 +2029,7 @@
 				E9BACCD20F898A08007AC4B3 /* List.png */,
 				E9A6CFA10FF559F700399E78 /* MainWindow.xib */,
 				0515E2D110C8E32900F58382 /* Downloader.xib */,
+				054EF62210CD0EAF0091D269 /* IndexDownloader.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2432,6 +2463,8 @@
 				0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */,
 				0515E2D310C8E32900F58382 /* Downloader.xib in Resources */,
 				0545546510CA385100EE11EC /* Downloader.strings in Resources */,
+				054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */,
+				0546D59D10CF725F00799DCB /* SWORD-HOWTO.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2757,6 +2790,11 @@
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
 				0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */,
+				05E3FCC910CF535E00DFEB77 /* PSMultiListController.mm in Sources */,
+				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
+				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
+				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
+				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2787,6 +2825,14 @@
 				0545546A10CA3A2000EE11EC /* zh */,
 			);
 			name = Downloader.strings;
+			sourceTree = "<group>";
+		};
+		054EF62210CD0EAF0091D269 /* IndexDownloader.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				054EF62310CD0EAF0091D269 /* English */,
+			);
+			name = IndexDownloader.xib;
 			sourceTree = "<group>";
 		};
 		E9A6CF9C0FF5508400399E78 /* Localizable.strings */ = {

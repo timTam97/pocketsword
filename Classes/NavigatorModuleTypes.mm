@@ -51,11 +51,11 @@ NSTimer *refreshTimer;
 // the InstallSource probably has downloadable modules that aren't supported in PocketSword yet,
 //   so we don't display all categories available, but instead only the categories supported by SwordManager.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if ([dataArray count] == 0)
-		return 0;
-	else
-		return [[SwordManager moduleTypes] count];
-	//return [dataArray count];
+	return [dataArray count];
+//	if ([dataArray count] == 0)
+//		return 0;
+//	else
+//		return [[SwordManager moduleTypes] count];
 }
 
 

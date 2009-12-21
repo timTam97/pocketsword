@@ -47,7 +47,7 @@
 	 xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n\
 	 xml:lang=\"en\" >\n"];
 	[outdata appendFormat:@"<head>\n<title>Installed Modules (%@)</title>\n", server.name];
-    [outdata appendString:@"<style>html {background-color:#eeeeee} body { background-color:#FFFFFF; font-family:Helvetica,Tahoma,Arial,sans-serif; font-size:18x; margin-left:15%; margin-right:15%; border:3px groove #006600; padding:15px; } </style>\n"];
+    [outdata appendString:@"<style type=\"text/css\">html {background-color:#eeeeee} body { background-color:#FFFFFF; font-family:Helvetica,Tahoma,Arial,sans-serif; font-size:18x; margin-left:15%; margin-right:15%; border:3px groove #006600; padding:15px; } </style>\n"];
     [outdata appendString:@"</head>\n<body>\n"];
 	[outdata appendFormat:@"<h1>Installed Modules (%@)</h1>\n", server.name];
     [outdata appendFormat:@"<bq>The following modules are currently installed in PocketSword on the iPhone %@:</bq>\n", server.name];
@@ -62,7 +62,7 @@
 		//[outdata appendFormat:@"<a href=\"%@\">%@</a>		(%8.1f Kb, %@)<br />\n", fname, fname, [[fileDict objectForKey:NSFileSize] floatValue] / 1024, modDate];
 	//}
 	for (SwordModule *mod in mods) {
-		[outdata appendFormat:@"&nbsp; &nbsp; <b> %@ </b> (<i>%@</i>)<br />\n", [mod name], [mod descr]];
+		[outdata appendFormat:@"&nbsp; &nbsp; <b> %@ </b> (<i>%@</i>)<br />\n", [mod name], [[mod descr] stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]];
 	}
     [outdata appendString:@"</p>\n"];
 	
