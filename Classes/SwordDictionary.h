@@ -34,5 +34,7 @@
 - (BOOL)keysCached;
 - (BOOL)keysLoaded;
 
+- (void)removeCache;
+
 
 @end

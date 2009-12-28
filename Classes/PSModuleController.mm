@@ -20,6 +20,7 @@
 #import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "ViewController.h"
+#import "SwordDictionary.h"
 
 
 @implementation PSModuleController
@@ -111,6 +112,24 @@ float installationProgress;
 	
 	[self setPreferences];
 	
+	//PSIndexController *ic = [[PSIndexController alloc] init];
+	//ic.moduleManager = moduleManager;
+	//[ic updateInstalledIndexListWithRemoteIndices:nil];
+//	SwordModule *mod = [swordManager moduleWithName: @"ESV"];
+//	[mod search: @"crystal"];
+	//[ic installSearchIndexForModule: mod];
+//	sword::SWModule *swModule = [mod swModule];
+//	sword::ListKey results = swModule->search("crystal", -4);
+//	results.sort();
+//	NSLog(@"Found %d results", results.Count());
+//	while(!results.Error()) {
+//		NSLog(@"%s", results.getText());
+//		results++;
+//	}
+	//	for(int i=0;i>results.Count();i++) {
+	//		NSLog(@"%s", results.getElement(i)->getText());
+	//	}
+
 	return self;
 }
 
@@ -133,7 +152,7 @@ float installationProgress;
 	if(swordManager) {
 		BOOL redLetter = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
 		
-		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_ON];
+		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_OFF];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: SW_OFF ];
@@ -168,19 +187,25 @@ float installationProgress;
 }
 
 - (NSString *)getCurrentBibleRef {
-	NSString *ref = nil;
-	if (primaryBible)
-		ref = [[[NSString stringWithUTF8String: ([primaryBible swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	else if(primaryCommentary)
-		ref = [[[NSString stringWithUTF8String: ([primaryCommentary swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	if(ref) {
-		return [[[[ref stringByReplacingOccurrencesOfString: @"III " withString: @"3 "]
-				  stringByReplacingOccurrencesOfString: @"II " withString: @"2 "]
-				 stringByReplacingOccurrencesOfString: @"I " withString: @"1 "]
-				stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
-	} else {
-		return @"Genesis 1"; // hard code to return a default valid result
+	NSString *lastRef = [[NSUserDefaults standardUserDefaults] stringForKey: @"lastRef"];
+	if (!lastRef) {
+		[[NSUserDefaults standardUserDefaults] setObject: @"Genesis 1" forKey: @"lastRef"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+//		[defaults setPersistentDomain: [NSDictionary dictionaryWithObject: @"Genesis 1" forKey: @"lastRef"] forName: [[NSBundle mainBundle] bundleIdentifier]];
+		lastRef = @"Genesis 1";
 	}
+	return lastRef;
+	
+//	NSString *ref = nil;
+//	if (primaryBible)
+//		ref = [[[NSString stringWithUTF8String: ([primaryBible swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+//	else if(primaryCommentary)
+//		ref = [[[NSString stringWithUTF8String: ([primaryCommentary swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+//	if(ref) {
+//		return [PSModuleController createRefString:ref];
+//	} else {
+//		return @"Genesis 1"; // hard code to return a default valid result
+//	}
 }
 
 - (void)loadPrimaryBible:(NSString *)newText {
@@ -208,10 +233,13 @@ float installationProgress;
 
 - (NSString *)setToNextChapter {
 	NSString *ret = nil;
+	NSString *cur = [self getCurrentBibleRef];
 	if(primaryBible) {
+		[primaryBible setChapter: cur];
 		ret = [primaryBible setToNextChapter];
 	}
 	if(primaryCommentary) {
+		[primaryCommentary setChapter: cur];
 		ret = [primaryCommentary setToNextChapter];
 	}
 	return ret;
@@ -219,10 +247,13 @@ float installationProgress;
 
 - (NSString *)setToPreviousChapter {
 	NSString *ret = nil;
+	NSString *cur = [self getCurrentBibleRef];
 	if(primaryBible) {
+		[primaryBible setChapter: cur];
 		ret = [primaryBible setToPreviousChapter];
 	}
 	if(primaryCommentary) {
+		[primaryCommentary setChapter: cur];
 		ret = [primaryCommentary setToPreviousChapter];
 	}
 	return ret;
@@ -440,6 +471,11 @@ float installationProgress;
 	int numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
 	int numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
 	
+	if([[moduleToRemove typeString] isEqualToString: SWMOD_CATEGORY_DICTIONARIES]) {
+		//need to remove the dictionary cache, if it exists
+		[((SwordDictionary*)moduleToRemove) removeCache];
+	}
+	
 
 	if(moduleToRemove) {
 		stat = [swordInstallManager uninstallModule: moduleToRemove fromManager: swordManager];	
@@ -488,6 +524,10 @@ float installationProgress;
 		//[bookmarkAddButton setEnabled:NO];
 		[viewController setEnabledCommentaryNextButton: NO];
 		[viewController setEnabledCommentaryPreviousButton: NO];
+	}
+	
+	if([name isEqualToString: primaryDictionaryName]) {
+		[viewController reloadDictionaryData];
 	}
 	
 	[pool release];
@@ -573,6 +613,13 @@ float installationProgress;
 	[swordManager release];
 	[currentInstallSource release];
 	[super dealloc];
+}
+
++ (NSString *)createRefString:(NSString *)ref {
+	return [[[[ref stringByReplacingOccurrencesOfString: @"III " withString: @"3 "] 
+							   stringByReplacingOccurrencesOfString: @"II " withString: @"2 "] 
+							  stringByReplacingOccurrencesOfString: @"I " withString: @"1 "] 
+							 stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
 }
 
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript {

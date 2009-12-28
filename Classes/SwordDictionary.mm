@@ -106,6 +106,11 @@
 
 @synthesize keys;
 
+- (void)removeCache {
+    NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
+	[[NSFileManager defaultManager] removeItemAtPath: cachePath error: NULL];
+}
+
 - (id)initWithName:(NSString *)aName swordManager:(SwordManager *)aManager {    
 	self = [super initWithName:aName swordManager:aManager];
     if(self) {

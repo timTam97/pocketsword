@@ -79,12 +79,13 @@ int prevLength = 0;
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	tableView.sectionHeaderHeight = 40.5;
-	if ([[moduleManager primaryDictionary] entryCount] == 0) {
-		return @"";//NSLocalizedString(@"NoModulesRefresh", @"No modules here. Try a refresh.");
-	}
-	else
-		return [[moduleManager primaryDictionary] descr];
+	return @"";
+//	tableView.sectionHeaderHeight = 22.5;
+//	if ([[moduleManager primaryDictionary] entryCount] == 0) {
+//		return @"";//NSLocalizedString(@"NoModulesRefresh", @"No modules here. Try a refresh.");
+//	}
+//	else
+//		return [[moduleManager primaryDictionary] descr];
 }
 
 
@@ -104,7 +105,8 @@ int prevLength = 0;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"selected: %@", [[moduleManager primaryDictionary] entryForKey: [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text]);
+	[dictionarySearchBar resignFirstResponder];
+	//NSLog(@"selected: %@", [[moduleManager primaryDictionary] entryForKey: [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text]);
 	[dictionaryDescriptionTitle setTitle: [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	NSString *descr = [[moduleManager primaryDictionary] entryForKey: dictionaryDescriptionTitle.title];
 	descr = [PSModuleController createHTMLString: descr usingPreferences: YES withJS: @""];
@@ -129,10 +131,15 @@ int prevLength = 0;
 		if(res <= NSOrderedSame)
 			break;
 	}
-	
+	if(row == count)
+		row--;
 	NSIndexPath *newIP = [NSIndexPath indexPathForRow: row inSection: 0];
-	[dictionaryEntriesTable scrollToRowAtIndexPath: newIP atScrollPosition: UITableViewScrollPositionMiddle animated: YES];
+	[dictionaryEntriesTable scrollToRowAtIndexPath: newIP atScrollPosition: UITableViewScrollPositionTop animated: YES];
 	prevLength = [searchText length];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+	[searchBar resignFirstResponder];
 }
 
 - (IBAction)showDescription:(id)sender {

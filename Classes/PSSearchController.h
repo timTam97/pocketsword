@@ -1,0 +1,31 @@
+//
+//  PSSearchController.h
+//  PocketSword
+//
+//  Created by Nic Carter on 9/12/09.
+//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//
+
+#import "DataController.h"
+#import "SwordListKey.h"
+
+@interface PSSearchController : UIViewController {
+
+	IBOutlet DataController *dataController;
+	IBOutlet PSModuleController *moduleManager;
+	IBOutlet id viewController;
+	IBOutlet UITableView *resultsTable;
+	IBOutlet UISearchBar *sBar;
+	
+	//SwordListKey *results;
+	NSMutableArray *results;
+}
+
+@property (retain, readwrite) NSMutableArray *results;
+
+- (void)refreshView;
+//- (void)hideKeyboard;
+
+- (IBAction)infoButtonPressed:(id)sender;
+
+@end

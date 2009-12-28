@@ -187,6 +187,8 @@
 		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
 		05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
+		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
+		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		05B3D61710BB7A92000F8A48 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
 		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
@@ -224,7 +226,7 @@
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
-		05E3FCC910CF535E00DFEB77 /* PSMultiListController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSMultiListController.mm */; };
+		05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
 		05F8E60110B1098600570141 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F8E5FF10B1098600570141 /* back.png */; };
@@ -750,6 +752,10 @@
 		05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesFontTableViewController.mm; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
 		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/CharisSILR.ttf; sourceTree = "<group>"; };
+		055E308310E74288004EBC79 /* SwordListKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordListKey.h; sourceTree = "<group>"; };
+		055E308410E74288004EBC79 /* SwordListKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordListKey.mm; sourceTree = "<group>"; };
+		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
+		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcurl-7.19.6-release.a"; path = "externals/libcurl/libcurl-7.19.6-release.a"; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
 		05B5295B107C529000826AFE /* PSModuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleType.h; sourceTree = "<group>"; };
@@ -821,8 +827,8 @@
 		05E37CA410B2AD9000C2F1F5 /* AppStoreInfo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AppStoreInfo.txt; path = Resources/doc/AppStoreInfo.txt; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
-		05E3FCC710CF535E00DFEB77 /* PSMultiListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMultiListController.h; path = Classes/PSMultiListController.h; sourceTree = "<group>"; };
-		05E3FCC810CF535E00DFEB77 /* PSMultiListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSMultiListController.mm; path = Classes/PSMultiListController.mm; sourceTree = "<group>"; };
+		05E3FCC710CF535E00DFEB77 /* PSSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchController.h; path = Classes/PSSearchController.h; sourceTree = "<group>"; };
+		05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchController.mm; path = Classes/PSSearchController.mm; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
@@ -1124,6 +1130,10 @@
 		0513ACBA10BFAD2100E414D9 /* Sword */ = {
 			isa = PBXGroup;
 			children = (
+				055E308810E74308004EBC79 /* SwordKey.h */,
+				055E308910E74308004EBC79 /* SwordKey.mm */,
+				055E308310E74288004EBC79 /* SwordListKey.h */,
+				055E308410E74288004EBC79 /* SwordListKey.mm */,
 				0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */,
 				0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */,
 				05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */,
@@ -1178,8 +1188,8 @@
 				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
 				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
-				05E3FCC710CF535E00DFEB77 /* PSMultiListController.h */,
-				05E3FCC810CF535E00DFEB77 /* PSMultiListController.mm */,
+				05E3FCC710CF535E00DFEB77 /* PSSearchController.h */,
+				05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */,
 				0545549610CA4D8000EE11EC /* PSIndexController.h */,
 				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
 				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
@@ -2790,11 +2800,13 @@
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
 				0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */,
-				05E3FCC910CF535E00DFEB77 /* PSMultiListController.mm in Sources */,
+				05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
 				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
 				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
+				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
+				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2893,6 +2905,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					"icu/common/**",
 					"externals/clucene/**",
@@ -2933,6 +2946,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					"icu/common/**",
 					"externals/clucene/**",
@@ -3062,6 +3076,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					"icu/common/**",
 					"externals/clucene/**",

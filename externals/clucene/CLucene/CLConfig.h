@@ -65,12 +65,12 @@
 //#define LUCENE_LOCK_DIR "/tmp"
 //
 //define this to try and load the lock dir from this specified environment variable
-#define LUCENE_LOCK_DIR_ENV_1 "TEMP"
+//#define LUCENE_LOCK_DIR_ENV_1 "TEMP"
 //define this if you want to have look up this environment variable if the first one fails
-#define LUCENE_LOCK_DIR_ENV_2 "TMP"
+//#define LUCENE_LOCK_DIR_ENV_2 "TMP"
 //define this if you want to have a fallback directory, if not defined then 
 //the lockdirectory will be the index directory
-#define LUCENE_LOCK_DIR_ENV_FALLBACK "/tmp"
+//#define LUCENE_LOCK_DIR_ENV_FALLBACK "/tmp"
 //
 ////////////////////////////////////////////////////////////////////
 

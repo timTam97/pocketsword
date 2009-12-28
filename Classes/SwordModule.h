@@ -12,6 +12,7 @@
 */
 
 #import "SwordModuleTextEntry.h"
+#import "SwordListKey.h"
 
 //#ifdef __cplusplus
 #include <swtext.h>
@@ -164,6 +165,8 @@ typedef enum {
 - (NSString *)configEntryForKey:(NSString *)entryKey;
 - (BOOL)hasSearchIndex;
 
+- (NSMutableArray *)search:(NSString *)istr;
+
 /**
  returns attribute values from the engine for notes, cross-refs and such for the given link type
  @return NSArray for references
@@ -175,6 +178,7 @@ typedef enum {
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
+- (void)setChapter:(NSString *)chapter;
 
 // ------- SwordModuleAccess ---------
 - (NSArray *)strippedTextEntriesForRef:(NSString *)reference;

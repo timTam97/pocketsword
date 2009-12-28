@@ -11,7 +11,7 @@
 
 @implementation PSPreferencesController
 
-
+BOOL requireReloadOfModuleViews = NO;
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 //- (void)viewWillAppear:(BOOL)animated {
@@ -24,6 +24,15 @@
     //self.navigationItem.rightBarButtonItem = iButton;
     //[iButton release];
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	if(requireReloadOfModuleViews) {
+		[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+		[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
+		[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	}
+	requireReloadOfModuleViews = NO;
 }
 
 /*
@@ -50,9 +59,11 @@
 - (void)dealloc {
     [super dealloc];
 }
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 3;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
@@ -64,6 +75,7 @@
 	}
 	return 0;
 }
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
@@ -159,11 +171,14 @@
 							fontSizeSlider.value = (float)fontSize;
 						} else {
 							fontSizeSlider.value = 14.0;
+							[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"fontSizePreference"];
+							[[NSUserDefaults standardUserDefaults] synchronize];
 						}
 						fontSizeSlider.continuous = NO;
 						[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
 						[ cell addSubview: fontSizeSlider ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size");
+						//don't set the cellLabel here, we do it below
+						//cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
 						[ fontSizeSlider release ];
 					}
                         break;
@@ -287,6 +302,9 @@
 		if(!font)
 			font = @"Helvetica";
 		cell.detailTextLabel.text = font;
+	} else if(indexPath.section == 0 && indexPath.row == 0) {
+		NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+		cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
 	}
 	return cell;				
 }
@@ -299,49 +317,55 @@
 }
 
 - (void)fontSizeChanged:(UISlider *)sender {
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	NSInteger f = [sender value];
 	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:@"fontSizePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	[preferencesTable reloadData];
+//	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	requireReloadOfModuleViews = YES;
 }
 
 - (void)nightModeChanged:(UISwitch *)sender {
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"nightModePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+//	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	requireReloadOfModuleViews = YES;
 }
 
 - (void)redLetterChanged:(UISwitch *)sender {
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"redLetterPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[moduleManager setPreferences];
-	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+//	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	requireReloadOfModuleViews = YES;
 }
 
 - (void)vplChanged:(UISwitch *)sender {
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"vplPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+//	[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	requireReloadOfModuleViews = YES;
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:@"fontNamePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
-	[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+//	[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	requireReloadOfModuleViews = YES;
 }
 
 - (void)insomniaModeChanged:(UISwitch *)sender {

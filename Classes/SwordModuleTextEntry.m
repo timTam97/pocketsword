@@ -32,4 +32,10 @@
     [super finalize];
 }
 
+- (void)dealloc {
+	self.key = nil;
+	self.text = nil;
+	[super dealloc];
+}
+
 @end

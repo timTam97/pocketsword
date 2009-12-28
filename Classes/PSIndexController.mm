@@ -15,6 +15,7 @@
 @synthesize downloadableIndices;
 @synthesize installedIndices;
 @synthesize unavailableIndices;
+@synthesize files;
 
 int tableSections;
 BOOL installedShown;
@@ -26,7 +27,7 @@ BOOL downloadableShown;
 	navItem.title = @"";
 	//i18n of close button
 	closeButton.title = @"Close";
-	NSLog(@"PSIndexController: viewDidLoad");
+	//NSLog(@"PSIndexController: viewDidLoad");
 	tableSections = 0;
 	installedShown = NO;
 	unavailableShown = NO;
@@ -36,7 +37,12 @@ BOOL downloadableShown;
 - (void)setModuleManager:(PSModuleController *)mm {
 	moduleManager = mm;
 	[moduleManager retain];
-	[self updateInstalledIndexList];
+	//[self updateInstalledIndexList];
+}
+
+- (void)setSearchController:(PSSearchController *)sc {
+	searchController = sc;
+	[searchController retain];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -137,7 +143,7 @@ BOOL downloadableShown;
 	}
 	
 	NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
-	NSMutableArray *files = [NSMutableArray arrayWithObjects: nil];
+	self.files = [NSMutableArray arrayWithObjects: nil];
 	NSRange dataRange;
 	
 	while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
@@ -155,11 +161,26 @@ BOOL downloadableShown;
 		}
 	}
 	
+	[self updateInstalledIndexList];
+
+	application.networkActivityIndicatorVisible = NO;
+	//[indicesTable reloadData];
+	[pool release];
+}
+
+- (IBAction)closeButtonPressed:(id)sender {
+	[searchController refreshView];
+	[ViewController hideModal:self.view withTiming:0.3];
+}
+
+- (void)updateInstalledIndexList {
+	
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSMutableArray *modules = [[[[moduleManager swordManager] listModules] mutableCopy] autorelease];
 	NSMutableArray *ii = [NSMutableArray arrayWithObjects: nil];
 	NSMutableArray *di = [NSMutableArray arrayWithObjects: nil];
 	NSMutableArray *nai = [NSMutableArray arrayWithObjects: nil];
-
+	
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[modules sortUsingDescriptors:sortDescriptors];
@@ -168,13 +189,13 @@ BOOL downloadableShown;
 	for(SwordModule *mod in modules) {
 		if([mod hasSearchIndex]) {
 			[ii addObject: mod];
-			NSLog(@"installed index for: %@", [mod name]);
-		} else if([files containsObject: [[mod name] lowercaseString]]) {
+			//NSLog(@"installed index for: %@", [mod name]);
+		} else if(self.files && [files containsObject: [[mod name] lowercaseString]]) {
 			[di addObject: mod];
-			NSLog(@"downloadable index for: %@", [mod name]);
+			//NSLog(@"downloadable index for: %@", [mod name]);
 		} else {
 			[nai addObject: mod];
-			NSLog(@"no available index for: %@", [mod name]);
+			//NSLog(@"no available index for: %@", [mod name]);
 		}
 	}
 	
@@ -183,15 +204,9 @@ BOOL downloadableShown;
 	self.unavailableIndices = nai;
 	
 	//[modules release];
-
+	
 	tableSections = 1;
 	installedShown = YES;
-//	if([installedIndices count] > 0) {
-//		tableSections++;
-//		installedShown = YES;
-//	} else {
-//		installedShown = NO;
-//	}
 	
 	if([downloadableIndices count] > 0) {
 		tableSections++;
@@ -206,59 +221,7 @@ BOOL downloadableShown;
 	} else {
 		unavailableShown = NO;
 	}
-
-	application.networkActivityIndicatorVisible = NO;
 	[indicesTable reloadData];
-	[pool release];
-}
-
-- (IBAction)closeButtonPressed:(id)sender {
-	[[moduleManager viewController] hideModal:self.view withTiming:0.3];
-}
-
-- (void)updateInstalledIndexList {
-	
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSMutableArray *modules = [[[[moduleManager swordManager] listModules] mutableCopy] autorelease];
-	NSMutableArray *ii = [NSMutableArray arrayWithObjects: nil];
-	NSMutableArray *rest = [NSMutableArray arrayWithObjects: nil];
-	
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-	[modules sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
-
-	for(SwordModule *mod in modules) {
-		if([mod hasSearchIndex]) {
-			[ii addObject: mod];
-		} else {
-			[rest addObject: mod];
-		}
-	}
-	//[modules release];
-	
-	self.installedIndices = ii;
-	self.unavailableIndices = rest;
-	self.downloadableIndices = nil;
-
-	tableSections = 1;
-	installedShown = YES;
-
-//	if([installedIndices count] > 0) {
-//		tableSections++;
-//		installedShown = YES;
-//	} else {
-//		installedShown = NO;
-//	}
-	
-	if([unavailableIndices count] > 0) {
-		tableSections++;
-		unavailableShown = YES;
-	} else {
-		unavailableShown = NO;
-	}
-
-	downloadableIndices = NO;
 	[pool release];
 }
 
@@ -335,7 +298,8 @@ BOOL downloadableShown;
 	DLog(@"Index (%@) installed successfully", moduleName);
 	
 	installationProgress = 1.0;
-	[indicesTable reloadData];
+	[self updateInstalledIndexList];
+	 //[indicesTable reloadData];
 }
 
 - (float)getInstallationProgress {
@@ -374,11 +338,13 @@ BOOL downloadableShown;
 //}
 
 - (void)dealloc {
-	NSLog(@"PSIndexController: dealloc");
+	//NSLog(@"PSIndexController: dealloc");
 	self.downloadableIndices = nil;
 	self.installedIndices = nil;
 	self.unavailableIndices = nil;
+	self.files = nil;
 	[moduleManager release];
+	[searchController release];
 	[super dealloc];
 }
 

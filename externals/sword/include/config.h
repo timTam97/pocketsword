@@ -42,6 +42,8 @@
 
 #define CURLAVAILABLE 1
 
+#define USELUCENE 1
+
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #define LT_OBJDIR ".libs/"

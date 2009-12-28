@@ -32,7 +32,7 @@
 //@synthesize sourceInstallSourceView;
 //@synthesize installedModuleGroups;
 
-sword::ListKey results;
+//sword::ListKey results;
 
 - (DataController *)init {
 	self = [super init];
@@ -213,7 +213,7 @@ sword::ListKey results;
 			return NSLocalizedString(@"NoModulesInstalled", @"");
 		}
 	} else if (tag == SEARCH_TABLE) {
-		return [NSString stringWithFormat: @"Search Results (%d)", results.Count()];
+		//return [NSString stringWithFormat: @"Search Results (%d)", results.Count()];
 	}
 	return @"";
 }
@@ -259,7 +259,7 @@ sword::ListKey results;
 		}
 		return 0;
 	} else if (tag == SEARCH_TABLE) {
-		return results.Count();
+		//return results.Count();
 	} else if (tag == BOOKMARK_TABLE) {
 		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
 		return [bookmarks count];
@@ -347,8 +347,8 @@ sword::ListKey results;
 		}
 		return cell;
 	} else if (tag == SEARCH_TABLE) {
-		cell.textLabel.text = [NSString stringWithUTF8String: results.getElement([indexPath indexAtPosition: 1])->getText()];
-		return cell;
+		//cell.textLabel.text = [NSString stringWithUTF8String: results.getElement([indexPath indexAtPosition: 1])->getText()];
+		//return cell;
 	} else if (tag == BOOKMARK_TABLE) {
 		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
 		cell.textLabel.text = [bookmarks objectAtIndex: indexPath.row];

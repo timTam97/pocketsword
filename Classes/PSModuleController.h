@@ -28,6 +28,7 @@
 #import "SwordModule.h"
 #import "SwordDictionary.h"
 #import "PSModuleType.h"
+#import "SwordKey.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -60,7 +61,6 @@
 	SwordManager *swordManager;
 	SwordInstallManager *swordInstallManager;
 	SwordInstallSource *currentInstallSource;
-	sword::SWKey currentLocation;
 }
 
 @property (assign) SwordModule *primaryBible;
@@ -72,6 +72,7 @@
 
 + (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript;
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript;
++ (NSString *)createRefString:(NSString*)ref;
 + (BOOL)checkNetworkConnection;
 
 - (PSModuleController *)init;

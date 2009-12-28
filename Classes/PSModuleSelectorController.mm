@@ -133,6 +133,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[moduleManager removeModule: module];
+		[tableView reloadData];
 		//[moduleManager reload];
 		//[moduleTable reloadData];
 	}

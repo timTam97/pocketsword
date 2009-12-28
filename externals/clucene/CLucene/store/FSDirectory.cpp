@@ -248,8 +248,8 @@ void FSDirectory::FSIndexInput::readInternal(uint8_t* b, const int32_t len) {
 			if ( LOCK_DIR == NULL )
 				LOCK_DIR=LUCENE_LOCK_DIR_ENV_FALLBACK;
 			#endif
-			if ( LOCK_DIR == NULL )
-				_CLTHROWA(CL_ERR_IO, "Couldn't get determine lock dir");
+		//if ( LOCK_DIR == NULL )
+		//_CLTHROWA(CL_ERR_IO, "Couldn't get determine lock dir");
 		#endif
 		
 		return LOCK_DIR;
@@ -260,7 +260,8 @@ void FSDirectory::FSIndexInput::readInternal(uint8_t* b, const int32_t len) {
    refCount(0),
    useMMap(false)
   {
-  	_realpath(path,directory);//set a realpath so that if we change directory, we can still function
+	  //_realpath(path,directory);//set a realpath so that if we change directory, we can still function
+	strcpy(directory, path);
   	if ( !directory || !*directory ){
   		strcpy(directory,path);	
   	}
@@ -273,16 +274,16 @@ void FSDirectory::FSIndexInput::readInternal(uint8_t* b, const int32_t len) {
     }
     
     // Ensure that lockDir exists and is a directory.
-		struct fileStat fstat;
-	  if ( fileStat(tmplockdir,&fstat) != 0 ) {
-			//todo: should construct directory using _mkdirs... have to write replacement
-			if ( _mkdir(directory) == -1 ){
-				_CLTHROWA(CL_ERR_IO,"Cannot create temp directory"); //todo: make richer error
-			}
-		}
-		if ( !(fstat.st_mode & S_IFDIR) ){
-			_CLTHROWA(CL_ERR_IO, "Found regular file where directory expected"); //todo: make richer error: " + lockDir);
-    }
+//		struct fileStat fstat;
+//	  if ( fileStat(tmplockdir,&fstat) != 0 ) {
+//			//todo: should construct directory using _mkdirs... have to write replacement
+//			if ( _mkdir(directory) == -1 ){
+//				_CLTHROWA(CL_ERR_IO,"Cannot create temp directory"); //todo: make richer error
+//			}
+//		}
+//		if ( !(fstat.st_mode & S_IFDIR) ){
+//			_CLTHROWA(CL_ERR_IO, "Found regular file where directory expected"); //todo: make richer error: " + lockDir);
+//    }
 	
 
     if (createDir) {

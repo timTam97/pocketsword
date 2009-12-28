@@ -31,7 +31,6 @@ NSTimer *timer;
 BOOL refSelectorShown = NO;
 BOOL modulesListShown = NO;
 BOOL multiListShown = NO;
-
  
 //- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 //	[searchBar resignFirstResponder];
@@ -300,7 +299,6 @@ BOOL multiListShown = NO;
 
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		
-		
 		NSString *lastRef = [defaults stringForKey: @"lastRef"];
 		if (lastRef == nil) {
 			[defaults setPersistentDomain: [NSDictionary dictionaryWithObject: @"Genesis 1" forKey: @"lastRef"] forName: [[NSBundle mainBundle] bundleIdentifier]];
@@ -335,10 +333,6 @@ BOOL multiListShown = NO;
 		[pool release];
 		initialized = true;
 	}
-	//	PSIndexController *ic = [[PSIndexController alloc] init];
-	//	ic.moduleManager = self;
-	//	[ic updateInstalledIndexListWithRemoteIndices:nil];
-	//	[ic installSearchIndexForModule: @"KJV"];
 	
 }
 
@@ -440,7 +434,7 @@ BOOL multiListShown = NO;
 {
 //	PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
 //	[indexC setModuleManager:moduleManager];
-//	[self showModal:indexC.view withTiming:0.7];
+//	[ViewController showModal:indexC.view withTiming:0.7];
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
@@ -453,14 +447,16 @@ BOOL multiListShown = NO;
 	
 	if(multiListShown) {
 		//[self hideModal:historyListView withTiming:0.7];
-		[self hideModal:multiListController.view withTiming:0.3];
+		[ViewController hideModal:multiListController.view withTiming:0.3];
 		multiListShown = NO;
 	} else {
 		[historyListTable reloadData];
-		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
-		if(ip)
-			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
-		[self showModal:multiListController.view withTiming:0.3];
+		if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
+			NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
+			if(ip)
+				[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
+		}
+		[ViewController showModal:multiListController.view withTiming:0.3];
 		multiListShown = YES;
 	}
 	
@@ -478,7 +474,7 @@ BOOL multiListShown = NO;
 	}
 	
 	if(modulesListShown) {
-		[self hideModal:modulesListView withTiming:0.3];
+		[ViewController hideModal:modulesListView withTiming:0.3];
 		modulesListShown = NO;
 	} else {
 		NSIndexPath *ip = nil;//default value
@@ -494,7 +490,7 @@ BOOL multiListShown = NO;
 			if (pos < [array count]) {
 				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 			}			
-		} else if([moduleSelector listType] == BibleTab) {
+		} else if([moduleSelector listType] == CommentaryTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
 			int pos = 0;
@@ -506,13 +502,23 @@ BOOL multiListShown = NO;
 			if (pos < [array count]) {
 				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 			}			
-			
 		} else {
+			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"")];
+			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
+			int pos = 0;
+			for(; pos < [array count]; pos++) {
+				if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryDictionary] name]]) {
+					break;
+				}
+			}
+			if (pos < [array count]) {
+				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
+			}			
 		}
 		[modulesListTable reloadData];
 		if(ip)
 			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
-		[self showModal:modulesListView withTiming:0.3];
+		[ViewController showModal:modulesListView withTiming:0.3];
 		modulesListShown = YES;
 	}
 }
@@ -534,7 +540,7 @@ BOOL multiListShown = NO;
 	
 	if(refSelectorShown) {
 		//hide the refSelector
-		[self hideModal:refSelectorView withTiming:0.3];
+		[ViewController hideModal:refSelectorView withTiming:0.3];
 		refSelectorShown = NO;
 		[dataController setRefSelectorBooks: nil];
 	} else {
@@ -545,7 +551,7 @@ BOOL multiListShown = NO;
 			[refSelectorTitle setTitle:[[moduleManager primaryCommentary] name]];
 		}
 		[dataController updateRefSelectorBooks];
-		[self showModal:refSelectorView withTiming:0.3];
+		[ViewController showModal:refSelectorView withTiming:0.3];
 		refSelectorShown = YES;
 
 		NSRange range = [[moduleManager getCurrentBibleRef] rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
@@ -1013,10 +1019,11 @@ BOOL multiListShown = NO;
 	}
 	
 	
-	NSString *titleString = [[[[ref stringByReplacingOccurrencesOfString: @"III " withString: @"3 "] 
-								stringByReplacingOccurrencesOfString: @"II " withString: @"2 "] 
-							   stringByReplacingOccurrencesOfString: @"I " withString: @"1 "] 
-							  stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
+	NSString *titleString = [PSModuleController createRefString:ref];
+//	[[[[ref stringByReplacingOccurrencesOfString: @"III " withString: @"3 "] 
+//								stringByReplacingOccurrencesOfString: @"II " withString: @"2 "] 
+//							   stringByReplacingOccurrencesOfString: @"I " withString: @"1 "] 
+//							  stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
 	if([moduleManager primaryBible]) {
 		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:BibleTab];
 		//[bibleNavBtn setTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition]];
@@ -1074,7 +1081,7 @@ BOOL multiListShown = NO;
 
 // Use this to show the modal view (pops-up from the bottom)
 // try a time of 0.7 to start with...
-- (void) showModal:(UIView*)modalView withTiming:(float)time
++ (void) showModal:(UIView*)modalView withTiming:(float)time
 {
 	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 	
@@ -1094,7 +1101,7 @@ BOOL multiListShown = NO;
 }
 
 // Use this to slide the semi-modal view back down.
-- (void) hideModal:(UIView*) modalView withTiming:(float)time
++ (void) hideModal:(UIView*) modalView withTiming:(float)time
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
@@ -1106,7 +1113,7 @@ BOOL multiListShown = NO;
 	[UIView commitAnimations];
 }
 
-- (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
++ (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
 	UIView* modalView = (UIView *)context;
 	[modalView removeFromSuperview];
@@ -1114,7 +1121,7 @@ BOOL multiListShown = NO;
 }
 
 // Use this to slide the semi-modal view back down.
-- (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time
++ (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
@@ -1126,7 +1133,7 @@ BOOL multiListShown = NO;
 	[UIView commitAnimations];
 }
 
-- (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
++ (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
 	UIView* modalView = (UIView *)context;
 	[modalView removeFromSuperview];

@@ -149,11 +149,12 @@ typedef enum {
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
 - (void)redisplayChapter:(PollingType)pollingType restore:(RestorePositionType)position;
 
-- (void) showModal:(UIView*)modalView withTiming:(float)time;
-- (void) hideModal:(UIView*) modalView withTiming:(float)time;
-- (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
-- (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
-- (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
++ (void) showModal:(UIView*)modalView withTiming:(float)time;
++ (void) hideModal:(UIView*) modalView withTiming:(float)time;
++ (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
++ (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
++ (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
+
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;

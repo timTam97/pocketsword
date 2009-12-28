@@ -8,13 +8,16 @@
 
 #import "PSModuleController.h"
 #import "SwordModule.h"
+#import "PSSearchController.h"
 
 @interface PSIndexController : UIViewController {
-	PSModuleController *moduleManager;
+	IBOutlet PSModuleController *moduleManager;
+	PSSearchController *searchController;
 
 	NSArray *downloadableIndices;
 	NSArray *installedIndices;
 	NSArray *unavailableIndices;
+	NSMutableArray *files;
 	
 	NSMutableData *responseData;
 	NSInteger responseDataExpectedLength;
@@ -30,10 +33,12 @@
 @property (retain, readwrite) NSArray *downloadableIndices;
 @property (retain, readwrite) NSArray *installedIndices;
 @property (retain, readwrite) NSArray *unavailableIndices;
+@property (retain, readwrite) NSMutableArray *files;
 
 - (void)viewDidLoad;
 - (void)dealloc;
 - (void)setModuleManager:(PSModuleController *)mm;
+- (void)setSearchController:(PSSearchController *)sc;
 
 - (IBAction)closeButtonPressed:(id)sender;
 

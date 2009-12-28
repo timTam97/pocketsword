@@ -694,6 +694,26 @@
 	}
 }
 
+- (NSMutableArray *)search:(NSString *)istr {
+	sword::ListKey results = swModule->search([istr UTF8String], -4);
+	results.sort();
+	NSLog(@"Found %d results", results.Count());
+	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
+	if(results.Count() > 0) {
+		while(!results.Error()) {
+			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
+			//[self textEntryForKey:[PSModuleController createRefString:[NSString stringWithUTF8String: results.getText()]] textType:TextTypeStripped];
+			//NSLog(@"%@: %@", entry.key, entry.text);
+			[retArray addObject: entry];
+			[entry release];
+			results++;
+		}
+	}
+//	SwordListKey *ret = [[SwordListKey alloc] initWithSWListKey: &results];
+//	return ret;
+	return retArray;
+}
+
 /** wrapper around getConfigEntry() */
 - (NSString *)configEntryForKey:(NSString *)entryKey {
 	NSString *result = nil;	
