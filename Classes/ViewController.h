@@ -80,6 +80,7 @@ typedef enum {
 	IBOutlet UIView				*historyListView;
 	IBOutlet UITableView		*historyListTable;
 	IBOutlet UINavigationItem	*historyNavigationItem;
+	IBOutlet UIBarButtonItem	*historyCloseButton;
 	
 	// Dictionary tab
 	IBOutlet UITabBarItem		*dictionaryTabBarItem;
@@ -107,12 +108,12 @@ typedef enum {
 	IBOutlet UITabBarItem *aboutTabBarItem;
 	
 	// Status view
-	IBOutlet id statusController;
-	IBOutlet id statusTitle;
-	IBOutlet id statusText;
-	IBOutlet id statusOverallText;
-	IBOutlet id statusBar;
-	IBOutlet id statusOverallBar;
+	IBOutlet UIViewController *statusController;
+	IBOutlet UILabel *statusTitle;
+	IBOutlet UILabel *statusText;
+	IBOutlet UILabel *statusOverallText;
+	IBOutlet UIProgressView *statusBar;
+	IBOutlet UIProgressView *statusOverallBar;
 	
 	// Busy Indicator
 	IBOutlet UIViewController *activityController;
@@ -132,6 +133,7 @@ typedef enum {
 //- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
 //- (void)confirmInstall:(NSString *)name;
 - (void)updateInstallationStatus;
+- (void)updateIndexInstallationStatus:(NSString*)arg;
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;
 - (IBAction)toggleNavigation:(id)sender;
@@ -166,5 +168,9 @@ typedef enum {
 
 - (void)reloadModuleTable;
 - (void)reloadDictionaryData;
+
+- (void)showIndexStatus;
+- (void)hideIndexStatus;
+- (void)hideOperationStatus;
 
 @end

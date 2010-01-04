@@ -24,10 +24,9 @@ BOOL downloadableShown;
 
 - (void)viewDidLoad {
 	//i18n of title
-	navItem.title = @"";
+	navItem.title = NSLocalizedString(@"SearchDownloaderTitle", @"Search Downloader");
 	//i18n of close button
-	closeButton.title = @"Close";
-	//NSLog(@"PSIndexController: viewDidLoad");
+	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 	tableSections = 0;
 	installedShown = NO;
 	unavailableShown = NO;
@@ -46,7 +45,10 @@ BOOL downloadableShown;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-	[self updateInstalledIndexList];
+	if(downloadableShown)
+		[self updateInstalledIndexList];
+	else
+		[self updateInstalledIndexListWithRemoteIndices:nil];
 	[super viewWillAppear:animated];
 }
 
@@ -74,15 +76,15 @@ BOOL downloadableShown;
 {
 	switch (section) {
 		case 0:
-			return @"Installed search index:";
+			return NSLocalizedString(@"IndexControllerInstalled", @"Installed search index for:");
 		case 1:
 			if(downloadableShown)
-				return @"Downloadable search index:";
+				return NSLocalizedString(@"IndexControllerDownloadable", @"Downloadable search index for:");
 			else
-				return @"No available search index:";
+				return NSLocalizedString(@"IndexControllerNone", @"No available search index for:");
 	}
 	//case 2:
-	return @"No remote search index:";
+	return NSLocalizedString(@"IndexControllerNoneRemote", @"No remote search index for:");
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -118,6 +120,8 @@ BOOL downloadableShown;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if(downloadableShown && (indexPath.section == 1)) {
+		ViewController *mm = [moduleManager viewController];
+		[mm performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
 		[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
 	}
 }
@@ -255,6 +259,10 @@ BOOL downloadableShown;
 	installationProgress = (float) responseDataCurrentLength / (float) responseDataExpectedLength;
 	if(installationProgress >= 1.0)
 		installationProgress = 0.9999;//1.0 is a reserved special value that shouldn't be set here.
+	ViewController *mm = [moduleManager viewController];
+	NSString *p = [NSString stringWithFormat: @"%f", installationProgress];
+	[mm performSelectorInBackground: @selector(updateIndexInstallationStatus:) withObject: p];
+	//[[moduleManager viewController] updateIndexInstallationStatus:installationProgress];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -266,6 +274,9 @@ BOOL downloadableShown;
 
 	ALog(@"Couldn't retrieve search index for: %@", moduleName);
 	installationProgress = -1.0;
+	ViewController *mm = [moduleManager viewController];
+	[mm performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
+	//[[moduleManager viewController] hideOperationStatus];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -300,6 +311,9 @@ BOOL downloadableShown;
 	installationProgress = 1.0;
 	[self updateInstalledIndexList];
 	 //[indicesTable reloadData];
+	ViewController *mm = [moduleManager viewController];
+	[mm performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
+	//[[moduleManager viewController] hideOperationStatus];
 }
 
 - (float)getInstallationProgress {

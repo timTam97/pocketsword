@@ -101,7 +101,7 @@ BOOL multiListShown = NO;
 	//DLog(@"%@", desc);
 	NSRange dataRange = [desc rangeOfString: @")"];
 	if(dataRange.location != NSNotFound) {
-		desc = [NSString stringWithFormat: @"%@ files)", [desc substringToIndex: dataRange.location]];
+		desc = [NSString stringWithFormat: @"%@ %@)", [desc substringToIndex: dataRange.location], NSLocalizedString(@"files", @"files")];
 	}
 	//DLog(@"%@", desc);
 	[statusOverallText setText: desc];
@@ -127,6 +127,16 @@ BOOL multiListShown = NO;
 		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
 								   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil] show];		
 	}
+	[pool release];
+}
+
+- (void)hideIndexStatus {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	[ViewController hideModal: statusController.view withTiming:0.3];
+	[statusText setText: @""];
+	[statusOverallText setText: @""];
+	[statusBar setProgress: 0.0];
+	[statusOverallBar setProgress: 0.0];
 	[pool release];
 }
 
@@ -157,13 +167,23 @@ BOOL multiListShown = NO;
 - (void)showIndexStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	[statusTitle setText: @"Index Download"];
-	[statusText setText: @"Installing"];
-	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	[navController setNavigationBarHidden: YES];
+	[statusTitle setText: NSLocalizedString(@"IndexDownloadTitle", @"Index Download")]; 
+	[statusText setText: @""];
+	[statusOverallBar setHidden: YES];
+	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
+	//[navController setNavigationBarHidden: YES];
 	
-	[tabController presentModalViewController: navController animated: YES];
+	//[tabController presentModalViewController: navController animated: YES];
+	[ViewController showModal: statusController.view withTiming:0.3];
 	
+	[pool release];
+}
+
+- (void)updateIndexInstallationStatus:(NSString*)arg {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	//[statusBar setProgress: reporter->fileProgress];
+	float p = [arg floatValue];
+	[statusBar setProgress: p];
 	[pool release];
 }
 
@@ -276,6 +296,8 @@ BOOL multiListShown = NO;
 		moduleTabBarItem.title = NSLocalizedString(@"TabBarTitleModules", @"Modules");
 		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
+		
+		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
@@ -784,130 +806,6 @@ BOOL multiListShown = NO;
     [super dealloc];
 }
 
-/*
-// Toggles the download source picker display
-- (IBAction)toggleDownloadSource:(id)sender {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	// downloadSourceBtn;
-	// downloadSourceSelector;
-	// downloadSourcesToolbar;
-	[downloadSourceSelector setHidden: ![downloadSourceSelector isHidden]];
-	[downloadSourcesToolbar setHidden: [downloadSourceSelector isHidden]];
-	
-	if (![downloadSourceSelector isHidden]) {
-		
-		DLog(@"Showing the DownloadSourcePicker");
-		[downloadSourceSelector selectRow: [dataController sourceInstallSourceView] inComponent: 0 animated: YES];
-		//[refSelector reloadAllComponents];
-		
-	}
-	
-	[pool release];
-}
-
-- (IBAction)refreshDownloadSourcesList:(id)sender {
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
-	
-	[[moduleManager swordInstallManager] refreshMasterRemoteInstallSourceList];
-	[[moduleManager swordInstallManager] refreshAllInstallSources];
-	//now have to refresh the download sources picker.
-	application.networkActivityIndicatorVisible = NO;
-	[downloadSourceSelector reloadAllComponents];
-}
-
-- (IBAction)refreshDownloadSource:(id)sender {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
-	//[downloadableModulesTable reloadData];
-
-	[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
-	
-	SEL method = @selector(updateRefreshStatus);
-	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
-	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-	[invocation setTarget: self];
-	[invocation setSelector: method];
-	
-	timer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
-
-	[pool release];
-}
-
-- (void)runRefreshDownloadSource {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[[moduleManager swordInstallManager] resetInstallationProgress];
-
-	[self performSelectorInBackground: @selector(showRefreshStatus) withObject: nil];
-
-	SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
-
-	[[moduleManager swordInstallManager] performSelectorInBackground: @selector(refreshInstallSource:) withObject:is];
-	//[[moduleManager swordInstallManager] refreshInstallSource: is];
-	
-	[self updateRefreshStatus];
-	
-	[pool release];
-}
-
-- (void)showRefreshStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
-	[statusTitle setText: @"Refreshing Module Source"];
-	[statusOverallText setText: @""];
-	//[statusBar setHidden: YES];
-	[statusOverallBar setHidden: YES];
-	//SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
-	//NSString *sText = [NSString stringWithFormat: @"Source: %@", [is caption]];
-	
-	[statusText setText: @""];
-	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	[navController setNavigationBarHidden: YES];
-	
-	[tabController presentModalViewController: navController animated: YES];
-	
-	[pool release];
-}
-
-- (void)updateRefreshStatus {
-	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
-	BOOL failed = YES;
-	float progress = reporter->fileProgress;
-	[statusBar setProgress: reporter->fileProgress];
-	//[statusOverallBar setProgress: reporter->overallProgress];
-	//NSString *desc = [[NSString alloc] initWithCString: reporter->getDescription() encoding: [NSString defaultCStringEncoding]];
-	//[statusOverallText setText: desc];
-	//[desc release];
-	
-	//DLog(@"updateRefreshStatus: Progress: %f", progress);
-	
-	if (progress == 1.0) {
-		//[statusOverallText setText: @"Done!"];
-		[dataController reloadModuleList];
-		[moduleTable reloadData];
-		[downloadableModulesTable reloadData];
-		//[moduleManager init]; -- not needed now that we're using SwordManager
-		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		//[NSThread sleepForTimeInterval: 1.0];
-		//[statusBar setHidden: NO];
-		
-		failed = NO;
-	}
-	else if (progress == -1.0) {
-		failed = YES;
-	} else {
-		failed = NO;
-	}
-	if (failed) {
-		[dataController reloadModuleList];
-		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		[moduleTable reloadData];
-		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
-								   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil] show];		
-	}
-}*/
-
 - (void)startAnimateChapterChange
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -1020,17 +918,11 @@ BOOL multiListShown = NO;
 	
 	
 	NSString *titleString = [PSModuleController createRefString:ref];
-//	[[[[ref stringByReplacingOccurrencesOfString: @"III " withString: @"3 "] 
-//								stringByReplacingOccurrencesOfString: @"II " withString: @"2 "] 
-//							   stringByReplacingOccurrencesOfString: @"I " withString: @"1 "] 
-//							  stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
 	if([moduleManager primaryBible]) {
 		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:BibleTab];
-		//[bibleNavBtn setTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition]];
 	}
 	if([moduleManager primaryCommentary]) {
 		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:CommentaryTab];
-		//[commentaryNavBtn setTitle: [NSString stringWithFormat:@"%@:%@", titleString, cVersePosition]];
 	}
 	
 	if ([[moduleManager getCurrentBibleRef] isEqualToString: @"Revelation 22"]) {

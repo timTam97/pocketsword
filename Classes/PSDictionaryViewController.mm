@@ -14,6 +14,7 @@
 @implementation PSDictionaryViewController
 
 int prevLength = 0;
+BOOL dictionaryEnabled = NO;
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
 	BOOL needsReload = reloadData;
@@ -30,18 +31,47 @@ int prevLength = 0;
 	
 	if([moduleManager primaryDictionary]) {
 		if(![[moduleManager primaryDictionary] keysLoaded]) {
-			//need to load it
-			[moduleManager displayBusyIndicator];
-			
-			[[moduleManager primaryDictionary] allKeys];
-			
-			[moduleManager hideBusyIndicator];
-			needsReload = YES;
+			if(![[moduleManager primaryDictionary] keysCached]) {
+				//ask whether to cache the keys now or another time
+				
+				[[[UIAlertView alloc] initWithTitle: [NSString stringWithFormat: @"%@ %@", [[moduleManager primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message: NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+				return;
+			} else {
+				//need to load it
+				[moduleManager displayBusyIndicator];
+				
+				[[moduleManager primaryDictionary] allKeys];
+				
+				[moduleManager hideBusyIndicator];
+				needsReload = YES;
+			}
 		}
 	}
+	[dictionarySearchBar setUserInteractionEnabled: YES];
+	dictionaryEnabled = YES;
 	if(needsReload) {
 		[dictionaryEntriesTable reloadData];
 	}
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	if (buttonIndex == 1) {
+		[moduleManager displayBusyIndicator];
+		
+		[[moduleManager primaryDictionary] allKeys];
+		
+		[moduleManager hideBusyIndicator];
+		dictionaryEnabled = YES;
+		[dictionarySearchBar setUserInteractionEnabled: YES];
+	} else {
+		[dictionarySearchBar setUserInteractionEnabled: NO];
+		dictionaryEnabled = NO;
+	}
+	
+	[dictionaryEntriesTable reloadData];
+	[pool release];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -74,7 +104,10 @@ int prevLength = 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [[moduleManager primaryDictionary] entryCount];
+	if(dictionaryEnabled)
+		return [[moduleManager primaryDictionary] entryCount];
+	else
+		return 0;
 }
 
 

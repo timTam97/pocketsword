@@ -16,6 +16,7 @@
 	IBOutlet id viewController;
 	IBOutlet UITableView *resultsTable;
 	IBOutlet UISearchBar *sBar;
+	IBOutlet UIBarButtonItem *closeButton;
 	
 	//SwordListKey *results;
 	NSMutableArray *results;

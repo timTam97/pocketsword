@@ -17,9 +17,12 @@
 
 BOOL searchingEnabled;
 
+- (void)awakeFromNib {
+	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
+}
 
 - (void)viewDidAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
+	[super viewDidAppear:animated];
 	ShownTab tab = [dataController listType];
 	BOOL showIndexController = NO;
 	switch(tab) {
@@ -33,11 +36,23 @@ BOOL searchingEnabled;
 			break;
 	}
 	if(showIndexController) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+	}
+	[self refreshView];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	if (buttonIndex == 1) {
 		PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
 		[indexC setModuleManager:moduleManager];
 		[ViewController showModal:indexC.view withTiming:0.3];
+	} else {
+		
 	}
 	[self refreshView];
+	[pool release];
 }
 
 - (void)refreshView {
@@ -60,6 +75,7 @@ BOOL searchingEnabled;
 		//disable search
 		[sBar setUserInteractionEnabled: NO];
 	}
+	[resultsTable reloadData];
 }
 
 - (void)dealloc {
@@ -82,10 +98,10 @@ BOOL searchingEnabled;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
 	if(!searchingEnabled) {
-		return @"No Search Index Installed";
+		return NSLocalizedString(@"NoSearchIndexInstalled", @"No Search Index Installed");
 	} else {
 		if(results)
-			return [NSString stringWithFormat: @"%d results", [results count]];
+			return [NSString stringWithFormat: @"%d %@", [results count], NSLocalizedString(@"SearchResults", @"results")];
 	}
 	return @"";
 }

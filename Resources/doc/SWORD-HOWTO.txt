@@ -1,6 +1,8 @@
 
 When updating SWORD from SVN into this project,
 
+delete all the Makefiles & other support files, leaving only the .cpp and .h files in their various folders...
+
 The following files should be "disabled" in Xcode (so that Xcode doesn't try to compile them):
 
 src/utilfuns/win32/dirent.cpp
@@ -13,10 +15,28 @@ AND (because they have a main() function):
 src/keys/genarray.c 
 src/utilfuns/zlib/maketree.c
 
-
-
-
 ie:  all the files in the following folders:
 src/frontend/im
 src/frontend/framework
 src/utilfuns/win32
+
+
+DIFFS:
+
+
+Index: /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp
+===================================================================
+--- /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp	(revision 8)
++++ /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp	(working copy)
+@@ -144,6 +144,7 @@
+ 
+ 		/* Switch on full protocol/debug output */
+ 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
++		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());
+ 		
+ 		/* FTP connection settings */
+ 
+
+
+--------------------------------------------------
+

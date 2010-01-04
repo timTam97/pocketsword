@@ -144,6 +144,7 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 
 		/* Switch on full protocol/debug output */
 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
+		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());
 		
 		/* FTP connection settings */
 

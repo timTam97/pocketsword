@@ -148,7 +148,7 @@
 	
 	self.navigationItem.rightBarButtonItem = nil;
 	//UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
-	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Email Us" style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
+	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
 	self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
 	[emailUsBarButtonItem release];
 	
@@ -157,7 +157,7 @@
 -(void)emailFeedback:(id)sender
 {
     NSString *recipients = @"mailto:niccarter@mac.com?";
-    //NSString *body = @"&body=It is raining in sunny California!";
+    //NSString *body = @"&body=PocketSword is the bestestest evar!";
 	NSString *subject = [NSString stringWithFormat:@"subject=PocketSword Feedback (v%@)", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 	
     
