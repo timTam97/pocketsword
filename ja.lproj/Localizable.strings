@@ -113,3 +113,24 @@
 "Maps" = "Maps";
 "Images" = "Images";
 
+"BibleHistoryTitle" = "Bible History";
+"CommentaryHistoryTitle" = "Commentary History";
+
+"None" = "None";
+"CloseButtonTitle" = "Close";
+"CacheDictionaryKeysTitle" = "Cache?";
+"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
+"IndexDownloadTitle" = "Index Download";
+"NoSearchIndexTitle" = "No Search Index";
+"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
+"SearchDownloaderTitle" = "Search Downloader";
+"FontPreferenceTitle" = "Font";
+"EmailUsButton" = "Email Us";
+"NoSearchIndexInstalled" = "No Search Index Installed";
+"SearchResults" = "Results";
+
+"IndexControllerInstalled" = "Installed search index for:";
+"IndexControllerDownloadable" = "Downloadable search index for:";
+"IndexControllerNone" = "No available search index for:";
+"IndexControllerNoneRemote" = "No remote search index for:";
+

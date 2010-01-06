@@ -41,7 +41,7 @@
     
     // still no entries?
 	if([keys count] == 0) {
-		NSLog(@"SwordDictionary starting to index %@", name);
+		DLog(@"\nSwordDictionary starting to index %@", name);
         NSMutableArray *arr = [NSMutableArray array];
 
         [moduleLock lock];
@@ -70,7 +70,7 @@
             (*swModule)++;
         }
 
-        NSLog(@"-- SwordDictionary finished indexing...");
+        DLog(@"\n-- SwordDictionary finished indexing...");
 		[moduleLock unlock];
         
         self.keys = arr;
@@ -81,7 +81,7 @@
 
 - (void)readFromCache {
 	//open cached file
-	NSLog(@"SwordDictionary: readFromCache %@", name);
+	DLog(@"\nSwordDictionary: readFromCache %@", name);
     NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
 	NSMutableArray *data = [NSArray arrayWithContentsOfFile:cachePath];
     if(data != nil) {
@@ -89,15 +89,15 @@
     } else {
         self.keys = [NSMutableArray array];
     }
-	NSLog(@"-- SwordDictionary: finished readFromCache");
+	DLog(@"\n-- SwordDictionary: finished readFromCache");
 }
 
 - (void)writeToCache {
 	// save cached file
-	NSLog(@"SwordDictionary: writeToCache %@", name);
+	DLog(@"\nSwordDictionary: writeToCache %@", name);
     NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
 	[keys writeToFile:cachePath atomically:NO];
-	NSLog(@"-- SwordDictionary: finished writeToCache");
+	DLog(@"\n-- SwordDictionary: finished writeToCache");
 }
 
 @end

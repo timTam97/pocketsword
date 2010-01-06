@@ -190,6 +190,8 @@
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		055E352C10F180B1004EBC79 /* libcurl-HOWTO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */; };
+		058E2C7310F49E21006E4447 /* search.txt in Resources */ = {isa = PBXBuildFile; fileRef = 058E2C7210F49E21006E4447 /* search.txt */; };
+		05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */ = {isa = PBXBuildFile; fileRef = 05A0403F10F1C4AE0094C6E3 /* Multi-List.png */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		05B3D61710BB7A92000F8A48 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
 		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
@@ -758,6 +760,8 @@
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
+		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
+		05A0403F10F1C4AE0094C6E3 /* Multi-List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Multi-List.png"; path = "Resources/Multi-List.png"; sourceTree = "<group>"; };
 		05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcurl-7.19.6-release.a"; path = "externals/libcurl/libcurl-7.19.6-release.a"; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
 		05B5295B107C529000826AFE /* PSModuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleType.h; sourceTree = "<group>"; };
@@ -1847,6 +1851,7 @@
 				05BADF6410B79EA50026BFBF /* BiblicaCommunication.txt */,
 				05E37CA410B2AD9000C2F1F5 /* AppStoreInfo.txt */,
 				0513ACB010BF74FC00E414D9 /* google-analytics.txt */,
+				058E2C7210F49E21006E4447 /* search.txt */,
 			);
 			name = doc;
 			sourceTree = "<group>";
@@ -2016,6 +2021,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				05A0403F10F1C4AE0094C6E3 /* Multi-List.png */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				0545546310CA385100EE11EC /* Downloader.strings */,
 				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
@@ -2479,6 +2485,8 @@
 				054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */,
 				0546D59D10CF725F00799DCB /* SWORD-HOWTO.txt in Resources */,
 				055E352C10F180B1004EBC79 /* libcurl-HOWTO.txt in Resources */,
+				05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */,
+				058E2C7310F49E21006E4447 /* search.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

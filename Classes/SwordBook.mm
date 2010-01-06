@@ -32,7 +32,7 @@
 		//NSString *osisName = [NSString stringWithCString:aBook->getOSISName() encoding:NSUTF8StringEncoding];
 		//NSString *prefAbbrev = [NSString stringWithCString:aBook->getPreferredAbbreviation() encoding:NSUTF8StringEncoding];
 		//NSString *rawName = [NSString stringWithCString:aBook->getLongName() encoding:NSUTF8StringEncoding];
-		//NSLog(@"%@::%@::%@", rawName, osisName, name);
+		//DLog(@"\n%@::%@::%@", rawName, osisName, name);
 	}
 	return self;
 }

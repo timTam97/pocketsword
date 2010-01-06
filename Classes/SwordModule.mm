@@ -379,7 +379,7 @@
 				}
 			}
 			
-			//NSLog(@"aboutText: %@", retStr);
+			//NSLog(@"\naboutText: %@", retStr);
             [configEntries setObject:retStr forKey:SWMOD_CONFENTRY_ABOUT];
 			aboutText = retStr;
         }
@@ -697,13 +697,11 @@
 - (NSMutableArray *)search:(NSString *)istr {
 	sword::ListKey results = swModule->search([istr UTF8String], -4);
 	results.sort();
-	NSLog(@"Found %d results", results.Count());
+	DLog(@"\nFound %d results", results.Count());
 	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
 	if(results.Count() > 0) {
 		while(!results.Error()) {
 			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
-			//[self textEntryForKey:[PSModuleController createRefString:[NSString stringWithUTF8String: results.getText()]] textType:TextTypeStripped];
-			//NSLog(@"%@: %@", entry.key, entry.text);
 			[retArray addObject: entry];
 			[entry release];
 			results++;

@@ -31,26 +31,28 @@
 + (NSString*)generateAboutHTML
 {
 
-	//										Ian Wagner <br /><i>(original concept & design)</i><br />
+	//										
 
 	NSString *body = [NSString stringWithFormat:
 							 @"<div id=\"header\">\n\
 								 <div class=\"title\">PocketSword</div>\n\
 								 <div class=\"version\"> Version %@</div>\n\
 								 <center><i><a href=\"http://crosswire.org/pocketsword\">http://crosswire.org/pocketsword</a></i><br />\n\
-									<i>@PocketSword on Twitter</i></center>\n\
+									<i><a href=\"http://twitter.com/PocketSword\">@PocketSword</a> on Twitter</i></center>\n\
 							 </div>\n\
 							 <div id=\"main\">\n\
 								<p><b>Developed by: </b><br />\n\
-									 Nic Carter <br />\n\
-									 Ian Wagner</p>\n\
+									 Nic Carter\n\
+								</p>\n\
 								 <p><b>With help from: </b><br />\n\
+										Ian Wagner <br /><i>(original concept & design)</i><br />\n\
 										Manfred Bergmann <br /><i>(MacSword - <a href=\"http://www.macsword.com/\">http://www.macsword.com/</a>)</i><br />\n\
 										The SWORD Project <br /><i>(hosted by CrossWire Bible Society - <a href=\"http://crosswire.org/sword/\">http://crosswire.org/sword/</a>)</i><br />\n\
-										James Coleman <br /><i>(App icon & Bible tab icon)</i><br />\n\
-										Cheree Lynley Designs <br /><i>(other custom icons)</i>\n\
+										James Coleman <br /><i>(icons)</i><br />\n\
+										Cheree Lynley Designs <br /><i>(icons)</i>\n\
 									</p>\n\
 								<p><b>With special thanks to: </b><br />\n\
+										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i>\n\
 										Pablo and Rusty's, Gordon <i>(<a href=\"http://www.pabloandrustys.com.au/\">http://www.pabloandrustys.com.au/</a>)</i>\n\
 									</p>\n\
 							</div>\n\

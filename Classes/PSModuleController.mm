@@ -112,24 +112,6 @@ float installationProgress;
 	
 	[self setPreferences];
 	
-	//PSIndexController *ic = [[PSIndexController alloc] init];
-	//ic.moduleManager = moduleManager;
-	//[ic updateInstalledIndexListWithRemoteIndices:nil];
-//	SwordModule *mod = [swordManager moduleWithName: @"ESV"];
-//	[mod search: @"crystal"];
-	//[ic installSearchIndexForModule: mod];
-//	sword::SWModule *swModule = [mod swModule];
-//	sword::ListKey results = swModule->search("crystal", -4);
-//	results.sort();
-//	NSLog(@"Found %d results", results.Count());
-//	while(!results.Error()) {
-//		NSLog(@"%s", results.getText());
-//		results++;
-//	}
-	//	for(int i=0;i>results.Count();i++) {
-	//		NSLog(@"%s", results.getElement(i)->getText());
-	//	}
-
 	return self;
 }
 
@@ -566,7 +548,7 @@ float installationProgress;
 	[bibleTitle setTitle: title];
 	NSString *text = [primaryBible getChapter:chapter withExtraJS:extraJS];
 	
-	//NSLog(@"%@", text);
+	//DLog(@"\n%@", text);
 	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: @"lastRef"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;
@@ -602,7 +584,7 @@ float installationProgress;
 	[commentaryTitle setTitle: title];
 	NSString *text = [primaryCommentary getChapter:chapter withExtraJS:extraJS];
 	
-	//NSLog(@"%@", text);
+	//DLog(@"\n%@", text);
 	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: @"lastRef"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;

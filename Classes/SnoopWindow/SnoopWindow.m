@@ -156,18 +156,18 @@ CGPoint CGPointNorm(CGPoint a) {
 				if (startTouchPosition1.x < currentTouchPosition.x) {
 					if(bibleEvent) {
 						DLog(@"bible swipe right");
-						//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeRight object:touch];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeRight object:touch];
 					} else {
 						DLog(@"commentary swipe right");
-						//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeRight object:touch];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeRight object:touch];
 					}
 				} else {
 					if(bibleEvent) {
 						DLog(@"bible swipe left");
-						//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeLeft object:touch];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeLeft object:touch];
 					} else {
 						DLog(@"commentary swipe left");
-						//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeLeft object:touch];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeLeft object:touch];
 					}
 				}
 			}/* else if(!movement && touchAndHold) {

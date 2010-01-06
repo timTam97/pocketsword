@@ -81,7 +81,7 @@ BOOL downloadableShown;
 			if(downloadableShown)
 				return NSLocalizedString(@"IndexControllerDownloadable", @"Downloadable search index for:");
 			else
-				return NSLocalizedString(@"IndexControllerNone", @"No available search index for:");
+				return NSLocalizedString(@"IndexControllerNoneRemote", @"No available search index for:");//used to be "IndexControllerNone"
 	}
 	//case 2:
 	return NSLocalizedString(@"IndexControllerNoneRemote", @"No remote search index for:");
@@ -123,6 +123,9 @@ BOOL downloadableShown;
 		ViewController *mm = [moduleManager viewController];
 		[mm performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
 		[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
+	} else {
+		//deselect the row
+		[tableView deselectRowAtIndexPath: indexPath animated: YES];
 	}
 }
 
@@ -130,37 +133,40 @@ BOOL downloadableShown;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
+	
+	if([PSModuleController checkNetworkConnection]) {
+		application.networkActivityIndicatorVisible = YES;
 
-	NSString *remoteDir = @"http://pocketsword.net/indices/";
-	
-	// Get the index directory listing
-	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
-											 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-	NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
-	if (!data) {
-		DLog(@"Couldn't list remote directory");
-		//as a fallback, call the local version:
-		[self updateInstalledIndexList];
-		[pool release];
-		return;
-	}
-	
-	NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
-	self.files = [NSMutableArray arrayWithObjects: nil];
-	NSRange dataRange;
-	
-	while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
-		dataString = [dataString substringFromIndex: dataRange.location + dataRange.length];
-		dataRange = [dataString rangeOfString: @"\""];
-		if (dataRange.location != NSNotFound) {
-			NSString *link = [dataString substringToIndex: dataRange.location];
-			//if ([item UTF8String][0] != '/') {
-			//if (![item hasPrefix:@"/"] && ![item hasSuffix:@"/"]) {
-			if ([link hasSuffix:@".zip"]) {
-				link = [link substringToIndex: ([link length] - 4)];
-				[files addObject: link];
-				//NSLog(@"found a file: %@", item);
+		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/";
+		
+		// Get the index directory listing
+		NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
+												 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
+		NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
+		if (!data) {
+			DLog(@"Couldn't list remote directory");
+			//as a fallback, call the local version:
+			[self updateInstalledIndexList];
+			[pool release];
+			return;
+		}
+		
+		NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
+		self.files = [NSMutableArray arrayWithObjects: nil];
+		NSRange dataRange;
+		
+		while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
+			dataString = [dataString substringFromIndex: dataRange.location + dataRange.length];
+			dataRange = [dataString rangeOfString: @"\""];
+			if (dataRange.location != NSNotFound) {
+				NSString *link = [dataString substringToIndex: dataRange.location];
+				//if ([item UTF8String][0] != '/') {
+				//if (![item hasPrefix:@"/"] && ![item hasSuffix:@"/"]) {
+				if ([link hasSuffix:@".zip"]) {
+					link = [link substringToIndex: ([link length] - 4)];
+					[files addObject: link];
+					//DLog(@"\nfound a file: %@", item);
+				}
 			}
 		}
 	}
@@ -193,13 +199,24 @@ BOOL downloadableShown;
 	for(SwordModule *mod in modules) {
 		if([mod hasSearchIndex]) {
 			[ii addObject: mod];
-			//NSLog(@"installed index for: %@", [mod name]);
-		} else if(self.files && [files containsObject: [[mod name] lowercaseString]]) {
-			[di addObject: mod];
-			//NSLog(@"downloadable index for: %@", [mod name]);
+			//DLog(@"\ninstalled index for: %@", [mod name]);
+		} else if([mod type] == dictionary) {
+			//ignore cause we don't have support for search in dictionaries atm
+		} else if(self.files) {
+			NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
+			if(v == nil)
+				v = @"0.0";//if there's no version information, it's version 0.0!
+			NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
+			if([files containsObject: indexName]) {
+				[di addObject: mod];
+				//DLog(@"\ndownloadable index for: %@", [mod name]);
+			} else {
+				[nai addObject: mod];
+				//DLog(@"\nno available index for: %@", [mod name]);
+			}
 		} else {
 			[nai addObject: mod];
-			//NSLog(@"no available index for: %@", [mod name]);
+			//DLog(@"\nno available index for: %@", [mod name]);
 		}
 	}
 	
@@ -320,39 +337,7 @@ BOOL downloadableShown;
 	return installationProgress;
 }
 
-//	NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
-//	if (!responseData) {
-//		ALog(@"Couldn't retrieve file: %@", filename);
-////		installationProgress = -1.0;
-//		[pool release];
-//		return NO;
-//	}
-//	
-//	if (![responseData writeToFile: zippedIndex atomically: NO]) {
-//		ALog(@"Couldn't write file: %@", zippedIndex);
-////		installationProgress = -1.0;
-//		[pool release];
-//		return NO;
-//	}
-//	
-//	ZipArchive *arch = [[ZipArchive alloc] init];
-//	[arch UnzipOpenFile:zippedIndex];
-//	[arch UnzipFileTo:cluceneDir overWrite:YES];
-//	[arch UnzipCloseFile];
-//	[arch release];
-//	
-//	NSFileManager *fileManager = [NSFileManager defaultManager];
-//	[fileManager removeItemAtPath:zippedIndex error:NULL];
-//	
-//	DLog(@"Index (%@) installed successfully", module);
-//	
-////	installationProgress = 1.0;
-//	[pool release];
-//	return YES;
-//}
-
 - (void)dealloc {
-	//NSLog(@"PSIndexController: dealloc");
 	self.downloadableIndices = nil;
 	self.installedIndices = nil;
 	self.unavailableIndices = nil;

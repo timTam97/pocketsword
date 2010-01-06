@@ -139,7 +139,6 @@ BOOL dictionaryEnabled = NO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[dictionarySearchBar resignFirstResponder];
-	//NSLog(@"selected: %@", [[moduleManager primaryDictionary] entryForKey: [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text]);
 	[dictionaryDescriptionTitle setTitle: [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	NSString *descr = [[moduleManager primaryDictionary] entryForKey: dictionaryDescriptionTitle.title];
 	descr = [PSModuleController createHTMLString: descr usingPreferences: YES withJS: @""];

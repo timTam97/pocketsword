@@ -375,7 +375,7 @@ BOOL multiListShown = NO;
 		}
 	} //else if([tabController.moreNavigationController.view isDescendantOfView:viewController.view]) {
 		//this is (hopefully) the root More controller.
-		//NSLog(@"RAAAHHH!");
+		//DLog(@"\n\nRAAAHHH!");
 		//viewController.navigationItem.rightBarButtonItem = nil;
 	//}
 	
@@ -758,7 +758,7 @@ BOOL multiListShown = NO;
 		
 		[history insertObject: historyItem atIndex: 0];
 		//[historyItem release];
-		if([history count] >= 15) {
+		if([history count] >= 50) {
 			[history removeLastObject];
 		}
 		
@@ -1073,6 +1073,10 @@ BOOL multiListShown = NO;
 
 - (void)reloadDictionaryData {
 	[dictionaryViewController reloadDictionaryData:YES];
+}
+
+- (UITabBarController *)tabController {
+	return tabController;
 }
 
 @end

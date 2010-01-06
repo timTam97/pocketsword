@@ -173,4 +173,6 @@ typedef enum {
 - (void)hideIndexStatus;
 - (void)hideOperationStatus;
 
+- (UITabBarController *)tabController;
+
 @end

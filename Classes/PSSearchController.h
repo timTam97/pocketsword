@@ -18,6 +18,8 @@
 	IBOutlet UISearchBar *sBar;
 	IBOutlet UIBarButtonItem *closeButton;
 	
+	UIView *helpView;
+	
 	//SwordListKey *results;
 	NSMutableArray *results;
 }

@@ -80,6 +80,8 @@ BOOL searchingEnabled;
 
 - (void)dealloc {
 	self.results = nil;
+	if(helpView)
+		[helpView release];
     [super dealloc];
 }
 
@@ -154,7 +156,7 @@ BOOL searchingEnabled;
 	mainLabel.text = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
 	NSMutableString *txt = [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text mutableCopy];
 	[txt replaceOccurrencesOfString:@"\n" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [txt length])];
-	//NSLog(@"%@", txt);
+	//DLog(@"\n%@", txt);
 	secondLabel.text = txt;
 	[txt release];
 	
@@ -163,15 +165,32 @@ BOOL searchingEnabled;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//	if(downloadableShown && (indexPath.section == 1)) {
-//		[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
-//	}
+	if(searchingEnabled && results) {
+		NSString *ref = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
+		NSString *verse = [[ref componentsSeparatedByString:@":"] objectAtIndex: 1];
+		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"commentaryVersePosition"];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+
+		ShownTab tab = [dataController listType];
+		PollingType pt;
+		switch(tab) {
+			case BibleTab:
+				pt = BibleViewPoll;
+				break;
+			case CommentaryTab:
+				pt = CommentaryViewPoll;
+				break;
+		}
+		[viewController displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
+		[viewController toggleMultiList: nil];
+	}
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
-//	[self performSelectorOnMainThread: @selector(hideKeyboard) withObject: nil waitUntilDone: NO];
 	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	ShownTab tab = [dataController listType];
 	self.results = nil;
@@ -195,7 +214,49 @@ BOOL searchingEnabled;
 //}
 
 - (IBAction)infoButtonPressed:(id)sender {
+	if(!helpView) {
+		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
+		UIWebView *webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
+		NSString *helpHTML = @"<html><body><font face=\"Helvetica\"><dl><dt>loved one</dt><dd>search for verses that contain \"loved\" or \"one\"<br/>NB: this is the same as searching for loved OR one</dd>\n\
+		<dt>\"loved one\"</dt><dd>search for verses that contain the phrase \"loved one\"</dd>\n\
+		<dt>love*</dt><dd>search for verses that contain a word starting with \"love\" (love OR loves OR loved OR etc...)</dd>\n\
+		<dt>loved AND one</dt><dd>search for verses that contains the word \"loved\" and the word \"one\"<br />NB: && can be used in place of AND</dd>\n\
+		<dt>+loved one</dt><dd>search for verses that must contain \"loved\" and may contain \"one\"</dd>\n\
+		<dt>loved NOT one</dt><dd>search for verses that contain \"loved\" but not \"one\"</dd>\n\
+		<dt>(loved one) AND God</dt><dd>search for verses that contain \"loved\" or \"one\" and \"God\"</dd>\n\
+		</font></body></html>";
+		[webView loadHTMLString: helpHTML baseURL:nil];
+		[helpView addSubview: webView];
+		[webView release];
+		UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
+		navBar.barStyle = UIBarStyleBlackOpaque;
+		UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: @"Search Help" ];
+		navItem.leftBarButtonItem = nil;
+		navItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
+		[navBar pushNavigationItem: navItem animated: NO];
+		[navItem release];
+		[helpView addSubview: navBar];
+		[helpView retain];
+	}
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
+                           forView:self.view
+                             cache:YES]; 
 	
+    [UIView setAnimationDuration:1];
+	[self.view addSubview:helpView];
+    [UIView commitAnimations];
+}
+
+- (void)closeSearchHelp {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
+                           forView:self.view
+                             cache:YES];
+	
+    [UIView setAnimationDuration:1];
+	[helpView removeFromSuperview];
+    [UIView commitAnimations];
 }
 
 @end
