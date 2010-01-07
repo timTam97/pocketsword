@@ -135,4 +135,5 @@
 "IndexControllerNoneRemote" = "No remote search index for:";
 
 "SearchHelpTitle" = "Search Help";
+"IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";
 

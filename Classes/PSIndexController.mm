@@ -120,13 +120,31 @@ BOOL downloadableShown;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if(downloadableShown && (indexPath.section == 1)) {
-		ViewController *mm = [moduleManager viewController];
-		[mm performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
-		[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"InstallTitle", @"Install?") message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"Download the search index for this module?  This may take a while for Commentary modules!") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 	} else {
 		//deselect the row
 		[tableView deselectRowAtIndexPath: indexPath animated: YES];
 	}
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	NSIndexPath *indexPath = [indicesTable indexPathForSelectedRow];
+
+	if (buttonIndex == 1) {
+		if(indexPath) {
+			ViewController *mm = [moduleManager viewController];
+			[mm performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
+			[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
+		}
+	} else {
+	}
+	if(indexPath) {
+		[indicesTable deselectRowAtIndexPath: indexPath animated: YES];
+	}
+	
+	[pool release];
 }
 
 - (IBAction)updateInstalledIndexListWithRemoteIndices:(id)sender {
@@ -137,7 +155,7 @@ BOOL downloadableShown;
 	if([PSModuleController checkNetworkConnection]) {
 		application.networkActivityIndicatorVisible = YES;
 
-		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/";
+		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
 		
 		// Get the index directory listing
 		NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
@@ -257,6 +275,7 @@ BOOL downloadableShown;
 	
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = YES;
+	application.idleTimerDisabled = YES;//disable auto-lock while we're installing a module, as it could take a while!
 
 	// Download the data file
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
@@ -288,6 +307,8 @@ BOOL downloadableShown;
     // Show error message
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = NO;
+	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
 	ALog(@"Couldn't retrieve search index for: %@", moduleName);
 	installationProgress = -1.0;
@@ -300,6 +321,8 @@ BOOL downloadableShown;
     [connection release];
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = NO;
+	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
     // Use responseData
 	SwordModule *mod = [[moduleManager swordManager] moduleWithName:moduleName];

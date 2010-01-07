@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
-		0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0513ACB010BF74FC00E414D9 /* google-analytics.txt */; };
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
@@ -180,7 +179,6 @@
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
 		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
-		0546D59D10CF725F00799DCB /* SWORD-HOWTO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */; };
 		054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
 		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
 		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
@@ -188,9 +186,7 @@
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
-		055E352C10F180B1004EBC79 /* libcurl-HOWTO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
-		058E2C7310F49E21006E4447 /* search.txt in Resources */ = {isa = PBXBuildFile; fileRef = 058E2C7210F49E21006E4447 /* search.txt */; };
 		05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */ = {isa = PBXBuildFile; fileRef = 05A0403F10F1C4AE0094C6E3 /* Multi-List.png */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		05B3D61710BB7A92000F8A48 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
@@ -2497,7 +2493,6 @@
 				05F8E60210B1098600570141 /* forward.png in Resources */,
 				05B3D61710BB7A92000F8A48 /* MMM.png in Resources */,
 				0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */,
-				0513ACB110BF74FC00E414D9 /* google-analytics.txt in Resources */,
 				0513AE1B10C0C43600E414D9 /* Default.png in Resources */,
 				0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */,
 				0513AE8410C0DC3900E414D9 /* back-white.png in Resources */,
@@ -2505,10 +2500,7 @@
 				0515E2D310C8E32900F58382 /* Downloader.xib in Resources */,
 				0545546510CA385100EE11EC /* Downloader.strings in Resources */,
 				054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */,
-				0546D59D10CF725F00799DCB /* SWORD-HOWTO.txt in Resources */,
-				055E352C10F180B1004EBC79 /* libcurl-HOWTO.txt in Resources */,
 				05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */,
-				058E2C7310F49E21006E4447 /* search.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3131,8 +3123,8 @@
 					"-DUSELUCENE",
 				);
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "8979D244-67BE-416C-B4A4-DE1C8D651204";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8979D244-67BE-416C-B4A4-DE1C8D651204";
+				PROVISIONING_PROFILE = "3E9F10DC-6173-4F42-B8A7-7D73C3ABD441";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3E9F10DC-6173-4F42-B8A7-7D73C3ABD441";
 			};
 			name = Distribution;
 		};

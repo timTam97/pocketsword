@@ -344,7 +344,6 @@ float installationProgress;
 		return NO;
 	}
 
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = YES;
 	application.idleTimerDisabled = YES;//disable auto-lock while we're installing a module, as it could take a while!
@@ -352,6 +351,7 @@ float installationProgress;
 	int status = [swordInstallManager installModule: swordModule fromSource: sIS withManager: swordManager];
 	
 	application.networkActivityIndicatorVisible = NO;
+	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 	
 	[self reload];
