@@ -147,7 +147,6 @@
 		05275B5D10884F72004FB0E0 /* rawtext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA710884F71004FB0E0 /* rawtext4.cpp */; };
 		05275B5E10884F72004FB0E0 /* swtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA810884F71004FB0E0 /* swtext.cpp */; };
 		05275B5F10884F72004FB0E0 /* ztext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAA10884F71004FB0E0 /* ztext.cpp */; };
-		05275B6110884F72004FB0E0 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05275B6210884F72004FB0E0 /* ftpparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAE10884F71004FB0E0 /* ftpparse.c */; };
 		05275B6310884F72004FB0E0 /* regex.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAF10884F71004FB0E0 /* regex.c */; };
 		05275B6410884F72004FB0E0 /* roman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB010884F71004FB0E0 /* roman.cpp */; };
@@ -190,6 +189,7 @@
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		055E352C10F180B1004EBC79 /* libcurl-HOWTO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */; };
+		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		058E2C7310F49E21006E4447 /* search.txt in Resources */ = {isa = PBXBuildFile; fileRef = 058E2C7210F49E21006E4447 /* search.txt */; };
 		05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */ = {isa = PBXBuildFile; fileRef = 05A0403F10F1C4AE0094C6E3 /* Multi-List.png */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
@@ -451,7 +451,6 @@
 		052759AE10884F64004FB0E0 /* rawtext4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rawtext4.h; sourceTree = "<group>"; };
 		052759AF10884F64004FB0E0 /* rawverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rawverse.h; sourceTree = "<group>"; };
 		052759B010884F64004FB0E0 /* rawverse4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rawverse4.h; sourceTree = "<group>"; };
-		052759B110884F64004FB0E0 /* regex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regex.h; sourceTree = "<group>"; };
 		052759B210884F64004FB0E0 /* roman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = roman.h; sourceTree = "<group>"; };
 		052759B310884F64004FB0E0 /* rtfhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rtfhtml.h; sourceTree = "<group>"; };
 		052759B410884F64004FB0E0 /* sapphire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sapphire.h; sourceTree = "<group>"; };
@@ -761,6 +760,10 @@
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
 		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
+		058E2D2B10F56EFC006E4447 /* canon_german.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_german.h; sourceTree = "<group>"; };
+		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
+		058E2D2D10F56EFC006E4447 /* canon_vulg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_vulg.h; sourceTree = "<group>"; };
+		058E2D3010F56EFC006E4447 /* regex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regex.h; sourceTree = "<group>"; };
 		05A0403F10F1C4AE0094C6E3 /* Multi-List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Multi-List.png"; path = "Resources/Multi-List.png"; sourceTree = "<group>"; };
 		05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcurl-7.19.6-release.a"; path = "externals/libcurl/libcurl-7.19.6-release.a"; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
@@ -1209,6 +1212,10 @@
 		0527595E10884F64004FB0E0 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				058E2D2B10F56EFC006E4447 /* canon_german.h */,
+				058E2D2C10F56EFC006E4447 /* canon_luther.h */,
+				058E2D2D10F56EFC006E4447 /* canon_vulg.h */,
+				058E2D2E10F56EFC006E4447 /* internal */,
 				0527595F10884F64004FB0E0 /* canon.h */,
 				0527596010884F64004FB0E0 /* canon_abbrevs.h */,
 				0527596110884F64004FB0E0 /* canon_kjva.h */,
@@ -1291,7 +1298,6 @@
 				052759AE10884F64004FB0E0 /* rawtext4.h */,
 				052759AF10884F64004FB0E0 /* rawverse.h */,
 				052759B010884F64004FB0E0 /* rawverse4.h */,
-				052759B110884F64004FB0E0 /* regex.h */,
 				052759B210884F64004FB0E0 /* roman.h */,
 				052759B310884F64004FB0E0 /* rtfhtml.h */,
 				052759B410884F64004FB0E0 /* sapphire.h */,
@@ -1867,6 +1873,22 @@
 				080E96DDFE201D6D7F000001 /* PS-other */,
 			);
 			name = Source;
+			sourceTree = "<group>";
+		};
+		058E2D2E10F56EFC006E4447 /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				058E2D2F10F56EFC006E4447 /* regex */,
+			);
+			path = internal;
+			sourceTree = "<group>";
+		};
+		058E2D2F10F56EFC006E4447 /* regex */ = {
+			isa = PBXGroup;
+			children = (
+				058E2D3010F56EFC006E4447 /* regex.h */,
+			);
+			path = regex;
 			sourceTree = "<group>";
 		};
 		05D6AB631097E76400A5026E /* CocoaHTTPServer */ = {
@@ -2759,7 +2781,6 @@
 				05275B5D10884F72004FB0E0 /* rawtext4.cpp in Sources */,
 				05275B5E10884F72004FB0E0 /* swtext.cpp in Sources */,
 				05275B5F10884F72004FB0E0 /* ztext.cpp in Sources */,
-				05275B6110884F72004FB0E0 /* ftplib.c in Sources */,
 				05275B6210884F72004FB0E0 /* ftpparse.c in Sources */,
 				05275B6310884F72004FB0E0 /* regex.c in Sources */,
 				05275B6410884F72004FB0E0 /* roman.cpp in Sources */,
@@ -2819,6 +2840,7 @@
 				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
+				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -134,3 +134,5 @@
 "IndexControllerNone" = "No available search index for:";
 "IndexControllerNoneRemote" = "No remote search index for:";
 
+"SearchHelpTitle" = "Search Help";
+

@@ -52,7 +52,7 @@
 										Cheree Lynley Designs <br /><i>(icons)</i>\n\
 									</p>\n\
 								<p><b>With special thanks to: </b><br />\n\
-										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i>\n\
+										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\
 										Pablo and Rusty's, Gordon <i>(<a href=\"http://www.pabloandrustys.com.au/\">http://www.pabloandrustys.com.au/</a>)</i>\n\
 									</p>\n\
 							</div>\n\
@@ -138,7 +138,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 416)];
+	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 367)];
 	
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];

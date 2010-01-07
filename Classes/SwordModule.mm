@@ -697,7 +697,6 @@
 - (NSMutableArray *)search:(NSString *)istr {
 	sword::ListKey results = swModule->search([istr UTF8String], -4);
 	results.sort();
-	DLog(@"\nFound %d results", results.Count());
 	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
 	if(results.Count() > 0) {
 		while(!results.Error()) {
@@ -707,8 +706,6 @@
 			results++;
 		}
 	}
-//	SwordListKey *ret = [[SwordListKey alloc] initWithSWListKey: &results];
-//	return ret;
 	return retArray;
 }
 

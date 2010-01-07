@@ -230,7 +230,7 @@ BOOL searchingEnabled;
 		[webView release];
 		UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
 		navBar.barStyle = UIBarStyleBlackOpaque;
-		UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: @"Search Help" ];
+		UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
 		navItem.leftBarButtonItem = nil;
 		navItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
 		[navBar pushNavigationItem: navItem animated: NO];

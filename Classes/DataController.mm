@@ -47,15 +47,6 @@
 	return self;
 }
 
-/*
-// Search
-- (void)performSearch:(NSString *)key {
-	sword::SWModule *primaryText = [moduleManager getPrimaryText];
-	results = primaryText->Search([key UTF8String], -4);
-	DLog(@"Found %d results", results.Count());
-	results.sort();
-}*/
-
 // Bookmark functions
 - (void)addBookmark:(NSString *)ref {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
