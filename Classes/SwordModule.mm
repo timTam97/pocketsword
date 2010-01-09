@@ -908,6 +908,15 @@
 //    swModule->setKey([aVerseKey swVerseKey]);
 //}
 
+// This takes insanely long on an iPhone!
+- (void)createSearchIndex {
+	swModule->createSearchFramework();
+}
+
+- (void)deleteSearchIndex {
+	swModule->deleteSearchFramework();
+}
+
 
 
 @end

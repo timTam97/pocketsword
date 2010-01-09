@@ -15,7 +15,6 @@
 	const sword::VerseMgr::Book *book;
 	NSString *name;
 	NSInteger chapters;
-	
 }
 
 -(id)initWithBook:(const sword::VerseMgr::Book *)aBook;
@@ -24,5 +23,6 @@
 -(NSInteger)verses:(NSInteger)chapter;
 -(NSInteger)chapters;
 -(NSString*)name;
+-(NSString*)osisName;
 
 @end

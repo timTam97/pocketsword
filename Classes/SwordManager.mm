@@ -218,7 +218,7 @@ using std::list;
     // use english for testing
     if(haveLocale) {
         // set the locale
-        lManager->setDefaultLocaleName([lang UTF8String]);    
+        lManager->setDefaultLocaleName([lang UTF8String]);
     }    
 }
 

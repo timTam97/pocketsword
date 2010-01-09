@@ -52,6 +52,10 @@
 			stringByReplacingOccurrencesOfString: @" of John" withString: @" "];
 }
 
+-(NSString*)osisName {
+	return [NSString stringWithCString:book->getOSISName() encoding:NSUTF8StringEncoding];
+}
+
 -(void)dealloc {
 	[name release];
 	//if(book != nil)

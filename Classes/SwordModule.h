@@ -189,5 +189,7 @@ typedef enum {
 - (void)setPositionFromKeyString:(NSString *)aKeyString;
 //- (void)setPositionFromVerseKey:(SwordVerseKey *)aVerseKey;
 
+- (void)createSearchIndex;
+- (void)deleteSearchIndex;
 
 @end

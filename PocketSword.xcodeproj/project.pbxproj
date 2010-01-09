@@ -172,7 +172,6 @@
 		05275B7B10884F72004FB0E0 /* untgz.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD210884F72004FB0E0 /* untgz.c */; };
 		05275B7C10884F72004FB0E0 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
 		0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 05D461E8108EEB00006BFBB1 /* iTunesArtwork */; };
-		0545546510CA385100EE11EC /* Downloader.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0545546310CA385100EE11EC /* Downloader.strings */; };
 		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
@@ -705,6 +704,15 @@
 		05275AD210884F72004FB0E0 /* untgz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = untgz.c; sourceTree = "<group>"; };
 		05275AD310884F72004FB0E0 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zutil.c; sourceTree = "<group>"; };
 		05275AD410884F72004FB0E0 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
+		05337B0210F823AF0003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		05337B0E10F8285A0003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		05337B0F10F828720003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/Downloader.xib; sourceTree = "<group>"; };
+		05337B1010F8287F0003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05337B1110F828BA0003CFA9 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05337B1210F828BD0003CFA9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05337B1310F828C00003CFA9 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05337B1410F828C30003CFA9 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05337B1510F828C60003CFA9 /* zh */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh; path = zh.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		0542F6CC10BE770C0088A721 /* curl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curl.h; sourceTree = "<group>"; };
 		0542F6CD10BE770C0088A721 /* curlbuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlbuild.h; sourceTree = "<group>"; };
 		0542F6CE10BE770C0088A721 /* curlrules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlrules.h; sourceTree = "<group>"; };
@@ -720,12 +728,6 @@
 		0545545610CA381D00EE11EC /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/Downloader.xib; sourceTree = "<group>"; };
 		0545545710CA382900EE11EC /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/Downloader.xib; sourceTree = "<group>"; };
 		0545545810CA383100EE11EC /* zh */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh; path = zh.lproj/Downloader.xib; sourceTree = "<group>"; };
-		0545546410CA385100EE11EC /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Downloader.strings; sourceTree = "<group>"; };
-		0545546610CA39F900EE11EC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Downloader.strings; sourceTree = "<group>"; };
-		0545546710CA39FF00EE11EC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Downloader.strings; sourceTree = "<group>"; };
-		0545546810CA3A0E00EE11EC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Downloader.strings; sourceTree = "<group>"; };
-		0545546910CA3A1800EE11EC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Downloader.strings; sourceTree = "<group>"; };
-		0545546A10CA3A2000EE11EC /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/Downloader.strings; sourceTree = "<group>"; };
 		0545549610CA4D8000EE11EC /* PSIndexController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSIndexController.h; path = Classes/PSIndexController.h; sourceTree = "<group>"; };
 		0545549710CA4D8000EE11EC /* PSIndexController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSIndexController.mm; path = Classes/PSIndexController.mm; sourceTree = "<group>"; };
 		0545E23810638D8400DD7F06 /* SwordInstallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallSource.h; sourceTree = "<group>"; };
@@ -2041,7 +2043,6 @@
 			children = (
 				05A0403F10F1C4AE0094C6E3 /* Multi-List.png */,
 				0542F70F10BE7C0B0088A721 /* doc */,
-				0545546310CA385100EE11EC /* Downloader.strings */,
 				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
 				E9A6CFA80FF560EA00399E78 /* MainWindow.strings */,
 				0513AE8210C0DC3900E414D9 /* back-white.png */,
@@ -2454,6 +2455,7 @@
 				ko,
 				es,
 				zh,
+				fr,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -2498,7 +2500,6 @@
 				0513AE8410C0DC3900E414D9 /* back-white.png in Resources */,
 				0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */,
 				0515E2D310C8E32900F58382 /* Downloader.xib in Resources */,
-				0545546510CA385100EE11EC /* Downloader.strings in Resources */,
 				054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */,
 				05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */,
 			);
@@ -2848,27 +2849,21 @@
 				0545545610CA381D00EE11EC /* ko */,
 				0545545710CA382900EE11EC /* sv */,
 				0545545810CA383100EE11EC /* zh */,
+				05337B0F10F828720003CFA9 /* fr */,
 			);
 			name = Downloader.xib;
-			sourceTree = "<group>";
-		};
-		0545546310CA385100EE11EC /* Downloader.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0545546410CA385100EE11EC /* English */,
-				0545546610CA39F900EE11EC /* es */,
-				0545546710CA39FF00EE11EC /* ja */,
-				0545546810CA3A0E00EE11EC /* ko */,
-				0545546910CA3A1800EE11EC /* sv */,
-				0545546A10CA3A2000EE11EC /* zh */,
-			);
-			name = Downloader.strings;
 			sourceTree = "<group>";
 		};
 		054EF62210CD0EAF0091D269 /* IndexDownloader.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				054EF62310CD0EAF0091D269 /* English */,
+				05337B1010F8287F0003CFA9 /* fr */,
+				05337B1110F828BA0003CFA9 /* es */,
+				05337B1210F828BD0003CFA9 /* ja */,
+				05337B1310F828C00003CFA9 /* ko */,
+				05337B1410F828C30003CFA9 /* sv */,
+				05337B1510F828C60003CFA9 /* zh */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -2882,6 +2877,7 @@
 				E9B8FF8A0FF57560006081E5 /* ko */,
 				E9B800340FF5B98D006081E5 /* es */,
 				E9B8004E0FF5C316006081E5 /* zh */,
+				05337B0210F823AF0003CFA9 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2895,6 +2891,7 @@
 				E9B8FF890FF57557006081E5 /* ko */,
 				E9B800320FF5B971006081E5 /* es */,
 				E9B8004C0FF5C301006081E5 /* zh */,
+				05337B0E10F8285A0003CFA9 /* fr */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";

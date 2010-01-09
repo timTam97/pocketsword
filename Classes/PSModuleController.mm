@@ -542,7 +542,7 @@ float installationProgress;
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
-	[primaryBible hasSearchIndex];
+	//[primaryBible hasSearchIndex];
 	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
 	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
 	[bibleTitle setTitle: title];
