@@ -731,21 +731,21 @@
 }
 
 - (void)setChapter:(NSString *)chapter {
-	swModule->setKey([chapter UTF8String]);
+	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
 	swModule->RenderText();
 }
 
 - (NSString *)setToNextChapter {
 	swModule->RenderText();
 	sword::SWKey curKey;
-	NSString *ch = [[[NSString stringWithUTF8String: swModule->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
 	
 	// Advance to the next chapter
 	do {
 		curKey = swModule->Key()++;
 		swModule->RenderText();
-		ref = [[[NSString stringWithUTF8String: curKey.getText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	} while ([ref isEqualToString: ch]);
 	return ref;
 }
@@ -753,7 +753,7 @@
 - (NSString *)setToPreviousChapter {
 	swModule->RenderText();
 	sword::SWKey curKey;
-	NSString *ch = [[[NSString stringWithUTF8String: swModule->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	//nicc crash here with "ch" being 'nil'
 	NSString *ref = [NSString stringWithString: ch];
 	
@@ -761,7 +761,8 @@
 	do {
 		curKey = swModule->Key()--;
 		swModule->RenderText();
-		ref = [[[NSString stringWithUTF8String: curKey.getText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		//ref = [[[NSString stringWithUTF8String: curKey.getText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	} while ([ref isEqualToString: ch]);
 	return ref;
 }
@@ -773,13 +774,13 @@
 	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_COMMENTARIES];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
-	swModule->setKey([chapter UTF8String]);
+	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
 	sword::SWKey lastKey;
 	
 	swModule->RenderText();
 	NSMutableString *verses = [@"" mutableCopy];
-	NSString *ch = [[[NSString stringWithUTF8String: swModule->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithUTF8String: swModule->getKeyText()]);
+	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding]);
 	if(printf) NSLog(@"ch = %@", ch);
 	NSString *ref = [NSString stringWithString: ch];
 	NSString *thisEntry = @"";
@@ -809,13 +810,13 @@
 		swModule->Key()++;
 		lastKey++;
 		swModule->RenderText();
-		ref = [[[NSString stringWithUTF8String: swModule->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-		if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithUTF8String: swModule->getKeyText()]);
+		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding]);
 		if(printf) NSLog(@"ref = %@", ref);
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->Key().Error() != KEYERR_OUTOFBOUNDS));
 	
-	swModule->setKey([chapter UTF8String]);	// Set the key back to what we had it at
+	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);	// Set the key back to what we had it at
 	
 	// add JS for navigating through the chapter.
 	// NOTE: for readability, the array isn't starting at the usual '0' position, but at '1'
