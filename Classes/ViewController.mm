@@ -31,7 +31,25 @@ NSTimer *timer;
 BOOL refSelectorShown = NO;
 BOOL modulesListShown = NO;
 BOOL multiListShown = NO;
- 
+static NSString *lastRefAvailable = @"Revelation 22";
+static NSString *firstRefAvailable = @"Genesis 1";
+
++ (void)setFirstRefAvailable:(NSString*)first
+{
+	if(firstRefAvailable)
+		[firstRefAvailable release];
+	firstRefAvailable = first;
+	[firstRefAvailable retain];
+}
+
++ (void)setLastRefAvailable:(NSString*)last
+{
+	if(lastRefAvailable)
+		[lastRefAvailable release];
+	lastRefAvailable = last;
+	[lastRefAvailable retain];
+}
+
 //- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 //	[searchBar resignFirstResponder];
 //}
@@ -929,12 +947,12 @@ BOOL multiListShown = NO;
 		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:CommentaryTab];
 	}
 	
-	if ([[moduleManager getCurrentBibleRef] isEqualToString: @"Revelation 22"]) {
+	if ([[moduleManager getCurrentBibleRef] isEqualToString: lastRefAvailable]) {
 		[self setEnabledBibleNextButton: NO];
 		[self setEnabledBiblePreviousButton: YES];
 		[self setEnabledCommentaryNextButton: NO];
 		[self setEnabledCommentaryPreviousButton: YES];
-	} else if ([[moduleManager getCurrentBibleRef] isEqualToString: @"Genesis 1"]) {
+	} else if ([[moduleManager getCurrentBibleRef] isEqualToString: firstRefAvailable]) {
 		[self setEnabledBibleNextButton: YES];
 		[self setEnabledBiblePreviousButton: NO];
 		[self setEnabledCommentaryNextButton: YES];

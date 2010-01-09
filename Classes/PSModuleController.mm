@@ -22,6 +22,8 @@
 #import "ViewController.h"
 #import "SwordDictionary.h"
 
+#include <localemgr.h>
+
 
 @implementation PSModuleController
 
@@ -89,6 +91,19 @@ float installationProgress;
 	if (userDisclaimer) {
 		[swordInstallManager setUserDisclainerConfirmed: YES];
 	}
+	// set localized book names
+	sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
+	NSString *book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSUTF8StringEncoding];
+	if(!book) {
+		book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSISOLatin1StringEncoding];
+	}
+	[ViewController setFirstRefAvailable: [NSString stringWithFormat: @"%@ 1", book]];
+	book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSUTF8StringEncoding];
+	if(!book) {
+		book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSISOLatin1StringEncoding];
+	}
+	[ViewController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
+	
 	
 	// This seems to sometimes cause a crash on start-up in the SWORD-lib code.  removing this line fixes it...
 	//[self performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];

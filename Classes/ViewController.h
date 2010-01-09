@@ -128,7 +128,8 @@ typedef enum {
 		
 }
 
-
++ (void)setFirstRefAvailable:(NSString*)first;
++ (void)setLastRefAvailable:(NSString*)last;
 
 //- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
 //- (void)confirmInstall:(NSString *)name;
