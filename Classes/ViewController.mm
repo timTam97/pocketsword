@@ -393,15 +393,17 @@ BOOL multiListShown = NO;
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		NSString *ref = [moduleManager setToNextChapter];
-		if(ref)
+		if(ref) {
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-		[self addHistoryItem: BibleTab];
+			[self addHistoryItem: BibleTab];
+		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		NSString *ref = [moduleManager setToNextChapter];
-		if(ref)
+		if(ref) {
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-		[self addHistoryItem: CommentaryTab];
+			[self addHistoryItem: CommentaryTab];
+		}
 	} else {
 		// weird & undefined
 		NSString *ref = [moduleManager setToNextChapter];
@@ -424,15 +426,17 @@ BOOL multiListShown = NO;
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		NSString *ref = [moduleManager setToPreviousChapter];
-		if(ref)
+		if(ref) {
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-		[self addHistoryItem: BibleTab];
+			[self addHistoryItem: BibleTab];
+		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		NSString *ref = [moduleManager setToPreviousChapter];
-		if(ref)
+		if(ref) {
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-		[self addHistoryItem: CommentaryTab];
+			[self addHistoryItem: CommentaryTab];
+		}
 	} else {
 		// weird & undefined
 		NSString *ref = [moduleManager setToPreviousChapter];
