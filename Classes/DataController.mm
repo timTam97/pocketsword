@@ -549,6 +549,11 @@
 	return [((SwordBook*)[refSelectorBooks objectAtIndex:bookIndex]) name];
 }
 
+- (NSString*)bookOSISName:(NSInteger)bookIndex
+{
+	return [((SwordBook*)[refSelectorBooks objectAtIndex:bookIndex]) osisName];
+}
+
 - (NSInteger)bookIndex:(NSString*)bookName
 {
 	NSInteger ret = NSNotFound;

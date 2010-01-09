@@ -83,6 +83,7 @@
 - (void)setShownTabTo:(ShownTab)tab;
 - (void)updateRefSelectorBooks;
 - (NSString*)bookName:(NSInteger)bookIndex;
+- (NSString*)bookOSISName:(NSInteger)bookIndex;
 - (NSInteger)bookIndex:(NSString*)bookName;
 //- (IBAction)updateDownloadManagerTableView;
 
