@@ -26,6 +26,9 @@ BOOL dictionaryEnabled = NO;
 			needsReload = YES;
 		} else {
 			[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+			[dictionarySearchBar setUserInteractionEnabled: NO];
+			dictionaryEnabled = NO;
+			return;
 		}
 	}
 	
@@ -139,9 +142,13 @@ BOOL dictionaryEnabled = NO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[dictionarySearchBar resignFirstResponder];
-	[dictionaryDescriptionTitle setTitle: [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text];
-	NSString *descr = [[moduleManager primaryDictionary] entryForKey: dictionaryDescriptionTitle.title];
-	descr = [PSModuleController createHTMLString: descr usingPreferences: YES withJS: @""];
+	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+	NSString *descr = [[moduleManager primaryDictionary] entryForKey: t];
+	descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br />%@", t, descr] usingPreferences: YES withJS: @""];
+	if([t length] > 20) {
+		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
+	}
+	[dictionaryDescriptionTitle setTitle: t];
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
 	
 	[self showDescription: nil];

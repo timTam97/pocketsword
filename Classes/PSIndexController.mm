@@ -270,8 +270,13 @@ BOOL downloadableShown;
 	if (!mod) {
 		return;
 	}
+	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
+	if(v == nil)
+		v = @"0.0";//if there's no version information, it's version 0.0!
+	NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
 	moduleName = [mod name];
-	NSString *filename = [NSString stringWithFormat: @"http://pocketsword.net/indices/%@.zip", [[mod name] lowercaseString]];
+	
+	NSString *filename = [NSString stringWithFormat: @"http://www.crosswire.org/pocketsword/indices/v1/%@.zip", indexName];
 	
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = YES;
@@ -327,7 +332,13 @@ BOOL downloadableShown;
     // Use responseData
 	SwordModule *mod = [[moduleManager swordManager] moduleWithName:moduleName];
 	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
-	NSString *zippedIndex = [outfileDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.zip", moduleName]];
+
+	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
+	if(v == nil)
+		v = @"0.0";//if there's no version information, it's version 0.0!
+	NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
+	
+	NSString *zippedIndex = [outfileDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.zip", indexName]];
 	NSString *cluceneDir = [outfileDir stringByAppendingPathComponent: @"lucene"];
 	if (![responseData writeToFile: zippedIndex atomically: NO]) {
 		ALog(@"Couldn't write file: %@", zippedIndex);
