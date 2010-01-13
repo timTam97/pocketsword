@@ -131,6 +131,12 @@ typedef enum {
 + (void)setFirstRefAvailable:(NSString*)first;
 + (void)setLastRefAvailable:(NSString*)last;
 
++ (void) showModal:(UIView*)modalView withTiming:(float)time;
++ (void) hideModal:(UIView*) modalView withTiming:(float)time;
++ (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
++ (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
++ (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
+
 //- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
 //- (void)confirmInstall:(NSString *)name;
 - (void)updateInstallationStatus;
@@ -152,12 +158,6 @@ typedef enum {
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
 - (void)redisplayChapter:(PollingType)pollingType restore:(RestorePositionType)position;
 
-+ (void) showModal:(UIView*)modalView withTiming:(float)time;
-+ (void) hideModal:(UIView*) modalView withTiming:(float)time;
-+ (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
-+ (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
-+ (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
-
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
@@ -173,6 +173,8 @@ typedef enum {
 - (void)showIndexStatus;
 - (void)hideIndexStatus;
 - (void)hideOperationStatus;
+
+- (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
 - (UITabBarController *)tabController;
 

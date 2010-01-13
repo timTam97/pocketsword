@@ -20,6 +20,7 @@
 #import "ViewController.h"
 //#import <dlfcn.h> -- needed for the loadFonts() code, but it doesn't currently work!
 #import "PSIndexController.h"
+#import "SearchWebView.h"
 
 
 @implementation ViewController
@@ -476,9 +477,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //
 - (IBAction)toggleMultiList:(id)sender
 {
-//	PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
-//	[indexC setModuleManager:moduleManager];
-//	[ViewController showModal:indexC.view withTiming:0.7];
+//	[self highlightSearchTerm: @"and" forTab: BibleTab];
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
@@ -908,8 +907,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
 	NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
-	[bibleWebView loadHTMLString: bText baseURL: nil];	// Get the chapter text
-	[commentaryWebView loadHTMLString: cText baseURL: nil];
+	[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];	// Get the chapter text
+	[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	
 	NSString *cVersePosition = @"1";
 	if(versePosition) {
@@ -1095,6 +1094,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)reloadDictionaryData {
 	[dictionaryViewController reloadDictionaryData:YES];
+}
+
+- (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
+	switch(tab) {
+		case BibleTab:
+			[bibleWebView highlightAllOccurencesOfString: term];
+			break;
+		case CommentaryTab:
+			[commentaryWebView highlightAllOccurencesOfString: term];
+			break;
+	}
 }
 
 - (UITabBarController *)tabController {
