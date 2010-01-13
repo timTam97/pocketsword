@@ -19,16 +19,21 @@
 	IBOutlet UIBarButtonItem *closeButton;
 	
 	UIView *helpView;
-	
+	NSTimer *busyTimer;
+	NSString *searchTerm;
+
 	//SwordListKey *results;
 	NSMutableArray *results;
 }
 
 @property (retain, readwrite) NSMutableArray *results;
+@property (retain, readwrite) NSTimer *busyTimer;
+@property (retain, readwrite) NSString *searchTerm;
 
 - (void)refreshView;
 //- (void)hideKeyboard;
 
 - (IBAction)infoButtonPressed:(id)sender;
+- (void)doubleClose:(NSTimer *)theTimer;
 
 @end

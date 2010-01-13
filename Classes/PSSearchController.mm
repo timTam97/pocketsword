@@ -14,6 +14,8 @@
 @implementation PSSearchController
 
 @synthesize results;
+@synthesize busyTimer;
+@synthesize searchTerm;
 
 BOOL searchingEnabled;
 
@@ -47,6 +49,7 @@ BOOL searchingEnabled;
 	if (buttonIndex == 1) {
 		PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
 		[indexC setModuleManager:moduleManager];
+		[indexC setSearchController: self];
 		[ViewController showModal:indexC.view withTiming:0.3];
 	} else {
 		
@@ -80,6 +83,7 @@ BOOL searchingEnabled;
 
 - (void)dealloc {
 	self.results = nil;
+	self.searchTerm = nil;
 	if(helpView)
 		[helpView release];
     [super dealloc];
@@ -184,16 +188,23 @@ BOOL searchingEnabled;
 				break;
 		}
 		[viewController displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
+		//self.searchTerm = nil;
 		[viewController toggleMultiList: nil];
+		[viewController highlightSearchTerm: searchTerm forTab: tab];
 	}
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
+	if(busyTimer) {
+		[busyTimer invalidate];
+		self.busyTimer = nil;
+	}
 	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	ShownTab tab = [dataController listType];
 	self.results = nil;
+	self.searchTerm = [searchBar text];
 	switch(tab) {
 		case BibleTab:
 			self.results = [[moduleManager primaryBible] search: [searchBar text]];
@@ -203,8 +214,13 @@ BOOL searchingEnabled;
 			break;
 	}
 	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	self.busyTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doubleClose:) userInfo:nil repeats:NO];
 	[resultsTable reloadData];
 	[pool release];
+}
+
+- (void)doubleClose:(NSTimer *)theTimer {
+	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 }
 
 //- (void)hideKeyboard {
