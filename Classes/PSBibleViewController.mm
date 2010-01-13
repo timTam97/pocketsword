@@ -91,7 +91,7 @@
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			//[bibleNavBtn setTitle: ref];
-			[viewController setTabTitle: ref ofTab:BibleTab];
+			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
 		}
 		load = NO;
 	}

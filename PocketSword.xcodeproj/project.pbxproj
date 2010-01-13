@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
+		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
+		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
+		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
@@ -352,6 +356,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
+		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
+		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
+		05034D2310FD625900884C98 /* SearchWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchWebView.h; sourceTree = "<group>"; };
+		05034D2410FD625900884C98 /* SearchWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchWebView.m; sourceTree = "<group>"; };
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
 		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
 		0513ACB010BF74FC00E414D9 /* google-analytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "google-analytics.txt"; path = "Resources/doc/google-analytics.txt"; sourceTree = "<group>"; };
@@ -1999,6 +2008,8 @@
 				0545E29A1063A09500DD7F06 /* globals.h */,
 				1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */,
 				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
+				05034D2310FD625900884C98 /* SearchWebView.h */,
+				05034D2410FD625900884C98 /* SearchWebView.m */,
 			);
 			name = "PS-other";
 			path = Classes;
@@ -2041,6 +2052,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				05034D2110FD61CE00884C98 /* SearchWebView.js */,
+				05034D0610FC570F00884C98 /* history.png */,
+				05034D0410FC569000884C98 /* dictionary.png */,
 				05A0403F10F1C4AE0094C6E3 /* Multi-List.png */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
@@ -2471,6 +2485,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05034D2810FD63E300884C98 /* SearchWebView.js in Resources */,
 				05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */,
 				05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */,
 				E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */,
@@ -2502,6 +2517,8 @@
 				0515E2D310C8E32900F58382 /* Downloader.xib in Resources */,
 				054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */,
 				05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */,
+				05034D0510FC569000884C98 /* dictionary.png in Resources */,
+				05034D0710FC570F00884C98 /* history.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2834,6 +2851,7 @@
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
+				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

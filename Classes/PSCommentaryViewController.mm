@@ -55,7 +55,7 @@
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			//[commentaryNavBtn setTitle: ref];
-			[viewController setTabTitle: ref ofTab:CommentaryTab];
+			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
 		}
 		load = NO;
 	}

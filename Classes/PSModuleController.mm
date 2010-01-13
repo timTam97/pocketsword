@@ -485,13 +485,13 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastBible"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[bibleWebView loadHTMLString: [self getBibleChapter: nsLoc withExtraJS: @""] baseURL: nil];
+		[bibleWebView loadHTMLString: [self getBibleChapter: nsLoc withExtraJS: @""] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	} else if ([name isEqualToString: primaryCommentaryName]) {
 		primaryCommentary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastCommentary"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[commentaryWebView loadHTMLString: [self getCommentaryChapter: nsLoc withExtraJS: @""] baseURL: nil];
+		[commentaryWebView loadHTMLString: [self getCommentaryChapter: nsLoc withExtraJS: @""] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	} else if([name isEqualToString: primaryDictionaryName]) {
 		primaryDictionary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastDictionary"];
@@ -649,8 +649,8 @@ float installationProgress;
 			xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\
 			xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n\
 			xml:lang=\"en\" >\n\
-			<meta name='viewport' content='width=device-width' />\n\
 			<head>\n\
+			<meta name='viewport' content='width=device-width' />\n\
 			<style type=\"text/css\">\n\
 			body {\n\
 				color: %@;\n\
@@ -674,6 +674,7 @@ float installationProgress;
 			}\n\
 			%@\n\
 			</style>\n\
+			<script type=\"text/javascript\" src=\"SearchWebView.js\" />\n\
 			%@\n\
 			</head>\n\
 			<body><div>%@</div></body></html>", 

@@ -365,6 +365,7 @@ BOOL downloadableShown;
 	ViewController *mm = [moduleManager viewController];
 	[mm performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
 	//[[moduleManager viewController] hideOperationStatus];
+	[searchController refreshView];
 }
 
 - (float)getInstallationProgress {

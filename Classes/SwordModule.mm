@@ -821,7 +821,7 @@
 	// add JS for navigating through the chapter.
 	// NOTE: for readability, the array isn't starting at the usual '0' position, but at '1'
 	//			so that versePosition[i] will be for verse 'i'
-	NSString *js = [NSString stringWithFormat: @"<script type=\"text/javascript\">\n\
+	NSString *js = [NSString stringWithFormat: @"<script type=\"text/javascript\">\n<!--\n\
 					var versepos;\n\
 					var det_loc_poll;\n\
 					function findPosition(foo) {\n\
@@ -889,7 +889,7 @@
 						}\n\
 						document.location = tmpstr;\n\
 						%@\n\
-					}\n\
+					}\n-->\
 					</script>\n", i, i, i, i, extraJS];
 	
 	
