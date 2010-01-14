@@ -763,7 +763,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 	
 	if(valid) {
-		NSString *ref = [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse];
+		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[moduleManager getCurrentBibleRef]], verse];
 		
 		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
 		
