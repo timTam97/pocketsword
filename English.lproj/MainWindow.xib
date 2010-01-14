@@ -2164,6 +2164,22 @@
 					</object>
 					<int key="connectionID">1054</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">bibleTabController</string>
+						<reference key="source" ref="44889390"/>
+						<reference key="destination" ref="1024858337"/>
+					</object>
+					<int key="connectionID">1060</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">commentaryTabController</string>
+						<reference key="source" ref="44889390"/>
+						<reference key="destination" ref="438882902"/>
+					</object>
+					<int key="connectionID">1061</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -2961,7 +2977,7 @@
 				<string key="1017.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1018.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1049.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="106.IBEditorWindowLastContentRect">{{163, 376}, {320, 480}}</string>
+				<string key="106.IBEditorWindowLastContentRect">{{149, 360}, {320, 480}}</string>
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="107.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="108.CustomClassName">PSBibleViewController</string>
@@ -3098,7 +3114,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1059</int>
+			<int key="maxID">1061</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3325,6 +3341,13 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">UIWebView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/SearchWebView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">ViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
@@ -3348,6 +3371,7 @@
 						<string key="bibleSearchButton">UIBarButtonItem</string>
 						<string key="bibleSegmentedControl">UISegmentedControl</string>
 						<string key="bibleTabBarItem">UITabBarItem</string>
+						<string key="bibleTabController">PSBibleViewController</string>
 						<string key="bibleWebView">UIWebView</string>
 						<string key="bookmarksEditBtn">id</string>
 						<string key="bookmarksNavBar">UINavigationItem</string>
@@ -3356,6 +3380,7 @@
 						<string key="commentarySearchButton">UIBarButtonItem</string>
 						<string key="commentarySegmentedControl">UISegmentedControl</string>
 						<string key="commentaryTabBarItem">UITabBarItem</string>
+						<string key="commentaryTabController">PSCommentaryViewController</string>
 						<string key="commentaryWebView">UIWebView</string>
 						<string key="dataController">id</string>
 						<string key="dictionaryTabBarItem">UITabBarItem</string>

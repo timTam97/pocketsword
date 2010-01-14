@@ -26,8 +26,17 @@
 }
 */
 
-- (void) viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	if(refToShow) {
+		NSString *cText = [moduleManager getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
+		[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		self.refToShow = nil;
+		self.jsToShow = nil;
+	}
+}
+
+- (void)viewDidAppear:(BOOL)animated {
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
@@ -101,6 +110,8 @@
 
 - (void)dealloc {
     [super dealloc];
+	self.refToShow = nil;
+	self.jsToShow = nil;
 }
 
 

@@ -17,6 +17,11 @@
 	IBOutlet id moduleManager;
 	IBOutlet id viewController;
 	IBOutlet UIBarButtonItem *bibleNavBtn;
+	NSString *refToShow;
+	NSString *jsToShow;
 }
+
+@property (copy, readwrite) NSString *refToShow;
+@property (copy, readwrite) NSString *jsToShow;
 
 @end

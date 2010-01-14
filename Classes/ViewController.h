@@ -23,6 +23,8 @@
 #import "PocketSwordAppDelegate.h"
 #import "globals.h"
 #import "PSDictionaryViewController.h"
+#import "PSBibleViewController.h"
+#import "PSCommentaryViewController.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -48,23 +50,19 @@ typedef enum {
 	
 	// Read tab
 	IBOutlet UIWebView			*bibleWebView;
-//	IBOutlet UIBarButtonItem	*bibleNavBtn;
-//	IBOutlet UIBarButtonItem	*biblePrevBtn;
-//	IBOutlet UIBarButtonItem	*bibleNextBtn;
 	IBOutlet UIActivityIndicatorView *bibleActivity;
 	IBOutlet UITabBarItem		*bibleTabBarItem;
 	IBOutlet UISegmentedControl *bibleSegmentedControl;
 	IBOutlet UIBarButtonItem	*bibleSearchButton;
+	IBOutlet PSBibleViewController *bibleTabController;
 	
 	// Commentary tab
 	IBOutlet UIWebView			*commentaryWebView;
-//	IBOutlet UIBarButtonItem	*commentaryNavBtn;
-//	IBOutlet UIBarButtonItem	*commentaryPrevBtn;
-//	IBOutlet UIBarButtonItem	*commentaryNextBtn;
 	IBOutlet UIActivityIndicatorView *commentaryActivity;
 	IBOutlet UITabBarItem		*commentaryTabBarItem;
 	IBOutlet UISegmentedControl *commentarySegmentedControl;
 	IBOutlet UIBarButtonItem	*commentarySearchButton;
+	IBOutlet PSCommentaryViewController *commentaryTabController;
 	
 	// Bible & Commentary tab
 	IBOutlet UIPickerView		*refSelector;
@@ -91,10 +89,6 @@ typedef enum {
 	IBOutlet id					moduleEditBtn;
 	IBOutlet UITabBarItem		*moduleTabBarItem;
 	IBOutlet UINavigationItem	*moduleNavBar;
-	
-	// Search tab
-	//IBOutlet id progressBar;
-	//IBOutlet id resultsTable;
 	
 	// Bookmarks tab
 	IBOutlet id bookmarksTable;

@@ -867,36 +867,25 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 	NSMutableString *bibleJavascript = [NSMutableString stringWithString:@""];
 	NSMutableString *commentaryJavascript = [NSMutableString stringWithString:@""];
-	switch(polling) {
-		case BibleViewPoll:
-			[bibleJavascript appendString:@"startDetLocPoll();\n"];
-			break;
-		case CommentaryViewPoll:
-			[commentaryJavascript appendString:@"startDetLocPoll();\n"];
-			break;
-		case NoViewPoll:
-		default:
-			break;
-	}
 	NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
 	switch(position) {
 		case RestoreScrollPosition:
 		{
 			NSString *scrollPosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleScrollPosition"];
 			if(scrollPosition) {
-				[bibleJavascript appendFormat:@"scrollToPosition(%@);", scrollPosition];
+				[bibleJavascript appendFormat:@"scrollToPosition(%@);\n", scrollPosition];
 			}
 			scrollPosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"commentaryScrollPosition"];
 			if(scrollPosition) {
-				[commentaryJavascript appendFormat:@"scrollToPosition(%@);", scrollPosition];
+				[commentaryJavascript appendFormat:@"scrollToPosition(%@);\n", scrollPosition];
 			}
 		}
 			break;
 		case RestoreVersePosition:
 		{
 			if(versePosition) {
-				[bibleJavascript appendFormat:@"scrollToVerse(%@);", versePosition];
-				[commentaryJavascript appendFormat:@"scrollToVerse(%@);", versePosition];
+				[bibleJavascript appendFormat:@"scrollToVerse(%@);\n", versePosition];
+				[commentaryJavascript appendFormat:@"scrollToVerse(%@);\n", versePosition];
 			}
 		}
 			break;
@@ -905,10 +894,40 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			break;
 	}
 	
-	NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
-	NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
-	[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];	// Get the chapter text
-	[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+	switch(polling) {
+		case BibleViewPoll:
+		{
+			[bibleJavascript appendString:@"startDetLocPoll();\n"];
+			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
+			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+			commentaryTabController.refToShow = ref;
+			commentaryTabController.jsToShow = commentaryJavascript;
+		}
+			break;
+		case CommentaryViewPoll:
+		{
+			[commentaryJavascript appendString:@"startDetLocPoll();\n"];
+			NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+			bibleTabController.refToShow = ref;
+			bibleTabController.jsToShow = bibleJavascript;
+		}
+			break;
+		case NoViewPoll:
+		default:
+		{
+			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
+			NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];	// Get the chapter text
+			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		}
+			break;
+	}
+
+//	NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
+//	[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+//	NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+//	[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	
 	NSString *cVersePosition = @"1";
 	if(versePosition) {

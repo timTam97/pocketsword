@@ -40,28 +40,17 @@
 "AboutModuleVersionUnspecified" = "(unspecified)";
 "AboutModuleAboutText" = "About: ";
 "AboutModuleLicence" = "Distribution Licence: ";
+"AboutModuleLCSH" = "Library of Congress Subject Heading: ";
+
 
 "Disclaimer" = "Disclaimer";
-"DisclaimerMsg" = "      -=+* WARNING *+=-\n
-			Although Install Manager provides a convenient way for installing 
-			and upgrading SWORD components, it also uses a systematic method 
-			for accessing sites which gives packet sniffers a target to lock 
-			into for singling out users. \n
-			IF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, 
-			YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \n
-			Also, Remote Sources other than CrossWire may contain less than 
-			quality modules, modules with unorthodox content, or even modules 
-			which are not legitimately distributable.  Many repositories 
-			contain wonderfully useful content.  These repositories simply 
-			are not reviewed or maintained by CrossWire and CrossWire 
-			cannot be held responsible for their content. CAVEAT EMPTOR.\n
-			Do you understand this and are you willing to enable remote source features?";
+"DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
 
 "WebNoIP" = "Web: Unable to determine external IP\n";
 "WiFiNoConnection" = "Wifi: No Connection\n";
 "NoNetworkConnection" = "No network connection available.";
 
-"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there.  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
+"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
 "InstallManagerDisabled" = "disabled...";
 "InstallTitle" = "Install?";
 "files" = "files";
@@ -91,6 +80,7 @@
 
 "TabBarTitleBible" = "Bible";
 "TabBarTitleCommentary" = "Commentary";
+"TabBarTitleDictionary" = "Dictionary";
 "TabBarTitleModules" = "Modules";
 "TabBarTitlePreferences" = "Preferences";
 "TabBarTitleAbout" = "About";
@@ -129,10 +119,10 @@
 "NoSearchIndexInstalled" = "No Search Index Installed";
 "SearchResults" = "Results";
 
-"IndexControllerInstalled" = "Installed search index for:";
-"IndexControllerDownloadable" = "Downloadable search index for:";
-"IndexControllerNone" = "No available search index for:";
-"IndexControllerNoneRemote" = "No remote search index for:";
+"IndexControllerInstalled" = "You already have installed a search index for:";
+"IndexControllerDownloadable" = "Select a downloadable search index from the following list to enable search for that module:";
+"IndexControllerNone" = "Check your network connection to enable search for:";
+"IndexControllerNoneRemote" = "There is currently no downloadable search index available for:";
 
 "SearchHelpTitle" = "Search Help";
 "IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";

@@ -853,6 +853,7 @@
 					}\n\
 					//window.onscroll = detLoc;//this doesn't seem to work properly on the iPhone\n\
 					function startDetLocPoll() {\n\
+						stopDetLocPoll();//we don't want this running more than once, so stop previous polls first...\n\
 						det_loc_poll = setInterval(\"detLoc()\", 1000);\n\
 					}\n\
 					function stopDetLocPoll() {\n\

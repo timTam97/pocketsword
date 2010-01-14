@@ -14,6 +14,9 @@
 
 @implementation PSBibleViewController
 
+@synthesize refToShow;
+@synthesize jsToShow;
+
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -40,11 +43,19 @@
 }*/
 
 
-- (void) viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	if(refToShow) {
+		NSString *bText = [moduleManager getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
+		[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		self.refToShow = nil;
+		self.jsToShow = nil;
+	}
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -103,6 +114,8 @@
 
 - (void)dealloc {
     [super dealloc];
+	self.refToShow = nil;
+	self.jsToShow = nil;
 }
 
 - (NSDictionary *)dataForLink:(NSURL *)aURL {
