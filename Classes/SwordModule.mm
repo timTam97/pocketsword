@@ -736,34 +736,46 @@
 }
 
 - (NSString *)setToNextChapter {
+	//swModule->RenderText(); -- we only call this method after calling [setChapter:ch] so we don't need to call this again!
+//	sword::VerseKey curKey;
+	sword::VerseKey curKey = (sword::VerseKey)swModule->Key();
+	int c = curKey.getChapter();
+	curKey.setChapter(c+1);
+	swModule->setKey(curKey);
 	swModule->RenderText();
-	sword::SWKey curKey;
+	
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
 	
 	// Advance to the next chapter
-	do {
-		curKey = swModule->Key()++;
-		swModule->RenderText();
-		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	} while ([ref isEqualToString: ch]);
+//	do {
+//		curKey = swModule->Key()++;
+//		swModule->RenderText();
+//		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+//	} while ([ref isEqualToString: ch]);
 	return ref;
 }
 
 - (NSString *)setToPreviousChapter {
+	//swModule->RenderText(); -- we only call this method after calling [setChapter:ch] so we don't need to call this again!
+//	sword::SWKey curKey;
+	sword::VerseKey curKey = (sword::VerseKey)swModule->Key();
+	int c = curKey.getChapter();
+	curKey.setChapter(c-1);
+	swModule->setKey(curKey);
 	swModule->RenderText();
-	sword::SWKey curKey;
+
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	//nicc crash here with "ch" being 'nil'
 	NSString *ref = [NSString stringWithString: ch];
 	
 	// Move to the previous chapter
-	do {
-		curKey = swModule->Key()--;
-		swModule->RenderText();
-		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-		//ref = [[[NSString stringWithUTF8String: curKey.getText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	} while ([ref isEqualToString: ch]);
+//	do {
+//		curKey = swModule->Key()--;
+//		swModule->RenderText();
+//		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+//		//ref = [[[NSString stringWithUTF8String: curKey.getText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
+//	} while ([ref isEqualToString: ch]);
 	return ref;
 }
 

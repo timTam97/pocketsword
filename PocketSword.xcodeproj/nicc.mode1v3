@@ -349,12 +349,14 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
+									<integer>29</integer>
+									<integer>23</integer>
+									<integer>3</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {242, 772}}</string>
+							<string>{{0, 251}, {242, 772}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -384,12 +386,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Info.plist</string>
+								<string>ViewController.mm</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -397,14 +401,13 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Info.plist</string>
+										<string>ViewController.mm</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>052B51B810FED1A500FFDF01</string>
+										<string>052B51F910FEE07500FFDF01</string>
 										<key>history</key>
 										<array>
-											<string>05DF559E10AA9384007CB847</string>
 											<string>05DF564110AAEDF9007CB847</string>
 											<string>05DF564510AAEDF9007CB847</string>
 											<string>05DF564710AAEDF9007CB847</string>
@@ -581,17 +584,13 @@
 											<string>05337B3710F83C1E0003CFA9</string>
 											<string>05337B3810F83C1E0003CFA9</string>
 											<string>05337B3B10F83C1E0003CFA9</string>
-											<string>05337B6D10F85E7B0003CFA9</string>
-											<string>05337B9610F866590003CFA9</string>
 											<string>05337B9910F866590003CFA9</string>
 											<string>05337B9A10F866590003CFA9</string>
-											<string>05337BFC10F876290003CFA9</string>
 											<string>05337C1610F87EBD0003CFA9</string>
 											<string>05337C6C10F88E1E0003CFA9</string>
 											<string>05337C6F10F88E1E0003CFA9</string>
 											<string>05337C8F10F891D60003CFA9</string>
 											<string>05337CCD10F89A270003CFA9</string>
-											<string>05337CCE10F89A270003CFA9</string>
 											<string>05337CF310F8A62A0003CFA9</string>
 											<string>05337D7610F8BBAE0003CFA9</string>
 											<string>05337D7810F8BBAE0003CFA9</string>
@@ -624,12 +623,10 @@
 											<string>052B513910FEBF7100FFDF01</string>
 											<string>052B513A10FEBF7100FFDF01</string>
 											<string>052B514610FEC20A00FFDF01</string>
-											<string>052B514910FEC20A00FFDF01</string>
 											<string>052B514A10FEC20A00FFDF01</string>
 											<string>052B514E10FEC27600FFDF01</string>
 											<string>052B515510FEC51E00FFDF01</string>
 											<string>052B515610FEC51E00FFDF01</string>
-											<string>052B518010FECCCE00FFDF01</string>
 											<string>052B518B10FECDFC00FFDF01</string>
 											<string>052B519410FECFFD00FFDF01</string>
 											<string>052B519510FECFFD00FFDF01</string>
@@ -638,10 +635,18 @@
 											<string>052B519810FECFFD00FFDF01</string>
 											<string>052B51B210FED1A500FFDF01</string>
 											<string>052B51B310FED1A500FFDF01</string>
-											<string>052B51B410FED1A500FFDF01</string>
 											<string>052B51B510FED1A500FFDF01</string>
 											<string>052B51B610FED1A500FFDF01</string>
-											<string>052B51B710FED1A500FFDF01</string>
+											<string>052B51CB10FED89400FFDF01</string>
+											<string>052B51CC10FED89400FFDF01</string>
+											<string>052B51CD10FED89400FFDF01</string>
+											<string>052B51CE10FED89400FFDF01</string>
+											<string>052B51CF10FED89400FFDF01</string>
+											<string>052B51D010FED89400FFDF01</string>
+											<string>052B51D110FED89400FFDF01</string>
+											<string>052B51F610FEE07500FFDF01</string>
+											<string>052B51F710FEE07500FFDF01</string>
+											<string>052B51F810FEE07500FFDF01</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -816,7 +821,7 @@
 	<key>PerspectivesBarVisible</key>
 	<false/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>052B51AA10FED04F00FFDF01</string>
+	<string>052B51C010FED6AB00FFDF01</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>SourceDescription</key>
@@ -824,7 +829,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>285135269.08269</real>
+	<real>285139061.47741097</real>
 	<key>ToolbarConfigUserDefaultsMinorVersion</key>
 	<string>2</string>
 	<key>ToolbarDisplayMode</key>
@@ -841,14 +846,13 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>052B51B910FED1A500FFDF01</string>
 		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>052B50DF10FEB31100FFDF01</string>
 		<string>052B50E010FEB31100FFDF01</string>
+		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>0545E0721060C3B400DD7F06</string>
 		<string>/Users/nicc/local/src/PocketSword/PocketSword.xcodeproj</string>
-		<string>1C78EAAD065D492600B07095</string>
 	</array>
 	<key>WindowString</key>
 	<string>49 47 1343 831 0 0 1440 878 </string>
@@ -1087,14 +1091,12 @@
 							<key>Dock</key>
 							<array>
 								<dict>
-									<key>BecomeActive</key>
-									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
 										<string>1CDD528C0622207200134675</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>SwordModule.mm</string>
+										<string>PSModuleController.mm</string>
 										<key>StatusBarVisibility</key>
 										<true/>
 									</dict>
@@ -1115,6 +1117,8 @@
 							<string>446pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -1226,7 +1230,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
