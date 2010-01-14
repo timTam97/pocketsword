@@ -90,6 +90,8 @@
 - (BOOL)installModule:(NSString *)name;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule;
 - (BOOL)removeModule:(NSString *)name;
+- (void)reloadLastBible;
+- (void)reloadLastCommentary;
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraCode;
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (void)dealloc;

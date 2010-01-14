@@ -126,6 +126,8 @@ float installationProgress;
 	 */
 	
 	[self setPreferences];
+	[self reloadLastBible];
+	[self reloadLastCommentary];
 	
 	return self;
 }
@@ -531,29 +533,53 @@ float installationProgress;
 	return success;
 }
 
+- (void)reloadLastBible {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSString *lastModule = [defaults stringForKey: @"lastBible"];
+	
+	if (lastModule != nil) {
+		primaryBible = [swordManager moduleWithName: lastModule];
+	}
+	
+	if (!primaryBible && [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count] > 0) {
+		primaryBible = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex: 0];
+		//[prefs removeObjectForKey: @"bookmarks"]; -- why did we used to do this here?????
+		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+		[prefs setObject: [primaryBible name] forKey: @"lastBible"];
+		
+		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
+		[prefs release];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
+}
+
+- (void)reloadLastCommentary {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSString *lastModule = [defaults stringForKey: @"lastCommentary"];
+	
+	if (lastModule != nil) {
+		primaryCommentary = [swordManager moduleWithName: lastModule];
+	}
+	
+	if (!primaryCommentary && [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] > 0) {
+		primaryCommentary = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex: 0];
+		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+		[prefs setObject: [primaryCommentary name] forKey: @"lastCommentary"];
+		
+		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
+		[prefs release];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
+}
+
 // Grabs the bible text for a given chapter (e.g. "Gen 1")
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
 	if (!primaryBible) {
 		[self reload];
 		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSString *lastModule = [defaults stringForKey: @"lastBible"];
-		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+		[self reloadLastBible];
 		
-		if (lastModule != nil) {
-			primaryBible = [swordManager moduleWithName: lastModule];
-		}
-		
-		if (!primaryBible && [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count] > 0) {
-			primaryBible = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex: 0];
-			//[prefs removeObjectForKey: @"bookmarks"]; -- why did we used to do this here?????
-			[prefs setObject: [primaryBible name] forKey: @"lastBible"];
-			
-			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-			[prefs release];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-		}
-		else if (!primaryBible) {
+		if (!primaryBible) {
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
@@ -574,23 +600,9 @@ float installationProgress;
 	if (!primaryCommentary) {
 		[self reload];
 		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSString *lastModule = [defaults stringForKey: @"lastCommentary"];
-		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+		[self reloadLastCommentary];
 		
-		if (lastModule != nil) {
-			primaryCommentary = [swordManager moduleWithName: lastModule];
-		}
-		
-		if (!primaryCommentary && [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] > 0) {
-			primaryCommentary = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex: 0];
-			[prefs setObject: [primaryCommentary name] forKey: @"lastCommentary"];
-			
-			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-			[prefs release];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-		}
-		else if (!primaryCommentary) {
+		if (!primaryCommentary) {
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
