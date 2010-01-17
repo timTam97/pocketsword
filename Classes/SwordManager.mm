@@ -184,10 +184,10 @@ using std::list;
     NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
 
     
-	//sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
-    //lManager->loadConfigDir([localePath UTF8String]);
+	sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
+    lManager->loadConfigDir([localePath UTF8String]);
 
-	sword::LocaleMgr *lManager = new sword::LocaleMgr::LocaleMgr([localePath UTF8String]);
+	//sword::LocaleMgr *lManager = new sword::LocaleMgr::LocaleMgr([localePath UTF8String]);
     
     //get the language
     NSArray *availLocales = [NSLocale preferredLanguages];
@@ -222,7 +222,7 @@ using std::list;
         // set the locale
         lManager->setDefaultLocaleName([lang UTF8String]);
     }    
-	sword::LocaleMgr::setSystemLocaleMgr(lManager);
+	//sword::LocaleMgr::setSystemLocaleMgr(lManager);
 }
 
 //Effectively, this is a list of the module types that are currently supported.
