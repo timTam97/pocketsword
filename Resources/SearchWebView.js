@@ -2,7 +2,7 @@
 var PS_SearchResultCount = 0;
 
 // helper function, recursively searches in elements and their child nodes
-function PS_HighlightAllOccurencesOfString(element,keyword) {
+function PS_HighlightAllOccurencesOfStringForElement(element,keyword) {
 	if (element) {
 		if (element.nodeType == 3) {        // Text node
 			while (true) {
@@ -28,7 +28,7 @@ function PS_HighlightAllOccurencesOfString(element,keyword) {
 		} else if (element.nodeType == 1) { // Element node
 			if (element.style.display != "none" && element.nodeName.toLowerCase() != 'select') {
 				for (var i=element.childNodes.length-1; i>=0; i--) {
-					PS_HighlightAllOccurencesOfString(element.childNodes[i],keyword);
+					PS_HighlightAllOccurencesOfStringForElement(element.childNodes[i],keyword);
 				}
 			}
 		}
@@ -38,11 +38,11 @@ function PS_HighlightAllOccurencesOfString(element,keyword) {
 // the main entry point to start the search
 function PS_HighlightAllOccurencesOfString(keyword) {
 	PS_RemoveAllHighlights();
-	PS_HighlightAllOccurencesOfString(document.body, keyword.toLowerCase());
+	PS_HighlightAllOccurencesOfStringForElement(document.body, keyword.toLowerCase());
 }
 
 // helper function, recursively removes the highlights in elements and their childs
-function PS_RemoveAllHighlights(element) {
+function PS_RemoveAllHighlightsForElement(element) {
 	if (element) {
 		if (element.nodeType == 1) {
 			if (element.getAttribute("class") == "PocketSwordHighlight") {
@@ -53,7 +53,7 @@ function PS_RemoveAllHighlights(element) {
 			} else {
 				var normalize = false;
 				for (var i=element.childNodes.length-1; i>=0; i--) {
-					if (PS_RemoveAllHighlights(element.childNodes[i])) {
+					if (PS_RemoveAllHighlightsForElement(element.childNodes[i])) {
 						normalize = true;
 					}
 				}
@@ -69,5 +69,5 @@ function PS_RemoveAllHighlights(element) {
 // the main entry point to remove the highlights
 function PS_RemoveAllHighlights() {
 	PS_SearchResultCount = 0;
-	PS_RemoveAllHighlights(document.body);
+	PS_RemoveAllHighlightsForElement(document.body);
 }
