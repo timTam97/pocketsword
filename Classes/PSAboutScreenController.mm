@@ -44,17 +44,22 @@
 								<p><b>Developed by: </b><br />\n\
 									 Nic Carter\n\
 								</p>\n\
-								 <p><b>With help from: </b><br />\n\
+								 <p><b>With thanks to: </b><br />\n\
 										Ian Wagner <br /><i>(original concept & design)</i><br />\n\
 										Manfred Bergmann <br /><i>(MacSword - <a href=\"http://www.macsword.com/\">http://www.macsword.com/</a>)</i><br />\n\
 										The SWORD Project <br /><i>(hosted by CrossWire Bible Society - <a href=\"http://crosswire.org/sword/\">http://crosswire.org/sword/</a>)</i><br />\n\
+										Connected Flow <br /><i>(<a href=\"http://connectedflow.com/\">http://connectedflow.com/</a>)</i><br />\n\
 										James Coleman <br /><i>(icons)</i><br />\n\
 										Cheree Lynley Designs <br /><i>(icons)</i>\n\
-									</p>\n\
+								</p>\n\
 								<p><b>With special thanks to: </b><br />\n\
 										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\
 										Pablo and Rusty's, Gordon <i>(<a href=\"http://www.pabloandrustys.com.au/\">http://www.pabloandrustys.com.au/</a>)</i>\n\
-									</p>\n\
+								</p>\n\
+								<p><b>Localisations by: </b><br />\n\
+										Dominique Corbex,<br />\n\
+										Christoffer Björkskog\n\
+								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\
 										<i><a href=\"http://www.crosswire.org/sword/software/biblecs/\">The SWORD Project for Windows</a></i><br />\n\

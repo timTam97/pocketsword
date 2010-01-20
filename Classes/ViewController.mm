@@ -593,7 +593,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		} else {
 			[refSelectorTitle setTitle:[[moduleManager primaryCommentary] name]];
 		}
-		[dataController updateRefSelectorBooks];
+		[dataController updateRefSelectorBooks:NO];
 		[ViewController showModal:refSelectorView withTiming:0.3];
 		refSelectorShown = YES;
 

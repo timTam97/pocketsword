@@ -144,7 +144,12 @@ BOOL dictionaryEnabled = NO;
 	[dictionarySearchBar resignFirstResponder];
 	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	NSString *descr = [[moduleManager primaryDictionary] entryForKey: t];
-	descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br />%@", t, descr] usingPreferences: YES withJS: @""];
+	NSString *javaScript = @"<script type=\"text/javascript\">\n<!--\n\
+	window.onload = function() {\n\
+		document.documentElement.style.webkitTouchCallout = \"none\";\n\
+	}\n-->\
+	</script>\n";
+	descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br />%@", t, descr] usingPreferences: YES withJS: javaScript];
 	if([t length] > 20) {
 		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
 	}

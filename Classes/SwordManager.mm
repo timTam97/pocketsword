@@ -201,6 +201,8 @@ using std::list;
 	sword::StringList localelist = lManager->getAvailableLocales();
     NSEnumerator *iter = [availLocales objectEnumerator];
     while((loc = [iter nextObject]) && !haveLocale) {
+		if([loc isEqualToString:@"zh-Hant"])
+			loc = @"zh_TW"; // SWORD and Apple use different names for traditional chinese...
         // check if this locale is available in SWORD
 		sword::StringList::iterator it;
 		sword::SWBuf locale;

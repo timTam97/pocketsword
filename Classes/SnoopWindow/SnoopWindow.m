@@ -81,11 +81,11 @@ CGPoint CGPointNorm(CGPoint a) {
 		if (touch.phase==UITouchPhaseBegan) {
 			//touchAndHold = NO;
 			//movement = NO;
-			if(holdTimer) {
-				[holdTimer invalidate];
-				self.holdTimer = nil;
-			}
-			self.holdTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(setTouchAndHold:) userInfo:nil repeats:NO];
+//			if(holdTimer) {
+//				[holdTimer invalidate];
+//				self.holdTimer = nil;
+//			}
+//			self.holdTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(setTouchAndHold:) userInfo:nil repeats:NO];
 			//[holdTimer retain];
 			
 			startTouchPosition1 = [touch locationInView:self];
@@ -105,10 +105,10 @@ CGPoint CGPointNorm(CGPoint a) {
 		//
 		
 		if (touch.phase==UITouchPhaseMoved) {
-			if([holdTimer isValid]) {
-				[holdTimer invalidate];
-				self.holdTimer = nil;
-			}
+//			if([holdTimer isValid]) {
+//				[holdTimer invalidate];
+//				self.holdTimer = nil;
+//			}
 			//touchAndHold = NO;
 			//movement = YES;
 			//DLog(@"--- UITouchPhaseMoved ---");
@@ -136,10 +136,10 @@ CGPoint CGPointNorm(CGPoint a) {
 		// touchesEnded
 		///
 		if (touch.phase==UITouchPhaseEnded) {
-			if([holdTimer isValid]) {
-				[holdTimer invalidate];
-				self.holdTimer = nil;
-			}
+//			if([holdTimer isValid]) {
+//				[holdTimer invalidate];
+//				self.holdTimer = nil;
+//			}
 			CGPoint currentTouchPosition = [touch locationInView:self];
 			//DLog(@"\nUITouchPhaseEnded: %f - %f = %f", touch.timestamp, startTouchTime, (touch.timestamp-startTouchTime));
 

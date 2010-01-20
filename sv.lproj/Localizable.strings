@@ -17,113 +17,113 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-"Edit" = "Ändra";
+"Edit" = "Redigera";
 "Done" = "Klar";
-"Module Download" = "Laddar ner modul";
-"Installing" = "Installera:";
+"Module Download" = "Modulnerladdning";
+"Installing" = "Installerar:";
 "Yes" = "Ja";
 "No" = "Nej";
-"ConfirmInstall" = "Vill du installera denna modul?";
+"ConfirmInstall" = "Vill du installera den här modulen?";
 "Next" = "Nästa";
 "Previous" = "Föregående";
 
 "Ok" = "Ok";
-"Cancel" = "Cancel";
-"Error" = "Error";
+"Cancel" = "Avbryt";
+"Error" = "Fel";
 
 // Module About
-"AboutModuleName" = "Module name: ";
-"AboutModuleDescription" = "Description: ";
-"AboutModuleType" = "Type: ";
-"AboutModuleLang" = "Language: ";
+"AboutModuleName" = "Modulnamn: ";
+"AboutModuleDescription" = "Beskrivning: ";
+"AboutModuleType" = "Typ: ";
+"AboutModuleLang" = "Språk: ";
 "AboutModuleVersion" = "Version: ";
-"AboutModuleVersionUnspecified" = "(unspecified)";
-"AboutModuleAboutText" = "About: ";
-"AboutModuleLicence" = "Distribution Licence: ";
+"AboutModuleVersionUnspecified" = "(ospecificerad)";
+"AboutModuleAboutText" = "Om: ";
+"AboutModuleLicence" = "Distributionslicens: ";
 "AboutModuleLCSH" = "Library of Congress Subject Heading: ";
 
 
 "Disclaimer" = "Disclaimer";
 "DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
 
-"WebNoIP" = "Web: Unable to determine external IP\n";
-"WiFiNoConnection" = "Wifi: No Connection\n";
-"NoNetworkConnection" = "No network connection available.";
+"WebNoIP" = "Web: Kunde inte fastställa extern IP\n";
+"WiFiNoConnection" = "Wifi: Ingen Anslutning\n";
+"NoNetworkConnection" = "Ingen nätverksanslutning tillgänglig.";
 
-"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
-"InstallManagerDisabled" = "disabled...";
-"InstallTitle" = "Install?";
-"files" = "files";
-"InstallProblem" = "A problem occurred during the installation.";
-"InstalledButtonTitle" = "Installed";
-"InstallButtonTitle" = "Install";
-"RefreshProblem" = "A problem occurred during the refresh.";
-"RefreshingModuleSource" = "Refreshing Module Source";
-"NoModulesRefresh" = "No modules here. Try a refresh.";
-"NoModulesInstalled" = "No modules installed.";
+"manualInstallHelp" = "För att manuellt installera en modul behöver du rikta din webbrowser till en av följande platser och sedan följa uppmaningarna där (eller så kan du söka efter din iPhone med hjälp av Bonjour!). Märk väl! Det är  rekommenderat att du använder dig av den inbyggda modulinstalleraren - denna manuella installerare är endast till för de användare som skapar sina egna moduler.";
+"InstallManagerDisabled" = "avstängd...";
+"InstallTitle" = "Installera?";
+"files" = "filer";
+"InstallProblem" = "Ett problem uppstod under installationen.";
+"InstalledButtonTitle" = "Installerad";
+"InstallButtonTitle" = "Installera";
+"RefreshProblem" = "Ett problem uppstod under förnyandet.";
+"RefreshingModuleSource" = "Förnyar modulkällor";
+"NoModulesRefresh" = "Inga tillgängliga moduler. Försök förnya.";
+"NoModulesInstalled" = "Inga moduler installerade.";
 
-"InstallSourcesTitle" = "Sources";
-"PreferencesTitle" = "Preferences";
-"PreferencesDisplayPreferencesTitle" = "Display Preferences";
-"PreferencesDevicePreferencesTitle" = "Device Preferences";
-"PreferencesFontSizeTitle" = "Font Size";
-"PreferencesNightModeTitle" = "Night Mode";
-"PreferencesVPLTitle" = "Verse Per Line";
+"InstallSourcesTitle" = "Källor";
+"PreferencesTitle" = "Inställningar";
+"PreferencesDisplayPreferencesTitle" = "Utseende";
+"PreferencesDevicePreferencesTitle" = "Beteende";
+"PreferencesFontSizeTitle" = "Fontstorlek";
+"PreferencesNightModeTitle" = "Nattläge";
+"PreferencesVPLTitle" = "Radbryt verser";
 "PreferencesFontTitle" = "Font";
-"PreferencesRedLetterTitle" = "Red Letter";
-"PreferencesRedLetterNote" = "Note that Red Letter mode is only available for certain modules";
-"PreferencesDisableAutoLockTitle" = "Disable auto-lock";
-"PreferencesModuleMaintainerModeTitle" = "Module Maintainer Mode";
-"PreferencesModuleMaintainerModeNote" = "Note that Module Maintainer Mode is for those users who create their own modules & require a method to manually install their own modules.  For all other users, it is suggested that you use the built-in module downloader to access official modules provided by CrossWire.";
+"PreferencesRedLetterTitle" = "Röda bokstäver";
+"PreferencesRedLetterNote" = "Observera att Röda bokstäver-läget endast är tillgängliga för vissa moduler";
+"PreferencesDisableAutoLockTitle" = "Förhindra automatisk låsning";
+"PreferencesModuleMaintainerModeTitle" = "Modulunderhållningsläge";
+"PreferencesModuleMaintainerModeNote" = "Observera att Modulunderhållningsläget är till för dom användare som skapat sina egna moduler och behöver ett sätt att installera sina moduler manuellt. För alla andra användare är det rekommenderat att istället använda den inbyggda modulinstalleraren för att ta del av officiella moduler från CrossWire";
 
-"AboutTitle" = "About";
+"AboutTitle" = "Om";
 
-"TabBarTitleBible" = "Bible";
-"TabBarTitleCommentary" = "Commentary";
-"TabBarTitleDictionary" = "Dictionary";
-"TabBarTitleModules" = "Modules";
-"TabBarTitlePreferences" = "Preferences";
-"TabBarTitleAbout" = "About";
+"TabBarTitleBible" = "Bibel";
+"TabBarTitleCommentary" = "Kommentar";
+"TabBarTitleDictionary" = "Ordbok";
+"TabBarTitleModules" = "Moduler";
+"TabBarTitlePreferences" = "Inställningar";
+"TabBarTitleAbout" = "Om";
 
-"ModulesTitle" = "Modules";
-"BookmarksTitle" = "Bookmarks";
+"ModulesTitle" = "Moduler";
+"BookmarksTitle" = "Bokmärken";
 
-"ActivityLabelLoading" = "Loading...";
-"MMMBonjourLoading" = "Bonjour Loading...";
-"MMMIPLoading" = "IP Loading...";
+"ActivityLabelLoading" = "Laddar...";
+"MMMBonjourLoading" = "Bonjour Laddar...";
+"MMMIPLoading" = "IP Laddar...";
 
-"Biblical Texts" = "Biblical Texts";
-"Commentaries" = "Commentaries";
-"Lexicons / Dictionaries" = "Lexicons / Dictionaries";
-"Generic Books" = "Generic Books";
-"Daily Devotional" = "Daily Devotional";
-"Glossaries" = "Glossaries";
-"Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
-"Essays" = "Essays";
-"Maps" = "Maps";
-"Images" = "Images";
+"Biblical Texts" = "Bibeltexter";
+"Commentaries" = "Kommentarer";
+"Lexicons / Dictionaries" = "Lexikon / Ordböcker";
+"Generic Books" = "Allmänna Böcker";
+"Daily Devotional" = "Daglig Andakt";
+"Glossaries" = "Ordlistor";
+"Cults / Unorthodox / Questionable Material" = "Kulter / Oortodoxa / Ifrågasatt Material";
+"Essays" = "Uppsatser";
+"Maps" = "Kartor";
+"Images" = "Bilder";
 
-"BibleHistoryTitle" = "Bible History";
-"CommentaryHistoryTitle" = "Commentary History";
+"BibleHistoryTitle" = "Bibelhistorik";
+"CommentaryHistoryTitle" = "Kommentarhistorik";
 
-"None" = "None";
-"CloseButtonTitle" = "Close";
+"None" = "Inga";
+"CloseButtonTitle" = "Stäng";
 "CacheDictionaryKeysTitle" = "Cache?";
-"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
-"IndexDownloadTitle" = "Index Download";
-"NoSearchIndexTitle" = "No Search Index";
-"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
-"SearchDownloaderTitle" = "Search Downloader";
+"CacheDictionaryKeysMsg" = "Denna ordbok har ännu inte initialiserats. Vill du spara ordboken i buffertminnet nu?";
+"IndexDownloadTitle" = "Indexnerladdning";
+"NoSearchIndexTitle" = "Inga Sökindex";
+"NoSearchIndexMsg" = " Inget sökindex är installerat för denna modul. Önskar du söka efter tillgängliga sökindex nu?";
+"SearchDownloaderTitle" = "Nerladdning av sökindex";
 "FontPreferenceTitle" = "Font";
-"EmailUsButton" = "Email Us";
-"NoSearchIndexInstalled" = "No Search Index Installed";
-"SearchResults" = "Results";
+"EmailUsButton" = "E-posta oss";
+"NoSearchIndexInstalled" = "Inget Sökindex Installerat";
+"SearchResults" = "Resultat";
 
-"IndexControllerInstalled" = "You already have installed a search index for:";
-"IndexControllerDownloadable" = "Select a downloadable search index from the following list to enable search for that module:";
-"IndexControllerNone" = "Check your network connection to enable search for:";
-"IndexControllerNoneRemote" = "There is currently no downloadable search index available for:";
+"IndexControllerInstalled" = "Du har redan installerat sökindex för:";
+"IndexControllerDownloadable" = "Välj ett nerladdningsbart sökindex från följande lista för att aktivera sökning för den modulen:";
+"IndexControllerNone" = "Kontrollera din nätverksanslutning för att aktivera sökning för:";
+"IndexControllerNoneRemote" = "Det finns för tillfället inga nerladdningsbara sökindex för:";
 
-"SearchHelpTitle" = "Search Help";
-"IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";
+"SearchHelpTitle" = "Sökhjälp";
+"IndexControllerConfirmQuestion" = "Önskar du ladda ner sökindexet för denna modul?\n Detta kan ta en stund för kommentarmoduler!";
 

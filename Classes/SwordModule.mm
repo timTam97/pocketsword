@@ -731,51 +731,35 @@
 }
 
 - (void)setChapter:(NSString *)chapter {
-	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
+//	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
+//	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	swModule->RenderText();
 }
 
 - (NSString *)setToNextChapter {
-	//swModule->RenderText(); -- we only call this method after calling [setChapter:ch] so we don't need to call this again!
-//	sword::VerseKey curKey;
-	sword::VerseKey curKey = (sword::VerseKey)swModule->Key();
-	int c = curKey.getChapter();
-	curKey.setChapter(c+1);
-	swModule->setKey(curKey);
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	int c = curKey->getChapter();
+	curKey->setChapter(c+1);
 	swModule->RenderText();
 	
-	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
 	
-	// Advance to the next chapter
-//	do {
-//		curKey = swModule->Key()++;
-//		swModule->RenderText();
-//		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-//	} while ([ref isEqualToString: ch]);
 	return ref;
 }
 
 - (NSString *)setToPreviousChapter {
-	//swModule->RenderText(); -- we only call this method after calling [setChapter:ch] so we don't need to call this again!
-//	sword::SWKey curKey;
-	sword::VerseKey curKey = (sword::VerseKey)swModule->Key();
-	int c = curKey.getChapter();
-	curKey.setChapter(c-1);
-	swModule->setKey(curKey);
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	int c = curKey->getChapter();
+	curKey->setChapter(c-1);
 	swModule->RenderText();
 
-	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	//nicc crash here with "ch" being 'nil'
 	NSString *ref = [NSString stringWithString: ch];
 	
-	// Move to the previous chapter
-//	do {
-//		curKey = swModule->Key()--;
-//		swModule->RenderText();
-//		ref = [[[NSString stringWithCString: curKey.getText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-//		//ref = [[[NSString stringWithUTF8String: curKey.getText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-//	} while ([ref isEqualToString: ch]);
 	return ref;
 }
 
@@ -786,13 +770,16 @@
 	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_COMMENTARIES];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
-	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
+//	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
+//	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	sword::SWKey lastKey;
 	
 	swModule->RenderText();
 	NSMutableString *verses = [@"" mutableCopy];
-	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding]);
+	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
 	if(printf) NSLog(@"ch = %@", ch);
 	NSString *ref = [NSString stringWithString: ch];
 	NSString *thisEntry = @"";
@@ -805,30 +792,31 @@
 	do {
 		lastKey = swModule->Key();
 		thisEntry = [NSString stringWithUTF8String: swModule->RenderText()];
-		if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
+		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry]) {
 
 			if ([modType isEqualToString: @"Commentaries"]) {
-				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\">%@</a></p>", i, i, thisEntry];
+				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\"></a>%@</p>", i, i, thisEntry];
 			}
 			else {
 				if(vpl)
-					[verses appendFormat: @"<a href=\"#verse%d\" id=\"vv%d\"><sup><small><b>%d</b></small></sup>%@</a><br />", i, i, i, thisEntry];
+					[verses appendFormat: @"<a href=\"#verse%d\" id=\"vv%d\"><sup><small><b>%d</b></small></sup></a>%@<br />", i, i, i, thisEntry];
 				else
-					[verses appendFormat: @"&nbsp;<a href=\"#verse%d\" id=\"vv%d\"><sup><small><b>%d</b></small></sup>%@</a>", i, i, i, thisEntry];
+					[verses appendFormat: @"&nbsp;<a href=\"#verse%d\" id=\"vv%d\"><sup><small><b>%d</b></small></sup></a>%@", i, i, i, thisEntry];
 			}
 		}
 		lastEntry = thisEntry;
 		swModule->Key()++;
 		lastKey++;
 		swModule->RenderText();
-		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-		if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSISOLatin1StringEncoding]);
+		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
 		if(printf) NSLog(@"ref = %@", ref);
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->Key().Error() != KEYERR_OUTOFBOUNDS));
 	
-	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);	// Set the key back to what we had it at
+	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
+//	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);	// Set the key back to what we had it at
 	
 	// add JS for navigating through the chapter.
 	// NOTE: for readability, the array isn't starting at the usual '0' position, but at '1'
@@ -915,7 +903,10 @@
 }
 
 - (void)setPositionFromKeyString:(NSString *)aKeyString {
-    swModule->setKey([aKeyString UTF8String]);        
+    //swModule->setKey([aKeyString UTF8String]);
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	curKey->setText([aKeyString cStringUsingEncoding: NSUTF8StringEncoding]);
+	swModule->RenderText();
 }
 
 //- (void)setPositionFromVerseKey:(SwordVerseKey *)aVerseKey {

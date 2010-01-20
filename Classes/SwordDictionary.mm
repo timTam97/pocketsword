@@ -109,6 +109,7 @@
 - (void)removeCache {
     NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
 	[[NSFileManager defaultManager] removeItemAtPath: cachePath error: NULL];
+	DLog(@"\n-- SwordDictionary: removed Cache");
 }
 
 - (id)initWithName:(NSString *)aName swordManager:(SwordManager *)aManager {    

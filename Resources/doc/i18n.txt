@@ -1,0 +1,11 @@
+LANG		TRANSLATOR				T EMAIL								PS VERSION
+
+French		Dominique Corbex		dominique.corbex@gmail.com			v1.1
+Spanish		David Bell				david.benjamin.bell@gmail.com		---
+Farsi		Peter von Kaehne		refdoc@gmx.net						---
+Swedish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		v1.1
+Finnish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		---
+Japanese	Ian Wagner				ianthetechie@gmail.com				---
+Korean		Ian Wagner				ianthetechie@gmail.com				---
+Chinese		Ian Wagner				ianthetechie@gmail.com				---
+

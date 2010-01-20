@@ -22,6 +22,7 @@
 #import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "SwordManager.h"
+#import "SwordDictionary.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -31,40 +32,131 @@
 
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
-    
-	BOOL kjv = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedBundledKJV"];
-	BOOL mhcc = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedBundledMHCC"];
-//	BOOL loadedLocales = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedSWORDLocales-v1"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
+	BOOL mhcc = [defaults boolForKey:@"loadedBundledMHCC"];
+	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
+	BOOL loadedLocales = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedSWORDLocales-v1"];
+	if(reset) {
+		DLog(@"\nreset_PocketSword is set");
+		[defaults removeObjectForKey: @"lastRef"];
+		[defaults removeObjectForKey: @"lastBible"];
+		[defaults removeObjectForKey: @"lastCommentary"];
+		[defaults removeObjectForKey: @"lastDictionary"];
+		[defaults removeObjectForKey: @"fontNamePreference"];
+		[defaults removeObjectForKey: @"nightModePreference"];
+		[defaults removeObjectForKey: @"fontSizePreference"];
+		[defaults removeObjectForKey: @"vplPreference"];
+		[defaults removeObjectForKey: @"redLetterPreference"];
+		[defaults removeObjectForKey: @"insomniaPreference"];
+		[defaults removeObjectForKey: @"moduleMaintainerModePreference"];
+		[defaults removeObjectForKey: @"reset_PocketSword"];
+		NSArray *dicts = [[moduleManager swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
+		for(SwordDictionary *dict in dicts) {
+			[dict removeCache];
+		}
+		[moduleManager setPrimaryBible: nil];
+		[moduleManager setPrimaryCommentary: nil];
+		[moduleManager setPrimaryDictionary: nil];
+		[viewController redisplayChapter: BibleViewPoll restore: RestoreNoPosition];
+	}
 	
 	if(!kjv) {
-		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedBundledKJV"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
+		[defaults setBool: YES forKey:@"loadedBundledKJV"];
+		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible];
 	}
 	if(!mhcc) {
-		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedBundledMHCC"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
+		[defaults setBool: YES forKey:@"loadedBundledMHCC"];
+		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary];
 	}
-//	if(!loadedLocales) {
-//		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedSWORDLocales-v1"];
-//		[[NSUserDefaults standardUserDefaults] synchronize];
-//		NSString *localesZIP = [[NSBundle mainBundle] pathForResource:@"locales.d" ofType:@"zip"];
-//		DLog(@"\n\n%@\n\n", localesZIP);
-//		NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-//		NSString *outfile = [root stringByAppendingPathComponent:@"locales.d"];
-//		[[NSFileManager defaultManager] removeItemAtPath:outfile error:NULL];//delete it if it already exists
-//		
-//		//unzip the archive
-//		ZipArchive *arch = [[ZipArchive alloc] init];
-//		[arch UnzipOpenFile:localesZIP];
-//		[arch UnzipFileTo:outfile overWrite:YES];
-//		[arch UnzipCloseFile];
-//		[arch release];
-//		
-//		[SwordManager initLocale];
-//		
-//	}
+
+	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	NSString *swLocales = [[docPath stringByAppendingPathComponent:@"unused"] stringByAppendingPathComponent: @"locales.d"];
+	
+	if(!loadedLocales) {
+		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedSWORDLocales-v1"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		NSString *localesZIP = [[NSBundle mainBundle] pathForResource:@"locales.d" ofType:@"zip"];
+		DLog(@"\n\n%@\n\n", localesZIP);
+		[[NSFileManager defaultManager] removeItemAtPath:swLocales error:NULL];//delete it if it already exists
+		
+		//unzip the archive
+		ZipArchive *arch = [[ZipArchive alloc] init];
+		[arch UnzipOpenFile:localesZIP];
+		[arch UnzipFileTo:swLocales overWrite:YES];
+		[arch UnzipCloseFile];
+		[arch release];
+		
+		//[SwordManager initLocale];
+		
+	}
+	
+	//"install" the l10n strings into SWORD for the current locale.
+    NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
+	
+	NSArray *availLocales = [NSLocale preferredLanguages];
+	NSArray *currentlyInstalledStrings = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: localePath error: NULL];
+	NSString *lang = nil;
+	NSString *loc = nil;
+	BOOL haveLocale = NO;
+	BOOL alreadyInstalled = NO;
+
+	if([[availLocales objectAtIndex: 0] isEqualToString: @"en"]) {
+		lang = loc;
+		alreadyInstalled = YES;
+		haveLocale = YES;
+	} else if(currentlyInstalledStrings && [currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", [availLocales objectAtIndex: 0]]]) {
+		alreadyInstalled = YES;
+		haveLocale = YES;
+		lang = [availLocales objectAtIndex: 0];
+	}
+
+	NSArray *availStrings = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: swLocales error: NULL];
+	NSEnumerator *iter = [availLocales objectEnumerator];
+	while((loc = [iter nextObject]) && !haveLocale) {
+		if([loc isEqualToString: @"en"]) {
+			lang = loc;
+			alreadyInstalled = YES;
+			break;//default, do nothing.
+		} else if([loc isEqualToString:@"zh-Hant"]) {
+			loc = @"zh_TW"; // SWORD and Apple use different names for traditional chinese...
+		}
+		
+		if([currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", loc]]) {
+			alreadyInstalled = YES;
+			lang = loc;
+			break;
+		}		
+		// check if this locale is available in SWORD
+		for(NSString *swLoc in availStrings) {
+			//NSLog(@"loc: %@   swLoc: %@", loc, swLoc);
+			if([swLoc hasPrefix: loc]) {
+				haveLocale = YES;
+				lang = swLoc;
+				break;
+			}
+		}
+	}
+	if(!alreadyInstalled) {
+		DLog(@"installing %@", lang);
+		[[NSFileManager defaultManager] removeItemAtPath: localePath error: NULL];
+		[[NSFileManager defaultManager] createDirectoryAtPath: localePath withIntermediateDirectories: NO attributes: nil error: NULL];
+		if(haveLocale) {
+			NSString *srcLocale = [swLocales stringByAppendingPathComponent: lang];
+			NSString *dstLocale = [localePath stringByAppendingPathComponent: lang];
+			[[NSFileManager defaultManager] copyItemAtPath: srcLocale toPath: dstLocale error: NULL];
+			//NSLog(@"copying from: %@", srcLocale);
+			//NSLog(@"		to: %@", dstLocale);
+			[SwordManager initLocale];
+			[moduleManager reload];
+		}
+	} else {
+		DLog(@"already installed %@", lang);
+	}
+
+	
 	
     // Add the tab bar controller's current view as a subview of the window
     [window addSubview:tabBarController.view];

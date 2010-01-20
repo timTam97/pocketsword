@@ -237,7 +237,7 @@ float installationProgress;
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToNextChapter];
 	}
-	if(primaryCommentary) {
+	if(primaryCommentary && !ret) {
 		[primaryCommentary setChapter: cur];
 		ret = [primaryCommentary setToNextChapter];
 	}
@@ -251,7 +251,7 @@ float installationProgress;
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToPreviousChapter];
 	}
-	if(primaryCommentary) {
+	if(primaryCommentary && !ret) {
 		[primaryCommentary setChapter: cur];
 		ret = [primaryCommentary setToPreviousChapter];
 	}
@@ -271,7 +271,8 @@ float installationProgress;
 	BOOL restoreBible = NO;
 	BOOL restoreCommentary = NO;
 	BOOL restoreDictionary = NO;
-	sword::SWKey loc;
+	//sword::SWKey loc;
+	NSString *ch;
 	sword::SWKey dictLoc;
 	NSString *bibleName;
 	NSString *commentaryName;
@@ -279,13 +280,15 @@ float installationProgress;
 	
 	if (primaryBible) {
 		restoreBible = YES;
-		loc = ([primaryBible swModule])->getKeyText();
+		ch = [[[NSString stringWithCString: ([primaryBible swModule])->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		//loc = ([primaryBible swModule])->getKeyText();
 		bibleName = [primaryBible name];
 	}
 	
 	if (primaryCommentary) {
 		restoreCommentary = YES;
-		loc = ([primaryCommentary swModule])->getKeyText();//doesn't matter that we may write over loc, they'll be the same.
+		ch = [[[NSString stringWithCString: ([primaryCommentary swModule])->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		//loc = ([primaryCommentary swModule])->getKeyText();//doesn't matter that we may write over loc, they'll be the same.
 		commentaryName = [primaryCommentary name];
 	}
 	
@@ -302,14 +305,19 @@ float installationProgress;
 	if (restoreBible) {
 		primaryBible = [swordManager moduleWithName: bibleName];
 		if (primaryBible) {
-			([primaryBible swModule])->setKey(loc);
+			sword::VerseKey *curKey = (sword::VerseKey*)([primaryBible swModule])->getKey();
+			curKey->setText([ch cStringUsingEncoding: NSUTF8StringEncoding]);
+			//([primaryBible swModule])->setKey(loc);
 		}
 	}
 	
 	if (restoreCommentary) {
 		primaryCommentary = [swordManager moduleWithName: commentaryName];
-		if (primaryCommentary)
-			([primaryCommentary swModule])->setKey(loc);
+		if (primaryCommentary) {
+			sword::VerseKey *curKey = (sword::VerseKey*)([primaryCommentary swModule])->getKey();
+			curKey->setText([ch cStringUsingEncoding: NSUTF8StringEncoding]);
+			//([primaryCommentary swModule])->setKey(loc);
+		}
 	}
 	
 	if (restoreDictionary) {
@@ -321,6 +329,7 @@ float installationProgress;
 	if([[swordManager moduleNames] count] == 0) {
 		[bookmarkAddButton setEnabled:NO];
 	}
+	[dataController updateRefSelectorBooks:YES];
 }
 
 - (PSStatusReporter*)getInstallationProgress {
@@ -670,7 +679,12 @@ float installationProgress;
 				font-size: %@pt;\n\
 				font-family: %@;\n\
 				line-height: 130%%;\n\
-				-webkit-user-select: none;\n\
+				//-webkit-user-select: none;\n\
+			}\n\
+			!P {\n\
+			}\n\
+			sup {\n\
+				line-height: 0%%;\n\
 			}\n\
 			a:link {\n\
 				color: %@;\n\
@@ -686,7 +700,6 @@ float installationProgress;
 			}\n\
 			%@\n\
 			</style>\n\
-			<script type=\"text/javascript\" src=\"SearchWebView.js\" />\n\
 			%@\n\
 			</head>\n\
 			<body><div>%@</div></body></html>", 
