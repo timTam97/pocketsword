@@ -3227,7 +3227,7 @@
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
-					"icu/common/**",
+					externals/icu,
 					"externals/clucene/**",
 					externals/sword/include,
 					externals/libcurl/include,
@@ -3358,7 +3358,7 @@
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
-					"icu/common/**",
+					externals/icu,
 					"externals/clucene/**",
 					externals/sword/include,
 					externals/libcurl/include,
