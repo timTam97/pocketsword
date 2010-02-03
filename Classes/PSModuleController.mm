@@ -33,6 +33,7 @@
 @synthesize swordInstallManager;
 @synthesize swordManager;
 @synthesize currentInstallSource;
+@synthesize busyTimer;
 
 float installationProgress;
 
@@ -329,7 +330,8 @@ float installationProgress;
 	if([[swordManager moduleNames] count] == 0) {
 		[bookmarkAddButton setEnabled:NO];
 	}
-	[dataController updateRefSelectorBooks:YES];
+	if(restoreBible || restoreCommentary)
+		[dataController updateRefSelectorBooks];
 }
 
 - (PSStatusReporter*)getInstallationProgress {
@@ -777,6 +779,16 @@ float installationProgress;
 }
 
 - (void)hideBusyIndicator
+{
+	if(busyTimer) {
+		[busyTimer invalidate];
+		self.busyTimer = nil;
+	}
+	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+	self.busyTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doubleClose:) userInfo:nil repeats:NO];
+}
+
+- (void)doubleClose:(NSTimer *)theTimer
 {
 	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 }

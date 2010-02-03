@@ -28,9 +28,9 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	if(requireReloadOfModuleViews) {
-		[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+		[moduleManager displayBusyIndicator];
 		[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-		[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+		[moduleManager hideBusyIndicator];
 	}
 	requireReloadOfModuleViews = NO;
 }
@@ -317,54 +317,39 @@ BOOL requireReloadOfModuleViews = NO;
 }
 
 - (void)fontSizeChanged:(UISlider *)sender {
-//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	NSInteger f = [sender value];
 	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:@"fontSizePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
-//	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 	requireReloadOfModuleViews = YES;
 }
 
 - (void)nightModeChanged:(UISwitch *)sender {
-//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"nightModePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-//	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 	requireReloadOfModuleViews = YES;
 }
 
 - (void)redLetterChanged:(UISwitch *)sender {
-//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"redLetterPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[moduleManager setPreferences];
-//	[viewController redisplayChapter:NoViewPoll restore:RestoreScrollPosition];
-//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 	requireReloadOfModuleViews = YES;
 }
 
 - (void)vplChanged:(UISwitch *)sender {
-//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"vplPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-//	[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 	requireReloadOfModuleViews = YES;
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
-//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:@"fontNamePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
-//	[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 	requireReloadOfModuleViews = YES;
 }
 

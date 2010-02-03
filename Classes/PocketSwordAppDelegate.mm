@@ -96,18 +96,20 @@
 	//"install" the l10n strings into SWORD for the current locale.
     NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
 	
-	NSArray *availLocales = [NSLocale preferredLanguages];
-	NSArray *currentlyInstalledStrings = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: localePath error: NULL];
-	NSString *lang = nil;
-	NSString *loc = nil;
+	NSArray *availLocales = [NSLocale preferredLanguages];//the iPhone locale
+	NSArray *currentlyInstalledStrings = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: localePath error: NULL];//currently installed SWORD locale
+	NSString *lang = nil;//language we're going to use this time around
+	NSString *loc = nil;//the SWORD loc we're going to use this time around
 	BOOL haveLocale = NO;
 	BOOL alreadyInstalled = NO;
 
 	if([[availLocales objectAtIndex: 0] isEqualToString: @"en"]) {
-		lang = loc;
+		//do nothing if it's English.
+		lang = @"en";
 		alreadyInstalled = YES;
 		haveLocale = YES;
 	} else if(currentlyInstalledStrings && [currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", [availLocales objectAtIndex: 0]]]) {
+		//do nothing if it's the non-English locale we used last time.
 		alreadyInstalled = YES;
 		haveLocale = YES;
 		lang = [availLocales objectAtIndex: 0];
@@ -125,6 +127,7 @@
 		}
 		
 		if([currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", loc]]) {
+			//we do this because it could be the non-primary iPhone locale...
 			alreadyInstalled = YES;
 			lang = loc;
 			break;

@@ -14,7 +14,6 @@
 @implementation PSSearchController
 
 @synthesize results;
-@synthesize busyTimer;
 @synthesize searchTerm;
 
 BOOL searchingEnabled;
@@ -197,11 +196,7 @@ BOOL searchingEnabled;
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
-	if(busyTimer) {
-		[busyTimer invalidate];
-		self.busyTimer = nil;
-	}
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+	[moduleManager displayBusyIndicator];
 	ShownTab tab = [dataController listType];
 	self.results = nil;
 	self.searchTerm = [searchBar text];
@@ -213,14 +208,9 @@ BOOL searchingEnabled;
 			self.results = [[moduleManager primaryCommentary] search: [searchBar text]];
 			break;
 	}
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
-	self.busyTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doubleClose:) userInfo:nil repeats:NO];
+	[moduleManager hideBusyIndicator];
 	[resultsTable reloadData];
 	[pool release];
-}
-
-- (void)doubleClose:(NSTimer *)theTimer {
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 }
 
 //- (void)hideKeyboard {

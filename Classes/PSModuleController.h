@@ -61,6 +61,8 @@
 	SwordManager *swordManager;
 	SwordInstallManager *swordInstallManager;
 	SwordInstallSource *currentInstallSource;
+
+	NSTimer *busyTimer;
 }
 
 @property (assign) SwordModule *primaryBible;
@@ -69,6 +71,7 @@
 @property (assign) SwordInstallManager *swordInstallManager;
 @property (assign) SwordManager *swordManager;
 @property (retain, readwrite) SwordInstallSource *currentInstallSource;
+@property (retain, readwrite) NSTimer *busyTimer;
 
 + (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript;
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript;
@@ -101,6 +104,6 @@
 
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;
-
+- (void)doubleClose:(NSTimer *)theTimer;
 
 @end

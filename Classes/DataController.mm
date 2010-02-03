@@ -523,11 +523,13 @@
 	}
 }
 
-- (void)updateRefSelectorBooks:(BOOL)forceRefresh {
+- (void)updateRefSelectorBooks {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *currentRefSystemName = [[moduleManager primaryBible] versification];
-	if(!currentRefSystemName || forceRefresh) //if there are no Bibles, fall back to the commentary versification
+	if(!currentRefSystemName) //if there are no Bibles, fall back to the commentary versification
 		currentRefSystemName = [[moduleManager primaryCommentary] versification];
+	if(!currentRefSystemName)
+		currentRefSystemName = @"KJV";//if no ref system, default to kjv
 	const sword::VerseMgr::System *refSystem = sword::VerseMgr::getSystemVerseMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
 	int numberOfBooks = refSystem->getBookCount();
 	NSMutableArray *books = [[[NSMutableArray alloc] init] autorelease];

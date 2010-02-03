@@ -176,7 +176,6 @@
 		05275B7C10884F72004FB0E0 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
 		052B52851101A32900FFDF01 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 052B52841101A32900FFDF01 /* Settings.bundle */; };
 		052B52F21101D76000FFDF01 /* locales.d.zip in Resources */ = {isa = PBXBuildFile; fileRef = 052B52ED1101D6DF00FFDF01 /* locales.d.zip */; };
-		0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 05D461E8108EEB00006BFBB1 /* iTunesArtwork */; };
 		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
@@ -2745,7 +2744,6 @@
 				05F8E60110B1098600570141 /* back.png in Resources */,
 				05F8E60210B1098600570141 /* forward.png in Resources */,
 				05B3D61710BB7A92000F8A48 /* MMM.png in Resources */,
-				0542F6E210BE7AE80088A721 /* iTunesArtwork in Resources */,
 				0513AE1B10C0C43600E414D9 /* Default.png in Resources */,
 				0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */,
 				0513AE8410C0DC3900E414D9 /* back-white.png in Resources */,

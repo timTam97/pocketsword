@@ -770,8 +770,6 @@
 	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_COMMENTARIES];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
-//	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
-//	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	sword::SWKey lastKey;
@@ -779,8 +777,8 @@
 	swModule->RenderText();
 	NSMutableString *verses = [@"" mutableCopy];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
-	if(printf) NSLog(@"ch = %@", ch);
+	//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
+	//if(printf) NSLog(@"ch = %@", ch);
 	NSString *ref = [NSString stringWithString: ch];
 	NSString *thisEntry = @"";
 	NSString *lastEntry = @"";
@@ -810,13 +808,14 @@
 		lastKey++;
 		swModule->RenderText();
 		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-		if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
-		if(printf) NSLog(@"ref = %@", ref);
+		//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
+		//if(printf) NSLog(@"ref = %@", ref);
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->Key().Error() != KEYERR_OUTOFBOUNDS));
 	
-	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-//	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);	// Set the key back to what we had it at
+	//if(printf) NSLog(@"verses:\n%@", verses);
+	
+	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);// Set the key back to what we had it at
 	
 	// add JS for navigating through the chapter.
 	// NOTE: for readability, the array isn't starting at the usual '0' position, but at '1'

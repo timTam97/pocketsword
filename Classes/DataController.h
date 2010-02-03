@@ -81,7 +81,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)dealloc;
 - (void)setShownTabTo:(ShownTab)tab;
-- (void)updateRefSelectorBooks:(BOOL)forceRefresh;
+- (void)updateRefSelectorBooks;
 - (NSString*)bookName:(NSInteger)bookIndex;
 - (NSString*)bookOSISName:(NSInteger)bookIndex;
 - (NSInteger)bookIndex:(NSString*)bookName;
