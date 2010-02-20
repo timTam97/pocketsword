@@ -176,6 +176,7 @@
 		05275B7C10884F72004FB0E0 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
 		052B52851101A32900FFDF01 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 052B52841101A32900FFDF01 /* Settings.bundle */; };
 		052B52F21101D76000FFDF01 /* locales.d.zip in Resources */ = {isa = PBXBuildFile; fileRef = 052B52ED1101D6DF00FFDF01 /* locales.d.zip */; };
+		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
 		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
@@ -735,6 +736,8 @@
 		0542F6D310BE770C0088A721 /* stdcheaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdcheaders.h; sourceTree = "<group>"; };
 		0542F6D410BE770C0088A721 /* typecheck-gcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "typecheck-gcc.h"; sourceTree = "<group>"; };
 		0542F6D510BE770C0088A721 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesModuleSelectorTableViewController.h; sourceTree = "<group>"; };
+		0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesModuleSelectorTableViewController.mm; sourceTree = "<group>"; };
 		0545545410CA37ED00EE11EC /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/Downloader.xib; sourceTree = "<group>"; };
 		0545545510CA381700EE11EC /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/Downloader.xib; sourceTree = "<group>"; };
 		0545545610CA381D00EE11EC /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/Downloader.xib; sourceTree = "<group>"; };
@@ -1290,6 +1293,8 @@
 		0513ACBB10BFADC400E414D9 /* PS-preferences */ = {
 			isa = PBXGroup;
 			children = (
+				0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */,
+				0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */,
 				05CD44C0109E92C900853E48 /* PSPreferencesController.h */,
 				05CD44C1109E92C900853E48 /* PSPreferencesController.mm */,
 				05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */,
@@ -3087,6 +3092,7 @@
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
 				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
+				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

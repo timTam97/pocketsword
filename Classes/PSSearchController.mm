@@ -190,6 +190,7 @@ BOOL searchingEnabled;
 		//self.searchTerm = nil;
 		[viewController toggleMultiList: nil];
 		[viewController highlightSearchTerm: searchTerm forTab: tab];
+		[viewController addHistoryItem: tab];
 	}
 }
 

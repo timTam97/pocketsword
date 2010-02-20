@@ -50,17 +50,19 @@ NSTimer *downloadTimer;
 		[pool release];
 		return;
 	}
+	
+	if([[module name] isEqualToString: @"Personal"] || [module configEntryForKey: SWMOD_CONFENTRY_CIPHERKEY]) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		[pool release];
+		return;
+	}
 
-	//Is it already installed?
-	//BOOL installedAlready = [[moduleManager swordManager] isModuleInstalled: module.name];
 	SwordInstallSource *sIS = [[navigatorSources moduleManager] currentInstallSource];
 	
 	NSString *question = NSLocalizedString(@"ConfirmInstall", @"Would you like to install this module?");
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
-	//if(installedAlready) {
-	//	question = @"This module is already installed, do you wish to download it again?";
-	//	messageTitle = @"Download again?";
-	//}
+
 	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
 	[[[UIAlertView alloc] initWithTitle: messageTitle message: message
 							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];

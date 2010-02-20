@@ -207,34 +207,95 @@
 - (NSString *)fullAboutText {
     NSMutableString *ret = [[[NSMutableString alloc] init] autorelease];
     
-    // module Name, book name, type, lang, version, about
     // module name
-	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleName", @""), [self name]]];
+	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleName", @""), [self name]];
     
     // module description
-	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleDescription", @""), [self descr]]];
+	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleDescription", @""), [self descr]];
 	
 	// module LCSH -- Library of Congress Subject Heading
 	NSString *lcsh = [self configEntryForKey:@"LCSH"];
-	if(lcsh) {
-		[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b><br />&nbsp; &nbsp; &nbsp; %@</p>", NSLocalizedString(@"AboutModuleLCSH", @"Library of Congress Subject Heading"), lcsh]];
-	}
+	if(lcsh)
+		[ret appendFormat:@"<p><b>%@</b><br />&nbsp; &nbsp; &nbsp; %@</p>", NSLocalizedString(@"AboutModuleLCSH", @"Library of Congress Subject Heading"), lcsh];
     
     // module type
-	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleType", @""), [self typeString]]];
+	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleType", @""), [self typeString]];
     
     // module lang
-	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleLang", @""), [self langString]]];
+	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleLang", @""), [self langString]];
     
     // module version
-	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleVersion", @""), [self version]]];
+	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleVersion", @""), [self version]];
 	
 	// module licence info
 	NSString *licence = [self configEntryForKey:@"DistributionLicense"];
-	if(licence != nil) {
-		[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleLicence", @""), licence]];
-	}
+	if(licence)
+		[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleLicence", @""), licence];
     
+	//
+	// Features that this module supports:
+	//
+	NSMutableString *featuresAboutString = [@"" mutableCopy];
+	if([self hasFeature: SWMOD_FEATURE_STRONGS] || [self hasFeature: SWMOD_CONF_FEATURE_STRONGS])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsStrongsNumbers", @"")];
+	
+	if([self hasFeature: SWMOD_FEATURE_MORPH])//contains Morphological tags
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsMorphTags", @"")];
+	
+//	if([self hasFeature: SWMOD_FEATURE_FOOTNOTES])
+//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsFootnotes", @"")];
+	
+//	if([self hasFeature: SWMOD_FEATURE_HEADINGS]) //not currently supported in PocketSword
+//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHeadings", @"")];
+	
+	if([self hasFeature: SWMOD_FEATURE_REDLETTERWORDS])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsRedLetterWords", @"")];
+	
+//	if([self hasFeature: SWMOD_FEATURE_VARIANTS]) //not currently supported in PocketSword
+//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsVariants", @"")];
+	
+	if([self hasFeature: SWMOD_FEATURE_GREEKACCENTS])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsGreekAccents", @"")];
+	
+//	if([self hasFeature: SWMOD_FEATURE_SCRIPTREF])
+//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsScriptref", @"")];
+	
+//	if([self hasFeature: SWMOD_FEATURE_LEMMA])
+//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsLemma", @"")];
+	
+	if([self hasFeature: SWMOD_FEATURE_CANTILLATION])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsCantillation", @"")];
+	
+	if([self hasFeature: SWMOD_FEATURE_HEBREWPOINTS])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHebrewPoints", @"")];
+	
+	if([self hasFeature: @"MorphSegmentation"])//morpheme segmented Hebrew
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsMorphSegmentation", @"")];
+	
+	if([self hasFeature: SWMOD_CONF_FEATURE_GREEKDEF])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsGreekDef", @"")];
+	
+	if([self hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHebrewDef", @"")];
+	
+	if([self hasFeature: SWMOD_CONF_FEATURE_GREEKPARSE])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsGreekParse", @"")];
+	
+	if([self hasFeature: SWMOD_CONF_FEATURE_HEBREWPARSE])//CrossWire doesn't currently have any mod with this in it!
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHebrewParse", @"")];
+	
+	if([self hasFeature: SWMOD_CONF_FEATURE_DAILYDEVOTION])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsDailyDevotion", @"")];
+	
+	if([self hasFeature: SWMOD_CONF_FEATURE_IMAGES])
+		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsImages", @"")];
+
+	if(![featuresAboutString isEqualToString:@""]) {
+		[ret appendFormat: @"<p><b>%@</b><br />", NSLocalizedString(@"AboutModuleFeaturesTitle", @"")];
+		[ret appendString: featuresAboutString];
+		[ret appendString: @"</p>"];
+	}
+	
     // module about
 	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b><br />%@</p>", NSLocalizedString(@"AboutModuleAboutText", @""), [self aboutText]]];
 
@@ -767,7 +828,7 @@
 // Grabs the text for a given chapter (e.g. "Gen 1")
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
 {
-	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_COMMENTARIES];
+	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
@@ -813,7 +874,9 @@
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->Key().Error() != KEYERR_OUTOFBOUNDS));
 	
-	//if(printf) NSLog(@"verses:\n%@", verses);
+	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
+	
+	if(printf) NSLog(@"verses:\n%@", verses);
 	
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);// Set the key back to what we had it at
 	

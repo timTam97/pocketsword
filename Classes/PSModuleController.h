@@ -77,6 +77,7 @@
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript;
 + (NSString *)createRefString:(NSString*)ref;
 + (BOOL)checkNetworkConnection;
++ (NSDictionary *)dataForLink:(NSURL *)aURL;
 
 - (PSModuleController *)init;
 - (id)viewController;

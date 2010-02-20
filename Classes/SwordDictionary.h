@@ -33,6 +33,7 @@
 
 - (BOOL)keysCached;
 - (BOOL)keysLoaded;
+- (void)releaseKeys;
 
 - (void)removeCache;
 

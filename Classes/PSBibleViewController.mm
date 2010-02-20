@@ -10,6 +10,7 @@
 //#import "SwordModule.h"
 #import "PSModuleController.h"
 #import "ViewController.h"
+#import "SwordDictionary.h"
 
 
 @implementation PSBibleViewController
@@ -89,7 +90,6 @@
 	BOOL load = YES;
 	
 	NSString *requestString = [[request URL] absoluteString];
-	//DLog(@"\nBIBLE: requestString: %@", requestString);
 	NSArray *components = [requestString componentsSeparatedByString:@":"];
 	
 	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
@@ -97,14 +97,71 @@
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: @"bibleVersePosition"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			//NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", [components objectAtIndex:2]];
-			//[commentaryWebView stringByEvaluatingJavaScriptFromString:javascript];
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			//[bibleNavBtn setTitle: ref];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
 		}
 		load = NO;
+	} else {
+		//NSLog(@"\nBIBLE: requestString: %@", requestString);
+		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+		NSString *entry = nil;
+		
+		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showStrongs"]) {//@"showStrongs"
+			//
+			// Strong's Numbers
+			//
+			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsGreekModule];
+			//NSLog(@"dataType = %@", [rData objectForKey:ATTRTYPE_TYPE]);
+			BOOL hebrew = NO;
+			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"Hebrew"]) {
+				mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule];
+				hebrew = YES;
+			}
+			
+			SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+			if(swordDictionary) {
+				entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+				//DLog(@"\n%@ = %@\n", mod, entry);
+			}
+			if(!entry) {
+				if(hebrew)
+					entry = NSLocalizedString(@"NoHebrewStrongsNumbersModuleInstalled", @"");
+				else
+					entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
+			}
+			
+		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
+			//
+			// Morphological Tags
+			//		type hasPrefix: "robinson"		for Greek
+			//		type isEqualToString: "Greek"	for Greek
+			//		type hasPrefix: "strongMorph"	for Hebrew	???
+			//
+			// for the time being I'm going to test for "strongMorph" & show an error dialogue or otherwise use Greek.
+			
+			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
+			if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
+				entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
+			} else {
+				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+				if(swordDictionary) {
+					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+					//DLog(@"\n%@ = %@\n", mod, entry);
+				}
+				if(!entry) {
+					entry = NSLocalizedString(@"NoMorphGreekModuleInstalled", @"");
+				}
+				
+			}
+			
+		}
+
+		
+		if(entry) {
+			[viewController showInfo: entry];
+			load = NO;
+		}
 	}
 	
 	[pool release];
@@ -117,61 +174,6 @@
 	self.refToShow = nil;
 	self.jsToShow = nil;
 }
-
-- (NSDictionary *)dataForLink:(NSURL *)aURL {
-    // there are two types of links
-    // our generated sword:// links and study data beginning with applewebdata://
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    
-    NSMutableDictionary *ret = [NSMutableDictionary dictionary];
-    
-    NSString *scheme = [aURL scheme];
-    if([scheme isEqualToString:@"sword"]) {
-        // in this case host is the module and path the reference
-        [ret setObject:[aURL host] forKey:ATTRTYPE_MODULE];
-        [ret setObject:[[[aURL path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""]
-                forKey:ATTRTYPE_VALUE];
-        [ret setObject:@"scriptRef" forKey:ATTRTYPE_TYPE];
-        [ret setObject:@"showRef" forKey:ATTRTYPE_ACTION];
-    } else if([scheme isEqualToString:@"applewebdata"]) {
-        // in this case
-        NSString *path = [aURL path];
-        NSString *query = [aURL query];
-        if([[path lastPathComponent] isEqualToString:@"passagestudy.jsp"]) {
-            NSArray *data = [query componentsSeparatedByString:@"&"];
-            NSString *type = @"x";
-            NSString *module = @"";
-            NSString *passage = @"";
-            NSString *value = @"1";
-            NSString *action = @"";
-            for(NSString *entry in data) {
-                if([entry hasPrefix:@"type="]) {
-                    type = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
-                } else if([entry hasPrefix:@"module="]) {
-                    module = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
-                } else if([entry hasPrefix:@"passage="]) {
-                    passage = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
-                } else if([entry hasPrefix:@"action="]) {
-                    action = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];                    
-                } else if([entry hasPrefix:@"value="]) {
-                    value = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];                    
-                } else {
-                    ALog(@"[ExtTextViewController -dataForLink:] unknown parameter: %@\n", entry);
-                }
-            }
-            
-            [ret setObject:module forKey:ATTRTYPE_MODULE];
-            [ret setObject:passage forKey:ATTRTYPE_PASSAGE];
-            [ret setObject:value forKey:ATTRTYPE_VALUE];
-            [ret setObject:action forKey:ATTRTYPE_ACTION];
-            [ret setObject:type forKey:ATTRTYPE_TYPE];
-        }
-    }
-    
-	[pool release];
-    return ret;
-}
-
 
 
 @end

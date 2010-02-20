@@ -151,23 +151,27 @@ float installationProgress;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/ {
 	if(swordManager) {
 		BOOL redLetter = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
+		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
+		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+		BOOL greekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
+		BOOL HVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
+		BOOL hebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
 		
 		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_OFF];
-		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
+		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: SW_OFF ];
 		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
-		if (redLetter)
-			[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: SW_ON ];
-		else
-			[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: SW_OFF ];
+		[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];
+		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: @"Primary Reading" ];//could make this an option?  but for now, disable.
+																					 //others are: @"Secondary Reading" && @"All Readings"
+		[swordManager setGlobalOption: SW_OPTION_GREEKACCENTS value: ((greekAccents) ? SW_ON : SW_OFF) ];
+		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
+		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
+		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
 
 		/*
 		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_MORPHS];
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_FOOTNOTES];
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_SCRIPTREFS];
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_REDLETTERWORDS];
-		 [modDisplayOptions setObject:SW_ON  forKey:SW_OPTION_HEADINGS];
 		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_HEBREWPOINTS];
 		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_HEBREWCANTILLATION];
 		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_GREEKACCENTS];
@@ -221,6 +225,9 @@ float installationProgress;
 }
 
 - (void)loadPrimaryDictionary:(NSString *)newText {
+	if(primaryDictionary)
+		[primaryDictionary releaseKeys];//release some memory
+	
 	primaryDictionary = (SwordDictionary *)[swordManager moduleWithName:newText];
 	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastDictionary"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
@@ -411,6 +418,30 @@ float installationProgress;
 	//	[bibleWebView loadHTMLString: [self getBibleChapter: @"Genesis 1" withExtraJS: @""] baseURL: nil];
 	//	[bookmarkAddButton setEnabled:YES];
 	//}
+	
+	// if we haven't defined the Strongs or Morph module of this type, make this the default module.
+	if([swordModule hasFeature: @"GreekDef"]) {
+		NSString *curSGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsGreekModule];
+		if(!curSGM || [curSGM isEqualToString: NSLocalizedString(@"None", @"None")]) {
+			[[NSUserDefaults standardUserDefaults] setObject: [swordModule name] forKey:DefaultsStrongsGreekModule];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		}
+	}
+	if([swordModule hasFeature: @"HebrewDef"]) {
+		NSString *curSHM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsHebrewModule];
+		if(!curSHM || [curSHM isEqualToString: NSLocalizedString(@"None", @"None")]) {
+			[[NSUserDefaults standardUserDefaults] setObject: [swordModule name] forKey:DefaultsStrongsHebrewModule];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		}
+	}
+	if([swordModule hasFeature: @"GreekParse"]) {
+		NSString *curMGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsMorphGreekModule];
+		if(!curMGM || [curMGM isEqualToString: NSLocalizedString(@"None", @"None")]) {
+			[[NSUserDefaults standardUserDefaults] setObject: [swordModule name] forKey:DefaultsMorphGreekModule];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		}
+	}
+	
 	[pool release];
 	
 	installationProgress = 1.0;
@@ -538,6 +569,18 @@ float installationProgress;
 	
 	if([name isEqualToString: primaryDictionaryName]) {
 		[viewController reloadDictionaryData];
+	}
+	
+	// if it's the module selected for one of our lookups, need to set that to @"None"
+	if([name isEqualToString: [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule]]) {
+		[[NSUserDefaults standardUserDefaults] setObject: NSLocalizedString(@"None", @"None") forKey:DefaultsMorphGreekModule];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	} else if([name isEqualToString: [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsGreekModule]]) {
+		[[NSUserDefaults standardUserDefaults] setObject: NSLocalizedString(@"None", @"None") forKey:DefaultsStrongsGreekModule];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	} else if([name isEqualToString: [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule]]) {
+		[[NSUserDefaults standardUserDefaults] setObject: NSLocalizedString(@"None", @"None") forKey:DefaultsStrongsHebrewModule];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	
 	[pool release];
@@ -792,5 +835,66 @@ float installationProgress;
 {
 	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 }
+
++ (NSDictionary *)dataForLink:(NSURL *)aURL {
+    // there are two types of links
+    // our generated sword:// links and study data beginning with file://
+	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    
+    NSMutableDictionary *ret = nil;
+    
+    NSString *scheme = [aURL scheme];
+    if([scheme isEqualToString:@"sword"]) {
+        // in this case host is the module and path the reference
+		ret = [NSMutableDictionary dictionary];
+        [ret setObject:[aURL host] forKey:ATTRTYPE_MODULE];
+        [ret setObject:[[[aURL path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""]
+                forKey:ATTRTYPE_VALUE];
+        [ret setObject:@"scriptRef" forKey:ATTRTYPE_TYPE];
+        [ret setObject:@"showRef" forKey:ATTRTYPE_ACTION];
+    } else if([scheme isEqualToString:@"file"]) {
+        // in this case
+        NSString *path = [aURL path];
+        NSString *query = [aURL query];
+        if([[path lastPathComponent] isEqualToString:@"passagestudy.jsp"]) {
+            NSArray *data = [query componentsSeparatedByString:@"&"];
+            NSString *type = @"x";
+            NSString *module = @"";
+            NSString *passage = @"";
+            NSString *value = @"1";
+            NSString *action = @"";
+            for(NSString *entry in data) {
+                if([entry hasPrefix:@"type="]) {
+                    type = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
+					//NSLog(@"type = %@", type);
+                } else if([entry hasPrefix:@"module="]) {
+                    module = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
+					//NSLog(@"module = %@", module);
+                } else if([entry hasPrefix:@"passage="]) {
+                    passage = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
+					//NSLog(@"passage = %@", passage);
+                } else if([entry hasPrefix:@"action="]) {
+                    action = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
+					//NSLog(@"action = %@", action);
+                } else if([entry hasPrefix:@"value="]) {
+                    value = [[entry componentsSeparatedByString:@"="] objectAtIndex:1];
+					//NSLog(@"value = %@", value);
+                } else {
+                    ALog(@"[ExtTextViewController -dataForLink:] unknown parameter: %@\n", entry);
+                }
+            }
+            ret = [NSMutableDictionary dictionary];
+            [ret setObject:module forKey:ATTRTYPE_MODULE];
+            [ret setObject:passage forKey:ATTRTYPE_PASSAGE];
+            [ret setObject:value forKey:ATTRTYPE_VALUE];
+            [ret setObject:action forKey:ATTRTYPE_ACTION];
+            [ret setObject:type forKey:ATTRTYPE_TYPE];
+        }
+    }
+    
+	//[pool release];
+    return ret;
+}
+
 
 @end

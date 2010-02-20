@@ -49,25 +49,27 @@ typedef enum {
 	IBOutlet UITabBarController *tabController;
 	
 	// Read tab
-	IBOutlet UIWebView			*bibleWebView;
-	IBOutlet UIActivityIndicatorView *bibleActivity;
-	IBOutlet UITabBarItem		*bibleTabBarItem;
-	IBOutlet UISegmentedControl *bibleSegmentedControl;
-	IBOutlet UIBarButtonItem	*bibleSearchButton;
-	IBOutlet PSBibleViewController *bibleTabController;
+	IBOutlet UIWebView					*bibleWebView;
+	IBOutlet UIActivityIndicatorView	*bibleActivity;
+	IBOutlet UITabBarItem				*bibleTabBarItem;
+	IBOutlet UISegmentedControl			*bibleSegmentedControl;
+	IBOutlet UIBarButtonItem			*bibleSearchButton;
+	IBOutlet PSBibleViewController		*bibleTabController;
 	
 	// Commentary tab
-	IBOutlet UIWebView			*commentaryWebView;
-	IBOutlet UIActivityIndicatorView *commentaryActivity;
-	IBOutlet UITabBarItem		*commentaryTabBarItem;
-	IBOutlet UISegmentedControl *commentarySegmentedControl;
-	IBOutlet UIBarButtonItem	*commentarySearchButton;
+	IBOutlet UIWebView					*commentaryWebView;
+	IBOutlet UIActivityIndicatorView	*commentaryActivity;
+	IBOutlet UITabBarItem				*commentaryTabBarItem;
+	IBOutlet UISegmentedControl			*commentarySegmentedControl;
+	IBOutlet UIBarButtonItem			*commentarySearchButton;
 	IBOutlet PSCommentaryViewController *commentaryTabController;
 	
 	// Bible & Commentary tab
 	IBOutlet UIPickerView		*refSelector;
 	IBOutlet UIView				*refSelectorView;
 	IBOutlet UIBarButtonItem	*refSelectorTitle;
+	IBOutlet UIView				*infoView;
+	IBOutlet UIWebView			*infoWebView;
 	
 	// MultiList
 	IBOutlet UITabBarController *multiListController;
@@ -81,8 +83,8 @@ typedef enum {
 	IBOutlet UIBarButtonItem	*historyCloseButton;
 	
 	// Dictionary tab
-	IBOutlet UITabBarItem		*dictionaryTabBarItem;
-	IBOutlet PSDictionaryViewController *dictionaryViewController;
+	IBOutlet UITabBarItem				*dictionaryTabBarItem;
+	IBOutlet PSDictionaryViewController	*dictionaryViewController;
 	
 	// Module tab
 	IBOutlet id					moduleTable;
@@ -171,5 +173,8 @@ typedef enum {
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
 - (UITabBarController *)tabController;
+
+- (void)showInfo:(NSString *)infoString;
+- (IBAction)hideInfo:(id)sender;
 
 @end

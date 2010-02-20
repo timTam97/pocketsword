@@ -29,9 +29,9 @@
 bool initialized = false, waitingForInstall = false;
 
 NSTimer *timer;
-BOOL refSelectorShown = NO;
-BOOL modulesListShown = NO;
-BOOL multiListShown = NO;
+//BOOL refSelectorShown = NO;
+//BOOL modulesListShown = NO;
+//BOOL multiListShown = NO;
 static NSString *lastRefAvailable = @"Revelation 22";
 static NSString *firstRefAvailable = @"Genesis 1";
 
@@ -467,14 +467,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-//- (IBAction)moveToModulesTab:(id)sender
-//{
-//	if(refSelectorShown) {
-//		[self toggleNavigation:sender];
-//	}
-//	[dataController setShownTabTo: ModuleTab];
-//}
-//
 - (IBAction)toggleMultiList:(id)sender
 {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
@@ -488,10 +480,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
 	}
 	
-	if(multiListShown) {
-		//[self hideModal:historyListView withTiming:0.7];
+	//if(multiListShown) {
+	if([multiListController.view superview]) {
 		[ViewController hideModal:multiListController.view withTiming:0.3];
-		multiListShown = NO;
+		//multiListShown = NO;
 	} else {
 		[historyListTable reloadData];
 		if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
@@ -500,7 +492,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 				[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
 		}
 		[ViewController showModal:multiListController.view withTiming:0.3];
-		multiListShown = YES;
+		//multiListShown = YES;
 	}
 	
 }
@@ -516,9 +508,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[moduleSelector setListType: DictionaryTab];
 	}
 	
-	if(modulesListShown) {
+	//if(modulesListShown) {
+	if([modulesListView superview]) {
 		[ViewController hideModal:modulesListView withTiming:0.3];
-		modulesListShown = NO;
+		//modulesListShown = NO;
 	} else {
 		NSIndexPath *ip = nil;//default value
 		if([moduleSelector listType] == BibleTab) {
@@ -562,7 +555,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if(ip)
 			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
 		[ViewController showModal:modulesListView withTiming:0.3];
-		modulesListShown = YES;
+		//modulesListShown = YES;
 	}
 }
 
@@ -581,10 +574,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		return;
 	}
 	
-	if(refSelectorShown) {
+	//if(refSelectorShown) {
+	if([refSelectorView superview]) {
 		//hide the refSelector
 		[ViewController hideModal:refSelectorView withTiming:0.3];
-		refSelectorShown = NO;
+		//refSelectorShown = NO;
 		[dataController setRefSelectorBooks: nil];
 	} else {
 		//show the refSelector
@@ -595,7 +589,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[dataController updateRefSelectorBooks];
 		[ViewController showModal:refSelectorView withTiming:0.3];
-		refSelectorShown = YES;
+		//refSelectorShown = YES;
 
 		NSRange range = [[moduleManager getCurrentBibleRef] rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
 		NSUInteger book = [dataController bookIndex: [[moduleManager getCurrentBibleRef] substringToIndex: range.location]];
@@ -728,6 +722,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //    or navigation to a new ref from the refPicker.
 //    or when the user selects a new module to view.
 //    or when the user selects a bookmark.
+//    or when the user selects a search result.
 - (IBAction)addHistoryItem:(ShownTab)tabForHistory
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -1128,6 +1123,27 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (UITabBarController *)tabController {
 	return tabController;
+}
+
+- (void)showInfo:(NSString *)infoString {
+	if(![infoView superview]) {
+		//need to show the info pane
+		[ViewController showModal: infoView withTiming: 0.3];
+	}
+	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:@"fontNamePreference"];
+	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:@"fontNamePreference"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	NSString *htmlString = [PSModuleController createHTMLString: infoString withJS: @"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>"];
+
+	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:@"fontNamePreference"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+	[infoWebView loadHTMLString: htmlString baseURL: nil];
+}
+
+- (IBAction)hideInfo:(id)sender {
+	[ViewController hideModal: infoView withTiming: 0.3];
 }
 
 @end

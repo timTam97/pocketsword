@@ -29,11 +29,18 @@ typedef enum {
 #define DEFAULT_APPSUPPORT_PATH     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 
 #define DEFAULT_INSTALLER_PATH		[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/"]
-//#define FTP_TMP_FILE				[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/swftplib.tmp"]
 // define for userdefaults
 #define userDefaults [NSUserDefaults standardUserDefaults]
 // define for default SwordManager
 #define defSwordManager [SwordManager defaultManager]
+
+
+#define DefaultsStrongsHebrewModule                 @"DefaultsStrongsHebrewModule"
+#define DefaultsStrongsGreekModule                  @"DefaultsStrongsGreekModule"
+#define DefaultsMorphHebrewModule                   @"DefaultsMorphHebrewModule"
+#define DefaultsMorphGreekModule                    @"DefaultsMorphGreekModule"
+
+#define StrongsFontName								@"Times New Roman"
 
 
 /**

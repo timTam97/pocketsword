@@ -35,7 +35,7 @@
  only the keys are stored here in an array
  */
 - (void)readKeys {    
-	if(keys == nil) {
+	if(!keys) {
         [self readFromCache];
     }
     
@@ -84,7 +84,7 @@
 	DLog(@"\nSwordDictionary: readFromCache %@", name);
     NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
 	NSMutableArray *data = [NSArray arrayWithContentsOfFile:cachePath];
-    if(data != nil) {
+    if(data) {
         self.keys = data;
     } else {
         self.keys = [NSMutableArray array];
@@ -153,6 +153,11 @@
 
 - (BOOL)keysLoaded {
 	return loaded;
+}
+
+- (void)releaseKeys {
+	self.keys = nil;
+	loaded = NO;
 }
 
 - (BOOL)keysCached {

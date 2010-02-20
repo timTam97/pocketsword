@@ -20,6 +20,7 @@
 	IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet id fontTableViewController;
+	IBOutlet id moduleSelectorTableViewController;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
@@ -27,6 +28,14 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+- (void)displayStrongsChanged:(UISwitch *)sender;
+- (void)displayMorphChanged:(UISwitch *)sender;
+- (void)displayGreekAccentsChanged:(UISwitch *)sender;
+- (void)displayHVPChanged:(UISwitch *)sender;
+- (void)displayHebrewCantillationChanged:(UISwitch *)sender;
+- (void)morphGreekModuleChanged:(NSString *)newModule;
+- (void)strongsGreekModuleChanged:(NSString *)newModule;
+- (void)strongsHebrewModuleChanged:(NSString *)newModule;
 - (void)fontSizeChanged:(UISlider *)sender;
 - (void)nightModeChanged:(UISwitch *)sender;
 - (void)redLetterChanged:(UISwitch *)sender;

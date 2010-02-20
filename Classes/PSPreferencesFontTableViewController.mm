@@ -16,15 +16,6 @@
 
 NSArray *fontStrings;
 
-/*
-- (id)initWithStyle:(UITableViewStyle)style {
-    // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-    if (self = [super initWithStyle:style]) {
-    }
-    return self;
-}
-*/
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -139,6 +130,8 @@ NSArray *fontStrings;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
 	cell.textLabel.text = [fontStrings objectAtIndex:indexPath.row];
+	cell.textLabel.font = [UIFont fontWithName: [fontStrings objectAtIndex:indexPath.row] size:15.0];
+
 	if([font isEqualToString:cell.textLabel.text])
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	else
