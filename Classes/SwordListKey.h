@@ -3,7 +3,7 @@
 //  MacSword2
 //
 //  Created by Manfred Bergmann on 10.04.09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
 #import "SwordKey.h"

@@ -3,7 +3,7 @@
 //  PocketSword
 //
 //  Created by Nic Carter on 3/11/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
 #import "PSBibleViewController.h"
@@ -155,6 +155,20 @@
 				
 			}
 			
+		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
+			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
+				entry = (NSString*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
+				NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+				NSMutableString *tmpEntry = [@"" mutableCopy];
+				for(NSDictionary *dict in array) {
+					[tmpEntry appendFormat:@"<b>%@:</b> ", [dict objectForKey:SW_OUTPUT_REF_KEY]];
+					[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+				}
+				if(![tmpEntry isEqualToString:@""]) {
+					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				}
+			}
 		}
 
 		

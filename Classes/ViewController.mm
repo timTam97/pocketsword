@@ -316,8 +316,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
-		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
 		moduleNavBar.title = NSLocalizedString(@"ModulesTitle", @"Modules");
@@ -1123,6 +1121,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (UITabBarController *)tabController {
 	return tabController;
+}
+
+- (UIView *)modulesListView {
+	return modulesListView;
 }
 
 - (void)showInfo:(NSString *)infoString {

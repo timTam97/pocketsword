@@ -173,6 +173,7 @@ typedef enum {
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
 - (UITabBarController *)tabController;
+- (UIView *)modulesListView;
 
 - (void)showInfo:(NSString *)infoString;
 - (IBAction)hideInfo:(id)sender;

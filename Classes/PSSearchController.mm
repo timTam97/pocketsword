@@ -3,7 +3,7 @@
 //  PocketSword
 //
 //  Created by Nic Carter on 9/12/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
 #import "PSSearchController.h"

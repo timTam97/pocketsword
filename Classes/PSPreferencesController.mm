@@ -3,7 +3,7 @@
 //  PocketSword
 //
 //  Created by Nic Carter on 2/11/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
 #import "PSPreferencesController.h"
@@ -15,33 +15,35 @@
 #define MORPH_SECTION		2
 #define LANG_SECTION		3
 #define DEVICE_SECTION		4
-#define PREF__SECTIONS		5
+#define PREF__SECTIONS		5//total sections in table
 
 //rows in DISPLAY section
 #define FONT_SIZE_ROW		0
 #define NIGHT_MODE_ROW		1
 #define VPL_ROW				2
-#define FONT_NAME_ROW		3
-#define RED_LETTER_ROW		4
-#define RED_LETTER_NOTE_ROW	5
-#define DISPLAY__ROWS		6//total rows in section
+#define XREF_ROW			3
+#define FOOTNOTES_ROW		4
+#define FONT_NAME_ROW		5
+#define RED_LETTER_ROW		6
+#define RED_LETTER_NOTE_ROW	7
+#define DISPLAY__ROWS		8//total rows in section
 
 //rows in STRONGS section
 #define STRONGS_DISPLAY_ROW	0
 #define STRONGS_G_ROW		1
 #define STRONGS_H_ROW		2
-#define STRONGS__ROWS		3
+#define STRONGS__ROWS		3//total rows in section
 
 //rows in MORPH section
 #define MORPH_DISPLAY_ROW	0
 #define MORPH_G_ROW			1
-#define MORPH__ROWS			2
+#define MORPH__ROWS			2//total rows in section
 
 //rows in LANG section
 #define LANG_GREEKACC_ROW	0
 #define LANG_HEBREWPTS_ROW	1
 #define LANG_HEBREWCANT_ROW	2
-#define LANG__ROWS			3
+#define LANG__ROWS			3//total rows in section
 
 //rows in DEVICE section
 #define INSOMNIA_ROW		0
@@ -225,6 +227,32 @@ BOOL requireReloadOfModuleViews = NO;
 						[ cell addSubview: vplSwitch ];
 						cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
 						[vplSwitch release];						
+					}
+						break;
+					case XREF_ROW :
+					{
+						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
+						cell.selectionStyle = UITableViewCellSelectionStyleNone;
+						UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
+						BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
+						xrefSwitch.on = xrefMode;
+						[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
+						[ cell addSubview: xrefSwitch ];
+						cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
+						[xrefSwitch release];
+					}
+						break;
+					case FOOTNOTES_ROW :
+					{
+						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
+						cell.selectionStyle = UITableViewCellSelectionStyleNone;
+						UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
+						BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
+						footnotesSwitch.on = footnotesMode;
+						[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
+						[ cell addSubview: footnotesSwitch ];
+						cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
+						[footnotesSwitch release];
 					}
 						break;
 					case FONT_NAME_ROW :
@@ -572,6 +600,22 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsHebrewModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
+}
+
+- (void)xrefChanged:(UISwitch *)sender {
+	BOOL n = [sender isOn];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"scriptRefsPreference"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[moduleManager setPreferences];
+	requireReloadOfModuleViews = YES;
+}
+
+- (void)footnotesChanged:(UISwitch *)sender {
+	BOOL n = [sender isOn];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"footnotesPreference"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[moduleManager setPreferences];
+	requireReloadOfModuleViews = YES;
 }
 
 - (void)fontSizeChanged:(UISlider *)sender {

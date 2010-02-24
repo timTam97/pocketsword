@@ -156,11 +156,13 @@ float installationProgress;
 		BOOL greekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
 		BOOL HVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
 		BOOL hebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
+		BOOL scriptRefs = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
+		BOOL footnotes = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
 		
-		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_OFF];
+		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: ((scriptRefs) ? SW_ON : SW_OFF)];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
-		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: SW_OFF ];
+		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
 		[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: @"Primary Reading" ];//could make this an option?  but for now, disable.
@@ -731,6 +733,20 @@ float installationProgress;
 			sup {\n\
 				line-height: 0%%;\n\
 			}\n\
+			sup.x {\n\
+				color: grey;\n\
+				line-height: 0%%;\n\
+			}\n\
+			sup.n {\n\
+				color: grey;\n\
+				line-height: 0%%;\n\
+			}\n\
+			em.strongs {\n\
+				color: grey;\n\
+			}\n\
+			em.morph {\n\
+				color: grey;\n\
+			}\n\
 			a:link {\n\
 				color: %@;\n\
 				text-decoration: none;\n\
@@ -741,6 +757,30 @@ float installationProgress;
 			}\n\
 			a:active {\n\
 				color: %@;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.strongs:link {\n\
+				color: grey;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.strongs:visited {\n\
+				color: grey;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.strongs:active {\n\
+				color: grey;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.morph:link {\n\
+				color: grey;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.morph:visited {\n\
+				color: grey;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.morph:active {\n\
+				color: grey;\n\
 				text-decoration: none;\n\
 			}\n\
 			%@\n\

@@ -3,7 +3,7 @@
 //  PocketSword
 //
 //  Created by Nic Carter on 18/02/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 The CrossWire Bible Society. All rights reserved.
 //
 
 #import "PSPreferencesModuleSelectorTableViewController.h"

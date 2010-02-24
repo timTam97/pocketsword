@@ -237,58 +237,58 @@
 	//
 	NSMutableString *featuresAboutString = [@"" mutableCopy];
 	if([self hasFeature: SWMOD_FEATURE_STRONGS] || [self hasFeature: SWMOD_CONF_FEATURE_STRONGS])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsStrongsNumbers", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsStrongsNumbers", @"")];
 	
 	if([self hasFeature: SWMOD_FEATURE_MORPH])//contains Morphological tags
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsMorphTags", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsMorphTags", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_FOOTNOTES])
-//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsFootnotes", @"")];
+//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsFootnotes", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_HEADINGS]) //not currently supported in PocketSword
-//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHeadings", @"")];
+//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHeadings", @"")];
 	
 	if([self hasFeature: SWMOD_FEATURE_REDLETTERWORDS])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsRedLetterWords", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsRedLetterWords", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_VARIANTS]) //not currently supported in PocketSword
-//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsVariants", @"")];
+//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsVariants", @"")];
 	
 	if([self hasFeature: SWMOD_FEATURE_GREEKACCENTS])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsGreekAccents", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsGreekAccents", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_SCRIPTREF])
-//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsScriptref", @"")];
+//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsScriptref", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_LEMMA])
-//		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsLemma", @"")];
+//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsLemma", @"")];
 	
 	if([self hasFeature: SWMOD_FEATURE_CANTILLATION])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsCantillation", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsCantillation", @"")];
 	
 	if([self hasFeature: SWMOD_FEATURE_HEBREWPOINTS])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHebrewPoints", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHebrewPoints", @"")];
 	
 	if([self hasFeature: @"MorphSegmentation"])//morpheme segmented Hebrew
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsMorphSegmentation", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsMorphSegmentation", @"")];
 	
 	if([self hasFeature: SWMOD_CONF_FEATURE_GREEKDEF])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsGreekDef", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsGreekDef", @"")];
 	
 	if([self hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHebrewDef", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHebrewDef", @"")];
 	
 	if([self hasFeature: SWMOD_CONF_FEATURE_GREEKPARSE])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsGreekParse", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsGreekParse", @"")];
 	
 	if([self hasFeature: SWMOD_CONF_FEATURE_HEBREWPARSE])//CrossWire doesn't currently have any mod with this in it!
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsHebrewParse", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHebrewParse", @"")];
 	
 	if([self hasFeature: SWMOD_CONF_FEATURE_DAILYDEVOTION])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsDailyDevotion", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsDailyDevotion", @"")];
 	
 	if([self hasFeature: SWMOD_CONF_FEATURE_IMAGES])
-		[featuresAboutString appendFormat: @"%@<br />", NSLocalizedString(@"AboutModuleContainsImages", @"")];
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsImages", @"")];
 
 	if(![featuresAboutString isEqualToString:@""]) {
 		[ret appendFormat: @"<p><b>%@</b><br />", NSLocalizedString(@"AboutModuleFeaturesTitle", @"")];
@@ -298,6 +298,8 @@
 	
     // module about
 	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b><br />%@</p>", NSLocalizedString(@"AboutModuleAboutText", @""), [self aboutText]]];
+	
+	[ret appendString: @"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
 
     return ret;
 }

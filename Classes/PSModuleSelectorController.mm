@@ -3,7 +3,7 @@
 //  PocketSword
 //
 //  Created by Nic Carter on 21/12/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
 #import "PSModuleSelectorController.h"
@@ -87,10 +87,7 @@
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.detailTextLabel.textColor = [UIColor blackColor];
 	}
-	//			cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	//		} else {
-	//			cell.accessoryType = UITableViewCellAccessoryNone;
-	//		}
+	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	return cell;
 }
 
@@ -141,6 +138,18 @@
 	[pool release];
 }
 
-
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+	SwordModule *mod = [[moduleManager swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
+	[leafViewController displayInfoForModule:mod];
+	[UIView beginAnimations:nil context:nil];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
+                           forView:[viewController modulesListView]
+                             cache:YES];
+	
+    [UIView setAnimationDuration:1];
+	[[viewController modulesListView] addSubview: leafViewController.view];
+    [UIView commitAnimations];
+	
+}
 
 @end

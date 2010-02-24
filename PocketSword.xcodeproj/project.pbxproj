@@ -182,6 +182,7 @@
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
+		0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */; };
 		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
 		054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
 		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
@@ -755,6 +756,8 @@
 		0545E26510639A4A00DD7F06 /* SwordManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordManager.mm; sourceTree = "<group>"; };
 		0545E28510639DC400DD7F06 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		0545E29A1063A09500DD7F06 /* globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
+		0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleLeafViewController.h; path = Classes/PSModuleLeafViewController.h; sourceTree = "<group>"; };
+		0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleLeafViewController.mm; path = Classes/PSModuleLeafViewController.mm; sourceTree = "<group>"; };
 		0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModuleTextEntry.h; sourceTree = "<group>"; };
 		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
@@ -1335,6 +1338,8 @@
 				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
 				0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */,
 				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
+				0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */,
+				0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -2693,6 +2698,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "CrossWire Bible Society";
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PocketSword" */;
 			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 1;
@@ -3093,6 +3101,7 @@
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
 				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
 				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
+				0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
