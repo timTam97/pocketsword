@@ -183,6 +183,9 @@
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
 		0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */; };
+		0546B59D113537E9009D5189 /* Robinson.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59A113537E9009D5189 /* Robinson.zip */; };
+		0546B59E113537E9009D5189 /* strongsrealgreek.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59B113537E9009D5189 /* strongsrealgreek.zip */; };
+		0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59C113537E9009D5189 /* strongsrealhebrew.zip */; };
 		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
 		054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
 		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
@@ -758,6 +761,9 @@
 		0545E29A1063A09500DD7F06 /* globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
 		0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleLeafViewController.h; path = Classes/PSModuleLeafViewController.h; sourceTree = "<group>"; };
 		0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleLeafViewController.mm; path = Classes/PSModuleLeafViewController.mm; sourceTree = "<group>"; };
+		0546B59A113537E9009D5189 /* Robinson.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = Robinson.zip; path = Resources/Robinson.zip; sourceTree = "<group>"; };
+		0546B59B113537E9009D5189 /* strongsrealgreek.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = strongsrealgreek.zip; path = Resources/strongsrealgreek.zip; sourceTree = "<group>"; };
+		0546B59C113537E9009D5189 /* strongsrealhebrew.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = strongsrealhebrew.zip; path = Resources/strongsrealhebrew.zip; sourceTree = "<group>"; };
 		0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModuleTextEntry.h; sourceTree = "<group>"; };
 		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
@@ -2294,6 +2300,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0546B59A113537E9009D5189 /* Robinson.zip */,
+				0546B59B113537E9009D5189 /* strongsrealgreek.zip */,
+				0546B59C113537E9009D5189 /* strongsrealhebrew.zip */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				052B52ED1101D6DF00FFDF01 /* locales.d.zip */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
@@ -2732,6 +2741,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0546B59D113537E9009D5189 /* Robinson.zip in Resources */,
+				0546B59E113537E9009D5189 /* strongsrealgreek.zip in Resources */,
+				0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */,
 				052B52F21101D76000FFDF01 /* locales.d.zip in Resources */,
 				05034D2810FD63E300884C98 /* SearchWebView.js in Resources */,
 				05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */,

@@ -34,9 +34,10 @@
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
-	BOOL mhcc = [defaults boolForKey:@"loadedBundledMHCC"];
 	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
-	BOOL loadedLocales = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedSWORDLocales-v1"];
+	BOOL loadedLocales = [defaults boolForKey:@"loadedSWORDLocales-v1"];
+	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
+	
 	if(reset) {
 		DLog(@"\nreset_PocketSword is set");
 		[defaults removeObjectForKey: @"lastRef"];
@@ -65,11 +66,18 @@
 		[defaults setBool: YES forKey:@"loadedBundledKJV"];
 		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible];
-	}
-	if(!mhcc) {
-		[defaults setBool: YES forKey:@"loadedBundledMHCC"];
-		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary];
+	}
+	
+	if(!strongsAndMorph) {
+		[defaults setBool: YES forKey:@"loadedBundledStrongsAndMorph"];
+		[defaults synchronize];
+		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary];
+		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary];
+		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary];
+		[defaults setObject:@"Robinson" forKey:DefaultsMorphGreekModule];
+		[defaults setObject:@"StrongsRealGreek" forKey:DefaultsStrongsGreekModule];
+		[defaults setObject:@"StrongsRealHebrew" forKey:DefaultsStrongsHebrewModule];
 	}
 
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
