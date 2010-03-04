@@ -52,6 +52,8 @@
 		[defaults removeObjectForKey: @"insomniaPreference"];
 		[defaults removeObjectForKey: @"moduleMaintainerModePreference"];
 		[defaults removeObjectForKey: @"reset_PocketSword"];
+		[defaults removeObjectForKey: @"bibleHistory"];
+		[defaults removeObjectForKey: @"commentaryHistory"];
 		NSArray *dicts = [[moduleManager swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
 		for(SwordDictionary *dict in dicts) {
 			[dict removeCache];

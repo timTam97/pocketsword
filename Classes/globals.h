@@ -53,7 +53,7 @@ typedef enum {
 #define NotificationCommentarySwipeRight	@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft		@"NotificationCommentarySwipeLeft"
 
-
+//careful of the '%' in the string below!  needs to be '%%' if moved to be used in an appendByFormat: but is fine how it is right now (3/3/10 niccarter)
 #define RUBY_CSS @"ruby\n\
 			{\n\
 				display: inline-table;\n\
@@ -61,29 +61,29 @@ typedef enum {
 				white-space: nowrap;\n\
 				text-indent: 0;\n\
 				margin: 0;\n\
-				vertical-align: -10%%;\n\
+				vertical-align: -10%;\n\
 			}\n\
 			\n\
 			ruby > rb, ruby > rbc\n\
 			{\n\
 				display: table-row-group;\n\
-				line-height: 110%%;\n\
+				line-height: 110%;\n\
 			}\n\
 			\n\
 			ruby > rt, ruby > rbc + rtc\n\
 			{\n\
 				display: table-header-group;\n\
-				valign: top;\n\
-				font-size: 60%%;\n\
-				line-height: 40%%;\n\
+				vertical-align: top;\n\
+				font-size: 60%;\n\
+				line-height: 40%;\n\
 				letter-spacing: 0;\n\
 			}\n\
 			\n\
 			ruby > rbc + rtc + rtc\n\
 			{\n\
 				display: table-footer-group;\n\
-				font-size: 60%%;\n\
-				line-height: 40%%;\n\
+				font-size: 60%;\n\
+				line-height: 40%;\n\
 				letter-spacing: 0;\n\
 			}\n\
 			\n\

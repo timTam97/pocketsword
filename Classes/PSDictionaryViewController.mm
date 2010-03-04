@@ -130,7 +130,7 @@ BOOL dictionaryEnabled = NO;
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"dict-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"dict-id"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dict-id"] autorelease];
 	}
 	
 	cell.textLabel.text = [[[moduleManager primaryDictionary] allKeys] objectAtIndex:indexPath.row];
@@ -183,6 +183,10 @@ BOOL dictionaryEnabled = NO;
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+	[searchBar resignFirstResponder];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
 }
 

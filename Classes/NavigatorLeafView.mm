@@ -149,7 +149,7 @@ NSTimer *downloadTimer;
 	
 	if (progress == 1.0) {
 		[[navigatorSources moduleManager] reload];
-		[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+		//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
 		//[moduleTable reloadData];
 		//[downloadableModulesTable reloadData];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
@@ -163,7 +163,7 @@ NSTimer *downloadTimer;
 	if (failed) {
 		[[navigatorSources moduleManager] reload];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
-		[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+		//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
 		//[moduleTable reloadData];
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		

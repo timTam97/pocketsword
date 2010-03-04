@@ -47,7 +47,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"lvl4-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"lvl4-id"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"lvl4-id"] autorelease];
 	}
 	
 	cell.textLabel.text = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];

@@ -49,8 +49,8 @@ bool ThMLWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			}
 
 			if(tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "morph")){
-				buf += "<small><em> (";
-				buf.appendFormatted("<a href=\"%s?showMorph=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str() );
+				//buf += " ";
+				buf.appendFormatted(" <a href=\"%s?showMorph=%s#cv\" class=\"strongs\">(", passageStudyURL.c_str(), URL::encode(url).c_str() );
 			}
 			else {
 				if (value) {
@@ -58,18 +58,18 @@ bool ThMLWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					//url = value;
 				}
 
-				buf += "<small><em> &lt;";
-				buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str() );
+				//buf += " ";
+				buf.appendFormatted(" <a href=\"%s?showStrong=%s#cv\" class=\"strongs\">&lt;", passageStudyURL.c_str(), URL::encode(url).c_str() );
 			}
 
 			buf += value;
-			buf += "</a>";
+			//buf += "";
 
 			if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "morph")) {
-				buf += ") </em></small>";
+				buf += ")</a>";
 			}
 			else {
-				buf += "&gt; </em></small>";
+				buf += "&gt;</a>";
 			}
 		}
 		else if (!strcmp(tag.getName(), "scripRef")) {

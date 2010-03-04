@@ -127,3 +127,48 @@
 "SearchHelpTitle" = "Sökhjälp";
 "IndexControllerConfirmQuestion" = "Önskar du ladda ner sökindexet för denna modul?\n Detta kan ta en stund för kommentarmoduler!";
 
+"PreferencesStrongsPreferencesTitle" = "Strong's Numbers";
+"PreferencesDisplayTitle" = "Display";
+"PreferencesGreekModuleTitle" = "Greek module";
+"PreferencesHebrewModuleTitle" = "Hebrew module";
+"PreferencesMorphologyPreferencesTitle" = "Morphology Preferences";
+"PreferencesOriginalLanguagePreferencesTitle" = "Original Language";
+"PreferencesGreekAccentsTitle" = "Greek Accents";
+"PreferencesHVPTitle" = "Hebrew Vowel Points";
+"PreferencesHebrewCantillationTitle" = "Hebrew Cantillation";
+"PreferencesGreekStrongsLexiconTitle" = "Greek Strong's lexicon";
+"PreferencesHebrewStrongsLexiconTitle" = "Hebrew Strong's lexicon";
+"PreferencesGreekMorphLexiconTitle" = "Greek Morphological lexicon";
+"PreferencesCrossReferencesTitle" = "Cross-references";
+"PreferencesFootnotesTitle" = "Footnotes";
+
+"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew Strong's Numbers Lexicon installed. Please install one (such as 'strongshebrew') via the More->Downloads tab.";
+"NoGreekStrongsNumbersModuleInstalled" = "No Greek Strong's Numbers Lexicon installed. Please install one (such as 'strongsgreek') via the More->Downloads tab.";
+
+"NoMorphGreekModuleInstalled" = "No Greek Morphological Analysis Codes Lexicon installed. Please install one (such as 'Robinson') via the More->Downloads tab";
+"MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+
+"AboutModuleFeaturesTitle" = "Module Features";
+"AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";
+"AboutModuleContainsMorphTags" = "Contains Morphological tags";
+"AboutModuleContainsFootnotes" = "Contains Footnotes";
+"AboutModuleContainsHeadings" = "Contains Headings";
+"AboutModuleContainsRedLetterWords" = "Words of Christ in Red";
+"AboutModuleContainsVariants" = "Contains Textual Variants";
+"AboutModuleContainsGreekAccents" = "Contains Greek Accents";
+"AboutModuleContainsScriptref" = "Contains Scriptual Cross-References";
+"AboutModuleContainsLemma" = "Lemmas";
+"AboutModuleContainsCantillation" = "Contains Cantillation Marks";
+"AboutModuleContainsHebrewPoints" = "Contains Hebrew Points";
+"AboutModuleContainsMorphSegmentation" = "This is a morpheme segmented Hebrew text";
+"AboutModuleContainsGreekDef" = "Defines Greek Strong's Numbers";
+"AboutModuleContainsHebrewDef" = "Defines Hebrew Strong's Numbers";
+"AboutModuleContainsGreekParse" = "Defines Greek Morphological Analysis Codes";
+"AboutModuleContainsHebrewParse" = "Defines Hebrew Morphological Analysis Codes";
+"AboutModuleContainsDailyDevotion" = "Contains a Daily Devotional";
+"AboutModuleContainsImages" = "Contains Images";
+
+"NotSupported" = "This module is not currently supported";
+"ConfirmDeleteTitle" = "Remove?";
+"ConfirmDeleteQuestion" = "Are you sure you wish to remove this module?";
+

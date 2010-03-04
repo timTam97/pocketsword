@@ -87,10 +87,10 @@ typedef enum {
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
 	
 	// Module tab
-	IBOutlet id					moduleTable;
-	IBOutlet id					moduleEditBtn;
-	IBOutlet UITabBarItem		*moduleTabBarItem;
-	IBOutlet UINavigationItem	*moduleNavBar;
+//	IBOutlet id					moduleTable;
+//	IBOutlet id					moduleEditBtn;
+//	IBOutlet UITabBarItem		*moduleTabBarItem;
+//	IBOutlet UINavigationItem	*moduleNavBar;
 	
 	// Bookmarks tab
 	IBOutlet id bookmarksTable;
@@ -141,7 +141,7 @@ typedef enum {
 - (IBAction)prevChapter:(id)sender;
 - (IBAction)toggleNavigation:(id)sender;
 - (IBAction)updateViewWithSelectedChapter:(id)sender;
-- (IBAction)toggleModuleTableEditing:(id)sender;
+//- (IBAction)toggleModuleTableEditing:(id)sender;
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;
 - (IBAction)addHistoryItem:(ShownTab)tabForHistory;
@@ -163,7 +163,7 @@ typedef enum {
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled;
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
 
-- (void)reloadModuleTable;
+//- (void)reloadModuleTable;
 - (void)reloadDictionaryData;
 
 - (void)showIndexStatus;

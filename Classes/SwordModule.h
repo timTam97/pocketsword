@@ -178,6 +178,7 @@ typedef enum {
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
+- (NSInteger)getVerseMax;
 - (void)setChapter:(NSString *)chapter;
 
 // ------- SwordModuleAccess ---------

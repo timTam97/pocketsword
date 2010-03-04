@@ -91,7 +91,7 @@
 							<object class="IBUISearchBar" id="470879492">
 								<reference key="NSNextResponder" ref="987283005"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrameSize">{225, 44}</string>
+								<string key="NSFrameSize">{230, 44}</string>
 								<reference key="NSSuperview" ref="987283005"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUIContentMode">3</int>
@@ -100,11 +100,15 @@
 								<string key="IBText"/>
 								<string key="IBPrompt"/>
 								<string key="IBPlaceholder"/>
+								<bool key="IBShowsCancelButton">YES</bool>
 								<object class="IBUITextInputTraits" key="IBTextInputTraits">
 									<int key="IBUIAutocapitalizationType">3</int>
 									<int key="IBUIAutocorrectionType">1</int>
 								</object>
-								<array key="IBScopeButtonTitles" id="0"/>
+								<array key="IBScopeButtonTitles">
+									<string>Scope</string>
+									<string>Scope</string>
+								</array>
 							</object>
 						</array>
 						<string key="NSFrameSize">{320, 411}</string>
@@ -248,7 +252,7 @@
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						</object>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="765670903">
-							<string key="IBUITitle">Läs</string>
+							<string key="IBUITitle"/>
 							<object class="NSCustomResource" key="IBUIImage">
 								<string key="NSClassName">NSImage</string>
 								<string key="NSResourceName">Read.png</string>
@@ -414,7 +418,7 @@
 									<array key="IBUIItems">
 										<object class="IBUINavigationItem" id="73570025">
 											<reference key="IBUINavigationBar" ref="375781994"/>
-											<string key="IBUITitle">Bokmärken</string>
+											<string key="IBUITitle">b</string>
 											<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="1049215372">
 												<int key="IBUIStyle">1</int>
 												<int key="IBUISystemItemIdentifier">2</int>
@@ -446,7 +450,7 @@
 							<string key="IBUITitle"/>
 							<int key="IBUISystemItemIdentifier">9</int>
 						</object>
-						<reference key="IBUIToolbarItems" ref="0"/>
+						<array key="IBUIToolbarItems" id="0"/>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<string key="IBUINibName">Downloader</string>
 					</object>
@@ -999,65 +1003,6 @@
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 			</object>
-			<object class="IBUIViewController" id="268481961">
-				<object class="IBUIView" key="IBUIView" id="42588758">
-					<nil key="NSNextResponder"/>
-					<int key="NSvFlags">274</int>
-					<array class="NSMutableArray" key="NSSubviews">
-						<object class="IBUITableView" id="872676394">
-							<reference key="NSNextResponder" ref="42588758"/>
-							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{0, 44}, {320, 367}}</string>
-							<reference key="NSSuperview" ref="42588758"/>
-							<bool key="IBUIOpaque">NO</bool>
-							<bool key="IBUIClipsSubviews">YES</bool>
-							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-							<int key="IBUITag">1</int>
-							<bool key="IBUIBouncesZoom">NO</bool>
-							<int key="IBUIStyle">1</int>
-							<int key="IBUISeparatorStyle">1</int>
-							<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
-							<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
-							<float key="IBUIRowHeight">44</float>
-							<float key="IBUISectionHeaderHeight">27</float>
-							<float key="IBUISectionFooterHeight">27</float>
-						</object>
-						<object class="IBUINavigationBar" id="55696777">
-							<reference key="NSNextResponder" ref="42588758"/>
-							<int key="NSvFlags">290</int>
-							<string key="NSFrameSize">{320, 44}</string>
-							<reference key="NSSuperview" ref="42588758"/>
-							<bool key="IBUIOpaque">NO</bool>
-							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-							<int key="IBUIBarStyle">1</int>
-							<array key="IBUIItems">
-								<object class="IBUINavigationItem" id="508227720">
-									<reference key="IBUINavigationBar" ref="55696777"/>
-									<string key="IBUITitle">Moduler</string>
-									<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="1020166451">
-										<int key="IBUIStyle">1</int>
-										<int key="IBUISystemItemIdentifier">2</int>
-									</object>
-								</object>
-							</array>
-						</object>
-					</array>
-					<string key="NSFrame">{{0, 34}, {320, 411}}</string>
-					<object class="NSColor" key="IBUIBackgroundColor">
-						<int key="NSColorSpace">3</int>
-						<bytes key="NSWhite">MQA</bytes>
-						<reference key="NSCustomColorSpace" ref="620936773"/>
-					</object>
-					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-				</object>
-				<object class="IBUITabBarItem" key="IBUITabBarItem" id="807309489">
-					<string key="IBUITitle">Moduler</string>
-					<object class="NSCustomResource" key="IBUIImage">
-						<string key="NSClassName">NSImage</string>
-						<string key="NSResourceName">modules.png</string>
-					</object>
-				</object>
-			</object>
 			<object class="IBUIView" id="887081261">
 				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
@@ -1077,7 +1022,7 @@
 					<object class="IBUIButton" id="413016242">
 						<reference key="NSNextResponder" ref="887081261"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrameSize">{18, 20}</string>
+						<string key="NSFrame">{{5, 0}, {18, 20}}</string>
 						<reference key="NSSuperview" ref="887081261"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -1226,14 +1171,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleTable</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="872676394"/>
-					</object>
-					<int key="connectionID">301</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">statusController</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="150922167"/>
@@ -1266,35 +1203,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleTable</string>
-						<reference key="source" ref="355979263"/>
-						<reference key="destination" ref="872676394"/>
-					</object>
-					<int key="connectionID">339</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">tabController</string>
 						<reference key="source" ref="355979263"/>
 						<reference key="destination" ref="1034742383"/>
 					</object>
 					<int key="connectionID">342</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="872676394"/>
-						<reference key="destination" ref="355979263"/>
-					</object>
-					<int key="connectionID">343</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="872676394"/>
-						<reference key="destination" ref="355979263"/>
-					</object>
-					<int key="connectionID">344</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1319,14 +1232,6 @@
 						<reference key="destination" ref="355979263"/>
 					</object>
 					<int key="connectionID">352</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleModuleTableEditing:</string>
-						<reference key="source" ref="1020166451"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">357</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1407,14 +1312,6 @@
 						<reference key="destination" ref="44889390"/>
 					</object>
 					<int key="connectionID">371</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleEditBtn</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="1020166451"/>
-					</object>
-					<int key="connectionID">377</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1786,14 +1683,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleTabBarItem</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="807309489"/>
-					</object>
-					<int key="connectionID">816</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">preferencesTabBarItem</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="954857202"/>
@@ -1879,14 +1768,6 @@
 						<reference key="destination" ref="620349161"/>
 					</object>
 					<int key="connectionID">852</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleNavBar</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="508227720"/>
-					</object>
-					<int key="connectionID">854</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -3141,55 +3022,6 @@
 						<reference key="parent" ref="500585933"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">109</int>
-						<reference key="object" ref="268481961"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="807309489"/>
-							<reference ref="42588758"/>
-						</array>
-						<reference key="parent" ref="0"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">110</int>
-						<reference key="object" ref="807309489"/>
-						<reference key="parent" ref="268481961"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">206</int>
-						<reference key="object" ref="42588758"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="55696777"/>
-							<reference ref="872676394"/>
-						</array>
-						<reference key="parent" ref="268481961"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">353</int>
-						<reference key="object" ref="55696777"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="508227720"/>
-						</array>
-						<reference key="parent" ref="42588758"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">207</int>
-						<reference key="object" ref="872676394"/>
-						<reference key="parent" ref="42588758"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">355</int>
-						<reference key="object" ref="508227720"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="1020166451"/>
-						</array>
-						<reference key="parent" ref="55696777"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">356</int>
-						<reference key="object" ref="1020166451"/>
-						<reference key="parent" ref="508227720"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">1051</int>
 						<reference key="object" ref="487590551"/>
 						<array class="NSMutableArray" key="children">
@@ -3296,7 +3128,7 @@
 				<string key="1017.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1018.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1049.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="106.IBEditorWindowLastContentRect">{{121, 267}, {320, 480}}</string>
+				<string key="106.IBEditorWindowLastContentRect">{{116, 472}, {320, 480}}</string>
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1062.IBEditorWindowLastContentRect">{{236, 216}, {320, 160}}</string>
 				<string key="1062.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -3318,10 +3150,6 @@
 				<string key="108.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1085.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1086.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="109.CustomClassName">ViewController</string>
-				<string key="109.IBEditorWindowLastContentRect">{{486, 334}, {320, 480}}</string>
-				<string key="109.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="110.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="126.CustomClassName">ViewController</string>
 				<string key="126.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -3334,8 +3162,6 @@
 				<string key="202.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="203.CustomClassName">ViewController</string>
 				<string key="203.IBEditorWindowLastContentRect">{{158, 273}, {320, 480}}</string>
-				<string key="206.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="207.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="217.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="237.IBEditorWindowLastContentRect">{{51, 629}, {320, 216}}</string>
 				<string key="237.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -3357,9 +3183,6 @@
 				<string key="333.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="338.CustomClassName">DataController</string>
 				<string key="338.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="353.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="355.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="356.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="381.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="384.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="534.IBEditorWindowLastContentRect">{{190, 263}, {320, 480}}</string>
@@ -3423,7 +3246,7 @@
 				<string key="883.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="895.IBEditorWindowLastContentRect">{{536, 331}, {320, 480}}</string>
 				<string key="895.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="896.IBEditorWindowLastContentRect">{{120, 203}, {320, 480}}</string>
+				<string key="896.IBEditorWindowLastContentRect">{{120, 353}, {320, 480}}</string>
 				<string key="896.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="897.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="970.CustomClassName">PSSearchController</string>
@@ -3462,7 +3285,6 @@
 						<string key="bookmarksTable">id</string>
 						<string key="commentaryTabController">PSCommentaryViewController</string>
 						<string key="moduleManager">id</string>
-						<string key="moduleTable">id</string>
 						<string key="resultsTable">id</string>
 						<string key="tabController">UITabBarController</string>
 						<string key="viewController">id</string>
@@ -3626,10 +3448,12 @@
 						<string key="displayMorphChanged:">UISwitch</string>
 						<string key="displayStrongsChanged:">UISwitch</string>
 						<string key="fontSizeChanged:">UISlider</string>
+						<string key="footnotesChanged:">UISwitch</string>
 						<string key="insomniaModeChanged:">UISwitch</string>
 						<string key="moduleMaintainerModeChanged:">UISwitch</string>
 						<string key="nightModeChanged:">UISwitch</string>
 						<string key="redLetterChanged:">UISwitch</string>
+						<string key="xrefChanged:">UISwitch</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="fontTableViewController">id</string>
@@ -3731,7 +3555,6 @@
 						<string key="nextChapter:">id</string>
 						<string key="prevChapter:">id</string>
 						<string key="toggleBookmarksTableEditing:">id</string>
-						<string key="toggleModuleTableEditing:">id</string>
 						<string key="toggleModulesList:">id</string>
 						<string key="toggleMultiList:">id</string>
 						<string key="toggleNavigation:">id</string>
@@ -3766,13 +3589,8 @@
 						<string key="historyNavigationItem">UINavigationItem</string>
 						<string key="infoView">UIView</string>
 						<string key="infoWebView">UIWebView</string>
-						<string key="moduleEditBtn">id</string>
 						<string key="moduleManager">id</string>
-						<string key="moduleNavBar">UINavigationItem</string>
 						<string key="moduleSelector">id</string>
-						<string key="moduleTabBarItem">UITabBarItem</string>
-						<string key="moduleTable">id</string>
-						<string key="modulesCloseButton">UIBarButtonItem</string>
 						<string key="modulesListTable">UITableView</string>
 						<string key="modulesListView">UIView</string>
 						<string key="modulesNavigationItem">UINavigationItem</string>

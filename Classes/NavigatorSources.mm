@@ -104,12 +104,12 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSString *kCellIdentifier = @"id";
+	NSString *kCellIdentifier = @"source-id";
 	
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifier] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier] autorelease];
 	}
 	NSArray *currentArray = [[moduleManager swordInstallManager] installSourceList];
 	cell.textLabel.text = [[currentArray objectAtIndex:indexPath.row] caption];

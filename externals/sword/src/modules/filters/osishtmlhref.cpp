@@ -117,7 +117,7 @@ void processLemma(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 			//	show = false;
 			//else {
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=%s&value=%s\" class=\"strongs\">%s</a>&gt;</em></small>",
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;%s&gt;</a>",
 							(gh.length()) ? gh.c_str() : "", 
 							URL::encode(val2).c_str(),
 							val2);
@@ -147,7 +147,7 @@ void processMorph(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 				if ((*val == 'T') && (strchr("GH", val[1])) && (isdigit(val[2])))
 					val2+=2;
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<small><em class=\"morph\">(<a href=\"passagestudy.jsp?action=showMorph&type=%s&value=%s\" class=\"morph\">%s</a>)</em></small>",
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showMorph&amp;type=%s&amp;value=%s\" class=\"morph\">(%s)</a>",
 							URL::encode(tag.getAttribute("morph")).c_str(),
 							URL::encode(val).c_str(), 
 							val2);
@@ -252,7 +252,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 						SWCATCH ( ... ) {	}
 						if (vkey) {
 							//printf("URL = %s\n",URL::encode(vkey->getText()).c_str());
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>",
+							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c</a>",
 								ch, 
 								URL::encode(footnoteNumber.c_str()).c_str(), 
 								URL::encode(u->version.c_str()).c_str(), 
@@ -261,7 +261,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 								ch);
 						}
 						else {
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>",
+							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c</a>",
 								ch, 
 								URL::encode(footnoteNumber.c_str()).c_str(), 
 								URL::encode(u->version.c_str()).c_str(), 
@@ -576,7 +576,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 
 				// just do all transChange tags this way for now
 				if ((type == "added") || (type == "supplied"))
-					outText("<i>", buf, u);
+					outText("<i class=\"transChangeAdded\">", buf, u);
 				else if (type == "tenseChange")
 					buf += "*";
 			}

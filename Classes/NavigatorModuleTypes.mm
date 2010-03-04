@@ -74,7 +74,7 @@ NSTimer *refreshTimer;
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"lvl2-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"lvl2-id"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"lvl2-id"] autorelease];
 	}
 	
 	cell.textLabel.text = NSLocalizedString([[dataArray objectAtIndex:indexPath.row] moduleType], @"");

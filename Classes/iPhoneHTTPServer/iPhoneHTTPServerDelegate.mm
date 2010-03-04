@@ -147,7 +147,7 @@
 	
 	//reload the moduleTable
 	//[moduleTable reloadData];
-	[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+	//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
 	
 	//remove the tmp files...
 	NSFileManager *fileManager = [NSFileManager defaultManager];

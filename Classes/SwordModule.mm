@@ -242,8 +242,8 @@
 	if([self hasFeature: SWMOD_FEATURE_MORPH])//contains Morphological tags
 		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsMorphTags", @"")];
 	
-//	if([self hasFeature: SWMOD_FEATURE_FOOTNOTES])
-//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsFootnotes", @"")];
+	if([self hasFeature: SWMOD_FEATURE_FOOTNOTES])
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsFootnotes", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_HEADINGS]) //not currently supported in PocketSword
 //		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHeadings", @"")];
@@ -257,8 +257,8 @@
 	if([self hasFeature: SWMOD_FEATURE_GREEKACCENTS])
 		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsGreekAccents", @"")];
 	
-//	if([self hasFeature: SWMOD_FEATURE_SCRIPTREF])
-//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsScriptref", @"")];
+	if([self hasFeature: SWMOD_FEATURE_SCRIPTREF])
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsScriptref", @"")];
 	
 //	if([self hasFeature: SWMOD_FEATURE_LEMMA])
 //		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsLemma", @"")];
@@ -826,6 +826,12 @@
 	return ref;
 }
 
+- (NSInteger)getVerseMax {
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	//int v = curKey->getVerseMax();
+	return curKey->getVerseMax();
+}
+
 
 // Grabs the text for a given chapter (e.g. "Gen 1")
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
@@ -857,13 +863,13 @@
 		if (![thisEntry isEqualToString: lastEntry]) {
 
 			if ([modType isEqualToString: @"Commentaries"]) {
-				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\"></a>%@</p>", i, i, thisEntry];
+				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\"></a>%@</p>\n", i, i, thisEntry];
 			}
 			else {
 				if(vpl)
-					[verses appendFormat: @"<a href=\"#verse%d\" id=\"vv%d\"><sup><small><b>%d</b></small></sup></a>%@<br />", i, i, i, thisEntry];
+					[verses appendFormat: @"<a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a>%@<br />\n", i, i, i, thisEntry];
 				else
-					[verses appendFormat: @"&nbsp;<a href=\"#verse%d\" id=\"vv%d\"><sup><small><b>%d</b></small></sup></a>%@", i, i, i, thisEntry];
+					[verses appendFormat: @"&nbsp; <a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, thisEntry];
 			}
 		}
 		lastEntry = thisEntry;

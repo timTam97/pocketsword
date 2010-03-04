@@ -60,7 +60,7 @@ float installationProgress;
 	
 	//reload the moduleTable
 	//[moduleTable reloadData];
-	[viewController reloadModuleTable];
+	//[viewController reloadModuleTable];
 
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -235,7 +235,8 @@ float installationProgress;
 	[[NSUserDefaults standardUserDefaults] synchronize];
 
 	int i = ([newText length] > 8) ? 8 : [newText length];
-	NSString *title = ([newText length] > i) ? [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]] : [newText substringToIndex:i];
+	//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
+	NSString *title = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
 	[dictionaryTitle setTitle: title];
 //	[dictionaryDescriptionTitle setTitle: title];
 }
@@ -257,13 +258,25 @@ float installationProgress;
 - (NSString *)setToPreviousChapter {
 	NSString *ret = nil;
 	NSString *cur = [self getCurrentBibleRef];
+	NSInteger verse = nil;
 	if(primaryBible) {
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToPreviousChapter];
+		verse = [primaryBible getVerseMax];
+		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: @"bibleVersePosition"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
-	if(primaryCommentary && !ret) {
-		[primaryCommentary setChapter: cur];
-		ret = [primaryCommentary setToPreviousChapter];
+	if(primaryCommentary) {
+		if(!ret) {
+			[primaryCommentary setChapter: cur];
+			ret = [primaryCommentary setToPreviousChapter];
+			verse = [primaryCommentary getVerseMax];
+			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		} else if(verse) {
+			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		}
 	}
 	return ret;
 }
@@ -392,7 +405,7 @@ float installationProgress;
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 	
 	[self reload];
-	[viewController reloadModuleTable];
+	//[viewController reloadModuleTable];
 	//[moduleTable reloadData];
 	
 	if (status != 0) {
@@ -547,7 +560,7 @@ float installationProgress;
 	// move these outside of this method & these are called by the caller after -removeModule is called.
 	[self reload];
 	//[moduleTable reloadData];
-	[viewController reloadModuleTable];
+	//[viewController reloadModuleTable];
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!
@@ -710,6 +723,8 @@ float installationProgress;
 		fontColor = (nightMode) ? @"white" : @"black";
 		backgroundColor = (nightMode) ? @"black" : @"white";
 	}
+	//-webkit-user-select: none; needs to be added to the body CSS to disable copy&paste.
+	
 	return [NSString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 			<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n\
 			\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\
@@ -726,75 +741,57 @@ float installationProgress;
 				font-size: %@pt;\n\
 				font-family: %@;\n\
 				line-height: 130%%;\n\
-				//-webkit-user-select: none;\n\
 			}\n\
-			!P {\n\
+			i.transChangeAdded {\n\
+				color: gray;\n\
 			}\n\
-			sup {\n\
+			a {\n\
+				color: inherit;\n\
+				text-decoration: none;\n\
+			}\n\
+			a.verse {\n\
+				font-size: small;\n\
+				font-variant: small-caps;\n\
+				vertical-align: super;\n\
 				line-height: 0%%;\n\
 			}\n\
-			sup.x {\n\
-				color: grey;\n\
+			a.x {\n\
+				color: gray;\n\
+				font-size: small;\n\
+				vertical-align: super;\n\
 				line-height: 0%%;\n\
+				font-variant: small-caps;\n\
 			}\n\
-			sup.n {\n\
-				color: grey;\n\
+			a.n {\n\
+				color: gray;\n\
+				font-size: small;\n\
+				vertical-align: super;\n\
 				line-height: 0%%;\n\
+				font-variant: small-caps;\n\
 			}\n\
-			em.strongs {\n\
-				color: grey;\n\
-			}\n\
-			em.morph {\n\
-				color: grey;\n\
-			}\n\
-			a:link {\n\
-				color: %@;\n\
+			a.strongs {\n\
+				color: gray;\n\
 				text-decoration: none;\n\
+				font-size: 70%%;\n\
+				font-style: italic;\n\
 			}\n\
-			a:visited {\n\
-				color: %@;\n\
+			a.morph {\n\
+				color: gray;\n\
 				text-decoration: none;\n\
-			}\n\
-			a:active {\n\
-				color: %@;\n\
-				text-decoration: none;\n\
-			}\n\
-			a.strongs:link {\n\
-				color: grey;\n\
-				text-decoration: none;\n\
-			}\n\
-			a.strongs:visited {\n\
-				color: grey;\n\
-				text-decoration: none;\n\
-			}\n\
-			a.strongs:active {\n\
-				color: grey;\n\
-				text-decoration: none;\n\
-			}\n\
-			a.morph:link {\n\
-				color: grey;\n\
-				text-decoration: none;\n\
-			}\n\
-			a.morph:visited {\n\
-				color: grey;\n\
-				text-decoration: none;\n\
-			}\n\
-			a.morph:active {\n\
-				color: grey;\n\
-				text-decoration: none;\n\
+				font-size: 70%%;\n\
+				font-style: italic;\n\
 			}\n\
 			%@\n\
 			</style>\n\
 			%@\n\
+			<title>PocketSword</title>\n\
 			</head>\n\
-			<body><div>%@</div></body></html>", 
+			<body>\n<div>%@</div>\n</body>\n</html>", 
 			fontColor,
 			backgroundColor, 
 			fontSize,
 			fontName,
-			fontColor,
-			fontColor,
-			fontColor,
+			//fontColor,
 			RUBY_CSS,
 			javascript,
 			body];

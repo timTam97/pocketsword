@@ -58,7 +58,8 @@
 								</p>\n\
 								<p><b>Localisations by: </b><br />\n\
 										Christoffer Björkskog,<br />\n\
-										Dominique Corbex\n\
+										Dominique Corbex,<br />\n\
+										David Bell\n\
 								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\

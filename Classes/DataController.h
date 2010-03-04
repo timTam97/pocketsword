@@ -37,7 +37,7 @@
 
 
 @interface DataController : NSObject {
-	IBOutlet id moduleTable;
+//	IBOutlet id moduleTable;
 	IBOutlet id resultsTable;
 	IBOutlet id bookmarksTable;
 	IBOutlet UITabBarController *tabController;

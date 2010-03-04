@@ -1467,6 +1467,7 @@ static NSMutableArray *recentNonces;
 	// Add standard headers
 	NSString *now = [self dateAsString:[NSDate date]];
 	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Date"), (CFStringRef)now);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Type"), CFSTR("application/xhtml+xml"));
 	
 	// Add server capability headers
 	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Accept-Ranges"), CFSTR("bytes"));

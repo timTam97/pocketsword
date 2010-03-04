@@ -162,10 +162,10 @@
 				NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
 				for(NSDictionary *dict in array) {
-					[tmpEntry appendFormat:@"<b>%@:</b> ", [dict objectForKey:SW_OUTPUT_REF_KEY]];
+					[tmpEntry appendFormat:@"<b>%@:</b> ", [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]]];
 					[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
 				}
-				if(![tmpEntry isEqualToString:@""]) {
+				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
 				}
 			}

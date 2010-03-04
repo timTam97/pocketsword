@@ -175,25 +175,25 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			SWBuf value = tag.getAttribute("value");
 			if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "morph")) { //&gt;
 				if(value.length())
-					buf.appendFormatted("<small><em class=\"morph\">(<a href=\"passagestudy.jsp?action=showMorph&type=Greek&value=%s\" class=\"morph\">%s</a>)</em></small>", 
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showMorph&amp;type=Greek&amp;value=%s\" class=\"morph\">(%s)</a>", 
 						URL::encode(value.c_str()).c_str(),
 						value.c_str());
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "lemma")) { //&gt;
 				if(value.length())
 					// empty "type=" is deliberate.
-					buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=&value=%s\" class=\"strongs\">%s</a>&gt;</em></small>", 
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=&amp;value=%s\" class=\"strongs\">&lt;%s&gt;</a>", 
 						URL::encode(value.c_str()).c_str(),
 						value.c_str());
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Strongs")) {
 				char ch = *value;
 				value<<1;
-				buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=%s&value=%s\" class=\"strongs\">",
+				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;",
 						    ((ch == 'H') ? "Hebrew" : "Greek"),
 						    URL::encode(value.c_str()).c_str());
 				buf += (value.length()) ? value.c_str() : "";
-				buf += "</a>&gt;</em></small>";
+				buf += "&gt;</a>";
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Dict")) {
 				buf += (tag.isEndTag() ? "</b>" : "<b>");
@@ -215,7 +215,7 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					if (vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>", 
+						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>", 
 							ch, 
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(), 
@@ -225,7 +225,7 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					}
 					else {
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>", 
+						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>", 
 							ch, 
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(), 
@@ -274,7 +274,7 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					if (vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
 						//buf.appendFormatted("<a href=\"noteID=%s.x.%s\"><small><sup>*x</sup></small></a> ", vkey->getText(), footnoteNumber.c_str());
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=x&value=%s&module=%s&passage=%s\"><small><sup class=\"x\">*x</sup></small></a>",
+						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=x&amp;value=%s&amp;module=%s&amp;passage=%s\"><small><sup class=\"x\">*x</sup></small></a>",
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(),
 							URL::encode(vkey->getText()).c_str());

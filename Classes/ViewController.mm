@@ -129,7 +129,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	if (progress == 1.0) {
 		[dataController reloadModuleList];
-		[moduleTable reloadData];
+		//[moduleTable reloadData];
 		//[downloadableModulesTable reloadData];
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		failed = NO;
@@ -142,7 +142,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if (failed) {
 		[dataController reloadModuleList];
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		[moduleTable reloadData];
+		//[moduleTable reloadData];
 		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
 								   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil] show];		
 	}
@@ -312,15 +312,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
 		commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
 		dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
-		moduleTabBarItem.title = NSLocalizedString(@"TabBarTitleModules", @"Modules");
 		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
-		moduleNavBar.title = NSLocalizedString(@"ModulesTitle", @"Modules");
 		bookmarksNavBar.title = NSLocalizedString(@"BookmarksTitle", @"Bookmarks");
-		
+		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 		
 		//configure the Bible & commentary segmented controls.
 		[bibleSegmentedControl setWidth: 30  forSegmentAtIndex:0];
@@ -376,21 +374,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-	if([moduleTable isDescendantOfView: viewController.view] && ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] > 0)) {
-		NSArray *array = [[[[moduleManager swordManager] moduleListByType] objectAtIndex: 0] moduleList];
-		int pos = 0;
-		for(; pos < [array count]; pos++) {
-			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryBible] name]]) {
-				break;
-			}
-		}
-		if (pos < [array count]) {
-			NSIndexPath *ip = [NSIndexPath indexPathForRow: pos inSection: 0];
-			[moduleTable reloadData];
-			if(ip)
-				[moduleTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
-		}
-	} //else if([tabController.moreNavigationController.view isDescendantOfView:viewController.view]) {
+	//else if([tabController.moreNavigationController.view isDescendantOfView:viewController.view]) {
 		//this is (hopefully) the root More controller.
 		//DLog(@"\n\nRAAAHHH!");
 		//viewController.navigationItem.rightBarButtonItem = nil;
@@ -444,21 +428,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		// bible tab
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref) {
-			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[self addHistoryItem: BibleTab];
 		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref) {
-			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[self addHistoryItem: CommentaryTab];
 		}
 	} else {
 		// weird & undefined
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref)
-			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
+			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
 	
 	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
@@ -688,18 +672,18 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-- (IBAction)toggleModuleTableEditing:(id)sender {
-	if ([moduleTable isEditing]) {
-		[moduleTable setEditing: NO animated: YES];
-		[moduleEditBtn setTitle: NSLocalizedString(@"Edit", @"Edit")];
-		[moduleEditBtn setStyle: UIBarButtonItemStyleBordered];
-	}
-	else {
-		[moduleEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
-		[moduleEditBtn setStyle: UIBarButtonItemStyleDone];
-		[moduleTable setEditing: YES animated: YES];
-	}
-}
+//- (IBAction)toggleModuleTableEditing:(id)sender {
+//	if ([moduleTable isEditing]) {
+//		[moduleTable setEditing: NO animated: YES];
+//		[moduleEditBtn setTitle: NSLocalizedString(@"Edit", @"Edit")];
+//		[moduleEditBtn setStyle: UIBarButtonItemStyleBordered];
+//	}
+//	else {
+//		[moduleEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
+//		[moduleEditBtn setStyle: UIBarButtonItemStyleDone];
+//		[moduleTable setEditing: YES animated: YES];
+//	}
+//}
 
 - (IBAction)toggleBookmarksTableEditing:(id)sender {
 	if ([bookmarksTable isEditing]) {
@@ -893,6 +877,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[bibleJavascript appendString:@"startDetLocPoll();\n"];
 			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
 			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+			//NSLog(@"%@", bText);
 			commentaryTabController.refToShow = ref;
 			commentaryTabController.jsToShow = commentaryJavascript;
 		}
@@ -909,10 +894,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		case NoViewPoll:
 		default:
 		{
-			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
-			NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
-			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];	// Get the chapter text
-			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+			commentaryTabController.refToShow = ref;
+			commentaryTabController.jsToShow = commentaryJavascript;
+			bibleTabController.refToShow = ref;
+			bibleTabController.jsToShow = bibleJavascript;
+//			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
+//			NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+//			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];	// Get the chapter text
+//			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		}
 			break;
 	}
@@ -1100,10 +1089,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[activityController.view removeFromSuperview];
 }
 
-- (void)reloadModuleTable {
-	[moduleTable reloadData];
-}
-
+//- (void)reloadModuleTable {
+//	[moduleTable reloadData];
+//}
+//
 - (void)reloadDictionaryData {
 	[dictionaryViewController reloadDictionaryData:YES];
 }
