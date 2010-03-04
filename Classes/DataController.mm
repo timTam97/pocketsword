@@ -326,13 +326,19 @@
 			case BibleTab:
 				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
 				cell.textLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 0];
-				cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				if([[history objectAtIndex: indexPath.row] count] > 2)
+					cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				else
+					cell.detailTextLabel.text = @"";
 				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 				break;
 			case CommentaryTab:
 				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
 				cell.textLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 0];
-				cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				if([[history objectAtIndex: indexPath.row] count] > 2)
+					cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+				else
+					cell.detailTextLabel.text = @"";
 				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 				break;
 		}
@@ -421,8 +427,12 @@
 				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
 				ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
 				scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
-				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-				[moduleManager loadPrimaryBible: mod];
+				if([[history objectAtIndex: indexPath.row] count] > 2) {
+					mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+					[moduleManager loadPrimaryBible: mod];
+				} else {
+					mod = nil;
+				}
 				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
 				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
@@ -432,8 +442,12 @@
 				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
 				ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
 				scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
-				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-				[moduleManager loadPrimaryCommentary: mod];
+				if([[history objectAtIndex: indexPath.row] count] > 2) {
+					mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
+					[moduleManager loadPrimaryCommentary: mod];
+				} else {
+					mod = nil;
+				}
 				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
 				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
@@ -531,6 +545,9 @@
 	if(!currentRefSystemName)
 		currentRefSystemName = @"KJV";//if no ref system, default to kjv
 	const sword::VerseMgr::System *refSystem = sword::VerseMgr::getSystemVerseMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
+	if(!refSystem) {
+		refSystem = sword::VerseMgr::getSystemVerseMgr()->getVersificationSystem("KJV");
+	}
 	int numberOfBooks = refSystem->getBookCount();
 	NSMutableArray *books = [[[NSMutableArray alloc] init] autorelease];
 	for(int i = 0; i < numberOfBooks; i++) {
