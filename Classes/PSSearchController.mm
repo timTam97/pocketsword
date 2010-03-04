@@ -154,6 +154,8 @@ BOOL searchingEnabled;
 				entry = [[moduleManager primaryCommentary] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
 				break;
 		}
+		//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
+		entry.text = [entry.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
 		[results replaceObjectAtIndex:indexPath.row withObject:entry];
 	}
 	mainLabel.text = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;

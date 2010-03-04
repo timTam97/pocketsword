@@ -57,9 +57,10 @@
 										Pablo and Rusty's, Gordon <i>(<a href=\"http://www.pabloandrustys.com.au/\">http://www.pabloandrustys.com.au/</a>)</i>\n\
 								</p>\n\
 								<p><b>Localisations by: </b><br />\n\
+										David Bell,<br />\n\
 										Christoffer Björkskog,<br />\n\
 										Dominique Corbex,<br />\n\
-										David Bell\n\
+										Yiguang Hu\n\
 								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\

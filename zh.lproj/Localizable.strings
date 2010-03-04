@@ -1,6 +1,6 @@
 ﻿/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,125 +22,124 @@
 "Module Download" = "模块下载";
 "Installing" = "安装:";
 "Yes" = "是";
-"No" = "不";
-"ConfirmInstall" = "你想安装此模块？";
+"No" = "否";
+"ConfirmInstall" = "你要安装此模块吗?";
 "Next" = "下一个";
-"Previous" = "前";
+"Previous" = "前一个";
 
-"Ok" = "Ok";
-"Cancel" = "Cancel";
-"Error" = "Error";
+"Ok" = "行";
+"Cancel" = "取消";
+"Error" = "错";
 
 // Module About
-"AboutModuleName" = "Module name: ";
-"AboutModuleDescription" = "Description: ";
-"AboutModuleType" = "Type: ";
-"AboutModuleLang" = "Language: ";
-"AboutModuleVersion" = "Version: ";
-"AboutModuleVersionUnspecified" = "(unspecified)";
-"AboutModuleAboutText" = "About: ";
-"AboutModuleLicence" = "Distribution Licence: ";
-"AboutModuleLCSH" = "Library of Congress Subject Heading: ";
+"AboutModuleName" = "模块名称: ";
+"AboutModuleDescription" = "描述: ";
+"AboutModuleType" = "类型: ";
+"AboutModuleLang" = "语言: ";
+"AboutModuleVersion" = "版本: ";
+"AboutModuleVersionUnspecified" = "(未定)";
+"AboutModuleAboutText" = "关于: ";
+"AboutModuleLicence" = "散发执照: ";
+"AboutModuleLCSH" = "美国国会图书馆主题标题: ";
 
 
-"Disclaimer" = "Disclaimer";
-"DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
+"Disclaimer" = "免责声明";
+"DisclaimerMsg" = "      -=+* 警告 *+=-\n,  \n虽然安装管理器提供了安装和升级sword部件的便捷方法，它也使用了访问网站的系统方法，这些网站可能成为数据包嗅探器为了锁定个别用户的目标。 \n如果你住在信仰受迫害的国家，不希望冒险被侦测到，您＊不＊应该使用安装源管理器的的远程资源功能。 \n另外，Crosswire以外的其他远程源可能含有质量不高的模块，那些模块含非正统的内容，有些模块可能甚至是不可以合法派发的。许多资源库有很好的有用内容。但Crosswire没有审查或维护过这些资源库，所以Crosswire不能对他们的内容负责。买者自负。\n你明白这一点并仍愿意启用远程源功能吗？";
+"WebNoIP" = "网: 不能确定外部IP\n";
+"WiFiNoConnection" = "Wifi: 无连接\n";
+"NoNetworkConnection" = "无可用的网路连接。";
+"manualInstallHelp" = "若手工安装模块，请将浏览器指向下列之一的地址，然后跟作提示。 (或用Bonjour搜寻你的iPhone!)。但我们建议你使用内置模块安装器，这个手工安装器只是提供给那些有自制模块的用户。";
+"InstallManagerDisabled" = "禁止...";
+"InstallTitle" = "安装?";
+"files" = "文件";
+"InstallProblem" = "安装中出了问题.";
+"InstalledButtonTitle" = "安装了";
+"InstallButtonTitle" = "安装";
+"RefreshProblem" = "刷新中出了问题。";
+"RefreshingModuleSource" = "刷新模块源。";
+"NoModulesRefresh" = "这儿没有模块。请试试刷新。";
+"NoModulesInstalled" = "没有模块已经安装。";
 
-"WebNoIP" = "Web: Unable to determine external IP\n";
-"WiFiNoConnection" = "Wifi: No Connection\n";
-"NoNetworkConnection" = "No network connection available.";
+"InstallSourcesTitle" = "源";
+"PreferencesTitle" = "偏好";
+"PreferencesDisplayPreferencesTitle" = "显示偏好";
+"PreferencesDevicePreferencesTitle" = "设备偏好";
+"PreferencesFontSizeTitle" = "字体大小";
+"PreferencesNightModeTitle" = "夜间模式";
+"PreferencesVPLTitle" = "一行一节";
+"PreferencesFontTitle" = "字体";
+"PreferencesRedLetterTitle" = "红字体";
+"PreferencesRedLetterNote" = "注意只有某些模块支持红字模式";
+"PreferencesDisableAutoLockTitle" = "禁用自动锁";
+"PreferencesModuleMaintainerModeTitle" = "模块维护模式";
+"PreferencesModuleMaintainerModeNote" = "注意，模块维护模式是为那些有自制模块而必须手工安装其自制模块的用户的。对所有别的用户，请用内置模块下载器下载CrossWire提供的模块。";
 
-"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
-"InstallManagerDisabled" = "disabled...";
-"InstallTitle" = "Install?";
-"files" = "files";
-"InstallProblem" = "A problem occurred during the installation.";
-"InstalledButtonTitle" = "Installed";
-"InstallButtonTitle" = "Install";
-"RefreshProblem" = "A problem occurred during the refresh.";
-"RefreshingModuleSource" = "Refreshing Module Source";
-"NoModulesRefresh" = "No modules here. Try a refresh.";
-"NoModulesInstalled" = "No modules installed.";
+"AboutTitle" = "关于";
 
-"InstallSourcesTitle" = "Sources";
-"PreferencesTitle" = "Preferences";
-"PreferencesDisplayPreferencesTitle" = "Display Preferences";
-"PreferencesDevicePreferencesTitle" = "Device Preferences";
-"PreferencesFontSizeTitle" = "Font Size";
-"PreferencesNightModeTitle" = "Night Mode";
-"PreferencesVPLTitle" = "Verse Per Line";
-"PreferencesFontTitle" = "Font";
-"PreferencesRedLetterTitle" = "Red Letter";
-"PreferencesRedLetterNote" = "Note that Red Letter mode is only available for certain modules";
-"PreferencesDisableAutoLockTitle" = "Disable auto-lock";
-"PreferencesModuleMaintainerModeTitle" = "Module Maintainer Mode";
-"PreferencesModuleMaintainerModeNote" = "Note that Module Maintainer Mode is for those users who create their own modules & require a method to manually install their own modules.  For all other users, it is suggested that you use the built-in module downloader to access official modules provided by CrossWire.";
+"TabBarTitleBible" = "圣经";
+"TabBarTitleCommentary" = "注解";
+"TabBarTitleDictionary" = "字典";
+"TabBarTitleModules" = "模块";
+"TabBarTitlePreferences" = "偏好";
+"TabBarTitleAbout" = "关于";
 
-"AboutTitle" = "About";
+"ModulesTitle" = "模块";
+"BookmarksTitle" = "书签";
 
-"TabBarTitleBible" = "Bible";
-"TabBarTitleCommentary" = "Commentary";
-"TabBarTitleDictionary" = "Dictionary";
-"TabBarTitleModules" = "Modules";
-"TabBarTitlePreferences" = "Preferences";
-"TabBarTitleAbout" = "About";
+"ActivityLabelLoading" = "装载...";
+"MMMBonjourLoading" = "Bonjour 装载...";
+"MMMIPLoading" = "IP 装载...";
 
-"ModulesTitle" = "Modules";
-"BookmarksTitle" = "Bookmarks";
+"Biblical Texts" = "经文";
+"Commentaries" = "注解";
+"Lexicons / Dictionaries" = "词典／字典";
+"Generic Books" = "一半图书";
+"Daily Devotional" = "每日灵修";
+"Glossaries" = "词汇表";
+"Cults / Unorthodox / Questionable Material" = "邪教 / 非正统 / 可疑问的材料";
+"Essays" = "散文";
+"Maps" = "地图";
+"Images" = "图片";
 
-"ActivityLabelLoading" = "Loading...";
-"MMMBonjourLoading" = "Bonjour Loading...";
-"MMMIPLoading" = "IP Loading...";
+"BibleHistoryTitle" = "圣经历史";
+"CommentaryHistoryTitle" = "注解历史";
 
-"Biblical Texts" = "Biblical Texts";
-"Commentaries" = "Commentaries";
-"Lexicons / Dictionaries" = "Lexicons / Dictionaries";
-"Generic Books" = "Generic Books";
-"Daily Devotional" = "Daily Devotional";
-"Glossaries" = "Glossaries";
-"Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
-"Essays" = "Essays";
-"Maps" = "Maps";
-"Images" = "Images";
+"None" = "无";
+"CloseButtonTitle" = "关闭";
+"CacheDictionaryKeysTitle" = "缓存?";
+"CacheDictionaryKeysMsg" = "此字典尚未初始化，你现在想要缓存此字典吗？";
+"IndexDownloadTitle" = "索引下载";
+"NoSearchIndexTitle" = "没有搜索索引";
+"NoSearchIndexMsg" = "你尚未安装此模块的搜索索引。 你想要检查已有的搜索索引吗？";
+"SearchDownloaderTitle" = "搜索下载器";
+"FontPreferenceTitle" = "字体";
+"EmailUsButton" = "发电邮给我们";
+"NoSearchIndexInstalled" = "没有安装搜索索引";
+"SearchResults" = "结果";
 
-"BibleHistoryTitle" = "Bible History";
-"CommentaryHistoryTitle" = "Commentary History";
+"IndexControllerInstalled" = "你已经安装了搜索索引:";
+"IndexControllerDownloadable" = "请从下列可下载的模块中挑选你所需要的搜索索引以便你可以搜索该模块:";
+"IndexControllerNone" = "为了搜索，请检查你的网路连接:";
+"IndexControllerNoneRemote" = "目前没有可下载的搜索索引:";
 
-"None" = "None";
-"CloseButtonTitle" = "Close";
-"CacheDictionaryKeysTitle" = "Cache?";
-"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
-"IndexDownloadTitle" = "Index Download";
-"NoSearchIndexTitle" = "No Search Index";
-"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
-"SearchDownloaderTitle" = "Search Downloader";
-"FontPreferenceTitle" = "Font";
-"EmailUsButton" = "Email Us";
-"NoSearchIndexInstalled" = "No Search Index Installed";
-"SearchResults" = "Results";
+"SearchHelpTitle" = "搜寻帮助";
+"IndexControllerConfirmQuestion" = "你是否想下载这个模块的搜索索引？\n下载其注解模块可能需要一些时间!";
 
-"IndexControllerInstalled" = "You already have installed a search index for:";
-"IndexControllerDownloadable" = "Select a downloadable search index from the following list to enable search for that module:";
-"IndexControllerNone" = "Check your network connection to enable search for:";
-"IndexControllerNoneRemote" = "There is currently no downloadable search index available for:";
+"PreferencesStrongsPreferencesTitle" = "Strong码";
+"PreferencesDisplayTitle" = "显示";
+"PreferencesGreekModuleTitle" = "希纳文模块";
+"PreferencesHebrewModuleTitle" = "希伯来文模块";
+"PreferencesMorphologyPreferencesTitle" = "形态偏好";
+"PreferencesOriginalLanguagePreferencesTitle" = "原文";
+"PreferencesGreekAccentsTitle" = "希腊口音";
+"PreferencesHVPTitle" = "希伯来语元音点";
+"PreferencesHebrewCantillationTitle" = "希伯来语吟唱符";
+"PreferencesGreekStrongsLexiconTitle" = "希纳文Strong词典";
+"PreferencesHebrewStrongsLexiconTitle" = "希伯来文Strong词典";
+"PreferencesGreekMorphLexiconTitle" = "希腊词汇形态";
+"PreferencesCrossReferencesTitle" = "交叉引用";
+"PreferencesFootnotesTitle" = "注脚";
 
-"SearchHelpTitle" = "Search Help";
-"IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";
-
-"PreferencesStrongsPreferencesTitle" = "Strong's Numbers";
-"PreferencesDisplayTitle" = "Display";
-"PreferencesGreekModuleTitle" = "Greek module";
-"PreferencesHebrewModuleTitle" = "Hebrew module";
-"PreferencesMorphologyPreferencesTitle" = "Morphology Preferences";
-"PreferencesOriginalLanguagePreferencesTitle" = "Original Language";
-"PreferencesGreekAccentsTitle" = "Greek Accents";
-"PreferencesHVPTitle" = "Hebrew Vowel Points";
-"PreferencesHebrewCantillationTitle" = "Hebrew Cantillation";
-"PreferencesGreekStrongsLexiconTitle" = "Greek Strong's lexicon";
-"PreferencesHebrewStrongsLexiconTitle" = "Hebrew Strong's lexicon";
-"PreferencesGreekMorphLexiconTitle" = "Greek Morphological lexicon";
-"PreferencesCrossReferencesTitle" = "Cross-references";
-"PreferencesFootnotesTitle" = "Footnotes";
 
 "NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew Strong's Numbers Lexicon installed. Please install one (such as 'strongshebrew') via the More->Downloads tab.";
 "NoGreekStrongsNumbersModuleInstalled" = "No Greek Strong's Numbers Lexicon installed. Please install one (such as 'strongsgreek') via the More->Downloads tab.";
