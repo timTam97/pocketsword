@@ -161,6 +161,7 @@ float installationProgress;
 		
 		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: ((scriptRefs) ? SW_ON : SW_OFF)];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
+		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
@@ -168,7 +169,6 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: @"Primary Reading" ];//could make this an option?  but for now, disable.
 																					 //others are: @"Secondary Reading" && @"All Readings"
 		[swordManager setGlobalOption: SW_OPTION_GREEKACCENTS value: ((greekAccents) ? SW_ON : SW_OFF) ];
-		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
 
@@ -711,6 +711,7 @@ float installationProgress;
 	NSString *fontSize = @"14";
 	NSString *fontColor = @"black";
 	NSString *backgroundColor = @"white";
+	NSString *linkColor = @"fuchsia";
 	
 	if(usePrefs) {
 		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
@@ -746,14 +747,14 @@ float installationProgress;
 				color: gray;\n\
 			}\n\
 			a {\n\
-				color: inherit;\n\
+				color: %@;\n\
 				text-decoration: none;\n\
 			}\n\
 			a.verse {\n\
-				font-size: small;\n\
-				font-variant: small-caps;\n\
+				font-size: 70%%;\n\
 				vertical-align: super;\n\
 				line-height: 0%%;\n\
+				color: %@;\n\
 			}\n\
 			a.x {\n\
 				color: gray;\n\
@@ -772,12 +773,14 @@ float installationProgress;
 			a.strongs {\n\
 				color: gray;\n\
 				text-decoration: none;\n\
+				vertical-align: super;\n\
 				font-size: 70%%;\n\
 				font-style: italic;\n\
 			}\n\
 			a.morph {\n\
 				color: gray;\n\
 				text-decoration: none;\n\
+				vertical-align: super;\n\
 				font-size: 70%%;\n\
 				font-style: italic;\n\
 			}\n\
@@ -791,7 +794,8 @@ float installationProgress;
 			backgroundColor, 
 			fontSize,
 			fontName,
-			//fontColor,
+			linkColor,
+			fontColor,
 			RUBY_CSS,
 			javascript,
 			body];
@@ -885,11 +889,11 @@ float installationProgress;
         // in this case host is the module and path the reference
 		ret = [NSMutableDictionary dictionary];
         [ret setObject:[aURL host] forKey:ATTRTYPE_MODULE];
-        [ret setObject:[[[aURL path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""]
+        [ret setObject:[[[[aURL path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "]
                 forKey:ATTRTYPE_VALUE];
         [ret setObject:@"scriptRef" forKey:ATTRTYPE_TYPE];
         [ret setObject:@"showRef" forKey:ATTRTYPE_ACTION];
-    } else if([scheme isEqualToString:@"file"]) {
+    } else if([scheme isEqualToString:@"file"] || [scheme isEqualToString:@"applewebdata"]) {
         // in this case
         NSString *path = [aURL path];
         NSString *query = [aURL query];

@@ -7,6 +7,7 @@
 //
 
 
+
 @interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate> {
 
 	IBOutlet UITableView *dictionaryEntriesTable;
@@ -18,11 +19,12 @@
 	IBOutlet UIWebView *dictionaryDescriptionWebView;
 	
 	IBOutlet id moduleManager;
+	IBOutlet id viewController;
 	
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData;
-- (IBAction)showDescription:(id)sender;
+- (void)showDescription:(NSString*)description withTitle:(NSString*)t;
 - (IBAction)hideDescription:(id)sender;
 
 - (void) showModal:(UIView*)modalView withTiming:(float)time;

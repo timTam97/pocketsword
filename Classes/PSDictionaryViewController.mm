@@ -8,7 +8,7 @@
 
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
-
+#import "ViewController.h"
 
 
 @implementation PSDictionaryViewController
@@ -144,20 +144,26 @@ BOOL dictionaryEnabled = NO;
 	[dictionarySearchBar resignFirstResponder];
 	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	NSString *descr = [[moduleManager primaryDictionary] entryForKey: t];
+	[self showDescription:descr withTitle:t];
+}
+
+- (void)showDescription:(NSString*)description withTitle:(NSString*)t {
 	NSString *javaScript = @"<script type=\"text/javascript\">\n<!--\n\
-	window.onload = function() {\n\
-		document.documentElement.style.webkitTouchCallout = \"none\";\n\
-	}\n-->\
-	</script>\n";
-	descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br />%@", t, descr] usingPreferences: YES withJS: javaScript];
+							window.onload = function() { document.documentElement.style.webkitTouchCallout = \"none\"; }\n\
+							-->\
+							</script>\n";
+	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br />%@<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>", t, description] usingPreferences: YES withJS: javaScript];
 	if([t length] > 20) {
 		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
 	}
 	[dictionaryDescriptionTitle setTitle: t];
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
+	//NSLog(@"%@", descr);
 	
-	[self showDescription: nil];
+	if(![dictionaryDescriptionView superview])
+		[self showModal: dictionaryDescriptionView withTiming: 0.3];
 }
+
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	int row = 0;
@@ -190,11 +196,8 @@ BOOL dictionaryEnabled = NO;
 	[searchBar resignFirstResponder];
 }
 
-- (IBAction)showDescription:(id)sender {
-	[self showModal: dictionaryDescriptionView withTiming: 0.3];
-}
-
 - (IBAction)hideDescription:(id)sender {
+	[viewController hideInfo: nil];
 	[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
 
@@ -237,5 +240,59 @@ BOOL dictionaryEnabled = NO;
 	[UIView commitAnimations];
 }
 
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	BOOL load = YES;
+	
+	//NSLog(@"\nDictionaryDescription: requestString: %@", [[request URL] absoluteString]);
+	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+	NSString *entry = nil;
+	
+	if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"]) {
+		//
+		// it's a dictionary entry to show.
+		//
+		NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
+		
+		SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+		if(swordDictionary) {
+			entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+			//DLog(@"\n%@ = %@\n", mod, entry);
+		} else {
+			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
+		}
+		[self showDescription: entry withTitle:[[rData objectForKey:ATTRTYPE_VALUE] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		entry = nil;
+		
+	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
+		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
+		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+		SwordManager *swordManager = [SwordManager defaultManager];
+		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
+		[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
+		NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
+		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
+		NSMutableString *tmpEntry = [@"" mutableCopy];
+		for(NSDictionary *dict in array) {
+			[tmpEntry appendFormat:@"<b>%@:</b> ", [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]]];
+			[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+		}
+		if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+			entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+		}
+		[tmpEntry release];
+	}
+	
+	
+	if(entry) {
+		[viewController showInfo: entry];
+		load = NO;
+	}
+	
+	
+	[pool release];
+	return load;
+}
 
 @end

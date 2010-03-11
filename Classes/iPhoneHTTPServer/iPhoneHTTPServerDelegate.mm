@@ -134,6 +134,9 @@
 	NSString *file = [root stringByAppendingPathComponent:[notification object]];
 	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
 	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	[fileManager removeItemAtPath:outfile error:NULL];
+
 	//unzip the archive
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:file];
@@ -150,7 +153,6 @@
 	//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
 	
 	//remove the tmp files...
-	NSFileManager *fileManager = [NSFileManager defaultManager];
 	[fileManager removeItemAtPath:file error:NULL];
 	[fileManager removeItemAtPath:outfile error:NULL];
 }

@@ -155,8 +155,8 @@ void UTF8Transliterator::Load(UErrorCode &status)
 	UResourceBundle *bundle = 0, *transIDs = 0, *colBund = 0;
 	bundle = ures_openDirect(SW_RESDATA, translit_swordindex, &status);
 	if (U_FAILURE(status)) {
-		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
-		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
+//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
 		return;
 	}
 
@@ -199,16 +199,20 @@ void UTF8Transliterator::Load(UErrorCode &status)
                                 		break;
 					}
         	                 }
-                	         else SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get resString");
+				 else {
+					 //SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get resString");
+				 }
 	                }
-			else SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get row");
+			else {
+				//SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get row");
+			}
 			ures_close(colBund);
 		}
 	}
 	else
 	{
-		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
-		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
+//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
 	}
 
 	ures_close(transIDs);
@@ -265,8 +269,8 @@ bool UTF8Transliterator::checkTrans(const UnicodeString& ID, UErrorCode &status 
 		//parser.parse(rules, isReverse ? UTRANS_REVERSE : UTRANS_FORWARD,
 		//        parseError, status);
 		if (U_FAILURE(status)) {
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get rules");
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get rules");
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
 			return false;
 		}
 
@@ -274,13 +278,13 @@ bool UTF8Transliterator::checkTrans(const UnicodeString& ID, UErrorCode &status 
 		Transliterator *trans = Transliterator::createFromRules(ID, rules, swstuff.dir,
 			parseError,status);
 		if (U_FAILURE(status)) {
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to create transliterator");
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: line %s", parseError.line);
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: offset %d", parseError.offset);
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: preContext %s", *parseError.preContext);
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: postContext %s", *parseError.postContext);
-			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: rules were");
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to create transliterator");
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: line %s", parseError.line);
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: offset %d", parseError.offset);
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: preContext %s", *parseError.preContext);
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: postContext %s", *parseError.postContext);
+//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: rules were");
 //			SWLog::getSystemLog()->logError((const char *)rules);
 			return false;
 		}

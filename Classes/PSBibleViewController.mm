@@ -47,10 +47,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	if(refToShow) {
+		[moduleManager displayBusyIndicator];
 		NSString *bText = [moduleManager getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
+		[moduleManager hideBusyIndicator];
 	}
 }
 
@@ -168,6 +170,7 @@
 				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
 				}
+				[tmpEntry release];
 			}
 		}
 
@@ -187,6 +190,7 @@
     [super dealloc];
 	self.refToShow = nil;
 	self.jsToShow = nil;
+	
 }
 
 

@@ -204,6 +204,8 @@
 		05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
 		05B52BDF107EEB7500826AFE /* NavigatorModules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDE107EEB7500826AFE /* NavigatorModules.mm */; };
+		05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB3FD1147711B00984097 /* popup-top-bar.png */; };
+		05BCB42011477A9A00984097 /* popup-down-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB41F11477A9A00984097 /* popup-down-button.png */; };
 		05CD44C2109E92C900853E48 /* PSPreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD44C1109E92C900853E48 /* PSPreferencesController.mm */; };
 		05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
@@ -913,6 +915,8 @@
 		05B52BDE107EEB7500826AFE /* NavigatorModules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModules.mm; sourceTree = "<group>"; };
 		05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PocketSword-Icon.png"; path = "Resources/PocketSword-Icon.png"; sourceTree = "<group>"; };
 		05BADF6410B79EA50026BFBF /* BiblicaCommunication.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BiblicaCommunication.txt; path = Resources/doc/BiblicaCommunication.txt; sourceTree = "<group>"; };
+		05BCB3FD1147711B00984097 /* popup-top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-top-bar.png"; path = "Resources/popup-top-bar.png"; sourceTree = "<group>"; };
+		05BCB41F11477A9A00984097 /* popup-down-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-down-button.png"; path = "Resources/popup-down-button.png"; sourceTree = "<group>"; };
 		05CD44C0109E92C900853E48 /* PSPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesController.h; sourceTree = "<group>"; };
 		05CD44C1109E92C900853E48 /* PSPreferencesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesController.mm; sourceTree = "<group>"; };
 		05CD4552109FFA0A00853E48 /* PSBibleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBibleViewController.h; path = Classes/PSBibleViewController.h; sourceTree = "<group>"; };
@@ -2300,6 +2304,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				05BCB41F11477A9A00984097 /* popup-down-button.png */,
+				05BCB3FD1147711B00984097 /* popup-top-bar.png */,
 				0546B59A113537E9009D5189 /* Robinson.zip */,
 				0546B59B113537E9009D5189 /* strongsrealgreek.zip */,
 				0546B59C113537E9009D5189 /* strongsrealhebrew.zip */,
@@ -2780,6 +2786,8 @@
 				05034D0710FC570F00884C98 /* history.png in Resources */,
 				052B52851101A32900FFDF01 /* Settings.bundle in Resources */,
 				05A498B11106A72B005424C5 /* i18n.txt in Resources */,
+				05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */,
+				05BCB42011477A9A00984097 /* popup-down-button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

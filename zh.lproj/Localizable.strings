@@ -170,4 +170,6 @@
 "NotSupported" = "This module is not currently supported";
 "ConfirmDeleteTitle" = "Remove?";
 "ConfirmDeleteQuestion" = "Are you sure you wish to remove this module?";
+"EmptyChapterWarning" = "This chapter is empty for this module.";
+"ModuleNotInstalled" = "is not installed.";
 

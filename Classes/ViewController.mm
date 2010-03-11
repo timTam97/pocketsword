@@ -246,12 +246,32 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
 {
 	[toolbarLock lock];
+	NSMutableString *mutableTitle = [NSMutableString stringWithString:@""];
+	NSString *titleToDisplay;
+	NSRange verseRange = [newTitle rangeOfString:@" " options:NSBackwardsSearch];
+	NSRange titleMask = NSRangeFromString(@"0 3");
+	if(verseRange.location != NSNotFound) {//only @"PocketSword" wont' be here.
+		NSString *rest = [newTitle substringToIndex: verseRange.location];//cuts off the @"3:16" part.
+		NSRange spaceRange = [rest rangeOfString:@" "];
+		if(spaceRange.location != NSNotFound) {//the book name contains a space.
+			if(spaceRange.location == 1) {//single char, so probably a number, as in "1 Cor", so keep this
+				[mutableTitle appendFormat: @"%c ", [newTitle characterAtIndex:0]];
+				titleMask.location = 2;
+			}
+		}
+		[mutableTitle appendString: [newTitle substringWithRange: titleMask]];
+		[mutableTitle appendString: [newTitle substringFromIndex: verseRange.location]];
+		titleToDisplay = mutableTitle;
+	} else {
+		titleToDisplay = newTitle;
+	}
+	
 	if(tab == BibleTab) {
 		//[bibleNavBtn setTitle: newTitle];
-		[bibleSegmentedControl setTitle: newTitle forSegmentAtIndex: 1];
+		[bibleSegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
 	} else if(tab == CommentaryTab) {
 		//[commentaryNavBtn setTitle: newTitle];
-		[commentarySegmentedControl setTitle: newTitle forSegmentAtIndex: 1];
+		[commentarySegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
 	}
 	[toolbarLock unlock];
 }
@@ -321,13 +341,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 		
 		//configure the Bible & commentary segmented controls.
-		[bibleSegmentedControl setWidth: 30  forSegmentAtIndex:0];
-		[bibleSegmentedControl setWidth: 138 forSegmentAtIndex:1];
-		[bibleSegmentedControl setWidth: 30  forSegmentAtIndex:2];
+		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
+		[bibleSegmentedControl setWidth: 78 forSegmentAtIndex:1];
+		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:2];
 		[bibleSegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
-		[commentarySegmentedControl setWidth: 30  forSegmentAtIndex:0];
-		[commentarySegmentedControl setWidth: 138 forSegmentAtIndex:1];
-		[commentarySegmentedControl setWidth: 30  forSegmentAtIndex:2];
+		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:0];//30
+		[commentarySegmentedControl setWidth: 78 forSegmentAtIndex:1];//138
+		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:2];//30
 		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
 		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
@@ -572,11 +592,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[dataController updateRefSelectorBooks];
 		[ViewController showModal:refSelectorView withTiming:0.3];
 		//refSelectorShown = YES;
-
-		NSRange range = [[moduleManager getCurrentBibleRef] rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
-		NSUInteger book = [dataController bookIndex: [[moduleManager getCurrentBibleRef] substringToIndex: range.location]];
+		
+		NSString *curBibRef = [moduleManager getCurrentBibleRef];
+		curBibRef = [PSModuleController createRefString: curBibRef];
+		NSRange range = [curBibRef rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
+		NSUInteger book = [dataController bookIndex: [curBibRef substringToIndex: range.location]];
 		int chapter = 1;
-		sscanf([[[[moduleManager getCurrentBibleRef] componentsSeparatedByString: @" "] lastObject] UTF8String], "%d", &chapter);
+		sscanf([[[curBibRef componentsSeparatedByString: @" "] lastObject] UTF8String], "%d", &chapter);
 		--chapter;
 		if (book != NSNotFound) {
 			[refSelector selectRow: book inComponent: 0 animated: YES];
@@ -1131,10 +1153,47 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	[infoWebView loadHTMLString: htmlString baseURL: nil];
+	
+	//NSLog(@"%@", infoString);
 }
 
 - (IBAction)hideInfo:(id)sender {
 	[ViewController hideModal: infoView withTiming: 0.3];
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	BOOL load = YES;
+	
+	//NSLog(@"\nInfo Pane: requestString: %@", [[request URL] absoluteString]);
+	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+	NSString *entry = nil;
+	
+	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
+		//
+		// it's a dictionary entry to show.
+		//
+		NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
+		
+		SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+		if(swordDictionary) {
+			entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+			//DLog(@"\n%@ = %@\n", mod, entry);
+		} else {
+			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
+		}
+		
+	}
+	
+	
+	if(entry) {
+		[self showInfo: entry];
+		load = NO;
+	}
+	
+	[pool release];
+	return load; // Return YES to make sure regular navigation works as expected.
+	
 }
 
 @end

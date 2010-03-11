@@ -117,10 +117,9 @@ void processLemma(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 			//	show = false;
 			//else {
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;%s&gt;</a>",
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;S&gt;</a>",
 							(gh.length()) ? gh.c_str() : "", 
-							URL::encode(val2).c_str(),
-							val2);
+							URL::encode(val2).c_str());
 				}
 			//}
 			
@@ -147,10 +146,9 @@ void processMorph(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 				if ((*val == 'T') && (strchr("GH", val[1])) && (isdigit(val[2])))
 					val2+=2;
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showMorph&amp;type=%s&amp;value=%s\" class=\"morph\">(%s)</a>",
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showMorph&amp;type=%s&amp;value=%s\" class=\"morph\">(M)</a>",
 							URL::encode(tag.getAttribute("morph")).c_str(),
-							URL::encode(val).c_str(), 
-							val2);
+							URL::encode(val).c_str());
 				}
 			} while (++i < count);
 		//}

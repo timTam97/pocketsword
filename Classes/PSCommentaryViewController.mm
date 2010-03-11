@@ -67,6 +67,99 @@
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
 		}
 		load = NO;
+	} else {
+		//NSLog(@"\nBIBLE: requestString: %@", requestString);
+		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+		NSString *entry = nil;
+		
+		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showStrongs"]) {
+			//
+			// Strong's Numbers
+			//
+			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsGreekModule];
+			//NSLog(@"dataType = %@", [rData objectForKey:ATTRTYPE_TYPE]);
+			BOOL hebrew = NO;
+			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"Hebrew"]) {
+				mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule];
+				hebrew = YES;
+			}
+			
+			SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+			if(swordDictionary) {
+				entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+				//DLog(@"\n%@ = %@\n", mod, entry);
+			}
+			if(!entry) {
+				if(hebrew)
+					entry = NSLocalizedString(@"NoHebrewStrongsNumbersModuleInstalled", @"");
+				else
+					entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
+			}
+			
+		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
+			//
+			// Morphological Tags
+			//		type hasPrefix: "robinson"		for Greek
+			//		type isEqualToString: "Greek"	for Greek
+			//		type hasPrefix: "strongMorph"	for Hebrew	???
+			//
+			// for the time being I'm going to test for "strongMorph" & show an error dialogue or otherwise use Greek.
+			
+			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
+			if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
+				entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
+			} else {
+				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+				if(swordDictionary) {
+					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+					//DLog(@"\n%@ = %@\n", mod, entry);
+				}
+				if(!entry) {
+					entry = NSLocalizedString(@"NoMorphGreekModuleInstalled", @"");
+				}
+				
+			}
+			
+		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
+			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
+				entry = (NSString*)[[moduleManager primaryCommentary] attributeValueForEntryData:rData];
+			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
+				NSArray *array = (NSArray*)[[moduleManager primaryCommentary] attributeValueForEntryData:rData];
+				NSMutableString *tmpEntry = [@"" mutableCopy];
+				for(NSDictionary *dict in array) {
+					[tmpEntry appendFormat:@"<b>%@:</b> ", [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]]];
+					[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+				}
+				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				}
+				[tmpEntry release];
+			}
+		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
+			BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
+			BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+			SwordManager *swordManager = [SwordManager defaultManager];
+			[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
+			[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
+			NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+			[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
+			[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
+			NSMutableString *tmpEntry = [@"" mutableCopy];
+			for(NSDictionary *dict in array) {
+				[tmpEntry appendFormat:@"<b>%@:</b> ", [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]]];
+				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+			}
+			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+			}
+			[tmpEntry release];
+		}
+		
+		
+		if(entry) {
+			[viewController showInfo: entry];
+			load = NO;
+		}
 	}
 	
 	[pool release];

@@ -836,7 +836,7 @@
 // Grabs the text for a given chapter (e.g. "Gen 1")
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
 {
-	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
+	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_COMMENTARIES];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
@@ -881,7 +881,11 @@
 		//if(printf) NSLog(@"ref = %@", ref);
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->Key().Error() != KEYERR_OUTOFBOUNDS));
-	
+
+	if([verses isEqualToString:@""]) {
+		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module.")];
+	}
+
 	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
 	
 	if(printf) NSLog(@"verses:\n%@", verses);
