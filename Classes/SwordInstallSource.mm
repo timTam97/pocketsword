@@ -89,7 +89,7 @@
 }
 
 - (void)finalize {
-    DLog( @"[SwordInstallSource -finalize]");
+    //DLog( @"[SwordInstallSource -finalize]");
 
     if(temporarySource == NO) {
         //DLog(@"[SwordInstallSource -finalize] deleting swInstalSource");
@@ -197,7 +197,7 @@
 		//if no one else is trying to create a swordManager for this source, we'll make one.
 		if(swordManager == nil) {
 			// create SwordManager from the SWMgr of this source
-			DLog(@"=== creating a swordManager in [SwordInstallSource swordManager]");
+			//DLog(@"=== creating a swordManager in [SwordInstallSource swordManager]");
 			sword::SWMgr *mgr;
 			if([[self source] isEqualToString:@"localhost"]) {
 				// create SwordManager from new SWMgr of path

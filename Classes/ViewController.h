@@ -94,7 +94,7 @@ typedef enum {
 	
 	// Bookmarks tab
 	IBOutlet id bookmarksTable;
-	IBOutlet id bookmarksEditBtn;
+//	IBOutlet id bookmarksEditBtn;
 	IBOutlet UINavigationItem *bookmarksNavBar;
 	
 	// Preferences tab

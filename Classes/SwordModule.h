@@ -150,6 +150,7 @@ typedef enum {
 - (NSString *)minVersion;
 - (NSString *)aboutText;
 - (NSString *)versification;
+- (NSString *)fullAboutText:(NSString*)currentVersionString;
 - (NSString *)fullAboutText;
 - (BOOL)isUnicode;
 - (BOOL)isEncrypted;

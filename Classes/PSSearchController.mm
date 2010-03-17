@@ -112,7 +112,7 @@ BOOL searchingEnabled;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 65;
+	return 70;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -123,20 +123,20 @@ BOOL searchingEnabled;
 	if (!cell)
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"resultsCell"] autorelease];
-		mainLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 320.0, 15.0)] autorelease];
+		mainLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 320.0, 22.0)] autorelease];
         mainLabel.tag = 477;
         mainLabel.font = [UIFont boldSystemFontOfSize:14.0];
         mainLabel.textColor = [UIColor blackColor];
-        mainLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;// | UIViewAutoresizingFlexibleHeight;
+        mainLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);// | UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:mainLabel];
 		
-        secondLabel = [[[UILabel alloc] initWithFrame:CGRectMake(5.0, 20.0, 310.0, 45.0)] autorelease];
+        secondLabel = [[[UILabel alloc] initWithFrame:CGRectMake(5.0, 22.0, 310.0, 45.0)] autorelease];
         secondLabel.tag = 577;
         secondLabel.font = [UIFont systemFontOfSize:12.0];
 		secondLabel.numberOfLines = 3;
 		secondLabel.lineBreakMode = UILineBreakModeWordWrap;
         secondLabel.textColor = [UIColor darkGrayColor];
-        secondLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;// | UIViewAutoresizingFlexibleHeight;
+        secondLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);// | UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:secondLabel];
 		
 	} else {

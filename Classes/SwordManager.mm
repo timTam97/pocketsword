@@ -444,9 +444,7 @@ using std::list;
 	SwordModule	*ret = [modules objectForKey:name];
     if(ret == nil) {
         sword::SWModule *mod = [self getSWModuleWithName:name];
-        if(mod == NULL) {
-            ALog(@"No module by that name: %@!", name);
-        } else {
+        if(mod) {
             NSString *type;
             if(mod->isUnicode()) {
                 type = [NSString stringWithUTF8String:mod->Type()];

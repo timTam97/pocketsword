@@ -32,7 +32,12 @@ NSTimer *downloadTimer;
 	}
 	self.navigationItem.rightBarButtonItem = installBarButtonItem;
 	[installBarButtonItem release];
-	NSString *about = [PSModuleController createHTMLString:[module fullAboutText] usingPreferences:YES withJS:@""];
+	NSString *currentInstalledVersion = nil;
+	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
+	if(installedModule) {
+		currentInstalledVersion = [installedModule version];
+	}
+	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@""];
 	//DLog(@"%@", about);
 	[detailsView loadHTMLString:about baseURL:nil];
 }

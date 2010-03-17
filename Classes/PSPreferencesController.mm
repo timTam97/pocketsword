@@ -149,7 +149,7 @@ BOOL requireReloadOfModuleViews = NO;
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case RED_LETTER_NOTE_ROW :
-					return 35;
+					return 38;
 				default :
 					return 45;
 			}
@@ -157,7 +157,7 @@ BOOL requireReloadOfModuleViews = NO;
 		case DEVICE_SECTION :
 			switch (indexPath.row) {
 				case MMM_NOTE_ROW :
-					return 90;
+					return 98;
 				default :
 					return 45;
 			}

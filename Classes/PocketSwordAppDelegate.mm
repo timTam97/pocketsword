@@ -166,7 +166,7 @@
 			[moduleManager reload];
 		}
 	} else {
-		DLog(@"already installed %@", lang);
+		//DLog(@"already installed %@", lang);
 	}
 
 	

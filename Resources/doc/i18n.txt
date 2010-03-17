@@ -7,5 +7,7 @@ Swedish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		v1.1
 Finnish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		---
 Japanese	Ian Wagner				ianthetechie@gmail.com				---
 Korean		Ian Wagner				ianthetechie@gmail.com				---
-Chinese		Ian Wagner				ianthetechie@gmail.com				---
+Chinese		Yiguang Hu				yighu@yahoo.com						---
+
+
 

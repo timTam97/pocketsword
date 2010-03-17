@@ -205,6 +205,10 @@
 #pragma mark - convenience methods
 
 - (NSString *)fullAboutText {
+	return [self fullAboutText:nil];
+}
+
+- (NSString *)fullAboutText:(NSString*)currentVersionString {
     NSMutableString *ret = [[[NSMutableString alloc] init] autorelease];
     
     // module name
@@ -225,7 +229,11 @@
 	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleLang", @""), [self langString]];
     
     // module version
-	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleVersion", @""), [self version]];
+	if(currentVersionString) {
+		[ret appendFormat:@"<p><b>%@</b>%@<br /><i><b>%@</b>%@</i></p>", NSLocalizedString(@"AboutModuleVersion", @""), [self version], NSLocalizedString(@"AboutModuleCurrentVersion", @""), currentVersionString];
+	} else {
+		[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleVersion", @""), [self version]];
+	}
 	
 	// module licence info
 	NSString *licence = [self configEntryForKey:@"DistributionLicense"];

@@ -339,6 +339,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		// and the titles of each tab
 		bookmarksNavBar.title = NSLocalizedString(@"BookmarksTitle", @"Bookmarks");
 		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
+
+		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleBookmarksTableEditing:)];
+		//bookmarksNavBar.leftBarButtonItem = nil;
+		bookmarksNavBar.leftBarButtonItem = btn;
+		[btn release];
 		
 		//configure the Bible & commentary segmented controls.
 		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
@@ -710,13 +715,22 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (IBAction)toggleBookmarksTableEditing:(id)sender {
 	if ([bookmarksTable isEditing]) {
 		[bookmarksTable setEditing: NO animated: YES];
-		[bookmarksEditBtn setTitle: NSLocalizedString(@"Edit", @"Edit")];
-		[bookmarksEditBtn setStyle: UIBarButtonItemStyleBordered];
+//		[bookmarksEditBtn setTitle: NSLocalizedString(@"Edit", @"Edit")];
+//		[bookmarksEditBtn setStyle: UIBarButtonItemStyleBordered];
+		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleBookmarksTableEditing:)];
+		//bookmarksNavBar.leftBarButtonItem = nil;
+		bookmarksNavBar.leftBarButtonItem = btn;
+		[btn release];
 	}
 	else {
-		[bookmarksEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
-		[bookmarksEditBtn setStyle: UIBarButtonItemStyleDone];
+//		[bookmarksEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
+//		[bookmarksEditBtn setStyle: UIBarButtonItemStyleDone];
 		[bookmarksTable setEditing: YES animated: YES];
+		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(toggleBookmarksTableEditing:)];
+		//bookmarksNavBar.leftBarButtonItem = nil;
+		bookmarksNavBar.leftBarButtonItem = btn;
+		[btn release];
+		
 	}
 }
 

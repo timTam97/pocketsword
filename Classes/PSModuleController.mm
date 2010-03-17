@@ -162,7 +162,7 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: ((scriptRefs) ? SW_ON : SW_OFF)];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
-		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
+		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_OFF ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
 		[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];
@@ -508,18 +508,19 @@ float installationProgress;
 	DLog(@"Removing module: %@", name);
 	SwordModule *moduleToRemove = [swordManager moduleWithName: name];
 	int stat = 1;
-	sword::SWKey loc;
+	//sword::SWKey loc;
+	NSString *curLoc = [self getCurrentBibleRef];
 
 	NSString *primaryBibleName = nil;
 	NSString *primaryCommentaryName = nil;
 	NSString *primaryDictionaryName = nil;
 	if (primaryBible) {
 		primaryBibleName = [primaryBible name];
-		loc = ([primaryBible swModule])->getKeyText();
+		//loc = ([primaryBible swModule])->getKeyText();
 	}
 	if (primaryCommentary) {
 		primaryCommentaryName = [primaryCommentary name];
-		loc = ([primaryCommentary swModule])->getKeyText();
+		//loc = ([primaryCommentary swModule])->getKeyText();
 	}
 	if (primaryDictionary) {
 		primaryDictionaryName = [primaryDictionary name];
@@ -531,7 +532,7 @@ float installationProgress;
 		//need to remove the dictionary cache, if it exists
 		[((SwordDictionary*)moduleToRemove) removeCache];
 	}
-	
+
 
 	if(moduleToRemove) {
 		stat = [swordInstallManager uninstallModule: moduleToRemove fromManager: swordManager];	
@@ -543,14 +544,14 @@ float installationProgress;
 		primaryBible = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastBible"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-		NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[bibleWebView loadHTMLString: [self getBibleChapter: nsLoc withExtraJS: @""] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
+		[bibleWebView loadHTMLString: [self getBibleChapter: curLoc withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	} else if ([name isEqualToString: primaryCommentaryName]) {
 		primaryCommentary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastCommentary"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-		NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[commentaryWebView loadHTMLString: [self getCommentaryChapter: nsLoc withExtraJS: @""] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
+		[commentaryWebView loadHTMLString: [self getCommentaryChapter: curLoc withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	} else if([name isEqualToString: primaryDictionaryName]) {
 		primaryDictionary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastDictionary"];
@@ -643,6 +644,11 @@ float installationProgress;
 
 // Grabs the bible text for a given chapter (e.g. "Gen 1")
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
+	NSString *ref = chapter;
+	NSRange colonRange = [chapter rangeOfString:@":"];
+	if(colonRange.location != NSNotFound) {
+		ref = [chapter substringToIndex: colonRange.location];
+	}
 	if (!primaryBible) {
 		[self reload];
 		
@@ -666,6 +672,11 @@ float installationProgress;
 
 // Grabs the commentary text for a given chapter (e.g. "Gen 1")
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
+	NSString *ref = chapter;
+	NSRange colonRange = [chapter rangeOfString:@":"];
+	if(colonRange.location != NSNotFound) {
+		ref = [chapter substringToIndex: colonRange.location];
+	}
 	if (!primaryCommentary) {
 		[self reload];
 		
@@ -822,7 +833,7 @@ float installationProgress;
 			// if target host is reachable and no connection is required
 			//  then we'll assume (for now) that your on Wi-Fi
 			retVal = YES;
-			DLog(@"Wi-Fi");
+			//DLog(@"Wi-Fi");
 		}
 		
 		
@@ -836,7 +847,7 @@ float installationProgress;
 			{
 				// ... and no [user] intervention is needed
 				retVal = YES;
-				DLog(@"Wi-Fi 2");
+				//DLog(@"Wi-Fi 2");
 			}
 		}
 		
@@ -845,7 +856,7 @@ float installationProgress;
 			// ... but WWAN connections are OK if the calling application
 			//     is using the CFNetwork (CFSocketStream?) APIs.
 			retVal = YES;
-			DLog(@"WWAN");
+			//DLog(@"WWAN");
 		}
 		
 	}

@@ -63,9 +63,9 @@
 		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
 		[prefs release];
 	}
-	
-	if(![bookmarks containsObject:ref])
-		[bookmarks addObject: ref];
+	NSString *refToAdd = [PSModuleController createRefString:ref];
+	if(![bookmarks containsObject: refToAdd])
+		[bookmarks addObject: refToAdd];
 	
 	[defaults setObject: bookmarks forKey: @"bookmarks2"];
 	[defaults synchronize];
