@@ -1069,11 +1069,11 @@
 						<reference key="IBUIFont" ref="878594600"/>
 						<bool key="IBUIShowsTouchWhenHighlighted">YES</bool>
 						<reference key="IBUIHighlightedTitleColor" ref="866556179"/>
-						<object class="NSColor" key="IBUINormalTitleColor" id="129987372">
+						<object class="NSColor" key="IBUINormalTitleColor" id="909699815">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MAA</bytes>
 						</object>
-						<reference key="IBUINormalTitleShadowColor" ref="129987372"/>
+						<reference key="IBUINormalTitleShadowColor" ref="909699815"/>
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 160}</string>
