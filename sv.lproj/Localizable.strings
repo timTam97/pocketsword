@@ -1,6 +1,6 @@
 ﻿/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@
 "DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
 
 "WebNoIP" = "Web: Kunde inte fastställa extern IP\n";
-"WiFiNoConnection" = "Wifi: Ingen Anslutning\n";
+"WiFiNoConnection" = "Wifi: Ingen anslutning\n";
 "NoNetworkConnection" = "Ingen nätverksanslutning tillgänglig.";
 
 "manualInstallHelp" = "För att manuellt installera en modul behöver du rikta din webbrowser till en av följande platser och sedan följa uppmaningarna där (eller så kan du söka efter din iPhone med hjälp av Bonjour!). Märk väl! Det är  rekommenderat att du använder dig av den inbyggda modulinstalleraren - denna manuella installerare är endast till för de användare som skapar sina egna moduler.";
@@ -57,9 +57,9 @@
 "InstallProblem" = "Ett problem uppstod under installationen.";
 "InstalledButtonTitle" = "Installerad";
 "InstallButtonTitle" = "Installera";
-"RefreshProblem" = "Ett problem uppstod under förnyandet.";
-"RefreshingModuleSource" = "Förnyar modulkällor";
-"NoModulesRefresh" = "Inga tillgängliga moduler. Försök förnya.";
+"RefreshProblem" = "Ett problem uppstod under uppdaterandet.";
+"RefreshingModuleSource" = "Uppdaterar modulkällor";
+"NoModulesRefresh" = "Inga tillgängliga moduler. Försök att uppdatera modulkällorna.";
 "NoModulesInstalled" = "Inga moduler installerade.";
 
 "InstallSourcesTitle" = "Källor";
@@ -71,15 +71,15 @@
 "PreferencesVPLTitle" = "Radbryt verser";
 "PreferencesFontTitle" = "Font";
 "PreferencesRedLetterTitle" = "Röda bokstäver";
-"PreferencesRedLetterNote" = "Observera att Röda bokstäver-läget endast är tillgängliga för vissa moduler";
+"PreferencesRedLetterNote" = "Observera att röda bokstäver endast är tillgängligt för vissa moduler";
 "PreferencesDisableAutoLockTitle" = "Förhindra automatisk låsning";
 "PreferencesModuleMaintainerModeTitle" = "Modulunderhållningsläge";
 "PreferencesModuleMaintainerModeNote" = "Observera att Modulunderhållningsläget är till för dom användare som skapat sina egna moduler och behöver ett sätt att installera sina moduler manuellt. För alla andra användare är det rekommenderat att istället använda den inbyggda modulinstalleraren för att ta del av officiella moduler från CrossWire";
 
 "AboutTitle" = "Om";
 
-"TabBarTitleBible" = "Bibel";
-"TabBarTitleCommentary" = "Kommentar";
+"TabBarTitleBible" = "Bibeln";
+"TabBarTitleCommentary" = "Kommentarer";
 "TabBarTitleDictionary" = "Ordbok";
 "TabBarTitleModules" = "Moduler";
 "TabBarTitlePreferences" = "Inställningar";
@@ -95,10 +95,10 @@
 "Biblical Texts" = "Bibeltexter";
 "Commentaries" = "Kommentarer";
 "Lexicons / Dictionaries" = "Lexikon / Ordböcker";
-"Generic Books" = "Allmänna Böcker";
-"Daily Devotional" = "Daglig Andakt";
+"Generic Books" = "Allmänna böcker";
+"Daily Devotional" = "Daglig andakt";
 "Glossaries" = "Ordlistor";
-"Cults / Unorthodox / Questionable Material" = "Kulter / Oortodoxa / Ifrågasatt Material";
+"Cults / Unorthodox / Questionable Material" = "Kulter / Oortodoxa / Ifrågasatt material";
 "Essays" = "Uppsatser";
 "Maps" = "Kartor";
 "Images" = "Bilder";
@@ -116,7 +116,7 @@
 "SearchDownloaderTitle" = "Nerladdning av sökindex";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "E-posta oss";
-"NoSearchIndexInstalled" = "Inget Sökindex Installerat";
+"NoSearchIndexInstalled" = "Inget sökindex installerat";
 "SearchResults" = "Resultat";
 
 "IndexControllerInstalled" = "Du har redan installerat sökindex för:";
@@ -127,50 +127,50 @@
 "SearchHelpTitle" = "Sökhjälp";
 "IndexControllerConfirmQuestion" = "Önskar du ladda ner sökindexet för denna modul?\n Detta kan ta en stund för kommentarmoduler!";
 
-"PreferencesStrongsPreferencesTitle" = "Strong's Numbers";
-"PreferencesDisplayTitle" = "Display";
-"PreferencesGreekModuleTitle" = "Greek module";
-"PreferencesHebrewModuleTitle" = "Hebrew module";
-"PreferencesMorphologyPreferencesTitle" = "Morphology Preferences";
-"PreferencesOriginalLanguagePreferencesTitle" = "Original Language";
-"PreferencesGreekAccentsTitle" = "Greek Accents";
-"PreferencesHVPTitle" = "Hebrew Vowel Points";
-"PreferencesHebrewCantillationTitle" = "Hebrew Cantillation";
-"PreferencesGreekStrongsLexiconTitle" = "Greek Strong's lexicon";
-"PreferencesHebrewStrongsLexiconTitle" = "Hebrew Strong's lexicon";
-"PreferencesGreekMorphLexiconTitle" = "Greek Morphological lexicon";
-"PreferencesCrossReferencesTitle" = "Cross-references";
-"PreferencesFootnotesTitle" = "Footnotes";
+"PreferencesStrongsPreferencesTitle" = "Strongs nummer";
+"PreferencesDisplayTitle" = "Visa";
+"PreferencesGreekModuleTitle" = "Grekisk modul";
+"PreferencesHebrewModuleTitle" = "Hebreisk modul";
+"PreferencesMorphologyPreferencesTitle" = "Inställningar för morfologi";
+"PreferencesOriginalLanguagePreferencesTitle" = "Grundtext";
+"PreferencesGreekAccentsTitle" = "Grekiska accenter";
+"PreferencesHVPTitle" = "Hebreiska vokalpunkter";
+"PreferencesHebrewCantillationTitle" = "Hebreisk sångmarkering";
+"PreferencesGreekStrongsLexiconTitle" = "Grekisk Strongs konkordans";
+"PreferencesHebrewStrongsLexiconTitle" = "Hebreisk Strongs konkordans";
+"PreferencesGreekMorphLexiconTitle" = "Grekisk morfologilexicon";
+"PreferencesCrossReferencesTitle" = "Parallellställen";
+"PreferencesFootnotesTitle" = "Fotnoter";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew Strong's Numbers Lexicon installed. Please install one (such as 'strongshebrew') via the More->Downloads tab.";
-"NoGreekStrongsNumbersModuleInstalled" = "No Greek Strong's Numbers Lexicon installed. Please install one (such as 'strongsgreek') via the More->Downloads tab.";
+"NoHebrewStrongsNumbersModuleInstalled" = "Ingen hebreisk Strongs nummerkonkordans är installerad. Vänligen installera en (t.ex. 'strongshebrew') via menyn Mer->Nerladdningar";
+"NoGreekStrongsNumbersModuleInstalled" = "Ingen grekisk Strongs nummerkonkordans är installerad. Vänligen installera en (t.ex. 'strongsgreek') via menyn Mer->Nerladdningar";
 
-"NoMorphGreekModuleInstalled" = "No Greek Morphological Analysis Codes Lexicon installed. Please install one (such as 'Robinson') via the More->Downloads tab";
-"MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+"NoMorphGreekModuleInstalled" = "Inget grekiskt morfologilexikon är installerat. Vänligen installera en (t.ex. 'Robinsons') via menyn Mera->Nerladdningar";
+"MorphHebrewNotSupported" = "Tyvärr är morfologiska analyskoder endast tillgängliga för grekiska ord. Om du har kunskapen och är villig att hjälpa till för att möjliggöra denna funktionalitet för PocketSword, vänligen besök <br />openscripture.org<br />och gå med i deras diskussionforum där.";
 
-"AboutModuleFeaturesTitle" = "Module Features";
-"AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";
-"AboutModuleContainsMorphTags" = "Contains Morphological tags";
-"AboutModuleContainsFootnotes" = "Contains Footnotes";
-"AboutModuleContainsHeadings" = "Contains Headings";
-"AboutModuleContainsRedLetterWords" = "Words of Christ in Red";
-"AboutModuleContainsVariants" = "Contains Textual Variants";
-"AboutModuleContainsGreekAccents" = "Contains Greek Accents";
-"AboutModuleContainsScriptref" = "Contains Scriptual Cross-References";
-"AboutModuleContainsLemma" = "Lemmas";
-"AboutModuleContainsCantillation" = "Contains Cantillation Marks";
-"AboutModuleContainsHebrewPoints" = "Contains Hebrew Points";
-"AboutModuleContainsMorphSegmentation" = "This is a morpheme segmented Hebrew text";
-"AboutModuleContainsGreekDef" = "Defines Greek Strong's Numbers";
-"AboutModuleContainsHebrewDef" = "Defines Hebrew Strong's Numbers";
-"AboutModuleContainsGreekParse" = "Defines Greek Morphological Analysis Codes";
-"AboutModuleContainsHebrewParse" = "Defines Hebrew Morphological Analysis Codes";
-"AboutModuleContainsDailyDevotion" = "Contains a Daily Devotional";
-"AboutModuleContainsImages" = "Contains Images";
+"AboutModuleFeaturesTitle" = "Modulegenskaper";
+"AboutModuleContainsStrongsNumbers" = "Innehåller Strongs nummer";
+"AboutModuleContainsMorphTags" = "Innehåller morfologiska taggar";
+"AboutModuleContainsFootnotes" = "Innehåller fotnoter";
+"AboutModuleContainsHeadings" = "Innehåller rubriker";
+"AboutModuleContainsRedLetterWords" = "Jesu ord med röda bokstäver";
+"AboutModuleContainsVariants" = "Inneåller textvarianter";
+"AboutModuleContainsGreekAccents" = "Innehåller grekiska accenter";
+"AboutModuleContainsScriptref" = "Innehåller andliga parallellställen";
+"AboutModuleContainsLemma" = "Lemman";
+"AboutModuleContainsCantillation" = "Innehåller sångmarkeringar";
+"AboutModuleContainsHebrewPoints" = "Innehåller hebreiska punkter";
+"AboutModuleContainsMorphSegmentation" = "Detta är en morfem-segmenterad hebreisk text";
+"AboutModuleContainsGreekDef" = "Definierar grekiska Strongs nummer";
+"AboutModuleContainsHebrewDef" = "Definierar hebreiska Strongs nummer";
+"AboutModuleContainsGreekParse" = "Definierar grekiska morfologikoder";
+"AboutModuleContainsHebrewParse" = "Definierar hebreiska morfologikoder";
+"AboutModuleContainsDailyDevotion" = "Innehåller dagliga andaktstexter";
+"AboutModuleContainsImages" = "Innehåller bilder";
 
-"NotSupported" = "This module is not currently supported";
-"ConfirmDeleteTitle" = "Remove?";
-"ConfirmDeleteQuestion" = "Are you sure you wish to remove this module?";
-"EmptyChapterWarning" = "This chapter is empty for this module.";
-"ModuleNotInstalled" = "is not installed.";
-"AboutModuleCurrentVersion" = "Installed Version: ";
+"NotSupported" = "Denna modul stöds tyvärr inte";
+"ConfirmDeleteTitle" = "Ta bort?";
+"ConfirmDeleteQuestion" = "Är du säker på att du vill ta bort denna modul?";
+"EmptyChapterWarning" = "Detta kapitel är tomt för denna modul.";
+"ModuleNotInstalled" = "är inte installerat.";
+"AboutModuleCurrentVersion" = "Installerad version: ";
