@@ -257,6 +257,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			if(spaceRange.location == 1) {//single char, so probably a number, as in "1 Cor", so keep this
 				[mutableTitle appendFormat: @"%c ", [newTitle characterAtIndex:0]];
 				titleMask.location = 2;
+			} else if(spaceRange.location == 2) {//double char, so probably a number followed by . as in "1. Cor", so keep this.
+				[mutableTitle appendFormat: @"%c%c ", [newTitle characterAtIndex:0], [newTitle characterAtIndex:1]];
+				titleMask.location = 3;
 			}
 		}
 		[mutableTitle appendString: [newTitle substringWithRange: titleMask]];

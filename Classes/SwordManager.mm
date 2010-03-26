@@ -202,7 +202,9 @@ using std::list;
     NSEnumerator *iter = [availLocales objectEnumerator];
     while((loc = [iter nextObject]) && !haveLocale) {
 		if([loc isEqualToString:@"zh-Hant"])
-			loc = @"zh_TW"; // SWORD and Apple use different names for traditional chinese...
+			loc = @"zh_Hant"; // SWORD and Apple use different names for traditional chinese...
+		 else if([loc isEqualToString:@"zh-Hans"])
+			loc = @"zh_Hans"; // SWORD and Apple use different names for traditional chinese...
         // check if this locale is available in SWORD
 		sword::StringList::iterator it;
 		sword::SWBuf locale;

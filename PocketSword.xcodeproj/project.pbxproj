@@ -372,6 +372,10 @@
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
 		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
 		0513ACB010BF74FC00E414D9 /* google-analytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "google-analytics.txt"; path = "Resources/doc/google-analytics.txt"; sourceTree = "<group>"; };
+		0513ADDB115CA55500F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0513ADE7115CA5DD00F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		0513ADE8115CA5E300F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0513ADE9115CA5E900F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		0513AE1810C0C43600E414D9 /* Default.acorn */ = {isa = PBXFileReference; lastKnownFileType = file; name = Default.acorn; path = Resources/Default.acorn; sourceTree = "<group>"; };
 		0513AE1910C0C43600E414D9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0513AE2B10C0CD5300E414D9 /* Icon2-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon2-small.png"; path = "Resources/Icon2-small.png"; sourceTree = "<group>"; };
@@ -2311,12 +2315,12 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0542F70F10BE7C0B0088A721 /* doc */,
 				05BCB41F11477A9A00984097 /* popup-down-button.png */,
 				05BCB3FD1147711B00984097 /* popup-top-bar.png */,
 				0546B59A113537E9009D5189 /* Robinson.zip */,
 				0546B59B113537E9009D5189 /* strongsrealgreek.zip */,
 				0546B59C113537E9009D5189 /* strongsrealhebrew.zip */,
-				0542F70F10BE7C0B0088A721 /* doc */,
 				052B52ED1101D6DF00FFDF01 /* locales.d.zip */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
 				05034D0610FC570F00884C98 /* history.png */,
@@ -2739,6 +2743,7 @@
 				es,
 				zh,
 				fr,
+				it,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -3144,6 +3149,7 @@
 				0545545710CA382900EE11EC /* sv */,
 				0545545810CA383100EE11EC /* zh */,
 				05337B0F10F828720003CFA9 /* fr */,
+				0513ADE8115CA5E300F752DA /* it */,
 			);
 			name = Downloader.xib;
 			sourceTree = "<group>";
@@ -3158,6 +3164,7 @@
 				05337B1310F828C00003CFA9 /* ko */,
 				05337B1410F828C30003CFA9 /* sv */,
 				05337B1510F828C60003CFA9 /* zh */,
+				0513ADE9115CA5E900F752DA /* it */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -3172,6 +3179,7 @@
 				E9B800340FF5B98D006081E5 /* es */,
 				E9B8004E0FF5C316006081E5 /* zh */,
 				05337B0210F823AF0003CFA9 /* fr */,
+				0513ADDB115CA55500F752DA /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -3186,6 +3194,7 @@
 				E9B800320FF5B971006081E5 /* es */,
 				E9B8004C0FF5C301006081E5 /* zh */,
 				05337B0E10F8285A0003CFA9 /* fr */,
+				0513ADE7115CA5DD00F752DA /* it */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";

@@ -30,12 +30,13 @@
 @synthesize tabBarController;
 //@synthesize viewController;
 
+#define LOCALES_VERSION @"loadedSWORDLocales-v2"
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
 	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
-	BOOL loadedLocales = [defaults boolForKey:@"loadedSWORDLocales-v1"];
+	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
 	
 	if(reset) {
@@ -86,7 +87,7 @@
 	NSString *swLocales = [[docPath stringByAppendingPathComponent:@"unused"] stringByAppendingPathComponent: @"locales.d"];
 	
 	if(!loadedLocales) {
-		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:@"loadedSWORDLocales-v1"];
+		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:LOCALES_VERSION];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		NSString *localesZIP = [[NSBundle mainBundle] pathForResource:@"locales.d" ofType:@"zip"];
 		DLog(@"\n\n%@\n\n", localesZIP);
@@ -132,9 +133,10 @@
 			lang = loc;
 			alreadyInstalled = YES;
 			break;//default, do nothing.
-		} else if([loc isEqualToString:@"zh-Hant"]) {
-			loc = @"zh_TW"; // SWORD and Apple use different names for traditional chinese...
-		}
+		} else if([loc isEqualToString:@"zh-Hant"])
+			loc = @"zh_Hant"; // SWORD and Apple use different names for traditional chinese...
+		else if([loc isEqualToString:@"zh-Hans"])
+			loc = @"zh_Hans"; // SWORD and Apple use different names for traditional chinese...
 		
 		if([currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", loc]]) {
 			//we do this because it could be the non-primary iPhone locale...
@@ -153,7 +155,7 @@
 		}
 	}
 	if(!alreadyInstalled) {
-		DLog(@"installing %@", lang);
+		//NSLog(@"installing %@", lang);
 		[[NSFileManager defaultManager] removeItemAtPath: localePath error: NULL];
 		[[NSFileManager defaultManager] createDirectoryAtPath: localePath withIntermediateDirectories: NO attributes: nil error: NULL];
 		if(haveLocale) {
@@ -166,7 +168,7 @@
 			[moduleManager reload];
 		}
 	} else {
-		//DLog(@"already installed %@", lang);
+		//NSLog(@"already installed %@", lang);
 	}
 
 	

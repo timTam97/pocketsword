@@ -4,13 +4,14 @@ LANG		TRANSLATOR				T EMAIL								AVAILABLE SINCE
 CURRENT-ISH
 
 French		Dominique Corbex		dominique.corbex@gmail.com			v1.1
-Spanish		David Bell				david.benjamin.bell@gmail.com		v1.2b
+Spanish		David Bell				david.benjamin.bell@gmail.com		v1.2
 Swedish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		v1.1
-Chinese		Yiguang Hu				yighu@yahoo.com						v1.2b
+Chinese		Yiguang Hu				yighu@yahoo.com						v1.2
+Italian		Enzo					enzo@infomicron.com					v1.2.1
 
 
 
-IN PROGRESS?
+IN PROGRESS (1.2b)
 
 Dutch		Henko van de Weerd		henko87@gmail.com					---
 Polish		Jon Glass				jonglass@mac.com					---

@@ -167,14 +167,14 @@ BOOL dictionaryEnabled = NO;
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	int row = 0;
-	if([searchText length] > prevLength) {
-		NSIndexPath *tableSelection = [[dictionaryEntriesTable indexPathsForVisibleRows] objectAtIndex: 0];
-		if(tableSelection)
-			row = tableSelection.row;
-		//we can continue searching from the current index
-	} else {
-		//start searching from the start
-	}
+//	if([searchText length] > prevLength) {
+//		NSIndexPath *tableSelection = [[dictionaryEntriesTable indexPathsForVisibleRows] objectAtIndex: 0];
+//		if(tableSelection)
+//			row = tableSelection.row;
+//		//we can continue searching from the current index
+//	} else {
+//		//start searching from the start
+//	}
 	int count = [[moduleManager primaryDictionary] entryCount];
 	for(; row < count; row++) {
 		NSComparisonResult res = [searchText caseInsensitiveCompare: [[[moduleManager primaryDictionary] allKeys] objectAtIndex: row]];

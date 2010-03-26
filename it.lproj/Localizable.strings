@@ -1,0 +1,176 @@
+﻿/*
+	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
+	Copyright (C) 2008-2010 CrossWire Bible Society
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License along
+	with this program; if not, write to the Free Software Foundation, Inc.,
+	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+"Edit" = "Modifica";
+"Done" = "Fine";
+"Module Download" = "Scaricamento modulo";
+"Installing" = "Installazione:";
+"Yes" = "Si";
+"No" = "No";
+"ConfirmInstall" = "Vuoi installare questo modulo?";
+"Next" = "Prossimo";
+"Previous" = "Precedente";
+
+"Ok" = "Ok";
+"Cancel" = "Annulla";
+"Error" = "Errore";
+
+// Module About
+"AboutModuleName" = "Nome Modulo: ";
+"AboutModuleDescription" = "Descrizione: ";
+"AboutModuleType" = "Tipo: ";
+"AboutModuleLang" = "Lingua: ";
+"AboutModuleVersion" = "Versione: ";
+"AboutModuleVersionUnspecified" = "(non specificato)";
+"AboutModuleAboutText" = "Informazioni: ";
+"AboutModuleLicence" = "Licenza di distribuzione: ";
+"AboutModuleLCSH" = "Titolo argomento Libreria del Congresso: ";
+
+
+"Disclaimer" = "Liberatoria";
+"DisclaimerMsg" = "      -=+* ATTENZIONE *+=-\nNonostante Install Manager rappresenti un modo efficace per installare e aggiornare componenti SWORD, esso utilizza un metodo sistematico per accedere ai siti che fornisce ai packet sniffer un bersaglio da puntare per identificare gli utenti. \nSE VIVETE IN UNA NAZIONE PERSEGUITATA E NON VOLETE RISCHIARE LA DETENZIONE, *NON* DOVRESTE USARE LE FONTI REMOTE DI INSTALL MANAGER. \nInoltre, fonti remote diverse da CrossWire potrebbero contenere moduli di qualità inferiore, moduli dal contenuto eterodosso o anche moduli non legalmente distribuibili.  Molti archivi contengono materiale meravigliosamente utile.  Questi archivi non sono verificati o mantenuti da CrossWire e CrossWire non può essere ritenuta responsabile per il loro contenuto. CAVEAT EMPTOR.\nHai compreso e vuoi abilitare le fonti remote?";
+
+"WebNoIP" = "Web: Impossibile determinare IP esterno\n";
+"WiFiNoConnection" = "Wifi: Nessuna Connessione\n";
+"NoNetworkConnection" = "Nessuna connessione disponibile.";
+
+"manualInstallHelp" = "Per installare manualmente un modulo devi puntare un browser web verso uno degli indirizzi sottostanti e seguire le indicazioni (oppure cerca il tuo iPhone usando Bonjour!). Comunque si suggerisce l'utilizzo del metodo di installazione predefinito. L'installazione manuale è presente solo per quegli utenti che sviluppano i propri moduli.";
+"InstallManagerDisabled" = "disabilitato...";
+"InstallTitle" = "Installa?";
+"files" = "file";
+"InstallProblem" = "Si è verificato un problema durante l'installazione.";
+"InstalledButtonTitle" = "Installato";
+"InstallButtonTitle" = "Installa";
+"RefreshProblem" = "Si è verificato un problema durante l'aggiornamento.";
+"RefreshingModuleSource" = "Aggiornamento fonti";
+"NoModulesRefresh" = "Nessun modulo. Prova ad aggiornare.";
+"NoModulesInstalled" = "Nessun modulo installato.";
+
+"InstallSourcesTitle" = "Fonti";
+"PreferencesTitle" = "Preferenze";
+"PreferencesDisplayPreferencesTitle" = "Preferenze visualizzazione";
+"PreferencesDevicePreferencesTitle" = "Preferenze dispositivo";
+"PreferencesFontSizeTitle" = "Dimensione carattere";
+"PreferencesNightModeTitle" = "Modalità notte";
+"PreferencesVPLTitle" = "Versetto per linea";
+"PreferencesFontTitle" = "Tipo carattere";
+"PreferencesRedLetterTitle" = "Lettere Rosse";
+"PreferencesRedLetterNote" = "Nota. La modalità Lettere Rosse è disponibile solo per alcuni moduli";
+"PreferencesDisableAutoLockTitle" = "Disabilita blocco autom.";
+"PreferencesModuleMaintainerModeTitle" = "Modo sviluppatore moduli";
+"PreferencesModuleMaintainerModeNote" = "Nota. La modalità sviluppatore moduli è per quegli utenti che sviluppano i propri moduli e necessitano un metodo per installarli manualmente. Per tutti gli altri utenti è consigliato usare il caricatore di moduli incluso per accedere ai moduli ufficiali forniti da CrossWire.";
+
+"AboutTitle" = "Informazioni";
+
+"TabBarTitleBible" = "Bibbia";
+"TabBarTitleCommentary" = "Commentario";
+"TabBarTitleDictionary" = "Dizionario";
+"TabBarTitleModules" = "Moduli";
+"TabBarTitlePreferences" = "Preferenze";
+"TabBarTitleAbout" = "Informazioni";
+
+"ModulesTitle" = "Moduli";
+"BookmarksTitle" = "Segnalibri";
+
+"ActivityLabelLoading" = "Caricamento...";
+"MMMBonjourLoading" = "Caricamento Bonjour...";
+"MMMIPLoading" = "Caricamento IP...";
+
+"Biblical Texts" = "Testi Biblici";
+"Commentaries" = "Commentari";
+"Lexicons / Dictionaries" = "Vocabolari / Dizionari";
+"Generic Books" = "Libri generici";
+"Daily Devotional" = "Devozionali quotidiani";
+"Glossaries" = "Glossari";
+"Cults / Unorthodox / Questionable Material" = "Sette / Eterodossia / Materiale discutibile";
+"Essays" = "Saggi";
+"Maps" = "Mappe";
+"Images" = "Immagini";
+
+"BibleHistoryTitle" = "Storia Bibbia";
+"CommentaryHistoryTitle" = "Storia Commentario";
+
+"None" = "Nessuna";
+"CloseButtonTitle" = "Chiudi";
+"CacheDictionaryKeysTitle" = "Cache?";
+"CacheDictionaryKeysMsg" = "Questo dizionario deve ancora essere inizializzato, vuoi farlo adesso?";
+"IndexDownloadTitle" = "Scarica indici";
+"NoSearchIndexTitle" = "Nessun indice di ricerca";
+"NoSearchIndexMsg" = "Non hai un indice di ricerca installato per questo modulo.  Desideri verificare adesso la disponibilità di indici di ricerca?";
+"SearchDownloaderTitle" = "Scarica ricerche";
+"FontPreferenceTitle" = "Font";
+"EmailUsButton" = "Scrivici";
+"NoSearchIndexInstalled" = "Nessun indice di ricerca installato";
+"SearchResults" = "Risultati";
+
+"IndexControllerInstalled" = "Hai già installato un indice di ricerca per:";
+"IndexControllerDownloadable" = "Seleziona un indice di ricerca dalla lista seguente per attivare la ricerca per quel modulo:";
+"IndexControllerNone" = "Controlla la tua connessione per attivare la ricerca per:";
+"IndexControllerNoneRemote" = "Attualmente non è disponibile nessun indice di ricerca scaricabile per:";
+
+"SearchHelpTitle" = "Aiuto Ricerca";
+"IndexControllerConfirmQuestion" = "Vuoi scaricare l'indice di ricerca per questo modulo?\nQuesto potrebbe richiedere parecchio tempo per i commentari!";
+
+"PreferencesStrongsPreferencesTitle" = "Numeri Strong";
+"PreferencesDisplayTitle" = "Mostra";
+"PreferencesGreekModuleTitle" = "Modulo Greco";
+"PreferencesHebrewModuleTitle" = "Modulo Ebraico";
+"PreferencesMorphologyPreferencesTitle" = "Preferenze di morfologia";
+"PreferencesOriginalLanguagePreferencesTitle" = "Lingua originale";
+"PreferencesGreekAccentsTitle" = "Accenti Greci";
+"PreferencesHVPTitle" = "Segni vocalici Ebraici";
+"PreferencesHebrewCantillationTitle" = "Cantillazione Ebraica";
+"PreferencesGreekStrongsLexiconTitle" = "Vocabolario Strong Greco";
+"PreferencesHebrewStrongsLexiconTitle" = "Vocabolario Strong Ebraico";
+"PreferencesGreekMorphLexiconTitle" = "Vocabolario morfologico Greco";
+"PreferencesCrossReferencesTitle" = "Riferimenti incrociati";
+"PreferencesFootnotesTitle" = "Note in calce";
+
+"NoHebrewStrongsNumbersModuleInstalled" = "Nessun vocabolario ebraico Strong installato. Installarne uno (tipo lo 'strongshebrew') tramite la scheda: More->Downloads.";
+"NoGreekStrongsNumbersModuleInstalled" = "Nessun vocabolario greco Strong installato. Installarne uno (tipo lo 'strongsgreek') tramite la scheda: More->Downloads.";
+
+"NoMorphGreekModuleInstalled" = "Nessun Vocabolario Codici di analisi morfologica greco installato. Installarne uno (tipo il 'Robinson') tramite la scheda: More->Downloads";
+"MorphHebrewNotSupported" = "Purtroppo, i codici di analisi morfologica sono attualmente disponibili solamente per parole in Greco.  Se possiedi le competenze linguistiche e desideri contribuire a implementare questa caratteristica su PocketSword, visita <br /> openscriptures.org<br />e unisciti al gruppo di discussione.";
+
+"AboutModuleFeaturesTitle" = "Caratteristiche del modulo";
+"AboutModuleContainsStrongsNumbers" = "Contiene numeri Strong";
+"AboutModuleContainsMorphTags" = "Contiene etichette morfologiche";
+"AboutModuleContainsFootnotes" = "Contiene note in calce";
+"AboutModuleContainsHeadings" = "Contiene intestazioni";
+"AboutModuleContainsRedLetterWords" = "Parole di Cristo in rosso";
+"AboutModuleContainsVariants" = "Contiene varianti del testo";
+"AboutModuleContainsGreekAccents" = "Contiene accenti greci";
+"AboutModuleContainsScriptref" = "Contiene riferimenti scritturali";
+"AboutModuleContainsLemma" = "Lemmi";
+"AboutModuleContainsCantillation" = "Contiene segni di cantillazione";
+"AboutModuleContainsHebrewPoints" = "Contiene segni vocalici ebraici";
+"AboutModuleContainsMorphSegmentation" = "Questo è un testo ebraico segmentato in morfemi";
+"AboutModuleContainsGreekDef" = "Definisce numeri Strong Greci";
+"AboutModuleContainsHebrewDef" = "Definisce numeri Strong Ebraici";
+"AboutModuleContainsGreekParse" = "Definisce codici di analisi morfologica greci";
+"AboutModuleContainsHebrewParse" = "Definisce codici di analisi morfologica ebraici";
+"AboutModuleContainsDailyDevotion" = "Contiene un Devozionale quotidiano";
+"AboutModuleContainsImages" = "Contiene Immagini";
+
+"NotSupported" = "Questo modulo non è attualmente supportato";
+"ConfirmDeleteTitle" = "Elimina?";
+"ConfirmDeleteQuestion" = "Sei sicuro di voler eliminare questo modulo?";
+"EmptyChapterWarning" = "Il capitolo è vuoto per questo modulo.";
+"ModuleNotInstalled" = "non è installato.";
+"AboutModuleCurrentVersion" = "Versione installata: ";

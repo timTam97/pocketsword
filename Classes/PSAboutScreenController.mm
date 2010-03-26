@@ -38,7 +38,7 @@
 								 <div class=\"title\">PocketSword</div>\n\
 								 <div class=\"version\"> Version %@</div>\n\
 								 <center><i><a href=\"http://crosswire.org/pocketsword\">http://crosswire.org/pocketsword</a></i><br />\n\
-									<i><a href=\"http://twitter.com/PocketSword\">@PocketSword</a> on Twitter</i></center>\n\
+									<i>@<a href=\"http://twitter.com/PocketSword\">PocketSword</a> on Twitter</i></center>\n\
 							 </div>\n\
 							 <div id=\"main\">\n\
 								<p><b>Developed by: </b><br />\n\
@@ -57,10 +57,7 @@
 										Pablo and Rusty's, Gordon <i>(<a href=\"http://www.pabloandrustys.com.au/\">http://www.pabloandrustys.com.au/</a>)</i>\n\
 								</p>\n\
 								<p><b>Localisations by: </b><br />\n\
-										David Bell,<br />\n\
-										Christoffer Björkskog,<br />\n\
-										Dominique Corbex,<br />\n\
-										Yiguang Hu\n\
+										David Bell, Christoffer Björkskog, Dominique Corbex, Enzo, Yiguang Hu\n\
 								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\
@@ -98,7 +95,6 @@
 				font-size: 11pt;\n\
 				font-family: Helvetica;\n\
 				line-height: 130%%;\n\
-				//-webkit-user-select: none;\n\
 			}\n\
 			#header {\n\
 				//font-size: 16px;\n\
