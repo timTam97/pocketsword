@@ -10,12 +10,18 @@
 #import "PSModuleController.h"
 
 @interface PSModuleLeafViewController : UIViewController {
-	IBOutlet UIWebView *infoWebView;
+	IBOutlet UIWebView			*infoWebView;
 	IBOutlet PSModuleController *moduleManager;
-	IBOutlet UINavigationItem *navBar;
-	IBOutlet UITableView *modulesListTable;
+	IBOutlet UINavigationItem	*navBar;
+	IBOutlet UITableView		*modulesListTable;
 	
-	IBOutlet UIBarButtonItem *closeButton;
+	IBOutlet UIBarButtonItem	*closeButton;
+	
+	IBOutlet UIWebView			*unlockWebView;
+	IBOutlet UILabel			*unlockLabel;
+	IBOutlet UITextField		*unlockTextField;
+	IBOutlet UIView				*unlockView;
+	IBOutlet UIToolbar			*unlockToolbar;
 }
 
 //needs a UINavigationBar across the top with:
@@ -31,5 +37,12 @@
 
 - (IBAction)closeLeaf:(id)sender;
 - (IBAction)trashModule:(id)sender;
+
+- (IBAction)saveKey:(id)sender;
+- (IBAction)closeUnlockView:(id)sender;
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField;
+- (void)keyboardWillShow:(NSNotification *)note;
+- (void)keyboardWillHide:(NSNotification *)note;
 
 @end

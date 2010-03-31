@@ -11,11 +11,39 @@
 
 @implementation PSModuleLeafViewController
 
+BOOL trashModule = NO;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 }
+
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
+	[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
+
+//	SwordModule *mod = [[moduleManager swordManager] moduleWithName: navBar.title];
+//	if(mod) {
+//		NSLog(@"mod");
+//		if([mod isLocked]) {
+//			//gotta ask the user if they want to unlock the module!
+//			NSLog(@"locked module!");
+//			NSString *question = NSLocalizedString(@"ModuleLockedQuestion", @"");
+//			NSString *messageTitle = NSLocalizedString(@"ModuleLockedTitle", @"Module Locked");
+//			
+//			//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
+//			[[[UIAlertView alloc] initWithTitle: messageTitle message: question
+//									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil] show];
+//			
+//		}
+//	}
+}
+
 
 - (void)displayInfoForModule:(SwordModule*)swordModule {
 	navBar.title = [swordModule name];
@@ -23,7 +51,6 @@
 }
 
 - (IBAction)closeLeaf:(id)sender {
-	// TODO: remove the view from the superview & release it
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
                            forView:self.view.superview
@@ -31,6 +58,52 @@
     [UIView setAnimationDuration:1];
 	[self.view removeFromSuperview];
     [UIView commitAnimations];
+}
+
+- (IBAction)closeUnlockView:(id)sender {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp
+                           forView:self.view
+                             cache:YES];
+    [UIView setAnimationDuration:1];
+	[unlockView removeFromSuperview];
+    [UIView commitAnimations];
+}
+
+- (IBAction)saveKey:(id)sender {
+	//
+	// TODO: save the key to the module.
+	//
+	[self closeUnlockView:nil];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	//load the key into the module & test it with:
+	// @"Jeremiah 29:11"
+	// @"Psalm 139:5"
+	// @"John 3:16"
+	return YES;
+}
+
+- (void)keyboardWillShow:(NSNotification *)note {
+    CGRect r  = unlockToolbar.frame, t;
+    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    r.origin.y -=  t.size.height;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    unlockToolbar.frame = r;
+	[UIView commitAnimations];
+}
+
+- (void)keyboardWillHide:(NSNotification *)note {
+    CGRect r  = unlockToolbar.frame, t;
+    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    r.origin.y +=  t.size.height;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    unlockToolbar.frame = r;
+	[UIView commitAnimations];
 }
 
 - (IBAction)trashModule:(id)sender {
@@ -45,13 +118,25 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	//DLog(@"Clicked button %d", buttonIndex);
-	if (buttonIndex == 1) {
-		//DLog(@"alertView: didDismissWithButtonIndex: -- waitingForInstall");
+	DLog(@"Clicked button %d", buttonIndex);
+	if (buttonIndex == 1 && trashModule) {
+		// user tapped @"Yes" to the trash this module question.
 		DLog(@"\nremoving module: %@", navBar.title);
 		[moduleManager removeModule: navBar.title];
 		[modulesListTable reloadData];
 		[self closeLeaf: nil];
+	} else if(buttonIndex == 1) {
+		// user tapped @"Yes" to unlocking this module question.
+		[unlockLabel setText:NSLocalizedString(@"ModuleEnterKeyTitle", @"Enter Key:")];
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown
+							   forView:self.view
+								 cache:YES];
+		
+		[UIView setAnimationDuration:1];
+		[self.view addSubview: unlockView];
+		[UIView commitAnimations];
+		[unlockTextField becomeFirstResponder];
 	}
 	
 	[pool release];
@@ -62,16 +147,15 @@
 	
 }
 
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
+
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	[nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	//[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
+	//[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
 }
-*/
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
