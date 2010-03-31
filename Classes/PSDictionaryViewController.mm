@@ -248,7 +248,7 @@ BOOL dictionaryEnabled = NO;
 	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 	NSString *entry = nil;
 	
-	if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"]) {
+	if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"] && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@""]) {
 		//
 		// it's a dictionary entry to show.
 		//
