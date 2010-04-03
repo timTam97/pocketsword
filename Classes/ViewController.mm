@@ -29,9 +29,6 @@
 bool initialized = false, waitingForInstall = false;
 
 NSTimer *timer;
-//BOOL refSelectorShown = NO;
-//BOOL modulesListShown = NO;
-//BOOL multiListShown = NO;
 static NSString *lastRefAvailable = @"Revelation 22";
 static NSString *firstRefAvailable = @"Genesis 1";
 
@@ -583,76 +580,30 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		// commentary tab
 		return;
 	}
+	ShownTab shownTab = (showingBibleTab) ? BibleTab : CommentaryTab;
+	[refSelectorController toggleNavigation:shownTab];
 	
-	//if(refSelectorShown) {
-	if([refSelectorView superview]) {
-		//hide the refSelector
-		[ViewController hideModal:refSelectorView withTiming:0.3];
-		//refSelectorShown = NO;
-		[dataController setRefSelectorBooks: nil];
-	} else {
-		//show the refSelector
-		if(showingBibleTab) {
-			[refSelectorTitle setTitle:[[moduleManager primaryBible] name]];
-		} else {
-			[refSelectorTitle setTitle:[[moduleManager primaryCommentary] name]];
-		}
-		[dataController updateRefSelectorBooks];
-		[ViewController showModal:refSelectorView withTiming:0.3];
-		//refSelectorShown = YES;
-		
-		NSString *curBibRef = [moduleManager getCurrentBibleRef];
-		curBibRef = [PSModuleController createRefString: curBibRef];
-		NSRange range = [curBibRef rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
-		NSUInteger book = [dataController bookIndex: [curBibRef substringToIndex: range.location]];
-		int chapter = 1;
-		sscanf([[[curBibRef componentsSeparatedByString: @" "] lastObject] UTF8String], "%d", &chapter);
-		--chapter;
-		if (book != NSNotFound) {
-			[refSelector selectRow: book inComponent: 0 animated: YES];
-			//[dataController pickerView: refSelector didSelectRow: book inComponent: 0];
-			[dataController setRefSelectorBook: book];
-			[refSelector reloadComponent:1];
-		}
-		[refSelector reloadAllComponents];
-		[refSelector selectRow: chapter inComponent: 1 animated: YES];
-		//[dataController pickerView: refSelector didSelectRow: chapter inComponent: 1];
-		[dataController setRefSelectorChapter: chapter+1];
-		[refSelector reloadComponent:2];
-		int verse = 1;
-		if(showingBibleTab) {
-			NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
-			verse = [versePosition intValue];
-			if(verse == 0)
-				verse++;
-		} else {
-			NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"commentaryVersePosition"];
-			verse = [versePosition intValue];
-			if(verse == 0)
-				verse++;
-		}
-		verse--;
-		[refSelector selectRow: verse inComponent: 2 animated: YES];
-	}
-
 	[pool release];
 }
 
-// Loads the chapter selected from the picker into the Web View
 - (IBAction)updateViewWithSelectedChapter:(id)sender {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	//[moduleManager getPrimaryText];//call this to set it if it's not set yet
 	NSInteger book = [refSelector selectedRowInComponent: 0];
-	
-	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
-	
-	NSString *bookName = [NSString stringWithCString:lmgr->translate([[dataController bookName:book] cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
-	
 	NSInteger chapter = [refSelector selectedRowInComponent: 1] + 1;
 	NSInteger verse = [refSelector selectedRowInComponent: 2] + 1;
+
+	[self toggleNavigation: nil];
+	[self updateViewWithSelectedBook:book chapter:chapter verse:verse];
+}
+
+// Loads the chapter selected from the picker into the Web View
+- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+		
+	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
+	
+	NSString *bookName = [NSString stringWithCString:lmgr->translate([[refSelectorController bookName:book] cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
+	
 	NSString *verseString = [NSString stringWithFormat:@"%d", verse];
-	//NSString *ref = [[BOOKS objectAtIndex: book] stringByAppendingFormat: @" %d", chapter];
 	NSString *ref = [bookName stringByAppendingFormat: @" %d", chapter];
 	NSString *currentRef = [moduleManager getCurrentBibleRef];
 	if([currentRef isEqualToString:ref]) {
@@ -662,11 +613,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[commentaryWebView stringByEvaluatingJavaScriptFromString:javascript];
 		if([moduleManager primaryBible]) {
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:BibleTab];
-			//[bibleNavBtn setTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString]];
 		}
 		if([moduleManager primaryCommentary]) {
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:CommentaryTab];
-			//[commentaryNavBtn setTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString]];
 		}
 	}
 	else
@@ -696,8 +645,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
 	}
-
-	[self toggleNavigation: sender];
 	
 	[pool release];
 }

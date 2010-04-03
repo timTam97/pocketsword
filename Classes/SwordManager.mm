@@ -391,6 +391,14 @@ using std::list;
             SendNotifyModulesChanged(nil);
         }
     }
+	
+	// unlock all modules that have a cipher key.
+	NSDictionary *cipherKeys = [userDefaults objectForKey:DefaultsModuleCipherKeysKey];
+    for(NSString *modName in cipherKeys) {
+        NSString *key = [cipherKeys objectForKey:modName];
+        [self setCipherKey:key forModuleNamed:modName];
+    }
+	
 	[managerLock unlock];    
 }
 
@@ -480,7 +488,10 @@ using std::list;
 
 - (void)setCipherKey:(NSString *)key forModuleNamed:(NSString *)name {
 	[managerLock lock];	
-	swManager->setCipherKey([name UTF8String], [key UTF8String]);
+	if(key)
+		swManager->setCipherKey([name UTF8String], [key UTF8String]);
+	else
+		swManager->setCipherKey([name UTF8String], "");
 	[managerLock unlock];
 }
 

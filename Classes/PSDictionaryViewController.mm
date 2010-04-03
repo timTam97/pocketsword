@@ -8,7 +8,6 @@
 
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
 
 
 @implementation PSDictionaryViewController
@@ -158,7 +157,7 @@ BOOL dictionaryEnabled = NO;
 	}
 	[dictionaryDescriptionTitle setTitle: t];
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
-	//NSLog(@"%@", descr);
+	//NSLog(@"%@", description);
 	
 	if(![dictionaryDescriptionView superview])
 		[self showModal: dictionaryDescriptionView withTiming: 0.3];
@@ -197,7 +196,7 @@ BOOL dictionaryEnabled = NO;
 }
 
 - (IBAction)hideDescription:(id)sender {
-	[viewController hideInfo: nil];
+	[[moduleManager viewController] hideInfo: nil];
 	[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
 
@@ -286,7 +285,7 @@ BOOL dictionaryEnabled = NO;
 	
 	
 	if(entry) {
-		[viewController showInfo: entry];
+		[[moduleManager viewController] showInfo: entry];
 		load = NO;
 	}
 	

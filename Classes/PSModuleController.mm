@@ -218,6 +218,7 @@ float installationProgress;
 	primaryBible = [swordManager moduleWithName:newText];
 	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastBible"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+	refSelectorController.refSelectorBooks = nil;
 }
 
 - (void)loadPrimaryCommentary:(NSString *)newText {
@@ -352,8 +353,7 @@ float installationProgress;
 	if([[swordManager moduleNames] count] == 0) {
 		[bookmarkAddButton setEnabled:NO];
 	}
-	if(restoreBible || restoreCommentary)
-		[dataController updateRefSelectorBooks];
+	refSelectorController.refSelectorBooks = nil;
 }
 
 - (PSStatusReporter*)getInstallationProgress {
@@ -607,7 +607,7 @@ float installationProgress;
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSString *lastModule = [defaults stringForKey: @"lastBible"];
 	
-	if (lastModule != nil) {
+	if (lastModule) {
 		primaryBible = [swordManager moduleWithName: lastModule];
 	}
 	
@@ -621,6 +621,7 @@ float installationProgress;
 		[prefs release];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
+	refSelectorController.refSelectorBooks = nil;
 }
 
 - (void)reloadLastCommentary {

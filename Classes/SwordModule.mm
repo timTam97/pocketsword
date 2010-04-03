@@ -553,7 +553,10 @@
     }
     
     NSMutableDictionary	*cipherKeys = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:DefaultsModuleCipherKeysKey]];
-    [cipherKeys setObject:unlockKey forKey:[self name]];
+	if(unlockKey)
+		[cipherKeys setObject:unlockKey forKey:[self name]];
+	else
+		[cipherKeys removeObjectForKey:[self name]];
     [userDefaults setObject:cipherKeys forKey:DefaultsModuleCipherKeysKey];
     
 	[swManager setCipherKey:unlockKey forModuleNamed:[self name]];

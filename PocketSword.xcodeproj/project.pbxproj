@@ -238,6 +238,8 @@
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
 		05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
+		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
+		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
 		05F8E60110B1098600570141 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F8E5FF10B1098600570141 /* back.png */; };
 		05F8E60210B1098600570141 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F8E60010B1098600570141 /* forward.png */; };
@@ -986,6 +988,9 @@
 		05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchController.mm; path = Classes/PSSearchController.mm; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
+		05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSRefSelectorController.h; path = Classes/PSRefSelectorController.h; sourceTree = "<group>"; };
+		05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSRefSelectorController.mm; path = Classes/PSRefSelectorController.mm; sourceTree = "<group>"; };
+		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
 		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
 		05F7106A11520AB700947290 /* canon_synodalprot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_synodalprot.h; sourceTree = "<group>"; };
@@ -1278,6 +1283,7 @@
 				051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */,
 				05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */,
 				05A4979B11068403005424C5 /* libicucore.dylib in Frameworks */,
+				05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1357,6 +1363,8 @@
 				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
 				0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */,
 				0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */,
+				05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */,
+				05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -2365,6 +2373,7 @@
 				051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */,
 				05D6ABA51097E8CC00A5026E /* CFNetwork.framework */,
 				05A4979A11068403005424C5 /* libicucore.dylib */,
+				05F0DB8911671E4800C2E87D /* QuartzCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3133,6 +3142,7 @@
 				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
 				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
 				0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */,
+				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

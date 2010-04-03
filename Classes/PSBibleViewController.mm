@@ -9,7 +9,7 @@
 #import "PSBibleViewController.h"
 //#import "SwordModule.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
+//#import "ViewController.h"
 #import "SwordDictionary.h"
 
 
@@ -101,7 +101,7 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
+			[[moduleManager viewController] setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
 		}
 		load = NO;
 	} else {
@@ -176,7 +176,7 @@
 
 		
 		if(entry) {
-			[viewController showInfo: entry];
+			[[moduleManager viewController] showInfo: entry];
 			load = NO;
 		}
 	}

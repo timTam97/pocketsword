@@ -102,24 +102,34 @@
 	}
 	// Update the module list to reflect the current module
 	[tableView reloadData];
+	BOOL locked = NO;
 	switch (listType) {
 		case BibleTab:
 			[moduleManager loadPrimaryBible: newModule];
-			[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[viewController addHistoryItem: BibleTab];
+			[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[[moduleManager viewController] addHistoryItem: BibleTab];
+			if([[moduleManager primaryBible] isLocked])
+				locked = YES;
 			break;
 		case CommentaryTab:
 			[moduleManager loadPrimaryCommentary:newModule];
-			[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[viewController addHistoryItem: CommentaryTab];
+			[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[[moduleManager viewController] addHistoryItem: CommentaryTab];
+			if([[moduleManager primaryCommentary] isLocked])
+				locked = YES;
 			break;
 		case DictionaryTab:
 			[moduleManager loadPrimaryDictionary:newModule];
-			[viewController reloadDictionaryData];
-			//[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[[moduleManager viewController] reloadDictionaryData];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			if([[moduleManager primaryDictionary] isLocked])
+				locked = YES;
 			break;
 	}
-	[viewController toggleModulesList: nil];
+	if(locked)
+		[self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+	else
+		[[moduleManager viewController] toggleModulesList: nil];
 	
 	[pool release];
 }
@@ -143,11 +153,11 @@
 	[leafViewController displayInfoForModule:mod];
 	[UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-                           forView:[viewController modulesListView]
+                           forView:[[moduleManager viewController] modulesListView]
                              cache:YES];
 	
     [UIView setAnimationDuration:1];
-	[[viewController modulesListView] addSubview: leafViewController.view];
+	[[[moduleManager viewController] modulesListView] addSubview: leafViewController.view];
     [UIView commitAnimations];
 	
 }

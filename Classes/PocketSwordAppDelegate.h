@@ -23,12 +23,10 @@
     UIWindow *window;
     UITabBarController *tabBarController;
 
-	IBOutlet id viewController;
 	IBOutlet id moduleManager;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
-//@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 
 @end

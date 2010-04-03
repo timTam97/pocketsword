@@ -8,7 +8,6 @@
 
 #import "PSCommentaryViewController.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
 
 
 @implementation PSCommentaryViewController
@@ -64,7 +63,7 @@
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			//[commentaryNavBtn setTitle: ref];
-			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
+			[[moduleManager viewController] setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
 		}
 		load = NO;
 	} else {
@@ -157,7 +156,7 @@
 		
 		
 		if(entry) {
-			[viewController showInfo: entry];
+			[[moduleManager viewController] showInfo: entry];
 			load = NO;
 		}
 	}

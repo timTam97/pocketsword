@@ -52,6 +52,15 @@
 			stringByReplacingOccurrencesOfString: @" of John" withString: @" "];
 }
 
+- (NSString*)buttonName {
+	NSString *ret = [[self name] stringByReplacingOccurrencesOfString:@" " withString:@""];
+	int maxIndex = 3;
+	if([ret length] < maxIndex)
+		maxIndex = [ret length];
+	ret = [ret substringToIndex:maxIndex];
+	return ret;
+}
+
 -(NSString*)osisName {
 	return [NSString stringWithCString:book->getOSISName() encoding:NSUTF8StringEncoding];
 }

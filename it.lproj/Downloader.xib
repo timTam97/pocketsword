@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.10">
+<archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">768</int>
 		<string key="IBDocument.SystemVersion">10D573</string>
@@ -10,24 +10,12 @@
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">62</string>
 		</object>
-		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-		</object>
-		<object class="NSArray" key="IBDocument.PluginDependencies">
-			<bool key="EncodedWithXMLCoder">YES</bool>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
+		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-		</object>
-		<object class="NSMutableDictionary" key="IBDocument.Metadata">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys" id="0">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
-			<object class="NSMutableArray" key="dict.values">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
-		</object>
-		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
-			<bool key="EncodedWithXMLCoder">YES</bool>
+		</array>
+		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
+		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<object class="IBProxyObject" id="841351856">
 				<string key="IBProxiedObjectIdentifier">IBFilesOwner</string>
 			</object>
@@ -38,8 +26,7 @@
 				<object class="IBUIView" key="IBUIView" id="756369362">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
-					<object class="NSMutableArray" key="NSSubviews">
-						<bool key="EncodedWithXMLCoder">YES</bool>
+					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUILabel" id="551750950">
 							<reference key="NSNextResponder" ref="756369362"/>
 							<int key="NSvFlags">292</int>
@@ -114,7 +101,7 @@
 							<int key="IBUIBaselineAdjustment">1</int>
 							<float key="IBUIMinimumFontSize">6</float>
 						</object>
-					</object>
+					</array>
 					<string key="NSFrameSize">{320, 460}</string>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">1</int>
@@ -207,8 +194,7 @@
 				<object class="IBUIView" key="IBUIView" id="71585425">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
-					<object class="NSMutableArray" key="NSSubviews">
-						<bool key="EncodedWithXMLCoder">YES</bool>
+					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUILabel" id="1056505139">
 							<reference key="NSNextResponder" ref="71585425"/>
 							<int key="NSvFlags">292</int>
@@ -308,7 +294,7 @@
 							<float key="IBUIMinimumFontSize">10</float>
 							<int key="IBUILineBreakMode">0</int>
 						</object>
-					</object>
+					</array>
 					<string key="NSFrame">{{0, 46}, {320, 367}}</string>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
@@ -334,10 +320,9 @@
 				<float key="IBUISectionHeaderHeight">22</float>
 				<float key="IBUISectionFooterHeight">22</float>
 			</object>
-		</object>
+		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
-			<object class="NSMutableArray" key="connectionRecords">
-				<bool key="EncodedWithXMLCoder">YES</bool>
+			<array class="NSMutableArray" key="connectionRecords">
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">navigatorLeafView</string>
@@ -675,13 +660,12 @@
 					</object>
 					<int key="connectionID">190</int>
 				</object>
-			</object>
+			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
-				<object class="NSArray" key="orderedObjects">
-					<bool key="EncodedWithXMLCoder">YES</bool>
+				<array key="orderedObjects">
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<reference key="object" ref="0"/>
+						<array key="object" id="0"/>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -699,68 +683,61 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">104</int>
 						<reference key="object" ref="723056529"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="756369362"/>
-						</object>
+						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">105</int>
 						<reference key="object" ref="2045477"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="351371510"/>
-						</object>
+						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">106</int>
 						<reference key="object" ref="224846581"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="74857348"/>
-						</object>
+						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">107</int>
 						<reference key="object" ref="835357671"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="979179349"/>
-						</object>
+						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">108</int>
 						<reference key="object" ref="653826964"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="582830054"/>
-						</object>
+						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">110</int>
 						<reference key="object" ref="94687841"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="71585425"/>
-						</object>
+						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">111</int>
 						<reference key="object" ref="71585425"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="1001765191"/>
 							<reference ref="979138913"/>
 							<reference ref="1056505139"/>
 							<reference ref="804489332"/>
 							<reference ref="661764452"/>
-						</object>
+						</array>
 						<reference key="parent" ref="94687841"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -811,14 +788,13 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">124</int>
 						<reference key="object" ref="756369362"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
+						<array class="NSMutableArray" key="children">
 							<reference ref="96470700"/>
 							<reference ref="92107583"/>
 							<reference ref="57019309"/>
 							<reference ref="898461116"/>
 							<reference ref="551750950"/>
-						</object>
+						</array>
 						<reference key="parent" ref="723056529"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -851,112 +827,55 @@
 						<reference key="object" ref="199911926"/>
 						<reference key="parent" ref="0"/>
 					</object>
-				</object>
+				</array>
 			</object>
-			<object class="NSMutableDictionary" key="flattenedProperties">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<object class="NSArray" key="dict.sortedKeys">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-					<string>-1.CustomClassName</string>
-					<string>-2.CustomClassName</string>
-					<string>104.IBEditorWindowLastContentRect</string>
-					<string>104.IBPluginDependency</string>
-					<string>105.CustomClassName</string>
-					<string>105.IBEditorWindowLastContentRect</string>
-					<string>105.IBPluginDependency</string>
-					<string>106.CustomClassName</string>
-					<string>106.IBEditorWindowLastContentRect</string>
-					<string>106.IBPluginDependency</string>
-					<string>107.CustomClassName</string>
-					<string>107.IBEditorWindowLastContentRect</string>
-					<string>107.IBPluginDependency</string>
-					<string>108.CustomClassName</string>
-					<string>108.IBEditorWindowLastContentRect</string>
-					<string>108.IBPluginDependency</string>
-					<string>110.CustomClassName</string>
-					<string>110.IBEditorWindowLastContentRect</string>
-					<string>110.IBPluginDependency</string>
-					<string>111.IBPluginDependency</string>
-					<string>112.IBPluginDependency</string>
-					<string>113.IBPluginDependency</string>
-					<string>114.IBPluginDependency</string>
-					<string>115.IBPluginDependency</string>
-					<string>116.IBPluginDependency</string>
-					<string>120.IBPluginDependency</string>
-					<string>121.IBPluginDependency</string>
-					<string>122.IBPluginDependency</string>
-					<string>123.IBPluginDependency</string>
-					<string>124.IBPluginDependency</string>
-					<string>125.IBPluginDependency</string>
-					<string>126.IBPluginDependency</string>
-					<string>127.IBPluginDependency</string>
-					<string>128.IBPluginDependency</string>
-					<string>129.IBPluginDependency</string>
-					<string>180.IBEditorWindowLastContentRect</string>
-					<string>180.IBPluginDependency</string>
-				</object>
-				<object class="NSMutableArray" key="dict.values">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-					<string>NavigatorSources</string>
-					<string>UIResponder</string>
-					<string>{{509, 221}, {320, 480}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>NavigatorModuleTypes</string>
-					<string>{{355, 47}, {320, 480}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>NavigatorModuleLanguages</string>
-					<string>{{269, 98}, {320, 480}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>NavigatorModules</string>
-					<string>{{75, 376}, {320, 480}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>NavigatorLeafView</string>
-					<string>{{276, 86}, {320, 480}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>iPhoneHTTPServerDelegate</string>
-					<string>{{153, 113}, {320, 480}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{174, 366}, {320, 411}}</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				</object>
-			</object>
-			<object class="NSMutableDictionary" key="unlocalizedProperties">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<reference key="dict.sortedKeys" ref="0"/>
-				<object class="NSMutableArray" key="dict.values">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-				</object>
-			</object>
+			<dictionary class="NSMutableDictionary" key="flattenedProperties">
+				<string key="-1.CustomClassName">NavigatorSources</string>
+				<string key="-2.CustomClassName">UIResponder</string>
+				<string key="104.IBEditorWindowLastContentRect">{{509, 221}, {320, 480}}</string>
+				<string key="104.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="105.CustomClassName">NavigatorModuleTypes</string>
+				<string key="105.IBEditorWindowLastContentRect">{{355, 47}, {320, 480}}</string>
+				<string key="105.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="106.CustomClassName">NavigatorModuleLanguages</string>
+				<string key="106.IBEditorWindowLastContentRect">{{269, 98}, {320, 480}}</string>
+				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="107.CustomClassName">NavigatorModules</string>
+				<string key="107.IBEditorWindowLastContentRect">{{75, 376}, {320, 480}}</string>
+				<string key="107.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="108.CustomClassName">NavigatorLeafView</string>
+				<string key="108.IBEditorWindowLastContentRect">{{276, 86}, {320, 480}}</string>
+				<string key="108.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="110.CustomClassName">iPhoneHTTPServerDelegate</string>
+				<string key="110.IBEditorWindowLastContentRect">{{153, 113}, {320, 480}}</string>
+				<string key="110.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="112.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="113.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="114.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="115.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="116.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="120.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="121.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="122.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="123.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="124.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="125.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="126.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="127.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="128.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="129.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="180.IBEditorWindowLastContentRect">{{174, 366}, {320, 411}}</string>
+				<string key="180.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+			</dictionary>
+			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
-			<object class="NSMutableDictionary" key="localizations">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<reference key="dict.sortedKeys" ref="0"/>
-				<object class="NSMutableArray" key="dict.values">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-				</object>
-			</object>
+			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
 			<int key="maxID">190</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<bool key="EncodedWithXMLCoder">YES</bool>
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -967,31 +886,16 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">NavigatorLeafView</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>detailsView</string>
-							<string>navigatorSources</string>
-							<string>statusBar</string>
-							<string>statusController</string>
-							<string>statusOverallBar</string>
-							<string>statusOverallText</string>
-							<string>statusText</string>
-							<string>statusTitle</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>NavigatorSources</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="detailsView">id</string>
+						<string key="navigatorSources">NavigatorSources</string>
+						<string key="statusBar">id</string>
+						<string key="statusController">id</string>
+						<string key="statusOverallBar">id</string>
+						<string key="statusOverallText">id</string>
+						<string key="statusText">id</string>
+						<string key="statusTitle">id</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorLeafView.h</string>
@@ -1000,21 +904,11 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">NavigatorModuleLanguages</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>navigatorModules</string>
-							<string>navigatorSources</string>
-							<string>table</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>NavigatorSources</string>
-							<string>id</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="navigatorModules">id</string>
+						<string key="navigatorSources">NavigatorSources</string>
+						<string key="table">id</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorModuleLanguages.h</string>
@@ -1027,33 +921,17 @@
 						<string key="NS.key.0">refreshDownloadSource:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>navigatorModuleLanguages</string>
-							<string>navigatorSources</string>
-							<string>statusBar</string>
-							<string>statusController</string>
-							<string>statusOverallBar</string>
-							<string>statusOverallText</string>
-							<string>statusText</string>
-							<string>statusTitle</string>
-							<string>table</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>NavigatorSources</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="navigatorModuleLanguages">id</string>
+						<string key="navigatorSources">NavigatorSources</string>
+						<string key="statusBar">id</string>
+						<string key="statusController">id</string>
+						<string key="statusOverallBar">id</string>
+						<string key="statusOverallText">id</string>
+						<string key="statusText">id</string>
+						<string key="statusTitle">id</string>
+						<string key="table">id</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorModuleTypes.h</string>
@@ -1062,21 +940,11 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">NavigatorModules</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>navigatorLeafView</string>
-							<string>navigatorSources</string>
-							<string>table</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>NavigatorSources</string>
-							<string>id</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="navigatorLeafView">id</string>
+						<string key="navigatorSources">NavigatorSources</string>
+						<string key="table">id</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorModules.h</string>
@@ -1089,27 +957,14 @@
 						<string key="NS.key.0">manualAddModule:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>manualInstallViewController</string>
-							<string>moduleManager</string>
-							<string>navigatorModuleTypes</string>
-							<string>refreshButton</string>
-							<string>tabController</string>
-							<string>table</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>PSModuleController</string>
-							<string>id</string>
-							<string>id</string>
-							<string>UITabBarController</string>
-							<string>id</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="manualInstallViewController">id</string>
+						<string key="moduleManager">PSModuleController</string>
+						<string key="navigatorModuleTypes">id</string>
+						<string key="refreshButton">id</string>
+						<string key="tabController">UITabBarController</string>
+						<string key="table">id</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorSources.h</string>
@@ -1118,31 +973,16 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">PSModuleController</string>
 					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>bibleTitle</string>
-							<string>bibleWebView</string>
-							<string>bookmarkAddButton</string>
-							<string>commentaryTitle</string>
-							<string>commentaryWebView</string>
-							<string>dataController</string>
-							<string>dictionaryTitle</string>
-							<string>viewController</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIBarButtonItem</string>
-							<string>UIWebView</string>
-							<string>id</string>
-							<string>UIBarButtonItem</string>
-							<string>UIWebView</string>
-							<string>id</string>
-							<string>UIBarButtonItem</string>
-							<string>id</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="bibleTitle">UIBarButtonItem</string>
+						<string key="bibleWebView">UIWebView</string>
+						<string key="bookmarkAddButton">id</string>
+						<string key="commentaryTitle">UIBarButtonItem</string>
+						<string key="commentaryWebView">UIWebView</string>
+						<string key="dataController">id</string>
+						<string key="dictionaryTitle">UIBarButtonItem</string>
+						<string key="viewController">id</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/PSModuleController.h</string>
@@ -1162,35 +1002,21 @@
 						<string key="NS.key.0">done:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>bonjourInfo</string>
-							<string>doneButton</string>
-							<string>helpInfo</string>
-							<string>ipInfo</string>
-							<string>navigatorSources</string>
-							<string>wwwInfo</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UILabel</string>
-							<string>UIButton</string>
-							<string>UILabel</string>
-							<string>UILabel</string>
-							<string>NavigatorSources</string>
-							<string>UILabel</string>
-						</object>
-					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="bonjourInfo">UILabel</string>
+						<string key="doneButton">UIButton</string>
+						<string key="helpInfo">UILabel</string>
+						<string key="ipInfo">UILabel</string>
+						<string key="navigatorSources">NavigatorSources</string>
+						<string key="wwwInfo">UILabel</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/iPhoneHTTPServer/iPhoneHTTPServerDelegate.h</string>
 					</object>
 				</object>
-			</object>
-			<object class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
-				<bool key="EncodedWithXMLCoder">YES</bool>
+			</array>
+			<array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -1445,16 +1271,12 @@
 						<string key="minorKey">UIKit.framework/Headers/UIWebView.h</string>
 					</object>
 				</object>
-			</object>
+			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
 			<integer value="768" key="NS.object.0"/>
-		</object>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
-			<integer value="3100" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../PocketSword.xcodeproj</string>

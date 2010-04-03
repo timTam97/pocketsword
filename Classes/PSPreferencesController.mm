@@ -77,7 +77,7 @@ BOOL requireReloadOfModuleViews = NO;
 - (void)viewWillDisappear:(BOOL)animated {
 	if(requireReloadOfModuleViews) {
 		//[moduleManager displayBusyIndicator];
-		[viewController redisplayChapter:NoViewPoll restore:RestoreVersePosition];
+		[[moduleManager viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
 		//[moduleManager hideBusyIndicator];
 	}
 	requireReloadOfModuleViews = NO;

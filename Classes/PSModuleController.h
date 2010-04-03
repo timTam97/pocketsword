@@ -29,6 +29,7 @@
 #import "SwordDictionary.h"
 #import "PSModuleType.h"
 #import "SwordKey.h"
+#import "PSRefSelectorController.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -53,6 +54,7 @@
 	
 	IBOutlet id dataController;
 	IBOutlet id viewController;
+	IBOutlet PSRefSelectorController *refSelectorController;
 	
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;

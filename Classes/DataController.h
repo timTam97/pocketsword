@@ -26,8 +26,8 @@
 
 
 
-#define MODULE_TABLE			1
-#define SEARCH_TABLE			2
+//#define MODULE_TABLE			1
+//#define SEARCH_TABLE			2
 //#define DOWNLOAD_TABLE		3
 #define BOOKMARK_TABLE			4
 
@@ -45,10 +45,6 @@
 	IBOutlet PSBibleViewController *bibleTabController;
 	IBOutlet PSCommentaryViewController *commentaryTabController;
 	
-	NSArray *refSelectorBooks;
-	//NSInteger numChapters;
-	NSInteger refSelectorBook;
-	NSInteger refSelectorChapter;
 	ShownTab listType;
 
 	//NSInteger sourceInstallSourceView;
@@ -56,35 +52,24 @@
 	
 	IBOutlet id moduleManager;
 	IBOutlet id viewController;
+	
 }
 
-@property (assign) NSInteger refSelectorBook;
-@property (assign) NSInteger refSelectorChapter;
-@property (retain, readwrite) NSArray *refSelectorBooks;
 @property (assign) ShownTab listType;
 //@property (assign) NSMutableArray *installedModuleGroups;
 //@property (assign) NSInteger sourceInstallSourceView;
 
-- (DataController *)init;
+//- (DataController *)init;
 //- (void)performSearch:(NSString *)key;
 - (void)addBookmark:(NSString *)ref;
 - (void)removeBookmark:(NSString *)ref;
 - (void)reloadModuleList;
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component;
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component;
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)dealloc;
+//- (void)dealloc;
 - (void)setShownTabTo:(ShownTab)tab;
-- (void)updateRefSelectorBooks;
-- (NSString*)bookName:(NSInteger)bookIndex;
-- (NSString*)bookOSISName:(NSInteger)bookIndex;
-- (NSInteger)bookIndex:(NSString*)bookName;
 //- (IBAction)updateDownloadManagerTableView;
 
 @end

@@ -25,6 +25,7 @@
 #import "PSDictionaryViewController.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
+#import "PSRefSelectorController.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -65,11 +66,10 @@ typedef enum {
 	IBOutlet PSCommentaryViewController *commentaryTabController;
 	
 	// Bible & Commentary tab
-	IBOutlet UIPickerView		*refSelector;
-	IBOutlet UIView				*refSelectorView;
-	IBOutlet UIBarButtonItem	*refSelectorTitle;
-	IBOutlet UIView				*infoView;
-	IBOutlet UIWebView			*infoWebView;
+	IBOutlet PSRefSelectorController	*refSelectorController;
+	IBOutlet UIPickerView				*refSelector;
+	IBOutlet UIView						*infoView;
+	IBOutlet UIWebView					*infoWebView;
 	
 	// MultiList
 	IBOutlet UITabBarController *multiListController;
@@ -85,12 +85,6 @@ typedef enum {
 	// Dictionary tab
 	IBOutlet UITabBarItem				*dictionaryTabBarItem;
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
-	
-	// Module tab
-//	IBOutlet id					moduleTable;
-//	IBOutlet id					moduleEditBtn;
-//	IBOutlet UITabBarItem		*moduleTabBarItem;
-//	IBOutlet UINavigationItem	*moduleNavBar;
 	
 	// Bookmarks tab
 	IBOutlet id bookmarksTable;
@@ -141,6 +135,7 @@ typedef enum {
 - (IBAction)prevChapter:(id)sender;
 - (IBAction)toggleNavigation:(id)sender;
 - (IBAction)updateViewWithSelectedChapter:(id)sender;
+- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 //- (IBAction)toggleModuleTableEditing:(id)sender;
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;

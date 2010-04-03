@@ -24,5 +24,6 @@
 -(NSInteger)chapters;
 -(NSString*)name;
 -(NSString*)osisName;
+- (NSString*)buttonName;
 
 @end

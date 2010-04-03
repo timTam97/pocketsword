@@ -18,10 +18,12 @@
 	IBOutlet UIBarButtonItem	*closeButton;
 	
 	IBOutlet UIWebView			*unlockWebView;
+	IBOutlet UIWebView			*unlockHelpWebView;
 	IBOutlet UILabel			*unlockLabel;
 	IBOutlet UITextField		*unlockTextField;
 	IBOutlet UIView				*unlockView;
 	IBOutlet UIToolbar			*unlockToolbar;
+	IBOutlet UINavigationItem	*unlockNavBarItem;
 }
 
 //needs a UINavigationBar across the top with:

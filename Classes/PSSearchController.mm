@@ -188,11 +188,11 @@ BOOL searchingEnabled;
 				pt = CommentaryViewPoll;
 				break;
 		}
-		[viewController displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
+		[[moduleManager viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
 		//self.searchTerm = nil;
-		[viewController toggleMultiList: nil];
-		[viewController highlightSearchTerm: searchTerm forTab: tab];
-		[viewController addHistoryItem: tab];
+		[[moduleManager viewController] toggleMultiList: nil];
+		[[moduleManager viewController] highlightSearchTerm: searchTerm forTab: tab];
+		[[moduleManager viewController] addHistoryItem: tab];
 	}
 }
 

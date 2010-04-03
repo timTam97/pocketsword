@@ -13,7 +13,6 @@
 
 	IBOutlet DataController *dataController;
 	IBOutlet PSModuleController *moduleManager;
-	IBOutlet id viewController;
 	IBOutlet UITableView *resultsTable;
 	IBOutlet UISearchBar *sBar;
 	IBOutlet UIBarButtonItem *closeButton;

@@ -19,7 +19,6 @@
 	IBOutlet UIWebView *dictionaryDescriptionWebView;
 	
 	IBOutlet id moduleManager;
-	IBOutlet id viewController;
 	
 }
 

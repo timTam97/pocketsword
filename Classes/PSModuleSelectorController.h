@@ -6,7 +6,6 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "ViewController.h"
 #import "PSModuleLeafViewController.h"
 
 @interface PSModuleSelectorController : NSObject {
@@ -14,9 +13,11 @@
 	IBOutlet PSModuleLeafViewController *leafViewController;
 
 	IBOutlet id moduleManager;
-	IBOutlet id viewController;
 }
 
 @property (assign) ShownTab listType;
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
+
 
 @end

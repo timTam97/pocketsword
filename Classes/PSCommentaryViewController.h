@@ -14,7 +14,6 @@
 	IBOutlet UIWebView *commentaryWebView;
 	
 	IBOutlet id moduleManager;
-	IBOutlet id viewController;
 	IBOutlet UIBarButtonItem *commentaryNavBtn;
 	NSString *refToShow;
 	NSString *jsToShow;

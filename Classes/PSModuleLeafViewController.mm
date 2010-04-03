@@ -27,21 +27,20 @@ BOOL trashModule = NO;
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
 
-//	SwordModule *mod = [[moduleManager swordManager] moduleWithName: navBar.title];
-//	if(mod) {
-//		NSLog(@"mod");
-//		if([mod isLocked]) {
-//			//gotta ask the user if they want to unlock the module!
-//			NSLog(@"locked module!");
-//			NSString *question = NSLocalizedString(@"ModuleLockedQuestion", @"");
-//			NSString *messageTitle = NSLocalizedString(@"ModuleLockedTitle", @"Module Locked");
-//			
-//			//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
-//			[[[UIAlertView alloc] initWithTitle: messageTitle message: question
-//									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil] show];
-//			
-//		}
-//	}
+	SwordModule *mod = [[moduleManager swordManager] moduleWithName: navBar.title];
+	if(mod) {
+		if([mod isLocked]) {
+			//gotta ask the user if they want to unlock the module!
+			DLog(@"\nlocked module!\n");
+			NSString *question = NSLocalizedString(@"ModuleLockedQuestion", @"");
+			NSString *messageTitle = NSLocalizedString(@"ModuleLockedTitle", @"Module Locked");
+			
+			//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
+			[[[UIAlertView alloc] initWithTitle: messageTitle message: question
+									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil] show];
+			
+		}
+	}
 }
 
 
@@ -71,9 +70,14 @@ BOOL trashModule = NO;
 }
 
 - (IBAction)saveKey:(id)sender {
-	//
-	// TODO: save the key to the module.
-	//
+	//save the key
+	[[[moduleManager swordManager] moduleWithName: navBar.title] unlock: unlockTextField.text];
+	//redisplay the text if this is the current primary bible/commentary
+	if([navBar.title isEqualToString:[[moduleManager primaryBible] name]]) {
+		[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+	} else if([navBar.title isEqualToString:[[moduleManager primaryCommentary] name]]) {
+		[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+	}
 	[self closeUnlockView:nil];
 }
 
@@ -83,6 +87,18 @@ BOOL trashModule = NO;
 	// @"Jeremiah 29:11"
 	// @"Psalm 139:5"
 	// @"John 3:16"
+	unlockWebView.hidden = NO;
+	NSMutableString *html = [NSMutableString string];
+	SwordModule *mod = [[moduleManager swordManager] moduleWithName: navBar.title];
+	[mod unlock: unlockTextField.text];
+	NSArray *refs = [NSArray arrayWithObjects:@"Jeremiah 29:11", @"Psalm 139:5", @"John 3:16", nil];
+	for(NSString *ref in refs) {
+		SwordModuleTextEntry *entry = [mod textEntryForKey:ref textType:TextTypeRendered];
+		[html appendFormat:@"<p><b>%@:</b> %@</p>", [PSModuleController createRefString: entry.key], entry.text];
+	}
+	
+	[unlockWebView loadHTMLString:[PSModuleController createHTMLString:html usingPreferences:YES withJS:@""] baseURL:nil];
+	[mod unlock: nil];
 	return YES;
 }
 
@@ -109,25 +125,43 @@ BOOL trashModule = NO;
 - (IBAction)trashModule:(id)sender {
 	NSString *question = NSLocalizedString(@"ConfirmDeleteQuestion", @"Are you sure you wish to remove this module?");
 	NSString *messageTitle = NSLocalizedString(@"ConfirmDeleteTitle", @"Remove?");
-	
+	trashModule = YES;
 //	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
 	[[[UIAlertView alloc] initWithTitle: messageTitle message: question
 							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 }
 
+#define UNLOCK_HELP_HTML @"<head>\n\
+<meta name='viewport' content='width=device-width' />\n\
+<style type=\"text/css\">\n\
+body {\n\
+	color: white;\n\
+	background-color: black;\n\
+	font-size: 12pt;\n\
+	font-family: Helvetica;\n\
+	line-height: 130%%;\n\
+}\n\
+</style>\n\
+</head>"
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	DLog(@"Clicked button %d", buttonIndex);
+	//DLog(@"Clicked button %d", buttonIndex);
 	if (buttonIndex == 1 && trashModule) {
 		// user tapped @"Yes" to the trash this module question.
 		DLog(@"\nremoving module: %@", navBar.title);
+		trashModule = NO;
 		[moduleManager removeModule: navBar.title];
 		[modulesListTable reloadData];
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {
 		// user tapped @"Yes" to unlocking this module question.
 		[unlockLabel setText:NSLocalizedString(@"ModuleEnterKeyTitle", @"Enter Key:")];
+		unlockNavBarItem.title = NSLocalizedString(@"ModuleUnlockScreenTitle", @"Unlock Module");
+		[unlockWebView loadHTMLString:@"<html><body bgcolor='black'>&nbsp;</body></html>" baseURL:nil];
+		[unlockHelpWebView loadHTMLString:[NSString stringWithFormat:@"<html>%@<body>%@</body></html>", UNLOCK_HELP_HTML, NSLocalizedString(@"ModuleUnlockHelpText", @"")] baseURL:nil];
+		unlockWebView.hidden = YES;
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown
 							   forView:self.view

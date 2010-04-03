@@ -28,7 +28,6 @@
 
 @synthesize window;
 @synthesize tabBarController;
-//@synthesize viewController;
 
 #define LOCALES_VERSION @"loadedSWORDLocales-v2"
 
@@ -38,6 +37,10 @@
 	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
 	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
+	
+	// testing unlocking mechanism:
+	[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
+	[defaults synchronize];
 	
 	if(reset) {
 		DLog(@"\nreset_PocketSword is set");
@@ -55,6 +58,8 @@
 		[defaults removeObjectForKey: @"reset_PocketSword"];
 		[defaults removeObjectForKey: @"bibleHistory"];
 		[defaults removeObjectForKey: @"commentaryHistory"];
+		[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
+		[defaults synchronize];
 		NSArray *dicts = [[moduleManager swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
 		for(SwordDictionary *dict in dicts) {
 			[dict removeCache];
@@ -62,7 +67,7 @@
 		[moduleManager setPrimaryBible: nil];
 		[moduleManager setPrimaryCommentary: nil];
 		[moduleManager setPrimaryDictionary: nil];
-		[viewController redisplayChapter: BibleViewPoll restore: RestoreNoPosition];
+		[[moduleManager viewController] redisplayChapter: BibleViewPoll restore: RestoreNoPosition];
 	}
 	
 	if(!kjv) {
@@ -74,21 +79,21 @@
 	
 	if(!strongsAndMorph) {
 		[defaults setBool: YES forKey:@"loadedBundledStrongsAndMorph"];
-		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary];
 		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary];
 		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary];
 		[defaults setObject:@"Robinson" forKey:DefaultsMorphGreekModule];
 		[defaults setObject:@"StrongsRealGreek" forKey:DefaultsStrongsGreekModule];
 		[defaults setObject:@"StrongsRealHebrew" forKey:DefaultsStrongsHebrewModule];
+		[defaults synchronize];
 	}
 
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *swLocales = [[docPath stringByAppendingPathComponent:@"unused"] stringByAppendingPathComponent: @"locales.d"];
 	
 	if(!loadedLocales) {
-		[[NSUserDefaults standardUserDefaults] setBool: YES forKey:LOCALES_VERSION];
-		[[NSUserDefaults standardUserDefaults] synchronize];
+		[defaults setBool: YES forKey:LOCALES_VERSION];
+		[defaults synchronize];
 		NSString *localesZIP = [[NSBundle mainBundle] pathForResource:@"locales.d" ofType:@"zip"];
 		DLog(@"\n\n%@\n\n", localesZIP);
 		[[NSFileManager defaultManager] removeItemAtPath:swLocales error:NULL];//delete it if it already exists
@@ -186,17 +191,6 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[PSLanguageCode doneWithLookupTable];
 }
-/*
-// Optional UITabBarControllerDelegate method
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed {
-}
-*/
 
 - (void)dealloc {
     [tabBarController release];
