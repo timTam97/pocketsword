@@ -21,8 +21,11 @@
 
 - (void)awakeFromNib {
 	refToucherMiscScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, 320, 416)];
-	[refToucherMiscScrollView setBackgroundColor:[UIColor darkGrayColor]];
-	[refToucherBookScrollView setBackgroundColor:[UIColor darkGrayColor]];
+	[refToucherMiscScrollView setBackgroundColor:[UIColor blackColor]];
+	[refToucherBookScrollView setBackgroundColor:[UIColor blackColor]];
+
+//	[refToucherMiscScrollView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]]];
+//	[refToucherBookScrollView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]]];
 }
 
 - (void)dealloc {
@@ -31,21 +34,28 @@
 	[super dealloc];
 }
 
+- (void)hideNavigation {
+	[refToucherView removeFromSuperview];
+}
+
 - (void)toggleNavigation:(ShownTab)shownTab {
+	BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
 	
-	if([refToucherView superview]) {
-		//[ViewController hideModal:refToucherView withTiming:0.3];
-		[refToucherView removeFromSuperview];
-	} else {
-		if([refToucherMiscScrollView superview])
-			[refToucherMiscScrollView removeFromSuperview];
-		[self removeButtonsFromMiscScrollView:NO];
-		//[self updateRefSelectorBooks];
-		[self drawRefToucher:Books];
-		//[ViewController showModal:refToucherView withTiming:0.3];
-		[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:refToucherView];
+	if(!refPickerMode) {
+		if([refToucherView superview]) {
+			//[ViewController hideModal:refToucherView withTiming:0.3];
+			[refToucherView removeFromSuperview];
+		} else {
+			if([refToucherMiscScrollView superview])
+				[refToucherMiscScrollView removeFromSuperview];
+			[self removeButtonsFromMiscScrollView:NO];
+			//[self updateRefSelectorBooks];
+			[self drawRefToucher:Books];
+			//[ViewController showModal:refToucherView withTiming:0.3];
+			[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:refToucherView];
+		}
+		return;
 	}
-	return;
 	
 	if([refSelectorView superview]) {
 		//hide the refSelector
@@ -254,12 +264,15 @@
 + (UIButton*)generateButton:(CGRect)frame withTitle:(NSString*)title {
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 	button.frame = frame;
+	button.titleLabel.font = [UIFont boldSystemFontOfSize:15];
 	[button setTitle:title forState:UIControlStateNormal];
 	[button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
 	button.showsTouchWhenHighlighted = YES;
-	[[button layer] setCornerRadius:8.0f];
+	//[[button layer] setCornerRadius:8.0f];
 	[[button layer] setMasksToBounds:YES];
 	[[button layer] setBorderWidth:1.0f];
+	[[button layer] setBorderColor:[[UIColor brownColor] CGColor]];
 
 	return button;
 }
@@ -279,10 +292,7 @@
 
 - (void)backToBook {
 	[self removeButtonsFromMiscScrollView:YES];
-	//[self drawRefToucher:Books];
-	refToucherTitle.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
-	[refToucherTitle setRightBarButtonItem:nil animated:YES];
-	[refToucherMiscScrollView removeFromSuperview];
+	[self drawRefToucher:Books];
 }
 
 - (void)backToChapter {
@@ -290,27 +300,26 @@
 	[self drawRefToucher:Chapters];
 }
 
-#define BUTTON_WIDTH			48
+#define BUTTON_WIDTH			50
 #define BUTTON_HEIGHT			30
 #define BUTTON_X_BORDER_PADDING	10
 #define BUTTON_Y_BORDER_PADDING	10
-#define BUTTON_X_PADDING		2
-#define BUTTON_Y_PADDING		2
-
-//- (void)resetBooks {
-//	[self removeButtonsFromMiscScrollView:NO];
-//	[self updateRefSelectorBooks];
-//}
+#define BUTTON_X_PADDING		0
+#define BUTTON_Y_PADDING		0
 
 - (void)drawRefToucher:(RefToucherType)objects {
 	int x = BUTTON_X_BORDER_PADDING;
-	int y = BUTTON_Y_BORDER_PADDING;//74;
+	int y = BUTTON_Y_BORDER_PADDING;
 	int numberOfButtons = 1;
 	switch(objects) {
 		case Books:
 		{
 			refToucherTitle.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
-			[refToucherTitle setRightBarButtonItem:nil animated:NO];
+			UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(hideNavigation)];
+			[refToucherTitle setLeftBarButtonItem:cancel animated:NO];
+			[cancel release];
+			if([refToucherMiscScrollView superview])
+				[refToucherMiscScrollView removeFromSuperview];
 			if(!refSelectorBooks) {
 				//need to reset the view.
 				[self removeButtonsFromMiscScrollView:NO];
@@ -328,18 +337,18 @@
 		case Chapters:
 		{
 			numberOfButtons = [((SwordBook*)[refSelectorBooks objectAtIndex:refSelectorBook]) chapters];
-			refToucherTitle.title = NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter");
+			refToucherTitle.title = [NSString stringWithFormat:@"%@ %@", [self bookName:refSelectorBook], NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter")];
 			UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RefSelectorBackButtonTitle", @"Back") style:UIBarButtonItemStyleBordered target:self action:@selector(backToBook)];
-			[refToucherTitle setRightBarButtonItem:refresh animated:NO];
+			[refToucherTitle setLeftBarButtonItem:refresh animated:YES];
 			[refresh release];
 		}
 			break;
 		case Verses:
 		{
 			numberOfButtons = [((SwordBook*)[refSelectorBooks objectAtIndex:refSelectorBook]) verses:refSelectorChapter];
-			refToucherTitle.title = NSLocalizedString(@"RefSelectorVerseTitle", @"Verse");
+			refToucherTitle.title = [NSString stringWithFormat:@"%@ %d %@", [self bookName:refSelectorBook], refSelectorChapter, NSLocalizedString(@"RefSelectorVerseTitle", @"Verse")];
 			UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"RefSelectorBackButtonTitle", @"Back") style:UIBarButtonItemStyleBordered target:self action:@selector(backToChapter)];
-			[refToucherTitle setRightBarButtonItem:refresh animated:NO];
+			[refToucherTitle setLeftBarButtonItem:refresh animated:YES];
 			[refresh release];
 		}
 			break;
@@ -353,14 +362,31 @@
 		else
 			title = [self bookButtonName:i];
 		UIButton *button = [PSRefSelectorController generateButton:CGRectMake(x, y, BUTTON_WIDTH, BUTTON_HEIGHT) withTitle:title];
-		if((objects == Books) && (i < refSelectorOTBookCount))
-			[[button layer] setBackgroundColor:[[UIColor greenColor] CGColor]];
-		else if(objects == Books)
-			[[button layer] setBackgroundColor:[[UIColor orangeColor] CGColor]];
-		else if(objects == Chapters)
-			[[button layer] setBackgroundColor:[[UIColor magentaColor] CGColor]];
-		else
-			[[button layer] setBackgroundColor:[[UIColor yellowColor] CGColor]];
+//		CAGradientLayer *gradientLayer = [[CAGradientLayer alloc] init];
+//		[gradientLayer setBounds:[button bounds]];
+//		[gradientLayer setPosition:CGPointMake([button bounds].size.width/2, [button bounds].size.height/2)];
+//		[gradientLayer setStartPoint:CGPointMake(0.5, 0.0)];
+//		[gradientLayer setEndPoint:CGPointMake(0.5, 0.5)];
+//		[[button layer] insertSublayer:gradientLayer atIndex:0];
+		
+		if((objects == Books) && (i < refSelectorOTBookCount)) {
+			[button setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+			//[gradientLayer setColors:[NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor greenColor] CGColor], nil]];
+			//[[button layer] setBackgroundColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]] CGColor]];
+		} else if(objects == Books) {
+			[button setTitleColor:[UIColor cyanColor] forState:UIControlStateNormal];
+			//[gradientLayer setColors:[NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor orangeColor] CGColor], nil]];
+			//[[button layer] setBackgroundColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]] CGColor]];
+		} else if(objects == Chapters) {
+			[button setTitleColor:[UIColor magentaColor] forState:UIControlStateNormal];
+			//[gradientLayer setColors:[NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor magentaColor] CGColor], nil]];
+			//[[button layer] setBackgroundColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]] CGColor]];
+		} else {
+			[button setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+			//[gradientLayer setColors:[NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor yellowColor] CGColor], nil]];
+			//[[button layer] setBackgroundColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]] CGColor]];
+		}
+		//[gradientLayer release];
 		
 		SEL buttonSelector;
 		switch(objects) {
@@ -381,20 +407,44 @@
 			[refToucherBookScrollView addSubview:button];
 		else
 			[refToucherMiscScrollView addSubview:button];
-		
+
 		x += BUTTON_WIDTH + BUTTON_X_PADDING;
 		if(x >= 270) {
 			x = BUTTON_X_BORDER_PADDING;
 			y += BUTTON_HEIGHT + BUTTON_Y_PADDING;
 		}
 	}
-	if(objects == Books) {
-		[refToucherBookScrollView setContentSize:CGSizeMake(320, y+BUTTON_HEIGHT + BUTTON_Y_PADDING)];
-		[refToucherBookScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
-	} else {
-		[refToucherMiscScrollView setContentSize:CGSizeMake(320, y+BUTTON_HEIGHT + BUTTON_Y_PADDING)];
-		[refToucherMiscScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
+	int width = (numberOfButtons > 5) ? ((6 * (BUTTON_WIDTH + BUTTON_X_PADDING)) - BUTTON_X_PADDING) : ((numberOfButtons * (BUTTON_WIDTH + BUTTON_X_PADDING)) - BUTTON_X_PADDING);
+	int height = (numberOfButtons % 6) ? (y + BUTTON_HEIGHT + BUTTON_Y_PADDING - BUTTON_Y_BORDER_PADDING) : (y - BUTTON_Y_BORDER_PADDING);
+	UIView *background = [[UIView alloc] initWithFrame:CGRectMake(BUTTON_X_BORDER_PADDING, BUTTON_Y_BORDER_PADDING, width, height)];
+	[background setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]]];
+	UIView *filler = nil;
+	if(numberOfButtons > 5 && (numberOfButtons % 6)) {
+		//we need some filler to hide part of the background
+		height = BUTTON_HEIGHT;
+		width = (6 - (numberOfButtons % 6)) * BUTTON_WIDTH;
+		filler = [[UIView alloc] initWithFrame:CGRectMake(x, y, width, height)];
+		[filler setBackgroundColor:[UIColor blackColor]];
 	}
+	
+	if(objects == Books) {
+		[refToucherBookScrollView setContentSize:CGSizeMake(320, y+BUTTON_HEIGHT + BUTTON_Y_PADDING + BUTTON_Y_BORDER_PADDING)];
+		[refToucherBookScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
+		[refToucherBookScrollView insertSubview:background atIndex:0];
+		if(filler) {
+			[refToucherBookScrollView addSubview:filler];
+			[filler release];
+		}
+	} else {
+		[refToucherMiscScrollView setContentSize:CGSizeMake(320, y+BUTTON_HEIGHT + BUTTON_Y_PADDING + BUTTON_Y_BORDER_PADDING)];
+		[refToucherMiscScrollView scrollRectToVisible:CGRectMake(0, 0, 320, 10) animated:NO];
+		[refToucherMiscScrollView insertSubview:background atIndex:0];
+		if(filler) {
+			[refToucherMiscScrollView addSubview:filler];
+			[filler release];
+		}
+	}
+	[background release];
 }
 
 @end

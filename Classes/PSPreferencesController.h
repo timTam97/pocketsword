@@ -27,6 +27,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+- (void)refPickerChanged:(UISwitch *)sender;
 - (void)displayStrongsChanged:(UISwitch *)sender;
 - (void)displayMorphChanged:(UISwitch *)sender;
 - (void)displayGreekAccentsChanged:(UISwitch *)sender;

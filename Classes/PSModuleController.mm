@@ -506,6 +506,12 @@ float installationProgress;
 - (BOOL)removeModule:(NSString *)name {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	DLog(@"Removing module: %@", name);
+	
+	//remove the cipherKey for the module.
+	NSMutableDictionary	*cipherKeys = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:DefaultsModuleCipherKeysKey]];
+	[cipherKeys removeObjectForKey: name];
+    [userDefaults setObject:cipherKeys forKey:DefaultsModuleCipherKeysKey];
+	
 	SwordModule *moduleToRemove = [swordManager moduleWithName: name];
 	int stat = 1;
 	//sword::SWKey loc;
@@ -710,6 +716,32 @@ float installationProgress;
 							   stringByReplacingOccurrencesOfString: @"II " withString: @"2 "] 
 							  stringByReplacingOccurrencesOfString: @"I " withString: @"1 "] 
 							 stringByReplacingOccurrencesOfString: @" of John " withString: @" "];
+}
+
++ (NSString*)createTitleRefString:(NSString *)newTitle {
+	NSMutableString *mutableTitle = [NSMutableString stringWithString:@""];
+	NSString *titleToDisplay;
+	NSRange verseRange = [newTitle rangeOfString:@" " options:NSBackwardsSearch];
+	NSRange titleMask = NSRangeFromString(@"0 3");
+	if(verseRange.location != NSNotFound) {//only @"PocketSword" wont' be here.
+		NSString *rest = [newTitle substringToIndex: verseRange.location];//cuts off the @"3:16" part.
+		NSRange spaceRange = [rest rangeOfString:@" "];
+		if(spaceRange.location != NSNotFound) {//the book name contains a space.
+			if(spaceRange.location == 1) {//single char, so probably a number, as in "1 Cor", so keep this
+				[mutableTitle appendFormat: @"%c ", [newTitle characterAtIndex:0]];
+				titleMask.location = 2;
+			} else if(spaceRange.location == 2) {//double char, so probably a number followed by . as in "1. Cor", so keep this.
+				[mutableTitle appendFormat: @"%c%c ", [newTitle characterAtIndex:0], [newTitle characterAtIndex:1]];
+				titleMask.location = 3;
+			}
+		}
+		[mutableTitle appendString: [newTitle substringWithRange: titleMask]];
+		[mutableTitle appendString: [newTitle substringFromIndex: verseRange.location]];
+		titleToDisplay = mutableTitle;
+	} else {
+		titleToDisplay = newTitle;
+	}
+	return titleToDisplay;
 }
 
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript {

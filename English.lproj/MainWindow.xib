@@ -12,7 +12,7 @@
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<integer value="551"/>
-			<integer value="1155"/>
+			<integer value="1157"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1307,10 +1307,6 @@
 							<object class="IBUINavigationItem" id="362888967">
 								<reference key="IBUINavigationBar" ref="363585914"/>
 								<string key="IBUITitle">ref selector buttons</string>
-								<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="819787507">
-									<int key="IBUIStyle">1</int>
-									<int key="IBUISystemItemIdentifier">1</int>
-								</object>
 							</object>
 						</array>
 					</object>
@@ -2580,14 +2576,6 @@
 					<int key="connectionID">1170</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleNavigation:</string>
-						<reference key="source" ref="819787507"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">1173</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">refToucherBookScrollView</string>
 						<reference key="source" ref="907622206"/>
@@ -3522,9 +3510,7 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">1157</int>
 						<reference key="object" ref="362888967"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="819787507"/>
-						</array>
+						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="363585914"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -3536,11 +3522,6 @@
 						<int key="objectID">1159</int>
 						<reference key="object" ref="907622206"/>
 						<reference key="parent" ref="0"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1172</int>
-						<reference key="object" ref="819787507"/>
-						<reference key="parent" ref="362888967"/>
 					</object>
 				</array>
 			</object>
@@ -3594,14 +3575,13 @@
 				<string key="1142.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1143.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1148.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1155.IBEditorWindowLastContentRect">{{102, 308}, {320, 480}}</string>
+				<string key="1155.IBEditorWindowLastContentRect">{{101, 307}, {320, 480}}</string>
 				<string key="1155.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1156.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1157.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1158.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1159.CustomClassName">PSRefSelectorController</string>
 				<string key="1159.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1172.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="126.CustomClassName">ViewController</string>
 				<string key="126.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="171.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

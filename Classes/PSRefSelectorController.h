@@ -52,6 +52,7 @@ typedef enum {
 - (void)selectedBook:(id)sender;
 - (void)selectedChapter:(id)sender;
 - (void)selectedVerse:(id)sender;
+- (void)hideNavigation;
 
 // common methods for each version
 - (void)updateRefSelectorBooks;

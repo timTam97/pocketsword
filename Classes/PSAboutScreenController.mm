@@ -44,20 +44,15 @@
 								<p><b>Developed by: </b><br />\n\
 									 Nic Carter\n\
 								</p>\n\
-								 <p><b>With thanks to: </b><br />\n\
-										Ian Wagner <br /><i>(original concept & design)</i><br />\n\
-										Manfred Bergmann <br /><i>(MacSword - <a href=\"http://www.macsword.com/\">http://www.macsword.com/</a>)</i><br />\n\
-										The SWORD Project <br /><i>(hosted by CrossWire Bible Society - <a href=\"http://crosswire.org/sword/\">http://crosswire.org/sword/</a>)</i><br />\n\
-										Connected Flow <br /><i>(<a href=\"http://connectedflow.com/\">http://connectedflow.com/</a>)</i><br />\n\
-										James Coleman <br /><i>(icons)</i><br />\n\
-										Cheree Lynley Designs <br /><i>(icons)</i>\n\
+								 <p><b>Icons by: </b><br />\n\
+										Cheree Lynley Designs, James Coleman, Nic Carter\n\
 								</p>\n\
-								<p><b>With special thanks to: </b><br />\n\
+							  <p><b>Localisations by: </b><br />\n\
+								  David Bell, Christoffer Björkskog, Dominique Corbex, Vincenzo Carrubba, Yiguang Hu\n\
+							  </p>\n\
+							  <p><b>Special thanks to: </b><br />\n\
 										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\
 										Pablo and Rusty's, Gordon <i>(<a href=\"http://www.pabloandrustys.com.au/\">http://www.pabloandrustys.com.au/</a>)</i>\n\
-								</p>\n\
-								<p><b>Localisations by: </b><br />\n\
-										David Bell, Christoffer Björkskog, Dominique Corbex, Enzo, Yiguang Hu\n\
 								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\
@@ -97,14 +92,13 @@
 				line-height: 130%%;\n\
 			}\n\
 			#header {\n\
-				//font-size: 16px;\n\
 				font-weight: bold;\n\
 				border-bottom: solid 1px gray;\n\
 				padding: 5px;\n\
 				background-color: #D5EEF9;\n\
 			}\n\
 			#main {\n\
-				padding: 20px;\n\
+				padding: 10px;\n\
 				text-align: center;\n\
 			}\n\
 			div.version {\n\
