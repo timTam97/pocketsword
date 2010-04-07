@@ -174,3 +174,15 @@
 "EmptyChapterWarning" = "Detta kapitel är tomt för denna modul.";
 "ModuleNotInstalled" = "är inte installerat.";
 "AboutModuleCurrentVersion" = "Installerad version: ";
+
+// new v1.2.2 strings:
+"ModuleLockedTitle" = "Module Locked";
+"ModuleLockedQuestion" = "This module is currently locked.  You must purchase a key to unlock this module.  Unfortunately, you can't do this through PocketSword at this time.  Please read the description of this module to find out how to purchase this module.\n  If you have already purchased a key, you can input your key to unlock this module.  Do you want to input your key now?";
+"ModuleEnterKeyTitle" = "Enter Key:";
+"ModuleUnlockScreenTitle" = "Unlock Module";
+"ModuleUnlockHelpText" = "To unlock this module, please enter the key you were sent when you bought this module.  Press Done to test the key and then press Save if it looks correct.";
+"RefSelectorBookTitle" = "Select Book:";
+"RefSelectorChapterTitle" = "Chapter:";
+"RefSelectorVerseTitle" = "Verse:";
+"RefSelectorBackButtonTitle" = "Back";
+"PreferencesRefPickerPreferenceTitle" = "Scroll Picker";

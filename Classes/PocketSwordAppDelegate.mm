@@ -29,7 +29,7 @@
 @synthesize window;
 @synthesize tabBarController;
 
-#define LOCALES_VERSION @"loadedSWORDLocales-v2"
+#define LOCALES_VERSION @"loadedSWORDLocales-v2.1"
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -44,6 +44,7 @@
 	
 	if(reset) {
 		DLog(@"\nreset_PocketSword is set");
+		[defaults removeObjectForKey: @"reset_PocketSword"];
 		[defaults removeObjectForKey: @"lastRef"];
 		[defaults removeObjectForKey: @"lastBible"];
 		[defaults removeObjectForKey: @"lastCommentary"];
@@ -55,10 +56,10 @@
 		[defaults removeObjectForKey: @"redLetterPreference"];
 		[defaults removeObjectForKey: @"insomniaPreference"];
 		[defaults removeObjectForKey: @"moduleMaintainerModePreference"];
-		[defaults removeObjectForKey: @"reset_PocketSword"];
 		[defaults removeObjectForKey: @"bibleHistory"];
 		[defaults removeObjectForKey: @"commentaryHistory"];
-		[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
+		[defaults removeObjectForKey: DefaultsModuleCipherKeysKey];
+		[defaults removeObjectForKey: LOCALES_VERSION];
 		[defaults synchronize];
 		NSArray *dicts = [[moduleManager swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
 		for(SwordDictionary *dict in dicts) {
@@ -90,13 +91,14 @@
 
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *swLocales = [[docPath stringByAppendingPathComponent:@"unused"] stringByAppendingPathComponent: @"locales.d"];
+	//"install" the l10n strings into SWORD for the current locale.
+    NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
 	
 	if(!loadedLocales) {
-		[defaults setBool: YES forKey:LOCALES_VERSION];
-		[defaults synchronize];
 		NSString *localesZIP = [[NSBundle mainBundle] pathForResource:@"locales.d" ofType:@"zip"];
 		DLog(@"\n\n%@\n\n", localesZIP);
-		[[NSFileManager defaultManager] removeItemAtPath:swLocales error:NULL];//delete it if it already exists
+		[[NSFileManager defaultManager] removeItemAtPath: swLocales error:NULL];//delete it if it already exists
+		[[NSFileManager defaultManager] removeItemAtPath: localePath error: NULL];//delete the currently installed ones, too.
 		
 		//unzip the archive
 		ZipArchive *arch = [[ZipArchive alloc] init];
@@ -105,12 +107,9 @@
 		[arch UnzipCloseFile];
 		[arch release];
 		
-		//[SwordManager initLocale];
-		
+		[defaults setBool: YES forKey:LOCALES_VERSION];
+		[defaults synchronize];
 	}
-	
-	//"install" the l10n strings into SWORD for the current locale.
-    NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
 	
 	NSArray *availLocales = [NSLocale preferredLanguages];//the iPhone locale
 	NSArray *currentlyInstalledStrings = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: localePath error: NULL];//currently installed SWORD locale
@@ -141,7 +140,7 @@
 		} else if([loc isEqualToString:@"zh-Hant"])
 			loc = @"zh_Hant"; // SWORD and Apple use different names for traditional chinese...
 		else if([loc isEqualToString:@"zh-Hans"])
-			loc = @"zh_Hans"; // SWORD and Apple use different names for traditional chinese...
+			loc = @"zh_Hans"; // SWORD and Apple use different names for simplified chinese...
 		
 		if([currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", loc]]) {
 			//we do this because it could be the non-primary iPhone locale...
@@ -167,8 +166,6 @@
 			NSString *srcLocale = [swLocales stringByAppendingPathComponent: lang];
 			NSString *dstLocale = [localePath stringByAppendingPathComponent: lang];
 			[[NSFileManager defaultManager] copyItemAtPath: srcLocale toPath: dstLocale error: NULL];
-			//NSLog(@"copying from: %@", srcLocale);
-			//NSLog(@"		to: %@", dstLocale);
 			[SwordManager initLocale];
 			[moduleManager reload];
 		}
