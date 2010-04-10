@@ -615,26 +615,27 @@
             }
         }
     } else if([attrType isEqualToString:@"scriptRef"] || [attrType isEqualToString:@"scripRef"]) {
-        NSString *key = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+" 
+		NSString *key = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+" 
                                                                                        withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        sword::VerseKey parser("gen.1.1");
-        parser.setVersificationSystem([[self versification] UTF8String]);
-        sword::ListKey refs = parser.ParseVerseList([key UTF8String], parser, true);
+		sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+		sword::VerseKey parser(curKey->getShortText());
+		parser.setVersificationSystem([[self versification] UTF8String]);
+		sword::ListKey refs = parser.ParseVerseList([key UTF8String], parser, true);
         
-        ret = [NSMutableArray array];
-        // collect references
-        for(refs = sword::TOP; !refs.Error(); refs++) {
-            swModule->setKey(refs);
-            if(![self error]) {
-                NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
-                NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
-                
-                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
-                [dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
-                [dict setObject:key forKey:SW_OUTPUT_REF_KEY];
-                [ret addObject:dict];                
-            }
-        }
+		ret = [NSMutableArray array];
+		// collect references
+		for(refs = sword::TOP; !refs.Error(); refs++) {
+			swModule->setKey(refs);
+			if(![self error]) {
+				NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
+				NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
+				
+				NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
+				[dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
+				[dict setObject:key forKey:SW_OUTPUT_REF_KEY];
+				[ret addObject:dict];                
+			}
+		}
     } else if([attrType isEqualToString:@"Greek"] || [attrType isEqualToString:@"Hebrew"]) {
         NSString *key = [data objectForKey:ATTRTYPE_VALUE];        
 
