@@ -17,7 +17,6 @@
 	NSArray *dataArray;
 	//IBOutlet UITabBarController *tabController;
 	IBOutlet NavigatorSources *navigatorSources;
-	//IBOutlet id moduleManager;
 }
 
 @property (retain, readwrite) NSArray *dataArray;

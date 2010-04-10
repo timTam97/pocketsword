@@ -45,7 +45,7 @@
 	if(reset) {
 		DLog(@"\nreset_PocketSword is set");
 		[defaults removeObjectForKey: @"reset_PocketSword"];
-		[defaults removeObjectForKey: @"lastRef"];
+		[defaults removeObjectForKey: DefaultsLastRef];
 		[defaults removeObjectForKey: @"lastBible"];
 		[defaults removeObjectForKey: @"lastCommentary"];
 		[defaults removeObjectForKey: @"lastDictionary"];

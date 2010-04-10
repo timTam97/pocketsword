@@ -102,6 +102,11 @@ BOOL trashModule = NO;
 	return YES;
 }
 
+- (IBAction)editButtonPressed:(id)sender {
+	if([unlockTextField canBecomeFirstResponder])
+		[unlockTextField becomeFirstResponder];
+}
+
 - (void)keyboardWillShow:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
     [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
@@ -110,6 +115,7 @@ BOOL trashModule = NO;
     [UIView setAnimationDuration:0.3];
     unlockToolbar.frame = r;
 	[UIView commitAnimations];
+	[editButton setEnabled:NO];
 }
 
 - (void)keyboardWillHide:(NSNotification *)note {
@@ -120,6 +126,7 @@ BOOL trashModule = NO;
     [UIView setAnimationDuration:0.3];
     unlockToolbar.frame = r;
 	[UIView commitAnimations];
+	[editButton setEnabled:YES];
 }
 
 - (IBAction)trashModule:(id)sender {

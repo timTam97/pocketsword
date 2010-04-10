@@ -193,11 +193,10 @@ float installationProgress;
 }
 
 - (NSString *)getCurrentBibleRef {
-	NSString *lastRef = [[NSUserDefaults standardUserDefaults] stringForKey: @"lastRef"];
+	NSString *lastRef = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastRef];
 	if (!lastRef) {
-		[[NSUserDefaults standardUserDefaults] setObject: @"Genesis 1" forKey: @"lastRef"];
+		[[NSUserDefaults standardUserDefaults] setObject: @"Genesis 1" forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-//		[defaults setPersistentDomain: [NSDictionary dictionaryWithObject: @"Genesis 1" forKey: @"lastRef"] forName: [[NSBundle mainBundle] bundleIdentifier]];
 		lastRef = @"Genesis 1";
 	}
 	return lastRef;
@@ -672,7 +671,7 @@ float installationProgress;
 	NSString *text = [primaryBible getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);
-	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: @"lastRef"];
+	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;
 }
@@ -699,7 +698,7 @@ float installationProgress;
 	NSString *text = [primaryCommentary getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);
-	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: @"lastRef"];
+	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;
 }

@@ -12,34 +12,73 @@
 #import <versemgr.h>
 #import "SwordBook.h"
 #import "PSModuleController.h"
+#import "PSChapterSelectorController.h"
 
 @implementation PSRefSelectorController
 
 @synthesize refSelectorChapter;
 @synthesize refSelectorBook;
 @synthesize refSelectorBooks;
+@synthesize refSelectorBooksIndex;
+@synthesize currentlyViewedBookName;
 
 - (void)awakeFromNib {
 	refToucherMiscScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, 320, 416)];
 	[refToucherMiscScrollView setBackgroundColor:[UIColor blackColor]];
 	[refToucherBookScrollView setBackgroundColor:[UIColor blackColor]];
 
-//	[refToucherMiscScrollView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]]];
-//	[refToucherBookScrollView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"ref-background.jpeg"]]];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	NSIndexPath *tableSelection = [refTable indexPathForSelectedRow];
+	[refTable deselectRowAtIndexPath:tableSelection animated:YES];
+    [super viewWillAppear:animated];
+	// TODO: scroll to current book.
 }
 
 - (void)dealloc {
 	[refSelectorBooks release];
+	[refSelectorBooksIndex release];
 	[refToucherMiscScrollView release];
+	[currentlyViewedBookName release];
 	[super dealloc];
 }
 
 - (void)hideNavigation {
-	[refToucherView removeFromSuperview];
+	if([refToucherView superview]) {
+		[refToucherView removeFromSuperview];
+	}
+	if([refNavigationController.view superview]) {
+		[ViewController hideModal:refNavigationController.view withTiming:0.3];
+	}
 }
 
 - (void)toggleNavigation:(ShownTab)shownTab {
 	BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
+	
+	if([refNavigationController.view superview]) {
+		[refNavigationController.view removeFromSuperview];
+	} else {
+		[self updateRefSelectorBooks];
+		[refTable reloadData];
+		refNavigationController.navigationBar.topItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
+		UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(hideNavigation)];
+		refNavigationController.navigationBar.topItem.leftBarButtonItem = cancel;
+		[cancel release];
+		//refNavigationController.navigationItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
+		[refNavigationController popToRootViewControllerAnimated:NO];
+		[ViewController showModal:refNavigationController.view withTiming:0.3];
+
+		NSIndexPath *ip = nil;
+		int bookCount = [refSelectorBooks count];
+		for(int i=0;i<bookCount;i++) {
+			if([currentlyViewedBookName isEqualToString:[((SwordBook*)[refSelectorBooks objectAtIndex:i]) name]]) {
+				ip = [NSIndexPath indexPathForRow: 0 inSection: i];
+			}
+		}
+		[refTable scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+	}
+	return;
 	
 	if(!refPickerMode) {
 		if([refToucherView superview]) {
@@ -186,14 +225,35 @@
 	int numberOfBooks = refSystem->getBookCount();
 	refSelectorOTBookCount = refSystem->getBMAX()[0];
 	NSMutableArray *books = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray *booksIndex = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray *booksFullIndex = [[[NSMutableArray alloc] init] autorelease];
+	//BOOL addNextBook = NO;
 	for(int i = 0; i < numberOfBooks; i++) {
 		SwordBook *book = [[SwordBook alloc] initWithBook:refSystem->getBook(i)];
 		[books addObject:book];
-		//[books insertObject:book atIndex:i];
+		//if(!(i%2) || addNextBook) {
+		//if(addNextBook)
+		//addNextBook = NO;
+			if(![booksFullIndex containsObject:[book shortName]])
+				[booksIndex addObject:[book shortName]];
+			else {
+				//addNextBook = YES;
+			}
+		//}
+		[booksFullIndex addObject:[book shortName]];
 		[book release];
 	}
 	//NSLog(@"refSelector: %d books, %d refSelectorOTBookCount", numberOfBooks, refSelectorOTBookCount);
+	NSString *currentBook = [moduleManager getCurrentBibleRef];
+	currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];
+	NSRange spaceRange = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
+	if(spaceRange.location != NSNotFound) {
+		currentBook = [currentBook substringToIndex: spaceRange.location];
+	}
+
 	[self setRefSelectorBooks:books];
+	[self setRefSelectorBooksIndex:booksIndex];
+	[self setCurrentlyViewedBookName:currentBook];
 
 	//reset the picker.
 	refSelectorBook = 0;
@@ -202,23 +262,87 @@
 	[pool release];
 }
 
+// UITableView delegate methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return [refSelectorBooks count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return 1;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	return @"";
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+	if (!cell)
+	{
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
+	}
+	
+	cell.textLabel.text = [self bookName:indexPath.section];
+	if([currentlyViewedBookName isEqualToString:cell.textLabel.text]) {
+		cell.textLabel.textColor = [UIColor blueColor];
+	} else {
+		cell.textLabel.textColor = [UIColor blackColor];
+	}
+	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
+	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	//PSChapterSelectorController *chapterSelectorController = [[PSChapterSelectorController alloc] initWithNibName:@"PSChapterSelectorController" bundle:nil];
+	PSChapterSelectorController *chapterSelectorController = [[PSChapterSelectorController alloc] init];
+	NSDictionary *proxyDict = [NSDictionary dictionaryWithObject:[moduleManager viewController] forKey:@"viewController"];
+	NSDictionary *optionsDict = [NSDictionary dictionaryWithObject:proxyDict forKey:UINibExternalObjects];
+	[[NSBundle mainBundle] loadNibNamed:@"PSChapterSelectorController" owner:chapterSelectorController options:optionsDict];
+	
+	[chapterSelectorController setBookAndInit: [refSelectorBooks objectAtIndex:indexPath.section]];
+	[refNavigationController pushViewController:chapterSelectorController animated:YES];
+	[chapterSelectorController release];
+	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
+	// [self.navigationController pushViewController:anotherViewController];
+	// [anotherViewController release];
+	
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+	return self.refSelectorBooksIndex;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+	for(int i=0;i<[refSelectorBooks count];i++) {
+		if([[self bookShortName:i] isEqualToString:[self.refSelectorBooksIndex objectAtIndex:index]])
+			return i;
+	}
+	return 0;
+}
+
+
+
+
+
+
+
 - (NSString*)bookName:(NSInteger)bookIndex
 {
 	return [((SwordBook*)[refSelectorBooks objectAtIndex:bookIndex]) name];
 }
 
-- (NSString*)bookButtonName:(NSInteger)bookIndex
+- (NSString*)bookShortName:(NSInteger)bookIndex
 {
-	return [((SwordBook*)[refSelectorBooks objectAtIndex:bookIndex]) buttonName];
+	return [((SwordBook*)[refSelectorBooks objectAtIndex:bookIndex]) shortName];
 }
 
-- (NSString*)bookOSISName:(NSInteger)bookIndex
-{
+- (NSString*)bookOSISName:(NSInteger)bookIndex {
 	return [((SwordBook*)[refSelectorBooks objectAtIndex:bookIndex]) osisName];
 }
 
-- (NSInteger)bookIndex:(NSString*)bookName
-{
+- (NSInteger)bookIndex:(NSString*)bookName {
 	NSInteger ret = NSNotFound;
 	for(int i = 0; i < [refSelectorBooks count]; i++) {
 		if([[((SwordBook*)[refSelectorBooks objectAtIndex:i]) name] isEqualToString:bookName]) {
@@ -234,7 +358,7 @@
 	NSString *btn = [(UIButton*)sender currentTitle];
 	//NSLog(@"pressed book %@", btn);
 	for(int i=0;i<[refSelectorBooks count];i++) {
-		if([[self bookButtonName:i] isEqualToString:btn]) {
+		if([[self bookShortName:i] isEqualToString:btn]) {
 			refSelectorBook = i;
 			break;
 		}
@@ -301,7 +425,7 @@
 }
 
 #define BUTTON_WIDTH			50
-#define BUTTON_HEIGHT			30
+#define BUTTON_HEIGHT			35
 #define BUTTON_X_BORDER_PADDING	10
 #define BUTTON_Y_BORDER_PADDING	10
 #define BUTTON_X_PADDING		0
@@ -360,7 +484,7 @@
 		if(objects != Books)
 			title = [NSString stringWithFormat:@"%d", i+1];
 		else
-			title = [self bookButtonName:i];
+			title = [self bookShortName:i];
 		UIButton *button = [PSRefSelectorController generateButton:CGRectMake(x, y, BUTTON_WIDTH, BUTTON_HEIGHT) withTitle:title];
 //		CAGradientLayer *gradientLayer = [[CAGradientLayer alloc] init];
 //		[gradientLayer setBounds:[button bounds]];

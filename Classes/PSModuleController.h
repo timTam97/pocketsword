@@ -37,18 +37,12 @@
 
 @interface PSModuleController : NSObject {
 	// IB Outlets
-	//IBOutlet id statusBar;
-	//IBOutlet id statusText;
-	//IBOutlet id moduleTable;
-	//IBOutlet UIBarButtonItem *bibleNavBtn;
-	//IBOutlet UIBarButtonItem *commentaryNavBtn;
 	IBOutlet UIWebView *bibleWebView;
 	IBOutlet UIWebView *commentaryWebView;
 	
 	IBOutlet UIBarButtonItem *bibleTitle;
 	IBOutlet UIBarButtonItem *commentaryTitle;
 	IBOutlet UIBarButtonItem *dictionaryTitle;
-//	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
 
 	IBOutlet id bookmarkAddButton;
 	

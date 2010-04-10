@@ -13,9 +13,10 @@
 	IBOutlet UIWebView			*infoWebView;
 	IBOutlet PSModuleController *moduleManager;
 	IBOutlet UINavigationItem	*navBar;
-	IBOutlet UITableView		*modulesListTable;
-	
+	IBOutlet UITableView			*modulesListTable;
+
 	IBOutlet UIBarButtonItem	*closeButton;
+	IBOutlet UIBarButtonItem	*editButton;
 	
 	IBOutlet UIWebView			*unlockWebView;
 	IBOutlet UIWebView			*unlockHelpWebView;
@@ -39,6 +40,7 @@
 
 - (IBAction)closeLeaf:(id)sender;
 - (IBAction)trashModule:(id)sender;
+- (IBAction)editButtonPressed:(id)sender;
 
 - (IBAction)saveKey:(id)sender;
 - (IBAction)closeUnlockView:(id)sender;

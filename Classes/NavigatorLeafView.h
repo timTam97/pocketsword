@@ -11,8 +11,6 @@
 #import "NavigatorSources.h"
 
 @interface NavigatorLeafView : UIViewController <UINavigationBarDelegate> {
-	//IBOutlet UITabBarController *tabController;
-	//IBOutlet id moduleManager;
 	IBOutlet id detailsView;
 	IBOutlet NavigatorSources *navigatorSources;
 

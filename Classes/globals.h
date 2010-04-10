@@ -23,7 +23,9 @@ typedef enum {
 	DictionaryTab
 } ShownTab;
 
-#define DefaultsModuleCipherKeysKey                 @"DefaultsModuleCipherKeysKey"
+#define DefaultsModuleCipherKeysKey					@"DefaultsModuleCipherKeysKey"
+#define DefaultsLastRef									@"lastRef"
+
 //#define DEFAULT_MODULE_PATH         [@"~/Library/Application Support/Sword" stringByExpandingTildeInPath]
 #define DEFAULT_MODULE_PATH         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_APPSUPPORT_PATH     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]

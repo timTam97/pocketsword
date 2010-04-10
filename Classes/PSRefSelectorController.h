@@ -15,8 +15,11 @@ typedef enum {
 } RefToucherType;
 
 
-@interface PSRefSelectorController : NSObject {
+@interface PSRefSelectorController : UIViewController {
 	NSArray *refSelectorBooks;
+	NSArray *refSelectorBooksIndex;
+	NSString *currentlyViewedBookName;
+	
 	int refSelectorOTBookCount;
 	NSInteger refSelectorBook;
 	NSInteger refSelectorChapter;
@@ -30,7 +33,11 @@ typedef enum {
 	IBOutlet UIView				*refToucherView;
 	IBOutlet UINavigationItem	*refToucherTitle;
 	IBOutlet UIScrollView		*refToucherBookScrollView;
-	UIScrollView				*refToucherMiscScrollView;
+	UIScrollView					*refToucherMiscScrollView;
+	
+	// UITableView version of the ref selector
+	IBOutlet UITableView					*refTable;
+	IBOutlet UINavigationController	*refNavigationController;
 
 	IBOutlet id moduleManager;
 }
@@ -38,6 +45,8 @@ typedef enum {
 @property (assign) NSInteger refSelectorBook;
 @property (assign) NSInteger refSelectorChapter;
 @property (retain, readwrite) NSArray *refSelectorBooks;
+@property (retain, readwrite) NSArray *refSelectorBooksIndex;
+@property (retain, readwrite) NSString *currentlyViewedBookName;
 
 // UIPickerView version of the ref selector
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
@@ -57,7 +66,7 @@ typedef enum {
 // common methods for each version
 - (void)updateRefSelectorBooks;
 - (NSString*)bookName:(NSInteger)bookIndex;
-- (NSString*)bookButtonName:(NSInteger)bookIndex;
+- (NSString*)bookShortName:(NSInteger)bookIndex;
 - (NSString*)bookOSISName:(NSInteger)bookIndex;
 - (NSInteger)bookIndex:(NSString*)bookName;
 - (void)toggleNavigation:(ShownTab)shownTab;

@@ -340,11 +340,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		
-		NSString *lastRef = [defaults stringForKey: @"lastRef"];
-		if (lastRef == nil) {
-			[defaults setPersistentDomain: [NSDictionary dictionaryWithObject: @"Genesis 1" forKey: @"lastRef"] forName: [[NSBundle mainBundle] bundleIdentifier]];
-			lastRef = @"Genesis 1";
-		}
+		NSString *lastRef = [moduleManager getCurrentBibleRef];
 		
 		[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
 		
@@ -378,7 +374,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-	//else if([tabController.moreNavigationController.view isDescendantOfView:viewController.view]) {
+	tabBarController.moreNavigationController.navigationBar.topItem.rightBarButtonItem = nil;
+	DLog(@"\nRemoving Edit button");
+	//if([tabController.moreNavigationController.view isDescendantOfView:viewController.view]) {
 		//this is (hopefully) the root More controller.
 		//DLog(@"\n\nRAAAHHH!");
 		//viewController.navigationItem.rightBarButtonItem = nil;
@@ -576,12 +574,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Loads the chapter selected from the picker into the Web View
 - (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse {
+	
+	NSString *bookName = [refSelectorController bookName:book];
+	[self updateViewWithSelectedBookName:bookName chapter:chapter verse:verse]; 
+	
+}
+
+- (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-		
+	
 	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
-	
-	NSString *bookName = [NSString stringWithCString:lmgr->translate([[refSelectorController bookName:book] cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
-	
+	NSString *bookName = [NSString stringWithCString:lmgr->translate([bookNameString cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
 	NSString *verseString = [NSString stringWithFormat:@"%d", verse];
 	NSString *ref = [bookName stringByAppendingFormat: @" %d", chapter];
 	NSString *currentRef = [moduleManager getCurrentBibleRef];

@@ -52,7 +52,7 @@
 			stringByReplacingOccurrencesOfString: @" of John" withString: @" "];
 }
 
-- (NSString*)buttonName {
+- (NSString*)shortName {
 	NSString *ret = [[self name] stringByReplacingOccurrencesOfString:@" " withString:@""];
 	int maxIndex = 3;
 	if([ret length] < maxIndex)

@@ -136,6 +136,7 @@ typedef enum {
 - (IBAction)toggleNavigation:(id)sender;
 - (IBAction)updateViewWithSelectedChapter:(id)sender;
 - (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
+- (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 //- (IBAction)toggleModuleTableEditing:(id)sender;
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;

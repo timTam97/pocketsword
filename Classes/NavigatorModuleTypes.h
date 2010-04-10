@@ -15,7 +15,6 @@
 	NSArray *dataArray;
 	IBOutlet NavigatorSources *navigatorSources;
 	//IBOutlet UITabBarController *tabController;
-	//IBOutlet id moduleManager;
 
 	// Status view
 	IBOutlet id statusController;

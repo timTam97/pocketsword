@@ -13,7 +13,6 @@
 	IBOutlet id navigatorModules;
 	PSModuleType *data;
 	//IBOutlet UITabBarController *tabController;
-	//IBOutlet id moduleManager;
 	IBOutlet NavigatorSources *navigatorSources;
 }
 

@@ -198,6 +198,10 @@
 		05A0404010F1C4AE0094C6E3 /* Multi-List.png in Resources */ = {isa = PBXBuildFile; fileRef = 05A0403F10F1C4AE0094C6E3 /* Multi-List.png */; };
 		05A4979B11068403005424C5 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A4979A11068403005424C5 /* libicucore.dylib */; };
 		05A498B11106A72B005424C5 /* i18n.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05A498B01106A72B005424C5 /* i18n.txt */; };
+		05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
+		05AB9481116D8D620043DB57 /* PSChapterSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AB947F116D8D620043DB57 /* PSChapterSelectorController.xib */; };
+		05AB950D116D9BB70043DB57 /* PSVerseSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AB950B116D9BB70043DB57 /* PSVerseSelectorController.xib */; };
+		05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		05B3D61710BB7A92000F8A48 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
 		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
@@ -912,6 +916,26 @@
 		05A4980F11068625005424C5 /* utypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utypes.h; sourceTree = "<group>"; };
 		05A4981011068625005424C5 /* uversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uversion.h; sourceTree = "<group>"; };
 		05A498B01106A72B005424C5 /* i18n.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = i18n.txt; path = Resources/doc/i18n.txt; sourceTree = "<group>"; };
+		05AB946A116D88B80043DB57 /* PSChapterSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSChapterSelectorController.h; path = Classes/PSChapterSelectorController.h; sourceTree = "<group>"; };
+		05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSChapterSelectorController.mm; path = Classes/PSChapterSelectorController.mm; sourceTree = "<group>"; };
+		05AB9480116D8D620043DB57 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB950C116D9BB70043DB57 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9510116D9C190043DB57 /* PSVerseSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSVerseSelectorController.h; path = Classes/PSVerseSelectorController.h; sourceTree = "<group>"; };
+		05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSVerseSelectorController.mm; path = Classes/PSVerseSelectorController.mm; sourceTree = "<group>"; };
+		05AB9648116DC0400043DB57 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB9649116DC0460043DB57 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB964A116DC04A0043DB57 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB964B116DC04E0043DB57 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB964C116DC0530043DB57 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB964D116DC0570043DB57 /* zh */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh; path = zh.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB964E116DC0590043DB57 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		05AB964F116DC06D0043DB57 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9650116DC0700043DB57 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9651116DC0730043DB57 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9652116DC0770043DB57 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9653116DC07A0043DB57 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9654116DC07D0043DB57 /* zh */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh; path = zh.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		05AB9655116DC0800043DB57 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
 		05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcurl-7.19.6-release.a"; path = "externals/libcurl/libcurl-7.19.6-release.a"; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
 		05B5295B107C529000826AFE /* PSModuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleType.h; sourceTree = "<group>"; };
@@ -1367,6 +1391,10 @@
 				0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */,
 				05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */,
 				05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */,
+				05AB946A116D88B80043DB57 /* PSChapterSelectorController.h */,
+				05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */,
+				05AB9510116D9C190043DB57 /* PSVerseSelectorController.h */,
+				05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -2362,6 +2390,8 @@
 				E9A6CFA10FF559F700399E78 /* MainWindow.xib */,
 				0515E2D110C8E32900F58382 /* Downloader.xib */,
 				054EF62210CD0EAF0091D269 /* IndexDownloader.xib */,
+				05AB947F116D8D620043DB57 /* PSChapterSelectorController.xib */,
+				05AB950B116D9BB70043DB57 /* PSVerseSelectorController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2812,6 +2842,8 @@
 				05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */,
 				05BCB42011477A9A00984097 /* popup-down-button.png in Resources */,
 				05CFB5D2116848B300ED4F4F /* ref-background.jpeg in Resources */,
+				05AB9481116D8D620043DB57 /* PSChapterSelectorController.xib in Resources */,
+				05AB950D116D9BB70043DB57 /* PSVerseSelectorController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3147,6 +3179,8 @@
 				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
 				0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */,
 				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
+				05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */,
+				05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3181,6 +3215,36 @@
 				0513ADE9115CA5E900F752DA /* it */,
 			);
 			name = IndexDownloader.xib;
+			sourceTree = "<group>";
+		};
+		05AB947F116D8D620043DB57 /* PSChapterSelectorController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AB9480116D8D620043DB57 /* English */,
+				05AB9648116DC0400043DB57 /* es */,
+				05AB9649116DC0460043DB57 /* fr */,
+				05AB964A116DC04A0043DB57 /* ja */,
+				05AB964B116DC04E0043DB57 /* ko */,
+				05AB964C116DC0530043DB57 /* sv */,
+				05AB964D116DC0570043DB57 /* zh */,
+				05AB964E116DC0590043DB57 /* it */,
+			);
+			name = PSChapterSelectorController.xib;
+			sourceTree = "<group>";
+		};
+		05AB950B116D9BB70043DB57 /* PSVerseSelectorController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AB950C116D9BB70043DB57 /* English */,
+				05AB964F116DC06D0043DB57 /* es */,
+				05AB9650116DC0700043DB57 /* fr */,
+				05AB9651116DC0730043DB57 /* ja */,
+				05AB9652116DC0770043DB57 /* ko */,
+				05AB9653116DC07A0043DB57 /* sv */,
+				05AB9654116DC07D0043DB57 /* zh */,
+				05AB9655116DC0800043DB57 /* it */,
+			);
+			name = PSVerseSelectorController.xib;
 			sourceTree = "<group>";
 		};
 		E9A6CF9C0FF5508400399E78 /* Localizable.strings */ = {
@@ -3238,7 +3302,6 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../SwordOSX/build/iPhone Simulator\"",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3282,7 +3345,6 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../SwordOSX/build/iPhone Simulator\"",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3413,7 +3475,6 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../SwordOSX/build/iPhone Simulator\"",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
