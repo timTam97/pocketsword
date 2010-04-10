@@ -1,6 +1,6 @@
 /*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #import <UIKit/UIKit.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
+#import "ViewController.h"
 #import "DataController.h"
 #import "SwordManager.h"
 #import "SwordInstallManager.h"
@@ -76,7 +77,7 @@
 + (BOOL)checkNetworkConnection;
 + (NSDictionary *)dataForLink:(NSURL *)aURL;
 
-- (PSModuleController *)init;
+- (id)init;
 - (id)viewController;
 - (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType;
 - (BOOL)isLoaded:(NSString *)module;

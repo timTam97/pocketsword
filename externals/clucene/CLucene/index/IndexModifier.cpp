@@ -29,9 +29,9 @@ void IndexModifier::init(Directory* directory, Analyzer* analyzer, bool create) 
 	open = false;
 
 	useCompoundFile = true;
-	int32_t maxBufferedDocs = IndexWriter::DEFAULT_MAX_BUFFERED_DOCS;
+	//int32_t maxBufferedDocs = IndexWriter::DEFAULT_MAX_BUFFERED_DOCS;
 	this->maxFieldLength = IndexWriter::DEFAULT_MAX_FIELD_LENGTH;
-	int32_t mergeFactor = IndexWriter::DEFAULT_MERGE_FACTOR;
+	//int32_t mergeFactor = IndexWriter::DEFAULT_MERGE_FACTOR;
 	
 	this->directory = _CL_POINTER(directory);
 	createIndexReader();

@@ -1,6 +1,6 @@
 /*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -140,7 +140,8 @@ typedef enum {
 //- (IBAction)toggleModuleTableEditing:(id)sender;
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;
-- (IBAction)addHistoryItem:(ShownTab)tabForHistory;
+- (void)removeBookmark:(NSString *)ref;
+- (void)addHistoryItem:(ShownTab)tabForHistory;
 //- (IBAction)moveToModulesTab:(id)sender;
 
 - (IBAction)toggleModulesList:(id)sender;
@@ -159,7 +160,7 @@ typedef enum {
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled;
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
 
-//- (void)reloadModuleTable;
+- (void)reloadModuleTable;
 - (void)reloadDictionaryData;
 
 - (void)showIndexStatus;
@@ -170,6 +171,7 @@ typedef enum {
 
 - (UITabBarController *)tabController;
 - (UIView *)modulesListView;
+- (void)setShownTabTo:(ShownTab)tab;
 
 - (void)showInfo:(NSString *)infoString;
 - (IBAction)hideInfo:(id)sender;

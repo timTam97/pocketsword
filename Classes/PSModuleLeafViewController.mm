@@ -160,7 +160,6 @@ body {\n\
 		DLog(@"\nremoving module: %@", navBar.title);
 		trashModule = NO;
 		[moduleManager removeModule: navBar.title];
-		[modulesListTable reloadData];
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {
 		// user tapped @"Yes" to unlocking this module question.

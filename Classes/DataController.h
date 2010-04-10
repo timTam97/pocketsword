@@ -1,6 +1,6 @@
 /*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-    Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -17,59 +17,31 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import <UIKit/UIKit.h>
-#import "PSModuleController.h"
-#import "ViewController.h"
-#import "PSBibleViewController.h"
-#import "PSCommentaryViewController.h"
 #import "globals.h"
-
-
 
 //#define MODULE_TABLE			1
 //#define SEARCH_TABLE			2
 //#define DOWNLOAD_TABLE		3
 #define BOOKMARK_TABLE			4
 
-#define MODULES_LIST_TABLE		7
+//#define MODULES_LIST_TABLE	7
 #define HISTORY_LIST_TABLE		8
 
-
-
 @interface DataController : NSObject {
-//	IBOutlet id moduleTable;
-	IBOutlet id resultsTable;
-	IBOutlet id bookmarksTable;
-	IBOutlet UITabBarController *tabController;
-	//IBOutlet id bibleNavBtn;
-	IBOutlet PSBibleViewController *bibleTabController;
-	IBOutlet PSCommentaryViewController *commentaryTabController;
-	
+
+	//this is for thie history list
 	ShownTab listType;
 
-	//NSInteger sourceInstallSourceView;
-	//NSMutableArray *installedModuleGroups;
-	
 	IBOutlet id moduleManager;
 	IBOutlet id viewController;
 	
 }
 
 @property (assign) ShownTab listType;
-//@property (assign) NSMutableArray *installedModuleGroups;
-//@property (assign) NSInteger sourceInstallSourceView;
 
-//- (DataController *)init;
-//- (void)performSearch:(NSString *)key;
-- (void)addBookmark:(NSString *)ref;
-- (void)removeBookmark:(NSString *)ref;
-- (void)reloadModuleList;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
-//- (void)dealloc;
-- (void)setShownTabTo:(ShownTab)tab;
-//- (IBAction)updateDownloadManagerTableView;
 
 @end

@@ -14,12 +14,12 @@
 #import "SwordModuleTextEntry.h"
 #import "SwordListKey.h"
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 #include <swtext.h>
 #include <versekey.h>
 #include <regex.h>
 class sword::SWModule;
-//#endif
+#endif
 
 #define My_SWDYNAMIC_CAST(className, object) (sword::className *)((object)?((object->getClass()->isAssignableFrom(#className))?object:0):0)
 

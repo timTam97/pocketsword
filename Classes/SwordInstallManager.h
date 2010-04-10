@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 #include <swmgr.h>
 #include <installmgr.h>
 #include <swconfig.h>
@@ -18,7 +18,7 @@ class sword::SWModule;
 class sword::InstallMgr;
 using sword::SWModule;
 using sword::InstallMgr;
-//#endif
+#endif
 
 @class SwordInstallSource;
 @class SwordModule;

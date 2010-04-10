@@ -1,6 +1,6 @@
 /*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ float installationProgress;
 	
 }
 
-- (PSModuleController *)init {
+- (id)init {
 	self = [super init];
 	installationProgress = 0.0;
 
@@ -563,10 +563,9 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}		
 	
-	// move these outside of this method & these are called by the caller after -removeModule is called.
 	[self reload];
 	//[moduleTable reloadData];
-	//[viewController reloadModuleTable];
+	[viewController reloadModuleTable];
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!

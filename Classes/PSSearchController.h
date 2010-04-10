@@ -7,6 +7,7 @@
 //
 
 #import "DataController.h"
+#import "PSModuleController.h"
 #import "SwordListKey.h"
 
 @interface PSSearchController : UIViewController {

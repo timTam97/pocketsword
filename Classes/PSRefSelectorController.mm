@@ -22,12 +22,12 @@
 @synthesize refSelectorBooksIndex;
 @synthesize currentlyViewedBookName;
 
-- (void)awakeFromNib {
-	refToucherMiscScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, 320, 416)];
-	[refToucherMiscScrollView setBackgroundColor:[UIColor blackColor]];
-	[refToucherBookScrollView setBackgroundColor:[UIColor blackColor]];
-
-}
+//- (void)awakeFromNib {
+//	refToucherMiscScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, 320, 416)];
+//	[refToucherMiscScrollView setBackgroundColor:[UIColor blackColor]];
+//	[refToucherBookScrollView setBackgroundColor:[UIColor blackColor]];
+//
+//}
 
 - (void)viewWillAppear:(BOOL)animated {
 	NSIndexPath *tableSelection = [refTable indexPathForSelectedRow];
@@ -39,30 +39,30 @@
 - (void)dealloc {
 	[refSelectorBooks release];
 	[refSelectorBooksIndex release];
-	[refToucherMiscScrollView release];
+//	[refToucherMiscScrollView release];
 	[currentlyViewedBookName release];
 	[super dealloc];
 }
 
-- (void)hideNavigation {
-	if([refToucherView superview]) {
-		[refToucherView removeFromSuperview];
-	}
-	if([refNavigationController.view superview]) {
-		[ViewController hideModal:refNavigationController.view withTiming:0.3];
-	}
-}
+//- (void)hideNavigation {
+//	if([refToucherView superview]) {
+//		[refToucherView removeFromSuperview];
+//	}
+//	if([refNavigationController.view superview]) {
+//		[ViewController hideModal:refNavigationController.view withTiming:0.3];
+//	}
+//}
 
-- (void)toggleNavigation:(ShownTab)shownTab {
-	BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
+- (void)toggleNavigation/*:(ShownTab)shownTab*/ {
+	//BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
 	
 	if([refNavigationController.view superview]) {
-		[refNavigationController.view removeFromSuperview];
+		[ViewController hideModal:refNavigationController.view withTiming:0.3];
 	} else {
 		[self updateRefSelectorBooks];
 		[refTable reloadData];
 		refNavigationController.navigationBar.topItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
-		UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(hideNavigation)];
+		UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(toggleNavigation)];
 		refNavigationController.navigationBar.topItem.leftBarButtonItem = cancel;
 		[cancel release];
 		//refNavigationController.navigationItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
@@ -80,7 +80,7 @@
 	}
 	return;
 	
-	if(!refPickerMode) {
+/*	if(!refPickerMode) {
 		if([refToucherView superview]) {
 			//[ViewController hideModal:refToucherView withTiming:0.3];
 			[refToucherView removeFromSuperview];
@@ -140,14 +140,11 @@
 		}
 		verse--;
 		[refSelector selectRow: verse inComponent: 2 animated: YES];
-	}
+	}*/
 	
 }
 
-//
-// UIPickerView delegate and data source methods
-//
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+/*- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
 	return 3;// One for book, one for chapter, one for verse.
 }
 
@@ -189,12 +186,6 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
 	if (component == 0) {
-		//DLog(@"picker selected Book row %d = %@", row, [((SwordBook*)[refSelectorBooks objectAtIndex:row]) name]);
-		//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-		
-		// Update the picker to contain the appropriate number of chapters
-		//numChapters = [[CHAPTERS objectAtIndex: row] intValue];
-		
 		refSelectorBook = row;
 		refSelectorChapter = 1;//reset to the top chapter
 		[pickerView reloadComponent: 1];
@@ -209,7 +200,7 @@
 		[pickerView reloadComponent: 2];
 		[pickerView selectRow: 0 inComponent: 2 animated: YES];
 	}
-}
+}*/
 
 - (void)updateRefSelectorBooks {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -262,7 +253,6 @@
 	[pool release];
 }
 
-// UITableView delegate methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [refSelectorBooks count];
 }
@@ -289,25 +279,18 @@
 	} else {
 		cell.textLabel.textColor = [UIColor blackColor];
 	}
-	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	//PSChapterSelectorController *chapterSelectorController = [[PSChapterSelectorController alloc] initWithNibName:@"PSChapterSelectorController" bundle:nil];
 	PSChapterSelectorController *chapterSelectorController = [[PSChapterSelectorController alloc] init];
 	NSDictionary *proxyDict = [NSDictionary dictionaryWithObject:[moduleManager viewController] forKey:@"viewController"];
 	NSDictionary *optionsDict = [NSDictionary dictionaryWithObject:proxyDict forKey:UINibExternalObjects];
 	[[NSBundle mainBundle] loadNibNamed:@"PSChapterSelectorController" owner:chapterSelectorController options:optionsDict];
-	
 	[chapterSelectorController setBookAndInit: [refSelectorBooks objectAtIndex:indexPath.section]];
 	[refNavigationController pushViewController:chapterSelectorController animated:YES];
 	[chapterSelectorController release];
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
-	
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
@@ -321,12 +304,6 @@
 	}
 	return 0;
 }
-
-
-
-
-
-
 
 - (NSString*)bookName:(NSInteger)bookIndex
 {
@@ -354,7 +331,7 @@
 	return ret;
 }
 
-- (void)selectedBook:(id)sender {
+/*- (void)selectedBook:(id)sender {
 	NSString *btn = [(UIButton*)sender currentTitle];
 	//NSLog(@"pressed book %@", btn);
 	for(int i=0;i<[refSelectorBooks count];i++) {
@@ -570,5 +547,5 @@
 	}
 	[background release];
 }
-
+*/
 @end

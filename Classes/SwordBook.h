@@ -6,7 +6,6 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-//#import <Foundation/Foundation.h>
 #include <versemgr.h>
 
 

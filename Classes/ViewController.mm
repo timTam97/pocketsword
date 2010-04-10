@@ -1,6 +1,6 @@
 /*
 	PocketSword - a frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	//DLog(@"updateInstallationStatus: Progress: %f", progress);
 	
 	if (progress == 1.0) {
-		[dataController reloadModuleList];
+		[moduleManager reload];
 		//[moduleTable reloadData];
 		//[downloadableModulesTable reloadData];
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
@@ -137,7 +137,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		failed = NO;
 	}
 	if (failed) {
-		[dataController reloadModuleList];
+		[moduleManager reload];
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		//[moduleTable reloadData];
 		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
@@ -375,12 +375,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
 	tabBarController.moreNavigationController.navigationBar.topItem.rightBarButtonItem = nil;
-	DLog(@"\nRemoving Edit button");
-	//if([tabController.moreNavigationController.view isDescendantOfView:viewController.view]) {
-		//this is (hopefully) the root More controller.
-		//DLog(@"\n\nRAAAHHH!");
-		//viewController.navigationItem.rightBarButtonItem = nil;
-	//}
+//	DLog(@"\nRemoving Edit button");
 	
 }
 
@@ -557,8 +552,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		// commentary tab
 		return;
 	}
-	ShownTab shownTab = (showingBibleTab) ? BibleTab : CommentaryTab;
-	[refSelectorController toggleNavigation:shownTab];
+//	ShownTab shownTab = (showingBibleTab) ? BibleTab : CommentaryTab;
+	[refSelectorController toggleNavigation/*:shownTab*/];
 	
 	[pool release];
 }
@@ -673,7 +668,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //    or when the user selects a new module to view.
 //    or when the user selects a bookmark.
 //    or when the user selects a search result.
-- (IBAction)addHistoryItem:(ShownTab)tabForHistory
+- (void)addHistoryItem:(ShownTab)tabForHistory
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -739,8 +734,55 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)addBookmark:(id)sender {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
-	[dataController addBookmark: [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse]];
+	NSString *ref = [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
+	
+	if (!bookmarks) {
+		bookmarks = [[NSMutableArray alloc] initWithObjects: nil];
+		
+		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+		[prefs setObject: bookmarks forKey: @"bookmarks2"];
+		
+		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
+		[prefs release];
+	}
+	NSString *refToAdd = [PSModuleController createRefString:ref];
+	if(![bookmarks containsObject: refToAdd])
+		[bookmarks addObject: refToAdd];
+	
+	[defaults setObject: bookmarks forKey: @"bookmarks2"];
+	[defaults synchronize];
+	[bookmarks release];
+	
+	[bookmarksTable reloadData];
+	[pool release];
+}
+
+- (void)removeBookmark:(NSString *)ref {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
+	
+	if(!bookmarks)
+		return;
+	
+	for(NSUInteger i = 0; i < [bookmarks count]; ++i) {
+		if ([[bookmarks objectAtIndex: i] isEqualToString: ref]) {
+			[bookmarks removeObjectAtIndex: i];
+		}
+	}
+	
+	[defaults setObject: bookmarks forKey: @"bookmarks2"];
+	[defaults synchronize];
+	[bookmarks release];
+	
+	[bookmarksTable reloadData];
+	[pool release];
 }
 
 - (void)getRemoteModuleList {
@@ -1057,10 +1099,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[activityController.view removeFromSuperview];
 }
 
-//- (void)reloadModuleTable {
-//	[moduleTable reloadData];
-//}
-//
+- (void)reloadModuleTable {
+	[modulesListTable reloadData];
+}
+
 - (void)reloadDictionaryData {
 	[dictionaryViewController reloadDictionaryData:YES];
 }
@@ -1140,6 +1182,29 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 	return load; // Return YES to make sure regular navigation works as expected.
 	
+}
+
+- (void)setShownTabTo:(ShownTab)tab {
+	switch(tab) {
+		case BibleTab:
+		{
+			for(UIViewController* uivc in tabController.viewControllers) {
+				if([uivc.view isDescendantOfView:bibleTabController.view]) {
+					tabController.selectedViewController = uivc;
+				}
+			}
+		}
+			break;
+		case CommentaryTab:
+		{
+			for(UIViewController* uivc in tabController.viewControllers) {
+				if([uivc.view isDescendantOfView:commentaryTabController.view]) {
+					tabController.selectedViewController = uivc;
+				}
+			}
+		}
+			break;
+	}
 }
 
 @end

@@ -106,7 +106,7 @@ z_streamp z;
 			 do {
 				*q++ = *(Bytef *)csp++;
 			 } while (--e);
-			 csp = s->window;
+			 csp = (unsigned long)s->window;
 			 do {
 				*q++ = *(Bytef *)csp++;
 			 } while (--c);

@@ -26,9 +26,9 @@
 #define FONT_NAME_ROW		5
 #define RED_LETTER_ROW		6
 #define RED_LETTER_NOTE_ROW	7
-#define REF_PICKER_ROW		8
-#define REF_PICKER_NOTE_ROW	9
-#define DISPLAY__ROWS		10//total rows in section
+#define REF_PICKER_ROW		8//removed
+#define REF_PICKER_NOTE_ROW	9//removed
+#define DISPLAY__ROWS		8//total rows in section
 
 //rows in STRONGS section
 #define STRONGS_DISPLAY_ROW	0

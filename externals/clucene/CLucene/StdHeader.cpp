@@ -73,7 +73,7 @@ void CLDebugBreak(){
 #if defined(_CLCOMPILER_MSVC) && defined(_DEBUG)
 	_CrtDbgBreak();
 #else
-	int i=0; //a line to put breakpoint on
+	//int i=0; //a line to put breakpoint on
 #endif
 }
 

@@ -15,7 +15,7 @@
 
 #import "SwordModule.h"
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 #include <swmgr.h>		// C++ Sword API
 #include <localemgr.h>
 #include <markupfiltmgr.h>
@@ -27,7 +27,7 @@
 #include <plainhtml.h>
 #include <versekey.h>
 class sword::SWModule;
-//#endif
+#endif
 
 @class SwordModule;
 

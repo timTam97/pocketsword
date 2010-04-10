@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 #include <swmgr.h>
 #include <installmgr.h>
 class sword::SWModule;
-//#endif
+#endif
 
 @class SwordManager;
 @class SwordInstallManager;

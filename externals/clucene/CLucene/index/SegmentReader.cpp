@@ -298,7 +298,7 @@ CL_NS_DEF(index)
     size_t patternLength = strlen(pattern);
 
     string res;
-	bool ret=false;
+	  //bool ret=false;
 	vector<string>::iterator itr = names.begin();
     while ( itr != names.end() ){
 		if ( (*itr).length()>patternLength && strncmp((*itr).c_str(),pattern,patternLength) == 0 ){

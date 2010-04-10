@@ -13,7 +13,6 @@
 	IBOutlet UIWebView			*infoWebView;
 	IBOutlet PSModuleController *moduleManager;
 	IBOutlet UINavigationItem	*navBar;
-	IBOutlet UITableView			*modulesListTable;
 
 	IBOutlet UIBarButtonItem	*closeButton;
 	IBOutlet UIBarButtonItem	*editButton;

@@ -535,7 +535,8 @@ CL_NS_DEF(index)
 	  // start with zero or 1 seg so optimize the current
 	  optimize();
 	  
-	  int32_t start = segmentInfos->size();
+	  //int32_t start = 
+	  segmentInfos->size();
 
 	  //Iterate through the directories
       int32_t i = 0;

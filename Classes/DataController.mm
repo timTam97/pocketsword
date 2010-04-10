@@ -1,6 +1,6 @@
 /*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008-2009 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,142 +18,24 @@
 */
 
 #import "DataController.h"
-#import "ViewController.h"
+#import "PSModuleController.h"
 
 @implementation DataController
 
 
 @synthesize listType;
-//@synthesize sourceInstallSourceView;
-//@synthesize installedModuleGroups;
 
-//sword::ListKey results;
-
-//- (DataController *)init {
-//	self = [super init];
-//	
-//	refSelectorBook = 0;
-//	refSelectorChapter = 1;
-//	//numChapters = [[CHAPTERS objectAtIndex: 0] intValue];
-//	//sourceInstallSourceView = 0;
-//	
-//	// TODO: why are we calling this here?  Are we actually calling this twice at the app-start event?
-//	//[self reloadModuleList];
-//	return self;
-//}
-
-// Bookmark functions
-- (void)addBookmark:(NSString *)ref {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
-	
-	if (bookmarks == nil) {
-		bookmarks = [[NSMutableArray alloc] initWithObjects: nil];
-		
-		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-		[prefs setObject: bookmarks forKey: @"bookmarks2"];
-		
-		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-		[prefs release];
-	}
-	NSString *refToAdd = [PSModuleController createRefString:ref];
-	if(![bookmarks containsObject: refToAdd])
-		[bookmarks addObject: refToAdd];
-	
-	[defaults setObject: bookmarks forKey: @"bookmarks2"];
-	[defaults synchronize];
-	[bookmarks release];
-	
-	[bookmarksTable reloadData];
-	[pool release];
-}
-
-- (void)removeBookmark:(NSString *)ref {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
-	
-	if (bookmarks == nil) { return; }
-	
-	for (NSUInteger i = 0; i < [bookmarks count]; ++i) {
-		if ([[bookmarks objectAtIndex: i] isEqualToString: ref]) {
-			[bookmarks removeObjectAtIndex: i];
-		}
-	}
-	
-	[defaults setObject: bookmarks forKey: @"bookmarks2"];
-	[defaults synchronize];
-	[bookmarks release];
-	
-	[bookmarksTable reloadData];
-	[pool release];
-}
-
-// Reloads the module list into the appropriate class-level arrays
-- (void)reloadModuleList {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[moduleManager reload];
-	
-	[pool release];
-}
-
-//
-// UITableView delegate and data source methods
-//
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//	NSInteger tag = [tableView tag];
-//	if (tag == MODULE_TABLE) {
-//		NSUInteger modCount = [[[moduleManager swordManager] moduleListByType] count];
-//		return modCount > 0 ? modCount : 1;
-//	} else {
-		return 1;
-//	}
+	return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-//	NSInteger tag = [tableView tag];
-//	if (tag == MODULE_TABLE) {
-//		@try {
-//			NSUInteger modCount = [[[moduleManager swordManager] moduleListByType] count];
-//			if (modCount > 0) {
-//				return [[[[moduleManager swordManager] moduleListByType] objectAtIndex: section] moduleType];
-//			} else {
-//				return NSLocalizedString(@"NoModulesInstalled", @"");
-//			}
-//		}
-//		@catch (id except) {
-//			return NSLocalizedString(@"NoModulesInstalled", @"");
-//		}
-//	}
 	return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	// TODO: Add mechanism for counting other module types
 	NSInteger tag = [tableView tag];
-//	if (tag == MODULE_TABLE) {
-//		@try {
-//			NSUInteger modCount = [[[moduleManager swordManager] moduleListByType] count];
-//			return (modCount > 0) ? [[[[[moduleManager swordManager] moduleListByType] objectAtIndex: section] moduleList] count] : 0;
-//		}
-//		@catch (id except) {
-//			return 0;
-//		}
-//	} else if (tag == MODULES_LIST_TABLE) {
-//		switch (listType) {
-//			case BibleTab:
-//				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
-//				break;
-//			case CommentaryTab:
-//				return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
-//				break;
-//		}
-//		return 0;
-	/*} else*/ if (tag == HISTORY_LIST_TABLE) {
+	if (tag == HISTORY_LIST_TABLE) {
 		NSArray *history;
 		switch (listType) {
 			case BibleTab:
@@ -184,7 +66,7 @@
 	
 	NSString *theIdentifier;
 	
-	if (tag == MODULES_LIST_TABLE || tag == HISTORY_LIST_TABLE)
+	if (tag == HISTORY_LIST_TABLE)
 		theIdentifier = @"id-mod";
 	else 
 		theIdentifier = @"id-book";
@@ -194,54 +76,13 @@
 	
 	// If no cell is available, create a new one using the given identifier - 
 	if (cell == nil) {
-		if (tag == MODULES_LIST_TABLE || tag == HISTORY_LIST_TABLE)
+		if (tag == HISTORY_LIST_TABLE)
 			cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 		else 
 			cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: theIdentifier] autorelease];
 	}
 	
-//	if (tag == MODULE_TABLE) {
-//		// Fill the cell
-//		try {
-//			int section = [indexPath section];
-//			int row = [indexPath row];
-//			cell.textLabel.text = [[[[[[moduleManager swordManager] moduleListByType] objectAtIndex: section] moduleList] objectAtIndex:row] name];
-//			cell.detailTextLabel.text = [[[[[[moduleManager swordManager] moduleListByType] objectAtIndex: section] moduleList] objectAtIndex:row] descr];
-//		} catch (...) {
-//			cell.textLabel.text = @"";
-//		}
-//		if ([moduleManager isLoaded:cell.textLabel.text]) {
-//			cell.textLabel.textColor = [UIColor blueColor];
-//			cell.detailTextLabel.textColor = [UIColor blueColor];
-//		} else {
-//			cell.textLabel.textColor = [UIColor blackColor];
-//			cell.detailTextLabel.textColor = [UIColor blackColor];
-//		}
-//			cell.accessoryType = UITableViewCellAccessoryCheckmark;
-//		} else {
-//			cell.accessoryType = UITableViewCellAccessoryNone;
-//		}
-//		return cell;
-//	} else if (tag == MODULES_LIST_TABLE) {
-//		switch (listType) {
-//			case BibleTab:
-//				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
-//				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
-//				break;
-//			case CommentaryTab:
-//				cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
-//				cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
-//				break;
-//		}
-//		if ([moduleManager isLoaded:cell.textLabel.text]) {
-//			cell.textLabel.textColor = [UIColor blueColor];
-//			cell.detailTextLabel.textColor = [UIColor blueColor];
-//		} else {
-//			cell.textLabel.textColor = [UIColor blackColor];
-//			cell.detailTextLabel.textColor = [UIColor blackColor];
-//		}
-//		return cell;
-	/*} else*/ if (tag == HISTORY_LIST_TABLE) {
+	if (tag == HISTORY_LIST_TABLE) {
 		NSArray *history;
 		switch (listType) {
 			case BibleTab:
@@ -281,61 +122,7 @@
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	NSInteger tag = [tableView tag];
-//	if (tag == MODULE_TABLE) {
-//		// TODO: module table should be removed in favour of modules list table...
-//		NSString *ref = [moduleManager getCurrentBibleRef];
-//
-//		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-//		if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]])) {
-//			[tableView deselectRowAtIndexPath:indexPath animated:YES];
-//			return;
-//		}
-//		SwordModule *mod = [[moduleManager swordManager] moduleWithName:newModule];
-//		BOOL bibleModule = ([[mod typeString] isEqualToString:SWMOD_CATEGORY_BIBLES]);
-//		if (bibleModule) {
-//			[moduleManager loadPrimaryBible: newModule];
-//		}
-//		else {
-//			[moduleManager loadPrimaryCommentary:newModule];
-//		}
-//		
-//		
-//		// Update the module list to reflect the current translation
-//		[tableView reloadData];
-//		if (bibleModule) {
-//			//[tabController setSelectedIndex: BIBLE_TAB];
-//			[self setShownTabTo:BibleTab];
-//			[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-//			[viewController addHistoryItem: BibleTab];
-//		} else {
-//			//[tabController setSelectedIndex: COMMENTARY_TAB];
-//			[self setShownTabTo:CommentaryTab];
-//			[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-//			[viewController addHistoryItem: CommentaryTab];
-//		}
-//	} else if (tag == MODULES_LIST_TABLE) {
-//		NSString *ref = [moduleManager getCurrentBibleRef];
-//		NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-//		if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]])) {
-//			[tableView deselectRowAtIndexPath:indexPath animated:YES];
-//			return; // do nothing if we select the currently loaded module.
-//		}
-//		// Update the module list to reflect the current translation
-//		[tableView reloadData];
-//		switch (listType) {
-//			case BibleTab:
-//				[moduleManager loadPrimaryBible: newModule];
-//				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-//				[viewController addHistoryItem: BibleTab];
-//				break;
-//			case CommentaryTab:
-//				[moduleManager loadPrimaryCommentary:newModule];
-//				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-//				[viewController addHistoryItem: CommentaryTab];
-//				break;
-//		}
-//		[viewController toggleModulesList: nil];
-	/*} else*/ if (tag == HISTORY_LIST_TABLE) {
+	if (tag == HISTORY_LIST_TABLE) {
 		NSArray *history;
 		NSString *ref;
 		NSString *scroll;
@@ -374,7 +161,7 @@
 		}
 		[viewController toggleMultiList: nil];
 	} else if (tag == BOOKMARK_TABLE) {
-		[self setShownTabTo:BibleTab];
+		[viewController setShownTabTo:BibleTab];
 		if (![[[moduleManager swordManager] moduleNames] count] == 0) {
 			NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
 			NSString *ref = [fullRef objectAtIndex: 0];
@@ -400,54 +187,14 @@
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSInteger tag = [tableView tag];
 	
-//	if (tag == MODULE_TABLE) {
-//		if (editingStyle == UITableViewCellEditingStyleDelete) {
-//			NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-//			[moduleManager removeModule: module];
-//			//[moduleManager reload];
-//			//[moduleTable reloadData];
-//			
-//		}
-	/*} else*/ if (tag == BOOKMARK_TABLE) {
+	if (tag == BOOKMARK_TABLE) {
 		if (editingStyle == UITableViewCellEditingStyleDelete) {
 			NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-			[self removeBookmark: ref];
+			[viewController removeBookmark: ref];
 		}
 	}
 	
 	[pool release];
-}
-
-- (void)setShownTabTo:(ShownTab)tab {
-	switch(tab) {
-		case BibleTab:
-		{
-			for(UIViewController* uivc in tabController.viewControllers) {
-				if([uivc.view isDescendantOfView:bibleTabController.view]) {
-					tabController.selectedViewController = uivc;
-				}
-			}
-		}
-			break;
-		case CommentaryTab:
-		{
-			for(UIViewController* uivc in tabController.viewControllers) {
-				if([uivc.view isDescendantOfView:commentaryTabController.view]) {
-					tabController.selectedViewController = uivc;
-				}
-			}
-		}
-			break;
-//		case ModuleTab:
-//		{
-//			for(UIViewController* uivc in tabController.viewControllers) {
-//				if([moduleTable isDescendantOfView: uivc.view]) {
-//					tabController.selectedViewController = uivc;
-//				}
-//			}
-//		}
-//			break;
-	}
 }
 
 @end

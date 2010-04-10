@@ -129,7 +129,7 @@ typedef enum
 #ifdef _LUCENE_PRAGMA_WARNINGS
  #pragma message ("===== Using internal character function =====")
 #else
- #warning "===== Using internal character function ====="
+//#warning "===== Using internal character function ====="
 #endif
 
 bool cl_isletter(gunichar c)
@@ -231,7 +231,7 @@ TCHAR cl_tolower (TCHAR ch)
       if (val >= 0x1000000)
       {
         const gchar *p = special_case_table + val - 0x1000000;
-        int len=0;
+		  //int len=0;
 		wchar_t ret=0;
 		lucene_utf8towc(&ret,p,6);
 #ifdef _UCS2

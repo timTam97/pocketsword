@@ -1,6 +1,6 @@
 /*
 	PocketSword - a frontend for viewing SWORD project modules on the iPhone and iPod Touch
-	Copyright (C) 2008 Ian Wagner
+	Copyright (C) 2008-2010 CrossWire Bible Society
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
