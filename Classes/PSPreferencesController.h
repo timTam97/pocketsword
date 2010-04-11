@@ -27,7 +27,6 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
-- (void)refPickerChanged:(UISwitch *)sender;
 - (void)displayStrongsChanged:(UISwitch *)sender;
 - (void)displayMorphChanged:(UISwitch *)sender;
 - (void)displayGreekAccentsChanged:(UISwitch *)sender;
@@ -44,7 +43,5 @@
 - (void)fontNameChanged:(NSString *)newFont;
 - (void)insomniaModeChanged:(UISwitch *)sender;
 - (void)moduleMaintainerModeChanged:(UISwitch *)sender;
-
-//- (IBAction)infoButtonPressed:(id)sender;
 
 @end

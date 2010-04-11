@@ -1,25 +1,25 @@
-LANG		TRANSLATOR				T EMAIL								AVAILABLE SINCE
+LANG			TRANSLATOR					T EMAIL								SINCE			LAST UPDATED
 
 
 CURRENT-ISH
 
-French		Dominique Corbex		dominique.corbex@gmail.com			v1.1
-Spanish		David Bell				david.benjamin.bell@gmail.com		v1.2
-Swedish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		v1.1
-Chinese		Yiguang Hu				yighu@yahoo.com						v1.2
-Italian		Enzo					enzo@infomicron.com					v1.2.1
+French			Dominique Corbex			dominique.corbex@gmail.com			v1.1
+Spanish		David Bell					david.benjamin.bell@gmail.com		v1.2
+Swedish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com	v1.1
+Chinese		Yiguang Hu					yighu@yahoo.com						v1.2
+Italian		Vincenzo Carrubba			enzo@infomicron.com					v1.2.1
 
 
 
 IN PROGRESS (1.2b)
 
-Dutch		Henko van de Weerd		henko87@gmail.com					---
-Polish		Jon Glass				jonglass@mac.com					---
+Dutch			Henko van de Weerd		henko87@gmail.com						---
+Polish			Jon Glass					jonglass@mac.com						---
 
 
 UNKNOWN:
 
-Farsi		Peter von Kaehne		refdoc@gmx.net						---
-Finnish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com		---
-Japanese	Ian Wagner				ianthetechie@gmail.com				---
-Korean		Ian Wagner				ianthetechie@gmail.com				---
+Farsi			Peter von Kaehne			refdoc@gmx.net						---
+Finnish		Christoffer Björkskog	christoffer.bjorkskog@gmail.com	---
+Japanese		Ian Wagner					ianthetechie@gmail.com				---
+Korean			Ian Wagner					ianthetechie@gmail.com				---

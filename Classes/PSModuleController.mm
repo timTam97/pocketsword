@@ -117,10 +117,10 @@ float installationProgress;
 	// debug code to print out all available fonts...
 	NSArray *names = [UIFont familyNames];
 	for(NSString *n in names) {
-		NSLog(@"%@", n);
+	 //NSLog(@"%@", n);
 		NSArray *fontNames = [UIFont fontNamesForFamilyName:n];
 		for(NSString *nn in fontNames) {
-			NSLog(@"->		%@", nn);
+	 //NSLog(@"->		%@", nn);
 		}
 	}
 	

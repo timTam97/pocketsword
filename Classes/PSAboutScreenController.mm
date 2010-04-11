@@ -45,7 +45,7 @@
 									 Nic Carter\n\
 								</p>\n\
 								 <p><b>Icons by: </b><br />\n\
-										Cheree Lynley Designs, James Coleman, Nic Carter\n\
+										Cheree Lynley Designs, James Coleman\n\
 								</p>\n\
 							  <p><b>Localisations by: </b><br />\n\
 								  David Bell, Christoffer Björkskog, Dominique Corbex, Vincenzo Carrubba, Yiguang Hu\n\

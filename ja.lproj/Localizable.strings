@@ -181,8 +181,7 @@
 "ModuleEnterKeyTitle" = "Enter Key:";
 "ModuleUnlockScreenTitle" = "Unlock Module";
 "ModuleUnlockHelpText" = "To unlock this module, please enter the key you were sent when you bought this module.  Press Done to test the key and then press Save if it looks correct.";
-"RefSelectorBookTitle" = "Select Book:";
-"RefSelectorChapterTitle" = "Chapter:";
-"RefSelectorVerseTitle" = "Verse:";
+"RefSelectorBookTitle" = "Select Book";
+"RefSelectorChapterTitle" = "Chapter";
+"RefSelectorVerseTitle" = "Verse";
 "RefSelectorBackButtonTitle" = "Back";
-"PreferencesRefPickerPreferenceTitle" = "Scroll Picker";

@@ -26,8 +26,6 @@
 #define FONT_NAME_ROW		5
 #define RED_LETTER_ROW		6
 #define RED_LETTER_NOTE_ROW	7
-#define REF_PICKER_ROW		8//removed
-#define REF_PICKER_NOTE_ROW	9//removed
 #define DISPLAY__ROWS		8//total rows in section
 
 //rows in STRONGS section
@@ -59,16 +57,9 @@
 
 BOOL requireReloadOfModuleViews = NO;
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-//- (void)viewWillAppear:(BOOL)animated {
 - (void)viewDidLoad {
 	[super viewDidLoad];
 
-    //UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    //[infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    //UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithCustomView: infoButton];
-    //self.navigationItem.rightBarButtonItem = iButton;
-    //[iButton release];
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
 }
 
@@ -151,7 +142,6 @@ BOOL requireReloadOfModuleViews = NO;
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case RED_LETTER_NOTE_ROW :
-				case REF_PICKER_NOTE_ROW :
 					return 38;
 				default :
 					return 45;
@@ -285,31 +275,6 @@ BOOL requireReloadOfModuleViews = NO;
 						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
 						cell.selectionStyle = UITableViewCellSelectionStyleNone;
 						cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
-						cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-						cell.textLabel.numberOfLines = 2;
-						cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
-						cell.textLabel.textColor = [UIColor darkGrayColor];
-					}
-						break;
-					case REF_PICKER_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *refPickerSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
-						refPickerSwitch.on = refPickerMode;
-						[refPickerSwitch addTarget:self action:@selector(refPickerChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: refPickerSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesRefPickerPreferenceTitle", @"Scroll Picker");
-						//cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
-						[refPickerSwitch release];
-					}
-						break;
-					case REF_PICKER_NOTE_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = @"Enable Scroll Picker to use the Scroller method to select Bible references.";//NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
 						cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 						cell.textLabel.numberOfLines = 2;
 						cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
@@ -570,12 +535,6 @@ BOOL requireReloadOfModuleViews = NO;
 			}
 			break;
 	}
-}
-
-- (void)refPickerChanged:(UISwitch *)sender {
-	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"refPickerPreference"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)displayStrongsChanged:(UISwitch *)sender {
