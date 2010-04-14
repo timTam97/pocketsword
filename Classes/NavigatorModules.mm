@@ -18,18 +18,18 @@
 {
 	[super viewWillAppear:animated];
 	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
-	NSMutableArray *modules = [self.dataArray mutableCopy];
-	BOOL resetArray = NO;
-	for(int i=0;i<[modules count];i++) {
-		if([[(SwordModule*)[modules objectAtIndex:i] name] isEqualToString:@"ESV"]) {
-			[modules removeObjectAtIndex: i];
-			resetArray = YES;
-			break;
-		}
-	}
-	if(resetArray)
-		self.dataArray = modules;
-	[modules release];
+//	NSMutableArray *modules = [self.dataArray mutableCopy];
+//	BOOL resetArray = NO;
+//	for(int i=0;i<[modules count];i++) {
+//		if([[(SwordModule*)[modules objectAtIndex:i] name] isEqualToString:@"ESV"]) {
+//			[modules removeObjectAtIndex: i];
+//			resetArray = YES;
+//			break;
+//		}
+//	}
+//	if(resetArray)
+//		self.dataArray = modules;
+//	[modules release];
 	[table reloadData];	// populate our table's data
 	if(tableSelection) {
 		[table selectRowAtIndexPath:tableSelection animated:NO scrollPosition:UITableViewScrollPositionMiddle];

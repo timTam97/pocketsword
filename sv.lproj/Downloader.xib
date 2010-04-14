@@ -3,12 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">768</int>
 		<string key="IBDocument.SystemVersion">10D573</string>
-		<string key="IBDocument.InterfaceBuilderVersion">783</string>
+		<string key="IBDocument.InterfaceBuilderVersion">762</string>
 		<string key="IBDocument.AppKitVersion">1038.29</string>
 		<string key="IBDocument.HIToolboxVersion">460.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">107</string>
+			<string key="NS.object.0">87</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
@@ -945,40 +945,6 @@
 						<string key="statusText">id</string>
 						<string key="statusTitle">id</string>
 					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="detailsView">
-							<string key="name">detailsView</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="navigatorSources">
-							<string key="name">navigatorSources</string>
-							<string key="candidateClassName">NavigatorSources</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusBar">
-							<string key="name">statusBar</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusController">
-							<string key="name">statusController</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusOverallBar">
-							<string key="name">statusOverallBar</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusOverallText">
-							<string key="name">statusOverallText</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusText">
-							<string key="name">statusText</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusTitle">
-							<string key="name">statusTitle</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorLeafView.h</string>
@@ -992,20 +958,6 @@
 						<string key="navigatorSources">NavigatorSources</string>
 						<string key="table">id</string>
 					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="navigatorModules">
-							<string key="name">navigatorModules</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="navigatorSources">
-							<string key="name">navigatorSources</string>
-							<string key="candidateClassName">NavigatorSources</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="table">
-							<string key="name">table</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorModuleLanguages.h</string>
@@ -1018,13 +970,6 @@
 						<string key="NS.key.0">refreshDownloadSource:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">refreshDownloadSource:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">refreshDownloadSource:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="navigatorModuleLanguages">id</string>
 						<string key="navigatorSources">NavigatorSources</string>
@@ -1035,44 +980,6 @@
 						<string key="statusText">id</string>
 						<string key="statusTitle">id</string>
 						<string key="table">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="navigatorModuleLanguages">
-							<string key="name">navigatorModuleLanguages</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="navigatorSources">
-							<string key="name">navigatorSources</string>
-							<string key="candidateClassName">NavigatorSources</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusBar">
-							<string key="name">statusBar</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusController">
-							<string key="name">statusController</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusOverallBar">
-							<string key="name">statusOverallBar</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusOverallText">
-							<string key="name">statusOverallText</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusText">
-							<string key="name">statusText</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusTitle">
-							<string key="name">statusTitle</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="table">
-							<string key="name">table</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1087,20 +994,6 @@
 						<string key="navigatorSources">NavigatorSources</string>
 						<string key="table">id</string>
 					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="navigatorLeafView">
-							<string key="name">navigatorLeafView</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="navigatorSources">
-							<string key="name">navigatorSources</string>
-							<string key="candidateClassName">NavigatorSources</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="table">
-							<string key="name">table</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/NavigatorModules.h</string>
@@ -1113,13 +1006,6 @@
 						<string key="NS.key.0">manualAddModule:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">manualAddModule:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">manualAddModule:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="manualInstallViewController">id</string>
 						<string key="moduleManager">PSModuleController</string>
@@ -1127,32 +1013,6 @@
 						<string key="refreshButton">id</string>
 						<string key="tabController">UITabBarController</string>
 						<string key="table">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="manualInstallViewController">
-							<string key="name">manualInstallViewController</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">PSModuleController</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="navigatorModuleTypes">
-							<string key="name">navigatorModuleTypes</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="refreshButton">
-							<string key="name">refreshButton</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="tabController">
-							<string key="name">tabController</string>
-							<string key="candidateClassName">UITabBarController</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="table">
-							<string key="name">table</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1171,40 +1031,6 @@
 						<string key="dataController">id</string>
 						<string key="dictionaryTitle">UIBarButtonItem</string>
 						<string key="viewController">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="bibleTitle">
-							<string key="name">bibleTitle</string>
-							<string key="candidateClassName">UIBarButtonItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="bibleWebView">
-							<string key="name">bibleWebView</string>
-							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="bookmarkAddButton">
-							<string key="name">bookmarkAddButton</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="commentaryTitle">
-							<string key="name">commentaryTitle</string>
-							<string key="candidateClassName">UIBarButtonItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="commentaryWebView">
-							<string key="name">commentaryWebView</string>
-							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="dataController">
-							<string key="name">dataController</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="dictionaryTitle">
-							<string key="name">dictionaryTitle</string>
-							<string key="candidateClassName">UIBarButtonItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="viewController">
-							<string key="name">viewController</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1225,13 +1051,6 @@
 						<string key="NS.key.0">done:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">done:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">done:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="bonjourInfo">UILabel</string>
 						<string key="doneButton">UIButton</string>
@@ -1239,32 +1058,6 @@
 						<string key="ipInfo">UILabel</string>
 						<string key="navigatorSources">NavigatorSources</string>
 						<string key="wwwInfo">UILabel</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="bonjourInfo">
-							<string key="name">bonjourInfo</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="doneButton">
-							<string key="name">doneButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="helpInfo">
-							<string key="name">helpInfo</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="ipInfo">
-							<string key="name">ipInfo</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="navigatorSources">
-							<string key="name">navigatorSources</string>
-							<string key="candidateClassName">NavigatorSources</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="wwwInfo">
-							<string key="name">wwwInfo</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1538,6 +1331,6 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../PocketSword.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">107</string>
+		<string key="IBCocoaTouchPluginVersion">87</string>
 	</data>
 </archive>
