@@ -17,6 +17,10 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// Swedish localisation
+// By Christoffer Björkskog
+// Last Updated v1.2.2
+
 "Edit" = "Redigera";
 "Done" = "Klar";
 "Module Download" = "Modulnerladdning";

@@ -776,6 +776,17 @@
 		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
 		054EF62310CD0EAF0091D269 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		054F3C5F117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/Downloader.xib; sourceTree = "<group>"; };
+		054F3C60117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		054F3C61117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		054F3C62117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		054F3C63117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		054F3C8C117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/Downloader.xib; sourceTree = "<group>"; };
+		054F3C8D117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		054F3C8E117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		054F3C8F117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		054F3C90117EB11100BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		054F3C91117EB11100BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
 		055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleSelectorController.h; path = Classes/PSModuleSelectorController.h; sourceTree = "<group>"; };
 		055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleSelectorController.mm; path = Classes/PSModuleSelectorController.mm; sourceTree = "<group>"; };
 		0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryViewController.h; path = Classes/PSDictionaryViewController.h; sourceTree = "<group>"; };
@@ -789,6 +800,7 @@
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
+		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
 		058E2D2B10F56EFC006E4447 /* canon_german.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_german.h; sourceTree = "<group>"; };
 		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
@@ -1270,7 +1282,7 @@
 		E96C139B0FFFC6390019B69E /* Read.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Read.png; path = Resources/Read.png; sourceTree = "<group>"; };
 		E996E5220ED70C6E0034DAF6 /* PSModuleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleController.h; path = Classes/PSModuleController.h; sourceTree = "<group>"; };
 		E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleController.mm; path = Classes/PSModuleController.mm; sourceTree = "<group>"; };
-		E9A6CF9A0FF54CC100399E78 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E9A6CF9A0FF54CC100399E78 /* English */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 10; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9A6CF9E0FF5508C00399E78 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B800320FF5B971006081E5 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		E9B800340FF5B98D006081E5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2772,6 +2784,8 @@
 				zh,
 				fr,
 				it,
+				nl,
+				uk,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -3177,6 +3191,8 @@
 				0545545810CA383100EE11EC /* zh */,
 				05337B0F10F828720003CFA9 /* fr */,
 				0513ADE8115CA5E300F752DA /* it */,
+				054F3C5F117EAD4100BF1361 /* nl */,
+				054F3C8C117EB11000BF1361 /* uk */,
 			);
 			name = Downloader.xib;
 			sourceTree = "<group>";
@@ -3192,6 +3208,8 @@
 				05337B1410F828C30003CFA9 /* sv */,
 				05337B1510F828C60003CFA9 /* zh */,
 				0513ADE9115CA5E900F752DA /* it */,
+				054F3C60117EAD4100BF1361 /* nl */,
+				054F3C8D117EB11000BF1361 /* uk */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -3207,6 +3225,8 @@
 				05AB964C116DC0530043DB57 /* sv */,
 				05AB964D116DC0570043DB57 /* zh */,
 				05AB964E116DC0590043DB57 /* it */,
+				054F3C62117EAD4100BF1361 /* nl */,
+				054F3C90117EB11100BF1361 /* uk */,
 			);
 			name = PSChapterSelectorController.xib;
 			sourceTree = "<group>";
@@ -3222,6 +3242,8 @@
 				05AB9653116DC07A0043DB57 /* sv */,
 				05AB9654116DC07D0043DB57 /* zh */,
 				05AB9655116DC0800043DB57 /* it */,
+				054F3C63117EAD4100BF1361 /* nl */,
+				054F3C91117EB11100BF1361 /* uk */,
 			);
 			name = PSVerseSelectorController.xib;
 			sourceTree = "<group>";
@@ -3237,6 +3259,8 @@
 				E9B8004E0FF5C316006081E5 /* zh */,
 				05337B0210F823AF0003CFA9 /* fr */,
 				0513ADDB115CA55500F752DA /* it */,
+				054F3C8E117EB11000BF1361 /* uk */,
+				05787333117EBB14008535F3 /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -3252,6 +3276,8 @@
 				E9B8004C0FF5C301006081E5 /* zh */,
 				05337B0E10F8285A0003CFA9 /* fr */,
 				0513ADE7115CA5DD00F752DA /* it */,
+				054F3C61117EAD4100BF1361 /* nl */,
+				054F3C8F117EB11000BF1361 /* uk */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";

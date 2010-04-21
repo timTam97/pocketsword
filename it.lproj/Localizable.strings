@@ -17,6 +17,10 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// Italian localisation
+// By Vincenzo Carrubba
+// Last Updated v1.2.2
+
 "Edit" = "Modifica";
 "Done" = "Fine";
 "Module Download" = "Scaricamento modulo";
@@ -66,14 +70,14 @@
 "PreferencesTitle" = "Preferenze";
 "PreferencesDisplayPreferencesTitle" = "Preferenze visualizzazione";
 "PreferencesDevicePreferencesTitle" = "Preferenze dispositivo";
-"PreferencesFontSizeTitle" = "Dimensione carattere";
+"PreferencesFontSizeTitle" = "Dimen. carattere";
 "PreferencesNightModeTitle" = "Modalità notte";
-"PreferencesVPLTitle" = "Versetto per linea";
-"PreferencesFontTitle" = "Tipo carattere";
+"PreferencesVPLTitle" = "Un versetto per linea";
+"PreferencesFontTitle" = "Tipo di carattere";
 "PreferencesRedLetterTitle" = "Lettere Rosse";
 "PreferencesRedLetterNote" = "Nota. La modalità Lettere Rosse è disponibile solo per alcuni moduli";
-"PreferencesDisableAutoLockTitle" = "Disabilita blocco autom.";
-"PreferencesModuleMaintainerModeTitle" = "Modo sviluppatore moduli";
+"PreferencesDisableAutoLockTitle" = "No blocco automatico";
+"PreferencesModuleMaintainerModeTitle" = "Modo sviluppatore";
 "PreferencesModuleMaintainerModeNote" = "Nota. La modalità sviluppatore moduli è per quegli utenti che sviluppano i propri moduli e necessitano un metodo per installarli manualmente. Per tutti gli altri utenti è consigliato usare il caricatore di moduli incluso per accedere ai moduli ufficiali forniti da CrossWire.";
 
 "AboutTitle" = "Informazioni";
@@ -103,10 +107,10 @@
 "Maps" = "Mappe";
 "Images" = "Immagini";
 
-"BibleHistoryTitle" = "Storia Bibbia";
-"CommentaryHistoryTitle" = "Storia Commentario";
+"BibleHistoryTitle" = "Cronologia Bibbia";
+"CommentaryHistoryTitle" = "Cronologia Commentario";
 
-"None" = "Nessuna";
+"None" = "Nessuno";
 "CloseButtonTitle" = "Chiudi";
 "CacheDictionaryKeysTitle" = "Cache?";
 "CacheDictionaryKeysMsg" = "Questo dizionario deve ancora essere inizializzato, vuoi farlo adesso?";
@@ -124,13 +128,13 @@
 "IndexControllerNone" = "Controlla la tua connessione per attivare la ricerca per:";
 "IndexControllerNoneRemote" = "Attualmente non è disponibile nessun indice di ricerca scaricabile per:";
 
-"SearchHelpTitle" = "Aiuto Ricerca";
+"SearchHelpTitle" = "Guida sulla ricerca";
 "IndexControllerConfirmQuestion" = "Vuoi scaricare l'indice di ricerca per questo modulo?\nQuesto potrebbe richiedere parecchio tempo per i commentari!";
 
 "PreferencesStrongsPreferencesTitle" = "Numeri Strong";
 "PreferencesDisplayTitle" = "Mostra";
-"PreferencesGreekModuleTitle" = "Modulo Greco";
-"PreferencesHebrewModuleTitle" = "Modulo Ebraico";
+"PreferencesGreekModuleTitle" = "Mod. Greco";
+"PreferencesHebrewModuleTitle" = "Mod. Ebraico";
 "PreferencesMorphologyPreferencesTitle" = "Preferenze di morfologia";
 "PreferencesOriginalLanguagePreferencesTitle" = "Lingua originale";
 "PreferencesGreekAccentsTitle" = "Accenti Greci";
@@ -142,10 +146,10 @@
 "PreferencesCrossReferencesTitle" = "Riferimenti incrociati";
 "PreferencesFootnotesTitle" = "Note in calce";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Nessun vocabolario ebraico Strong installato. Installarne uno (tipo lo 'strongshebrew') tramite la scheda: More->Downloads.";
-"NoGreekStrongsNumbersModuleInstalled" = "Nessun vocabolario greco Strong installato. Installarne uno (tipo lo 'strongsgreek') tramite la scheda: More->Downloads.";
+"NoHebrewStrongsNumbersModuleInstalled" = "Nessun vocabolario ebraico Strong installato. Installarne uno (tipo lo 'strongshebrew') tramite la scheda: Altro->Download.";
+"NoGreekStrongsNumbersModuleInstalled" = "Nessun vocabolario greco Strong installato. Installarne uno (tipo lo 'strongsgreek') tramite la scheda: Altro->Download.";
 
-"NoMorphGreekModuleInstalled" = "Nessun Vocabolario Codici di analisi morfologica greco installato. Installarne uno (tipo il 'Robinson') tramite la scheda: More->Downloads";
+"NoMorphGreekModuleInstalled" = "Nessun Vocabolario Codici di analisi morfologica greco installato. Installarne uno (tipo il 'Robinson') tramite la scheda: Altro->Download";
 "MorphHebrewNotSupported" = "Purtroppo, i codici di analisi morfologica sono attualmente disponibili solamente per parole in Greco.  Se possiedi le competenze linguistiche e desideri contribuire a implementare questa caratteristica su PocketSword, visita <br /> openscriptures.org<br />e unisciti al gruppo di discussione.";
 
 "AboutModuleFeaturesTitle" = "Caratteristiche del modulo";
@@ -171,17 +175,17 @@
 "NotSupported" = "Questo modulo non è attualmente supportato";
 "ConfirmDeleteTitle" = "Elimina?";
 "ConfirmDeleteQuestion" = "Sei sicuro di voler eliminare questo modulo?";
-"EmptyChapterWarning" = "Il capitolo è vuoto per questo modulo.";
+"EmptyChapterWarning" = "Il modulo non contiene informazioni per questo capitolo.";
 "ModuleNotInstalled" = "non è installato.";
 "AboutModuleCurrentVersion" = "Versione installata: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Module Locked";
-"ModuleLockedQuestion" = "This module is currently locked.  You must purchase a key to unlock this module.  Unfortunately, you can't do this through PocketSword at this time.  Please read the description of this module to find out how to purchase this module.\n  If you have already purchased a key, you can input your key to unlock this module.  Do you want to input your key now?";
-"ModuleEnterKeyTitle" = "Enter Key:";
-"ModuleUnlockScreenTitle" = "Unlock Module";
-"ModuleUnlockHelpText" = "To unlock this module, please enter the key you were sent when you bought this module.  Press Done to test the key and then press Save if it looks correct.";
-"RefSelectorBookTitle" = "Select Book";
-"RefSelectorChapterTitle" = "Chapter";
-"RefSelectorVerseTitle" = "Verse";
-"RefSelectorBackButtonTitle" = "Back";
+"ModuleLockedTitle" = "Modulo bloccato";
+"ModuleLockedQuestion" = "Questo modulo è attualmente bloccato.  Per usare questo modulo devi acquistare un codice.  Attualmente non è possibile farlo attraverso PocketSword.  Leggi la descrizione di questo modulo per sapere come acquistarlo.\n  Se hai già acquistato un codice, puoi inserirlo per sbloccare questo modulo.  Desideri inserire il codice adesso?";
+"ModuleEnterKeyTitle" = "Inserire Codice:";
+"ModuleUnlockScreenTitle" = "Sblocco Modulo";
+"ModuleUnlockHelpText" = "Per sbloccare questo modulo, inserisci il codice che ti è stato inviato quando lo hai acquistato.  Premi Fine per provare il codice quindi premi Salva se è corretto.";
+"RefSelectorBookTitle" = "Scelta Libro";
+"RefSelectorChapterTitle" = "Capitolo";
+"RefSelectorVerseTitle" = "Verso";
+"RefSelectorBackButtonTitle" = "Indietro";

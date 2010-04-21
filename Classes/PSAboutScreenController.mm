@@ -38,6 +38,7 @@
 								 <div class=\"title\">PocketSword</div>\n\
 								 <div class=\"version\"> Version %@</div>\n\
 								 <center><i><a href=\"http://crosswire.org/pocketsword\">http://crosswire.org/pocketsword</a></i><br />\n\
+									<i><a href=\"http://www.crosswire.org/forums/mvnforum/listthreads?forum=16\">User Forums</a></i><br />\n\
 									<i>@<a href=\"http://twitter.com/PocketSword\">PocketSword</a> on Twitter</i></center>\n\
 							 </div>\n\
 							 <div id=\"main\">\n\
@@ -48,7 +49,7 @@
 										Cheree Lynley Designs, James Coleman\n\
 								</p>\n\
 							  <p><b>Localisations by: </b><br />\n\
-								  David Bell, Christoffer Björkskog, Dominique Corbex, Vincenzo Carrubba, Yiguang Hu\n\
+								  David Bell, Christoffer Björkskog, Dominique Corbex, Henko van de Weerd, Nakamaru Kunio, Vincenzo Carrubba, Vitaliy, Yiguang Hu\n\
 							  </p>\n\
 							  <p><b>Special thanks to: </b><br />\n\
 										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\

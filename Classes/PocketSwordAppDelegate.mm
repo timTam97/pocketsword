@@ -29,7 +29,7 @@
 @synthesize window;
 @synthesize tabBarController;
 
-#define LOCALES_VERSION @"loadedSWORDLocales-v2.1"
+#define LOCALES_VERSION @"loadedSWORDLocales-v2.2"
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

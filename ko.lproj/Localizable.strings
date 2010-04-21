@@ -17,6 +17,10 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// Korean localisation
+// By <none>
+// Last Updated v1.0b2
+
 "Edit" = "편집";
 "Done" = "완료";
 "Module Download" = "Module Download";
