@@ -461,7 +461,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	//if(multiListShown) {
 	if([multiListController.view superview]) {
-		[ViewController hideModal:multiListController.view withTiming:0.3];
+		[tabController dismissModalViewControllerAnimated:YES];
+		//[ViewController hideModal:multiListController.view withTiming:0.3];
 		//multiListShown = NO;
 	} else {
 		[historyListTable reloadData];
@@ -470,7 +471,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			if(ip)
 				[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
 		}
-		[ViewController showModal:multiListController.view withTiming:0.3];
+		//[ViewController showModal:multiListController.view withTiming:0.3];
+		[tabController presentModalViewController:multiListController animated:YES];
 		//multiListShown = YES;
 	}
 	
