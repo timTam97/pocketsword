@@ -372,8 +372,8 @@
 		05034D2410FD625900884C98 /* SearchWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchWebView.m; sourceTree = "<group>"; };
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
 		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
-		05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSDictionaryOverlayViewController.h; sourceTree = "<group>"; };
-		05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSDictionaryOverlayViewController.m; sourceTree = "<group>"; };
+		05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryOverlayViewController.h; path = Classes/PSDictionaryOverlayViewController.h; sourceTree = "<group>"; };
+		05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSDictionaryOverlayViewController.m; path = Classes/PSDictionaryOverlayViewController.m; sourceTree = "<group>"; };
 		0513ACB010BF74FC00E414D9 /* google-analytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "google-analytics.txt"; path = "Resources/doc/google-analytics.txt"; sourceTree = "<group>"; };
 		0513ADDB115CA55500F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0513ADE7115CA5DD00F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/MainWindow.xib; sourceTree = "<group>"; };
