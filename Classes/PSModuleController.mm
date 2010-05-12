@@ -162,7 +162,7 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: ((scriptRefs) ? SW_ON : SW_OFF)];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
-		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_OFF ];
+		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: SW_ON ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
 		[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];

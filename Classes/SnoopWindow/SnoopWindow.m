@@ -12,7 +12,7 @@
 #import "globals.h"
 
 
-#define SWIPE_DRAG_HORIZ_MIN 40
+#define SWIPE_DRAG_HORIZ_MIN 200
 #define SWIPE_DRAG_VERT_MAX 40
 #define ZOOM_DRAG_MIN 20
 

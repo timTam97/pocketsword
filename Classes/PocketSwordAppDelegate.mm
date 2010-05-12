@@ -180,6 +180,19 @@
 	
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+//    if (!url) {  return NO; }
+//	
+//    NSString *URLString = [url absoluteString];
+//    [[NSUserDefaults standardUserDefaults] setObject:URLString forKey:@"url"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+
+//	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+//	[[NSUserDefaults standardUserDefaults] synchronize];
+	return YES;
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application {
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }

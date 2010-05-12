@@ -7,12 +7,12 @@
 //
 
 
-
 @interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate> {
 
 	IBOutlet UITableView *dictionaryEntriesTable;
 	IBOutlet UISearchBar *dictionarySearchBar;
 	IBOutlet UIBarButtonItem *dictionaryTitle;
+	IBOutlet UINavigationItem *dictionaryNavItem;
 	
 	IBOutlet UIView *dictionaryDescriptionView;
 	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
@@ -20,11 +20,15 @@
 	
 	IBOutlet id moduleManager;
 	
+	BOOL searching;
+	BOOL letUserSelectRow;
+	NSMutableArray *searchResults;
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData;
 - (void)showDescription:(NSString*)description withTitle:(NSString*)t;
 - (IBAction)hideDescription:(id)sender;
+- (void)searchDictionaryEntries;
 
 - (void) showModal:(UIView*)modalView withTiming:(float)time;
 - (void) hideModal:(UIView*) modalView withTiming:(float)time;

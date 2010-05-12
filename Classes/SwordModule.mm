@@ -848,11 +848,12 @@
 // Grabs the text for a given chapter (e.g. "Gen 1")
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
 {
-	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_COMMENTARIES];
+	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
+	//curKey->setVerse(0);
 	sword::SWKey lastKey;
 	
 	swModule->RenderText();
@@ -863,6 +864,8 @@
 	NSString *ref = [NSString stringWithString: ch];
 	NSString *thisEntry = @"";
 	NSString *lastEntry = @"";
+	NSString *preverseHeading;
+	NSString *interverseHeading;
 	NSString *modType = [NSString stringWithUTF8String: swModule->Type()];
 	NSInteger i = 1;
 	BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
@@ -871,13 +874,30 @@
 	do {
 		lastKey = swModule->Key();
 		thisEntry = [NSString stringWithUTF8String: swModule->RenderText()];
+		preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
+		if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
+			//NSLog(@"preverseHeading = '%@'", preverseHeading);
+			[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
+		}
+		interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
+		if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
+			//NSLog(@"interverseHeading = '%@'", interverseHeading);
+			if(preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) {
+				[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+			} else if(!preverseHeading) {
+				[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+			}
+		}
+		//replace *X and *N with simply X and N for xrefs and footnotes
+		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+
 		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry]) {
-
+			
 			if ([modType isEqualToString: @"Commentaries"]) {
 				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\"></a>%@</p>\n", i, i, thisEntry];
-			}
-			else {
+			} else {
 				if(vpl)
 					[verses appendFormat: @"<a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a>%@<br />\n", i, i, i, thisEntry];
 				else
@@ -952,7 +972,9 @@
 						setTimeout(\"window.scrollTo(0, \"+position+\")\", 250);\n\
 					}\n\
 					function _scrollToVerse(verse) {\n\
-						if(versepos[verse] != 0) {\n\
+						if(verse == '1' || verse == '0')\n\
+							window.scrollTo(0,0);\n\
+						else if(versepos[verse] != 0) {\n\
 							window.scrollTo(0, versepos[verse]);\n\
 						} else {\n\
 							for(var ii = verse; ii > 0; ii--) {\n\

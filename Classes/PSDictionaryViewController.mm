@@ -6,14 +6,15 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import "PSDictionaryOverlayViewController.h"
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
 
 
 @implementation PSDictionaryViewController
 
-int prevLength = 0;
 BOOL dictionaryEnabled = NO;
+PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
 	BOOL needsReload = reloadData;
@@ -52,6 +53,8 @@ BOOL dictionaryEnabled = NO;
 	[dictionarySearchBar setUserInteractionEnabled: YES];
 	dictionaryEnabled = YES;
 	if(needsReload) {
+		if(searching)
+			[self searchDictionaryEntries];
 		[dictionaryEntriesTable reloadData];
 	}
 }
@@ -72,6 +75,8 @@ BOOL dictionaryEnabled = NO;
 		dictionaryEnabled = NO;
 	}
 	
+	if(searching)
+		[self searchDictionaryEntries];
 	[dictionaryEntriesTable reloadData];
 	[pool release];
 }
@@ -87,6 +92,9 @@ BOOL dictionaryEnabled = NO;
 
 - (void)dealloc {
     [super dealloc];
+	[dictionarySearchBar release];
+	[searchResults release];
+	[overlayViewController release];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -96,9 +104,12 @@ BOOL dictionaryEnabled = NO;
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
+- (void)viewDidLoad {
+	dictionaryNavItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
+	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
+	searching = NO;
+	letUserSelectRow = YES;
+	searchResults = [[NSMutableArray alloc] init];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -106,7 +117,9 @@ BOOL dictionaryEnabled = NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(dictionaryEnabled)
+	if(searching)
+		return [searchResults count];
+	else if(dictionaryEnabled)
 		return [[moduleManager primaryDictionary] entryCount];
 	else
 		return 0;
@@ -114,13 +127,10 @@ BOOL dictionaryEnabled = NO;
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	return @"";
-//	tableView.sectionHeaderHeight = 22.5;
-//	if ([[moduleManager primaryDictionary] entryCount] == 0) {
-//		return @"";//NSLocalizedString(@"NoModulesRefresh", @"No modules here. Try a refresh.");
-//	}
-//	else
-//		return [[moduleManager primaryDictionary] descr];
+	if(searching && ([searchResults count] > 0))
+		return [NSString stringWithFormat: @"%d %@", [searchResults count], NSLocalizedString(@"SearchResults", @"results")];
+	else
+		return @"";
 }
 
 
@@ -131,8 +141,10 @@ BOOL dictionaryEnabled = NO;
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dict-id"] autorelease];
 	}
-	
-	cell.textLabel.text = [[[moduleManager primaryDictionary] allKeys] objectAtIndex:indexPath.row];
+	if(searching)
+		cell.textLabel.text = [searchResults objectAtIndex:indexPath.row];
+	else
+		cell.textLabel.text = [[[moduleManager primaryDictionary] allKeys] objectAtIndex:indexPath.row];
 	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	return cell;
@@ -144,6 +156,14 @@ BOOL dictionaryEnabled = NO;
 	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	NSString *descr = [[moduleManager primaryDictionary] entryForKey: t];
 	[self showDescription:descr withTitle:t];
+}
+
+- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if(letUserSelectRow)
+		return indexPath;
+	else
+		return nil;
 }
 
 - (void)showDescription:(NSString*)description withTitle:(NSString*)t {
@@ -159,40 +179,126 @@ BOOL dictionaryEnabled = NO;
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
 	//NSLog(@"%@", description);
 	
-	if(![dictionaryDescriptionView superview])
+	if(![dictionaryDescriptionView superview]) {
+		//[self presentModalViewController:<#(UIViewController *)modalViewController#> animated:<#(BOOL)animated#>
 		[self showModal: dictionaryDescriptionView withTiming: 0.3];
+	}
 }
 
+- (void) searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
+	
+	//Add the overlay view.
+	if(!overlayViewController) {
+		overlayViewController = [[PSDictionaryOverlayViewController alloc] initWithNibName:nil bundle:nil];
+	
+		CGFloat yaxis = self.navigationController.navigationBar.frame.size.height;
+		yaxis += dictionaryEntriesTable.tableHeaderView.frame.size.height;
+		CGFloat width = self.view.frame.size.width;
+		CGFloat height = self.view.frame.size.height;
+		
+		//Parameters x = origion on x-axis, y = origon on y-axis.
+		CGRect frame = CGRectMake(0, yaxis, width, height);
+		overlayViewController.view.frame = frame;
+		
+		overlayViewController.dictionaryViewController = self;
+	}
+
+	searching = YES;
+
+	if([dictionarySearchBar.text length] <= 0) {
+		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+		[dictionaryEntriesTable insertSubview:overlayViewController.view aboveSubview:self.parentViewController.view];
+		letUserSelectRow = NO;
+		dictionaryEntriesTable.scrollEnabled = NO;
+	} else {
+		letUserSelectRow = YES;
+		dictionaryEntriesTable.scrollEnabled = YES;
+	}
+	
+	[dictionaryNavItem setLeftBarButtonItem:[[[UIBarButtonItem alloc]
+											  initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
+											  target:self action:@selector(cancelSearch:)] autorelease] animated:YES];
+	//dictionaryNavItem.leftBarButtonItem = ;
+	[self searchDictionaryEntries];
+	[dictionaryEntriesTable reloadData];
+}
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-	int row = 0;
-//	if([searchText length] > prevLength) {
-//		NSIndexPath *tableSelection = [[dictionaryEntriesTable indexPathsForVisibleRows] objectAtIndex: 0];
-//		if(tableSelection)
-//			row = tableSelection.row;
-//		//we can continue searching from the current index
-//	} else {
-//		//start searching from the start
+//	int row = 0;
+//	int count = [[moduleManager primaryDictionary] entryCount];
+//	for(; row < count; row++) {
+//		NSComparisonResult res = [searchText caseInsensitiveCompare: [[[moduleManager primaryDictionary] allKeys] objectAtIndex: row]];
+//		if(res <= NSOrderedSame)
+//			break;
 //	}
-	int count = [[moduleManager primaryDictionary] entryCount];
-	for(; row < count; row++) {
-		NSComparisonResult res = [searchText caseInsensitiveCompare: [[[moduleManager primaryDictionary] allKeys] objectAtIndex: row]];
-		if(res <= NSOrderedSame)
-			break;
+//	if(row == count)
+//		row--;
+//	NSIndexPath *newIP = [NSIndexPath indexPathForRow: row inSection: 0];
+//	[dictionaryEntriesTable scrollToRowAtIndexPath: newIP atScrollPosition: UITableViewScrollPositionTop animated: YES];
+
+	[searchResults removeAllObjects];
+	
+	if([searchText length] > 0) {
+		[overlayViewController.view removeFromSuperview];
+		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+		searching = YES;
+		letUserSelectRow = YES;
+		dictionaryEntriesTable.scrollEnabled = YES;
+		[self searchDictionaryEntries];
+	} else {
+		[dictionaryEntriesTable insertSubview:overlayViewController.view aboveSubview:self.parentViewController.view];
+		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+		searching = YES;
+		letUserSelectRow = NO;
+		dictionaryEntriesTable.scrollEnabled = NO;
 	}
-	if(row == count)
-		row--;
-	NSIndexPath *newIP = [NSIndexPath indexPathForRow: row inSection: 0];
-	[dictionaryEntriesTable scrollToRowAtIndexPath: newIP atScrollPosition: UITableViewScrollPositionTop animated: YES];
-	prevLength = [searchText length];
+	
+	[dictionaryEntriesTable reloadData];
+	
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
 }
 
+- (void)cancelSearch:(id)sender {
+	[self searchBarCancelButtonClicked:nil];
+}
+
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-	[searchBar resignFirstResponder];
+	if([dictionarySearchBar isFirstResponder])
+		[dictionarySearchBar resignFirstResponder];
+	
+	letUserSelectRow = YES;
+	searching = NO;
+	dictionaryEntriesTable.scrollEnabled = YES;
+	
+	[overlayViewController.view removeFromSuperview];
+	[overlayViewController release];
+	overlayViewController = nil;
+	[dictionaryNavItem setLeftBarButtonItem:nil animated:YES];
+	//dictionaryNavItem.leftBarButtonItem = nil;	
+	dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+//	if([searchResults count] > 0)
+//		[dictionaryEntriesTable reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+//	else
+	[searchResults removeAllObjects];
+	[dictionaryEntriesTable reloadData];
+	dictionarySearchBar.text = @"";
+}
+
+- (void)searchDictionaryEntries {
+	
+	[searchResults removeAllObjects];
+	NSString *searchText = dictionarySearchBar.text;
+	NSArray *keys = [[moduleManager primaryDictionary] allKeys];
+	
+	for (NSString *t in keys) {
+		NSRange titleResultsRange = [t rangeOfString:searchText options:NSCaseInsensitiveSearch];
+		
+		if (titleResultsRange.length > 0)
+			[searchResults addObject:t];
+	}
 }
 
 - (IBAction)hideDescription:(id)sender {

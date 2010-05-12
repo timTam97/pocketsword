@@ -21,21 +21,6 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	// TODO: Add other section headers for other module types
-//	NSInteger tag = [tableView tag];
-//	if (tag == MODULE_TABLE) {
-//		@try {
-//			NSUInteger modCount = [[[moduleManager swordManager] moduleListByType] count];
-//			if (modCount > 0) {
-//				return [[[[moduleManager swordManager] moduleListByType] objectAtIndex: section] moduleType];
-//			} else {
-//				return NSLocalizedString(@"NoModulesInstalled", @"");
-//			}
-//		}
-//		@catch (id except) {
-//			return NSLocalizedString(@"NoModulesInstalled", @"");
-//		}
-//	}
 	return @"";
 }
 

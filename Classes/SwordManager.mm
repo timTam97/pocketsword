@@ -248,7 +248,7 @@ using std::list;
 		case essay:
 			return NO;
 		case devotional:
-			return NO;
+			return YES;//beta
 		default:
 			return NO;
 	}
