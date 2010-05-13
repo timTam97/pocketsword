@@ -14,7 +14,7 @@
 	IBOutlet UIBarButtonItem *dictionaryTitle;
 	IBOutlet UINavigationItem *dictionaryNavItem;
 	
-	IBOutlet UIView *dictionaryDescriptionView;
+	IBOutlet UIViewController *dictionaryDescriptionViewController;
 	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
 	IBOutlet UIWebView *dictionaryDescriptionWebView;
 	

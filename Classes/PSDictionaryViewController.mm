@@ -179,9 +179,9 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
 	//NSLog(@"%@", description);
 	
-	if(![dictionaryDescriptionView superview]) {
-		//[self presentModalViewController:<#(UIViewController *)modalViewController#> animated:<#(BOOL)animated#>
-		[self showModal: dictionaryDescriptionView withTiming: 0.3];
+	if(![dictionaryDescriptionViewController.view superview]) {
+		[self presentModalViewController:dictionaryDescriptionViewController animated:YES];
+		//[self showModal: dictionaryDescriptionView withTiming: 0.3];
 	}
 }
 
@@ -303,7 +303,8 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (IBAction)hideDescription:(id)sender {
 	[[moduleManager viewController] hideInfo: nil];
-	[self hideModal: dictionaryDescriptionView withTiming: 0.3];
+	[self dismissModalViewControllerAnimated:YES];
+	//[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
 
 // Use this to show the modal view (pops-up from the bottom)
