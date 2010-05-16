@@ -188,6 +188,361 @@
 		0546B59E113537E9009D5189 /* strongsrealgreek.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59B113537E9009D5189 /* strongsrealgreek.zip */; };
 		0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59C113537E9009D5189 /* strongsrealhebrew.zip */; };
 		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
+		054BEC32119F89E800ABCA18 /* Robinson.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59A113537E9009D5189 /* Robinson.zip */; };
+		054BEC33119F89E800ABCA18 /* strongsrealgreek.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59B113537E9009D5189 /* strongsrealgreek.zip */; };
+		054BEC34119F89E800ABCA18 /* strongsrealhebrew.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59C113537E9009D5189 /* strongsrealhebrew.zip */; };
+		054BEC35119F89E800ABCA18 /* locales.d.zip in Resources */ = {isa = PBXBuildFile; fileRef = 052B52ED1101D6DF00FFDF01 /* locales.d.zip */; };
+		054BEC36119F89E800ABCA18 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
+		054BEC37119F89E800ABCA18 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
+		054BEC38119F89E800ABCA18 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
+		054BEC39119F89E800ABCA18 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
+		054BEC3A119F89E800ABCA18 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
+		054BEC3B119F89E800ABCA18 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
+		054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
+		054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
+		054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
+		054BEC3F119F89E800ABCA18 /* Read.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Read.png */; };
+		054BEC40119F89E800ABCA18 /* nt.bks in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1310884F71004FB0E0 /* nt.bks */; };
+		054BEC41119F89E800ABCA18 /* nt.cps in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1410884F71004FB0E0 /* nt.cps */; };
+		054BEC42119F89E800ABCA18 /* ot.bks in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1510884F71004FB0E0 /* ot.bks */; };
+		054BEC43119F89E800ABCA18 /* ot.cps in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1610884F71004FB0E0 /* ot.cps */; };
+		054BEC44119F89E800ABCA18 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05D6AB781097E76400A5026E /* ReadMe.txt */; };
+		054BEC45119F89E800ABCA18 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
+		054BEC46119F89E800ABCA18 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
+		054BEC47119F89E800ABCA18 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
+		054BEC48119F89E800ABCA18 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
+		054BEC49119F89E800ABCA18 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
+		054BEC4A119F89E800ABCA18 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
+		054BEC4B119F89E800ABCA18 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
+		054BEC4C119F89E800ABCA18 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
+		054BEC4D119F89E800ABCA18 /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
+		054BEC4E119F89E800ABCA18 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
+		054BEC4F119F89E800ABCA18 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
+		054BEC50119F89E800ABCA18 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
+		054BEC51119F89E800ABCA18 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 052B52841101A32900FFDF01 /* Settings.bundle */; };
+		054BEC52119F89E800ABCA18 /* popup-top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB3FD1147711B00984097 /* popup-top-bar.png */; };
+		054BEC53119F89E800ABCA18 /* popup-down-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB41F11477A9A00984097 /* popup-down-button.png */; };
+		054BEC54119F89E800ABCA18 /* PSChapterSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AB947F116D8D620043DB57 /* PSChapterSelectorController.xib */; };
+		054BEC55119F89E800ABCA18 /* PSVerseSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AB950B116D9BB70043DB57 /* PSVerseSelectorController.xib */; };
+		054BEC57119F89E800ABCA18 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		054BEC58119F89E800ABCA18 /* PocketSwordAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */; };
+		054BEC59119F89E800ABCA18 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* ViewController.mm */; };
+		054BEC5A119F89E800ABCA18 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
+		054BEC5B119F89E800ABCA18 /* AnalysisHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */; };
+		054BEC5C119F89E800ABCA18 /* Analyzers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012F30EFDD2D200DA9B7F /* Analyzers.cpp */; };
+		054BEC5D119F89E800ABCA18 /* StandardAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012F80EFDD2D200DA9B7F /* StandardAnalyzer.cpp */; };
+		054BEC5E119F89E800ABCA18 /* StandardFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012FA0EFDD2D200DA9B7F /* StandardFilter.cpp */; };
+		054BEC5F119F89E800ABCA18 /* StandardTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012FC0EFDD2D200DA9B7F /* StandardTokenizer.cpp */; };
+		054BEC60119F89E800ABCA18 /* gunichartables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940130B0EFDD2D200DA9B7F /* gunichartables.cpp */; };
+		054BEC61119F89E800ABCA18 /* repl_lltot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013110EFDD2D200DA9B7F /* repl_lltot.cpp */; };
+		054BEC62119F89E800ABCA18 /* repl_tcscasecmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013130EFDD2D200DA9B7F /* repl_tcscasecmp.cpp */; };
+		054BEC63119F89E800ABCA18 /* repl_tcslwr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013140EFDD2D200DA9B7F /* repl_tcslwr.cpp */; };
+		054BEC64119F89E800ABCA18 /* repl_tcstod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013150EFDD2D200DA9B7F /* repl_tcstod.cpp */; };
+		054BEC65119F89E800ABCA18 /* repl_tcstoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013160EFDD2D200DA9B7F /* repl_tcstoll.cpp */; };
+		054BEC66119F89E800ABCA18 /* repl_tprintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013170EFDD2D200DA9B7F /* repl_tprintf.cpp */; };
+		054BEC67119F89E800ABCA18 /* threads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940131B0EFDD2D200DA9B7F /* threads.cpp */; };
+		054BEC68119F89E800ABCA18 /* utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940131C0EFDD2D200DA9B7F /* utf8.cpp */; };
+		054BEC69119F89E800ABCA18 /* condition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940131E0EFDD2D200DA9B7F /* condition.cpp */; };
+		054BEC6A119F89E800ABCA18 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013200EFDD2D200DA9B7F /* error.cpp */; };
+		054BEC6B119F89E800ABCA18 /* memtracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013250EFDD2D200DA9B7F /* memtracking.cpp */; };
+		054BEC6C119F89E800ABCA18 /* DateField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013270EFDD2D200DA9B7F /* DateField.cpp */; };
+		054BEC6D119F89E800ABCA18 /* Document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013290EFDD2D200DA9B7F /* Document.cpp */; };
+		054BEC6E119F89E800ABCA18 /* Field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940132B0EFDD2D200DA9B7F /* Field.cpp */; };
+		054BEC6F119F89E800ABCA18 /* CompoundFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940132F0EFDD2D300DA9B7F /* CompoundFile.cpp */; };
+		054BEC70119F89E800ABCA18 /* DocumentWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013310EFDD2D300DA9B7F /* DocumentWriter.cpp */; };
+		054BEC71119F89E800ABCA18 /* FieldInfos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013340EFDD2D300DA9B7F /* FieldInfos.cpp */; };
+		054BEC72119F89E800ABCA18 /* FieldsReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013360EFDD2D300DA9B7F /* FieldsReader.cpp */; };
+		054BEC73119F89E800ABCA18 /* FieldsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013380EFDD2D300DA9B7F /* FieldsWriter.cpp */; };
+		054BEC74119F89E800ABCA18 /* IndexModifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940133A0EFDD2D300DA9B7F /* IndexModifier.cpp */; };
+		054BEC75119F89E800ABCA18 /* IndexReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940133C0EFDD2D300DA9B7F /* IndexReader.cpp */; };
+		054BEC76119F89E800ABCA18 /* IndexWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940133E0EFDD2D300DA9B7F /* IndexWriter.cpp */; };
+		054BEC77119F89E800ABCA18 /* MultiReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013410EFDD2D300DA9B7F /* MultiReader.cpp */; };
+		054BEC78119F89E800ABCA18 /* SegmentInfos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013440EFDD2D300DA9B7F /* SegmentInfos.cpp */; };
+		054BEC79119F89E800ABCA18 /* SegmentMergeInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013460EFDD2D300DA9B7F /* SegmentMergeInfo.cpp */; };
+		054BEC7A119F89E800ABCA18 /* SegmentMergeQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013480EFDD2D300DA9B7F /* SegmentMergeQueue.cpp */; };
+		054BEC7B119F89E800ABCA18 /* SegmentMerger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940134A0EFDD2D300DA9B7F /* SegmentMerger.cpp */; };
+		054BEC7C119F89E800ABCA18 /* SegmentReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940134C0EFDD2D300DA9B7F /* SegmentReader.cpp */; };
+		054BEC7D119F89E800ABCA18 /* SegmentTermDocs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940134D0EFDD2D300DA9B7F /* SegmentTermDocs.cpp */; };
+		054BEC7E119F89E800ABCA18 /* SegmentTermEnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940134E0EFDD2D300DA9B7F /* SegmentTermEnum.cpp */; };
+		054BEC7F119F89E800ABCA18 /* SegmentTermPositions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013500EFDD2D300DA9B7F /* SegmentTermPositions.cpp */; };
+		054BEC80119F89E800ABCA18 /* SegmentTermVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013510EFDD2D300DA9B7F /* SegmentTermVector.cpp */; };
+		054BEC81119F89E800ABCA18 /* Term.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013520EFDD2D300DA9B7F /* Term.cpp */; };
+		054BEC82119F89E800ABCA18 /* TermInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013540EFDD2D300DA9B7F /* TermInfo.cpp */; };
+		054BEC83119F89E800ABCA18 /* TermInfosReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013560EFDD2D300DA9B7F /* TermInfosReader.cpp */; };
+		054BEC84119F89E800ABCA18 /* TermInfosWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013580EFDD2D300DA9B7F /* TermInfosWriter.cpp */; };
+		054BEC85119F89E800ABCA18 /* TermVectorReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940135C0EFDD2D300DA9B7F /* TermVectorReader.cpp */; };
+		054BEC86119F89E800ABCA18 /* TermVectorWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940135D0EFDD2D300DA9B7F /* TermVectorWriter.cpp */; };
+		054BEC87119F89E800ABCA18 /* Lexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013610EFDD2D300DA9B7F /* Lexer.cpp */; };
+		054BEC88119F89E800ABCA18 /* MultiFieldQueryParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013640EFDD2D300DA9B7F /* MultiFieldQueryParser.cpp */; };
+		054BEC89119F89E800ABCA18 /* QueryParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013660EFDD2D300DA9B7F /* QueryParser.cpp */; };
+		054BEC8A119F89E800ABCA18 /* QueryParserBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013680EFDD2D300DA9B7F /* QueryParserBase.cpp */; };
+		054BEC8B119F89E800ABCA18 /* QueryToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940136A0EFDD2D300DA9B7F /* QueryToken.cpp */; };
+		054BEC8C119F89E800ABCA18 /* TokenList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940136C0EFDD2D300DA9B7F /* TokenList.cpp */; };
+		054BEC8D119F89E800ABCA18 /* BooleanQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013700EFDD2D300DA9B7F /* BooleanQuery.cpp */; };
+		054BEC8E119F89E800ABCA18 /* BooleanScorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013720EFDD2D300DA9B7F /* BooleanScorer.cpp */; };
+		054BEC8F119F89E800ABCA18 /* CachingWrapperFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013740EFDD2D300DA9B7F /* CachingWrapperFilter.cpp */; };
+		054BEC90119F89E800ABCA18 /* ChainedFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013760EFDD2D300DA9B7F /* ChainedFilter.cpp */; };
+		054BEC91119F89E800ABCA18 /* ConjunctionScorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013790EFDD2D300DA9B7F /* ConjunctionScorer.cpp */; };
+		054BEC92119F89E800ABCA18 /* DateFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940137B0EFDD2D300DA9B7F /* DateFilter.cpp */; };
+		054BEC93119F89E800ABCA18 /* ExactPhraseScorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940137D0EFDD2D300DA9B7F /* ExactPhraseScorer.cpp */; };
+		054BEC94119F89E800ABCA18 /* Explanation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940137F0EFDD2D300DA9B7F /* Explanation.cpp */; };
+		054BEC95119F89E800ABCA18 /* FieldCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013810EFDD2D300DA9B7F /* FieldCache.cpp */; };
+		054BEC96119F89E800ABCA18 /* FieldCacheImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013830EFDD2D300DA9B7F /* FieldCacheImpl.cpp */; };
+		054BEC97119F89E800ABCA18 /* FieldDocSortedHitQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013860EFDD2D300DA9B7F /* FieldDocSortedHitQueue.cpp */; };
+		054BEC98119F89E800ABCA18 /* FieldSortedHitQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013880EFDD2D300DA9B7F /* FieldSortedHitQueue.cpp */; };
+		054BEC99119F89E800ABCA18 /* FilteredTermEnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940138B0EFDD2D300DA9B7F /* FilteredTermEnum.cpp */; };
+		054BEC9A119F89E800ABCA18 /* FuzzyQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940138D0EFDD2D300DA9B7F /* FuzzyQuery.cpp */; };
+		054BEC9B119F89E800ABCA18 /* HitQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940138F0EFDD2D300DA9B7F /* HitQueue.cpp */; };
+		054BEC9C119F89E800ABCA18 /* Hits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013910EFDD2D300DA9B7F /* Hits.cpp */; };
+		054BEC9D119F89E800ABCA18 /* IndexSearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013920EFDD2D300DA9B7F /* IndexSearcher.cpp */; };
+		054BEC9E119F89E800ABCA18 /* MultiSearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013950EFDD2D300DA9B7F /* MultiSearcher.cpp */; };
+		054BEC9F119F89E800ABCA18 /* MultiTermQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013970EFDD2D300DA9B7F /* MultiTermQuery.cpp */; };
+		054BECA0119F89E800ABCA18 /* PhrasePositions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013990EFDD2D300DA9B7F /* PhrasePositions.cpp */; };
+		054BECA1119F89E800ABCA18 /* PhraseQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940139B0EFDD2D300DA9B7F /* PhraseQuery.cpp */; };
+		054BECA2119F89E800ABCA18 /* PhraseScorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E940139E0EFDD2D300DA9B7F /* PhraseScorer.cpp */; };
+		054BECA3119F89E800ABCA18 /* PrefixQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013A00EFDD2D300DA9B7F /* PrefixQuery.cpp */; };
+		054BECA4119F89E800ABCA18 /* QueryFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013A20EFDD2D300DA9B7F /* QueryFilter.cpp */; };
+		054BECA5119F89E800ABCA18 /* RangeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013A40EFDD2D300DA9B7F /* RangeFilter.cpp */; };
+		054BECA6119F89E800ABCA18 /* RangeQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013A60EFDD2D300DA9B7F /* RangeQuery.cpp */; };
+		054BECA7119F89E800ABCA18 /* SearchHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013A90EFDD2D300DA9B7F /* SearchHeader.cpp */; };
+		054BECA8119F89E800ABCA18 /* Similarity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013AB0EFDD2D300DA9B7F /* Similarity.cpp */; };
+		054BECA9119F89E800ABCA18 /* SloppyPhraseScorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013AD0EFDD2D300DA9B7F /* SloppyPhraseScorer.cpp */; };
+		054BECAA119F89E800ABCA18 /* Sort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013AF0EFDD2D300DA9B7F /* Sort.cpp */; };
+		054BECAB119F89E800ABCA18 /* TermQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013B10EFDD2D300DA9B7F /* TermQuery.cpp */; };
+		054BECAC119F89E800ABCA18 /* TermScorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013B30EFDD2D300DA9B7F /* TermScorer.cpp */; };
+		054BECAD119F89E800ABCA18 /* WildcardQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013B50EFDD2D300DA9B7F /* WildcardQuery.cpp */; };
+		054BECAE119F89E800ABCA18 /* WildcardTermEnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013B70EFDD2D300DA9B7F /* WildcardTermEnum.cpp */; };
+		054BECAF119F89E800ABCA18 /* StdHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013B90EFDD2D300DA9B7F /* StdHeader.cpp */; };
+		054BECB0119F89E800ABCA18 /* FSDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013BD0EFDD2D300DA9B7F /* FSDirectory.cpp */; };
+		054BECB1119F89E800ABCA18 /* IndexInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013BF0EFDD2D300DA9B7F /* IndexInput.cpp */; };
+		054BECB2119F89E800ABCA18 /* IndexOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013C10EFDD2D300DA9B7F /* IndexOutput.cpp */; };
+		054BECB3119F89E800ABCA18 /* Lock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013C40EFDD2D300DA9B7F /* Lock.cpp */; };
+		054BECB4119F89E800ABCA18 /* MMapInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013C70EFDD2D300DA9B7F /* MMapInput.cpp */; };
+		054BECB5119F89E800ABCA18 /* RAMDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013C90EFDD2D300DA9B7F /* RAMDirectory.cpp */; };
+		054BECB6119F89E800ABCA18 /* TransactionalRAMDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013CB0EFDD2D300DA9B7F /* TransactionalRAMDirectory.cpp */; };
+		054BECB7119F89E800ABCA18 /* BitSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013CF0EFDD2D300DA9B7F /* BitSet.cpp */; };
+		054BECB8119F89E800ABCA18 /* Equators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013D40EFDD2D300DA9B7F /* Equators.cpp */; };
+		054BECB9119F89E800ABCA18 /* FastCharStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013D60EFDD2D300DA9B7F /* FastCharStream.cpp */; };
+		054BECBA119F89E800ABCA18 /* fileinputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013D80EFDD2D300DA9B7F /* fileinputstream.cpp */; };
+		054BECBB119F89E800ABCA18 /* MD5Digester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013DE0EFDD2D300DA9B7F /* MD5Digester.cpp */; };
+		054BECBC119F89E800ABCA18 /* Misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013E00EFDD2D300DA9B7F /* Misc.cpp */; };
+		054BECBD119F89E800ABCA18 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013E30EFDD2D400DA9B7F /* Reader.cpp */; };
+		054BECBE119F89E800ABCA18 /* StringBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013E60EFDD2D400DA9B7F /* StringBuffer.cpp */; };
+		054BECBF119F89E800ABCA18 /* StringIntern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013E80EFDD2D400DA9B7F /* StringIntern.cpp */; };
+		054BECC0119F89E800ABCA18 /* ThreadLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013EC0EFDD2D400DA9B7F /* ThreadLocal.cpp */; };
+		054BECC1119F89E800ABCA18 /* DataController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* DataController.mm */; };
+		054BECC2119F89E800ABCA18 /* dirent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013D20EFDD2D300DA9B7F /* dirent.cpp */; };
+		054BECC3119F89E800ABCA18 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
+		054BECC4119F89E800ABCA18 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
+		054BECC5119F89E800ABCA18 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
+		054BECC6119F89E800ABCA18 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
+		054BECC7119F89E800ABCA18 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
+		054BECC8119F89E800ABCA18 /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
+		054BECC9119F89E800ABCA18 /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
+		054BECCA119F89E800ABCA18 /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
+		054BECCB119F89E800ABCA18 /* NavigatorModules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDE107EEB7500826AFE /* NavigatorModules.mm */; };
+		054BECCC119F89E800ABCA18 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
+		054BECCD119F89E800ABCA18 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
+		054BECCE119F89E800ABCA18 /* swlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0D10884F71004FB0E0 /* swlog.cpp */; };
+		054BECCF119F89E800ABCA18 /* listkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1210884F71004FB0E0 /* listkey.cpp */; };
+		054BECD0119F89E800ABCA18 /* strkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1710884F71004FB0E0 /* strkey.cpp */; };
+		054BECD1119F89E800ABCA18 /* swkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1810884F71004FB0E0 /* swkey.cpp */; };
+		054BECD2119F89E800ABCA18 /* treekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1910884F71004FB0E0 /* treekey.cpp */; };
+		054BECD3119F89E800ABCA18 /* treekeyidx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1A10884F71004FB0E0 /* treekeyidx.cpp */; };
+		054BECD4119F89E800ABCA18 /* versekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1B10884F71004FB0E0 /* versekey.cpp */; };
+		054BECD5119F89E800ABCA18 /* versetreekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1C10884F71004FB0E0 /* versetreekey.cpp */; };
+		054BECD6119F89E800ABCA18 /* curlftpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1E10884F71004FB0E0 /* curlftpt.cpp */; };
+		054BECD7119F89E800ABCA18 /* curlhttpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1F10884F71004FB0E0 /* curlhttpt.cpp */; };
+		054BECD8119F89E800ABCA18 /* encfiltmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2010884F71004FB0E0 /* encfiltmgr.cpp */; };
+		054BECD9119F89E800ABCA18 /* filemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2110884F71004FB0E0 /* filemgr.cpp */; };
+		054BECDA119F89E800ABCA18 /* ftplibftpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2210884F71004FB0E0 /* ftplibftpt.cpp */; };
+		054BECDB119F89E800ABCA18 /* ftptrans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2310884F71004FB0E0 /* ftptrans.cpp */; };
+		054BECDC119F89E800ABCA18 /* installmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2410884F71004FB0E0 /* installmgr.cpp */; };
+		054BECDD119F89E800ABCA18 /* localemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2510884F71004FB0E0 /* localemgr.cpp */; };
+		054BECDE119F89E800ABCA18 /* markupfiltmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2610884F71004FB0E0 /* markupfiltmgr.cpp */; };
+		054BECDF119F89E800ABCA18 /* stringmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2710884F71004FB0E0 /* stringmgr.cpp */; };
+		054BECE0119F89E800ABCA18 /* swcacher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2810884F71004FB0E0 /* swcacher.cpp */; };
+		054BECE1119F89E800ABCA18 /* swconfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2910884F71004FB0E0 /* swconfig.cpp */; };
+		054BECE2119F89E800ABCA18 /* swfiltermgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2A10884F71004FB0E0 /* swfiltermgr.cpp */; };
+		054BECE3119F89E800ABCA18 /* swlocale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2B10884F71004FB0E0 /* swlocale.cpp */; };
+		054BECE4119F89E800ABCA18 /* swmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2C10884F71004FB0E0 /* swmgr.cpp */; };
+		054BECE5119F89E800ABCA18 /* swsearchable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2D10884F71004FB0E0 /* swsearchable.cpp */; };
+		054BECE6119F89E800ABCA18 /* versemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2E10884F71004FB0E0 /* versemgr.cpp */; };
+		054BECE7119F89E800ABCA18 /* hrefcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3210884F71004FB0E0 /* hrefcom.cpp */; };
+		054BECE8119F89E800ABCA18 /* rawcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3410884F71004FB0E0 /* rawcom.cpp */; };
+		054BECE9119F89E800ABCA18 /* rawcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3610884F71004FB0E0 /* rawcom4.cpp */; };
+		054BECEA119F89E800ABCA18 /* rawfiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3810884F71004FB0E0 /* rawfiles.cpp */; };
+		054BECEB119F89E800ABCA18 /* swcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3910884F71004FB0E0 /* swcom.cpp */; };
+		054BECEC119F89E800ABCA18 /* zcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3B10884F71004FB0E0 /* zcom.cpp */; };
+		054BECED119F89E800ABCA18 /* entriesblk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3E10884F71004FB0E0 /* entriesblk.cpp */; };
+		054BECEE119F89E800ABCA18 /* lzsscomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3F10884F71004FB0E0 /* lzsscomprs.cpp */; };
+		054BECEF119F89E800ABCA18 /* rawstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4010884F71004FB0E0 /* rawstr.cpp */; };
+		054BECF0119F89E800ABCA18 /* rawstr4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4110884F71004FB0E0 /* rawstr4.cpp */; };
+		054BECF1119F89E800ABCA18 /* rawverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4210884F71004FB0E0 /* rawverse.cpp */; };
+		054BECF2119F89E800ABCA18 /* rawverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4310884F71004FB0E0 /* rawverse4.cpp */; };
+		054BECF3119F89E800ABCA18 /* sapphire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4410884F71004FB0E0 /* sapphire.cpp */; };
+		054BECF4119F89E800ABCA18 /* swcipher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4510884F71004FB0E0 /* swcipher.cpp */; };
+		054BECF5119F89E800ABCA18 /* swcomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4610884F71004FB0E0 /* swcomprs.cpp */; };
+		054BECF6119F89E800ABCA18 /* zipcomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4810884F71004FB0E0 /* zipcomprs.cpp */; };
+		054BECF7119F89E800ABCA18 /* zstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4910884F71004FB0E0 /* zstr.cpp */; };
+		054BECF8119F89E800ABCA18 /* zverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4A10884F71004FB0E0 /* zverse.cpp */; };
+		054BECF9119F89E800ABCA18 /* cipherfil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4C10884F71004FB0E0 /* cipherfil.cpp */; };
+		054BECFA119F89E800ABCA18 /* gbffootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4D10884F71004FB0E0 /* gbffootnotes.cpp */; };
+		054BECFB119F89E800ABCA18 /* gbfheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4E10884F71004FB0E0 /* gbfheadings.cpp */; };
+		054BECFC119F89E800ABCA18 /* gbfhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4F10884F71004FB0E0 /* gbfhtml.cpp */; };
+		054BECFD119F89E800ABCA18 /* gbfhtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5010884F71004FB0E0 /* gbfhtmlhref.cpp */; };
+		054BECFE119F89E800ABCA18 /* gbfmorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5110884F71004FB0E0 /* gbfmorph.cpp */; };
+		054BECFF119F89E800ABCA18 /* gbfosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5210884F71004FB0E0 /* gbfosis.cpp */; };
+		054BED00119F89E800ABCA18 /* gbfplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5310884F71004FB0E0 /* gbfplain.cpp */; };
+		054BED01119F89E800ABCA18 /* gbfredletterwords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5410884F71004FB0E0 /* gbfredletterwords.cpp */; };
+		054BED02119F89E800ABCA18 /* gbfrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5510884F71004FB0E0 /* gbfrtf.cpp */; };
+		054BED03119F89E800ABCA18 /* gbfstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5610884F71004FB0E0 /* gbfstrongs.cpp */; };
+		054BED04119F89E800ABCA18 /* gbfthml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5710884F71004FB0E0 /* gbfthml.cpp */; };
+		054BED05119F89E800ABCA18 /* gbfwebif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5810884F71004FB0E0 /* gbfwebif.cpp */; };
+		054BED06119F89E800ABCA18 /* gbfwordjs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5910884F71004FB0E0 /* gbfwordjs.cpp */; };
+		054BED07119F89E800ABCA18 /* greeklexattribs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5A10884F71004FB0E0 /* greeklexattribs.cpp */; };
+		054BED08119F89E800ABCA18 /* latin1utf16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5B10884F71004FB0E0 /* latin1utf16.cpp */; };
+		054BED09119F89E800ABCA18 /* latin1utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5C10884F71004FB0E0 /* latin1utf8.cpp */; };
+		054BED0A119F89E800ABCA18 /* osisfootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5D10884F71004FB0E0 /* osisfootnotes.cpp */; };
+		054BED0B119F89E800ABCA18 /* osisheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5E10884F71004FB0E0 /* osisheadings.cpp */; };
+		054BED0C119F89E800ABCA18 /* osishtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A5F10884F71004FB0E0 /* osishtmlhref.cpp */; };
+		054BED0D119F89E800ABCA18 /* osislemma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6010884F71004FB0E0 /* osislemma.cpp */; };
+		054BED0E119F89E800ABCA18 /* osismorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6110884F71004FB0E0 /* osismorph.cpp */; };
+		054BED0F119F89E800ABCA18 /* osismorphsegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6210884F71004FB0E0 /* osismorphsegmentation.cpp */; };
+		054BED10119F89E800ABCA18 /* osisosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6310884F71004FB0E0 /* osisosis.cpp */; };
+		054BED11119F89E800ABCA18 /* osisplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6410884F71004FB0E0 /* osisplain.cpp */; };
+		054BED12119F89E800ABCA18 /* osisredletterwords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6510884F71004FB0E0 /* osisredletterwords.cpp */; };
+		054BED13119F89E800ABCA18 /* osisrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6610884F71004FB0E0 /* osisrtf.cpp */; };
+		054BED14119F89E800ABCA18 /* osisruby.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6710884F71004FB0E0 /* osisruby.cpp */; };
+		054BED15119F89E800ABCA18 /* osisscripref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6810884F71004FB0E0 /* osisscripref.cpp */; };
+		054BED16119F89E800ABCA18 /* osisstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6910884F71004FB0E0 /* osisstrongs.cpp */; };
+		054BED17119F89E800ABCA18 /* osisvariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6A10884F71004FB0E0 /* osisvariants.cpp */; };
+		054BED18119F89E800ABCA18 /* osiswebif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6B10884F71004FB0E0 /* osiswebif.cpp */; };
+		054BED19119F89E800ABCA18 /* osiswordjs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6C10884F71004FB0E0 /* osiswordjs.cpp */; };
+		054BED1A119F89E800ABCA18 /* papyriplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6D10884F71004FB0E0 /* papyriplain.cpp */; };
+		054BED1B119F89E800ABCA18 /* plainfootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6E10884F71004FB0E0 /* plainfootnotes.cpp */; };
+		054BED1C119F89E800ABCA18 /* plainhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A6F10884F71004FB0E0 /* plainhtml.cpp */; };
+		054BED1D119F89E800ABCA18 /* rtfhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7010884F71004FB0E0 /* rtfhtml.cpp */; };
+		054BED1E119F89E800ABCA18 /* swbasicfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7110884F71004FB0E0 /* swbasicfilter.cpp */; };
+		054BED1F119F89E800ABCA18 /* swoptfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7210884F71004FB0E0 /* swoptfilter.cpp */; };
+		054BED20119F89E800ABCA18 /* teihtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7310884F71004FB0E0 /* teihtmlhref.cpp */; };
+		054BED21119F89E800ABCA18 /* teiplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7410884F71004FB0E0 /* teiplain.cpp */; };
+		054BED22119F89E800ABCA18 /* teirtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7510884F71004FB0E0 /* teirtf.cpp */; };
+		054BED23119F89E800ABCA18 /* thmlfootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7610884F71004FB0E0 /* thmlfootnotes.cpp */; };
+		054BED24119F89E800ABCA18 /* thmlgbf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7710884F71004FB0E0 /* thmlgbf.cpp */; };
+		054BED25119F89E800ABCA18 /* thmlheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7810884F71004FB0E0 /* thmlheadings.cpp */; };
+		054BED26119F89E800ABCA18 /* thmlhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7910884F71004FB0E0 /* thmlhtml.cpp */; };
+		054BED27119F89E800ABCA18 /* thmlhtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7A10884F71004FB0E0 /* thmlhtmlhref.cpp */; };
+		054BED28119F89E800ABCA18 /* thmllemma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7B10884F71004FB0E0 /* thmllemma.cpp */; };
+		054BED29119F89E800ABCA18 /* thmlmorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7C10884F71004FB0E0 /* thmlmorph.cpp */; };
+		054BED2A119F89E800ABCA18 /* thmlosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7D10884F71004FB0E0 /* thmlosis.cpp */; };
+		054BED2B119F89E800ABCA18 /* thmlplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7E10884F71004FB0E0 /* thmlplain.cpp */; };
+		054BED2C119F89E800ABCA18 /* thmlrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7F10884F71004FB0E0 /* thmlrtf.cpp */; };
+		054BED2D119F89E800ABCA18 /* thmlscripref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8010884F71004FB0E0 /* thmlscripref.cpp */; };
+		054BED2E119F89E800ABCA18 /* thmlstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8110884F71004FB0E0 /* thmlstrongs.cpp */; };
+		054BED2F119F89E800ABCA18 /* thmlvariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8210884F71004FB0E0 /* thmlvariants.cpp */; };
+		054BED30119F89E800ABCA18 /* thmlwebif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8310884F71004FB0E0 /* thmlwebif.cpp */; };
+		054BED31119F89E800ABCA18 /* thmlwordjs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8410884F71004FB0E0 /* thmlwordjs.cpp */; };
+		054BED32119F89E800ABCA18 /* unicodertf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8510884F71004FB0E0 /* unicodertf.cpp */; };
+		054BED33119F89E800ABCA18 /* utf16utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8610884F71004FB0E0 /* utf16utf8.cpp */; };
+		054BED34119F89E800ABCA18 /* utf8arabicpoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8710884F71004FB0E0 /* utf8arabicpoints.cpp */; };
+		054BED35119F89E800ABCA18 /* utf8arshaping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8810884F71004FB0E0 /* utf8arshaping.cpp */; };
+		054BED36119F89E800ABCA18 /* utf8bidireorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8910884F71004FB0E0 /* utf8bidireorder.cpp */; };
+		054BED37119F89E800ABCA18 /* utf8cantillation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8A10884F71004FB0E0 /* utf8cantillation.cpp */; };
+		054BED38119F89E800ABCA18 /* utf8greekaccents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8B10884F71004FB0E0 /* utf8greekaccents.cpp */; };
+		054BED39119F89E800ABCA18 /* utf8hebrewpoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8C10884F71004FB0E0 /* utf8hebrewpoints.cpp */; };
+		054BED3A119F89E800ABCA18 /* utf8html.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8D10884F71004FB0E0 /* utf8html.cpp */; };
+		054BED3B119F89E800ABCA18 /* utf8latin1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8E10884F71004FB0E0 /* utf8latin1.cpp */; };
+		054BED3C119F89E800ABCA18 /* utf8nfc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8F10884F71004FB0E0 /* utf8nfc.cpp */; };
+		054BED3D119F89E800ABCA18 /* utf8nfkd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9010884F71004FB0E0 /* utf8nfkd.cpp */; };
+		054BED3E119F89E800ABCA18 /* utf8transliterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9110884F71004FB0E0 /* utf8transliterator.cpp */; };
+		054BED3F119F89E800ABCA18 /* utf8utf16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9210884F71004FB0E0 /* utf8utf16.cpp */; };
+		054BED40119F89E800ABCA18 /* rawgenbook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9510884F71004FB0E0 /* rawgenbook.cpp */; };
+		054BED41119F89E800ABCA18 /* swgenbook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9610884F71004FB0E0 /* swgenbook.cpp */; };
+		054BED42119F89E800ABCA18 /* rawld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9910884F71004FB0E0 /* rawld.cpp */; };
+		054BED43119F89E800ABCA18 /* rawld4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9B10884F71004FB0E0 /* rawld4.cpp */; };
+		054BED44119F89E800ABCA18 /* swld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9C10884F71004FB0E0 /* swld.cpp */; };
+		054BED45119F89E800ABCA18 /* zld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9E10884F71004FB0E0 /* zld.cpp */; };
+		054BED46119F89E800ABCA18 /* swmodule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA010884F71004FB0E0 /* swmodule.cpp */; };
+		054BED47119F89E800ABCA18 /* echomod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA210884F71004FB0E0 /* echomod.cpp */; };
+		054BED48119F89E800ABCA18 /* rawtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA510884F71004FB0E0 /* rawtext.cpp */; };
+		054BED49119F89E800ABCA18 /* rawtext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA710884F71004FB0E0 /* rawtext4.cpp */; };
+		054BED4A119F89E800ABCA18 /* swtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA810884F71004FB0E0 /* swtext.cpp */; };
+		054BED4B119F89E800ABCA18 /* ztext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAA10884F71004FB0E0 /* ztext.cpp */; };
+		054BED4C119F89E800ABCA18 /* ftpparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAE10884F71004FB0E0 /* ftpparse.c */; };
+		054BED4D119F89E800ABCA18 /* roman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB010884F71004FB0E0 /* roman.cpp */; };
+		054BED4E119F89E800ABCA18 /* swbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB110884F71004FB0E0 /* swbuf.cpp */; };
+		054BED4F119F89E800ABCA18 /* swobject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB210884F71004FB0E0 /* swobject.cpp */; };
+		054BED50119F89E800ABCA18 /* swunicod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB310884F71004FB0E0 /* swunicod.cpp */; };
+		054BED51119F89E800ABCA18 /* swversion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB410884F71004FB0E0 /* swversion.cpp */; };
+		054BED52119F89E800ABCA18 /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB510884F71004FB0E0 /* url.cpp */; };
+		054BED53119F89E800ABCA18 /* utilstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB610884F71004FB0E0 /* utilstr.cpp */; };
+		054BED54119F89E800ABCA18 /* utilxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AB710884F71004FB0E0 /* utilxml.cpp */; };
+		054BED55119F89E800ABCA18 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ABC10884F71004FB0E0 /* adler32.c */; };
+		054BED56119F89E800ABCA18 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ABD10884F71004FB0E0 /* compress.c */; };
+		054BED57119F89E800ABCA18 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ABE10884F71004FB0E0 /* crc32.c */; };
+		054BED58119F89E800ABCA18 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ABF10884F72004FB0E0 /* deflate.c */; };
+		054BED59119F89E800ABCA18 /* gzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AC110884F72004FB0E0 /* gzio.c */; };
+		054BED5A119F89E800ABCA18 /* infblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AC210884F72004FB0E0 /* infblock.c */; };
+		054BED5B119F89E800ABCA18 /* infcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AC410884F72004FB0E0 /* infcodes.c */; };
+		054BED5C119F89E800ABCA18 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AC610884F72004FB0E0 /* inffast.c */; };
+		054BED5D119F89E800ABCA18 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AC910884F72004FB0E0 /* inflate.c */; };
+		054BED5E119F89E800ABCA18 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ACA10884F72004FB0E0 /* inftrees.c */; };
+		054BED5F119F89E800ABCA18 /* infutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ACC10884F72004FB0E0 /* infutil.c */; };
+		054BED60119F89E800ABCA18 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275ACF10884F72004FB0E0 /* trees.c */; };
+		054BED61119F89E800ABCA18 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD110884F72004FB0E0 /* uncompr.c */; };
+		054BED62119F89E800ABCA18 /* untgz.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD210884F72004FB0E0 /* untgz.c */; };
+		054BED63119F89E800ABCA18 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
+		054BED64119F89E800ABCA18 /* NavigatorModuleLanguages.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */; };
+		054BED65119F89E800ABCA18 /* PSLanguageCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D4629F10907130006BFBB1 /* PSLanguageCode.m */; };
+		054BED66119F89E800ABCA18 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB671097E76400A5026E /* AsyncSocket.m */; };
+		054BED67119F89E800ABCA18 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB691097E76400A5026E /* DDData.m */; };
+		054BED68119F89E800ABCA18 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB6B1097E76400A5026E /* DDNumber.m */; };
+		054BED69119F89E800ABCA18 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB6D1097E76400A5026E /* DDRange.m */; };
+		054BED6A119F89E800ABCA18 /* HTTPAsyncFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB6F1097E76400A5026E /* HTTPAsyncFileResponse.m */; };
+		054BED6B119F89E800ABCA18 /* HTTPAuthenticationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB711097E76400A5026E /* HTTPAuthenticationRequest.m */; };
+		054BED6C119F89E800ABCA18 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB731097E76400A5026E /* HTTPConnection.m */; };
+		054BED6D119F89E800ABCA18 /* HTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB751097E76400A5026E /* HTTPResponse.m */; };
+		054BED6E119F89E800ABCA18 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB771097E76400A5026E /* HTTPServer.m */; };
+		054BED6F119F89E800ABCA18 /* iPhoneHTTPServerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ABBA1097EAF300A5026E /* iPhoneHTTPServerDelegate.mm */; };
+		054BED70119F89E800ABCA18 /* localhostAddresses.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ABBC1097EAF300A5026E /* localhostAddresses.m */; };
+		054BED71119F89E800ABCA18 /* MyHTTPConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ABBE1097EAF300A5026E /* MyHTTPConnection.mm */; };
+		054BED72119F89E800ABCA18 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF2109830ED00A5026E /* ioapi.c */; };
+		054BED73119F89E800ABCA18 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF4109830ED00A5026E /* mztools.c */; };
+		054BED74119F89E800ABCA18 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF6109830EE00A5026E /* unzip.c */; };
+		054BED75119F89E800ABCA18 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF9109830EE00A5026E /* zip.c */; };
+		054BED76119F89E800ABCA18 /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACFC109830EE00A5026E /* ZipArchive.mm */; };
+		054BED77119F89E800ABCA18 /* PSPreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD44C1109E92C900853E48 /* PSPreferencesController.mm */; };
+		054BED78119F89E800ABCA18 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
+		054BED79119F89E800ABCA18 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
+		054BED7A119F89E800ABCA18 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
+		054BED7B119F89E800ABCA18 /* SnoopWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DF546910A93E69007CB847 /* SnoopWindow.m */; };
+		054BED7C119F89E800ABCA18 /* SwordBook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF558E10AA9123007CB847 /* SwordBook.mm */; };
+		054BED7D119F89E800ABCA18 /* PSAboutScreenController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */; };
+		054BED7E119F89E800ABCA18 /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
+		054BED7F119F89E800ABCA18 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
+		054BED80119F89E800ABCA18 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
+		054BED81119F89E800ABCA18 /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
+		054BED82119F89E800ABCA18 /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
+		054BED83119F89E800ABCA18 /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
+		054BED84119F89E800ABCA18 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
+		054BED85119F89E800ABCA18 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
+		054BED86119F89E800ABCA18 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
+		054BED87119F89E800ABCA18 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
+		054BED88119F89E800ABCA18 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
+		054BED89119F89E800ABCA18 /* PSModuleLeafViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */; };
+		054BED8A119F89E800ABCA18 /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
+		054BED8B119F89E800ABCA18 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
+		054BED8C119F89E800ABCA18 /* PSVerseSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */; };
+		054BED8D119F89E800ABCA18 /* PSDictionaryOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */; };
+		054BED8F119F89E800ABCA18 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		054BED90119F89E800ABCA18 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		054BED91119F89E800ABCA18 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
+		054BED92119F89E800ABCA18 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
+		054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
+		054BED94119F89E800ABCA18 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A4979A11068403005424C5 /* libicucore.dylib */; };
+		054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
+		054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
 		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
 		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
@@ -778,6 +1133,8 @@
 		0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModuleTextEntry.h; sourceTree = "<group>"; };
 		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
+		054BED9B119F89E800ABCA18 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
 		054EF62310CD0EAF0091D269 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		054F3C5F117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054F3C60117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -1300,6 +1657,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		054BED8E119F89E800ABCA18 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				054BED8F119F89E800ABCA18 /* Foundation.framework in Frameworks */,
+				054BED90119F89E800ABCA18 /* UIKit.framework in Frameworks */,
+				054BED91119F89E800ABCA18 /* libcurl-7.19.6-release.a in Frameworks */,
+				054BED92119F89E800ABCA18 /* SystemConfiguration.framework in Frameworks */,
+				054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */,
+				054BED94119F89E800ABCA18 /* libicucore.dylib in Frameworks */,
+				054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */,
+				054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2324,6 +2696,7 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* PocketSword.app */,
+				054BED9B119F89E800ABCA18 /* PocketSword.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2341,6 +2714,7 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				052B52841101A32900FFDF01 /* Settings.bundle */,
+				054BED9D119F89E800ABCA18 /* Info-PS-en.plist */,
 			);
 			name = PocketSword;
 			sourceTree = "<group>";
@@ -2746,6 +3120,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		054BEC2F119F89E800ABCA18 /* PS-en */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 054BED97119F89E800ABCA18 /* Build configuration list for PBXNativeTarget "PS-en" */;
+			buildPhases = (
+				054BEC31119F89E800ABCA18 /* Resources */,
+				054BEC56119F89E800ABCA18 /* Sources */,
+				054BED8E119F89E800ABCA18 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PS-en";
+			productName = PocketSword;
+			productReference = 054BED9B119F89E800ABCA18 /* PocketSword.app */;
+			productType = "com.apple.product-type.application";
+		};
 		1D6058900D05DD3D006BFB54 /* PocketSword */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "PocketSword" */;
@@ -2794,13 +3185,58 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* PocketSword */,
+				054BEC2F119F89E800ABCA18 /* PS-en */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		054BEC31119F89E800ABCA18 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				054BEC32119F89E800ABCA18 /* Robinson.zip in Resources */,
+				054BEC33119F89E800ABCA18 /* strongsrealgreek.zip in Resources */,
+				054BEC34119F89E800ABCA18 /* strongsrealhebrew.zip in Resources */,
+				054BEC35119F89E800ABCA18 /* locales.d.zip in Resources */,
+				054BEC36119F89E800ABCA18 /* SearchWebView.js in Resources */,
+				054BEC37119F89E800ABCA18 /* KJV.zip in Resources */,
+				054BEC38119F89E800ABCA18 /* MHCC.zip in Resources */,
+				054BEC39119F89E800ABCA18 /* MainWindow.xib in Resources */,
+				054BEC3A119F89E800ABCA18 /* LICENSE.txt in Resources */,
+				054BEC3B119F89E800ABCA18 /* Entitlements.plist in Resources */,
+				054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */,
+				054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */,
+				054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */,
+				054BEC3F119F89E800ABCA18 /* Read.png in Resources */,
+				054BEC40119F89E800ABCA18 /* nt.bks in Resources */,
+				054BEC41119F89E800ABCA18 /* nt.cps in Resources */,
+				054BEC42119F89E800ABCA18 /* ot.bks in Resources */,
+				054BEC43119F89E800ABCA18 /* ot.cps in Resources */,
+				054BEC44119F89E800ABCA18 /* ReadMe.txt in Resources */,
+				054BEC45119F89E800ABCA18 /* gear-24.png in Resources */,
+				054BEC46119F89E800ABCA18 /* commentary.png in Resources */,
+				054BEC47119F89E800ABCA18 /* About.png in Resources */,
+				054BEC48119F89E800ABCA18 /* MMM.png in Resources */,
+				054BEC49119F89E800ABCA18 /* Default.png in Resources */,
+				054BEC4A119F89E800ABCA18 /* Icon2-small.png in Resources */,
+				054BEC4B119F89E800ABCA18 /* back-white.png in Resources */,
+				054BEC4C119F89E800ABCA18 /* forward-white.png in Resources */,
+				054BEC4D119F89E800ABCA18 /* Downloader.xib in Resources */,
+				054BEC4E119F89E800ABCA18 /* IndexDownloader.xib in Resources */,
+				054BEC4F119F89E800ABCA18 /* dictionary.png in Resources */,
+				054BEC50119F89E800ABCA18 /* history.png in Resources */,
+				054BEC51119F89E800ABCA18 /* Settings.bundle in Resources */,
+				054BEC52119F89E800ABCA18 /* popup-top-bar.png in Resources */,
+				054BEC53119F89E800ABCA18 /* popup-down-button.png in Resources */,
+				054BEC54119F89E800ABCA18 /* PSChapterSelectorController.xib in Resources */,
+				054BEC55119F89E800ABCA18 /* PSVerseSelectorController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1D60588D0D05DD3D006BFB54 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2866,6 +3302,324 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		054BEC56119F89E800ABCA18 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				054BEC57119F89E800ABCA18 /* main.m in Sources */,
+				054BEC58119F89E800ABCA18 /* PocketSwordAppDelegate.mm in Sources */,
+				054BEC59119F89E800ABCA18 /* ViewController.mm in Sources */,
+				054BEC5A119F89E800ABCA18 /* PSModuleController.mm in Sources */,
+				054BEC5B119F89E800ABCA18 /* AnalysisHeader.cpp in Sources */,
+				054BEC5C119F89E800ABCA18 /* Analyzers.cpp in Sources */,
+				054BEC5D119F89E800ABCA18 /* StandardAnalyzer.cpp in Sources */,
+				054BEC5E119F89E800ABCA18 /* StandardFilter.cpp in Sources */,
+				054BEC5F119F89E800ABCA18 /* StandardTokenizer.cpp in Sources */,
+				054BEC60119F89E800ABCA18 /* gunichartables.cpp in Sources */,
+				054BEC61119F89E800ABCA18 /* repl_lltot.cpp in Sources */,
+				054BEC62119F89E800ABCA18 /* repl_tcscasecmp.cpp in Sources */,
+				054BEC63119F89E800ABCA18 /* repl_tcslwr.cpp in Sources */,
+				054BEC64119F89E800ABCA18 /* repl_tcstod.cpp in Sources */,
+				054BEC65119F89E800ABCA18 /* repl_tcstoll.cpp in Sources */,
+				054BEC66119F89E800ABCA18 /* repl_tprintf.cpp in Sources */,
+				054BEC67119F89E800ABCA18 /* threads.cpp in Sources */,
+				054BEC68119F89E800ABCA18 /* utf8.cpp in Sources */,
+				054BEC69119F89E800ABCA18 /* condition.cpp in Sources */,
+				054BEC6A119F89E800ABCA18 /* error.cpp in Sources */,
+				054BEC6B119F89E800ABCA18 /* memtracking.cpp in Sources */,
+				054BEC6C119F89E800ABCA18 /* DateField.cpp in Sources */,
+				054BEC6D119F89E800ABCA18 /* Document.cpp in Sources */,
+				054BEC6E119F89E800ABCA18 /* Field.cpp in Sources */,
+				054BEC6F119F89E800ABCA18 /* CompoundFile.cpp in Sources */,
+				054BEC70119F89E800ABCA18 /* DocumentWriter.cpp in Sources */,
+				054BEC71119F89E800ABCA18 /* FieldInfos.cpp in Sources */,
+				054BEC72119F89E800ABCA18 /* FieldsReader.cpp in Sources */,
+				054BEC73119F89E800ABCA18 /* FieldsWriter.cpp in Sources */,
+				054BEC74119F89E800ABCA18 /* IndexModifier.cpp in Sources */,
+				054BEC75119F89E800ABCA18 /* IndexReader.cpp in Sources */,
+				054BEC76119F89E800ABCA18 /* IndexWriter.cpp in Sources */,
+				054BEC77119F89E800ABCA18 /* MultiReader.cpp in Sources */,
+				054BEC78119F89E800ABCA18 /* SegmentInfos.cpp in Sources */,
+				054BEC79119F89E800ABCA18 /* SegmentMergeInfo.cpp in Sources */,
+				054BEC7A119F89E800ABCA18 /* SegmentMergeQueue.cpp in Sources */,
+				054BEC7B119F89E800ABCA18 /* SegmentMerger.cpp in Sources */,
+				054BEC7C119F89E800ABCA18 /* SegmentReader.cpp in Sources */,
+				054BEC7D119F89E800ABCA18 /* SegmentTermDocs.cpp in Sources */,
+				054BEC7E119F89E800ABCA18 /* SegmentTermEnum.cpp in Sources */,
+				054BEC7F119F89E800ABCA18 /* SegmentTermPositions.cpp in Sources */,
+				054BEC80119F89E800ABCA18 /* SegmentTermVector.cpp in Sources */,
+				054BEC81119F89E800ABCA18 /* Term.cpp in Sources */,
+				054BEC82119F89E800ABCA18 /* TermInfo.cpp in Sources */,
+				054BEC83119F89E800ABCA18 /* TermInfosReader.cpp in Sources */,
+				054BEC84119F89E800ABCA18 /* TermInfosWriter.cpp in Sources */,
+				054BEC85119F89E800ABCA18 /* TermVectorReader.cpp in Sources */,
+				054BEC86119F89E800ABCA18 /* TermVectorWriter.cpp in Sources */,
+				054BEC87119F89E800ABCA18 /* Lexer.cpp in Sources */,
+				054BEC88119F89E800ABCA18 /* MultiFieldQueryParser.cpp in Sources */,
+				054BEC89119F89E800ABCA18 /* QueryParser.cpp in Sources */,
+				054BEC8A119F89E800ABCA18 /* QueryParserBase.cpp in Sources */,
+				054BEC8B119F89E800ABCA18 /* QueryToken.cpp in Sources */,
+				054BEC8C119F89E800ABCA18 /* TokenList.cpp in Sources */,
+				054BEC8D119F89E800ABCA18 /* BooleanQuery.cpp in Sources */,
+				054BEC8E119F89E800ABCA18 /* BooleanScorer.cpp in Sources */,
+				054BEC8F119F89E800ABCA18 /* CachingWrapperFilter.cpp in Sources */,
+				054BEC90119F89E800ABCA18 /* ChainedFilter.cpp in Sources */,
+				054BEC91119F89E800ABCA18 /* ConjunctionScorer.cpp in Sources */,
+				054BEC92119F89E800ABCA18 /* DateFilter.cpp in Sources */,
+				054BEC93119F89E800ABCA18 /* ExactPhraseScorer.cpp in Sources */,
+				054BEC94119F89E800ABCA18 /* Explanation.cpp in Sources */,
+				054BEC95119F89E800ABCA18 /* FieldCache.cpp in Sources */,
+				054BEC96119F89E800ABCA18 /* FieldCacheImpl.cpp in Sources */,
+				054BEC97119F89E800ABCA18 /* FieldDocSortedHitQueue.cpp in Sources */,
+				054BEC98119F89E800ABCA18 /* FieldSortedHitQueue.cpp in Sources */,
+				054BEC99119F89E800ABCA18 /* FilteredTermEnum.cpp in Sources */,
+				054BEC9A119F89E800ABCA18 /* FuzzyQuery.cpp in Sources */,
+				054BEC9B119F89E800ABCA18 /* HitQueue.cpp in Sources */,
+				054BEC9C119F89E800ABCA18 /* Hits.cpp in Sources */,
+				054BEC9D119F89E800ABCA18 /* IndexSearcher.cpp in Sources */,
+				054BEC9E119F89E800ABCA18 /* MultiSearcher.cpp in Sources */,
+				054BEC9F119F89E800ABCA18 /* MultiTermQuery.cpp in Sources */,
+				054BECA0119F89E800ABCA18 /* PhrasePositions.cpp in Sources */,
+				054BECA1119F89E800ABCA18 /* PhraseQuery.cpp in Sources */,
+				054BECA2119F89E800ABCA18 /* PhraseScorer.cpp in Sources */,
+				054BECA3119F89E800ABCA18 /* PrefixQuery.cpp in Sources */,
+				054BECA4119F89E800ABCA18 /* QueryFilter.cpp in Sources */,
+				054BECA5119F89E800ABCA18 /* RangeFilter.cpp in Sources */,
+				054BECA6119F89E800ABCA18 /* RangeQuery.cpp in Sources */,
+				054BECA7119F89E800ABCA18 /* SearchHeader.cpp in Sources */,
+				054BECA8119F89E800ABCA18 /* Similarity.cpp in Sources */,
+				054BECA9119F89E800ABCA18 /* SloppyPhraseScorer.cpp in Sources */,
+				054BECAA119F89E800ABCA18 /* Sort.cpp in Sources */,
+				054BECAB119F89E800ABCA18 /* TermQuery.cpp in Sources */,
+				054BECAC119F89E800ABCA18 /* TermScorer.cpp in Sources */,
+				054BECAD119F89E800ABCA18 /* WildcardQuery.cpp in Sources */,
+				054BECAE119F89E800ABCA18 /* WildcardTermEnum.cpp in Sources */,
+				054BECAF119F89E800ABCA18 /* StdHeader.cpp in Sources */,
+				054BECB0119F89E800ABCA18 /* FSDirectory.cpp in Sources */,
+				054BECB1119F89E800ABCA18 /* IndexInput.cpp in Sources */,
+				054BECB2119F89E800ABCA18 /* IndexOutput.cpp in Sources */,
+				054BECB3119F89E800ABCA18 /* Lock.cpp in Sources */,
+				054BECB4119F89E800ABCA18 /* MMapInput.cpp in Sources */,
+				054BECB5119F89E800ABCA18 /* RAMDirectory.cpp in Sources */,
+				054BECB6119F89E800ABCA18 /* TransactionalRAMDirectory.cpp in Sources */,
+				054BECB7119F89E800ABCA18 /* BitSet.cpp in Sources */,
+				054BECB8119F89E800ABCA18 /* Equators.cpp in Sources */,
+				054BECB9119F89E800ABCA18 /* FastCharStream.cpp in Sources */,
+				054BECBA119F89E800ABCA18 /* fileinputstream.cpp in Sources */,
+				054BECBB119F89E800ABCA18 /* MD5Digester.cpp in Sources */,
+				054BECBC119F89E800ABCA18 /* Misc.cpp in Sources */,
+				054BECBD119F89E800ABCA18 /* Reader.cpp in Sources */,
+				054BECBE119F89E800ABCA18 /* StringBuffer.cpp in Sources */,
+				054BECBF119F89E800ABCA18 /* StringIntern.cpp in Sources */,
+				054BECC0119F89E800ABCA18 /* ThreadLocal.cpp in Sources */,
+				054BECC1119F89E800ABCA18 /* DataController.mm in Sources */,
+				054BECC2119F89E800ABCA18 /* dirent.cpp in Sources */,
+				054BECC3119F89E800ABCA18 /* SwordInstallSource.mm in Sources */,
+				054BECC4119F89E800ABCA18 /* SwordInstallManager.mm in Sources */,
+				054BECC5119F89E800ABCA18 /* SwordModule.mm in Sources */,
+				054BECC6119F89E800ABCA18 /* SwordManager.mm in Sources */,
+				054BECC7119F89E800ABCA18 /* PSStatusReporter.cpp in Sources */,
+				054BECC8119F89E800ABCA18 /* PSModuleType.mm in Sources */,
+				054BECC9119F89E800ABCA18 /* NavigatorSources.mm in Sources */,
+				054BECCA119F89E800ABCA18 /* NavigatorModuleTypes.mm in Sources */,
+				054BECCB119F89E800ABCA18 /* NavigatorModules.mm in Sources */,
+				054BECCC119F89E800ABCA18 /* NavigatorLeafView.mm in Sources */,
+				054BECCD119F89E800ABCA18 /* swdisp.cpp in Sources */,
+				054BECCE119F89E800ABCA18 /* swlog.cpp in Sources */,
+				054BECCF119F89E800ABCA18 /* listkey.cpp in Sources */,
+				054BECD0119F89E800ABCA18 /* strkey.cpp in Sources */,
+				054BECD1119F89E800ABCA18 /* swkey.cpp in Sources */,
+				054BECD2119F89E800ABCA18 /* treekey.cpp in Sources */,
+				054BECD3119F89E800ABCA18 /* treekeyidx.cpp in Sources */,
+				054BECD4119F89E800ABCA18 /* versekey.cpp in Sources */,
+				054BECD5119F89E800ABCA18 /* versetreekey.cpp in Sources */,
+				054BECD6119F89E800ABCA18 /* curlftpt.cpp in Sources */,
+				054BECD7119F89E800ABCA18 /* curlhttpt.cpp in Sources */,
+				054BECD8119F89E800ABCA18 /* encfiltmgr.cpp in Sources */,
+				054BECD9119F89E800ABCA18 /* filemgr.cpp in Sources */,
+				054BECDA119F89E800ABCA18 /* ftplibftpt.cpp in Sources */,
+				054BECDB119F89E800ABCA18 /* ftptrans.cpp in Sources */,
+				054BECDC119F89E800ABCA18 /* installmgr.cpp in Sources */,
+				054BECDD119F89E800ABCA18 /* localemgr.cpp in Sources */,
+				054BECDE119F89E800ABCA18 /* markupfiltmgr.cpp in Sources */,
+				054BECDF119F89E800ABCA18 /* stringmgr.cpp in Sources */,
+				054BECE0119F89E800ABCA18 /* swcacher.cpp in Sources */,
+				054BECE1119F89E800ABCA18 /* swconfig.cpp in Sources */,
+				054BECE2119F89E800ABCA18 /* swfiltermgr.cpp in Sources */,
+				054BECE3119F89E800ABCA18 /* swlocale.cpp in Sources */,
+				054BECE4119F89E800ABCA18 /* swmgr.cpp in Sources */,
+				054BECE5119F89E800ABCA18 /* swsearchable.cpp in Sources */,
+				054BECE6119F89E800ABCA18 /* versemgr.cpp in Sources */,
+				054BECE7119F89E800ABCA18 /* hrefcom.cpp in Sources */,
+				054BECE8119F89E800ABCA18 /* rawcom.cpp in Sources */,
+				054BECE9119F89E800ABCA18 /* rawcom4.cpp in Sources */,
+				054BECEA119F89E800ABCA18 /* rawfiles.cpp in Sources */,
+				054BECEB119F89E800ABCA18 /* swcom.cpp in Sources */,
+				054BECEC119F89E800ABCA18 /* zcom.cpp in Sources */,
+				054BECED119F89E800ABCA18 /* entriesblk.cpp in Sources */,
+				054BECEE119F89E800ABCA18 /* lzsscomprs.cpp in Sources */,
+				054BECEF119F89E800ABCA18 /* rawstr.cpp in Sources */,
+				054BECF0119F89E800ABCA18 /* rawstr4.cpp in Sources */,
+				054BECF1119F89E800ABCA18 /* rawverse.cpp in Sources */,
+				054BECF2119F89E800ABCA18 /* rawverse4.cpp in Sources */,
+				054BECF3119F89E800ABCA18 /* sapphire.cpp in Sources */,
+				054BECF4119F89E800ABCA18 /* swcipher.cpp in Sources */,
+				054BECF5119F89E800ABCA18 /* swcomprs.cpp in Sources */,
+				054BECF6119F89E800ABCA18 /* zipcomprs.cpp in Sources */,
+				054BECF7119F89E800ABCA18 /* zstr.cpp in Sources */,
+				054BECF8119F89E800ABCA18 /* zverse.cpp in Sources */,
+				054BECF9119F89E800ABCA18 /* cipherfil.cpp in Sources */,
+				054BECFA119F89E800ABCA18 /* gbffootnotes.cpp in Sources */,
+				054BECFB119F89E800ABCA18 /* gbfheadings.cpp in Sources */,
+				054BECFC119F89E800ABCA18 /* gbfhtml.cpp in Sources */,
+				054BECFD119F89E800ABCA18 /* gbfhtmlhref.cpp in Sources */,
+				054BECFE119F89E800ABCA18 /* gbfmorph.cpp in Sources */,
+				054BECFF119F89E800ABCA18 /* gbfosis.cpp in Sources */,
+				054BED00119F89E800ABCA18 /* gbfplain.cpp in Sources */,
+				054BED01119F89E800ABCA18 /* gbfredletterwords.cpp in Sources */,
+				054BED02119F89E800ABCA18 /* gbfrtf.cpp in Sources */,
+				054BED03119F89E800ABCA18 /* gbfstrongs.cpp in Sources */,
+				054BED04119F89E800ABCA18 /* gbfthml.cpp in Sources */,
+				054BED05119F89E800ABCA18 /* gbfwebif.cpp in Sources */,
+				054BED06119F89E800ABCA18 /* gbfwordjs.cpp in Sources */,
+				054BED07119F89E800ABCA18 /* greeklexattribs.cpp in Sources */,
+				054BED08119F89E800ABCA18 /* latin1utf16.cpp in Sources */,
+				054BED09119F89E800ABCA18 /* latin1utf8.cpp in Sources */,
+				054BED0A119F89E800ABCA18 /* osisfootnotes.cpp in Sources */,
+				054BED0B119F89E800ABCA18 /* osisheadings.cpp in Sources */,
+				054BED0C119F89E800ABCA18 /* osishtmlhref.cpp in Sources */,
+				054BED0D119F89E800ABCA18 /* osislemma.cpp in Sources */,
+				054BED0E119F89E800ABCA18 /* osismorph.cpp in Sources */,
+				054BED0F119F89E800ABCA18 /* osismorphsegmentation.cpp in Sources */,
+				054BED10119F89E800ABCA18 /* osisosis.cpp in Sources */,
+				054BED11119F89E800ABCA18 /* osisplain.cpp in Sources */,
+				054BED12119F89E800ABCA18 /* osisredletterwords.cpp in Sources */,
+				054BED13119F89E800ABCA18 /* osisrtf.cpp in Sources */,
+				054BED14119F89E800ABCA18 /* osisruby.cpp in Sources */,
+				054BED15119F89E800ABCA18 /* osisscripref.cpp in Sources */,
+				054BED16119F89E800ABCA18 /* osisstrongs.cpp in Sources */,
+				054BED17119F89E800ABCA18 /* osisvariants.cpp in Sources */,
+				054BED18119F89E800ABCA18 /* osiswebif.cpp in Sources */,
+				054BED19119F89E800ABCA18 /* osiswordjs.cpp in Sources */,
+				054BED1A119F89E800ABCA18 /* papyriplain.cpp in Sources */,
+				054BED1B119F89E800ABCA18 /* plainfootnotes.cpp in Sources */,
+				054BED1C119F89E800ABCA18 /* plainhtml.cpp in Sources */,
+				054BED1D119F89E800ABCA18 /* rtfhtml.cpp in Sources */,
+				054BED1E119F89E800ABCA18 /* swbasicfilter.cpp in Sources */,
+				054BED1F119F89E800ABCA18 /* swoptfilter.cpp in Sources */,
+				054BED20119F89E800ABCA18 /* teihtmlhref.cpp in Sources */,
+				054BED21119F89E800ABCA18 /* teiplain.cpp in Sources */,
+				054BED22119F89E800ABCA18 /* teirtf.cpp in Sources */,
+				054BED23119F89E800ABCA18 /* thmlfootnotes.cpp in Sources */,
+				054BED24119F89E800ABCA18 /* thmlgbf.cpp in Sources */,
+				054BED25119F89E800ABCA18 /* thmlheadings.cpp in Sources */,
+				054BED26119F89E800ABCA18 /* thmlhtml.cpp in Sources */,
+				054BED27119F89E800ABCA18 /* thmlhtmlhref.cpp in Sources */,
+				054BED28119F89E800ABCA18 /* thmllemma.cpp in Sources */,
+				054BED29119F89E800ABCA18 /* thmlmorph.cpp in Sources */,
+				054BED2A119F89E800ABCA18 /* thmlosis.cpp in Sources */,
+				054BED2B119F89E800ABCA18 /* thmlplain.cpp in Sources */,
+				054BED2C119F89E800ABCA18 /* thmlrtf.cpp in Sources */,
+				054BED2D119F89E800ABCA18 /* thmlscripref.cpp in Sources */,
+				054BED2E119F89E800ABCA18 /* thmlstrongs.cpp in Sources */,
+				054BED2F119F89E800ABCA18 /* thmlvariants.cpp in Sources */,
+				054BED30119F89E800ABCA18 /* thmlwebif.cpp in Sources */,
+				054BED31119F89E800ABCA18 /* thmlwordjs.cpp in Sources */,
+				054BED32119F89E800ABCA18 /* unicodertf.cpp in Sources */,
+				054BED33119F89E800ABCA18 /* utf16utf8.cpp in Sources */,
+				054BED34119F89E800ABCA18 /* utf8arabicpoints.cpp in Sources */,
+				054BED35119F89E800ABCA18 /* utf8arshaping.cpp in Sources */,
+				054BED36119F89E800ABCA18 /* utf8bidireorder.cpp in Sources */,
+				054BED37119F89E800ABCA18 /* utf8cantillation.cpp in Sources */,
+				054BED38119F89E800ABCA18 /* utf8greekaccents.cpp in Sources */,
+				054BED39119F89E800ABCA18 /* utf8hebrewpoints.cpp in Sources */,
+				054BED3A119F89E800ABCA18 /* utf8html.cpp in Sources */,
+				054BED3B119F89E800ABCA18 /* utf8latin1.cpp in Sources */,
+				054BED3C119F89E800ABCA18 /* utf8nfc.cpp in Sources */,
+				054BED3D119F89E800ABCA18 /* utf8nfkd.cpp in Sources */,
+				054BED3E119F89E800ABCA18 /* utf8transliterator.cpp in Sources */,
+				054BED3F119F89E800ABCA18 /* utf8utf16.cpp in Sources */,
+				054BED40119F89E800ABCA18 /* rawgenbook.cpp in Sources */,
+				054BED41119F89E800ABCA18 /* swgenbook.cpp in Sources */,
+				054BED42119F89E800ABCA18 /* rawld.cpp in Sources */,
+				054BED43119F89E800ABCA18 /* rawld4.cpp in Sources */,
+				054BED44119F89E800ABCA18 /* swld.cpp in Sources */,
+				054BED45119F89E800ABCA18 /* zld.cpp in Sources */,
+				054BED46119F89E800ABCA18 /* swmodule.cpp in Sources */,
+				054BED47119F89E800ABCA18 /* echomod.cpp in Sources */,
+				054BED48119F89E800ABCA18 /* rawtext.cpp in Sources */,
+				054BED49119F89E800ABCA18 /* rawtext4.cpp in Sources */,
+				054BED4A119F89E800ABCA18 /* swtext.cpp in Sources */,
+				054BED4B119F89E800ABCA18 /* ztext.cpp in Sources */,
+				054BED4C119F89E800ABCA18 /* ftpparse.c in Sources */,
+				054BED4D119F89E800ABCA18 /* roman.cpp in Sources */,
+				054BED4E119F89E800ABCA18 /* swbuf.cpp in Sources */,
+				054BED4F119F89E800ABCA18 /* swobject.cpp in Sources */,
+				054BED50119F89E800ABCA18 /* swunicod.cpp in Sources */,
+				054BED51119F89E800ABCA18 /* swversion.cpp in Sources */,
+				054BED52119F89E800ABCA18 /* url.cpp in Sources */,
+				054BED53119F89E800ABCA18 /* utilstr.cpp in Sources */,
+				054BED54119F89E800ABCA18 /* utilxml.cpp in Sources */,
+				054BED55119F89E800ABCA18 /* adler32.c in Sources */,
+				054BED56119F89E800ABCA18 /* compress.c in Sources */,
+				054BED57119F89E800ABCA18 /* crc32.c in Sources */,
+				054BED58119F89E800ABCA18 /* deflate.c in Sources */,
+				054BED59119F89E800ABCA18 /* gzio.c in Sources */,
+				054BED5A119F89E800ABCA18 /* infblock.c in Sources */,
+				054BED5B119F89E800ABCA18 /* infcodes.c in Sources */,
+				054BED5C119F89E800ABCA18 /* inffast.c in Sources */,
+				054BED5D119F89E800ABCA18 /* inflate.c in Sources */,
+				054BED5E119F89E800ABCA18 /* inftrees.c in Sources */,
+				054BED5F119F89E800ABCA18 /* infutil.c in Sources */,
+				054BED60119F89E800ABCA18 /* trees.c in Sources */,
+				054BED61119F89E800ABCA18 /* uncompr.c in Sources */,
+				054BED62119F89E800ABCA18 /* untgz.c in Sources */,
+				054BED63119F89E800ABCA18 /* zutil.c in Sources */,
+				054BED64119F89E800ABCA18 /* NavigatorModuleLanguages.mm in Sources */,
+				054BED65119F89E800ABCA18 /* PSLanguageCode.m in Sources */,
+				054BED66119F89E800ABCA18 /* AsyncSocket.m in Sources */,
+				054BED67119F89E800ABCA18 /* DDData.m in Sources */,
+				054BED68119F89E800ABCA18 /* DDNumber.m in Sources */,
+				054BED69119F89E800ABCA18 /* DDRange.m in Sources */,
+				054BED6A119F89E800ABCA18 /* HTTPAsyncFileResponse.m in Sources */,
+				054BED6B119F89E800ABCA18 /* HTTPAuthenticationRequest.m in Sources */,
+				054BED6C119F89E800ABCA18 /* HTTPConnection.m in Sources */,
+				054BED6D119F89E800ABCA18 /* HTTPResponse.m in Sources */,
+				054BED6E119F89E800ABCA18 /* HTTPServer.m in Sources */,
+				054BED6F119F89E800ABCA18 /* iPhoneHTTPServerDelegate.mm in Sources */,
+				054BED70119F89E800ABCA18 /* localhostAddresses.m in Sources */,
+				054BED71119F89E800ABCA18 /* MyHTTPConnection.mm in Sources */,
+				054BED72119F89E800ABCA18 /* ioapi.c in Sources */,
+				054BED73119F89E800ABCA18 /* mztools.c in Sources */,
+				054BED74119F89E800ABCA18 /* unzip.c in Sources */,
+				054BED75119F89E800ABCA18 /* zip.c in Sources */,
+				054BED76119F89E800ABCA18 /* ZipArchive.mm in Sources */,
+				054BED77119F89E800ABCA18 /* PSPreferencesController.mm in Sources */,
+				054BED78119F89E800ABCA18 /* PSBibleViewController.mm in Sources */,
+				054BED79119F89E800ABCA18 /* PSCommentaryViewController.mm in Sources */,
+				054BED7A119F89E800ABCA18 /* PSPreferencesFontTableViewController.mm in Sources */,
+				054BED7B119F89E800ABCA18 /* SnoopWindow.m in Sources */,
+				054BED7C119F89E800ABCA18 /* SwordBook.mm in Sources */,
+				054BED7D119F89E800ABCA18 /* PSAboutScreenController.mm in Sources */,
+				054BED7E119F89E800ABCA18 /* PSIndexController.mm in Sources */,
+				054BED7F119F89E800ABCA18 /* PSSearchController.mm in Sources */,
+				054BED80119F89E800ABCA18 /* SwordDictionary.mm in Sources */,
+				054BED81119F89E800ABCA18 /* SwordModuleTextEntry.m in Sources */,
+				054BED82119F89E800ABCA18 /* PSModuleSelectorController.mm in Sources */,
+				054BED83119F89E800ABCA18 /* PSDictionaryViewController.mm in Sources */,
+				054BED84119F89E800ABCA18 /* SwordListKey.mm in Sources */,
+				054BED85119F89E800ABCA18 /* SwordKey.mm in Sources */,
+				054BED86119F89E800ABCA18 /* ftplib.c in Sources */,
+				054BED87119F89E800ABCA18 /* SearchWebView.m in Sources */,
+				054BED88119F89E800ABCA18 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
+				054BED89119F89E800ABCA18 /* PSModuleLeafViewController.mm in Sources */,
+				054BED8A119F89E800ABCA18 /* PSRefSelectorController.mm in Sources */,
+				054BED8B119F89E800ABCA18 /* PSChapterSelectorController.mm in Sources */,
+				054BED8C119F89E800ABCA18 /* PSVerseSelectorController.mm in Sources */,
+				054BED8D119F89E800ABCA18 /* PSDictionaryOverlayViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1D60588E0D05DD3D006BFB54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3292,6 +4046,137 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		054BED98119F89E800ABCA18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = 4.2;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
+					externals/icu,
+					"externals/clucene/**",
+					externals/sword/include,
+					externals/libcurl/include,
+				);
+				INFOPLIST_FILE = "Info-PS-en.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/externals/libcurl\"",
+				);
+				OTHER_CFLAGS = (
+					"-D_ICU_",
+					"-DCURLAVAILABLE",
+					"-Dunix",
+					"-D__unix__",
+					"-DUSELUCENE",
+					"-DDEBUG",
+				);
+				PRODUCT_NAME = PocketSword;
+				PROVISIONING_PROFILE = "A9BD9C94-4AB3-408C-8702-F7405AE0F65F";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A9BD9C94-4AB3-408C-8702-F7405AE0F65F";
+			};
+			name = Debug;
+		};
+		054BED99119F89E800ABCA18 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = 4.2;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
+					externals/icu,
+					"externals/clucene/**",
+					externals/sword/include,
+					externals/libcurl/include,
+				);
+				INFOPLIST_FILE = "Info copy.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SRCROOT)\\\"",
+					"\\\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/externals/libcurl\\\"",
+				);
+				OTHER_CFLAGS = (
+					"-D_ICU_",
+					"-DCURLAVAILABLE",
+					"-Dunix",
+					"-D__unix__",
+					"-DUSELUCENE",
+				);
+				PRODUCT_NAME = PocketSword;
+				PROVISIONING_PROFILE = "069304B3-B369-4565-99FD-88B5793C2982";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "069304B3-B369-4565-99FD-88B5793C2982";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		054BED9A119F89E800ABCA18 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = 4.2;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
+					externals/icu,
+					"externals/clucene/**",
+					externals/sword/include,
+					externals/libcurl/include,
+				);
+				INFOPLIST_FILE = "Info copy.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SRCROOT)\\\"",
+					"\\\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/externals/libcurl\\\"",
+				);
+				OTHER_CFLAGS = (
+					"-D_ICU_",
+					"-DCURLAVAILABLE",
+					"-Dunix",
+					"-D__unix__",
+					"-DUSELUCENE",
+				);
+				PRODUCT_NAME = PocketSword;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				VALIDATE_PRODUCT = NO;
+			};
+			name = Distribution;
+		};
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3516,6 +4401,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		054BED97119F89E800ABCA18 /* Build configuration list for PBXNativeTarget "PS-en" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				054BED98119F89E800ABCA18 /* Debug */,
+				054BED99119F89E800ABCA18 /* Release */,
+				054BED9A119F89E800ABCA18 /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "PocketSword" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

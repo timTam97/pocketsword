@@ -2,3 +2,12 @@ syntax: glob
 
 .DS_Store
 
+es.lproj/*.xib
+fr.lproj/*.xib
+it.lproj/*.xib
+ja.lproj/*.xib
+ko.lproj/*.xib
+nl.lproj/*.xib
+sv.lproj/*.xib
+uk.lproj/*.xib
+zh.lproj/*.xib

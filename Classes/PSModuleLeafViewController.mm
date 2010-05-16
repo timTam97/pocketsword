@@ -69,7 +69,7 @@ BOOL trashModule = NO;
     [UIView commitAnimations];
 }
 
-- (IBAction)saveKey:(id)sender {
+- (IBAction)unlockSaveButtonPressed:(id)sender {
 	//save the key
 	[[[moduleManager swordManager] moduleWithName: navBar.title] unlock: unlockTextField.text];
 	//redisplay the text if this is the current primary bible/commentary
@@ -102,7 +102,7 @@ BOOL trashModule = NO;
 	return YES;
 }
 
-- (IBAction)editButtonPressed:(id)sender {
+- (IBAction)unlockEditButtonPressed:(id)sender {
 	if([unlockTextField canBecomeFirstResponder])
 		[unlockTextField becomeFirstResponder];
 }
@@ -115,7 +115,7 @@ BOOL trashModule = NO;
     [UIView setAnimationDuration:0.3];
     unlockToolbar.frame = r;
 	[UIView commitAnimations];
-	[editButton setEnabled:NO];
+	[unlockEditButton setEnabled:NO];
 }
 
 - (void)keyboardWillHide:(NSNotification *)note {
@@ -126,7 +126,7 @@ BOOL trashModule = NO;
     [UIView setAnimationDuration:0.3];
     unlockToolbar.frame = r;
 	[UIView commitAnimations];
-	[editButton setEnabled:YES];
+	[unlockEditButton setEnabled:YES];
 }
 
 - (IBAction)trashModule:(id)sender {

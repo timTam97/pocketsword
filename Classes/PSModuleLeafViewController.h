@@ -15,8 +15,8 @@
 	IBOutlet UINavigationItem	*navBar;
 
 	IBOutlet UIBarButtonItem	*closeButton;
-	IBOutlet UIBarButtonItem	*editButton;
 	
+	IBOutlet UIBarButtonItem	*unlockEditButton;
 	IBOutlet UIWebView			*unlockWebView;
 	IBOutlet UIWebView			*unlockHelpWebView;
 	IBOutlet UILabel			*unlockLabel;
@@ -39,9 +39,9 @@
 
 - (IBAction)closeLeaf:(id)sender;
 - (IBAction)trashModule:(id)sender;
-- (IBAction)editButtonPressed:(id)sender;
+- (IBAction)unlockEditButtonPressed:(id)sender;
 
-- (IBAction)saveKey:(id)sender;
+- (IBAction)unlockSaveButtonPressed:(id)sender;
 - (IBAction)closeUnlockView:(id)sender;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
