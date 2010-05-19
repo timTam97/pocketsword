@@ -173,8 +173,6 @@
 		//NSLog(@"already installed %@", lang);
 	}
 
-	
-	
     // Add the tab bar controller's current view as a subview of the window
     [window addSubview:tabBarController.view];
 	
@@ -182,14 +180,23 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-//    if (!url) {  return NO; }
-//	
-//    NSString *URLString = [url absoluteString];
-//    [[NSUserDefaults standardUserDefaults] setObject:URLString forKey:@"url"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
+    if(!url)
+		return NO;
+	
+    if([[url scheme] isEqualToString:@"sword"]) {
+        // in this case host is the module and path the reference
+		NSString *module = [url host];
+		if(module) {
+			[[NSUserDefaults standardUserDefaults] setObject: module forKey: @"lastBible"];
+		}
+        NSString *chapter = [[[[url path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
 
-//	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
-//	[[NSUserDefaults standardUserDefaults] synchronize];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	} else {
+		return NO;
+	}
+
 	return YES;
 }
 

@@ -387,6 +387,41 @@
     return minVersion;
 }
 
+/** Install Size in config */
+- (NSString *)installSize {
+    NSString *installSize = [configEntries objectForKey:SWMOD_CONFENTRY_INSTALLSIZE];
+    if(!installSize) {
+        installSize = [self configEntryForKey:SWMOD_CONFENTRY_INSTALLSIZE];
+        if(installSize) {
+            [configEntries setObject:installSize forKey:SWMOD_CONFENTRY_INSTALLSIZE];
+        }
+    }
+	
+	if(installSize) {
+		//convert to be in format x.yMB or x.yKB instead of in bytes
+		float size = [installSize floatValue];
+		if(size == 0.0)
+			return nil;
+		size /= 1024.0;
+		if(size >= 1.0) {
+			// more than 1KB:
+			size /= 1024.0;
+			if(size >= 1.0) {
+				// more than 1MB:
+				installSize = [NSString stringWithFormat:@"%.2f MB", size];
+			} else {
+				// more than 1KB, less than 1MB:
+				installSize = [NSString stringWithFormat:@"%.2f KB", (size*1024)];
+			}
+		} else {
+			// less than 1KB:
+			installSize = [NSString stringWithFormat:@"%@ Bytes", installSize];
+		}
+	}
+    
+    return installSize;
+}
+
 - (BOOL)charIsDigit:(unichar)c
 {
 	if( c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' )

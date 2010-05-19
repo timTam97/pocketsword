@@ -48,33 +48,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[lastRefAvailable retain];
 }
 
-//- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-//	[searchBar resignFirstResponder];
-//}
-//
-//- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	
-//	[searchBar resignFirstResponder];
-//	
-//	// Check if we have a lucene search framework
-//	sword::SWModule *primaryText = [moduleManager getPrimaryText];
-//	sword::SWBuf dir = primaryText->getConfigEntry("AbsoluteDataPath");
-//	char ch = dir.c_str()[strlen(dir.c_str())-1];
-//	if ((ch != '/') && (ch != '\\'))
-//		dir.append('/');
-//	dir.append("lucene");
-//	char isIndexed = sword::FileMgr::existsFile(dir.c_str(), "segments");
-//	if (isIndexed != 1) {
-//		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"You must download an index before you can search this module. Would you like to download it it now?"
-//								   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
-//		
-//	}
-//	[dataController performSearch: [searchBar text]];
-//	[resultsTable reloadData];
-//	[pool release];
-//}
- 
 - (void)showDownloadStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
@@ -316,13 +289,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
-		bookmarksNavBar.title = NSLocalizedString(@"BookmarksTitle", @"Bookmarks");
 		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleBookmarksTableEditing:)];
-		//bookmarksNavBar.leftBarButtonItem = nil;
-		bookmarksNavBar.leftBarButtonItem = btn;
-		[btn release];
 		
 		//configure the Bible & commentary segmented controls.
 		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
@@ -482,20 +449,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[moduleSelector setListType: BibleTab];
+		[moduleSelectorViewController setListType: BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		[moduleSelector setListType: CommentaryTab];
+		[moduleSelectorViewController setListType: CommentaryTab];
 	} else {
-		[moduleSelector setListType: DictionaryTab];
+		[moduleSelectorViewController setListType: DictionaryTab];
 	}
 	
 	//if(modulesListShown) {
-	if([modulesListView superview]) {
-		[ViewController hideModal:modulesListView withTiming:0.3];
+	if([[moduleSelectorViewController view] superview]) {
+		//[ViewController hideModal:modulesListView withTiming:0.3];
 		//modulesListShown = NO;
+		[tabController dismissModalViewControllerAnimated:YES];
 	} else {
 		NSIndexPath *ip = nil;//default value
-		if([moduleSelector listType] == BibleTab) {
+		if([moduleSelectorViewController listType] == BibleTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
 			int pos = 0;
@@ -507,7 +475,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			if (pos < [array count]) {
 				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 			}			
-		} else if([moduleSelector listType] == CommentaryTab) {
+		} else if([moduleSelectorViewController listType] == CommentaryTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
 			int pos = 0;
@@ -535,7 +503,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[modulesListTable reloadData];
 		if(ip)
 			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
-		[ViewController showModal:modulesListView withTiming:0.3];
+		//[ViewController showModal:modulesListView withTiming:0.3];
+		[tabController presentModalViewController:moduleSelectorViewController animated:YES];
 		//modulesListShown = YES;
 	}
 }
@@ -628,41 +597,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-//- (IBAction)toggleModuleTableEditing:(id)sender {
-//	if ([moduleTable isEditing]) {
-//		[moduleTable setEditing: NO animated: YES];
-//		[moduleEditBtn setTitle: NSLocalizedString(@"Edit", @"Edit")];
-//		[moduleEditBtn setStyle: UIBarButtonItemStyleBordered];
-//	}
-//	else {
-//		[moduleEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
-//		[moduleEditBtn setStyle: UIBarButtonItemStyleDone];
-//		[moduleTable setEditing: YES animated: YES];
-//	}
-//}
-
-- (IBAction)toggleBookmarksTableEditing:(id)sender {
-	if ([bookmarksTable isEditing]) {
-		[bookmarksTable setEditing: NO animated: YES];
-//		[bookmarksEditBtn setTitle: NSLocalizedString(@"Edit", @"Edit")];
-//		[bookmarksEditBtn setStyle: UIBarButtonItemStyleBordered];
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleBookmarksTableEditing:)];
-		//bookmarksNavBar.leftBarButtonItem = nil;
-		bookmarksNavBar.leftBarButtonItem = btn;
-		[btn release];
-	}
-	else {
-//		[bookmarksEditBtn setTitle: NSLocalizedString(@"Done", @"Done")];
-//		[bookmarksEditBtn setStyle: UIBarButtonItemStyleDone];
-		[bookmarksTable setEditing: YES animated: YES];
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(toggleBookmarksTableEditing:)];
-		//bookmarksNavBar.leftBarButtonItem = nil;
-		bookmarksNavBar.leftBarButtonItem = btn;
-		[btn release];
-		
-	}
-}
-
 // This should be called just AFTER:
 //    "nextChapter".
 //    or "prevChapter".
@@ -733,58 +667,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	[pool release];
 	
-}
-
-- (IBAction)addBookmark:(id)sender {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
-	NSString *ref = [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
-	
-	if (!bookmarks) {
-		bookmarks = [[NSMutableArray alloc] initWithObjects: nil];
-		
-		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-		[prefs setObject: bookmarks forKey: @"bookmarks2"];
-		
-		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-		[prefs release];
-	}
-	NSString *refToAdd = [PSModuleController createRefString:ref];
-	if(![bookmarks containsObject: refToAdd])
-		[bookmarks addObject: refToAdd];
-	
-	[defaults setObject: bookmarks forKey: @"bookmarks2"];
-	[defaults synchronize];
-	[bookmarks release];
-	
-	[bookmarksTable reloadData];
-	[pool release];
-}
-
-- (void)removeBookmark:(NSString *)ref {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
-	
-	if(!bookmarks)
-		return;
-	
-	for(NSUInteger i = 0; i < [bookmarks count]; ++i) {
-		if ([[bookmarks objectAtIndex: i] isEqualToString: ref]) {
-			[bookmarks removeObjectAtIndex: i];
-		}
-	}
-	
-	[defaults setObject: bookmarks forKey: @"bookmarks2"];
-	[defaults synchronize];
-	[bookmarks release];
-	
-	[bookmarksTable reloadData];
-	[pool release];
 }
 
 - (void)getRemoteModuleList {
@@ -1124,10 +1006,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return tabController;
 }
 
-- (UIView *)modulesListView {
-	return modulesListView;
-}
-
+//- (UIView *)modulesListView {
+//	return modulesListView;
+//}
+//
 - (void)showInfo:(NSString *)infoString {
 	if(![infoView superview]) {
 		//need to show the info pane

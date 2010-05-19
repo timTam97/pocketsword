@@ -123,10 +123,7 @@ NSTimer *refreshTimer;
 	
 	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
 	
-	//SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
-	
 	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
-	//[[moduleManager swordInstallManager] refreshInstallSource: is];
 	
 	[self updateRefreshStatus];
 	
@@ -135,18 +132,11 @@ NSTimer *refreshTimer;
 
 - (void)showRefreshStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
 	[statusTitle setText: NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source")];
 	[statusOverallText setText: @""];
-	//[statusBar setHidden: YES];
 	[statusOverallBar setHidden: YES];
-	//SwordInstallSource *is = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex: [dataController sourceInstallSourceView]];
-	//NSString *sText = [NSString stringWithFormat: @"Source: %@", [is caption]];
 	
 	[statusText setText: @""];
-	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	//[navController setNavigationBarHidden: YES];
-	//[navigationController presentModalViewController: navController animated: YES];
 	[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
 	
 	[pool release];
@@ -165,9 +155,6 @@ NSTimer *refreshTimer;
 	//DLog(@"updateRefreshStatus: Progress: %f", progress);
 	
 	if (progress == 1.0) {
-		//[dataController reloadModuleList];
-		//[moduleTable reloadData];
-		//[downloadableModulesTable reloadData];
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		
 		failed = NO;
@@ -178,11 +165,8 @@ NSTimer *refreshTimer;
 		failed = NO;
 	}
 	if (failed) {
-		//[dataController reloadModuleList];
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		//[moduleTable reloadData];
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
 	}
 }
 

@@ -138,11 +138,12 @@
 	[leafViewController displayInfoForModule:mod];
 	[UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-                           forView:[[moduleManager viewController] modulesListView]
+                           forView:self.view //[[moduleManager viewController] modulesListView]
                              cache:YES];
 	
     [UIView setAnimationDuration:1];
-	[[[moduleManager viewController] modulesListView] addSubview: leafViewController.view];
+	//[[[moduleManager viewController] modulesListView] addSubview: leafViewController.view];
+	[self.view addSubview:leafViewController.view];
     [UIView commitAnimations];
 	
 }

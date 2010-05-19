@@ -21,7 +21,7 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "ViewController.h"
-#import "DataController.h"
+//#import "DataController.h"
 #import "SwordManager.h"
 #import "SwordInstallManager.h"
 #import "globals.h"
@@ -47,7 +47,6 @@
 
 	IBOutlet id bookmarkAddButton;
 	
-	IBOutlet id dataController;
 	IBOutlet id viewController;
 	IBOutlet PSRefSelectorController *refSelectorController;
 	

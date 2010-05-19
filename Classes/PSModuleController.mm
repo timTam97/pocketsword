@@ -617,7 +617,6 @@ float installationProgress;
 	
 	if (!primaryBible && [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count] > 0) {
 		primaryBible = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex: 0];
-		//[prefs removeObjectForKey: @"bookmarks"]; -- why did we used to do this here?????
 		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
 		[prefs setObject: [primaryBible name] forKey: @"lastBible"];
 		

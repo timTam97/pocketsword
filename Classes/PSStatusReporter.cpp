@@ -40,7 +40,7 @@ void PSStatusReporter::statusUpdate(double dtTotal, double dlNow) {
 	if(overallProgress >= 1.0) {
 		overallProgress = 0.9999;
 	}
-	//sword::SWLog::getSystemLog()->logError("==========STATUSUPDATE(dtTotal = %f, dlNow = %f) = %f==========", dtTotal, dlNow, fileProgress);
+	//sword::SWLog::getSystemLog()->logError("==========STATUSUPDATE(dtTotal = %.0f, dlNow = %.0f) = %f==========", dtTotal, dlNow, fileProgress);
 }
 
 const char* PSStatusReporter::getDescription() {

@@ -152,6 +152,7 @@ typedef enum {
 - (NSString *)versification;
 - (NSString *)fullAboutText:(NSString*)currentVersionString;
 - (NSString *)fullAboutText;
+- (NSString *)installSize;
 - (BOOL)isUnicode;
 - (BOOL)isEncrypted;
 - (BOOL)isLocked;

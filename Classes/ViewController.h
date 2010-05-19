@@ -17,7 +17,6 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import <UIKit/UIKit.h>
 #import "PSModuleController.h"
 #import "DataController.h"
 #import "PocketSwordAppDelegate.h"
@@ -73,7 +72,8 @@ typedef enum {
 	
 	// MultiList
 	IBOutlet UITabBarController *multiListController;
-	IBOutlet UIView				*modulesListView;
+	//IBOutlet UIView				*modulesListView;
+	IBOutlet id					moduleSelectorViewController;
 	IBOutlet UITableView		*modulesListTable;
 	IBOutlet UINavigationItem	*modulesNavigationItem;
 	
@@ -87,9 +87,9 @@ typedef enum {
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
 	
 	// Bookmarks tab
-	IBOutlet id bookmarksTable;
+//	IBOutlet id bookmarksTable;
 //	IBOutlet id bookmarksEditBtn;
-	IBOutlet UINavigationItem *bookmarksNavBar;
+//	IBOutlet UINavigationItem *bookmarksNavBar;
 	
 	// Preferences tab
 	IBOutlet UITabBarItem *preferencesTabBarItem;
@@ -114,7 +114,6 @@ typedef enum {
 	
 	IBOutlet id moduleManager;
 	IBOutlet id dataController;
-	IBOutlet id moduleSelector;
 		
 }
 
@@ -138,9 +137,7 @@ typedef enum {
 - (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 //- (IBAction)toggleModuleTableEditing:(id)sender;
-- (IBAction)toggleBookmarksTableEditing:(id)sender;
-- (IBAction)addBookmark:(id)sender;
-- (void)removeBookmark:(NSString *)ref;
+
 - (void)addHistoryItem:(ShownTab)tabForHistory;
 //- (IBAction)moveToModulesTab:(id)sender;
 
@@ -170,7 +167,7 @@ typedef enum {
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
 - (UITabBarController *)tabController;
-- (UIView *)modulesListView;
+//- (UIView *)modulesListView;
 - (void)setShownTabTo:(ShownTab)tab;
 
 - (void)showInfo:(NSString *)infoString;

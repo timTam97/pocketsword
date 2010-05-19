@@ -8,7 +8,7 @@
 
 #import "PSModuleLeafViewController.h"
 
-@interface PSModuleSelectorController : NSObject {
+@interface PSModuleSelectorController : UIViewController {
 	ShownTab listType;
 	IBOutlet PSModuleLeafViewController *leafViewController;
 

@@ -22,7 +22,7 @@
 //#define MODULE_TABLE			1
 //#define SEARCH_TABLE			2
 //#define DOWNLOAD_TABLE		3
-#define BOOKMARK_TABLE			4
+//#define BOOKMARK_TABLE		4
 
 //#define MODULES_LIST_TABLE	7
 #define HISTORY_LIST_TABLE		8
@@ -33,15 +33,9 @@
 	ShownTab listType;
 
 	IBOutlet id moduleManager;
-	IBOutlet id viewController;
 	
 }
 
 @property (assign) ShownTab listType;
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

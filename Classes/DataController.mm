@@ -54,10 +54,11 @@
 				break;
 		}
 		return 0;
-	} else if (tag == BOOKMARK_TABLE) {
-		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
-		return [bookmarks count];
 	}
+//	else if (tag == BOOKMARK_TABLE) {
+//		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
+//		return [bookmarks count];
+//	}
 	return 0;
 }
 
@@ -105,13 +106,14 @@
 				break;
 		}
 		return cell;
-	} else if (tag == BOOKMARK_TABLE) {
-		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
-		cell.textLabel.text = [bookmarks objectAtIndex: indexPath.row];
-		// TODO:  add the first bit of the chapter to the detailLabel:
-		cell.detailTextLabel.text = @"";
-		return cell;
 	}
+//	else if (tag == BOOKMARK_TABLE) {
+//		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
+//		cell.textLabel.text = [bookmarks objectAtIndex: indexPath.row];
+//		// TODO:  add the first bit of the chapter to the detailLabel:
+//		cell.detailTextLabel.text = @"";
+//		return cell;
+//	}
 	
 	
 	cell.textLabel.text = @"";
@@ -140,8 +142,8 @@
 				}
 				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
-				[viewController displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
-				[viewController addHistoryItem: BibleTab];
+				[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+				[[moduleManager viewController] addHistoryItem: BibleTab];
 				break;
 			case CommentaryTab:
 				history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
@@ -155,45 +157,32 @@
 				}
 				[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
-				[viewController displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
-				[viewController addHistoryItem: CommentaryTab];
+				[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
+				[[moduleManager viewController] addHistoryItem: CommentaryTab];
 				break;
 		}
-		[viewController toggleMultiList: nil];
-	} else if (tag == BOOKMARK_TABLE) {
-		[viewController setShownTabTo:BibleTab];
-		if (![[[moduleManager swordManager] moduleNames] count] == 0) {
-			NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
-			NSString *ref = [fullRef objectAtIndex: 0];
-			NSString *verse = [fullRef objectAtIndex: 1];
-			if(verse) {
-				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
-				[[NSUserDefaults standardUserDefaults] synchronize];
-				[viewController displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
-			} else {
-				[viewController displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
-			}
-			[viewController addHistoryItem: BibleTab];
-		}
-		
-		[tableView deselectRowAtIndexPath:indexPath animated:NO];
-		//[tabController setSelectedIndex: BIBLE_TAB];
+		[[moduleManager viewController] toggleMultiList: nil];
 	}
+//	else if (tag == BOOKMARK_TABLE) {
+//		[[moduleManager viewController] setShownTabTo:BibleTab];
+//		if (![[[moduleManager swordManager] moduleNames] count] == 0) {
+//			NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
+//			NSString *ref = [fullRef objectAtIndex: 0];
+//			NSString *verse = [fullRef objectAtIndex: 1];
+//			if(verse) {
+//				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
+//				[[NSUserDefaults standardUserDefaults] synchronize];
+//				[[moduleManager viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
+//			} else {
+//				[[moduleManager viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
+//			}
+//			[[moduleManager viewController] addHistoryItem: BibleTab];
+//		}
+//		
+//		[tableView deselectRowAtIndexPath:indexPath animated:NO];
+//		//[tabController setSelectedIndex: BIBLE_TAB];
+//	}
 
-	[pool release];
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSInteger tag = [tableView tag];
-	
-	if (tag == BOOKMARK_TABLE) {
-		if (editingStyle == UITableViewCellEditingStyleDelete) {
-			NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-			[viewController removeBookmark: ref];
-		}
-	}
-	
 	[pool release];
 }
 
