@@ -189,3 +189,6 @@
 "RefSelectorChapterTitle" = "Capítulo";
 "RefSelectorVerseTitle" = "Versículo";
 "RefSelectorBackButtonTitle" = "Atrás";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";

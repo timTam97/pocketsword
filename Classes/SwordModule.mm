@@ -888,7 +888,6 @@
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-	//curKey->setVerse(0);
 	sword::SWKey lastKey;
 	
 	swModule->RenderText();
@@ -904,23 +903,26 @@
 	NSString *modType = [NSString stringWithUTF8String: swModule->Type()];
 	NSInteger i = 1;
 	BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
+	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
 	
 	// Grab till the end of the chapter
 	do {
 		lastKey = swModule->Key();
 		thisEntry = [NSString stringWithUTF8String: swModule->RenderText()];
-		preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
-		if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
-			//NSLog(@"preverseHeading = '%@'", preverseHeading);
-			[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
-		}
-		interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
-		if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
-			//NSLog(@"interverseHeading = '%@'", interverseHeading);
-			if(preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) {
-				[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
-			} else if(!preverseHeading) {
-				[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+		if(headings) {
+			preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
+			if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
+				//NSLog(@"preverseHeading = '%@'", preverseHeading);
+				[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
+			}
+			interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
+			if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
+				//NSLog(@"interverseHeading = '%@'", interverseHeading);
+				if(preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) {
+					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+				} else if(!preverseHeading) {
+					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+				}
 			}
 		}
 		//replace *X and *N with simply X and N for xrefs and footnotes

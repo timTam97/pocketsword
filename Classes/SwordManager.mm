@@ -214,7 +214,7 @@ using std::list;
 			//DLog(@"\nloc: %@   swLoc: %@", loc, swLoc);
             if([swLoc hasPrefix:loc]) {
                 haveLocale = YES;
-                lang = loc;
+                lang = swLoc;
                 break;
             }
         }        

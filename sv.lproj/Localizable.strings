@@ -189,3 +189,6 @@
 "RefSelectorChapterTitle" = "Kapitel";
 "RefSelectorVerseTitle" = "Vers";
 "RefSelectorBackButtonTitle" = "Tillbaka";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";

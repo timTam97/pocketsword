@@ -190,3 +190,6 @@
 "RefSelectorChapterTitle" = "章";
 "RefSelectorVerseTitle" = "節";
 "RefSelectorBackButtonTitle" = "戻る";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";

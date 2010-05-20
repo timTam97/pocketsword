@@ -188,3 +188,6 @@
 "RefSelectorChapterTitle" = "章";
 "RefSelectorVerseTitle" = "节";
 "RefSelectorBackButtonTitle" = "回去";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";

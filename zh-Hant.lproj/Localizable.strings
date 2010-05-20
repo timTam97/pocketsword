@@ -1,0 +1,193 @@
+﻿/*
+	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
+	Copyright (C) 2008-2010 CrossWire Bible Society
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License along
+	with this program; if not, write to the Free Software Foundation, Inc.,
+	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// Traditional Chinese Localisation
+// By Brian Wu
+// Last Updated v1.2.2 (10-May-2010)
+
+"Edit" = "編輯";
+"Done" = "完成";
+"Module Download" = "模組下載";
+"Installing" = "安裝:";
+"Yes" = "是";
+"No" = "否";
+"ConfirmInstall" = "你要安裝此模組嗎?";
+"Next" = "下一個";
+"Previous" = "前一個";
+
+"Ok" = "確定";
+"Cancel" = "取消";
+"Error" = "錯誤";
+
+// Module About
+"AboutModuleName" = "模組名稱: ";
+"AboutModuleDescription" = "描述: ";
+"AboutModuleType" = "類型: ";
+"AboutModuleLang" = "語言: ";
+"AboutModuleVersion" = "版本: ";
+"AboutModuleVersionUnspecified" = "(未定)";
+"AboutModuleAboutText" = "關於: ";
+"AboutModuleLicence" = "散發執照: ";
+"AboutModuleLCSH" = "美國國會圖書館主題標題: ";
+
+
+"Disclaimer" = "免責聲明";
+"DisclaimerMsg" = "      -=+* 警告 *+=-\n,  \n雖然安裝管理員提供了安裝和升級sword部件的便捷方法，它也使用了訪問網站的系統方法，這些網站可能成為資料包嗅探器為了鎖定個別使用者的目標。 \n如果你住在信仰受迫害的國家，不希望冒險被偵測到，您＊不＊應該使用安裝源管理器的的遠端資源功能。 \n另外，Crosswire以外的其他遠端源可能含有品質不高的模組，那些模組含非正統的內容，有些模組可能甚至是不可以合法派發的。許多資源庫有很好的有用內容。但Crosswire沒有審查或維護過這些資源庫，所以Crosswire不能對他們的內容負責。買者自負。\n你明白這一點並仍願意啟用遠端源功能嗎？";
+"WebNoIP" = "網: 不能確定外部IP\n";
+"WiFiNoConnection" = "Wifi: 無連接\n";
+"NoNetworkConnection" = "無可用的網路連接。";
+"manualInstallHelp" = "若手工安裝模組，請將流覽器指向下列之一的位址，然後跟作提示。 (或用Bonjour搜尋你的iPhone!)。但我們建議你使用內置模組安裝器，這個手工安裝器只是提供給那些有自製模組的使用者。";
+"InstallManagerDisabled" = "禁止...";
+"InstallTitle" = "安裝?";
+"files" = "文件";
+"InstallProblem" = "安裝中出了問題.";
+"InstalledButtonTitle" = "安裝了";
+"InstallButtonTitle" = "安裝";
+"RefreshProblem" = "刷新中出了問題。";
+"RefreshingModuleSource" = "刷新模組源。";
+"NoModulesRefresh" = "這兒沒有模組。請試試刷新。";
+"NoModulesInstalled" = "沒有模組已經安裝。";
+
+"InstallSourcesTitle" = "源";
+"PreferencesTitle" = "偏好";
+"PreferencesDisplayPreferencesTitle" = "顯示偏好";
+"PreferencesDevicePreferencesTitle" = "設備偏好";
+"PreferencesFontSizeTitle" = "字體大小";
+"PreferencesNightModeTitle" = "夜間模式";
+"PreferencesVPLTitle" = "一行一節";
+"PreferencesFontTitle" = "字體";
+"PreferencesRedLetterTitle" = "紅字體";
+"PreferencesRedLetterNote" = "注意只有某些模組支援紅字模式";
+"PreferencesDisableAutoLockTitle" = "禁用自動鎖";
+"PreferencesModuleMaintainerModeTitle" = "模組維護模式";
+"PreferencesModuleMaintainerModeNote" = "注意，模組維護模式是為那些有自製模組而必須手工安裝其自製模組的使用者的。對所有別的使用者，請用內置模組下載器下載CrossWire提供的模組。";
+
+"AboutTitle" = "關於";
+
+"TabBarTitleBible" = "聖經";
+"TabBarTitleCommentary" = "注解";
+"TabBarTitleDictionary" = "字典";
+"TabBarTitleModules" = "模組";
+"TabBarTitlePreferences" = "偏好";
+"TabBarTitleAbout" = "關於";
+
+"ModulesTitle" = "模組";
+"BookmarksTitle" = "書簽";
+
+"ActivityLabelLoading" = "裝載...";
+"MMMBonjourLoading" = "Bonjour 裝載...";
+"MMMIPLoading" = "IP 裝載...";
+
+"Biblical Texts" = "經文";
+"Commentaries" = "注解";
+"Lexicons / Dictionaries" = "詞典／字典";
+"Generic Books" = "一半圖書";
+"Daily Devotional" = "每日靈修";
+"Glossaries" = "詞彙表";
+"Cults / Unorthodox / Questionable Material" = "邪教/非正統/可疑問的材料";
+"Essays" = "散文";
+"Maps" = "地圖";
+"Images" = "圖片";
+
+"BibleHistoryTitle" = "聖經歷史";
+"CommentaryHistoryTitle" = "注解歷史";
+
+"None" = "無";
+"CloseButtonTitle" = "關閉";
+"CacheDictionaryKeysTitle" = "緩存?";
+"CacheDictionaryKeysMsg" = "此字典尚未初始化，你現在想要緩存此字典嗎？";
+"IndexDownloadTitle" = "索引下載";
+"NoSearchIndexTitle" = "沒有搜索索引";
+"NoSearchIndexMsg" = "你尚未安裝此模組的搜索索引。 你想要檢查已有的搜索索引嗎？";
+"SearchDownloaderTitle" = "搜索下載器";
+"FontPreferenceTitle" = "字體";
+"EmailUsButton" = "發電郵給我們";
+"NoSearchIndexInstalled" = "沒有安裝搜索索引";
+"SearchResults" = "結果";
+
+"IndexControllerInstalled" = "你已經安裝了搜索索引:";
+"IndexControllerDownloadable" = "請從下列可下載的模組中挑選你所需要的搜索索引以便你可以搜索該模組:";
+"IndexControllerNone" = "為了搜索，請檢查你的網路連接:";
+"IndexControllerNoneRemote" = "目前沒有可下載的搜索索引:";
+
+"SearchHelpTitle" = "搜尋幫助";
+"IndexControllerConfirmQuestion" = "你是否想下載這個模組的搜索索引？\n下載其注解模組可能需要一些時間!";
+
+"PreferencesStrongsPreferencesTitle" = "史特朗碼";
+"PreferencesDisplayTitle" = "顯示";
+"PreferencesGreekModuleTitle" = "希臘文模組";
+"PreferencesHebrewModuleTitle" = "希伯來文模組";
+"PreferencesMorphologyPreferencesTitle" = "形態偏好";
+"PreferencesOriginalLanguagePreferencesTitle" = "原文";
+"PreferencesGreekAccentsTitle" = "希臘口音";
+"PreferencesHVPTitle" = "希伯來語母音點";
+"PreferencesHebrewCantillationTitle" = "希伯來語吟誦符";
+"PreferencesGreekStrongsLexiconTitle" = "希臘文史特朗詞典";
+"PreferencesHebrewStrongsLexiconTitle" = "希伯來文史特朗詞典";
+"PreferencesGreekMorphLexiconTitle" = "希臘詞彙形態";
+"PreferencesCrossReferencesTitle" = "交叉引用";
+"PreferencesFootnotesTitle" = "注腳";
+
+
+"NoHebrewStrongsNumbersModuleInstalled" = "沒有安裝希伯來文史特朗詞典. 請通過更多－》下載和安裝一個 (例如 'strongshebrew')。";
+"NoGreekStrongsNumbersModuleInstalled" = "沒有安裝希臘文史特朗詞典. 請通過更多－》下載和安裝一個 (例如 'strongsgreek')。";
+
+"NoMorphGreekModuleInstalled" = "沒有安裝希臘文形態分析碼詞典. 請通過更多－》下載和安裝一個 (例如 'Robinson')。";
+"MorphHebrewNotSupported" = "可惜現在只有希臘文字的形態分析碼。您如果有語言天分並願意幫忙添加此功能在PocketSword上，請到<br /> openscriptures.org<br />並加入討論小組。";
+
+"AboutModuleFeaturesTitle" = "模組特徵";
+"AboutModuleContainsStrongsNumbers" = "含史特朗碼";
+"AboutModuleContainsMorphTags" = "含形態標符";
+"AboutModuleContainsFootnotes" = "含注腳";
+"AboutModuleContainsHeadings" = "含頁首";
+"AboutModuleContainsRedLetterWords" = "基督的話為紅色";
+"AboutModuleContainsVariants" = "含文字變化";
+"AboutModuleContainsGreekAccents" = "含希臘口音";
+"AboutModuleContainsScriptref" = "含經文交叉引用";
+"AboutModuleContainsLemma" = "引理";
+"AboutModuleContainsCantillation" = "含吟誦符";
+"AboutModuleContainsHebrewPoints" = "含希伯來文點";
+"AboutModuleContainsMorphSegmentation" = "這是詞素分割希伯來文";
+"AboutModuleContainsGreekDef" = "定義希臘文史特朗碼";
+"AboutModuleContainsHebrewDef" = "定義希伯來文史特朗碼";
+"AboutModuleContainsGreekParse" = "定義希臘文形態分析碼";
+"AboutModuleContainsHebrewParse" = "定義希伯來文形態分析碼";
+"AboutModuleContainsDailyDevotion" = "含每日靈修";
+"AboutModuleContainsImages" = "含圖片";
+
+"NotSupported" = "目前不支援此模組";
+"ConfirmDeleteTitle" = "去除?";
+"ConfirmDeleteQuestion" = "您肯定要去除此模組？";
+"EmptyChapterWarning" = "此模組本章無內容。";
+"ModuleNotInstalled" = "尚未安裝";
+"AboutModuleCurrentVersion" = "已安裝的版本： ";
+
+// new v1.2.2 strings:
+"ModuleLockedTitle" = "模組被鎖";
+"ModuleLockedQuestion" = "此模組現在被鎖。你必須買鑰匙（key)打開它。可是你目前不能通過PocketSword買。請閱讀此模組的介紹來找到如何買模組\n  你如果已經買了鑰匙，請輸入你的鑰匙來打開模組。你要輸入你的鑰匙嗎？";
+"ModuleEnterKeyTitle" = "輸入鑰匙（key):";
+"ModuleUnlockScreenTitle" = "解鎖模組";
+"ModuleUnlockHelpText" = "請輸入你買模組時收到的鑰匙來打開它。按完成以測試模組，如果正確就按存檔（Save）.";
+"RefSelectorBookTitle" = "選擇書名";
+"RefSelectorChapterTitle" = "章";
+"RefSelectorVerseTitle" = "節";
+"RefSelectorBackButtonTitle" = "回去";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";

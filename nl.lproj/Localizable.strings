@@ -19,7 +19,7 @@
 
 // Dutch Localisation
 // By Henko van de Weerd
-// Last Updated v1.2.2
+// Last Updated v1.2.2 (8-May-2010)
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
@@ -43,15 +43,15 @@
 "AboutModuleVersion" = "Versie: ";
 "AboutModuleVersionUnspecified" = "(ongespecificeerd)";
 "AboutModuleAboutText" = "Over: ";
-"AboutModuleLicence" = "Distributie Licentie: ";
+"AboutModuleLicence" = "Distributie licentie: ";
 "AboutModuleLCSH" = "Library of Congress Subject Heading: ";
 
 
 "Disclaimer" = "Disclaimer";
-"DisclaimerMsg" = "      -=+* WAARSCHUWING *+=-\nHoewel de het via de Installatie Manager gemakkelijk is om SWORD-componenten te installeren en updaten, gebruikt deze een systematische methode om websites te benaderen wat zogenaamde packet sniffers de mogelijkheid kan geven om gebruikers te detecteren. \nALS U IN EEN LAND WOONT WAAR CHRISTENEN VERVOLGD WORDEN DOET U ER ZEER VERSTANDIG AAN OM DE INSTALLATIE MANAGER *NIET* TE GEBRUIKEN. \nAndere bronnen dan CrossWire kunnen modules van een mindere kwaliteit bevatten, modules met onorthodoxe inhoud, of modules die niet vrij gedistribueerd mogen worden.\nVeel repositories bevatten een geweldig nuttige inhoud. Deze repositories worden simpelweg niet nagekeken of onderhouden door CrossWire en CrossWire kan niet verantwoordelijk gehouden worden voor deze inhoud. CAVEAT EMPTOR.\nBegrijpt u dit en wilt u de externe bron-functies inschakelen?";
+"DisclaimerMsg" = "      -=+* WAARSCHUWING *+=-\nHoewel de het via de Installatie Manager gemakkelijk is om SWORD-componenten te installeren en updaten, gebruikt deze een systematische methode om websites te benaderen wat zogenaamde packet sniffers de mogelijkheid kan geven om gebruikers te detecteren. \nALS U IN EEN LAND WOONT WAAR CHRISTENEN VERVOLGD WORDEN DOET U ER ZEER VERSTANDIG AAN OM DE INSTALLATIE MANAGER *NIET* TE GEBRUIKEN. \nAndere bronnen dan CrossWire kunnen modules van een mindere kwaliteit bevatten, modules met onorthodoxe inhoud, of modules die niet vrij gedistribueerd mogen worden.Veel repositories bevatten een geweldig nuttige inhoud. Deze repositories worden simpelweg niet nagekeken of onderhouden door CrossWire en CrossWire kan niet verantwoordelijk gehouden worden voor deze inhoud. CAVEAT EMPTOR.\nBegrijpt u dit en wilt u de externe bron-functies inschakelen?";
 
 "WebNoIP" = "Web: Niet in staat om externe IP-adres te bepalen\n";
-"WiFiNoConnection" = "Wifi: Geen Verbinding\n";
+"WiFiNoConnection" = "Wifi: Geen verbinding\n";
 "NoNetworkConnection" = "Geen netwerkverbinding beschikbaar.";
 
 "manualInstallHelp" = "Om handmatig een module te installeren dient u één van de onderstaande locaties te openen in een webbrowser en de instructies te volgen (of zoek gewoon naar uw iPhone door gebruik te maken van Bonjour!). Het is echter wel aan te raden om gebruik te maken van de geïntegreerde module installer - deze optie tot handmatige installatie is enkel toegevoegd voor gerbuikers die zelf modules ontwikkelen.";
@@ -62,22 +62,22 @@
 "InstalledButtonTitle" = "Geïnstalleerd";
 "InstallButtonTitle" = "Installeer";
 "RefreshProblem" = "Er is een probleem opgetreden bij het vernieuwen.";
-"RefreshingModuleSource" = "Vernieuwen Module Bron";
+"RefreshingModuleSource" = "Vernieuwen module bron";
 "NoModulesRefresh" = "Geen modules. Probeer te vernieuwen.";
 "NoModulesInstalled" = "Geen modules geïnstalleerd.";
 
 "InstallSourcesTitle" = "Bronnen";
 "PreferencesTitle" = "Instellingen";
-"PreferencesDisplayPreferencesTitle" = "Geef instellingen weer";
-"PreferencesDevicePreferencesTitle" = "Apparaat Instellingen";
+"PreferencesDisplayPreferencesTitle" = "Weergave-instellingen";
+"PreferencesDevicePreferencesTitle" = "Apparaat-instellingen";
 "PreferencesFontSizeTitle" = "Tekstgrootte";
 "PreferencesNightModeTitle" = "Nachtmodus";
-"PreferencesVPLTitle" = "Vers Per Regel";
+"PreferencesVPLTitle" = "Vers per regel";
 "PreferencesFontTitle" = "Font";
-"PreferencesRedLetterTitle" = "Rode Letters";
+"PreferencesRedLetterTitle" = "Rode letters";
 "PreferencesRedLetterNote" = "Let op: De Rode Letters modus is alleen beschikbaar voor bepaalde modules.";
 "PreferencesDisableAutoLockTitle" = "Schakel auto-lock uit";
-"PreferencesModuleMaintainerModeTitle" = "Module Beheerder Modus";
+"PreferencesModuleMaintainerModeTitle" = "Module beheerder modus";
 "PreferencesModuleMaintainerModeNote" = "Let op: De Module Beheerder Modus is voor de gebruikers die hun eigen modules maken en een manier nodig hebben om hun eigen modules te installeren. Alle andere gebruikers kunnen gebruik maken van de geïntegreerde module downloader om toegang te krijgen tot de modules die aangeboden worden door CrossWire.";
 
 "AboutTitle" = "Over PocketSword";
@@ -87,28 +87,28 @@
 "TabBarTitleDictionary" = "Woordenboek";
 "TabBarTitleModules" = "Modules";
 "TabBarTitlePreferences" = "Instellingen";
-"TabBarTitleAbout" = "Over PS";
+"TabBarTitleAbout" = "Over PocketSword";
 
 "ModulesTitle" = "Modules";
 "BookmarksTitle" = "Bladwijzers";
 
 "ActivityLabelLoading" = "Bezig met laden...";
-"MMMBonjourLoading" = "Bonjour Laden...";
-"MMMIPLoading" = "IP Laden...";
+"MMMBonjourLoading" = "Bonjour laden...";
+"MMMIPLoading" = "IP laden...";
 
-"Biblical Texts" = "Bijbelteksten";
+"Biblical Texts" = "Bijbelse teksten";
 "Commentaries" = "Commentaar";
-"Lexicons / Dictionaries" = "Lexicons / Woordenboeken";
-"Generic Books" = "Algemene Boeken";
-"Daily Devotional" = "Dagelijkse Bijbelstudie";
+"Lexicons / Dictionaries" = "Lexicons / woordenboeken";
+"Generic Books" = "Algemene boeken";
+"Daily Devotional" = "Dagelijkse bijbelstudie";
 "Glossaries" = "Woordenlijsten";
-"Cults / Unorthodox / Questionable Material" = "Sekten / Onorthodox / Twijfelachtig Materiaal";
+"Cults / Unorthodox / Questionable Material" = "Sekten / onorthodox / twijfelachtig materiaal";
 "Essays" = "Essays";
 "Maps" = "Kaarten";
 "Images" = "Afbeeldingen";
 
-"BibleHistoryTitle" = "Bijbel Geschiedenis";
-"CommentaryHistoryTitle" = "Commentaar Geschiedenis";
+"BibleHistoryTitle" = "Geschiedenis";
+"CommentaryHistoryTitle" = "Geschiedenis";
 
 "None" = "Geen";
 "CloseButtonTitle" = "Afsluiten";
@@ -117,7 +117,7 @@
 "IndexDownloadTitle" = "Index downloaden...";
 "NoSearchIndexTitle" = "Geen zoek-index";
 "NoSearchIndexMsg" = "U hebt geen zoek-index geïnstalleerd voor deze module. Wilt u nu controleren op beschikbare indexen?";
-"SearchDownloaderTitle" = "Zoek Downloader";
+"SearchDownloaderTitle" = "Zoek-index downloaden";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email ons";
 "NoSearchIndexInstalled" = "Geen zoek-index geïnstalleerd";
@@ -128,47 +128,47 @@
 "IndexControllerNone" = "Controleer de internetverbinding om zoeken mogelijk te maken voor:";
 "IndexControllerNoneRemote" = "Er is momenteel geen zoek-index beschikbaar voor:";
 
-"SearchHelpTitle" = "Zoeken Help";
+"SearchHelpTitle" = "Hulp bij zoeken";
 "IndexControllerConfirmQuestion" = "Wilt u de zoek-index downloaden voor deze module? \nDit kan even duren voor Commentaar-modules!";
 
 "PreferencesStrongsPreferencesTitle" = "Verzen";
 "PreferencesDisplayTitle" = "Weergave";
 "PreferencesGreekModuleTitle" = "Griekse module";
 "PreferencesHebrewModuleTitle" = "Hebreeuwse module";
-"PreferencesMorphologyPreferencesTitle" = "Instellingen Morfologie";
+"PreferencesMorphologyPreferencesTitle" = "Instellingen morfologie";
 "PreferencesOriginalLanguagePreferencesTitle" = "Grondtekst";
-"PreferencesGreekAccentsTitle" = "Griekse Accenten";
-"PreferencesHVPTitle" = "Hebreeuwse Klinker Punten";
-"PreferencesHebrewCantillationTitle" = "Hebreeuwse Cantillation";
-"PreferencesGreekStrongsLexiconTitle" = "Griekse Strong's lexicon";
-"PreferencesHebrewStrongsLexiconTitle" = "Hebreeuwse Strong's lexicon";
-"PreferencesGreekMorphLexiconTitle" = "Griekse Morfologie lexicon";
+"PreferencesGreekAccentsTitle" = "Griekse accenten";
+"PreferencesHVPTitle" = "Hebreeuwse klinker punten";
+"PreferencesHebrewCantillationTitle" = "Hebreeuwse cantillation";
+"PreferencesGreekStrongsLexiconTitle" = "Griekse strong's lexicon";
+"PreferencesHebrewStrongsLexiconTitle" = "Hebreeuwse strong's lexicon";
+"PreferencesGreekMorphLexiconTitle" = "Griekse morfologie lexicon";
 "PreferencesCrossReferencesTitle" = "Kruisverwijzingen";
 "PreferencesFootnotesTitle" = "Voetnoten";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Geen Hebreeuwse Strong's Nummers Lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'strongshebrew') via de Meer -> Downloads tab.";
-"NoGreekStrongsNumbersModuleInstalled" = "Geen Griekse Strong's Nummers Lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'strongsgreek') via de Meer -> Downloads tab.";
+"NoHebrewStrongsNumbersModuleInstalled" = "Geen Hebreeuwse strong's nummers lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'strongshebrew') via de Meer -> Downloads tab.";
+"NoGreekStrongsNumbersModuleInstalled" = "Geen Griekse strong's nummers lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'strongsgreek') via de Meer -> Downloads tab.";
 
-"NoMorphGreekModuleInstalled" = "Geen Griekse Morfologie Analyse Codes lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'Robinson') via de Meer -> Downloads tab";
-"MorphHebrewNotSupported" = "Helaas, Morfologie Analyse Codes zijn momenteel alleen beschikbaar voor Griekse woorden. Als u de taal machtig bent en wilt helpen bij het toevoegen van deze functie aan PocketSword kunt u een kijkje nemen op <br /> openscriptures.org<br />en uzelf aansluiten bij de discussiegroep daar.";
+"NoMorphGreekModuleInstalled" = "Geen Griekse morfologie analyse codes lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'Robinson') via de Meer -> Downloads tab";
+"MorphHebrewNotSupported" = "Helaas, morfologie analyse codes zijn momenteel alleen beschikbaar voor Griekse woorden. Als u de taal machtig bent en wilt helpen bij het toevoegen van deze functie aan PocketSword kunt u een kijkje nemen op <br /> openscriptures.org<br />en uzelf aansluiten bij de discussiegroep daar.";
 
-"AboutModuleFeaturesTitle" = "Module Kenmerken";
-"AboutModuleContainsStrongsNumbers" = "Bevat Strong's nummers";
-"AboutModuleContainsMorphTags" = "Bevat Morfologietags";
-"AboutModuleContainsFootnotes" = "Bevat Voetnoten";
-"AboutModuleContainsHeadings" = "Bevat Rubrieken";
+"AboutModuleFeaturesTitle" = "Module kenmerken";
+"AboutModuleContainsStrongsNumbers" = "Bevat strong's nummers";
+"AboutModuleContainsMorphTags" = "Bevat morfologietags";
+"AboutModuleContainsFootnotes" = "Bevat voetnoten";
+"AboutModuleContainsHeadings" = "Bevat rubrieken";
 "AboutModuleContainsRedLetterWords" = "Woorden van Christus in het rood";
-"AboutModuleContainsVariants" = "Bevat Tekstvarianten";
-"AboutModuleContainsGreekAccents" = "Bevat Griekse Accenten";
-"AboutModuleContainsScriptref" = "Bevat Schriftelijke Kruisverwijzingen";
+"AboutModuleContainsVariants" = "Bevat tekstvarianten";
+"AboutModuleContainsGreekAccents" = "Bevat Griekse accenten";
+"AboutModuleContainsScriptref" = "Bevat schriftelijke kruisverwijzingen";
 "AboutModuleContainsLemma" = "Lemmata";
-"AboutModuleContainsCantillation" = "Bevat Cantillation Marks";
-"AboutModuleContainsHebrewPoints" = "Bevat Hebreeuwse Punten";
+"AboutModuleContainsCantillation" = "Bevat cantillation marks";
+"AboutModuleContainsHebrewPoints" = "Bevat Hebreeuwse punten";
 "AboutModuleContainsMorphSegmentation" = "Dit is een morfeem gesegmenteerd Hebreeuwse tekst";
-"AboutModuleContainsGreekDef" = "Definieert Griekse Strong's Nummers";
-"AboutModuleContainsHebrewDef" = "Definieert Hebreeuwse Strong's Nummers";
-"AboutModuleContainsGreekParse" = "Definieert Griekse Morfologie Analyse Codes";
-"AboutModuleContainsHebrewParse" = "Definieert Hebreeuwse Morfologie Analyse Codes";
+"AboutModuleContainsGreekDef" = "Definieert Griekse strong's nummers";
+"AboutModuleContainsHebrewDef" = "Definieert Hebreeuwse strong's nummers";
+"AboutModuleContainsGreekParse" = "Definieert Griekse morfologie analyse codes";
+"AboutModuleContainsHebrewParse" = "Definieert Hebreeuwse morfologie analyse codes";
 "AboutModuleContainsDailyDevotion" = "Bevat een dagelijkse bijbelstudie";
 "AboutModuleContainsImages" = "Bevat afbeeldingen";
 
@@ -177,16 +177,18 @@
 "ConfirmDeleteQuestion" = "Weet u zeker dat u deze module wilt verwijderen?";
 "EmptyChapterWarning" = "Het hoofdstuk van deze module is leeg.";
 "ModuleNotInstalled" = "is niet geïnstalleerd.";
-"AboutModuleCurrentVersion" = "Geïnstalleerde Versie: ";
+"AboutModuleCurrentVersion" = "Geïnstalleerde versie: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Module Geblokkeerd";
+"ModuleLockedTitle" = "Module geblokkeerd";
 "ModuleLockedQuestion" = "Deze module is momenteel geblokkeerd. U dient een productsleutel te kopen om deze module te deblokkeren. Helaas is dit momenteel nog niet mogelijk via PockenSword. Leest u alstublieft de beschrijving van deze module om te zien hoe u deze module kunt aanschaffen.\n  Wanneer u reeds een productsleutel gekocht heeft kunt u deze invoeren om de module te deblokkeren. Wilt u de productsleutel nu invoeren?";
 "ModuleEnterKeyTitle" = "Voer sleutel in:";
-"ModuleUnlockScreenTitle" = "Deblokkeer Module";
+"ModuleUnlockScreenTitle" = "Deblokkeer module";
 "ModuleUnlockHelpText" = "Vult u alstublieft de productsleutel in die u toegezonden is nadat u deze module gekocht heeft. Druk op Klaar om de sleutel te testen en druk op Opslaan als de sleutel juist is.";
-"RefSelectorBookTitle" = "Selecteer een Boek";
+"RefSelectorBookTitle" = "Selecteer een boek";
 "RefSelectorChapterTitle" = "Hoofdstuk";
 "RefSelectorVerseTitle" = "Vers";
 "RefSelectorBackButtonTitle" = "Terug";
 
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";

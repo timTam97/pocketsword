@@ -23,10 +23,11 @@
 #define VPL_ROW				2
 #define XREF_ROW			3
 #define FOOTNOTES_ROW		4
-#define FONT_NAME_ROW		5
-#define RED_LETTER_ROW		6
-#define RED_LETTER_NOTE_ROW	7
-#define DISPLAY__ROWS		8//total rows in section
+#define HEADINGS_ROW		5
+#define FONT_NAME_ROW		6
+#define RED_LETTER_ROW		7
+#define RED_LETTER_NOTE_ROW	8
+#define DISPLAY__ROWS		9//total rows in section
 
 //rows in STRONGS section
 #define STRONGS_DISPLAY_ROW	0
@@ -246,6 +247,19 @@ BOOL requireReloadOfModuleViews = NO;
 						[ cell addSubview: footnotesSwitch ];
 						cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
 						[footnotesSwitch release];
+					}
+						break;
+					case HEADINGS_ROW :
+					{
+						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
+						cell.selectionStyle = UITableViewCellSelectionStyleNone;
+						UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
+						BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+						headingsSwitch.on = headingsMode;
+						[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
+						[ cell addSubview: headingsSwitch ];
+						cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
+						[headingsSwitch release];
 					}
 						break;
 					case FONT_NAME_ROW :
@@ -606,6 +620,14 @@ BOOL requireReloadOfModuleViews = NO;
 - (void)footnotesChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"footnotesPreference"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[moduleManager setPreferences];
+	requireReloadOfModuleViews = YES;
+}
+
+- (void)headingsChanged:(UISwitch *)sender {
+	BOOL n = [sender isOn];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"headingsPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[moduleManager setPreferences];
 	requireReloadOfModuleViews = YES;
