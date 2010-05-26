@@ -17,10 +17,10 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "DataController.h"
+#import "HistoryController.h"
 #import "PSModuleController.h"
 
-@implementation DataController
+@implementation HistoryController
 
 
 @synthesize listType;

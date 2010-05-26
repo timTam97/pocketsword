@@ -6,13 +6,13 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "DataController.h"
+#import "HistoryController.h"
 #import "PSModuleController.h"
 #import "SwordListKey.h"
 
 @interface PSSearchController : UIViewController {
 
-	IBOutlet DataController *dataController;
+	IBOutlet HistoryController *historyController;
 	IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITableView *resultsTable;
 	IBOutlet UISearchBar *sBar;

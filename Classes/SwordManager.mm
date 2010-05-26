@@ -66,12 +66,6 @@ using std::list;
             name = [NSString stringWithCString:mod->Name() encoding:NSISOLatin1StringEncoding];
             mLang = [NSString stringWithCString:mod->Lang() encoding:NSISOLatin1StringEncoding];
         }
-		if(![types containsObject: type]) {
-			[types insertObject: type atIndex: [types count]];
-		}
-		//if(![langs containsObject: mLang]) {
-		//	[langs insertObject: mLang atIndex: [langs count]];
-		//}
         
         SwordModule *sm;// = [[SwordModule alloc] initWithSWModule:mod swordManager:self];
 		//we may want to incorporate this code at a later point, so I'm leaving this in here atm...
@@ -89,8 +83,15 @@ using std::list;
             sm = [[SwordModule alloc] initWithSWModule:mod swordManager:self];
         }
 		
-		// at this point I want to manually exclude "cult" texts until there is a disclaimer about them in there!
 		ModuleCategory cat = [sm cat];
+
+		if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES] && cat == devotional) {
+			type = SWMOD_CATEGORY_DAILYDEVS;
+		}
+		if(![types containsObject: type]) {
+			[types insertObject: type atIndex: [types count]];
+		}
+		   // at this point I want to manually exclude "cult" texts until there is a disclaimer about them in there!
 		if((cat & cult) == cult) {
 			//this is a questionable/cult module & we're currently not allowing these!
 		} else if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES] && ![SwordManager moduleCategoryAllowed: cat]) {
@@ -235,6 +236,7 @@ using std::list;
             SWMOD_CATEGORY_BIBLES, 
             SWMOD_CATEGORY_COMMENTARIES,
             SWMOD_CATEGORY_DICTIONARIES,
+			SWMOD_CATEGORY_DAILYDEVS,
             //SWMOD_CATEGORY_GENBOOKS, 
 			nil];
 }
@@ -498,114 +500,6 @@ using std::list;
 	[managerLock unlock];
 }
 
-/**
- generate a menu structure
- 
- @params[in|out] subMenuItem is the start of the menustructure.
- @params[in] type, create menu for module types. ModuleType enum values can be ORed, -1 for all
- @params[in] aTarget the target object of the created menuitem
- @params[in] aSelector the selector of the target that should be called
- */
-/*- (void)generateModuleMenu:(NSMenu **)itemMenu 
-             forModuletype:(int)type 
-            withMenuTarget:(id)aTarget 
-            withMenuAction:(SEL)aSelector {
-    
-    // create menu for modules for specified type
-    // bibles
-    if((type == -1) || ((type & bible) == bible)) {
-        // get bibles
-        NSArray *bibles = [self modulesForType:SWMOD_CATEGORY_BIBLES];
-        for(SwordBible *mod in bibles) {
-            NSMenuItem *menuItem = [[NSMenuItem alloc] init];
-            [menuItem setTitle:[mod name]];
-            //[menuItem setToolTip:[[urlval valueData] absoluteString]];					
-            //image = [NSImage imageNamed:@"ItemAdd"];
-            //[image setSize:NSMakeSize(32,32)];
-            //[menuItem setImage:image];
-            [menuItem setTarget:aTarget];
-            [menuItem setAction:aSelector];
-            [*itemMenu addItem:menuItem];
-            [menuItem release];
-        }
-        
-        // add separator as last item
-        [*itemMenu addItem:[NSMenuItem separatorItem]];
-    }
-    
-    // commentaries
-    if((type == -1) || ((type & commentary) == commentary)) {
-        // get bibles
-        NSArray *bibles = [self modulesForType:SWMOD_CATEGORY_COMMENTARIES];
-        for(SwordBible *mod in bibles) {
-            NSMenuItem *menuItem = [[NSMenuItem alloc] init];
-            [menuItem setTitle:[mod name]];
-            //[menuItem setToolTip:[[urlval valueData] absoluteString]];					
-            //image = [NSImage imageNamed:@"ItemAdd"];
-            //[image setSize:NSMakeSize(32,32)];
-            //[menuItem setImage:image];
-            [menuItem setTarget:aTarget];
-            [menuItem setAction:aSelector];
-            [*itemMenu addItem:menuItem];
-            [menuItem release];
-        }
-        
-        // add separator as last item
-        [*itemMenu addItem:[NSMenuItem separatorItem]];
-    }
-
-    // dictionaries
-    if((type == -1) || ((type & dictionary) == dictionary)) {
-        // get bibles
-        NSArray *bibles = [self modulesForType:SWMOD_CATEGORY_DICTIONARIES];
-        for(SwordBible *mod in bibles) {
-            NSMenuItem *menuItem = [[NSMenuItem alloc] init];
-            [menuItem setTitle:[mod name]];
-            //[menuItem setToolTip:[[urlval valueData] absoluteString]];					
-            //image = [NSImage imageNamed:@"ItemAdd"];
-            //[image setSize:NSMakeSize(32,32)];
-            //[menuItem setImage:image];
-            [menuItem setTarget:aTarget];
-            [menuItem setAction:aSelector];
-            [*itemMenu addItem:menuItem];
-            [menuItem release];
-        }
-        
-        // add separator as last item
-        [*itemMenu addItem:[NSMenuItem separatorItem]];
-    }
-
-    // gen books
-    if((type == -1) || ((type & genbook) == genbook)) {
-        // get bibles
-        NSArray *bibles = [self modulesForType:SWMOD_CATEGORY_GENBOOKS];
-        for(SwordBible *mod in bibles) {
-            NSMenuItem *menuItem = [[NSMenuItem alloc] init];
-            [menuItem setTitle:[mod name]];
-            //[menuItem setToolTip:[[urlval valueData] absoluteString]];					
-            //image = [NSImage imageNamed:@"ItemAdd"];
-            //[image setSize:NSMakeSize(32,32)];
-            //[menuItem setImage:image];
-            [menuItem setTarget:aTarget];
-            [menuItem setAction:aSelector];
-            [*itemMenu addItem:menuItem];
-            [menuItem release];
-        }
-        
-        // add separator as last item
-        [*itemMenu addItem:[NSMenuItem separatorItem]];
-    }
-    
-    // check last item is a separator, then remove    
-    int len = [[*itemMenu itemArray] count];
-    if(len > 0) {
-        NSMenuItem *last = [*itemMenu itemAtIndex:len-1];
-        if([last isSeparatorItem]) {
-            [*itemMenu removeItem:last];
-        }
-    }
-}
-*/
 #pragma mark - module access
 
 /** 
@@ -655,9 +549,24 @@ using std::list;
 - (NSArray *)modulesForType:(NSString *)type {
 
     NSMutableArray *ret = [NSMutableArray array];
+	NSString *searchType = type;
+	ModuleCategory catType = errorCategory;
+	
+	if([searchType isEqualToString:SWMOD_CATEGORY_DICTIONARIES]) {
+		catType = undefinedCategory;
+	} else if([searchType isEqualToString:SWMOD_CATEGORY_DAILYDEVS]) {
+		searchType = SWMOD_CATEGORY_DICTIONARIES;
+		catType = devotional;
+	}
+	
     for(SwordModule *mod in [modules allValues]) {
-        if([[mod typeString] isEqualToString:type]) {
-            [ret addObject:mod];
+        if([[mod typeString] isEqualToString:searchType]) {
+			if(catType != errorCategory) {
+				if([mod cat] == catType)
+					[ret addObject:mod];
+			} else {
+				[ret addObject:mod];
+			}
         }
     }
     

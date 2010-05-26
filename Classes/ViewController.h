@@ -18,7 +18,6 @@
 */
 
 #import "PSModuleController.h"
-#import "DataController.h"
 #import "PocketSwordAppDelegate.h"
 #import "globals.h"
 #import "PSDictionaryViewController.h"
@@ -113,7 +112,7 @@ typedef enum {
 	NSLock *toolbarLock;
 	
 	IBOutlet id moduleManager;
-	IBOutlet id dataController;
+	IBOutlet id historyController;
 		
 }
 

@@ -21,6 +21,7 @@
 //#import <dlfcn.h> -- needed for the loadFonts() code, but it doesn't currently work!
 #import "PSIndexController.h"
 #import "SearchWebView.h"
+#import "HistoryController.h"
 
 
 @implementation ViewController
@@ -419,10 +420,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		[dataController setListType: BibleTab];
+		[historyController setListType: BibleTab];
 		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
 	} else {
-		[dataController setListType: CommentaryTab];
+		[historyController setListType: CommentaryTab];
 		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
 	}
 	

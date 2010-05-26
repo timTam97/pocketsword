@@ -107,6 +107,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)viewDidLoad {
 	dictionaryNavItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
+	dictionarySearchBar.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
 	searching = NO;
 	letUserSelectRow = YES;
@@ -216,10 +217,8 @@ PSDictionaryOverlayViewController *overlayViewController;
 		dictionaryEntriesTable.scrollEnabled = YES;
 	}
 	
-	[dictionaryNavItem setLeftBarButtonItem:[[[UIBarButtonItem alloc]
-											  initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
-											  target:self action:@selector(cancelSearch:)] autorelease] animated:YES];
-	//dictionaryNavItem.leftBarButtonItem = ;
+	[dictionarySearchBar setShowsCancelButton:YES animated:YES];
+//	[dictionaryNavItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelSearch:)] autorelease] animated:YES];
 	[self searchDictionaryEntries];
 	[dictionaryEntriesTable reloadData];
 }
@@ -277,8 +276,9 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[overlayViewController.view removeFromSuperview];
 	[overlayViewController release];
 	overlayViewController = nil;
-	[dictionaryNavItem setLeftBarButtonItem:nil animated:YES];
-	//dictionaryNavItem.leftBarButtonItem = nil;	
+	//[dictionaryNavItem setLeftBarButtonItem:nil animated:YES];
+	[dictionarySearchBar setShowsCancelButton:NO animated:YES];
+
 	dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 //	if([searchResults count] > 0)
 //		[dictionaryEntriesTable reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];

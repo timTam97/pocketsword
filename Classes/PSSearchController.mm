@@ -24,7 +24,7 @@ BOOL searchingEnabled;
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	ShownTab tab = [dataController listType];
+	ShownTab tab = [historyController listType];
 	BOOL showIndexController = NO;
 	switch(tab) {
 		case BibleTab:
@@ -58,7 +58,7 @@ BOOL searchingEnabled;
 }
 
 - (void)refreshView {
-	ShownTab tab = [dataController listType];
+	ShownTab tab = [historyController listType];
 	searchingEnabled = NO;
 	switch(tab) {
 		case BibleTab:
@@ -144,7 +144,7 @@ BOOL searchingEnabled;
         secondLabel = (UILabel *)[cell.contentView viewWithTag:577];
 	}
 	if(!((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text || [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text isEqualToString: @""]) {
-		ShownTab tab = [dataController listType];
+		ShownTab tab = [historyController listType];
 		SwordModuleTextEntry *entry;
 		switch(tab) {
 			case BibleTab:
@@ -178,7 +178,7 @@ BOOL searchingEnabled;
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
-		ShownTab tab = [dataController listType];
+		ShownTab tab = [historyController listType];
 		PollingType pt;
 		switch(tab) {
 			case BibleTab:
@@ -200,7 +200,7 @@ BOOL searchingEnabled;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
 	[moduleManager displayBusyIndicator];
-	ShownTab tab = [dataController listType];
+	ShownTab tab = [historyController listType];
 	self.results = nil;
 	self.searchTerm = [searchBar text];
 	switch(tab) {
@@ -211,6 +211,15 @@ BOOL searchingEnabled;
 			self.results = [[moduleManager primaryCommentary] search: [searchBar text]];
 			break;
 	}
+
+	//remove duplicate entries manually.  why do these appear? *sad face*
+	if(results && [results count] > 0) {
+		for(int i = 0; i < ([results count] -1); i++) {
+			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key])
+				[results removeObjectAtIndex:i+1];//remove the duplicate.
+		}
+	}
+	
 	[moduleManager hideBusyIndicator];
 	[resultsTable reloadData];
 	[pool release];

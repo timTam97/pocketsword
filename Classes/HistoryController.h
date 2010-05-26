@@ -27,7 +27,7 @@
 //#define MODULES_LIST_TABLE	7
 #define HISTORY_LIST_TABLE		8
 
-@interface DataController : NSObject {
+@interface HistoryController : NSObject {
 
 	//this is for thie history list
 	ShownTab listType;

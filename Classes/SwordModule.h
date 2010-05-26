@@ -54,7 +54,8 @@ typedef enum {
 	glossary			= 0x0001, 
 	essay				= 0x0002, 
 	devotional			= 0x0004, 
-	cult				= 0x0008
+	cult				= 0x0008,
+	errorCategory		= 0xFFFF
 }ModuleCategory;
 
 @protocol SwordModuleAccess

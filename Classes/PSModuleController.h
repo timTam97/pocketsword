@@ -21,7 +21,6 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "ViewController.h"
-//#import "DataController.h"
 #import "SwordManager.h"
 #import "SwordInstallManager.h"
 #import "globals.h"

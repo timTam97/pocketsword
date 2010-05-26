@@ -44,8 +44,7 @@
 	[table deselectRowAtIndexPath:tableSelection animated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	//[table reloadData];	// populate our table's data
 	//DLog(@"  (SINC)  ");
@@ -59,13 +58,10 @@
 	} else {
 		[self performSelectorOnMainThread:@selector(resetTableSelection) withObject:nil waitUntilDone:YES];
 	}
-	for(int i=0;i<5;i++) {
-		if([[tabController.viewControllers objectAtIndex:i] isMemberOfClass:[NavigatorSources class]])
-			NSLog(@"Downloader is NOT in the More Tab (is tab number %d)", i);
-	}
-	//if(tabController.moreNavigationController) {
-	//	DLog(@"\n-NavigatorSources:  has a nav controller");
-	//}
+//	for(int i=0;i<5;i++) {
+//		if([[tabController.viewControllers objectAtIndex:i] isMemberOfClass:[NavigatorSources class]])
+//			NSLog(@"Downloader is NOT in the More Tab (is tab number %d)", i);
+//	}
 }
 
 //- (void)viewDidAppear:(BOOL)animated
