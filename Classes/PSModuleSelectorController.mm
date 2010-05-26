@@ -105,7 +105,7 @@
 			break;
 		case DictionaryTab:
 			[moduleManager loadPrimaryDictionary:newModule];
-			[[moduleManager viewController] reloadDictionaryData];
+			//[[moduleManager viewController] reloadDictionaryData];
 			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			if([[moduleManager primaryDictionary] isLocked])
 				locked = YES;
@@ -125,9 +125,8 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[moduleManager removeModule: module];
-		//[tableView reloadData];
-		//[moduleManager reload];
-		//[moduleTable reloadData];
+		if(listType == DictionaryTab)
+			[[moduleManager viewController] reloadDictionaryData];
 	}
 	
 	[pool release];

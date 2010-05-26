@@ -28,6 +28,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 			[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 			[dictionarySearchBar setUserInteractionEnabled: NO];
 			dictionaryEnabled = NO;
+			[dictionaryEntriesTable reloadData];
 			return;
 		}
 	}

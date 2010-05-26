@@ -450,6 +450,9 @@ using std::list;
  get module with name from internal list
  */
 - (SwordModule *)moduleWithName:(NSString *)name {
+	
+	if(!name)
+		return nil;
     
 	SwordModule	*ret = [modules objectForKey:name];
     if(ret == nil) {

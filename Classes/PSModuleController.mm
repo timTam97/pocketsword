@@ -231,15 +231,21 @@ float installationProgress;
 	if(primaryDictionary)
 		[primaryDictionary releaseKeys];//release some memory
 	
-	primaryDictionary = (SwordDictionary *)[swordManager moduleWithName:newText];
-	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastDictionary"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	if(newText) {
+		primaryDictionary = (SwordDictionary *)[swordManager moduleWithName:newText];
+		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastDictionary"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 
-	int i = ([newText length] > 8) ? 8 : [newText length];
-	//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
-	NSString *title = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
-	[dictionaryTitle setTitle: title];
-//	[dictionaryDescriptionTitle setTitle: title];
+		int i = ([newText length] > 8) ? 8 : [newText length];
+		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
+		NSString *title = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
+		[dictionaryTitle setTitle: title];
+	} else {
+		primaryDictionary = nil;
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastDictionary"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	}
 }
 
 - (NSString *)setToNextChapter {
@@ -419,20 +425,10 @@ float installationProgress;
 		NSString *ref = [self getCurrentBibleRef];
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		[bookmarkAddButton setEnabled:YES];
+	} else if(!primaryDictionary && ([swordModule type] == dictionary)) {
+		//set it to the primaryDictionary.
+		[self loadPrimaryDictionary:[swordModule name]];
 	}
-	// else if (!primaryCommentary && [swordModule type] == commentary) {
-	//	NSString *ref = [self getCurrentBibleRef];
-	//	if(!ref)
-	//		ref = @"Genesis 1";
-	//	[commentaryNavBtn setTitle: ref];
-	//	[commentaryWebView loadHTMLString: [self getCommentaryChapter: ref withExtraJS: @""] baseURL: nil];
-	//}
-	//if ([[swordManager moduleNames] count] == 1) {
-	//	[bibleNavBtn setTitle: @"Genesis 1"];
-	//	//[commentaryNavBtn setTitle: @"Genesis 1"];
-	//	[bibleWebView loadHTMLString: [self getBibleChapter: @"Genesis 1" withExtraJS: @""] baseURL: nil];
-	//	[bookmarkAddButton setEnabled:YES];
-	//}
 	
 	// if we haven't defined the Strongs or Morph module of this type, make this the default module.
 	if([swordModule hasFeature: @"GreekDef"]) {
@@ -589,6 +585,12 @@ float installationProgress;
 	}
 	
 	if([name isEqualToString: primaryDictionaryName]) {
+		if([[swordManager modulesForType:SWMOD_CATEGORY_DICTIONARIES] count] > 0) {
+			//set the primaryDicitonary to the next available dictionary.
+			[self loadPrimaryDictionary:[[[swordManager modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:0] name]];
+		} else {
+			//
+		}
 		[viewController reloadDictionaryData];
 	}
 	
