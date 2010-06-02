@@ -7,32 +7,42 @@
 //
 
 #import "SwordKey.h"
+#import "VerseEnumerator.h"
 
 #ifdef __cplusplus
-//#include <swkey.h>
+#include <swkey.h>
 #include <listkey.h>
 #include <versekey.h>
 #endif
 
-@class SwordBible;
+@class SwordBible, VerseEnumerator;
 
 @interface SwordListKey : SwordKey {
 }
 
 + (id)listKeyWithRef:(NSString *)aRef;
-+ (id)listKeyWithRef:(NSString *)aRef versification:(NSString *)scheme;
++ (id)listKeyWithRef:(NSString *)aRef v11n:(NSString *)scheme;
++ (id)listKeyWithRef:(NSString *)aRef headings:(BOOL)headings v11n:(NSString *)scheme;
 
 #ifdef __cplusplus
++ (id)listKeyWithSWListKey:(sword::ListKey *)aLk;
++ (id)listKeyWithSWListKey:(sword::ListKey *)aLk makeCopy:(BOOL)copy;
 - (id)initWithSWListKey:(sword::ListKey *)aLk;
+- (id)initWithSWListKey:(sword::ListKey *)aLk makeCopy:(BOOL)copy;
 - (sword::ListKey *)swListKey;
 #endif
 
 - (id)initWithRef:(NSString *)aRef;
-- (id)initWithRef:(NSString *)aRef versification:(NSString *)scheme;
+- (id)initWithRef:(NSString *)aRef v11n:(NSString *)scheme;
+- (id)initWithRef:(NSString *)aRef headings:(BOOL)headings v11n:(NSString *)scheme;
+
+- (void)parse;
+- (void)parseWithHeaders;
+- (VerseEnumerator *)verseEnumerator;
 
 - (NSInteger)numberOfVerses;
 - (NSInteger)count;
 - (NSString *)refForElement:(NSInteger)elt;
-//- (BOOL)containsKey:(SwordKey *)aVerseKey;
+- (BOOL)containsKey:(SwordKey *)aVerseKey;
 
 @end

@@ -19,17 +19,8 @@
 
 #import "globals.h"
 
-//#define MODULE_TABLE			1
-//#define SEARCH_TABLE			2
-//#define DOWNLOAD_TABLE		3
-//#define BOOKMARK_TABLE		4
-
-//#define MODULES_LIST_TABLE	7
-#define HISTORY_LIST_TABLE		8
-
 @interface HistoryController : NSObject {
 
-	//this is for thie history list
 	ShownTab listType;
 
 	IBOutlet id moduleManager;

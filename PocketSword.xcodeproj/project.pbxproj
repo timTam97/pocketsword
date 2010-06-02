@@ -12,6 +12,8 @@
 		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
+		05124A9B11B5F02000575BA9 /* devo-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 05124A9A11B5F02000575BA9 /* devo-open.png */; };
+		05124A9C11B5F02000575BA9 /* devo-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 05124A9A11B5F02000575BA9 /* devo-open.png */; };
 		05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */; };
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
@@ -545,6 +547,12 @@
 		054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		054BEE6311A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */; };
 		054BEE6411A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */; };
+		054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
+		054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570211AE0E6B00633371 /* VerseEnumerator.mm */; };
+		054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
+		054C570611AE0E6B00633371 /* VerseEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570211AE0E6B00633371 /* VerseEnumerator.mm */; };
+		054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C57BD11AE409000633371 /* PSDevotionalViewController.mm */; };
+		054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C57BD11AE409000633371 /* PSDevotionalViewController.mm */; };
 		054EF62410CD0EAF0091D269 /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
 		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
 		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
@@ -729,6 +737,7 @@
 		05034D2410FD625900884C98 /* SearchWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchWebView.m; sourceTree = "<group>"; };
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
 		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
+		05124A9A11B5F02000575BA9 /* devo-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "devo-open.png"; path = "Resources/devo-open.png"; sourceTree = "<group>"; };
 		05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryOverlayViewController.h; path = Classes/PSDictionaryOverlayViewController.h; sourceTree = "<group>"; };
 		05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSDictionaryOverlayViewController.m; path = Classes/PSDictionaryOverlayViewController.m; sourceTree = "<group>"; };
 		0513ACB010BF74FC00E414D9 /* google-analytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "google-analytics.txt"; path = "Resources/doc/google-analytics.txt"; sourceTree = "<group>"; };
@@ -1155,6 +1164,12 @@
 		054BEF3C11A4F13200ABCA18 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MainWindow.xib"; sourceTree = "<group>"; };
 		054BEF3D11A4F13200ABCA18 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSChapterSelectorController.xib"; sourceTree = "<group>"; };
 		054BEF3E11A4F13200ABCA18 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSVerseSelectorController.xib"; sourceTree = "<group>"; };
+		054C570011AE0E6B00633371 /* SwordVerseKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordVerseKey.mm; sourceTree = "<group>"; };
+		054C570111AE0E6B00633371 /* VerseEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerseEnumerator.h; sourceTree = "<group>"; };
+		054C570211AE0E6B00633371 /* VerseEnumerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VerseEnumerator.mm; sourceTree = "<group>"; };
+		054C570711AE0EC300633371 /* SwordVerseKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordVerseKey.h; sourceTree = "<group>"; };
+		054C57BC11AE409000633371 /* PSDevotionalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDevotionalViewController.h; path = Classes/PSDevotionalViewController.h; sourceTree = "<group>"; };
+		054C57BD11AE409000633371 /* PSDevotionalViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSDevotionalViewController.mm; path = Classes/PSDevotionalViewController.mm; sourceTree = "<group>"; };
 		054EF62310CD0EAF0091D269 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		054F3C5F117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054F3C60117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -1709,6 +1724,10 @@
 		0513ACBA10BFAD2100E414D9 /* Sword */ = {
 			isa = PBXGroup;
 			children = (
+				054C570711AE0EC300633371 /* SwordVerseKey.h */,
+				054C570011AE0E6B00633371 /* SwordVerseKey.mm */,
+				054C570111AE0E6B00633371 /* VerseEnumerator.h */,
+				054C570211AE0E6B00633371 /* VerseEnumerator.mm */,
 				055E308810E74308004EBC79 /* SwordKey.h */,
 				055E308910E74308004EBC79 /* SwordKey.mm */,
 				055E308310E74288004EBC79 /* SwordListKey.h */,
@@ -1759,13 +1778,16 @@
 		0513AD0710BFB57300E414D9 /* PS-controllers */ = {
 			isa = PBXGroup;
 			children = (
+				054C55B611AD096F00633371 /* base */,
 				054C55BC11AD0ACA00633371 /* b & c */,
-				054C55BB11AD0AA900633371 /* muti */,
+				054C55BB11AD0AA900633371 /* multi */,
 				054C55BA11AD0A8B00633371 /* bookmarks */,
 				054C55B911AD0A4F00633371 /* module selector */,
-				054C55B611AD096F00633371 /* base */,
 				054C55B711AD09F600633371 /* ref selector */,
 				054C55B811AD0A2700633371 /* Dictionary */,
+				0513ACBC10BFADD600E414D9 /* PS-about */,
+				0513ACBB10BFADC400E414D9 /* PS-preferences */,
+				05D6ABE21097F76B00A5026E /* PS-install */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -2433,9 +2455,6 @@
 			children = (
 				0513ACBA10BFAD2100E414D9 /* Sword */,
 				0513AD0710BFB57300E414D9 /* PS-controllers */,
-				0513ACBC10BFADD600E414D9 /* PS-about */,
-				0513ACBB10BFADC400E414D9 /* PS-preferences */,
-				05D6ABE21097F76B00A5026E /* PS-install */,
 				080E96DDFE201D6D7F000001 /* PS-other */,
 			);
 			name = Source;
@@ -2472,6 +2491,8 @@
 				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
 				05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */,
 				05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */,
+				054C57BC11AE409000633371 /* PSDevotionalViewController.h */,
+				054C57BD11AE409000633371 /* PSDevotionalViewController.mm */,
 			);
 			name = Dictionary;
 			sourceTree = "<group>";
@@ -2496,7 +2517,7 @@
 			name = bookmarks;
 			sourceTree = "<group>";
 		};
-		054C55BB11AD0AA900633371 /* muti */ = {
+		054C55BB11AD0AA900633371 /* multi */ = {
 			isa = PBXGroup;
 			children = (
 				E92217530F0687340089A794 /* HistoryController.h */,
@@ -2506,7 +2527,7 @@
 				0545549610CA4D8000EE11EC /* PSIndexController.h */,
 				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
 			);
-			name = muti;
+			name = multi;
 			sourceTree = "<group>";
 		};
 		054C55BC11AD0ACA00633371 /* b & c */ = {
@@ -2808,6 +2829,7 @@
 			isa = PBXGroup;
 			children = (
 				05BCB41F11477A9A00984097 /* popup-down-button.png */,
+				05124A9A11B5F02000575BA9 /* devo-open.png */,
 				05BCB3FD1147711B00984097 /* popup-top-bar.png */,
 				0546B59A113537E9009D5189 /* Robinson.zip */,
 				0546B59B113537E9009D5189 /* strongsrealgreek.zip */,
@@ -3311,6 +3333,7 @@
 				054BEC53119F89E800ABCA18 /* popup-down-button.png in Resources */,
 				054BEC54119F89E800ABCA18 /* PSChapterSelectorController.xib in Resources */,
 				054BEC55119F89E800ABCA18 /* PSVerseSelectorController.xib in Resources */,
+				05124A9B11B5F02000575BA9 /* devo-open.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3354,6 +3377,7 @@
 				05BCB42011477A9A00984097 /* popup-down-button.png in Resources */,
 				05AB9481116D8D620043DB57 /* PSChapterSelectorController.xib in Resources */,
 				05AB950D116D9BB70043DB57 /* PSVerseSelectorController.xib in Resources */,
+				05124A9C11B5F02000575BA9 /* devo-open.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3695,6 +3719,9 @@
 				054BED8C119F89E800ABCA18 /* PSVerseSelectorController.mm in Sources */,
 				054BED8D119F89E800ABCA18 /* PSDictionaryOverlayViewController.m in Sources */,
 				054BEE6411A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */,
+				054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
+				054C570611AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
+				054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4014,6 +4041,9 @@
 				05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */,
 				05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */,
 				054BEE6311A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */,
+				054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
+				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
+				054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

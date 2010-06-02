@@ -169,6 +169,13 @@ typedef enum {
 - (BOOL)hasSearchIndex;
 
 - (NSMutableArray *)search:(NSString *)istr;
+- (void)setKeyString:(NSString *)aKeyString;
+
+- (NSString *)renderedText;
+- (NSString *)renderedTextFromString:(NSString *)aString;
+- (NSString *)strippedText;
+- (NSString *)strippedTextFromString:(NSString *)aString;
+
 
 /**
  returns attribute values from the engine for notes, cross-refs and such for the given link type

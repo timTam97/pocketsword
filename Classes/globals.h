@@ -20,11 +20,17 @@
 typedef enum {
     BibleTab = 1,
     CommentaryTab,
-	DictionaryTab
+	DictionaryTab,
+	DevotionalTab
 } ShownTab;
 
 #define DefaultsModuleCipherKeysKey					@"DefaultsModuleCipherKeysKey"
-#define DefaultsLastRef									@"lastRef"
+#define DefaultsLastRef								@"lastRef"
+#define DefaultsLastBible							@"lastBible"
+#define DefaultsLastCommentary						@"lastCommentary"
+#define DefaultsLastDictionary						@"lastDictionary"
+#define DefaultsLastDevotional						@"lastDevotional"
+
 
 //#define DEFAULT_MODULE_PATH         [@"~/Library/Application Support/Sword" stringByExpandingTildeInPath]
 #define DEFAULT_MODULE_PATH         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
@@ -54,50 +60,7 @@ typedef enum {
 #define NotificationBibleSwipeLeft			@"NotificationBibleSwipeLeft"
 #define NotificationCommentarySwipeRight	@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft		@"NotificationCommentarySwipeLeft"
-
-//careful of the '%' in the string below!  needs to be '%%' if moved to be used in an appendByFormat: but is fine how it is right now (3/3/10 niccarter)
-#define RUBY_CSS @"ruby\n\
-			{\n\
-				display: inline-table;\n\
-				text-align: center;\n\
-				white-space: nowrap;\n\
-				text-indent: 0;\n\
-				margin: 0;\n\
-				vertical-align: -10%;\n\
-			}\n\
-			\n\
-			ruby > rb, ruby > rbc\n\
-			{\n\
-				display: table-row-group;\n\
-				line-height: 110%;\n\
-			}\n\
-			\n\
-			ruby > rt, ruby > rbc + rtc\n\
-			{\n\
-				display: table-header-group;\n\
-				vertical-align: top;\n\
-				font-size: 60%;\n\
-				line-height: 40%;\n\
-				letter-spacing: 0;\n\
-			}\n\
-			\n\
-			ruby > rbc + rtc + rtc\n\
-			{\n\
-				display: table-footer-group;\n\
-				font-size: 60%;\n\
-				line-height: 40%;\n\
-				letter-spacing: 0;\n\
-			}\n\
-			\n\
-			rbc > rb, rtc > rt\n\
-			{\n\
-				display: table-cell;\n\
-				letter-spacing: 0;\n\
-			}\n\
-			\n\
-			rtc > rt[rbspan] { display: table-caption; }\n\
-			\n\
-			rp { display: none; }\n"
+#define NotificationDevotionalChanged		@"NotificationDevotionalChanged"
 
 
 /*

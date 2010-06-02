@@ -46,9 +46,9 @@
 		DLog(@"\nreset_PocketSword is set");
 		[defaults removeObjectForKey: @"reset_PocketSword"];
 		[defaults removeObjectForKey: DefaultsLastRef];
-		[defaults removeObjectForKey: @"lastBible"];
-		[defaults removeObjectForKey: @"lastCommentary"];
-		[defaults removeObjectForKey: @"lastDictionary"];
+		[defaults removeObjectForKey: DefaultsLastBible];
+		[defaults removeObjectForKey: DefaultsLastCommentary];
+		[defaults removeObjectForKey: DefaultsLastDictionary];
 		[defaults removeObjectForKey: @"fontNamePreference"];
 		[defaults removeObjectForKey: @"nightModePreference"];
 		[defaults removeObjectForKey: @"fontSizePreference"];
@@ -187,7 +187,7 @@
         // in this case host is the module and path the reference
 		NSString *module = [url host];
 		if(module) {
-			[[NSUserDefaults standardUserDefaults] setObject: module forKey: @"lastBible"];
+			[[NSUserDefaults standardUserDefaults] setObject: module forKey: DefaultsLastBible];
 		}
         NSString *chapter = [[[[url path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];

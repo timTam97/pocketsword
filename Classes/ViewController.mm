@@ -287,6 +287,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
+		devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
@@ -341,11 +342,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 }
 
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-	tabBarController.moreNavigationController.navigationBar.topItem.rightBarButtonItem = nil;
+//- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+//	tabBarController.moreNavigationController.navigationBar.topItem.rightBarButtonItem = nil;
 //	DLog(@"\nRemoving Edit button");
-	
-}
+//}
 
 // Loads the next chapter into the Web View
 - (IBAction)nextChapter:(id)sender {
@@ -453,6 +453,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[moduleSelectorViewController setListType: BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		[moduleSelectorViewController setListType: CommentaryTab];
+	} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		[moduleSelectorViewController setListType: DevotionalTab];
 	} else {
 		[moduleSelectorViewController setListType: DictionaryTab];
 	}
@@ -462,6 +464,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		//[ViewController hideModal:modulesListView withTiming:0.3];
 		//modulesListShown = NO;
 		[tabController dismissModalViewControllerAnimated:YES];
+		if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
+			devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
+		}
 	} else {
 		NSIndexPath *ip = nil;//default value
 		if([moduleSelectorViewController listType] == BibleTab) {
@@ -487,7 +492,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}
 			if (pos < [array count]) {
 				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
-			}			
+			}
+		} else if([moduleSelectorViewController listType] == DevotionalTab) {
+			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"")];
+			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
+			int pos = 0;
+			for(; pos < [array count]; pos++) {
+				if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryDevotional] name]]) {
+					break;
+				}
+			}
+			if (pos < [array count]) {
+				ip = [NSIndexPath indexPathForRow: pos inSection: 0];
+			}
 		} else {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"")];
 			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];

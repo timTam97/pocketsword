@@ -253,8 +253,8 @@
 	if([self hasFeature: SWMOD_FEATURE_FOOTNOTES])
 		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsFootnotes", @"")];
 	
-//	if([self hasFeature: SWMOD_FEATURE_HEADINGS]) //not currently supported in PocketSword
-//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHeadings", @"")];
+	if([self hasFeature: SWMOD_FEATURE_HEADINGS]) //not currently supported in PocketSword
+		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsHeadings", @"")];
 	
 	if([self hasFeature: SWMOD_FEATURE_REDLETTERWORDS])
 		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsRedLetterWords", @"")];
@@ -325,7 +325,11 @@
 }
 
 - (NSString *)lang {
-	return [NSString stringWithCString:swModule->Lang() encoding:NSUTF8StringEncoding];
+    NSString *str = [NSString stringWithCString:swModule->Lang() encoding:NSUTF8StringEncoding];
+    if(!str) {
+        str = [NSString stringWithCString:swModule->Lang() encoding:NSISOLatin1StringEncoding];
+	}
+	return str;
 }
 
 - (NSString *)langString {
@@ -336,17 +340,13 @@
 }
 
 - (NSString *)typeString {
-	NSString *ret = SWMOD_CATEGORY_BIBLES;
-	if(swModule) {
-		ret =[NSString stringWithCString:swModule->Type() encoding:NSUTF8StringEncoding];
-	} else {
-		DLog(@"swModule empty for SwordModule: %@", [self description]);
-		ret = [SwordModule moduleTypeStringForModuleType: type];
-	}
-    return ret;
+    NSString *str = [NSString stringWithCString:swModule->Type() encoding:NSUTF8StringEncoding];
+    if(!str) {
+        str = [NSString stringWithCString:swModule->Type() encoding:NSISOLatin1StringEncoding];
+    }
+    return str;
 }
 
-/** cipher key in config */
 - (NSString *)cipherKey {
     NSString *cipherKey = [configEntries objectForKey:SWMOD_CONFENTRY_CIPHERKEY];
     if(cipherKey == nil) {
@@ -359,7 +359,6 @@
     return cipherKey;
 }
 
-/** version in config */
 - (NSString *)version {
     NSString *version = [configEntries objectForKey:SWMOD_CONFENTRY_VERSION];
     if(version == nil) {
@@ -368,13 +367,12 @@
             [configEntries setObject:version forKey:SWMOD_CONFENTRY_VERSION];
         }
     }
-    if(version == nil) {
+    if(!version) {
 		version = NSLocalizedString(@"AboutModuleVersionUnspecified", @"");
 	}
     return version;
 }
 
-/** minimum version in config */
 - (NSString *)minVersion {
     NSString *minVersion = [configEntries objectForKey:SWMOD_CONFENTRY_MINVERSION];
     if(minVersion == nil) {
@@ -429,9 +427,7 @@
 	return NO;
 }
 
-/**
- this might be RTF string but the return value will be converted to UTF8
- */
+/** this might be RTF string  but the return value will be converted to UTF8 */
 - (NSString *)aboutText {
     NSMutableString *aboutText = [configEntries objectForKey:SWMOD_CONFENTRY_ABOUT];
     if(aboutText == nil) {
@@ -550,12 +546,10 @@
     return ret;    
 }
 
-/** read config entry for encoding */
 - (BOOL)isUnicode {    
     return swModule->isUnicode();
 }
 
-/** is module encrypted/has a cipher key */
 - (BOOL)isEncrypted {
     BOOL encrypted = YES;
     if([self cipherKey] == nil) {
@@ -580,7 +574,6 @@
     return locked;
 }
 
-/** Sets the unlock key of the modules and writes the key into the pref file */
 - (BOOL)unlock:(NSString *)unlockKey {
     
 	if (![self isEncrypted]) {
@@ -697,16 +690,19 @@
         [self setPositionFromKeyString:aKey];
         if(![self error]) {
             //const char *keyCStr = swModule->getKeyText();
-            const char *txtCStr = NULL;
-            if(aType == TextTypeRendered) {
-				txtCStr = swModule->RenderText();
-            } else {
-                txtCStr = swModule->StripText();
-            }
             NSString *key = aKey;
-            NSString *txt = @"";
-            txt = [NSString stringWithUTF8String:txtCStr];
-            //key = [NSString stringWithUTF8String:keyCStr];
+            NSString *txt = nil;
+            if(aType == TextTypeRendered) {
+				txt = [NSString stringWithUTF8String:swModule->RenderText()];
+				if(!txt) {
+					txt = [NSString stringWithCString:swModule->RenderText() encoding:NSISOLatin1StringEncoding];
+				}
+            } else {
+				txt = [NSString stringWithUTF8String:swModule->StripText()];
+				if(!txt) {
+					txt = [NSString stringWithCString:swModule->StripText() encoding:NSISOLatin1StringEncoding];
+				}
+            }
             
             // add to dict
             if(key && txt) {
@@ -762,9 +758,50 @@
 - (void)writeEntry:(NSString *)value forRef:(NSString *)reference {
 }
 
+- (void)setKeyString:(NSString *)aKeyString {
+    swModule->setKey([aKeyString UTF8String]);
+}
+
 - (NSString *)description {
     return [self name];
 }
+
+- (NSString *)renderedText {
+    NSString *ret = @"";
+    ret = [NSString stringWithUTF8String:swModule->RenderText()];
+    if(!ret) {
+        ret = [NSString stringWithCString:swModule->RenderText() encoding:NSISOLatin1StringEncoding];
+    }
+    return ret;
+}
+
+- (NSString *)renderedTextFromString:(NSString *)aString {
+    NSString *ret = @"";
+    ret = [NSString stringWithUTF8String:swModule->RenderText([aString UTF8String])];
+    if(!ret) {
+        ret = [NSString stringWithCString:swModule->RenderText([aString UTF8String]) encoding:NSISOLatin1StringEncoding];
+    }
+    return ret;
+}
+
+- (NSString *)strippedText {
+    NSString *ret = @"";
+    ret = [NSString stringWithUTF8String:swModule->StripText()];
+    if(!ret) {
+        ret = [NSString stringWithCString:swModule->StripText() encoding:NSISOLatin1StringEncoding];
+    }
+    return ret;
+}
+
+- (NSString *)strippedTextFromString:(NSString *)aString {
+    NSString *ret = @"";
+    ret = [NSString stringWithUTF8String:swModule->RenderText([aString UTF8String])];
+    if(!ret) {
+        ret = [NSString stringWithCString:swModule->RenderText([aString UTF8String]) encoding:NSISOLatin1StringEncoding];
+    }
+    return ret;
+}
+
 
 #pragma mark - lowlevel access
 
@@ -1048,10 +1085,10 @@
 }
 
 - (void)setPositionFromKeyString:(NSString *)aKeyString {
-    //swModule->setKey([aKeyString UTF8String]);
-	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
-	curKey->setText([aKeyString cStringUsingEncoding: NSUTF8StringEncoding]);
-	swModule->RenderText();
+    swModule->setKey([aKeyString UTF8String]);
+	//sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	//curKey->setText([aKeyString cStringUsingEncoding: NSUTF8StringEncoding]);
+	//swModule->RenderText();
 }
 
 //- (void)setPositionFromVerseKey:(SwordVerseKey *)aVerseKey {

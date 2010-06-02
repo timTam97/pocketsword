@@ -84,6 +84,8 @@ typedef enum {
 	// Dictionary tab
 	IBOutlet UITabBarItem				*dictionaryTabBarItem;
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
+	IBOutlet UITabBarItem				*devotionalTabBarItem;
+	IBOutlet UIWebView					*devotionalWebView;
 	
 	// Bookmarks tab
 //	IBOutlet id bookmarksTable;

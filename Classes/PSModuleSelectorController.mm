@@ -35,6 +35,9 @@
 		case DictionaryTab:
 			return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] count];
 			break;
+		case DevotionalTab:
+			return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] count];
+			break;
 	}
 	return 0;
 }
@@ -63,6 +66,10 @@
 		case DictionaryTab:
 			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] name];
 			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] descr];
+			break;
+		case DevotionalTab:
+			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] name];
+			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] descr];
 			break;
 	}
 	if ([moduleManager isLoaded:cell.textLabel.text]) {
@@ -108,6 +115,11 @@
 			//[[moduleManager viewController] reloadDictionaryData];
 			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			if([[moduleManager primaryDictionary] isLocked])
+				locked = YES;
+			break;
+		case DevotionalTab:
+			[moduleManager loadPrimaryDevotional:newModule];
+			if([[moduleManager primaryDevotional] isLocked])
 				locked = YES;
 			break;
 	}

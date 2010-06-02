@@ -24,12 +24,58 @@
 
 #include <localemgr.h>
 
+//careful of the '%' in the string below!  needs to be '%%' if moved to be used in an appendByFormat: but is fine how it is right now (3/3/10 niccarter)
+#define RUBY_CSS @"ruby\n\
+{\n\
+	display: inline-table;\n\
+	text-align: center;\n\
+	white-space: nowrap;\n\
+	text-indent: 0;\n\
+	margin: 0;\n\
+	vertical-align: -10%;\n\
+}\n\
+\n\
+ruby > rb, ruby > rbc\n\
+{\n\
+	display: table-row-group;\n\
+	line-height: 110%;\n\
+}\n\
+\n\
+ruby > rt, ruby > rbc + rtc\n\
+{\n\
+	display: table-header-group;\n\
+	vertical-align: top;\n\
+	font-size: 60%;\n\
+	line-height: 40%;\n\
+	letter-spacing: 0;\n\
+}\n\
+\n\
+ruby > rbc + rtc + rtc\n\
+{\n\
+	display: table-footer-group;\n\
+	font-size: 60%;\n\
+	line-height: 40%;\n\
+	letter-spacing: 0;\n\
+}\n\
+\n\
+rbc > rb, rtc > rt\n\
+{\n\
+	display: table-cell;\n\
+	letter-spacing: 0;\n\
+}\n\
+\n\
+rtc > rt[rbspan] { display: table-caption; }\n\
+\n\
+rp { display: none; }\n"
+
+
 
 @implementation PSModuleController
 
 @synthesize primaryBible;
 @synthesize primaryCommentary;
 @synthesize primaryDictionary;
+@synthesize primaryDevotional;
 @synthesize swordInstallManager;
 @synthesize swordManager;
 @synthesize currentInstallSource;
@@ -190,6 +236,9 @@ float installationProgress;
 		return YES;
 	else if (primaryDictionary && [[primaryDictionary name] isEqualToString:module])
 		return YES;
+	else if (primaryDevotional && [[primaryDevotional name] isEqualToString:module])
+		return YES;
+	
 	return NO;
 }
 
@@ -216,14 +265,14 @@ float installationProgress;
 
 - (void)loadPrimaryBible:(NSString *)newText {
 	primaryBible = [swordManager moduleWithName:newText];
-	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastBible"];
+	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastBible];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	refSelectorController.refSelectorBooks = nil;
 }
 
 - (void)loadPrimaryCommentary:(NSString *)newText {
 	primaryCommentary = [swordManager moduleWithName:newText];
-	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastCommentary"];
+	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastCommentary];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -233,7 +282,7 @@ float installationProgress;
 	
 	if(newText) {
 		primaryDictionary = (SwordDictionary *)[swordManager moduleWithName:newText];
-		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: @"lastDictionary"];
+		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		int i = ([newText length] > 8) ? 8 : [newText length];
@@ -242,9 +291,23 @@ float installationProgress;
 		[dictionaryTitle setTitle: title];
 	} else {
 		primaryDictionary = nil;
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastDictionary"];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	}
+}
+
+- (void)loadPrimaryDevotional:(NSString *)newText {
+	if(newText) {
+		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName:newText];
+		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastDevotional];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDevotionalChanged object:newText];
+	} else {
+		primaryDevotional = nil;
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey: DefaultsLastDevotional];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDevotionalChanged object:newText];
 	}
 }
 
@@ -301,12 +364,14 @@ float installationProgress;
 	BOOL restoreBible = NO;
 	BOOL restoreCommentary = NO;
 	BOOL restoreDictionary = NO;
+	BOOL restoreDevotional = NO;
 	//sword::SWKey loc;
 	NSString *ch;
 	sword::SWKey dictLoc;
 	NSString *bibleName;
 	NSString *commentaryName;
 	NSString *dictionaryName;
+	NSString *devotionalName;
 	
 	if (primaryBible) {
 		restoreBible = YES;
@@ -326,6 +391,11 @@ float installationProgress;
 		restoreDictionary = YES;
 		dictLoc = ([primaryDictionary swModule])->getKeyText();
 		dictionaryName = [primaryDictionary name];
+	}
+	
+	if (primaryDevotional) {
+		restoreDevotional = YES;
+		devotionalName = [primaryDevotional name];
 	}
 	
 	[swordManager reInit];
@@ -354,6 +424,10 @@ float installationProgress;
 		primaryDictionary = (SwordDictionary *)[swordManager moduleWithName: dictionaryName];
 		if (primaryDictionary)
 			([primaryDictionary swModule])->setKey(dictLoc);
+	}
+	
+	if(restoreDevotional) {
+		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName: devotionalName];
 	}
 	
 	if([[swordManager moduleNames] count] == 0) {
@@ -425,9 +499,11 @@ float installationProgress;
 		NSString *ref = [self getCurrentBibleRef];
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		[bookmarkAddButton setEnabled:YES];
-	} else if(!primaryDictionary && ([swordModule type] == dictionary)) {
+	} else if(!primaryDictionary && ([swordModule type] == dictionary) && ([swordModule cat] == undefinedCategory)) {
 		//set it to the primaryDictionary.
 		[self loadPrimaryDictionary:[swordModule name]];
+	} else if(!primaryDevotional && ([swordModule type] == dictionary) && ([swordModule cat] == devotional)) {
+		[self loadPrimaryDevotional:[swordModule name]];
 	}
 	
 	// if we haven't defined the Strongs or Morph module of this type, make this the default module.
@@ -516,6 +592,7 @@ float installationProgress;
 	NSString *primaryBibleName = nil;
 	NSString *primaryCommentaryName = nil;
 	NSString *primaryDictionaryName = nil;
+	NSString *primaryDevotionalName = nil;
 	if (primaryBible) {
 		primaryBibleName = [primaryBible name];
 		//loc = ([primaryBible swModule])->getKeyText();
@@ -526,6 +603,9 @@ float installationProgress;
 	}
 	if (primaryDictionary) {
 		primaryDictionaryName = [primaryDictionary name];
+	}
+	if(primaryDevotional) {
+		primaryDevotionalName = [primaryDevotional name];
 	}
 	int numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
 	int numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
@@ -544,21 +624,23 @@ float installationProgress;
 		
 	if ([name isEqualToString: primaryBibleName]) {
 		primaryBible = nil;
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastBible"];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastBible];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
 		[bibleWebView loadHTMLString: [self getBibleChapter: curLoc withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	} else if ([name isEqualToString: primaryCommentaryName]) {
 		primaryCommentary = nil;
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastCommentary"];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastCommentary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
 		[commentaryWebView loadHTMLString: [self getCommentaryChapter: curLoc withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	} else if([name isEqualToString: primaryDictionaryName]) {
 		primaryDictionary = nil;
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"lastDictionary"];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-	}		
+	} else if([name isEqualToString:primaryDevotionalName]) {
+		[self loadPrimaryDevotional:nil];
+	}
 	
 	[self reload];
 	//[moduleTable reloadData];
@@ -592,6 +674,13 @@ float installationProgress;
 			//
 		}
 		[viewController reloadDictionaryData];
+	} else if([name isEqualToString: primaryDevotionalName]) {
+		if([[swordManager modulesForType:SWMOD_CATEGORY_DAILYDEVS] count] > 0) {
+			//set the primaryDevotional to the next available devo.
+			[self loadPrimaryDevotional:[[[swordManager modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:0] name]];
+		} else {
+			[self loadPrimaryDevotional:nil];
+		}
 	}
 	
 	// if it's the module selected for one of our lookups, need to set that to @"None"
@@ -612,7 +701,7 @@ float installationProgress;
 
 - (void)reloadLastBible {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSString *lastModule = [defaults stringForKey: @"lastBible"];
+	NSString *lastModule = [defaults stringForKey: DefaultsLastBible];
 	
 	if (lastModule) {
 		primaryBible = [swordManager moduleWithName: lastModule];
@@ -621,7 +710,7 @@ float installationProgress;
 	if (!primaryBible && [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count] > 0) {
 		primaryBible = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex: 0];
 		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-		[prefs setObject: [primaryBible name] forKey: @"lastBible"];
+		[prefs setObject: [primaryBible name] forKey: DefaultsLastBible];
 		
 		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
 		[prefs release];
@@ -632,7 +721,7 @@ float installationProgress;
 
 - (void)reloadLastCommentary {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSString *lastModule = [defaults stringForKey: @"lastCommentary"];
+	NSString *lastModule = [defaults stringForKey: DefaultsLastCommentary];
 	
 	if (lastModule != nil) {
 		primaryCommentary = [swordManager moduleWithName: lastModule];
@@ -641,7 +730,7 @@ float installationProgress;
 	if (!primaryCommentary && [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] > 0) {
 		primaryCommentary = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex: 0];
 		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-		[prefs setObject: [primaryCommentary name] forKey: @"lastCommentary"];
+		[prefs setObject: [primaryCommentary name] forKey: DefaultsLastCommentary];
 		
 		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
 		[prefs release];

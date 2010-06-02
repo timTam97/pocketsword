@@ -19,7 +19,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 - (void)reloadDictionaryData:(BOOL)reloadData {
 	BOOL needsReload = reloadData;
 	if(![moduleManager primaryDictionary]) {
-		NSString *lastDictionary = [[NSUserDefaults standardUserDefaults] stringForKey: @"lastDictionary"];
+		NSString *lastDictionary = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDictionary];
 		
 		if (lastDictionary) {
 			[moduleManager loadPrimaryDictionary: lastDictionary];
@@ -179,7 +179,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	}
 	[dictionaryDescriptionTitle setTitle: t];
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
-	//NSLog(@"%@", description);
+	NSLog(@"%@", description);
 	
 	if(![dictionaryDescriptionViewController.view superview]) {
 		[self presentModalViewController:dictionaryDescriptionViewController animated:YES];

@@ -52,6 +52,7 @@
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;
 	SwordDictionary *primaryDictionary;
+	SwordDictionary *primaryDevotional;
 	
 	SwordManager *swordManager;
 	SwordInstallManager *swordInstallManager;
@@ -63,6 +64,7 @@
 @property (assign) SwordModule *primaryBible;
 @property (assign) SwordModule *primaryCommentary;
 @property (assign) SwordDictionary *primaryDictionary;
+@property (assign) SwordDictionary *primaryDevotional;
 @property (assign) SwordInstallManager *swordInstallManager;
 @property (assign) SwordManager *swordManager;
 @property (retain, readwrite) SwordInstallSource *currentInstallSource;
@@ -83,6 +85,7 @@
 - (void)loadPrimaryBible:(NSString *)newText;
 - (void)loadPrimaryCommentary:(NSString *)newText;
 - (void)loadPrimaryDictionary:(NSString *)newText;
+- (void)loadPrimaryDevotional:(NSString *)newText;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (void)reload;

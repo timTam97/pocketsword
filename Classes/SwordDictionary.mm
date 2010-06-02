@@ -195,29 +195,17 @@
  nil if the key does not exist.
  */
 - (NSString *)entryForKey:(NSString *)aKey {
-    NSString *ret = nil;
-    
+	NSString *ret = nil;
+
 	[moduleLock lock];	
-	sword::SWKey *swkey = swModule->CreateKey();
-	if([self isUnicode]) {
-		(*swkey) = [[aKey uppercaseString] UTF8String];
-    } else {
-		(*swkey) = [[aKey uppercaseString] cStringUsingEncoding:NSISOLatin1StringEncoding];
-    }
-    
-    // error on key addressing?
-	if(swkey->Error()) {
-        ALog(@"[SwordDictionary -entryForKey:] error on getting key!");
-    } else {
-        // get text
-        //NSArray *data = [self strippedTextEntriesForRef:aKey];
-        NSArray *data = [self renderedTextEntriesForRef:aKey];
-        if(data && [data count] > 0) {
-            ret = [(SwordModuleTextEntry *)[data objectAtIndex:0] text];
-        }
-    }
+	[self setKeyString:aKey];    
+	if([self error]) {
+		ALog(@"[SwordDictionary -entryForKey:] error on getting key!");
+	} else {
+		ret = [self renderedText];
+	}
 	[moduleLock unlock];
-	
+
 	return ret;
 }
 
