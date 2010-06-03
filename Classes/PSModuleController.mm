@@ -124,11 +124,30 @@ float installationProgress;
 - (id)init {
 	self = [super init];
 	installationProgress = 0.0;
+	
+	//migration of modules, for v1.3.0: will allow backup of modules with iTunes sync...
+	if([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"]]) {
+		//need to migrate from the old to the new...
+		NSString *fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"];
+		NSString *toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"mods.d"];
+		if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
+			DLog(@"moved mods.d from %@ to %@", fromPath, toPath);
+		} else {
+			DLog(@"failed to move mods.d folder");
+		}
+		fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString:@"modules"];
+		toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"modules"];
+		if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
+			DLog(@"moved modules from %@ to %@", fromPath, toPath);
+		} else {
+			DLog(@"failed to move modules folder");
+		}
+		
+	}
 
 	// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
-	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]
-							  withIntermediateDirectories: YES attributes: NULL error: NULL];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]] != YES) {
+	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+	if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
 		ALog(@"Couldn't create mods.d");
 	}
 	swordManager = [[SwordManager defaultManager] retain];

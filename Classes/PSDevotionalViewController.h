@@ -11,6 +11,7 @@
 	IBOutlet UIWebView *devotionalWebView;
 	IBOutlet UIView *devotionalDatePickerView;
 	IBOutlet UIDatePicker *devotionalDatePicker;
+	IBOutlet UIBarButtonItem *todayButton;
 	
 	IBOutlet id moduleManager;
 }

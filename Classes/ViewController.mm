@@ -464,9 +464,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		//[ViewController hideModal:modulesListView withTiming:0.3];
 		//modulesListShown = NO;
 		[tabController dismissModalViewControllerAnimated:YES];
-		if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
-			devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
-		}
+//		if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
+//			devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
+//		}
 	} else {
 		NSIndexPath *ip = nil;//default value
 		if([moduleSelectorViewController listType] == BibleTab) {

@@ -22,6 +22,7 @@ BOOL loaded;
     [super viewDidLoad];
 	loaded = NO;
 	
+	todayButton.title = NSLocalizedString(@"TodayButtonTitle", @"");
 	
 	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 	if(!devoTitle)
@@ -51,7 +52,7 @@ BOOL loaded;
 	self.navigationItem.titleView = titleButton;
 	
 	devotionalDatePicker.date = [NSDate date];
-	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
+//	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
 }
@@ -101,6 +102,9 @@ BOOL loaded;
 	if(!loaded) {
 		[self loadDevotionalForDate:devotionalDatePicker.date];
 	}
+//	NSLog(@"pre.y = %d", devotionalWebView.frame.origin.y);
+//	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
+//	NSLog(@"post.y = %d", devotionalWebView.frame.origin.y);
 }
 
 - (void)loadDevotionalForDate:(NSDate *)date {

@@ -4234,7 +4234,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = "Info copy.plist";
+				INFOPLIST_FILE = "Info-PS-en.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)\\\"",
@@ -4277,7 +4277,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = "Info copy.plist";
+				INFOPLIST_FILE = "Info-PS-en.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)\\\"",
