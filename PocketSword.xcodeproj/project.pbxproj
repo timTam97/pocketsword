@@ -561,6 +561,10 @@
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
+		059A6CC111B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
+		059A6CC211B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
+		059A6CC311B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
+		059A6CC411B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
 		05A4979B11068403005424C5 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A4979A11068403005424C5 /* libicucore.dylib */; };
 		05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
@@ -1200,6 +1204,8 @@
 		058E2D2B10F56EFC006E4447 /* canon_german.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_german.h; sourceTree = "<group>"; };
 		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
 		058E2D2D10F56EFC006E4447 /* canon_vulg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_vulg.h; sourceTree = "<group>"; };
+		059A6CBF11B79ABD00B33E54 /* bible.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bible.png; path = Resources/bible.png; sourceTree = "<group>"; };
+		059A6CC011B79ABD00B33E54 /* notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notes.png; path = Resources/notes.png; sourceTree = "<group>"; };
 		05A0403F10F1C4AE0094C6E3 /* Multi-List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Multi-List.png"; path = "Resources/Multi-List.png"; sourceTree = "<group>"; };
 		05A4979A11068403005424C5 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		05A497A011068625005424C5 /* brkiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = brkiter.h; sourceTree = "<group>"; };
@@ -2828,6 +2834,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				059A6CBF11B79ABD00B33E54 /* bible.png */,
+				059A6CC011B79ABD00B33E54 /* notes.png */,
 				05BCB41F11477A9A00984097 /* popup-down-button.png */,
 				05124A9A11B5F02000575BA9 /* devo-open.png */,
 				05BCB3FD1147711B00984097 /* popup-top-bar.png */,
@@ -3334,6 +3342,8 @@
 				054BEC54119F89E800ABCA18 /* PSChapterSelectorController.xib in Resources */,
 				054BEC55119F89E800ABCA18 /* PSVerseSelectorController.xib in Resources */,
 				05124A9B11B5F02000575BA9 /* devo-open.png in Resources */,
+				059A6CC111B79ABD00B33E54 /* bible.png in Resources */,
+				059A6CC211B79ABD00B33E54 /* notes.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3378,6 +3388,8 @@
 				05AB9481116D8D620043DB57 /* PSChapterSelectorController.xib in Resources */,
 				05AB950D116D9BB70043DB57 /* PSVerseSelectorController.xib in Resources */,
 				05124A9C11B5F02000575BA9 /* devo-open.png in Resources */,
+				059A6CC311B79ABD00B33E54 /* bible.png in Resources */,
+				059A6CC411B79ABD00B33E54 /* notes.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
