@@ -203,7 +203,7 @@
 		054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
 		054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
-		054BEC3F119F89E800ABCA18 /* Read.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Read.png */; };
+		054BEC3F119F89E800ABCA18 /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		054BEC40119F89E800ABCA18 /* nt.bks in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1310884F71004FB0E0 /* nt.bks */; };
 		054BEC41119F89E800ABCA18 /* nt.cps in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1410884F71004FB0E0 /* nt.cps */; };
 		054BEC42119F89E800ABCA18 /* ot.bks in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1510884F71004FB0E0 /* ot.bks */; };
@@ -725,7 +725,7 @@
 		E94014E40EFDD2D400DA9B7F /* ThreadLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013EC0EFDD2D400DA9B7F /* ThreadLocal.cpp */; };
 		E9617A330FF566F300690108 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
 		E9617A350FF566FF00690108 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
-		E96C139C0FFFC6390019B69E /* Read.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Read.png */; };
+		E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
@@ -1678,7 +1678,7 @@
 		E9617A640FF56C7300690108 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		E9617A840FF56E1800690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		E9617A850FF56E2100690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E96C139B0FFFC6390019B69E /* Read.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Read.png; path = Resources/Read.png; sourceTree = "<group>"; };
+		E96C139B0FFFC6390019B69E /* Daily-Devotional.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Daily-Devotional.png"; path = "Resources/Daily-Devotional.png"; sourceTree = "<group>"; };
 		E996E5220ED70C6E0034DAF6 /* PSModuleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleController.h; path = Classes/PSModuleController.h; sourceTree = "<group>"; };
 		E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleController.mm; path = Classes/PSModuleController.mm; sourceTree = "<group>"; };
 		E9A6CF9A0FF54CC100399E78 /* English */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 10; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2865,7 +2865,7 @@
 				05509FC810A7B6B200363295 /* commentary.png */,
 				05CD458210A013DD00853E48 /* gear-24.png */,
 				05D461E8108EEB00006BFBB1 /* iTunesArtwork */,
-				E96C139B0FFFC6390019B69E /* Read.png */,
+				E96C139B0FFFC6390019B69E /* Daily-Devotional.png */,
 				E9D540F20FA415BA00AD011C /* Icon.png */,
 				E9BACCD20F898A08007AC4B3 /* List.png */,
 				E9A6CFA10FF559F700399E78 /* MainWindow.xib */,
@@ -3318,7 +3318,7 @@
 				054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */,
 				054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */,
 				054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */,
-				054BEC3F119F89E800ABCA18 /* Read.png in Resources */,
+				054BEC3F119F89E800ABCA18 /* Daily-Devotional.png in Resources */,
 				054BEC40119F89E800ABCA18 /* nt.bks in Resources */,
 				054BEC41119F89E800ABCA18 /* nt.cps in Resources */,
 				054BEC42119F89E800ABCA18 /* ot.bks in Resources */,
@@ -3364,7 +3364,7 @@
 				E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */,
 				E9617A330FF566F300690108 /* gen_xib_strings.py in Resources */,
 				E9617A350FF566FF00690108 /* localize_xibs.py in Resources */,
-				E96C139C0FFFC6390019B69E /* Read.png in Resources */,
+				E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */,
 				05275ADD10884F72004FB0E0 /* nt.bks in Resources */,
 				05275ADE10884F72004FB0E0 /* nt.cps in Resources */,
 				05275ADF10884F72004FB0E0 /* ot.bks in Resources */,
