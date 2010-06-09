@@ -134,4 +134,16 @@
 	[pool release];
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+		[[moduleManager viewController] removeHistoryItem:ref forTab:listType];
+		[tableView reloadData];
+	}
+	
+}
+
+
+
 @end

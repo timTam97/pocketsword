@@ -140,7 +140,7 @@ typedef enum {
 //- (IBAction)toggleModuleTableEditing:(id)sender;
 
 - (void)addHistoryItem:(ShownTab)tabForHistory;
-//- (IBAction)moveToModulesTab:(id)sender;
+- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory;
 
 - (IBAction)toggleModulesList:(id)sender;
 - (IBAction)toggleMultiList:(id)sender;

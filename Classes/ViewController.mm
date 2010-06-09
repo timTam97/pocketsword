@@ -661,7 +661,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
 		
-		if (history == nil) {
+		if (!history) {
 			history = [[NSMutableArray alloc] initWithObjects: nil];
 			
 			NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
@@ -685,6 +685,35 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	[pool release];
 	
+}
+
+- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSMutableArray *history;
+	NSString *historyName;
+	if(tabForHistory == BibleTab) {
+		historyName = @"bibleHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else if(tabForHistory == CommentaryTab) {
+		historyName = @"commentaryHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else {
+		return;
+	}
+	
+	for(NSArray *historyItem in history) {
+		if([ref isEqualToString:[historyItem objectAtIndex:0]]) {
+			[history removeObject:historyItem];
+			break;
+		}
+	}
+	[defaults setObject: history forKey: historyName];
+	[defaults synchronize];
+	[history release];
+	
+	[pool release];
 }
 
 - (void)getRemoteModuleList {
