@@ -416,6 +416,8 @@
 			installSize = [NSString stringWithFormat:@"%@ Bytes", installSize];
 		}
 	}
+	if(!installSize)
+		return @"";
     
     return installSize;
 }

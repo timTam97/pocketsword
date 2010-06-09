@@ -67,7 +67,7 @@ NSTimer *downloadTimer;
 	
 	NSString *question = NSLocalizedString(@"ConfirmInstall", @"Would you like to install this module?");
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
-
+	
 	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
 	[[[UIAlertView alloc] initWithTitle: messageTitle message: message
 							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];

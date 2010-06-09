@@ -81,6 +81,22 @@ float status;
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
+					[is setType:INSTALLSOURCE_TYPE_FTP];
+					[is setCaption:@"NET (Bible.org)"];
+					[is setSource:@"ftp.bible.org"];
+					[is setDirectory:@"/sword"];
+					[is setUID:@"bibleDotOrg-ftp"];
+					// add is
+					[self addInstallSource:is withReinitialize:NO];
+					
+					[is setType:INSTALLSOURCE_TYPE_FTP];
+					[is setCaption:@"Xiphos"];
+					[is setSource:@"ftp.xiphos.org"];
+					[is setDirectory:@"."];                    
+					[is setUID:@"xiphos-ftp"];
+					// add is
+					[self addInstallSource:is withReinitialize:NO];
+					
 					// create default FTP Install source
 					//[is setType:INSTALLSOURCE_TYPE_FTP];
                     //[is setCaption:@"CrossWire (ftp)"];
@@ -89,10 +105,35 @@ float status;
 					//[is setUID:@"crosswire-ftp"];
                     //[self addInstallSource:is withReinitialize:NO];
 					
+					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories"];
 					//after we've added all the default Install sources, reinitialize:
 					[self reinitialize];
                     
                 } else {
+					//make sure bible.org & xiphos.org are added:
+					BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedXiphosAndBibleRepositories"];
+					if(!xbr) {
+						SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
+						[is setType:INSTALLSOURCE_TYPE_FTP];
+						[is setCaption:@"NET (Bible.org)"];
+						[is setSource:@"ftp.bible.org"];
+						[is setDirectory:@"/sword"];
+						[is setUID:@"bibleDotOrg-ftp"];
+						// add is
+						[self addInstallSource:is withReinitialize:NO];
+						
+						[is setType:INSTALLSOURCE_TYPE_FTP];
+						[is setCaption:@"Xiphos"];
+						[is setSource:@"ftp.xiphos.org"];
+						[is setDirectory:@"."];                    
+						[is setUID:@"xiphos-ftp"];
+						// add is
+						[self addInstallSource:is withReinitialize:NO];
+						
+						[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories"];
+					}
+
+					
                     // init installMgr
                     [self reinitialize];                
                 }
