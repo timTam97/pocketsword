@@ -904,7 +904,6 @@
 	swModule->RenderText();
 
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	//nicc crash here with "ch" being 'nil'
 	NSString *ref = [NSString stringWithString: ch];
 	
 	return ref;

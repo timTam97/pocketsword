@@ -26,14 +26,21 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:@"ModuleMaintainerModeChanged" object:nil];
 }
 
+// available actions (via Edit button):
+//		- Add Source
+//		- Edit/Remove Sources (have this also cover "add" with a + button there?)
+//		- Module Maintainer Mode (if preference is set)
+//		
+
 - (void)addManualInstallButton {
 	BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
 	self.navigationItem.rightBarButtonItem = nil;
 	if(manualInstallEnabled) {
 		//UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(manualAddModule:)];
-		UIImage *mmmImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"MMM" ofType:@"png"]];
-		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:mmmImg style:UIBarButtonItemStyleBordered target:self action:@selector(manualAddModule:)];
-		[mmmImg release];
+		//UIImage *mmmImg = [UIImage imageNamed:@"MMM.png"];
+		//UIImage *mmmImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"MMM" ofType:@"png"]];
+		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(manualAddModule:)];
+		//[mmmImg release];
 		self.navigationItem.rightBarButtonItem = iButton;
 		[iButton release];
 	}

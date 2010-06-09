@@ -1037,10 +1037,13 @@ float installationProgress;
     NSMutableDictionary *ret = nil;
     
     NSString *scheme = [aURL scheme];
-    if([scheme isEqualToString:@"sword"]) {
+    if([scheme isEqualToString:@"sword"] || [scheme isEqualToString:@"bible"]) {
         // in this case host is the module and path the reference
 		ret = [NSMutableDictionary dictionary];
-        [ret setObject:[aURL host] forKey:ATTRTYPE_MODULE];
+		if([aURL host])
+			[ret setObject:[aURL host] forKey:ATTRTYPE_MODULE];
+		else
+			[ret setObject:[NSNull null] forKey:ATTRTYPE_MODULE];
         [ret setObject:[[[[aURL path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "]
                 forKey:ATTRTYPE_VALUE];
         [ret setObject:@"scriptRef" forKey:ATTRTYPE_TYPE];

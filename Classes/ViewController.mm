@@ -622,7 +622,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //    or when the user selects a new module to view.
 //    or when the user selects a bookmark.
 //    or when the user selects a search result.
-- (void)addHistoryItem:(ShownTab)tabForHistory
+- (void)addHistoryItem:(ShownTab)tabForHistory  // TODO: add the module name as a parameter
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -1055,9 +1055,32 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL load = YES;
 	
-	//NSLog(@"\nInfo Pane: requestString: %@", [[request URL] absoluteString]);
+	//NSLog(@"  Info Pane: requestString: %@", [[request URL] absoluteString]);
 	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 	NSString *entry = nil;
+	
+	if([[[request URL] scheme] isEqualToString:@"bible"]) {
+		//our internal reference to say this is a Bible verse to display in the Bible tab
+		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
+			//error checking, should always get here...
+			[self setShownTabTo:BibleTab];
+			[dictionaryViewController dismissModalViewControllerAnimated:YES];
+			NSString *ref = [rData objectForKey:ATTRTYPE_VALUE];
+			NSArray *comps = [ref componentsSeparatedByString:@":"];
+
+			if([comps count] > 1) {
+				//we have a verse
+				[[NSUserDefaults standardUserDefaults] setObject: [comps objectAtIndex:1] forKey: @"bibleVersePosition"];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				ref = [comps objectAtIndex:0];//just the book & ch
+				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
+			} else {
+				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
+			}
+
+			return NO;
+		}
+	}
 	
 	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 		//

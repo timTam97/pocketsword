@@ -45,7 +45,7 @@ void lucene_vfnwprintf(StringBuffer* buffer, size_t count, const wchar_t * forma
 					//todo: this is faulty. it doesn't heed count
 
 					//print a string or null
-					TCHAR *wstr = va_arg(valist, TCHAR *);
+					const TCHAR *wstr = va_arg(valist, TCHAR *);//nicc fix to remove conversion warning: added 'const'
 					if ( !wstr )
 						wstr = _T("(null)");
 
