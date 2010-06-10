@@ -58,7 +58,12 @@ float status;
                 // set configFilePath
                 [self setConfigFilePath:[configPath stringByAppendingPathComponent:@"InstallMgr.conf"]];
                 
-                // check config
+				BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedXiphosAndBibleRepositories2"];
+				if(!xbr) {
+					[fm removeItemAtPath:configFilePath error:NULL];
+				}
+
+				// check config
                 if([fm fileExistsAtPath:configFilePath] == NO) {
                     // create config entry
                     sword::SWConfig config([configFilePath cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -70,14 +75,16 @@ float status;
                     [is setCaption:@"CrossWire 1 (http)"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/raw"];
-					[is setUID:@"crosswire-http"];
+					[is setUID:@"20081216195754"];
+					//[is setUID:@"crosswire-http"];//20081216195754
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
                     [is setCaption:@"CrossWire 2 (http)"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/betaraw"];                    
-					[is setUID:@"crosswire-beta-http"];
+					[is setUID:@"20090224125400"];//20090224125400
+					//[is setUID:@"crosswire-beta-http"];//20090224125400
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
@@ -85,7 +92,8 @@ float status;
 					[is setCaption:@"NET (Bible.org)"];
 					[is setSource:@"ftp.bible.org"];
 					[is setDirectory:@"/sword"];
-					[is setUID:@"bibleDotOrg-ftp"];
+					[is setUID:@"20090514005700"];//20090514005700
+					//[is setUID:@"bibleDotOrg-ftp"];//20090514005700
 					// add is
 					[self addInstallSource:is withReinitialize:NO];
 					
@@ -93,7 +101,8 @@ float status;
 					[is setCaption:@"Xiphos"];
 					[is setSource:@"ftp.xiphos.org"];
 					[is setDirectory:@"."];                    
-					[is setUID:@"xiphos-ftp"];
+					[is setUID:@"20090514005900"];//20090514005900
+					//[is setUID:@"xiphos-ftp"];//20090514005900
 					// add is
 					[self addInstallSource:is withReinitialize:NO];
 					
@@ -105,35 +114,11 @@ float status;
 					//[is setUID:@"crosswire-ftp"];
                     //[self addInstallSource:is withReinitialize:NO];
 					
-					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories"];
+					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories2"];
 					//after we've added all the default Install sources, reinitialize:
 					[self reinitialize];
                     
                 } else {
-					//make sure bible.org & xiphos.org are added:
-					BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedXiphosAndBibleRepositories"];
-					if(!xbr) {
-						SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
-						[is setType:INSTALLSOURCE_TYPE_FTP];
-						[is setCaption:@"NET (Bible.org)"];
-						[is setSource:@"ftp.bible.org"];
-						[is setDirectory:@"/sword"];
-						[is setUID:@"bibleDotOrg-ftp"];
-						// add is
-						[self addInstallSource:is withReinitialize:NO];
-						
-						[is setType:INSTALLSOURCE_TYPE_FTP];
-						[is setCaption:@"Xiphos"];
-						[is setSource:@"ftp.xiphos.org"];
-						[is setDirectory:@"."];                    
-						[is setUID:@"xiphos-ftp"];
-						// add is
-						[self addInstallSource:is withReinitialize:NO];
-						
-						[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories"];
-					}
-
-					
                     // init installMgr
                     [self reinitialize];                
                 }
@@ -282,9 +267,13 @@ base path of the module installation
 
 //if we're just removing & adding an install source, we only need to reinitialize after re-adding the IS again.
 - (void)removeInstallSource:(SwordInstallSource *)is withReinitialize:(BOOL)performReinitialize {
-    
+	[self removeInstallSourceNamed:[is caption] withReinitialize:performReinitialize];
+}
+
+- (void)removeInstallSourceNamed:(NSString*)caption withReinitialize:(BOOL)performReinitialize {
+
     // remove source
-    [installSources removeObjectForKey:[is caption]];
+    [installSources removeObjectForKey:caption];
     
     // save at once
     sword::SWConfig config([configFilePath cStringUsingEncoding:NSUTF8StringEncoding]);

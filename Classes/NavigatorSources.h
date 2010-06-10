@@ -9,14 +9,16 @@
 #import <UIKit/UIKit.h>
 
 #import "PSModuleController.h"
+#import "PSAddSourceViewController.h"
 
-@interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate> {
 
 	IBOutlet id table;
 	IBOutlet id refreshButton;
 	IBOutlet PSModuleController *moduleManager;
 	IBOutlet id navigatorModuleTypes;
 	IBOutlet UITabBarController *tabController;
+	IBOutlet PSAddSourceViewController *addSourceViewController;
 		
 	IBOutlet id manualInstallViewController;
 	
@@ -28,6 +30,7 @@
 - (IBAction)manualAddModule:(id)sender;
 - (void)viewWillAppear:(BOOL)animated;
 - (void)addManualInstallButton;
+- (IBAction)editButtonPressed:(id)sender;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;

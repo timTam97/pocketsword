@@ -23,7 +23,7 @@
 	
 	self.navigationItem.title = NSLocalizedString(@"InstallSourcesTitle", @"Sources");
 	[self addManualInstallButton];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:@"ModuleMaintainerModeChanged" object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:@"ModuleMaintainerModeChanged" object:nil];
 }
 
 // available actions (via Edit button):
@@ -33,16 +33,44 @@
 //		
 
 - (void)addManualInstallButton {
-	BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
+	//BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
 	self.navigationItem.rightBarButtonItem = nil;
-	if(manualInstallEnabled) {
+	if([[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
 		//UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(manualAddModule:)];
-		//UIImage *mmmImg = [UIImage imageNamed:@"MMM.png"];
-		//UIImage *mmmImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"MMM" ofType:@"png"]];
-		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(manualAddModule:)];
-		//[mmmImg release];
+		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed:)];//manualAddModule
 		self.navigationItem.rightBarButtonItem = iButton;
 		[iButton release];
+	}
+}
+
+// TODO: add /*NSLocalizedString(@"DeleteSource", @""),*/ to the list of buttons?
+- (IBAction)editButtonPressed:(id)sender {
+	UIActionSheet *actionSheet;
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"]) {
+		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), /*NSLocalizedString(@"AddFTPSource", @""), NSLocalizedString(@"AddHTTPSource", @""),*/ NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @""), nil];
+	} else {
+		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
+	}
+	
+	[actionSheet showFromTabBar:tabController.tabBar];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if(buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+	
+	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddFTPSource", @"")]) {
+		//[self presentModalViewController:imageViewController animated:YES];
+	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddHTTPSource", @"")]) {
+		
+	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"DeleteSource", @"")]) {
+		//not currently implemented...
+	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
+		[[moduleManager swordInstallManager] refreshMasterRemoteInstallSourceList];
+		[table reloadData];
+	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
+		[self manualAddModule:nil];
 	}
 }
 
@@ -149,6 +177,16 @@
 	
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+		NSString *caption = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+		[[moduleManager swordInstallManager] removeInstallSourceNamed:caption withReinitialize:YES];
+		[tableView reloadData];
+	}
+	
+}
+
 /*- (void)navigationController:(UINavigationController *)navController willShowViewController:(UIViewController *)vController animated:(BOOL)animated {
 	if([vController.title isEqualToString:@"Sources"]) {
 		if(![[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
@@ -174,6 +212,7 @@
 	if (buttonIndex == 1) {
 		//DLog(@"alertView: didDismissWithButtonIndex:  %d", buttonIndex);
 		[[moduleManager swordInstallManager] setUserDisclainerConfirmed: YES];
+		[self addManualInstallButton];
 		[table reloadData];
 		//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		//NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];

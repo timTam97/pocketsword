@@ -195,3 +195,12 @@
 "PreferencesHeadingsTitle" = "Headings";
 "DictionarySearchPlaceholderText" = "Search Dictionary";
 "TabBarTitleDevotional" = "Daily Devotionals";
+"TodayButtonTitle" = "Today";
+"ManageSources" = "Manage Sources";
+"AddFTPSource" = "Add FTP Source";
+"AddHTTPSource" = "Add HTTP Source";
+"DeleteSource" = "Delete Source";
+"RefreshSourceList" = "Refresh Source List";
+"AddSourceCaptionTitle" = "Caption";
+"AddSourceServerTitle" = "Server";
+"AddSourcePathTitle" = "Path";

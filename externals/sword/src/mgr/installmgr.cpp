@@ -600,9 +600,9 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 	SWBuf root = (SWBuf)privatePath;
 	removeTrailingSlash(root);
 	SWBuf masterRepoListPath = root + "/" + masterRepoList;
-	InstallSource is("FTP");
+	InstallSource is("HTTP");
 	is.source = "ftp.crosswire.org";
-	is.directory = "/pub/sword";
+	is.directory = "/ftpmirror/pub/sword";
 	int errorCode = ftpCopy(&is, masterRepoList, masterRepoListPath.c_str(), false);
 	if (!errorCode) { //sucessfully downloaded the repo list
 		SWConfig masterList(masterRepoListPath);
@@ -613,7 +613,9 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 				InstallSourceMap::iterator it;
 				for (it = sources.begin(); it != sources.end(); ++it) {
 					// is this our UID?
+					SWLog::getSystemLog()->logDebug("uid: %s && actions->first: %s \n", it->second->uid.c_str(), actions->first.c_str());
 					if ((it->second) && (it->second->uid == actions->first)) {
+						SWLog::getSystemLog()->logDebug("uid: %s && (actions->first) \n", it->second->uid.c_str());
 						if (actions->second == "REMOVE") {
 							// be sure to call save/reload after this
 							// or this could be dangerous
@@ -630,9 +632,28 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 								// but it seems like we might want to change any
 								// of the current fields so we don't do this now
 								// InstallSource i("FTP", actions->second);
-								delete it->second;
-								it->second = new InstallSource("FTP", actions->second.c_str());
-								it->second->uid = actions->first;
+								if(it->second->caption == "CrossWire 1 (http)") {
+									delete it->second;
+									it->second = new InstallSource("HTTP", actions->second.c_str());
+									it->second->uid = actions->first;
+									it->second->caption = "CrossWire 1 (http)";
+									it->second->directory = "/ftpmirror/pub/sword/raw";
+								} else if(it->second->caption == "CrossWire 2 (http)") {
+									delete it->second;
+									it->second = new InstallSource("HTTP", actions->second.c_str());
+									it->second->uid = actions->first;
+									it->second->caption = "CrossWire 2 (http)";
+									it->second->directory = "/ftpmirror/pub/sword/betaraw";
+								} else if(it->second->caption == "NET (Bible.org)") {
+									delete it->second;
+									it->second = new InstallSource("FTP", actions->second.c_str());
+									it->second->uid = actions->first;
+									it->second->caption = "NET (Bible.org)";
+								} else {
+									delete it->second;
+									it->second = new InstallSource("FTP", actions->second.c_str());
+									it->second->uid = actions->first;
+								}
 							}
 						}
 						break;
@@ -643,8 +664,21 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 					SWBuf key = actions->second.stripPrefix('=');
 					if (key == "FTPSource") {
 						if (actions->second != "REMOVE") {
-							InstallSource *is = new InstallSource("FTP", actions->second.c_str());
+							InstallSource *is;
+							is = new InstallSource("FTP", actions->second.c_str());
 							is->uid = actions->first;
+							if(is->caption == "CrossWire") {
+								is->type = "HTTP";
+								is->caption = "CrossWire 1 (http)";
+								is->directory = "/ftpmirror/pub/sword/raw";
+							} else if(is->caption == "CrossWire Beta") {
+								delete it->second;
+								is->type = "HTTP";
+								is->caption = "CrossWire 2 (http)";
+								is->directory = "/ftpmirror/pub/sword/betaraw";
+							} else if(is->caption == "Bible.org") {
+								is->caption = "NET (Bible.org)";
+							}
 							sources[is->caption] = is;
 						}
 					}
