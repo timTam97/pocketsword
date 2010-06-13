@@ -204,3 +204,8 @@
 "AddSourceCaptionTitle" = "Caption";
 "AddSourceServerTitle" = "Server";
 "AddSourcePathTitle" = "Path";
+"AddFTPSourceTitle" = "New FTP Source";
+"AddHTTPSourceTitle" = "New HTTP Source";
+"FillInAllFieldsMessage" = "You must fill in all the fields!";
+"Warning" = "Warning";
+"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";

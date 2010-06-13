@@ -672,7 +672,6 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 								is->caption = "CrossWire 1 (http)";
 								is->directory = "/ftpmirror/pub/sword/raw";
 							} else if(is->caption == "CrossWire Beta") {
-								delete it->second;
 								is->type = "HTTP";
 								is->caption = "CrossWire 2 (http)";
 								is->directory = "/ftpmirror/pub/sword/betaraw";

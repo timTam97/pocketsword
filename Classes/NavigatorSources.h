@@ -6,8 +6,6 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 #import "PSModuleController.h"
 #import "PSAddSourceViewController.h"
 
@@ -31,6 +29,7 @@
 - (void)viewWillAppear:(BOOL)animated;
 - (void)addManualInstallButton;
 - (IBAction)editButtonPressed:(id)sender;
+- (void)resetTableSelection;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;

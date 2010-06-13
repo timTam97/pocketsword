@@ -580,7 +580,7 @@ using std::list;
 }
 
 
-//NOTE: you need to do a manual refresh of the modules after this!
+// WARNING: you need to do a manual refresh of the modules after this!
 - (void)installModulesFromPath:(NSString *)path
 {
 	/*
@@ -613,6 +613,11 @@ using std::list;
 		curMod = (*it).second;
 		swInstallMgr->installModule(swManager, [path UTF8String], curMod->Name());
 	}
+	
+	// TODO: now to traverse the subdirectories searching for more modules?
+	
+	delete swInstallMgr;
+	delete tmpManager;
 }
 
 #pragma mark - lowlevel methods

@@ -179,8 +179,8 @@
 		05275B7C10884F72004FB0E0 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AD310884F72004FB0E0 /* zutil.c */; };
 		052B52851101A32900FFDF01 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 052B52841101A32900FFDF01 /* Settings.bundle */; };
 		052B52F21101D76000FFDF01 /* locales.d.zip in Resources */ = {isa = PBXBuildFile; fileRef = 052B52ED1101D6DF00FFDF01 /* locales.d.zip */; };
-		0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.m */; };
-		0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.m */; };
+		0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.mm */; };
+		0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.mm */; };
 		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
 		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
@@ -1110,7 +1110,7 @@
 		05337B1310F828C00003CFA9 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		05337B1410F828C30003CFA9 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		0533EF2B11C0B48900A65DCE /* PSAddSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSAddSourceViewController.h; sourceTree = "<group>"; };
-		0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSAddSourceViewController.m; sourceTree = "<group>"; };
+		0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSAddSourceViewController.mm; sourceTree = "<group>"; };
 		053C59DA1150B3630024192C /* S_M_85032342_20091130_20091227.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20091130_20091227.txt; path = Resources/doc/S_M_85032342_20091130_20091227.txt; sourceTree = "<group>"; };
 		053C59DB1150B3630024192C /* S_M_85032342_20091228_20100131.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20091228_20100131.txt; path = Resources/doc/S_M_85032342_20091228_20100131.txt; sourceTree = "<group>"; };
 		053C59DC1150B3630024192C /* S_M_85032342_20100201_20100228.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20100201_20100228.txt; path = Resources/doc/S_M_85032342_20100201_20100228.txt; sourceTree = "<group>"; };
@@ -2737,7 +2737,7 @@
 				05B52BDA107EEB5B00826AFE /* NavigatorModuleTypes.h */,
 				05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */,
 				0533EF2B11C0B48900A65DCE /* PSAddSourceViewController.h */,
-				0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.m */,
+				0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.mm */,
 			);
 			name = "PS-install";
 			path = Classes;
@@ -3740,7 +3740,7 @@
 				054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570611AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */,
-				0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.m in Sources */,
+				0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4063,7 +4063,7 @@
 				054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */,
-				0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.m in Sources */,
+				0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

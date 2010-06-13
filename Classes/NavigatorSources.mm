@@ -47,7 +47,7 @@
 - (IBAction)editButtonPressed:(id)sender {
 	UIActionSheet *actionSheet;
 	if([[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"]) {
-		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), /*NSLocalizedString(@"AddFTPSource", @""), NSLocalizedString(@"AddHTTPSource", @""),*/ NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @""), nil];
+		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), NSLocalizedString(@"AddFTPSource", @""), /*NSLocalizedString(@"AddHTTPSource", @""),*/ NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @""), nil];
 	} else {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
 	}
@@ -61,9 +61,11 @@
 	
 	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddFTPSource", @"")]) {
-		//[self presentModalViewController:imageViewController animated:YES];
+		addSourceViewController.serverType = INSTALLSOURCE_TYPE_FTP;
+		[self presentModalViewController:addSourceViewController animated:YES];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddHTTPSource", @"")]) {
-		
+		addSourceViewController.serverType = INSTALLSOURCE_TYPE_HTTP;
+		[self presentModalViewController:addSourceViewController animated:YES];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"DeleteSource", @"")]) {
 		//not currently implemented...
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
@@ -77,6 +79,7 @@
 - (void)resetTableSelection {
 	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
 	[table deselectRowAtIndexPath:tableSelection animated:YES];
+	[table reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -85,8 +88,7 @@
 	//DLog(@"  (SINC)  ");
 	
 	if(![[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 	}
 	if([NSThread isMainThread]) {
 		[self resetTableSelection];

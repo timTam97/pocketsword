@@ -238,12 +238,6 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
 
-		/*
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_MORPHS];
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_HEBREWPOINTS];
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_HEBREWCANTILLATION];
-		 [modDisplayOptions setObject:SW_OFF forKey:SW_OPTION_GREEKACCENTS];
-		*/
 	}
 	return;
 }
