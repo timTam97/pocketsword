@@ -4500,8 +4500,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4533,8 +4533,8 @@
 					"-DUSELUCENE",
 				);
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "08143D11-4A05-4912-9EE5-6C38E6C3F162";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "08143D11-4A05-4912-9EE5-6C38E6C3F162";
 				VALIDATE_PRODUCT = NO;
 			};
 			name = Distribution;
