@@ -43,13 +43,14 @@
 							 </div>\n\
 							 <div id=\"main\">\n\
 								<p><b>Developed by: </b><br />\n\
-									 Nic Carter\n\
+									 Nic Carter<br />\n\
+									 and the CrossWire team\n\
 								</p>\n\
 								 <p><b>Icons by: </b><br />\n\
 										Cheree Lynley Designs, James Coleman\n\
 								</p>\n\
 							  <p><b>Localisations by: </b><br />\n\
-								  David Bell, Christoffer Björkskog, Dominique Corbex, Henko van de Weerd, Nakamaru Kunio, Vincenzo Carrubba, Vitaliy, Yiguang Hu\n\
+								  David Bell, Christoffer Björkskog, Vincenzo Carrubba, Dominique Corbex, Yiguang Hu, Nakamaru Kunio, Vitaliy, Henko van de Weerd, Brian Wu\n\
 							  </p>\n\
 							  <p><b>Special thanks to: </b><br />\n\
 										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\
@@ -57,11 +58,10 @@
 								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\
-										<i><a href=\"http://www.crosswire.org/sword/software/biblecs/\">The SWORD Project for Windows</a></i><br />\n\
 										<i><a href=\"http://www.macsword.com/\">MacSword</a></i><br />\n\
-										<i><a href=\"http://xiphos.org/\">Xiphos (Linux, UNIX, Windows)</a></i><br />\n\
+										<i><a href=\"http://xiphos.org/\">Xiphos (Windows, Linux/Unix)</a></i><br />\n\
 										<i><a href=\"http://www.bibletime.info/\">BibleTime (Linux/Unix and Windows)</a></i><br />\n\
-										<i><a href=\"http://www.crosswire.org/bibledesktop/\">Bible Desktop (Windows, Mac, Linux, Unix)</a></i>\n\
+										<i><a href=\"http://www.crosswire.org/bibledesktop/\">Bible Desktop (Windows, Mac, Linux/Unix)</a></i>\n\
 									</p>\n\
 					  <br />\n\
 					  <br />\n\

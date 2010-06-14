@@ -148,6 +148,11 @@
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"FillInAllFieldsMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
 		return;
 	}
+
+	if(![PSModuleController checkNetworkConnection]) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		return;
+	}
 	
 	
 	UIApplication *application = [UIApplication sharedApplication];

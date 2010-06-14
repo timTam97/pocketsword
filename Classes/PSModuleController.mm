@@ -238,6 +238,9 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
 
+		if(primaryBible) {
+			[primaryBible setHeadings:headings];
+		}
 	}
 	return;
 }
@@ -281,6 +284,8 @@ float installationProgress;
 	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastBible];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	refSelectorController.refSelectorBooks = nil;
+	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+	[primaryBible setHeadings:headings];
 }
 
 - (void)loadPrimaryCommentary:(NSString *)newText {

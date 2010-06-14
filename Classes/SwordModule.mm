@@ -879,6 +879,10 @@
 	return swModule;
 }
 
+- (void)setHeadings:(BOOL)headings {
+//	((sword::VerseKey *)(swModule->getKey()))->Headings((headings) ? true : false);
+}
+
 - (void)setChapter:(NSString *)chapter {
 //	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();

@@ -36,8 +36,8 @@
 	//BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
 	self.navigationItem.rightBarButtonItem = nil;
 	if([[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
-		//UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(manualAddModule:)];
-		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed:)];//manualAddModule
+		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(editButtonPressed:)];
+		//UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed:)];//manualAddModule
 		self.navigationItem.rightBarButtonItem = iButton;
 		[iButton release];
 	}
@@ -69,6 +69,10 @@
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"DeleteSource", @"")]) {
 		//not currently implemented...
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
+		if(![PSModuleController checkNetworkConnection]) {
+			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+			return;
+		}
 		[[moduleManager swordInstallManager] refreshMasterRemoteInstallSourceList];
 		[table reloadData];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
