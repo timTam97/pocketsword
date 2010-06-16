@@ -237,10 +237,6 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_GREEKACCENTS value: ((greekAccents) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
-
-		if(primaryBible) {
-			[primaryBible setHeadings:headings];
-		}
 	}
 	return;
 }
@@ -426,6 +422,8 @@ float installationProgress;
 			sword::VerseKey *curKey = (sword::VerseKey*)([primaryBible swModule])->getKey();
 			curKey->setText([ch cStringUsingEncoding: NSUTF8StringEncoding]);
 			//([primaryBible swModule])->setKey(loc);
+			BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+			[primaryBible setHeadings:headings];
 		}
 	}
 	
