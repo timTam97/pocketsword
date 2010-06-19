@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Traditional Chinese Localisation
 // By Brian Wu
-// Last Updated v1.2.2 (10-May-2010)
+// Last Updated v1.3.0 (17th June, 2010)
 
 "Edit" = "編輯";
 "Done" = "完成";
@@ -190,20 +190,20 @@
 "RefSelectorBackButtonTitle" = "回去";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"PreferencesHeadingsTitle" = "標題";
+"DictionarySearchPlaceholderText" = "字典搜索";
+"TabBarTitleDevotional" = "每日靈修";
+"TodayButtonTitle" = "今天";
+"ManageSources" = "管理來源";
+"AddFTPSource" = "加入FTP來源";
+"AddHTTPSource" = "加入TTP來源";
+"DeleteSource" = "刪除來源";
+"RefreshSourceList" = "重新整理來源列表";
+"AddSourceCaptionTitle" = "標題";
+"AddSourceServerTitle" = "伺服器";
+"AddSourcePathTitle" = "路徑";
+"AddFTPSourceTitle" = "加入 FTP 來源";
+"AddHTTPSourceTitle" = "加入 HTTP 來源";
+"FillInAllFieldsMessage" = "您必須填寫所有項目";
+"Warning" = "警告";
+"CannotVerifyInstallSourceWarning" = "PocketSword 無法確認此來源,您希望儲存它嗎?";

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Simplified Chinese Localisation
 // By Yiguang Hu
-// Last Updated v1.2.2
+// Last Updated v1.3.0 (17th June, 2010)
 
 "Edit" = "编辑";
 "Done" = "完成";
@@ -98,7 +98,7 @@
 "Commentaries" = "注解";
 "Lexicons / Dictionaries" = "词典／字典";
 "Generic Books" = "一半图书";
-"Daily Devotional" = "每日灵修";
+"Daily Devotionals" = "每日灵修";
 "Glossaries" = "词汇表";
 "Cults / Unorthodox / Questionable Material" = "邪教/非正统/可疑问的材料";
 "Essays" = "散文";
@@ -190,20 +190,20 @@
 "RefSelectorBackButtonTitle" = "回去";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"PreferencesHeadingsTitle" = "头抬";
+"DictionarySearchPlaceholderText" = "查询字典";
+"TabBarTitleDevotional" = "每日灵修";
+"TodayButtonTitle" = "今天";
+"ManageSources" = "管理资源";
+"AddFTPSource" = "加FTP资源";
+"AddHTTPSource" = "加HTTP资源";
+"DeleteSource" = "删除资源";
+"RefreshSourceList" = "更新资源表";
+"AddSourceCaptionTitle" = "题目";
+"AddSourceServerTitle" = "服务器";
+"AddSourcePathTitle" = "路径";
+"AddFTPSourceTitle" = "新的FTP资源";
+"AddHTTPSourceTitle" = "新的HTTP资源";
+"FillInAllFieldsMessage" = "你必须填入所有的空白！";
+"Warning" = "警告";
+"CannotVerifyInstallSourceWarning" = "PocketSword不能确认这是一个恰当的模块资源。你仍然要存它吗？";

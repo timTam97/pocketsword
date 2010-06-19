@@ -19,7 +19,7 @@
 
 // Dutch Localisation
 // By Henko van de Weerd
-// Last Updated v1.2.2 (8-May-2010)
+// Last Updated v1.3.0 (16th June, 2010)
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
@@ -100,7 +100,7 @@
 "Commentaries" = "Commentaar";
 "Lexicons / Dictionaries" = "Lexicons / woordenboeken";
 "Generic Books" = "Algemene boeken";
-"Daily Devotional" = "Dagelijkse bijbelstudie";
+"Daily Devotional" = "Dagelijkse bijbelstudies";
 "Glossaries" = "Woordenlijsten";
 "Cults / Unorthodox / Questionable Material" = "Sekten / onorthodox / twijfelachtig materiaal";
 "Essays" = "Essays";
@@ -191,20 +191,20 @@
 "RefSelectorBackButtonTitle" = "Terug";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
+"PreferencesHeadingsTitle" = "Titels";
+"DictionarySearchPlaceholderText" = "Zoek woordenboek";
+"TabBarTitleDevotional" = "Dagelijkse bijbelstudies";
+"TodayButtonTitle" = "Vandaag";
+"ManageSources" = "Beheer bronnen";
+"AddFTPSource" = "FTP-bron toevoegen";
+"AddHTTPSource" = "HTTP-bron toevoegen";
+"DeleteSource" = "Bron verwijderen";
+"RefreshSourceList" = "Bronlijst vernieuwen";
+"AddSourceCaptionTitle" = "Hoofdletters";
 "AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"AddSourcePathTitle" = "Pad";
+"AddFTPSourceTitle" = "Nieuwe FTP-bron";
+"AddHTTPSourceTitle" = "Nieuwe HTTP-bron";
+"FillInAllFieldsMessage" = "U dient alle velden in te vullen!";
+"Warning" = "Waarschuwing";
+"CannotVerifyInstallSourceWarning" = "PocketSword kan niet controleren of dit een geldige bron voor modules is. Wilt u deze desondanks toch opslaan?";

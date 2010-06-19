@@ -1154,7 +1154,7 @@
 		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
 		054BEE6111A3A2F300ABCA18 /* PSBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksViewController.h; path = Classes/PSBookmarksViewController.h; sourceTree = "<group>"; };
 		054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarksViewController.mm; path = Classes/PSBookmarksViewController.mm; sourceTree = "<group>"; };
-		054BEF1311A4E77300ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		054BEF1311A4E77300ABCA18 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		054BEF1411A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054BEF1511A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
 		054BEF1611A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -1186,7 +1186,7 @@
 		054F3C63117EAD4100BF1361 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
 		054F3C8C117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054F3C8D117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
-		054F3C8E117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		054F3C8E117EB11000BF1361 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		054F3C8F117EB11000BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		054F3C90117EB11100BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
 		054F3C91117EB11100BF1361 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };

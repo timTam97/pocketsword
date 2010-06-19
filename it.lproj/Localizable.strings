@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Italian localisation
 // By Vincenzo Carrubba
-// Last Updated v1.2.2
+// Last Updated v1.3.0 (16th June, 2010)
 
 "Edit" = "Modifica";
 "Done" = "Fine";
@@ -70,7 +70,7 @@
 "PreferencesTitle" = "Preferenze";
 "PreferencesDisplayPreferencesTitle" = "Preferenze visualizzazione";
 "PreferencesDevicePreferencesTitle" = "Preferenze dispositivo";
-"PreferencesFontSizeTitle" = "Dimen. carattere";
+"PreferencesFontSizeTitle" = "Dim. caratteri";
 "PreferencesNightModeTitle" = "Modalità notte";
 "PreferencesVPLTitle" = "Un versetto per linea";
 "PreferencesFontTitle" = "Tipo di carattere";
@@ -191,20 +191,20 @@
 "RefSelectorBackButtonTitle" = "Indietro";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
+"PreferencesHeadingsTitle" = "Intestazioni";
+"DictionarySearchPlaceholderText" = "Cerca nel Dizionario";
+"TabBarTitleDevotional" = "Devozionali quotidiani";
+"TodayButtonTitle" = "Oggi";
+"ManageSources" = "Gestione Fonti";
+"AddFTPSource" = "Aggiungi Fonte FTP";
+"AddHTTPSource" = "Aggiungi Fonte HTTP";
+"DeleteSource" = "Elimina Fonte";
+"RefreshSourceList" = "Aggiorna Lista Fonti";
+"AddSourceCaptionTitle" = "Nome";
 "AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"AddSourcePathTitle" = "Percorso";
+"AddFTPSourceTitle" = "Nuova Fonte FTP";
+"AddHTTPSourceTitle" = "Nuova Fonte HTTP";
+"FillInAllFieldsMessage" = "Riempire tutti i campi richiesti!";
+"Warning" = "Attenzione";
+"CannotVerifyInstallSourceWarning" = "PocketSword non può verificare la validità di questa fonte. Si desidera salvarla comunque?";

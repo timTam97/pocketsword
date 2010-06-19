@@ -19,15 +19,15 @@
 
 // Japanese localisation
 // By Nakamaru Kunio
-// Last Updated v1.2.2
+// Last Updated v1.3.0 (16th June, 2010)
 
 "Edit" = "編集";
 "Done" = "完了";
-"Module Download" = "モジュールのダウンロード";
+"Module Download" = "拡張データのダウンロード";
 "Installing" = "インストール中:";
 "Yes" = "はい";
 "No" = "いいえ";
-"ConfirmInstall" = "このモジュールをインストールしますか？";
+"ConfirmInstall" = "この拡張データをインストールしますか？";
 "Next" = "次へ";
 "Previous" = "前へ";
 
@@ -36,7 +36,7 @@
 "Error" = "エラー";
 
 // Module About
-"AboutModuleName" = "モジュール名: ";
+"AboutModuleName" = "拡張データ名: ";
 "AboutModuleDescription" = "説明: ";
 "AboutModuleType" = "タイプ: ";
 "AboutModuleLang" = "言語: ";
@@ -54,7 +54,7 @@
 "WiFiNoConnection" = "Wifi: 接続がありません\n";
 "NoNetworkConnection" = "有効なネットワーク接続がありません。";
 
-"manualInstallHelp" = "手動でモジュールをインストールするには、ブラウザーに以下の場所のいずれかを指示する必要があります。それから、ここの説明に従ってください。(または、Bonjour機能を使って検索してください) しかし、ビルドインのモジュールダウンローダーを利用する事をお勧めします。この手動インストーラーは、自分でモジュールを作成できる人のための物です。";
+"manualInstallHelp" = "手動で拡張データをインストールするには、ブラウザーに以下の場所のいずれかを指示する必要があります。それから、ここの説明に従ってください。(または、Bonjour機能を使って検索してください) しかし、ビルドインの拡張データダウンローダーを利用する事をお勧めします。この手動インストーラーは、自分で拡張データを作成できる人のための物です。";
 "InstallManagerDisabled" = "オフになりました";
 "InstallTitle" = "インストールしますか？";
 "files" = "ファイル";
@@ -62,9 +62,9 @@
 "InstalledButtonTitle" = "インストール済み";
 "InstallButtonTitle" = "インストール";
 "RefreshProblem" = "リフレッシュ中にエラーが発生しました";
-"RefreshingModuleSource" = "モジュールのソースをリフレッシュしています";
-"NoModulesRefresh" = "モジュールが見つかりません リフレッシュしてください";
-"NoModulesInstalled" = "モジュールがインストールされていません";
+"RefreshingModuleSource" = "拡張データのソースをリフレッシュしています";
+"NoModulesRefresh" = "拡張データが見つかりません リフレッシュしてください";
+"NoModulesInstalled" = "拡張データがインストールされていません";
 
 "InstallSourcesTitle" = "ソース";
 "PreferencesTitle" = "個人設定";
@@ -75,21 +75,21 @@
 "PreferencesVPLTitle" = "一文節一節";
 "PreferencesFontTitle" = "フォント";
 "PreferencesRedLetterTitle" = "赤文字";
-"PreferencesRedLetterNote" = "赤文字モードは、一部のモジュールでのみ動作します";
+"PreferencesRedLetterNote" = "赤文字モードは、一部の拡張データでのみ動作します";
 "PreferencesDisableAutoLockTitle" = "オートロックをオフ";
-"PreferencesModuleMaintainerModeTitle" = "モジュールメンテモード";
-"PreferencesModuleMaintainerModeNote" = "モジュールメンテモードは、自らモジュールを作成し、手動でモジュールをインストールする必要がある人のためのモードです。その他のユーザーは、ビルドインのモジュールダウンローダーを用い、CrossWireに公式的に公開されているモジュールにアクセスしてください。";
+"PreferencesModuleMaintainerModeTitle" = "拡張データメンテモード";
+"PreferencesModuleMaintainerModeNote" = "拡張データメンテモードは、自ら拡張データを作成し、手動で拡張データをインストールする必要がある人のためのモードです。その他のユーザーは、ビルドインの拡張データダウンローダーを用い、CrossWireに公式的に公開されている拡張データにアクセスしてください。";
 
 "AboutTitle" = "バージョン情報";
 
 "TabBarTitleBible" = "聖書";
 "TabBarTitleCommentary" = "注解";
 "TabBarTitleDictionary" = "辞書";
-"TabBarTitleModules" = "モジュール";
+"TabBarTitleModules" = "拡張データ";
 "TabBarTitlePreferences" = "個人設定";
 "TabBarTitleAbout" = "バージョン情報";
 
-"ModulesTitle" = "モジュール";
+"ModulesTitle" = "拡張データ";
 "BookmarksTitle" = "ブックマーク";
 
 "ActivityLabelLoading" = "ロード中です・・・";
@@ -100,15 +100,15 @@
 "Commentaries" = "注解書";
 "Lexicons / Dictionaries" = "用語集・辞書";
 "Generic Books" = "一般書";
-"Daily Devotional" = "ディボーション";
+"Daily Devotional" = "静思の時";
 "Glossaries" = "用語集";
 "Cults / Unorthodox / Questionable Material" = "カルト・異端関係資料";
 "Essays" = "エッセイ";
 "Maps" = "地図";
 "Images" = "イメージ";
 
-"BibleHistoryTitle" = "聖書歴史";
-"CommentaryHistoryTitle" = "注解書歴史";
+"BibleHistoryTitle" = "聖書参照履歴";
+"CommentaryHistoryTitle" = "注解書参照歴史";
 
 "None" = "未選択";
 "CloseButtonTitle" = "閉じる";
@@ -116,7 +116,7 @@
 "CacheDictionaryKeysMsg" = "辞書が初期化されていません。辞書をキャッシュしますか？";
 "IndexDownloadTitle" = "索引のダウンロード";
 "NoSearchIndexTitle" = "索引未設定";
-"NoSearchIndexMsg" = "このモジュールの索引がインストールされていません。索引がダウンロード可能か確認しますか？";
+"NoSearchIndexMsg" = "この拡張データの索引がインストールされていません。索引がダウンロード可能か確認しますか？";
 "SearchDownloaderTitle" = "索引ダウンローダー";
 "FontPreferenceTitle" = "フォント";
 "EmailUsButton" = "開発者にメール";
@@ -124,17 +124,17 @@
 "SearchResults" = "検索結果";
 
 "IndexControllerInstalled" = "すでに次の索引がインストール済みです:";
-"IndexControllerDownloadable" = "ダウンロード可能な索引を次の一覧から、該当するモジュールの検索を可能にするために選択してください:";
+"IndexControllerDownloadable" = "ダウンロード可能な索引を次の一覧から、該当する拡張データの検索を可能にするために選択してください:";
 "IndexControllerNone" = "ネットワーク接続を確認してください:";
-"IndexControllerNoneRemote" = "次のモジュールには、ダウンロードが可能な索引がありません:";
+"IndexControllerNoneRemote" = "次の拡張データには、ダウンロードが可能な索引がありません:";
 
 "SearchHelpTitle" = "ヘルプ検索";
-"IndexControllerConfirmQuestion" = "このモジュールの索引をダウンロードしますか？\n注解書の場合時間がかかる場合があります";
+"IndexControllerConfirmQuestion" = "この拡張データの索引をダウンロードしますか？\n注解書の場合時間がかかる場合があります";
 
 "PreferencesStrongsPreferencesTitle" = "ストロングナンバー";
 "PreferencesDisplayTitle" = "表示";
-"PreferencesGreekModuleTitle" = "ギリシャ語モジュール";
-"PreferencesHebrewModuleTitle" = "ヘブル語モジュール";
+"PreferencesGreekModuleTitle" = "ギリシャ語拡張データ";
+"PreferencesHebrewModuleTitle" = "ヘブル語拡張データ";
 "PreferencesMorphologyPreferencesTitle" = "形態設定";
 "PreferencesOriginalLanguagePreferencesTitle" = "原語";
 "PreferencesGreekAccentsTitle" = "ギリシャ語強勢";
@@ -153,7 +153,7 @@
 
 "MorphHebrewNotSupported" = "残念な事に、形態コード分析は、ギリシャ語に対してのみ可能となっております。もし、言語能力があり、PocketSwordにこの機能を組み込みたいと願う方がいましたら、<br /> openscriptures.org<br />のディスカッショングループにに参加ください。";
 
-"AboutModuleFeaturesTitle" = "モジュール特徴";
+"AboutModuleFeaturesTitle" = "拡張データ特徴";
 "AboutModuleContainsStrongsNumbers" = "ストロングナンバー付き";
 "AboutModuleContainsMorphTags" = "形態タグ付き";
 "AboutModuleContainsFootnotes" = "脚注付き";
@@ -170,42 +170,42 @@
 "AboutModuleContainsHebrewDef" = "ヘブル語ストロングナンバーの定義";
 "AboutModuleContainsGreekParse" = "ギリシャ語形態コード分析定義";
 "AboutModuleContainsHebrewParse" = "ヘブル語形態コード分析定義";
-"AboutModuleContainsDailyDevotion" = "ディボーション付き";
+"AboutModuleContainsDailyDevotion" = "静思の時付き";
 "AboutModuleContainsImages" = "イメージ付き";
 
-"NotSupported" = "このモジュールは現在まだサポートされていません";
+"NotSupported" = "この拡張データは現在まだサポートされていません";
 "ConfirmDeleteTitle" = "削除しますか？";
-"ConfirmDeleteQuestion" = "本当に、このモジュールを削除しますか？";
-"EmptyChapterWarning" = "このモジュールでは、この章は空です。";
+"ConfirmDeleteQuestion" = "本当に、この拡張データを削除しますか？";
+"EmptyChapterWarning" = "この拡張データでは、この章は空です。";
 "ModuleNotInstalled" = "は、インストールされていません。";
 "AboutModuleCurrentVersion" = "インストール済みバージョン: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "モジュールロック";
-"ModuleLockedQuestion" = "このモジュールはロックされています。ロック解除するには、キーを購入する必要があります。残念ながら、現状PocketSwordを通じて、購入する事はできません。モジュールの説明をご覧になり、購入方法をお調べください。\n もしすでにキーを購入済みであれば、キーを入力してロック解除をしてください。今、キーを入力しますか？";
+"ModuleLockedTitle" = "拡張データロック";
+"ModuleLockedQuestion" = "この拡張データはロックされています。ロック解除するには、キーを購入する必要があります。残念ながら、現状PocketSwordを通じて、購入する事はできません。拡張データの説明をご覧になり、購入方法をお調べください。\n もしすでにキーを購入済みであれば、キーを入力してロック解除をしてください。今、キーを入力しますか？";
 "ModuleEnterKeyTitle" = "キーを入力してください:";
-"ModuleUnlockScreenTitle" = "モジュール解除";
-"ModuleUnlockHelpText" = "このモジュールを解除するには、購入時に送られたキーを入力してください。完了を押して、キーをテストし、正しいようであれば、保存を押してください。";
+"ModuleUnlockScreenTitle" = "拡張データ解除";
+"ModuleUnlockHelpText" = "この拡張データを解除するには、購入時に送られたキーを入力してください。完了を押して、キーをテストし、正しいようであれば、保存を押してください。";
 "RefSelectorBookTitle" = "書選択";
 "RefSelectorChapterTitle" = "章";
 "RefSelectorVerseTitle" = "節";
 "RefSelectorBackButtonTitle" = "戻る";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"PreferencesHeadingsTitle" = "見出し";
+"DictionarySearchPlaceholderText" = "辞書検索";
+"TabBarTitleDevotional" = "静思の時";
+"TodayButtonTitle" = "今日";
+"ManageSources" = "データ取得元管理";
+"AddFTPSource" = "FTP取得先の追加";
+"AddHTTPSource" = "HTTP取得先の追加";
+"DeleteSource" = "データ取得元の削除";
+"RefreshSourceList" = "取得元一覧を再表示";
+"AddSourceCaptionTitle" = "取得元名";
+"AddSourceServerTitle" = "サーバ";
+"AddSourcePathTitle" = "パス";
+"AddFTPSourceTitle" = "新しいFTP元";
+"AddHTTPSourceTitle" = "新しいHTTP元";
+"FillInAllFieldsMessage" = "すべての項目を入力ください";
+"Warning" = "警告";
+"CannotVerifyInstallSourceWarning" = "PocketSwordは、選択された取得元を認識できませんでした。取得元情報を保存しますか？";
