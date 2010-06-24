@@ -50,7 +50,7 @@
 										Cheree Lynley Designs, James Coleman\n\
 								</p>\n\
 							  <p><b>Localisations by: </b><br />\n\
-								  David Bell, Christoffer Björkskog, Vincenzo Carrubba, Dominique Corbex, Yiguang Hu, Nakamaru Kunio, Vitaliy, Henko van de Weerd, Brian Wu\n\
+								  David Bell, Christoffer Björkskog, Vincenzo Carrubba, Dominique Corbex, Grace Community Church (HK), Yiguang Hu, Nakamaru Kunio, Vitaliy, Henko van de Weerd\n\
 							  </p>\n\
 							  <p><b>Special thanks to: </b><br />\n\
 										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\

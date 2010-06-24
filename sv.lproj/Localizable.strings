@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Swedish localisation
 // By Christoffer Björkskog
-// Last Updated v1.2.2
+// Last Updated v1.3.0 (23rd June, 2010)
 
 "Edit" = "Redigera";
 "Done" = "Klar";
@@ -100,7 +100,7 @@
 "Commentaries" = "Kommentarer";
 "Lexicons / Dictionaries" = "Lexikon / Ordböcker";
 "Generic Books" = "Allmänna böcker";
-"Daily Devotional" = "Daglig andakt";
+"Daily Devotional" = "Dagliga andakter";
 "Glossaries" = "Ordlistor";
 "Cults / Unorthodox / Questionable Material" = "Kulter / Oortodoxa / Ifrågasatt material";
 "Essays" = "Uppsatser";
@@ -191,20 +191,20 @@
 "RefSelectorBackButtonTitle" = "Tillbaka";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
+"PreferencesHeadingsTitle" = "Rubriker";
+"DictionarySearchPlaceholderText" = "Sök i Ordbok";
+"TabBarTitleDevotional" = "Dagliga andakter";
+"TodayButtonTitle" = "Idag";
+"ManageSources" = "Administrera källor";
+"AddFTPSource" = "Infoga FTP källa";
+"AddHTTPSource" = "Infoga HTTP källa";
+"DeleteSource" = "Radera källa";
 "RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
+"AddSourceCaptionTitle" = "Beskrivning";
 "AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"AddSourcePathTitle" = "Sökväg";
+"AddFTPSourceTitle" = "Ny FTP källa";
+"AddHTTPSourceTitle" = "Ny HTTP källa";
+"FillInAllFieldsMessage" = "Alla fält bör vara ifyllda!";
+"Warning" = "Varning";
+"CannotVerifyInstallSourceWarning" = "PocketSword kan inte fastställa att detta är en giltig modulkälla. Vill du spara den i alla fall?";
