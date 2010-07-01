@@ -544,7 +544,6 @@
 		054BED91119F89E800ABCA18 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		054BED92119F89E800ABCA18 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
-		054BED94119F89E800ABCA18 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A4979A11068403005424C5 /* libicucore.dylib */; };
 		054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		054BEE6311A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */; };
@@ -567,7 +566,6 @@
 		059A6CC211B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
 		059A6CC311B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
 		059A6CC411B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
-		05A4979B11068403005424C5 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A4979A11068403005424C5 /* libicucore.dylib */; };
 		05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
 		05AB9481116D8D620043DB57 /* PSChapterSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AB947F116D8D620043DB57 /* PSChapterSelectorController.xib */; };
@@ -1211,120 +1209,6 @@
 		059A6CBF11B79ABD00B33E54 /* bible.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bible.png; path = Resources/bible.png; sourceTree = "<group>"; };
 		059A6CC011B79ABD00B33E54 /* notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notes.png; path = Resources/notes.png; sourceTree = "<group>"; };
 		05A0403F10F1C4AE0094C6E3 /* Multi-List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Multi-List.png"; path = "Resources/Multi-List.png"; sourceTree = "<group>"; };
-		05A4979A11068403005424C5 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		05A497A011068625005424C5 /* brkiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = brkiter.h; sourceTree = "<group>"; };
-		05A497A111068625005424C5 /* calendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = calendar.h; sourceTree = "<group>"; };
-		05A497A211068625005424C5 /* caniter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = caniter.h; sourceTree = "<group>"; };
-		05A497A311068625005424C5 /* chariter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chariter.h; sourceTree = "<group>"; };
-		05A497A411068625005424C5 /* choicfmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = choicfmt.h; sourceTree = "<group>"; };
-		05A497A511068625005424C5 /* coleitr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coleitr.h; sourceTree = "<group>"; };
-		05A497A611068625005424C5 /* coll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coll.h; sourceTree = "<group>"; };
-		05A497A711068625005424C5 /* curramt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curramt.h; sourceTree = "<group>"; };
-		05A497A811068625005424C5 /* currunit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = currunit.h; sourceTree = "<group>"; };
-		05A497A911068625005424C5 /* datefmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datefmt.h; sourceTree = "<group>"; };
-		05A497AA11068625005424C5 /* dbbi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dbbi.h; sourceTree = "<group>"; };
-		05A497AB11068625005424C5 /* dcfmtsym.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dcfmtsym.h; sourceTree = "<group>"; };
-		05A497AC11068625005424C5 /* decimfmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decimfmt.h; sourceTree = "<group>"; };
-		05A497AD11068625005424C5 /* docmain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = docmain.h; sourceTree = "<group>"; };
-		05A497AE11068625005424C5 /* dtfmtsym.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dtfmtsym.h; sourceTree = "<group>"; };
-		05A497AF11068625005424C5 /* fieldpos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fieldpos.h; sourceTree = "<group>"; };
-		05A497B011068625005424C5 /* fmtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fmtable.h; sourceTree = "<group>"; };
-		05A497B111068625005424C5 /* format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = format.h; sourceTree = "<group>"; };
-		05A497B211068625005424C5 /* gregocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gregocal.h; sourceTree = "<group>"; };
-		05A497B311068625005424C5 /* locid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = locid.h; sourceTree = "<group>"; };
-		05A497B411068625005424C5 /* measfmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = measfmt.h; sourceTree = "<group>"; };
-		05A497B511068625005424C5 /* measunit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = measunit.h; sourceTree = "<group>"; };
-		05A497B611068625005424C5 /* measure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = measure.h; sourceTree = "<group>"; };
-		05A497B711068625005424C5 /* msgfmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = msgfmt.h; sourceTree = "<group>"; };
-		05A497B811068625005424C5 /* normlzr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normlzr.h; sourceTree = "<group>"; };
-		05A497B911068625005424C5 /* numfmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = numfmt.h; sourceTree = "<group>"; };
-		05A497BA11068625005424C5 /* parseerr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parseerr.h; sourceTree = "<group>"; };
-		05A497BB11068625005424C5 /* parsepos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parsepos.h; sourceTree = "<group>"; };
-		05A497BC11068625005424C5 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		05A497BD11068625005424C5 /* ppalmos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ppalmos.h; sourceTree = "<group>"; };
-		05A497BE11068625005424C5 /* putil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = putil.h; sourceTree = "<group>"; };
-		05A497BF11068625005424C5 /* pwin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pwin32.h; sourceTree = "<group>"; };
-		05A497C011068625005424C5 /* rbbi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rbbi.h; sourceTree = "<group>"; };
-		05A497C111068625005424C5 /* rbnf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rbnf.h; sourceTree = "<group>"; };
-		05A497C211068625005424C5 /* regex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regex.h; sourceTree = "<group>"; };
-		05A497C311068625005424C5 /* rep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rep.h; sourceTree = "<group>"; };
-		05A497C411068625005424C5 /* resbund.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resbund.h; sourceTree = "<group>"; };
-		05A497C511068625005424C5 /* schriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = schriter.h; sourceTree = "<group>"; };
-		05A497C611068625005424C5 /* search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = search.h; sourceTree = "<group>"; };
-		05A497C711068625005424C5 /* simpletz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simpletz.h; sourceTree = "<group>"; };
-		05A497C811068625005424C5 /* smpdtfmt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smpdtfmt.h; sourceTree = "<group>"; };
-		05A497C911068625005424C5 /* sortkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sortkey.h; sourceTree = "<group>"; };
-		05A497CA11068625005424C5 /* strenum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strenum.h; sourceTree = "<group>"; };
-		05A497CB11068625005424C5 /* stsearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stsearch.h; sourceTree = "<group>"; };
-		05A497CC11068625005424C5 /* symtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = symtable.h; sourceTree = "<group>"; };
-		05A497CD11068625005424C5 /* tblcoll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tblcoll.h; sourceTree = "<group>"; };
-		05A497CE11068625005424C5 /* timezone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timezone.h; sourceTree = "<group>"; };
-		05A497CF11068625005424C5 /* translit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = translit.h; sourceTree = "<group>"; };
-		05A497D011068625005424C5 /* ubidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ubidi.h; sourceTree = "<group>"; };
-		05A497D111068625005424C5 /* ubrk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ubrk.h; sourceTree = "<group>"; };
-		05A497D211068625005424C5 /* ucal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucal.h; sourceTree = "<group>"; };
-		05A497D311068625005424C5 /* ucasemap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucasemap.h; sourceTree = "<group>"; };
-		05A497D411068625005424C5 /* ucat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucat.h; sourceTree = "<group>"; };
-		05A497D511068625005424C5 /* uchar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uchar.h; sourceTree = "<group>"; };
-		05A497D611068625005424C5 /* uchriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uchriter.h; sourceTree = "<group>"; };
-		05A497D711068625005424C5 /* uclean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uclean.h; sourceTree = "<group>"; };
-		05A497D811068625005424C5 /* ucnv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucnv.h; sourceTree = "<group>"; };
-		05A497D911068625005424C5 /* ucnv_cb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucnv_cb.h; sourceTree = "<group>"; };
-		05A497DA11068625005424C5 /* ucnv_err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucnv_err.h; sourceTree = "<group>"; };
-		05A497DB11068625005424C5 /* ucol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucol.h; sourceTree = "<group>"; };
-		05A497DC11068625005424C5 /* ucoleitr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucoleitr.h; sourceTree = "<group>"; };
-		05A497DD11068625005424C5 /* uconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uconfig.h; sourceTree = "<group>"; };
-		05A497DE11068625005424C5 /* ucsdet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucsdet.h; sourceTree = "<group>"; };
-		05A497DF11068625005424C5 /* ucurr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucurr.h; sourceTree = "<group>"; };
-		05A497E011068625005424C5 /* udat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = udat.h; sourceTree = "<group>"; };
-		05A497E111068625005424C5 /* udata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = udata.h; sourceTree = "<group>"; };
-		05A497E211068625005424C5 /* udeprctd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = udeprctd.h; sourceTree = "<group>"; };
-		05A497E311068625005424C5 /* udraft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = udraft.h; sourceTree = "<group>"; };
-		05A497E411068625005424C5 /* uenum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uenum.h; sourceTree = "<group>"; };
-		05A497E511068625005424C5 /* uidna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uidna.h; sourceTree = "<group>"; };
-		05A497E611068625005424C5 /* uintrnal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uintrnal.h; sourceTree = "<group>"; };
-		05A497E711068625005424C5 /* uiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiter.h; sourceTree = "<group>"; };
-		05A497E811068625005424C5 /* uloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uloc.h; sourceTree = "<group>"; };
-		05A497E911068625005424C5 /* ulocdata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ulocdata.h; sourceTree = "<group>"; };
-		05A497EA11068625005424C5 /* umachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = umachine.h; sourceTree = "<group>"; };
-		05A497EB11068625005424C5 /* umisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = umisc.h; sourceTree = "<group>"; };
-		05A497EC11068625005424C5 /* umsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = umsg.h; sourceTree = "<group>"; };
-		05A497ED11068625005424C5 /* unifilt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unifilt.h; sourceTree = "<group>"; };
-		05A497EE11068625005424C5 /* unifunct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unifunct.h; sourceTree = "<group>"; };
-		05A497EF11068625005424C5 /* unimatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unimatch.h; sourceTree = "<group>"; };
-		05A497F011068625005424C5 /* unirepl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unirepl.h; sourceTree = "<group>"; };
-		05A497F111068625005424C5 /* uniset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uniset.h; sourceTree = "<group>"; };
-		05A497F211068625005424C5 /* unistr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unistr.h; sourceTree = "<group>"; };
-		05A497F311068625005424C5 /* unorm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unorm.h; sourceTree = "<group>"; };
-		05A497F411068625005424C5 /* unum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unum.h; sourceTree = "<group>"; };
-		05A497F511068625005424C5 /* uobject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uobject.h; sourceTree = "<group>"; };
-		05A497F611068625005424C5 /* uobslete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uobslete.h; sourceTree = "<group>"; };
-		05A497F711068625005424C5 /* urbtok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = urbtok.h; sourceTree = "<group>"; };
-		05A497F811068625005424C5 /* uregex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uregex.h; sourceTree = "<group>"; };
-		05A497F911068625005424C5 /* urename.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = urename.h; sourceTree = "<group>"; };
-		05A497FA11068625005424C5 /* urep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = urep.h; sourceTree = "<group>"; };
-		05A497FB11068625005424C5 /* ures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ures.h; sourceTree = "<group>"; };
-		05A497FC11068625005424C5 /* uscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uscript.h; sourceTree = "<group>"; };
-		05A497FD11068625005424C5 /* usearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usearch.h; sourceTree = "<group>"; };
-		05A497FE11068625005424C5 /* uset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uset.h; sourceTree = "<group>"; };
-		05A497FF11068625005424C5 /* usetiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usetiter.h; sourceTree = "<group>"; };
-		05A4980011068625005424C5 /* ushape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ushape.h; sourceTree = "<group>"; };
-		05A4980111068625005424C5 /* usprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usprep.h; sourceTree = "<group>"; };
-		05A4980211068625005424C5 /* ustdio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ustdio.h; sourceTree = "<group>"; };
-		05A4980311068625005424C5 /* ustream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ustream.h; sourceTree = "<group>"; };
-		05A4980411068625005424C5 /* ustring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ustring.h; sourceTree = "<group>"; };
-		05A4980511068625005424C5 /* usystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usystem.h; sourceTree = "<group>"; };
-		05A4980611068625005424C5 /* utext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utext.h; sourceTree = "<group>"; };
-		05A4980711068625005424C5 /* utf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf.h; sourceTree = "<group>"; };
-		05A4980811068625005424C5 /* utf16.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf16.h; sourceTree = "<group>"; };
-		05A4980911068625005424C5 /* utf32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf32.h; sourceTree = "<group>"; };
-		05A4980A11068625005424C5 /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
-		05A4980B11068625005424C5 /* utf_old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf_old.h; sourceTree = "<group>"; };
-		05A4980C11068625005424C5 /* utmscale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utmscale.h; sourceTree = "<group>"; };
-		05A4980D11068625005424C5 /* utrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utrace.h; sourceTree = "<group>"; };
-		05A4980E11068625005424C5 /* utrans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utrans.h; sourceTree = "<group>"; };
-		05A4980F11068625005424C5 /* utypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utypes.h; sourceTree = "<group>"; };
-		05A4981011068625005424C5 /* uversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uversion.h; sourceTree = "<group>"; };
 		05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20100301_20100328.txt; path = Resources/doc/S_M_85032342_20100301_20100328.txt; sourceTree = "<group>"; };
 		05A8A1C911717AB4005B6411 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		05AB946A116D88B80043DB57 /* PSChapterSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSChapterSelectorController.h; path = Classes/PSChapterSelectorController.h; sourceTree = "<group>"; };
@@ -1704,7 +1588,6 @@
 				054BED91119F89E800ABCA18 /* libcurl-7.19.6-release.a in Frameworks */,
 				054BED92119F89E800ABCA18 /* SystemConfiguration.framework in Frameworks */,
 				054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */,
-				054BED94119F89E800ABCA18 /* libicucore.dylib in Frameworks */,
 				054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */,
 				054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */,
 			);
@@ -1719,7 +1602,6 @@
 				05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */,
 				051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */,
 				05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */,
-				05A4979B11068403005424C5 /* libicucore.dylib in Frameworks */,
 				05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */,
 				05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */,
 			);
@@ -2401,7 +2283,6 @@
 		0542F6C110BE75570088A721 /* externals */ = {
 			isa = PBXGroup;
 			children = (
-				05A4979E11068625005424C5 /* icu */,
 				0542F6CB10BE770C0088A721 /* curl */,
 				0542F6CA10BE76ED0088A721 /* sword */,
 				05D6AB631097E76400A5026E /* CocoaHTTPServer */,
@@ -2543,135 +2424,6 @@
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
 			);
 			name = "b & c";
-			sourceTree = "<group>";
-		};
-		05A4979E11068625005424C5 /* icu */ = {
-			isa = PBXGroup;
-			children = (
-				05A4979F11068625005424C5 /* unicode */,
-			);
-			name = icu;
-			path = externals/icu;
-			sourceTree = "<group>";
-		};
-		05A4979F11068625005424C5 /* unicode */ = {
-			isa = PBXGroup;
-			children = (
-				05A497A011068625005424C5 /* brkiter.h */,
-				05A497A111068625005424C5 /* calendar.h */,
-				05A497A211068625005424C5 /* caniter.h */,
-				05A497A311068625005424C5 /* chariter.h */,
-				05A497A411068625005424C5 /* choicfmt.h */,
-				05A497A511068625005424C5 /* coleitr.h */,
-				05A497A611068625005424C5 /* coll.h */,
-				05A497A711068625005424C5 /* curramt.h */,
-				05A497A811068625005424C5 /* currunit.h */,
-				05A497A911068625005424C5 /* datefmt.h */,
-				05A497AA11068625005424C5 /* dbbi.h */,
-				05A497AB11068625005424C5 /* dcfmtsym.h */,
-				05A497AC11068625005424C5 /* decimfmt.h */,
-				05A497AD11068625005424C5 /* docmain.h */,
-				05A497AE11068625005424C5 /* dtfmtsym.h */,
-				05A497AF11068625005424C5 /* fieldpos.h */,
-				05A497B011068625005424C5 /* fmtable.h */,
-				05A497B111068625005424C5 /* format.h */,
-				05A497B211068625005424C5 /* gregocal.h */,
-				05A497B311068625005424C5 /* locid.h */,
-				05A497B411068625005424C5 /* measfmt.h */,
-				05A497B511068625005424C5 /* measunit.h */,
-				05A497B611068625005424C5 /* measure.h */,
-				05A497B711068625005424C5 /* msgfmt.h */,
-				05A497B811068625005424C5 /* normlzr.h */,
-				05A497B911068625005424C5 /* numfmt.h */,
-				05A497BA11068625005424C5 /* parseerr.h */,
-				05A497BB11068625005424C5 /* parsepos.h */,
-				05A497BC11068625005424C5 /* platform.h */,
-				05A497BD11068625005424C5 /* ppalmos.h */,
-				05A497BE11068625005424C5 /* putil.h */,
-				05A497BF11068625005424C5 /* pwin32.h */,
-				05A497C011068625005424C5 /* rbbi.h */,
-				05A497C111068625005424C5 /* rbnf.h */,
-				05A497C211068625005424C5 /* regex.h */,
-				05A497C311068625005424C5 /* rep.h */,
-				05A497C411068625005424C5 /* resbund.h */,
-				05A497C511068625005424C5 /* schriter.h */,
-				05A497C611068625005424C5 /* search.h */,
-				05A497C711068625005424C5 /* simpletz.h */,
-				05A497C811068625005424C5 /* smpdtfmt.h */,
-				05A497C911068625005424C5 /* sortkey.h */,
-				05A497CA11068625005424C5 /* strenum.h */,
-				05A497CB11068625005424C5 /* stsearch.h */,
-				05A497CC11068625005424C5 /* symtable.h */,
-				05A497CD11068625005424C5 /* tblcoll.h */,
-				05A497CE11068625005424C5 /* timezone.h */,
-				05A497CF11068625005424C5 /* translit.h */,
-				05A497D011068625005424C5 /* ubidi.h */,
-				05A497D111068625005424C5 /* ubrk.h */,
-				05A497D211068625005424C5 /* ucal.h */,
-				05A497D311068625005424C5 /* ucasemap.h */,
-				05A497D411068625005424C5 /* ucat.h */,
-				05A497D511068625005424C5 /* uchar.h */,
-				05A497D611068625005424C5 /* uchriter.h */,
-				05A497D711068625005424C5 /* uclean.h */,
-				05A497D811068625005424C5 /* ucnv.h */,
-				05A497D911068625005424C5 /* ucnv_cb.h */,
-				05A497DA11068625005424C5 /* ucnv_err.h */,
-				05A497DB11068625005424C5 /* ucol.h */,
-				05A497DC11068625005424C5 /* ucoleitr.h */,
-				05A497DD11068625005424C5 /* uconfig.h */,
-				05A497DE11068625005424C5 /* ucsdet.h */,
-				05A497DF11068625005424C5 /* ucurr.h */,
-				05A497E011068625005424C5 /* udat.h */,
-				05A497E111068625005424C5 /* udata.h */,
-				05A497E211068625005424C5 /* udeprctd.h */,
-				05A497E311068625005424C5 /* udraft.h */,
-				05A497E411068625005424C5 /* uenum.h */,
-				05A497E511068625005424C5 /* uidna.h */,
-				05A497E611068625005424C5 /* uintrnal.h */,
-				05A497E711068625005424C5 /* uiter.h */,
-				05A497E811068625005424C5 /* uloc.h */,
-				05A497E911068625005424C5 /* ulocdata.h */,
-				05A497EA11068625005424C5 /* umachine.h */,
-				05A497EB11068625005424C5 /* umisc.h */,
-				05A497EC11068625005424C5 /* umsg.h */,
-				05A497ED11068625005424C5 /* unifilt.h */,
-				05A497EE11068625005424C5 /* unifunct.h */,
-				05A497EF11068625005424C5 /* unimatch.h */,
-				05A497F011068625005424C5 /* unirepl.h */,
-				05A497F111068625005424C5 /* uniset.h */,
-				05A497F211068625005424C5 /* unistr.h */,
-				05A497F311068625005424C5 /* unorm.h */,
-				05A497F411068625005424C5 /* unum.h */,
-				05A497F511068625005424C5 /* uobject.h */,
-				05A497F611068625005424C5 /* uobslete.h */,
-				05A497F711068625005424C5 /* urbtok.h */,
-				05A497F811068625005424C5 /* uregex.h */,
-				05A497F911068625005424C5 /* urename.h */,
-				05A497FA11068625005424C5 /* urep.h */,
-				05A497FB11068625005424C5 /* ures.h */,
-				05A497FC11068625005424C5 /* uscript.h */,
-				05A497FD11068625005424C5 /* usearch.h */,
-				05A497FE11068625005424C5 /* uset.h */,
-				05A497FF11068625005424C5 /* usetiter.h */,
-				05A4980011068625005424C5 /* ushape.h */,
-				05A4980111068625005424C5 /* usprep.h */,
-				05A4980211068625005424C5 /* ustdio.h */,
-				05A4980311068625005424C5 /* ustream.h */,
-				05A4980411068625005424C5 /* ustring.h */,
-				05A4980511068625005424C5 /* usystem.h */,
-				05A4980611068625005424C5 /* utext.h */,
-				05A4980711068625005424C5 /* utf.h */,
-				05A4980811068625005424C5 /* utf16.h */,
-				05A4980911068625005424C5 /* utf32.h */,
-				05A4980A11068625005424C5 /* utf8.h */,
-				05A4980B11068625005424C5 /* utf_old.h */,
-				05A4980C11068625005424C5 /* utmscale.h */,
-				05A4980D11068625005424C5 /* utrace.h */,
-				05A4980E11068625005424C5 /* utrans.h */,
-				05A4980F11068625005424C5 /* utypes.h */,
-				05A4981011068625005424C5 /* uversion.h */,
-			);
-			path = unicode;
 			sourceTree = "<group>";
 		};
 		05D6AB631097E76400A5026E /* CocoaHTTPServer */ = {
@@ -2885,7 +2637,6 @@
 				05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */,
 				051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */,
 				05D6ABA51097E8CC00A5026E /* CFNetwork.framework */,
-				05A4979A11068403005424C5 /* libicucore.dylib */,
 				05F0DB8911671E4800C2E87D /* QuartzCore.framework */,
 				05A8A1C911717AB4005B6411 /* CoreGraphics.framework */,
 			);
@@ -4213,13 +3964,14 @@
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
 				OTHER_CFLAGS = (
-					"-D_ICU_",
+					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
 					"-Dunix",
 					"-D__unix__",
 					"-DUSELUCENE",
 					"-DDEBUG",
 				);
+				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "A9BD9C94-4AB3-408C-8702-F7405AE0F65F";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A9BD9C94-4AB3-408C-8702-F7405AE0F65F";
@@ -4256,7 +4008,7 @@
 					"\\\"$(SRCROOT)/externals/libcurl\\\"",
 				);
 				OTHER_CFLAGS = (
-					"-D_ICU_",
+					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
 					"-Dunix",
 					"-D__unix__",
@@ -4299,7 +4051,7 @@
 					"\\\"$(SRCROOT)/externals/libcurl\\\"",
 				);
 				OTHER_CFLAGS = (
-					"-D_ICU_",
+					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
 					"-Dunix",
 					"-D__unix__",
@@ -4332,7 +4084,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
-					"externals/clucene/**",
+					externals/clucene,
 					externals/sword/include,
 					externals/libcurl/include,
 				);
@@ -4344,13 +4096,14 @@
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
 				OTHER_CFLAGS = (
-					"-D_ICU_",
+					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
 					"-Dunix",
 					"-D__unix__",
 					"-DUSELUCENE",
 					"-DDEBUG",
 				);
+				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "45D22FBA-7644-4CD6-ABE0-00F5A4983FF6";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "45D22FBA-7644-4CD6-ABE0-00F5A4983FF6";
@@ -4387,12 +4140,13 @@
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
 				OTHER_CFLAGS = (
-					"-D_ICU_",
+					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
 					"-Dunix",
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
+				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "069304B3-B369-4565-99FD-88B5793C2982";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "069304B3-B369-4565-99FD-88B5793C2982";
@@ -4425,7 +4179,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Debug;
 		};
@@ -4455,7 +4209,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Release;
 		};
@@ -4486,7 +4240,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Distribution;
 		};
@@ -4520,12 +4274,13 @@
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
 				OTHER_CFLAGS = (
-					"-D_ICU_",
+					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
 					"-Dunix",
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
+				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "5D44B6C2-F6BA-4368-9316-A7A51AE35A19";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5D44B6C2-F6BA-4368-9316-A7A51AE35A19";

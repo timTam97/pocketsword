@@ -36,6 +36,10 @@
 
 #include <unicode/locid.h>
 
+#elif defined (_APPLE_IOS_)
+
+#include <unicode/ustring.h>
+
 #endif
 
 SWORD_NAMESPACE_START
@@ -115,7 +119,7 @@ int isValidUTF8(unsigned char *txt) {
 }
 
 
-#ifdef _ICU_
+#if defined (_ICU_) || defined (_APPLE_IOS_)
 
 //here comes our ICUStringMgr reimplementation
 class ICUStringMgr : public StringMgr {
@@ -164,7 +168,7 @@ void StringMgr::setSystemStringMgr(StringMgr *newStringMgr) {
 */
 StringMgr* StringMgr::getSystemStringMgr() {
 	if (!systemStringMgr) {
-#ifdef _ICU_
+#if defined (_ICU_) || defined (_APPLE_IOS_)
 		systemStringMgr = new ICUStringMgr();
 // 		SWLog::getSystemLog()->logInformation("created default ICUStringMgr");
 #else
@@ -237,7 +241,7 @@ bool StringMgr::supportsUnicode() const {
 }
 
 
-#ifdef _ICU_
+#if defined (_ICU_) || (_APPLE_IOS_)
 
 char *ICUStringMgr::upperUTF8(char *buf, unsigned int maxlen) const {
 	char *ret = buf;

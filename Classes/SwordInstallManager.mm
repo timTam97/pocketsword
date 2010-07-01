@@ -51,7 +51,7 @@ float status;
             BOOL isDir;
             if(([fm fileExistsAtPath:configPath] == NO) && createPath == YES) {
                 // create path
-                [fm createDirectoryAtPath:configPath attributes:nil];
+                [fm createDirectoryAtPath:configPath withIntermediateDirectories:YES attributes:nil error:NULL];
             }
             
             if(([fm fileExistsAtPath:configPath isDirectory:&isDir] == YES) && (isDir)) {

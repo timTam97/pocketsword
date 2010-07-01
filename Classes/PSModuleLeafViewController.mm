@@ -109,7 +109,8 @@ BOOL trashModule = NO;
 
 - (void)keyboardWillShow:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey instead
+    [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
     r.origin.y -=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
