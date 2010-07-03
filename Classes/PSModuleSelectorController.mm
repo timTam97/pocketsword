@@ -156,6 +156,7 @@
 	//[[[moduleManager viewController] modulesListView] addSubview: leafViewController.view];
 	[self.view addSubview:leafViewController.view];
     [UIView commitAnimations];
+	[leafViewController performSelector:@selector(viewDidAppear) withObject:nil afterDelay:1.0];
 	
 }
 

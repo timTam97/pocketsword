@@ -35,6 +35,8 @@
 
 //perhaps a tab with the version history in it?
 
+- (void)viewDidAppear;
+
 - (void)displayInfoForModule:(SwordModule*)swordModule;
 
 - (IBAction)closeLeaf:(id)sender;

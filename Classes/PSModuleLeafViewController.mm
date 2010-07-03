@@ -7,6 +7,7 @@
 //
 
 #import "PSModuleLeafViewController.h"
+#import "PocketSwordAppDelegate.h"
 
 
 @implementation PSModuleLeafViewController
@@ -19,6 +20,13 @@ BOOL trashModule = NO;
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 }
 
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//}
+
+- (void)viewDidAppear {
+	[self viewDidAppear:YES];
+}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
@@ -41,6 +49,20 @@ BOOL trashModule = NO;
 			
 		}
 	}
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	[nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	//[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
+	//[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+	[super viewDidDisappear:animated];
+	[infoWebView loadHTMLString:@"" baseURL: nil];
 }
 
 
@@ -111,6 +133,8 @@ BOOL trashModule = NO;
     CGRect r  = unlockToolbar.frame, t;
     //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey instead
     [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
+	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	t = [mainWindow convertRect:t fromWindow:nil];
     r.origin.y -=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -121,7 +145,10 @@ BOOL trashModule = NO;
 
 - (void)keyboardWillHide:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
+	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	t = [mainWindow convertRect:t fromWindow:nil];
     r.origin.y +=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -182,27 +209,6 @@ body {\n\
 	
 	[pool release];
 }
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-	
-}
-
-
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-	[nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-	//[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
-	//[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
-	[infoWebView loadHTMLString:@"" baseURL: nil];
-}
-
 
 /*
 // Override to allow orientations other than the default portrait orientation.

@@ -55,16 +55,32 @@
 	pathTextField.returnKeyType = UIReturnKeyDone;
 	pathTextField.delegate = self;	
 
+}
+
+- (void)viewWillAppear:(BOOL)animated {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardDidShow:) name: UIKeyboardDidShowNotification object:nil];
 	//[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
+	NSString *t = [NSString stringWithFormat:@"Add%@SourceTitle", serverType];
+	navBar.title = NSLocalizedString(t, @"");
+	[captionTextField becomeFirstResponder];
+	[super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self];
+	[super viewWillDisappear:animated];
 }
 
 - (void)keyboardWillShow:(NSNotification *)note {
 	//DLog(@"willShow");
     CGRect r  = addSourceTableView.frame, t;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
+	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	t = [mainWindow convertRect:t fromWindow:nil];
     //r.size.height -=  t.size.height;
     r.size.height = 416 - t.size.height;
     [UIView beginAnimations:nil context:NULL];
@@ -90,9 +106,11 @@
 	if([captionTextField isFirstResponder]) {
 		//DLog(@"caption");
 		[serverTextField becomeFirstResponder];
+		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SERVER_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	} else if([serverTextField isFirstResponder]) {
 		//DLog(@"server");
 		[pathTextField becomeFirstResponder];
+		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:PATH_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	} else if([pathTextField isFirstResponder]) {
 		//DLog(@"path");
 		[self saveButtonPressed];
@@ -100,11 +118,16 @@
 	//[textField resignFirstResponder];
     return YES;
 }
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+	[self keyboardDidShow:nil];
+}
 	   
 - (void)keyboardWillHide:(NSNotification *)note {
 	//DLog(@"willHide");
-    CGRect r  = addSourceTableView.frame, t;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
+    CGRect r  = addSourceTableView.frame;
+	//CGRect t;
+    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
     //r.size.height +=  t.size.height;
 	r.size.height = 416;
     [UIView beginAnimations:nil context:NULL];
@@ -112,13 +135,6 @@
     addSourceTableView.frame = r;
 	//addSourceTableView.frame.size.height = 416;
 	[UIView commitAnimations];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	NSString *t = [NSString stringWithFormat:@"Add%@SourceTitle", serverType];
-	navBar.title = NSLocalizedString(t, @"");
-	[captionTextField becomeFirstResponder];
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
