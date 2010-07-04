@@ -11,6 +11,7 @@
 			<string key="NS.object.0">117</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="108"/>
 			<integer value="192"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
@@ -208,9 +209,10 @@
 			</object>
 			<object class="IBUIViewController" id="653826964">
 				<object class="IBUIWebView" key="IBUIView" id="582830054">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<string key="NSFrameSize">{320, 460}</string>
+					<reference key="NSSuperview"/>
 					<object class="NSColor" key="IBUIBackgroundColor" id="372853635">
 						<int key="NSColorSpace">1</int>
 						<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -219,8 +221,6 @@
 					<bool key="IBUIClipsSubviews">YES</bool>
 					<bool key="IBUIMultipleTouchEnabled">YES</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-					<int key="IBUIDataDetectorTypes">1</int>
-					<bool key="IBUIDetectsPhoneNumbers">YES</bool>
 				</object>
 				<reference key="IBUISimulatedStatusBarMetrics" ref="188127103"/>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
@@ -381,7 +381,7 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 44}, {320, 416}}</string>
 							<reference key="NSSuperview" ref="257506694"/>
-							<object class="NSColor" key="IBUIBackgroundColor" id="790022610">
+							<object class="NSColor" key="IBUIBackgroundColor" id="83877362">
 								<int key="NSColorSpace">10</int>
 								<object class="NSImage" key="NSImage">
 									<int key="NSImageFlags">549453824</int>
@@ -454,7 +454,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</array>
 					<string key="NSFrameSize">{320, 460}</string>
 					<reference key="NSSuperview"/>
-					<reference key="IBUIBackgroundColor" ref="790022610"/>
+					<reference key="IBUIBackgroundColor" ref="83877362"/>
 					<bool key="IBUIMultipleTouchEnabled">YES</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				</object>

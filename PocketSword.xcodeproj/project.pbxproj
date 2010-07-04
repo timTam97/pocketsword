@@ -4169,6 +4169,7 @@
 					"clucene/**",
 					include,
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-Dunix",
@@ -4199,6 +4200,7 @@
 					"clucene/**",
 					include,
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-Dunix",
@@ -4230,6 +4232,7 @@
 					"clucene/**",
 					include,
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-Dunix",
