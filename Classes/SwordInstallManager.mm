@@ -217,6 +217,7 @@ base path of the module installation
             [installSources setObject:is forKey:[is caption]];
             // also add to list
             [installSourceList addObject:is];
+			[is release];
         }
 		//sort the installSourceList by "caption"
 		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"caption" ascending:YES];

@@ -93,7 +93,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)dealloc {
     [super dealloc];
-	[dictionarySearchBar release];
+	//[dictionarySearchBar release];
 	[searchResults release];
 	[overlayViewController release];
 }
