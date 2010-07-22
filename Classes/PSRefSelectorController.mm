@@ -33,7 +33,6 @@
 	NSIndexPath *tableSelection = [refTable indexPathForSelectedRow];
 	[refTable deselectRowAtIndexPath:tableSelection animated:YES];
     [super viewWillAppear:animated];
-	// TODO: scroll to current book.
 }
 
 - (void)dealloc {

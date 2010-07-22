@@ -85,6 +85,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[self reloadDictionaryData:NO];
+	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

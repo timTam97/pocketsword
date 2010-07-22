@@ -93,6 +93,15 @@ NSTimer *refreshTimer;
 	
 }
 
+- (void)createRefreshTimer {
+	SEL method = @selector(updateRefreshStatus);
+	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
+	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
+	[invocation setTarget: self];
+	[invocation setSelector: method];
+	
+	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+}
 
 - (IBAction)refreshDownloadSource:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -104,31 +113,32 @@ NSTimer *refreshTimer;
 		return;
 	}
 	
-	[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
+	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated:YES];
+	//[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
+	//testing:
+	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
+	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
+	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+	//[self updateRefreshStatus];
+	//end testing.
 	
-	SEL method = @selector(updateRefreshStatus);
-	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
-	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-	[invocation setTarget: self];
-	[invocation setSelector: method];
-	
-	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+	[self createRefreshTimer];
 	
 	[pool release];
 }
 
-- (void)runRefreshDownloadSource {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
-	
-	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
-	
-	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
-	
-	[self updateRefreshStatus];
-	
-	[pool release];
-}
+//- (void)runRefreshDownloadSource {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
+//	
+//	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
+//	
+//	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+//	
+//	[self updateRefreshStatus];
+//	
+//	[pool release];
+//}
 
 - (void)showRefreshStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -152,35 +162,45 @@ NSTimer *refreshTimer;
 	//[statusOverallText setText: desc];
 	//[desc release];
 	
-	//DLog(@"updateRefreshStatus: Progress: %f", progress);
+	//DLog(@"  -------  Progress: %f", progress);
+	//if(!refreshTimer)
+		//NSLog(@"######################### borken");
 	
 	if (progress == 1.0) {
+		if(refreshTimer) {// move this to updateRefreshStatus?
+			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
+			//[refreshTimer invalidate];
+			refreshTimer = nil;
+		}
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		
 		failed = NO;
-	}
-	else if (progress == -1.0) {
+	} else if (progress == -1.0) {
 		failed = YES;
 	} else {
 		failed = NO;
 	}
+	
 	if (failed) {
+		if(refreshTimer) {// move this to updateRefreshStatus?
+			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
+			//[refreshTimer invalidate];
+			refreshTimer = nil;
+		}
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
 	}
 }
 
 - (void)hideOperationStatus {
+	//NSLog(@" ++++++++ hideOperationStatus");
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
-	if(refreshTimer)
-		[refreshTimer invalidate];
 	
 	[statusText setText: @""];
 	[statusOverallText setText: @""];
 	[statusBar setProgress: 0.0];
 	[statusOverallBar setProgress: 0.0];
-	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated:YES];
 	[pool release];
 }
 

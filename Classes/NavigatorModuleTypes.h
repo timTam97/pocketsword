@@ -37,7 +37,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 - (IBAction)refreshDownloadSource:(id)sender;
-- (void)runRefreshDownloadSource;
+//- (void)runRefreshDownloadSource;
 - (void)showRefreshStatus;
 - (void)updateRefreshStatus;
 - (void)hideOperationStatus;

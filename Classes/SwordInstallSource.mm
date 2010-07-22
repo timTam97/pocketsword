@@ -22,6 +22,9 @@
     [swManager retain];
     [swordManager release];
     swordManager = swManager;
+	if(swordManager) {
+		swordManagerLoaded = YES;
+	}
 }
 
 @end
@@ -81,11 +84,12 @@
 }
 
 - (void)dealloc {
+	[self setSwordManager: nil];
 	[super dealloc];
 	[managerCreationLock release];
-	if(swordManagerLoaded) {
-		[swordManager release];
-	}
+//	if(swordManagerLoaded) {
+//		[swordManager release];
+//	}
 }
 
 - (void)finalize {

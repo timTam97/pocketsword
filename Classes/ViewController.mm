@@ -622,7 +622,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //    or when the user selects a new module to view.
 //    or when the user selects a bookmark.
 //    or when the user selects a search result.
-- (void)addHistoryItem:(ShownTab)tabForHistory  // TODO: add the module name as a parameter
+- (void)addHistoryItem:(ShownTab)tabForHistory
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -716,9 +716,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-- (void)getRemoteModuleList {
-	[[moduleManager swordInstallManager] refreshAllInstallSources];
-}
+//- (void)getRemoteModuleList {
+//	[[moduleManager swordInstallManager] refreshAllInstallSources];
+//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
