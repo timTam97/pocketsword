@@ -1117,6 +1117,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			} else {
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
+			[self addHistoryItem: BibleTab];
 
 			return NO;
 		}

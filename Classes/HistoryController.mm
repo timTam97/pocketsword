@@ -95,37 +95,44 @@
 	
 	NSArray *history;
 	NSString *ref;
-	NSString *scroll;
+	//NSString *scroll;
+	NSString *verse;
 	NSString *mod;
 	switch (listType) {
 		case BibleTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
 			ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
-			scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
+			verse = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 1];
+			//scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
 			if([[history objectAtIndex: indexPath.row] count] > 2) {
 				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
 				[moduleManager loadPrimaryBible: mod];
 			} else {
 				mod = nil;
 			}
-			[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
+			//[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+			[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[moduleManager viewController] addHistoryItem: BibleTab];
 			break;
 		case CommentaryTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
 			ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
-			scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
+			verse = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 1];
+			//scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
 			if([[history objectAtIndex: indexPath.row] count] > 2) {
 				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
 				[moduleManager loadPrimaryCommentary: mod];
 			} else {
 				mod = nil;
 			}
-			[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
+			//[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"commentaryVersePosition"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
+			[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[moduleManager viewController] addHistoryItem: CommentaryTab];
 			break;
 	}
