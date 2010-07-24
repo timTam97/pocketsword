@@ -8,13 +8,14 @@
  */
 
 #include <ftptrans.h>
-#include <swbuf.h>
+//#include <swbuf.h>
 
 class PSStatusReporter : public sword::StatusReporter {
 public:
 	
 	float overallProgress, fileProgress, totalBytesReported, completedBytesReported;
-	sword::SWBuf *description;
+	//sword::SWBuf *description;
+	const char *des;
     PSStatusReporter();
 	
     /** called before stages of a batch download */
@@ -24,4 +25,6 @@ public:
     void statusUpdate(double dtTotal, double dlNow);
 	
 	const char* getDescription();
+
+	virtual ~PSStatusReporter();
 };

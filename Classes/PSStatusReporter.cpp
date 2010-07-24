@@ -15,7 +15,13 @@ PSStatusReporter::PSStatusReporter() {
 	fileProgress = 0.0;
 	totalBytesReported = 0.0;
 	completedBytesReported = 0.0;
-	description = new sword::SWBuf("");
+	//description = new sword::SWBuf("");
+	//description = NULL;
+	des = NULL;
+}
+
+PSStatusReporter::~PSStatusReporter() {
+	//delete description;
 }
 	
 /** called before stages of a batch download */
@@ -26,7 +32,10 @@ void PSStatusReporter::preStatus(long totalBytes, long completedBytes, const cha
 	if(overallProgress >= 1.0) {
 		overallProgress = 0.9999;
 	}
-	description = new sword::SWBuf(message);
+	des = message;
+//	description = NULL;
+//	delete description;
+//	description = new sword::SWBuf(message);
 	//sword::SWLog::getSystemLog()->logError("==========\nPRESTATUS(totalBytes = %d, competedBytes = %d, message = %s) = %f\n==========", totalBytes, completedBytes, message, overallProgress);
 }
 	
@@ -44,6 +53,13 @@ void PSStatusReporter::statusUpdate(double dtTotal, double dlNow) {
 }
 
 const char* PSStatusReporter::getDescription() {
-	return description->c_str();
+	if(des)
+		return des;
+	else
+		return "";
+//	if(description)
+//		return description->c_str();
+//	else
+//		return "";
 }
 
