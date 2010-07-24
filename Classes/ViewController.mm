@@ -22,6 +22,7 @@
 #import "PSIndexController.h"
 #import "SearchWebView.h"
 #import "HistoryController.h"
+#import "NavigatorSources.h"
 
 
 @implementation ViewController
@@ -524,6 +525,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		//[ViewController showModal:modulesListView withTiming:0.3];
 		[tabController presentModalViewController:moduleSelectorViewController animated:YES];
 		//modulesListShown = YES;
+	}
+}
+
+- (IBAction)addModuleButtonPressed {
+	[self toggleModulesList:nil];
+	for(UIViewController *uivc in tabController.viewControllers) {
+		if([uivc isKindOfClass:[NavigatorSources class]]) {
+			tabController.selectedViewController = uivc;
+			break;
+		}
 	}
 }
 

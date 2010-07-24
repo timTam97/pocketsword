@@ -70,6 +70,9 @@
 	if ([[[navigatorSources moduleManager] swordManager] isModuleInstalled: cell.textLabel.text]) {
 		cell.textLabel.textColor = [UIColor blueColor];
 		cell.detailTextLabel.textColor = [UIColor blueColor];
+	} else if([(SwordModule*)[dataArray objectAtIndex:indexPath.row] isLocked]) {
+		cell.textLabel.textColor = [UIColor brownColor];
+		cell.detailTextLabel.textColor = [UIColor brownColor];
 	} else {
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.detailTextLabel.textColor = [UIColor blackColor];

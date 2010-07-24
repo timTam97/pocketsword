@@ -213,10 +213,15 @@
     
     // module name
 	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleName", @""), [self name]];
-    
+	
     // module description
 	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleDescription", @""), [self descr]];
 	
+	// module locked status
+	if([self isLocked]) {
+		[ret appendFormat:@"<p><b>%@</b></p>", NSLocalizedString(@"AboutModuleLocked", @"")];
+	}
+    
 	// module LCSH -- Library of Congress Subject Heading
 	NSString *lcsh = [self configEntryForKey:@"LCSH"];
 	if(lcsh)

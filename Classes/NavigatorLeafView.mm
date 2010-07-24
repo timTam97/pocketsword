@@ -56,7 +56,7 @@ NSTimer *downloadTimer;
 		return;
 	}
 	
-	if([[module name] isEqualToString: @"Personal"] || [module configEntryForKey: SWMOD_CONFENTRY_CIPHERKEY]) {
+	if([[module name] isEqualToString: @"Personal"]) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
 		[pool release];

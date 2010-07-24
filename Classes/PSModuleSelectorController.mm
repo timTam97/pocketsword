@@ -13,6 +13,7 @@
 @implementation PSModuleSelectorController
 
 @synthesize listType;
+
 //
 // UITableView delegate and data source methods
 //
@@ -54,27 +55,35 @@
 		cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 	}
 	
+	BOOL locked = NO;
 	switch (listType) {
 		case BibleTab:
 			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
 			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
+			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] isLocked];
 			break;
 		case CommentaryTab:
 			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
 			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
+			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] isLocked];
 			break;
 		case DictionaryTab:
 			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] name];
 			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] descr];
+			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] isLocked];
 			break;
 		case DevotionalTab:
 			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] name];
 			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] descr];
+			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] isLocked];
 			break;
 	}
 	if ([moduleManager isLoaded:cell.textLabel.text]) {
 		cell.textLabel.textColor = [UIColor blueColor];
 		cell.detailTextLabel.textColor = [UIColor blueColor];
+	} else if(locked) {
+		cell.textLabel.textColor = [UIColor brownColor];
+		cell.detailTextLabel.textColor = [UIColor brownColor];
 	} else {
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.detailTextLabel.textColor = [UIColor blackColor];

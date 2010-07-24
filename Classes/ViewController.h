@@ -144,6 +144,7 @@ typedef enum {
 
 - (IBAction)toggleModulesList:(id)sender;
 - (IBAction)toggleMultiList:(id)sender;
+- (IBAction)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
