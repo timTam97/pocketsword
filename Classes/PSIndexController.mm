@@ -45,11 +45,15 @@ BOOL downloadableShown;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	if(![PSModuleController checkNetworkConnection]) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		return;
+	}
 	if(downloadableShown)
 		[self updateInstalledIndexList];
 	else
 		[self updateInstalledIndexListWithRemoteIndices:nil];
-	[super viewWillAppear:animated];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
