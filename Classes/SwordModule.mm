@@ -960,15 +960,17 @@
 			preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 			if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
 				//NSLog(@"preverseHeading = '%@'", preverseHeading);
+				preverseHeading = [NSString stringWithUTF8String:swModule->RenderText([preverseHeading UTF8String])];
 				[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
 			}
 			interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 			if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
 				//NSLog(@"interverseHeading = '%@'", interverseHeading);
-				if(preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) {
+				if((preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) || !preverseHeading) {
+					interverseHeading = [NSString stringWithUTF8String:swModule->RenderText([interverseHeading UTF8String])];
 					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
-				} else if(!preverseHeading) {
-					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+//				} else if(!preverseHeading) {
+//					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
 				}
 			}
 		}
