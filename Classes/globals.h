@@ -31,6 +31,8 @@ typedef enum {
 #define DefaultsLastDictionary						@"lastDictionary"
 #define DefaultsLastDevotional						@"lastDevotional"
 
+#define DefaultsBibleVersePosition					@"bibleVersePosition"
+#define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
 
 //#define DEFAULT_MODULE_PATH         [@"~/Library/Application Support/Sword" stringByExpandingTildeInPath]  
 #define DEFAULT_MODULE_PATH_OLD         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]

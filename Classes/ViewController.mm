@@ -601,22 +601,22 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// bible tab
-			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[self addHistoryItem: BibleTab];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
-			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[self addHistoryItem: CommentaryTab];
 		} else {
 			//something tab???
-			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"bibleVersePosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		}
@@ -646,7 +646,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	BOOL valid = NO;
 	
 	if(tabForHistory == BibleTab) {
-		verse = [defaults stringForKey: @"bibleVersePosition"];
+		verse = [defaults stringForKey: DefaultsBibleVersePosition];
 		scroll = [defaults stringForKey: @"bibleScrollPosition"];
 		if([moduleManager primaryBible]) {
 			valid = YES;
@@ -655,7 +655,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		historyName = @"bibleHistory";
 		history = [[defaults arrayForKey: historyName] mutableCopy];
 	} else if(tabForHistory == CommentaryTab) {
-		verse = [defaults stringForKey: @"commentaryVersePosition"];
+		verse = [defaults stringForKey: DefaultsCommentaryVersePosition];
 		scroll = [defaults stringForKey: @"commentaryScrollPosition"];
 		if([moduleManager primaryCommentary]) {
 			valid = YES;
@@ -796,7 +796,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 	NSMutableString *bibleJavascript = [NSMutableString stringWithString:@""];
 	NSMutableString *commentaryJavascript = [NSMutableString stringWithString:@""];
-	NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
+	NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBibleVersePosition];
 	switch(position) {
 		case RestoreScrollPosition:
 		{
@@ -872,7 +872,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	switch(position) {
 		case RestoreScrollPosition:
 		{
-			cVersePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"commentaryVersePosition"];
+			cVersePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsCommentaryVersePosition];
 			if(!cVersePosition)
 				cVersePosition = @"1";
 		}
@@ -1110,7 +1110,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 			if([comps count] > 1) {
 				//we have a verse
-				[[NSUserDefaults standardUserDefaults] setObject: [comps objectAtIndex:1] forKey: @"bibleVersePosition"];
+				[[NSUserDefaults standardUserDefaults] setObject: [comps objectAtIndex:1] forKey: DefaultsBibleVersePosition];
 				[[NSUserDefaults standardUserDefaults] synchronize];
 				ref = [comps objectAtIndex:0];//just the book & ch
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];

@@ -127,12 +127,12 @@
 		[refSelector reloadComponent:2];
 		int verse = 1;
 		if(shownTab == BibleTab) {
-			NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
+			NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBibleVersePosition];
 			verse = [versePosition intValue];
 			if(verse == 0)
 				verse++;
 		} else {
-			NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"commentaryVersePosition"];
+			NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsCommentaryVersePosition];
 			verse = [versePosition intValue];
 			if(verse == 0)
 				verse++;

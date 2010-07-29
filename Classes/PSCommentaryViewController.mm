@@ -56,7 +56,7 @@
 	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 		if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"commentaryScrollPosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			//NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", [components objectAtIndex:2]];
 			//[bibleWebView stringByEvaluatingJavaScriptFromString:javascript];

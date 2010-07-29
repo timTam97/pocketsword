@@ -114,9 +114,11 @@ float installationProgress;
 	[fileManager removeItemAtPath:outfile error:NULL];
 	
 	if((!primaryBible && (modType == bible)) || (!primaryCommentary && (modType == commentary))) {
+		if(!primaryBible && (modType == bible)) {
+			[bookmarkAddButton setEnabled:YES];
+		}
 		NSString *ref = [self getCurrentBibleRef];
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
-		[bookmarkAddButton setEnabled:YES];
 	}
 	
 }
@@ -232,8 +234,7 @@ float installationProgress;
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
 		[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];
-		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: @"Primary Reading" ];//could make this an option?  but for now, disable.
-																					 //others are: @"Secondary Reading" && @"All Readings"
+		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: SW_OPTION_VARIANTS_PRIMARY ];//could make this an option?
 		[swordManager setGlobalOption: SW_OPTION_GREEKACCENTS value: ((greekAccents) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
@@ -347,7 +348,7 @@ float installationProgress;
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToPreviousChapter];
 		verse = [primaryBible getVerseMax];
-		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: @"bibleVersePosition"];
+		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsBibleVersePosition];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	if(primaryCommentary) {
@@ -355,10 +356,10 @@ float installationProgress;
 			[primaryCommentary setChapter: cur];
 			ret = [primaryCommentary setToPreviousChapter];
 			verse = [primaryCommentary getVerseMax];
-			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 		} else if(verse) {
-			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 	}
@@ -677,7 +678,6 @@ float installationProgress;
 		//[commentaryNavBtn setTitle: @"PocketSword"];
 		[viewController setTabTitle: @"PocketSword" ofTab:CommentaryTab];
 		[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
-		//[bookmarkAddButton setEnabled:NO];
 		[viewController setEnabledCommentaryNextButton: NO];
 		[viewController setEnabledCommentaryPreviousButton: NO];
 	}

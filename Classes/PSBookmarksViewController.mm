@@ -87,8 +87,12 @@
 }
 
 - (IBAction)addBookmark:(id)sender {
+	if(!((PSModuleController*)moduleManager).primaryBible && !((PSModuleController*)moduleManager).primaryCommentary) {
+		//can't add a bookmark for the currently viewed verse!
+		return;
+	}
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleVersePosition"];
+	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBibleVersePosition];
 	NSString *ref = [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
@@ -231,7 +235,7 @@
 		NSString *ref = [fullRef objectAtIndex: 0];
 		NSString *verse = [fullRef objectAtIndex: 1];
 		if(verse) {
-			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[[moduleManager viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
 		} else {

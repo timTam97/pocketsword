@@ -174,8 +174,8 @@ BOOL searchingEnabled;
 		NSString *ref = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
 		NSString *verse = [[ref componentsSeparatedByString:@":"] objectAtIndex: 1];
 		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
-		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"commentaryVersePosition"];
-		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		ShownTab tab = [historyController listType];

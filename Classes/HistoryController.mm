@@ -111,7 +111,7 @@
 				mod = nil;
 			}
 			//[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"bibleVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
 			[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
@@ -129,7 +129,7 @@
 				mod = nil;
 			}
 			//[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: @"commentaryVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
 			[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];

@@ -97,7 +97,7 @@
 	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 		if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
-			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: @"bibleVersePosition"];
+			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];

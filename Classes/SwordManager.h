@@ -103,6 +103,9 @@ class sword::SWModule;
 /** On / Off */
 #define SW_ON    @"On"
 #define SW_OFF   @"Off"
+#define SW_OPTION_VARIANTS_PRIMARY		@"Primary Reading"
+#define SW_OPTION_VARIANTS_SECONDARY	@"Secondary Reading"
+#define SW_OPTION_VARIANTS_ALL			@"All Readings"
 
 // direction
 #define SW_DIRECTION_RTL    @"RtoL"
