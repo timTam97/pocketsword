@@ -110,7 +110,7 @@ float installationProgress;
 
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	[fileManager removeItemAtPath:zippedModule error:NULL];//this won't remove the zip file on the iPhone device.............
+	//[fileManager removeItemAtPath:zippedModule error:NULL];//this won't remove the zip file on the iPhone device.............
 	[fileManager removeItemAtPath:outfile error:NULL];
 	
 	if((!primaryBible && (modType == bible)) || (!primaryCommentary && (modType == commentary))) {
@@ -504,8 +504,6 @@ float installationProgress;
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 	
 	[self reload];
-	//[viewController reloadModuleTable];
-	//[moduleTable reloadData];
 	
 	if (status != 0) {
 		ALog(@"Couldn't install module (%@)!\n", [swordModule name]);
@@ -663,7 +661,7 @@ float installationProgress;
 	
 	[self reload];
 	//[moduleTable reloadData];
-	[viewController reloadModuleTable];
+	//[viewController reloadModuleTable];
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!

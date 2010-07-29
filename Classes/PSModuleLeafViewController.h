@@ -15,6 +15,7 @@
 	IBOutlet UINavigationItem	*navBar;
 
 	IBOutlet UIBarButtonItem	*closeButton;
+	IBOutlet UITableView *modulesListTable;
 	
 	IBOutlet UIBarButtonItem	*unlockEditButton;
 	IBOutlet UIWebView			*unlockWebView;

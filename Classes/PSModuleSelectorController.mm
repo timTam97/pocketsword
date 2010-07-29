@@ -148,6 +148,7 @@
 		[moduleManager removeModule: module];
 		if(listType == DictionaryTab)
 			[[moduleManager viewController] reloadDictionaryData];
+		[tableView reloadData];
 	}
 	
 	[pool release];
