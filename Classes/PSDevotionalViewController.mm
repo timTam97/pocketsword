@@ -52,6 +52,7 @@ BOOL loaded;
 	self.navigationItem.titleView = titleButton;
 	
 	devotionalDatePicker.date = [NSDate date];
+	devotionalDatePicker.locale = [NSLocale currentLocale];
 //	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
