@@ -64,7 +64,7 @@ typedef enum {
 #define NotificationCommentarySwipeRight	@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft		@"NotificationCommentarySwipeLeft"
 #define NotificationDevotionalChanged		@"NotificationDevotionalChanged"
-
+#define NotificationRefSelectorResetBooks	@"NotificationRefSelectorResetBooks"
 
 /*
 #define BUNDLEVERSION               CFBundleGetVersionNumber(CFBundleGetMainBundle())

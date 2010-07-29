@@ -29,6 +29,18 @@
 //
 //}
 
+- (void)viewDidLoad {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetBooks:) name:NotificationRefSelectorResetBooks object:nil];
+}
+
+- (void)viewDidUnload {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationRefSelectorResetBooks object:nil];
+}
+
+- (void)resetBooks:(NSNotification *)notification {
+	self.refSelectorBooks = nil;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 	NSIndexPath *tableSelection = [refTable indexPathForSelectedRow];
 	[refTable deselectRowAtIndexPath:tableSelection animated:YES];

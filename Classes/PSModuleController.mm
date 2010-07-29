@@ -114,9 +114,9 @@ float installationProgress;
 	[fileManager removeItemAtPath:outfile error:NULL];
 	
 	if((!primaryBible && (modType == bible)) || (!primaryCommentary && (modType == commentary))) {
-		if(!primaryBible && (modType == bible)) {
-			[bookmarkAddButton setEnabled:YES];
-		}
+//		if(!primaryBible && (modType == bible)) {
+//			[bookmarkAddButton setEnabled:YES];
+//		}
 		NSString *ref = [self getCurrentBibleRef];
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
@@ -280,7 +280,8 @@ float installationProgress;
 	primaryBible = [swordManager moduleWithName:newText];
 	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastBible];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	refSelectorController.refSelectorBooks = nil;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
+	//refSelectorController.refSelectorBooks = nil;
 	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
 	[primaryBible setHeadings:headings];
 }
@@ -447,10 +448,11 @@ float installationProgress;
 		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName: devotionalName];
 	}
 	
-	if([[swordManager moduleNames] count] == 0) {
-		[bookmarkAddButton setEnabled:NO];
-	}
-	refSelectorController.refSelectorBooks = nil;
+//	if([[swordManager moduleNames] count] == 0) {
+//		[bookmarkAddButton setEnabled:NO];
+//	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
+	//refSelectorController.refSelectorBooks = nil;
 }
 
 - (PSStatusReporter*)getInstallationProgress {
@@ -515,7 +517,7 @@ float installationProgress;
 	if((!primaryBible && ([swordModule type] == bible)) || (!primaryCommentary && [swordModule type] == commentary)) {
 		NSString *ref = [self getCurrentBibleRef];
 		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
-		[bookmarkAddButton setEnabled:YES];
+		//[bookmarkAddButton setEnabled:YES];
 	} else if(!primaryDictionary && ([swordModule type] == dictionary) && ([swordModule cat] == undefinedCategory)) {
 		//set it to the primaryDictionary.
 		[self loadPrimaryDictionary:[swordModule name]];
@@ -668,7 +670,7 @@ float installationProgress;
 		//[bibleNavBtn setTitle: @"PocketSword"];
 		[viewController setTabTitle: @"PocketSword" ofTab:BibleTab];
 		[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
-		[bookmarkAddButton setEnabled:NO];
+		//[bookmarkAddButton setEnabled:NO];
 		[viewController setEnabledBibleNextButton: NO];
 		[viewController setEnabledBiblePreviousButton: NO];
 	}
@@ -732,7 +734,8 @@ float installationProgress;
 		[prefs release];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
-	refSelectorController.refSelectorBooks = nil;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
+	//refSelectorController.refSelectorBooks = nil;
 }
 
 - (void)reloadLastCommentary {

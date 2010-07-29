@@ -36,6 +36,7 @@ typedef enum {
 @property (retain, readwrite) NSArray *refSelectorBooksIndex;
 @property (retain, readwrite) NSString *currentlyViewedBookName;
 
+- (void)resetBooks:(NSNotification *)notification;
 - (void)updateRefSelectorBooks;
 - (NSString*)bookName:(NSInteger)bookIndex;
 - (NSString*)bookShortName:(NSInteger)bookIndex;

@@ -44,10 +44,10 @@
 	IBOutlet UIBarButtonItem *commentaryTitle;
 	IBOutlet UIBarButtonItem *dictionaryTitle;
 
-	IBOutlet id bookmarkAddButton;
+	//IBOutlet id bookmarkAddButton;
 	
 	IBOutlet id viewController;
-	IBOutlet PSRefSelectorController *refSelectorController;
+	//IBOutlet PSRefSelectorController *refSelectorController;
 	
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;
