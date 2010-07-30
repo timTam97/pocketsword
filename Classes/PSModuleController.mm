@@ -117,8 +117,9 @@ float installationProgress;
 //		if(!primaryBible && (modType == bible)) {
 //			[bookmarkAddButton setEnabled:YES];
 //		}
-		NSString *ref = [self getCurrentBibleRef];
-		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+		//NSString *ref = [self getCurrentBibleRef];
+		//[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
 	
 }
@@ -513,8 +514,9 @@ float installationProgress;
 		ret = YES;
 	}
 	if((!primaryBible && ([swordModule type] == bible)) || (!primaryCommentary && [swordModule type] == commentary)) {
-		NSString *ref = [self getCurrentBibleRef];
-		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//		NSString *ref = [self getCurrentBibleRef];
+//		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		//[bookmarkAddButton setEnabled:YES];
 	} else if(!primaryDictionary && ([swordModule type] == dictionary) && ([swordModule cat] == undefinedCategory)) {
 		//set it to the primaryDictionary.
@@ -603,8 +605,6 @@ float installationProgress;
 	
 	SwordModule *moduleToRemove = [swordManager moduleWithName: name];
 	int stat = 1;
-	//sword::SWKey loc;
-	NSString *curLoc = [self getCurrentBibleRef];
 
 	NSString *primaryBibleName = nil;
 	NSString *primaryCommentaryName = nil;
@@ -644,17 +644,22 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastBible];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[bibleWebView loadHTMLString: [self getBibleChapter: curLoc withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationPrimaryBibleRemoved object:nil];
+		//[bibleWebView loadHTMLString: [self getBibleChapter: [self getCurrentBibleRef] withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		//[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
 	} else if ([name isEqualToString: primaryCommentaryName]) {
 		primaryCommentary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastCommentary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[commentaryWebView loadHTMLString: [self getCommentaryChapter: curLoc withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationPrimaryCommentaryRemoved object:nil];
+		//[commentaryWebView loadHTMLString: [self getCommentaryChapter: [self getCurrentBibleRef] withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		//[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	} else if([name isEqualToString: primaryDictionaryName]) {
 		primaryDictionary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
+		//[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	} else if([name isEqualToString:primaryDevotionalName]) {
 		[self loadPrimaryDevotional:nil];
 	}
@@ -667,7 +672,7 @@ float installationProgress;
 		//well, we now have 0, ie, none!
 		//[bibleNavBtn setTitle: @"PocketSword"];
 		[viewController setTabTitle: @"PocketSword" ofTab:BibleTab];
-		[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
+		//[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		//[bookmarkAddButton setEnabled:NO];
 		[viewController setEnabledBibleNextButton: NO];
 		[viewController setEnabledBiblePreviousButton: NO];
@@ -677,7 +682,7 @@ float installationProgress;
 		//no commentaries left...
 		//[commentaryNavBtn setTitle: @"PocketSword"];
 		[viewController setTabTitle: @"PocketSword" ofTab:CommentaryTab];
-		[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
+		//[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		[viewController setEnabledCommentaryNextButton: NO];
 		[viewController setEnabledCommentaryPreviousButton: NO];
 	}

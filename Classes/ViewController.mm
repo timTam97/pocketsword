@@ -316,11 +316,15 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] == 0) {
 			[self setTabTitle: @"PocketSword" ofTab:BibleTab];
-			//[bibleNavBtn setTitle: @"PocketSword"];
+			[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+			[self setEnabledBibleNextButton: NO];
+			[self setEnabledBiblePreviousButton: NO];
 		}
 		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
 			[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
-			//[commentaryNavBtn setTitle: @"PocketSword"];
+			[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+			[self setEnabledCommentaryNextButton: NO];
+			[self setEnabledCommentaryPreviousButton: NO];
 		}
 		
 		if ([defaults boolForKey: @"insomniaPreference"]) {
@@ -337,6 +341,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationBibleSwipeLeft object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationCommentarySwipeLeft object:nil];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayChapterWithDefaults) name:NotificationResetBibleAndCommentaryView object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationPrimaryBibleRemoved object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationPrimaryCommentaryRemoved object:nil];
 		[pool release];
 		initialized = true;
 	}
@@ -786,6 +793,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
+- (void)redisplayChapterWithDefaults {
+	NSString *ref = [moduleManager getCurrentBibleRef];
+	[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
+}
+
+- (void)redisplayBibleChapter {
+	[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+	[self redisplayChapter:BibleViewPoll restore:RestoreVersePosition];
+}
+
+- (void)redisplayCommentaryChapter {
+	[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	[self redisplayChapter:CommentaryViewPoll restore:RestoreVersePosition];
+}
+
 - (void)redisplayChapter:(PollingType)pollingType restore:(RestorePositionType)position {
 	NSString *ref = [moduleManager getCurrentBibleRef];
 	[self displayChapter:ref withPollingType:pollingType restoreType:position];
@@ -916,14 +938,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self setEnabledCommentaryPreviousButton: YES];
 	}
 	//if we don't have any modules of that type, disable the buttons.
-	if(![moduleManager primaryBible]) {
-		[self setEnabledBibleNextButton: NO];
-		[self setEnabledBiblePreviousButton: NO];
-	}
-	if(![moduleManager primaryCommentary]) {
-		[self setEnabledCommentaryNextButton: NO];
-		[self setEnabledCommentaryPreviousButton: NO];
-	}
+//	if(![moduleManager primaryBible]) {
+//		[self setEnabledBibleNextButton: NO];
+//		[self setEnabledBiblePreviousButton: NO];
+//	}
+//	if(![moduleManager primaryCommentary]) {
+//		[self setEnabledCommentaryNextButton: NO];
+//		[self setEnabledCommentaryPreviousButton: NO];
+//	}
 	
 	[pool release];
 }

@@ -57,14 +57,18 @@ typedef enum {
 /**
  \brief this notification is send, when the modules have changed (updated, added, removed)
  */
-#define NotificationModulesChanged			@"NotificationModulesChanged"
+#define NotificationModulesChanged				@"NotificationModulesChanged"
 #define SendNotifyModulesChanged(X) [[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:X];
-#define NotificationBibleSwipeRight			@"NotificationBibleSwipeRight"
-#define NotificationBibleSwipeLeft			@"NotificationBibleSwipeLeft"
-#define NotificationCommentarySwipeRight	@"NotificationCommentarySwipeRight"
-#define NotificationCommentarySwipeLeft		@"NotificationCommentarySwipeLeft"
-#define NotificationDevotionalChanged		@"NotificationDevotionalChanged"
-#define NotificationRefSelectorResetBooks	@"NotificationRefSelectorResetBooks"
+#define NotificationBibleSwipeRight				@"NotificationBibleSwipeRight"
+#define NotificationBibleSwipeLeft				@"NotificationBibleSwipeLeft"
+#define NotificationCommentarySwipeRight		@"NotificationCommentarySwipeRight"
+#define NotificationCommentarySwipeLeft			@"NotificationCommentarySwipeLeft"
+#define NotificationDevotionalChanged			@"NotificationDevotionalChanged"
+#define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"
+#define NotificationResetBibleAndCommentaryView @"NotificationResetBibleAndCommentaryView"
+#define NotificationPrimaryBibleRemoved			@"NotificationPrimaryBibleRemoved"
+#define NotificationPrimaryCommentaryRemoved	@"NotificationPrimaryCommentaryRemoved"
+#define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
 
 /*
 #define BUNDLEVERSION               CFBundleGetVersionNumber(CFBundleGetMainBundle())

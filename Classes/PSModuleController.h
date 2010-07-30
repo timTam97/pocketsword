@@ -37,8 +37,8 @@
 
 @interface PSModuleController : NSObject {
 	// IB Outlets
-	IBOutlet UIWebView *bibleWebView;
-	IBOutlet UIWebView *commentaryWebView;
+	//IBOutlet UIWebView *bibleWebView;
+	//IBOutlet UIWebView *commentaryWebView;
 	
 	IBOutlet UIBarButtonItem *bibleTitle;
 	IBOutlet UIBarButtonItem *commentaryTitle;

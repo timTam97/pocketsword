@@ -16,6 +16,10 @@
 BOOL dictionaryEnabled = NO;
 PSDictionaryOverlayViewController *overlayViewController;
 
+- (void)primaryDictionaryChanged {
+	[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+}
+
 - (void)reloadDictionaryData:(BOOL)reloadData {
 	BOOL needsReload = reloadData;
 	if(![moduleManager primaryDictionary]) {
@@ -114,6 +118,13 @@ PSDictionaryOverlayViewController *overlayViewController;
 	searching = NO;
 	letUserSelectRow = YES;
 	searchResults = [[NSMutableArray alloc] init];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
+}
+
+- (void)viewDidUnload {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationPrimaryDictionaryChanged object:nil];
+	[searchResults release];
+	searchResults = nil;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
