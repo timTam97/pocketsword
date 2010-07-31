@@ -28,6 +28,7 @@ typedef enum {
 	IBOutlet UINavigationController	*refNavigationController;
 
 	IBOutlet id moduleManager;
+	IBOutlet id viewController;
 }
 
 @property (assign) NSInteger refSelectorBook;

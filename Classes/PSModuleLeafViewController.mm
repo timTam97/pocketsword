@@ -96,9 +96,11 @@ BOOL trashModule = NO;
 	[[[moduleManager swordManager] moduleWithName: navBar.title] unlock: unlockTextField.text];
 	//redisplay the text if this is the current primary bible/commentary
 	if([navBar.title isEqualToString:[[moduleManager primaryBible] name]]) {
-		[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+		//[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 	} else if([navBar.title isEqualToString:[[moduleManager primaryCommentary] name]]) {
-		[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+		//[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 	}
 	[self closeUnlockView:nil];
 }

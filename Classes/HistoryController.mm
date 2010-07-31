@@ -25,6 +25,125 @@
 
 @synthesize listType;
 
+- (void)viewDidLoad {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
+}
+
+- (void)viewDidUnload {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddBibleHistoryItem object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddCommentaryHistoryItem object:nil];
+}
+
+- (void)addBibleHistoryItem {
+	[self addHistoryItem: BibleTab];
+}
+
+- (void)addCommentaryHistoryItem {
+	[self addHistoryItem: CommentaryTab];
+}
+
+// This should be called just AFTER:
+//    "nextChapter".
+//    or "prevChapter".
+//    or navigation to a new ref from the refPicker.
+//    or when the user selects a new module to view.
+//    or when the user selects a bookmark.
+//    or when the user selects a search result.
+- (void)addHistoryItem:(ShownTab)tabForHistory
+{
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSString *verse;
+	NSString *scroll;
+	NSString *mod;
+	NSMutableArray *history;
+	NSString *historyName;
+	BOOL valid = NO;
+	
+	if(tabForHistory == BibleTab) {
+		verse = [defaults stringForKey: DefaultsBibleVersePosition];
+		scroll = [defaults stringForKey: @"bibleScrollPosition"];
+		if([moduleManager primaryBible]) {
+			valid = YES;
+			mod = [[moduleManager primaryBible] name];
+		}
+		historyName = @"bibleHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else if(tabForHistory == CommentaryTab) {
+		verse = [defaults stringForKey: DefaultsCommentaryVersePosition];
+		scroll = [defaults stringForKey: @"commentaryScrollPosition"];
+		if([moduleManager primaryCommentary]) {
+			valid = YES;
+			mod = [[moduleManager primaryCommentary] name];
+		}
+		historyName = @"commentaryHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else {
+		ALog(@"\nWe don't know which tab we're on!  :(");
+	}
+	
+	if(valid) {
+		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[moduleManager getCurrentBibleRef]], verse];
+		
+		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
+		
+		if (!history) {
+			history = [[NSMutableArray alloc] initWithObjects: nil];
+			
+			NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+			[prefs setObject: history forKey: historyName];
+			
+			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
+			[prefs release];
+		}
+		
+		[history insertObject: historyItem atIndex: 0];
+		//[historyItem release];
+		if([history count] >= 50) {
+			[history removeLastObject];
+		}
+		
+		[defaults setObject: history forKey: historyName];
+		[defaults synchronize];
+	}
+	if(history)
+		[history release];
+	
+	[pool release];
+	
+}
+
+- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSMutableArray *history;
+	NSString *historyName;
+	if(tabForHistory == BibleTab) {
+		historyName = @"bibleHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else if(tabForHistory == CommentaryTab) {
+		historyName = @"commentaryHistory";
+		history = [[defaults arrayForKey: historyName] mutableCopy];
+	} else {
+		return;
+	}
+	
+	for(NSArray *historyItem in history) {
+		if([ref isEqualToString:[historyItem objectAtIndex:0]]) {
+			[history removeObject:historyItem];
+			break;
+		}
+	}
+	[defaults setObject: history forKey: historyName];
+	[defaults synchronize];
+	[history release];
+	
+	[pool release];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
@@ -110,12 +229,13 @@
 			} else {
 				mod = nil;
 			}
-			//[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"bibleScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
-			[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[[moduleManager viewController] addHistoryItem: BibleTab];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			//[[moduleManager viewController] addHistoryItem: BibleTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			break;
 		case CommentaryTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
@@ -130,13 +250,17 @@
 			}
 			//[[NSUserDefaults standardUserDefaults] setObject: scroll forKey: @"commentaryScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
-			[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[[moduleManager viewController] addHistoryItem: CommentaryTab];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			//[[moduleManager viewController] addHistoryItem: CommentaryTab];
 			break;
 	}
-	[[moduleManager viewController] toggleMultiList: nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
+	//[[moduleManager viewController] toggleMultiList];
 
 	[pool release];
 }
@@ -145,7 +269,7 @@
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		[[moduleManager viewController] removeHistoryItem:ref forTab:listType];
+		[self removeHistoryItem:ref forTab:listType];
 		[tableView reloadData];
 	}
 	

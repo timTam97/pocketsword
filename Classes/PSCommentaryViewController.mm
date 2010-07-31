@@ -63,7 +63,7 @@
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			//[commentaryNavBtn setTitle: ref];
-			[[moduleManager viewController] setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
+			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
 		}
 		load = NO;
 	} else {
@@ -157,7 +157,7 @@
 		
 		
 		if(entry) {
-			[[moduleManager viewController] showInfo: entry];
+			[viewController showInfo: entry];
 			load = NO;
 		}
 	}

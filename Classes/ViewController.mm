@@ -117,12 +117,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationCommentarySwipeLeft object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayChapterWithDefaults) name:NotificationResetBibleAndCommentaryView object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationPrimaryBibleRemoved object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationPrimaryCommentaryRemoved object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationRedisplayPrimaryBible object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationRedisplayPrimaryCommentary object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBibleTitleViaNotification) name:NotificationNewPrimaryBible object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setCommentaryTitleViaNotification) name:NotificationNewPrimaryCommentary object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDictionaryTitleViaNotification) name:NotificationNewPrimaryDictionary object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMultiList) name:NotificationToggleMultiList object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList) name:NotificationToggleModuleList object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
+		
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicator) name:NotificationDisplayBusyIndicator object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
 		
 		[pool release];
 		initialized = true;
@@ -139,6 +148,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[bibleTitle setTitle: newTitle];
 	} else {
 		[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+		[self setTabTitle: @"PocketSword" ofTab:BibleTab];
+		[self setEnabledBibleNextButton: NO];
+		[self setEnabledBiblePreviousButton: NO];
 	}
 	[pool release];
 }
@@ -152,6 +164,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[commentaryTitle setTitle: newTitle];
 	} else {
 		[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+		[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
+		[self setEnabledCommentaryNextButton: NO];
+		[self setEnabledCommentaryPreviousButton: NO];
 	}
 	[pool release];
 }
@@ -171,133 +186,119 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-- (void)showDownloadStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
-	[statusOverallText setText: @""];
-	NSString *sText = [NSString stringWithFormat: @"%@", NSLocalizedString(@"Installing", @"Installing")] ;
-	
-	[statusOverallBar setHidden: NO];
-	[statusText setText: sText];
-	[statusText setLineBreakMode: UILineBreakModeWordWrap];
-	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	[navController setNavigationBarHidden: YES];
-	
-	[tabController presentModalViewController: navController animated: YES];
-	
-	[pool release];
-}
+//- (void)showDownloadStatus {// called in -installIndex
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
+//	[statusOverallText setText: @""];
+//	NSString *sText = [NSString stringWithFormat: @"%@", NSLocalizedString(@"Installing", @"Installing")] ;
+//	
+//	[statusOverallBar setHidden: NO];
+//	[statusText setText: sText];
+//	[statusText setLineBreakMode: UILineBreakModeWordWrap];
+//	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
+//	[navController setNavigationBarHidden: YES];
+//	
+//	[tabController presentModalViewController: navController animated: YES];
+//	
+//	[pool release];
+//}
 
-/*- (void)runInstallation {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[[moduleManager swordInstallManager] resetInstallationProgress];
-	
-	[self performSelectorInBackground: @selector(showDownloadStatus) withObject: nil];
-	
-	[moduleManager setCurrentInstallSource:[[[moduleManager swordInstallManager] installSourceList] objectAtIndex: installModuleInstallSource]];
-	[moduleManager performSelectorInBackground: @selector(installModule:) withObject: installModule];
-	[self updateInstallationStatus];
-	
-	[pool release];
-}*/
+//- (void)updateInstallationStatus {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
+//	BOOL failed = YES;
+//	float progress = reporter->overallProgress;
+//	[statusBar setProgress: reporter->fileProgress];
+//	[statusOverallBar setProgress: reporter->overallProgress];
+//	NSString *desc = [[[NSString alloc] initWithCString: reporter->getDescription() encoding: [NSString defaultCStringEncoding]] autorelease];
+//	//DLog(@"%@", desc);
+//	NSRange dataRange = [desc rangeOfString: @")"];
+//	if(dataRange.location != NSNotFound) {
+//		desc = [NSString stringWithFormat: @"%@ %@)", [desc substringToIndex: dataRange.location], NSLocalizedString(@"files", @"files")];
+//	}
+//	//DLog(@"%@", desc);
+//	[statusOverallText setText: desc];
+//	
+//	//DLog(@"updateInstallationStatus: Progress: %f", progress);
+//	
+//	if (progress == 1.0) {
+//		[moduleManager reload];
+//		//[moduleTable reloadData];
+//		//[downloadableModulesTable reloadData];
+//		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+//		failed = NO;
+//	}
+//	else if (progress == -1.0) {
+//		failed = YES;
+//	} else {
+//		failed = NO;
+//	}
+//	if (failed) {
+//		[moduleManager reload];
+//		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+//		//[moduleTable reloadData];
+//		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
+//								   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil] show];		
+//	}
+//	[pool release];
+//}
 
-- (void)updateInstallationStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
-	BOOL failed = YES;
-	float progress = reporter->overallProgress;
-	[statusBar setProgress: reporter->fileProgress];
-	[statusOverallBar setProgress: reporter->overallProgress];
-	NSString *desc = [[[NSString alloc] initWithCString: reporter->getDescription() encoding: [NSString defaultCStringEncoding]] autorelease];
-	//DLog(@"%@", desc);
-	NSRange dataRange = [desc rangeOfString: @")"];
-	if(dataRange.location != NSNotFound) {
-		desc = [NSString stringWithFormat: @"%@ %@)", [desc substringToIndex: dataRange.location], NSLocalizedString(@"files", @"files")];
-	}
-	//DLog(@"%@", desc);
-	[statusOverallText setText: desc];
-	
-	//DLog(@"updateInstallationStatus: Progress: %f", progress);
-	
-	if (progress == 1.0) {
-		[moduleManager reload];
-		//[moduleTable reloadData];
-		//[downloadableModulesTable reloadData];
-		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		failed = NO;
-	}
-	else if (progress == -1.0) {
-		failed = YES;
-	} else {
-		failed = NO;
-	}
-	if (failed) {
-		[moduleManager reload];
-		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		//[moduleTable reloadData];
-		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
-								   delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil] show];		
-	}
-	[pool release];
-}
+//- (void)hideOperationStatus {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	
+//	[tabController dismissModalViewControllerAnimated: YES];
+//	[timer invalidate];
+//	
+//	[statusText setText: @""];
+//	[statusOverallText setText: @""];
+//	[statusBar setProgress: 0.0];
+//	[statusOverallBar setProgress: 0.0];
+//	[pool release];
+//}
 
-- (void)hideIndexStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[ViewController hideModal: statusController.view withTiming:0.3];
-	[statusText setText: @""];
-	[statusOverallText setText: @""];
-	[statusBar setProgress: 0.0];
-	[statusOverallBar setProgress: 0.0];
-	[pool release];
-}
+//- (void)installIndex {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	
+//	[self performSelectorInBackground: @selector(showDownloadStatus) withObject: nil];
+//	
+//	[moduleManager performSelectorInBackground: @selector(installSearchIndex) withObject: nil];
+//	[self updateInstallationStatus];
+//	
+//	[pool release];
+//}
 
-- (void)hideOperationStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[tabController dismissModalViewControllerAnimated: YES];
-	[timer invalidate];
-	
-	[statusText setText: @""];
-	[statusOverallText setText: @""];
-	[statusBar setProgress: 0.0];
-	[statusOverallBar setProgress: 0.0];
-	[pool release];
-}
-
-- (void)installIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[self performSelectorInBackground: @selector(showDownloadStatus) withObject: nil];
-	
-	[moduleManager performSelectorInBackground: @selector(installSearchIndex) withObject: nil];
-	[self updateInstallationStatus];
-	
-	[pool release];
-}
-
-- (void)showIndexStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[statusTitle setText: NSLocalizedString(@"IndexDownloadTitle", @"Index Download")]; 
-	[statusText setText: @""];
-	[statusOverallBar setHidden: YES];
-	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	//[navController setNavigationBarHidden: YES];
-	
-	//[tabController presentModalViewController: navController animated: YES];
-	[ViewController showModal: statusController.view withTiming:0.3];
-	
-	[pool release];
-}
-
-- (void)updateIndexInstallationStatus:(NSString*)arg {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[statusBar setProgress: reporter->fileProgress];
-	float p = [arg floatValue];
-	[statusBar setProgress: p];
-	[pool release];
-}
+//- (void)hideIndexStatus {//needed, move to PSIndexController
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	[ViewController hideModal: statusController.view withTiming:0.3];
+//	[statusText setText: @""];
+//	[statusOverallText setText: @""];
+//	[statusBar setProgress: 0.0];
+//	[statusOverallBar setProgress: 0.0];
+//	[pool release];
+//}
+//
+//- (void)showIndexStatus {//needed, move to PSIndexController
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	
+//	[statusTitle setText: NSLocalizedString(@"IndexDownloadTitle", @"Index Download")]; 
+//	[statusText setText: @""];
+//	[statusOverallBar setHidden: YES];
+//	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
+//	//[navController setNavigationBarHidden: YES];
+//	
+//	//[tabController presentModalViewController: navController animated: YES];
+//	[ViewController showModal: statusController.view withTiming:0.3];
+//	
+//	[pool release];
+//}
+//
+//- (void)updateIndexInstallationStatus:(NSString*)arg {//needed, move to PSIndexController
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	//[statusBar setProgress: reporter->fileProgress];
+//	float p = [arg floatValue];
+//	[statusBar setProgress: p];
+//	[pool release];
+//}
 
 //
 // UIAlertView delegate method
@@ -319,19 +320,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		timer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
 	}
-	else if (buttonIndex == 1) {
-		DLog(@"alertView: didDismissWithButtonIndex: -- installIndex??!!??");
-		//percent = 0;
-		[self performSelectorInBackground: @selector(installIndex) withObject: nil];
-		
-		SEL method = @selector(updateInstallationStatus);
-		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
-		NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-		[invocation setTarget: self];
-		[invocation setSelector: method];
-		
-		timer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
-	}
+//	else if (buttonIndex == 1) {
+//		DLog(@"alertView: didDismissWithButtonIndex: -- installIndex??!!??");
+//		//percent = 0;
+//		[self performSelectorInBackground: @selector(installIndex) withObject: nil];
+//		
+//		SEL method = @selector(updateInstallationStatus);
+//		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
+//		NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
+//		[invocation setTarget: self];
+//		[invocation setSelector: method];
+//		
+//		timer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+//	}
 	
 	[pool release];
 }
@@ -418,14 +419,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		NSString *ref = [moduleManager setToNextChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-			[self addHistoryItem: BibleTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			//[self addHistoryItem: BibleTab];
 		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		NSString *ref = [moduleManager setToNextChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-			[self addHistoryItem: CommentaryTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			//[self addHistoryItem: CommentaryTab];
 		}
 	} else {
 		// weird & undefined
@@ -451,14 +454,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[self addHistoryItem: BibleTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			//[self addHistoryItem: BibleTab];
 		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		NSString *ref = [moduleManager setToPreviousChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[self addHistoryItem: CommentaryTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			//[self addHistoryItem: CommentaryTab];
 		}
 	} else {
 		// weird & undefined
@@ -471,7 +476,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-- (IBAction)toggleMultiList:(id)sender
+- (IBAction)toggleMultiList
 {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
 	
@@ -503,8 +508,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 }
 
-- (IBAction)toggleModulesList:(id)sender
-{
+- (IBAction)toggleModulesList {
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[moduleSelectorViewController setListType: BibleTab];
@@ -585,7 +589,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)addModuleButtonPressed {
-	[self toggleModulesList:nil];
+	[self toggleModulesList];
 	for(UIViewController *uivc in tabController.viewControllers) {
 		if([uivc isKindOfClass:[NavigatorSources class]]) {
 			tabController.selectedViewController = uivc;
@@ -661,14 +665,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[self addHistoryItem: BibleTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			//[self addHistoryItem: BibleTab];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[self addHistoryItem: CommentaryTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			//[self addHistoryItem: CommentaryTab];
 		} else {
 			//something tab???
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
@@ -678,107 +684,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
 	}
-	
-	[pool release];
-}
-
-// This should be called just AFTER:
-//    "nextChapter".
-//    or "prevChapter".
-//    or navigation to a new ref from the refPicker.
-//    or when the user selects a new module to view.
-//    or when the user selects a bookmark.
-//    or when the user selects a search result.
-- (void)addHistoryItem:(ShownTab)tabForHistory
-{
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSString *verse;
-	NSString *scroll;
-	NSString *mod;
-	NSMutableArray *history;
-	NSString *historyName;
-	BOOL valid = NO;
-	
-	if(tabForHistory == BibleTab) {
-		verse = [defaults stringForKey: DefaultsBibleVersePosition];
-		scroll = [defaults stringForKey: @"bibleScrollPosition"];
-		if([moduleManager primaryBible]) {
-			valid = YES;
-			mod = [[moduleManager primaryBible] name];
-		}
-		historyName = @"bibleHistory";
-		history = [[defaults arrayForKey: historyName] mutableCopy];
-	} else if(tabForHistory == CommentaryTab) {
-		verse = [defaults stringForKey: DefaultsCommentaryVersePosition];
-		scroll = [defaults stringForKey: @"commentaryScrollPosition"];
-		if([moduleManager primaryCommentary]) {
-			valid = YES;
-			mod = [[moduleManager primaryCommentary] name];
-		}
-		historyName = @"commentaryHistory";
-		history = [[defaults arrayForKey: historyName] mutableCopy];
-	} else {
-		ALog(@"\nWe don't know which tab we're on!  :(");
-	}
-	
-	if(valid) {
-		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[moduleManager getCurrentBibleRef]], verse];
-		
-		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
-		
-		if (!history) {
-			history = [[NSMutableArray alloc] initWithObjects: nil];
-			
-			NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-			[prefs setObject: history forKey: historyName];
-			
-			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-			[prefs release];
-		}
-		
-		[history insertObject: historyItem atIndex: 0];
-		//[historyItem release];
-		if([history count] >= 50) {
-			[history removeLastObject];
-		}
-		
-		[defaults setObject: history forKey: historyName];
-		[defaults synchronize];
-	}
-	if(history)
-		[history release];
-	
-	[pool release];
-	
-}
-
-- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSMutableArray *history;
-	NSString *historyName;
-	if(tabForHistory == BibleTab) {
-		historyName = @"bibleHistory";
-		history = [[defaults arrayForKey: historyName] mutableCopy];
-	} else if(tabForHistory == CommentaryTab) {
-		historyName = @"commentaryHistory";
-		history = [[defaults arrayForKey: historyName] mutableCopy];
-	} else {
-		return;
-	}
-	
-	for(NSArray *historyItem in history) {
-		if([ref isEqualToString:[historyItem objectAtIndex:0]]) {
-			[history removeObject:historyItem];
-			break;
-		}
-	}
-	[defaults setObject: history forKey: historyName];
-	[defaults synchronize];
-	[history release];
 	
 	[pool release];
 }
@@ -1093,7 +998,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-- (void)hideBusyIndicator {
+- (void)_hideBusyIndicator {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	if (activityIndicator) {
 		[UIView beginAnimations:nil context:nil];
@@ -1107,6 +1012,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
+- (void)hideBusyIndicator {
+	[self _hideBusyIndicator];
+	[self performSelector:@selector(_hideBusyIndicator) withObject:nil afterDelay:1];
+}
+
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
 	[activityIndicator stopAnimating];
 	[activityController.view removeFromSuperview];
@@ -1114,10 +1024,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)reloadModuleTable {
 	[modulesListTable reloadData];
-}
-
-- (void)reloadDictionaryData {
-	[dictionaryViewController reloadDictionaryData:YES];
 }
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
@@ -1135,10 +1041,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return tabController;
 }
 
-//- (UIView *)modulesListView {
-//	return modulesListView;
-//}
-//
+- (void)showInfoWithNotification:(NSNotification *)notification {
+	if(notification) {
+		[self showInfo:[notification object]];
+	}
+}
+
 - (void)showInfo:(NSString *)infoString {
 	if(![infoView superview]) {
 		//need to show the info pane
@@ -1158,7 +1066,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	//NSLog(@"%@", infoString);
 }
 
-- (IBAction)hideInfo:(id)sender {
+- (IBAction)hideInfo {
 	[ViewController hideModal: infoView withTiming: 0.3];
 }
 
@@ -1188,7 +1096,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			} else {
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
-			[self addHistoryItem: BibleTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			//[self addHistoryItem: BibleTab];
 
 			return NO;
 		}

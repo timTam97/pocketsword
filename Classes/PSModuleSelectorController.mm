@@ -95,7 +95,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	NSString *ref = [moduleManager getCurrentBibleRef];
+	//NSString *ref = [moduleManager getCurrentBibleRef];
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]]) || ([moduleManager primaryDictionary] && [newModule isEqualToString:[[moduleManager primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -107,15 +107,19 @@
 	switch (listType) {
 		case BibleTab:
 			[moduleManager loadPrimaryBible: newModule];
-			[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[[moduleManager viewController] addHistoryItem: BibleTab];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			//[[moduleManager viewController] addHistoryItem: BibleTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			if([[moduleManager primaryBible] isLocked])
 				locked = YES;
 			break;
 		case CommentaryTab:
 			[moduleManager loadPrimaryCommentary:newModule];
-			[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[[moduleManager viewController] addHistoryItem: CommentaryTab];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			//[[moduleManager viewController] addHistoryItem: CommentaryTab];
 			if([[moduleManager primaryCommentary] isLocked])
 				locked = YES;
 			break;
@@ -132,10 +136,12 @@
 				locked = YES;
 			break;
 	}
-	if(locked)
+	if(locked) {
 		[self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
-	else
-		[[moduleManager viewController] toggleModulesList: nil];
+	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+		//[[moduleManager viewController] toggleModulesList];
+	}
 	
 	[pool release];
 }
@@ -146,8 +152,10 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[moduleManager removeModule: module];
-		if(listType == DictionaryTab)
-			[[moduleManager viewController] reloadDictionaryData];
+		if(listType == DictionaryTab) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
+			//[[moduleManager viewController] reloadDictionaryData];
+		}
 		[tableView reloadData];
 	}
 	

@@ -166,10 +166,12 @@
 	SwordInstallSource *sIS = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex:indexPath.row];
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		[moduleManager displayBusyIndicator];
 
 		[sIS swordManager];
 
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 		[moduleManager hideBusyIndicator];
 	}
 	[((NavigatorModuleTypes*)navigatorModuleTypes) setDataArray:[sIS moduleListByType]];

@@ -71,7 +71,8 @@ BOOL requireReloadOfModuleViews = NO;
 - (void)viewWillDisappear:(BOOL)animated {
 	if(requireReloadOfModuleViews) {
 		//[moduleManager displayBusyIndicator];
-		[[moduleManager viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+		//[[moduleManager viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
 		//[moduleManager hideBusyIndicator];
 	}
 	requireReloadOfModuleViews = NO;

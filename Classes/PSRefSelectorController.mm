@@ -296,7 +296,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	PSChapterSelectorController *chapterSelectorController = [[PSChapterSelectorController alloc] init];
-	NSDictionary *proxyDict = [NSDictionary dictionaryWithObject:[moduleManager viewController] forKey:@"viewController"];
+	NSDictionary *proxyDict = [NSDictionary dictionaryWithObject:viewController forKey:@"viewController"];
 	NSDictionary *optionsDict = [NSDictionary dictionaryWithObject:proxyDict forKey:UINibExternalObjects];
 	[[NSBundle mainBundle] loadNibNamed:@"PSChapterSelectorController" owner:chapterSelectorController options:optionsDict];
 	[chapterSelectorController setBookAndInit: [refSelectorBooks objectAtIndex:indexPath.section]];

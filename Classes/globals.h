@@ -54,64 +54,34 @@ typedef enum {
 #define StrongsFontName								@"Times New Roman"
 
 
-/**
- \brief this notification is send, when the modules have changed (updated, added, removed)
- */
+// Notification identifiers
 #define NotificationModulesChanged				@"NotificationModulesChanged"
 #define SendNotifyModulesChanged(X) [[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:X];
 #define NotificationBibleSwipeRight				@"NotificationBibleSwipeRight"
 #define NotificationBibleSwipeLeft				@"NotificationBibleSwipeLeft"
 #define NotificationCommentarySwipeRight		@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft			@"NotificationCommentarySwipeLeft"
+
 #define NotificationDevotionalChanged			@"NotificationDevotionalChanged"
 #define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"
 #define NotificationNewPrimaryBible				@"NotificationNewPrimaryBible"
 #define NotificationNewPrimaryCommentary		@"NotificationNewPrimaryCommentary"
 #define NotificationNewPrimaryDictionary		@"NotificationNewPrimaryDictionary"
+#define NotificationReloadDictionaryData		@"NotificationReloadDictionaryData"
 #define NotificationResetBibleAndCommentaryView @"NotificationResetBibleAndCommentaryView"
-#define NotificationPrimaryBibleRemoved			@"NotificationPrimaryBibleRemoved"
-#define NotificationPrimaryCommentaryRemoved	@"NotificationPrimaryCommentaryRemoved"
+
+#define NotificationRedisplayPrimaryBible		@"NotificationRedisplayPrimaryBible"
+#define NotificationRedisplayPrimaryCommentary	@"NotificationRedisplayPrimaryCommentary"
 #define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
 
-/*
-#define BUNDLEVERSION               CFBundleGetVersionNumber(CFBundleGetMainBundle())
-#define BUNDLEVERSIONSTRING         CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey)
-#define APPNAME                     @"MacSword"
-#define OLD_BOOKMARK_PATH           [@"~/Library/Application Support/MacSword/Bookmarks.plist" stringByExpandingTildeInPath]
-#define DEFAULT_BOOKMARK_PATH       [@"~/Library/Application Support/MacSword/Bookmarklist.plist" stringByExpandingTildeInPath]
-#define DEFAULT_SESSION_PATH        [@"~/Library/Application Support/MacSword/DefaultSession.plist" stringByExpandingTildeInPath]
-#define DEFAULT_SEARCHBOOKSET_PATH  [@"~/Library/Application Support/MacSword/DefaultSearchBookSets.plist" stringByExpandingTildeInPath]
-#define SWINSTALLMGR_NAME           @"InstallMgr"
-#define LOGFILE                     [@"~/Library/Logs/MacSword2.log" stringByExpandingTildeInPath]
-#define TMPFOLDER                   [@"~/Library/Caches/MacSword" stringByExpandingTildeInPath]
+#define NotificationAddBibleHistoryItem			@"NotificationAddBibleHistoryItem"
+#define NotificationAddCommentaryHistoryItem	@"NotificationAddCommentaryHistoryItem"
 
-// OS version
-#define OSVERSION [[NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"] objectForKey:@"ProductVersion"]
-*/
+#define NotificationToggleMultiList				@"NotificationToggleMultiList"
+#define NotificationToggleModuleList			@"NotificationToggleModuleList"
 
-// table and outlineview fonts
-/*#define FontTiny [UIFont fontWithName: @"Lucida Grande" size:9]
-#define FontSmall [UIFont fontWithName: @"Lucida Grande" size:10]
-#define FontStd [UIFont fontWithName: @"Lucida Grande" size: 11]
-#define FontStdBold [UIFont fontWithName: @"Lucida Grande Bold" size: 11]
-#define FontLarge [UIFont fontWithName: @"Lucida Grande" size: 12]
-#define FontLargeBold [UIFont fontWithName: @"Lucida Grande Bold" size: 12]
-#define FontMoreLarge [UIFont fontWithName: @"Lucida Grande" size: 14]
-#define FontMoreLargeBold [UIFont fontWithName: @"Lucida Grande Bold" size: 14]*/
+#define NotificationHideInfoPane				@"NotificationHideInfoPane"
+#define NotificationShowInfoPane				@"NotificationShowInfoPane"
 
-
-
-// Notification identifiers
-
-
-/**
- \brief this notification is send when the user clicks on a link in ExtTextView or the tooltip sows up
- */
-//#define NotificationShowPreviewData @"NotificationShowPreviewData"
-//#define SendNotifyShowPreviewData(X) [[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowPreviewData object:X];
-
-/**
- \brief this notification is send when among the currently displayed and active modules is a dictionary or genbook
- */
-//#define NotificationSetHUDContentView @"NotificationSetHUDContentView"
-//#define SendNotifySetHUDContentView(X) [[NSNotificationCenter defaultCenter] postNotificationName:NotificationSetHUDContentView object:X];
+//#define NotificationDisplayBusyIndicator		@"NotificationDisplayBusyIndicator"
+//#define NotificationHideBusyIndicator			@"NotificationHideBusyIndicator"

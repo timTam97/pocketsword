@@ -17,6 +17,10 @@
 
 BOOL loaded;
 
+- (void)moduleButtonPressed {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,7 +35,8 @@ BOOL loaded;
 		if(![moduleManager primaryDevotional])
 			[moduleManager loadPrimaryDevotional:devoTitle];
 	}
-	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:[moduleManager viewController] action:@selector(toggleModulesList:)];
+	//UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:[moduleManager viewController] action:@selector(toggleModulesList)];
+	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
 	self.navigationItem.rightBarButtonItem = moduleButton;
 	[moduleButton release];
 	
@@ -161,7 +166,8 @@ BOOL loaded;
 	
 	
 	if(entry) {
-		[[moduleManager viewController] showInfo: entry];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
+		//[[moduleManager viewController] showInfo: entry];
 		load = NO;
 	}
 	

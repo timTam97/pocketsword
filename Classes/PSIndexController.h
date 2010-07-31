@@ -28,12 +28,24 @@
 	IBOutlet UIBarButtonItem *closeButton;
 	IBOutlet UITableView *indicesTable;
 	IBOutlet UINavigationItem *navItem;
+
+	// Status view
+	IBOutlet UIViewController *statusController;
+	IBOutlet UILabel *statusTitle;
+	IBOutlet UILabel *statusText;
+	IBOutlet UILabel *statusOverallText;
+	IBOutlet UIProgressView *statusBar;
+	IBOutlet UIProgressView *statusOverallBar;
 }
 
 @property (retain, readwrite) NSArray *downloadableIndices;
 @property (retain, readwrite) NSArray *installedIndices;
 @property (retain, readwrite) NSArray *unavailableIndices;
 @property (retain, readwrite) NSMutableArray *files;
+
+- (void)updateIndexInstallationStatus:(NSString*)arg;//needed, move to PSIndexController
+- (void)showIndexStatus;//needed, move to PSIndexController
+- (void)hideIndexStatus;//needed, move to PSIndexController
 
 - (void)viewDidLoad;
 - (void)dealloc;

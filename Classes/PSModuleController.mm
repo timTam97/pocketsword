@@ -17,12 +17,17 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+#import <SystemConfiguration/SystemConfiguration.h>
+
 #import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "ViewController.h"
 #import "SwordDictionary.h"
 
 #include <localemgr.h>
+#include <swmgr.h>
+#include <swmodule.h>
+#include <markupfiltmgr.h>
 
 //careful of the '%' in the string below!  needs to be '%%' if moved to be used in an appendByFormat: but is fine how it is right now (3/3/10 niccarter)
 #define RUBY_CSS @"ruby\n\
@@ -103,12 +108,7 @@ float installationProgress;
 	//install the module/s contained in the archive:
 	[swordManager installModulesFromPath:outfile];
 	[self reload];
-	
-	//reload the moduleTable
-	//[moduleTable reloadData];
-	//[viewController reloadModuleTable];
-
-	
+		
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	//[fileManager removeItemAtPath:zippedModule error:NULL];//this won't remove the zip file on the iPhone device.............
 	[fileManager removeItemAtPath:outfile error:NULL];
@@ -118,8 +118,6 @@ float installationProgress;
 //			[bookmarkAddButton setEnabled:YES];
 //		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		//NSString *ref = [self getCurrentBibleRef];
-		//[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
 	
 }
@@ -199,10 +197,6 @@ float installationProgress;
 	[self reloadLastCommentary];
 	
 	return self;
-}
-
-- (ViewController *)viewController {
-	return viewController;
 }
 
 // This method was written to speed up access of the downloads tab.
@@ -519,8 +513,6 @@ float installationProgress;
 	}
 	if((!primaryBible && ([swordModule type] == bible)) || (!primaryCommentary && [swordModule type] == commentary)) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//		NSString *ref = [self getCurrentBibleRef];
-//		[viewController displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		//[bookmarkAddButton setEnabled:YES];
 	} else if(!primaryDictionary && ([swordModule type] == dictionary) && ([swordModule cat] == undefinedCategory)) {
 		//set it to the primaryDictionary.
@@ -648,7 +640,7 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastBible];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationPrimaryBibleRemoved object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 		//[bibleWebView loadHTMLString: [self getBibleChapter: [self getCurrentBibleRef] withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		//[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
 	} else if ([name isEqualToString: primaryCommentaryName]) {
@@ -656,7 +648,7 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastCommentary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//NSString *nsLoc = [NSString stringWithCString: loc.getText() encoding: [NSString defaultCStringEncoding]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationPrimaryCommentaryRemoved object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 		//[commentaryWebView loadHTMLString: [self getCommentaryChapter: [self getCurrentBibleRef] withExtraJS: @"startDetLocPoll();\n"] baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		//[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	} else if([name isEqualToString: primaryDictionaryName]) {
@@ -669,26 +661,26 @@ float installationProgress;
 	}
 	
 	[self reload];
-	//[moduleTable reloadData];
-	//[viewController reloadModuleTable];
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!
 		//[bibleNavBtn setTitle: @"PocketSword"];
-		[viewController setTabTitle: @"PocketSword" ofTab:BibleTab];
 		//[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		//[bookmarkAddButton setEnabled:NO];
-		[viewController setEnabledBibleNextButton: NO];
-		[viewController setEnabledBiblePreviousButton: NO];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
+		//[viewController setTabTitle: @"PocketSword" ofTab:BibleTab];
+		//[viewController setEnabledBibleNextButton: NO];
+		//[viewController setEnabledBiblePreviousButton: NO];
 	}
 	
 	if (numberOfCommentaries == 1 && primaryCommentary == nil) {
 		//no commentaries left...
 		//[commentaryNavBtn setTitle: @"PocketSword"];
-		[viewController setTabTitle: @"PocketSword" ofTab:CommentaryTab];
 		//[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
-		[viewController setEnabledCommentaryNextButton: NO];
-		[viewController setEnabledCommentaryPreviousButton: NO];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
+		//[viewController setTabTitle: @"PocketSword" ofTab:CommentaryTab];
+		//[viewController setEnabledCommentaryNextButton: NO];
+		//[viewController setEnabledCommentaryPreviousButton: NO];
 	}
 	
 	if([name isEqualToString: primaryDictionaryName]) {
@@ -698,7 +690,7 @@ float installationProgress;
 		} else {
 			//
 		}
-		[viewController reloadDictionaryData];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
 	} else if([name isEqualToString: primaryDevotionalName]) {
 		if([[swordManager modulesForType:SWMOD_CATEGORY_DAILYDEVS] count] > 0) {
 			//set the primaryDevotional to the next available devo.
@@ -1027,18 +1019,19 @@ float installationProgress;
 
 - (void)hideBusyIndicator
 {
-	if(busyTimer) {
-		[busyTimer invalidate];
-		self.busyTimer = nil;
-	}
+//	if(busyTimer) {
+//		[busyTimer invalidate];
+//		self.busyTimer = nil;
+//	}
 	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
-	self.busyTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doubleClose:) userInfo:nil repeats:NO];
+	//[self performSelector:@selector(doubleClose:) withObject:nil afterDelay:1];
+	//self.busyTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doubleClose:) userInfo:nil repeats:NO];
 }
 
-- (void)doubleClose:(NSTimer *)theTimer
-{
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
-}
+//- (void)doubleClose:(NSTimer *)theTimer
+//{
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+//}
 
 + (NSDictionary *)dataForLink:(NSURL *)aURL {
     // there are two types of links

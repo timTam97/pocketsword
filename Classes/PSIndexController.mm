@@ -56,6 +56,39 @@ BOOL downloadableShown;
 		[self updateInstalledIndexListWithRemoteIndices:nil];
 }
 
+- (void)hideIndexStatus {//needed, move to PSIndexController
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	[ViewController hideModal: statusController.view withTiming:0.3];
+	[statusText setText: @""];
+	[statusOverallText setText: @""];
+	[statusBar setProgress: 0.0];
+	[statusOverallBar setProgress: 0.0];
+	[pool release];
+}
+
+- (void)showIndexStatus {//needed, move to PSIndexController
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	[statusTitle setText: NSLocalizedString(@"IndexDownloadTitle", @"Index Download")]; 
+	[statusText setText: @""];
+	[statusOverallBar setHidden: YES];
+	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
+	//[navController setNavigationBarHidden: YES];
+	
+	//[tabController presentModalViewController: navController animated: YES];
+	[ViewController showModal: statusController.view withTiming:0.3];
+	
+	[pool release];
+}
+
+- (void)updateIndexInstallationStatus:(NSString*)arg {//needed, move to PSIndexController
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	//[statusBar setProgress: reporter->fileProgress];
+	float p = [arg floatValue];
+	[statusBar setProgress: p];
+	[pool release];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return tableSections;
@@ -138,8 +171,8 @@ BOOL downloadableShown;
 
 	if (buttonIndex == 1) {
 		if(indexPath) {
-			ViewController *mm = [moduleManager viewController];
-			[mm performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
+			//ViewController *mm = [moduleManager viewController];
+			[self performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
 			[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
 		}
 	} else {
@@ -304,9 +337,9 @@ BOOL downloadableShown;
 	installationProgress = (float) responseDataCurrentLength / (float) responseDataExpectedLength;
 	if(installationProgress >= 1.0)
 		installationProgress = 0.9999;//1.0 is a reserved special value that shouldn't be set here.
-	ViewController *mm = [moduleManager viewController];
+	//ViewController *mm = [moduleManager viewController];
 	NSString *p = [NSString stringWithFormat: @"%f", installationProgress];
-	[mm performSelectorInBackground: @selector(updateIndexInstallationStatus:) withObject: p];
+	[self performSelectorInBackground: @selector(updateIndexInstallationStatus:) withObject: p];
 	//[[moduleManager viewController] updateIndexInstallationStatus:installationProgress];
 }
 
@@ -321,8 +354,8 @@ BOOL downloadableShown;
 
 	ALog(@"Couldn't retrieve search index for: %@", moduleName);
 	installationProgress = -1.0;
-	ViewController *mm = [moduleManager viewController];
-	[mm performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
+	//ViewController *mm = [moduleManager viewController];
+	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
 	//[[moduleManager viewController] hideOperationStatus];
 }
 
@@ -366,8 +399,8 @@ BOOL downloadableShown;
 	installationProgress = 1.0;
 	[self updateInstalledIndexList];
 	 //[indicesTable reloadData];
-	ViewController *mm = [moduleManager viewController];
-	[mm performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
+	 //ViewController *mm = [moduleManager viewController];
+	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
 	//[[moduleManager viewController] hideOperationStatus];
 	[searchController refreshView];
 }

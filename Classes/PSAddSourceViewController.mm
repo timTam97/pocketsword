@@ -174,6 +174,7 @@
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = YES;
 	
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	[[navSources moduleManager] displayBusyIndicator];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/mods.d.tar.gz", [serverType lowercaseString], server, path]];
@@ -183,6 +184,7 @@
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
 	data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
 	
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	[[navSources moduleManager] hideBusyIndicator];
 
 	application.networkActivityIndicatorVisible = NO;

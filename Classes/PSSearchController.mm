@@ -176,29 +176,41 @@ BOOL searchingEnabled;
 		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+		[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		ShownTab tab = [historyController listType];
-		PollingType pt;
+		//PollingType pt;
 		switch(tab) {
 			case BibleTab:
-				pt = BibleViewPoll;
+				//pt = BibleViewPoll;
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 				break;
 			case CommentaryTab:
-				pt = CommentaryViewPoll;
+				//pt = CommentaryViewPoll;
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 				break;
 		}
-		[[moduleManager viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
+		//[[moduleManager viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
 		//self.searchTerm = nil;
-		[[moduleManager viewController] toggleMultiList: nil];
-		[[moduleManager viewController] highlightSearchTerm: searchTerm forTab: tab];
-		[[moduleManager viewController] addHistoryItem: tab];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
+		//[[moduleManager viewController] toggleMultiList];
+		//[[moduleManager viewController] highlightSearchTerm: searchTerm forTab: tab]; -- doesn't work atm 31/7/10 nicc
+//		if(tab == BibleTab) {
+//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+//		} else {
+//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+//		}
+		//[[moduleManager viewController] addHistoryItem: tab];
 	}
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	[moduleManager displayBusyIndicator];
 	ShownTab tab = [historyController listType];
 	self.results = nil;
@@ -220,6 +232,7 @@ BOOL searchingEnabled;
 		}
 	}
 	
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	[moduleManager hideBusyIndicator];
 	[resultsTable reloadData];
 	[pool release];

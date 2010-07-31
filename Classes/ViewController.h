@@ -102,13 +102,13 @@ typedef enum {
 	// About tab
 	IBOutlet UITabBarItem *aboutTabBarItem;
 	
-	// Status view
-	IBOutlet UIViewController *statusController;
-	IBOutlet UILabel *statusTitle;
-	IBOutlet UILabel *statusText;
-	IBOutlet UILabel *statusOverallText;
-	IBOutlet UIProgressView *statusBar;
-	IBOutlet UIProgressView *statusOverallBar;
+//	// Status view
+//	IBOutlet UIViewController *statusController;
+//	IBOutlet UILabel *statusTitle;
+//	IBOutlet UILabel *statusText;
+//	IBOutlet UILabel *statusOverallText;
+//	IBOutlet UIProgressView *statusBar;
+//	IBOutlet UIProgressView *statusOverallBar;
 	
 	// Busy Indicator
 	IBOutlet UIViewController *activityController;
@@ -134,21 +134,22 @@ typedef enum {
 - (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
 - (void)setDictionaryTitleViaNotification;
-- (void)updateInstallationStatus;
-- (void)updateIndexInstallationStatus:(NSString*)arg;
+
+//- (void)updateInstallationStatus;
+//- (void)updateIndexInstallationStatus:(NSString*)arg;//needed, move to PSIndexController
+//- (void)showIndexStatus;//needed, move to PSIndexController
+//- (void)hideIndexStatus;//needed, move to PSIndexController
+//- (void)hideOperationStatus;
+
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;
 - (IBAction)toggleNavigation:(id)sender;
 - (IBAction)updateViewWithSelectedChapter:(id)sender;
 - (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
-//- (IBAction)toggleModuleTableEditing:(id)sender;
 
-- (void)addHistoryItem:(ShownTab)tabForHistory;
-- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory;
-
-- (IBAction)toggleModulesList:(id)sender;
-- (IBAction)toggleMultiList:(id)sender;
+- (IBAction)toggleModulesList;
+- (IBAction)toggleMultiList;
 - (IBAction)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
@@ -168,19 +169,14 @@ typedef enum {
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
 
 - (void)reloadModuleTable;
-- (void)reloadDictionaryData;
-
-- (void)showIndexStatus;
-- (void)hideIndexStatus;
-- (void)hideOperationStatus;
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
 - (UITabBarController *)tabController;
-//- (UIView *)modulesListView;
 - (void)setShownTabTo:(ShownTab)tab;
 
+- (void)showInfoWithNotification:(NSNotification *)notification;
 - (void)showInfo:(NSString *)infoString;
-- (IBAction)hideInfo:(id)sender;
+- (IBAction)hideInfo;
 
 @end

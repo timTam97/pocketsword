@@ -17,8 +17,6 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import <UIKit/UIKit.h>
-#import <SystemConfiguration/SystemConfiguration.h>
 
 #import "ViewController.h"
 #import "SwordManager.h"
@@ -30,10 +28,6 @@
 #import "PSModuleType.h"
 #import "SwordKey.h"
 #import "PSRefSelectorController.h"
-
-#include <swmgr.h>
-#include <swmodule.h>
-#include <markupfiltmgr.h>
 
 @interface PSModuleController : NSObject {
 	// IB Outlets
@@ -78,7 +72,6 @@
 + (NSDictionary *)dataForLink:(NSURL *)aURL;
 
 - (id)init;
-- (id)viewController;
 - (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType;
 - (BOOL)isLoaded:(NSString *)module;
 - (NSString *)getCurrentBibleRef;
@@ -98,12 +91,10 @@
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraCode;
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (void)dealloc;
-//- (NSString *)getDescription:(NSString *)name fromSource:(SwordInstallSource *)source;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
-//- (void)readSwordInstallSourceModuleConfigFiles;
 
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;
-- (void)doubleClose:(NSTimer *)theTimer;
+//- (void)doubleClose:(NSTimer *)theTimer;
 
 @end

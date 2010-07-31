@@ -20,6 +20,10 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 }
 
+- (void)reloadDictionaryData {
+	[self reloadDictionaryData:YES];
+}
+
 - (void)reloadDictionaryData:(BOOL)reloadData {
 	BOOL needsReload = reloadData;
 	if(![moduleManager primaryDictionary]) {
@@ -119,10 +123,12 @@ PSDictionaryOverlayViewController *overlayViewController;
 	letUserSelectRow = YES;
 	searchResults = [[NSMutableArray alloc] init];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryData) name:NotificationReloadDictionaryData object:nil];
 }
 
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationPrimaryDictionaryChanged object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationReloadDictionaryData object:nil];
 	[searchResults release];
 	searchResults = nil;
 }
@@ -316,7 +322,8 @@ PSDictionaryOverlayViewController *overlayViewController;
 }
 
 - (IBAction)hideDescription:(id)sender {
-	[[moduleManager viewController] hideInfo: nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideInfoPane object:nil];
+	//[[moduleManager viewController] hideInfo];
 	[self dismissModalViewControllerAnimated:YES];
 	//[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
@@ -407,7 +414,9 @@ PSDictionaryOverlayViewController *overlayViewController;
 	
 	
 	if(entry) {
-		[[moduleManager viewController] showInfo: entry];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
+
+		//[[moduleManager viewController] showInfo: entry];
 		load = NO;
 	}
 	

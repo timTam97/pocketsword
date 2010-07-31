@@ -19,7 +19,7 @@
 
 #import "globals.h"
 
-@interface HistoryController : NSObject {
+@interface HistoryController : UIViewController {
 
 	ShownTab listType;
 
@@ -28,5 +28,11 @@
 }
 
 @property (assign) ShownTab listType;
+
+- (void)addBibleHistoryItem;
+- (void)addCommentaryHistoryItem;
+
+- (void)addHistoryItem:(ShownTab)tabForHistory;
+- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory;
 
 @end

@@ -101,7 +101,7 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			[[moduleManager viewController] setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
+			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
 		}
 		load = NO;
 	} else {
@@ -177,7 +177,7 @@
 
 		
 		if(entry) {
-			[[moduleManager viewController] showInfo: entry];
+			[viewController showInfo: entry];
 			load = NO;
 		}
 	}

@@ -25,6 +25,7 @@
 	NSMutableArray *searchResults;
 }
 
+- (void)reloadDictionaryData;
 - (void)reloadDictionaryData:(BOOL)reloadData;
 - (void)showDescription:(NSString*)description withTitle:(NSString*)t;
 - (IBAction)hideDescription:(id)sender;

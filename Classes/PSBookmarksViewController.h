@@ -12,6 +12,7 @@
 	IBOutlet UINavigationItem *bookmarksNavBar;
 	
 	IBOutlet id moduleManager;
+	IBOutlet id viewController;
 }
 
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
