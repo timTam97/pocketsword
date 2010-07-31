@@ -282,6 +282,7 @@ float installationProgress;
 	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastBible];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	//refSelectorController.refSelectorBooks = nil;
 	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
 	[primaryBible setHeadings:headings];
@@ -452,6 +453,7 @@ float installationProgress;
 //	if([[swordManager moduleNames] count] == 0) {
 //		[bookmarkAddButton setEnabled:NO];
 //	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
 	//refSelectorController.refSelectorBooks = nil;
 }
@@ -738,6 +740,7 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	//refSelectorController.refSelectorBooks = nil;
 }
 
@@ -776,10 +779,11 @@ float installationProgress;
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	//[primaryBible hasSearchIndex];
-	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
-	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
-	[bibleTitle setTitle: title];
+//	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
+//	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
+//	[bibleTitle setTitle: title];
 	NSString *text = [primaryBible getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);

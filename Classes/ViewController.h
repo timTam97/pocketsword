@@ -129,8 +129,7 @@ typedef enum {
 + (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
-//- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
-//- (void)confirmInstall:(NSString *)name;
+- (void)setBibleTitleViaNotification;
 - (void)updateInstallationStatus;
 - (void)updateIndexInstallationStatus:(NSString*)arg;
 - (IBAction)nextChapter:(id)sender;
@@ -151,6 +150,9 @@ typedef enum {
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
 - (void)redisplayChapter:(PollingType)pollingType restore:(RestorePositionType)position;
+- (void)redisplayChapterWithDefaults;
+- (void)redisplayBibleChapter;
+- (void)redisplayCommentaryChapter;
 
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;

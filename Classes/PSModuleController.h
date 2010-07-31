@@ -40,7 +40,7 @@
 	//IBOutlet UIWebView *bibleWebView;
 	//IBOutlet UIWebView *commentaryWebView;
 	
-	IBOutlet UIBarButtonItem *bibleTitle;
+	//IBOutlet UIBarButtonItem *bibleTitle;
 	IBOutlet UIBarButtonItem *commentaryTitle;
 	IBOutlet UIBarButtonItem *dictionaryTitle;
 

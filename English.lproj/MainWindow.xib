@@ -12,7 +12,7 @@
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<integer value="1256"/>
-			<integer value="171"/>
+			<integer value="217"/>
 			<integer value="896"/>
 			<integer value="1075"/>
 			<integer value="836"/>
@@ -2069,14 +2069,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="44889390"/>
 					</object>
 					<int key="connectionID">850</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">bibleTitle</string>
-						<reference key="source" ref="678867077"/>
-						<reference key="destination" ref="243836230"/>
-					</object>
-					<int key="connectionID">851</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -4515,16 +4507,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string key="className">PSModuleController</string>
 					<string key="superclassName">NSObject</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="bibleTitle">UIBarButtonItem</string>
 						<string key="commentaryTitle">UIBarButtonItem</string>
 						<string key="dictionaryTitle">UIBarButtonItem</string>
 						<string key="viewController">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="bibleTitle">
-							<string key="name">bibleTitle</string>
-							<string key="candidateClassName">UIBarButtonItem</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="commentaryTitle">
 							<string key="name">commentaryTitle</string>
 							<string key="candidateClassName">UIBarButtonItem</string>

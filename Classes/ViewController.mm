@@ -50,6 +50,95 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[lastRefAvailable retain];
 }
 
+- (void)awakeFromNib {
+	if (!initialized) {
+		toolbarLock = [[NSLock alloc] init];
+		NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+		//localize the tab bar titles
+		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
+		commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
+		dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
+		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
+		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
+		devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
+		
+		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
+		// and the titles of each tab
+		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
+		
+		//configure the Bible & commentary segmented controls.
+		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
+		[bibleSegmentedControl setWidth: 78 forSegmentAtIndex:1];
+		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:2];
+		[bibleSegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:0];//30
+		[commentarySegmentedControl setWidth: 78 forSegmentAtIndex:1];//138
+		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:2];//30
+		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+		
+		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
+		[bibleWebView loadHTMLString: black baseURL: nil];
+		[commentaryWebView loadHTMLString: black baseURL: nil];
+		
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		
+		NSString *lastRef = [moduleManager getCurrentBibleRef];
+		
+		[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+		
+		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] == 0) {
+			[self setTabTitle: @"PocketSword" ofTab:BibleTab];
+			[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+			[self setEnabledBibleNextButton: NO];
+			[self setEnabledBiblePreviousButton: NO];
+		}
+		[self setBibleTitleViaNotification];
+		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
+			[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
+			[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+			[self setEnabledCommentaryNextButton: NO];
+			[self setEnabledCommentaryPreviousButton: NO];
+		}
+		
+		if ([defaults boolForKey: @"insomniaPreference"]) {
+			UIApplication *thisApp = [UIApplication sharedApplication];
+			thisApp.idleTimerDisabled = YES;
+		}
+		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+		tabController.delegate = self;
+		tabController.customizableViewControllers = nil;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationBibleSwipeRight object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationCommentarySwipeRight object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationBibleSwipeLeft object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationCommentarySwipeLeft object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayChapterWithDefaults) name:NotificationResetBibleAndCommentaryView object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationPrimaryBibleRemoved object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationPrimaryCommentaryRemoved object:nil];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBibleTitleViaNotification) name:NotificationNewPrimaryBible object:nil];
+		
+		[pool release];
+		initialized = true;
+	}
+	
+}
+
+- (void)setBibleTitleViaNotification {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	SwordModule *primaryBible = [moduleManager primaryBible];
+	if(primaryBible) {
+		int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
+		NSString *newTitle = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
+		[bibleTitle setTitle: newTitle];
+	} else {
+		[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+	}
+	[pool release];
+}
+
 - (void)showDownloadStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
@@ -276,78 +365,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			break;
 		}
 	}
-}
-
-- (void)awakeFromNib {
-	if (!initialized) {
-		toolbarLock = [[NSLock alloc] init];
-		NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-		//localize the tab bar titles
-		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
-		commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
-		dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
-		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
-		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
-		devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
-		
-		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
-		// and the titles of each tab
-		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-		
-		//configure the Bible & commentary segmented controls.
-		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
-		[bibleSegmentedControl setWidth: 78 forSegmentAtIndex:1];
-		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:2];
-		[bibleSegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
-		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:0];//30
-		[commentarySegmentedControl setWidth: 78 forSegmentAtIndex:1];//138
-		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:2];//30
-		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
-		
-		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-		[bibleWebView loadHTMLString: black baseURL: nil];
-		[commentaryWebView loadHTMLString: black baseURL: nil];
-
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		
-		NSString *lastRef = [moduleManager getCurrentBibleRef];
-		
-		[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
-		
-		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] == 0) {
-			[self setTabTitle: @"PocketSword" ofTab:BibleTab];
-			[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
-			[self setEnabledBibleNextButton: NO];
-			[self setEnabledBiblePreviousButton: NO];
-		}
-		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
-			[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
-			[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
-			[self setEnabledCommentaryNextButton: NO];
-			[self setEnabledCommentaryPreviousButton: NO];
-		}
-		
-		if ([defaults boolForKey: @"insomniaPreference"]) {
-			UIApplication *thisApp = [UIApplication sharedApplication];
-			thisApp.idleTimerDisabled = YES;
-		}
-		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-		tabController.delegate = self;
-		tabController.customizableViewControllers = nil;
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationBibleSwipeRight object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationCommentarySwipeRight object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationBibleSwipeLeft object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationCommentarySwipeLeft object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayChapterWithDefaults) name:NotificationResetBibleAndCommentaryView object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationPrimaryBibleRemoved object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationPrimaryCommentaryRemoved object:nil];
-		[pool release];
-		initialized = true;
-	}
-	
 }
 
 //- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
