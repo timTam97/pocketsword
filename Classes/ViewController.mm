@@ -130,8 +130,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
 		
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicator) name:NotificationDisplayBusyIndicator object:nil];
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicatorViaNotification) name:NotificationDisplayBusyIndicator object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
 		
 		[pool release];
 		initialized = true;
@@ -980,6 +980,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	UIView* modalView = (UIView *)context;
 	[modalView removeFromSuperview];
 	[modalView release];
+}
+
+- (void)displayBusyIndicatorViaNotification {
+	[self performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
 }
 
 - (void)displayBusyIndicator {

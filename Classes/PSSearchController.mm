@@ -210,8 +210,8 @@ BOOL searchingEnabled;
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
-	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-	[moduleManager displayBusyIndicator];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+	//[moduleManager displayBusyIndicator];
 	ShownTab tab = [historyController listType];
 	self.results = nil;
 	self.searchTerm = [searchBar text];
@@ -232,8 +232,8 @@ BOOL searchingEnabled;
 		}
 	}
 	
-	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	[moduleManager hideBusyIndicator];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	//[moduleManager hideBusyIndicator];
 	[resultsTable reloadData];
 	[pool release];
 }

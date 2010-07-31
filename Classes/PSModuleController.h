@@ -40,7 +40,7 @@
 
 	//IBOutlet id bookmarkAddButton;
 	
-	IBOutlet id viewController;
+	//IBOutlet id viewController;
 	//IBOutlet PSRefSelectorController *refSelectorController;
 	
 	SwordModule *primaryBible;
@@ -93,8 +93,8 @@
 - (void)dealloc;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
 
-- (void)displayBusyIndicator;
-- (void)hideBusyIndicator;
+//- (void)displayBusyIndicator;
+//- (void)hideBusyIndicator;
 //- (void)doubleClose:(NSTimer *)theTimer;
 
 @end

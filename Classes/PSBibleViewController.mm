@@ -47,12 +47,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	if(refToShow) {
-		[moduleManager displayBusyIndicator];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		//[moduleManager displayBusyIndicator];
 		NSString *bText = [moduleManager getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
-		[moduleManager hideBusyIndicator];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+		//[moduleManager hideBusyIndicator];
 	}
 }
 

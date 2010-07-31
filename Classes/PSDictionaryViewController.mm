@@ -50,11 +50,13 @@ PSDictionaryOverlayViewController *overlayViewController;
 				return;
 			} else {
 				//need to load it
-				[moduleManager displayBusyIndicator];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+				//[moduleManager displayBusyIndicator];
 				
 				[[moduleManager primaryDictionary] allKeys];
 				
-				[moduleManager hideBusyIndicator];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+				//[moduleManager hideBusyIndicator];
 				needsReload = YES;
 			}
 		}
@@ -72,11 +74,13 @@ PSDictionaryOverlayViewController *overlayViewController;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if (buttonIndex == 1) {
-		[moduleManager displayBusyIndicator];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		//[moduleManager displayBusyIndicator];
 		
 		[[moduleManager primaryDictionary] allKeys];
 		
-		[moduleManager hideBusyIndicator];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+		//[moduleManager hideBusyIndicator];
 		dictionaryEnabled = YES;
 		[dictionarySearchBar setUserInteractionEnabled: YES];
 	} else {

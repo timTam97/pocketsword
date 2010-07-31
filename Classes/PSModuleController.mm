@@ -664,23 +664,12 @@ float installationProgress;
 	
 	if (numberOfBibles == 1 && primaryBible == nil) {
 		//well, we now have 0, ie, none!
-		//[bibleNavBtn setTitle: @"PocketSword"];
-		//[bibleWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
-		//[bookmarkAddButton setEnabled:NO];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
-		//[viewController setTabTitle: @"PocketSword" ofTab:BibleTab];
-		//[viewController setEnabledBibleNextButton: NO];
-		//[viewController setEnabledBiblePreviousButton: NO];
 	}
 	
 	if (numberOfCommentaries == 1 && primaryCommentary == nil) {
 		//no commentaries left...
-		//[commentaryNavBtn setTitle: @"PocketSword"];
-		//[commentaryWebView loadHTMLString: [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""] baseURL: nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
-		//[viewController setTabTitle: @"PocketSword" ofTab:CommentaryTab];
-		//[viewController setEnabledCommentaryNextButton: NO];
-		//[viewController setEnabledCommentaryPreviousButton: NO];
 	}
 	
 	if([name isEqualToString: primaryDictionaryName]) {
@@ -1012,21 +1001,21 @@ float installationProgress;
 	return retVal;
 }
 
-- (void)displayBusyIndicator
-{
-	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
-}
+//- (void)displayBusyIndicator
+//{
+//	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//}
 
-- (void)hideBusyIndicator
-{
+//- (void)hideBusyIndicator
+//{
 //	if(busyTimer) {
 //		[busyTimer invalidate];
 //		self.busyTimer = nil;
 //	}
-	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
+//	[viewController performSelectorInBackground: @selector(hideBusyIndicator) withObject: nil];
 	//[self performSelector:@selector(doubleClose:) withObject:nil afterDelay:1];
 	//self.busyTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doubleClose:) userInfo:nil repeats:NO];
-}
+//}
 
 //- (void)doubleClose:(NSTimer *)theTimer
 //{
