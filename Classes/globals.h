@@ -67,6 +67,7 @@ typedef enum {
 #define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"
 #define NotificationNewPrimaryBible				@"NotificationNewPrimaryBible"
 #define NotificationNewPrimaryCommentary		@"NotificationNewPrimaryCommentary"
+#define NotificationNewPrimaryDictionary		@"NotificationNewPrimaryDictionary"
 #define NotificationResetBibleAndCommentaryView @"NotificationResetBibleAndCommentaryView"
 #define NotificationPrimaryBibleRemoved			@"NotificationPrimaryBibleRemoved"
 #define NotificationPrimaryCommentaryRemoved	@"NotificationPrimaryCommentaryRemoved"

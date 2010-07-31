@@ -304,16 +304,17 @@ float installationProgress;
 		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
-		int i = ([newText length] > 8) ? 8 : [newText length];
-		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
-		NSString *title = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
-		[dictionaryTitle setTitle: title];
+//		int i = ([newText length] > 8) ? 8 : [newText length];
+//		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
+//		NSString *title = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
+//		[dictionaryTitle setTitle: title];
 	} else {
 		primaryDictionary = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-		[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+		//[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryDictionary object:nil];
 }
 
 - (void)loadPrimaryDevotional:(NSString *)newText {

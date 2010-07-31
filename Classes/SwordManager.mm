@@ -265,9 +265,9 @@ using std::list;
     return manager;
 }
 
+static SwordManager *instance;
 /** the singleton instance */
 + (SwordManager *)defaultManager {
-    static SwordManager *instance;
     if(instance == nil) {
         // use default path
         instance = [[SwordManager alloc] initWithPath:DEFAULT_MODULE_PATH];
@@ -276,6 +276,10 @@ using std::list;
 	return instance;
 }
 
++ (void)releaseDefaultManager {
+	[instance release];
+	instance = nil;
+}
 
 /* 
  Initializes Sword Manager with the path to the folder that contains the mods.d, modules.

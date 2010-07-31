@@ -86,6 +86,8 @@ typedef enum {
 	// Dictionary tab
 	IBOutlet UITabBarItem				*dictionaryTabBarItem;
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
+	IBOutlet UIBarButtonItem			*dictionaryTitle;
+	
 	IBOutlet UITabBarItem				*devotionalTabBarItem;
 	IBOutlet UIWebView					*devotionalWebView;
 	
@@ -131,6 +133,7 @@ typedef enum {
 
 - (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
+- (void)setDictionaryTitleViaNotification;
 - (void)updateInstallationStatus;
 - (void)updateIndexInstallationStatus:(NSString*)arg;
 - (IBAction)nextChapter:(id)sender;

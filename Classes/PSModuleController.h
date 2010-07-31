@@ -41,8 +41,8 @@
 	//IBOutlet UIWebView *commentaryWebView;
 	
 	//IBOutlet UIBarButtonItem *bibleTitle;
-	IBOutlet UIBarButtonItem *commentaryTitle;
-	IBOutlet UIBarButtonItem *dictionaryTitle;
+	//IBOutlet UIBarButtonItem *commentaryTitle;
+	//IBOutlet UIBarButtonItem *dictionaryTitle;
 
 	//IBOutlet id bookmarkAddButton;
 	

@@ -100,6 +100,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[self setBibleTitleViaNotification];
 		[self setCommentaryTitleViaNotification];
+		[self setDictionaryTitleViaNotification];
 		
 		if ([defaults boolForKey: @"insomniaPreference"]) {
 			UIApplication *thisApp = [UIApplication sharedApplication];
@@ -121,6 +122,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBibleTitleViaNotification) name:NotificationNewPrimaryBible object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setCommentaryTitleViaNotification) name:NotificationNewPrimaryCommentary object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDictionaryTitleViaNotification) name:NotificationNewPrimaryDictionary object:nil];
 		
 		[pool release];
 		initialized = true;
@@ -150,6 +152,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[commentaryTitle setTitle: newTitle];
 	} else {
 		[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	}
+	[pool release];
+}
+
+- (void)setDictionaryTitleViaNotification {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	SwordModule *primaryDictionary = [moduleManager primaryDictionary];
+	if(primaryDictionary) {
+		NSString *newText = [primaryDictionary name];
+		int i = ([newText length] > 8) ? 8 : [newText length];
+		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
+		NSString *newTitle = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
+		[dictionaryTitle setTitle: newTitle];
+	} else {
+		[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	}
 	[pool release];
 }
