@@ -92,13 +92,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[self setEnabledBibleNextButton: NO];
 			[self setEnabledBiblePreviousButton: NO];
 		}
-		[self setBibleTitleViaNotification];
 		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
 			[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
 			[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 			[self setEnabledCommentaryNextButton: NO];
 			[self setEnabledCommentaryPreviousButton: NO];
 		}
+		[self setBibleTitleViaNotification];
+		[self setCommentaryTitleViaNotification];
 		
 		if ([defaults boolForKey: @"insomniaPreference"]) {
 			UIApplication *thisApp = [UIApplication sharedApplication];
@@ -119,6 +120,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationPrimaryCommentaryRemoved object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBibleTitleViaNotification) name:NotificationNewPrimaryBible object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setCommentaryTitleViaNotification) name:NotificationNewPrimaryCommentary object:nil];
 		
 		[pool release];
 		initialized = true;
@@ -135,6 +137,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[bibleTitle setTitle: newTitle];
 	} else {
 		[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+	}
+	[pool release];
+}
+
+- (void)setCommentaryTitleViaNotification {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	SwordModule *primaryCommentary = [moduleManager primaryCommentary];
+	if(primaryCommentary) {
+		int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
+		NSString *newTitle = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
+		[commentaryTitle setTitle: newTitle];
+	} else {
+		[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	}
 	[pool release];
 }

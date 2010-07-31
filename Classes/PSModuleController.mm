@@ -290,6 +290,7 @@ float installationProgress;
 
 - (void)loadPrimaryCommentary:(NSString *)newText {
 	primaryCommentary = [swordManager moduleWithName:newText];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 	[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastCommentary];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -453,7 +454,7 @@ float installationProgress;
 //	if([[swordManager moduleNames] count] == 0) {
 //		[bookmarkAddButton setEnabled:NO];
 //	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
 	//refSelectorController.refSelectorBooks = nil;
 }
@@ -761,6 +762,7 @@ float installationProgress;
 		[prefs release];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 }
 
 // Grabs the bible text for a given chapter (e.g. "Gen 1")
@@ -808,9 +810,10 @@ float installationProgress;
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
 	}
-	int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
-	NSString *title = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
-	[commentaryTitle setTitle: title];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
+//	int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
+//	NSString *title = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
+//	[commentaryTitle setTitle: title];
 	NSString *text = [primaryCommentary getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);

@@ -130,6 +130,7 @@ typedef enum {
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
 - (void)setBibleTitleViaNotification;
+- (void)setCommentaryTitleViaNotification;
 - (void)updateInstallationStatus;
 - (void)updateIndexInstallationStatus:(NSString*)arg;
 - (IBAction)nextChapter:(id)sender;
