@@ -646,9 +646,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				</object>
 			</object>
-			<object class="IBUICustomObject" id="678867077">
-				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-			</object>
 			<object class="IBUIViewController" id="746792536">
 				<object class="IBUIView" key="IBUIView" id="402845121">
 					<nil key="NSNextResponder"/>
@@ -1593,14 +1590,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">351</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">bibleWebView</string>
 						<reference key="source" ref="1024858337"/>
 						<reference key="destination" ref="422417741"/>
@@ -1614,14 +1603,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="422417741"/>
 					</object>
 					<int key="connectionID">615</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="77914966"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">681</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1654,14 +1635,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="450617303"/>
 					</object>
 					<int key="connectionID">700</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="90017793"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">702</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1777,22 +1750,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="438882902"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">765</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="1024858337"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">769</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">activityController</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="746792536"/>
@@ -1822,14 +1779,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="94271223"/>
 					</object>
 					<int key="connectionID">808</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="664661524"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">813</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1945,14 +1894,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1000</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="470879492"/>
 						<reference key="destination" ref="210134216"/>
@@ -2062,14 +2003,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="1021755726"/>
 					</object>
 					<int key="connectionID">1040</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="1021755726"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1041</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -2183,14 +2116,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="996913943"/>
 					</object>
 					<int key="connectionID">1074</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="316480144"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1080</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -2346,14 +2271,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="78384495"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1213</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="151246611"/>
 						<reference key="destination" ref="78384495"/>
@@ -2418,14 +2335,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="1051373453"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1227</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="735258169"/>
 						<reference key="destination" ref="1051373453"/>
@@ -2471,14 +2380,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="327752184"/>
 					</object>
 					<int key="connectionID">1234</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="865983814"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1235</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -2570,14 +2471,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="282359419"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1278</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">todayButton</string>
 						<reference key="source" ref="282359419"/>
 						<reference key="destination" ref="488078422"/>
@@ -2623,14 +2516,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="333305739"/>
 					</object>
 					<int key="connectionID">1287</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleManager</string>
-						<reference key="source" ref="740552616"/>
-						<reference key="destination" ref="678867077"/>
-					</object>
-					<int key="connectionID">1288</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -2875,11 +2760,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<int key="objectID">107</int>
 						<reference key="object" ref="795333663"/>
 						<reference key="parent" ref="1034742383"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">302</int>
-						<reference key="object" ref="678867077"/>
-						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">203</int>
@@ -3799,8 +3679,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="272.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.CustomClassName">PocketSwordAppDelegate</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="302.CustomClassName">PSModuleController</string>
-				<string key="302.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="534.IBEditorWindowLastContentRect">{{190, 263}, {320, 480}}</string>
 				<string key="534.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="540.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -3887,17 +3765,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<object class="IBPartialClassDescription">
 					<string key="className">HistoryController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">moduleManager</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">moduleManager</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/HistoryController.h</string>
@@ -3930,7 +3797,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="addSourceViewController">PSAddSourceViewController</string>
 						<string key="manualInstallViewController">id</string>
-						<string key="moduleManager">PSModuleController</string>
 						<string key="navigatorModuleTypes">id</string>
 						<string key="refreshButton">id</string>
 						<string key="tabController">UITabBarController</string>
@@ -3944,10 +3810,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="manualInstallViewController">
 							<string key="name">manualInstallViewController</string>
 							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">PSModuleController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="navigatorModuleTypes">
 							<string key="name">navigatorModuleTypes</string>
@@ -4048,7 +3910,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="bibleWebView">UIWebView</string>
 						<string key="commentaryWebView">UIWebView</string>
-						<string key="moduleManager">id</string>
 						<string key="viewController">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -4059,10 +3920,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="commentaryWebView">
 							<string key="name">commentaryWebView</string>
 							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="viewController">
 							<string key="name">viewController</string>
@@ -4094,7 +3951,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="bookmarksNavBar">UINavigationItem</string>
 						<string key="bookmarksTable">UITableView</string>
-						<string key="moduleManager">id</string>
 						<string key="viewController">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -4105,10 +3961,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="bookmarksTable">
 							<string key="name">bookmarksTable</string>
 							<string key="candidateClassName">UITableView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="viewController">
 							<string key="name">viewController</string>
@@ -4126,7 +3978,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="bibleWebView">UIWebView</string>
 						<string key="commentaryWebView">UIWebView</string>
-						<string key="moduleManager">id</string>
 						<string key="viewController">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -4137,10 +3988,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="commentaryWebView">
 							<string key="name">commentaryWebView</string>
 							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="viewController">
 							<string key="name">viewController</string>
@@ -4173,7 +4020,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="devotionalDatePicker">UIDatePicker</string>
 						<string key="devotionalDatePickerView">UIView</string>
 						<string key="devotionalWebView">UIWebView</string>
-						<string key="moduleManager">id</string>
 						<string key="todayButton">UIBarButtonItem</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -4188,10 +4034,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="devotionalWebView">
 							<string key="name">devotionalWebView</string>
 							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="todayButton">
 							<string key="name">todayButton</string>
@@ -4225,7 +4067,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="dictionaryNavItem">UINavigationItem</string>
 						<string key="dictionarySearchBar">UISearchBar</string>
 						<string key="dictionaryTitle">UIBarButtonItem</string>
-						<string key="moduleManager">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="dictionaryDescriptionTitle">
@@ -4256,22 +4097,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">dictionaryTitle</string>
 							<string key="candidateClassName">UIBarButtonItem</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/PSDictionaryViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">PSModuleController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSModuleController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4309,7 +4138,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="closeButton">UIBarButtonItem</string>
 						<string key="infoWebView">UIWebView</string>
-						<string key="moduleManager">PSModuleController</string>
 						<string key="modulesListTable">UITableView</string>
 						<string key="navBar">UINavigationItem</string>
 						<string key="unlockEditButton">UIBarButtonItem</string>
@@ -4329,10 +4157,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="infoWebView">
 							<string key="name">infoWebView</string>
 							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">PSModuleController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="modulesListTable">
 							<string key="name">modulesListTable</string>
@@ -4383,20 +4207,17 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<object class="IBPartialClassDescription">
 					<string key="className">PSModuleSelectorController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="leafViewController">PSModuleLeafViewController</string>
-						<string key="moduleManager">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="leafViewController">
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">leafViewController</string>
+						<string key="NS.object.0">PSModuleLeafViewController</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">leafViewController</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
 							<string key="name">leafViewController</string>
 							<string key="candidateClassName">PSModuleLeafViewController</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/PSModuleSelectorController.h</string>
@@ -4471,7 +4292,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="fontTableViewController">id</string>
-						<string key="moduleManager">PSModuleController</string>
 						<string key="moduleSelectorTableViewController">id</string>
 						<string key="preferencesTable">UITableView</string>
 						<string key="tabController">UITabBarController</string>
@@ -4480,10 +4300,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="fontTableViewController">
 							<string key="name">fontTableViewController</string>
 							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">PSModuleController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="moduleSelectorTableViewController">
 							<string key="name">moduleSelectorTableViewController</string>
@@ -4551,16 +4367,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string key="className">PSRefSelectorController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="moduleManager">id</string>
 						<string key="refNavigationController">UINavigationController</string>
 						<string key="refTable">UITableView</string>
 						<string key="viewController">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="refNavigationController">
 							<string key="name">refNavigationController</string>
 							<string key="candidateClassName">UINavigationController</string>
@@ -4596,7 +4407,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="closeButton">UIBarButtonItem</string>
 						<string key="historyController">HistoryController</string>
-						<string key="moduleManager">PSModuleController</string>
 						<string key="resultsTable">UITableView</string>
 						<string key="sBar">UISearchBar</string>
 					</dictionary>
@@ -4608,10 +4418,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="historyController">
 							<string key="name">historyController</string>
 							<string key="candidateClassName">HistoryController</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">PSModuleController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="resultsTable">
 							<string key="name">resultsTable</string>
@@ -4631,15 +4437,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string key="className">PocketSwordAppDelegate</string>
 					<string key="superclassName">NSObject</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="moduleManager">id</string>
 						<string key="tabBarController">UITabBarController</string>
 						<string key="window">UIWindow</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="tabBarController">
 							<string key="name">tabBarController</string>
 							<string key="candidateClassName">UITabBarController</string>
@@ -4761,7 +4562,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="historyNavigationItem">UINavigationItem</string>
 						<string key="infoView">UIView</string>
 						<string key="infoWebView">UIWebView</string>
-						<string key="moduleManager">id</string>
 						<string key="moduleSelectorViewController">id</string>
 						<string key="modulesListTable">UITableView</string>
 						<string key="modulesNavigationItem">UINavigationItem</string>
@@ -4891,10 +4691,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="infoWebView">
 							<string key="name">infoWebView</string>
 							<string key="candidateClassName">UIWebView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="moduleManager">
-							<string key="name">moduleManager</string>
-							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="moduleSelectorViewController">
 							<string key="name">moduleSelectorViewController</string>

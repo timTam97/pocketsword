@@ -28,16 +28,16 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch (listType) {
 		case BibleTab:
-			return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
+			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
 			break;
 		case CommentaryTab:
-			return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
+			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
 			break;
 		case DictionaryTab:
-			return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] count];
+			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] count];
 			break;
 		case DevotionalTab:
-			return [[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] count];
+			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] count];
 			break;
 	}
 	return 0;
@@ -58,27 +58,27 @@
 	BOOL locked = NO;
 	switch (listType) {
 		case BibleTab:
-			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
-			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] isLocked];
+			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
+			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
+			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] isLocked];
 			break;
 		case CommentaryTab:
-			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
-			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] isLocked];
+			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
+			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
+			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] isLocked];
 			break;
 		case DictionaryTab:
-			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] descr];
-			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] isLocked];
+			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] name];
+			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] descr];
+			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] isLocked];
 			break;
 		case DevotionalTab:
-			cell.textLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] descr];
-			locked = [[[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] isLocked];
+			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] name];
+			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] descr];
+			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] isLocked];
 			break;
 	}
-	if ([moduleManager isLoaded:cell.textLabel.text]) {
+	if ([[PSModuleController defaultModuleController] isLoaded:cell.textLabel.text]) {
 		cell.textLabel.textColor = [UIColor blueColor];
 		cell.detailTextLabel.textColor = [UIColor blueColor];
 	} else if(locked) {
@@ -95,9 +95,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	//NSString *ref = [moduleManager getCurrentBibleRef];
+	//NSString *ref = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-	if(([moduleManager primaryBible] && [newModule isEqualToString:[[moduleManager primaryBible] name]]) || ([moduleManager primaryCommentary] && [newModule isEqualToString:[[moduleManager primaryCommentary] name]]) || ([moduleManager primaryDictionary] && [newModule isEqualToString:[[moduleManager primaryDictionary] name]])) {
+	if(([[PSModuleController defaultModuleController] primaryBible] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) || ([[PSModuleController defaultModuleController] primaryCommentary] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) || ([[PSModuleController defaultModuleController] primaryDictionary] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
 		return; // do nothing, because we selected the currently loaded module.
 	}
@@ -106,33 +106,33 @@
 	BOOL locked = NO;
 	switch (listType) {
 		case BibleTab:
-			[moduleManager loadPrimaryBible: newModule];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[[PSModuleController defaultModuleController] loadPrimaryBible: newModule];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[moduleManager viewController] addHistoryItem: BibleTab];
+			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			if([[moduleManager primaryBible] isLocked])
+			if([[[PSModuleController defaultModuleController] primaryBible] isLocked])
 				locked = YES;
 			break;
 		case CommentaryTab:
-			[moduleManager loadPrimaryCommentary:newModule];
+			[[PSModuleController defaultModuleController] loadPrimaryCommentary:newModule];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[[moduleManager viewController] addHistoryItem: CommentaryTab];
-			if([[moduleManager primaryCommentary] isLocked])
+			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: CommentaryTab];
+			if([[[PSModuleController defaultModuleController] primaryCommentary] isLocked])
 				locked = YES;
 			break;
 		case DictionaryTab:
-			[moduleManager loadPrimaryDictionary:newModule];
-			//[[moduleManager viewController] reloadDictionaryData];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			if([[moduleManager primaryDictionary] isLocked])
+			[[PSModuleController defaultModuleController] loadPrimaryDictionary:newModule];
+			//[[[PSModuleController defaultModuleController] viewController] reloadDictionaryData];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			if([[[PSModuleController defaultModuleController] primaryDictionary] isLocked])
 				locked = YES;
 			break;
 		case DevotionalTab:
-			[moduleManager loadPrimaryDevotional:newModule];
-			if([[moduleManager primaryDevotional] isLocked])
+			[[PSModuleController defaultModuleController] loadPrimaryDevotional:newModule];
+			if([[[PSModuleController defaultModuleController] primaryDevotional] isLocked])
 				locked = YES;
 			break;
 	}
@@ -140,7 +140,7 @@
 		[self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
-		//[[moduleManager viewController] toggleModulesList];
+		//[[[PSModuleController defaultModuleController] viewController] toggleModulesList];
 	}
 	
 	[pool release];
@@ -151,10 +151,10 @@
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		[moduleManager removeModule: module];
+		[[PSModuleController defaultModuleController] removeModule: module];
 		if(listType == DictionaryTab) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
-			//[[moduleManager viewController] reloadDictionaryData];
+			//[[[PSModuleController defaultModuleController] viewController] reloadDictionaryData];
 		}
 		[tableView reloadData];
 	}
@@ -163,15 +163,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	SwordModule *mod = [[moduleManager swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
 	[UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-                           forView:self.view //[[moduleManager viewController] modulesListView]
+                           forView:self.view //[[[PSModuleController defaultModuleController] viewController] modulesListView]
                              cache:YES];
 	
     [UIView setAnimationDuration:1];
-	//[[[moduleManager viewController] modulesListView] addSubview: leafViewController.view];
+	//[[[[PSModuleController defaultModuleController] viewController] modulesListView] addSubview: leafViewController.view];
 	[self.view addSubview:leafViewController.view];
     [UIView commitAnimations];
 	[leafViewController performSelector:@selector(viewDidAppear) withObject:nil afterDelay:1.0];

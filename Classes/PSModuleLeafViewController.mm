@@ -35,7 +35,7 @@ BOOL trashModule = NO;
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
 
-	SwordModule *mod = [[moduleManager swordManager] moduleWithName: navBar.title];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: navBar.title];
 	if(mod) {
 		if([mod isLocked]) {
 			//gotta ask the user if they want to unlock the module!
@@ -93,14 +93,14 @@ BOOL trashModule = NO;
 
 - (IBAction)unlockSaveButtonPressed:(id)sender {
 	//save the key
-	[[[moduleManager swordManager] moduleWithName: navBar.title] unlock: unlockTextField.text];
+	[[[[PSModuleController defaultModuleController] swordManager] moduleWithName: navBar.title] unlock: unlockTextField.text];
 	//redisplay the text if this is the current primary bible/commentary
-	if([navBar.title isEqualToString:[[moduleManager primaryBible] name]]) {
+	if([navBar.title isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-		//[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-	} else if([navBar.title isEqualToString:[[moduleManager primaryCommentary] name]]) {
+		//[[[PSModuleController defaultModuleController] viewController] displayChapter:[[PSModuleController defaultModuleController] getCurrentBibleRef] withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+	} else if([navBar.title isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-		//[[moduleManager viewController] displayChapter:[moduleManager getCurrentBibleRef] withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+		//[[[PSModuleController defaultModuleController] viewController] displayChapter:[[PSModuleController defaultModuleController] getCurrentBibleRef] withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 	}
 	[self closeUnlockView:nil];
 }
@@ -113,7 +113,7 @@ BOOL trashModule = NO;
 	// @"John 3:16"
 	unlockWebView.hidden = NO;
 	NSMutableString *html = [NSMutableString string];
-	SwordModule *mod = [[moduleManager swordManager] moduleWithName: navBar.title];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: navBar.title];
 	[mod unlock: unlockTextField.text];
 	NSArray *refs = [NSArray arrayWithObjects:@"Jeremiah 29:11", @"Psalm 139:5", @"John 3:16", nil];
 	for(NSString *ref in refs) {
@@ -189,7 +189,7 @@ body {\n\
 		// user tapped @"Yes" to the trash this module question.
 		DLog(@"\nremoving module: %@", navBar.title);
 		trashModule = NO;
-		[moduleManager removeModule: navBar.title];
+		[[PSModuleController defaultModuleController] removeModule: navBar.title];
 		[modulesListTable reloadData];
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {

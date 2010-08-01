@@ -28,7 +28,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	if(refToShow) {
-		NSString *cText = [moduleManager getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
+		NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
@@ -60,7 +60,7 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			//NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", [components objectAtIndex:2]];
 			//[bibleWebView stringByEvaluatingJavaScriptFromString:javascript];
-			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
+			NSMutableString *ref = [NSMutableString stringWithString:[[PSModuleController defaultModuleController] getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			//[commentaryNavBtn setTitle: ref];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
@@ -121,9 +121,9 @@
 			
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
-				entry = (NSString*)[[moduleManager primaryCommentary] attributeValueForEntryData:rData];
+				entry = (NSString*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
 			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
-				NSArray *array = (NSArray*)[[moduleManager primaryCommentary] attributeValueForEntryData:rData];
+				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
 				for(NSDictionary *dict in array) {
 					[tmpEntry appendFormat:@"<b>%@:</b> ", [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]]];
@@ -140,7 +140,7 @@
 			SwordManager *swordManager = [SwordManager defaultManager];
 			[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 			[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
-			NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
 			[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 			[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 			NSMutableString *tmpEntry = [@"" mutableCopy];

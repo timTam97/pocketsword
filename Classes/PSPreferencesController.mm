@@ -70,10 +70,10 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	if(requireReloadOfModuleViews) {
-		//[moduleManager displayBusyIndicator];
+		//[[PSModuleController defaultModuleController] displayBusyIndicator];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		//[[moduleManager viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-		//[moduleManager hideBusyIndicator];
+		//[[[PSModuleController defaultModuleController] viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
+		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
 	requireReloadOfModuleViews = NO;
 }
@@ -556,7 +556,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"strongsPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -564,7 +564,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"morphPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -572,7 +572,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"greekAccentsPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -580,7 +580,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"hvpPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -588,7 +588,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"hebrewCantillationPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -614,7 +614,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"scriptRefsPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -622,7 +622,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"footnotesPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -630,7 +630,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"headingsPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 
@@ -653,7 +653,7 @@ BOOL requireReloadOfModuleViews = NO;
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"redLetterPreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[moduleManager setPreferences];
+	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
 }
 

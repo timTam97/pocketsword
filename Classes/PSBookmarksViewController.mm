@@ -87,13 +87,13 @@
 }
 
 - (IBAction)addBookmark:(id)sender {
-	if(!((PSModuleController*)moduleManager).primaryBible && !((PSModuleController*)moduleManager).primaryCommentary) {
+	if(![PSModuleController defaultModuleController].primaryBible && ![PSModuleController defaultModuleController].primaryCommentary) {
 		//can't add a bookmark for the currently viewed verse!
 		return;
 	}
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBibleVersePosition];
-	NSString *ref = [NSString stringWithFormat:@"%@:%@", [moduleManager getCurrentBibleRef], verse];
+	NSString *ref = [NSString stringWithFormat:@"%@:%@", [[PSModuleController defaultModuleController] getCurrentBibleRef], verse];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
 	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
@@ -230,7 +230,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[viewController setShownTabTo:BibleTab];
-	if (![[[moduleManager swordManager] moduleNames] count] == 0) {
+	if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
 		NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
 		NSString *ref = [fullRef objectAtIndex: 0];
 		[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
@@ -239,14 +239,14 @@
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[moduleManager viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
 		} else {
 			[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[moduleManager viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 		}
-		//[[moduleManager viewController] addHistoryItem: BibleTab];
+		//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 	}
 	

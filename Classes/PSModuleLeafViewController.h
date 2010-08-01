@@ -11,7 +11,7 @@
 
 @interface PSModuleLeafViewController : UIViewController {
 	IBOutlet UIWebView			*infoWebView;
-	IBOutlet PSModuleController *moduleManager;
+	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet UINavigationItem	*navBar;
 
 	IBOutlet UIBarButtonItem	*closeButton;

@@ -32,10 +32,10 @@ BOOL loaded;
 	if(!devoTitle)
 		devoTitle = NSLocalizedString(@"None", @"");
 	else {
-		if(![moduleManager primaryDevotional])
-			[moduleManager loadPrimaryDevotional:devoTitle];
+		if(![[PSModuleController defaultModuleController] primaryDevotional])
+			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
-	//UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:[moduleManager viewController] action:@selector(toggleModulesList)];
+	//UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:[[PSModuleController defaultModuleController] viewController] action:@selector(toggleModulesList)];
 	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
 	self.navigationItem.rightBarButtonItem = moduleButton;
 	[moduleButton release];
@@ -149,7 +149,7 @@ BOOL loaded;
 		SwordManager *swordManager = [SwordManager defaultManager];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
-		NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+		NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 		NSMutableString *tmpEntry = [@"" mutableCopy];
@@ -167,7 +167,7 @@ BOOL loaded;
 	
 	if(entry) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-		//[[moduleManager viewController] showInfo: entry];
+		//[[[PSModuleController defaultModuleController] viewController] showInfo: entry];
 		load = NO;
 	}
 	

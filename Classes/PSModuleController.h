@@ -64,6 +64,9 @@
 @property (retain, readwrite) SwordInstallSource *currentInstallSource;
 @property (retain, readwrite) NSTimer *busyTimer;
 
++ (PSModuleController *)defaultModuleController;
++ (void)releaseDefaultModuleController;
+
 + (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript;
 + (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript;
 + (NSString *)createRefString:(NSString*)ref;

@@ -28,11 +28,11 @@ BOOL searchingEnabled;
 	BOOL showIndexController = NO;
 	switch(tab) {
 		case BibleTab:
-			if(![[moduleManager primaryBible] hasSearchIndex])
+			if(![[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
 				showIndexController = YES;
 			break;
 		case CommentaryTab:
-			if(![[moduleManager primaryCommentary] hasSearchIndex])
+			if(![[[PSModuleController defaultModuleController] primaryCommentary] hasSearchIndex])
 				showIndexController = YES;
 			break;
 	}
@@ -47,7 +47,7 @@ BOOL searchingEnabled;
 	
 	if (buttonIndex == 1) {
 		PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
-		[indexC setModuleManager:moduleManager];
+		//[indexC setModuleManager:[PSModuleController defaultModuleController]];
 		[indexC setSearchController: self];
 		[ViewController showModal:indexC.view withTiming:0.3];
 	} else {
@@ -62,11 +62,11 @@ BOOL searchingEnabled;
 	searchingEnabled = NO;
 	switch(tab) {
 		case BibleTab:
-			if([[moduleManager primaryBible] hasSearchIndex])
+			if([[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
 				searchingEnabled = YES;
 			break;
 		case CommentaryTab:
-			if([[moduleManager primaryCommentary] hasSearchIndex])
+			if([[[PSModuleController defaultModuleController] primaryCommentary] hasSearchIndex])
 				searchingEnabled = YES;
 			break;
 	}
@@ -148,10 +148,10 @@ BOOL searchingEnabled;
 		SwordModuleTextEntry *entry;
 		switch(tab) {
 			case BibleTab:
-				entry = [[moduleManager primaryBible] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
+				entry = [[[PSModuleController defaultModuleController] primaryBible] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
 				break;
 			case CommentaryTab:
-				entry = [[moduleManager primaryCommentary] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
+				entry = [[[PSModuleController defaultModuleController] primaryCommentary] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
 				break;
 		}
 		//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
@@ -193,17 +193,17 @@ BOOL searchingEnabled;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 				break;
 		}
-		//[[moduleManager viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
+		//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
 		//self.searchTerm = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
-		//[[moduleManager viewController] toggleMultiList];
-		//[[moduleManager viewController] highlightSearchTerm: searchTerm forTab: tab]; -- doesn't work atm 31/7/10 nicc
+		//[[[PSModuleController defaultModuleController] viewController] toggleMultiList];
+		//[[[PSModuleController defaultModuleController] viewController] highlightSearchTerm: searchTerm forTab: tab]; -- doesn't work atm 31/7/10 nicc
 //		if(tab == BibleTab) {
 //			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 //		} else {
 //			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 //		}
-		//[[moduleManager viewController] addHistoryItem: tab];
+		//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: tab];
 	}
 }
 
@@ -211,16 +211,16 @@ BOOL searchingEnabled;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[searchBar resignFirstResponder];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-	//[moduleManager displayBusyIndicator];
+	//[[PSModuleController defaultModuleController] displayBusyIndicator];
 	ShownTab tab = [historyController listType];
 	self.results = nil;
 	self.searchTerm = [searchBar text];
 	switch(tab) {
 		case BibleTab:
-			self.results = [[moduleManager primaryBible] search: [searchBar text]];
+			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [searchBar text]];
 			break;
 		case CommentaryTab:
-			self.results = [[moduleManager primaryCommentary] search: [searchBar text]];
+			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: [searchBar text]];
 			break;
 	}
 
@@ -233,7 +233,7 @@ BOOL searchingEnabled;
 	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	//[moduleManager hideBusyIndicator];
+	//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	[resultsTable reloadData];
 	[pool release];
 }

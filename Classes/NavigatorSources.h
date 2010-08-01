@@ -13,7 +13,7 @@
 
 	IBOutlet id table;
 	IBOutlet id refreshButton;
-	IBOutlet PSModuleController *moduleManager;
+	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet id navigatorModuleTypes;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet PSAddSourceViewController *addSourceViewController;
@@ -22,7 +22,7 @@
 	
 }
 
-@property (readonly) PSModuleController *moduleManager;
+//@property (readonly) PSModuleController *moduleManager;
 @property (readonly) UITabBarController *tabController;
 
 - (IBAction)manualAddModule:(id)sender;

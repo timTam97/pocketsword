@@ -12,7 +12,7 @@
 	ShownTab listType;
 	IBOutlet PSModuleLeafViewController *leafViewController;
 
-	IBOutlet id moduleManager;
+	//IBOutlet id moduleManager;
 }
 
 @property (assign) ShownTab listType;

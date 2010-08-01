@@ -40,7 +40,7 @@ NSTimer *refreshTimer;
 - (void)viewDidAppear:(BOOL)animated {
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	//[[navigatorSources moduleManager] hideBusyIndicator];
+	//[[PSModuleController defaultModuleController] hideBusyIndicator];
 }
 
 
@@ -117,9 +117,9 @@ NSTimer *refreshTimer;
 	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated:YES];
 	//[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
 	//testing:
-	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
+	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
 	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
-	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
 	//[self updateRefreshStatus];
 	//end testing.
 	
@@ -130,11 +130,11 @@ NSTimer *refreshTimer;
 
 //- (void)runRefreshDownloadSource {
 //	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
+//	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
 //	
 //	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
 //	
-//	[[navigatorSources moduleManager] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+//	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
 //	
 //	[self updateRefreshStatus];
 //	
@@ -154,7 +154,7 @@ NSTimer *refreshTimer;
 }
 
 - (void)updateRefreshStatus {
-	PSStatusReporter *reporter = [[navigatorSources moduleManager] getInstallationProgress];
+	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->fileProgress;
 	[statusBar setProgress: reporter->fileProgress];

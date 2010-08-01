@@ -23,7 +23,7 @@ NSTimer *downloadTimer;
 	[detailsView setBackgroundColor:backgroundColor];
 	
 	UIBarButtonItem *installBarButtonItem;
-	if ([[[navigatorSources moduleManager] swordManager] isModuleInstalled:module.name]) {
+	if ([[[PSModuleController defaultModuleController] swordManager] isModuleInstalled:module.name]) {
 		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstalledButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:nil];
 		[installBarButtonItem setEnabled:NO];
 	} else {
@@ -63,7 +63,7 @@ NSTimer *downloadTimer;
 		return;
 	}
 
-	SwordInstallSource *sIS = [[navigatorSources moduleManager] currentInstallSource];
+	SwordInstallSource *sIS = [[PSModuleController defaultModuleController] currentInstallSource];
 	
 	NSString *question = NSLocalizedString(@"ConfirmInstall", @"Would you like to install this module?");
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
@@ -119,9 +119,9 @@ NSTimer *downloadTimer;
 - (void)runInstallation {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	[[[navigatorSources moduleManager] swordInstallManager] resetInstallationProgress];
+	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
 	
-	[[navigatorSources moduleManager] performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
+	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
 
 	[self performSelectorOnMainThread: @selector(showDownloadStatus) withObject: nil waitUntilDone: NO];
 	//[self showDownloadStatus];
@@ -134,7 +134,7 @@ NSTimer *downloadTimer;
 
 - (void)updateInstallationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	PSStatusReporter *reporter = [[navigatorSources moduleManager] getInstallationProgress];
+	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
 	BOOL failed = YES;
 	float progress = reporter->overallProgress;
 	[statusBar setProgress: reporter->fileProgress];
@@ -153,8 +153,8 @@ NSTimer *downloadTimer;
 	//DLog(@"updateInstallationStatus: Progress: %f", progress);
 	
 	if (progress == 1.0) {
-		[[navigatorSources moduleManager] reload];
-		//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+		[[PSModuleController defaultModuleController] reload];
+		//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
 		//[moduleTable reloadData];
 		//[downloadableModulesTable reloadData];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
@@ -166,9 +166,9 @@ NSTimer *downloadTimer;
 		failed = NO;
 	}
 	if (failed) {
-		[[navigatorSources moduleManager] reload];
+		[[PSModuleController defaultModuleController] reload];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
-		//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+		//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
 		//[moduleTable reloadData];
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		

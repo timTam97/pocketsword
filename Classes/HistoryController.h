@@ -23,7 +23,7 @@
 
 	ShownTab listType;
 
-	IBOutlet id moduleManager;
+	//IBOutlet id moduleManager;
 	
 }
 

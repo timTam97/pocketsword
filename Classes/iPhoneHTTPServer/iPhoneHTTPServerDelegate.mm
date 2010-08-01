@@ -145,12 +145,12 @@
 	[arch release];
 	
 	//install the module/s contained in the archive:
-	[[[navigatorSources moduleManager] swordManager] installModulesFromPath:outfile];
-	[[navigatorSources moduleManager] reload];
+	[[[PSModuleController defaultModuleController] swordManager] installModulesFromPath:outfile];
+	[[PSModuleController defaultModuleController] reload];
 	
 	//reload the moduleTable
 	//[moduleTable reloadData];
-	//[[[navigatorSources moduleManager] viewController] reloadModuleTable];
+	//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
 	
 	//remove the tmp files...
 	[fileManager removeItemAtPath:file error:NULL];

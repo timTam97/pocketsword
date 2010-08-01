@@ -26,11 +26,11 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
 	BOOL needsReload = reloadData;
-	if(![moduleManager primaryDictionary]) {
+	if(![[PSModuleController defaultModuleController] primaryDictionary]) {
 		NSString *lastDictionary = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDictionary];
 		
 		if (lastDictionary) {
-			[moduleManager loadPrimaryDictionary: lastDictionary];
+			[[PSModuleController defaultModuleController] loadPrimaryDictionary: lastDictionary];
 			needsReload = YES;
 		} else {
 			[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
@@ -41,22 +41,22 @@ PSDictionaryOverlayViewController *overlayViewController;
 		}
 	}
 	
-	if([moduleManager primaryDictionary]) {
-		if(![[moduleManager primaryDictionary] keysLoaded]) {
-			if(![[moduleManager primaryDictionary] keysCached]) {
+	if([[PSModuleController defaultModuleController] primaryDictionary]) {
+		if(![[[PSModuleController defaultModuleController] primaryDictionary] keysLoaded]) {
+			if(![[[PSModuleController defaultModuleController] primaryDictionary] keysCached]) {
 				//ask whether to cache the keys now or another time
 				
-				[[[UIAlertView alloc] initWithTitle: [NSString stringWithFormat: @"%@ %@", [[moduleManager primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message: NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+				[[[UIAlertView alloc] initWithTitle: [NSString stringWithFormat: @"%@ %@", [[[PSModuleController defaultModuleController] primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message: NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 				return;
 			} else {
 				//need to load it
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-				//[moduleManager displayBusyIndicator];
+				//[[PSModuleController defaultModuleController] displayBusyIndicator];
 				
-				[[moduleManager primaryDictionary] allKeys];
+				[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
 				
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-				//[moduleManager hideBusyIndicator];
+				//[[PSModuleController defaultModuleController] hideBusyIndicator];
 				needsReload = YES;
 			}
 		}
@@ -75,12 +75,12 @@ PSDictionaryOverlayViewController *overlayViewController;
 	
 	if (buttonIndex == 1) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		//[moduleManager displayBusyIndicator];
+		//[[PSModuleController defaultModuleController] displayBusyIndicator];
 		
-		[[moduleManager primaryDictionary] allKeys];
+		[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-		//[moduleManager hideBusyIndicator];
+		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 		dictionaryEnabled = YES;
 		[dictionarySearchBar setUserInteractionEnabled: YES];
 	} else {
@@ -145,7 +145,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	if(searching)
 		return [searchResults count];
 	else if(dictionaryEnabled)
-		return [[moduleManager primaryDictionary] entryCount];
+		return [[[PSModuleController defaultModuleController] primaryDictionary] entryCount];
 	else
 		return 0;
 }
@@ -169,7 +169,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	if(searching)
 		cell.textLabel.text = [searchResults objectAtIndex:indexPath.row];
 	else
-		cell.textLabel.text = [[[moduleManager primaryDictionary] allKeys] objectAtIndex:indexPath.row];
+		cell.textLabel.text = [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex:indexPath.row];
 	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	return cell;
@@ -179,7 +179,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[dictionarySearchBar resignFirstResponder];
 	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-	NSString *descr = [[moduleManager primaryDictionary] entryForKey: t];
+	NSString *descr = [[[PSModuleController defaultModuleController] primaryDictionary] entryForKey: t];
 	[self showDescription:descr withTitle:t];
 }
 
@@ -248,9 +248,9 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 //	int row = 0;
-//	int count = [[moduleManager primaryDictionary] entryCount];
+//	int count = [[[PSModuleController defaultModuleController] primaryDictionary] entryCount];
 //	for(; row < count; row++) {
-//		NSComparisonResult res = [searchText caseInsensitiveCompare: [[[moduleManager primaryDictionary] allKeys] objectAtIndex: row]];
+//		NSComparisonResult res = [searchText caseInsensitiveCompare: [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex: row]];
 //		if(res <= NSOrderedSame)
 //			break;
 //	}
@@ -315,7 +315,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	
 	[searchResults removeAllObjects];
 	NSString *searchText = dictionarySearchBar.text;
-	NSArray *keys = [[moduleManager primaryDictionary] allKeys];
+	NSArray *keys = [[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
 	
 	for (NSString *t in keys) {
 		NSRange titleResultsRange = [t rangeOfString:searchText options:NSCaseInsensitiveSearch];
@@ -327,7 +327,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (IBAction)hideDescription:(id)sender {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideInfoPane object:nil];
-	//[[moduleManager viewController] hideInfo];
+	//[[[PSModuleController defaultModuleController] viewController] hideInfo];
 	[self dismissModalViewControllerAnimated:YES];
 	//[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
@@ -401,7 +401,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 		SwordManager *swordManager = [SwordManager defaultManager];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
-		NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+		NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 		NSMutableString *tmpEntry = [@"" mutableCopy];
@@ -420,7 +420,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	if(entry) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
 
-		//[[moduleManager viewController] showInfo: entry];
+		//[[[PSModuleController defaultModuleController] viewController] showInfo: entry];
 		load = NO;
 	}
 	

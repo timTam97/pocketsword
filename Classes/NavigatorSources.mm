@@ -13,7 +13,7 @@
 
 @implementation NavigatorSources
 
-@synthesize moduleManager;
+//@synthesize moduleManager;
 @synthesize tabController;
 
 // displaying the Install Sources
@@ -35,7 +35,7 @@
 - (void)addManualInstallButton {
 	//BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
 	self.navigationItem.rightBarButtonItem = nil;
-	if([[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
+	if([[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(editButtonPressed:)];
 		//UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed:)];//manualAddModule
 		self.navigationItem.rightBarButtonItem = iButton;
@@ -73,7 +73,7 @@
 			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
 			return;
 		}
-		[[moduleManager swordInstallManager] refreshMasterRemoteInstallSourceList];
+		[[[PSModuleController defaultModuleController] swordInstallManager] refreshMasterRemoteInstallSourceList];
 		[table reloadData];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
 		[self manualAddModule:nil];
@@ -91,7 +91,7 @@
 	//[table reloadData];	// populate our table's data
 	//DLog(@"  (SINC)  ");
 	
-	if(![[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
+	if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 	}
 	if([NSThread isMainThread]) {
@@ -129,14 +129,14 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if (![[moduleManager swordInstallManager] userDisclaimerConfirmed])
+	if (![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed])
 		return 0;
-	return [[[moduleManager swordInstallManager] installSourceList] count];
+	return [[[[PSModuleController defaultModuleController] swordInstallManager] installSourceList] count];
 }
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if (![[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
+	if (![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		((UITableView*)table).sectionHeaderHeight = 40.5;
 		return NSLocalizedString(@"InstallManagerDisabled", @"");
 	}
@@ -152,7 +152,7 @@
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier] autorelease];
 	}
-	NSArray *currentArray = [[moduleManager swordInstallManager] installSourceList];
+	NSArray *currentArray = [[[PSModuleController defaultModuleController] swordInstallManager] installSourceList];
 	cell.textLabel.text = [[currentArray objectAtIndex:indexPath.row] caption];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
@@ -161,25 +161,25 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (![[moduleManager swordInstallManager] userDisclaimerConfirmed])
+	if (![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed])
 		return;
-	SwordInstallSource *sIS = [[[moduleManager swordInstallManager] installSourceList] objectAtIndex:indexPath.row];
+	SwordInstallSource *sIS = [[[[PSModuleController defaultModuleController] swordInstallManager] installSourceList] objectAtIndex:indexPath.row];
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		//[moduleManager displayBusyIndicator];
+		//[[PSModuleController defaultModuleController] displayBusyIndicator];
 
 		[sIS swordManager];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-		//[moduleManager hideBusyIndicator];
+		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
 	[((NavigatorModuleTypes*)navigatorModuleTypes) setDataArray:[sIS moduleListByType]];
 	((NavigatorModuleTypes*)navigatorModuleTypes).title = [sIS caption];
 	[((NavigatorModuleTypes*)navigatorModuleTypes) reloadTable];
 	
 	// need to set the current install source, for when we want to install a module.
-	[moduleManager setCurrentInstallSource:sIS];
+	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];
 	
 	[tabController.moreNavigationController pushViewController:navigatorModuleTypes animated:YES];
 	
@@ -189,7 +189,7 @@
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *caption = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		[[moduleManager swordInstallManager] removeInstallSourceNamed:caption withReinitialize:YES];
+		[[[PSModuleController defaultModuleController] swordInstallManager] removeInstallSourceNamed:caption withReinitialize:YES];
 		[tableView reloadData];
 	}
 	
@@ -197,7 +197,7 @@
 
 /*- (void)navigationController:(UINavigationController *)navController willShowViewController:(UIViewController *)vController animated:(BOOL)animated {
 	if([vController.title isEqualToString:@"Sources"]) {
-		if(![[moduleManager swordInstallManager] userDisclaimerConfirmed]) {
+		if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"")
 									   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 		}
@@ -205,7 +205,7 @@
 		[table deselectRowAtIndexPath:tableSelection animated:NO];
 		// to make the navigation faster, try to pre-load the mod.d .conf files...
 		//  unfortunately, this seems to cause a crash.  Removing this until the source of the crash is discovered...
-		//[moduleManager performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
+		//[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
 	}
 }*/
 
@@ -219,7 +219,7 @@
 	//DLog(@"Clicked button %d", buttonIndex);
 	if (buttonIndex == 1) {
 		//DLog(@"alertView: didDismissWithButtonIndex:  %d", buttonIndex);
-		[[moduleManager swordInstallManager] setUserDisclainerConfirmed: YES];
+		[[[PSModuleController defaultModuleController] swordInstallManager] setUserDisclainerConfirmed: YES];
 		[self addManualInstallButton];
 		[table reloadData];
 		//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

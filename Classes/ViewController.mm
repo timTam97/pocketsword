@@ -82,17 +82,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		
-		NSString *lastRef = [moduleManager getCurrentBibleRef];
+		NSString *lastRef = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 		
 		[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
 		
-		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] == 0) {
+		if ([[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] == 0) {
 			[self setTabTitle: @"PocketSword" ofTab:BibleTab];
 			[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
 			[self setEnabledBibleNextButton: NO];
 			[self setEnabledBiblePreviousButton: NO];
 		}
-		if ([[[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
+		if ([[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
 			[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
 			[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 			[self setEnabledCommentaryNextButton: NO];
@@ -141,7 +141,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)setBibleTitleViaNotification {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *primaryBible = [moduleManager primaryBible];
+	SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
 	if(primaryBible) {
 		int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
 		NSString *newTitle = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
@@ -157,7 +157,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)setCommentaryTitleViaNotification {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *primaryCommentary = [moduleManager primaryCommentary];
+	SwordModule *primaryCommentary = [[PSModuleController defaultModuleController] primaryCommentary];
 	if(primaryCommentary) {
 		int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
 		NSString *newTitle = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
@@ -173,7 +173,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)setDictionaryTitleViaNotification {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *primaryDictionary = [moduleManager primaryDictionary];
+	SwordModule *primaryDictionary = [[PSModuleController defaultModuleController] primaryDictionary];
 	if(primaryDictionary) {
 		NSString *newText = [primaryDictionary name];
 		int i = ([newText length] > 8) ? 8 : [newText length];
@@ -205,7 +205,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 //- (void)updateInstallationStatus {
 //	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	PSStatusReporter *reporter = [moduleManager getInstallationProgress];
+//	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
 //	BOOL failed = YES;
 //	float progress = reporter->overallProgress;
 //	[statusBar setProgress: reporter->fileProgress];
@@ -222,7 +222,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //	//DLog(@"updateInstallationStatus: Progress: %f", progress);
 //	
 //	if (progress == 1.0) {
-//		[moduleManager reload];
+//		[[PSModuleController defaultModuleController] reload];
 //		//[moduleTable reloadData];
 //		//[downloadableModulesTable reloadData];
 //		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
@@ -234,7 +234,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //		failed = NO;
 //	}
 //	if (failed) {
-//		[moduleManager reload];
+//		[[PSModuleController defaultModuleController] reload];
 //		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 //		//[moduleTable reloadData];
 //		[[[UIAlertView alloc] initWithTitle: @"Error" message: @"A problem occurred during the installation."
@@ -261,7 +261,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //	
 //	[self performSelectorInBackground: @selector(showDownloadStatus) withObject: nil];
 //	
-//	[moduleManager performSelectorInBackground: @selector(installSearchIndex) withObject: nil];
+//	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(installSearchIndex) withObject: nil];
 //	[self updateInstallationStatus];
 //	
 //	[pool release];
@@ -407,7 +407,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Loads the next chapter into the Web View
 - (IBAction)nextChapter:(id)sender {
-//	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[moduleManager getCurrentBibleRef] isEqualToString: @"Revelation 22"]) {
+//	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[[PSModuleController defaultModuleController] getCurrentBibleRef] isEqualToString: @"Revelation 22"]) {
 //		return;
 //	}
 	
@@ -416,7 +416,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		NSString *ref = [moduleManager setToNextChapter];
+		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -424,7 +424,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		NSString *ref = [moduleManager setToNextChapter];
+		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -432,7 +432,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 	} else {
 		// weird & undefined
-		NSString *ref = [moduleManager setToNextChapter];
+		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
 		if(ref)
 			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
 	}
@@ -443,7 +443,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Loads the previous chapter into the Web View
 - (IBAction)prevChapter:(id)sender {
-//	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[moduleManager getCurrentBibleRef] isEqualToString: @"Genesis 1"]) {
+//	if (([[bibleNavBtn title] isEqualToString: @"PocketSword"] && [[commentaryNavBtn title] isEqualToString: @"PocketSword"]) || [[[PSModuleController defaultModuleController] getCurrentBibleRef] isEqualToString: @"Genesis 1"]) {
 //		return;
 //	}
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -451,7 +451,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		NSString *ref = [moduleManager setToPreviousChapter];
+		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -459,7 +459,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		NSString *ref = [moduleManager setToPreviousChapter];
+		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
 		if(ref) {
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -467,7 +467,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 	} else {
 		// weird & undefined
-		NSString *ref = [moduleManager setToPreviousChapter];
+		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
 		if(ref)
 			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
@@ -532,10 +532,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		NSIndexPath *ip = nil;//default value
 		if([moduleSelectorViewController listType] == BibleTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
-			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
+			NSArray *array = [[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
 			int pos = 0;
 			for(; pos < [array count]; pos++) {
-				if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryBible] name]]) {
+				if([[[array objectAtIndex: pos] name] isEqualToString: [[[PSModuleController defaultModuleController] primaryBible] name]]) {
 					break;
 				}
 			}
@@ -544,10 +544,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}			
 		} else if([moduleSelectorViewController listType] == CommentaryTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
-			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
+			NSArray *array = [[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
 			int pos = 0;
 			for(; pos < [array count]; pos++) {
-				if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryCommentary] name]]) {
+				if([[[array objectAtIndex: pos] name] isEqualToString: [[[PSModuleController defaultModuleController] primaryCommentary] name]]) {
 					break;
 				}
 			}
@@ -556,10 +556,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}
 		} else if([moduleSelectorViewController listType] == DevotionalTab) {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"")];
-			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
+			NSArray *array = [[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
 			int pos = 0;
 			for(; pos < [array count]; pos++) {
-				if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryDevotional] name]]) {
+				if([[[array objectAtIndex: pos] name] isEqualToString: [[[PSModuleController defaultModuleController] primaryDevotional] name]]) {
 					break;
 				}
 			}
@@ -568,10 +568,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}
 		} else {
 			[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"")];
-			NSArray *array = [[moduleManager swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
+			NSArray *array = [[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
 			int pos = 0;
 			for(; pos < [array count]; pos++) {
-				if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleManager primaryDictionary] name]]) {
+				if([[[array objectAtIndex: pos] name] isEqualToString: [[[PSModuleController defaultModuleController] primaryDictionary] name]]) {
 					break;
 				}
 			}
@@ -604,11 +604,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	BOOL showingBibleTab = NO;
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		if(![moduleManager primaryBible])
+		if(![[PSModuleController defaultModuleController] primaryBible])
 		   return;
 		else
 		   showingBibleTab = YES;
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] && !([moduleManager primaryCommentary])) {
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] && !([[PSModuleController defaultModuleController] primaryCommentary])) {
 		// commentary tab
 		return;
 	}
@@ -642,16 +642,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *bookName = [NSString stringWithCString:lmgr->translate([bookNameString cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
 	NSString *verseString = [NSString stringWithFormat:@"%d", verse];
 	NSString *ref = [bookName stringByAppendingFormat: @" %d", chapter];
-	NSString *currentRef = [moduleManager getCurrentBibleRef];
+	NSString *currentRef = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 	if([currentRef isEqualToString:ref]) {
 		//we only need to move to the selected verse rather than reload the whole chapter
 		NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", verseString];
 		[bibleWebView stringByEvaluatingJavaScriptFromString:javascript];
 		[commentaryWebView stringByEvaluatingJavaScriptFromString:javascript];
-		if([moduleManager primaryBible]) {
+		if([[PSModuleController defaultModuleController] primaryBible]) {
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:BibleTab];
 		}
-		if([moduleManager primaryCommentary]) {
+		if([[PSModuleController defaultModuleController] primaryCommentary]) {
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:CommentaryTab];
 		}
 	}
@@ -689,7 +689,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 //- (void)getRemoteModuleList {
-//	[[moduleManager swordInstallManager] refreshAllInstallSources];
+//	[[[PSModuleController defaultModuleController] swordInstallManager] refreshAllInstallSources];
 //}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -748,7 +748,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)redisplayChapterWithDefaults {
-	NSString *ref = [moduleManager getCurrentBibleRef];
+	NSString *ref = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 	[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 }
 
@@ -763,7 +763,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)redisplayChapter:(PollingType)pollingType restore:(RestorePositionType)position {
-	NSString *ref = [moduleManager getCurrentBibleRef];
+	NSString *ref = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 	[self displayChapter:ref withPollingType:pollingType restoreType:position];
 }
 
@@ -803,7 +803,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		case BibleViewPoll:
 		{
 			[bibleJavascript appendString:@"startDetLocPoll();\n"];
-			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
+			NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:ref withExtraJS:bibleJavascript];
 			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 			//NSLog(@"%@", bText);
 			commentaryTabController.refToShow = ref;
@@ -813,7 +813,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		case CommentaryViewPoll:
 		{
 			[commentaryJavascript appendString:@"startDetLocPoll();\n"];
-			NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+			NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:ref withExtraJS:commentaryJavascript];
 			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 			bibleTabController.refToShow = ref;
 			bibleTabController.jsToShow = bibleJavascript;
@@ -826,17 +826,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			commentaryTabController.jsToShow = commentaryJavascript;
 			bibleTabController.refToShow = ref;
 			bibleTabController.jsToShow = bibleJavascript;
-//			NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
-//			NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+//			NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:ref withExtraJS:bibleJavascript];
+//			NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:ref withExtraJS:commentaryJavascript];
 //			[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];	// Get the chapter text
 //			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		}
 			break;
 	}
 
-//	NSString *bText = [moduleManager getBibleChapter:ref withExtraJS:bibleJavascript];
+//	NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:ref withExtraJS:bibleJavascript];
 //	[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
-//	NSString *cText = [moduleManager getCommentaryChapter:ref withExtraJS:commentaryJavascript];
+//	NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:ref withExtraJS:commentaryJavascript];
 //	[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 	
 	NSString *cVersePosition = @"1";
@@ -868,19 +868,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	
 	NSString *titleString = [PSModuleController createRefString:ref];
-	if([moduleManager primaryBible]) {
+	if([[PSModuleController defaultModuleController] primaryBible]) {
 		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:BibleTab];
 	}
-	if([moduleManager primaryCommentary]) {
+	if([[PSModuleController defaultModuleController] primaryCommentary]) {
 		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:CommentaryTab];
 	}
 	
-	if ([[moduleManager getCurrentBibleRef] isEqualToString: lastRefAvailable]) {
+	if ([[[PSModuleController defaultModuleController] getCurrentBibleRef] isEqualToString: lastRefAvailable]) {
 		[self setEnabledBibleNextButton: NO];
 		[self setEnabledBiblePreviousButton: YES];
 		[self setEnabledCommentaryNextButton: NO];
 		[self setEnabledCommentaryPreviousButton: YES];
-	} else if ([[moduleManager getCurrentBibleRef] isEqualToString: firstRefAvailable]) {
+	} else if ([[[PSModuleController defaultModuleController] getCurrentBibleRef] isEqualToString: firstRefAvailable]) {
 		[self setEnabledBibleNextButton: YES];
 		[self setEnabledBiblePreviousButton: NO];
 		[self setEnabledCommentaryNextButton: YES];
@@ -892,11 +892,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self setEnabledCommentaryPreviousButton: YES];
 	}
 	//if we don't have any modules of that type, disable the buttons.
-//	if(![moduleManager primaryBible]) {
+//	if(![[PSModuleController defaultModuleController] primaryBible]) {
 //		[self setEnabledBibleNextButton: NO];
 //		[self setEnabledBiblePreviousButton: NO];
 //	}
-//	if(![moduleManager primaryCommentary]) {
+//	if(![[PSModuleController defaultModuleController] primaryCommentary]) {
 //		[self setEnabledCommentaryNextButton: NO];
 //		[self setEnabledCommentaryPreviousButton: NO];
 //	}

@@ -65,18 +65,18 @@
 	if(tabForHistory == BibleTab) {
 		verse = [defaults stringForKey: DefaultsBibleVersePosition];
 		scroll = [defaults stringForKey: @"bibleScrollPosition"];
-		if([moduleManager primaryBible]) {
+		if([[PSModuleController defaultModuleController] primaryBible]) {
 			valid = YES;
-			mod = [[moduleManager primaryBible] name];
+			mod = [[[PSModuleController defaultModuleController] primaryBible] name];
 		}
 		historyName = @"bibleHistory";
 		history = [[defaults arrayForKey: historyName] mutableCopy];
 	} else if(tabForHistory == CommentaryTab) {
 		verse = [defaults stringForKey: DefaultsCommentaryVersePosition];
 		scroll = [defaults stringForKey: @"commentaryScrollPosition"];
-		if([moduleManager primaryCommentary]) {
+		if([[PSModuleController defaultModuleController] primaryCommentary]) {
 			valid = YES;
-			mod = [[moduleManager primaryCommentary] name];
+			mod = [[[PSModuleController defaultModuleController] primaryCommentary] name];
 		}
 		historyName = @"commentaryHistory";
 		history = [[defaults arrayForKey: historyName] mutableCopy];
@@ -85,7 +85,7 @@
 	}
 	
 	if(valid) {
-		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[moduleManager getCurrentBibleRef]], verse];
+		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[[PSModuleController defaultModuleController] getCurrentBibleRef]], verse];
 		
 		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
 		
@@ -225,16 +225,16 @@
 			//scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
 			if([[history objectAtIndex: indexPath.row] count] > 2) {
 				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-				[moduleManager loadPrimaryBible: mod];
+				[[PSModuleController defaultModuleController] loadPrimaryBible: mod];
 			} else {
 				mod = nil;
 			}
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[moduleManager viewController] addHistoryItem: BibleTab];
+			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			break;
 		case CommentaryTab:
@@ -244,7 +244,7 @@
 			//scroll = [[history objectAtIndex: indexPath.row] objectAtIndex: 1];
 			if([[history objectAtIndex: indexPath.row] count] > 2) {
 				mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-				[moduleManager loadPrimaryCommentary: mod];
+				[[PSModuleController defaultModuleController] loadPrimaryCommentary: mod];
 			} else {
 				mod = nil;
 			}
@@ -252,15 +252,15 @@
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
-			//[[moduleManager viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
+			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[[moduleManager viewController] addHistoryItem: CommentaryTab];
+			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: CommentaryTab];
 			break;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
-	//[[moduleManager viewController] toggleMultiList];
+	//[[[PSModuleController defaultModuleController] viewController] toggleMultiList];
 
 	[pool release];
 }

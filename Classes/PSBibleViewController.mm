@@ -48,13 +48,13 @@
     [super viewWillAppear:animated];
 	if(refToShow) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		//[moduleManager displayBusyIndicator];
-		NSString *bText = [moduleManager getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
+		//[[PSModuleController defaultModuleController] displayBusyIndicator];
+		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-		//[moduleManager hideBusyIndicator];
+		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
 }
 
@@ -101,7 +101,7 @@
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			NSMutableString *ref = [NSMutableString stringWithString:[moduleManager getCurrentBibleRef]];
+			NSMutableString *ref = [NSMutableString stringWithString:[[PSModuleController defaultModuleController] getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
 		}
@@ -161,9 +161,9 @@
 			
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
-				entry = (NSString*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+				entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
 			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
-				NSArray *array = (NSArray*)[[moduleManager primaryBible] attributeValueForEntryData:rData];
+				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
 				for(NSDictionary *dict in array) {
 					NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];

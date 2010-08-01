@@ -33,11 +33,11 @@ BOOL downloadableShown;
 	downloadableShown = NO;
 }
 
-- (void)setModuleManager:(PSModuleController *)mm {
-	moduleManager = mm;
-	[moduleManager retain];
-	//[self updateInstalledIndexList];
-}
+//- (void)setModuleManager:(PSModuleController *)mm {
+//	moduleManager = mm;
+//	[moduleManager retain];
+//	//[self updateInstalledIndexList];
+//}
 
 - (void)setSearchController:(PSSearchController *)sc {
 	searchController = sc;
@@ -171,7 +171,7 @@ BOOL downloadableShown;
 
 	if (buttonIndex == 1) {
 		if(indexPath) {
-			//ViewController *mm = [moduleManager viewController];
+			//ViewController *mm = [[PSModuleController defaultModuleController] viewController];
 			[self performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
 			[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
 		}
@@ -241,7 +241,7 @@ BOOL downloadableShown;
 - (void)updateInstalledIndexList {
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSMutableArray *modules = [[[[moduleManager swordManager] listModules] mutableCopy] autorelease];
+	NSMutableArray *modules = [[[[[PSModuleController defaultModuleController] swordManager] listModules] mutableCopy] autorelease];
 	NSMutableArray *ii = [NSMutableArray arrayWithObjects: nil];
 	NSMutableArray *di = [NSMutableArray arrayWithObjects: nil];
 	NSMutableArray *nai = [NSMutableArray arrayWithObjects: nil];
@@ -303,7 +303,7 @@ BOOL downloadableShown;
 
 // Installs the search index for the primary text
 - (void)installSearchIndexForModule:(SwordModule *)mod {
-	//SwordModule *mod = [[moduleManager swordManager] moduleWithName:module];
+	//SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:module];
 	if (!mod) {
 		return;
 	}
@@ -337,10 +337,10 @@ BOOL downloadableShown;
 	installationProgress = (float) responseDataCurrentLength / (float) responseDataExpectedLength;
 	if(installationProgress >= 1.0)
 		installationProgress = 0.9999;//1.0 is a reserved special value that shouldn't be set here.
-	//ViewController *mm = [moduleManager viewController];
+	//ViewController *mm = [[PSModuleController defaultModuleController] viewController];
 	NSString *p = [NSString stringWithFormat: @"%f", installationProgress];
 	[self performSelectorInBackground: @selector(updateIndexInstallationStatus:) withObject: p];
-	//[[moduleManager viewController] updateIndexInstallationStatus:installationProgress];
+	//[[[PSModuleController defaultModuleController] viewController] updateIndexInstallationStatus:installationProgress];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -354,9 +354,9 @@ BOOL downloadableShown;
 
 	ALog(@"Couldn't retrieve search index for: %@", moduleName);
 	installationProgress = -1.0;
-	//ViewController *mm = [moduleManager viewController];
+	//ViewController *mm = [[PSModuleController defaultModuleController] viewController];
 	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
-	//[[moduleManager viewController] hideOperationStatus];
+	//[[[PSModuleController defaultModuleController] viewController] hideOperationStatus];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -367,7 +367,7 @@ BOOL downloadableShown;
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
     // Use responseData
-	SwordModule *mod = [[moduleManager swordManager] moduleWithName:moduleName];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleName];
 	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
 
 	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
@@ -399,9 +399,9 @@ BOOL downloadableShown;
 	installationProgress = 1.0;
 	[self updateInstalledIndexList];
 	 //[indicesTable reloadData];
-	 //ViewController *mm = [moduleManager viewController];
+	 //ViewController *mm = [[PSModuleController defaultModuleController] viewController];
 	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
-	//[[moduleManager viewController] hideOperationStatus];
+	//[[[PSModuleController defaultModuleController] viewController] hideOperationStatus];
 	[searchController refreshView];
 }
 
@@ -414,7 +414,7 @@ BOOL downloadableShown;
 	self.installedIndices = nil;
 	self.unavailableIndices = nil;
 	self.files = nil;
-	[moduleManager release];
+	//[moduleManager release];
 	[searchController release];
 	[super dealloc];
 }

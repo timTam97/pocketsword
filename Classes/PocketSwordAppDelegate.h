@@ -23,7 +23,7 @@
     UIWindow *window;
     UITabBarController *tabBarController;
 
-	IBOutlet id moduleManager;
+	//IBOutlet id moduleManager;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

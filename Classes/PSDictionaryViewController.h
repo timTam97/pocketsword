@@ -18,7 +18,7 @@
 	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
 	IBOutlet UIWebView *dictionaryDescriptionWebView;
 	
-	IBOutlet id moduleManager;
+	//IBOutlet id moduleManager;
 	
 	BOOL searching;
 	BOOL letUserSelectRow;

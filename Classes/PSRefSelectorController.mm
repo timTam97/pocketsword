@@ -114,14 +114,14 @@
 	} else {
 		//show the refSelector
 		if(shownTab == BibleTab) {
-			[refSelectorTitle setTitle:[[moduleManager primaryBible] name]];
+			[refSelectorTitle setTitle:[[[PSModuleController defaultModuleController] primaryBible] name]];
 		} else {
-			[refSelectorTitle setTitle:[[moduleManager primaryCommentary] name]];
+			[refSelectorTitle setTitle:[[[PSModuleController defaultModuleController] primaryCommentary] name]];
 		}
 		[self updateRefSelectorBooks];
 		[ViewController showModal:refSelectorView withTiming:0.3];
 		
-		NSString *curBibRef = [moduleManager getCurrentBibleRef];
+		NSString *curBibRef = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 		curBibRef = [PSModuleController createRefString: curBibRef];
 		NSRange range = [curBibRef rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet] options: NSBackwardsSearch];
 		NSUInteger book = [self bookIndex: [curBibRef substringToIndex: range.location]];
@@ -215,9 +215,9 @@
 
 - (void)updateRefSelectorBooks {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSString *currentRefSystemName = [[moduleManager primaryBible] versification];
+	NSString *currentRefSystemName = [[[PSModuleController defaultModuleController] primaryBible] versification];
 	if(!currentRefSystemName) //if there are no Bibles, fall back to the commentary versification
-		currentRefSystemName = [[moduleManager primaryCommentary] versification];
+		currentRefSystemName = [[[PSModuleController defaultModuleController] primaryCommentary] versification];
 	if(!currentRefSystemName)
 		currentRefSystemName = @"KJV";//if no ref system, default to kjv
 	const sword::VerseMgr::System *refSystem = sword::VerseMgr::getSystemVerseMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -246,7 +246,7 @@
 		[book release];
 	}
 	//NSLog(@"refSelector: %d books, %d refSelectorOTBookCount", numberOfBooks, refSelectorOTBookCount);
-	NSString *currentBook = [moduleManager getCurrentBibleRef];
+	NSString *currentBook = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 	currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];
 	NSRange spaceRange = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
 	if(spaceRange.location != NSNotFound) {
@@ -365,12 +365,12 @@
 }
 
 - (void)selectedVerse:(id)sender {
-//	[moduleManager displayBusyIndicator];
+//	[[PSModuleController defaultModuleController] displayBusyIndicator];
 	NSString *btn = [(UIButton*)sender currentTitle];
 	//NSLog(@"pressed verse %@", btn);
 	[self toggleNavigation: BibleTab];
-	[[moduleManager viewController] updateViewWithSelectedBook:refSelectorBook chapter:refSelectorChapter verse:[btn integerValue]];
-//	[moduleManager hideBusyIndicator];
+	[[[PSModuleController defaultModuleController] viewController] updateViewWithSelectedBook:refSelectorBook chapter:refSelectorChapter verse:[btn integerValue]];
+//	[[PSModuleController defaultModuleController] hideBusyIndicator];
 }
 
 + (UIButton*)generateButton:(CGRect)frame withTitle:(NSString*)title {

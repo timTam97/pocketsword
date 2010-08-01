@@ -175,7 +175,7 @@
 	application.networkActivityIndicatorVisible = YES;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-	//[[navSources moduleManager] displayBusyIndicator];
+	//[[PSModuleController defaultModuleController] displayBusyIndicator];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/mods.d.tar.gz", [serverType lowercaseString], server, path]];
 	NSData *data = nil;
@@ -185,7 +185,7 @@
 	data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	//[[navSources moduleManager] hideBusyIndicator];
+	//[[PSModuleController defaultModuleController] hideBusyIndicator];
 
 	application.networkActivityIndicatorVisible = NO;
 
@@ -207,7 +207,7 @@
 	[is setSource:server];
 	[is setUID:[NSString stringWithFormat:@"%@-%@", server, caption]];
 	
-	[[[navSources moduleManager] swordInstallManager] addInstallSource:is];
+	[[[PSModuleController defaultModuleController] swordInstallManager] addInstallSource:is];
 	[navSources resetTableSelection];
 	
 	[navSources dismissModalViewControllerAnimated:YES];

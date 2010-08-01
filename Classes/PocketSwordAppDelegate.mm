@@ -32,6 +32,7 @@
 #define LOCALES_VERSION @"loadedSWORDLocales-v2.2"
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
+	PSModuleController *moduleManager = [PSModuleController defaultModuleController];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
 	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
@@ -61,7 +62,7 @@
 		[defaults removeObjectForKey: DefaultsModuleCipherKeysKey];
 		[defaults removeObjectForKey: LOCALES_VERSION];
 		[defaults synchronize];
-		NSArray *dicts = [[moduleManager swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
+		NSArray *dicts = [[[PSModuleController defaultModuleController] swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
 		for(SwordDictionary *dict in dicts) {
 			[dict removeCache];
 		}
@@ -208,6 +209,8 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[PSLanguageCode doneWithLookupTable];
+	[PSModuleController releaseDefaultModuleController];
+	[SwordManager releaseDefaultManager];
 }
 
 - (void)dealloc {

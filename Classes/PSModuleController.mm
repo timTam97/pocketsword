@@ -88,6 +88,22 @@ rp { display: none; }\n"
 
 float installationProgress;
 
+static PSModuleController *instance;
+/** the singleton instance */
++ (PSModuleController *)defaultModuleController {
+    if(instance == nil) {
+        // use default path
+        instance = [[PSModuleController alloc] init];
+    }
+    
+	return instance;
+}
+
++ (void)releaseDefaultModuleController {
+	[instance release];
+	instance = nil;
+}
+
 - (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType {
 	
 	if(!zippedModule)
@@ -465,7 +481,7 @@ float installationProgress;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
-	SwordInstallSource *sIS = [self currentInstallSource];
+	SwordInstallSource *sIS = self.currentInstallSource;
 	installationProgress = 0.01;
 	BOOL ret = NO;
 
@@ -552,18 +568,18 @@ float installationProgress;
 
 - (BOOL)refreshCurrentInstallSource {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[swordInstallManager refreshInstallSource:[self currentInstallSource]];
-	[[self currentInstallSource] resetSwordManagerLoaded];
+	[swordInstallManager refreshInstallSource:self.currentInstallSource];
+	[self.currentInstallSource resetSwordManagerLoaded];
 	[pool release];
 	return YES;
 }
 
 - (BOOL)installModule:(NSString *)name {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	DLog(@"[PSModuleController -installModule: %@ fromSource: %@]", name, [[self currentInstallSource] caption]);
+	DLog(@"[PSModuleController -installModule: %@ fromSource: %@]", name, [self.currentInstallSource caption]);
 
 	installationProgress = 0.01;
-	SwordInstallSource *sIS = currentInstallSource;
+	SwordInstallSource *sIS = self.currentInstallSource;
 	SwordModule *swordModule;
 	if(!sIS) {
 		for (int i = 0; i < [[swordInstallManager installSourceList] count]; i++) {

@@ -117,7 +117,7 @@ typedef enum {
 	
 	NSLock *toolbarLock;
 	
-	IBOutlet id moduleManager;
+	//IBOutlet id moduleManager;
 	IBOutlet id historyController;
 		
 }

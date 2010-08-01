@@ -11,7 +11,7 @@
 #import "PSSearchController.h"
 
 @interface PSIndexController : UIViewController {
-	IBOutlet PSModuleController *moduleManager;
+	//IBOutlet PSModuleController *moduleManager;
 	PSSearchController *searchController;
 
 	NSArray *downloadableIndices;
@@ -49,7 +49,7 @@
 
 - (void)viewDidLoad;
 - (void)dealloc;
-- (void)setModuleManager:(PSModuleController *)mm;
+//- (void)setModuleManager:(PSModuleController *)mm;
 - (void)setSearchController:(PSSearchController *)sc;
 
 - (IBAction)closeButtonPressed:(id)sender;

@@ -27,7 +27,7 @@ typedef enum {
 	IBOutlet UITableView					*refTable;
 	IBOutlet UINavigationController	*refNavigationController;
 
-	IBOutlet id moduleManager;
+	//IBOutlet id moduleManager;
 	IBOutlet id viewController;
 }
 
