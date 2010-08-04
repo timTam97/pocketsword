@@ -208,3 +208,6 @@
 "FillInAllFieldsMessage" = "You must fill in all the fields!";
 "Warning" = "Warning";
 "CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+
+// new v1.3.2 strings:
+"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";

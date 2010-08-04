@@ -207,3 +207,6 @@
 "FillInAllFieldsMessage" = "你必须填入所有的空白！";
 "Warning" = "警告";
 "CannotVerifyInstallSourceWarning" = "PocketSword不能确认这是一个恰当的模块资源。你仍然要存它吗？";
+
+// new v1.3.2 strings:
+"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
