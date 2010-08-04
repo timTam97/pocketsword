@@ -246,7 +246,7 @@
 		[book release];
 	}
 	//NSLog(@"refSelector: %d books, %d refSelectorOTBookCount", numberOfBooks, refSelectorOTBookCount);
-	NSString *currentBook = [[PSModuleController defaultModuleController] getCurrentBibleRef];
+	NSString *currentBook = [PSModuleController getCurrentBibleRef];
 	currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];
 	NSRange spaceRange = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
 	if(spaceRange.location != NSNotFound) {

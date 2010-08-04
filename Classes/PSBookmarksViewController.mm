@@ -93,7 +93,7 @@
 	}
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *verse = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBibleVersePosition];
-	NSString *ref = [NSString stringWithFormat:@"%@:%@", [[PSModuleController defaultModuleController] getCurrentBibleRef], verse];
+	NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController getCurrentBibleRef], verse];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
 	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];

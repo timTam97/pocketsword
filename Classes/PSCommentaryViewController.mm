@@ -60,7 +60,7 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			//NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", [components objectAtIndex:2]];
 			//[bibleWebView stringByEvaluatingJavaScriptFromString:javascript];
-			NSMutableString *ref = [NSMutableString stringWithString:[[PSModuleController defaultModuleController] getCurrentBibleRef]];
+			NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			//[commentaryNavBtn setTitle: ref];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];

@@ -8,11 +8,78 @@
 
 #import "PSModuleSelectorController.h"
 #import "PSModuleController.h"
+#import "NavigatorSources.h"
 
 
 @implementation PSModuleSelectorController
 
 @synthesize listType;
+
+-(void)viewWillAppear:(BOOL)animated {
+	NSIndexPath *ip = nil;//default value
+	PSModuleController *moduleController = [PSModuleController defaultModuleController];
+	if([self listType] == BibleTab) {
+		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
+		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
+		int pos = 0;
+		for(; pos < [array count]; pos++) {
+			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryBible] name]]) {
+				break;
+			}
+		}
+		if (pos < [array count]) {
+			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
+		}			
+	} else if([self listType] == CommentaryTab) {
+		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
+		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
+		int pos = 0;
+		for(; pos < [array count]; pos++) {
+			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryCommentary] name]]) {
+				break;
+			}
+		}
+		if (pos < [array count]) {
+			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
+		}
+	} else if([self listType] == DevotionalTab) {
+		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"")];
+		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
+		int pos = 0;
+		for(; pos < [array count]; pos++) {
+			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryDevotional] name]]) {
+				break;
+			}
+		}
+		if (pos < [array count]) {
+			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
+		}
+	} else {
+		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"")];
+		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
+		int pos = 0;
+		for(; pos < [array count]; pos++) {
+			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryDictionary] name]]) {
+				break;
+			}
+		}
+		if (pos < [array count]) {
+			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
+		}			
+	}
+	[modulesListTable reloadData];
+	if(ip)
+		[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
+}
+
+- (IBAction)addModuleButtonPressed {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowDownloadsTab object:nil];
+}
+
+- (IBAction)dismissModuleSelector {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+}
 
 //
 // UITableView delegate and data source methods
@@ -166,9 +233,7 @@
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
 	[UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-                           forView:self.view //[[[PSModuleController defaultModuleController] viewController] modulesListView]
-                             cache:YES];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
 	
     [UIView setAnimationDuration:1];
 	//[[[[PSModuleController defaultModuleController] viewController] modulesListView] addSubview: leafViewController.view];

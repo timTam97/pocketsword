@@ -603,6 +603,8 @@
 		05D6ACFF109830EE00A5026E /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF6109830EE00A5026E /* unzip.c */; };
 		05D6AD00109830EE00A5026E /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF9109830EE00A5026E /* zip.c */; };
 		05D6AD01109830EE00A5026E /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACFC109830EE00A5026E /* ZipArchive.mm */; };
+		05DE576F120916E9005A636A /* PSModuleSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05DE576D120916E9005A636A /* PSModuleSelectorController.xib */; };
+		05DE5770120916E9005A636A /* PSModuleSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05DE576D120916E9005A636A /* PSModuleSelectorController.xib */; };
 		05DF546A10A93E69007CB847 /* SnoopWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DF546910A93E69007CB847 /* SnoopWindow.m */; };
 		05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF558E10AA9123007CB847 /* SwordBook.mm */; };
 		05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */; };
@@ -1290,6 +1292,18 @@
 		05D6ACFA109830EE00A5026E /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		05D6ACFB109830EE00A5026E /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		05D6ACFC109830EE00A5026E /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
+		05DE576E120916E9005A636A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584112093548005A636A /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE58421209354E005A636A /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584312093551005A636A /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584412093554005A636A /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584512093556005A636A /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584612093559005A636A /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE58471209355B005A636A /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE58481209355E005A636A /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584912093561005A636A /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05DE584A12093565005A636A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSModuleSelectorController.xib"; sourceTree = "<group>"; };
+		05DE584B1209356A005A636A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PSModuleSelectorController.xib"; sourceTree = "<group>"; };
 		05DF546810A93E69007CB847 /* SnoopWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnoopWindow.h; sourceTree = "<group>"; };
 		05DF546910A93E69007CB847 /* SnoopWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SnoopWindow.m; sourceTree = "<group>"; };
 		05DF558D10AA9123007CB847 /* SwordBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordBook.h; sourceTree = "<group>"; };
@@ -2625,6 +2639,7 @@
 				054EF62210CD0EAF0091D269 /* IndexDownloader.xib */,
 				05AB947F116D8D620043DB57 /* PSChapterSelectorController.xib */,
 				05AB950B116D9BB70043DB57 /* PSVerseSelectorController.xib */,
+				05DE576D120916E9005A636A /* PSModuleSelectorController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -3095,6 +3110,7 @@
 				05124A9B11B5F02000575BA9 /* devo-open.png in Resources */,
 				059A6CC111B79ABD00B33E54 /* bible.png in Resources */,
 				059A6CC211B79ABD00B33E54 /* notes.png in Resources */,
+				05DE5770120916E9005A636A /* PSModuleSelectorController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3141,6 +3157,7 @@
 				05124A9C11B5F02000575BA9 /* devo-open.png in Resources */,
 				059A6CC311B79ABD00B33E54 /* bible.png in Resources */,
 				059A6CC411B79ABD00B33E54 /* notes.png in Resources */,
+				05DE576F120916E9005A636A /* PSModuleSelectorController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3889,6 +3906,25 @@
 				054BEF3E11A4F13200ABCA18 /* zh-Hant */,
 			);
 			name = PSVerseSelectorController.xib;
+			sourceTree = "<group>";
+		};
+		05DE576D120916E9005A636A /* PSModuleSelectorController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05DE576E120916E9005A636A /* English */,
+				05DE584112093548005A636A /* es */,
+				05DE58421209354E005A636A /* fr */,
+				05DE584312093551005A636A /* it */,
+				05DE584412093554005A636A /* ja */,
+				05DE584512093556005A636A /* ko */,
+				05DE584612093559005A636A /* nl */,
+				05DE58471209355B005A636A /* sv */,
+				05DE58481209355E005A636A /* uk */,
+				05DE584912093561005A636A /* ru */,
+				05DE584A12093565005A636A /* zh-Hant */,
+				05DE584B1209356A005A636A /* zh-Hans */,
+			);
+			name = PSModuleSelectorController.xib;
 			sourceTree = "<group>";
 		};
 		E9A6CF9C0FF5508400399E78 /* Localizable.strings */ = {

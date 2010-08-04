@@ -81,7 +81,7 @@ rp { display: none; }\n"
 @synthesize primaryCommentary;
 @synthesize primaryDictionary;
 @synthesize primaryDevotional;
-@synthesize swordInstallManager;
+//@synthesize swordInstallManager;
 @synthesize swordManager;
 @synthesize currentInstallSource;
 @synthesize busyTimer;
@@ -138,80 +138,85 @@ static PSModuleController *instance;
 	
 }
 
+- (SwordInstallManager *)swordInstallManager {
+	if(!swordInstallManager) {
+		swordInstallManager = [[[SwordInstallManager alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES] retain];
+		
+		BOOL userDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey: @"userDisclaimerAccepted"];
+		if (userDisclaimer) {
+			[swordInstallManager setUserDisclainerConfirmed: YES];
+		}
+	}
+	return swordInstallManager;
+}
+
 - (id)init {
 	self = [super init];
-	installationProgress = 0.0;
-	
-	//migration of modules, for v1.3.0: will allow backup of modules with iTunes sync...
-	if([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"]]) {
-		//need to migrate from the old to the new...
-		NSString *fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"];
-		NSString *toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"mods.d"];
-		if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
-			DLog(@"moved mods.d from %@ to %@", fromPath, toPath);
-		} else {
-			DLog(@"failed to move mods.d folder");
+	if(self) {
+		DLog(@"[PSModuleController init]");
+		installationProgress = 0.0;
+		
+		//migration of modules, for v1.3.0: will allow backup of modules with iTunes sync...
+		if([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"]]) {
+			//need to migrate from the old to the new...
+			NSString *fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"];
+			NSString *toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"mods.d"];
+			if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
+				DLog(@"moved mods.d from %@ to %@", fromPath, toPath);
+			} else {
+				DLog(@"failed to move mods.d folder");
+			}
+			fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString:@"modules"];
+			toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"modules"];
+			if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
+				DLog(@"moved modules from %@ to %@", fromPath, toPath);
+			} else {
+				DLog(@"failed to move modules folder");
+			}
+			
 		}
-		fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString:@"modules"];
-		toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"modules"];
-		if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
-			DLog(@"moved modules from %@ to %@", fromPath, toPath);
-		} else {
-			DLog(@"failed to move modules folder");
+
+		// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
+		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+		if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
+			ALog(@"Couldn't create mods.d");
+		}
+		swordManager = [[SwordManager defaultManager] retain];
+		swordInstallManager = nil;
+		// set localized book names
+		sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
+		NSString *book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSUTF8StringEncoding];
+		if(!book) {
+			book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSISOLatin1StringEncoding];
+		}
+		[ViewController setFirstRefAvailable: [NSString stringWithFormat: @"%@ 1", book]];
+		book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSUTF8StringEncoding];
+		if(!book) {
+			book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSISOLatin1StringEncoding];
+		}
+		[ViewController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
+		
+		
+		// This seems to sometimes cause a crash on start-up in the SWORD-lib code.  removing this line fixes it...
+		//[self performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
+		
+		/*
+		// debug code to print out all available fonts...
+		NSArray *names = [UIFont familyNames];
+		for(NSString *n in names) {
+		 //NSLog(@"%@", n);
+			NSArray *fontNames = [UIFont fontNamesForFamilyName:n];
+			for(NSString *nn in fontNames) {
+		 //NSLog(@"->		%@", nn);
+			}
 		}
 		
+		 */
+		
+		[self setPreferences];
+		[self reloadLastBible];
+		[self reloadLastCommentary];
 	}
-
-	// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
-	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
-	if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
-		ALog(@"Couldn't create mods.d");
-	}
-	swordManager = [[SwordManager defaultManager] retain];
-	swordInstallManager = [[[SwordInstallManager alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES] retain];
-
-	BOOL userDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey: @"userDisclaimerAccepted"];
-	if (userDisclaimer) {
-		[swordInstallManager setUserDisclainerConfirmed: YES];
-	}
-	// set localized book names
-	sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
-	NSString *book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSUTF8StringEncoding];
-	if(!book) {
-		book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSISOLatin1StringEncoding];
-	}
-	[ViewController setFirstRefAvailable: [NSString stringWithFormat: @"%@ 1", book]];
-	book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSUTF8StringEncoding];
-	if(!book) {
-		book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSISOLatin1StringEncoding];
-	}
-	[ViewController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
-	
-	
-	// This seems to sometimes cause a crash on start-up in the SWORD-lib code.  removing this line fixes it...
-	//[self performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
-	
-	//for debug purposes, we can enable the following line...  don't want this for the release version!
-	//[swordInstallManager performSelectorInBackground:@selector(refreshMasterRemoteInstallSourceList) withObject:nil];
-	
-	
-	/*
-	// debug code to print out all available fonts...
-	NSArray *names = [UIFont familyNames];
-	for(NSString *n in names) {
-	 //NSLog(@"%@", n);
-		NSArray *fontNames = [UIFont fontNamesForFamilyName:n];
-		for(NSString *nn in fontNames) {
-	 //NSLog(@"->		%@", nn);
-		}
-	}
-	
-	 */
-	
-	[self setPreferences];
-	[self reloadLastBible];
-	[self reloadLastCommentary];
-	
 	return self;
 }
 
@@ -266,7 +271,7 @@ static PSModuleController *instance;
 	return NO;
 }
 
-- (NSString *)getCurrentBibleRef {
++ (NSString *)getCurrentBibleRef {
 	NSString *lastRef = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastRef];
 	if (!lastRef) {
 		[[NSUserDefaults standardUserDefaults] setObject: @"Genesis 1" forKey: DefaultsLastRef];
@@ -343,7 +348,7 @@ static PSModuleController *instance;
 
 - (NSString *)setToNextChapter {
 	NSString *ret = nil;
-	NSString *cur = [self getCurrentBibleRef];
+	NSString *cur = [PSModuleController getCurrentBibleRef];
 	if(primaryBible) {
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToNextChapter];
@@ -357,7 +362,7 @@ static PSModuleController *instance;
 
 - (NSString *)setToPreviousChapter {
 	NSString *ret = nil;
-	NSString *cur = [self getCurrentBibleRef];
+	NSString *cur = [PSModuleController getCurrentBibleRef];
 	NSInteger verse = nil;
 	if(primaryBible) {
 		[primaryBible setChapter: cur];
@@ -471,7 +476,7 @@ static PSModuleController *instance;
 }
 
 - (PSStatusReporter*)getInstallationProgress {
-	PSStatusReporter *reporter = [swordInstallManager getInstallationProgress];
+	PSStatusReporter *reporter = [[self swordInstallManager] getInstallationProgress];
 	if(installationProgress == -1 || installationProgress == 1) {
 		reporter->overallProgress = installationProgress;
 	}
@@ -512,7 +517,7 @@ static PSModuleController *instance;
 	application.networkActivityIndicatorVisible = YES;
 	application.idleTimerDisabled = YES;//disable auto-lock while we're installing a module, as it could take a while!
 	
-	int status = [swordInstallManager installModule: swordModule fromSource: sIS withManager: swordManager];
+	int status = [[self swordInstallManager] installModule: swordModule fromSource: sIS withManager: swordManager];
 	
 	application.networkActivityIndicatorVisible = NO;
 	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
@@ -568,7 +573,7 @@ static PSModuleController *instance;
 
 - (BOOL)refreshCurrentInstallSource {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[swordInstallManager refreshInstallSource:self.currentInstallSource];
+	[[self swordInstallManager] refreshInstallSource:self.currentInstallSource];
 	[self.currentInstallSource resetSwordManagerLoaded];
 	[pool release];
 	return YES;
@@ -582,7 +587,7 @@ static PSModuleController *instance;
 	SwordInstallSource *sIS = self.currentInstallSource;
 	SwordModule *swordModule;
 	if(!sIS) {
-		for (int i = 0; i < [[swordInstallManager installSourceList] count]; i++) {
+		for (int i = 0; i < [[[self swordInstallManager] installSourceList] count]; i++) {
 			sIS = [[swordInstallManager installSourceList] objectAtIndex: i];
 			SwordManager *sM = [sIS swordManager];
 			swordModule = [sM moduleWithName: name];
@@ -646,7 +651,7 @@ static PSModuleController *instance;
 
 
 	if(moduleToRemove) {
-		stat = [swordInstallManager uninstallModule: moduleToRemove fromManager: swordManager];	
+		stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordManager];	
 	}
 	
 	BOOL success = (stat == 0) ? YES : NO;

@@ -101,7 +101,7 @@
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			NSMutableString *ref = [NSMutableString stringWithString:[[PSModuleController defaultModuleController] getCurrentBibleRef]];
+			NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
 		}

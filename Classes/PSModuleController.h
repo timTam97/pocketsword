@@ -59,7 +59,7 @@
 @property (assign) SwordModule *primaryCommentary;
 @property (assign) SwordDictionary *primaryDictionary;
 @property (assign) SwordDictionary *primaryDevotional;
-@property (assign) SwordInstallManager *swordInstallManager;
+//@property (assign) SwordInstallManager *swordInstallManager;
 @property (assign) SwordManager *swordManager;
 @property (retain, readwrite) SwordInstallSource *currentInstallSource;
 @property (retain, readwrite) NSTimer *busyTimer;
@@ -73,11 +73,11 @@
 + (NSString*)createTitleRefString:(NSString *)newTitle;
 + (BOOL)checkNetworkConnection;
 + (NSDictionary *)dataForLink:(NSURL *)aURL;
++ (NSString *)getCurrentBibleRef;
 
 - (id)init;
 - (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType;
 - (BOOL)isLoaded:(NSString *)module;
-- (NSString *)getCurrentBibleRef;
 - (void)loadPrimaryBible:(NSString *)newText;
 - (void)loadPrimaryCommentary:(NSString *)newText;
 - (void)loadPrimaryDictionary:(NSString *)newText;
@@ -95,6 +95,7 @@
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
 - (void)dealloc;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
+- (SwordInstallManager *)swordInstallManager;
 
 //- (void)displayBusyIndicator;
 //- (void)hideBusyIndicator;

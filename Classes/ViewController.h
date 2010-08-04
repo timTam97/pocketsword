@@ -73,21 +73,23 @@ typedef enum {
 	
 	// MultiList
 	IBOutlet UITabBarController *multiListController;
-	//IBOutlet UIView				*modulesListView;
-	IBOutlet id					moduleSelectorViewController;
-	IBOutlet UITableView		*modulesListTable;
-	IBOutlet UINavigationItem	*modulesNavigationItem;
+	//IBOutlet UIView			*modulesListView;
+	id							moduleSelectorViewController;
+	//IBOutlet UITableView		*modulesListTable;
+	//IBOutlet UINavigationItem	*modulesNavigationItem;
 	
 	IBOutlet UIView				*historyListView;
 	IBOutlet UITableView		*historyListTable;
 	IBOutlet UINavigationItem	*historyNavigationItem;
 	IBOutlet UIBarButtonItem	*historyCloseButton;
+	IBOutlet id					historyController;
 	
 	// Dictionary tab
 	IBOutlet UITabBarItem				*dictionaryTabBarItem;
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
 	IBOutlet UIBarButtonItem			*dictionaryTitle;
 	
+	// Devotional tab
 	IBOutlet UITabBarItem				*devotionalTabBarItem;
 	IBOutlet UIWebView					*devotionalWebView;
 	
@@ -102,24 +104,13 @@ typedef enum {
 	// About tab
 	IBOutlet UITabBarItem *aboutTabBarItem;
 	
-//	// Status view
-//	IBOutlet UIViewController *statusController;
-//	IBOutlet UILabel *statusTitle;
-//	IBOutlet UILabel *statusText;
-//	IBOutlet UILabel *statusOverallText;
-//	IBOutlet UIProgressView *statusBar;
-//	IBOutlet UIProgressView *statusOverallBar;
-	
 	// Busy Indicator
 	IBOutlet UIViewController *activityController;
 	IBOutlet UIActivityIndicatorView *activityIndicator;
 	IBOutlet UILabel *activityLoadingLabel;
 	
-	NSLock *toolbarLock;
+	//NSLock *toolbarLock;
 	
-	//IBOutlet id moduleManager;
-	IBOutlet id historyController;
-		
 }
 
 + (void)setFirstRefAvailable:(NSString*)first;
@@ -168,7 +159,7 @@ typedef enum {
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled;
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
 
-- (void)reloadModuleTable;
+//- (void)reloadModuleTable;
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 

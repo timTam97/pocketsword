@@ -12,11 +12,14 @@
 	ShownTab listType;
 	IBOutlet PSModuleLeafViewController *leafViewController;
 
-	//IBOutlet id moduleManager;
+	IBOutlet UITableView		*modulesListTable;
+	IBOutlet UINavigationItem	*modulesNavigationItem;
 }
 
 @property (assign) ShownTab listType;
 
+- (IBAction)addModuleButtonPressed;
+- (IBAction)dismissModuleSelector;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
 
 

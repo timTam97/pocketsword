@@ -85,7 +85,7 @@
 	}
 	
 	if(valid) {
-		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[[PSModuleController defaultModuleController] getCurrentBibleRef]], verse];
+		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]], verse];
 		
 		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
 		
