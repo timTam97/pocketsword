@@ -18,7 +18,7 @@
 
 BOOL searchingEnabled;
 
-- (void)awakeFromNib {
+- (void)viewDidLoad {
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 }
 

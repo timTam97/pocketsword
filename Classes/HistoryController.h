@@ -23,8 +23,9 @@
 
 	ShownTab listType;
 
-	//IBOutlet id moduleManager;
-	
+	IBOutlet UIBarButtonItem	*historyCloseButton;
+	IBOutlet UINavigationItem	*historyNavigationItem;
+	IBOutlet UITableView		*historyListTable;
 }
 
 @property (assign) ShownTab listType;

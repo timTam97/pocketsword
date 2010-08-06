@@ -28,11 +28,26 @@
 - (void)viewDidLoad {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
+	historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 }
 
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddBibleHistoryItem object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddCommentaryHistoryItem object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	if(listType == BibleTab) {
+		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
+	} else {
+		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
+	}
+	[historyListTable reloadData];
+	if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
+		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
+		if(ip)
+			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
+	}
 }
 
 - (void)addBibleHistoryItem {

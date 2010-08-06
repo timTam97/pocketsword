@@ -65,7 +65,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		// and the titles of each tab
-		historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 		
 		//configure the Bible & commentary segmented controls.
 		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
@@ -488,10 +487,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[historyController setListType: BibleTab];
-		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
+		//historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
 	} else {
 		[historyController setListType: CommentaryTab];
-		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
+		//historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
 	}
 	
 	//if(multiListShown) {
@@ -500,12 +499,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		//[ViewController hideModal:multiListController.view withTiming:0.3];
 		//multiListShown = NO;
 	} else {
-		[historyListTable reloadData];
-		if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
-			NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
-			if(ip)
-				[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
-		}
 		//[ViewController showModal:multiListController.view withTiming:0.3];
 		[tabController presentModalViewController:multiListController animated:YES];
 		//multiListShown = YES;

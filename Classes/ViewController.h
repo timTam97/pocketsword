@@ -78,10 +78,7 @@ typedef enum {
 	//IBOutlet UITableView		*modulesListTable;
 	//IBOutlet UINavigationItem	*modulesNavigationItem;
 	
-	IBOutlet UIView				*historyListView;
-	IBOutlet UITableView		*historyListTable;
-	IBOutlet UINavigationItem	*historyNavigationItem;
-	IBOutlet UIBarButtonItem	*historyCloseButton;
+	//IBOutlet UIView				*historyListView;
 	IBOutlet id					historyController;
 	
 	// Dictionary tab
