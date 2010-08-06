@@ -53,7 +53,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)awakeFromNib {
 	if (!initialized) {
-		//toolbarLock = [[NSLock alloc] init];
+		toolbarLock = [[NSLock alloc] init];
 		NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 		//localize the tab bar titles
 		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
@@ -344,7 +344,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
 {
-	//[toolbarLock lock];
+	[toolbarLock lock];
 	NSString *titleToDisplay = [PSModuleController createTitleRefString:newTitle];
 	
 	if(tab == BibleTab) {
@@ -354,7 +354,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		//[commentaryNavBtn setTitle: newTitle];
 		[commentarySegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
 	}
-	//[toolbarLock unlock];
+	[toolbarLock unlock];
 }
 
 - (void)setEnabledBibleNextButton:(BOOL)enabled
@@ -719,14 +719,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 
 - (void)dealloc {
-	//[toolbarLock release];
+	[toolbarLock release];
     [super dealloc];
 }
 
 - (void)startAnimateChapterChange
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[toolbarLock lock];
+	[toolbarLock lock];
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 //		[bibleSearchButton setEnabled: NO];
 		[bibleActivity startAnimating];
@@ -734,14 +734,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //		[commentarySearchButton setEnabled: NO];
 		[commentaryActivity startAnimating];
 	}
-	//[toolbarLock unlock];
+	[toolbarLock unlock];
 	[pool release];
 }
 
 - (void)stopAnimateChapterChange
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[toolbarLock lock];
+	[toolbarLock lock];
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		[bibleActivity stopAnimating];
 //		[bibleSearchButton setEnabled: YES];
@@ -749,7 +749,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[commentaryActivity stopAnimating];
 //		[commentarySearchButton setEnabled: YES];
 	}
-	//[toolbarLock unlock];
+	[toolbarLock unlock];
 	[pool release];
 }
 

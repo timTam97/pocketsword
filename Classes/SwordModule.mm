@@ -534,6 +534,25 @@
     return ret;
 }
 
+- (BOOL)isPersonalCommentary {
+    BOOL ret = NO;
+    NSString *modDrv = [configEntries objectForKey:SWMOD_CONFENTRY_MODDRV];
+    if(modDrv == nil) {
+        modDrv = [self configEntryForKey:SWMOD_CONFENTRY_MODDRV];
+        if(modDrv != nil) {
+            [configEntries setObject:modDrv forKey:SWMOD_CONFENTRY_MODDRV];
+        }
+    }
+    
+    if(modDrv) {
+        if([modDrv isEqualToString:SWMOD_CONF_MODDRV]) {
+            ret = YES;
+        }
+    }
+    
+    return ret;
+}
+
 - (BOOL)isRTL {
     BOOL ret = NO;
     NSString *direction = [configEntries objectForKey:SWMOD_CONFENTRY_DIRECTION];
@@ -663,7 +682,8 @@
 			swModule->setKey(refs);
 			if(![self error]) {
 				NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
-				NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
+				//NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
+				NSString *text = [NSString stringWithUTF8String:swModule->RenderText()];
 				
 				NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
 				[dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
@@ -951,11 +971,12 @@
 	NSInteger i = 1;
 	BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
 	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+	BOOL rawFile = [self isPersonalCommentary];
 	
 	// Grab till the end of the chapter
 	do {
 		lastKey = swModule->Key();
-		thisEntry = [NSString stringWithUTF8String: swModule->RenderText()];
+		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->RenderText()];
 		if(headings) {
 			preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 			if(preverseHeading && ![preverseHeading isEqualToString:@""]) {

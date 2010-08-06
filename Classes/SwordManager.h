@@ -60,6 +60,7 @@ class sword::SWModule;
 #define SWMOD_CONFENTRY_VERSIFICATION       @"Versification"
 #define SWMOD_CONFENTRY_DIRECTION           @"Direction"
 #define SWMOD_CONFENTRY_EDITABLE            @"Editable"
+#define SWMOD_CONFENTRY_MODDRV				@"ModDrv"
 
 /** module features */
 #define SWMOD_FEATURE_STRONGS           @"Strongs"
@@ -99,6 +100,7 @@ class sword::SWModule;
 #define SWMOD_CONF_FEATURE_DAILYDEVOTION @"DailyDevotion"
 #define SWMOD_CONF_FEATURE_GLOSSARY      @"Glossary"
 #define SWMOD_CONF_FEATURE_IMAGES        @"Images"
+#define SWMOD_CONF_MODDRV				 @"RawFiles"
 
 /** On / Off */
 #define SW_ON    @"On"

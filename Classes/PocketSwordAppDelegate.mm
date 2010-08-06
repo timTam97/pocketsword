@@ -29,15 +29,18 @@
 @synthesize window;
 @synthesize tabBarController;
 
-#define LOCALES_VERSION @"loadedSWORDLocales-v2.2"
+#define LOCALES_VERSION					@"loadedSWORDLocales-v2.2"
+#define STRONGS_REAL_HEBREW_VERSION		@"loadedBundledStrongsRealHebrew-v1.4-100511"
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	PSModuleController *moduleManager = [PSModuleController defaultModuleController];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	//[defaults removeObjectForKey:STRONGS_REAL_HEBREW_VERSION];
 	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
 	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
 	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
+	BOOL strongsRealHebrew = [defaults boolForKey:STRONGS_REAL_HEBREW_VERSION];
 	
 	// testing unlocking mechanism:
 	[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
@@ -74,21 +77,32 @@
 	}
 	
 	if(!kjv) {
-		[defaults setBool: YES forKey:@"loadedBundledKJV"];
 		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary];
+		[defaults setBool: YES forKey:@"loadedBundledKJV"];
 	}
 	
 	if(!strongsAndMorph) {
-		[defaults setBool: YES forKey:@"loadedBundledStrongsAndMorph"];
-		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary];
 		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary];
 		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary];
 		[defaults setObject:@"Robinson" forKey:DefaultsMorphGreekModule];
 		[defaults setObject:@"StrongsRealGreek" forKey:DefaultsStrongsGreekModule];
 		[defaults setObject:@"StrongsRealHebrew" forKey:DefaultsStrongsHebrewModule];
+		[defaults setBool: YES forKey:@"loadedBundledStrongsAndMorph"];
 		[defaults synchronize];
+	}
+	
+	if(!strongsRealHebrew) {
+		//remove existing module, if it exists:
+		if([[moduleManager swordManager] isModuleInstalled:@"StrongsRealGreek"]) {
+			DLog(@"\nRemoving existing StrongsRealGreek module & updating...");
+			[moduleManager removeModule:@"StrongsRealGreek"];
+		} else {
+			DLog(@"\nInstalling StrongsRealGreek for the first time...");
+		}
+		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary];
+		[defaults setBool: YES forKey:STRONGS_REAL_HEBREW_VERSION];
 	}
 
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];

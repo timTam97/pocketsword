@@ -92,6 +92,11 @@ static PSModuleController *instance;
 /** the singleton instance */
 + (PSModuleController *)defaultModuleController {
     if(instance == nil) {
+		// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
+		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+		if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
+			ALog(@"Couldn't create mods.d");
+		}
         // use default path
         instance = [[PSModuleController alloc] init];
     }
@@ -109,6 +114,12 @@ static PSModuleController *instance;
 	if(!zippedModule)
 		return;
 	
+	// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
+	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+	if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
+		ALog(@"Couldn't create mods.d");
+	}
+
 	DLog(@"\n\n%@\n\n", zippedModule);
 	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	//NSString *file = [root stringByAppendingPathComponent:[notification object]];
@@ -176,11 +187,6 @@ static PSModuleController *instance;
 			
 		}
 
-		// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
-		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
-		if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
-			ALog(@"Couldn't create mods.d");
-		}
 		swordManager = [[SwordManager defaultManager] retain];
 		swordInstallManager = nil;
 		// set localized book names

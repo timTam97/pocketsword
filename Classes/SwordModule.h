@@ -158,6 +158,7 @@ typedef enum {
 - (BOOL)isEncrypted;
 - (BOOL)isLocked;
 - (BOOL)isEditable;
+- (BOOL)isPersonalCommentary;
 - (BOOL)isRTL;
 - (BOOL)unlock:(NSString *)unlockKey;
 

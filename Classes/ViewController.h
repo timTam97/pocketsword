@@ -109,7 +109,7 @@ typedef enum {
 	IBOutlet UIActivityIndicatorView *activityIndicator;
 	IBOutlet UILabel *activityLoadingLabel;
 	
-	//NSLock *toolbarLock;
+	NSLock *toolbarLock;
 	
 }
 
