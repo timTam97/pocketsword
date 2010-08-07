@@ -67,18 +67,13 @@ typedef enum {
 	
 	// Bible & Commentary tab
 	IBOutlet PSRefSelectorController	*refSelectorController;
-	IBOutlet UIPickerView				*refSelector;
 	IBOutlet UIView						*infoView;
 	IBOutlet UIWebView					*infoWebView;
 	
 	// MultiList
 	IBOutlet UITabBarController *multiListController;
-	//IBOutlet UIView			*modulesListView;
 	id							moduleSelectorViewController;
-	//IBOutlet UITableView		*modulesListTable;
-	//IBOutlet UINavigationItem	*modulesNavigationItem;
 	
-	//IBOutlet UIView				*historyListView;
 	IBOutlet id					historyController;
 	
 	// Dictionary tab
@@ -132,8 +127,8 @@ typedef enum {
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;
 - (IBAction)toggleNavigation:(id)sender;
-- (IBAction)updateViewWithSelectedChapter:(id)sender;
-- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
+//- (IBAction)updateViewWithSelectedChapter:(id)sender;
+//- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 
 - (IBAction)toggleModulesList;

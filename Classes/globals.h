@@ -21,7 +21,8 @@ typedef enum {
     BibleTab = 1,
     CommentaryTab,
 	DictionaryTab,
-	DevotionalTab
+	DevotionalTab,
+	DownloadsTab
 } ShownTab;
 
 #define DefaultsModuleCipherKeysKey					@"DefaultsModuleCipherKeysKey"
