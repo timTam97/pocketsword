@@ -119,7 +119,7 @@ char OSISHeadings::processText(SWBuf &text, const SWKey *key, const SWModule *mo
 					continue;
 				}
 				if (hide && tag.isEndTag(pvDID)) {
-					if (module->isProcessEntryAttributes() && ((option || canonical) || (!preverse))) {
+					if (/*module->isProcessEntryAttributes() nicc: fixes LEB headings &&*/ ((option || canonical) || (!preverse))) {
 						if (preverse) {
 							sprintf(buf, "%i", pvHeaderNum++);
 							module->getEntryAttributes()["Heading"]["Preverse"][buf] = header;
