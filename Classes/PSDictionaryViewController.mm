@@ -282,6 +282,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
+	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
 }
 
 - (void)cancelSearch:(id)sender {
