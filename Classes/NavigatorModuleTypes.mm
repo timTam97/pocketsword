@@ -27,6 +27,8 @@ NSTimer *refreshTimer;
 	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
 	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
 	[refreshBarButtonItem release];
+
+	[cancelButton setTitle: NSLocalizedString(@"Cancel", @"Cancel") forState: UIControlStateNormal];
 	
 	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
 	[table deselectRowAtIndexPath:tableSelection animated:YES];
@@ -104,6 +106,11 @@ NSTimer *refreshTimer;
 	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
 }
 
+- (IBAction)cancelRefreshDownloadSource {
+	// need to do more than this!!!
+	[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+}
+
 - (IBAction)refreshDownloadSource:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -148,7 +155,8 @@ NSTimer *refreshTimer;
 	[statusOverallBar setHidden: YES];
 	
 	[statusText setText: @""];
-	[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
+	[ViewController showModal:statusController.view withTiming:0.3];
+	//[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
 	
 	[pool release];
 }
@@ -196,7 +204,8 @@ NSTimer *refreshTimer;
 - (void)hideOperationStatus {
 	//NSLog(@" ++++++++ hideOperationStatus");
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
+	//[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
+	[ViewController hideModal:statusController.view withTiming:0.3];
 	
 	[statusText setText: @""];
 	[statusOverallText setText: @""];

@@ -375,6 +375,8 @@ base path of the module installation
 - (PSStatusReporter *)getInstallationProgress {
 	if (status == 1.0) {
 		statusReporter->fileProgress = 1.0;
+	} else if (status == -1.0) {
+		statusReporter->fileProgress = -1.0;
 	}
 	return statusReporter;
 }
@@ -405,6 +407,7 @@ base path of the module installation
     } else {
         if([[is source] isEqualToString:@"localhost"] == NO) {
             ret = swInstallMgr->refreshRemoteSource([is installSource]);
+			//ret = -1;//DEBUG
 			[self updateInstallSource: is];
         } else {
 			[self updateInstallSource: is];
@@ -412,7 +415,10 @@ base path of the module installation
         }
     }
 	application.networkActivityIndicatorVisible = NO;
-    status = 1.0;
+	if(!ret) // success = 0 for refreshRemoteSource()
+		status = 1.0;
+	else
+		status = -1.0;
 	
 	[pool release];
 	DLog(@"SwordInstallManager -refreshInstallSource: END");

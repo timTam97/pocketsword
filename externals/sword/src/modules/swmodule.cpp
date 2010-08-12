@@ -856,7 +856,7 @@ const char *SWModule::StripText(const char *buf, int len) {
 
  const char *SWModule::RenderText(const char *buf, int len, bool render) {
 	bool savePEA = isProcessEntryAttributes();
-	if (!buf) {
+	if (!buf || render) { //nicc fix for LEB/ABN/etc
 		entryAttributes.clear();
 	}
 	else {

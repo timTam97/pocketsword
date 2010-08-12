@@ -579,10 +579,10 @@ static PSModuleController *instance;
 
 - (BOOL)refreshCurrentInstallSource {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[[self swordInstallManager] refreshInstallSource:self.currentInstallSource];
+	BOOL success = [[self swordInstallManager] refreshInstallSource:self.currentInstallSource];
 	[self.currentInstallSource resetSwordManagerLoaded];
 	[pool release];
-	return YES;
+	return success;
 }
 
 - (BOOL)installModule:(NSString *)name {
