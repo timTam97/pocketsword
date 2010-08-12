@@ -23,20 +23,23 @@ NSTimer *downloadTimer;
 	[detailsView setBackgroundColor:backgroundColor];
 	
 	UIBarButtonItem *installBarButtonItem;
-	if ([[[PSModuleController defaultModuleController] swordManager] isModuleInstalled:module.name]) {
+	NSString *currentInstalledVersion = nil;
+	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
+	NSString *availableModuleVersion = [module version];
+	if(installedModule && [availableModuleVersion isEqualToString:[installedModule version]]) {
+		currentInstalledVersion = [installedModule version];
 		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstalledButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:nil];
 		[installBarButtonItem setEnabled:NO];
+	} else if(installedModule) {
+		currentInstalledVersion = [installedModule version];
+		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"UpgradeButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(confirmUpgrade)];
+		[installBarButtonItem setEnabled:YES];
 	} else {
 		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstallButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(confirmInstall)];
 		[installBarButtonItem setEnabled:YES];
 	}
 	self.navigationItem.rightBarButtonItem = installBarButtonItem;
 	[installBarButtonItem release];
-	NSString *currentInstalledVersion = nil;
-	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
-	if(installedModule) {
-		currentInstalledVersion = [installedModule version];
-	}
 	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@""];
 	//DLog(@"%@", about);
 	[detailsView loadHTMLString:about baseURL:nil];
@@ -44,6 +47,35 @@ NSTimer *downloadTimer;
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[detailsView loadHTMLString:@"" baseURL:nil];
+}
+
+- (void)confirmUpgrade {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	if(![PSModuleController checkNetworkConnection]) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		[pool release];
+		return;
+	}
+	
+	if([[module name] isEqualToString: @"Personal"]) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		[pool release];
+		return;
+	}
+	
+	SwordInstallSource *sIS = [[PSModuleController defaultModuleController] currentInstallSource];
+	
+	NSString *question = NSLocalizedString(@"ConfirmUpgrade", @"Would you like to upgrade this module?");
+	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
+	
+	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
+	[[[UIAlertView alloc] initWithTitle: messageTitle message: message
+							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+	
+	[pool release];
 }
 
 - (void)confirmInstall {
@@ -80,10 +112,23 @@ NSTimer *downloadTimer;
 //
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
+	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
 	
-	//DLog(@"Clicked button %d", buttonIndex);
-	if (buttonIndex == 1) {
-		//DLog(@"alertView: didDismissWithButtonIndex: -- waitingForInstall");
+	if (buttonIndex == 1 && !installedModule) {
+		//install the module
+		[self performSelectorInBackground: @selector(runInstallation) withObject: nil];
+		
+		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: @selector(updateInstallationStatus)];
+		NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
+		[invocation setTarget: self];
+		[invocation setSelector: @selector(updateInstallationStatus)];
+		
+		downloadTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+	} else if(buttonIndex == 1) {
+		//upgrade the module
+		[[PSModuleController defaultModuleController] removeModule:module.name];
+		
 		[self performSelectorInBackground: @selector(runInstallation) withObject: nil];
 		
 		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: @selector(updateInstallationStatus)];
