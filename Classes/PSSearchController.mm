@@ -49,7 +49,8 @@ BOOL searchingEnabled;
 		PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
 		//[indexC setModuleManager:[PSModuleController defaultModuleController]];
 		[indexC setSearchController: self];
-		[ViewController showModal:indexC.view withTiming:0.3];
+		[self presentModalViewController:indexC animated:YES];
+		//[ViewController showModal:indexC.view withTiming:0.3];
 	} else {
 		
 	}

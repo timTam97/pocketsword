@@ -191,6 +191,7 @@ BOOL downloadableShown;
 	
 	if([PSModuleController checkNetworkConnection]) {
 		application.networkActivityIndicatorVisible = YES;
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 
 		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
 		
@@ -224,6 +225,7 @@ BOOL downloadableShown;
 				}
 			}
 		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	
 	[self updateInstalledIndexList];
@@ -235,7 +237,8 @@ BOOL downloadableShown;
 
 - (IBAction)closeButtonPressed:(id)sender {
 	[searchController refreshView];
-	[ViewController hideModal:self.view withTiming:0.3];
+	//[ViewController hideModal:self.view withTiming:0.3];
+	[searchController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updateInstalledIndexList {
