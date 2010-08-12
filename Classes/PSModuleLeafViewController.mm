@@ -143,6 +143,7 @@ BOOL trashModule = NO;
     unlockToolbar.frame = r;
 	[UIView commitAnimations];
 	[unlockEditButton setEnabled:NO];
+	[unlockSaveButton setEnabled:NO];
 }
 
 - (void)keyboardWillHide:(NSNotification *)note {
@@ -157,6 +158,7 @@ BOOL trashModule = NO;
     unlockToolbar.frame = r;
 	[UIView commitAnimations];
 	[unlockEditButton setEnabled:YES];
+	[unlockSaveButton setEnabled:YES];
 }
 
 - (IBAction)trashModule:(id)sender {

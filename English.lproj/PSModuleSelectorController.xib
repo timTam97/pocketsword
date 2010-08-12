@@ -12,8 +12,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="22"/>
 			<integer value="54"/>
-			<integer value="15"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -542,6 +542,14 @@
 					</object>
 					<int key="connectionID">65</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">unlockSaveButton</string>
+						<reference key="source" ref="129870049"/>
+						<reference key="destination" ref="204203523"/>
+					</object>
+					<int key="connectionID">66</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -842,7 +850,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">65</int>
+			<int key="maxID">66</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -922,6 +930,7 @@
 							<string>unlockHelpWebView</string>
 							<string>unlockLabel</string>
 							<string>unlockNavBarItem</string>
+							<string>unlockSaveButton</string>
 							<string>unlockTextField</string>
 							<string>unlockToolbar</string>
 							<string>unlockView</string>
@@ -937,6 +946,7 @@
 							<string>UIWebView</string>
 							<string>UILabel</string>
 							<string>UINavigationItem</string>
+							<string>UIBarButtonItem</string>
 							<string>UITextField</string>
 							<string>UIToolbar</string>
 							<string>UIView</string>
@@ -955,6 +965,7 @@
 							<string>unlockHelpWebView</string>
 							<string>unlockLabel</string>
 							<string>unlockNavBarItem</string>
+							<string>unlockSaveButton</string>
 							<string>unlockTextField</string>
 							<string>unlockToolbar</string>
 							<string>unlockView</string>
@@ -993,6 +1004,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">unlockNavBarItem</string>
 								<string key="candidateClassName">UINavigationItem</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">unlockSaveButton</string>
+								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">unlockTextField</string>

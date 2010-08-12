@@ -32,50 +32,61 @@
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.2"
 #define STRONGS_REAL_HEBREW_VERSION		@"loadedBundledStrongsRealHebrew-v1.4-100511"
 
+- (void)resetPreferences {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	PSModuleController *moduleManager = [PSModuleController defaultModuleController];
+	DLog(@"\nResetting PocketSword");
+	[defaults removeObjectForKey: @"reset_PocketSword"];
+	[defaults removeObjectForKey: DefaultsLastRef];
+	[defaults removeObjectForKey: DefaultsLastBible];
+	[defaults removeObjectForKey: DefaultsLastCommentary];
+	[defaults removeObjectForKey: DefaultsLastDictionary];
+	[defaults removeObjectForKey: @"fontNamePreference"];
+	[defaults removeObjectForKey: @"nightModePreference"];
+	[defaults removeObjectForKey: @"fontSizePreference"];
+	[defaults removeObjectForKey: @"vplPreference"];
+	[defaults removeObjectForKey: @"redLetterPreference"];
+	[defaults removeObjectForKey: @"insomniaPreference"];
+	[defaults removeObjectForKey: @"moduleMaintainerModePreference"];
+	[defaults removeObjectForKey: @"bibleHistory"];
+	[defaults removeObjectForKey: @"commentaryHistory"];
+	[defaults removeObjectForKey: DefaultsModuleCipherKeysKey];
+	[defaults removeObjectForKey: LOCALES_VERSION];
+	[defaults synchronize];
+	NSArray *dicts = [[[PSModuleController defaultModuleController] swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
+	for(SwordDictionary *dict in dicts) {
+		[dict removeCache];
+	}
+	[moduleManager setPrimaryBible: nil];
+	[moduleManager setPrimaryCommentary: nil];
+	[moduleManager setPrimaryDictionary: nil];
+	//[[moduleManager viewController] redisplayChapter: BibleViewPoll restore: RestoreNoPosition];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"reset_PocketSword"]) {
+		[self resetPreferences];
+	}
+}
+
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	PSModuleController *moduleManager = [PSModuleController defaultModuleController];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	//[defaults removeObjectForKey:STRONGS_REAL_HEBREW_VERSION];
+	
+	// testing unlocking mechanism:
+	//[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
+	//[defaults synchronize];
+	
+	if([defaults boolForKey:@"reset_PocketSword"]) {
+		[self resetPreferences];
+	}
+	
 	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
-	BOOL reset = [defaults boolForKey:@"reset_PocketSword"];
 	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
 	BOOL strongsRealHebrew = [defaults boolForKey:STRONGS_REAL_HEBREW_VERSION];
-	
-	// testing unlocking mechanism:
-	[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
-	[defaults synchronize];
-	
-	if(reset) {
-		DLog(@"\nreset_PocketSword is set");
-		[defaults removeObjectForKey: @"reset_PocketSword"];
-		[defaults removeObjectForKey: DefaultsLastRef];
-		[defaults removeObjectForKey: DefaultsLastBible];
-		[defaults removeObjectForKey: DefaultsLastCommentary];
-		[defaults removeObjectForKey: DefaultsLastDictionary];
-		[defaults removeObjectForKey: @"fontNamePreference"];
-		[defaults removeObjectForKey: @"nightModePreference"];
-		[defaults removeObjectForKey: @"fontSizePreference"];
-		[defaults removeObjectForKey: @"vplPreference"];
-		[defaults removeObjectForKey: @"redLetterPreference"];
-		[defaults removeObjectForKey: @"insomniaPreference"];
-		[defaults removeObjectForKey: @"moduleMaintainerModePreference"];
-		[defaults removeObjectForKey: @"bibleHistory"];
-		[defaults removeObjectForKey: @"commentaryHistory"];
-		[defaults removeObjectForKey: DefaultsModuleCipherKeysKey];
-		[defaults removeObjectForKey: LOCALES_VERSION];
-		[defaults synchronize];
-		NSArray *dicts = [[[PSModuleController defaultModuleController] swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
-		for(SwordDictionary *dict in dicts) {
-			[dict removeCache];
-		}
-		[moduleManager setPrimaryBible: nil];
-		[moduleManager setPrimaryCommentary: nil];
-		[moduleManager setPrimaryDictionary: nil];
-		//[[moduleManager viewController] redisplayChapter: BibleViewPoll restore: RestoreNoPosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-	}
-	
+
 	if(!kjv) {
 		[defaults synchronize];
 		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible];

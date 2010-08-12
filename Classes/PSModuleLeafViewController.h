@@ -18,6 +18,7 @@
 	IBOutlet UITableView *modulesListTable;
 	
 	IBOutlet UIBarButtonItem	*unlockEditButton;
+	IBOutlet UIBarButtonItem	*unlockSaveButton;
 	IBOutlet UIWebView			*unlockWebView;
 	IBOutlet UIWebView			*unlockHelpWebView;
 	IBOutlet UILabel			*unlockLabel;
