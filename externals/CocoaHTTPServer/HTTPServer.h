@@ -3,7 +3,7 @@
 @class AsyncSocket;
 
 
-@interface HTTPServer : NSObject <NSNetServiceDelegate>
+@interface HTTPServer : NSObject //<NSNetServiceDelegate>
 {
 	// Underlying asynchronous TCP/IP socket
 	AsyncSocket *asyncSocket;

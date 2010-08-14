@@ -77,11 +77,11 @@
 - (void)keyboardWillShow:(NSNotification *)note {
 	//DLog(@"willShow");
     CGRect r  = addSourceTableView.frame, t;
-    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
-    [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
-	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	t = [mainWindow convertRect:t fromWindow:nil];
-    //r.size.height -=  t.size.height;
+    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
+    //[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
+	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	//t = [mainWindow convertRect:t fromWindow:nil];
+    ////r.size.height -=  t.size.height;
     r.size.height = 416 - t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
