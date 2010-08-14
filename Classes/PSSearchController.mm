@@ -263,12 +263,12 @@ BOOL searchingEnabled;
 		UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
 		navBar.barStyle = UIBarStyleBlackOpaque;
 		UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
-		navItem.leftBarButtonItem = nil;
-		navItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
+		navItem.rightBarButtonItem = nil;
+		navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
 		[navBar pushNavigationItem: navItem animated: NO];
 		[navItem release];
 		[helpView addSubview: navBar];
-		[helpView retain];
+		//[helpView retain];
 	}
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
@@ -289,6 +289,8 @@ BOOL searchingEnabled;
     [UIView setAnimationDuration:1];
 	[helpView removeFromSuperview];
     [UIView commitAnimations];
+	[helpView release];
+	helpView = nil;
 }
 
 @end
