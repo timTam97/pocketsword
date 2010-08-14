@@ -24,6 +24,7 @@
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
 #import "PSRefSelectorController.h"
+//#import "PSMultiListController.h"
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -72,9 +73,10 @@ typedef enum {
 	
 	// MultiList
 	IBOutlet UITabBarController *multiListController;
-	id							moduleSelectorViewController;
-	
 	IBOutlet id					historyController;
+	//PSMultiListController				*multiListController;
+
+	id							moduleSelectorViewController;
 	
 	// Dictionary tab
 	IBOutlet UITabBarItem				*dictionaryTabBarItem;

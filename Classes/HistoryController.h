@@ -28,7 +28,9 @@
 	IBOutlet UITableView		*historyListTable;
 }
 
-@property (assign) ShownTab listType;
+- (void)setListType:(ShownTab)listType;
+- (ShownTab)listType;
+- (IBAction)closeButtonPressed;
 
 - (void)addBibleHistoryItem;
 - (void)addCommentaryHistoryItem;

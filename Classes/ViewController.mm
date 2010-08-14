@@ -338,15 +338,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
 	
-	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		[historyController setListType: BibleTab];
-	} else {
-		[historyController setListType: CommentaryTab];
-	}
-	
 	if([multiListController.view superview]) {
+	//if(multiListController) {
 		[tabController dismissModalViewControllerAnimated:YES];
+		//multiListController = nil;
 	} else {
+		//multiListController = [[PSMultiListController alloc] initWithNibName:@"PSMultiListController" bundle:nil];
+		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+			[historyController setListType: BibleTab];
+		} else {
+			[historyController setListType: CommentaryTab];
+		}
 		[tabController presentModalViewController:multiListController animated:YES];
 	}
 	
@@ -472,6 +474,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)dealloc {
 	[toolbarLock release];
+	//[multiListController release];
     [super dealloc];
 }
 
