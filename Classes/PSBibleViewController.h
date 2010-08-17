@@ -11,8 +11,11 @@
 
 
 @interface PSBibleViewController : UIViewController <UIWebViewDelegate> {
+
+	IBOutlet UITabBarItem				*bibleTabBarItem;
+	
 	IBOutlet UIWebView *bibleWebView;
-	IBOutlet UIWebView *commentaryWebView;
+	//IBOutlet UIWebView *commentaryWebView;
 	
 	//IBOutlet id moduleManager;
 	IBOutlet id viewController;

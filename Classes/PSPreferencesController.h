@@ -15,6 +15,7 @@
 
 @interface PSPreferencesController : UIViewController {
 	
+	IBOutlet UITabBarItem *preferencesTabBarItem;
 	IBOutlet UITableView *preferencesTable;
 	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;

@@ -60,7 +60,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-
+	preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
 }
 

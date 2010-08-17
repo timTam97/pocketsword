@@ -34,14 +34,16 @@
 }
 */
 
-/*
+
 - (void) viewDidLoad {
-	NSString *scrollPosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleScrollPosition"];
-	if(scrollPosition) {
-		NSString *script = [NSString stringWithFormat:@"window.scrollTo(0, %@);", scrollPosition];
-		[bibleWebView stringByEvaluatingJavaScriptFromString: script];
-	}
-}*/
+	[super viewDidLoad];
+	bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
+//	NSString *scrollPosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleScrollPosition"];
+//	if(scrollPosition) {
+//		NSString *script = [NSString stringWithFormat:@"window.scrollTo(0, %@);", scrollPosition];
+//		[bibleWebView stringByEvaluatingJavaScriptFromString: script];
+//	}
+}
 
 
 - (void)viewWillAppear:(BOOL)animated {

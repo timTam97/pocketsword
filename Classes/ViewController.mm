@@ -54,16 +54,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	//if (!initialized) {
 		toolbarLock = [[NSLock alloc] init];
 		//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-		//localize the tab bar titles
-		bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
-		commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
-		dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
-		preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
-		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
-		devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
-		// and the titles of each tab
+		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
 		//configure the Bible & commentary segmented controls.
 		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];

@@ -119,6 +119,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 }
 
 - (void)viewDidLoad {
+	dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 	dictionaryNavItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 	dictionarySearchBar.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
 	[dictionarySearchBar retain];//hack to try to make our search bar never run away!

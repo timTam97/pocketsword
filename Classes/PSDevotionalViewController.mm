@@ -26,6 +26,7 @@ BOOL loaded;
     [super viewDidLoad];
 	loaded = NO;
 	
+	devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
 	todayButton.title = NSLocalizedString(@"TodayButtonTitle", @"");
 	
 	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];

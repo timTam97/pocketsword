@@ -9,6 +9,7 @@
 
 @interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate> {
 
+	IBOutlet UITabBarItem				*dictionaryTabBarItem;
 	IBOutlet UITableView *dictionaryEntriesTable;
 	IBOutlet UISearchBar *dictionarySearchBar;
 	IBOutlet UIBarButtonItem *dictionaryTitle;

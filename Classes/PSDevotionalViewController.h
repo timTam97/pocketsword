@@ -8,6 +8,7 @@
 
 
 @interface PSDevotionalViewController : UIViewController {
+	IBOutlet UITabBarItem				*devotionalTabBarItem;
 	IBOutlet UIWebView *devotionalWebView;
 	IBOutlet UIView *devotionalDatePickerView;
 	IBOutlet UIDatePicker *devotionalDatePicker;

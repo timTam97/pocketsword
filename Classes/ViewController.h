@@ -51,7 +51,6 @@ typedef enum {
 	// Bible tab
 	IBOutlet UIWebView					*bibleWebView;
 	IBOutlet UIActivityIndicatorView	*bibleActivity;
-	IBOutlet UITabBarItem				*bibleTabBarItem;
 	IBOutlet UISegmentedControl			*bibleSegmentedControl;
 	IBOutlet UIBarButtonItem			*bibleSearchButton;
 	IBOutlet PSBibleViewController		*bibleTabController;
@@ -60,7 +59,6 @@ typedef enum {
 	// Commentary tab
 	IBOutlet UIWebView					*commentaryWebView;
 	IBOutlet UIActivityIndicatorView	*commentaryActivity;
-	IBOutlet UITabBarItem				*commentaryTabBarItem;
 	IBOutlet UISegmentedControl			*commentarySegmentedControl;
 	IBOutlet UIBarButtonItem			*commentarySearchButton;
 	IBOutlet PSCommentaryViewController *commentaryTabController;
@@ -79,12 +77,10 @@ typedef enum {
 	id							moduleSelectorViewController;
 	
 	// Dictionary tab
-	IBOutlet UITabBarItem				*dictionaryTabBarItem;
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
 	IBOutlet UIBarButtonItem			*dictionaryTitle;
 	
 	// Devotional tab
-	IBOutlet UITabBarItem				*devotionalTabBarItem;
 	IBOutlet UIWebView					*devotionalWebView;
 	
 	// Bookmarks tab
@@ -93,7 +89,6 @@ typedef enum {
 //	IBOutlet UINavigationItem *bookmarksNavBar;
 	
 	// Preferences tab
-	IBOutlet UITabBarItem *preferencesTabBarItem;
 	
 	// About tab
 	IBOutlet UITabBarItem *aboutTabBarItem;

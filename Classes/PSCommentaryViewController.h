@@ -10,7 +10,9 @@
 
 
 @interface PSCommentaryViewController : UIViewController <UIWebViewDelegate> {
-	IBOutlet UIWebView *bibleWebView;
+	IBOutlet UITabBarItem				*commentaryTabBarItem;
+
+	//IBOutlet UIWebView *bibleWebView;
 	IBOutlet UIWebView *commentaryWebView;
 	
 	//IBOutlet id moduleManager;
