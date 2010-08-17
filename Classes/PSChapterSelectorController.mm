@@ -9,6 +9,7 @@
 #import "PSChapterSelectorController.h"
 #import "PSVerseSelectorController.h"
 #import "globals.h"
+#import "ViewController.h"
 
 @implementation PSChapterSelectorController
 
@@ -104,6 +105,7 @@ BOOL needToScroll;
 	} else {
 		cell.textLabel.textColor = [UIColor blackColor];
 	}
+	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	
     return cell;
 }
@@ -118,6 +120,12 @@ BOOL needToScroll;
 	verseSelectorController.chapter = indexPath.section+1;
 	[self.navigationController pushViewController:verseSelectorController animated:YES];
 	[verseSelectorController release];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+	//jump to ch1, v1 of that book.
+	[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	[viewController updateViewWithSelectedBookName:[book name] chapter:(indexPath.section+1) verse:1];
 }
 
 - (void)dealloc {

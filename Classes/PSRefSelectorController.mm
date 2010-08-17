@@ -290,6 +290,7 @@
 	} else {
 		cell.textLabel.textColor = [UIColor blackColor];
 	}
+	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	
 	return cell;
 }
@@ -302,6 +303,12 @@
 	[chapterSelectorController setBookAndInit: [refSelectorBooks objectAtIndex:indexPath.section]];
 	[refNavigationController pushViewController:chapterSelectorController animated:YES];
 	[chapterSelectorController release];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+	//jump to ch1, v1 of that book.
+	[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	[viewController updateViewWithSelectedBookName:[[refSelectorBooks objectAtIndex:indexPath.section] name] chapter:1 verse:1];
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
