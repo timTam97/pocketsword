@@ -736,6 +736,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0501E811121A3904000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		0501E812121A390B000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0501E813121A3912000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		0501E814121A3918000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/PSChapterSelectorController.xib; sourceTree = "<group>"; };
+		0501E815121A391E000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/PSVerseSelectorController.xib; sourceTree = "<group>"; };
+		0501E816121A3925000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -3055,6 +3062,7 @@
 				ru,
 				"zh-Hans",
 				"zh-Hant",
+				cs,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -3847,6 +3855,7 @@
 				054BEF1411A4E79800ABCA18 /* ru */,
 				054BEF3311A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3911A4F13200ABCA18 /* zh-Hant */,
+				0501E812121A390B000D9CA3 /* cs */,
 			);
 			name = Downloader.xib;
 			sourceTree = "<group>";
@@ -3866,6 +3875,7 @@
 				054BEF1511A4E79800ABCA18 /* ru */,
 				054BEF3411A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3A11A4F13200ABCA18 /* zh-Hant */,
+				0501E813121A3912000D9CA3 /* cs */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -3885,6 +3895,7 @@
 				054BEF1711A4E79800ABCA18 /* ru */,
 				054BEF3711A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3D11A4F13200ABCA18 /* zh-Hant */,
+				0501E814121A3918000D9CA3 /* cs */,
 			);
 			name = PSChapterSelectorController.xib;
 			sourceTree = "<group>";
@@ -3904,6 +3915,7 @@
 				054BEF1811A4E79800ABCA18 /* ru */,
 				054BEF3811A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3E11A4F13200ABCA18 /* zh-Hant */,
+				0501E815121A391E000D9CA3 /* cs */,
 			);
 			name = PSVerseSelectorController.xib;
 			sourceTree = "<group>";
@@ -3923,6 +3935,7 @@
 				05DE584912093561005A636A /* ru */,
 				05DE584A12093565005A636A /* zh-Hant */,
 				05DE584B1209356A005A636A /* zh-Hans */,
+				0501E816121A3925000D9CA3 /* cs */,
 			);
 			name = PSModuleSelectorController.xib;
 			sourceTree = "<group>";
@@ -3942,6 +3955,7 @@
 				054BEF1311A4E77300ABCA18 /* ru */,
 				054BEF3511A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3B11A4F13200ABCA18 /* zh-Hant */,
+				0501E810121A38EC000D9CA3 /* cs */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -3961,6 +3975,7 @@
 				054BEF1611A4E79800ABCA18 /* ru */,
 				054BEF3611A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3C11A4F13200ABCA18 /* zh-Hant */,
+				0501E811121A3904000D9CA3 /* cs */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";

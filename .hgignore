@@ -43,3 +43,15 @@ zh-Hant.lproj/PSModuleSelectorController.strings
 ru.lproj/PSModuleSelectorController.xib
 zh-Hans.lproj/PSModuleSelectorController.xib
 zh-Hant.lproj/PSModuleSelectorController.xib
+cs.lproj/Downloader.strings
+cs.lproj/Downloader.xib
+cs.lproj/IndexDownloader.strings
+cs.lproj/IndexDownloader.xib
+cs.lproj/MainWindow.strings
+cs.lproj/MainWindow.xib
+cs.lproj/PSChapterSelectorController.strings
+cs.lproj/PSChapterSelectorController.xib
+cs.lproj/PSModuleSelectorController.strings
+cs.lproj/PSModuleSelectorController.xib
+cs.lproj/PSVerseSelectorController.strings
+cs.lproj/PSVerseSelectorController.xib

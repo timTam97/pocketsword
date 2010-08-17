@@ -208,5 +208,8 @@
 "Warning" = "警告";
 "CannotVerifyInstallSourceWarning" = "PocketSword 無法確認此來源,您希望儲存它嗎?";
 
+
 // new v1.3.2 strings:
 "AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
+"UpgradeButtonTitle" = "Replace";
+"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
