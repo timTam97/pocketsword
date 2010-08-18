@@ -93,9 +93,11 @@
 - (void)reloadLastCommentary;
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraCode;
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
-- (void)dealloc;
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
 - (SwordInstallManager *)swordInstallManager;
+
+- (void)didReceiveMemoryWarning;//never called by the OS - must be called manually!
+- (void)dealloc;
 
 //- (void)displayBusyIndicator;
 //- (void)hideBusyIndicator;

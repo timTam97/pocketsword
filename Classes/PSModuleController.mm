@@ -338,6 +338,14 @@ static PSModuleController *instance;
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryDictionary object:nil];
 }
 
+- (void)didReceiveMemoryWarning {
+	//add things that can be released if we need to clear up some memory
+	// won't be called by the OS, need to call this ourselves
+	if(primaryDictionary)
+		[primaryDictionary releaseKeys];//release some memory
+	
+}
+
 - (void)loadPrimaryDevotional:(NSString *)newText {
 	if(newText) {
 		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName:newText];

@@ -243,6 +243,10 @@
 	[SwordManager releaseDefaultManager];
 }
 
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+	[[PSModuleController defaultModuleController] didReceiveMemoryWarning];
+}
+
 - (void)dealloc {
     [tabBarController release];
     [window release];
