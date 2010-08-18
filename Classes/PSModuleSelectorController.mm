@@ -163,8 +163,9 @@
 	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	//NSString *ref = [[PSModuleController defaultModuleController] getCurrentBibleRef];
+	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-	if(([[PSModuleController defaultModuleController] primaryBible] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) || ([[PSModuleController defaultModuleController] primaryCommentary] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) || ([[PSModuleController defaultModuleController] primaryDictionary] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryDictionary] name]])) {
+	if(([moduleController primaryBible] && [newModule isEqualToString:[[moduleController primaryBible] name]]) || ([moduleController primaryCommentary] && [newModule isEqualToString:[[moduleController primaryCommentary] name]]) || ([moduleController primaryDictionary] && [newModule isEqualToString:[[moduleController primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 		return; // do nothing, because we selected the currently loaded module, but close the view & return to viewing the module.
@@ -174,33 +175,33 @@
 	BOOL locked = NO;
 	switch (listType) {
 		case BibleTab:
-			[[PSModuleController defaultModuleController] loadPrimaryBible: newModule];
-			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[moduleController loadPrimaryBible: newModule];
+			//[[moduleController viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
+			//[[moduleController viewController] addHistoryItem: BibleTab];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			if([[[PSModuleController defaultModuleController] primaryBible] isLocked])
+			if([[moduleController primaryBible] isLocked])
 				locked = YES;
 			break;
 		case CommentaryTab:
-			[[PSModuleController defaultModuleController] loadPrimaryCommentary:newModule];
+			[moduleController loadPrimaryCommentary:newModule];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: CommentaryTab];
-			if([[[PSModuleController defaultModuleController] primaryCommentary] isLocked])
+			//[[moduleController viewController] addHistoryItem: CommentaryTab];
+			if([[moduleController primaryCommentary] isLocked])
 				locked = YES;
 			break;
 		case DictionaryTab:
-			[[PSModuleController defaultModuleController] loadPrimaryDictionary:newModule];
-			//[[[PSModuleController defaultModuleController] viewController] reloadDictionaryData];
-			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			if([[[PSModuleController defaultModuleController] primaryDictionary] isLocked])
+			[moduleController loadPrimaryDictionary:newModule];
+			//[[moduleController viewController] reloadDictionaryData];
+			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			if([[moduleController primaryDictionary] isLocked])
 				locked = YES;
 			break;
 		case DevotionalTab:
-			[[PSModuleController defaultModuleController] loadPrimaryDevotional:newModule];
-			if([[[PSModuleController defaultModuleController] primaryDevotional] isLocked])
+			[moduleController loadPrimaryDevotional:newModule];
+			if([[moduleController primaryDevotional] isLocked])
 				locked = YES;
 			break;
 	}
@@ -208,7 +209,7 @@
 		[self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
-		//[[[PSModuleController defaultModuleController] viewController] toggleModulesList];
+		//[[moduleController viewController] toggleModulesList];
 	}
 	
 	//[pool release];
