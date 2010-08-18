@@ -607,20 +607,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			break;
 	}
 	
-	NSString *titleString = [PSModuleController createRefString:ref];
+	NSString *titleString = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:ref], versePosition];
 	if([[PSModuleController defaultModuleController] primaryBible]) {
-		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:BibleTab];
+		[self setTabTitle: titleString ofTab:BibleTab];
 	}
 	if([[PSModuleController defaultModuleController] primaryCommentary]) {
-		[self setTabTitle: [NSString stringWithFormat:@"%@:%@", titleString, versePosition] ofTab:CommentaryTab];
+		[self setTabTitle: titleString ofTab:CommentaryTab];
 	}
 	
-	if ([[PSModuleController getCurrentBibleRef] isEqualToString: lastRefAvailable]) {
+	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	if ([currentRef isEqualToString: lastRefAvailable]) {
 		[self setEnabledBibleNextButton: NO];
 		[self setEnabledBiblePreviousButton: YES];
 		[self setEnabledCommentaryNextButton: NO];
 		[self setEnabledCommentaryPreviousButton: YES];
-	} else if ([[PSModuleController getCurrentBibleRef] isEqualToString: firstRefAvailable]) {
+	} else if ([currentRef isEqualToString: firstRefAvailable]) {
 		[self setEnabledBibleNextButton: YES];
 		[self setEnabledBiblePreviousButton: NO];
 		[self setEnabledCommentaryNextButton: YES];
