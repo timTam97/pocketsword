@@ -503,12 +503,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)redisplayBibleChapter {
-	[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+	//[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
 	[self redisplayChapter:BibleViewPoll restore:RestoreVersePosition];
 }
 
 - (void)redisplayCommentaryChapter {
-	[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	//[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	[self redisplayChapter:CommentaryViewPoll restore:RestoreVersePosition];
 }
 
