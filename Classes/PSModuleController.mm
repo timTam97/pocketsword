@@ -350,14 +350,12 @@ static PSModuleController *instance;
 	if(newText) {
 		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName:newText];
 		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastDevotional];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDevotionalChanged object:newText];
 	} else {
 		primaryDevotional = nil;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey: DefaultsLastDevotional];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDevotionalChanged object:newText];
 	}
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDevotionalChanged object:newText];
 }
 
 - (NSString *)setToNextChapter {
@@ -797,8 +795,8 @@ static PSModuleController *instance;
 		if (!primaryBible) {
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	//[primaryBible hasSearchIndex];
 //	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
 //	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
@@ -826,8 +824,8 @@ static PSModuleController *instance;
 		if (!primaryCommentary) {
 			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
 		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 //	int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
 //	NSString *title = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
 //	[commentaryTitle setTitle: title];
