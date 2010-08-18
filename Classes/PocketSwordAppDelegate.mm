@@ -30,7 +30,7 @@
 @synthesize tabBarController;
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.2"
-#define STRONGS_REAL_HEBREW_VERSION		@"loadedBundledStrongsRealHebrew-v1.4-100511"
+#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-100511"
 
 - (void)resetPreferences {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -85,7 +85,7 @@
 	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
 	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
-	BOOL strongsRealHebrew = [defaults boolForKey:STRONGS_REAL_HEBREW_VERSION];
+	BOOL strongsRealGreek = [defaults boolForKey:STRONGS_REAL_GREEK_VERSION];
 
 	if(!kjv) {
 		[defaults synchronize];
@@ -104,7 +104,7 @@
 		[defaults synchronize];
 	}
 	
-	if(!strongsRealHebrew) {
+	if(!strongsRealGreek) {
 		//remove existing module, if it exists:
 		if([[moduleManager swordManager] isModuleInstalled:@"StrongsRealGreek"]) {
 			DLog(@"\nRemoving existing StrongsRealGreek module & updating...");
@@ -113,7 +113,12 @@
 			DLog(@"\nInstalling StrongsRealGreek for the first time...");
 		}
 		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary];
-		[defaults setBool: YES forKey:STRONGS_REAL_HEBREW_VERSION];
+		[defaults setBool: YES forKey:STRONGS_REAL_GREEK_VERSION];
+		NSString *curSGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsGreekModule];
+		if(!curSGM || [curSGM isEqualToString: NSLocalizedString(@"None", @"None")]) {
+			[[NSUserDefaults standardUserDefaults] setObject: @"StrongsRealGreek" forKey:DefaultsStrongsGreekModule];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		}
 	}
 
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
