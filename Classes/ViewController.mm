@@ -348,9 +348,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)toggleModulesList {
-	if(moduleSelectorViewController) {
+	if(moduleSelectorViewController && [((PSModuleSelectorController*)moduleSelectorViewController).view superview]) {
 		[tabController dismissModalViewControllerAnimated:YES];
-		moduleSelectorViewController = nil;
+		//moduleSelectorViewController = nil;
 	} else {
 		moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil];
 		//set the module selector to use the correct module type.
@@ -461,12 +461,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
     // Release anything that's not essential, such as cached data
-	
 }
 
 
 - (void)dealloc {
 	[toolbarLock release];
+	[moduleSelectorViewController release];
 	//[multiListController release];
     [super dealloc];
 }
