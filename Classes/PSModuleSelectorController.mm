@@ -160,13 +160,14 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	//NSString *ref = [[PSModuleController defaultModuleController] getCurrentBibleRef];
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	if(([[PSModuleController defaultModuleController] primaryBible] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) || ([[PSModuleController defaultModuleController] primaryCommentary] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) || ([[PSModuleController defaultModuleController] primaryDictionary] && [newModule isEqualToString:[[[PSModuleController defaultModuleController] primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
-		return; // do nothing, because we selected the currently loaded module.
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+		return; // do nothing, because we selected the currently loaded module, but close the view & return to viewing the module.
 	}
 	// Update the module list to reflect the current module
 	[tableView reloadData];
@@ -210,7 +211,7 @@
 		//[[[PSModuleController defaultModuleController] viewController] toggleModulesList];
 	}
 	
-	[pool release];
+	//[pool release];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
