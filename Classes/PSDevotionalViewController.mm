@@ -57,8 +57,6 @@ BOOL loaded;
 	
 	self.navigationItem.titleView = titleButton;
 	
-	devotionalDatePicker.date = [NSDate date];
-	devotionalDatePicker.locale = [NSLocale currentLocale];
 //	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
@@ -107,6 +105,10 @@ BOOL loaded;
 
 - (void)viewWillAppear:(BOOL)animated {
 	if(!loaded) {
+		devotionalDatePicker.locale = [NSLocale currentLocale];
+		devotionalDatePicker.timeZone = [NSTimeZone localTimeZone];
+		devotionalDatePicker.calendar = [NSCalendar currentCalendar];
+		[devotionalDatePicker setDate:[NSDate date] animated:NO];
 		[self loadDevotionalForDate:devotionalDatePicker.date];
 	}
 //	NSLog(@"pre.y = %d", devotionalWebView.frame.origin.y);
