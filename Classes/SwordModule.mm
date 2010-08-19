@@ -635,7 +635,8 @@
         } else {
             swModule->setKey([passage cStringUsingEncoding:NSISOLatin1StringEncoding]);
         }
-        swModule->RenderText(); // force processing of key
+        //swModule->RenderText(); // force processing of key
+        swModule->StripText(); // force processing of key
         
         sword::SWBuf footnoteText = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["body"].c_str();
         // convert from base markup to display markup
@@ -647,7 +648,8 @@
         } else {
             swModule->setKey([passage cStringUsingEncoding:NSISOLatin1StringEncoding]);
         }
-        swModule->RenderText(); // force processing of key
+        //swModule->RenderText(); // force processing of key
+        swModule->StripText(); // force processing of key
         
         sword::SWBuf refList = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["refList"];
         sword::VerseKey parser([passage UTF8String]);
@@ -913,14 +915,16 @@
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 //	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-	swModule->RenderText();
+	//swModule->RenderText();
+	swModule->StripText();
 }
 
 - (NSString *)setToNextChapter {
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	int c = curKey->getChapter();
 	curKey->setChapter(c+1);
-	swModule->RenderText();
+	//swModule->RenderText();
+	swModule->StripText();
 	
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
@@ -932,7 +936,8 @@
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	int c = curKey->getChapter();
 	curKey->setChapter(c-1);
-	swModule->RenderText();
+	//swModule->RenderText();
+	swModule->StripText();
 
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
@@ -957,7 +962,8 @@
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	sword::SWKey lastKey;
 	
-	swModule->RenderText();
+	//swModule->RenderText();
+	swModule->StripText();
 	NSMutableString *verses = [@"" mutableCopy];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
@@ -1016,7 +1022,8 @@
 		lastEntry = thisEntry;
 		swModule->Key()++;
 		lastKey++;
-		swModule->RenderText();
+		//swModule->RenderText();
+		swModule->StripText();
 		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 		//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
 		//if(printf) NSLog(@"ref = %@", ref);
