@@ -7,7 +7,7 @@
 //
 
 //#import <UIKit/UIKit.h>
-//#import "PSBibleViewController.h"
+#import "PSCommentaryViewController.h"
 
 
 @interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate> {
@@ -16,6 +16,7 @@
 	
 	IBOutlet UIWebView *bibleWebView;
 	//IBOutlet UIWebView *commentaryWebView;
+	IBOutlet PSCommentaryViewController *commentaryView;
 	
 	//IBOutlet id moduleManager;
 	IBOutlet id viewController;

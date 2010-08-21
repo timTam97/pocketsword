@@ -129,6 +129,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addModuleButtonPressed) name:NotificationShowDownloadsTab object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayCommentaryTabViaNotification) name:NotificationShowCommentaryTab object:nil];
 
 		//[pool release];
 		initialized = true;
@@ -370,6 +371,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (IBAction)addModuleButtonPressed {
 	[self setShownTabTo:DownloadsTab];
+}
+
+- (void)displayCommentaryTabViaNotification {
+	[self setShownTabTo:CommentaryTab];
 }
 
 - (IBAction)toggleNavigation:(id)sender {

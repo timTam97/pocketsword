@@ -39,6 +39,9 @@
 		[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
+	} else if(jsToShow) {
+		[commentaryWebView stringByEvaluatingJavaScriptFromString:jsToShow];
+		self.jsToShow = nil;
 	}
 }
 

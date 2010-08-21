@@ -88,3 +88,4 @@ typedef enum {
 #define NotificationHideBusyIndicator			@"NotificationHideBusyIndicator"
 
 #define NotificationShowDownloadsTab			@"NotificationShowDownloadsTab"
+#define NotificationShowCommentaryTab			@"NotificationShowCommentaryTab"

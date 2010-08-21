@@ -216,3 +216,4 @@
 "ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
 
 "VerseContextualMenuAddBookmark" = "Add Bookmark";
+"VerseContextualMenuCommentary" = "View in Commentary";
