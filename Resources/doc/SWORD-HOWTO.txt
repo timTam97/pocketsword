@@ -1,4 +1,9 @@
 
+*** NOTE: this is probably out of date...  if you have questions, email me and I'll go about remembering what I have done!  ***
+
+As of iOS 4.0.2, Apple's ICU headers are broken.  you need to replace umachine.h & uversion.h & urename.h with the versions that are in iOS3.2 in both the iPhone & the iPhoneSimulator platforms...  *sigh* reported the issue with Apple in iOS 4.0.0 but it's still not fixed!
+
+
 When updating SWORD from SVN into this project,
 
 delete all the Makefiles & other support files, leaving only the .cpp and .h files in their various folders...

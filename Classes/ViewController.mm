@@ -27,7 +27,7 @@
 
 @implementation ViewController
 
-//bool initialized = false, waitingForInstall = false;
+bool initialized = false;
 
 //NSTimer *timer;
 static NSString *lastRefAvailable = @"Revelation 22";
@@ -51,7 +51,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (void)awakeFromNib {
 	[super awakeFromNib];
-	//if (!initialized) {
+
+	if (!initialized) {
 		toolbarLock = [[NSLock alloc] init];
 		//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 		
@@ -130,8 +131,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addModuleButtonPressed) name:NotificationShowDownloadsTab object:nil];
 
 		//[pool release];
-		//initialized = true;
-	//}
+		initialized = true;
+	}
 	
 }
 
@@ -271,7 +272,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (IBAction)nextChapter:(id)sender {	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
-	
+
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
@@ -301,7 +302,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (IBAction)prevChapter:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
-	
+
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
