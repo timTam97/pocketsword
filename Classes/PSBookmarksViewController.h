@@ -15,6 +15,8 @@
 	IBOutlet id viewController;
 }
 
++ (void)addBookmarkForRef:(NSString*)bookAndChapterRef withVerse:(NSString*)verse;
+
 - (IBAction)toggleBookmarksTableEditing:(id)sender;
 - (IBAction)addBookmark:(id)sender;
 - (void)removeBookmark:(NSString *)ref;

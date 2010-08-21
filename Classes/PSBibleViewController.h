@@ -10,7 +10,7 @@
 //#import "PSBibleViewController.h"
 
 
-@interface PSBibleViewController : UIViewController <UIWebViewDelegate> {
+@interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate> {
 
 	IBOutlet UITabBarItem				*bibleTabBarItem;
 	
@@ -22,9 +22,11 @@
 	//IBOutlet UIBarButtonItem *bibleNavBtn;
 	NSString *refToShow;
 	NSString *jsToShow;
+	NSString *tappedVerse;
 }
 
 @property (copy, readwrite) NSString *refToShow;
 @property (copy, readwrite) NSString *jsToShow;
+@property (copy, readwrite) NSString *tappedVerse;
 
 @end

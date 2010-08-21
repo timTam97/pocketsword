@@ -41,11 +41,12 @@
 }
 
 
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	[bookmarksTable reloadData];
 }
-*/
+
 /*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -84,6 +85,32 @@
 		//self.navigationItem.leftBarButtonItem = btn;
 		[btn release];
 	}
+}
+
++ (void)addBookmarkForRef:(NSString*)bookAndChapterRef withVerse:(NSString*)verse {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	NSString *ref = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
+	
+	if (!bookmarks) {
+		bookmarks = [[NSMutableArray alloc] initWithObjects: nil];
+		
+		NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
+		[prefs setObject: bookmarks forKey: @"bookmarks2"];
+		
+		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
+		[prefs release];
+	}
+	NSString *refToAdd = [PSModuleController createRefString:ref];
+	if(![bookmarks containsObject: refToAdd])
+		[bookmarks addObject: refToAdd];
+	
+	[defaults setObject: bookmarks forKey: @"bookmarks2"];
+	[defaults synchronize];
+	[bookmarks release];
+	[pool release];
 }
 
 - (IBAction)addBookmark:(id)sender {

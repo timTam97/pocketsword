@@ -11,12 +11,14 @@
 #import "PSModuleController.h"
 //#import "ViewController.h"
 #import "SwordDictionary.h"
+#import "PSBookmarksViewController.h"
 
 
 @implementation PSBibleViewController
 
 @synthesize refToShow;
 @synthesize jsToShow;
+@synthesize tappedVerse;
 
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -100,12 +102,20 @@
 	
 	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 		if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
+			//our method of updating the title bar & remembering our position.
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
+		} else if([(NSString *)[components objectAtIndex:1] isEqualToString:@"versemenu"]) {
+			//bring up the contextual menu for a verse.
+			self.tappedVerse = [components objectAtIndex:2];
+			//DLog(@"    %@", tappedVerse);
+			NSString *sheetTitle = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerse];
+			UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""),nil];
+			[sheet showInView:bibleWebView];
 		}
 		load = NO;
 	} else {
@@ -191,11 +201,20 @@
 	
 }
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
+		//add a bookmark!
+		[PSBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
+		self.tappedVerse = nil;
+	}
+}
+
 - (void)dealloc {
     [super dealloc];
 	self.refToShow = nil;
 	self.jsToShow = nil;
-	
+	self.tappedVerse = nil;
 }
 
 

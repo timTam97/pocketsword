@@ -1014,9 +1014,9 @@
 				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\"></a>%@</p>\n", i, i, thisEntry];
 			} else {
 				if(vpl)
-					[verses appendFormat: @"<a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a>%@<br />\n", i, i, i, thisEntry];
+					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@<br />\n", i, i, i, thisEntry];
 				else
-					[verses appendFormat: @"&nbsp; <a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, thisEntry];
+					[verses appendFormat: @"&nbsp; <a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, thisEntry];
 			}
 		}
 		lastEntry = thisEntry;
