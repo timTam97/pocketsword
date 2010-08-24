@@ -1008,10 +1008,10 @@
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 
 		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
-		if (![thisEntry isEqualToString: lastEntry]) {
+		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
 			
 			if ([modType isEqualToString: @"Commentaries"]) {
-				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\"></a>%@</p>\n", i, i, thisEntry];
+				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a>%@</p>\n", i, i, i, thisEntry];
 			} else {
 				if(vpl)
 					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@<br />\n", i, i, i, thisEntry];
@@ -1034,7 +1034,17 @@
 		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module.")];
 	}
 
-	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
+	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
+	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+	fs = (fs == 0) ? 14 : fs;
+	if(fs <= 17) {
+		for(int i=fs;i<18;i++) {
+			if(i!=14)
+				[verses appendString:@"<p>&nbsp;</p>"];
+		}
+	}
+	
+	
 	
 	if(printf) NSLog(@"verses:\n%@", verses);
 	
