@@ -180,6 +180,7 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 			//[[moduleController viewController] addHistoryItem: BibleTab];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			//[HistoryController addHistoryItem:BibleTab];
 			if([[moduleController primaryBible] isLocked])
 				locked = YES;
 			break;
@@ -188,7 +189,7 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[[moduleController viewController] addHistoryItem: CommentaryTab];
+			//[HistoryController addHistoryItem:CommentaryTab];
 			if([[moduleController primaryCommentary] isLocked])
 				locked = YES;
 			break;

@@ -71,11 +71,11 @@
 }
 
 - (void)addBibleHistoryItem {
-	[self addHistoryItem: BibleTab];
+	[HistoryController addHistoryItem: BibleTab];
 }
 
 - (void)addCommentaryHistoryItem {
-	[self addHistoryItem: CommentaryTab];
+	[HistoryController addHistoryItem: CommentaryTab];
 }
 
 // This should be called just AFTER:
@@ -85,7 +85,7 @@
 //    or when the user selects a new module to view.
 //    or when the user selects a bookmark.
 //    or when the user selects a search result.
-- (void)addHistoryItem:(ShownTab)tabForHistory
++ (void)addHistoryItem:(ShownTab)tabForHistory
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -150,7 +150,7 @@
 	
 }
 
-- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory {
++ (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -304,7 +304,7 @@
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		[self removeHistoryItem:ref forTab:listType];
+		[HistoryController removeHistoryItem:ref forTab:listType];
 		[tableView reloadData];
 	}
 	

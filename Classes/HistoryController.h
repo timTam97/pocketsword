@@ -35,7 +35,7 @@
 - (void)addBibleHistoryItem;
 - (void)addCommentaryHistoryItem;
 
-- (void)addHistoryItem:(ShownTab)tabForHistory;
-- (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory;
++ (void)addHistoryItem:(ShownTab)tabForHistory;
++ (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory;
 
 @end

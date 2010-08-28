@@ -275,6 +275,7 @@
 		}
 		//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		//[HistoryController addHistoryItem:BibleTab];
 	}
 	
 	[tableView deselectRowAtIndexPath:indexPath animated:NO];
