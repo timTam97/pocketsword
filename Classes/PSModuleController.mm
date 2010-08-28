@@ -364,10 +364,14 @@ static PSModuleController *instance;
 	if(primaryBible) {
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToNextChapter];
+		[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	if(primaryCommentary && !ret) {
 		[primaryCommentary setChapter: cur];
 		ret = [primaryCommentary setToNextChapter];
+		[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsCommentaryVersePosition];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	return ret;
 }
