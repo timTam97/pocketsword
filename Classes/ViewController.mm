@@ -270,29 +270,24 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //}
 
 // Loads the next chapter into the Web View
-- (IBAction)nextChapter:(id)sender {	
+- (IBAction)nextChapter:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 
-	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
+	if(!ref) {
+		//rats...?
+	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
-		if(ref) {
-			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		}
+		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
-		if(ref) {
-			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		}
+		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 	} else {
 		// weird & undefined
-		NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
-		if(ref)
-			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
+		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
 	}
 	
 	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
@@ -304,25 +299,20 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 
-	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
+	if(!ref) {
+		//rats...?
+	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
-		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
-		if(ref) {
-			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		}
+		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
-		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
-		if(ref) {
-			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		}
+		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 	} else {
 		// weird & undefined
-		NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
-		if(ref)
-			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
+		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
 	
 	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
