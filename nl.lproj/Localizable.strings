@@ -17,9 +17,9 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// Dutch Localisation
+// Dutch (nl) Localisation
 // By Henko van de Weerd
-// Last Updated v1.3.0 (16th June, 2010)
+// Last Updated v1.3.2 (28th August, 2010)
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
@@ -211,9 +211,9 @@
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+"AboutModuleLocked" = "** Deze module is op dit moment geblokkeerd en u dient een deblokkeer-code aan te schaffen voor deze module op de website van de uitgever. Meer informatie vindt u hier onder. **";
+"UpgradeButtonTitle" = "Vervangen";
+"ConfirmUpgrade" = "Weet u zeker dat u deze modele wilt vervangen door de huidig beschikbare versie?";
 
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"VerseContextualMenuAddBookmark" = "Bladwijzer toevoegen";
+"VerseContextualMenuCommentary" = "Bekijk in Commentaar";

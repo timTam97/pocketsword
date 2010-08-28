@@ -748,7 +748,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0501E811121A3904000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		0501E812121A390B000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/Downloader.xib; sourceTree = "<group>"; };
 		0501E813121A3912000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -1126,7 +1126,7 @@
 		052851C81226670900A99ECD /* gear-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear-24@2x.png"; path = "Resources/gear-24@2x.png"; sourceTree = "<group>"; };
 		052B52841101A32900FFDF01 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		052B52ED1101D6DF00FFDF01 /* locales.d.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = locales.d.zip; path = Resources/locales.d.zip; sourceTree = "<group>"; };
-		05337B0210F823AF0003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		05337B0210F823AF0003CFA9 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		05337B0E10F8285A0003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		05337B0F10F828720003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/Downloader.xib; sourceTree = "<group>"; };
 		05337B1010F8287F0003CFA9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -1600,7 +1600,7 @@
 		E96C139B0FFFC6390019B69E /* Daily-Devotional.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Daily-Devotional.png"; path = "Resources/Daily-Devotional.png"; sourceTree = "<group>"; };
 		E996E5220ED70C6E0034DAF6 /* PSModuleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleController.h; path = Classes/PSModuleController.h; sourceTree = "<group>"; };
 		E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleController.mm; path = Classes/PSModuleController.mm; sourceTree = "<group>"; };
-		E9A6CF9A0FF54CC100399E78 /* English */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 10; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E9A6CF9A0FF54CC100399E78 /* English */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 4; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9A6CF9E0FF5508C00399E78 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B800320FF5B971006081E5 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		E9B800340FF5B98D006081E5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };

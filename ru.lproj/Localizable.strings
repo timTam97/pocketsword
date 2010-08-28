@@ -17,9 +17,9 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// Russian localisation
+// Russian (ru) localisation
 // By Vitaliy K.
-// Last Updated v1.3.0 (16th June, 2010)
+// Last Updated v1.3.2 (28th August, 2010)
 
 "Edit" = "Изменить";
 "Done" = "Готово";
@@ -211,9 +211,9 @@
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+"AboutModuleLocked" = "** Модуль в настоящее время заблокирован и нужно приобрести ключ на веб-сайте издателя модуля. Смотрите ниже для более подробной информации. **";
+"UpgradeButtonTitle" = "Замена";
+"ConfirmUpgrade" = "Заменить этот модуль на версию которая доступна в настоящее время?";
 
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"VerseContextualMenuAddBookmark" = "Добавить закладку";
+"VerseContextualMenuCommentary" = "Открыть в комментарии";

@@ -17,9 +17,9 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// Simplified Chinese Localisation
+// Simplified Chinese (zh-Hans) Localisation
 // By Yiguang Hu
-// Last Updated v1.3.0 (17th June, 2010)
+// Last Updated v1.3.2 (28th August, 2010)
 
 "Edit" = "编辑";
 "Done" = "完成";
@@ -210,9 +210,9 @@
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+"AboutModuleLocked" = "** 注意此模块目前被锁，你需要到模块出版社网站买解锁码。详情见下。**";
+"UpgradeButtonTitle" = "替代";
+"ConfirmUpgrade" = "你想用现有版本替代此模块吗？";
 
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"VerseContextualMenuAddBookmark" = "加书签";
+"VerseContextualMenuCommentary" = "在注解中浏览";
