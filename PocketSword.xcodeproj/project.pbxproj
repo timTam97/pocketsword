@@ -228,7 +228,6 @@
 		054BEC45119F89E800ABCA18 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
 		054BEC46119F89E800ABCA18 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
 		054BEC47119F89E800ABCA18 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
-		054BEC48119F89E800ABCA18 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
 		054BEC49119F89E800ABCA18 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		054BEC4A119F89E800ABCA18 /* Icon2-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE2B10C0CD5300E414D9 /* Icon2-small.png */; };
 		054BEC4B119F89E800ABCA18 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
@@ -586,7 +585,6 @@
 		05AB950D116D9BB70043DB57 /* PSVerseSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AB950B116D9BB70043DB57 /* PSVerseSelectorController.xib */; };
 		05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */; };
 		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
-		05B3D61710BB7A92000F8A48 /* MMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B3D61610BB7A92000F8A48 /* MMM.png */; };
 		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
 		05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
@@ -1267,7 +1265,6 @@
 		05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModuleTypes.mm; sourceTree = "<group>"; };
 		05B52BDD107EEB7500826AFE /* NavigatorModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModules.h; sourceTree = "<group>"; };
 		05B52BDE107EEB7500826AFE /* NavigatorModules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModules.mm; sourceTree = "<group>"; };
-		05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PocketSword-Icon.png"; path = "Resources/PocketSword-Icon.png"; sourceTree = "<group>"; };
 		05BCB3FD1147711B00984097 /* popup-top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-top-bar.png"; path = "Resources/popup-top-bar.png"; sourceTree = "<group>"; };
 		05BCB41F11477A9A00984097 /* popup-down-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-down-button.png"; path = "Resources/popup-down-button.png"; sourceTree = "<group>"; };
 		05CD44C0109E92C900853E48 /* PSPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesController.h; sourceTree = "<group>"; };
@@ -2327,7 +2324,6 @@
 				0528518D122658F100A99ECD /* forward-white@2x.png */,
 				0513AE2B10C0CD5300E414D9 /* Icon2-small.png */,
 				0513AE1910C0C43600E414D9 /* Default.png */,
-				05BA072910BBC91E00FC9668 /* PocketSword-Icon.png */,
 				05B3D61610BB7A92000F8A48 /* MMM.png */,
 				05DF57C610ABC753007CB847 /* About.png */,
 				052851C3122664DE00A99ECD /* About@2x.png */,
@@ -2378,8 +2374,8 @@
 		052851BB1226614600A99ECD /* misc */ = {
 			isa = PBXGroup;
 			children = (
-				05034D2110FD61CE00884C98 /* SearchWebView.js */,
 				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
+				05034D2110FD61CE00884C98 /* SearchWebView.js */,
 				0550A0C310A8407C00363295 /* CharisSILR.ttf */,
 			);
 			name = misc;
@@ -3149,7 +3145,6 @@
 				054BEC45119F89E800ABCA18 /* gear-24.png in Resources */,
 				054BEC46119F89E800ABCA18 /* commentary.png in Resources */,
 				054BEC47119F89E800ABCA18 /* About.png in Resources */,
-				054BEC48119F89E800ABCA18 /* MMM.png in Resources */,
 				054BEC49119F89E800ABCA18 /* Default.png in Resources */,
 				054BEC4A119F89E800ABCA18 /* Icon2-small.png in Resources */,
 				054BEC4B119F89E800ABCA18 /* back-white.png in Resources */,
@@ -3203,7 +3198,6 @@
 				05CD458310A013DD00853E48 /* gear-24.png in Resources */,
 				05509FC910A7B6B200363295 /* commentary.png in Resources */,
 				05DF57C710ABC753007CB847 /* About.png in Resources */,
-				05B3D61710BB7A92000F8A48 /* MMM.png in Resources */,
 				0513AE1B10C0C43600E414D9 /* Default.png in Resources */,
 				0513AE2C10C0CD5300E414D9 /* Icon2-small.png in Resources */,
 				0513AE8410C0DC3900E414D9 /* back-white.png in Resources */,
