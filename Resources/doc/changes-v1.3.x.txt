@@ -1,0 +1,23 @@
+
+New in v1.3.2
+- Added ability to download "locked" texts & unlock them (eg: NET Bible)
+- updated the built-in Greek Strong's lexicon
+- improved start-up time of app
+- improved speed of moving between Bible chapters.
+- Can now tap on a verse number to add a bookmark or to view the corresponding Commentary entry for that verse.
+- Can now jump straight to the start of a Book or Chapter from the ref selector
+- fixed headings in the LEB module (from Logos)
+- fixed display of Strong's numbers inline
+- re-enabled use of PocketSword with iOS 3.0
+- Added Czech localisation
+- started upgrade of images for iPhone 4 retina display
+- bug fixes
+
+New in v1.3.2
+- bug fixes
+
+New in v1.3.0
+- added Daily Devotional support
+- Updated Download section to add more download sources
+- added Russian & Traditional Chinese localisations
+- Can now define your own download source, for users who create their own modules
