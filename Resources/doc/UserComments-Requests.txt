@@ -1,0 +1,16 @@
+// Requests found in user comments in iTunes
+//
+// Last updated: 3rd of September, 2010
+
+- new splash screen
+- notes
+- NIV; NKJV
+- highlighter
+- font per module
+- auto scroll
+- landscape mode
+- search in "night mode" be white on black?
+- split screen
+- genbook support
+- icon
+- iPad support
