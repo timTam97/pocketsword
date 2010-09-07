@@ -75,8 +75,8 @@ typedef enum {
 #define NotificationRedisplayPrimaryCommentary	@"NotificationRedisplayPrimaryCommentary"
 #define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
 
-#define NotificationAddBibleHistoryItem			@"NotificationAddBibleHistoryItem"
-#define NotificationAddCommentaryHistoryItem	@"NotificationAddCommentaryHistoryItem"
+//#define NotificationAddBibleHistoryItem			@"NotificationAddBibleHistoryItem"
+//#define NotificationAddCommentaryHistoryItem	@"NotificationAddCommentaryHistoryItem"
 
 #define NotificationToggleMultiList				@"NotificationToggleMultiList"
 #define NotificationToggleModuleList			@"NotificationToggleModuleList"

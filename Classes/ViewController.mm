@@ -280,13 +280,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		//[HistoryController addHistoryItem:BibleTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		[HistoryController addHistoryItem:BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		//[HistoryController addHistoryItem:CommentaryTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+		[HistoryController addHistoryItem:CommentaryTab];
 	} else {
 		// weird & undefined
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
@@ -307,13 +307,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		//[HistoryController addHistoryItem:BibleTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		[HistoryController addHistoryItem:BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		//[HistoryController addHistoryItem:CommentaryTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+		[HistoryController addHistoryItem:CommentaryTab];
 	} else {
 		// weird & undefined
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
@@ -424,16 +424,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			//[HistoryController addHistoryItem:BibleTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			[HistoryController addHistoryItem:BibleTab];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[HistoryController addHistoryItem:CommentaryTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			[HistoryController addHistoryItem:CommentaryTab];
 		} else {
 			//something tab???
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
@@ -814,8 +814,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			} else {
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			//[HistoryController addHistoryItem:BibleTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			[HistoryController addHistoryItem:BibleTab];
 
 			return NO;
 		}

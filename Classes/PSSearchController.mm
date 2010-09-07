@@ -186,14 +186,14 @@ BOOL searchingEnabled;
 			case BibleTab:
 				//pt = BibleViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-				//[HistoryController addHistoryItem:BibleTab];
+				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+				[HistoryController addHistoryItem:BibleTab];
 				break;
 			case CommentaryTab:
 				//pt = CommentaryViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-				//[HistoryController addHistoryItem:CommentaryTab];
+				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+				[HistoryController addHistoryItem:CommentaryTab];
 				break;
 		}
 		//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
