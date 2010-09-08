@@ -28,9 +28,14 @@
 
 @synthesize window;
 @synthesize tabBarController;
+@synthesize urlToOpen;
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.2"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-100511"
+
++ (PocketSwordAppDelegate *)sharedAppDelegate {
+    return (PocketSwordAppDelegate *) [UIApplication sharedApplication].delegate;
+}
 
 - (void)resetPreferences {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -70,10 +75,11 @@
 	}
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
 	PSModuleController *moduleManager = [PSModuleController defaultModuleController];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
+
 	// testing unlocking mechanism:
 	//[defaults removeObjectForKey:DefaultsModuleCipherKeysKey];
 	//[defaults synchronize];
@@ -208,25 +214,150 @@
     // Add the tab bar controller's current view as a subview of the window
     [window addSubview:tabBarController.view];
 	
+	NSURL *url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+	// uncomment this line for testing the open url functionality
+	//url = [NSURL URLWithString:@"sword://John+10:10?module=AFER"];
+	if (url != nil) {
+		return [self application:application handleOpenURL:url];
+	} else {
+		return YES;
+	}
 }
 
+/*
+ * Parse url's query portion (like key=value&name=something) into an NSDictionary
+ */
+- (NSDictionary *)parseQueryDictionaryFromURL:(NSURL *)url {
+	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	if (url == nil || [url query] == nil || [[url query] length] == 0) {
+		return result;
+	}
+		
+	NSArray *pairs = [[url query] componentsSeparatedByString:@"&"];
+	for (NSString *keyValueStr in pairs) {
+		NSArray *keyValueArray = [keyValueStr componentsSeparatedByString:@"="];
+		if ([keyValueArray count] > 1) {
+			[result setObject:[keyValueArray objectAtIndex:1] forKey:[keyValueArray objectAtIndex:0]];
+		}
+	}
+	
+	return result;
+}
+
+/*
+ * The URL format is as follows:
+ *
+ * scheme (required): "sword://"
+ *
+ * host (required): a bible reference, for example: "John+3:16" or "John 3"
+ *
+ * query (optional): for example:
+ *   "?type=bible&module=KVJ" or 
+ *   "?type=commentary&module=MHCC" or 
+ *   "?type=commentary&module=list"
+ *   - type is either "bible" or "commentary".  bible is the default if not present.
+ *   - module is a module name, such as KJV, MHCC, Geneva, CalvinCommentaries, etc.  
+ *       The current bible is the default if not present.
+ *       If module is "list", then the current module will be selected, but the user 
+ *       will be presented with a list of installed modules to choose from.
+ *
+ * Some complete example URLs are:
+ * sword://John+3:16
+ * sword://John+3:16?type=bible
+ * sword://John+3:16?type=bible&module=KJV
+ * sword://John+3:16?type=commentary
+ * sword://John+3:16?type=commentary&module=MHCC
+ * sword://John+3:16?type=commentary&module=list
+ */
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    if(!url)
+    if(!url || ![[url scheme] isEqualToString:@"sword"]) {
 		return NO;
+	}
+    
+	self.urlToOpen = url;
 	
-    if([[url scheme] isEqualToString:@"sword"]) {
-        // in this case host is the module and path the reference
-		NSString *module = [url host];
-		if(module) {
-			[[NSUserDefaults standardUserDefaults] setObject: module forKey: DefaultsLastBible];
-		}
-        NSString *chapter = [[[[url path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+	NSString *reference = [[url absoluteString] substringFromIndex:[@"sword://" length]];
+	NSRange queryRange = [reference rangeOfString:@"?"];
+	if (queryRange.location != NSNotFound) {
+		reference = [reference substringToIndex:queryRange.location];
+	}
+	reference = [[[reference stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 
-		[[NSUserDefaults standardUserDefaults] synchronize];
+	NSString *chapter;
+	NSString *verse;
+	if ([reference rangeOfString:@":"].location == NSNotFound) {
+		chapter = reference;
+		verse = @"1";
 	} else {
-		return NO;
+		NSArray *parts = [reference componentsSeparatedByString:@":"];
+		chapter = [parts objectAtIndex:0];
+		verse = [parts objectAtIndex:1];
+	}
+	
+	// preserve only the first number in verse, i.e. change 28-30 into 28, or change 26,28;30 into 26
+	NSCharacterSet *digits = [NSCharacterSet decimalDigitCharacterSet];
+	int i = 1;
+	for (; i < [verse length]; i++) {
+		if (![digits characterIsMember:[verse characterAtIndex:i]]) {
+			break;
+		}
+	}
+	verse = [verse substringToIndex:i];
+	
+	
+	NSDictionary *params = [self parseQueryDictionaryFromURL:url];
+	NSString *type = [params objectForKey:@"type"];
+	NSString *module = [params objectForKey:@"module"];
+	
+	BOOL isBible; // determined first by "module" if present, then fall back to "type", then default to "bible"
+	if (module != nil) {
+		SwordModule *requestedModule = [[PSModuleController defaultModuleController].swordManager moduleWithName:module];
+		if (requestedModule != nil) {
+			isBible = (requestedModule.type == bible);
+		} else {
+			// requested module is not installed or does not exist, so display the list of installed modules
+			module = @"list";
+			isBible = (type == nil || [type isEqualToString:@"bible"]);
+		}
+	} else {
+		isBible = (type == nil || [type isEqualToString:@"bible"]);
+	}
+	
+	if (isBible) {
+		if (module != nil && ![module isEqualToString:@"list"]) {
+			// they requested a specific module
+			[[PSModuleController defaultModuleController] loadPrimaryBible:module];
+			//[[NSUserDefaults standardUserDefaults] setObject: module forKey: DefaultsLastBible];
+		}
+		
+		[viewController setShownTabTo:BibleTab];
+
+		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+	} else {			
+		if (module != nil && ![module isEqualToString:@"list"]) {
+			// they requested a specific module
+			[[PSModuleController defaultModuleController] loadPrimaryCommentary:module];
+		}
+		
+		[viewController setShownTabTo:CommentaryTab];
+
+		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+	}
+	
+	if (module != nil && [module isEqualToString:@"list"]) {
+		[viewController toggleModulesListAnimated:NO];
 	}
 
 	return YES;

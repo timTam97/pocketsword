@@ -23,10 +23,15 @@
     UIWindow *window;
     UITabBarController *tabBarController;
 
+	NSURL *urlToOpen;
 	//IBOutlet id moduleManager;
+	IBOutlet id viewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
+@property (nonatomic, retain) IBOutlet NSURL *urlToOpen;
+
++ (PocketSwordAppDelegate *)sharedAppDelegate;
 
 @end

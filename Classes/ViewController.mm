@@ -79,7 +79,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		NSString *lastRef = [PSModuleController getCurrentBibleRef];
 		
-		[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+		if ([PocketSwordAppDelegate sharedAppDelegate].urlToOpen == nil) {
+			[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreScrollPosition];
+		} else {
+			[PocketSwordAppDelegate sharedAppDelegate].urlToOpen = nil;
+			[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+		}
 		
 		if ([[[moduleController swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count] == 0) {
 			[self setTabTitle: @"PocketSword" ofTab:BibleTab];
@@ -344,8 +349,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)toggleModulesList {
+	[self toggleModulesListAnimated:YES];
+}
+
+- (void)toggleModulesListAnimated:(BOOL)animated {
 	if(moduleSelectorViewController && [((PSModuleSelectorController*)moduleSelectorViewController).view superview]) {
-		[tabController dismissModalViewControllerAnimated:YES];
+		[tabController dismissModalViewControllerAnimated:animated];
 		//moduleSelectorViewController = nil;
 	} else {
 		moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil];
@@ -359,7 +368,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		} else {
 			[moduleSelectorViewController setListType: DictionaryTab];
 		}
-		[tabController presentModalViewController:moduleSelectorViewController animated:YES];
+		[tabController presentModalViewController:moduleSelectorViewController animated:animated];
 	}
 }
 
