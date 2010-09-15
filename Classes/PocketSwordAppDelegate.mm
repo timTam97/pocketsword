@@ -89,14 +89,14 @@
 
 	if(!kjv) {
 		[defaults synchronize];
-		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible];
-		[moduleManager loadInitialModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary];
+		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible removeZip:NO];
+		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary removeZip:NO];
 		[defaults setBool: YES forKey:@"loadedBundledKJV"];
 	}
 	
 	if(!strongsAndMorph) {
-		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary];
-		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary];
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary removeZip:NO];
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary removeZip:NO];
 		[defaults setObject:@"Robinson" forKey:DefaultsMorphGreekModule];
 		[defaults setObject:@"StrongsRealGreek" forKey:DefaultsStrongsGreekModule];
 		[defaults setObject:@"StrongsRealHebrew" forKey:DefaultsStrongsHebrewModule];
@@ -112,7 +112,7 @@
 		} else {
 			DLog(@"\nInstalling StrongsRealGreek for the first time...");
 		}
-		[moduleManager loadInitialModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary];
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary removeZip:NO];
 		[defaults setBool: YES forKey:STRONGS_REAL_GREEK_VERSION];
 		NSString *curSGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsGreekModule];
 		if(!curSGM || [curSGM isEqualToString: NSLocalizedString(@"None", @"None")]) {

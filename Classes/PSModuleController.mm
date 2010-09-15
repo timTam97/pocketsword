@@ -109,7 +109,8 @@ static PSModuleController *instance;
 	instance = nil;
 }
 
-- (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType {
+// note: this will install all the modules contained within a supplied ZIP file.
+- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip {
 	
 	if(!zippedModule)
 		return;
@@ -122,9 +123,11 @@ static PSModuleController *instance;
 
 	DLog(@"\n\n%@\n\n", zippedModule);
 	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-	//NSString *file = [root stringByAppendingPathComponent:[notification object]];
 	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
-	
+
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	[fileManager removeItemAtPath:outfile error:NULL];
+
 	//unzip the archive
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:zippedModule];
@@ -136,14 +139,12 @@ static PSModuleController *instance;
 	[swordManager installModulesFromPath:outfile];
 	[self reload];
 		
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	//[fileManager removeItemAtPath:zippedModule error:NULL];//this won't remove the zip file on the iPhone device.............
+	if(temporaryZip) {
+		[fileManager removeItemAtPath:zippedModule error:NULL];
+	}
 	[fileManager removeItemAtPath:outfile error:NULL];
 	
 	if((!primaryBible && (modType == bible)) || (!primaryCommentary && (modType == commentary))) {
-//		if(!primaryBible && (modType == bible)) {
-//			[bookmarkAddButton setEnabled:YES];
-//		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	}
 	

@@ -42,6 +42,7 @@ typedef enum {
 }TextPullType;
 
 typedef enum {
+	unknown_type = -1,
 	bible       = 0x0001, 
     commentary  = 0x0002, 
     dictionary  = 0x0004,
