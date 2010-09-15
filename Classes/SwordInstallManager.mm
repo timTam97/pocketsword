@@ -267,6 +267,8 @@ base path of the module installation
 }
 
 //if we're just removing & adding an install source, we only need to reinitialize after re-adding the IS again.
+// Note that if you remove an InstallSource and don't reinitialize, data will be dirty and you will run into trouble!
+//      So, play nicely.  :P
 - (void)removeInstallSource:(SwordInstallSource *)is withReinitialize:(BOOL)performReinitialize {
 	[self removeInstallSourceNamed:[is caption] withReinitialize:performReinitialize];
 }
