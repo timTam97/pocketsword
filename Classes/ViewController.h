@@ -111,6 +111,7 @@ typedef enum {
 + (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
+- (void)setVoiceOverForRefSegmentedControl;
 - (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
 - (void)setDictionaryTitleViaNotification;

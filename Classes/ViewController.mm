@@ -64,10 +64,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[bibleSegmentedControl setWidth: 78 forSegmentAtIndex:1];
 		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:2];
 		[bibleSegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+		
 		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:0];//30
 		[commentarySegmentedControl setWidth: 78 forSegmentAtIndex:1];//138
 		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:2];//30
 		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+		
+		//VoiceOver hints:
+		[self setVoiceOverForRefSegmentedControl];
+		bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+		commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 		[bibleWebView loadHTMLString: black baseURL: nil];
@@ -208,6 +214,45 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //	[pool release];
 //}
 
+- (void)setVoiceOverForRefSegmentedControl {
+	int segmentCount = 0;
+	//VoiceOver support for the prev & next buttons in the Bible tab
+	for(UIView *segmentView in bibleSegmentedControl.subviews) {
+		switch (segmentCount) {
+			case 0:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+				break;
+			case 1:
+				segmentView.accessibilityLabel = [bibleSegmentedControl titleForSegmentAtIndex:1];
+				break;
+			case 2:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+				break;
+			default:
+				break;
+		}
+		segmentCount++;
+	}
+	segmentCount = 0;
+	//VoiceOver support for the prev & next buttons in the commentary tab
+	for(UIView *segmentView in commentarySegmentedControl.subviews) {
+		switch (segmentCount) {
+			case 0:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+				break;
+			case 1:
+				segmentView.accessibilityLabel = [commentarySegmentedControl titleForSegmentAtIndex:1];
+				break;
+			case 2:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+				break;
+			default:
+				break;
+		}
+		segmentCount++;
+	}
+}
+
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
 {
 	[toolbarLock lock];
@@ -218,6 +263,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if(tab == CommentaryTab) {
 		[commentarySegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
 	}
+	[self setVoiceOverForRefSegmentedControl];
 	[toolbarLock unlock];
 }
 
