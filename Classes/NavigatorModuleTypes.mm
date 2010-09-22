@@ -64,11 +64,13 @@ NSTimer *refreshTimer;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if ([dataArray count] == 0) {
-		((UITableView*)table).sectionHeaderHeight = 40.5;
+		//((UITableView*)table).sectionHeaderHeight = 40.5;
 		return NSLocalizedString(@"NoModulesRefresh", @"No modules here. Try a refresh.");
 	}
-	else
-		return @"";
+	else {
+		//((UITableView*)table).sectionHeaderHeight = 1.0;
+		return NSLocalizedString(@"ModuleTypesHeaderText", @"");
+	}
 }
 
 

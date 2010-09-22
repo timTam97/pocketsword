@@ -27,9 +27,6 @@
 
 @property (retain, readwrite) SwordModule *module;
 
-- (void)viewWillAppear:(BOOL)animated;
-- (void)viewDidDisappear:(BOOL)animated;
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
 - (void)showDownloadStatus;
 - (void)runInstallation;
 - (void)updateInstallationStatus;

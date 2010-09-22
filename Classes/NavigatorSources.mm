@@ -137,10 +137,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
-		((UITableView*)table).sectionHeaderHeight = 40.5;
+		//((UITableView*)table).sectionHeaderHeight = 40.5;
 		return NSLocalizedString(@"InstallManagerDisabled", @"");
+	} else {
+		//((UITableView*)table).sectionHeaderHeight = 80.0;
+		return NSLocalizedString(@"InstallManagerDownloadsHint", @"");
 	}
-	return @"";
 }
 
 
