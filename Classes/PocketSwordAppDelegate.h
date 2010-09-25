@@ -30,3 +30,9 @@
 //@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 
 @end
+
+@interface UITabBarController (PocketSword)
+@end
+
+@interface UINavigationController (PocketSword)
+@end

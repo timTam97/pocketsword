@@ -32,7 +32,7 @@
 - (IBAction)hideDescription:(id)sender;
 - (void)searchDictionaryEntries;
 
-- (void) showModal:(UIView*)modalView withTiming:(float)time;
-- (void) hideModal:(UIView*) modalView withTiming:(float)time;
+//- (void) showModal:(UIView*)modalView withTiming:(float)time;
+//- (void) hideModal:(UIView*) modalView withTiming:(float)time;
 
 @end

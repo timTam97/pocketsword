@@ -254,6 +254,17 @@
 	[PSLanguageCode doneWithLookupTable];
 }
 
-
 @end
 
+
+@implementation UITabBarController (PocketSword)
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+@end
+
+@implementation UINavigationController (PocketSword)
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+@end
