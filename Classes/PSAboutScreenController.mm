@@ -84,6 +84,9 @@
 			<meta name='viewport' content='width=device-width' />\n\
 			<head>\n\
 			<style type=\"text/css\">\n\
+			html {\n\
+				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
+			}\n\
 			body {\n\
 				color: black;\n\
 				background-color: white;\n\
