@@ -678,8 +678,24 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	CGSize modalSize = modalView.bounds.size;
 	//CGPoint middleCenter = modalView.center;
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, offSize.height - (modalSize.height / 2.0));
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+	CGFloat width, height;
+	CGPoint offScreenCenter, middleCenter;
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
+		middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
+		middleCenter = CGPointMake(offSize.width - (modalSize.height / 2.0), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
+		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
+	} else {
+		width = offSize.width;
+		height = offSize.height;
+		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
+		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
+	}
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];
 	
@@ -695,6 +711,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
+	}
 	[UIView beginAnimations:nil context:modalView];
 	[UIView setAnimationDuration:time];
 	[UIView setAnimationDelegate:self];

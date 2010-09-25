@@ -59,6 +59,29 @@ BOOL loaded;
 		
 		[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
 	} else {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {// || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 480.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 480.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 320.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 320.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		}
 		[ViewController showModal:devotionalDatePickerView withTiming:0.3];
 	}
 }
