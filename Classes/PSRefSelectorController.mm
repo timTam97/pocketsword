@@ -64,11 +64,12 @@
 //	}
 //}
 
-- (void)toggleNavigation/*:(ShownTab)shownTab*/ {
+- (void)toggleNavigation {
 	//BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
 	
 	if([refNavigationController.view superview]) {
-		[ViewController hideModal:refNavigationController.view withTiming:0.3];
+		//[ViewController hideModal:refNavigationController.view withTiming:0.3];
+		[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
 	} else {
 		[self updateRefSelectorBooks];
 		[refTable reloadData];
@@ -78,7 +79,8 @@
 		[cancel release];
 		//refNavigationController.navigationItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
 		[refNavigationController popToRootViewControllerAnimated:NO];
-		[ViewController showModal:refNavigationController.view withTiming:0.3];
+		//[ViewController showModal:refNavigationController.view withTiming:0.3];
+		[[viewController tabBarController] presentModalViewController:refNavigationController animated:YES];
 
 		NSIndexPath *ip = nil;
 		int bookCount = [refSelectorBooks count];
@@ -307,7 +309,8 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	//jump to ch1, v1 of that book.
-	[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	//[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
 	[viewController updateViewWithSelectedBookName:[[refSelectorBooks objectAtIndex:indexPath.section] name] chapter:1 verse:1];
 }
 

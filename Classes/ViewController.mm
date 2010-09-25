@@ -299,7 +299,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		case 1: // Ref
 		{
-			[self toggleNavigation: sender];
+			[self toggleNavigation];
 			break;
 		}
 		case 2:	// next
@@ -409,6 +409,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 }
 
+- (UITabBarController *)tabBarController {
+	return tabController;
+}
+
 - (IBAction)addModuleButtonPressed {
 	[self setShownTabTo:DownloadsTab];
 }
@@ -417,7 +421,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[self setShownTabTo:CommentaryTab];
 }
 
-- (IBAction)toggleNavigation:(id)sender {
+- (IBAction)toggleNavigation {
 	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL showingBibleTab = NO;
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
@@ -430,7 +434,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		// commentary tab
 		return;
 	}
-	[refSelectorController toggleNavigation/*:shownTab*/];
+	[refSelectorController toggleNavigation];
 	
 	//[pool release];
 }

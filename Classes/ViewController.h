@@ -44,7 +44,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : UITabBarController <UITabBarControllerDelegate> {
+@interface ViewController : NSObject <UITabBarControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
 	
@@ -124,13 +124,14 @@ typedef enum {
 
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;
-- (IBAction)toggleNavigation:(id)sender;
+- (IBAction)toggleNavigation;
 //- (IBAction)updateViewWithSelectedChapter:(id)sender;
 //- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 
 - (IBAction)toggleModulesList;
 - (IBAction)toggleMultiList;
+- (UITabBarController *)tabBarController;
 - (IBAction)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
