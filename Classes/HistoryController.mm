@@ -307,7 +307,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[HistoryController removeHistoryItem:ref forTab:listType];
-		[tableView reloadData];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 }

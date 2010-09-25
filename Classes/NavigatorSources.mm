@@ -192,7 +192,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *caption = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[[[PSModuleController defaultModuleController] swordInstallManager] removeInstallSourceNamed:caption withReinitialize:YES];
-		[tableView reloadData];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 }

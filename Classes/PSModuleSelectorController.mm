@@ -227,7 +227,7 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
 			//[[[PSModuleController defaultModuleController] viewController] reloadDictionaryData];
 		}
-		[tableView reloadData];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 	[pool release];

@@ -166,7 +166,7 @@
 	[defaults synchronize];
 	[bookmarks release];
 	
-	[bookmarksTable reloadData];
+	//[bookmarksTable reloadData];
 	[pool release];
 }
 
@@ -209,6 +209,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[self removeBookmark: ref];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 }
