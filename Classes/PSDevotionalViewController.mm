@@ -41,22 +41,6 @@ BOOL loaded;
 	self.navigationItem.rightBarButtonItem = moduleButton;
 	[moduleButton release];
 	
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-	[dateFormatter setDateFormat:@"MMMM d"];
-	NSString *todayTitle = [dateFormatter stringFromDate:[NSDate date]];
-		
-	UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	titleButton.backgroundColor = [UIColor clearColor];
-	titleButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
-	titleButton.showsTouchWhenHighlighted = YES;
-	[titleButton setTitle:todayTitle forState:UIControlStateNormal];
-	[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
-	[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	titleButton.frame = CGRectMake(0, 0, 150, 40);
-	[titleButton addTarget: self action: @selector(toggleDatePicker:) forControlEvents: UIControlEventTouchUpInside];
-	
-	self.navigationItem.titleView = titleButton;
-	
 //	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
@@ -105,6 +89,22 @@ BOOL loaded;
 
 - (void)viewWillAppear:(BOOL)animated {
 	if(!loaded) {
+		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+		[dateFormatter setDateFormat:@"MMMM d"];
+		NSString *todayTitle = [dateFormatter stringFromDate:[NSDate date]];
+		
+		UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		titleButton.backgroundColor = [UIColor clearColor];
+		titleButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
+		titleButton.showsTouchWhenHighlighted = YES;
+		[titleButton setTitle:todayTitle forState:UIControlStateNormal];
+		[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
+		[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		titleButton.frame = CGRectMake(0, 0, 150, 40);
+		[titleButton addTarget: self action: @selector(toggleDatePicker:) forControlEvents: UIControlEventTouchUpInside];
+		
+		self.navigationItem.titleView = titleButton;
+		
 		devotionalDatePicker.locale = [NSLocale currentLocale];
 		devotionalDatePicker.timeZone = [NSTimeZone localTimeZone];
 		devotionalDatePicker.calendar = [NSCalendar currentCalendar];
