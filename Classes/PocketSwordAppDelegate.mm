@@ -27,7 +27,7 @@
 @implementation PocketSwordAppDelegate
 
 @synthesize window;
-@synthesize tabBarController;
+//@synthesize tabBarController;
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.2"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-100511"
@@ -248,11 +248,12 @@
 }
 
 - (void)dealloc {
-    [tabBarController release];
+    //[tabBarController release];
     [window release];
     [super dealloc];
 	[PSLanguageCode doneWithLookupTable];
 }
+
 
 @end
 

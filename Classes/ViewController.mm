@@ -493,25 +493,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-//    // Return YES for supported orientations
-//    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-//	return YES;
-//}
-
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//	//[bibleWebView reload];
-//	DLog(@"Rotating");
-//	//NSString *text = [bibleWebView stringByEvaluatingJavaScriptFromString:@"document.documentElement.textContent"];
-//	//[bibleWebView loadHTMLString: @"foo" baseURL: nil];
-//}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
-    // Release anything that's not essential, such as cached data
-}
-
-
 - (void)dealloc {
 	[toolbarLock release];
 	[moduleSelectorViewController release];
@@ -801,10 +782,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 }
 
-- (UITabBarController *)tabController {
-	return tabController;
-}
-
 - (void)showInfoWithNotification:(NSNotification *)notification {
 	if(notification) {
 		[self showInfo:[notification object]];
@@ -924,6 +901,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 			break;
 	}
+}
+
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	// Return YES for supported orientations
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

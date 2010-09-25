@@ -44,7 +44,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : UIViewController <UITabBarControllerDelegate> {
+@interface ViewController : UITabBarController <UITabBarControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
 	
@@ -153,7 +153,6 @@ typedef enum {
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
-- (UITabBarController *)tabController;
 - (void)setShownTabTo:(ShownTab)tab;
 
 - (void)showInfoWithNotification:(NSNotification *)notification;

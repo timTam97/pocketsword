@@ -194,7 +194,6 @@
 		[[[PSModuleController defaultModuleController] swordInstallManager] removeInstallSourceNamed:caption withReinitialize:YES];
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
-	
 }
 
 /*- (void)navigationController:(UINavigationController *)navController willShowViewController:(UIViewController *)vController animated:(BOOL)animated {
