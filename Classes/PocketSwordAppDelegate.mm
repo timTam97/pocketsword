@@ -23,6 +23,7 @@
 #import "ZipArchive.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
+#import "HistoryController.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -348,7 +349,8 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		[HistoryController addHistoryItem:BibleTab];
 	} else {			
 		if (module != nil && ![module isEqualToString:LIST]) {
 			// they requested a specific module and it is available
@@ -363,7 +365,8 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+		[HistoryController addHistoryItem:CommentaryTab];
 	}
 	
 	if (module != nil && [module isEqualToString:LIST]) {
