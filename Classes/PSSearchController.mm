@@ -186,14 +186,14 @@ BOOL searchingEnabled;
 			case BibleTab:
 				//pt = BibleViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-				//[HistoryController addHistoryItem:BibleTab];
+				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+				[HistoryController addHistoryItem:BibleTab];
 				break;
 			case CommentaryTab:
 				//pt = CommentaryViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-				//[HistoryController addHistoryItem:CommentaryTab];
+				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+				[HistoryController addHistoryItem:CommentaryTab];
 				break;
 		}
 		//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
@@ -247,30 +247,59 @@ BOOL searchingEnabled;
 //	[pool release];
 //}
 
+- (void)createHelpView {
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	UIWebView *webView = nil;
+	UINavigationBar *navBar = nil;
+	if(deviceOrientation == UIDeviceOrientationPortrait || deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
+		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
+		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
+		
+	} else {
+		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 480, 251)];// 320-69
+		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 480, 212)];//320-113
+		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 480, 44)];
+		
+	}
+	helpView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	navBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	NSString *helpHTML = @"<html><body><font face=\"Helvetica\"><dl><dt>loved one</dt><dd>search for verses that contain \"loved\" or \"one\"<br/>NB: this is the same as searching for loved OR one</dd>\n\
+	<dt>\"loved one\"</dt><dd>search for verses that contain the phrase \"loved one\"</dd>\n\
+	<dt>love*</dt><dd>search for verses that contain a word starting with \"love\" (love OR loves OR loved OR etc...)</dd>\n\
+	<dt>loved AND one</dt><dd>search for verses that contains the word \"loved\" and the word \"one\"<br />NB: && can be used in place of AND</dd>\n\
+	<dt>+loved one</dt><dd>search for verses that must contain \"loved\" and may contain \"one\"</dd>\n\
+	<dt>loved NOT one</dt><dd>search for verses that contain \"loved\" but not \"one\"</dd>\n\
+	<dt>(loved one) AND God</dt><dd>search for verses that contain \"loved\" or \"one\" and \"God\"</dd>\n\
+	</font></body></html>";
+	[webView loadHTMLString: helpHTML baseURL:nil];
+	[helpView addSubview: webView];
+	[webView release];
+	navBar.barStyle = UIBarStyleBlackOpaque;
+	UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
+	navItem.rightBarButtonItem = nil;
+	navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
+	[navBar pushNavigationItem: navItem animated: NO];
+	[navItem release];
+	[helpView addSubview: navBar];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	//NSLog(@"rotating...");
+	if(helpView) {
+		//NSLog(@"rotating...2");
+		[helpView removeFromSuperview];
+		[helpView release];
+		helpView = nil;
+		[self createHelpView];
+		[self.view addSubview:helpView];
+	}
+}
+
 - (IBAction)infoButtonPressed:(id)sender {
 	if(!helpView) {
-		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
-		UIWebView *webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
-		NSString *helpHTML = @"<html><body><font face=\"Helvetica\"><dl><dt>loved one</dt><dd>search for verses that contain \"loved\" or \"one\"<br/>NB: this is the same as searching for loved OR one</dd>\n\
-		<dt>\"loved one\"</dt><dd>search for verses that contain the phrase \"loved one\"</dd>\n\
-		<dt>love*</dt><dd>search for verses that contain a word starting with \"love\" (love OR loves OR loved OR etc...)</dd>\n\
-		<dt>loved AND one</dt><dd>search for verses that contains the word \"loved\" and the word \"one\"<br />NB: && can be used in place of AND</dd>\n\
-		<dt>+loved one</dt><dd>search for verses that must contain \"loved\" and may contain \"one\"</dd>\n\
-		<dt>loved NOT one</dt><dd>search for verses that contain \"loved\" but not \"one\"</dd>\n\
-		<dt>(loved one) AND God</dt><dd>search for verses that contain \"loved\" or \"one\" and \"God\"</dd>\n\
-		</font></body></html>";
-		[webView loadHTMLString: helpHTML baseURL:nil];
-		[helpView addSubview: webView];
-		[webView release];
-		UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
-		navBar.barStyle = UIBarStyleBlackOpaque;
-		UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
-		navItem.rightBarButtonItem = nil;
-		navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
-		[navBar pushNavigationItem: navItem animated: NO];
-		[navItem release];
-		[helpView addSubview: navBar];
-		//[helpView retain];
+		[self createHelpView];
 	}
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft

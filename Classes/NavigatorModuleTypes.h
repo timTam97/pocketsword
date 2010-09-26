@@ -28,15 +28,7 @@
 }
 @property (retain, readwrite) NSArray *dataArray;
 
-- (void)viewWillAppear:(BOOL)animated;
 - (void)reloadTable;
-- (void)viewDidAppear:(BOOL)animated;
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-
 - (IBAction)refreshDownloadSource:(id)sender;
 - (IBAction)cancelRefreshDownloadSource;
 //- (void)runRefreshDownloadSource;

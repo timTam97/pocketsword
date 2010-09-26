@@ -69,7 +69,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	//[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
 	[viewController updateViewWithSelectedBookName:[book name] chapter:chapter verse:(indexPath.section+1)];
 }
 

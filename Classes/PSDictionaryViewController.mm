@@ -336,42 +336,42 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 // Use this to show the modal view (pops-up from the bottom)
 // try a time of 0.7 to start with...
-- (void) showModal:(UIView*)modalView withTiming:(float)time
-{
-	
-	CGSize modalSize = modalView.bounds.size;
-	//CGPoint middleCenter = modalView.center;
-	CGSize offSize = [self view].bounds.size;
-	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, offSize.height - (modalSize.height / 2.0));
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	modalView.center = offScreenCenter; // we start off-screen
-	[[self view] addSubview:modalView];
-	
-	// Show it with a transition effect
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:time]; // animation duration in seconds
-	modalView.center = middleCenter;
-	[UIView commitAnimations];
-}
-
-- (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
-{
-	UIView* modalView = (UIView *)context;
-	[modalView removeFromSuperview];
-}
-
+//- (void) showModal:(UIView*)modalView withTiming:(float)time
+//{
+//	
+//	CGSize modalSize = modalView.bounds.size;
+//	//CGPoint middleCenter = modalView.center;
+//	CGSize offSize = [self view].bounds.size;
+//	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, offSize.height - (modalSize.height / 2.0));
+//	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+//	modalView.center = offScreenCenter; // we start off-screen
+//	[[self view] addSubview:modalView];
+//	
+//	// Show it with a transition effect
+//	[UIView beginAnimations:nil context:nil];
+//	[UIView setAnimationDuration:time]; // animation duration in seconds
+//	modalView.center = middleCenter;
+//	[UIView commitAnimations];
+//}
+//
+//- (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
+//{
+//	UIView* modalView = (UIView *)context;
+//	[modalView removeFromSuperview];
+//}
+//
 // Use this to slide the semi-modal view back down.
-- (void) hideModal:(UIView*) modalView withTiming:(float)time
-{
-	CGSize offSize = [self view].bounds.size;
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	[UIView beginAnimations:nil context:modalView];
-	[UIView setAnimationDuration:time];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(hideModalEnded:finished:context:)];
-	modalView.center = offScreenCenter;
-	[UIView commitAnimations];
-}
+//- (void) hideModal:(UIView*) modalView withTiming:(float)time
+//{
+//	CGSize offSize = [self view].bounds.size;
+//	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+//	[UIView beginAnimations:nil context:modalView];
+//	[UIView setAnimationDuration:time];
+//	[UIView setAnimationDelegate:self];
+//	[UIView setAnimationDidStopSelector:@selector(hideModalEnded:finished:context:)];
+//	modalView.center = offScreenCenter;
+//	[UIView commitAnimations];
+//}
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];

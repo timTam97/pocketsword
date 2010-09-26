@@ -64,10 +64,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[bibleSegmentedControl setWidth: 78 forSegmentAtIndex:1];
 		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:2];
 		[bibleSegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+		
 		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:0];//30
 		[commentarySegmentedControl setWidth: 78 forSegmentAtIndex:1];//138
 		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:2];//30
 		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+		
+		//VoiceOver hints:
+		[self setVoiceOverForRefSegmentedControl];
+		bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+		commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 		[bibleWebView loadHTMLString: black baseURL: nil];
@@ -213,6 +219,45 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //	[pool release];
 //}
 
+- (void)setVoiceOverForRefSegmentedControl {
+	int segmentCount = 0;
+	//VoiceOver support for the prev & next buttons in the Bible tab
+	for(UIView *segmentView in bibleSegmentedControl.subviews) {
+		switch (segmentCount) {
+			case 0:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+				break;
+			case 1:
+				segmentView.accessibilityLabel = [bibleSegmentedControl titleForSegmentAtIndex:1];
+				break;
+			case 2:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+				break;
+			default:
+				break;
+		}
+		segmentCount++;
+	}
+	segmentCount = 0;
+	//VoiceOver support for the prev & next buttons in the commentary tab
+	for(UIView *segmentView in commentarySegmentedControl.subviews) {
+		switch (segmentCount) {
+			case 0:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+				break;
+			case 1:
+				segmentView.accessibilityLabel = [commentarySegmentedControl titleForSegmentAtIndex:1];
+				break;
+			case 2:
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+				break;
+			default:
+				break;
+		}
+		segmentCount++;
+	}
+}
+
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
 {
 	[toolbarLock lock];
@@ -223,6 +268,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if(tab == CommentaryTab) {
 		[commentarySegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
 	}
+	[self setVoiceOverForRefSegmentedControl];
 	[toolbarLock unlock];
 }
 
@@ -258,7 +304,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		case 1: // Ref
 		{
-			[self toggleNavigation: sender];
+			[self toggleNavigation];
 			break;
 		}
 		case 2:	// next
@@ -285,13 +331,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		//[HistoryController addHistoryItem:BibleTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		[HistoryController addHistoryItem:BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		//[HistoryController addHistoryItem:CommentaryTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+		[HistoryController addHistoryItem:CommentaryTab];
 	} else {
 		// weird & undefined
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
@@ -312,13 +358,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		//[HistoryController addHistoryItem:BibleTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		[HistoryController addHistoryItem:BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		//[HistoryController addHistoryItem:CommentaryTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+		[HistoryController addHistoryItem:CommentaryTab];
 	} else {
 		// weird & undefined
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
@@ -372,6 +418,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 }
 
+- (UITabBarController *)tabBarController {
+	return tabController;
+}
+
 - (IBAction)addModuleButtonPressed {
 	[self setShownTabTo:DownloadsTab];
 }
@@ -380,7 +430,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[self setShownTabTo:CommentaryTab];
 }
 
-- (IBAction)toggleNavigation:(id)sender {
+- (IBAction)toggleNavigation {
 	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL showingBibleTab = NO;
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
@@ -393,7 +443,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		// commentary tab
 		return;
 	}
-	[refSelectorController toggleNavigation/*:shownTab*/];
+	[refSelectorController toggleNavigation];
 	
 	//[pool release];
 }
@@ -433,16 +483,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			//[HistoryController addHistoryItem:BibleTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			[HistoryController addHistoryItem:BibleTab];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[HistoryController addHistoryItem:CommentaryTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			[HistoryController addHistoryItem:CommentaryTab];
 		} else {
 			//something tab???
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
@@ -455,25 +505,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	[pool release];
 }
-
-//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-//    // Return YES for supported orientations
-//    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-//	return YES;
-//}
-
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//	//[bibleWebView reload];
-//	DLog(@"Rotating");
-//	//NSString *text = [bibleWebView stringByEvaluatingJavaScriptFromString:@"document.documentElement.textContent"];
-//	//[bibleWebView loadHTMLString: @"foo" baseURL: nil];
-//}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
-    // Release anything that's not essential, such as cached data
-}
-
 
 - (void)dealloc {
 	[toolbarLock release];
@@ -656,8 +687,24 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	CGSize modalSize = modalView.bounds.size;
 	//CGPoint middleCenter = modalView.center;
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, offSize.height - (modalSize.height / 2.0));
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+	CGFloat width, height;
+	CGPoint offScreenCenter, middleCenter;
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
+		middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
+		middleCenter = CGPointMake(offSize.width - (modalSize.height / 2.0), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
+		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
+	} else {
+		width = offSize.width;
+		height = offSize.height;
+		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
+		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
+	}
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];
 	
@@ -673,6 +720,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
+	}
 	[UIView beginAnimations:nil context:modalView];
 	[UIView setAnimationDuration:time];
 	[UIView setAnimationDelegate:self];
@@ -764,10 +819,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 }
 
-- (UITabBarController *)tabController {
-	return tabController;
-}
-
 - (void)showInfoWithNotification:(NSNotification *)notification {
 	if(notification) {
 		[self showInfo:[notification object]];
@@ -823,8 +874,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			} else {
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			//[HistoryController addHistoryItem:BibleTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			[HistoryController addHistoryItem:BibleTab];
 
 			return NO;
 		}
@@ -887,6 +938,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 			break;
 	}
+}
+
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	// Return YES for supported orientations
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

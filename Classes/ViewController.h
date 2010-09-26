@@ -44,7 +44,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : UIViewController <UITabBarControllerDelegate> {
+@interface ViewController : NSObject <UITabBarControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
 	
@@ -111,6 +111,7 @@ typedef enum {
 + (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
+- (void)setVoiceOverForRefSegmentedControl;
 - (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
 - (void)setDictionaryTitleViaNotification;
@@ -123,7 +124,7 @@ typedef enum {
 
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;
-- (IBAction)toggleNavigation:(id)sender;
+- (IBAction)toggleNavigation;
 //- (IBAction)updateViewWithSelectedChapter:(id)sender;
 //- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
@@ -131,6 +132,7 @@ typedef enum {
 - (void)toggleModulesListAnimated:(BOOL)animated;
 - (IBAction)toggleModulesList;
 - (IBAction)toggleMultiList;
+- (UITabBarController *)tabBarController;
 - (IBAction)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
@@ -153,7 +155,6 @@ typedef enum {
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
-- (UITabBarController *)tabController;
 - (void)setShownTabTo:(ShownTab)tab;
 
 - (void)showInfoWithNotification:(NSNotification *)notification;

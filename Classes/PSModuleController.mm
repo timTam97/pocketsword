@@ -109,7 +109,8 @@ static PSModuleController *instance;
 	instance = nil;
 }
 
-- (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType {
+// note: this will install all the modules contained within a supplied ZIP file.
+- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip {
 	
 	if(!zippedModule)
 		return;
@@ -122,9 +123,11 @@ static PSModuleController *instance;
 
 	DLog(@"\n\n%@\n\n", zippedModule);
 	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-	//NSString *file = [root stringByAppendingPathComponent:[notification object]];
 	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
-	
+
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	[fileManager removeItemAtPath:outfile error:NULL];
+
 	//unzip the archive
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:zippedModule];
@@ -136,14 +139,12 @@ static PSModuleController *instance;
 	[swordManager installModulesFromPath:outfile];
 	[self reload];
 		
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	//[fileManager removeItemAtPath:zippedModule error:NULL];//this won't remove the zip file on the iPhone device.............
+	if(temporaryZip) {
+		[fileManager removeItemAtPath:zippedModule error:NULL];
+	}
 	[fileManager removeItemAtPath:outfile error:NULL];
 	
 	if((!primaryBible && (modType == bible)) || (!primaryCommentary && (modType == commentary))) {
-//		if(!primaryBible && (modType == bible)) {
-//			[bookmarkAddButton setEnabled:YES];
-//		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	}
 	
@@ -894,8 +895,8 @@ static PSModuleController *instance;
 	NSString *backgroundColor = @"white";
 	NSString *linkColor = @"fuchsia";
 	
+	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
 	if(usePrefs) {
-		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
 		fontName = [[NSUserDefaults standardUserDefaults] objectForKey:@"fontNamePreference"];
 		if(!fontName)
 			fontName = @"Helvetica";
@@ -904,7 +905,12 @@ static PSModuleController *instance;
 		fontSize = [NSString stringWithFormat:@"%d", fs];
 		fontColor = (nightMode) ? @"white" : @"black";
 		backgroundColor = (nightMode) ? @"black" : @"white";
+	} else {
+		fs = 14;
 	}
+	NSString *fontSizeMinusOne = [NSString stringWithFormat:@"<font style=\"font-size: %dpt;line-height: 0%%;\">", (fs-2)];
+	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
+
 	//-webkit-user-select: none; needs to be added to the body CSS to disable copy&paste.
 	
 	return [NSString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -979,7 +985,7 @@ static PSModuleController *instance;
 			fontColor,
 			RUBY_CSS,
 			javascript,
-			body];
+			finalBody];
 }
 
 + (BOOL)checkNetworkConnection {

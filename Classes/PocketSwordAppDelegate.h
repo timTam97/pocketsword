@@ -19,9 +19,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate,  UINavigationBarDelegate> {
-    UIWindow *window;
-    UITabBarController *tabBarController;
+@interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate> {
+    IBOutlet UIWindow *window;
+    IBOutlet UITabBarController *tabBarController;
 
 	NSURL *urlToOpen;
 	//IBOutlet id moduleManager;
@@ -29,9 +29,15 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
+//@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain) IBOutlet NSURL *urlToOpen;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate;
 
+@end
+
+@interface UITabBarController (PocketSword)
+@end
+
+@interface UINavigationController (PocketSword)
 @end

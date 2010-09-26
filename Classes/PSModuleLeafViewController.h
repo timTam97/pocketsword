@@ -37,6 +37,7 @@
 
 //perhaps a tab with the version history in it?
 
+- (void)viewWillAppear;
 - (void)viewDidAppear;
 
 - (void)displayInfoForModule:(SwordModule*)swordModule;

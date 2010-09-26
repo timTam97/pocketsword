@@ -9,6 +9,7 @@
 #import "PSBookmarksViewController.h"
 
 #import "PSModuleController.h"
+#import "HistoryController.h"
 #import "globals.h"
 
 @implementation PSBookmarksViewController
@@ -165,7 +166,7 @@
 	[defaults synchronize];
 	[bookmarks release];
 	
-	[bookmarksTable reloadData];
+	//[bookmarksTable reloadData];
 	[pool release];
 }
 
@@ -208,6 +209,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[self removeBookmark: ref];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 }
@@ -274,8 +276,8 @@
 			//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 		}
 		//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		//[HistoryController addHistoryItem:BibleTab];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+		[HistoryController addHistoryItem:BibleTab];
 	}
 	
 	[tableView deselectRowAtIndexPath:indexPath animated:NO];

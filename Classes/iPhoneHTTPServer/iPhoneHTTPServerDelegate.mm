@@ -132,29 +132,32 @@
 	DLog(@"%@", [notification object]);
 	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *file = [root stringByAppendingPathComponent:[notification object]];
-	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	[fileManager removeItemAtPath:outfile error:NULL];
 
-	//unzip the archive
-	ZipArchive *arch = [[ZipArchive alloc] init];
-	[arch UnzipOpenFile:file];
-	[arch UnzipFileTo:outfile overWrite:YES];
-	[arch UnzipCloseFile];
-	[arch release];
+	[[PSModuleController defaultModuleController] installModulesFromZip:file ofType:unknown_type removeZip:YES];
 	
-	//install the module/s contained in the archive:
-	[[[PSModuleController defaultModuleController] swordManager] installModulesFromPath:outfile];
-	[[PSModuleController defaultModuleController] reload];
-	
-	//reload the moduleTable
-	//[moduleTable reloadData];
-	//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
-	
-	//remove the tmp files...
-	[fileManager removeItemAtPath:file error:NULL];
-	[fileManager removeItemAtPath:outfile error:NULL];
+//	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
+//	
+//	NSFileManager *fileManager = [NSFileManager defaultManager];
+//	[fileManager removeItemAtPath:outfile error:NULL];
+//
+//	//unzip the archive
+//	ZipArchive *arch = [[ZipArchive alloc] init];
+//	[arch UnzipOpenFile:file];
+//	[arch UnzipFileTo:outfile overWrite:YES];
+//	[arch UnzipCloseFile];
+//	[arch release];
+//	
+//	//install the module/s contained in the archive:
+//	[[[PSModuleController defaultModuleController] swordManager] installModulesFromPath:outfile];
+//	[[PSModuleController defaultModuleController] reload];
+//	
+//	//reload the moduleTable
+//	//[moduleTable reloadData];
+//	//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
+//	
+//	//remove the tmp files...
+//	[fileManager removeItemAtPath:file error:NULL];
+//	[fileManager removeItemAtPath:outfile error:NULL];
 }
 
 @end

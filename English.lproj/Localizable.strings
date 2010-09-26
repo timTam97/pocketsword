@@ -66,7 +66,7 @@
 "NoModulesRefresh" = "No modules here. Try a refresh.";
 "NoModulesInstalled" = "No modules installed.";
 
-"InstallSourcesTitle" = "Sources";
+"InstallSourcesTitle" = "Downloads";//changed for v1.3.3ish
 "PreferencesTitle" = "Preferences";
 "PreferencesDisplayPreferencesTitle" = "Display Preferences";
 "PreferencesDevicePreferencesTitle" = "Device Preferences";
@@ -216,3 +216,11 @@
 
 "VerseContextualMenuAddBookmark" = "Add Bookmark";
 "VerseContextualMenuCommentary" = "View in Commentary";
+
+// new v1.x.x strings:
+"VoiceOverPreviousChapterButton" = "Previous Chapter";
+"VoiceOverNextChapterButton" = "Next Chapter";
+"VoiceOverHistoryAndSearchButton" = "History and Search";
+"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
+"ModuleTypesHeaderText" = "Select Module Type:";
+"ModuleLanguagesHeaderText" = "Select Language:";

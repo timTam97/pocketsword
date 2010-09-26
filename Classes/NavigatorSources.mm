@@ -137,10 +137,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
-		((UITableView*)table).sectionHeaderHeight = 40.5;
+		//((UITableView*)table).sectionHeaderHeight = 40.5;
 		return NSLocalizedString(@"InstallManagerDisabled", @"");
+	} else {
+		//((UITableView*)table).sectionHeaderHeight = 80.0;
+		return NSLocalizedString(@"InstallManagerDownloadsHint", @"");
 	}
-	return @"";
 }
 
 
@@ -190,9 +192,8 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *caption = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[[[PSModuleController defaultModuleController] swordInstallManager] removeInstallSourceNamed:caption withReinitialize:YES];
-		[tableView reloadData];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
-	
 }
 
 /*- (void)navigationController:(UINavigationController *)navController willShowViewController:(UIViewController *)vController animated:(BOOL)animated {

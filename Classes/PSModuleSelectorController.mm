@@ -9,6 +9,7 @@
 #import "PSModuleSelectorController.h"
 #import "PSModuleController.h"
 #import "NavigatorSources.h"
+#import "HistoryController.h"
 
 
 @implementation PSModuleSelectorController
@@ -179,8 +180,8 @@
 			//[[moduleController viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 			//[[moduleController viewController] addHistoryItem: BibleTab];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			//[HistoryController addHistoryItem:BibleTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			[HistoryController addHistoryItem:BibleTab];
 			if([[moduleController primaryBible] isLocked])
 				locked = YES;
 			break;
@@ -188,8 +189,8 @@
 			[moduleController loadPrimaryCommentary:newModule];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			//[HistoryController addHistoryItem:CommentaryTab];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			[HistoryController addHistoryItem:CommentaryTab];
 			if([[moduleController primaryCommentary] isLocked])
 				locked = YES;
 			break;
@@ -226,7 +227,7 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
 			//[[[PSModuleController defaultModuleController] viewController] reloadDictionaryData];
 		}
-		[tableView reloadData];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 	[pool release];
@@ -235,6 +236,7 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
+	[leafViewController viewWillAppear];
 	[UIView beginAnimations:nil context:nil];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
 	
@@ -244,6 +246,13 @@
     [UIView commitAnimations];
 	[leafViewController performSelector:@selector(viewDidAppear) withObject:nil afterDelay:1.0];
 	
+}
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return YES;
 }
 
 @end

@@ -124,7 +124,8 @@ BOOL needToScroll;
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	//jump to ch1, v1 of that book.
-	[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	//[ViewController hideModal:self.navigationController.view withTiming:0.3];
+	[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
 	[viewController updateViewWithSelectedBookName:[book name] chapter:(indexPath.section+1) verse:1];
 }
 

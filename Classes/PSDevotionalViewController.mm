@@ -41,22 +41,6 @@ BOOL loaded;
 	self.navigationItem.rightBarButtonItem = moduleButton;
 	[moduleButton release];
 	
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-	[dateFormatter setDateFormat:@"MMMM d"];
-	NSString *todayTitle = [dateFormatter stringFromDate:[NSDate date]];
-		
-	UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	titleButton.backgroundColor = [UIColor clearColor];
-	titleButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
-	titleButton.showsTouchWhenHighlighted = YES;
-	[titleButton setTitle:todayTitle forState:UIControlStateNormal];
-	[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
-	[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	titleButton.frame = CGRectMake(0, 0, 150, 40);
-	[titleButton addTarget: self action: @selector(toggleDatePicker:) forControlEvents: UIControlEventTouchUpInside];
-	
-	self.navigationItem.titleView = titleButton;
-	
 //	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
@@ -75,6 +59,29 @@ BOOL loaded;
 		
 		[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
 	} else {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {// || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 480.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 480.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 320.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+			devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+			devotionalDatePickerView.frame.size.width = 320.0;
+			devotionalDatePickerView.frame.size.height = 260.0;
+		}
 		[ViewController showModal:devotionalDatePickerView withTiming:0.3];
 	}
 }
@@ -105,6 +112,22 @@ BOOL loaded;
 
 - (void)viewWillAppear:(BOOL)animated {
 	if(!loaded) {
+		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+		[dateFormatter setDateFormat:@"MMMM d"];
+		NSString *todayTitle = [dateFormatter stringFromDate:[NSDate date]];
+		
+		UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		titleButton.backgroundColor = [UIColor clearColor];
+		titleButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
+		titleButton.showsTouchWhenHighlighted = YES;
+		[titleButton setTitle:todayTitle forState:UIControlStateNormal];
+		[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
+		[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		titleButton.frame = CGRectMake(0, 0, 150, 40);
+		[titleButton addTarget: self action: @selector(toggleDatePicker:) forControlEvents: UIControlEventTouchUpInside];
+		
+		self.navigationItem.titleView = titleButton;
+		
 		devotionalDatePicker.locale = [NSLocale currentLocale];
 		devotionalDatePicker.timeZone = [NSTimeZone localTimeZone];
 		devotionalDatePicker.calendar = [NSCalendar currentCalendar];

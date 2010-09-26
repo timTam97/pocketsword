@@ -46,14 +46,14 @@
 }
 
 - (void)viewDidLoad {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
 	historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
 }
 
 - (void)viewDidUnload {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddBibleHistoryItem object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddCommentaryHistoryItem object:nil];
+	//[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddBibleHistoryItem object:nil];
+	//[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddCommentaryHistoryItem object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -270,7 +270,8 @@
 			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
+			[HistoryController addHistoryItem:BibleTab];
 			break;
 		case CommentaryTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
@@ -290,7 +291,8 @@
 			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreScrollPosition];
 			//[[[PSModuleController defaultModuleController] viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
+			[HistoryController addHistoryItem:CommentaryTab];
 			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: CommentaryTab];
 			break;
 	}
@@ -305,7 +307,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[HistoryController removeHistoryItem:ref forTab:listType];
-		[tableView reloadData];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
 	
 }

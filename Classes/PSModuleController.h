@@ -76,7 +76,7 @@
 + (NSString *)getCurrentBibleRef;
 
 - (id)init;
-- (void)loadInitialModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType;
+- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip;
 - (BOOL)isLoaded:(NSString *)module;
 - (void)loadPrimaryBible:(NSString *)newText;
 - (void)loadPrimaryCommentary:(NSString *)newText;

@@ -18,8 +18,8 @@
 */
 
 // Spanish (es) Localisation
-// By David Bell et al.
-// Last Updated v1.2.2
+// By Ricardo Ramírez (previously David Bell et al).
+// Last Updated v1.3.2 (29th August, 2010)
 
 "Edit" = "Edición";
 "Done" = "Fin";
@@ -191,29 +191,28 @@
 "RefSelectorBackButtonTitle" = "Atrás";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"PreferencesHeadingsTitle" = "Títulos";
+"DictionarySearchPlaceholderText" = "Buscar Diccionario";
+"TabBarTitleDevotional" = "Devocionales";
+"TodayButtonTitle" = "Hoy";
+"ManageSources" = "Administración de Fuentes";
+"AddFTPSource" = "Añadir fuente FTP";
+"AddHTTPSource" = "Añadir fuente HTTP";
+"DeleteSource" = "Borrar Fuente";
+"RefreshSourceList" = "Actualizar lista de fuentes";
+"AddSourceCaptionTitle" = "Título";
+"AddSourceServerTitle" = "Servidor";
+"AddSourcePathTitle" = "Puta";
+"AddFTPSourceTitle" = "Nueva Fuente FTP";
+"AddHTTPSourceTitle" = "Nueva Fuente HTTP";
+"FillInAllFieldsMessage" = "Debe completar todos los campos!";
+"Warning" = "Precaución";
+"CannotVerifyInstallSourceWarning" = "PocketSword no puede verificar la validez de la Fuente. Quiere guardarlo de todos modos?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
-
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"AboutModuleLocked" = "** Tenga en cuenta que este es un módulo bloqueado y usted necesita comprar una llave de desbloqueo del sitio web del Editor. Vea en seguida para más detalles. **";
+"UpgradeButtonTitle" = "Remplazar";
+"ConfirmUpgrade" = "¿Quiere remplazar éste módulo con la versión actual disponible?";
+"VerseContextualMenuAddBookmark" = "Añadir Marcador";
+"VerseContextualMenuCommentary" = "Ver en Comentario";

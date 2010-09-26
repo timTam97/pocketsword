@@ -20,9 +20,18 @@ BOOL trashModule = NO;
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//}
+- (void)viewWillAppear {
+    [super viewWillAppear:NO];
+	
+	UIView *view = self.view;
+	CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		view.frame = CGRectMake(0, 0, appFrame.size.height, appFrame.size.width);
+	} else {
+		view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);;
+	}
+}
 
 - (void)viewDidAppear {
 	[self viewDidAppear:YES];
@@ -30,7 +39,7 @@ BOOL trashModule = NO;
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-
+	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
@@ -215,13 +224,12 @@ body {\n\
 	[pool release];
 }
 
-/*
+
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
-*/
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.

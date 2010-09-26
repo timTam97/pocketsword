@@ -136,6 +136,7 @@
     [super viewDidLoad];
 	
 	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 367)];
+	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;// | UIViewAutoresizingFlexibleHeight;
 	
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
