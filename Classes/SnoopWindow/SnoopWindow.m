@@ -55,6 +55,14 @@ CGPoint CGPointNorm(CGPoint a) {
 - (void)setTouchAndHold:(NSTimer *)theTimer
 {
 	DLog(@"Timer Fired");
+	
+// TODO: this should send a notification for either a ToggleBibleFullscreen or ToggleCommentaryFullScreen
+	if(bibleEvent) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
+	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentaryToggleFullscreen object:nil];
+	}
+	
 	//touchAndHold = YES;
 	//if(bibleEvent) {
 	//	[bibleWebView becomeFirstResponder];
@@ -70,6 +78,7 @@ CGPoint CGPointNorm(CGPoint a) {
 	NSArray *allTouches = [[event allTouches] allObjects];
 	UITouch *touch = [[event allTouches] anyObject];
 	UIView *touchView = [touch view];
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	
 	if (touchView && ([touchView isDescendantOfView:bibleWebView] || [touchView isDescendantOfView:commentaryWebView])) {
 		bibleEvent = [touchView isDescendantOfView:bibleWebView];
@@ -81,14 +90,25 @@ CGPoint CGPointNorm(CGPoint a) {
 		if (touch.phase==UITouchPhaseBegan) {
 			//touchAndHold = NO;
 			//movement = NO;
-//			if(holdTimer) {
-//				[holdTimer invalidate];
-//				self.holdTimer = nil;
-//			}
-//			self.holdTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(setTouchAndHold:) userInfo:nil repeats:NO];
-			//[holdTimer retain];
+			if ([[event allTouches] count] > 1) {
+				if(holdTimer) {
+					[holdTimer invalidate];
+					self.holdTimer = nil;
+				}
+				self.holdTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(setTouchAndHold:) userInfo:nil repeats:NO];
+				//[holdTimer retain];
+			} else if([holdTimer isValid]) {
+				[holdTimer invalidate];
+				self.holdTimer = nil;
+			}
 			
 			startTouchPosition1 = [touch locationInView:self];
+			if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+				//switch x & y if in landscape mode
+				CGFloat dummyX = startTouchPosition1.x;
+				startTouchPosition1.x = startTouchPosition1.y;
+				startTouchPosition1.y = dummyX;
+			}
 			//startTouchPosition1 = [touch locationInView:touchView];
 			startTouchTime = touch.timestamp;
 			
@@ -105,10 +125,10 @@ CGPoint CGPointNorm(CGPoint a) {
 		//
 		
 		if (touch.phase==UITouchPhaseMoved) {
-//			if([holdTimer isValid]) {
-//				[holdTimer invalidate];
-//				self.holdTimer = nil;
-//			}
+			if([holdTimer isValid]) {
+				[holdTimer invalidate];
+				self.holdTimer = nil;
+			}
 			//touchAndHold = NO;
 			//movement = YES;
 			//DLog(@"--- UITouchPhaseMoved ---");
@@ -136,11 +156,21 @@ CGPoint CGPointNorm(CGPoint a) {
 		// touchesEnded
 		///
 		if (touch.phase==UITouchPhaseEnded) {
-//			if([holdTimer isValid]) {
-//				[holdTimer invalidate];
-//				self.holdTimer = nil;
-//			}
+			if([holdTimer isValid]) {
+				[holdTimer invalidate];
+				self.holdTimer = nil;
+			}
 			CGPoint currentTouchPosition = [touch locationInView:self];
+			if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+				//switch x & y if in landscape mode
+				CGFloat dummyX = currentTouchPosition.x;
+				currentTouchPosition.x = currentTouchPosition.y;
+				currentTouchPosition.y = dummyX;
+			}
+			BOOL reverseSwipe = NO;
+			if(deviceOrientation == UIDeviceOrientationLandscapeRight || deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+				reverseSwipe = YES;
+			}
 			//DLog(@"\nUITouchPhaseEnded: %f - %f = %f", touch.timestamp, startTouchTime, (touch.timestamp-startTouchTime));
 
 			// Check if it's a swipe
@@ -153,7 +183,7 @@ CGPoint CGPointNorm(CGPoint a) {
 				touch.timestamp - startTouchTime < .7
 				) {
 				// It appears to be a swipe.
-				if (startTouchPosition1.x < currentTouchPosition.x) {
+				if ((startTouchPosition1.x < currentTouchPosition.x && !reverseSwipe) || (startTouchPosition1.x > currentTouchPosition.x && reverseSwipe)) {
 					if(bibleEvent) {
 						DLog(@"bible swipe right");
 						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeRight object:touch];
