@@ -36,3 +36,9 @@
 //- (void) hideModal:(UIView*) modalView withTiming:(float)time;
 
 @end
+
+@interface PSDictionaryEntryViewController : UIViewController {
+
+}
+
+@end
