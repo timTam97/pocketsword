@@ -11,8 +11,8 @@
 			<string key="NS.object.0">123</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="534"/>
 			<integer value="646"/>
-			<integer value="1013"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -656,12 +656,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			</object>
 			<object class="IBUIViewController" id="746792536">
 				<object class="IBUIView" key="IBUIView" id="402845121">
-					<nil key="NSNextResponder"/>
-					<int key="NSvFlags">274</int>
+					<reference key="NSNextResponder"/>
+					<int key="NSvFlags">310</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUIActivityIndicatorView" id="946324666">
 							<reference key="NSNextResponder" ref="402845121"/>
-							<int key="NSvFlags">292</int>
+							<int key="NSvFlags">301</int>
 							<string key="NSFrame">{{116, 220}, {20, 20}}</string>
 							<reference key="NSSuperview" ref="402845121"/>
 							<bool key="IBUIOpaque">NO</bool>
@@ -672,7 +672,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 						<object class="IBUILabel" id="645871772">
 							<reference key="NSNextResponder" ref="402845121"/>
-							<int key="NSvFlags">292</int>
+							<int key="NSvFlags">301</int>
 							<string key="NSFrame">{{144, 214}, {94, 30}}</string>
 							<reference key="NSSuperview" ref="402845121"/>
 							<bool key="IBUIOpaque">NO</bool>
@@ -693,11 +693,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{320, 460}</string>
+					<reference key="NSSuperview"/>
 					<reference key="IBUIBackgroundColor" ref="26859688"/>
-					<bool key="IBUIOpaque">NO</bool>
-					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					<float key="IBUIAlpha">0.5</float>
-					<int key="IBUIContentMode">4</int>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				</object>
 				<reference key="IBUISimulatedStatusBarMetrics" ref="980622261"/>
@@ -1133,7 +1131,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			</object>
 			<object class="IBUIViewController" id="768611766">
 				<object class="IBUIView" key="IBUIView" id="500585933">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">294</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUIToolbar" id="623639369">
@@ -1182,7 +1180,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</array>
 					<string key="NSFrame">{{0, 10}, {320, 460}}</string>
-					<reference key="NSSuperview"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MQA</bytes>
@@ -2337,26 +2334,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<reference ref="402845121"/>
 						</array>
 						<reference key="parent" ref="0"/>
-						<string key="objectName">loading view</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">540</int>
-						<reference key="object" ref="402845121"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="946324666"/>
-							<reference ref="645871772"/>
-						</array>
-						<reference key="parent" ref="746792536"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">541</int>
-						<reference key="object" ref="946324666"/>
-						<reference key="parent" ref="402845121"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">554</int>
-						<reference key="object" ref="645871772"/>
-						<reference key="parent" ref="402845121"/>
+						<string key="objectName">loading vc</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">675</int>
@@ -2916,6 +2894,26 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="object" ref="80540714"/>
 						<reference key="parent" ref="282359419"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">540</int>
+						<reference key="object" ref="402845121"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="645871772"/>
+							<reference ref="946324666"/>
+						</array>
+						<reference key="parent" ref="746792536"/>
+						<string key="objectName">loading view</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">554</int>
+						<reference key="object" ref="645871772"/>
+						<reference key="parent" ref="402845121"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">541</int>
+						<reference key="object" ref="946324666"/>
+						<reference key="parent" ref="402845121"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2994,9 +2992,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="272.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.CustomClassName">PocketSwordAppDelegate</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="534.CustomClassName">PSLoadingViewController</string>
 				<string key="534.IBEditorWindowLastContentRect">{{190, 263}, {320, 480}}</string>
 				<string key="534.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="540.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<object class="NSAffineTransform" key="540.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAw+UAAA</bytes>
+				</object>
 				<string key="541.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="554.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="588.CustomClassName">PSPreferencesController</string>
@@ -3407,7 +3409,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<object class="IBPartialClassDescription">
 					<string key="className">PSDictionaryEntryViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="650441612">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="974901718">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/PSDictionaryViewController.h</string>
 					</object>
@@ -3470,7 +3472,15 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="candidateClassName">UIBarButtonItem</string>
 						</object>
 					</dictionary>
-					<reference key="sourceIdentifier" ref="650441612"/>
+					<reference key="sourceIdentifier" ref="974901718"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">PSLoadingViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="93210054">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/ViewController.h</string>
+					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PSPreferencesController</string>
@@ -3932,10 +3942,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="candidateClassName">UITabBarController</string>
 						</object>
 					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/ViewController.h</string>
-					</object>
+					<reference key="sourceIdentifier" ref="93210054"/>
 				</object>
 			</array>
 			<array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
@@ -3997,7 +4004,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="838310495">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="613269233">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">Foundation.framework/Headers/NSURL.h</string>
 					</object>
@@ -4047,7 +4054,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<object class="IBPartialClassDescription">
 					<string key="className">NSURL</string>
 					<string key="superclassName">NSObject</string>
-					<reference key="sourceIdentifier" ref="838310495"/>
+					<reference key="sourceIdentifier" ref="613269233"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">UIActivityIndicatorView</string>

@@ -162,3 +162,9 @@ typedef enum {
 - (IBAction)hideInfo;
 
 @end
+
+@interface PSLoadingViewController : UIViewController {
+	
+}
+
+@end

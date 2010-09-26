@@ -771,8 +771,34 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)displayBusyIndicator {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {// || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		//activityController.view.frame.size.width = 480.0;
+		//activityController.view.frame.size.height = 320.0;
+		activityLoadingLabel.transform = CGAffineTransformIdentity;
+		activityLoadingLabel.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		//activityController.view.frame.size.width = 480.0;
+		//activityController.view.frame.size.height = 320.0;
+		activityLoadingLabel.transform = CGAffineTransformIdentity;
+		activityLoadingLabel.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+	} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+		activityLoadingLabel.transform = CGAffineTransformIdentity;
+		//activityController.view.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
+		//activityController.view.frame.size.width = 320.0;
+		//activityController.view.frame.size.height = 460.0;
+	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		activityLoadingLabel.transform = CGAffineTransformIdentity;
+		activityLoadingLabel.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+		//activityController.view.frame.size.width = 320.0;
+		//activityController.view.frame.size.height = 460.0;
+	}
+
+	
 	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 	[activityIndicator startAnimating];
+	//[tabController presentModalViewController:activityController animated:NO];
 	activityController.view.alpha = 0.0;
 	[mainWindow addSubview:activityController.view];
 	[UIView beginAnimations:nil context:nil];
@@ -793,6 +819,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 		activityController.view.alpha = 0.0;
 		[UIView commitAnimations];
+		//[tabController dismissModalViewControllerAnimated:NO];
+		//[activityIndicator stopAnimating];
 	}
 	
 	[pool release];
@@ -948,3 +976,15 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 @end
+
+@implementation PSLoadingViewController
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	// Return YES for supported orientations
+	return YES;//(interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+
+@end
+

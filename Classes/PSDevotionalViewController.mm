@@ -73,7 +73,7 @@ BOOL loaded;
 			devotionalDatePickerView.frame.size.height = 260.0;
 		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
 			devotionalDatePickerView.transform = CGAffineTransformIdentity;
-			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
+			//devotionalDatePickerView.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
 			devotionalDatePickerView.frame.size.width = 320.0;
 			devotionalDatePickerView.frame.size.height = 260.0;
 		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
