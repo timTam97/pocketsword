@@ -328,12 +328,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
 	if(!ref) {
 		//rats...?
-	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 		[HistoryController addHistoryItem:BibleTab];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -355,12 +355,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
 	if(!ref) {
 		//rats...?
-	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 		[HistoryController addHistoryItem:BibleTab];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];

@@ -923,6 +923,9 @@ static PSModuleController *instance;
 			<head>\n\
 			<meta name='viewport' content='width=device-width' />\n\
 			<style type=\"text/css\">\n\
+			html {\n\
+				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
+			}\n\
 			body {\n\
 				color: %@;\n\
 				background-color: %@;\n\

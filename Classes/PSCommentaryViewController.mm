@@ -14,6 +14,7 @@
 
 @synthesize refToShow;
 @synthesize jsToShow;
+@synthesize isFullScreen;
 
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -29,7 +30,10 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	isFullScreen = NO;
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -47,6 +51,10 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+//	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+//	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+//		[self toggleFullscreen];
+//	}
 }
 
 
@@ -54,6 +62,72 @@
 	[super viewWillDisappear:animated];
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 }
+
+- (CGRect)getOrientationRect {
+	CGFloat x,y,width,height;
+	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+		x = 0.0;
+		y = 0.0;
+		width = 480.0;
+		height = 320.0;
+	} else {
+		x = 0.0;
+		y = 0.0;
+		width = 320.0;
+		height = 480.0;
+	}
+	return CGRectMake(x, y, width, height);
+}
+
+- (void)toggleFullscreen {
+    isFullScreen = !isFullScreen;
+	
+    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	
+    [UIView beginAnimations:@"fullscreen" context:nil];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3];
+	
+    //move tab bar up/down
+    CGRect tabBarFrame = self.tabBarController.tabBar.frame;
+    int tabBarHeight = tabBarFrame.size.height;
+    int offset = isFullScreen ? tabBarHeight : -1 * tabBarHeight;
+    int tabBarY = tabBarFrame.origin.y + offset;
+    tabBarFrame.origin.y = tabBarY;
+    self.tabBarController.tabBar.frame = tabBarFrame;
+	
+    //fade it in/out
+    self.tabBarController.tabBar.alpha = isFullScreen ? 0 : 1;
+	
+    //resize webview to be full screen / normal
+    [commentaryWebView removeFromSuperview];
+    if(isFullScreen) {
+		//previousTabBarView is an ivar to hang on to the original view...
+        previousTabBarView = self.tabBarController.view;
+        [self.tabBarController.view addSubview:commentaryWebView];
+		
+        commentaryWebView.frame = [self getOrientationRect];  //checks orientation to provide the correct rect
+		
+    } else {
+		CGFloat startWidth = 320.0, startHeight = 480.0;
+		UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+		if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+			startWidth = 480.0;
+			startHeight = 320.0;
+		}
+		CGFloat cwvHeight = startHeight - commentaryToolbar.frame.size.height - self.tabBarController.tabBar.frame.size.height;
+		commentaryWebView.frame = CGRectMake(0, commentaryToolbar.frame.size.height, startWidth, cwvHeight);
+        [self.view addSubview:commentaryWebView];
+        self.tabBarController.view = previousTabBarView;
+    }
+	
+    [UIView commitAnimations];
+}
+
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+//	[self toggleFullscreen];
+//}
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -201,6 +275,7 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationCommentaryToggleFullscreen];
 }
 
 

@@ -13,9 +13,9 @@
 @interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate> {
 
 	IBOutlet UITabBarItem				*bibleTabBarItem;
+	IBOutlet UIToolbar *bibleToolbar;
 	
 	IBOutlet UIWebView *bibleWebView;
-	//IBOutlet UIWebView *commentaryWebView;
 	IBOutlet PSCommentaryViewController *commentaryView;
 	
 	//IBOutlet id moduleManager;
@@ -24,10 +24,16 @@
 	NSString *refToShow;
 	NSString *jsToShow;
 	NSString *tappedVerse;
+	BOOL isFullScreen;
+	UIView *previousTabBarView;
 }
 
 @property (copy, readwrite) NSString *refToShow;
 @property (copy, readwrite) NSString *jsToShow;
 @property (copy, readwrite) NSString *tappedVerse;
+@property (readonly) BOOL isFullScreen;
+
+- (void)toggleFullscreen;
+
 
 @end
