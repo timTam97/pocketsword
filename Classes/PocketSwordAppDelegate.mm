@@ -215,8 +215,15 @@
     [window addSubview:tabBarController.view];
 	
 	NSURL *url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-	// uncomment this line for testing the open url functionality
-	//url = [NSURL URLWithString:@"sword://John+10:10?module=AFER"];
+	// uncomment these lines for testing the open url functionality
+//	url = [NSURL URLWithString:@"sword:///John+3:16"]; // verse with no module
+//	url = [NSURL URLWithString:@"sword://KJV/John+3:16"]; // verse with module (bible)
+//	url = [NSURL URLWithString:@"sword://MHCC/John+3:16"]; // verse with module (commentary)
+//	url = [NSURL URLWithString:@"sword://ABCDEF/John+3:16"]; // verse with non-existent module
+//	url = [NSURL URLWithString:@"sword://ABCDEF/John+3:16?type=commentary"]; // verse with non-existent module and type
+//	url = [NSURL URLWithString:@"sword:///John+3:16?type=bible&module=list"]; // bible list
+//	url = [NSURL URLWithString:@"sword:///John+3:16?type=commentary&module=list"]; // commentary list
+//	url = [NSURL URLWithString:@"sword:///John+3:16-18"]; // verse with range (should ignore range)	
 	if (url != nil) {
 		return [self application:application handleOpenURL:url];
 	} else {
@@ -249,25 +256,23 @@
  *
  * scheme (required): "sword://"
  *
- * host (required): a bible reference, for example: "John+3:16" or "John 3"
+ * host (optional): an installed module
+ *
+ * path (required): a bible reference, for example: "John+3:16" or "John 3"
  *
  * query (optional): for example:
- *   "?type=bible&module=KVJ" or 
- *   "?type=commentary&module=MHCC" or 
+ *   "?type=bible" or 
  *   "?type=commentary&module=list"
  *   - type is either "bible" or "commentary".  bible is the default if not present.
- *   - module is a module name, such as KJV, MHCC, Geneva, CalvinCommentaries, etc.  
- *       The current bible is the default if not present.
- *       If module is "list", then the current module will be selected, but the user 
+ *   - module=list, then the current module will be selected, but the user 
  *       will be presented with a list of installed modules to choose from.
  *
  * Some complete example URLs are:
- * sword://John+3:16
- * sword://John+3:16?type=bible
- * sword://John+3:16?type=bible&module=KJV
- * sword://John+3:16?type=commentary
- * sword://John+3:16?type=commentary&module=MHCC
- * sword://John+3:16?type=commentary&module=list
+ * sword:///John+3:16                                (verse with no module specified)
+ * sword://KJV/John+3:16                             (verse with module)
+ * sword://ESV/John+3:16?type=bible                  (verse with module and fall-back type if not installed)
+ * sword:///John+3:16?type=bible&module=list         (verse with list of bible modules)
+ * sword:///John+3:16?type=commentary&module=list    (verse with list of commentary modules)
  */
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -277,11 +282,8 @@
     
 	self.urlToOpen = url;
 	
-	NSString *reference = [[url absoluteString] substringFromIndex:[@"sword://" length]];
-	NSRange queryRange = [reference rangeOfString:@"?"];
-	if (queryRange.location != NSNotFound) {
-		reference = [reference substringToIndex:queryRange.location];
-	}
+	NSString *module = [url host];
+	NSString *reference = [url path];
 	reference = [[[reference stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 
 	NSString *chapter;
@@ -308,25 +310,33 @@
 	
 	NSDictionary *params = [self parseQueryDictionaryFromURL:url];
 	NSString *type = [params objectForKey:@"type"];
-	NSString *module = [params objectForKey:@"module"];
+	static NSString *LIST = @"list";
 	
 	BOOL isBible; // determined first by "module" if present, then fall back to "type", then default to "bible"
-	if (module != nil) {
+	if (module != nil && [module length] != 0) {
+		// they requested a specific module
 		SwordModule *requestedModule = [[PSModuleController defaultModuleController].swordManager moduleWithName:module];
 		if (requestedModule != nil) {
 			isBible = (requestedModule.type == bible);
 		} else {
 			// requested module is not installed or does not exist, so display the list of installed modules
-			module = @"list";
+			// TODO: prompting the user to install the module (if available) might be better
+			module = LIST;
 			isBible = (type == nil || [type isEqualToString:@"bible"]);
 		}
-	} else {
+	} else { 
+		// no module requested
 		isBible = (type == nil || [type isEqualToString:@"bible"]);
+
+		NSString *moduleInQuery = [params objectForKey:@"module"];
+		if (moduleInQuery != nil && [moduleInQuery isEqualToString:LIST]) {
+			module = LIST;
+		}
 	}
 	
 	if (isBible) {
-		if (module != nil && ![module isEqualToString:@"list"]) {
-			// they requested a specific module
+		if (module != nil && ![module isEqualToString:LIST]) {
+			// they requested a specific module and it is available
 			[[PSModuleController defaultModuleController] loadPrimaryBible:module];
 			//[[NSUserDefaults standardUserDefaults] setObject: module forKey: DefaultsLastBible];
 		}
@@ -340,8 +350,8 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 	} else {			
-		if (module != nil && ![module isEqualToString:@"list"]) {
-			// they requested a specific module
+		if (module != nil && ![module isEqualToString:LIST]) {
+			// they requested a specific module and it is available
 			[[PSModuleController defaultModuleController] loadPrimaryCommentary:module];
 		}
 		
@@ -356,7 +366,7 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 	}
 	
-	if (module != nil && [module isEqualToString:@"list"]) {
+	if (module != nil && [module isEqualToString:LIST]) {
 		[viewController toggleModulesListAnimated:NO];
 	}
 
