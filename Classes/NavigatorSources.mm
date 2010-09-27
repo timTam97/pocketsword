@@ -110,14 +110,15 @@
 //}
 
 - (IBAction)manualAddModule:(id)sender {
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-                           forView:tabController.moreNavigationController.view
-                             cache:YES];
-	
-    [UIView setAnimationDuration:1];
-	[tabController.moreNavigationController.view addSubview:[manualInstallViewController view]];
-    [UIView commitAnimations];
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
+//                           forView:tabController.moreNavigationController.view
+//                             cache:YES];
+//	
+//    [UIView setAnimationDuration:1];
+//	[tabController.moreNavigationController.view addSubview:[manualInstallViewController view]];
+//    [UIView commitAnimations];
+	[tabController presentModalViewController:manualInstallViewController animated:YES];
 
 	[manualInstallViewController startServer];
 }

@@ -14,6 +14,12 @@
 
 @implementation iPhoneHTTPServerDelegate
 
+
+- (void)viewDidLoad {
+	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//UIModalTransitionStyleCrossDissolve;
+}
+
+
 - (void)startServer
 {
 	//DLog(@"");
@@ -39,7 +45,7 @@
 	bonjourInfo.text = NSLocalizedString(@"MMMBonjourLoading", @"Bonjour Loading...");
 	ipInfo.text = NSLocalizedString(@"MMMIPLoading", @"IP Loading...");
 	[doneButton setTitle:NSLocalizedString(@"Done", @"Done") forState:UIControlStateNormal]; 
-	[doneButton setTitle:NSLocalizedString(@"Done", @"Done") forState:UIControlStateHighlighted]; 
+	[doneButton setTitle:NSLocalizedString(@"Done", @"Done") forState:UIControlStateHighlighted];
 }
 
 -(void)relistAddresses:(NSNotification *) notification
@@ -55,14 +61,15 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"BonjourServicePublished" object:nil];
 	[httpServer release];
 	//now remove ourselves from the current view...
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-                           forView:self.view.superview
-                             cache:YES];
-	
-    [UIView setAnimationDuration:1];
-	[self.view removeFromSuperview];
-    [UIView commitAnimations];
+	[navigatorSources.tabController dismissModalViewControllerAnimated:YES];
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
+//                           forView:self.view.superview
+//                             cache:YES];
+//	
+//    [UIView setAnimationDuration:1];
+//	[self.view removeFromSuperview];
+//    [UIView commitAnimations];
 }
 
 - (void)displayInfoUpdate:(NSNotification *) notification
@@ -135,29 +142,12 @@
 
 	[[PSModuleController defaultModuleController] installModulesFromZip:file ofType:unknown_type removeZip:YES];
 	
-//	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
-//	
-//	NSFileManager *fileManager = [NSFileManager defaultManager];
-//	[fileManager removeItemAtPath:outfile error:NULL];
-//
-//	//unzip the archive
-//	ZipArchive *arch = [[ZipArchive alloc] init];
-//	[arch UnzipOpenFile:file];
-//	[arch UnzipFileTo:outfile overWrite:YES];
-//	[arch UnzipCloseFile];
-//	[arch release];
-//	
-//	//install the module/s contained in the archive:
-//	[[[PSModuleController defaultModuleController] swordManager] installModulesFromPath:outfile];
-//	[[PSModuleController defaultModuleController] reload];
-//	
-//	//reload the moduleTable
-//	//[moduleTable reloadData];
-//	//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
-//	
-//	//remove the tmp files...
-//	[fileManager removeItemAtPath:file error:NULL];
-//	[fileManager removeItemAtPath:outfile error:NULL];
+}
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+// Return YES for supported orientations
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end
