@@ -35,3 +35,6 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
 
 @end
+
+@interface PSStatusController : UIViewController {}
+@end

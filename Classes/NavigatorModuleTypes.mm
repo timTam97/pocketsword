@@ -123,7 +123,7 @@ NSTimer *refreshTimer;
 		return;
 	}
 	
-	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated:YES];
+	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated: NO];
 	//[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
 	//testing:
 	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
@@ -157,8 +157,8 @@ NSTimer *refreshTimer;
 	[statusOverallBar setHidden: YES];
 	
 	[statusText setText: @""];
-	[ViewController showModal:statusController.view withTiming:0.3];
-	//[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
+	//[ViewController showModal:statusController.view withTiming:0.3];
+	[navigatorSources.tabController presentModalViewController: statusController animated: YES];
 	
 	[pool release];
 }
@@ -183,7 +183,8 @@ NSTimer *refreshTimer;
 			//[refreshTimer invalidate];
 			refreshTimer = nil;
 		}
-		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+		[self performSelectorOnMainThread:@selector(hideOperationStatus) withObject:nil waitUntilDone:YES];
+		//[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		
 		failed = NO;
 	} else if (progress == -1.0) {
@@ -206,8 +207,8 @@ NSTimer *refreshTimer;
 - (void)hideOperationStatus {
 	//NSLog(@" ++++++++ hideOperationStatus");
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
-	[ViewController hideModal:statusController.view withTiming:0.3];
+	[navigatorSources.tabController dismissModalViewControllerAnimated: YES];
+	//[ViewController hideModal:statusController.view withTiming:0.3];
 	
 	[statusText setText: @""];
 	[statusOverallText setText: @""];
