@@ -133,13 +133,21 @@
 			body];
 }
 
-
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-	
-	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 367)];
-	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;// | UIViewAutoresizingFlexibleHeight;
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
+	CGFloat height = 480.0;
+	CGFloat width = 320.0;
+	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+		height = 320.0;
+		width = 480.0;
+	}
+	height -= 20.0 + self.tabBarController.tabBar.frame.size.height + self.navigationController.navigationBar.frame.size.height;
+	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
@@ -155,6 +163,12 @@
 	self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
 	[emailUsBarButtonItem release];
 	
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+	[super viewDidDisappear:animated];
+	[aboutWebView removeFromSuperview];
+	self.navigationItem.rightBarButtonItem = nil;
 }
 
 -(void)emailFeedback:(id)sender
