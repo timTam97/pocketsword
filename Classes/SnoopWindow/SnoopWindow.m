@@ -21,7 +21,7 @@
 
 @synthesize bibleWebView;
 @synthesize commentaryWebView;
-@synthesize holdTimer;
+//@synthesize holdTimer;
 
 #pragma mark -
 #pragma mark Helper functions for generic math operations on CGPoints
@@ -56,7 +56,6 @@ CGPoint CGPointNorm(CGPoint a) {
 {
 	DLog(@"Timer Fired");
 	
-// TODO: this should send a notification for either a ToggleBibleFullscreen or ToggleCommentaryFullScreen
 	if(bibleEvent) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
 	} else {
@@ -89,18 +88,18 @@ CGPoint CGPointNorm(CGPoint a) {
 		//
 		if (touch.phase==UITouchPhaseBegan) {
 			//touchAndHold = NO;
-			//movement = NO;
-			if ([[event allTouches] count] > 1) {
-				if(holdTimer) {
-					[holdTimer invalidate];
-					self.holdTimer = nil;
-				}
-				self.holdTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(setTouchAndHold:) userInfo:nil repeats:NO];
-				//[holdTimer retain];
-			} else if([holdTimer isValid]) {
-				[holdTimer invalidate];
-				self.holdTimer = nil;
-			}
+			movement = NO;
+//			if ([[event allTouches] count] > 1) {
+//				if(holdTimer) {
+//					[holdTimer invalidate];
+//					self.holdTimer = nil;
+//				}
+//				self.holdTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(setTouchAndHold:) userInfo:nil repeats:NO];
+//				//[holdTimer retain];
+//			} else if([holdTimer isValid]) {
+//				[holdTimer invalidate];
+//				self.holdTimer = nil;
+//			}
 			
 			startTouchPosition1 = [touch locationInView:self];
 			if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
@@ -125,12 +124,12 @@ CGPoint CGPointNorm(CGPoint a) {
 		//
 		
 		if (touch.phase==UITouchPhaseMoved) {
-			if([holdTimer isValid]) {
-				[holdTimer invalidate];
-				self.holdTimer = nil;
-			}
+//			if([holdTimer isValid]) {
+//				[holdTimer invalidate];
+//				self.holdTimer = nil;
+//			}
 			//touchAndHold = NO;
-			//movement = YES;
+			movement = YES;
 			//DLog(@"--- UITouchPhaseMoved ---");
 			/*if ([[event allTouches] count] > 1) {
 				CGPoint currentTouchPosition1 = [[allTouches objectAtIndex:0] locationInView:self];
@@ -156,10 +155,21 @@ CGPoint CGPointNorm(CGPoint a) {
 		// touchesEnded
 		///
 		if (touch.phase==UITouchPhaseEnded) {
-			if([holdTimer isValid]) {
-				[holdTimer invalidate];
-				self.holdTimer = nil;
+//			if([holdTimer isValid]) {
+//				[holdTimer invalidate];
+//				self.holdTimer = nil;
+//			}
+			
+			if (!movement && ([[event allTouches] count] > 1)) {
+				DLog(@"2-finger-tap");
+				
+				if(bibleEvent) {
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
+				} else {
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentaryToggleFullscreen object:nil];
+				}
 			}
+			
 			CGPoint currentTouchPosition = [touch locationInView:self];
 			if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
 				//switch x & y if in landscape mode

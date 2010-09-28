@@ -13,10 +13,10 @@
 	NSTimeInterval startTouchTime;
 	CGPoint previousTouchPosition1, previousTouchPosition2;
 	CGPoint startTouchPosition1, startTouchPosition2;
-	NSTimer *holdTimer;
+	//NSTimer *holdTimer;
 	BOOL bibleEvent;
 	//BOOL touchAndHold;
-	//BOOL movement;
+	BOOL movement;
 	
 	IBOutlet UIWebView *bibleWebView;
 	IBOutlet UIWebView *commentaryWebView;
@@ -24,7 +24,7 @@
 
 @property (nonatomic, assign) UIWebView *bibleWebView;
 @property (nonatomic, assign) UIWebView *commentaryWebView;
-@property (retain, readwrite) NSTimer *holdTimer;
+//@property (retain, readwrite) NSTimer *holdTimer;
 
 - (void)sendEvent:(UIEvent *)event;
 - (void)setTouchAndHold:(NSTimer *)theTimer;
