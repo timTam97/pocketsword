@@ -98,7 +98,6 @@ BOOL requireReloadOfModuleViews = NO;
 	// e.g. self.myOutlet = nil;
 }
 
-
 - (void)dealloc {
     [super dealloc];
 }
@@ -108,8 +107,8 @@ BOOL requireReloadOfModuleViews = NO;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	//[preferencesTable reloadData];
-	[preferencesTable reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, PREF__SECTIONS)] withRowAnimation:UITableViewRowAnimationFade];
+	[preferencesTable reloadData];
+	//[preferencesTable reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, PREF__SECTIONS)] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

@@ -215,3 +215,11 @@
 
 "VerseContextualMenuAddBookmark" = "加入書籤";
 "VerseContextualMenuCommentary" = "觀看評論";
+
+// new v1.3.3 strings:
+"VoiceOverPreviousChapterButton" = "Previous Chapter";
+"VoiceOverNextChapterButton" = "Next Chapter";
+"VoiceOverHistoryAndSearchButton" = "History and Search";
+"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
+"ModuleTypesHeaderText" = "Select Module Type:";
+"ModuleLanguagesHeaderText" = "Select Language:";

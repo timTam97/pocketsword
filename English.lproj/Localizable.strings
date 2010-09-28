@@ -217,7 +217,7 @@
 "VerseContextualMenuAddBookmark" = "Add Bookmark";
 "VerseContextualMenuCommentary" = "View in Commentary";
 
-// new v1.x.x strings:
+// new v1.3.3 strings:
 "VoiceOverPreviousChapterButton" = "Previous Chapter";
 "VoiceOverNextChapterButton" = "Next Chapter";
 "VoiceOverHistoryAndSearchButton" = "History and Search";

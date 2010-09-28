@@ -216,3 +216,11 @@
 
 "VerseContextualMenuAddBookmark" = "Přidej do záložek";
 "VerseContextualMenuCommentary" = "Přejdi na komentář";
+
+// new v1.3.3 strings:
+"VoiceOverPreviousChapterButton" = "Previous Chapter";
+"VoiceOverNextChapterButton" = "Next Chapter";
+"VoiceOverHistoryAndSearchButton" = "History and Search";
+"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
+"ModuleTypesHeaderText" = "Select Module Type:";
+"ModuleLanguagesHeaderText" = "Select Language:";
