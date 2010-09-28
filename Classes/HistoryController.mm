@@ -68,7 +68,26 @@
 		if(ip)
 			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
 	}
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		historyNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		historyListTable.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
+	} else {
+		historyNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		historyListTable.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
+	}
 }
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		historyNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		historyListTable.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
+	} else {
+		historyNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		historyListTable.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
+	}
+}
+
 
 - (void)addBibleHistoryItem {
 	[HistoryController addHistoryItem: BibleTab];

@@ -26,13 +26,13 @@ BOOL trashModule = NO;
 	
 //	UIView *view = self.view;
 //	CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 //	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
 //		view.frame = CGRectMake(0, 0, appFrame.size.height, appFrame.size.width);
 //	} else {
 //		view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);;
 //	}
 	
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
 		infoNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
 		infoWebView.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);

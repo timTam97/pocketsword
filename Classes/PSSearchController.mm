@@ -42,6 +42,32 @@ BOOL searchingEnabled;
 	[self refreshView];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		searchBar.frame = CGRectMake(61.0, 0.0, 396.0, 32.0);//396,236
+		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
+	} else {
+		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		searchBar.frame = CGRectMake(61.0, 0.0, 236.0, 44.0);//396,236
+		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
+	}
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		searchBar.frame = CGRectMake(61.0, 0.0, 236.0, 32.0);//396,236
+		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
+	} else {
+		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		searchBar.frame = CGRectMake(61.0, 0.0, 396.0, 44.0);//396,236
+		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
+	}
+}
+
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -73,12 +99,12 @@ BOOL searchingEnabled;
 	}
 	if(searchingEnabled) {
 		//enable search
-		[sBar setUserInteractionEnabled: YES];
+		[searchBar setUserInteractionEnabled: YES];
 	} else {
 		//disable search
-		[sBar setUserInteractionEnabled: NO];
+		[searchBar setUserInteractionEnabled: NO];
 	}
-	[resultsTable reloadData];
+	[searchResultsTable reloadData];
 }
 
 - (void)dealloc {
@@ -210,20 +236,20 @@ BOOL searchingEnabled;
 	}
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+- (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[searchBar resignFirstResponder];
+	[sBar resignFirstResponder];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	//[[PSModuleController defaultModuleController] displayBusyIndicator];
 	ShownTab tab = [historyController listType];
 	self.results = nil;
-	self.searchTerm = [searchBar text];
+	self.searchTerm = [sBar text];
 	switch(tab) {
 		case BibleTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [searchBar text]];
+			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [sBar text]];
 			break;
 		case CommentaryTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: [searchBar text]];
+			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: [sBar text]];
 			break;
 	}
 
@@ -237,13 +263,13 @@ BOOL searchingEnabled;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	//[[PSModuleController defaultModuleController] hideBusyIndicator];
-	[resultsTable reloadData];
+	[searchResultsTable reloadData];
 	[pool release];
 }
 
 //- (void)hideKeyboard {
 //	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	[sBar resignFirstResponder];
+//	[searchBar resignFirstResponder];
 //	[pool release];
 //}
 

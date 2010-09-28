@@ -26,6 +26,7 @@
 	IBOutlet UIBarButtonItem	*historyCloseButton;
 	IBOutlet UINavigationItem	*historyNavigationItem;
 	IBOutlet UITableView		*historyListTable;
+	IBOutlet UINavigationBar	*historyNavigationBar;
 }
 
 - (void)setListType:(ShownTab)listType;

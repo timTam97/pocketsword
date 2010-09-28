@@ -13,10 +13,10 @@
 @interface PSSearchController : UIViewController {
 
 	IBOutlet HistoryController *historyController;
-	//IBOutlet PSModuleController *moduleManager;
-	IBOutlet UITableView *resultsTable;
-	IBOutlet UISearchBar *sBar;
+	IBOutlet UITableView *searchResultsTable;
+	IBOutlet UISearchBar *searchBar;
 	IBOutlet UIBarButtonItem *closeButton;
+	IBOutlet UINavigationBar *searchNavigationBar;
 	
 	UIView *helpView;
 	NSString *searchTerm;
