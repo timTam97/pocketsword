@@ -98,6 +98,24 @@ PSDictionaryOverlayViewController *overlayViewController;
     [super viewWillAppear:animated];
 	[self reloadDictionaryData:NO];
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		dictionaryEntriesTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+	} else {
+		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		dictionaryEntriesTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+	}
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		dictionaryEntriesTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
+	} else {
+		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		dictionaryEntriesTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
+	}
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -136,6 +154,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationReloadDictionaryData object:nil];
 	[searchResults release];
 	searchResults = nil;
+	//[dictionarySearchBar release];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -182,6 +201,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	NSString *descr = [[[PSModuleController defaultModuleController] primaryDictionary] entryForKey: t];
 	[self showDescription:descr withTitle:t];
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -333,45 +353,6 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[self dismissModalViewControllerAnimated:YES];
 	//[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
-
-// Use this to show the modal view (pops-up from the bottom)
-// try a time of 0.7 to start with...
-//- (void) showModal:(UIView*)modalView withTiming:(float)time
-//{
-//	
-//	CGSize modalSize = modalView.bounds.size;
-//	//CGPoint middleCenter = modalView.center;
-//	CGSize offSize = [self view].bounds.size;
-//	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, offSize.height - (modalSize.height / 2.0));
-//	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-//	modalView.center = offScreenCenter; // we start off-screen
-//	[[self view] addSubview:modalView];
-//	
-//	// Show it with a transition effect
-//	[UIView beginAnimations:nil context:nil];
-//	[UIView setAnimationDuration:time]; // animation duration in seconds
-//	modalView.center = middleCenter;
-//	[UIView commitAnimations];
-//}
-//
-//- (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
-//{
-//	UIView* modalView = (UIView *)context;
-//	[modalView removeFromSuperview];
-//}
-//
-// Use this to slide the semi-modal view back down.
-//- (void) hideModal:(UIView*) modalView withTiming:(float)time
-//{
-//	CGSize offSize = [self view].bounds.size;
-//	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-//	[UIView beginAnimations:nil context:modalView];
-//	[UIView setAnimationDuration:time];
-//	[UIView setAnimationDelegate:self];
-//	[UIView setAnimationDidStopSelector:@selector(hideModalEnded:finished:context:)];
-//	modalView.center = offScreenCenter;
-//	[UIView commitAnimations];
-//}
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];

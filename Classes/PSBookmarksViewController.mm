@@ -35,9 +35,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	bookmarksNavBar.title = NSLocalizedString(@"BookmarksTitle", @"Bookmarks");
+	bookmarksNavItem.title = NSLocalizedString(@"BookmarksTitle", @"Bookmarks");
 	UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleBookmarksTableEditing:)];
-	bookmarksNavBar.leftBarButtonItem = btn;
+	bookmarksNavItem.leftBarButtonItem = btn;
 	[btn release];
 }
 
@@ -46,6 +46,24 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[bookmarksTable reloadData];
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		bookmarksTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+	} else {
+		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		bookmarksTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+	}
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		bookmarksTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
+	} else {
+		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		bookmarksTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
+	}
 }
 
 /*
@@ -76,13 +94,13 @@
 		[bookmarksTable setEditing: NO animated: YES];
 		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleBookmarksTableEditing:)];
 		//self.navigationItem.leftBarButtonItem = btn;
-		bookmarksNavBar.leftBarButtonItem = btn;
+		bookmarksNavItem.leftBarButtonItem = btn;
 		[btn release];
 	}
 	else {
 		[bookmarksTable setEditing: YES animated: YES];
 		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(toggleBookmarksTableEditing:)];
-		bookmarksNavBar.leftBarButtonItem = btn;
+		bookmarksNavItem.leftBarButtonItem = btn;
 		//self.navigationItem.leftBarButtonItem = btn;
 		[btn release];
 	}

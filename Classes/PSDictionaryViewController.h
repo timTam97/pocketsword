@@ -14,6 +14,7 @@
 	IBOutlet UISearchBar *dictionarySearchBar;
 	IBOutlet UIBarButtonItem *dictionaryTitle;
 	IBOutlet UINavigationItem *dictionaryNavItem;
+	IBOutlet UINavigationBar *dictionaryNavBar;
 	
 	IBOutlet UIViewController *dictionaryDescriptionViewController;
 	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
@@ -31,9 +32,6 @@
 - (void)showDescription:(NSString*)description withTitle:(NSString*)t;
 - (IBAction)hideDescription:(id)sender;
 - (void)searchDictionaryEntries;
-
-//- (void) showModal:(UIView*)modalView withTiming:(float)time;
-//- (void) hideModal:(UIView*) modalView withTiming:(float)time;
 
 @end
 

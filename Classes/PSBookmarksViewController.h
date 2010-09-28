@@ -9,7 +9,8 @@
 
 @interface PSBookmarksViewController : UITableViewController {
 	IBOutlet UITableView *bookmarksTable;
-	IBOutlet UINavigationItem *bookmarksNavBar;
+	IBOutlet UINavigationItem *bookmarksNavItem;
+	IBOutlet UINavigationBar *bookmarksNavBar;
 	
 	//IBOutlet id moduleManager;
 	IBOutlet id viewController;
