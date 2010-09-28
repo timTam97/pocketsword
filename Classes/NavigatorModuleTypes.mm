@@ -217,6 +217,10 @@ NSTimer *refreshTimer;
 	[pool release];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
 - (void)dealloc {
 	[dataArray release];
 	[super dealloc];

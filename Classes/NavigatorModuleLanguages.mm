@@ -70,6 +70,11 @@
 }
 
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
+
 - (void)dealloc {
 	[data release];
 	[super dealloc];

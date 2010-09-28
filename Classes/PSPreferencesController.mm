@@ -103,6 +103,10 @@ BOOL requireReloadOfModuleViews = NO;
     [super dealloc];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return PREF__SECTIONS;
 }

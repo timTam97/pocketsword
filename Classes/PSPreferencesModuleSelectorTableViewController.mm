@@ -169,6 +169,10 @@ SEL moduleChanged;
 	self.currentModule = nil;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
 
 @end
 
