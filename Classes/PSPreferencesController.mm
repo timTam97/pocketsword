@@ -107,6 +107,11 @@ BOOL requireReloadOfModuleViews = NO;
     return YES;
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	//[preferencesTable reloadData];
+	[preferencesTable reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, PREF__SECTIONS)] withRowAnimation:UITableViewRowAnimationFade];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return PREF__SECTIONS;
 }
@@ -168,299 +173,354 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	NSString *CellIdentifier = [NSString stringWithFormat: @"prefs-%d:%d", indexPath.section, indexPath.row];
+	static NSString *CellIdentifierPlain = @"prefs-plain";
+	static NSString *CellIdentifierStyled = @"prefs-styled";
 	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifier];
+    UITableViewCell *cell;// = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+//	if(!cell) {
+//		cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifierPlain] autorelease ];
+//	}
 	
-	//if the cell hasn't been initialised yet, initialise here:
-    if (!cell) {
-		
-        switch (indexPath.section) {
-            case DISPLAY_SECTION :
-                switch (indexPath.row) {
-                    case FONT_SIZE_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(170, 0, 125, 50) ];
-						fontSizeSlider.minimumValue = 10.0;
-						fontSizeSlider.maximumValue = 20.0;
-						//fontSizeSlider.tag = 0;
-						NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
-						if(fontSize != 0) {//defaults default to 0 if it's not previously set...
-							fontSizeSlider.value = (float)fontSize;
-						} else {
-							fontSizeSlider.value = 14.0;
-							[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"fontSizePreference"];
-							[[NSUserDefaults standardUserDefaults] synchronize];
-						}
-						fontSizeSlider.continuous = NO;
-						[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: fontSizeSlider ];
-						[ fontSizeSlider release ];
+	switch (indexPath.section) {
+		case DISPLAY_SECTION :
+			switch (indexPath.row) {
+				case FONT_SIZE_ROW :
+				case NIGHT_MODE_ROW :
+				case VPL_ROW :
+				case XREF_ROW :
+				case FOOTNOTES_ROW :
+				case HEADINGS_ROW :
+				case RED_LETTER_ROW :
+				case RED_LETTER_NOTE_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
-                        break;
-					case NIGHT_MODE_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
-						nightModeSwitch.on = nightMode;
-						//nightModeSwitch.tag = 1;
-						[nightModeSwitch addTarget:self action:@selector(nightModeChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: nightModeSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
-						[nightModeSwitch release];						
-					}
-						break;
-					case VPL_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
-						vplSwitch.on = vpl;
-						//vplSwitch.tag = 4;
-						[vplSwitch addTarget:self action:@selector(vplChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: vplSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
-						[vplSwitch release];						
-					}
-						break;
-					case XREF_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
-						BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
-						xrefSwitch.on = xrefMode;
-						[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: xrefSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
-						[xrefSwitch release];
-					}
-						break;
-					case FOOTNOTES_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
-						BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
-						footnotesSwitch.on = footnotesMode;
-						[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: footnotesSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
-						[footnotesSwitch release];
-					}
-						break;
-					case HEADINGS_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
-						BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
-						headingsSwitch.on = headingsMode;
-						[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: headingsSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
-						[headingsSwitch release];
-					}
-						break;
-					case FONT_NAME_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
-						cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-					}
-						break;
-					case RED_LETTER_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];//x,y,width,height
-						BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
-						redLetterModeSwitch.on = redLetterMode;
-						//redLetterModeSwitch.tag = 2;
-						[redLetterModeSwitch addTarget:self action:@selector(redLetterChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: redLetterModeSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterTitle", @"Red Letter");
-						[redLetterModeSwitch release];
-					}
-						break;
-					case RED_LETTER_NOTE_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
-						cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-						cell.textLabel.numberOfLines = 2;
-						cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
-						cell.textLabel.textColor = [UIColor darkGrayColor];
-					}
-						break;
 				}
-				break;
-            case STRONGS_SECTION :
-                switch (indexPath.row) {
-                    case STRONGS_DISPLAY_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *strongsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL displayStrongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
-						strongsSwitch.on = displayStrongs;
-						//strongsSwitch.tag = 9;
-						[strongsSwitch addTarget:self action:@selector(displayStrongsChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: strongsSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
-						[strongsSwitch release];						
+					break;
+				case FONT_NAME_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
 					}
-						break;
-                    case STRONGS_G_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
-						cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-					}
-						break;
-                    case STRONGS_H_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewModuleTitle", @"Hebrew module");
-						cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-					}
-						break;
 				}
-				break;
-            case MORPH_SECTION :
-                switch (indexPath.row) {
-                    case MORPH_DISPLAY_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *morphSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL displayMorph = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
-						morphSwitch.on = displayMorph;
-						//morphSwitch.tag = 9;
-						[morphSwitch addTarget:self action:@selector(displayMorphChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: morphSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
-						[morphSwitch release];						
+					break;
+			}
+			break;
+		case STRONGS_SECTION :
+			switch (indexPath.row) {
+				case STRONGS_DISPLAY_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
-						break;
-                    case MORPH_G_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
-						cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				}
+					break;
+				case STRONGS_G_ROW :
+				case STRONGS_H_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
 					}
-						break;
+				}
+					break;
+			}
+			break;
+		case MORPH_SECTION :
+			switch (indexPath.row) {
+				case MORPH_DISPLAY_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+					}
+				}
+					break;
+				case MORPH_G_ROW :
+				//case MORPH_H_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+					}
+				}
+					break;
+			}
+			break;
+		case LANG_SECTION :
+		case DEVICE_SECTION :
+		{
+			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+			if(!cell) {
+				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+			}
+		}
+			break;
+	}
+	
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+	cell.textLabel.textColor = [UIColor darkTextColor];
+	
+	CGFloat xx = 0.0;
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		xx = 150.0;
+	}
+
+	for(UIView *subv in [cell subviews]) {
+		if([subv isMemberOfClass:[UISlider class]] || [subv isMemberOfClass:[UISwitch class]]) {
+			[subv removeFromSuperview];
+		}
+	}
+	
+	switch (indexPath.section) {
+		case DISPLAY_SECTION :
+			switch (indexPath.row) {
+				case FONT_SIZE_ROW :
+				{
+					UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
+					fontSizeSlider.minimumValue = 10.0;
+					fontSizeSlider.maximumValue = 20.0;
+					NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+					if(fontSize != 0) {//defaults default to 0 if it's not previously set...
+						fontSizeSlider.value = (float)fontSize;
+					} else {
+						fontSizeSlider.value = 14.0;
+						[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"fontSizePreference"];
+						[[NSUserDefaults standardUserDefaults] synchronize];
+					}
+					fontSizeSlider.continuous = NO;
+					[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: fontSizeSlider ];
+					[ fontSizeSlider release ];
+				}
+					break;
+				case NIGHT_MODE_ROW :
+				{
+					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
+					nightModeSwitch.on = nightMode;
+					//nightModeSwitch.tag = 1;
+					[nightModeSwitch addTarget:self action:@selector(nightModeChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: nightModeSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
+					[nightModeSwitch release];						
+				}
+					break;
+				case VPL_ROW :
+				{
+					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
+					vplSwitch.on = vpl;
+					//vplSwitch.tag = 4;
+					[vplSwitch addTarget:self action:@selector(vplChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: vplSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
+					[vplSwitch release];						
+				}
+					break;
+				case XREF_ROW :
+				{
+					UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
+					xrefSwitch.on = xrefMode;
+					[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: xrefSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
+					[xrefSwitch release];
+				}
+					break;
+				case FOOTNOTES_ROW :
+				{
+					UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
+					footnotesSwitch.on = footnotesMode;
+					[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: footnotesSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
+					[footnotesSwitch release];
+				}
+					break;
+				case HEADINGS_ROW :
+				{
+					UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+					headingsSwitch.on = headingsMode;
+					[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: headingsSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
+					[headingsSwitch release];
+				}
+					break;
+				case FONT_NAME_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
+					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				}
+					break;
+				case RED_LETTER_ROW :
+				{
+					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
+					redLetterModeSwitch.on = redLetterMode;
+					//redLetterModeSwitch.tag = 2;
+					[redLetterModeSwitch addTarget:self action:@selector(redLetterChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: redLetterModeSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterTitle", @"Red Letter");
+					[redLetterModeSwitch release];
+				}
+					break;
+				case RED_LETTER_NOTE_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 2;
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+					cell.textLabel.textColor = [UIColor darkGrayColor];
+				}
+					break;
+			}
+			break;
+		case STRONGS_SECTION :
+			switch (indexPath.row) {
+				case STRONGS_DISPLAY_ROW :
+				{
+					UISwitch *strongsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL displayStrongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
+					strongsSwitch.on = displayStrongs;
+					//strongsSwitch.tag = 9;
+					[strongsSwitch addTarget:self action:@selector(displayStrongsChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: strongsSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
+					[strongsSwitch release];						
+				}
+					break;
+				case STRONGS_G_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
+					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				}
+					break;
+				case STRONGS_H_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewModuleTitle", @"Hebrew module");
+					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				}
+					break;
+			}
+			break;
+		case MORPH_SECTION :
+			switch (indexPath.row) {
+				case MORPH_DISPLAY_ROW :
+				{
+					UISwitch *morphSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL displayMorph = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+					morphSwitch.on = displayMorph;
+					//morphSwitch.tag = 9;
+					[morphSwitch addTarget:self action:@selector(displayMorphChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: morphSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
+					[morphSwitch release];						
+				}
+					break;
+				case MORPH_G_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
+					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				}
+					break;
 //                    case MORPH_H_ROW :
 //					{
-//						cell = [ [ [ UITableViewCell alloc ] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier] autorelease ];
-//						cell.selectionStyle = UITableViewCellSelectionStyleNone;
 //						cell.textLabel.text = NSLocalizedString(@"PreferencesStrongsHebrewTitle", @"Strong's Hebrew module");
 //						cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 //					}
 //						break;
+			}
+			break;
+		case LANG_SECTION:
+			switch (indexPath.row) {
+				case LANG_GREEKACC_ROW:
+				{
+					UISwitch *greekAccentsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL displayGreekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
+					greekAccentsSwitch.on = displayGreekAccents;
+					//greekAccentsSwitch.tag = 9;
+					[greekAccentsSwitch addTarget:self action:@selector(displayGreekAccentsChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: greekAccentsSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesGreekAccentsTitle", @"Greek Accents");
+					[greekAccentsSwitch release];
 				}
-				break;
-			case LANG_SECTION:
-				switch (indexPath.row) {
-					case LANG_GREEKACC_ROW:
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *greekAccentsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL displayGreekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
-						greekAccentsSwitch.on = displayGreekAccents;
-						//greekAccentsSwitch.tag = 9;
-						[greekAccentsSwitch addTarget:self action:@selector(displayGreekAccentsChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: greekAccentsSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesGreekAccentsTitle", @"Greek Accents");
-						[greekAccentsSwitch release];
-					}
-						break;
-					case LANG_HEBREWPTS_ROW:
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL displayHVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
-						hvpSwitch.on = displayHVP;
-						//hvpSwitch.tag = 9;
-						[hvpSwitch addTarget:self action:@selector(displayHVPChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: hvpSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
-						[hvpSwitch release];
-					}
-						break;
-					case LANG_HEBREWCANT_ROW:
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL displayHebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
-						hebrewCantillationSwitch.on = displayHebrewCantillation;
-						//hebrewCantillationSwitch.tag = 9;
-						[hebrewCantillationSwitch addTarget:self action:@selector(displayHebrewCantillationChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: hebrewCantillationSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewCantillationTitle", @"Hebrew Cantillation");
-						[hebrewCantillationSwitch release];						
-					}
-						break;
+					break;
+				case LANG_HEBREWPTS_ROW:
+				{
+					UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL displayHVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
+					hvpSwitch.on = displayHVP;
+					//hvpSwitch.tag = 9;
+					[hvpSwitch addTarget:self action:@selector(displayHVPChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: hvpSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
+					[hvpSwitch release];
 				}
-				break;
-			case DEVICE_SECTION:
-				switch (indexPath.row) {
-					case INSOMNIA_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *insomniaSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
-						insomniaSwitch.on = insomniaMode;
-						//insomniaSwitch.tag = 3;
-						[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: insomniaSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"Disable auto-lock");
-						[insomniaSwitch release];						
-					}
-						break;
-					case MMM_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						UISwitch *manualInstallSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(200, 10, 0, 0) ];
-						BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
-						manualInstallSwitch.on = manualInstallEnabled;
-						//manualInstallSwitch.tag = 3;
-						[manualInstallSwitch addTarget:self action:@selector(moduleMaintainerModeChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: manualInstallSwitch ];
-						cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
-						cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:15.0];
-						[manualInstallSwitch release];						
-					}
-						break;
-					case MMM_NOTE_ROW :
-					{
-						cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifier] autorelease ];
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-						cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeNote", @"");
-						cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-						cell.textLabel.numberOfLines = 6;
-						cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
-						cell.textLabel.textColor = [UIColor darkGrayColor];
-					}
-						break;
+					break;
+				case LANG_HEBREWCANT_ROW:
+				{
+					UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL displayHebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
+					hebrewCantillationSwitch.on = displayHebrewCantillation;
+					//hebrewCantillationSwitch.tag = 9;
+					[hebrewCantillationSwitch addTarget:self action:@selector(displayHebrewCantillationChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: hebrewCantillationSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewCantillationTitle", @"Hebrew Cantillation");
+					[hebrewCantillationSwitch release];						
 				}
-				break;
-		}
+					break;
+			}
+			break;
+		case DEVICE_SECTION:
+			switch (indexPath.row) {
+				case INSOMNIA_ROW :
+				{
+					UISwitch *insomniaSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+					insomniaSwitch.on = insomniaMode;
+					//insomniaSwitch.tag = 3;
+					[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: insomniaSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"Disable auto-lock");
+					[insomniaSwitch release];						
+				}
+					break;
+				case MMM_ROW :
+				{
+					UISwitch *manualInstallSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
+					manualInstallSwitch.on = manualInstallEnabled;
+					//manualInstallSwitch.tag = 3;
+					[manualInstallSwitch addTarget:self action:@selector(moduleMaintainerModeChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: manualInstallSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
+					//cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:15.0];
+					[manualInstallSwitch release];						
+				}
+					break;
+				case MMM_NOTE_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeNote", @"");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 6;
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+					cell.textLabel.textColor = [UIColor darkGrayColor];
+				}
+					break;
+			}
+			break;
 	}
 	
 	// some of the cells can be changed from elsewhere, so we now need to set the text for some cell labels:
