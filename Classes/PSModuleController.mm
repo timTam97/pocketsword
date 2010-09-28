@@ -924,7 +924,6 @@ static PSModuleController *instance;
 			<meta name='viewport' content='width=device-width' />\n\
 			<style type=\"text/css\">\n\
 			html {\n\
-				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
 			}\n\
 			body {\n\
 				color: %@;\n\
@@ -932,6 +931,7 @@ static PSModuleController *instance;
 				font-size: %@pt;\n\
 				font-family: %@;\n\
 				line-height: 130%%;\n\
+				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
 			}\n\
 			i.transChangeAdded {\n\
 				color: gray;\n\

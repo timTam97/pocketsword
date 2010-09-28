@@ -65,7 +65,28 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+	} else {
+		bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+	}
 }
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(isFullScreen)
+		return;
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		bibleWebView.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
+	} else {
+		bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		bibleWebView.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
+	}
+}
+
 
 - (void)viewDidAppear:(BOOL)animated {
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
@@ -138,6 +159,17 @@
         [self.view addSubview:bibleWebView];
         self.tabBarController.view = previousTabBarView;
     }
+	
+	if(!isFullScreen) {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+			bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+		} else {
+			bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+			bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+		}
+	}
 	
     [UIView commitAnimations];
 }

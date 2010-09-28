@@ -212,18 +212,18 @@ PSDictionaryOverlayViewController *overlayViewController;
 		return nil;
 }
 
-- (void)showDescription:(NSString*)description withTitle:(NSString*)t {
+- (void)showDescription:(NSString*)description withTitle:(NSString*)t {//-webkit-text-size-adjust: none
 	NSString *javaScript = @"<script type=\"text/javascript\">\n<!--\n\
 							window.onload = function() { document.documentElement.style.webkitTouchCallout = \"none\"; }\n\
 							-->\
 							</script>\n";
-	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br />%@<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>", t, description] usingPreferences: YES withJS: javaScript];
+	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>", t, description] usingPreferences: YES withJS: javaScript];
 	if([t length] > 20) {
 		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
 	}
 	[dictionaryDescriptionTitle setTitle: t];
 	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
-	//NSLog(@"%@", description);
+	//NSLog(@"%@", descr);
 	
 	if(![dictionaryDescriptionViewController.view superview]) {
 		[self presentModalViewController:dictionaryDescriptionViewController animated:YES];
@@ -416,6 +416,31 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 @implementation PSDictionaryEntryViewController
 
+- (void)viewDidLoad {
+	self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
+	} else {
+		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
+	}
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);//367
+	} else {
+		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
+	}
+}
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

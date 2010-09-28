@@ -9,16 +9,16 @@
 
 @interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate> {
 
-	IBOutlet UITabBarItem				*dictionaryTabBarItem;
-	IBOutlet UITableView *dictionaryEntriesTable;
-	IBOutlet UISearchBar *dictionarySearchBar;
-	IBOutlet UIBarButtonItem *dictionaryTitle;
-	IBOutlet UINavigationItem *dictionaryNavItem;
-	IBOutlet UINavigationBar *dictionaryNavBar;
+	IBOutlet UITabBarItem		*dictionaryTabBarItem;
+	IBOutlet UITableView		*dictionaryEntriesTable;
+	IBOutlet UISearchBar		*dictionarySearchBar;
+	IBOutlet UIBarButtonItem	*dictionaryTitle;
+	IBOutlet UINavigationItem	*dictionaryNavItem;
+	IBOutlet UINavigationBar	*dictionaryNavBar;
 	
-	IBOutlet UIViewController *dictionaryDescriptionViewController;
-	IBOutlet UIBarButtonItem *dictionaryDescriptionTitle;
-	IBOutlet UIWebView *dictionaryDescriptionWebView;
+	IBOutlet UIViewController	*dictionaryDescriptionViewController;
+	IBOutlet UIBarButtonItem	*dictionaryDescriptionTitle;
+	IBOutlet UIWebView			*dictionaryDescriptionWebView;
 	
 	//IBOutlet id moduleManager;
 	
@@ -36,7 +36,8 @@
 @end
 
 @interface PSDictionaryEntryViewController : UIViewController {
-
+	IBOutlet UIToolbar	*dictionaryDescriptionToolbar;
+	IBOutlet UIWebView	*dictionaryDescriptionWebView;
 }
 
 @end

@@ -47,7 +47,28 @@
 		[commentaryWebView stringByEvaluatingJavaScriptFromString:jsToShow];
 		self.jsToShow = nil;
 	}
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		commentaryWebView.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+	} else {
+		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		commentaryWebView.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+	}
 }
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(isFullScreen)
+		return;
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		commentaryWebView.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
+	} else {
+		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		commentaryWebView.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
+	}
+}
+
 
 - (void)viewDidAppear:(BOOL)animated {
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
@@ -121,6 +142,17 @@
         [self.view addSubview:commentaryWebView];
         self.tabBarController.view = previousTabBarView;
     }
+	
+	if(!isFullScreen) {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			commentaryToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+			commentaryWebView.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+		} else {
+			commentaryToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+			commentaryWebView.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+		}
+	}		
 	
     [UIView commitAnimations];
 }
