@@ -164,10 +164,10 @@
 		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
 			bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-			bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
+			bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 239.0);
 		} else {
 			bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-			bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
+			bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 387.0);
 		}
 	}
 	
