@@ -69,8 +69,28 @@
 		}			
 	}
 	[modulesListTable reloadData];
-	if(ip)
+	if(ip) {
 		[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
+	}
+
+	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		modulesListTable.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
+	} else {
+		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		modulesListTable.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
+	}
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		modulesListTable.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
+	} else {
+		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		modulesListTable.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
+	}
 }
 
 - (IBAction)addModuleButtonPressed {
@@ -236,15 +256,7 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
-	[leafViewController viewWillAppear];
-	[UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
-	
-    [UIView setAnimationDuration:1];
-	//[[[[PSModuleController defaultModuleController] viewController] modulesListView] addSubview: leafViewController.view];
-	[self.view addSubview:leafViewController.view];
-    [UIView commitAnimations];
-	[leafViewController performSelector:@selector(viewDidAppear) withObject:nil afterDelay:1.0];
+	[self presentModalViewController:leafViewController animated:YES];
 	
 }
 

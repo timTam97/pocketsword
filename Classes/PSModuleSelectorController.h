@@ -14,6 +14,7 @@
 
 	IBOutlet UITableView		*modulesListTable;
 	IBOutlet UINavigationItem	*modulesNavigationItem;
+	IBOutlet UINavigationBar	*modulesNavigationBar;
 }
 
 @property (assign) ShownTab listType;

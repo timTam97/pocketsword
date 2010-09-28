@@ -13,7 +13,6 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="51"/>
-			<integer value="28"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -40,7 +39,7 @@
 			</object>
 			<object class="IBUIViewController" id="129870049">
 				<object class="IBUIView" key="IBUIView" id="896839579">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -76,7 +75,7 @@
 						</object>
 						<object class="IBUIWebView" id="586548251">
 							<reference key="NSNextResponder" ref="896839579"/>
-							<int key="NSvFlags">274</int>
+							<int key="NSvFlags">310</int>
 							<string key="NSFrame">{{0, 44}, {320, 416}}</string>
 							<reference key="NSSuperview" ref="896839579"/>
 							<object class="NSColor" key="IBUIBackgroundColor" id="385080255">
@@ -91,7 +90,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{320, 460}</string>
-					<reference key="NSSuperview"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MQA</bytes>
@@ -330,14 +328,6 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">navBar</string>
-						<reference key="source" ref="129870049"/>
-						<reference key="destination" ref="307570198"/>
-					</object>
-					<int key="connectionID">34</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">unlockNavBarItem</string>
 						<reference key="source" ref="129870049"/>
 						<reference key="destination" ref="898585797"/>
@@ -543,6 +533,38 @@
 						<reference key="destination" ref="204203523"/>
 					</object>
 					<int key="connectionID">66</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">modulesNavigationBar</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="740387933"/>
+					</object>
+					<int key="connectionID">68</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">infoNavItem</string>
+						<reference key="source" ref="129870049"/>
+						<reference key="destination" ref="307570198"/>
+					</object>
+					<int key="connectionID">69</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">infoNavBar</string>
+						<reference key="source" ref="129870049"/>
+						<reference key="destination" ref="762248520"/>
+					</object>
+					<int key="connectionID">70</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">moduleSelectorController</string>
+						<reference key="source" ref="129870049"/>
+						<reference key="destination" ref="841351856"/>
+					</object>
+					<int key="connectionID">71</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -819,7 +841,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{294, 269}, {320, 460}}</string>
+					<string>{{285, 356}, {320, 460}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -844,7 +866,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">66</int>
+			<int key="maxID">71</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -917,9 +939,11 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>closeButton</string>
+							<string>infoNavBar</string>
+							<string>infoNavItem</string>
 							<string>infoWebView</string>
+							<string>moduleSelectorController</string>
 							<string>modulesListTable</string>
-							<string>navBar</string>
 							<string>unlockEditButton</string>
 							<string>unlockHelpWebView</string>
 							<string>unlockLabel</string>
@@ -933,9 +957,11 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIBarButtonItem</string>
-							<string>UIWebView</string>
-							<string>UITableView</string>
+							<string>UINavigationBar</string>
 							<string>UINavigationItem</string>
+							<string>UIWebView</string>
+							<string>PSModuleSelectorController</string>
+							<string>UITableView</string>
 							<string>UIBarButtonItem</string>
 							<string>UIWebView</string>
 							<string>UILabel</string>
@@ -952,9 +978,11 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>closeButton</string>
+							<string>infoNavBar</string>
+							<string>infoNavItem</string>
 							<string>infoWebView</string>
+							<string>moduleSelectorController</string>
 							<string>modulesListTable</string>
-							<string>navBar</string>
 							<string>unlockEditButton</string>
 							<string>unlockHelpWebView</string>
 							<string>unlockLabel</string>
@@ -972,16 +1000,24 @@
 								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
 							<object class="IBToOneOutletInfo">
+								<string key="name">infoNavBar</string>
+								<string key="candidateClassName">UINavigationBar</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">infoNavItem</string>
+								<string key="candidateClassName">UINavigationItem</string>
+							</object>
+							<object class="IBToOneOutletInfo">
 								<string key="name">infoWebView</string>
 								<string key="candidateClassName">UIWebView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">modulesListTable</string>
-								<string key="candidateClassName">UITableView</string>
+								<string key="name">moduleSelectorController</string>
+								<string key="candidateClassName">PSModuleSelectorController</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">navBar</string>
-								<string key="candidateClassName">UINavigationItem</string>
+								<string key="name">modulesListTable</string>
+								<string key="candidateClassName">UITableView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">unlockEditButton</string>
@@ -1067,12 +1103,14 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>leafViewController</string>
 							<string>modulesListTable</string>
+							<string>modulesNavigationBar</string>
 							<string>modulesNavigationItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>PSModuleLeafViewController</string>
 							<string>UITableView</string>
+							<string>UINavigationBar</string>
 							<string>UINavigationItem</string>
 						</object>
 					</object>
@@ -1082,6 +1120,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>leafViewController</string>
 							<string>modulesListTable</string>
+							<string>modulesNavigationBar</string>
 							<string>modulesNavigationItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1093,6 +1132,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">modulesListTable</string>
 								<string key="candidateClassName">UITableView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">modulesNavigationBar</string>
+								<string key="candidateClassName">UINavigationBar</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">modulesNavigationItem</string>

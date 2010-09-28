@@ -11,11 +11,12 @@
 
 @interface PSModuleLeafViewController : UIViewController {
 	IBOutlet UIWebView			*infoWebView;
-	//IBOutlet PSModuleController *moduleManager;
-	IBOutlet UINavigationItem	*navBar;
+	IBOutlet UINavigationItem	*infoNavItem;
+	IBOutlet UINavigationBar	*infoNavBar;
 
-	IBOutlet UIBarButtonItem	*closeButton;
-	IBOutlet UITableView *modulesListTable;
+	IBOutlet UIBarButtonItem			*closeButton;
+	IBOutlet UITableView				*modulesListTable;
+	IBOutlet id moduleSelectorController;
 	
 	IBOutlet UIBarButtonItem	*unlockEditButton;
 	IBOutlet UIBarButtonItem	*unlockSaveButton;
@@ -37,8 +38,8 @@
 
 //perhaps a tab with the version history in it?
 
-- (void)viewWillAppear;
-- (void)viewDidAppear;
+//- (void)viewWillAppear;
+//- (void)viewDidAppear;
 
 - (void)displayInfoForModule:(SwordModule*)swordModule;
 

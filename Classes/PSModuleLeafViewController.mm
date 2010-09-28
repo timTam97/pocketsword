@@ -18,24 +18,43 @@ BOOL trashModule = NO;
     [super viewDidLoad];
 
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
+	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 }
 
-- (void)viewWillAppear {
-    [super viewWillAppear:NO];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 	
-	UIView *view = self.view;
-	CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
+//	UIView *view = self.view;
+//	CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+//	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+//		view.frame = CGRectMake(0, 0, appFrame.size.height, appFrame.size.width);
+//	} else {
+//		view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);;
+//	}
+	
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		view.frame = CGRectMake(0, 0, appFrame.size.height, appFrame.size.width);
+		infoNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+		infoWebView.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
 	} else {
-		view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);;
+		infoNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+		infoWebView.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
 	}
 }
 
-- (void)viewDidAppear {
-	[self viewDidAppear:YES];
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		infoNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+		infoWebView.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
+	} else {
+		infoNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+		infoWebView.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
+	}
 }
+
+//- (void)viewDidAppear {
+//	[self viewDidAppear:YES];
+//}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
@@ -44,7 +63,7 @@ BOOL trashModule = NO;
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
 
-	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: navBar.title];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: infoNavItem.title];
 	if(mod) {
 		if([mod isLocked]) {
 			//gotta ask the user if they want to unlock the module!
@@ -76,18 +95,12 @@ BOOL trashModule = NO;
 
 
 - (void)displayInfoForModule:(SwordModule*)swordModule {
-	navBar.title = [swordModule name];
+	infoNavItem.title = [swordModule name];
 	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@""] baseURL:nil];
 }
 
 - (IBAction)closeLeaf:(id)sender {
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-                           forView:self.view.superview
-                             cache:YES];
-    [UIView setAnimationDuration:1];
-	[self.view removeFromSuperview];
-    [UIView commitAnimations];
+	[moduleSelectorController dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)closeUnlockView:(id)sender {
@@ -102,12 +115,12 @@ BOOL trashModule = NO;
 
 - (IBAction)unlockSaveButtonPressed:(id)sender {
 	//save the key
-	[[[[PSModuleController defaultModuleController] swordManager] moduleWithName: navBar.title] unlock: unlockTextField.text];
+	[[[[PSModuleController defaultModuleController] swordManager] moduleWithName: infoNavItem.title] unlock: unlockTextField.text];
 	//redisplay the text if this is the current primary bible/commentary
-	if([navBar.title isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) {
+	if([infoNavItem.title isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 		//[[[PSModuleController defaultModuleController] viewController] displayChapter:[[PSModuleController defaultModuleController] getCurrentBibleRef] withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-	} else if([navBar.title isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) {
+	} else if([infoNavItem.title isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 		//[[[PSModuleController defaultModuleController] viewController] displayChapter:[[PSModuleController defaultModuleController] getCurrentBibleRef] withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 	}
@@ -122,7 +135,7 @@ BOOL trashModule = NO;
 	// @"John 3:16"
 	unlockWebView.hidden = NO;
 	NSMutableString *html = [NSMutableString string];
-	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: navBar.title];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: infoNavItem.title];
 	[mod unlock: unlockTextField.text];
 	NSArray *refs = [NSArray arrayWithObjects:@"Jeremiah 29:11", @"Psalm 139:5", @"John 3:16", nil];
 	for(NSString *ref in refs) {
@@ -198,9 +211,9 @@ body {\n\
 	//DLog(@"Clicked button %d", buttonIndex);
 	if (buttonIndex == 1 && trashModule) {
 		// user tapped @"Yes" to the trash this module question.
-		DLog(@"\nremoving module: %@", navBar.title);
+		DLog(@"\nremoving module: %@", infoNavItem.title);
 		trashModule = NO;
-		[[PSModuleController defaultModuleController] removeModule: navBar.title];
+		[[PSModuleController defaultModuleController] removeModule: infoNavItem.title];
 		[modulesListTable reloadData];
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {
