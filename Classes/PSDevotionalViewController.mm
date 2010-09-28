@@ -60,8 +60,7 @@ BOOL loaded;
 		[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
 	} else {
 		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-
-		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {// || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
 			devotionalDatePickerView.transform = CGAffineTransformIdentity;
 			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 			devotionalDatePickerView.frame.size.width = 480.0;

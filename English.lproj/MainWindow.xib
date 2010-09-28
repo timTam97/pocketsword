@@ -11,8 +11,8 @@
 			<string key="NS.object.0">123</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="1062"/>
 			<integer value="106"/>
-			<integer value="534"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -138,12 +138,12 @@
 												<string>{0, 0}</string>
 											</array>
 											<array class="NSMutableArray" key="IBSegmentImages">
-												<object class="NSCustomResource" id="362056588">
+												<object class="NSCustomResource" id="657399670">
 													<string key="NSClassName">NSImage</string>
 													<string key="NSResourceName">back-white.png</string>
 												</object>
 												<object class="NSNull" id="4"/>
-												<object class="NSCustomResource" id="1020690600">
+												<object class="NSCustomResource" id="356302921">
 													<string key="NSClassName">NSImage</string>
 													<string key="NSResourceName">forward-white.png</string>
 												</object>
@@ -162,7 +162,7 @@
 									<int key="IBUIBarStyle">1</int>
 									<array class="NSMutableArray" key="IBUIItems">
 										<object class="IBUIBarButtonItem" id="620349161">
-											<object class="NSCustomResource" key="IBUIImage" id="79650166">
+											<object class="NSCustomResource" key="IBUIImage" id="466770139">
 												<string key="NSClassName">NSImage</string>
 												<string key="NSResourceName">history.png</string>
 											</object>
@@ -271,9 +271,9 @@
 												<string>{0, 0}</string>
 											</array>
 											<array class="NSMutableArray" key="IBSegmentImages">
-												<reference ref="362056588"/>
+												<reference ref="657399670"/>
 												<reference ref="4"/>
-												<reference ref="1020690600"/>
+												<reference ref="356302921"/>
 											</array>
 											<bool key="IBMomentary">YES</bool>
 											<object class="NSColor" key="IBTintColor">
@@ -291,7 +291,7 @@
 									<int key="IBUIBarStyle">1</int>
 									<array class="NSMutableArray" key="IBUIItems">
 										<object class="IBUIBarButtonItem" id="301983801">
-											<reference key="IBUIImage" ref="79650166"/>
+											<reference key="IBUIImage" ref="466770139"/>
 											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 											<int key="IBUIStyle">1</int>
 											<reference key="IBUIToolbar" ref="762539378"/>
@@ -656,7 +656,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			</object>
 			<object class="IBUIViewController" id="746792536">
 				<object class="IBUIView" key="IBUIView" id="402845121">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">310</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUIActivityIndicatorView" id="946324666">
@@ -693,7 +693,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{320, 460}</string>
-					<reference key="NSSuperview"/>
 					<reference key="IBUIBackgroundColor" ref="26859688"/>
 					<float key="IBUIAlpha">0.5</float>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -941,7 +940,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<object class="IBUIView" id="887081261">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">310</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIWebView" id="764216997">
@@ -959,12 +958,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<object class="IBUIImageView" id="929479415">
 						<reference key="NSNextResponder" ref="887081261"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">294</int>
 						<string key="NSFrame">{{2.13443e-314, 0}, {320, 20}}</string>
 						<reference key="NSSuperview" ref="887081261"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
@@ -1018,6 +1016,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 160}</string>
+				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MSAxIDEgMAA</bytes>
@@ -2937,7 +2936,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="YES" key="106.IBViewEditorWindowController.showingBoundsRectangles"/>
 				<boolean value="YES" key="106.IBViewEditorWindowController.showingLayoutRectangles"/>
-				<string key="1062.IBEditorWindowLastContentRect">{{187, 396}, {320, 160}}</string>
+				<string key="1062.IBEditorWindowLastContentRect">{{248, 527}, {320, 160}}</string>
 				<string key="1062.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1063.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1064.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

@@ -856,6 +856,24 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)showInfo:(NSString *)infoString {
 	if(![infoView superview]) {
 		//need to show the info pane
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+			infoView.transform = CGAffineTransformIdentity;
+			infoView.frame = CGRectMake(0, 0, 480.0, 100.0);
+			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			infoView.transform = CGAffineTransformIdentity;
+			infoView.frame = CGRectMake(0, 0, 480.0, 100.0);
+			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+			infoView.transform = CGAffineTransformIdentity;
+			//devotionalDatePickerView.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
+			infoView.frame = CGRectMake(0, 0, 320.0, 160.0);
+		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+			infoView.transform = CGAffineTransformIdentity;
+			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+			infoView.frame = CGRectMake(0, 0, 320.0, 160.0);
+		}
 		[ViewController showModal: infoView withTiming: 0.3];
 	}
 	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:@"fontNamePreference"];

@@ -43,7 +43,6 @@
 	}
 }
 
-// TODO: add /*NSLocalizedString(@"DeleteSource", @""),*/ to the list of buttons?
 - (IBAction)editButtonPressed:(id)sender {
 	UIActionSheet *actionSheet;
 	if([[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"]) {
