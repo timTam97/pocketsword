@@ -58,7 +58,8 @@ BOOL downloadableShown;
 
 - (void)hideIndexStatus {//needed, move to PSIndexController
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[ViewController hideModal: statusController.view withTiming:0.3];
+	//[ViewController hideModal: statusController.view withTiming:0.3];
+	[self dismissModalViewControllerAnimated:YES];
 	[statusText setText: @""];
 	[statusOverallText setText: @""];
 	[statusBar setProgress: 0.0];
@@ -76,7 +77,8 @@ BOOL downloadableShown;
 	//[navController setNavigationBarHidden: YES];
 	
 	//[tabController presentModalViewController: navController animated: YES];
-	[ViewController showModal: statusController.view withTiming:0.3];
+	//[ViewController showModal: statusController.view withTiming:0.3];
+	[self presentModalViewController:statusController animated:YES];
 	
 	[pool release];
 }

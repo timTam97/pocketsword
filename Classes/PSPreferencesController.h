@@ -21,6 +21,8 @@
 	IBOutlet UITabBarController *tabController;
 	IBOutlet id fontTableViewController;
 	IBOutlet id moduleSelectorTableViewController;
+	
+	UILabel *fontSizeLabel;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;

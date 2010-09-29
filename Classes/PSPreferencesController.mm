@@ -62,9 +62,14 @@ BOOL requireReloadOfModuleViews = NO;
 	[super viewDidLoad];
 	preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
+	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 2.0, 20.0, 42.0)];
+	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+	fontSizeLabel.textColor = [UIColor darkTextColor];
+	fontSizeLabel.text = @"14";
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 	[preferencesTable reloadData];
 }
 
@@ -96,6 +101,7 @@ BOOL requireReloadOfModuleViews = NO;
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	[fontSizeLabel release];
 }
 
 - (void)dealloc {
@@ -174,16 +180,44 @@ BOOL requireReloadOfModuleViews = NO;
 	
 	static NSString *CellIdentifierPlain = @"prefs-plain";
 	static NSString *CellIdentifierStyled = @"prefs-styled";
+	static NSString *CellIdentifierFS = @"prefs-fs";
 	
     UITableViewCell *cell;// = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 //	if(!cell) {
 //		cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifierPlain] autorelease ];
 //	}
+	BOOL resetCell = YES;
 	
 	switch (indexPath.section) {
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case FONT_SIZE_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
+						
+						UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(170, 0, 125, 50) ];
+						fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+						fontSizeSlider.minimumValue = 10.0;
+						fontSizeSlider.maximumValue = 20.0;
+						NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+						if(fontSize != 0) {//defaults default to 0 if it's not previously set...
+							fontSizeSlider.value = (float)fontSize;
+						} else {
+							fontSizeSlider.value = 14.0;
+							[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"fontSizePreference"];
+							[[NSUserDefaults standardUserDefaults] synchronize];
+						}
+						fontSizeSlider.continuous = YES;
+						[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
+						[ cell addSubview: fontSizeSlider ];
+						[ fontSizeSlider release ];
+						[cell addSubview: fontSizeLabel];
+					}
+					resetCell = NO;
+				}
+					break;
 				case NIGHT_MODE_ROW :
 				case VPL_ROW :
 				case XREF_ROW :
@@ -269,12 +303,14 @@ BOOL requireReloadOfModuleViews = NO;
 	CGFloat xx = 0.0;
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		xx = 150.0;
+		xx = 160.0;
 	}
-
-	for(UIView *subv in [cell subviews]) {
-		if([subv isMemberOfClass:[UISlider class]] || [subv isMemberOfClass:[UISwitch class]]) {
-			[subv removeFromSuperview];
+	
+	if(resetCell) {
+		for(UIView *subv in [cell subviews]) {
+			if([subv isMemberOfClass:[UISlider class]] || [subv isMemberOfClass:[UISwitch class]]) {
+				[subv removeFromSuperview];
+			}
 		}
 	}
 	
@@ -283,26 +319,12 @@ BOOL requireReloadOfModuleViews = NO;
 			switch (indexPath.row) {
 				case FONT_SIZE_ROW :
 				{
-					UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
-					fontSizeSlider.minimumValue = 10.0;
-					fontSizeSlider.maximumValue = 20.0;
-					NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
-					if(fontSize != 0) {//defaults default to 0 if it's not previously set...
-						fontSizeSlider.value = (float)fontSize;
-					} else {
-						fontSizeSlider.value = 14.0;
-						[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"fontSizePreference"];
-						[[NSUserDefaults standardUserDefaults] synchronize];
-					}
-					fontSizeSlider.continuous = NO;
-					[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: fontSizeSlider ];
-					[ fontSizeSlider release ];
 				}
 					break;
 				case NIGHT_MODE_ROW :
 				{
 					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					nightModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
 					nightModeSwitch.on = nightMode;
 					//nightModeSwitch.tag = 1;
@@ -315,6 +337,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case VPL_ROW :
 				{
 					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
 					vplSwitch.on = vpl;
 					//vplSwitch.tag = 4;
@@ -327,6 +350,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case XREF_ROW :
 				{
 					UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
 					xrefSwitch.on = xrefMode;
 					[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
@@ -338,6 +362,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case FOOTNOTES_ROW :
 				{
 					UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
 					footnotesSwitch.on = footnotesMode;
 					[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
@@ -349,6 +374,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case HEADINGS_ROW :
 				{
 					UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
 					headingsSwitch.on = headingsMode;
 					[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
@@ -366,6 +392,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case RED_LETTER_ROW :
 				{
 					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+					redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
 					redLetterModeSwitch.on = redLetterMode;
 					//redLetterModeSwitch.tag = 2;
@@ -391,6 +418,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case STRONGS_DISPLAY_ROW :
 				{
 					UISwitch *strongsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					strongsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayStrongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
 					strongsSwitch.on = displayStrongs;
 					//strongsSwitch.tag = 9;
@@ -419,6 +447,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case MORPH_DISPLAY_ROW :
 				{
 					UISwitch *morphSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					morphSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayMorph = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
 					morphSwitch.on = displayMorph;
 					//morphSwitch.tag = 9;
@@ -447,6 +476,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case LANG_GREEKACC_ROW:
 				{
 					UISwitch *greekAccentsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					greekAccentsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayGreekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
 					greekAccentsSwitch.on = displayGreekAccents;
 					//greekAccentsSwitch.tag = 9;
@@ -459,6 +489,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case LANG_HEBREWPTS_ROW:
 				{
 					UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					hvpSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayHVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
 					hvpSwitch.on = displayHVP;
 					//hvpSwitch.tag = 9;
@@ -471,6 +502,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case LANG_HEBREWCANT_ROW:
 				{
 					UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					hebrewCantillationSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayHebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
 					hebrewCantillationSwitch.on = displayHebrewCantillation;
 					//hebrewCantillationSwitch.tag = 9;
@@ -487,6 +519,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case INSOMNIA_ROW :
 				{
 					UISwitch *insomniaSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					insomniaSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
 					insomniaSwitch.on = insomniaMode;
 					//insomniaSwitch.tag = 3;
@@ -499,6 +532,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case MMM_ROW :
 				{
 					UISwitch *manualInstallSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					manualInstallSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
 					manualInstallSwitch.on = manualInstallEnabled;
 					//manualInstallSwitch.tag = 3;
@@ -529,7 +563,9 @@ BOOL requireReloadOfModuleViews = NO;
 				case FONT_SIZE_ROW :
 				{
 					NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
-					cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
+					//cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
+					cell.textLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size")];
+					fontSizeLabel.text = [NSString stringWithFormat:@"%d", fontSize];
 				}
 					break;
 				case FONT_NAME_ROW:
@@ -701,7 +737,9 @@ BOOL requireReloadOfModuleViews = NO;
 	NSInteger f = [sender value];
 	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:@"fontSizePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
+	//[preferencesTable reloadData];
+	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
 	requireReloadOfModuleViews = YES;
 }
 
