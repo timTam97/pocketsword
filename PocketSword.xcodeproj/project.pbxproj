@@ -4360,8 +4360,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -4382,8 +4382,8 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
+				PROVISIONING_PROFILE = "BD75AC9D-A58B-4259-B194-8D278931B011";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BD75AC9D-A58B-4259-B194-8D278931B011";
 				SDKROOT = iphoneos4.1;
 			};
 			name = Distribution;
@@ -4392,8 +4392,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4426,8 +4426,8 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "BD75AC9D-A58B-4259-B194-8D278931B011";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BD75AC9D-A58B-4259-B194-8D278931B011";
 				VALIDATE_PRODUCT = NO;
 			};
 			name = Distribution;
