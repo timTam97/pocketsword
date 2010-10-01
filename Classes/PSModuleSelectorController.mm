@@ -17,6 +17,7 @@
 @synthesize listType;
 
 -(void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	if([self listType] == BibleTab) {

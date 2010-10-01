@@ -26,13 +26,9 @@
 @property (readonly) UITabBarController *tabController;
 
 - (IBAction)manualAddModule:(id)sender;
-- (void)viewWillAppear:(BOOL)animated;
 - (void)addManualInstallButton;
 - (IBAction)editButtonPressed:(id)sender;
 - (void)resetTableSelection;
-
-- (void)dealloc;
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
 
 @end
 

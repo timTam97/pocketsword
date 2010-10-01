@@ -16,6 +16,7 @@
 NSTimer *downloadTimer;
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	self.title = module.name;
 	self.navigationItem.rightBarButtonItem = nil;
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];

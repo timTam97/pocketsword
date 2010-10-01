@@ -110,6 +110,7 @@ BOOL loaded;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	if(!loaded) {
 		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 		[dateFormatter setDateFormat:@"MMMM d"];

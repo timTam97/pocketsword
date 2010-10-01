@@ -57,6 +57,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	if(listType == BibleTab) {
 		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
 	} else {

@@ -43,6 +43,7 @@ BOOL searchingEnabled;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
