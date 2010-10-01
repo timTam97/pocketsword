@@ -217,7 +217,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 							window.onload = function() { document.documentElement.style.webkitTouchCallout = \"none\"; }\n\
 							-->\
 							</script>\n";
-	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>", t, description] usingPreferences: YES withJS: javaScript];
+	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, description] usingPreferences: YES withJS: javaScript];
 	if([t length] > 20) {
 		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
 	}
@@ -226,6 +226,11 @@ PSDictionaryOverlayViewController *overlayViewController;
 	//NSLog(@"%@", descr);
 	
 	if(![dictionaryDescriptionViewController.view superview]) {
+		if([[[PSModuleController defaultModuleController] primaryDictionary] hasFeature:SWMOD_CONF_FEATURE_IMAGES]) {
+			dictionaryDescriptionWebView.scalesPageToFit = YES;
+		} else {
+			dictionaryDescriptionWebView.scalesPageToFit = NO;
+		}
 		[self presentModalViewController:dictionaryDescriptionViewController animated:YES];
 		//[self showModal: dictionaryDescriptionView withTiming: 0.3];
 	}
