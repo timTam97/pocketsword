@@ -30,6 +30,7 @@
 //}
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetBooks:) name:NotificationRefSelectorResetBooks object:nil];
 }
 

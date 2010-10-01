@@ -47,8 +47,6 @@
 - (void)showIndexStatus;//needed, move to PSIndexController
 - (void)hideIndexStatus;//needed, move to PSIndexController
 
-- (void)viewDidLoad;
-- (void)dealloc;
 //- (void)setModuleManager:(PSModuleController *)mm;
 - (void)setSearchController:(PSSearchController *)sc;
 

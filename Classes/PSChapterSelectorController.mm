@@ -33,8 +33,6 @@ BOOL needToScroll;
 		[chapterTable scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 		needToScroll = NO;
 	}
-
-	
 	[super viewDidAppear:animated];
 }
 

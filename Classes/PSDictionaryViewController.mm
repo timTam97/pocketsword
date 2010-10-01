@@ -137,6 +137,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 }
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 	dictionaryNavItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 	dictionarySearchBar.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
@@ -422,6 +423,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 @implementation PSDictionaryEntryViewController
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 }
 

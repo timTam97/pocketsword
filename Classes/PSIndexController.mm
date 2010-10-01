@@ -23,6 +23,7 @@ BOOL unavailableShown;
 BOOL downloadableShown;
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	//i18n of title
 	navItem.title = NSLocalizedString(@"SearchDownloaderTitle", @"Search Downloader");
 	//i18n of close button

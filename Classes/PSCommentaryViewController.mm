@@ -71,13 +71,13 @@
 
 
 - (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 //	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
 //	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
 //		[self toggleFullscreen];
 //	}
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -270,7 +270,6 @@
 			}
 			[tmpEntry release];
 		}
-		
 		
 		if(entry) {
 			[viewController showInfo: entry];

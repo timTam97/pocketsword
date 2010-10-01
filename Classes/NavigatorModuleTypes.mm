@@ -40,6 +40,7 @@ NSTimer *refreshTimer;
 
 
 - (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	//[[PSModuleController defaultModuleController] hideBusyIndicator];

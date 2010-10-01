@@ -46,6 +46,7 @@
 }
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
 	historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");

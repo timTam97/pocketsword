@@ -74,6 +74,7 @@ BOOL requireReloadOfModuleViews = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
 	if(requireReloadOfModuleViews) {
 		//[[PSModuleController defaultModuleController] displayBusyIndicator];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];

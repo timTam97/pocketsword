@@ -7,7 +7,6 @@
 //
 
 #import "PSBibleViewController.h"
-//#import "SwordModule.h"
 #import "PSModuleController.h"
 #import "ViewController.h"
 #import "SwordDictionary.h"
@@ -22,98 +21,43 @@
 @synthesize tappedVerse;
 @synthesize isFullScreen;
 
-/*
- // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // Custom initialization
-    }
-    return self;
-}
-*/
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
-}
-*/
-
-
 - (void) viewDidLoad {
 	[super viewDidLoad];
 	isFullScreen = NO;
 	bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
-	
-//	NSString *scrollPosition = [[NSUserDefaults standardUserDefaults] stringForKey: @"bibleScrollPosition"];
-//	if(scrollPosition) {
-//		NSString *script = [NSString stringWithFormat:@"window.scrollTo(0, %@);", scrollPosition];
-//		[bibleWebView stringByEvaluatingJavaScriptFromString: script];
-//	}
 }
 
+- (void)viewDidUnload {
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationBibleToggleFullscreen];
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	if(refToShow) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		//[[PSModuleController defaultModuleController] displayBusyIndicator];
 		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
 	[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
-//	CGSize screen = [[UIScreen mainScreen] bounds].size;
-//	CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
-//	CGFloat barHeight, viewHeight, width;
-//	CGFloat tabBarHeight = [((ViewController*)viewController) tabBarController].tabBar.frame.size.height;
-//
-//	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-//	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-//		width = screen.height;
-//		barHeight = barLandscapeHeight;
-//		viewHeight = screen.width - barLandscapeHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
-//	} else {
-//		width = screen.width;
-//		barHeight = barPortraitHeight;
-//		viewHeight = screen.height - barPortraitHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
-//	}
-//	bibleToolbar.frame = CGRectMake(0.0, 0.0, width, barHeight);
-//	bibleWebView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-//	CGSize screen = [[UIScreen mainScreen] bounds].size;
-//	CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
-//	CGFloat barHeight, viewHeight, width;
-//	CGFloat tabBarHeight = [((ViewController*)viewController) tabBarController].tabBar.frame.size.height;
-//	if((toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) && !(self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight)) {
-//		width = screen.width;
-//		barHeight = barLandscapeHeight;
-//		viewHeight = screen.height - barLandscapeHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
-//	} else if((toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) && !(self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) {
-//		width = screen.height;
-//		barHeight = barPortraitHeight;
-//		viewHeight = screen.width - barPortraitHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
-//	}
-//	bibleToolbar.frame = CGRectMake(0.0, 0.0, width, barHeight);
-//	bibleWebView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
 }
 
 
 - (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-//	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-//	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-//		[self toggleFullscreen];
-//	}
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -183,14 +127,6 @@
 	
 	if(!isFullScreen) {
 		[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
-//		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-//		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-//			bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-//			bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 239.0);
-//		} else {
-//			bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-//			bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 387.0);
-//		}
 	}
 	
     [UIView commitAnimations];
@@ -214,12 +150,6 @@
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationBibleToggleFullscreen];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
