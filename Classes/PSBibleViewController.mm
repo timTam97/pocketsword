@@ -12,6 +12,7 @@
 #import "ViewController.h"
 #import "SwordDictionary.h"
 #import "PSBookmarksViewController.h"
+#import "PSResizing.h"
 
 
 @implementation PSBibleViewController
@@ -65,43 +66,45 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
-	CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
-	CGFloat barHeight, viewHeight, width;
-	CGFloat tabBarHeight = [((ViewController*)viewController) tabBarController].tabBar.frame.size.height;
-
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		width = screen.height;
-		barHeight = barLandscapeHeight;
-		viewHeight = screen.width - barLandscapeHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
-	} else {
-		width = screen.width;
-		barHeight = barPortraitHeight;
-		viewHeight = screen.height - barPortraitHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
-	}
-	bibleToolbar.frame = CGRectMake(0.0, 0.0, width, barHeight);
-	bibleWebView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
+	[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+//	CGSize screen = [[UIScreen mainScreen] bounds].size;
+//	CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
+//	CGFloat barHeight, viewHeight, width;
+//	CGFloat tabBarHeight = [((ViewController*)viewController) tabBarController].tabBar.frame.size.height;
+//
+//	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+//	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+//		width = screen.height;
+//		barHeight = barLandscapeHeight;
+//		viewHeight = screen.width - barLandscapeHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
+//	} else {
+//		width = screen.width;
+//		barHeight = barPortraitHeight;
+//		viewHeight = screen.height - barPortraitHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
+//	}
+//	bibleToolbar.frame = CGRectMake(0.0, 0.0, width, barHeight);
+//	bibleWebView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	if(isFullScreen)
 		return;
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
-	CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
-	CGFloat barHeight, viewHeight, width;
-	CGFloat tabBarHeight = [((ViewController*)viewController) tabBarController].tabBar.frame.size.height;
-	if((toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) && !(self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight)) {
-		width = screen.width;
-		barHeight = barLandscapeHeight;
-		viewHeight = screen.height - barLandscapeHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
-	} else if((toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) && !(self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) {
-		width = screen.height;
-		barHeight = barPortraitHeight;
-		viewHeight = screen.width - barPortraitHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
-	}
-	bibleToolbar.frame = CGRectMake(0.0, 0.0, width, barHeight);
-	bibleWebView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
+	[PSResizing resizeViewsOnRotateWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+//	CGSize screen = [[UIScreen mainScreen] bounds].size;
+//	CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
+//	CGFloat barHeight, viewHeight, width;
+//	CGFloat tabBarHeight = [((ViewController*)viewController) tabBarController].tabBar.frame.size.height;
+//	if((toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) && !(self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight)) {
+//		width = screen.width;
+//		barHeight = barLandscapeHeight;
+//		viewHeight = screen.height - barLandscapeHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
+//	} else if((toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) && !(self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) {
+//		width = screen.height;
+//		barHeight = barPortraitHeight;
+//		viewHeight = screen.width - barPortraitHeight - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
+//	}
+//	bibleToolbar.frame = CGRectMake(0.0, 0.0, width, barHeight);
+//	bibleWebView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
 }
 
 
@@ -121,16 +124,17 @@
 - (CGRect)getOrientationRect {
 	CGFloat x,y,width,height;
 	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
 		x = 0.0;
 		y = 0.0;
-		width = 480.0;
-		height = 320.0;
+		width = screen.height;
+		height = screen.width;
 	} else {
 		x = 0.0;
 		y = 0.0;
-		width = 320.0;
-		height = 480.0;
+		width = screen.width;
+		height = screen.height;
 	}
 	return CGRectMake(x, y, width, height);
 }
@@ -178,14 +182,15 @@
     }
 	
 	if(!isFullScreen) {
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-			bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-			bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 239.0);
-		} else {
-			bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-			bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 387.0);
-		}
+		[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
+//		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+//		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+//			bibleToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+//			bibleWebView.frame = CGRectMake(0.0, 32.0, 480.0, 239.0);
+//		} else {
+//			bibleToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+//			bibleWebView.frame = CGRectMake(0.0, 44.0, 320.0, 387.0);
+//		}
 	}
 	
     [UIView commitAnimations];

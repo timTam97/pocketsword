@@ -638,6 +638,9 @@
 		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
+		05F4D00D1254A6670088C902 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; };
+		05F4D07B1255D68B0088C902 /* PSResizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F4D0331255D2940088C902 /* PSResizing.m */; };
+		05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F4D0331255D2940088C902 /* PSResizing.m */; };
 		1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -1360,6 +1363,9 @@
 		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
 		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
+		05F4D00C1254A6670088C902 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		05F4D0321255D2940088C902 /* PSResizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSResizing.h; sourceTree = "<group>"; };
+		05F4D0331255D2940088C902 /* PSResizing.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = PSResizing.m; sourceTree = "<group>"; };
 		05F7106A11520AB700947290 /* canon_synodalprot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_synodalprot.h; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSwordAppDelegate.h; sourceTree = "<group>"; };
@@ -1638,6 +1644,7 @@
 				054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */,
 				054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */,
 				054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */,
+				05F4D00D1254A6670088C902 /* MessageUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2661,6 +2668,8 @@
 				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
 				05034D2310FD625900884C98 /* SearchWebView.h */,
 				05034D2410FD625900884C98 /* SearchWebView.m */,
+				05F4D0321255D2940088C902 /* PSResizing.h */,
+				05F4D0331255D2940088C902 /* PSResizing.m */,
 			);
 			name = "PS-other";
 			path = Classes;
@@ -2725,6 +2734,7 @@
 				05D6ABA51097E8CC00A5026E /* CFNetwork.framework */,
 				05F0DB8911671E4800C2E87D /* QuartzCore.framework */,
 				05A8A1C911717AB4005B6411 /* CoreGraphics.framework */,
+				05F4D00C1254A6670088C902 /* MessageUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3598,6 +3608,7 @@
 				054C570611AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */,
 				0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
+				05F4D07B1255D68B0088C902 /* PSResizing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3921,6 +3932,7 @@
 				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */,
 				0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
+				05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
