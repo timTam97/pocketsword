@@ -18,7 +18,7 @@
 +(void)resizeViewsOnAppearWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView useStatusBar:(BOOL)useStatusBar {
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	CGFloat barHeight, viewHeight, width;//, tabBarY;
-	CGFloat tabBarHeight = tabBarController.tabBar.frame.size.height;
+	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
 	
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
@@ -43,6 +43,8 @@
 		//if(useStatusBar) tabBarY += [UIApplication sharedApplication].statusBarFrame.size.height;
 	}
 	topBar.frame = CGRectMake(0.0, 0.0, width, barHeight);
+	[topBar layoutIfNeeded];
+	[topBar setNeedsDisplay];
 	mainView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
 	//tabBarController.tabBar.frame = CGRectMake(0.0, tabBarY, width, tabBarHeight);
 	//tabBarController.selectedViewController.view.frame = CGRectMake(0.0, 0.0, width, tabBarY);
@@ -52,18 +54,23 @@
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	//CGFloat barLandscapeHeight = 32.0, barPortraitHeight = 44.0;
 	CGFloat barHeight, viewHeight, width;
-	CGFloat tabBarHeight = tabBarController.tabBar.frame.size.height;
+	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
+	BOOL redrawInNewFrames = NO;
 	if((toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) && !(fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)) {
 		width = screen.width;
 		barHeight = TOP_BAR_LANDSCAPE_HEIGHT;
 		viewHeight = screen.height - TOP_BAR_LANDSCAPE_HEIGHT - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
+		redrawInNewFrames = YES;
 	} else if((toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) && !(fromInterfaceOrientation == UIInterfaceOrientationPortrait || fromInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) {
 		width = screen.height;
 		barHeight = TOP_BAR_PORTRAIT_HEIGHT;
 		viewHeight = screen.width - TOP_BAR_PORTRAIT_HEIGHT - tabBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
+		redrawInNewFrames = YES;
 	}
-	topBar.frame = CGRectMake(0.0, 0.0, width, barHeight);
-	mainView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
+	if(redrawInNewFrames) {
+		topBar.frame = CGRectMake(0.0, 0.0, width, barHeight);
+		mainView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
+	}
 }
 
 + (CGRect)getOrientationRect {
