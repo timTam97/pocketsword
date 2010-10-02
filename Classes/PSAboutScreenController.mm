@@ -187,6 +187,7 @@
 		[mailComposeViewController setSubject:subject];
 		[mailComposeViewController setToRecipients:[NSArray arrayWithObject:recipients]];
 		mailComposeViewController.mailComposeDelegate = self;
+		mailComposeViewController.navigationBar.barStyle = UIBarStyleBlack;
 		[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
 		[mailComposeViewController release];
 		//NSString *email = [NSString stringWithFormat:@"mailto:%@?subject=%@", recipients, subject];
@@ -199,13 +200,11 @@
 	[self.tabBarController dismissModalViewControllerAnimated:YES];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	if(navigationType == UIWebViewNavigationTypeLinkClicked) {
 		[[UIApplication sharedApplication] openURL:[request URL]];
 		return NO;
 	}
-	
 	return YES;
 }
 
