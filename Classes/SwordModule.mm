@@ -1010,7 +1010,7 @@
 		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
 			
-			if ([modType isEqualToString: @"Commentaries"]) {
+			if ([modType isEqualToString: SWMOD_CATEGORY_COMMENTARIES]) {
 				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
 			} else {
 				if(vpl)
@@ -1035,12 +1035,15 @@
 	}
 
 	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
-	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
-	fs = (fs == 0) ? 14 : fs;
-	if(fs <= 17) {
-		for(int i=fs;i<18;i++) {
-			if(i!=14)
-				[verses appendString:@"<p>&nbsp;</p>"];
+	if([modType isEqualToString: SWMOD_CATEGORY_BIBLES]) {
+		//only pad the bottom if it's a Bible, don't for commentaries
+		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+		fs = (fs == 0) ? 14 : fs;
+		if(fs <= 17) {
+			for(int i=fs;i<18;i++) {
+				if(i!=14)
+					[verses appendString:@"<p>&nbsp;</p>"];
+			}
 		}
 	}
 	

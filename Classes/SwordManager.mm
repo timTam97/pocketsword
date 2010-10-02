@@ -56,15 +56,15 @@ using std::list;
         // create module instances
         NSString *type;
         NSString *name;
-		NSString *mLang;
+		//NSString *mLang;
         if(mod->isUnicode()) {
             type = [NSString stringWithUTF8String:mod->Type()];
             name = [NSString stringWithUTF8String:mod->Name()];
-            mLang = [NSString stringWithUTF8String:mod->Lang()];
+            //mLang = [NSString stringWithUTF8String:mod->Lang()];
         } else {
             type = [NSString stringWithCString:mod->Type() encoding:NSISOLatin1StringEncoding];
             name = [NSString stringWithCString:mod->Name() encoding:NSISOLatin1StringEncoding];
-            mLang = [NSString stringWithCString:mod->Lang() encoding:NSISOLatin1StringEncoding];
+            //mLang = [NSString stringWithCString:mod->Lang() encoding:NSISOLatin1StringEncoding];
         }
         
         SwordModule *sm;// = [[SwordModule alloc] initWithSWModule:mod swordManager:self];
