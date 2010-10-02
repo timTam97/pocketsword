@@ -6,8 +6,10 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import <MessageUI/MessageUI.h>
 
-@interface PSAboutScreenController : UIViewController <UIWebViewDelegate> {
+
+@interface PSAboutScreenController : UIViewController <UIWebViewDelegate, MFMailComposeViewControllerDelegate> {
 	IBOutlet UIWebView *aboutWebView;
 }
 

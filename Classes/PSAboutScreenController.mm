@@ -8,7 +8,6 @@
 
 #import "PSAboutScreenController.h"
 #import "PSModuleController.h"
-#import <MessageUI/MessageUI.h>
 
 
 @implementation PSAboutScreenController
@@ -181,19 +180,24 @@
     NSString *recipients = @"niccarter@mac.com";
     //NSString *body = @"&body=PocketSword is the bestestest evar!";
 	
-	//MFMailComposeViewController *mailComposeViewController
-	
 	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [[UIDevice currentDevice] model]];
 	
-//	if([MFMailComposeViewController canSendMail]) {
-		NSString *email = [NSString stringWithFormat:@"mailto:%@?subject=%@", recipients, subject];
-		email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
-//	}
+	if([MFMailComposeViewController canSendMail]) {
+		MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
+		[mailComposeViewController setSubject:subject];
+		[mailComposeViewController setToRecipients:[NSArray arrayWithObject:recipients]];
+		mailComposeViewController.mailComposeDelegate = self;
+		[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
+		[mailComposeViewController release];
+		//NSString *email = [NSString stringWithFormat:@"mailto:%@?subject=%@", recipients, subject];
+		 //email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		 //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+	}
 }
 
-
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	[self.tabBarController dismissModalViewControllerAnimated:YES];
+}
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
