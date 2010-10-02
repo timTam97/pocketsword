@@ -54,4 +54,23 @@
 	topBar.frame = CGRectMake(0.0, 0.0, width, barHeight);
 	mainView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
 }
+
++ (CGRect)getOrientationRect {
+	CGFloat x,y,width,height;
+	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+		x = 0.0;
+		y = 0.0;
+		width = screen.height;
+		height = screen.width;
+	} else {
+		x = 0.0;
+		y = 0.0;
+		width = screen.width;
+		height = screen.height;
+	}
+	return CGRectMake(x, y, width, height);
+}
+
 @end

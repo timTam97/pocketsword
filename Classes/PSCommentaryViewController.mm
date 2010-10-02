@@ -9,6 +9,8 @@
 #import "PSCommentaryViewController.h"
 #import "PSModuleController.h"
 
+#import "PSResizing.h"
+
 
 @implementation PSCommentaryViewController
 
@@ -16,24 +18,20 @@
 @synthesize jsToShow;
 @synthesize isFullScreen;
 
-/*
- // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // Custom initialization
-    }
-    return self;
-}
-*/
+bool comm_initialised = false;
 
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	isFullScreen = NO;
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
+}
+
+- (void)awakeFromNib {
+	[super awakeFromNib];
+	if(!comm_initialised) {
+		isFullScreen = NO;
+		comm_initialised = true;
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -47,26 +45,13 @@
 		[commentaryWebView stringByEvaluatingJavaScriptFromString:jsToShow];
 		self.jsToShow = nil;
 	}
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		commentaryWebView.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
-	} else {
-		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		commentaryWebView.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
-	}
+	[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	if(isFullScreen)
 		return;
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		commentaryWebView.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
-	} else {
-		commentaryToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		commentaryWebView.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
-	}
+	[PSResizing resizeViewsOnRotateWithTabBar:self.tabBarController.tabBar topBar:commentaryToolbar mainView:commentaryWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 
@@ -82,23 +67,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
-}
-
-- (CGRect)getOrientationRect {
-	CGFloat x,y,width,height;
-	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-		x = 0.0;
-		y = 0.0;
-		width = 480.0;
-		height = 320.0;
-	} else {
-		x = 0.0;
-		y = 0.0;
-		width = 320.0;
-		height = 480.0;
-	}
-	return CGRectMake(x, y, width, height);
 }
 
 - (void)toggleFullscreen {
@@ -128,31 +96,13 @@
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:commentaryWebView];
 		
-        commentaryWebView.frame = [self getOrientationRect];  //checks orientation to provide the correct rect
+        commentaryWebView.frame = [PSResizing getOrientationRect];  //checks orientation to provide the correct rect
 		
     } else {
-		CGFloat startWidth = 320.0, startHeight = 480.0;
-		UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-		if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-			startWidth = 480.0;
-			startHeight = 320.0;
-		}
-		CGFloat cwvHeight = startHeight - commentaryToolbar.frame.size.height - self.tabBarController.tabBar.frame.size.height;
-		commentaryWebView.frame = CGRectMake(0, commentaryToolbar.frame.size.height, startWidth, cwvHeight);
+		[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:NO];
         [self.view addSubview:commentaryWebView];
         self.tabBarController.view = previousTabBarView;
     }
-	
-	if(!isFullScreen) {
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-			commentaryToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-			commentaryWebView.frame = CGRectMake(0.0, 32.0, 480.0, 239.0);
-		} else {
-			commentaryToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-			commentaryWebView.frame = CGRectMake(0.0, 44.0, 320.0, 387.0);
-		}
-	}		
 	
     [UIView commitAnimations];
 }

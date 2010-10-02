@@ -21,12 +21,21 @@
 @synthesize tappedVerse;
 @synthesize isFullScreen;
 
+bool bib_initialised = false;
+
 - (void) viewDidLoad {
 	[super viewDidLoad];
-	isFullScreen = NO;
 	bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
+}
+
+- (void)awakeFromNib {
+	[super awakeFromNib];
+	if(!bib_initialised) {
+		isFullScreen = NO;
+		bib_initialised = true;
+	}
 }
 
 - (void)viewDidUnload {
@@ -45,13 +54,14 @@
 		self.jsToShow = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
-	[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+	//[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	if(isFullScreen)
 		return;
-	[PSResizing resizeViewsOnRotateWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBar:self.tabBarController.tabBar topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 
@@ -63,24 +73,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
-}
-
-- (CGRect)getOrientationRect {
-	CGFloat x,y,width,height;
-	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
-	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-		x = 0.0;
-		y = 0.0;
-		width = screen.height;
-		height = screen.width;
-	} else {
-		x = 0.0;
-		y = 0.0;
-		width = screen.width;
-		height = screen.height;
-	}
-	return CGRectMake(x, y, width, height);
 }
 
 - (void)toggleFullscreen {
@@ -95,13 +87,13 @@
     //move tab bar up/down
     CGRect tabBarFrame = self.tabBarController.tabBar.frame;
     int tabBarHeight = tabBarFrame.size.height;
-    int offset = isFullScreen ? tabBarHeight : -1 * tabBarHeight;
+    int offset = (isFullScreen) ? tabBarHeight : -1 * tabBarHeight;
     int tabBarY = tabBarFrame.origin.y + offset;
     tabBarFrame.origin.y = tabBarY;
     self.tabBarController.tabBar.frame = tabBarFrame;
 	
     //fade it in/out
-    self.tabBarController.tabBar.alpha = isFullScreen ? 0 : 1;
+    self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
 	
     //resize webview to be full screen / normal
     [bibleWebView removeFromSuperview];
@@ -109,25 +101,12 @@
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:bibleWebView];
-		
-        bibleWebView.frame = [self getOrientationRect];  //checks orientation to provide the correct rect
-		
+        bibleWebView.frame = [PSResizing getOrientationRect];  //checks orientation to provide the correct rect
     } else {
-		CGFloat startWidth = 320.0, startHeight = 480.0;
-		UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-		if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-			startWidth = 480.0;
-			startHeight = 320.0;
-		}
-		CGFloat bwvHeight = startHeight - bibleToolbar.frame.size.height - self.tabBarController.tabBar.frame.size.height;
-		bibleWebView.frame = CGRectMake(0, bibleToolbar.frame.size.height, startWidth, bwvHeight);
+		[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
         [self.view addSubview:bibleWebView];
         self.tabBarController.view = previousTabBarView;
     }
-	
-	if(!isFullScreen) {
-		[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
-	}
 	
     [UIView commitAnimations];
 }
