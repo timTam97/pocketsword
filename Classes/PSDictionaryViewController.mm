@@ -97,9 +97,9 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable useStatusBar:YES];
 	[self reloadDictionaryData:NO];
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {

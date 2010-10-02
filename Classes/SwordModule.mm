@@ -1113,8 +1113,8 @@
 							}\n\
 						}\n\
 					}\n\
-					window.onload = function() {\n\
-						document.documentElement.style.webkitTouchCallout = \"none\";\n\
+					function resetArrays() {\n\
+						versepos = null;\n\
 						versepos = new Array(%d);\n\
 						var tmpstr = \"arraydump:\";\n\
 						for (var i=1; i < %d; i++) {\n\
@@ -1126,6 +1126,10 @@
 							tmpstr += versepos[i] + \":\";\n\
 						}\n\
 						document.location = tmpstr;\n\
+					}\n\
+					window.onload = function() {\n\
+						document.documentElement.style.webkitTouchCallout = \"none\";\n\
+						resetArrays()\n\
 						%@\n\
 					}\n-->\
 					</script>\n", i, i, i, i, extraJS];

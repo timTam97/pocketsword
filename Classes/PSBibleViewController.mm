@@ -8,7 +8,7 @@
 
 #import "PSBibleViewController.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
+//#import "ViewController.h"
 #import "SwordDictionary.h"
 #import "PSBookmarksViewController.h"
 #import "PSResizing.h"
@@ -46,6 +46,7 @@ bool bib_initialised = false;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
 	if(refToShow) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
@@ -55,15 +56,19 @@ bool bib_initialised = false;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	//[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"resetArrays();"];
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];

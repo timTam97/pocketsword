@@ -45,8 +45,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[bookmarksTable reloadData];
 	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bookmarksNavBar mainView:bookmarksTable useStatusBar:YES];
+	[bookmarksTable reloadData];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {

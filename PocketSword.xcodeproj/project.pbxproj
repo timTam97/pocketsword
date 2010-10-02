@@ -11,6 +11,7 @@
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
+		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; };
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
 		05124A9B11B5F02000575BA9 /* devo-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 05124A9A11B5F02000575BA9 /* devo-open.png */; };
 		05124A9C11B5F02000575BA9 /* devo-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 05124A9A11B5F02000575BA9 /* devo-open.png */; };
@@ -1659,6 +1660,7 @@
 				05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */,
 				05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */,
 				05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */,
+				050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2689,6 +2691,7 @@
 			children = (
 				E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				054BED9D119F89E800ABCA18 /* Info-PS-en.plist */,
 				0545E32710654A8500DD7F06 /* Source */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				0542F6C110BE75570088A721 /* externals */,
@@ -2697,7 +2700,6 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				052B52841101A32900FFDF01 /* Settings.bundle */,
-				054BED9D119F89E800ABCA18 /* Info-PS-en.plist */,
 			);
 			name = PocketSword;
 			sourceTree = "<group>";

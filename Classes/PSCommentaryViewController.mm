@@ -36,6 +36,7 @@ bool comm_initialised = false;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:YES];
 	if(refToShow) {
 		NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
@@ -45,15 +46,19 @@ bool comm_initialised = false;
 		[commentaryWebView stringByEvaluatingJavaScriptFromString:jsToShow];
 		self.jsToShow = nil;
 	}
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"resetArrays();"];
+	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
