@@ -55,13 +55,13 @@ bool bib_initialised = false;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	//[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
-	[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	if(isFullScreen)
 		return;
-	[PSResizing resizeViewsOnRotateWithTabBar:self.tabBarController.tabBar topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 
@@ -103,7 +103,7 @@ bool bib_initialised = false;
         [self.tabBarController.view addSubview:bibleWebView];
         bibleWebView.frame = [PSResizing getOrientationRect];  //checks orientation to provide the correct rect
     } else {
-		[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
         [self.view addSubview:bibleWebView];
         self.tabBarController.view = previousTabBarView;
     }

@@ -10,7 +10,7 @@
 #import "PSModuleController.h"
 #import "NavigatorSources.h"
 #import "HistoryController.h"
-
+#import "PSResizing.h"
 
 @implementation PSModuleSelectorController
 
@@ -74,24 +74,11 @@
 		[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
 	}
 
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		modulesListTable.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
-	} else {
-		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		modulesListTable.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
-	}
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		modulesListTable.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
-	} else {
-		modulesNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		modulesListTable.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
-	}
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (IBAction)addModuleButtonPressed {

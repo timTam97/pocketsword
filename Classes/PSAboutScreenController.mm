@@ -8,6 +8,7 @@
 
 #import "PSAboutScreenController.h"
 #import "PSModuleController.h"
+#import <MessageUI/MessageUI.h>
 
 
 @implementation PSAboutScreenController
@@ -135,17 +136,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-//- (void)viewDidLoad {
-//    [super viewDidLoad];
-	CGFloat height = 480.0;
-	CGFloat width = 320.0;
+	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	CGFloat height = screen.height;
+	CGFloat width = screen.width;
+	CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
 	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
 	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-		height = 320.0;
-		width = 480.0;
+		height = screen.width;
+		width = screen.height;
+		statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.width;
 	}
-	height -= 20.0 + self.tabBarController.tabBar.frame.size.height + self.navigationController.navigationBar.frame.size.height;
+	height -= statusBarHeight + self.tabBarController.tabBar.frame.size.height + self.navigationController.navigationBar.frame.size.height;
 	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
 	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	
@@ -158,10 +159,14 @@
 	
 	
 	self.navigationItem.rightBarButtonItem = nil;
-	//UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
-	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
-	self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
-	[emailUsBarButtonItem release];
+	//if([MFMailComposeViewController canSendMail]) {
+		//UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
+		UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
+		self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
+		[emailUsBarButtonItem release];
+	//} else {
+		//what should I show here instead?
+	//}
 	
 }
 
@@ -173,15 +178,19 @@
 
 -(void)emailFeedback:(id)sender
 {
-    NSString *recipients = @"mailto:niccarter@mac.com?";
+    NSString *recipients = @"niccarter@mac.com";
     //NSString *body = @"&body=PocketSword is the bestestest evar!";
-	NSString *subject = [NSString stringWithFormat:@"subject=PocketSword Feedback (v%@)", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 	
-    
-    NSString *email = [NSString stringWithFormat:@"%@%@", recipients, subject];
-    email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+	//MFMailComposeViewController *mailComposeViewController
+	
+	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [[UIDevice currentDevice] model]];
+	
+//	if([MFMailComposeViewController canSendMail]) {
+		NSString *email = [NSString stringWithFormat:@"mailto:%@?subject=%@", recipients, subject];
+		email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+//	}
 }
 
 

@@ -45,6 +45,9 @@ BOOL searchingEnabled;
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+// TODO: when we rip this view to pieces, this needs to be switched to be:
+	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable useStatusBar:YES];
+
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
@@ -58,6 +61,7 @@ BOOL searchingEnabled;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	//[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
 		searchBar.frame = CGRectMake(61.0, 0.0, 236.0, 32.0);//396,236

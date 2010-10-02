@@ -24,6 +24,8 @@
 #import "NavigatorSources.h"
 #import "PSModuleSelectorController.h"
 
+#define INFO_LANDSCAPE_HEIGHT 100.0
+#define INFO_PORTRAIT_HEIGHT 160.0
 
 @implementation ViewController
 
@@ -774,25 +776,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	
 	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {// || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		//activityController.view.frame.size.width = 480.0;
-		//activityController.view.frame.size.height = 320.0;
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
 		activityLoadingLabel.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		//activityController.view.frame.size.width = 480.0;
-		//activityController.view.frame.size.height = 320.0;
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
 		activityLoadingLabel.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 	} else if(deviceOrientation == UIDeviceOrientationPortrait) {
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
-		//activityController.view.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
-		//activityController.view.frame.size.width = 320.0;
-		//activityController.view.frame.size.height = 460.0;
 	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
 		activityLoadingLabel.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-		//activityController.view.frame.size.width = 320.0;
-		//activityController.view.frame.size.height = 460.0;
 	}
 
 	
@@ -856,23 +849,23 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)showInfo:(NSString *)infoString {
 	if(![infoView superview]) {
 		//need to show the info pane
+		CGSize screen = [[UIScreen mainScreen] bounds].size;
 		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, 480.0, 100.0);
+			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
 			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, 480.0, 100.0);
+			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
 			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
 			infoView.transform = CGAffineTransformIdentity;
-			//devotionalDatePickerView.transform = CGAffineTransformMakeRotation(0.0 * M_PI / 2.0);
-			infoView.frame = CGRectMake(0, 0, 320.0, 160.0);
+			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
 		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-			infoView.frame = CGRectMake(0, 0, 320.0, 160.0);
+			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
 		}
 		[ViewController showModal: infoView withTiming: 0.3];
 	}

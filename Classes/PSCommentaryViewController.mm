@@ -45,13 +45,13 @@ bool comm_initialised = false;
 		[commentaryWebView stringByEvaluatingJavaScriptFromString:jsToShow];
 		self.jsToShow = nil;
 	}
-	[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	if(isFullScreen)
 		return;
-	[PSResizing resizeViewsOnRotateWithTabBar:self.tabBarController.tabBar topBar:commentaryToolbar mainView:commentaryWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 
@@ -99,7 +99,7 @@ bool comm_initialised = false;
         commentaryWebView.frame = [PSResizing getOrientationRect];  //checks orientation to provide the correct rect
 		
     } else {
-		[PSResizing resizeViewsOnAppearWithTabBar:self.tabBarController.tabBar topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:NO];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:NO];
         [self.view addSubview:commentaryWebView];
         self.tabBarController.view = previousTabBarView;
     }

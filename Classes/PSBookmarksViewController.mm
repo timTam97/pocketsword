@@ -7,10 +7,10 @@
 //
 
 #import "PSBookmarksViewController.h"
-
 #import "PSModuleController.h"
 #import "HistoryController.h"
 #import "globals.h"
+#import "PSResizing.h"
 
 @implementation PSBookmarksViewController
 
@@ -46,24 +46,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[bookmarksTable reloadData];
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		bookmarksTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
-	} else {
-		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		bookmarksTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
-	}
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bookmarksNavBar mainView:bookmarksTable useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		bookmarksTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
-	} else {
-		bookmarksNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		bookmarksTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
-	}
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bookmarksNavBar mainView:bookmarksTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 /*

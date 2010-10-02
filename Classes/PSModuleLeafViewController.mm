@@ -8,7 +8,7 @@
 
 #import "PSModuleLeafViewController.h"
 #import "PocketSwordAppDelegate.h"
-
+#import "PSResizing.h"
 
 @implementation PSModuleLeafViewController
 
@@ -23,33 +23,11 @@ BOOL trashModule = NO;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	
-//	UIView *view = self.view;
-//	CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-//	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-//		view.frame = CGRectMake(0, 0, appFrame.size.height, appFrame.size.width);
-//	} else {
-//		view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);;
-//	}
-	
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		infoNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		infoWebView.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
-	} else {
-		infoNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		infoWebView.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
-	}
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		infoNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		infoWebView.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
-	} else {
-		infoNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		infoWebView.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
-	}
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 //- (void)viewDidAppear {

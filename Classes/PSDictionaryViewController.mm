@@ -9,6 +9,7 @@
 #import "PSDictionaryOverlayViewController.h"
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
+#import "PSResizing.h"
 
 
 @implementation PSDictionaryViewController
@@ -98,24 +99,11 @@ PSDictionaryOverlayViewController *overlayViewController;
     [super viewWillAppear:animated];
 	[self reloadDictionaryData:NO];
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		dictionaryEntriesTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);
-	} else {
-		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		dictionaryEntriesTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);
-	}
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		dictionaryEntriesTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//367
-	} else {
-		dictionaryNavBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		dictionaryEntriesTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);
-	}
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -429,24 +417,11 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
-	} else {
-		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
-	}
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryDescriptionToolbar mainView:dictionaryDescriptionWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);//367
-	} else {
-		dictionaryDescriptionToolbar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		dictionaryDescriptionWebView.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
-	}
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:dictionaryDescriptionToolbar mainView:dictionaryDescriptionWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 // Override to allow orientations other than the default portrait orientation.
