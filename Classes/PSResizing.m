@@ -19,9 +19,18 @@
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	CGFloat barHeight, viewHeight, width;//, tabBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
+	BOOL redrawInNewFrames = NO;
 	
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	UIInterfaceOrientation interfaceOrientation = tabBarController.interfaceOrientation;
+	if(!tabBarController) {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(UIDeviceOrientationIsLandscape(deviceOrientation))
+			interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
+		else if(UIDeviceOrientationIsPortrait(deviceOrientation))
+			interfaceOrientation = UIInterfaceOrientationPortrait;
+	}
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		redrawInNewFrames = YES;
 		//tabBarHeight = TAB_BAR_LANDSCAPE_HEIGHT;
 		width = screen.height;
 		barHeight = TOP_BAR_LANDSCAPE_HEIGHT;
@@ -31,7 +40,8 @@
 		}
 		//tabBarY = viewHeight+barHeight;
 		//if(useStatusBar) tabBarY += [UIApplication sharedApplication].statusBarFrame.size.width;
-	} else {
+	} else if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		redrawInNewFrames = YES;
 		//tabBarHeight = TAB_BAR_PORTRAIT_HEIGHT;
 		width = screen.width;
 		barHeight = TOP_BAR_PORTRAIT_HEIGHT;
@@ -42,12 +52,14 @@
 		//tabBarY = viewHeight+barHeight;
 		//if(useStatusBar) tabBarY += [UIApplication sharedApplication].statusBarFrame.size.height;
 	}
-	topBar.frame = CGRectMake(0.0, 0.0, width, barHeight);
-	[topBar layoutIfNeeded];
-	[topBar setNeedsDisplay];
-	mainView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
-	//tabBarController.tabBar.frame = CGRectMake(0.0, tabBarY, width, tabBarHeight);
-	//tabBarController.selectedViewController.view.frame = CGRectMake(0.0, 0.0, width, tabBarY);
+	if(redrawInNewFrames) {
+		topBar.frame = CGRectMake(0.0, 0.0, width, barHeight);
+		[topBar layoutIfNeeded];
+		[topBar setNeedsDisplay];
+		mainView.frame = CGRectMake(0.0, barHeight, width, viewHeight);
+		//tabBarController.tabBar.frame = CGRectMake(0.0, tabBarY, width, tabBarHeight);
+		//tabBarController.selectedViewController.view.frame = CGRectMake(0.0, 0.0, width, tabBarY);
+	}
 }
 
 +(void)resizeViewsOnRotateWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView fromOrientation:(UIInterfaceOrientation)fromInterfaceOrientation toOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
