@@ -106,7 +106,7 @@ bool bib_initialised = false;
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:bibleWebView];
-        bibleWebView.frame = [PSResizing getOrientationRect];  //checks orientation to provide the correct rect
+        bibleWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];  //checks orientation to provide the correct rect
     } else {
 		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
         [self.view addSubview:bibleWebView];

@@ -11,6 +11,6 @@
 +(void)resizeViewsOnAppearWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView useStatusBar:(BOOL)useStatusBar;
 +(void)resizeViewsOnRotateWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView fromOrientation:(UIInterfaceOrientation)fromInterfaceOrientation toOrientation:(UIInterfaceOrientation)toInterfaceOrientation;
 
-+ (CGRect)getOrientationRect;
++ (CGRect)getOrientationRect:(UIInterfaceOrientation)interfaceOrientation;
 
 @end

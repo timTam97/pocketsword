@@ -101,7 +101,7 @@ bool comm_initialised = false;
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:commentaryWebView];
 		
-        commentaryWebView.frame = [PSResizing getOrientationRect];  //checks orientation to provide the correct rect
+        commentaryWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];  //checks orientation to provide the correct rect
 		
     } else {
 		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:NO];

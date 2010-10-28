@@ -85,11 +85,10 @@
 	}
 }
 
-+ (CGRect)getOrientationRect {
++ (CGRect)getOrientationRect:(UIInterfaceOrientation)interfaceOrientation {
 	CGFloat x,y,width,height;
-	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
-	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		x = 0.0;
 		y = 0.0;
 		width = screen.height;
