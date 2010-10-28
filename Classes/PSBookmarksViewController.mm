@@ -205,7 +205,20 @@
 	cell.textLabel.text = [bookmarks objectAtIndex: indexPath.row];
 	// TODO:  add the first bit of the chapter to the detailLabel:
 	cell.detailTextLabel.text = @"";    
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.textLabel.textColor = [UIColor whiteColor];
+	} else {
+		cell.textLabel.textColor = [UIColor blackColor];
+	}
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 

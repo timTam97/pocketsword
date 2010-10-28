@@ -124,6 +124,10 @@ PSDictionaryOverlayViewController *overlayViewController;
 	// Release any cached data, images, etc that aren't in use.
 }
 
+- (void)reloadDictionaryEntriesTable {
+	[dictionaryEntriesTable reloadData];
+}
+
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
@@ -136,11 +140,13 @@ PSDictionaryOverlayViewController *overlayViewController;
 	searchResults = [[NSMutableArray alloc] init];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryData) name:NotificationReloadDictionaryData object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryEntriesTable) name:NotificationNightModeChanged object:nil];
 }
 
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationPrimaryDictionaryChanged object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationReloadDictionaryData object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationNightModeChanged object:nil];
 	[searchResults release];
 	searchResults = nil;
 	//[dictionarySearchBar release];
@@ -181,9 +187,22 @@ PSDictionaryOverlayViewController *overlayViewController;
 		cell.textLabel.text = [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex:indexPath.row];
 	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.textLabel.textColor = [UIColor whiteColor];
+	} else {
+		cell.textLabel.textColor = [UIColor blackColor];
+	}
+
 	return cell;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[dictionarySearchBar resignFirstResponder];

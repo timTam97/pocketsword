@@ -64,8 +64,21 @@
     }
     
 	cell.textLabel.text = [NSString stringWithFormat:@"%@ %d", NSLocalizedString(@"RefSelectorVerseTitle", @"Verse"), (indexPath.section+1)];
-
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.textLabel.textColor = [UIColor whiteColor];
+	} else {
+		cell.textLabel.textColor = [UIColor blackColor];
+	}
+	
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

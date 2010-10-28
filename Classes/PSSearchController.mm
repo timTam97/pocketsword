@@ -176,6 +176,17 @@ BOOL searchingEnabled;
         mainLabel = (UILabel *)[cell.contentView viewWithTag:477];
         secondLabel = (UILabel *)[cell.contentView viewWithTag:577];
 	}
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		mainLabel.textColor = [UIColor whiteColor];
+		secondLabel.textColor = [UIColor lightGrayColor];
+		mainLabel.backgroundColor = [UIColor blackColor];
+		secondLabel.backgroundColor = [UIColor blackColor];
+	} else {
+		mainLabel.textColor = [UIColor blackColor];
+		secondLabel.textColor = [UIColor darkGrayColor];
+		mainLabel.backgroundColor = [UIColor whiteColor];
+		secondLabel.backgroundColor = [UIColor whiteColor];
+	}
 	if(!((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text || [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text isEqualToString: @""]) {
 		ShownTab tab = [historyController listType];
 		SwordModuleTextEntry *entry;
@@ -199,6 +210,14 @@ BOOL searchingEnabled;
 	[txt release];
 	
 	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

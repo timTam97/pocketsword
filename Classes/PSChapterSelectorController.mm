@@ -101,11 +101,23 @@ BOOL needToScroll;
 	if((indexPath.section+1) == currentChapter) {
 		cell.textLabel.textColor = [UIColor blueColor];
 	} else {
-		cell.textLabel.textColor = [UIColor blackColor];
+		if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+			cell.textLabel.textColor = [UIColor whiteColor];
+		} else {
+			cell.textLabel.textColor = [UIColor blackColor];
+		}
 	}
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 

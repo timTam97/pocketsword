@@ -160,11 +160,24 @@
 		cell.textLabel.textColor = [UIColor brownColor];
 		cell.detailTextLabel.textColor = [UIColor brownColor];
 	} else {
-		cell.textLabel.textColor = [UIColor blackColor];
-		cell.detailTextLabel.textColor = [UIColor blackColor];
+		if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+			cell.textLabel.textColor = [UIColor whiteColor];
+			cell.detailTextLabel.textColor = [UIColor whiteColor];
+		} else {
+			cell.textLabel.textColor = [UIColor blackColor];
+			cell.detailTextLabel.textColor = [UIColor blackColor];
+		}
 	}
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -749,6 +749,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"nightModePreference"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNightModeChanged object:nil];
 }
 
 - (void)redLetterChanged:(UISwitch *)sender {
