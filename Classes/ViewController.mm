@@ -850,19 +850,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if(![infoView superview]) {
 		//need to show the info pane
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+		UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
 			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
 			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
-		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
