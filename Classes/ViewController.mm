@@ -137,6 +137,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotateInfo) name:NotificationRotateInfoPane object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicatorViaNotification) name:NotificationDisplayBusyIndicator object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
@@ -854,11 +855,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
-			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
-			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
@@ -881,6 +882,47 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[infoWebView loadHTMLString: htmlString baseURL: nil];
 	
 	//NSLog(@"%@", infoString);
+}
+
+- (void)rotateInfo {
+	if([infoView superview]) {//only rotate if it's displayed!
+		[UIView beginAnimations:@"rotateInfo" context:nil];
+		[UIView setAnimationBeginsFromCurrentState:YES];
+		[UIView setAnimationDuration:0.3];
+		
+		CGSize screen = [[UIScreen mainScreen] bounds].size;
+		UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+		CGFloat x,y;
+		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+			infoView.transform = CGAffineTransformIdentity;
+			x = 0.5 * INFO_LANDSCAPE_HEIGHT - 20;
+//			if(![[UIApplication sharedApplication] isStatusBarHidden]) {
+//				NSLog(@"status bar visible");
+//				x -= [UIApplication sharedApplication].statusBarFrame.size.width;
+//			} else {
+//				NSLog(@"status bar NOT visible");
+//				x -= 20;
+//			}
+			y = (0.5 * screen.height) - (0.5 * INFO_LANDSCAPE_HEIGHT);
+			infoView.frame = CGRectMake(x, y, screen.height, INFO_LANDSCAPE_HEIGHT);
+			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+			infoView.transform = CGAffineTransformIdentity;
+			x = 0.5 * INFO_LANDSCAPE_HEIGHT - 0.5 * screen.height;
+			y = (0.5 * screen.height) - (0.5 * INFO_LANDSCAPE_HEIGHT);
+			infoView.frame = CGRectMake(x, y, screen.height, INFO_LANDSCAPE_HEIGHT);
+			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+			infoView.transform = CGAffineTransformIdentity;
+			infoView.frame = CGRectMake(0, (screen.height - INFO_PORTRAIT_HEIGHT), screen.width, INFO_PORTRAIT_HEIGHT);
+		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+			infoView.transform = CGAffineTransformIdentity;
+			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
+			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+		}
+		
+		[UIView commitAnimations];
+	}
 }
 
 - (IBAction)hideInfo {

@@ -159,6 +159,7 @@ typedef enum {
 
 - (void)showInfoWithNotification:(NSNotification *)notification;
 - (void)showInfo:(NSString *)infoString;
+- (void)rotateInfo;
 - (IBAction)hideInfo;
 
 @end

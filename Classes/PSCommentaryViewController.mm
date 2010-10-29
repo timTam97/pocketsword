@@ -56,6 +56,7 @@ bool comm_initialised = false;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"resetArrays();"];
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }

@@ -84,6 +84,7 @@ typedef enum {
 
 #define NotificationHideInfoPane				@"NotificationHideInfoPane"
 #define NotificationShowInfoPane				@"NotificationShowInfoPane"
+#define NotificationRotateInfoPane				@"NotificationRotateInfoPane"
 
 #define NotificationDisplayBusyIndicator		@"NotificationDisplayBusyIndicator"
 #define NotificationHideBusyIndicator			@"NotificationHideBusyIndicator"

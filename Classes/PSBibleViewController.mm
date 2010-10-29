@@ -66,6 +66,7 @@ bool bib_initialised = false;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"resetArrays();"];
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
