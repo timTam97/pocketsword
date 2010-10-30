@@ -851,7 +851,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if(![infoView superview]) {
 		//need to show the info pane
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
+		if([UIApplication sharedApplication].statusBarHidden) {
+			interfaceOrientation = tabController.interfaceOrientation;
+		}
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
@@ -885,13 +888,18 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)rotateInfo {
+	NSLog(@"rotateInfo");
 	if([infoView superview]) {//only rotate if it's displayed!
+		NSLog(@"rotateInfo - doing something");
 		[UIView beginAnimations:@"rotateInfo" context:nil];
 		[UIView setAnimationBeginsFromCurrentState:YES];
 		[UIView setAnimationDuration:0.3];
 		
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
+		if([UIApplication sharedApplication].statusBarHidden) {
+			interfaceOrientation = tabController.interfaceOrientation;
+		}
 		CGFloat x,y;
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;

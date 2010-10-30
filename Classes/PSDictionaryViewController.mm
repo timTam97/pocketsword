@@ -106,6 +106,10 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+//	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+//}
+
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 }
@@ -412,7 +416,6 @@ PSDictionaryOverlayViewController *overlayViewController;
 		[tmpEntry release];
 	}
 	
-	
 	if(entry) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
 
@@ -441,6 +444,10 @@ PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:dictionaryDescriptionToolbar mainView:dictionaryDescriptionWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 }
 
 // Override to allow orientations other than the default portrait orientation.

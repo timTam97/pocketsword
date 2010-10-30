@@ -7,6 +7,14 @@
 //
 
 
+
+@interface PSDictionaryEntryViewController : UIViewController {
+	IBOutlet UIToolbar	*dictionaryDescriptionToolbar;
+	IBOutlet UIWebView	*dictionaryDescriptionWebView;
+}
+
+@end
+
 @interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate> {
 
 	IBOutlet UITabBarItem		*dictionaryTabBarItem;
@@ -16,7 +24,7 @@
 	IBOutlet UINavigationItem	*dictionaryNavItem;
 	IBOutlet UINavigationBar	*dictionaryNavBar;
 	
-	IBOutlet UIViewController	*dictionaryDescriptionViewController;
+	IBOutlet PSDictionaryEntryViewController	*dictionaryDescriptionViewController;
 	IBOutlet UIBarButtonItem	*dictionaryDescriptionTitle;
 	IBOutlet UIWebView			*dictionaryDescriptionWebView;
 	
@@ -32,12 +40,5 @@
 - (void)showDescription:(NSString*)description withTitle:(NSString*)t;
 - (IBAction)hideDescription:(id)sender;
 - (void)searchDictionaryEntries;
-
-@end
-
-@interface PSDictionaryEntryViewController : UIViewController {
-	IBOutlet UIToolbar	*dictionaryDescriptionToolbar;
-	IBOutlet UIWebView	*dictionaryDescriptionWebView;
-}
 
 @end
