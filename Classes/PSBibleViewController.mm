@@ -81,6 +81,16 @@ bool bib_initialised = false;
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 }
 
+- (void)switchToFullscreen {
+	if(!isFullScreen)
+		[self toggleFullscreen];
+}
+
+- (void)switchToNormalscreen {
+	if(isFullScreen)
+		[self toggleFullscreen];
+}
+
 - (void)toggleFullscreen {
     isFullScreen = !isFullScreen;
 	
@@ -254,6 +264,10 @@ bool bib_initialised = false;
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {
 		//[[NSUserDefaults standardUserDefaults] setObject: tappedVerse forKey: DefaultsCommentaryVersePosition];
 		commentaryView.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", tappedVerse];
+		if([self isFullScreen]) {
+			[self toggleFullscreen];
+			[commentaryView viewWillAppear:YES];
+		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
 		self.tappedVerse = nil;
 	}

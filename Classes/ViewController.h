@@ -44,12 +44,15 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
+@interface PSWebView : UIWebView {}
+@end
+
 @interface ViewController : NSObject <UITabBarControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
 	
 	// Bible tab
-	IBOutlet UIWebView					*bibleWebView;
+	IBOutlet PSWebView					*bibleWebView;
 	IBOutlet UIActivityIndicatorView	*bibleActivity;
 	IBOutlet UISegmentedControl			*bibleSegmentedControl;
 	IBOutlet UIBarButtonItem			*bibleSearchButton;
@@ -57,7 +60,7 @@ typedef enum {
 	IBOutlet UIBarButtonItem			*bibleTitle;
 	
 	// Commentary tab
-	IBOutlet UIWebView					*commentaryWebView;
+	IBOutlet PSWebView					*commentaryWebView;
 	IBOutlet UIActivityIndicatorView	*commentaryActivity;
 	IBOutlet UISegmentedControl			*commentarySegmentedControl;
 	IBOutlet UIBarButtonItem			*commentarySearchButton;

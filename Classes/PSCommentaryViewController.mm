@@ -26,6 +26,26 @@ bool comm_initialised = false;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 }
 
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+	
+	// Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationCommentaryToggleFullscreen];
+}
+
+
+- (void)dealloc {
+    [super dealloc];
+	self.refToShow = nil;
+	self.jsToShow = nil;
+}
+
 - (void)awakeFromNib {
 	[super awakeFromNib];
 	if(!comm_initialised) {
@@ -73,6 +93,16 @@ bool comm_initialised = false;
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+}
+
+- (void)switchToFullscreen {
+	if(!isFullScreen)
+		[self toggleFullscreen];
+}
+
+- (void)switchToNormalscreen {
+	if(isFullScreen)
+		[self toggleFullscreen];
 }
 
 - (void)toggleFullscreen {
@@ -251,26 +281,6 @@ bool comm_initialised = false;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 */
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationCommentaryToggleFullscreen];
-}
-
-
-- (void)dealloc {
-    [super dealloc];
-	self.refToShow = nil;
-	self.jsToShow = nil;
-}
 
 
 @end

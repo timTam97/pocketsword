@@ -94,4 +94,4 @@ typedef enum {
 
 #define NotificationBibleToggleFullscreen		@"NotificationBibleToggleFullscreen"
 #define NotificationCommentaryToggleFullscreen	@"NotificationCommentaryToggleFullscreen"
-
+#define NotificationSwitchToFullscreen			@"NotificationSwitchToFullscreen"

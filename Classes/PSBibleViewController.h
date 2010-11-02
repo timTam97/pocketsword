@@ -34,6 +34,7 @@
 @property (readonly) BOOL isFullScreen;
 
 - (void)toggleFullscreen;
-
+- (void)switchToFullscreen;
+- (void)switchToNormalscreen;
 
 @end

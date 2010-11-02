@@ -11,7 +11,7 @@
 			<string key="NS.object.0">123</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="657"/>
+			<integer value="656"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -3027,6 +3027,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="1260.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1261.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="171.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="188.CustomClassName">PSWebView</string>
 				<string key="188.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.CustomClassName">SnoopWindow</string>
 				<dictionary class="NSMutableDictionary" key="2.IBAttributePlaceholdersKey"/>
@@ -3061,6 +3062,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="646.IBEditorWindowLastContentRect">{{433, 309}, {320, 480}}</string>
 				<string key="646.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="656.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="657.CustomClassName">PSWebView</string>
 				<string key="657.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="675.CustomClassName">NavigatorSources</string>
 				<string key="722.CustomClassName">PSPreferencesFontTableViewController</string>
@@ -3505,7 +3507,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="dictionaryDescriptionTitle">UIBarButtonItem</string>
-						<string key="dictionaryDescriptionViewController">UIViewController</string>
+						<string key="dictionaryDescriptionViewController">PSDictionaryEntryViewController</string>
 						<string key="dictionaryDescriptionWebView">UIWebView</string>
 						<string key="dictionaryEntriesTable">UITableView</string>
 						<string key="dictionaryNavBar">UINavigationBar</string>
@@ -3521,7 +3523,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						</object>
 						<object class="IBToOneOutletInfo" key="dictionaryDescriptionViewController">
 							<string key="name">dictionaryDescriptionViewController</string>
-							<string key="candidateClassName">UIViewController</string>
+							<string key="candidateClassName">PSDictionaryEntryViewController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="dictionaryDescriptionWebView">
 							<string key="name">dictionaryDescriptionWebView</string>
@@ -3783,6 +3785,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">PSWebView</string>
+					<string key="superclassName">UIWebView</string>
+					<reference key="sourceIdentifier" ref="93210054"/>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">PocketSwordAppDelegate</string>
 					<string key="superclassName">NSObject</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
@@ -3903,13 +3910,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="bibleSegmentedControl">UISegmentedControl</string>
 						<string key="bibleTabController">PSBibleViewController</string>
 						<string key="bibleTitle">UIBarButtonItem</string>
-						<string key="bibleWebView">UIWebView</string>
+						<string key="bibleWebView">PSWebView</string>
 						<string key="commentaryActivity">UIActivityIndicatorView</string>
 						<string key="commentarySearchButton">UIBarButtonItem</string>
 						<string key="commentarySegmentedControl">UISegmentedControl</string>
 						<string key="commentaryTabController">PSCommentaryViewController</string>
 						<string key="commentaryTitle">UIBarButtonItem</string>
-						<string key="commentaryWebView">UIWebView</string>
+						<string key="commentaryWebView">PSWebView</string>
 						<string key="devotionalWebView">UIWebView</string>
 						<string key="dictionaryTitle">UIBarButtonItem</string>
 						<string key="dictionaryViewController">PSDictionaryViewController</string>
@@ -3960,7 +3967,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						</object>
 						<object class="IBToOneOutletInfo" key="bibleWebView">
 							<string key="name">bibleWebView</string>
-							<string key="candidateClassName">UIWebView</string>
+							<string key="candidateClassName">PSWebView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="commentaryActivity">
 							<string key="name">commentaryActivity</string>
@@ -3984,7 +3991,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						</object>
 						<object class="IBToOneOutletInfo" key="commentaryWebView">
 							<string key="name">commentaryWebView</string>
-							<string key="candidateClassName">UIWebView</string>
+							<string key="candidateClassName">PSWebView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="devotionalWebView">
 							<string key="name">devotionalWebView</string>

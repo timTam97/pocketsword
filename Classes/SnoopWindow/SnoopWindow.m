@@ -12,7 +12,7 @@
 #import "globals.h"
 
 
-#define SWIPE_DRAG_HORIZ_MIN 200
+#define SWIPE_DRAG_HORIZ_MIN 100
 #define SWIPE_DRAG_VERT_MAX 40
 #define ZOOM_DRAG_MIN 20
 
@@ -160,8 +160,8 @@ CGPoint CGPointNorm(CGPoint a) {
 //				self.holdTimer = nil;
 //			}
 			
-			if (!movement && ([[event allTouches] count] > 1)) {
-				DLog(@"2-finger-tap");
+			if (!movement /*&& ([[event allTouches] count] > 1)*/) {
+				//DLog(@"toggle-fullscreen-tap");
 				
 				if(bibleEvent) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];

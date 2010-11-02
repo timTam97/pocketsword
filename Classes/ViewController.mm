@@ -145,10 +145,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addModuleButtonPressed) name:NotificationShowDownloadsTab object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayCommentaryTabViaNotification) name:NotificationShowCommentaryTab object:nil];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchToFullscreen) name:NotificationSwitchToFullscreen object:nil];
 		//[pool release];
 		initialized = true;
 	}
 	
+}
+
+- (void)switchToFullscreen {
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		// bible tab
+		[bibleTabController switchToFullscreen];
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		// commentary tab
+		[commentaryTabController switchToFullscreen];
+	}
 }
 
 - (void)setBibleTitleViaNotification {
@@ -1049,3 +1060,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 @end
 
+@implementation PSWebView
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
+	[super scrollViewWillBeginDragging:scrollView];
+}
+
+@end
