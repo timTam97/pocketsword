@@ -1243,6 +1243,7 @@
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
 		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "changes-v1.3.x.txt"; path = "Resources/doc/changes-v1.3.x.txt"; sourceTree = "<group>"; };
 		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
 		058E2D2B10F56EFC006E4447 /* canon_german.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_german.h; sourceTree = "<group>"; };
 		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
@@ -2452,6 +2453,7 @@
 		0542F70F10BE7C0B0088A721 /* doc */ = {
 			isa = PBXGroup;
 			children = (
+				057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */,
 				05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */,
 				053C59DA1150B3630024192C /* S_M_85032342_20091130_20091227.txt */,
 				053C59DB1150B3630024192C /* S_M_85032342_20091228_20100131.txt */,

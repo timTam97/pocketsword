@@ -1,4 +1,10 @@
 
+New in v1.3.3
+- now works in Landscape and Portrait modes
+- full-screen mode (default)
+- sending feedback now composes an email in-app, rather than launching Mail.app
+- bug fixes
+
 New in v1.3.2
 - Added ability to download "locked" texts & unlock them (eg: NET Bible)
 - updated the built-in Greek Strong's lexicon
@@ -13,7 +19,7 @@ New in v1.3.2
 - started upgrade of images for iPhone 4 retina display
 - bug fixes
 
-New in v1.3.2
+New in v1.3.1
 - bug fixes
 
 New in v1.3.0
