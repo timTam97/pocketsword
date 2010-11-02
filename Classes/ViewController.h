@@ -71,13 +71,15 @@ typedef enum {
 	IBOutlet PSRefSelectorController	*refSelectorController;
 	IBOutlet UIView						*infoView;
 	IBOutlet UIWebView					*infoWebView;
-	
+	UIView								*refTitleSplashView;
+	NSTimer								*refTitleSplashTimer;
+
 	// MultiList
-	IBOutlet UITabBarController *multiListController;
-	IBOutlet id					historyController;
+	IBOutlet UITabBarController			*multiListController;
+	IBOutlet id							historyController;
 	//PSMultiListController				*multiListController;
 
-	id							moduleSelectorViewController;
+	id									moduleSelectorViewController;
 	
 	// Dictionary tab
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;
@@ -87,21 +89,21 @@ typedef enum {
 	IBOutlet UIWebView					*devotionalWebView;
 	
 	// Bookmarks tab
-//	IBOutlet id bookmarksTable;
-//	IBOutlet id bookmarksEditBtn;
-//	IBOutlet UINavigationItem *bookmarksNavBar;
+//	IBOutlet id							bookmarksTable;
+//	IBOutlet id							bookmarksEditBtn;
+//	IBOutlet UINavigationItem			*bookmarksNavBar;
 	
 	// Preferences tab
 	
 	// About tab
-	IBOutlet UITabBarItem *aboutTabBarItem;
+	IBOutlet UITabBarItem				*aboutTabBarItem;
 	
 	// Busy Indicator
-	IBOutlet UIViewController *activityController;
-	IBOutlet UIActivityIndicatorView *activityIndicator;
-	IBOutlet UILabel *activityLoadingLabel;
+	IBOutlet UIViewController			*activityController;
+	IBOutlet UIActivityIndicatorView	*activityIndicator;
+	IBOutlet UILabel					*activityLoadingLabel;
 	
-	NSLock *toolbarLock;
+	NSLock								*toolbarLock;
 	
 }
 
@@ -125,6 +127,8 @@ typedef enum {
 //- (void)hideIndexStatus;//needed, move to PSIndexController
 //- (void)hideOperationStatus;
 
+- (void)displayTitle;
+- (void)removeTitle:(NSTimer*)theTimer;
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;
 - (IBAction)toggleNavigation;
