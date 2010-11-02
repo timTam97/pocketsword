@@ -127,7 +127,7 @@ typedef enum {
 //- (void)hideIndexStatus;//needed, move to PSIndexController
 //- (void)hideOperationStatus;
 
-- (void)displayTitle;
+- (void)displayTitle:(NSString*)title;
 - (void)removeTitle:(NSTimer*)theTimer;
 - (IBAction)nextChapter:(id)sender;
 - (IBAction)prevChapter:(id)sender;

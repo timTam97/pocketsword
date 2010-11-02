@@ -38,6 +38,11 @@ BOOL needToScroll;
 
 
 - (void)viewWillAppear:(BOOL)animated {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		chapterTable.backgroundColor = [UIColor blackColor];
+	} else {
+		chapterTable.backgroundColor = [UIColor whiteColor];
+	}
 	self.navigationItem.title = [book name];//[NSString stringWithFormat:@"%@ %@", [book name], NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter")];
 	NSString *currentBook = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastRef];
 	currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];

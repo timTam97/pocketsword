@@ -60,6 +60,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		historyListTable.backgroundColor = [UIColor blackColor];
+	} else {
+		historyListTable.backgroundColor = [UIColor whiteColor];
+	}
 	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable useStatusBar:YES];
 	if(listType == BibleTab) {
 		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");

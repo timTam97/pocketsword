@@ -347,7 +347,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		if(bibleTabController.isFullScreen) {
-			[self displayTitle];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -355,7 +355,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
-			[self displayTitle];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -380,7 +380,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		if(bibleTabController.isFullScreen) {
-			[self displayTitle];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -388,7 +388,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
-			[self displayTitle];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -541,25 +541,25 @@ static NSString *firstRefAvailable = @"Genesis 1";
     [super dealloc];
 }
 
-- (void)displayTitle {
+- (void)displayTitle:(NSString*)title {
 	CGRect frame;
 	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
-	NSString *ref = [PSModuleController getCurrentBibleRef];
+	//NSString *ref = [PSModuleController getCurrentBibleRef];
 	UILabel *label;
 	label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 200, 50)];
 	label.adjustsFontSizeToFitWidth = YES;
-	label.text = ref;
+	label.text = [PSModuleController createRefString:title];
 	label.backgroundColor = [UIColor clearColor];
 	label.textColor = [UIColor whiteColor];
 	label.textAlignment = UITextAlignmentCenter;
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		frame = CGRectMake(130, 115, 220, 70);
-	} else if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+	} else {// if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		frame = CGRectMake(50, 195, 220, 70);
 	}
 	
 	if(refTitleSplashView) {
-		DLog(@"refTitleSplashView");
+		//DLog(@"refTitleSplashView");
 		//[self removeTitle:nil];
 		[refTitleSplashView removeFromSuperview];
 		refTitleSplashView = nil;
@@ -584,12 +584,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		//refTitleSplashView.frame = CGRectMake(130, 115, 220, 70);
 		refTitleSplashView.center = CGPointMake(160, 230);
 		refTitleSplashView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-		refTitleSplashView.transform = CGAffineTransformIdentity;
-		refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
 	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		refTitleSplashView.transform = CGAffineTransformIdentity;
 		refTitleSplashView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+		refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
+	} else {// if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+		refTitleSplashView.transform = CGAffineTransformIdentity;
 		refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
 	}
 	
@@ -611,6 +611,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void) removeTitleEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
 	[refTitleSplashView removeFromSuperview];
 	refTitleSplashView = nil;
+	refTitleSplashTimer = nil;
 }
 
 
@@ -624,10 +625,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[UIView setAnimationDidStopSelector:@selector(removeTitleEnded:finished:context:)];
 		refTitleSplashView.alpha = 0.0;
 		[UIView commitAnimations];
-	}
-	if(theTimer) {
-		[theTimer invalidate];
-		theTimer = nil;
 	}
 }
 

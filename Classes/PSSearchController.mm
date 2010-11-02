@@ -45,7 +45,12 @@ BOOL searchingEnabled;
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-// TODO: when we rip this view to pieces, this needs to be switched to be:
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		searchResultsTable.backgroundColor = [UIColor blackColor];
+	} else {
+		searchResultsTable.backgroundColor = [UIColor whiteColor];
+	}
+	// TODO: when we rip this view to pieces, this needs to be switched to be:
 	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable useStatusBar:YES];
 
 	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;

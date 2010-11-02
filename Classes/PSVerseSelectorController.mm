@@ -16,6 +16,11 @@
 @synthesize chapter;
 
 - (void)viewWillAppear:(BOOL)animated {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		verseTable.backgroundColor = [UIColor blackColor];
+	} else {
+		verseTable.backgroundColor = [UIColor whiteColor];
+	}
 	self.navigationItem.title = [NSString stringWithFormat:@"%@ %d", [book name], chapter];
     [super viewWillAppear:animated];
 }

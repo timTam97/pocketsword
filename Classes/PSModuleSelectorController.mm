@@ -18,6 +18,11 @@
 
 -(void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		modulesListTable.backgroundColor = [UIColor blackColor];
+	} else {
+		modulesListTable.backgroundColor = [UIColor whiteColor];
+	}
 	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable useStatusBar:YES];
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];

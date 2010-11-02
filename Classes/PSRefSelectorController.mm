@@ -43,9 +43,14 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		refTable.backgroundColor = [UIColor blackColor];
+	} else {
+		refTable.backgroundColor = [UIColor whiteColor];
+	}
 	NSIndexPath *tableSelection = [refTable indexPathForSelectedRow];
 	[refTable deselectRowAtIndexPath:tableSelection animated:YES];
-    [super viewWillAppear:animated];
 }
 
 - (void)dealloc {
