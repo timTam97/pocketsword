@@ -48,15 +48,17 @@ BOOL searchingEnabled;
 // TODO: when we rip this view to pieces, this needs to be switched to be:
 	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable useStatusBar:YES];
 
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
+	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
 		searchBar.frame = CGRectMake(61.0, 0.0, 396.0, 32.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 268.0);
+		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);//219.0 instead of 268.0
 	} else {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
 		searchBar.frame = CGRectMake(61.0, 0.0, 236.0, 44.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 416.0);
+		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);//367.0 instead of 416.0 -- removed 49 (tab bar!)
 	}
 }
 
@@ -65,11 +67,11 @@ BOOL searchingEnabled;
 	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
 		searchBar.frame = CGRectMake(61.0, 0.0, 236.0, 32.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 428.0);
+		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//428.0
 	} else {
 		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
 		searchBar.frame = CGRectMake(61.0, 0.0, 396.0, 44.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 256.0);
+		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);//256.0
 	}
 }
 
@@ -299,18 +301,19 @@ BOOL searchingEnabled;
 //}
 
 - (void)createHelpView {
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 	UIWebView *webView = nil;
 	UINavigationBar *navBar = nil;
-	if(deviceOrientation == UIDeviceOrientationPortrait || deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
-		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
-		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
-		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
-		
-	} else {
+	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
+	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 480, 251)];// 320-69
 		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 480, 212)];//320-113
 		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 480, 44)];
+	} else {
+		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
+		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
+		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
 		
 	}
 	helpView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

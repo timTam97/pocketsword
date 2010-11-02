@@ -302,8 +302,10 @@ BOOL requireReloadOfModuleViews = NO;
 	cell.textLabel.textColor = [UIColor darkTextColor];
 	
 	CGFloat xx = 0.0;
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		xx = 160.0;
 	}
 	
