@@ -63,13 +63,16 @@ bool comm_initialised = false;
 		self.refToShow = nil;
 		self.jsToShow = nil;
 	} else if(jsToShow) {
-		[commentaryWebView stringByEvaluatingJavaScriptFromString:jsToShow];
+		[commentaryWebView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@startDetLocPoll();", jsToShow]];
 		self.jsToShow = nil;
+	} else {
+		[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsCommentaryVersePosition]];
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
@@ -77,18 +80,20 @@ bool comm_initialised = false;
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"resetArrays();"];
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	NSString *js = nil;
+	if(self.jsToShow) {
+		js = [NSString stringWithFormat:@"resetArrays();%@startDetLocPoll();", self.jsToShow];
+		self.jsToShow = nil;
+	} else {
+		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
+	}
+	[commentaryWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-//	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-//	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-//		[self toggleFullscreen];
-//	}
-}
+//- (void)viewDidAppear:(BOOL)animated {
+//	[super viewDidAppear:animated];
+//	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+//}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -106,6 +111,7 @@ bool comm_initialised = false;
 }
 
 - (void)toggleFullscreen {
+	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	
     [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
@@ -141,6 +147,7 @@ bool comm_initialised = false;
     }
 	
     [UIView commitAnimations];
+	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
 //- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

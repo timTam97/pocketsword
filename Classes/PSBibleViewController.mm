@@ -54,12 +54,15 @@ bool bib_initialised = false;
 		self.refToShow = nil;
 		self.jsToShow = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	} else {
+		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 	//[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);", [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsBibleVersePosition]];
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
@@ -67,14 +70,20 @@ bool bib_initialised = false;
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"resetArrays();"];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	NSString *js = nil;
+	if(self.jsToShow) {
+		js = [NSString stringWithFormat:@"resetArrays();%@startDetLocPoll();", self.jsToShow];
+		self.jsToShow = nil;
+	} else {
+		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
+	}
+	[bibleWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-}
+//- (void)viewDidAppear:(BOOL)animated {
+//	DLog(@"");
+//	[super viewDidAppear:animated];
+//}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -92,6 +101,7 @@ bool bib_initialised = false;
 }
 
 - (void)toggleFullscreen {
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	
     [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
@@ -125,6 +135,7 @@ bool bib_initialised = false;
     }
 	
     [UIView commitAnimations];
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
 //- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -153,6 +164,7 @@ bool bib_initialised = false;
 	
 	NSString *requestString = [[request URL] absoluteString];
 	NSArray *components = [requestString componentsSeparatedByString:@":"];
+	//DLog(@"\nBIBLE: requestString: %@", requestString);
 	
 	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 		if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
@@ -264,11 +276,15 @@ bool bib_initialised = false;
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {
 		//[[NSUserDefaults standardUserDefaults] setObject: tappedVerse forKey: DefaultsCommentaryVersePosition];
 		commentaryView.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", tappedVerse];
-		if([self isFullScreen]) {
+		BOOL fs = [self isFullScreen];
+		if(fs) {
 			[self toggleFullscreen];
 			[commentaryView viewWillAppear:YES];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
+		if(fs) {
+			[commentaryView toggleFullscreen];
+		}
 		self.tappedVerse = nil;
 	}
 }
