@@ -1165,7 +1165,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if([[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
 	}
-	[super scrollViewWillBeginDragging:scrollView];
+	[super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 }
 
 @end
