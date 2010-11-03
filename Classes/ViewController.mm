@@ -611,12 +611,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void) removeTitleEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
 	[refTitleSplashView removeFromSuperview];
 	refTitleSplashView = nil;
-	refTitleSplashTimer = nil;
 }
 
 
 
 - (void)removeTitle:(NSTimer*)theTimer {
+	refTitleSplashTimer = nil;
 	if(refTitleSplashView) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.5];
@@ -1162,7 +1162,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 @implementation PSWebView
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"]) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
+	}
 	[super scrollViewWillBeginDragging:scrollView];
 }
 

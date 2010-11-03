@@ -223,3 +223,6 @@
 "InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
 "ModuleTypesHeaderText" = "Select Module Type:";
 "ModuleLanguagesHeaderText" = "Select Language:";
+"PreferencesModulePreferencesTitle" = "Module Preferences";
+"PreferencesFullscreenModeTitle" = "Fullscreen Mode";
+"PreferencesFullscreenNote" = "With Fullscreen Mode disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";

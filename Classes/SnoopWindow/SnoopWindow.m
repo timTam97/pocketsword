@@ -160,7 +160,7 @@ CGPoint CGPointNorm(CGPoint a) {
 //				self.holdTimer = nil;
 //			}
 			
-			if (!movement /*&& ([[event allTouches] count] > 1)*/) {
+			if (!movement && ([[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"] || ([[event allTouches] count] > 1))) {
 				//DLog(@"toggle-fullscreen-tap");
 				
 				if(bibleEvent) {

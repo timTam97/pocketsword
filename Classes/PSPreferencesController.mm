@@ -11,23 +11,29 @@
 
 //sections
 #define DISPLAY_SECTION		0
-#define STRONGS_SECTION		1
-#define MORPH_SECTION		2
-#define LANG_SECTION		3
-#define DEVICE_SECTION		4
-#define PREF__SECTIONS		5//total sections in table
+#define MODULE_SECTION		1
+#define STRONGS_SECTION		2
+#define MORPH_SECTION		3
+#define LANG_SECTION		4
+#define DEVICE_SECTION		5
+#define PREF__SECTIONS		6//total sections in table
 
 //rows in DISPLAY section
 #define FONT_SIZE_ROW		0
-#define NIGHT_MODE_ROW		1
-#define VPL_ROW				2
-#define XREF_ROW			3
-#define FOOTNOTES_ROW		4
-#define HEADINGS_ROW		5
-#define FONT_NAME_ROW		6
-#define RED_LETTER_ROW		7
-#define RED_LETTER_NOTE_ROW	8
-#define DISPLAY__ROWS		9//total rows in section
+#define FONT_NAME_ROW		1
+#define NIGHT_MODE_ROW		2
+#define FULLSCREEN_MODE_ROW	3
+#define FULLSCREEN_NOTE_ROW	4
+#define DISPLAY__ROWS		5//total rows in section
+
+//rows in the MODULE section
+#define VPL_ROW				0
+#define XREF_ROW			1
+#define FOOTNOTES_ROW		2
+#define HEADINGS_ROW		3
+#define RED_LETTER_ROW		4
+#define RED_LETTER_NOTE_ROW	5
+#define MODULE__ROWS		6
 
 //rows in STRONGS section
 #define STRONGS_DISPLAY_ROW	0
@@ -126,6 +132,8 @@ BOOL requireReloadOfModuleViews = NO;
 	switch (section) {
 		case DISPLAY_SECTION:
 			return DISPLAY__ROWS;
+		case MODULE_SECTION:
+			return MODULE__ROWS;
 		case STRONGS_SECTION:
 			return STRONGS__ROWS;
 		case MORPH_SECTION:
@@ -142,6 +150,8 @@ BOOL requireReloadOfModuleViews = NO;
 	switch (section) {
 		case DISPLAY_SECTION:
 			return NSLocalizedString(@"PreferencesDisplayPreferencesTitle", @"Display Preferences");
+		case MODULE_SECTION:
+			return NSLocalizedString(@"PreferencesModulePreferencesTitle", @"Module Preferences");
 		case STRONGS_SECTION:
 			return NSLocalizedString(@"PreferencesStrongsPreferencesTitle", @"Strong's Preferences");
 		case MORPH_SECTION:
@@ -157,6 +167,14 @@ BOOL requireReloadOfModuleViews = NO;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch (indexPath.section) {
 		case DISPLAY_SECTION :
+			switch (indexPath.row) {
+				case FULLSCREEN_NOTE_ROW :
+					return 55;
+				default :
+					return 45;
+			}
+			break;
+		case MODULE_SECTION :
 			switch (indexPath.row) {
 				case RED_LETTER_NOTE_ROW :
 					return 38;
@@ -219,7 +237,28 @@ BOOL requireReloadOfModuleViews = NO;
 					resetCell = NO;
 				}
 					break;
+				case FONT_NAME_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+					}
+				}
+					break;
 				case NIGHT_MODE_ROW :
+				case FULLSCREEN_MODE_ROW :
+				case FULLSCREEN_NOTE_ROW :
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+					if(!cell) {
+						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+					}
+				}
+					break;
+			}
+			break;
+		case MODULE_SECTION :
+			switch (indexPath.row) {
 				case VPL_ROW :
 				case XREF_ROW :
 				case FOOTNOTES_ROW :
@@ -230,14 +269,6 @@ BOOL requireReloadOfModuleViews = NO;
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
 						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
-					}
-				}
-					break;
-				case FONT_NAME_ROW :
-				{
-					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
-					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
 					}
 				}
 					break;
@@ -324,6 +355,12 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 				}
 					break;
+				case FONT_NAME_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
+					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				}
+					break;
 				case NIGHT_MODE_ROW :
 				{
 					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
@@ -337,6 +374,32 @@ BOOL requireReloadOfModuleViews = NO;
 					[nightModeSwitch release];						
 				}
 					break;
+				case FULLSCREEN_MODE_ROW :
+				{
+					UISwitch *fullscreenModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					fullscreenModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					BOOL fullscreenMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"];
+					fullscreenModeSwitch.on = fullscreenMode;
+					//nightModeSwitch.tag = 1;
+					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: fullscreenModeSwitch ];
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
+					[fullscreenModeSwitch release];						
+				}
+					break;
+				case FULLSCREEN_NOTE_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenNote", @"With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 3;
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+					cell.textLabel.textColor = [UIColor darkGrayColor];
+				}
+					break;
+			}
+			break;
+		case MODULE_SECTION :
+			switch (indexPath.row) {
 				case VPL_ROW :
 				{
 					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
@@ -386,12 +449,6 @@ BOOL requireReloadOfModuleViews = NO;
 					[headingsSwitch release];
 				}
 					break;
-				case FONT_NAME_ROW :
-				{
-					cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
-					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-				}
-					break;
 				case RED_LETTER_ROW :
 				{
 					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
@@ -415,7 +472,6 @@ BOOL requireReloadOfModuleViews = NO;
 				}
 					break;
 			}
-			break;
 		case STRONGS_SECTION :
 			switch (indexPath.row) {
 				case STRONGS_DISPLAY_ROW :
@@ -652,6 +708,14 @@ BOOL requireReloadOfModuleViews = NO;
 			}
 			break;
 	}
+}
+
+- (void)fullscreenModeChanged:(UISwitch *)sender {
+	BOOL n = [sender isOn];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"fullscreenModePreference"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	//[[PSModuleController defaultModuleController] setPreferences];
+	//requireReloadOfModuleViews = YES;
 }
 
 - (void)displayStrongsChanged:(UISwitch *)sender {
