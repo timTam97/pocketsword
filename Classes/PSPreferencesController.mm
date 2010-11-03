@@ -364,7 +364,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case NIGHT_MODE_ROW :
 				{
 					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					nightModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//nightModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
 					nightModeSwitch.on = nightMode;
 					//nightModeSwitch.tag = 1;
@@ -377,7 +377,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case FULLSCREEN_MODE_ROW :
 				{
 					UISwitch *fullscreenModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					fullscreenModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//fullscreenModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL fullscreenMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"];
 					fullscreenModeSwitch.on = fullscreenMode;
 					//nightModeSwitch.tag = 1;
@@ -403,7 +403,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case VPL_ROW :
 				{
 					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
 					vplSwitch.on = vpl;
 					//vplSwitch.tag = 4;
@@ -416,7 +416,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case XREF_ROW :
 				{
 					UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
 					xrefSwitch.on = xrefMode;
 					[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
@@ -428,7 +428,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case FOOTNOTES_ROW :
 				{
 					UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
 					footnotesSwitch.on = footnotesMode;
 					[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
@@ -440,7 +440,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case HEADINGS_ROW :
 				{
 					UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
 					headingsSwitch.on = headingsMode;
 					[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
@@ -452,7 +452,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case RED_LETTER_ROW :
 				{
 					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
 					redLetterModeSwitch.on = redLetterMode;
 					//redLetterModeSwitch.tag = 2;
@@ -472,12 +472,13 @@ BOOL requireReloadOfModuleViews = NO;
 				}
 					break;
 			}
+			break;
 		case STRONGS_SECTION :
 			switch (indexPath.row) {
 				case STRONGS_DISPLAY_ROW :
 				{
 					UISwitch *strongsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					strongsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//strongsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayStrongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
 					strongsSwitch.on = displayStrongs;
 					//strongsSwitch.tag = 9;
@@ -506,7 +507,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case MORPH_DISPLAY_ROW :
 				{
 					UISwitch *morphSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					morphSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//morphSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayMorph = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
 					morphSwitch.on = displayMorph;
 					//morphSwitch.tag = 9;
@@ -535,7 +536,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case LANG_GREEKACC_ROW:
 				{
 					UISwitch *greekAccentsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					greekAccentsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//greekAccentsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayGreekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
 					greekAccentsSwitch.on = displayGreekAccents;
 					//greekAccentsSwitch.tag = 9;
@@ -548,7 +549,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case LANG_HEBREWPTS_ROW:
 				{
 					UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					hvpSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//hvpSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayHVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
 					hvpSwitch.on = displayHVP;
 					//hvpSwitch.tag = 9;
@@ -561,7 +562,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case LANG_HEBREWCANT_ROW:
 				{
 					UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					hebrewCantillationSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//hebrewCantillationSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL displayHebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
 					hebrewCantillationSwitch.on = displayHebrewCantillation;
 					//hebrewCantillationSwitch.tag = 9;
@@ -578,7 +579,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case INSOMNIA_ROW :
 				{
 					UISwitch *insomniaSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					insomniaSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//insomniaSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
 					insomniaSwitch.on = insomniaMode;
 					//insomniaSwitch.tag = 3;
@@ -591,7 +592,7 @@ BOOL requireReloadOfModuleViews = NO;
 				case MMM_ROW :
 				{
 					UISwitch *manualInstallSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					manualInstallSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					//manualInstallSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
 					manualInstallSwitch.on = manualInstallEnabled;
 					//manualInstallSwitch.tag = 3;
