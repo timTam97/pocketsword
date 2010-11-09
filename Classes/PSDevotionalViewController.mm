@@ -63,16 +63,20 @@ BOOL loaded;
 		
 		[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
 	} else {
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+		if([UIApplication sharedApplication].statusBarHidden) {
+			interfaceOrientation = [self.tabBarController interfaceOrientation];//(UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+		}
+		//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			devotionalDatePickerView.transform = CGAffineTransformIdentity;
 			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			devotionalDatePickerView.transform = CGAffineTransformIdentity;
 			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-		} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 			devotionalDatePickerView.transform = CGAffineTransformIdentity;
-		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			devotionalDatePickerView.transform = CGAffineTransformIdentity;
 			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 		}

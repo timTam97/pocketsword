@@ -139,8 +139,12 @@
 	CGFloat height = screen.height;
 	CGFloat width = screen.width;
 	CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-	UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-	if(toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
+	//UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
+	UIInterfaceOrientation intOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		intOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+	}
+	if(intOrientation == UIInterfaceOrientationLandscapeLeft || intOrientation == UIInterfaceOrientationLandscapeRight) {
 		height = screen.width;
 		width = screen.height;
 		statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.width;

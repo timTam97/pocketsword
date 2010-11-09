@@ -804,14 +804,18 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGFloat width, height;
 	CGPoint offScreenCenter, middleCenter;
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+	}
+	//UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
 		middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
-	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
 		middleCenter = CGPointMake(offSize.width - (modalSize.height / 2.0), offSize.height / 2.0);
-	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
 	} else {
@@ -835,12 +839,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+	}
+	//UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
-	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
-	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 	}
 	[UIView beginAnimations:nil context:modalView];
@@ -886,17 +894,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)displayBusyIndicator {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+	}
 	
-	if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {// || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
 		activityLoadingLabel.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-	} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
 		activityLoadingLabel.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-	} else if(deviceOrientation == UIDeviceOrientationPortrait) {
+	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
-	} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		activityLoadingLabel.transform = CGAffineTransformIdentity;
 		activityLoadingLabel.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 	}

@@ -77,7 +77,11 @@ CGPoint CGPointNorm(CGPoint a) {
 	NSArray *allTouches = [[event allTouches] allObjects];
 	UITouch *touch = [[event allTouches] anyObject];
 	UIView *touchView = [touch view];
-	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+	//UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
+	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
+	}
 	
 	if (touchView && ([touchView isDescendantOfView:bibleWebView] || [touchView isDescendantOfView:commentaryWebView])) {
 		bibleEvent = [touchView isDescendantOfView:bibleWebView];
@@ -102,7 +106,7 @@ CGPoint CGPointNorm(CGPoint a) {
 //			}
 			
 			startTouchPosition1 = [touch locationInView:self];
-			if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 				//switch x & y if in landscape mode
 				CGFloat dummyX = startTouchPosition1.x;
 				startTouchPosition1.x = startTouchPosition1.y;
@@ -171,14 +175,14 @@ CGPoint CGPointNorm(CGPoint a) {
 			}
 			
 			CGPoint currentTouchPosition = [touch locationInView:self];
-			if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 				//switch x & y if in landscape mode
 				CGFloat dummyX = currentTouchPosition.x;
 				currentTouchPosition.x = currentTouchPosition.y;
 				currentTouchPosition.y = dummyX;
 			}
 			BOOL reverseSwipe = NO;
-			if(deviceOrientation == UIDeviceOrientationLandscapeRight || deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 				reverseSwipe = YES;
 			}
 			//DLog(@"\nUITouchPhaseEnded: %f - %f = %f", touch.timestamp, startTouchTime, (touch.timestamp-startTouchTime));

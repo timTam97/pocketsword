@@ -21,7 +21,7 @@
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
 	BOOL redrawInNewFrames = NO;
 	
-	UIInterfaceOrientation interfaceOrientation = tabBarController.interfaceOrientation;
+	UIInterfaceOrientation interfaceOrientation = [tabBarController interfaceOrientation];
 	if(!tabBarController) {
 		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 		if(UIDeviceOrientationIsLandscape(deviceOrientation))

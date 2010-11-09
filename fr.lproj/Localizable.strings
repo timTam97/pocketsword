@@ -19,7 +19,7 @@
 
 // French (fr) Localisation
 // By Dominique Corbex
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3beta (2nd October, 2010)
 
 "Edit" = "Éditer";
 "Done" = "Terminé";
@@ -218,12 +218,12 @@
 "VerseContextualMenuCommentary" = "Voir dans le commentaire";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
+"VoiceOverPreviousChapterButton" = "Chapitre précédent";
+"VoiceOverNextChapterButton" = "Chaptitre suivant";
+"VoiceOverHistoryAndSearchButton" = "Historique et Recherches";
+"InstallManagerDownloadsHint" = "Vous pouvez télécharger des modules supplémentaires depuis n'importe quel dépôt ci-dessous :";
+"ModuleTypesHeaderText" = "Selection du type de module :";
+"ModuleLanguagesHeaderText" = "Selection de langue :";
 "PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Fullscreen Mode";
-"PreferencesFullscreenNote" = "With Fullscreen Mode disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
+"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
