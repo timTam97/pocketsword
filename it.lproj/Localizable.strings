@@ -19,7 +19,7 @@
 
 // Italian (it) localisation
 // By Vincenzo Carrubba
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (9th November, 2010)
 
 "Edit" = "Modifica";
 "Done" = "Fine";
@@ -219,12 +219,12 @@
 "VerseContextualMenuCommentary" = "Vedi il commentario";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "Capitolo precedente";
+"VoiceOverNextChapterButton" = "Capitolo successivo";
+"VoiceOverHistoryAndSearchButton" = "Cronologia e Ricerca";
+"InstallManagerDownloadsHint" = "E' possibile scaricare moduli aggiuntivi dalle fonti sottostanti:";
+"ModuleTypesHeaderText" = "Scelta tipologia di modulo:";
+"ModuleLanguagesHeaderText" = "Scelta Lingua:";
+"PreferencesModulePreferencesTitle" = "Preferenze moduli";
+"PreferencesFullscreenModeTitle" = "Tutto schermo Auto";
+"PreferencesFullscreenNote" = "Disabilitando Tutto schermo Auto, si può attivare e disattivare la modalità a tutto schermo, nelle sezioni Bibbia e Commentario, con un tocco a due dita.";

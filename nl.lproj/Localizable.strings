@@ -19,7 +19,7 @@
 
 // Dutch (nl) Localisation
 // By Henko van de Weerd
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (9th November, 2010)
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
@@ -68,12 +68,12 @@
 
 "InstallSourcesTitle" = "Bronnen";
 "PreferencesTitle" = "Instellingen";
-"PreferencesDisplayPreferencesTitle" = "Weergave-instellingen";
-"PreferencesDevicePreferencesTitle" = "Apparaat-instellingen";
+"PreferencesDisplayPreferencesTitle" = "Weergave";
+"PreferencesDevicePreferencesTitle" = "Apparaat";
 "PreferencesFontSizeTitle" = "Tekstgrootte";
 "PreferencesNightModeTitle" = "Nachtmodus";
 "PreferencesVPLTitle" = "Vers per regel";
-"PreferencesFontTitle" = "Font";
+"PreferencesFontTitle" = "Lettertype";
 "PreferencesRedLetterTitle" = "Rode letters";
 "PreferencesRedLetterNote" = "Let op: De Rode Letters modus is alleen beschikbaar voor bepaalde modules.";
 "PreferencesDisableAutoLockTitle" = "Schakel auto-lock uit";
@@ -111,7 +111,7 @@
 "CommentaryHistoryTitle" = "Geschiedenis";
 
 "None" = "Geen";
-"CloseButtonTitle" = "Afsluiten";
+"CloseButtonTitle" = "Sluit";
 "CacheDictionaryKeysTitle" = "Cache?";
 "CacheDictionaryKeysMsg" = "Dit woordenboek moet nog geinitialiseerd worden, wilt u dit nu doen?";
 "IndexDownloadTitle" = "Index downloaden...";
@@ -135,7 +135,7 @@
 "PreferencesDisplayTitle" = "Weergave";
 "PreferencesGreekModuleTitle" = "Griekse module";
 "PreferencesHebrewModuleTitle" = "Hebreeuwse module";
-"PreferencesMorphologyPreferencesTitle" = "Instellingen morfologie";
+"PreferencesMorphologyPreferencesTitle" = "Morfologie";
 "PreferencesOriginalLanguagePreferencesTitle" = "Grondtekst";
 "PreferencesGreekAccentsTitle" = "Griekse accenten";
 "PreferencesHVPTitle" = "Hebreeuwse klinker punten";
@@ -219,12 +219,12 @@
 "VerseContextualMenuCommentary" = "Bekijk in Commentaar";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
+"VoiceOverPreviousChapterButton" = "Vorige hoofdstuk";
+"VoiceOverNextChapterButton" = "Volgende hoofdstuk";
+"VoiceOverHistoryAndSearchButton" = "Geschiedenis en zoeken";
+"InstallManagerDownloadsHint" = "U kunt aanvullende modules downloaden van één van de onderstaande module-bronnen:";
+"ModuleTypesHeaderText" = "Selecteer type module:";
+"ModuleLanguagesHeaderText" = "Selecteer taal:";
+"PreferencesModulePreferencesTitle" = "Module voorkeuren";
 "PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"PreferencesFullscreenNote" = "Met Auto Fullscreen uitgeschakeld kunt u nog steeds van en naar fullscreen schakelen door met 2 vingers op het scherm te tikken in de Bijbel en commentaar tabbladen.";

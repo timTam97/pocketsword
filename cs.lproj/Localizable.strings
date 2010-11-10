@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Czech (cs) localisation
 // By Jan Bubík
-// Last Updated 1.3.2 (28th August, 2010)
+// Last Updated 1.3.3 (9th November, 2010)
 
 "Edit" = "Edituj";
 "Done" = "Hotovo";
@@ -218,12 +218,13 @@
 "VerseContextualMenuCommentary" = "Přejdi na komentář";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "Předchozí kapitola";
+"VoiceOverNextChapterButton" = "Následující kapitola";
+"VoiceOverHistoryAndSearchButton" = "Poslední navštívené a hledání";
+"InstallManagerDownloadsHint" = "Další moduly můžete stáhnout z níže uvedených zdrojů:";
+"ModuleTypesHeaderText" = "Vyber typ modulu:";
+"ModuleLanguagesHeaderText" = "Vyber jazyk:";
+"PreferencesModulePreferencesTitle" = "Nastavení modulu";
+"PreferencesFullscreenModeTitle" = "Automaticky na celý display";
+"PreferencesFullscreenNote" = "I když je automatické zobrazení na celý display vypnuté, můžete se do něj přepnout poklepáním dvěma prsty během čtení Bible nebo komentáře.";
+

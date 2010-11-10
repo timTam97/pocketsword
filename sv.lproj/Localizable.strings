@@ -19,7 +19,7 @@
 
 // Swedish (sv) localisation
 // By Christoffer Björkskog
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (9th November, 2010)
 
 "Edit" = "Redigera";
 "Done" = "Klar";
@@ -219,12 +219,12 @@
 "VerseContextualMenuCommentary" = "Se i kommentarer";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "Föregående kapitel";
+"VoiceOverNextChapterButton" = "Nästa kapitel";
+"VoiceOverHistoryAndSearchButton" = "Historik och sökning";
+"InstallManagerDownloadsHint" = "Du kan ladda ner ytterligare moduler från någon av dom nedanvarande modulkällorna:";
+"ModuleTypesHeaderText" = "Välj modultyp:";
+"ModuleLanguagesHeaderText" = "Välj språk:";
+"PreferencesModulePreferencesTitle" = "Modulinställningar";
+"PreferencesFullscreenModeTitle" = "Automatisk helskärmsläge";
+"PreferencesFullscreenNote" = "Med automatisk helskärmsläge aktiverat kan du fortfarande byta från och till helskärmsläge med en tvåfingrars beröring i bibel- eller kommentarflikarna.";

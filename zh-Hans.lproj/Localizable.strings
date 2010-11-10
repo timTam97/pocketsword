@@ -19,7 +19,7 @@
 
 // Simplified Chinese (zh-Hans) Localisation
 // By Yiguang Hu
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (9th November, 2010)
 
 "Edit" = "编辑";
 "Done" = "完成";
@@ -218,12 +218,12 @@
 "VerseContextualMenuCommentary" = "在注解中浏览";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "前一章";
+"VoiceOverNextChapterButton" = "下一章";
+"VoiceOverHistoryAndSearchButton" = "历史和搜寻";
+"InstallManagerDownloadsHint" = "你可以从下列模块源下载任何额外的模块:";
+"ModuleTypesHeaderText" = "选择模块类型:";
+"ModuleLanguagesHeaderText" = "选择语言:";
+"PreferencesModulePreferencesTitle" = "模块优选";
+"PreferencesFullscreenModeTitle" = "自动全屏";
+"PreferencesFullscreenNote" = "若你未使用自动全屏，可以用两个手指击打圣经或注解菜单转到或转离全屏。";
