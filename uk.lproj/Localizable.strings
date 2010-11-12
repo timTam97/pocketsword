@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Ukrainian (uk) localisation
 // By Vitaliy K.
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (10th November, 2010)
 
 "Edit" = "Редагувати";
 "Done" = "Готово";
@@ -219,12 +219,12 @@
 "VerseContextualMenuCommentary" = "Відкрити у коментарі";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "Попередній розділ";
+"VoiceOverNextChapterButton" = "Наступний розділ";
+"VoiceOverHistoryAndSearchButton" = "Журнал і Пошук";
+"InstallManagerDownloadsHint" = "Ви можете завантажити додаткові модулі з будь-яких нижче даних джерел:";
+"ModuleTypesHeaderText" = "Виберіть тип модуля:";
+"ModuleLanguagesHeaderText" = "Виберіть мову:";
+"PreferencesModulePreferencesTitle" = "Параметри модуля";
+"PreferencesFullscreenModeTitle" = "Авто повноекранний режим";
+"PreferencesFullscreenNote" = "Якщо авто повноекранний режим виключений, ви можете перейти до(від) повноекранного режиму дотиком двома пальцями у вкладках Біблії і Коментарію.";

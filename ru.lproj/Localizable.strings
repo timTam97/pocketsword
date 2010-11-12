@@ -19,7 +19,7 @@
 
 // Russian (ru) localisation
 // By Vitaliy K.
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (10th November, 2010)
 
 "Edit" = "Изменить";
 "Done" = "Готово";
@@ -219,12 +219,12 @@
 "VerseContextualMenuCommentary" = "Открыть в комментарии";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "Предыдущая глава";
+"VoiceOverNextChapterButton" = "Следующая глава";
+"VoiceOverHistoryAndSearchButton" = "Журнал и Поиск";
+"InstallManagerDownloadsHint" = "Вы можете скачать дополнительные модули с любых ниже данных источников:";
+"ModuleTypesHeaderText" = "Выберите тип модуля:";
+"ModuleLanguagesHeaderText" = "Выберите язык:";
+"PreferencesModulePreferencesTitle" = "Параметры модуля";
+"PreferencesFullscreenModeTitle" = "Авто полноэкранный режим";
+"PreferencesFullscreenNote" = "Если авто полноэкранный режим выключен, вы можете перейти к(из) полноэкранному режиму двухпальцевым касанием на вкладках Библии и Комментария.";

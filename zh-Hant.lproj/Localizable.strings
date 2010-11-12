@@ -19,7 +19,7 @@
 
 // Traditional Chinese (zh-Hant) Localisation
 // By Brian Wu
-// Last Updated v1.3.2 (28th August, 2010)
+// Last Updated v1.3.3 (10th November, 2010)
 
 "Edit" = "編輯";
 "Done" = "完成";
@@ -217,12 +217,12 @@
 "VerseContextualMenuCommentary" = "觀看評論";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "前一章";
+"VoiceOverNextChapterButton" = "下一章";
+"VoiceOverHistoryAndSearchButton" = "紀錄與搜尋";
+"InstallManagerDownloadsHint" = "您可從以下下載點下載更多模組";
+"ModuleTypesHeaderText" = "選擇模組類別";
+"ModuleLanguagesHeaderText" = "選擇語言:";
+"PreferencesModulePreferencesTitle" = "模組選項";
+"PreferencesFullscreenModeTitle" = "全螢幕";
+"PreferencesFullscreenNote" = "全螢幕功能關閉下您仍可用在聖經檢視中使用多點解屏進行切換全螢幕功能";

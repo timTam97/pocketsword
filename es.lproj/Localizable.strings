@@ -1,8 +1,8 @@
-﻿/*
+/*
 	PocketSword - Un programa diseñado para visualizar los módulos del poyecto SWORD en el iPhone y el iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
-	Este programa es gratis; lo puedes distribuirlo y/o modificarlo
+	Este programa es gratis; puedes distribuirlo y/o modificarlo
 	bajo los términos de la licencia pública general GNU publicada por
 	la Fundación de software gratis; o la versión 2 de la licencia o
 	cualquier versión posterior.
@@ -13,13 +13,13 @@
 	licencia pública general GNU para más detales.
 
 	Deberías haber recibido una copia de la licencia pública general GNU con
-	este programa; si no, escribe a la Fundación de software gratis, S.A.,
+	este programa; si no es así, escriba a la Fundación de software gratis, S.A.,
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 // Spanish (es) Localisation
-// By David Bell et al (inc. Ricardo Ramírez).
-// Last Updated v1.3.2 (29th August, 2010)
+// By David Bell et al.
+// Last Updated v1.3.3 (10th November, 2010)
 
 "Edit" = "Edición";
 "Done" = "Fin";
@@ -48,7 +48,7 @@
 
 
 "Disclaimer" = "Renuncia de Responsabilidad";
-"DisclaimerMsg" = "      -=+* ADVERTENCIA *+=-\n Aunque el Instalador de módulos provee una forma conveniente de instalar y actualizar los componentes de SWORD, también usa un método sistemático para acceder a los sitios que se convierte en un blanco para los buscadores de paquetes que intentan identificar usuarios individuales. \nSI VIVES EN UN PAÍS PERSEGUIDO Y NO QUIERES CORRER EL RIESGO DE SER DETECTADO, *NO* DEBES USAR LA OPCIÓN DE FUENTE REMOTO EN EL INSTALADOR DE MÓDULOS. \nTambién, una fuente remoto que no sea la de CrossWire podría contener módulos que no son de calidad, módulos con contenido no ortodoxo o incluso módulos que no se pueden distribuir legalmente. Muchos de los repositorios contienen contenidos maravillosamente útiles. Estos repositorios sencillamente no se revisan o no están mantenidos por Crossware, así que Crosswire no puede asumir responsabilidad por su contenido. CAVEAT EMPTOR. \n¿Entiendes esto y estás dispuesto a habilitar la opción de la fuente remoto?";
+"DisclaimerMsg" = "      -=+* ADVERTENCIA *+=-\n Aunque el Instalador de módulos provee una forma conveniente de instalar y actualizar los componentes de SWORD, también usa un método sistemático para acceder a los sitios que se convierte en un blanco para los buscadores de paquetes que intentan identificar usuarios individuales. \nSI VIVES EN UN PAÍS PERSEGUIDO Y NO QUIERES CORRER EL RIESGO DE SER DETECTADO, *NO* DEBE USAR LA OPCIÓN DE FUENTE REMOTO EN EL INSTALADOR DE MÓDULOS. \nTambién, una fuente remoto que no sea la de CrossWire podría contener módulos que no son de calidad, módulos con contenido no ortodoxo o incluso módulos que no se pueden distribuir legalmente. Muchos de los repositorios tienen contenidos maravillosamente útiles. Estos repositorios sencillamente no se revisan o no están mantenidos por Crossware, así que Crosswire no puede asumir responsabilidad por su contenido. CAVEAT EMPTOR. \n¿Entiende esto y estás dispuesto a habilitar la opción de la fuente remoto?";
 
 "WebNoIP" = "Web: Imposible determinar IP externo\n";
 "WiFiNoConnection" = "Wifi: No hay conexión\n";
@@ -63,7 +63,7 @@
 "InstallButtonTitle" = "Instalar";
 "RefreshProblem" = "Ocurrió un problema durante la actualización de la pantalla.";
 "RefreshingModuleSource" = "Actualización de la fuente";
-"NoModulesRefresh" = "No existen módulos. Intenta actualizar.";
+"NoModulesRefresh" = "No existen módulos. Intente actualizar.";
 "NoModulesInstalled" = "No hay módulos instalados.";
 
 "InstallSourcesTitle" = "Fuentes";
@@ -75,10 +75,10 @@
 "PreferencesVPLTitle" = "Versículo por línea";
 "PreferencesFontTitle" = "Fuente";
 "PreferencesRedLetterTitle" = "Letra roja";
-"PreferencesRedLetterNote" = "Nota que el opción de letras rojas aparece sólo en ciertos módulos";
+"PreferencesRedLetterNote" = "Nota que la opción de letras rojas aparece sólo en ciertos módulos";
 "PreferencesDisableAutoLockTitle" = "Deshabilitar bloque automático";
 "PreferencesModuleMaintainerModeTitle" = "Modo de mantenimiento de módulos";
-"PreferencesModuleMaintainerModeNote" = "Nota que el modo de mantenimiento de módulos es para los usuarios que crean sus propios módulos y necesitan un método manual para instalarlos. Para los demás usuarios, se sugiere usar el instalador de módulos para acceder los módulos oficiales provistos por CrossWire.";
+"PreferencesModuleMaintainerModeNote" = "Nota que el modo de mantenimiento de módulos es para los usuarios que crean sus propios módulos y necesitan un método manual para instalarlos. Para los demás usuarios, se sugiere usar el instalador de módulos para acceder a los módulos oficiales provistos por CrossWire.";
 
 "AboutTitle" = "Acerca de";
 
@@ -113,7 +113,7 @@
 "None" = "Ninguno";
 "CloseButtonTitle" = "Cerrar";
 "CacheDictionaryKeysTitle" = "Almacén";
-"CacheDictionaryKeysMsg" = "Todavía no se ha inicializado este diccionario; ¿quieres almacenar este diccionario en cache ahora?";
+"CacheDictionaryKeysMsg" = "Todavía no se ha inicializado este diccionario; ¿Quieres almacenar este diccionario en cache ahora?";
 "IndexDownloadTitle" = "Descargar índice";
 "NoSearchIndexTitle" = "No existe índice de búsqueda";
 "NoSearchIndexMsg" = "No tienes un índice de búsqueda instalado para este módulo. ¿Quieres comprobar si existe un índice ahora?";
@@ -131,7 +131,7 @@
 "SearchHelpTitle" = "Ayuda de búsqueda";
 "IndexControllerConfirmQuestion" = "¿Quieres descargar el índice de búsqueda para este módulo? \n¡Podría tardar un poco para módulos de comentarios!";
 
-"PreferencesStrongsPreferencesTitle" = "Códigos Strongs";
+"PreferencesStrongsPreferencesTitle" = "Códigos Strong";
 "PreferencesDisplayTitle" = "Apariencia";
 "PreferencesGreekModuleTitle" = "Módulo griego";
 "PreferencesHebrewModuleTitle" = "Módulo hebreo";
@@ -146,11 +146,11 @@
 "PreferencesCrossReferencesTitle" = "Referencia cruzadas";
 "PreferencesFootnotesTitle" = "Notas";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "No existe un léxico para los códigos Strong para hebreo. Por favor, instala uno(por ejemplo, 'strongshebrew') bajo la pestaña Más->Descargas.";
-"NoGreekStrongsNumbersModuleInstalled" = "No existe un léxico para los códigos Strong para hebreo. Por favor, instala uno(por ejemplo, 'strongsgreek') bajo la pestaña Más->Descargas.";
+"NoHebrewStrongsNumbersModuleInstalled" = "No existe un léxico para los códigos Strong para hebreo. Por favor, instala uno (por ejemplo, 'strongshebrew') bajo la pestaña Más->Descargas.";
+"NoGreekStrongsNumbersModuleInstalled" = "No existe un léxico para los códigos Strong para griego. Por favor, instala uno (por ejemplo, 'strongsgreek') bajo la pestaña Más->Descargas.";
 
 "NoMorphGreekModuleInstalled" = "No existe un léxico para los códigos morfológicos. Por favor, instala uno (por ejemplo, 'Robinson') bajo la pestaña Más->Descargas.";
-"MorphHebrewNotSupported" = "Desafortunadamente, los códigos morfológicos no están disponibles para las palabras en griego. Si tienes habilidades con idiomas y estás dispuesto a ayudar a traer esta característica a PocketSword, por favor mira <br /> openscriptures.org<br />y apúntate al grupo de comentarios allí.";
+"MorphHebrewNotSupported" = "Desafortunadamente, los códigos morfológicos no están disponibles para las palabras en griego. Si tienes habilidades con idiomas y estás dispuesto a ayudar a traer esta característica a PocketSword, por favor mire <br /> openscriptures.org<br />y apúntese al grupo de comentarios allí.";
 
 "AboutModuleFeaturesTitle" = "Características del módulo";
 "AboutModuleContainsStrongsNumbers" = "Contiene códigos Strong";
@@ -160,7 +160,7 @@
 "AboutModuleContainsRedLetterWords" = "Palabras de Cristo en rojo";
 "AboutModuleContainsVariants" = "Contiene variantes textuales";
 "AboutModuleContainsGreekAccents" = "Contiene acentos en griego";
-"AboutModuleContainsScriptref" = "Contiene referencia cruzadas de las Escrituras";
+"AboutModuleContainsScriptref" = "Contiene referencias cruzadas de las Escrituras";
 "AboutModuleContainsLemma" = "Lemas";
 "AboutModuleContainsCantillation" = "Contiene las marcas de cantilación en hebreo";
 "AboutModuleContainsHebrewPoints" = "Contiene puntos vocálicos en hebreo";
@@ -202,28 +202,28 @@
 "RefreshSourceList" = "Actualizar lista de fuentes";
 "AddSourceCaptionTitle" = "Título";
 "AddSourceServerTitle" = "Servidor";
-"AddSourcePathTitle" = "Puta";
+"AddSourcePathTitle" = "Ruta";
 "AddFTPSourceTitle" = "Nueva Fuente FTP";
 "AddHTTPSourceTitle" = "Nueva Fuente HTTP";
-"FillInAllFieldsMessage" = "Debe completar todos los campos!";
+"FillInAllFieldsMessage" = "¡Todos los campos se deben completar!";
 "Warning" = "Precaución";
-"CannotVerifyInstallSourceWarning" = "PocketSword no puede verificar la validez de la Fuente. Quiere guardarlo de todos modos?";
+"CannotVerifyInstallSourceWarning" = "PocketSword no puede verificar la validez de la Fuente. ¿Quiere guardarlo de todos modos?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Tenga en cuenta que este es un módulo bloqueado y usted necesita comprar una llave de desbloqueo del sitio web del Editor. Vea en seguida para más detalles. **";
+"AboutModuleLocked" = "** Recuerda que este es un módulo bloqueado y tendrás que comprar una llave de desbloqueo del sitio web del Editor. Ve lo siguiente para más detalles. **";
 "UpgradeButtonTitle" = "Remplazar";
-"ConfirmUpgrade" = "¿Quiere remplazar éste módulo con la versión actual disponible?";
+"ConfirmUpgrade" = "¿Quieres remplazar éste módulo con la versión actual disponible?";
 "VerseContextualMenuAddBookmark" = "Añadir Marcador";
 "VerseContextualMenuCommentary" = "Ver en Comentario";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "Capítulo anterior";
+"VoiceOverNextChapterButton" = "Capítulo siguiente";
+"VoiceOverHistoryAndSearchButton" = "Historial y búsqueda";
+"InstallManagerDownloadsHint" = "Se puede bajar módulos adicionales de cualquiera de las siguientes fuentes:";
+"ModuleTypesHeaderText" = "Seleccionar el tipo de módulo:";
+"ModuleLanguagesHeaderText" = "Seleccionar el idioma:";
+"PreferencesModulePreferencesTitle" = "Preferencias de módulo";
+"PreferencesFullscreenModeTitle" = "Pantalla completa automática";
+"PreferencesFullscreenNote" = "Con la pantalla completa automática deshabilitada, todavía podrás cambiar a pantalla completa tocando las pestañas de Biblia y Comentario con dos dedos.";

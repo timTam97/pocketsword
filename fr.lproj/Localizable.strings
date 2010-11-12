@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // French (fr) Localisation
 // By Dominique Corbex
-// Last Updated v1.3.3beta (2nd October, 2010)
+// Last Updated v1.3.3 (11th November, 2010)
 
 "Edit" = "Éditer";
 "Done" = "Terminé";
@@ -224,6 +224,6 @@
 "InstallManagerDownloadsHint" = "Vous pouvez télécharger des modules supplémentaires depuis n'importe quel dépôt ci-dessous :";
 "ModuleTypesHeaderText" = "Selection du type de module :";
 "ModuleLanguagesHeaderText" = "Selection de langue :";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"PreferencesModulePreferencesTitle" = "Préférences Module";
+"PreferencesFullscreenModeTitle" = "Plein écran Auto";
+"PreferencesFullscreenNote" = "Avec Plein écran Auto désactivé, il est toujours possible de basculer en mode plein écran par action à 2 doigts dans un onglet Bible ou Commentaire.";
