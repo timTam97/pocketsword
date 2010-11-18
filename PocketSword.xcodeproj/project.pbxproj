@@ -4347,7 +4347,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -4369,7 +4369,7 @@
 					include,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Dunix",
 					"-D__unix__",
@@ -4379,7 +4379,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -4402,7 +4402,7 @@
 					include,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Dunix",
 					"-D__unix__",
@@ -4412,7 +4412,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "BD75AC9D-A58B-4259-B194-8D278931B011";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BD75AC9D-A58B-4259-B194-8D278931B011";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 			};
 			name = Distribution;
 		};

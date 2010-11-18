@@ -1,8 +1,8 @@
 
 New in v1.3.3
 - now works in Landscape and Portrait modes
-- full-screen mode
-- sending feedback now composes an email in-app, rather than launching Mail.app
+- added full-screen mode (see Preferences)
+- sending feedback from the About section now composes an email in-app, rather than launching Mail.app
 - bug fixes
 
 New in v1.3.2
