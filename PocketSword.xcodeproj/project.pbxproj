@@ -215,7 +215,6 @@
 		054BEC38119F89E800ABCA18 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
 		054BEC39119F89E800ABCA18 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		054BEC3A119F89E800ABCA18 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
-		054BEC3B119F89E800ABCA18 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
 		054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
 		054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
@@ -571,6 +570,12 @@
 		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
 		05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
+		0552D1301295230300A4994B /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12D1295230300A4994B /* Icon-Small-50.png */; };
+		0552D1311295230300A4994B /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12E1295230300A4994B /* Icon-Small.png */; };
+		0552D1321295230300A4994B /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12F1295230300A4994B /* Icon-Small@2x.png */; };
+		0552D1331295230300A4994B /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12D1295230300A4994B /* Icon-Small-50.png */; };
+		0552D1341295230300A4994B /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12E1295230300A4994B /* Icon-Small.png */; };
+		0552D1351295230300A4994B /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12F1295230300A4994B /* Icon-Small@2x.png */; };
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
@@ -762,7 +767,6 @@
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
-		E9C1DA470ED9DC1E009F76D2 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1193,7 +1197,7 @@
 		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
 		054BED9B119F89E800ABCA18 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
+		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
 		054BEE6111A3A2F300ABCA18 /* PSBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksViewController.h; path = Classes/PSBookmarksViewController.h; sourceTree = "<group>"; };
 		054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarksViewController.mm; path = Classes/PSBookmarksViewController.mm; sourceTree = "<group>"; };
 		054BEF1311A4E77300ABCA18 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1240,6 +1244,9 @@
 		05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesFontTableViewController.mm; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
 		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/CharisSILR.ttf; sourceTree = "<group>"; };
+		0552D12D1295230300A4994B /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
+		0552D12E1295230300A4994B /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "Resources/Icon-Small.png"; sourceTree = "<group>"; };
+		0552D12F1295230300A4994B /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
 		055E308310E74288004EBC79 /* SwordListKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordListKey.h; sourceTree = "<group>"; };
 		055E308410E74288004EBC79 /* SwordListKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordListKey.mm; sourceTree = "<group>"; };
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
@@ -2347,6 +2354,9 @@
 		052851B8122660F600A99ECD /* img */ = {
 			isa = PBXGroup;
 			children = (
+				0552D12D1295230300A4994B /* Icon-Small-50.png */,
+				0552D12E1295230300A4994B /* Icon-Small.png */,
+				0552D12F1295230300A4994B /* Icon-Small@2x.png */,
 				05034D0610FC570F00884C98 /* history.png */,
 				05DD8679122E605700115EAD /* history@2x.png */,
 				05034D0410FC569000884C98 /* dictionary.png */,
@@ -3175,7 +3185,6 @@
 				054BEC38119F89E800ABCA18 /* MHCC.zip in Resources */,
 				054BEC39119F89E800ABCA18 /* MainWindow.xib in Resources */,
 				054BEC3A119F89E800ABCA18 /* LICENSE.txt in Resources */,
-				054BEC3B119F89E800ABCA18 /* Entitlements.plist in Resources */,
 				054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */,
 				054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */,
 				054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */,
@@ -3219,6 +3228,9 @@
 				05CBE8D0128A840000730CB8 /* Icon@2x.png in Resources */,
 				05CBE8EA128A848300730CB8 /* Icon.png in Resources */,
 				05CBE8F8128A85DF00730CB8 /* Icon-72.png in Resources */,
+				0552D1331295230300A4994B /* Icon-Small-50.png in Resources */,
+				0552D1341295230300A4994B /* Icon-Small.png in Resources */,
+				0552D1351295230300A4994B /* Icon-Small@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3235,7 +3247,6 @@
 				05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */,
 				E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
-				E9C1DA470ED9DC1E009F76D2 /* Entitlements.plist in Resources */,
 				E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */,
 				E9617A330FF566F300690108 /* gen_xib_strings.py in Resources */,
 				E9617A350FF566FF00690108 /* localize_xibs.py in Resources */,
@@ -3279,6 +3290,9 @@
 				05CBE8D1128A840000730CB8 /* Icon@2x.png in Resources */,
 				05CBE8E9128A848200730CB8 /* Icon.png in Resources */,
 				05CBE8F9128A85DF00730CB8 /* Icon-72.png in Resources */,
+				0552D1301295230300A4994B /* Icon-Small-50.png in Resources */,
+				0552D1311295230300A4994B /* Icon-Small.png in Resources */,
+				0552D1321295230300A4994B /* Icon-Small@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4355,8 +4369,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -4377,8 +4391,8 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
+				PROVISIONING_PROFILE = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
