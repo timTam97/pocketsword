@@ -30,7 +30,7 @@
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 //@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
-@property (nonatomic, retain) IBOutlet NSURL *urlToOpen;
+@property (nonatomic, retain) NSURL *urlToOpen;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate;
 
