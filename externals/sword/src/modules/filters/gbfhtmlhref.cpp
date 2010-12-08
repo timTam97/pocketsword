@@ -159,7 +159,11 @@ bool GBFHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 			for (tok = token+2; *tok; tok++)
 				//if(token[i] != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">&lt;S&gt;</a>";
+			buf += "\" class=\"strongs\">&lt;";
+			for (tok = token + 2; *tok; tok++)
+				//if(token[i] != '\"')
+				buf += *tok;
+			buf += "&gt;</a>";
 		}
 		else if (!strncmp(token, "WH", 2)) { // strong's numbers
 			//buf += " <small><em>&lt;<a href=\"type=Strongs value=";
@@ -167,7 +171,11 @@ bool GBFHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 			for (tok = token+2; *tok; tok++)
 				//if(token[i] != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">&lt;S&gt;</a>";
+			buf += "\" class=\"strongs\">&lt;";
+			for (tok = token + 2; *tok; tok++)
+				//if(token[i] != '\"')
+				buf += *tok;
+			buf += "&gt;</a>";
 		}
 		else if (!strncmp(token, "WTG", 3)) { // strong's numbers tense
 			//buf += " <small><em>(<a href=\"type=Strongs value=";
@@ -175,7 +183,11 @@ bool GBFHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">(S)</a>";
+			buf += "\" class=\"strongs\">(";
+			for (tok = token + 3; *tok; tok++)
+				if(*tok != '\"')
+					buf += *tok;
+			buf += ")</a>";
 		}
 		else if (!strncmp(token, "WTH", 3)) { // strong's numbers tense
 			//buf += " <small><em>(<a href=\"type=Strongs value=";
@@ -183,7 +195,11 @@ bool GBFHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">(S)</a>";
+			buf += "\" class=\"strongs\">(";
+			for (tok = token + 3; *tok; tok++)
+				if(*tok != '\"')
+					buf += *tok;
+			buf += ")</a>";
 		}
 
 		else if (!strncmp(token, "WT", 2) && strncmp(token, "WTH", 3) && strncmp(token, "WTG", 3)) { // morph tags

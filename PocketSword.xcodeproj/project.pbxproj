@@ -4116,8 +4116,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4153,8 +4153,8 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "4648A014-41C1-4876-97A8-E9D8C7E02D82";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4648A014-41C1-4876-97A8-E9D8C7E02D82";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 			};
 			name = Debug;
 		};
@@ -4195,8 +4195,8 @@
 					"-DUSELUCENE",
 				);
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "069304B3-B369-4565-99FD-88B5793C2982";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "069304B3-B369-4565-99FD-88B5793C2982";
+				PROVISIONING_PROFILE = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

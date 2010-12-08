@@ -182,15 +182,18 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "lemma")) { //&gt;
 				if(value.length())
 					// empty "type=" is deliberate.
-					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=&amp;value=%s\" class=\"strongs\">&lt;S&gt;</a>", 
-						URL::encode(value.c_str()).c_str());
+					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=&amp;value=%s\" class=\"strongs\">&lt;%s&gt;</a>", 
+						URL::encode(value.c_str()).c_str(),
+						value.c_str());
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Strongs")) {
 				char ch = *value;
 				value<<1;
-				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;S&gt;</a>",
+				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt",
 						    ((ch == 'H') ? "Hebrew" : "Greek"),
 						    URL::encode(value.c_str()).c_str());
+				buf += (value.length()) ? value.c_str() : "";
+				buf += "&gt;</a>";
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Dict")) {
 				buf += (tag.isEndTag() ? "</b>" : "<b>");
