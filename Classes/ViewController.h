@@ -166,8 +166,11 @@ typedef enum {
 
 - (void)showInfoWithNotification:(NSNotification *)notification;
 - (void)showInfo:(NSString *)infoString;
-- (void)rotateInfo;
+- (void)rotateInfo:(NSNotification *)notification;
 - (IBAction)hideInfo;
+- (void) showInfoModal:(UIView*)modalView withTiming:(float)time;
+- (void) hideInfoModal:(UIView*) modalView withTiming:(float)time;
+- (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
 @end
 

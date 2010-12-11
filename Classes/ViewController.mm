@@ -139,7 +139,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotateInfo) name:NotificationRotateInfoPane object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotateInfo:) name:NotificationRotateInfoPane object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicatorViaNotification) name:NotificationDisplayBusyIndicator object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
@@ -806,9 +806,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	CGPoint offScreenCenter, middleCenter;
 	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
 	if([UIApplication sharedApplication].statusBarHidden) {
-		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 	}
-	//UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
 		middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
@@ -818,11 +817,58 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
-	} else {
+	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 		width = offSize.width;
 		height = offSize.height;
 		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
 		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
+	} else {
+		ALog(@"ERROR");
+	}
+	modalView.center = offScreenCenter; // we start off-screen
+	[mainWindow addSubview:modalView];
+	
+	// Show it with a transition effect
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:time]; // animation duration in seconds
+	modalView.center = middleCenter;
+	[UIView commitAnimations];
+}
+
+- (void) showInfoModal:(UIView*)modalView withTiming:(float)time
+{
+	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	
+	CGSize modalSize = modalView.bounds.size;
+	//CGPoint middleCenter = modalView.center;
+	CGSize offSize = [UIScreen mainScreen].bounds.size;
+	CGFloat width, height;
+	CGPoint offScreenCenter, middleCenter;
+	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
+		if(bibleTabController.isFullScreen) {
+			interfaceOrientation = bibleTabController.interfaceOrientation;
+		} else if(commentaryTabController.isFullScreen) {
+			interfaceOrientation = commentaryTabController.interfaceOrientation;
+		}
+	}
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
+		middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
+	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
+		middleCenter = CGPointMake(offSize.width - (modalSize.height / 2.0), offSize.height / 2.0);
+	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
+		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
+	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+		width = offSize.width;
+		height = offSize.height;
+		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
+		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
+	} else {
+		ALog(@"ERROR");
 	}
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];
@@ -860,7 +906,43 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[UIView commitAnimations];
 }
 
+- (void) hideInfoModal:(UIView*) modalView withTiming:(float)time
+{
+	CGSize offSize = [UIScreen mainScreen].bounds.size;
+	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
+	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	if([UIApplication sharedApplication].statusBarHidden) {
+		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+		if(bibleTabController.isFullScreen) {
+			interfaceOrientation = bibleTabController.interfaceOrientation;
+		} else if(commentaryTabController.isFullScreen) {
+			interfaceOrientation = commentaryTabController.interfaceOrientation;
+		}
+	}
+	//UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
+	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+		offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
+	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
+	}
+	[UIView beginAnimations:nil context:modalView];
+	[UIView setAnimationDuration:time];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+	[UIView setAnimationDidStopSelector:@selector(hideInfoModalEnded:finished:context:)];
+	modalView.center = offScreenCenter;
+	[UIView commitAnimations];
+}
+
 + (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
+{
+	UIView* modalView = (UIView *)context;
+	[modalView removeFromSuperview];
+}
+
+- (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
 	UIView* modalView = (UIView *)context;
 	[modalView removeFromSuperview];
@@ -977,7 +1059,18 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
 		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
 		if([UIApplication sharedApplication].statusBarHidden) {
-			interfaceOrientation = tabController.interfaceOrientation;
+			//we are in fullscreen mode in the Bible or Commentary tab.
+			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
+			if(bibleTabController.isFullScreen) {
+				interfaceOrientation = bibleTabController.interfaceOrientation;
+			} else if(commentaryTabController.isFullScreen) {
+				interfaceOrientation = commentaryTabController.interfaceOrientation;
+			}
+			//interfaceOrientation = tabController.interfaceOrientation;
+//			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+//				interfaceOrientation = UIInterfaceOrientationLandscapeRight;
+//			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+//				interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
 		}
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
@@ -995,7 +1088,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
 		}
-		[ViewController showModal: infoView withTiming: 0.3];
+		[self showInfoModal: infoView withTiming: 0.3];
 	}
 	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:@"fontNamePreference"];
 	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:@"fontNamePreference"];
@@ -1011,7 +1104,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	//NSLog(@"%@", infoString);
 }
 
-- (void)rotateInfo {
+- (void)rotateInfo:(NSNotification *)notification {
+	DLog(@"rotateInfo");
 	if([infoView superview]) {//only rotate if it's displayed!
 		[UIView beginAnimations:@"rotateInfo" context:nil];
 		[UIView setAnimationBeginsFromCurrentState:YES];
@@ -1020,19 +1114,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
 		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
 		if([UIApplication sharedApplication].statusBarHidden) {
-			interfaceOrientation = tabController.interfaceOrientation;
+			//interfaceOrientation = tabController.interfaceOrientation;
+			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 		}
 		CGFloat x,y;
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
 			x = 0.5 * INFO_LANDSCAPE_HEIGHT - 20;
-//			if(![[UIApplication sharedApplication] isStatusBarHidden]) {
-//				NSLog(@"status bar visible");
-//				x -= [UIApplication sharedApplication].statusBarFrame.size.width;
-//			} else {
-//				NSLog(@"status bar NOT visible");
-//				x -= 20;
-//			}
 			y = (0.5 * screen.height) - (0.5 * INFO_LANDSCAPE_HEIGHT);
 			infoView.frame = CGRectMake(x, y, screen.height, INFO_LANDSCAPE_HEIGHT);
 			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
@@ -1056,7 +1144,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)hideInfo {
-	[ViewController hideModal: infoView withTiming: 0.3];
+	[self hideInfoModal: infoView withTiming: 0.3];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
