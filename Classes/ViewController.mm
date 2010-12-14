@@ -1105,7 +1105,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)rotateInfo:(NSNotification *)notification {
-	DLog(@"rotateInfo");
+	//DLog(@"rotateInfo");
 	if([infoView superview]) {//only rotate if it's displayed!
 		[UIView beginAnimations:@"rotateInfo" context:nil];
 		[UIView setAnimationBeginsFromCurrentState:YES];
@@ -1251,9 +1251,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 @implementation PSLoadingViewController
 
 // Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	// Return YES for supported orientations
-	return YES;//(interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
 

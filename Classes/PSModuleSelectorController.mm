@@ -16,14 +16,36 @@
 
 @synthesize listType;
 
--(void)viewWillAppear:(BOOL)animated {
+- (IBAction)toggleLock {
+	
+	UIInterfaceOrientation interfaceOrientation = [self interfaceOrientation];
+	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+	
+	if(rotationLockPosition == RotationEnabled) {
+		[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight ? RotationLockedInLandscape : RotationLockedInPortrait)] forKey:ROTATION_LOCK_POSITION];
+		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateLocked.png"];
+	} else {
+		[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:RotationEnabled] forKey:ROTATION_LOCK_POSITION];
+		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateUnlocked.png"];
+	}
+	
+}
+
+- (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
 		modulesListTable.backgroundColor = [UIColor blackColor];
 	} else {
 		modulesListTable.backgroundColor = [UIColor whiteColor];
 	}
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable useStatusBar:YES];
+	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+	
+	if(rotationLockPosition == RotationEnabled) {
+		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateUnlocked.png"];
+	} else {
+		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateLocked.png"];
+	}
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar useStatusBar:YES];
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	if([self listType] == BibleTab) {
@@ -82,7 +104,7 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (IBAction)addModuleButtonPressed {
@@ -266,10 +288,8 @@
 }
 
 // Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
 @end

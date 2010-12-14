@@ -219,7 +219,7 @@ NSTimer *refreshTimer;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return YES;
+	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void)dealloc {

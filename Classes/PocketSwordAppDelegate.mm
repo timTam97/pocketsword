@@ -403,12 +403,12 @@
 
 @implementation UITabBarController (PocketSword)
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return YES;
+	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 @end
 
 @implementation UINavigationController (PocketSword)
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return YES;
+	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 @end

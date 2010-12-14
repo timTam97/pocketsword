@@ -17,7 +17,7 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import <UIKit/UIKit.h>
+#import "PSResizing.h"
 
 @interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate> {
     IBOutlet UIWindow *window;

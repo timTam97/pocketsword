@@ -95,3 +95,13 @@ typedef enum {
 #define NotificationBibleToggleFullscreen		@"NotificationBibleToggleFullscreen"
 #define NotificationCommentaryToggleFullscreen	@"NotificationCommentaryToggleFullscreen"
 #define NotificationSwitchToFullscreen			@"NotificationSwitchToFullscreen"
+
+#define ROTATION_LOCK_POSITION @"rotationLockedPosition"
+
+typedef enum {
+	RotationEnabled,
+	RotationLockedInPortrait,
+	RotationLockedInLandscape
+} RotationPosition;
+
+
