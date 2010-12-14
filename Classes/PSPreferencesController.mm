@@ -322,7 +322,7 @@ BOOL requireReloadOfModuleViews = NO;
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	//cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];//[UIFont systemFontOfSize:12.0];
 	cell.textLabel.textColor = [UIColor darkTextColor];
 	
 	CGFloat xx = 0.0;
@@ -388,6 +388,7 @@ BOOL requireReloadOfModuleViews = NO;
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 					cell.textLabel.numberOfLines = 4;
 					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
@@ -550,7 +551,7 @@ BOOL requireReloadOfModuleViews = NO;
 					[hvpSwitch addTarget:self action:@selector(displayHVPChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: hvpSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
-					cell.textLabel.font = [UIFont systemFontOfSize:11.0];
+					cell.textLabel.font = [UIFont boldSystemFontOfSize:10.0];
 					[hvpSwitch release];
 				}
 					break;
@@ -597,7 +598,7 @@ BOOL requireReloadOfModuleViews = NO;
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 					cell.textLabel.numberOfLines = 2;
-					cell.textLabel.font = [UIFont systemFontOfSize:10.0];
+					cell.textLabel.font = [UIFont boldSystemFontOfSize:10.0];
 				}
 					break;
 				case MMM_NOTE_ROW :
