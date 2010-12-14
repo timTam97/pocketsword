@@ -68,7 +68,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[super viewDidLoad];
 	preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
-	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 2.0, 20.0, 42.0)];
+	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	fontSizeLabel.textColor = [UIColor darkTextColor];
 	fontSizeLabel.text = @"14";
@@ -161,7 +161,7 @@ BOOL requireReloadOfModuleViews = NO;
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case FULLSCREEN_NOTE_ROW :
-					return 55;
+					return 75;
 				default :
 					return 45;
 			}
@@ -177,7 +177,7 @@ BOOL requireReloadOfModuleViews = NO;
 		case DEVICE_SECTION :
 			switch (indexPath.row) {
 				case MMM_NOTE_ROW :
-					return 98;
+					return 110;
 				default :
 					return 45;
 			}
@@ -321,7 +321,8 @@ BOOL requireReloadOfModuleViews = NO;
 	
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.accessoryType = UITableViewCellAccessoryNone;
-	cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+	//cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+	cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 	cell.textLabel.textColor = [UIColor darkTextColor];
 	
 	CGFloat xx = 0.0;
@@ -375,16 +376,17 @@ BOOL requireReloadOfModuleViews = NO;
 					//nightModeSwitch.tag = 1;
 					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: fullscreenModeSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
 					[fullscreenModeSwitch release];						
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 2;
 				}
 					break;
 				case FULLSCREEN_NOTE_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenNote", @"With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-					cell.textLabel.numberOfLines = 3;
-					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+					cell.textLabel.numberOfLines = 4;
 					cell.textLabel.textColor = [UIColor darkGrayColor];
 				}
 					break;
@@ -459,8 +461,8 @@ BOOL requireReloadOfModuleViews = NO;
 					cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 					cell.textLabel.numberOfLines = 2;
-					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
@@ -548,6 +550,7 @@ BOOL requireReloadOfModuleViews = NO;
 					[hvpSwitch addTarget:self action:@selector(displayHVPChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: hvpSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
+					cell.textLabel.font = [UIFont systemFontOfSize:11.0];
 					[hvpSwitch release];
 				}
 					break;
@@ -577,8 +580,8 @@ BOOL requireReloadOfModuleViews = NO;
 					//insomniaSwitch.tag = 3;
 					[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: insomniaSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"Disable auto-lock");
 					[insomniaSwitch release];						
+					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"Disable auto-lock");
 				}
 					break;
 				case MMM_ROW :
@@ -590,16 +593,18 @@ BOOL requireReloadOfModuleViews = NO;
 					//manualInstallSwitch.tag = 3;
 					[manualInstallSwitch addTarget:self action:@selector(moduleMaintainerModeChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: manualInstallSwitch ];
+					[manualInstallSwitch release];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
-					//cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:15.0];
-					[manualInstallSwitch release];						
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 2;
+					cell.textLabel.font = [UIFont systemFontOfSize:10.0];
 				}
 					break;
 				case MMM_NOTE_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeNote", @"");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-					cell.textLabel.numberOfLines = 6;
+					cell.textLabel.numberOfLines = 7;
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 					cell.textLabel.textColor = [UIColor darkGrayColor];
 				}
@@ -626,6 +631,7 @@ BOOL requireReloadOfModuleViews = NO;
 					if(!font)
 						font = @"Helvetica";
 					cell.detailTextLabel.text = font;
+					cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
@@ -638,6 +644,7 @@ BOOL requireReloadOfModuleViews = NO;
 					if(!module)
 						module = NSLocalizedString(@"None", @"None");
 					cell.detailTextLabel.text = module;
+					cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 				case STRONGS_H_ROW:
@@ -646,6 +653,7 @@ BOOL requireReloadOfModuleViews = NO;
 					if(!module)
 						module = NSLocalizedString(@"None", @"None");
 					cell.detailTextLabel.text = module;
+					cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
@@ -658,6 +666,7 @@ BOOL requireReloadOfModuleViews = NO;
 					if(!module)
 						module = NSLocalizedString(@"None", @"None");
 					cell.detailTextLabel.text = module;
+					cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
