@@ -23,7 +23,7 @@
 	
 	self.navigationItem.title = NSLocalizedString(@"InstallSourcesTitle", @"Sources");
 	[self addManualInstallButton];
-	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:@"ModuleMaintainerModeChanged" object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:NotificationModuleMaintainerModeChanged object:nil];
 }
 
 // available actions (via Edit button):
@@ -33,7 +33,7 @@
 //		
 
 - (void)addManualInstallButton {
-	//BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
+	//BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference];
 	self.navigationItem.rightBarButtonItem = nil;
 	if([[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(editButtonPressed:)];
@@ -45,7 +45,7 @@
 
 - (IBAction)editButtonPressed:(id)sender {
 	UIActionSheet *actionSheet;
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference]) {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), NSLocalizedString(@"AddFTPSource", @""), /*NSLocalizedString(@"AddHTTPSource", @""),*/ NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @""), nil];
 	} else {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];

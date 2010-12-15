@@ -44,7 +44,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		refTable.backgroundColor = [UIColor blackColor];
 	} else {
 		refTable.backgroundColor = [UIColor whiteColor];
@@ -296,7 +296,7 @@
 	if([currentlyViewedBookName isEqualToString:cell.textLabel.text]) {
 		cell.textLabel.textColor = [UIColor blueColor];
 	} else {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 			cell.textLabel.textColor = [UIColor whiteColor];
 		} else {
 			cell.textLabel.textColor = [UIColor blackColor];
@@ -308,7 +308,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];

@@ -244,8 +244,8 @@ bool comm_initialised = false;
 				[tmpEntry release];
 			}
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-			BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
-			BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+			BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
+			BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
 			SwordManager *swordManager = [SwordManager defaultManager];
 			[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 			[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];

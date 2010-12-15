@@ -38,7 +38,7 @@ BOOL needToScroll;
 
 
 - (void)viewWillAppear:(BOOL)animated {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		chapterTable.backgroundColor = [UIColor blackColor];
 	} else {
 		chapterTable.backgroundColor = [UIColor whiteColor];
@@ -106,7 +106,7 @@ BOOL needToScroll;
 	if((indexPath.section+1) == currentChapter) {
 		cell.textLabel.textColor = [UIColor blueColor];
 	} else {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 			cell.textLabel.textColor = [UIColor whiteColor];
 		} else {
 			cell.textLabel.textColor = [UIColor blackColor];
@@ -118,7 +118,7 @@ BOOL needToScroll;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];

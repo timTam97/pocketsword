@@ -61,7 +61,7 @@ NSArray *fontStrings;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[table reloadData];
-	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:@"fontNamePreference"];
+	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 	if(!font)
 		font = @"Helvetica";
 	
@@ -115,7 +115,7 @@ NSArray *fontStrings;
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:@"fontNamePreference"];
+	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 	if(!font)
 		font = @"Helvetica";
 	

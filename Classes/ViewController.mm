@@ -112,7 +112,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self setCommentaryTitleViaNotification];
 		[self setDictionaryTitleViaNotification];
 		
-		if ([defaults boolForKey: @"insomniaPreference"]) {
+		if ([defaults boolForKey: DefaultsInsomniaPreference]) {
 			UIApplication *thisApp = [UIApplication sharedApplication];
 			thisApp.idleTimerDisabled = YES;
 		}
@@ -1090,13 +1090,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[self showInfoModal: infoView withTiming: 0.3];
 	}
-	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:@"fontNamePreference"];
-	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:@"fontNamePreference"];
+	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 
 	NSString *htmlString = [PSModuleController createHTMLString: infoString withJS: @"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>"];
 
-	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:@"fontNamePreference"];
+	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	[infoWebView loadHTMLString: htmlString baseURL: nil];
@@ -1261,7 +1261,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 @implementation PSWebView
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
 	}
 	[super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];

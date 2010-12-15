@@ -47,10 +47,31 @@ typedef enum {
 #define defSwordManager [SwordManager defaultManager]
 
 
+// Preferences - general
 #define DefaultsStrongsHebrewModule                 @"DefaultsStrongsHebrewModule"
 #define DefaultsStrongsGreekModule                  @"DefaultsStrongsGreekModule"
 #define DefaultsMorphHebrewModule                   @"DefaultsMorphHebrewModule"
 #define DefaultsMorphGreekModule                    @"DefaultsMorphGreekModule"
+#define DefaultsFullscreenModePreference			@"fullscreenModePreference"
+#define DefaultsNightModePreference					@"nightModePreference"
+#define DefaultsInsomniaPreference					@"insomniaPreference"
+#define DefaultsModuleMaintainerModePreference		@"moduleMaintainerModePreference"
+
+// Preferences - per module
+#define DefaultsFontNamePreference					@"fontNamePreference"
+#define DefaultsFontSizePreference					@"fontSizePreference"
+#define DefaultsStrongsPreference					@"strongsPreference"
+#define DefaultsMorphPreference						@"morphPreference"
+#define DefaultsScriptRefsPreference				@"scriptRefsPreference"
+#define DefaultsFootnotesPreference					@"footnotesPreference"
+#define DefaultsHeadingsPreference					@"headingsPreference"
+#define DefaultsRedLetterPreference					@"redLetterPreference"
+#define DefaultsVPLPreference						@"vplPreference"
+
+// Preferences - potential "per module"?
+#define DefaultsGreekAccentsPreference				@"greekAccentsPreference"
+#define DefaultsHVPPreference						@"hvpPreference"
+#define DefaultsHebrewCantillationPreference		@"hebrewCantillationPreference"
 
 #define StrongsFontName								@"Times New Roman"
 
@@ -63,6 +84,7 @@ typedef enum {
 #define NotificationCommentarySwipeRight		@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft			@"NotificationCommentarySwipeLeft"
 #define NotificationNightModeChanged			@"NotificationNightModeChanged"
+#define NotificationModuleMaintainerModeChanged	@"ModuleMaintainerModeChanged"
 
 #define NotificationDevotionalChanged			@"NotificationDevotionalChanged"
 #define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"

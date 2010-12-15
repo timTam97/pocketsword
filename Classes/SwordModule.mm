@@ -976,8 +976,8 @@
 	NSString *interverseHeading;
 	NSString *modType = [NSString stringWithUTF8String: swModule->Type()];
 	NSInteger i = 1;
-	BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
-	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+	BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
+	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 	BOOL rawFile = [self isPersonalCommentary];
 	
 	// Grab till the end of the chapter
@@ -1038,7 +1038,7 @@
 	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
 	if([modType isEqualToString: SWMOD_CATEGORY_BIBLES]) {
 		//only pad the bottom if it's a Bible, don't for commentaries
-		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 		fs = (fs == 0) ? 14 : fs;
 		if(fs <= 17) {
 			for(int i=fs;i<18;i++) {

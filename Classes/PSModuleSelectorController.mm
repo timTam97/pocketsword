@@ -33,7 +33,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		modulesListTable.backgroundColor = [UIColor blackColor];
 	} else {
 		modulesListTable.backgroundColor = [UIColor whiteColor];
@@ -187,7 +187,7 @@
 		cell.textLabel.textColor = [UIColor brownColor];
 		cell.detailTextLabel.textColor = [UIColor brownColor];
 	} else {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 			cell.textLabel.textColor = [UIColor whiteColor];
 			cell.detailTextLabel.textColor = [UIColor whiteColor];
 		} else {
@@ -200,7 +200,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];

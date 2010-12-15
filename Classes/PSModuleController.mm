@@ -240,15 +240,15 @@ static PSModuleController *instance;
 
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/ {
 	if(swordManager) {
-		BOOL redLetter = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
-		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
-		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
-		BOOL greekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
-		BOOL HVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
-		BOOL hebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
-		BOOL scriptRefs = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
-		BOOL footnotes = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
-		BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+		BOOL redLetter = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsRedLetterPreference];
+		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
+		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
+		BOOL greekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsGreekAccentsPreference];
+		BOOL HVP = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHVPPreference];
+		BOOL hebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHebrewCantillationPreference];
+		BOOL scriptRefs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsScriptRefsPreference];
+		BOOL footnotes = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFootnotesPreference];
+		BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 		
 		[swordManager setGlobalOption: SW_OPTION_SCRIPTREFS value: ((scriptRefs) ? SW_ON : SW_OFF)];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
@@ -306,7 +306,7 @@ static PSModuleController *instance;
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	//refSelectorController.refSelectorBooks = nil;
-	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 	[primaryBible setHeadings:headings];
 }
 
@@ -460,7 +460,7 @@ static PSModuleController *instance;
 			sword::VerseKey *curKey = (sword::VerseKey*)([primaryBible swModule])->getKey();
 			curKey->setText([ch cStringUsingEncoding: NSUTF8StringEncoding]);
 			//([primaryBible swModule])->setKey(loc);
-			BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+			BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 			[primaryBible setHeadings:headings];
 		}
 	}
@@ -537,7 +537,7 @@ static PSModuleController *instance;
 	int status = [[self swordInstallManager] installModule: swordModule fromSource: sIS withManager: swordManager];
 	
 	application.networkActivityIndicatorVisible = NO;
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 	
 	[self reload];
@@ -895,12 +895,12 @@ static PSModuleController *instance;
 	NSString *backgroundColor = @"white";
 	NSString *linkColor = @"fuchsia";
 	
-	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 	if(usePrefs) {
-		fontName = [[NSUserDefaults standardUserDefaults] objectForKey:@"fontNamePreference"];
+		fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
 		if(!fontName)
 			fontName = @"Helvetica";
-		BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
+		BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 		fs = (fs == 0) ? 14 : fs;
 		fontSize = [NSString stringWithFormat:@"%d", fs];
 		fontColor = (nightMode) ? @"white" : @"black";

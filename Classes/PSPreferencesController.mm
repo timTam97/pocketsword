@@ -212,12 +212,12 @@ BOOL requireReloadOfModuleViews = NO;
 						fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 						fontSizeSlider.minimumValue = 10.0;
 						fontSizeSlider.maximumValue = 20.0;
-						NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+						NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 						if(fontSize != 0) {//defaults default to 0 if it's not previously set...
 							fontSizeSlider.value = (float)fontSize;
 						} else {
 							fontSizeSlider.value = 14.0;
-							[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:@"fontSizePreference"];
+							[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:DefaultsFontSizePreference];
 							[[NSUserDefaults standardUserDefaults] synchronize];
 						}
 						fontSizeSlider.continuous = YES;
@@ -358,7 +358,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//nightModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
+					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 					nightModeSwitch.on = nightMode;
 					//nightModeSwitch.tag = 1;
 					[nightModeSwitch addTarget:self action:@selector(nightModeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -371,7 +371,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *fullscreenModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//fullscreenModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL fullscreenMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"fullscreenModePreference"];
+					BOOL fullscreenMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference];
 					fullscreenModeSwitch.on = fullscreenMode;
 					//nightModeSwitch.tag = 1;
 					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -399,7 +399,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:@"vplPreference"];
+					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
 					vplSwitch.on = vpl;
 					//vplSwitch.tag = 4;
 					[vplSwitch addTarget:self action:@selector(vplChanged:) forControlEvents:UIControlEventValueChanged];
@@ -412,7 +412,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
 					//xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"scriptRefsPreference"];
+					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsScriptRefsPreference];
 					xrefSwitch.on = xrefMode;
 					[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: xrefSwitch ];
@@ -424,7 +424,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
 					//footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"footnotesPreference"];
+					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFootnotesPreference];
 					footnotesSwitch.on = footnotesMode;
 					[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: footnotesSwitch ];
@@ -436,7 +436,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
 					//headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"headingsPreference"];
+					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 					headingsSwitch.on = headingsMode;
 					[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: headingsSwitch ];
@@ -448,7 +448,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
 					//redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"redLetterPreference"];
+					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsRedLetterPreference];
 					redLetterModeSwitch.on = redLetterMode;
 					//redLetterModeSwitch.tag = 2;
 					[redLetterModeSwitch addTarget:self action:@selector(redLetterChanged:) forControlEvents:UIControlEventValueChanged];
@@ -474,7 +474,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *strongsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//strongsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL displayStrongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
+					BOOL displayStrongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
 					strongsSwitch.on = displayStrongs;
 					//strongsSwitch.tag = 9;
 					[strongsSwitch addTarget:self action:@selector(displayStrongsChanged:) forControlEvents:UIControlEventValueChanged];
@@ -503,7 +503,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *morphSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//morphSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL displayMorph = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+					BOOL displayMorph = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
 					morphSwitch.on = displayMorph;
 					//morphSwitch.tag = 9;
 					[morphSwitch addTarget:self action:@selector(displayMorphChanged:) forControlEvents:UIControlEventValueChanged];
@@ -532,7 +532,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *greekAccentsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//greekAccentsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL displayGreekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:@"greekAccentsPreference"];
+					BOOL displayGreekAccents = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsGreekAccentsPreference];
 					greekAccentsSwitch.on = displayGreekAccents;
 					//greekAccentsSwitch.tag = 9;
 					[greekAccentsSwitch addTarget:self action:@selector(displayGreekAccentsChanged:) forControlEvents:UIControlEventValueChanged];
@@ -545,7 +545,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//hvpSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL displayHVP = [[NSUserDefaults standardUserDefaults] boolForKey:@"hvpPreference"];
+					BOOL displayHVP = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHVPPreference];
 					hvpSwitch.on = displayHVP;
 					//hvpSwitch.tag = 9;
 					[hvpSwitch addTarget:self action:@selector(displayHVPChanged:) forControlEvents:UIControlEventValueChanged];
@@ -559,7 +559,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//hebrewCantillationSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL displayHebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:@"hebrewCantillationPreference"];
+					BOOL displayHebrewCantillation = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHebrewCantillationPreference];
 					hebrewCantillationSwitch.on = displayHebrewCantillation;
 					//hebrewCantillationSwitch.tag = 9;
 					[hebrewCantillationSwitch addTarget:self action:@selector(displayHebrewCantillationChanged:) forControlEvents:UIControlEventValueChanged];
@@ -576,7 +576,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *insomniaSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//insomniaSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+					BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
 					insomniaSwitch.on = insomniaMode;
 					//insomniaSwitch.tag = 3;
 					[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -589,7 +589,7 @@ BOOL requireReloadOfModuleViews = NO;
 				{
 					UISwitch *manualInstallSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 					//manualInstallSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"moduleMaintainerModePreference"];
+					BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference];
 					manualInstallSwitch.on = manualInstallEnabled;
 					//manualInstallSwitch.tag = 3;
 					[manualInstallSwitch addTarget:self action:@selector(moduleMaintainerModeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -620,7 +620,7 @@ BOOL requireReloadOfModuleViews = NO;
 			switch (indexPath.row) {
 				case FONT_SIZE_ROW :
 				{
-					NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:@"fontSizePreference"];
+					NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 					//cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
 					cell.textLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size")];
 					fontSizeLabel.text = [NSString stringWithFormat:@"%d", fontSize];
@@ -628,7 +628,7 @@ BOOL requireReloadOfModuleViews = NO;
 					break;
 				case FONT_NAME_ROW:
 				{
-					NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:@"fontNamePreference"];
+					NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 					if(!font)
 						font = @"Helvetica";
 					cell.detailTextLabel.text = font;
@@ -715,15 +715,13 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)fullscreenModeChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"fullscreenModePreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsFullscreenModePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	//[[PSModuleController defaultModuleController] setPreferences];
-	//requireReloadOfModuleViews = YES;
 }
 
 - (void)displayStrongsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"strongsPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsStrongsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -731,7 +729,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)displayMorphChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"morphPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsMorphPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -739,7 +737,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)displayGreekAccentsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"greekAccentsPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsGreekAccentsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -747,7 +745,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)displayHVPChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"hvpPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHVPPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -755,7 +753,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)displayHebrewCantillationChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"hebrewCantillationPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHebrewCantillationPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -781,7 +779,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)xrefChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"scriptRefsPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsScriptRefsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -789,7 +787,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)footnotesChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"footnotesPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsFootnotesPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -797,7 +795,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)headingsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"headingsPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHeadingsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -805,7 +803,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)fontSizeChanged:(UISlider *)sender {
 	NSInteger f = [sender value];
-	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:@"fontSizePreference"];
+	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:DefaultsFontSizePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
 	//[preferencesTable reloadData];
@@ -815,7 +813,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)nightModeChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"nightModePreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsNightModePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	requireReloadOfModuleViews = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNightModeChanged object:nil];
@@ -823,7 +821,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)redLetterChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"redLetterPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsRedLetterPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
 	requireReloadOfModuleViews = YES;
@@ -831,13 +829,13 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)vplChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"vplPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsVPLPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	requireReloadOfModuleViews = YES;
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
-	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:@"fontNamePreference"];
+	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
 	requireReloadOfModuleViews = YES;
@@ -845,7 +843,7 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)insomniaModeChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"insomniaPreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsInsomniaPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	UIApplication *thisApp = [UIApplication sharedApplication];
 	thisApp.idleTimerDisabled = n;
@@ -853,9 +851,9 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)moduleMaintainerModeChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:@"moduleMaintainerModePreference"];
+	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsModuleMaintainerModePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ModuleMaintainerModeChanged" object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationModuleMaintainerModeChanged object:nil];
 }
 
 @end

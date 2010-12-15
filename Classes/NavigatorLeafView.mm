@@ -19,7 +19,7 @@ NSTimer *downloadTimer;
 	[super viewWillAppear:animated];
 	self.title = module.name;
 	self.navigationItem.rightBarButtonItem = nil;
-	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"];
+	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
 	[detailsView setBackgroundColor:backgroundColor];
 	

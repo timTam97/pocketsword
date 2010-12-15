@@ -191,7 +191,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 		cell.textLabel.text = [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex:indexPath.row];
 	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.textLabel.textColor = [UIColor whiteColor];
 	} else {
 		cell.textLabel.textColor = [UIColor blackColor];
@@ -201,7 +201,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];
@@ -396,8 +396,8 @@ PSDictionaryOverlayViewController *overlayViewController;
 		entry = nil;
 		
 	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:@"strongsPreference"];
-		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:@"morphPreference"];
+		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
+		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
 		SwordManager *swordManager = [SwordManager defaultManager];
 		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];

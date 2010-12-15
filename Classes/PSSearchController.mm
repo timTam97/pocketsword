@@ -45,7 +45,7 @@ BOOL searchingEnabled;
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		searchResultsTable.backgroundColor = [UIColor blackColor];
 	} else {
 		searchResultsTable.backgroundColor = [UIColor whiteColor];
@@ -183,7 +183,7 @@ BOOL searchingEnabled;
         mainLabel = (UILabel *)[cell.contentView viewWithTag:477];
         secondLabel = (UILabel *)[cell.contentView viewWithTag:577];
 	}
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		mainLabel.textColor = [UIColor whiteColor];
 		secondLabel.textColor = [UIColor lightGrayColor];
 		mainLabel.backgroundColor = [UIColor blackColor];
@@ -220,7 +220,7 @@ BOOL searchingEnabled;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"nightModePreference"]) {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];

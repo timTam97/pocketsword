@@ -355,7 +355,7 @@ BOOL downloadableShown;
     // Show error message
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = NO;
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
 	ALog(@"Couldn't retrieve search index for: %@", moduleName);
@@ -369,7 +369,7 @@ BOOL downloadableShown;
     [connection release];
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = NO;
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"insomniaPreference"];
+	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
     // Use responseData
