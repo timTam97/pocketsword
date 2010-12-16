@@ -74,7 +74,7 @@ BOOL trashModule = NO;
 
 - (void)displayInfoForModule:(SwordModule*)swordModule {
 	infoNavItem.title = [swordModule name];
-	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@""] baseURL:nil];
+	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:swordModule.name] baseURL:nil];
 }
 
 - (IBAction)closeLeaf:(id)sender {
@@ -121,7 +121,7 @@ BOOL trashModule = NO;
 		[html appendFormat:@"<p><b>%@:</b> %@</p>", [PSModuleController createRefString: entry.key], entry.text];
 	}
 	
-	[unlockWebView loadHTMLString:[PSModuleController createHTMLString:html usingPreferences:YES withJS:@""] baseURL:nil];
+	[unlockWebView loadHTMLString:[PSModuleController createHTMLString:html usingPreferences:YES withJS:@"" usingModuleForPreferences:mod.name] baseURL:nil];
 	[mod unlock: nil];
 	return YES;
 }

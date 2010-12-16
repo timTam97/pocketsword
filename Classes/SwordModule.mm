@@ -1136,7 +1136,7 @@
 					</script>\n", i, i, i, i, extraJS];
 	
 	
-	NSString *text = [PSModuleController createHTMLString: verses withJS: js];
+	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name];
 	[verses release];
 	if (swModule->Direction() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];

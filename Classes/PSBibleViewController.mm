@@ -205,6 +205,13 @@ bool bib_initialised = false;
 					entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
 			}
 			
+			NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+			[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
+			[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+						
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
 			//
 			// Morphological Tags
@@ -226,12 +233,13 @@ bool bib_initialised = false;
 				if(!entry) {
 					entry = NSLocalizedString(@"NoMorphGreekModuleInstalled", @"");
 				}
-				
 			}
+			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
 			
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
 				entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
 				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
@@ -242,6 +250,7 @@ bool bib_initialised = false;
 				}
 				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 				}
 				[tmpEntry release];
 			}

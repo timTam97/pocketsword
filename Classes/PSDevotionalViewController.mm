@@ -93,7 +93,7 @@ BOOL loaded;
 	if(!lastModule) {
 		loaded = NO;
 		self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"None", @"");
-		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
+		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
 		[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 		return;
 	}
@@ -149,12 +149,12 @@ BOOL loaded;
 	NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 	if(!lastModule) {
 		loaded = NO;
-		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
+		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
 		[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 		return;
 	}
 	SwordDictionary *devo = (SwordDictionary *)[defSwordManager moduleWithName:lastModule];
-	NSString *devoHTMLString = [PSModuleController createHTMLString:[devo entryForKey:dateKey] withJS:@""];
+	NSString *devoHTMLString = [PSModuleController createHTMLString:[devo entryForKey:dateKey] usingPreferences:YES withJS:@"" usingModuleForPreferences:devo.name];
 	devoHTMLString = [[devoHTMLString stringByReplacingOccurrencesOfString:@"<!P><br />" withString:@"<p>"] stringByReplacingOccurrencesOfString:@"<!/P>" withString:@"</p>"];
 	[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 	loaded = YES;
@@ -185,6 +185,7 @@ BOOL loaded;
 		}
 		if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 			entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 		}
 		[tmpEntry release];
 	}

@@ -798,7 +798,7 @@ static PSModuleController *instance;
 		[self reloadLastBible];
 		
 		if (!primaryBible) {
-			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
+			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	}
@@ -827,7 +827,7 @@ static PSModuleController *instance;
 		[self reloadLastCommentary];
 		
 		if (!primaryCommentary) {
-			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] withJS:@""];
+			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 	}
@@ -882,12 +882,12 @@ static PSModuleController *instance;
 	return titleToDisplay;
 }
 
-+ (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript {
-	return [PSModuleController createHTMLString:body usingPreferences:YES withJS:javascript];
++ (NSString *)createInfoHTMLString:(NSString*)body usingModuleForPreferences:(NSString*)moduleName {
+	return [PSModuleController createHTMLString:body usingPreferences:YES withJS:@"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>" usingModuleForPreferences:moduleName];
 }
 
 // allows you to add extra javascript into the <head> html object.
-+ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript
++ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName
 {
 	NSString *fontName = @"Helvetica";
 	NSString *fontSize = @"14";
@@ -898,6 +898,15 @@ static PSModuleController *instance;
 	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 	if(usePrefs) {
 		fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+		
+		// if we're provided with a moduleName, try to use that module's prefs
+		if(moduleName) {
+			NSString *fn = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontNamePreference, moduleName]];
+			fontName = (fn != nil) ? fn : fontName;
+			NSInteger fsMod = [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontSizePreference, moduleName]];
+			fs = (fsMod == 0) ? fs : fsMod;
+		}
+		
 		if(!fontName)
 			fontName = @"Helvetica";
 		BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];

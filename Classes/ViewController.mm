@@ -1094,12 +1094,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 
-	NSString *htmlString = [PSModuleController createHTMLString: infoString withJS: @"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>"];
+	//NSString *htmlString = [PSModuleController createHTMLString: infoString usingPreferences:YES withJS: @"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>" usingModuleForPreferences:blah];
+	//NSString *htmlString = [PSModuleController createInfoHTMLString: infoString usingModuleForPreferences:blah];
 
 	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-	[infoWebView loadHTMLString: htmlString baseURL: nil];
+	[infoWebView loadHTMLString: infoString baseURL: nil];
 	
 	//NSLog(@"%@", infoString);
 }
@@ -1193,6 +1194,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		} else {
 			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
 		}
+
+		NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+		[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
+		[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 	}
 	

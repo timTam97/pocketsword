@@ -58,15 +58,18 @@ typedef enum {
 #define DefaultsModuleMaintainerModePreference		@"moduleMaintainerModePreference"
 
 // Preferences - per module
+		// from createHTMLString:
 #define DefaultsFontNamePreference					@"fontNamePreference"
 #define DefaultsFontSizePreference					@"fontSizePreference"
-#define DefaultsStrongsPreference					@"strongsPreference"
-#define DefaultsMorphPreference						@"morphPreference"
+
+		// from attributeValueForEntryData: && getChapter:
+#define DefaultsStrongsPreference					@"strongsPreference" // attributeValueForEntryData: needs a clean:(BOOL) param 
+#define DefaultsMorphPreference						@"morphPreference" // attributeValueForEntryData: needs a clean:(BOOL) param 
 #define DefaultsScriptRefsPreference				@"scriptRefsPreference"
 #define DefaultsFootnotesPreference					@"footnotesPreference"
-#define DefaultsHeadingsPreference					@"headingsPreference"
+#define DefaultsHeadingsPreference					@"headingsPreference" // PSModuleController uses this when it loads a Bible...
 #define DefaultsRedLetterPreference					@"redLetterPreference"
-#define DefaultsVPLPreference						@"vplPreference"
+#define DefaultsVPLPreference						@"vplPreference" // only in getChapter, not in SWORDLib
 
 // Preferences - potential "per module"?
 #define DefaultsGreekAccentsPreference				@"greekAccentsPreference"

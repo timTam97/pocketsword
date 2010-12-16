@@ -229,7 +229,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 							window.onload = function() { document.documentElement.style.webkitTouchCallout = \"none\"; }\n\
 							-->\
 							</script>\n";
-	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, description] usingPreferences: YES withJS: javaScript];
+	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, description] usingPreferences: YES withJS: javaScript usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
 	if([t length] > 20) {
 		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
 	}
@@ -412,6 +412,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 		}
 		if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 			entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 		}
 		[tmpEntry release];
 	}

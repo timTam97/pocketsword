@@ -67,8 +67,8 @@
 + (PSModuleController *)defaultModuleController;
 + (void)releaseDefaultModuleController;
 
-+ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript;
-+ (NSString *)createHTMLString:(NSString*)body withJS:(NSString*)javascript;
++ (NSString *)createInfoHTMLString:(NSString*)body usingModuleForPreferences:(NSString*)moduleName;
++ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName;
 + (NSString *)createRefString:(NSString*)ref;
 + (NSString*)createTitleRefString:(NSString *)newTitle;
 + (BOOL)checkNetworkConnection;

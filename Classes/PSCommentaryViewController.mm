@@ -203,6 +203,13 @@ bool comm_initialised = false;
 				else
 					entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
 			}
+
+			NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+			[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
+			[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
+			[[NSUserDefaults standardUserDefaults] synchronize];
 			
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
 			//
@@ -215,7 +222,7 @@ bool comm_initialised = false;
 			
 			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
 			if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
-				entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
+				entry = [PSModuleController createInfoHTMLString: NSLocalizedString(@"MorphHebrewNotSupported", @"") usingModuleForPreferences:nil];
 			} else {
 				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
 				if(swordDictionary) {
@@ -225,7 +232,7 @@ bool comm_initialised = false;
 				if(!entry) {
 					entry = NSLocalizedString(@"NoMorphGreekModuleInstalled", @"");
 				}
-				
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
 			}
 			
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
@@ -240,6 +247,7 @@ bool comm_initialised = false;
 				}
 				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryCommentary] name]];
 				}
 				[tmpEntry release];
 			}
@@ -260,6 +268,7 @@ bool comm_initialised = false;
 			}
 			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			}
 			[tmpEntry release];
 		}
