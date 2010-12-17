@@ -10,8 +10,10 @@
 @interface PSPreferencesFontTableViewController : UITableViewController {
 	IBOutlet id preferencesController;
 	IBOutlet UITableView *table;
+	
+	NSString *moduleName;
 }
 
-//@property (assign) PSPreferencesController *preferencesController;
+@property (retain, readwrite) NSString *moduleName;
 
 @end

@@ -71,7 +71,7 @@ BOOL requireReloadOfModuleViews = NO;
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	fontSizeLabel.textColor = [UIColor darkTextColor];
-	fontSizeLabel.text = @"14";
+	fontSizeLabel.text = @"12";
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -216,8 +216,8 @@ BOOL requireReloadOfModuleViews = NO;
 						if(fontSize != 0) {//defaults default to 0 if it's not previously set...
 							fontSizeSlider.value = (float)fontSize;
 						} else {
-							fontSizeSlider.value = 14.0;
-							[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:DefaultsFontSizePreference];
+							fontSizeSlider.value = 12.0;
+							[[NSUserDefaults standardUserDefaults] setInteger:12 forKey:DefaultsFontSizePreference];
 							[[NSUserDefaults standardUserDefaults] synchronize];
 						}
 						fontSizeSlider.continuous = YES;
@@ -684,6 +684,7 @@ BOOL requireReloadOfModuleViews = NO;
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case FONT_NAME_ROW :
+					((PSPreferencesFontTableViewController*)fontTableViewController).moduleName = nil;
 					[tabController.moreNavigationController pushViewController:fontTableViewController animated:YES];
 					break;
 			}
@@ -712,6 +713,10 @@ BOOL requireReloadOfModuleViews = NO;
 			}
 			break;
 	}
+}
+
+- (void)hideFontTableView {
+	[tabController.moreNavigationController popViewControllerAnimated:YES];
 }
 
 - (void)fullscreenModeChanged:(UISwitch *)sender {

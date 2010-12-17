@@ -79,7 +79,7 @@ BOOL trashModule = NO;
 	self.tabBarItem.title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AboutTitle", @""), [swordModule name]];
 	preferencesTabBarItem.title = [NSString stringWithFormat:@"%@ %@", [swordModule name], NSLocalizedString(@"TabBarTitlePreferences", @"")];
 	[prefController displayPrefsForModule:swordModule];
-	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:swordModule.name] baseURL:nil];
+	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil] baseURL:nil];
 }
 
 - (IBAction)closeLeaf:(id)sender {

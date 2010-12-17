@@ -20,7 +20,7 @@ BOOL requireReloadOfModuleView = NO;
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	fontSizeLabel.textColor = [UIColor darkTextColor];
-	fontSizeLabel.text = @"14";
+	fontSizeLabel.text = @"12";
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 }
 
@@ -301,8 +301,8 @@ BOOL requireReloadOfModuleView = NO;
 	
 	if(indexPath.section == DisplaySection) {
 		if(indexPath.row == FontSizeRow) {
-			UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(170, 0, 125, 50) ];
-			fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+			UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
+			//fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 			fontSizeSlider.minimumValue = 10.0;
 			fontSizeSlider.maximumValue = 20.0;
 			NSInteger fontSize = GetIntegerPrefForMod(DefaultsFontSizePreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
@@ -314,9 +314,9 @@ BOOL requireReloadOfModuleView = NO;
 					fontSizeSlider.value = (float)fontSize;
 					SetIntegerPrefForMod(fontSize, DefaultsFontSizePreference, preferencesNavigationItem.title);
 				} else {
-					fontSizeSlider.value = 14.0;
-					SetIntegerPrefForMod(14, DefaultsFontSizePreference, preferencesNavigationItem.title);
-					[[NSUserDefaults standardUserDefaults] setInteger:14 forKey:DefaultsFontSizePreference];
+					fontSizeSlider.value = 12.0;
+					SetIntegerPrefForMod(12, DefaultsFontSizePreference, preferencesNavigationItem.title);
+					[[NSUserDefaults standardUserDefaults] setInteger:12 forKey:DefaultsFontSizePreference];
 					[[NSUserDefaults standardUserDefaults] synchronize];
 				}
 			}
@@ -481,7 +481,10 @@ BOOL requireReloadOfModuleView = NO;
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section == DisplaySection && indexPath.row == FontNameRow) {
-		[self.tabBarController.moreNavigationController pushViewController:fontTableViewController animated:YES];
+		((PSPreferencesFontTableViewController*)fontTableViewController).moduleName = preferencesNavigationItem.title;
+		//fontTableViewController.moduleName = preferencesNavigationItem.title;
+		[self presentModalViewController:fontTableViewController animated:YES];
+		//[self.tabBarController.moreNavigationController pushViewController:fontTableViewController animated:YES];
 	} else if(indexPath.section == StrongsSection) {
 		if(indexPath.row == StrongsGreekRow) {
 			//strongs greek
@@ -497,6 +500,11 @@ BOOL requireReloadOfModuleView = NO;
 		//[moduleSelectorTableViewController setTableType: MorphGreek];
 		//[self.tabBarController.moreNavigationController pushViewController:moduleSelectorTableViewController animated:YES];
 	}
+}
+
+- (void)hideFontTableView {
+	//[tabController.moreNavigationController popViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)displayStrongsChanged:(UISwitch *)sender {
@@ -618,7 +626,8 @@ BOOL requireReloadOfModuleView = NO;
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
-	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
+	SetObjectPrefForMod(newFont, DefaultsFontNamePreference, preferencesNavigationItem.title);
+	//[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
 	requireReloadOfModuleView = YES;

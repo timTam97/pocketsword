@@ -9,9 +9,9 @@
 #import "ViewController.h"
 #import "PSModuleController.h"
 //#import "PSPreferencesFontTableViewController.h"
+#import "PSBasePreferencesController.h"
 
-
-@interface PSModulePreferencesController : UIViewController {
+@interface PSModulePreferencesController : PSBasePreferencesController {
 	
 	IBOutlet UITabBarItem		*preferencesTabBarItem;
 	IBOutlet UITableView		*preferencesTable;

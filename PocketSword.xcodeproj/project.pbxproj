@@ -17,6 +17,8 @@
 		0502E82812B5B736003E93AB /* rotateUnlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0502E82412B5B736003E93AB /* rotateUnlocked@2x.png */; };
 		0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
 		0502EC7A12B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
+		0502EEEC12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
+		0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
@@ -793,6 +795,8 @@
 		0502E82412B5B736003E93AB /* rotateUnlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rotateUnlocked@2x.png"; path = "Resources/rotateUnlocked@2x.png"; sourceTree = "<group>"; };
 		0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModulePreferencesController.h; path = Classes/PSModulePreferencesController.h; sourceTree = "<group>"; };
 		0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModulePreferencesController.mm; path = Classes/PSModulePreferencesController.mm; sourceTree = "<group>"; };
+		0502EEEA12BB2AFC003E93AB /* PSBasePreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSBasePreferencesController.h; sourceTree = "<group>"; };
+		0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSBasePreferencesController.m; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -1736,6 +1740,8 @@
 				05CD44C1109E92C900853E48 /* PSPreferencesController.mm */,
 				05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */,
 				05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */,
+				0502EEEA12BB2AFC003E93AB /* PSBasePreferencesController.h */,
+				0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */,
 			);
 			name = "PS-preferences";
 			path = Classes;
@@ -3670,6 +3676,7 @@
 				0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
 				05F4D07B1255D68B0088C902 /* PSResizing.m in Sources */,
 				0502EC7A12B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
+				0502EEEC12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3995,6 +4002,7 @@
 				0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
 				05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */,
 				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
+				0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

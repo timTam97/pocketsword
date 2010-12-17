@@ -6,14 +6,14 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "ViewController.h"
 #import "PSModuleController.h"
 #import "PSAboutScreenController.h"
 //#import "PSPreferencesFontTableViewController.h"
+#import "PSBasePreferencesController.h"
 
 
-@interface PSPreferencesController : UIViewController {
+@interface PSPreferencesController : PSBasePreferencesController {
 	
 	IBOutlet UITabBarItem *preferencesTabBarItem;
 	IBOutlet UITableView *preferencesTable;
@@ -39,7 +39,7 @@
 //- (void)fontSizeChanged:(UISlider *)sender;
 //- (void)nightModeChanged:(UISwitch *)sender;
 //- (void)redLetterChanged:(UISwitch *)sender;
-- (void)fontNameChanged:(NSString *)newFont;
+//- (void)fontNameChanged:(NSString *)newFont;
 //- (void)insomniaModeChanged:(UISwitch *)sender;
 //- (void)moduleMaintainerModeChanged:(UISwitch *)sender;
 

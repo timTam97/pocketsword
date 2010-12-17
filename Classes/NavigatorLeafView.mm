@@ -41,7 +41,7 @@ NSTimer *downloadTimer;
 	}
 	self.navigationItem.rightBarButtonItem = installBarButtonItem;
 	[installBarButtonItem release];
-	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:module.name];
+	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
 	//DLog(@"%@", about);
 	[detailsView loadHTMLString:about baseURL:nil];
 }

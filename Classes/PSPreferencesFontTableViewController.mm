@@ -12,7 +12,7 @@
 
 @implementation PSPreferencesFontTableViewController
 
-//@synthesize preferencesController;
+@synthesize moduleName;
 
 NSArray *fontStrings;
 
@@ -32,7 +32,7 @@ NSArray *fontStrings;
 					   @"Arial Unicode MS", 
 					   @"Courier", 
 					   @"Courier New", 
-					   @"DB LCD Temp", 
+					   //@"DB LCD Temp", 
 					   @"Georgia", 
 					   @"Geeza Pro", 
 					   @"Heiti J", 
@@ -47,7 +47,7 @@ NSArray *fontStrings;
 					   @"Thonburi", 
 					   @"Trebuchet MS", 
 					   @"Verdana", 
-					   @"Zapfino", 
+					   //@"Zapfino", 
 					   nil] retain];
 	}
 }
@@ -62,6 +62,8 @@ NSArray *fontStrings;
     [super viewWillAppear:animated];
 	[table reloadData];
 	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
+	if(self.moduleName)
+		font = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
 	if(!font)
 		font = @"Helvetica";
 	
@@ -116,6 +118,8 @@ NSArray *fontStrings;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
+	if(self.moduleName)
+		font = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
 	if(!font)
 		font = @"Helvetica";
 	
@@ -138,12 +142,9 @@ NSArray *fontStrings;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[(PSPreferencesController*)preferencesController fontNameChanged:[fontStrings objectAtIndex:indexPath.row]];
-	[self.navigationController popViewControllerAnimated:YES];
-    // Navigation logic may go here. Create and push another view controller.
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
+	[(PSBasePreferencesController*)preferencesController fontNameChanged:[fontStrings objectAtIndex:indexPath.row]];
+	[(PSBasePreferencesController*)preferencesController hideFontTableView];
+	//[self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -190,6 +191,7 @@ NSArray *fontStrings;
 - (void)dealloc {
     [super dealloc];
 	[fontStrings release];
+	self.moduleName = nil;
 }
 
 
