@@ -14,9 +14,9 @@
 #define MODULE_SECTION		1
 #define STRONGS_SECTION		2
 #define MORPH_SECTION		3
-#define LANG_SECTION		4
-#define DEVICE_SECTION		5
-#define PREF__SECTIONS		6//total sections in table
+#define LANG_SECTION		44
+#define DEVICE_SECTION		4
+#define PREF__SECTIONS		5//total sections in table
 
 //rows in DISPLAY section
 #define FONT_SIZE_ROW		0
@@ -27,24 +27,24 @@
 #define DISPLAY__ROWS		5//total rows in section
 
 //rows in the MODULE section
-#define VPL_ROW				0
-#define XREF_ROW			1
-#define FOOTNOTES_ROW		2
-#define HEADINGS_ROW		3
-#define RED_LETTER_ROW		4
-#define RED_LETTER_NOTE_ROW	5
-#define MODULE__ROWS		6
+#define VPL_ROW				10
+#define XREF_ROW			11
+#define FOOTNOTES_ROW		22
+#define HEADINGS_ROW		33
+#define RED_LETTER_ROW		44
+#define RED_LETTER_NOTE_ROW	0
+#define MODULE__ROWS		1
 
 //rows in STRONGS section
-#define STRONGS_DISPLAY_ROW	0
-#define STRONGS_G_ROW		1
-#define STRONGS_H_ROW		2
-#define STRONGS__ROWS		3//total rows in section
+#define STRONGS_DISPLAY_ROW	-1
+#define STRONGS_G_ROW		0
+#define STRONGS_H_ROW		1
+#define STRONGS__ROWS		2//total rows in section
 
 //rows in MORPH section
-#define MORPH_DISPLAY_ROW	0
-#define MORPH_G_ROW			1
-#define MORPH__ROWS			2//total rows in section
+#define MORPH_DISPLAY_ROW	-1
+#define MORPH_G_ROW			0
+#define MORPH__ROWS			1//total rows in section
 
 //rows in LANG section
 #define LANG_GREEKACC_ROW	0
@@ -169,7 +169,7 @@ BOOL requireReloadOfModuleViews = NO;
 		case MODULE_SECTION :
 			switch (indexPath.row) {
 				case RED_LETTER_NOTE_ROW :
-					return 38;
+					return 110;//38;
 				default :
 					return 45;
 			}
@@ -459,9 +459,10 @@ BOOL requireReloadOfModuleViews = NO;
 					break;
 				case RED_LETTER_NOTE_ROW :
 				{
-					cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
+					//cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
+					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-					cell.textLabel.numberOfLines = 2;
+					cell.textLabel.numberOfLines = 7;//2;
 					cell.textLabel.textColor = [UIColor darkGrayColor];
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}

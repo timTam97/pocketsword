@@ -11,6 +11,7 @@
 @interface PSModuleSelectorController : UIViewController {
 	ShownTab listType;
 	IBOutlet PSModuleLeafViewController *leafViewController;
+	IBOutlet UITabBarController *leafTabBarController;
 
 	IBOutlet UITableView		*modulesListTable;
 	IBOutlet UINavigationItem	*modulesNavigationItem;

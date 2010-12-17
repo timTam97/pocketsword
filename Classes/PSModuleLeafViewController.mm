@@ -19,6 +19,7 @@ BOOL trashModule = NO;
 
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -68,17 +69,22 @@ BOOL trashModule = NO;
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	[infoWebView loadHTMLString:@"" baseURL: nil];
+	//[infoWebView loadHTMLString:@"" baseURL: nil];
 }
 
 
 - (void)displayInfoForModule:(SwordModule*)swordModule {
+	[self.tabBarController setSelectedIndex:0];
 	infoNavItem.title = [swordModule name];
+	self.tabBarItem.title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AboutTitle", @""), [swordModule name]];
+	preferencesTabBarItem.title = [NSString stringWithFormat:@"%@ %@", [swordModule name], NSLocalizedString(@"TabBarTitlePreferences", @"")];
+	[prefController displayPrefsForModule:swordModule];
 	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:swordModule.name] baseURL:nil];
 }
 
 - (IBAction)closeLeaf:(id)sender {
 	[moduleSelectorController dismissModalViewControllerAnimated:YES];
+	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
 }
 
 - (IBAction)closeUnlockView:(id)sender {

@@ -142,6 +142,8 @@ typedef enum {
 //#endif
 - (void)finalize;
 - (void)dealloc;
+- (void)setPreferences;
+- (void)resetPreferences;
 
 - (NSInteger)error;
 - (NSString *)descr;
@@ -185,6 +187,7 @@ typedef enum {
  @return NSString for text data
  */
 - (id)attributeValueForEntryData:(NSDictionary *)data;
+- (id)attributeValueForEntryData:(NSDictionary *)data cleanFeed:(BOOL)clean;
 
 - (SwordModuleTextEntry *)textEntryForKey:(NSString *)aKey textType:(TextPullType)aType;
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;

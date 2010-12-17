@@ -283,7 +283,8 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
-	[self presentModalViewController:leafViewController animated:YES];
+	[self presentModalViewController:leafTabBarController animated:YES];
+	//[self presentModalViewController:leafViewController animated:YES];
 	
 }
 

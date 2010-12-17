@@ -202,6 +202,52 @@
     [moduleLock unlock];
 }
 
+- (void)setPreferences {
+	if(swManager) {
+		BOOL redLetter = GetBoolPrefForMod(DefaultsRedLetterPreference, self.name);
+		BOOL strongs = GetBoolPrefForMod(DefaultsStrongsPreference, self.name);
+		BOOL morphs = GetBoolPrefForMod(DefaultsMorphPreference, self.name);
+		BOOL greekAccents = GetBoolPrefForMod(DefaultsGreekAccentsPreference, self.name);
+		BOOL HVP = GetBoolPrefForMod(DefaultsHVPPreference, self.name);
+		BOOL hebrewCantillation = GetBoolPrefForMod(DefaultsHebrewCantillationPreference, self.name);
+		BOOL scriptRefs = GetBoolPrefForMod(DefaultsScriptRefsPreference, self.name);
+		BOOL footnotes = GetBoolPrefForMod(DefaultsFootnotesPreference, self.name);
+		BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, self.name);
+		
+		[swManager setGlobalOption: SW_OPTION_SCRIPTREFS value: ((scriptRefs) ? SW_ON : SW_OFF)];
+		[swManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: SW_OPTION_HEADINGS value: ((headings) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
+		[swManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: SW_OPTION_VARIANTS value: SW_OPTION_VARIANTS_PRIMARY ];//could make this an option?
+		[swManager setGlobalOption: SW_OPTION_GREEKACCENTS value: ((greekAccents) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
+		[swManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
+	}
+	return;
+}
+
+#define RemovePrefForMod(Pref,Mod)		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", Pref, Mod]];
+
+- (void)resetPreferences {
+	// warning:: this will remove all the module-specific preferences for this module!
+	
+	RemovePrefForMod(DefaultsRedLetterPreference, self.name);
+	RemovePrefForMod(DefaultsStrongsPreference, self.name);
+	RemovePrefForMod(DefaultsMorphPreference, self.name);
+	RemovePrefForMod(DefaultsGreekAccentsPreference, self.name);
+	RemovePrefForMod(DefaultsHVPPreference, self.name);
+	RemovePrefForMod(DefaultsHebrewCantillationPreference, self.name);
+	RemovePrefForMod(DefaultsScriptRefsPreference, self.name);
+	RemovePrefForMod(DefaultsFootnotesPreference, self.name);
+	RemovePrefForMod(DefaultsHeadingsPreference, self.name);
+	
+	RemovePrefForMod(DefaultsFontSizePreference, self.name);
+	RemovePrefForMod(DefaultsFontNamePreference, self.name);
+}
+
 #pragma mark - convenience methods
 
 - (NSString *)fullAboutText {
@@ -617,13 +663,24 @@
     
 	return YES;
 }
-
 - (id)attributeValueForEntryData:(NSDictionary *)data {
+	return [self attributeValueForEntryData:data cleanFeed:NO];
+}
+
+- (id)attributeValueForEntryData:(NSDictionary *)data cleanFeed:(BOOL)clean {
 
     id ret = nil;
     
     // first set module to key
     [moduleLock lock];
+	[self setPreferences];
+	if(clean) {
+		[swManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
+		[swManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
+		[swManager setGlobalOption: SW_OPTION_HEADINGS value: SW_OFF ];
+		[swManager setGlobalOption: SW_OPTION_FOOTNOTES value: SW_OFF ];
+		[swManager setGlobalOption: SW_OPTION_SCRIPTREFS value: SW_OFF ];
+	}
     NSString *passage = [data objectForKey:ATTRTYPE_PASSAGE];
     if(passage) {
         passage = [[passage stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -707,7 +764,9 @@
             [dict setObject:key forKey:SW_OUTPUT_REF_KEY];            
         }        
     }
-    
+    if(clean) {
+		[self setPreferences];
+	}
     [moduleLock unlock];
     
     return ret;
@@ -956,7 +1015,10 @@
 // Grabs the text for a given chapter (e.g. "Gen 1")
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
 {
+    [moduleLock lock];
 	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
+
+	[self setPreferences];
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
@@ -976,8 +1038,8 @@
 	NSString *interverseHeading;
 	NSString *modType = [NSString stringWithUTF8String: swModule->Type()];
 	NSInteger i = 1;
-	BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
-	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
+	BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, self.name);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
+	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, self.name);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 	BOOL rawFile = [self isPersonalCommentary];
 	
 	// Grab till the end of the chapter
@@ -1141,6 +1203,9 @@
 	if (swModule->Direction() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];
 	}
+
+    [moduleLock unlock];
+	
 	return text;
 }
 

@@ -255,12 +255,14 @@ static PSModuleController *instance;
 		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEADINGS value: ((headings) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_FOOTNOTES value: ((footnotes) ? SW_ON : SW_OFF) ];
-		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
 		[swordManager setGlobalOption: SW_OPTION_REDLETTERWORDS value: ((redLetter) ? SW_ON : SW_OFF) ];
-		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: SW_OPTION_VARIANTS_PRIMARY ];//could make this an option?
 		[swordManager setGlobalOption: SW_OPTION_GREEKACCENTS value: ((greekAccents) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWPOINTS value: ((HVP) ? SW_ON : SW_OFF) ];
 		[swordManager setGlobalOption: SW_OPTION_HEBREWCANTILLATION value: ((hebrewCantillation) ? SW_ON : SW_OFF) ];
+		
+		// constants:
+		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: SW_OPTION_VARIANTS_PRIMARY ];//could make this an option?
+		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
 	}
 	return;
 }
@@ -306,7 +308,7 @@ static PSModuleController *instance;
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	//refSelectorController.refSelectorBooks = nil;
-	BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
+	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, newText);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
 	[primaryBible setHeadings:headings];
 }
 
@@ -901,9 +903,9 @@ static PSModuleController *instance;
 		
 		// if we're provided with a moduleName, try to use that module's prefs
 		if(moduleName) {
-			NSString *fn = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontNamePreference, moduleName]];
+			NSString *fn = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);//[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontNamePreference, moduleName]];
 			fontName = (fn != nil) ? fn : fontName;
-			NSInteger fsMod = [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontSizePreference, moduleName]];
+			NSInteger fsMod = GetIntegerPrefForMod(DefaultsFontSizePreference, moduleName)//[[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontSizePreference, moduleName]];
 			fs = (fsMod == 0) ? fs : fsMod;
 		}
 		

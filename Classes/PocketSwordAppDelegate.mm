@@ -63,6 +63,10 @@
 	for(SwordDictionary *dict in dicts) {
 		[dict removeCache];
 	}
+	NSArray *moduleList = [[[PSModuleController defaultModuleController] swordManager] listModules];
+	for(SwordModule *mod in moduleList) {
+		[mod resetPreferences];
+	}
 	[moduleManager setPrimaryBible: nil];
 	[moduleManager setPrimaryCommentary: nil];
 	[moduleManager setPrimaryDictionary: nil];

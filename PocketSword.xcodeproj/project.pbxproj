@@ -15,6 +15,8 @@
 		0502E82612B5B736003E93AB /* rotateUnlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0502E82412B5B736003E93AB /* rotateUnlocked@2x.png */; };
 		0502E82712B5B736003E93AB /* rotateUnlocked.png in Resources */ = {isa = PBXBuildFile; fileRef = 0502E82312B5B736003E93AB /* rotateUnlocked.png */; };
 		0502E82812B5B736003E93AB /* rotateUnlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0502E82412B5B736003E93AB /* rotateUnlocked@2x.png */; };
+		0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
+		0502EC7A12B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
@@ -789,6 +791,8 @@
 		0502E81912B3A599003E93AB /* rotateLocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rotateLocked@2x.png"; path = "Resources/rotateLocked@2x.png"; sourceTree = "<group>"; };
 		0502E82312B5B736003E93AB /* rotateUnlocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rotateUnlocked.png; path = Resources/rotateUnlocked.png; sourceTree = "<group>"; };
 		0502E82412B5B736003E93AB /* rotateUnlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rotateUnlocked@2x.png"; path = "Resources/rotateUnlocked@2x.png"; sourceTree = "<group>"; };
+		0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModulePreferencesController.h; path = Classes/PSModulePreferencesController.h; sourceTree = "<group>"; };
+		0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModulePreferencesController.mm; path = Classes/PSModulePreferencesController.mm; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -2551,6 +2555,8 @@
 		054C55B911AD0A4F00633371 /* module selector */ = {
 			isa = PBXGroup;
 			children = (
+				0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */,
+				0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */,
 				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
 				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
 				0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */,
@@ -3663,6 +3669,7 @@
 				054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */,
 				0533EF2E11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
 				05F4D07B1255D68B0088C902 /* PSResizing.m in Sources */,
+				0502EC7A12B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3987,6 +3994,7 @@
 				054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */,
 				0533EF2D11C0B48900A65DCE /* PSAddSourceViewController.mm in Sources */,
 				05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */,
+				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

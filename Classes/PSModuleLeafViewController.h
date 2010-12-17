@@ -8,11 +8,14 @@
 
 #import "SwordModule.h"
 #import "PSModuleController.h"
+#import "PSModulePreferencesController.h"
 
 @interface PSModuleLeafViewController : UIViewController {
 	IBOutlet UIWebView			*infoWebView;
 	IBOutlet UINavigationItem	*infoNavItem;
 	IBOutlet UINavigationBar	*infoNavBar;
+	IBOutlet UITabBarItem		*preferencesTabBarItem;
+	IBOutlet PSModulePreferencesController *prefController;
 
 	IBOutlet UIBarButtonItem			*closeButton;
 	IBOutlet UITableView				*modulesListTable;

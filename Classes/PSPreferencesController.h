@@ -25,27 +25,22 @@
 	UILabel *fontSizeLabel;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-
-- (void)fullscreenModeChanged:(UISwitch *)sender;
-- (void)displayStrongsChanged:(UISwitch *)sender;
-- (void)displayMorphChanged:(UISwitch *)sender;
-- (void)displayGreekAccentsChanged:(UISwitch *)sender;
-- (void)displayHVPChanged:(UISwitch *)sender;
-- (void)displayHebrewCantillationChanged:(UISwitch *)sender;
-- (void)morphGreekModuleChanged:(NSString *)newModule;
-- (void)strongsGreekModuleChanged:(NSString *)newModule;
-- (void)strongsHebrewModuleChanged:(NSString *)newModule;
-- (void)xrefChanged:(UISwitch *)sender;
-- (void)footnotesChanged:(UISwitch *)sender;
-- (void)fontSizeChanged:(UISlider *)sender;
-- (void)nightModeChanged:(UISwitch *)sender;
-- (void)redLetterChanged:(UISwitch *)sender;
+//- (void)fullscreenModeChanged:(UISwitch *)sender;
+//- (void)displayStrongsChanged:(UISwitch *)sender;
+//- (void)displayMorphChanged:(UISwitch *)sender;
+//- (void)displayGreekAccentsChanged:(UISwitch *)sender;
+//- (void)displayHVPChanged:(UISwitch *)sender;
+//- (void)displayHebrewCantillationChanged:(UISwitch *)sender;
+//- (void)morphGreekModuleChanged:(NSString *)newModule;
+//- (void)strongsGreekModuleChanged:(NSString *)newModule;
+//- (void)strongsHebrewModuleChanged:(NSString *)newModule;
+//- (void)xrefChanged:(UISwitch *)sender;
+//- (void)footnotesChanged:(UISwitch *)sender;
+//- (void)fontSizeChanged:(UISlider *)sender;
+//- (void)nightModeChanged:(UISwitch *)sender;
+//- (void)redLetterChanged:(UISwitch *)sender;
 - (void)fontNameChanged:(NSString *)newFont;
-- (void)insomniaModeChanged:(UISwitch *)sender;
-- (void)moduleMaintainerModeChanged:(UISwitch *)sender;
+//- (void)insomniaModeChanged:(UISwitch *)sender;
+//- (void)moduleMaintainerModeChanged:(UISwitch *)sender;
 
 @end

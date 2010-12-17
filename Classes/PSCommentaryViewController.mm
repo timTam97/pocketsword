@@ -252,14 +252,14 @@ bool comm_initialised = false;
 				[tmpEntry release];
 			}
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-			BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
-			BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
-			SwordManager *swordManager = [SwordManager defaultManager];
-			[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
-			[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
-			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
-			[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
-			[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
+//			BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
+//			BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
+//			SwordManager *swordManager = [SwordManager defaultManager];
+//			[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
+//			[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
+			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
+//			[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
+//			[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 			NSMutableString *tmpEntry = [@"" mutableCopy];
 			for(NSDictionary *dict in array) {
 				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
