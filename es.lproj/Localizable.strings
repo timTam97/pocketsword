@@ -227,3 +227,6 @@
 "PreferencesModulePreferencesTitle" = "Preferencias de módulo";
 "PreferencesFullscreenModeTitle" = "Pantalla completa automática";
 "PreferencesFullscreenNote" = "Con la pantalla completa automática deshabilitada, todavía podrás cambiar a pantalla completa tocando las pestañas de Biblia y Comentario con dos dedos.";
+
+// new v1.3.4 strings:
+"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";

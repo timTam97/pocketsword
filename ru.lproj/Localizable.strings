@@ -228,3 +228,6 @@
 "PreferencesModulePreferencesTitle" = "Параметры модуля";
 "PreferencesFullscreenModeTitle" = "Авто полноэкранный режим";
 "PreferencesFullscreenNote" = "Если авто полноэкранный режим выключен, вы можете перейти к(из) полноэкранному режиму двухпальцевым касанием на вкладках Библии и Комментария.";
+
+// new v1.3.4 strings:
+"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";

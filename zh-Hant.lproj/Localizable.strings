@@ -226,3 +226,6 @@
 "PreferencesModulePreferencesTitle" = "模組選項";
 "PreferencesFullscreenModeTitle" = "全螢幕";
 "PreferencesFullscreenNote" = "全螢幕功能關閉下您仍可用在聖經檢視中使用多點解屏進行切換全螢幕功能";
+
+// new v1.3.4 strings:
+"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";

@@ -227,3 +227,6 @@
 "PreferencesModulePreferencesTitle" = "模块优选";
 "PreferencesFullscreenModeTitle" = "自动全屏";
 "PreferencesFullscreenNote" = "若你未使用自动全屏，可以用两个手指击打圣经或注解菜单转到或转离全屏。";
+
+// new v1.3.4 strings:
+"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
