@@ -16,6 +16,7 @@
 	IBOutlet UITableView		*modulesListTable;
 	IBOutlet UINavigationItem	*modulesNavigationItem;
 	IBOutlet UINavigationBar	*modulesNavigationBar;
+	IBOutlet UIBarButtonItem	*modulesCloseButton;
 	
 	IBOutlet UIToolbar			*modulesToolbar;
 	IBOutlet UIBarButtonItem	*modulesRotationLockButton;

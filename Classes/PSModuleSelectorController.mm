@@ -16,6 +16,11 @@
 
 @synthesize listType;
 
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	modulesCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
+}
+
 - (IBAction)toggleLock {
 	
 	UIInterfaceOrientation interfaceOrientation = [self interfaceOrientation];
