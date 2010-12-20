@@ -22,9 +22,7 @@
 #define FONT_SIZE_ROW		0
 #define FONT_NAME_ROW		1
 #define NIGHT_MODE_ROW		2
-#define FULLSCREEN_MODE_ROW	3
-#define FULLSCREEN_NOTE_ROW	4
-#define DISPLAY__ROWS		5//total rows in section
+#define DISPLAY__ROWS		3//total rows in section
 
 //rows in the MODULE section
 #define VPL_ROW				10
@@ -54,9 +52,12 @@
 
 //rows in DEVICE section
 #define INSOMNIA_ROW		0
-#define MMM_ROW				1
-#define MMM_NOTE_ROW		2
-#define DEVICE__ROWS		3//total rows in section
+#define ROTATION_LOCK_ROW	1
+#define FULLSCREEN_MODE_ROW	2
+#define FULLSCREEN_NOTE_ROW	3
+#define MMM_ROW				4
+#define MMM_NOTE_ROW		5
+#define DEVICE__ROWS		6//total rows in section
 
 
 
@@ -158,14 +159,12 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch (indexPath.section) {
-		case DISPLAY_SECTION :
-			switch (indexPath.row) {
-				case FULLSCREEN_NOTE_ROW :
-					return 75;
-				default :
-					return 45;
-			}
-			break;
+//		case DISPLAY_SECTION :
+//			switch (indexPath.row) {
+//				default :
+//					return 45;
+//			}
+//			break;
 		case MODULE_SECTION :
 			switch (indexPath.row) {
 				case RED_LETTER_NOTE_ROW :
@@ -176,6 +175,8 @@ BOOL requireReloadOfModuleViews = NO;
 			break;
 		case DEVICE_SECTION :
 			switch (indexPath.row) {
+				case FULLSCREEN_NOTE_ROW :
+					return 75;
 				case MMM_NOTE_ROW :
 					return 110;
 				default :
@@ -238,8 +239,6 @@ BOOL requireReloadOfModuleViews = NO;
 				}
 					break;
 				case NIGHT_MODE_ROW :
-				case FULLSCREEN_MODE_ROW :
-				case FULLSCREEN_NOTE_ROW :
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
@@ -365,30 +364,6 @@ BOOL requireReloadOfModuleViews = NO;
 					[ cell addSubview: nightModeSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
 					[nightModeSwitch release];						
-				}
-					break;
-				case FULLSCREEN_MODE_ROW :
-				{
-					UISwitch *fullscreenModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					//fullscreenModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL fullscreenMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference];
-					fullscreenModeSwitch.on = fullscreenMode;
-					//nightModeSwitch.tag = 1;
-					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: fullscreenModeSwitch ];
-					[fullscreenModeSwitch release];						
-					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-					cell.textLabel.numberOfLines = 2;
-				}
-					break;
-				case FULLSCREEN_NOTE_ROW :
-				{
-					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenNote", @"With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-					cell.textLabel.numberOfLines = 4;
-					cell.textLabel.textColor = [UIColor darkGrayColor];
-					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
@@ -583,7 +558,46 @@ BOOL requireReloadOfModuleViews = NO;
 					[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: insomniaSwitch ];
 					[insomniaSwitch release];						
-					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"Disable auto-lock");
+					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"");
+				}
+					break;
+				case ROTATION_LOCK_ROW :
+				{
+					UISwitch *rotationLockSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+					if(rotationLockPosition == RotationEnabled) {
+						rotationLockSwitch.on = NO;
+					} else {
+						rotationLockSwitch.on = YES;
+					}
+					[rotationLockSwitch addTarget:self action:@selector(rotationLockChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: rotationLockSwitch ];
+					[rotationLockSwitch release];						
+					cell.textLabel.text = NSLocalizedString(@"PreferencesRotationLock", @"Rotation Lock");
+				}
+					break;
+				case FULLSCREEN_MODE_ROW :
+				{
+					UISwitch *fullscreenModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+					//fullscreenModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					BOOL fullscreenMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference];
+					fullscreenModeSwitch.on = fullscreenMode;
+					//nightModeSwitch.tag = 1;
+					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
+					[ cell addSubview: fullscreenModeSwitch ];
+					[fullscreenModeSwitch release];						
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 2;
+				}
+					break;
+				case FULLSCREEN_NOTE_ROW :
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenNote", @"With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 4;
+					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 				case MMM_ROW :
@@ -717,6 +731,19 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)hideFontTableView {
 	[tabController.moreNavigationController popViewControllerAnimated:YES];
+}
+
+- (void)rotationLockChanged:(UISwitch *)sender {
+	//BOOL n = [sender isOn];
+	UIInterfaceOrientation interfaceOrientation = [self interfaceOrientation];
+	//int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+	
+	if([sender isOn]) {
+		[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight ? RotationLockedInLandscape : RotationLockedInPortrait)] forKey:ROTATION_LOCK_POSITION];
+	} else {
+		[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:RotationEnabled] forKey:ROTATION_LOCK_POSITION];
+	}
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)fullscreenModeChanged:(UISwitch *)sender {

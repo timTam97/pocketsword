@@ -18,13 +18,13 @@
 	IBOutlet UINavigationBar	*modulesNavigationBar;
 	IBOutlet UIBarButtonItem	*modulesCloseButton;
 	
-	IBOutlet UIToolbar			*modulesToolbar;
-	IBOutlet UIBarButtonItem	*modulesRotationLockButton;
+	//IBOutlet UIToolbar			*modulesToolbar;
+	//IBOutlet UIBarButtonItem	*modulesRotationLockButton;
 }
 
 @property (assign) ShownTab listType;
 
-- (IBAction)toggleLock;
+//- (IBAction)toggleLock;
 - (IBAction)addModuleButtonPressed;
 - (IBAction)dismissModuleSelector;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;

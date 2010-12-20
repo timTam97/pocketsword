@@ -76,7 +76,7 @@
 "PreferencesFontTitle" = "Font";
 "PreferencesRedLetterTitle" = "Red Letter";
 "PreferencesRedLetterNote" = "Note that Red Letter mode is only available for certain modules";
-"PreferencesDisableAutoLockTitle" = "Disable auto-lock";
+"PreferencesDisableAutoLockTitle" = "Disable auto-sleep";
 "PreferencesModuleMaintainerModeTitle" = "Module Maintainer Mode";
 "PreferencesModuleMaintainerModeNote" = "Note that Module Maintainer Mode is for those users who create their own modules & require a method to manually install their own modules.  For all other users, it is suggested that you use the built-in module downloader to access official modules provided by CrossWire.";
 
@@ -230,3 +230,4 @@
 
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
+"PreferencesRotationLock" = "Rotation Lock";
