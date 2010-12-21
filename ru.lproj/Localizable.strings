@@ -19,7 +19,7 @@
 
 // Russian (ru) localisation
 // By Vitaliy K.
-// Last Updated v1.3.3 (10th November, 2010)
+// Last Updated v1.3.4 (21st December, 2010)
 
 "Edit" = "Изменить";
 "Done" = "Готово";
@@ -230,5 +230,5 @@
 "PreferencesFullscreenNote" = "Если авто полноэкранный режим выключен, вы можете перейти к(из) полноэкранному режиму двухпальцевым касанием на вкладках Библии и Комментария.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "Параметры модуля устанавливаются индивидуально для каждого модуля. Для изменения параметров нажмите на кнопку списка модулей в правом верхнем углу на соответствующей вкладке и нажмите стрелку раскрытия информации для модуля.";
+"PreferencesRotationLock" = "Блокировать вращение";
