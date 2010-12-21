@@ -19,12 +19,12 @@
 
 // Dutch (nl) Localisation
 // By Henko van de Weerd
-// Last Updated v1.3.3 (9th November, 2010)
+// Last Updated v1.3.4 (21st December, 2010)
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
 "Module Download" = "Module downloaden...";
-"Installing" = "Installeerd:";
+"Installing" = "Installeert:";
 "Yes" = "Ja";
 "No" = "Nee";
 "ConfirmInstall" = "Wilt u deze module installeren?";
@@ -76,7 +76,7 @@
 "PreferencesFontTitle" = "Lettertype";
 "PreferencesRedLetterTitle" = "Rode letters";
 "PreferencesRedLetterNote" = "Let op: De Rode Letters modus is alleen beschikbaar voor bepaalde modules.";
-"PreferencesDisableAutoLockTitle" = "Schakel auto-lock uit";
+"PreferencesDisableAutoLockTitle" = "Schakel auto-slaapstand uit";
 "PreferencesModuleMaintainerModeTitle" = "Module beheerder modus";
 "PreferencesModuleMaintainerModeNote" = "Let op: De Module Beheerder Modus is voor de gebruikers die hun eigen modules maken en een manier nodig hebben om hun eigen modules te installeren. Alle andere gebruikers kunnen gebruik maken van de geïntegreerde module downloader om toegang te krijgen tot de modules die aangeboden worden door CrossWire.";
 
@@ -230,5 +230,5 @@
 "PreferencesFullscreenNote" = "Met Auto Fullscreen uitgeschakeld kunt u nog steeds van en naar fullscreen schakelen door met 2 vingers op het scherm te tikken in de Bijbel en commentaar tabbladen.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "Module specifieke instellingen zijn nu ingesteld voor elke afzonderlijke module. Druk op de module-lijst knop in de rechter bovenhoek van het desbetreffende tabblad en druk op de openbaarmaken-knop voor de module.";
+"PreferencesRotationLock" = "Rotatieslot";

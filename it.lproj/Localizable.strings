@@ -19,7 +19,7 @@
 
 // Italian (it) localisation
 // By Vincenzo Carrubba
-// Last Updated v1.3.3 (9th November, 2010)
+// Last Updated v1.3.4 (21st December, 2010)
 
 "Edit" = "Modifica";
 "Done" = "Fine";
@@ -76,8 +76,8 @@
 "PreferencesFontTitle" = "Tipo di carattere";
 "PreferencesRedLetterTitle" = "Lettere Rosse";
 "PreferencesRedLetterNote" = "Nota. La modalità Lettere Rosse è disponibile solo per alcuni moduli";
-"PreferencesDisableAutoLockTitle" = "No blocco automatico";
-"PreferencesModuleMaintainerModeTitle" = "Modo sviluppatore";
+"PreferencesDisableAutoLockTitle" = "Impedisci spegnimento";
+"PreferencesModuleMaintainerModeTitle" = "Modalità sviluppatore";
 "PreferencesModuleMaintainerModeNote" = "Nota. La modalità sviluppatore moduli è per quegli utenti che sviluppano i propri moduli e necessitano un metodo per installarli manualmente. Per tutti gli altri utenti è consigliato usare il caricatore di moduli incluso per accedere ai moduli ufficiali forniti da CrossWire.";
 
 "AboutTitle" = "Informazioni";
@@ -133,8 +133,8 @@
 
 "PreferencesStrongsPreferencesTitle" = "Numeri Strong";
 "PreferencesDisplayTitle" = "Mostra";
-"PreferencesGreekModuleTitle" = "Mod. Greco";
-"PreferencesHebrewModuleTitle" = "Mod. Ebraico";
+"PreferencesGreekModuleTitle" = "Modulo Greco";
+"PreferencesHebrewModuleTitle" = "Modulo Ebraico";
 "PreferencesMorphologyPreferencesTitle" = "Preferenze di morfologia";
 "PreferencesOriginalLanguagePreferencesTitle" = "Lingua originale";
 "PreferencesGreekAccentsTitle" = "Accenti Greci";
@@ -230,5 +230,5 @@
 "PreferencesFullscreenNote" = "Disabilitando Tutto schermo Auto, si può attivare e disattivare la modalità a tutto schermo, nelle sezioni Bibbia e Commentario, con un tocco a due dita.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "Le preferenze dei moduli sono impostate individualmente. Per cambiarle, tocca il bottone dei moduli nell'angolo in alto a destra della scheda corrispondente poi tocca la freccia a destra del modulo.";
+"PreferencesRotationLock" = "Blocco Rotazione";

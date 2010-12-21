@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -19,7 +19,7 @@
 
 // Japanese (ja) localisation
 // By Nakamaru Kunio
-// Last Updated v1.3.0 (16th June, 2010)
+// Last Updated v1.3.4 (21st December, 2010)
 
 "Edit" = "編集";
 "Done" = "完了";
@@ -76,7 +76,7 @@
 "PreferencesFontTitle" = "フォント";
 "PreferencesRedLetterTitle" = "赤文字";
 "PreferencesRedLetterNote" = "赤文字モードは、一部の拡張データでのみ動作します";
-"PreferencesDisableAutoLockTitle" = "オートロックをオフ";
+"PreferencesDisableAutoLockTitle" = "オートスリープをオフ";
 "PreferencesModuleMaintainerModeTitle" = "拡張データメンテモード";
 "PreferencesModuleMaintainerModeNote" = "拡張データメンテモードは、自ら拡張データを作成し、手動で拡張データをインストールする必要がある人のためのモードです。その他のユーザーは、ビルドインの拡張データダウンローダーを用い、CrossWireに公式的に公開されている拡張データにアクセスしてください。";
 
@@ -211,24 +211,24 @@
 "CannotVerifyInstallSourceWarning" = "PocketSwordは、選択された取得元を認識できませんでした。取得元情報を保存しますか？";
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+"AboutModuleLocked" = "** 当拡張データはロックされており、発行者のウェブサイトより解除キーをご購入頂く必要があります。以下をご参照下さい。 **";
+"UpgradeButtonTitle" = "上書き";
+"ConfirmUpgrade" = "当拡張データを最新の物で上書きします。よろしいですか？";
 
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"VerseContextualMenuAddBookmark" = "ブックマークに追加";
+"VerseContextualMenuCommentary" = "注解書を参照";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "前章";
+"VoiceOverNextChapterButton" = "次章";
+"VoiceOverHistoryAndSearchButton" = "履歴・検索";
+"InstallManagerDownloadsHint" = "以下のウェブサイトから更に拡張データをダウンロードする事ができます:";
+"ModuleTypesHeaderText" = "拡張データのタイプを選択:";
+"ModuleLanguagesHeaderText" = "言語を選択:";
+"PreferencesModulePreferencesTitle" = "拡張データ設定";
+"PreferencesFullscreenModeTitle" = "自動フルスクリーン";
+"PreferencesFullscreenNote" = "自動フルスクリーンがオフの状態でも、2本の指でタップをする事で聖書・注解書タブで常にフルスクリーン化する事ができます。";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "拡張データごとの設定がなされました。変更する場合には、それぞれのタブ内にて右上端の拡張データ一覧ボタンをタップした後、該当拡張データの公開ボタンをタップしてください。";
+"PreferencesRotationLock" = "傾けによる自動スリープ";

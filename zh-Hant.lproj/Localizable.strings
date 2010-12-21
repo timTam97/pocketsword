@@ -19,7 +19,7 @@
 
 // Traditional Chinese (zh-Hant) Localisation
 // By Brian Wu
-// Last Updated v1.3.3 (10th November, 2010)
+// Last Updated v1.3.4 (21st December, 2010)
 
 "Edit" = "編輯";
 "Done" = "完成";
@@ -74,7 +74,7 @@
 "PreferencesFontTitle" = "字體";
 "PreferencesRedLetterTitle" = "紅字體";
 "PreferencesRedLetterNote" = "注意只有某些模組支援紅字模式";
-"PreferencesDisableAutoLockTitle" = "禁用自動鎖";
+"PreferencesDisableAutoLockTitle" = "禁用自動鎖定";
 "PreferencesModuleMaintainerModeTitle" = "模組維護模式";
 "PreferencesModuleMaintainerModeNote" = "注意，模組維護模式是為那些有自製模組而必須手工安裝其自製模組的使用者的。對所有別的使用者，請用內置模組下載器下載CrossWire提供的模組。";
 
@@ -225,8 +225,8 @@
 "ModuleLanguagesHeaderText" = "選擇語言:";
 "PreferencesModulePreferencesTitle" = "模組選項";
 "PreferencesFullscreenModeTitle" = "全螢幕";
-"PreferencesFullscreenNote" = "全螢幕功能關閉下您仍可用在聖經檢視中使用多點解屏進行切換全螢幕功能";
+"PreferencesFullscreenNote" = "您可在聖經檢視中點擊屏幕屏切換全螢幕功能";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "每一模組可進行個別設定，您可從模組列表中進行編輯";
+"PreferencesRotationLock" = "轉向鎖定";

@@ -19,7 +19,7 @@
 
 // Swedish (sv) localisation
 // By Christoffer Björkskog
-// Last Updated v1.3.3 (9th November, 2010)
+// Last Updated v1.3.4 (21st December, 2010)
 
 "Edit" = "Redigera";
 "Done" = "Klar";
@@ -76,7 +76,7 @@
 "PreferencesFontTitle" = "Font";
 "PreferencesRedLetterTitle" = "Röda bokstäver";
 "PreferencesRedLetterNote" = "Observera att röda bokstäver endast är tillgängligt för vissa moduler";
-"PreferencesDisableAutoLockTitle" = "Förhindra automatisk låsning";
+"PreferencesDisableAutoLockTitle" = "Förhindra automatisk viloläge";
 "PreferencesModuleMaintainerModeTitle" = "Modulunderhållningsläge";
 "PreferencesModuleMaintainerModeNote" = "Observera att Modulunderhållningsläget är till för dom användare som skapat sina egna moduler och behöver ett sätt att installera sina moduler manuellt. För alla andra användare är det rekommenderat att istället använda den inbyggda modulinstalleraren för att ta del av officiella moduler från CrossWire";
 
@@ -230,5 +230,5 @@
 "PreferencesFullscreenNote" = "Med automatisk helskärmsläge aktiverat kan du fortfarande byta från och till helskärmsläge med en tvåfingrars beröring i bibel- eller kommentarflikarna.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "Inställningar som är specifika för moduler ställs in enkilt för varje modul. För att ändra en moduls inställningar, öppna modul-listan genom att trycka i den flik som modulen förekommer i på knappen uppe i högra hörnet. Då får du fram en modul lista. Tryck sedan på expanderingknappen för den modul du vill redigera, för att få fram inställningarna för den modulen.";
+"PreferencesRotationLock" = "Förhindra rotation";
