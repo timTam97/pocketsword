@@ -19,7 +19,7 @@
 
 // French (fr) Localisation
 // By Dominique Corbex
-// Last Updated v1.3.3 (11th November, 2010)
+// Last Updated v1.3.4 (22nd December, 2010)
 
 "Edit" = "Éditer";
 "Done" = "Terminé";
@@ -76,7 +76,7 @@
 "PreferencesFontTitle" = "Police";
 "PreferencesRedLetterTitle" = "Lettres en rouge";
 "PreferencesRedLetterNote" = "Notez que le mode Lettres en rouge n'est disponible que pour certain modules";
-"PreferencesDisableAutoLockTitle" = "Désactiver le verrouillage";
+"PreferencesDisableAutoLockTitle" = "Désactiver la mise en veille";
 "PreferencesModuleMaintainerModeTitle" = "Mode responsable de module";
 "PreferencesModuleMaintainerModeNote" = "Notez que le Mode responsable de module est destiné aux utilisateurs qui créent leurs propres modules & nécessite une méthode pour installer manuellement les modules. Pour tous les autres utilisateurs, il est suggéré d'utiliser le gestionnaire de modules intégré pour accéder aux modules officiels fournis par CrossWire.";
 
@@ -207,7 +207,7 @@
 "AddHTTPSourceTitle" = "Nouveau dépôt HTTP";
 "FillInAllFieldsMessage" = "Tous les champs ne sont pas remplis!";
 "Warning" = "Attention";
-"CannotVerifyInstallSourceWarning" = "PocketSword ne peut pas vérifier la validité de ce dépôt. Sauvegarder néanmoins?";
+"CannotVerifyInstallSourceWarning" = "PocketSword ne peut pas vérifier la validité de ce dépôt. Enregistrer néanmoins?";
 
 
 // new v1.3.2 strings:
@@ -219,7 +219,7 @@
 
 // new v1.3.3 strings:
 "VoiceOverPreviousChapterButton" = "Chapitre précédent";
-"VoiceOverNextChapterButton" = "Chaptitre suivant";
+"VoiceOverNextChapterButton" = "Chapitre suivant";
 "VoiceOverHistoryAndSearchButton" = "Historique et Recherches";
 "InstallManagerDownloadsHint" = "Vous pouvez télécharger des modules supplémentaires depuis n'importe quel dépôt ci-dessous :";
 "ModuleTypesHeaderText" = "Selection du type de module :";
@@ -229,5 +229,5 @@
 "PreferencesFullscreenNote" = "Avec Plein écran Auto désactivé, il est toujours possible de basculer en mode plein écran par action à 2 doigts dans un onglet Bible ou Commentaire.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "Les préférences spécifiques de module sont maintenant réglées pour chaque module. Pour les modifier, tapez sur le bouton Liste des modules dans le coin en haut à droite de l'onglet correspondant puis sur le bouton d'information du module";
+"PreferencesRotationLock" = "Verrouiller la rotation";

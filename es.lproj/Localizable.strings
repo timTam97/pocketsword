@@ -19,7 +19,7 @@
 
 // Spanish (es) Localisation
 // By David Bell et al.
-// Last Updated v1.3.3 (10th November, 2010)
+// Last Updated v1.3.4 (22nd December, 2010)
 
 "Edit" = "Edición";
 "Done" = "Fin";
@@ -229,5 +229,5 @@
 "PreferencesFullscreenNote" = "Con la pantalla completa automática deshabilitada, todavía podrás cambiar a pantalla completa tocando las pestañas de Biblia y Comentario con dos dedos.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesModuleSectionNote" = "Las preferencias específicas de módulo se establecen ahora individualmente para cada módulo. Para cambiarlas, toca el botón de la pestaña relevante en la esquina superior derecha de la Lista de Módulos y luego el botón que corresponde al módulo.";
+"PreferencesRotationLock" = "Bloqueo de rotación";
