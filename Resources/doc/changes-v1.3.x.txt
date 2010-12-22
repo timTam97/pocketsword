@@ -1,4 +1,10 @@
 
+New in v1.3.4
+- Added rotation lock preference.
+- Created per-Bible preferences.
+- Re-worked preference tab.
+- Bug fixes.
+
 New in v1.3.3
 - now works in Landscape and Portrait modes
 - added full-screen mode (see Preferences)
