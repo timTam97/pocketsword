@@ -903,9 +903,9 @@ static PSModuleController *instance;
 		
 		// if we're provided with a moduleName, try to use that module's prefs
 		if(moduleName) {
-			NSString *fn = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);//[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontNamePreference, moduleName]];
-			fontName = (fn != nil) ? fn : fontName;
-			NSInteger fsMod = GetIntegerPrefForMod(DefaultsFontSizePreference, moduleName)//[[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"%@_%@", DefaultsFontSizePreference, moduleName]];
+			NSString *fn = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
+			fontName = (fn) ? fn : fontName;
+			NSInteger fsMod = GetIntegerPrefForMod(DefaultsFontSizePreference, moduleName);
 			fs = (fsMod == 0) ? fs : fsMod;
 		}
 		

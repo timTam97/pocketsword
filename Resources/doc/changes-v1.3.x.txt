@@ -1,4 +1,9 @@
 
+New in v1.3.5
+- moved Strong's & other preferences back into the preferences tab (you now need to set these preferences for the specific Bible you want these to show in).
+- updated the splash screen for Retina Display.
+- NOTE: your preferences may reset with this release.  Sorry about that!
+
 New in v1.3.4
 - Added rotation lock preference.
 - Created per-Bible preferences.
