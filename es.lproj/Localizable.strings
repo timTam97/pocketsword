@@ -231,3 +231,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "Las preferencias específicas de módulo se establecen ahora individualmente para cada módulo. Para cambiarlas, toca el botón de la pestaña relevante en la esquina superior derecha de la Lista de Módulos y luego el botón que corresponde al módulo.";
 "PreferencesRotationLock" = "Bloqueo de rotación";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";

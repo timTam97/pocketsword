@@ -232,3 +232,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "Module specifieke instellingen zijn nu ingesteld voor elke afzonderlijke module. Druk op de module-lijst knop in de rechter bovenhoek van het desbetreffende tabblad en druk op de openbaarmaken-knop voor de module.";
 "PreferencesRotationLock" = "Rotatieslot";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";

@@ -230,3 +230,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "每一模組可進行個別設定，您可從模組列表中進行編輯";
 "PreferencesRotationLock" = "轉向鎖定";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";

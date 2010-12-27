@@ -131,7 +131,7 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 	}
-
+	
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *swLocales = [[docPath stringByAppendingPathComponent:@"unused"] stringByAppendingPathComponent: @"locales.d"];
 	//"install" the l10n strings into SWORD for the current locale.
@@ -374,7 +374,7 @@
 	}
 	
 	if (module != nil && [module isEqualToString:LIST]) {
-		[viewController toggleModulesListAnimated:NO];
+		[viewController toggleModulesListAnimated:NO withModule:nil];
 	}
 
 	return YES;

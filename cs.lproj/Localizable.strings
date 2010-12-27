@@ -231,3 +231,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "Je možné upravit nastavení pro jednotlivé moduly. V příslušné části programu (např. Bible) otevři seznam modulů klepnutím na tlačítko v pravém horním rohu. Pak klepni na tlačítko podrobností o příslušném modulu.";
 "PreferencesRotationLock" = "Zabránit otáčení dipleje";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";

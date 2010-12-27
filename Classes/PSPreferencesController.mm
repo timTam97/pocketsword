@@ -11,11 +11,11 @@
 
 //sections
 #define DISPLAY_SECTION		0
-#define MODULE_SECTION		1
-#define STRONGS_SECTION		2
-#define MORPH_SECTION		3
+#define MODULE_SECTION		4
+#define STRONGS_SECTION		1
+#define MORPH_SECTION		2
 #define LANG_SECTION		44
-#define DEVICE_SECTION		4
+#define DEVICE_SECTION		3
 #define PREF__SECTIONS		5//total sections in table
 
 //rows in DISPLAY section
@@ -126,7 +126,8 @@ BOOL requireReloadOfModuleViews = NO;
 		case DISPLAY_SECTION:
 			return DISPLAY__ROWS;
 		case MODULE_SECTION:
-			return MODULE__ROWS;
+			return [[[[PSModuleController defaultModuleController] swordManager] listModules] count];
+			//return MODULE__ROWS;
 		case STRONGS_SECTION:
 			return STRONGS__ROWS;
 		case MORPH_SECTION:
@@ -165,14 +166,14 @@ BOOL requireReloadOfModuleViews = NO;
 //					return 45;
 //			}
 //			break;
-		case MODULE_SECTION :
-			switch (indexPath.row) {
-				case RED_LETTER_NOTE_ROW :
-					return 110;//38;
-				default :
-					return 45;
-			}
-			break;
+//		case MODULE_SECTION :
+//			switch (indexPath.row) {
+//				case RED_LETTER_NOTE_ROW :
+//					return 110;//38;
+//				default :
+//					return 45;
+//			}
+//			break;
 		case DEVICE_SECTION :
 			switch (indexPath.row) {
 				case FULLSCREEN_NOTE_ROW :
@@ -193,7 +194,8 @@ BOOL requireReloadOfModuleViews = NO;
 	static NSString *CellIdentifierPlain = @"prefs-plain";
 	static NSString *CellIdentifierStyled = @"prefs-styled";
 	static NSString *CellIdentifierFS = @"prefs-fs";
-	
+	static NSString *CellIdenfifierSub = @"prefs-subtitle";
+		
     UITableViewCell *cell;// = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 //	if(!cell) {
 //		cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifierPlain] autorelease ];
@@ -256,10 +258,12 @@ BOOL requireReloadOfModuleViews = NO;
 				case HEADINGS_ROW :
 				case RED_LETTER_ROW :
 				case RED_LETTER_NOTE_ROW :
+				default :
 				{
-					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+						//cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub] autorelease];
 					}
 				}
 					break;
@@ -369,81 +373,89 @@ BOOL requireReloadOfModuleViews = NO;
 			}
 			break;
 		case MODULE_SECTION :
-			switch (indexPath.row) {
-				case VPL_ROW :
-				{
-					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
-					vplSwitch.on = vpl;
-					//vplSwitch.tag = 4;
-					[vplSwitch addTarget:self action:@selector(vplChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: vplSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
-					[vplSwitch release];						
-				}
-					break;
-				case XREF_ROW :
-				{
-					UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					//xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsScriptRefsPreference];
-					xrefSwitch.on = xrefMode;
-					[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: xrefSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
-					[xrefSwitch release];
-				}
-					break;
-				case FOOTNOTES_ROW :
-				{
-					UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					//footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFootnotesPreference];
-					footnotesSwitch.on = footnotesMode;
-					[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: footnotesSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
-					[footnotesSwitch release];
-				}
-					break;
-				case HEADINGS_ROW :
-				{
-					UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					//headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
-					headingsSwitch.on = headingsMode;
-					[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: headingsSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
-					[headingsSwitch release];
-				}
-					break;
-				case RED_LETTER_ROW :
-				{
-					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-					//redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsRedLetterPreference];
-					redLetterModeSwitch.on = redLetterMode;
-					//redLetterModeSwitch.tag = 2;
-					[redLetterModeSwitch addTarget:self action:@selector(redLetterChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: redLetterModeSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterTitle", @"Red Letter");
-					[redLetterModeSwitch release];
-				}
-					break;
-				case RED_LETTER_NOTE_ROW :
-				{
-					//cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
-					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-					cell.textLabel.numberOfLines = 7;//2;
-					cell.textLabel.textColor = [UIColor darkGrayColor];
-					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
-				}
-					break;
-			}
+		{
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			// all Bibles are available for setting prefs:
+			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row] name];
+			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row] descr];
+		}
 			break;
+//			switch (indexPath.row) {
+//				case VPL_ROW :
+//				{
+//					UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+//					//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//					BOOL vpl = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
+//					vplSwitch.on = vpl;
+//					//vplSwitch.tag = 4;
+//					[vplSwitch addTarget:self action:@selector(vplChanged:) forControlEvents:UIControlEventValueChanged];
+//					[ cell addSubview: vplSwitch ];
+//					cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
+//					[vplSwitch release];						
+//				}
+//					break;
+//				case XREF_ROW :
+//				{
+//					UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+//					//xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//					BOOL xrefMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsScriptRefsPreference];
+//					xrefSwitch.on = xrefMode;
+//					[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
+//					[ cell addSubview: xrefSwitch ];
+//					cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
+//					[xrefSwitch release];
+//				}
+//					break;
+//				case FOOTNOTES_ROW :
+//				{
+//					UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+//					//footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//					BOOL footnotesMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFootnotesPreference];
+//					footnotesSwitch.on = footnotesMode;
+//					[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
+//					[ cell addSubview: footnotesSwitch ];
+//					cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
+//					[footnotesSwitch release];
+//				}
+//					break;
+//				case HEADINGS_ROW :
+//				{
+//					UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+//					//headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//					BOOL headingsMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
+//					headingsSwitch.on = headingsMode;
+//					[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
+//					[ cell addSubview: headingsSwitch ];
+//					cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
+//					[headingsSwitch release];
+//				}
+//					break;
+//				case RED_LETTER_ROW :
+//				{
+//					UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
+//					//redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//					BOOL redLetterMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsRedLetterPreference];
+//					redLetterModeSwitch.on = redLetterMode;
+//					//redLetterModeSwitch.tag = 2;
+//					[redLetterModeSwitch addTarget:self action:@selector(redLetterChanged:) forControlEvents:UIControlEventValueChanged];
+//					[ cell addSubview: redLetterModeSwitch ];
+//					cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterTitle", @"Red Letter");
+//					[redLetterModeSwitch release];
+//				}
+//					break;
+//				case RED_LETTER_NOTE_ROW :
+//				{
+//					//cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterNote", @"Note that Red Letter mode is only available in some modules");
+//					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
+//					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+//					cell.textLabel.numberOfLines = 7;//2;
+//					cell.textLabel.textColor = [UIColor darkGrayColor];
+//					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+//				}
+//					break;
+//			}
+//			break;
 		case STRONGS_SECTION :
 			switch (indexPath.row) {
 				case STRONGS_DISPLAY_ROW :
@@ -690,6 +702,13 @@ BOOL requireReloadOfModuleViews = NO;
 	}
 	
 	return cell;				
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section == MODULE_SECTION) {
+		// only respond if this is a module.
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row]];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {

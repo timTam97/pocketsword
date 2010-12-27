@@ -232,3 +232,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "拡張データごとの設定がなされました。変更する場合には、それぞれのタブ内にて右上端の拡張データ一覧ボタンをタップした後、該当拡張データの公開ボタンをタップしてください。";
 "PreferencesRotationLock" = "傾けによる自動スリープ";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";

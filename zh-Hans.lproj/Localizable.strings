@@ -231,3 +231,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "各个模块有自己的优先选择了。若要改动，击打相关选项右上角模块列表键，再击打模块的发布键。";
 "PreferencesRotationLock" = "旋转锁";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";

@@ -25,6 +25,7 @@
 #import "HistoryController.h"
 #import "NavigatorSources.h"
 #import "PSModuleSelectorController.h"
+#import "PSPreferencesController.h"
 
 #define INFO_LANDSCAPE_HEIGHT 100.0
 #define INFO_PORTRAIT_HEIGHT 160.0
@@ -135,7 +136,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDictionaryTitleViaNotification) name:NotificationNewPrimaryDictionary object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMultiList) name:NotificationToggleMultiList object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList) name:NotificationToggleModuleList object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList:) name:NotificationToggleModuleList object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
@@ -422,27 +423,44 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 }
 
-- (IBAction)toggleModulesList {
-	[self toggleModulesListAnimated:YES];
+- (IBAction)toggleModulesList:(NSNotification *)notification {
+	if(notification) {
+		[self toggleModulesListAnimated:YES withModule:[notification object]];
+	} else {
+		[self toggleModulesListAnimated:YES withModule:nil];
+	}
 }
 
-- (void)toggleModulesListAnimated:(BOOL)animated {
-	if(moduleSelectorViewController && [((PSModuleSelectorController*)moduleSelectorViewController).view superview]) {
+- (IBAction)toggleModulesListFromButton:(id)sender {
+	[self toggleModulesListAnimated:YES withModule:nil];
+}
+
+- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
+	if(moduleSelectorViewController /*&& [((PSModuleSelectorController*)moduleSelectorViewController).view superview]*/) {
 		[tabController dismissModalViewControllerAnimated:animated];
-		//moduleSelectorViewController = nil;
+		moduleSelectorViewController = nil;
 	} else {
-		moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil];
-		//set the module selector to use the correct module type.
-		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil] autorelease];
+
+		if(swordModule) {
+			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = swordModule;
 			[moduleSelectorViewController setListType: BibleTab];
-		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
-			[moduleSelectorViewController setListType: CommentaryTab];
-		} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
-			[moduleSelectorViewController setListType: DevotionalTab];
 		} else {
-			[moduleSelectorViewController setListType: DictionaryTab];
+			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = nil;
+			//set the module selector to use the correct module type.
+			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+				[moduleSelectorViewController setListType: BibleTab];
+			} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+				[moduleSelectorViewController setListType: CommentaryTab];
+			} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
+				[moduleSelectorViewController setListType: DevotionalTab];
+			} else {
+				[moduleSelectorViewController setListType: DictionaryTab];
+			}
 		}
-		[tabController presentModalViewController:moduleSelectorViewController animated:animated];
+		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
+		modSelectorNavController.navigationBarHidden = YES;
+		[tabController presentModalViewController:modSelectorNavController animated:animated];
 	}
 }
 
@@ -1238,6 +1256,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		{
 			for(UIViewController *uivc in tabController.viewControllers) {
 				if([uivc isKindOfClass:[NavigatorSources class]]) {
+					tabController.selectedViewController = uivc;
+					break;
+				}
+			}
+		}
+			break;
+		case PreferencesTab:
+		{
+			for(UIViewController *uivc in tabController.viewControllers) {
+				if([uivc isKindOfClass:[PSPreferencesController class]]) {
 					tabController.selectedViewController = uivc;
 					break;
 				}

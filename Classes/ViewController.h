@@ -17,6 +17,7 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+#import "SwordModule.h"
 #import "PSModuleController.h"
 #import "PocketSwordAppDelegate.h"
 #import "globals.h"
@@ -136,8 +137,10 @@ typedef enum {
 //- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 
-- (void)toggleModulesListAnimated:(BOOL)animated;
-- (IBAction)toggleModulesList;
+- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule;
+//- (IBAction)toggleModulesList;
+- (IBAction)toggleModulesList:(NSNotification *)notification;
+- (IBAction)toggleModulesListFromButton:(id)sender;
 - (IBAction)toggleMultiList;
 - (UITabBarController *)tabBarController;
 - (IBAction)addModuleButtonPressed;

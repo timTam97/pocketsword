@@ -229,8 +229,6 @@
 	return;
 }
 
-#define RemovePrefForMod(Pref,Mod)		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@_%@", Pref, Mod]];
-
 - (void)resetPreferences {
 	// warning:: this will remove all the module-specific preferences for this module!
 	

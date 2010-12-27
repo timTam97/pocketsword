@@ -61,16 +61,22 @@ BOOL requireReloadOfModuleView = NO;
 	DisplayRows = ModuleRows = StrongsRows = MorphRows = LangRows = 0;
 
 	// init row indices
-	FontSizeRow = FontNameRow = VPLRow = XrefRow = FootnotesRow = HeadingsRow = RedLetterRow = StrongsToggleRow = StrongsGreekRow = StrongsHebrewRow = MorphToggleRow = MorphGreekRow = LangGreekAccentsRow = LangHebrewPointsRow = LangHebrewCantillationRow = -1;
+	FontDefaultsRow = FontSizeRow = FontNameRow = VPLRow = XrefRow = FootnotesRow = HeadingsRow = RedLetterRow = StrongsToggleRow = StrongsGreekRow = StrongsHebrewRow = MorphToggleRow = MorphGreekRow = LangGreekAccentsRow = LangHebrewPointsRow = LangHebrewCantillationRow = -1;
 	
 	// Display section:
 	DisplaySection = Sections++;
-	FontSizeRow = DisplayRows++;
-	FontNameRow = DisplayRows++;
+	FontDefaultsRow = DisplayRows++;
+	BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
+	if(fontDefaults) {
+		FontSizeRow = DisplayRows++;
+		FontNameRow = DisplayRows++;
+	}
 	
 	// Module section:
 	//always show the VPL option.
-	VPLRow = ModuleRows++;
+	if([swordModule type] == bible) {
+		VPLRow = ModuleRows++;
+	}
 	if([swordModule hasFeature: SWMOD_FEATURE_HEADINGS]) {
 		HeadingsRow = ModuleRows++;
 	}
@@ -183,7 +189,7 @@ BOOL requireReloadOfModuleView = NO;
 		return @"";
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //	switch (indexPath.section) {
 //		case DISPLAY_SECTION :
 //			switch (indexPath.row) {
@@ -210,8 +216,8 @@ BOOL requireReloadOfModuleView = NO;
 //			}
 //			break;
 //	}
-//	return 45;
-//}
+	return 45;
+}
 
 
 // yes, this method is kinda out of control.  *sigh*
@@ -225,7 +231,12 @@ BOOL requireReloadOfModuleView = NO;
 	BOOL resetCell = YES;
 	
 	if(indexPath.section == DisplaySection) {
-		if(indexPath.row == FontSizeRow) {
+		if(indexPath.row == FontDefaultsRow) {
+			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
+			if(!cell) {
+				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+			}
+		} else if(indexPath.row == FontSizeRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 			if(!cell) {
 				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
@@ -300,7 +311,17 @@ BOOL requireReloadOfModuleView = NO;
 	}
 	
 	if(indexPath.section == DisplaySection) {
-		if(indexPath.row == FontSizeRow) {
+		if(indexPath.row == FontDefaultsRow) {
+			UISwitch *fontDefaultsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+			//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+			BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
+			fontDefaultsSwitch.on = fontDefaults;
+			//vplSwitch.tag = 4;
+			[fontDefaultsSwitch addTarget:self action:@selector(fontDefaultsChanged:) forControlEvents:UIControlEventValueChanged];
+			[ cell addSubview: fontDefaultsSwitch ];
+			cell.textLabel.text = NSLocalizedString(@"PreferencesFontDefaultTitle", @"Verse Per Line");
+			[fontDefaultsSwitch release];						
+		} else if(indexPath.row == FontSizeRow) {
 			UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
 			//fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 			fontSizeSlider.minimumValue = 10.0;
@@ -505,6 +526,32 @@ BOOL requireReloadOfModuleView = NO;
 - (void)hideFontTableView {
 	//[tabController.moreNavigationController popViewControllerAnimated:YES];
 	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)fontDefaultsChanged:(UISwitch *)sender {
+	BOOL n = [sender isOn];
+	SetBoolPrefForMod(n, DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	requireReloadOfModuleView = YES;
+	if(n) {
+		// we now need to add the additional rows
+		FontSizeRow = DisplayRows++;
+		FontNameRow = DisplayRows++;
+		NSIndexPath *rowOne = [NSIndexPath indexPathForRow:FontSizeRow inSection:DisplaySection];
+		NSIndexPath *rowTwo = [NSIndexPath indexPathForRow:FontNameRow inSection:DisplaySection];
+		NSArray *indexPaths = [NSArray arrayWithObjects:rowOne, rowTwo, nil];
+		[preferencesTable insertRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
+	} else {
+		NSIndexPath *rowOne = [NSIndexPath indexPathForRow:FontSizeRow inSection:DisplaySection];
+		NSIndexPath *rowTwo = [NSIndexPath indexPathForRow:FontNameRow inSection:DisplaySection];
+		NSArray *indexPaths = [NSArray arrayWithObjects:rowOne, rowTwo, nil];
+		DisplayRows -= 2;
+		FontSizeRow = -1;
+		FontNameRow = -1;
+		RemovePrefForMod(DefaultsFontSizePreference, preferencesNavigationItem.title);
+		RemovePrefForMod(DefaultsFontNamePreference, preferencesNavigationItem.title);
+		[preferencesTable deleteRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
+	}
 }
 
 - (void)displayStrongsChanged:(UISwitch *)sender {

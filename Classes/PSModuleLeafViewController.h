@@ -18,7 +18,6 @@
 	IBOutlet PSModulePreferencesController *prefController;
 
 	IBOutlet UIBarButtonItem			*closeButton;
-	IBOutlet UITableView				*modulesListTable;
 	IBOutlet id moduleSelectorController;
 	
 	IBOutlet UIBarButtonItem	*unlockEditButton;

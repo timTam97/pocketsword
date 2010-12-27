@@ -9,6 +9,7 @@
 #import "PSModuleLeafViewController.h"
 #import "PocketSwordAppDelegate.h"
 #import "PSResizing.h"
+#import "PSModuleSelectorController.h"
 
 @implementation PSModuleLeafViewController
 
@@ -69,7 +70,7 @@ BOOL trashModule = NO;
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	//[infoWebView loadHTMLString:@"" baseURL: nil];
+	//[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
 }
 
 
@@ -83,8 +84,12 @@ BOOL trashModule = NO;
 }
 
 - (IBAction)closeLeaf:(id)sender {
-	[moduleSelectorController dismissModalViewControllerAnimated:YES];
-	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
+	if(((PSModuleSelectorController*)moduleSelectorController).moduleToView) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+	} else {
+		//[moduleSelectorController dismissModalViewControllerAnimated:YES];
+		[self.navigationController popViewControllerAnimated:YES];
+	}
 }
 
 - (IBAction)closeUnlockView:(id)sender {
@@ -198,7 +203,6 @@ body {\n\
 		DLog(@"\nremoving module: %@", infoNavItem.title);
 		trashModule = NO;
 		[[PSModuleController defaultModuleController] removeModule: infoNavItem.title];
-		[modulesListTable reloadData];
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {
 		// user tapped @"Yes" to unlocking this module question.

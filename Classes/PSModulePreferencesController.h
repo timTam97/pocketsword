@@ -29,7 +29,7 @@
 	NSInteger Sections;//total sections
 	
 	//rows in DISPLAY section
-	NSInteger FontSizeRow, FontNameRow;
+	NSInteger FontDefaultsRow, FontSizeRow, FontNameRow;
 	NSInteger DisplayRows;//total rows in section
 	
 	//rows in the MODULE section

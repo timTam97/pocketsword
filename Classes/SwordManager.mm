@@ -519,8 +519,15 @@ static SwordManager *instance;
  list all module and return them in a Array 
  */
 - (NSArray *)listModules {
-	//return moduleList;
-    return [modules allValues];
+    NSMutableArray *ret = [NSMutableArray array];
+	[ret addObjectsFromArray:[modules allValues]];
+    // sort
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor]; 
+    [ret sortUsingDescriptors:sortDescriptors];
+	[sortDescriptor release];
+	
+	return [NSArray arrayWithArray:ret];
 }
 - (NSArray *)moduleNames {
     return [modules allKeys];

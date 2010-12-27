@@ -15,10 +15,16 @@
 @implementation PSModuleSelectorController
 
 @synthesize listType;
+@synthesize moduleToView;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	modulesCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
+}
+
+- (void)dealloc {
+	self.moduleToView = nil;
+	[super dealloc];
 }
 
 //- (IBAction)toggleLock {
@@ -35,8 +41,17 @@
 //	}
 //}
 
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+//	if(self.moduleToView) {
+//		[leafViewController displayInfoForModule:self.moduleToView];
+//		[self presentModalViewController:leafTabBarController animated:NO];
+//	}
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		modulesListTable.backgroundColor = [UIColor blackColor];
 	} else {
@@ -104,6 +119,12 @@
 	[modulesListTable reloadData];
 	if(ip) {
 		[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
+	}
+	if(self.moduleToView) {
+		[leafViewController displayInfoForModule:self.moduleToView];
+		//[self presentModalViewController:leafTabBarController animated:NO];
+		[leafTabBarController setSelectedIndex:1];
+		[self.navigationController pushViewController:leafTabBarController animated:NO];
 	}
 }
 
@@ -287,9 +308,12 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
-	[self presentModalViewController:leafTabBarController animated:YES];
-	//[self presentModalViewController:leafViewController animated:YES];
-	
+	//if(listType == BibleTab) {
+		[self.navigationController pushViewController:leafTabBarController animated:YES];
+	//} else {
+	//	[self.navigationController pushViewController:leafViewController animated:YES];
+	//}
+	//[self presentModalViewController:leafTabBarController animated:YES];	
 }
 
 // Override to allow orientations other than the default portrait orientation.

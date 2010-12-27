@@ -7,9 +7,11 @@
 //
 
 #import "PSModuleLeafViewController.h"
+#import "SwordModule.h"
 
 @interface PSModuleSelectorController : UIViewController {
 	ShownTab listType;
+	SwordModule *moduleToView;
 	IBOutlet PSModuleLeafViewController *leafViewController;
 	IBOutlet UITabBarController *leafTabBarController;
 
@@ -23,6 +25,7 @@
 }
 
 @property (assign) ShownTab listType;
+@property (retain, readwrite) SwordModule *moduleToView;
 
 //- (IBAction)toggleLock;
 - (IBAction)addModuleButtonPressed;

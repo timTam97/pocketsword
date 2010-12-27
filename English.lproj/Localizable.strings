@@ -231,3 +231,6 @@
 // new v1.3.4 strings:
 "PreferencesModuleSectionNote" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
 "PreferencesRotationLock" = "Rotation Lock";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";
