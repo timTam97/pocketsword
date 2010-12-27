@@ -1108,19 +1108,20 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[self showInfoModal: infoView withTiming: 0.3];
 	}
-	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+//	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+//	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+//	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	//NSLog(@"%@", infoString);
 
 	//NSString *htmlString = [PSModuleController createHTMLString: infoString usingPreferences:YES withJS: @"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>" usingModuleForPreferences:blah];
 	//NSString *htmlString = [PSModuleController createInfoHTMLString: infoString usingModuleForPreferences:blah];
 
-	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+//	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
+//	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	[infoWebView loadHTMLString: infoString baseURL: nil];
 	
-	//NSLog(@"%@", infoString);
 }
 
 - (void)rotateInfo:(NSNotification *)notification {

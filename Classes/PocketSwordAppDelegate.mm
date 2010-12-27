@@ -97,6 +97,7 @@
 	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
 	BOOL strongsRealGreek = [defaults boolForKey:STRONGS_REAL_GREEK_VERSION];
+	BOOL removeModulePrefs = [defaults boolForKey:@"removedModulePreferences"];
 
 	if(!kjv) {
 		[defaults synchronize];
@@ -132,6 +133,15 @@
 		}
 	}
 	
+	if(!removeModulePrefs) {
+		NSArray *moduleList = [[[PSModuleController defaultModuleController] swordManager] listModules];
+		for(SwordModule *mod in moduleList) {
+			[mod resetPreferences];
+		}
+		[defaults setBool: YES forKey:@"removedModulePreferences"];
+		[defaults synchronize];
+	}
+
 	NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *swLocales = [[docPath stringByAppendingPathComponent:@"unused"] stringByAppendingPathComponent: @"locales.d"];
 	//"install" the l10n strings into SWORD for the current locale.
