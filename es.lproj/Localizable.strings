@@ -19,7 +19,7 @@
 
 // Spanish (es) Localisation
 // By David Bell et al.
-// Last Updated v1.3.4 (22nd December, 2010)
+// Last Updated v1.3.5 (27th December, 2010)
 
 "Edit" = "Edición";
 "Done" = "Fin";
@@ -233,4 +233,4 @@
 "PreferencesRotationLock" = "Bloqueo de rotación";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "Usar fuente personalizado";

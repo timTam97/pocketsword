@@ -19,7 +19,7 @@
 
 // Swedish (sv) localisation
 // By Christoffer Björkskog
-// Last Updated v1.3.4 (21st December, 2010)
+// Last Updated v1.3.5 (27th December, 2010)
 
 "Edit" = "Redigera";
 "Done" = "Klar";
@@ -234,4 +234,4 @@
 "PreferencesRotationLock" = "Förhindra rotation";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "Använd anpassat typsnitt";

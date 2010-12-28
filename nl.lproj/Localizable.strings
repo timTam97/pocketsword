@@ -19,7 +19,7 @@
 
 // Dutch (nl) Localisation
 // By Henko van de Weerd
-// Last Updated v1.3.4 (21st December, 2010)
+// Last Updated v1.3.5 (28th December, 2010)
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
@@ -234,4 +234,4 @@
 "PreferencesRotationLock" = "Rotatieslot";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "Gebruik aangepast lettertype";

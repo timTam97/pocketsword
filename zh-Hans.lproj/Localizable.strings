@@ -19,7 +19,7 @@
 
 // Simplified Chinese (zh-Hans) Localisation
 // By Yiguang Hu
-// Last Updated v1.3.4 (21st December, 2010)
+// Last Updated v1.3.5 (28th December, 2010)
 
 "Edit" = "编辑";
 "Done" = "完成";
@@ -233,4 +233,4 @@
 "PreferencesRotationLock" = "旋转锁";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "使用自定义字体";

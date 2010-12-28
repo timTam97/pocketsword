@@ -19,7 +19,7 @@
 
 // Russian (ru) localisation
 // By Vitaliy K.
-// Last Updated v1.3.4 (21st December, 2010)
+// Last Updated v1.3.5 (28th December, 2010)
 
 "Edit" = "Изменить";
 "Done" = "Готово";
@@ -234,4 +234,4 @@
 "PreferencesRotationLock" = "Блокировать вращение";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "Использовать особый шрифт";

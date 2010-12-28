@@ -19,7 +19,7 @@
 
 // French (fr) Localisation
 // By Dominique Corbex
-// Last Updated v1.3.4 (22nd December, 2010)
+// Last Updated v1.3.5 (27th December, 2010)
 
 "Edit" = "Éditer";
 "Done" = "Terminé";
@@ -233,4 +233,4 @@
 "PreferencesRotationLock" = "Verrouiller la rotation";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "Police personnalisée";
