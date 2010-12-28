@@ -64,7 +64,7 @@
 //	} else {
 //		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateLocked.png"];
 //	}
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:nil useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar useStatusBar:YES];
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	if([self listType] == BibleTab) {
@@ -116,20 +116,23 @@
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}			
 	}
-	[modulesListTable reloadData];
-	if(ip) {
-		[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
-	}
 	if(self.moduleToView) {
 		[leafViewController displayInfoForModule:self.moduleToView];
 		//[self presentModalViewController:leafTabBarController animated:NO];
 		[leafTabBarController setSelectedIndex:1];
 		[self.navigationController pushViewController:leafTabBarController animated:NO];
+	} else {
+		reloadModuleViews = NO;
+		[modulesListTable reloadData];
+		if(ip) {
+			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
+		}
+		[self addButtonsToToolbar:NO];
 	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:nil fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (IBAction)addModuleButtonPressed {
@@ -319,6 +322,124 @@
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (void)addButtonsToToolbar:(BOOL)animated {
+	if(self.listType == BibleTab) {
+		// create the array of buttons to show
+		NSMutableArray *buttons = [NSMutableArray arrayWithCapacity:2];
+		SwordModule *swordModule = [[PSModuleController defaultModuleController] primaryBible];
+		NSString *imageName;
+		
+		// strongs, morph, headings, x-refs, footnotes, red letter
+		if([swordModule hasFeature: SWMOD_FEATURE_STRONGS] || [swordModule hasFeature: SWMOD_CONF_FEATURE_STRONGS]) {
+			if(GetBoolPrefForMod(DefaultsStrongsPreference, [swordModule name])) {
+				imageName = @"enabled-Strongs.png";
+			} else {
+				imageName = @"disabled-Strongs.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(strongsButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+		if([swordModule hasFeature: SWMOD_FEATURE_HEADINGS]) {
+			if(GetBoolPrefForMod(DefaultsHeadingsPreference, [swordModule name])) {
+				imageName = @"enabled-Headings.png";
+			} else {
+				imageName = @"disabled-Headings.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(headingsButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+		if([swordModule hasFeature: SWMOD_FEATURE_FOOTNOTES]) {
+			if(GetBoolPrefForMod(DefaultsFootnotesPreference, [swordModule name])) {
+				imageName = @"enabled-Footnotes.png";
+			} else {
+				imageName = @"disabled-Footnotes.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(footnotesButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+		if([swordModule hasFeature: SWMOD_FEATURE_SCRIPTREF]) {
+			if(GetBoolPrefForMod(DefaultsScriptRefsPreference, [swordModule name])) {
+				imageName = @"enabled-Xrefs.png";
+			} else {
+				imageName = @"disabled-Xrefs.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(xrefsButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+//		if([swordModule hasFeature: SWMOD_FEATURE_REDLETTERWORDS]) {
+//			if(GetBoolPrefForMod(DefaultsRedLetterPreference, [swordModule name])) {
+//				imageName = @"enabled-RedLetter.png";
+//			} else {
+//				imageName = @"disabled-RedLetter.png";
+//			}
+//			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(redletterButtonPressed:)];
+//			[buttons addObject:barButton];
+//			[barButton release];
+//		}
+		if([swordModule hasFeature: SWMOD_FEATURE_MORPH]) {
+			if(GetBoolPrefForMod(DefaultsMorphPreference, [swordModule name])) {
+				imageName = @"enabled-Morph.png";
+			} else {
+				imageName = @"disabled-Morph.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(morphButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+		
+		// add buttons to the bottom toolbar.
+		[modulesToolbar setItems:buttons animated:animated];
+	}
+}
+
+- (void)strongsButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	SetBoolPrefForMod(!pref, DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	//[self dismissModuleSelector];
+	reloadModuleViews = YES;
+	[self addButtonsToToolbar:YES];
+}
+
+- (void)headingsButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	SetBoolPrefForMod(!pref, DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	reloadModuleViews = YES;
+	[self addButtonsToToolbar:YES];
+}
+
+- (void)footnotesButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	SetBoolPrefForMod(!pref, DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	reloadModuleViews = YES;
+	[self addButtonsToToolbar:YES];
+}
+
+- (void)xrefsButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	SetBoolPrefForMod(!pref, DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	reloadModuleViews = YES;
+	[self addButtonsToToolbar:YES];
+}
+
+- (void)morphButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	SetBoolPrefForMod(!pref, DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	reloadModuleViews = YES;
+	[self addButtonsToToolbar:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	if(reloadModuleViews) {
+		reloadModuleViews = NO;
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	}
 }
 
 @end

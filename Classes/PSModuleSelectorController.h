@@ -20,14 +20,15 @@
 	IBOutlet UINavigationBar	*modulesNavigationBar;
 	IBOutlet UIBarButtonItem	*modulesCloseButton;
 	
-	//IBOutlet UIToolbar			*modulesToolbar;
-	//IBOutlet UIBarButtonItem	*modulesRotationLockButton;
+	IBOutlet UIToolbar			*modulesToolbar;
+	
+	BOOL reloadModuleViews;
 }
 
 @property (assign) ShownTab listType;
 @property (retain, readwrite) SwordModule *moduleToView;
 
-//- (IBAction)toggleLock;
+- (void)addButtonsToToolbar:(BOOL)animated;
 - (IBAction)addModuleButtonPressed;
 - (IBAction)dismissModuleSelector;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;

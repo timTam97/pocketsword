@@ -106,9 +106,9 @@ typedef enum {
     /** yes, we have a delegate to report any action to */
     id delegate;
 
-	//#ifdef __cplusplus
+	#ifdef __cplusplus
 	sword::SWModule	*swModule;
-	//#endif
+	#endif
 }
 
 // ------------- properties ---------------
@@ -135,11 +135,11 @@ typedef enum {
 // ------------- instance methods ---------------
 
 - (id)initWithName:(NSString *)aName swordManager:(SwordManager *)aManager;
-//#ifdef __cplusplus
+#ifdef __cplusplus
 - (id)initWithSWModule:(sword::SWModule *)aModule;
 - (id)initWithSWModule:(sword::SWModule *)aModule swordManager:(SwordManager *)aManager;
 - (sword::SWModule *)swModule;
-//#endif
+#endif
 - (void)finalize;
 - (void)dealloc;
 - (void)setPreferences;

@@ -22,9 +22,9 @@ class sword::SWModule;
 
 @interface SwordInstallSource : NSObject {
     
-	//#ifdef __cplusplus
+#ifdef __cplusplus
     sword::InstallSource *swInstallSource;
-	//#endif
+#endif
     
     /** the sword manager for this source */
     SwordManager *swordManager;
@@ -38,9 +38,9 @@ class sword::SWModule;
 
 // init
 - (id)init;
-//#ifdef __cplusplus
+#ifdef __cplusplus
 - (id)initWithSource:(sword::InstallSource *)is;
-//#endif
+#endif
 - (id)initWithType:(NSString *)aType;
 - (void)dealloc;
 
@@ -75,8 +75,8 @@ class sword::SWModule;
 - (void)resetSwordManagerLoaded;
 - (NSArray *)moduleListByType;
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 - (sword::InstallSource *)installSource;
-//#endif
+#endif
 
 @end

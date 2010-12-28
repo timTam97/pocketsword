@@ -27,11 +27,13 @@
 #import "PSRefSelectorController.h"
 //#import "PSMultiListController.h"
 
+#ifdef __cplusplus
 #include <swmgr.h>
 #include <swmodule.h>
 #include <markupfiltmgr.h>
 #include <filemgr.h>
 #include <localemgr.h>
+#endif
 
 typedef enum {
     RestoreScrollPosition = 1,

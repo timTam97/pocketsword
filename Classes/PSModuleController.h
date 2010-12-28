@@ -85,7 +85,9 @@
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (void)reload;
+#ifdef __cplusplus
 - (PSStatusReporter*)getInstallationProgress;
+#endif
 - (BOOL)installModule:(NSString *)name;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule;
 - (BOOL)removeModule:(NSString *)name;

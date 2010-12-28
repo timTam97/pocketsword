@@ -10,11 +10,13 @@
 #import "SnoopWindow.h"
 
 #import "globals.h"
+#import "PSModuleController.h"
 
 
 #define SWIPE_DRAG_HORIZ_MIN 100
 #define SWIPE_DRAG_VERT_MAX 40
 #define ZOOM_DRAG_MIN 20
+//#define MOVEMENT_LEEWAY 10
 
 
 @implementation SnoopWindow
@@ -92,6 +94,7 @@ CGPoint CGPointNorm(CGPoint a) {
 		//
 		if (touch.phase==UITouchPhaseBegan) {
 			//touchAndHold = NO;
+			ignoreMovementEvents = NO;
 			movement = NO;
 //			if ([[event allTouches] count] > 1) {
 //				if(holdTimer) {
@@ -135,6 +138,24 @@ CGPoint CGPointNorm(CGPoint a) {
 			//touchAndHold = NO;
 			movement = YES;
 			//DLog(@"--- UITouchPhaseMoved ---");
+			if(bibleEvent && !ignoreMovementEvents && ([[event allTouches] count] == 3)) {
+				CGPoint currentTouchPosition = [touch locationInView:self];
+				if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+					//switch x & y if in landscape mode
+					CGFloat dummyX = currentTouchPosition.x;
+					currentTouchPosition.x = currentTouchPosition.y;
+					currentTouchPosition.y = dummyX;
+				}
+				BOOL reverseSwipe = NO;
+				if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+					reverseSwipe = YES;
+				}
+				if((currentTouchPosition.y - startTouchPosition1.y) >= SWIPE_DRAG_HORIZ_MIN) {
+					ignoreMovementEvents = YES;
+					//NSLog(@"%f %f", currentTouchPosition.y, startTouchPosition1.y);
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[PSModuleController defaultModuleController] primaryBible]];
+				}
+			}
 			/*if ([[event allTouches] count] > 1) {
 				CGPoint currentTouchPosition1 = [[allTouches objectAtIndex:0] locationInView:self];
 				CGPoint currentTouchPosition2 = [[allTouches objectAtIndex:1] locationInView:self];
@@ -164,7 +185,7 @@ CGPoint CGPointNorm(CGPoint a) {
 //				self.holdTimer = nil;
 //			}
 			
-			if (!movement && ([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference] || ([[event allTouches] count] > 1))) {
+			if (!movement && ([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference] || ([[event allTouches] count] == 2))) {
 				//DLog(@"toggle-fullscreen-tap");
 				
 				if(bibleEvent) {
@@ -191,7 +212,7 @@ CGPoint CGPointNorm(CGPoint a) {
 			//DLog(@"%d %f %d %f time: %g",fabsf(startTouchPosition1.x - currentTouchPosition.x) >= SWIPE_DRAG_HORIZ_MIN ? 1 : 0,
 			//	 fabsf(startTouchPosition1.y - currentTouchPosition.y),
 			//	 fabsf(startTouchPosition1.x - currentTouchPosition.x) > fabsf(startTouchPosition1.y - currentTouchPosition.y)  ? 1 : 0, touch.timestamp - startTouchTime, touch.timestamp - startTouchTime);
-			if (fabsf(startTouchPosition1.x - currentTouchPosition.x) >= SWIPE_DRAG_HORIZ_MIN &&
+			if (([[event allTouches] count] == 1) &&fabsf(startTouchPosition1.x - currentTouchPosition.x) >= SWIPE_DRAG_HORIZ_MIN &&
 				fabsf(startTouchPosition1.y - currentTouchPosition.y) <= SWIPE_DRAG_VERT_MAX &&
 				fabsf(startTouchPosition1.x - currentTouchPosition.x) > fabsf(startTouchPosition1.y - currentTouchPosition.y) &&
 				touch.timestamp - startTouchTime < .7
@@ -214,7 +235,9 @@ CGPoint CGPointNorm(CGPoint a) {
 						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeLeft object:touch];
 					}
 				}
-			}/* else if(!movement && touchAndHold) {
+			}
+			
+			/* else if(!movement && touchAndHold) {
 				//a touchAndHold event - so we pass the event through to super.
 				DLog(@"\nfound a touchAndHold event");
 			} else if(movement) {

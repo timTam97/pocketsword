@@ -16,10 +16,10 @@
 //#include "MyInstallMgr.h"
 
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 //typedef std::map<sword::SWBuf, sword::InstallSource *> InstallSourceMap;
 typedef sword::multimapwithdefault<sword::SWBuf, sword::SWBuf, std::less <sword::SWBuf> > ConfigEntMap;
-//#endif
+#endif
 
 #define INSTALLSOURCE_SECTION_TYPE_FTP  "FTPSource"
 #define INSTALLSOURCE_SECTION_TYPE_HTTP	"HTTPSource"

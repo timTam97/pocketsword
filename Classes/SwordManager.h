@@ -114,11 +114,11 @@ class sword::SWModule;
 
 @interface SwordManager : NSObject {
     
-	//#ifdef __cplusplus
+	#ifdef __cplusplus
 	sword::SWMgr *swManager;
 	//sword::SWFilter *plainFilter, *thmlFilter, *gbfFilter, *osisFilter;
 	//sword::SWFilter *thmlStripFilter, *gbfStripFilter, *osisStripFilter;
-	//#endif
+	#endif
 
 	NSDictionary *modules;
 	NSArray *moduleListByType;
@@ -183,10 +183,10 @@ class sword::SWModule;
 
 - (void)installModulesFromPath:(NSString *)path;
 
-//#ifdef __cplusplus
+#ifdef __cplusplus
 - (id)initWithSWMgr:(sword::SWMgr *)smgr;
 - (sword::SWModule *)getSWModuleWithName:(NSString *)moduleName;
 - (sword::SWMgr *)swManager;
-//#endif
+#endif
 
 @end

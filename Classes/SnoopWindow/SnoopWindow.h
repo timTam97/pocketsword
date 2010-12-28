@@ -17,6 +17,7 @@
 	BOOL bibleEvent;
 	//BOOL touchAndHold;
 	BOOL movement;
+	BOOL ignoreMovementEvents;
 	
 	IBOutlet UIWebView *bibleWebView;
 	IBOutlet UIWebView *commentaryWebView;

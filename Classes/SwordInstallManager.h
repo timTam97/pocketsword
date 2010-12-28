@@ -37,10 +37,10 @@ typedef enum _ModuleStatusConst {
 @interface SwordInstallManager : NSObject
 {
 @private
-	//#ifdef __cplusplus
+#ifdef __cplusplus
     sword::InstallMgr *swInstallMgr;
-	//#endif
 	PSStatusReporter *statusReporter;
+#endif
     
     BOOL createPath;
     
@@ -85,7 +85,9 @@ base path of the module installation
 - (void)removeInstallSource:(SwordInstallSource *)is withReinitialize:(BOOL)performReinitialize;
 - (void)updateInstallSource:(SwordInstallSource *)is;
 - (int)refreshMasterRemoteInstallSourceList;
+#ifdef __cplusplus
 - (PSStatusReporter *)getInstallationProgress;
+#endif
 - (void)resetInstallationProgress;
 
 // disclaimer
@@ -106,8 +108,8 @@ base path of the module installation
 - (NSArray *)moduleStatusInInstallSource:(SwordInstallSource *)is baseManager:(SwordManager *)baseMgr;
 
 // low level access
-//#ifdef __cplusplus
+#ifdef __cplusplus
 - (sword::InstallMgr *)installMgr;
-//#endif
+#endif
 
 @end
