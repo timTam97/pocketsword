@@ -135,12 +135,27 @@
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+	if(reloadModuleViews) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+		reloadModuleViews = NO;
+	}
+}
+
 - (IBAction)addModuleButtonPressed {
+	if(reloadModuleViews) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+		reloadModuleViews = NO;
+	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowDownloadsTab object:nil];
 }
 
 - (IBAction)dismissModuleSelector {
+	if(reloadModuleViews) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+		reloadModuleViews = NO;
+	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 }
 
@@ -243,6 +258,10 @@
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	if(([moduleController primaryBible] && [newModule isEqualToString:[[moduleController primaryBible] name]]) || ([moduleController primaryCommentary] && [newModule isEqualToString:[[moduleController primaryCommentary] name]]) || ([moduleController primaryDictionary] && [newModule isEqualToString:[[moduleController primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
+		if(reloadModuleViews) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+			reloadModuleViews = NO;
+		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 		return; // do nothing, because we selected the currently loaded module, but close the view & return to viewing the module.
 	}
@@ -327,7 +346,7 @@
 - (void)addButtonsToToolbar:(BOOL)animated {
 	if(self.listType == BibleTab) {
 		// create the array of buttons to show
-		NSMutableArray *buttons = [NSMutableArray arrayWithCapacity:2];
+		NSMutableArray *buttons = [NSMutableArray arrayWithCapacity:4];
 		SwordModule *swordModule = [[PSModuleController defaultModuleController] primaryBible];
 		NSString *imageName;
 		
@@ -339,6 +358,16 @@
 				imageName = @"disabled-Strongs.png";
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(strongsButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+		if([swordModule hasFeature: SWMOD_FEATURE_MORPH]) {
+			if(GetBoolPrefForMod(DefaultsMorphPreference, [swordModule name])) {
+				imageName = @"enabled-Morph.png";
+			} else {
+				imageName = @"disabled-Morph.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(morphButtonPressed:)];
 			[buttons addObject:barButton];
 			[barButton release];
 		}
@@ -382,16 +411,6 @@
 //			[buttons addObject:barButton];
 //			[barButton release];
 //		}
-		if([swordModule hasFeature: SWMOD_FEATURE_MORPH]) {
-			if(GetBoolPrefForMod(DefaultsMorphPreference, [swordModule name])) {
-				imageName = @"enabled-Morph.png";
-			} else {
-				imageName = @"disabled-Morph.png";
-			}
-			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(morphButtonPressed:)];
-			[buttons addObject:barButton];
-			[barButton release];
-		}
 		
 		// add buttons to the bottom toolbar.
 		[modulesToolbar setItems:buttons animated:animated];
@@ -433,13 +452,6 @@
 	SetBoolPrefForMod(!pref, DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	reloadModuleViews = YES;
 	[self addButtonsToToolbar:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	if(reloadModuleViews) {
-		reloadModuleViews = NO;
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-	}
 }
 
 @end
