@@ -22,7 +22,7 @@
 	
 	IBOutlet UIToolbar			*modulesToolbar;
 	
-	BOOL reloadModuleViews;
+	//BOOL reloadModuleViews;
 }
 
 @property (assign) ShownTab listType;

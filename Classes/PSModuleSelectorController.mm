@@ -122,7 +122,7 @@
 		[leafTabBarController setSelectedIndex:1];
 		[self.navigationController pushViewController:leafTabBarController animated:NO];
 	} else {
-		reloadModuleViews = NO;
+		//reloadModuleViews = NO;
 		[modulesListTable reloadData];
 		if(ip) {
 			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
@@ -136,26 +136,26 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-	if(reloadModuleViews) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		reloadModuleViews = NO;
-	}
+//	if(reloadModuleViews) {
+//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//		reloadModuleViews = NO;
+//	}
 }
 
 - (IBAction)addModuleButtonPressed {
-	if(reloadModuleViews) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		reloadModuleViews = NO;
-	}
+//	if(reloadModuleViews) {
+//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//		reloadModuleViews = NO;
+//	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowDownloadsTab object:nil];
 }
 
 - (IBAction)dismissModuleSelector {
-	if(reloadModuleViews) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		reloadModuleViews = NO;
-	}
+//	if(reloadModuleViews) {
+//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//		reloadModuleViews = NO;
+//	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 }
 
@@ -258,10 +258,10 @@
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	if(([moduleController primaryBible] && [newModule isEqualToString:[[moduleController primaryBible] name]]) || ([moduleController primaryCommentary] && [newModule isEqualToString:[[moduleController primaryCommentary] name]]) || ([moduleController primaryDictionary] && [newModule isEqualToString:[[moduleController primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
-		if(reloadModuleViews) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-			reloadModuleViews = NO;
-		}
+//		if(reloadModuleViews) {
+//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//			reloadModuleViews = NO;
+//		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 		return; // do nothing, because we selected the currently loaded module, but close the view & return to viewing the module.
 	}
@@ -420,37 +420,37 @@
 - (void)strongsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-	//[self dismissModuleSelector];
-	reloadModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
+	//reloadModuleViews = YES;
+	//[self dismissModuleSelector];
 }
 
 - (void)headingsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	reloadModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
 }
 
 - (void)footnotesButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	reloadModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
 }
 
 - (void)xrefsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	reloadModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
 }
 
 - (void)morphButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	reloadModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
 }
 

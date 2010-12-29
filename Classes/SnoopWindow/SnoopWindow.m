@@ -147,10 +147,11 @@ CGPoint CGPointNorm(CGPoint a) {
 					currentTouchPosition.y = dummyX;
 				}
 				BOOL reverseSwipe = NO;
-				if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+				if(interfaceOrientation == UIInterfaceOrientationLandscapeRight || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 					reverseSwipe = YES;
 				}
-				if((currentTouchPosition.y - startTouchPosition1.y) >= SWIPE_DRAG_HORIZ_MIN) {
+				if((!reverseSwipe && ((currentTouchPosition.y - startTouchPosition1.y) >= SWIPE_DRAG_HORIZ_MIN)) || 
+				   (reverseSwipe && ((startTouchPosition1.y - currentTouchPosition.y) >= SWIPE_DRAG_HORIZ_MIN))) {
 					ignoreMovementEvents = YES;
 					//NSLog(@"%f %f", currentTouchPosition.y, startTouchPosition1.y);
 					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[PSModuleController defaultModuleController] primaryBible]];

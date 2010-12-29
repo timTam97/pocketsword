@@ -11,7 +11,7 @@
 
 @implementation PSModulePreferencesController
 
-BOOL requireReloadOfModuleView = NO;
+//BOOL requireReloadOfModuleView = NO;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -40,13 +40,10 @@ BOOL requireReloadOfModuleView = NO;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	if(requireReloadOfModuleView) {
-		//[[PSModuleController defaultModuleController] displayBusyIndicator];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		//[[[PSModuleController defaultModuleController] viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-		//[[PSModuleController defaultModuleController] hideBusyIndicator];
-	}
-	requireReloadOfModuleView = NO;
+//	if(requireReloadOfModuleView) {
+//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//	}
+//	requireReloadOfModuleView = NO;
 }
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule {
@@ -532,7 +529,6 @@ BOOL requireReloadOfModuleView = NO;
 	BOOL n = [sender isOn];
 	SetBoolPrefForMod(n, DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	requireReloadOfModuleView = YES;
 	if(n) {
 		// we now need to add the additional rows
 		FontSizeRow = DisplayRows++;
@@ -551,6 +547,7 @@ BOOL requireReloadOfModuleView = NO;
 		RemovePrefForMod(DefaultsFontSizePreference, preferencesNavigationItem.title);
 		RemovePrefForMod(DefaultsFontNamePreference, preferencesNavigationItem.title);
 		[preferencesTable deleteRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	}
 }
 
@@ -560,7 +557,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsStrongsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayMorphChanged:(UISwitch *)sender {
@@ -569,7 +566,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsMorphPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayGreekAccentsChanged:(UISwitch *)sender {
@@ -578,7 +575,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsGreekAccentsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayHVPChanged:(UISwitch *)sender {
@@ -587,7 +584,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHVPPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayHebrewCantillationChanged:(UISwitch *)sender {
@@ -596,7 +593,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHebrewCantillationPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)morphGreekModuleChanged:(NSString *)newModule {
@@ -623,7 +620,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsScriptRefsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)footnotesChanged:(UISwitch *)sender {
@@ -632,7 +629,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsFootnotesPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)headingsChanged:(UISwitch *)sender {
@@ -641,7 +638,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHeadingsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)fontSizeChanged:(UISlider *)sender {
@@ -652,7 +649,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
 	//[preferencesTable reloadData];
 	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)redLetterChanged:(UISwitch *)sender {
@@ -661,7 +658,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsRedLetterPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)vplChanged:(UISwitch *)sender {
@@ -669,7 +666,7 @@ BOOL requireReloadOfModuleView = NO;
 	SetBoolPrefForMod(n, DefaultsVPLPreference, preferencesNavigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsVPLPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
@@ -677,7 +674,7 @@ BOOL requireReloadOfModuleView = NO;
 	//[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
-	requireReloadOfModuleView = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 @end

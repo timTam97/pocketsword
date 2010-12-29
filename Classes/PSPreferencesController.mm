@@ -63,7 +63,7 @@
 
 @implementation PSPreferencesController
 
-BOOL requireReloadOfModuleViews = NO;
+//BOOL requireReloadOfModuleViews = NO;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -82,13 +82,10 @@ BOOL requireReloadOfModuleViews = NO;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	if(requireReloadOfModuleViews) {
-		//[[PSModuleController defaultModuleController] displayBusyIndicator];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		//[[[PSModuleController defaultModuleController] viewController] redisplayChapter:NoViewPoll restore:RestoreVersePosition];
-		//[[PSModuleController defaultModuleController] hideBusyIndicator];
-	}
-	requireReloadOfModuleViews = NO;
+//	if(requireReloadOfModuleViews) {
+//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//	}
+//	requireReloadOfModuleViews = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -776,7 +773,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsStrongsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayMorphChanged:(UISwitch *)sender {
@@ -784,7 +781,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsMorphPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayGreekAccentsChanged:(UISwitch *)sender {
@@ -792,7 +789,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsGreekAccentsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayHVPChanged:(UISwitch *)sender {
@@ -800,7 +797,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHVPPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)displayHebrewCantillationChanged:(UISwitch *)sender {
@@ -808,7 +805,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHebrewCantillationPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)morphGreekModuleChanged:(NSString *)newModule {
@@ -834,7 +831,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsScriptRefsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)footnotesChanged:(UISwitch *)sender {
@@ -842,7 +839,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsFootnotesPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)headingsChanged:(UISwitch *)sender {
@@ -850,7 +847,7 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHeadingsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)fontSizeChanged:(UISlider *)sender {
@@ -860,14 +857,14 @@ BOOL requireReloadOfModuleViews = NO;
 	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
 	//[preferencesTable reloadData];
 	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)nightModeChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsNightModePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNightModeChanged object:nil];
 }
 
@@ -876,21 +873,21 @@ BOOL requireReloadOfModuleViews = NO;
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsRedLetterPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)vplChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsVPLPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
 	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];
-	requireReloadOfModuleViews = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)insomniaModeChanged:(UISwitch *)sender {

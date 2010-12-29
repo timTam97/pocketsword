@@ -46,7 +46,9 @@ bool bib_initialised = false;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+	if(!self.isFullScreen) {
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+	}
 	if(refToShow) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
@@ -57,7 +59,10 @@ bool bib_initialised = false;
 	} else {
 		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
-	//[PSResizing resizeViewsOnAppearWithTabBar:[((ViewController*)viewController) tabBarController].tabBar topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+//	if(self.isFullScreen) {
+//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+//	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -127,7 +132,7 @@ bool bib_initialised = false;
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:bibleWebView];
-        bibleWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];  //checks orientation to provide the correct rect
+        bibleWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];
     } else {
 		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
         [self.view addSubview:bibleWebView];
@@ -148,6 +153,13 @@ bool bib_initialised = false;
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+//	if(self.isFullScreen) {
+//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+//	}
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
