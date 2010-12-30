@@ -19,7 +19,7 @@
 
 // Ukrainian (uk) localisation
 // By Vitaliy K.
-// Last Updated v1.3.5 (28th December, 2010)
+// Last Updated v1.3.5 (30th December, 2010)
 
 "Edit" = "Редагувати";
 "Done" = "Готово";
@@ -234,4 +234,4 @@
 "PreferencesRotationLock" = "Замкнути обертання";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Використати особливий шрифт";
+"PreferencesFontDefaultTitle" = "Настроїти особливий шрифт";

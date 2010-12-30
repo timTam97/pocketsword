@@ -46,9 +46,6 @@ bool bib_initialised = false;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	if(!self.isFullScreen) {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
-	}
 	if(refToShow) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
@@ -59,10 +56,9 @@ bool bib_initialised = false;
 	} else {
 		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
-//	if(self.isFullScreen) {
-//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
-//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-//	}
+	if(!self.isFullScreen) {
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -156,10 +152,6 @@ bool bib_initialised = false;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-//	if(self.isFullScreen) {
-//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
-//		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-//	}
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
