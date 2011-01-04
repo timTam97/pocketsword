@@ -9,6 +9,7 @@
 #import "SwordModule.h"
 #import "PSModuleController.h"
 #import "PSModulePreferencesController.h"
+#import "PSModuleUnlockViewController.h"
 
 @interface PSModuleLeafViewController : UIViewController {
 	IBOutlet UIWebView			*infoWebView;
@@ -19,16 +20,9 @@
 
 	IBOutlet UIBarButtonItem			*closeButton;
 	IBOutlet id moduleSelectorController;
+	IBOutlet PSModuleUnlockViewController *unlockViewController;
 	
-	IBOutlet UIBarButtonItem	*unlockEditButton;
-	IBOutlet UIBarButtonItem	*unlockSaveButton;
-	IBOutlet UIWebView			*unlockWebView;
-	IBOutlet UIWebView			*unlockHelpWebView;
-	IBOutlet UILabel			*unlockLabel;
-	IBOutlet UITextField		*unlockTextField;
-	IBOutlet UIView				*unlockView;
-	IBOutlet UIToolbar			*unlockToolbar;
-	IBOutlet UINavigationItem	*unlockNavBarItem;
+	BOOL trashModule, askToUnlock;
 }
 
 //needs a UINavigationBar across the top with:
@@ -47,13 +41,5 @@
 
 - (IBAction)closeLeaf:(id)sender;
 - (IBAction)trashModule:(id)sender;
-- (IBAction)unlockEditButtonPressed:(id)sender;
-
-- (IBAction)unlockSaveButtonPressed:(id)sender;
-- (IBAction)closeUnlockView:(id)sender;
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField;
-- (void)keyboardWillShow:(NSNotification *)note;
-- (void)keyboardWillHide:(NSNotification *)note;
 
 @end

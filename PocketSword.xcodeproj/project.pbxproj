@@ -623,6 +623,8 @@
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
+		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
+		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		059A6CC111B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
 		059A6CC211B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
 		059A6CC311B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
@@ -1322,6 +1324,8 @@
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
+		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleUnlockViewController.h; sourceTree = "<group>"; };
+		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "changes-v1.3.x.txt"; path = "Resources/doc/changes-v1.3.x.txt"; sourceTree = "<group>"; };
 		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
@@ -2643,6 +2647,8 @@
 				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
 				0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */,
 				0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */,
+				05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */,
+				05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */,
 			);
 			name = "module selector";
 			sourceTree = "<group>";
@@ -3787,6 +3793,7 @@
 				05F4D07B1255D68B0088C902 /* PSResizing.m in Sources */,
 				0502EC7A12B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 				0502EEEC12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
+				05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4113,6 +4120,7 @@
 				05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */,
 				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 				0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
+				05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
