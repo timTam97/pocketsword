@@ -189,7 +189,7 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Strongs")) {
 				char ch = *value;
 				value<<1;
-				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt",
+				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;",
 						    ((ch == 'H') ? "Hebrew" : "Greek"),
 						    URL::encode(value.c_str()).c_str());
 				buf += (value.length()) ? value.c_str() : "";
