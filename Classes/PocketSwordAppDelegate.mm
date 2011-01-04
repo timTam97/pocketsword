@@ -31,7 +31,7 @@
 //@synthesize tabBarController;
 @synthesize urlToOpen;
 
-#define LOCALES_VERSION					@"loadedSWORDLocales-v2.2"
+#define LOCALES_VERSION					@"loadedSWORDLocales-v2.3"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-100511"
 
 + (PocketSwordAppDelegate *)sharedAppDelegate {
