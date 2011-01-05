@@ -12,6 +12,8 @@
 	IBOutlet UITableView *table;
 	
 	NSString *moduleName;
+
+	NSArray *fontStrings;
 }
 
 @property (retain, readwrite) NSString *moduleName;

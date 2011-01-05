@@ -14,6 +14,9 @@
 	//IBOutlet PSRefSelectorController *refSelectorController;
 	IBOutlet UITableView *chapterTable;
 	IBOutlet id viewController;
+
+	int currentChapter;
+	BOOL needToScroll;
 }
 
 @property (retain, readwrite) SwordBook *book;

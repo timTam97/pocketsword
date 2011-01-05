@@ -14,8 +14,6 @@
 
 @synthesize moduleName;
 
-NSArray *fontStrings;
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];

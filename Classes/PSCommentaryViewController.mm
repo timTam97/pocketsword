@@ -18,10 +18,10 @@
 @synthesize jsToShow;
 @synthesize isFullScreen;
 
-bool comm_initialised = false;
-
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	isFullScreen = NO;
+	//comm_initialised = false;
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 }
@@ -46,13 +46,13 @@ bool comm_initialised = false;
 	self.jsToShow = nil;
 }
 
-- (void)awakeFromNib {
-	[super awakeFromNib];
-	if(!comm_initialised) {
-		isFullScreen = NO;
-		comm_initialised = true;
-	}
-}
+//- (void)awakeFromNib {
+//	[super awakeFromNib];
+//	if(!comm_initialised) {
+//		isFullScreen = NO;
+//		comm_initialised = true;
+//	}
+//}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

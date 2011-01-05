@@ -15,9 +15,6 @@
 
 @synthesize book;
 
-int currentChapter;
-BOOL needToScroll;
-
 - (void)setBookAndInit:(SwordBook*)newBook {
 	self.book = newBook;
 	needToScroll = YES;

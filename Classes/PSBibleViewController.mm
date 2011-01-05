@@ -21,22 +21,22 @@
 @synthesize tappedVerse;
 @synthesize isFullScreen;
 
-bool bib_initialised = false;
+//bool bib_initialised = false;
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 	bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
-
+	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
 }
 
-- (void)awakeFromNib {
-	[super awakeFromNib];
-	if(!bib_initialised) {
-		isFullScreen = NO;
-		bib_initialised = true;
-	}
-}
+//- (void)awakeFromNib {
+//	[super awakeFromNib];
+//	if(!bib_initialised) {
+//		isFullScreen = NO;
+//		bib_initialised = true;
+//	}
+//}
 
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.

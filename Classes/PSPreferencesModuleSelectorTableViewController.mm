@@ -15,8 +15,6 @@
 @synthesize moduleList;
 @synthesize currentModule;
 
-SEL moduleChanged;
-
 - (void)setTableType:(ModuleFeatureRequired)feature {
 	tableType = feature;
 }

@@ -11,7 +11,6 @@
 #import "PSSearchController.h"
 
 @interface PSIndexController : UIViewController {
-	//IBOutlet PSModuleController *moduleManager;
 	PSSearchController *searchController;
 
 	NSArray *downloadableIndices;
@@ -36,6 +35,11 @@
 	IBOutlet UILabel *statusOverallText;
 	IBOutlet UIProgressView *statusBar;
 	IBOutlet UIProgressView *statusOverallBar;
+
+	int tableSections;
+	BOOL installedShown;
+	BOOL unavailableShown;
+	BOOL downloadableShown;
 }
 
 @property (retain, readwrite) NSArray *downloadableIndices;

@@ -20,8 +20,8 @@
 	
 	UIView *helpView;
 	NSString *searchTerm;
+	BOOL searchingEnabled;
 
-	//SwordListKey *results;
 	NSMutableArray *results;
 }
 

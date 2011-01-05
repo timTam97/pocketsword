@@ -86,7 +86,6 @@ rp { display: none; }\n"
 @synthesize currentInstallSource;
 @synthesize busyTimer;
 
-float installationProgress;
 
 static PSModuleController *instance;
 /** the singleton instance */

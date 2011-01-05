@@ -7,7 +7,6 @@
 //
 
 
-
 @interface PSDictionaryEntryViewController : UIViewController {
 	IBOutlet UIToolbar	*dictionaryDescriptionToolbar;
 	IBOutlet UIWebView	*dictionaryDescriptionWebView;
@@ -33,6 +32,9 @@
 	BOOL searching;
 	BOOL letUserSelectRow;
 	NSMutableArray *searchResults;
+	BOOL dictionaryEnabled;
+
+	id overlayViewController;
 }
 
 - (void)reloadDictionaryData;

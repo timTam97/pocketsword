@@ -17,11 +17,6 @@
 @synthesize unavailableIndices;
 @synthesize files;
 
-int tableSections;
-BOOL installedShown;
-BOOL unavailableShown;
-BOOL downloadableShown;
-
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	//i18n of title

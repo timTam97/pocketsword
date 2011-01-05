@@ -14,24 +14,6 @@
 
 @implementation PSBookmarksViewController
 
-
-#pragma mark -
-#pragma mark Initialization
-
-/*
-- (id)initWithStyle:(UITableViewStyle)style {
-    // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-    if ((self = [super initWithStyle:style])) {
-    }
-    return self;
-}
-*/
-
-
-#pragma mark -
-#pragma mark View lifecycle
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -40,8 +22,6 @@
 	bookmarksNavItem.leftBarButtonItem = btn;
 	[btn release];
 }
-
-
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

@@ -21,6 +21,7 @@ typedef enum {
 	ModuleFeatureRequired tableType;
 	NSArray *moduleList;
 	NSString *currentModule;
+	SEL moduleChanged;
 }
 
 @property (retain) NSArray *moduleList;

@@ -30,18 +30,6 @@
 #import "PSRefSelectorController.h"
 
 @interface PSModuleController : NSObject {
-	// IB Outlets
-	//IBOutlet UIWebView *bibleWebView;
-	//IBOutlet UIWebView *commentaryWebView;
-	
-	//IBOutlet UIBarButtonItem *bibleTitle;
-	//IBOutlet UIBarButtonItem *commentaryTitle;
-	//IBOutlet UIBarButtonItem *dictionaryTitle;
-
-	//IBOutlet id bookmarkAddButton;
-	
-	//IBOutlet id viewController;
-	//IBOutlet PSRefSelectorController *refSelectorController;
 	
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;
@@ -53,6 +41,7 @@
 	SwordInstallSource *currentInstallSource;
 
 	NSTimer *busyTimer;
+	float installationProgress;
 }
 
 @property (assign) SwordModule *primaryBible;

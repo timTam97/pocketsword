@@ -6,8 +6,6 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-//#import <UIKit/UIKit.h>
-
 
 @interface PSCommentaryViewController : UIViewController <UIWebViewDelegate> {
 	IBOutlet UITabBarItem				*commentaryTabBarItem;
@@ -22,6 +20,7 @@
 	NSString *jsToShow;
 	BOOL isFullScreen;
 	UIView *previousTabBarView;
+	//bool comm_initialised;
 }
 
 @property (copy, readwrite) NSString *refToShow;

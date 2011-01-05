@@ -16,8 +16,6 @@
 @synthesize results;
 @synthesize searchTerm;
 
-BOOL searchingEnabled;
-
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");

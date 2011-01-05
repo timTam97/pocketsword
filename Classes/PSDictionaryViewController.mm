@@ -14,8 +14,6 @@
 
 @implementation PSDictionaryViewController
 
-BOOL dictionaryEnabled = NO;
-PSDictionaryOverlayViewController *overlayViewController;
 
 - (void)primaryDictionaryChanged {
 	[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
@@ -141,6 +139,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
 	searching = NO;
 	letUserSelectRow = YES;
+	dictionaryEnabled = NO;
 	searchResults = [[NSMutableArray alloc] init];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryData) name:NotificationReloadDictionaryData object:nil];
@@ -261,16 +260,16 @@ PSDictionaryOverlayViewController *overlayViewController;
 		
 		//Parameters x = origion on x-axis, y = origon on y-axis.
 		CGRect frame = CGRectMake(0, yaxis, width, height);
-		overlayViewController.view.frame = frame;
+		((PSDictionaryOverlayViewController*)overlayViewController).view.frame = frame;
 		
-		overlayViewController.dictionaryViewController = self;
+		((PSDictionaryOverlayViewController*)overlayViewController).dictionaryViewController = self;
 	}
 
 	searching = YES;
 
 	if([dictionarySearchBar.text length] <= 0) {
 		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-		[dictionaryEntriesTable insertSubview:overlayViewController.view aboveSubview:self.parentViewController.view];
+		[dictionaryEntriesTable insertSubview:((PSDictionaryOverlayViewController*)overlayViewController).view aboveSubview:self.parentViewController.view];
 		letUserSelectRow = NO;
 		dictionaryEntriesTable.scrollEnabled = NO;
 	} else {
@@ -300,14 +299,14 @@ PSDictionaryOverlayViewController *overlayViewController;
 	[searchResults removeAllObjects];
 	
 	if([searchText length] > 0) {
-		[overlayViewController.view removeFromSuperview];
+		[((PSDictionaryOverlayViewController*)overlayViewController).view removeFromSuperview];
 		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 		searching = YES;
 		letUserSelectRow = YES;
 		dictionaryEntriesTable.scrollEnabled = YES;
 		[self searchDictionaryEntries];
 	} else {
-		[dictionaryEntriesTable insertSubview:overlayViewController.view aboveSubview:self.parentViewController.view];
+		[dictionaryEntriesTable insertSubview:((PSDictionaryOverlayViewController*)overlayViewController).view aboveSubview:self.parentViewController.view];
 		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
 		searching = YES;
 		letUserSelectRow = NO;
@@ -335,7 +334,7 @@ PSDictionaryOverlayViewController *overlayViewController;
 	searching = NO;
 	dictionaryEntriesTable.scrollEnabled = YES;
 	
-	[overlayViewController.view removeFromSuperview];
+	[((PSDictionaryOverlayViewController*)overlayViewController).view removeFromSuperview];
 	[overlayViewController release];
 	overlayViewController = nil;
 	//[dictionaryNavItem setLeftBarButtonItem:nil animated:YES];
