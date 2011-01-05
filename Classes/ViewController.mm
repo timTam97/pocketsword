@@ -147,6 +147,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addModuleButtonPressed) name:NotificationShowDownloadsTab object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayCommentaryTabViaNotification) name:NotificationShowCommentaryTab object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBibleTabViaNotification) name:NotificationShowBibleTab object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchToFullscreen) name:NotificationSwitchToFullscreen object:nil];
 		//[pool release];
@@ -473,7 +474,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)displayCommentaryTabViaNotification {
-	[self setShownTabTo:CommentaryTab];
+	[self setShownTabTo:CommentaryTab];//setShownTabTo:BibleTab
+}
+
+- (void)displayBibleTabViaNotification {
+	[self setShownTabTo:BibleTab];
 }
 
 - (IBAction)toggleNavigation {

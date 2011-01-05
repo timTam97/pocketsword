@@ -124,6 +124,7 @@ typedef enum {
 
 #define NotificationShowDownloadsTab			@"NotificationShowDownloadsTab"
 #define NotificationShowCommentaryTab			@"NotificationShowCommentaryTab"
+#define NotificationShowBibleTab				@"NotificationShowBibleTab"
 
 #define NotificationBibleToggleFullscreen		@"NotificationBibleToggleFullscreen"
 #define NotificationCommentaryToggleFullscreen	@"NotificationCommentaryToggleFullscreen"

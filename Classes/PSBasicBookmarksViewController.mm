@@ -255,7 +255,8 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[viewController setShownTabTo:BibleTab];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
+	//[viewController setShownTabTo:BibleTab];
 	if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
 		NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
 		NSString *ref = [fullRef objectAtIndex: 0];
