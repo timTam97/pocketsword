@@ -6,13 +6,13 @@
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSBookmarksViewController.h"
+#import "PSBasicBookmarksViewController.h"
 #import "PSModuleController.h"
 #import "HistoryController.h"
 #import "globals.h"
 #import "PSResizing.h"
 
-@implementation PSBookmarksViewController
+@implementation PSBasicBookmarksViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -66,11 +66,15 @@
 	}
 }
 
++ (void)_addBookmark:(NSString*)ref {
+	
+}
+
 + (void)addBookmarkForRef:(NSString*)bookAndChapterRef withVerse:(NSString*)verse {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *ref = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSMutableArray *bookmarks = [[defaults arrayForKey: @"bookmarks2"] mutableCopy];
 	
 	if (!bookmarks) {

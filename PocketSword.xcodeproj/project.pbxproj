@@ -601,8 +601,8 @@
 		054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
 		054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
-		054BEE6311A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */; };
-		054BEE6411A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */; };
+		054BEE6311A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */; };
+		054BEE6411A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */; };
 		054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
 		054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570211AE0E6B00633371 /* VerseEnumerator.mm */; };
 		054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
@@ -625,6 +625,8 @@
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
+		05781F2B12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
+		05781F2C12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
 		059A6CC111B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
 		059A6CC211B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
 		059A6CC311B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
@@ -1270,8 +1272,8 @@
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
 		054BED9B119F89E800ABCA18 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
-		054BEE6111A3A2F300ABCA18 /* PSBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksViewController.h; path = Classes/PSBookmarksViewController.h; sourceTree = "<group>"; };
-		054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarksViewController.mm; path = Classes/PSBookmarksViewController.mm; sourceTree = "<group>"; };
+		054BEE6111A3A2F300ABCA18 /* PSBasicBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBasicBookmarksViewController.h; path = Classes/PSBasicBookmarksViewController.h; sourceTree = "<group>"; };
+		054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBasicBookmarksViewController.mm; path = Classes/PSBasicBookmarksViewController.mm; sourceTree = "<group>"; };
 		054BEF1311A4E77300ABCA18 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		054BEF1411A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054BEF1511A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -1324,8 +1326,10 @@
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
-		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleUnlockViewController.h; sourceTree = "<group>"; };
-		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
+		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
+		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
+		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
+		05781F2A12D42819005F4890 /* PSBookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmark.m; path = Classes/PSBookmark.m; sourceTree = "<group>"; };
 		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "changes-v1.3.x.txt"; path = "Resources/doc/changes-v1.3.x.txt"; sourceTree = "<group>"; };
 		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
@@ -2656,8 +2660,10 @@
 		054C55BA11AD0A8B00633371 /* bookmarks */ = {
 			isa = PBXGroup;
 			children = (
-				054BEE6111A3A2F300ABCA18 /* PSBookmarksViewController.h */,
-				054BEE6211A3A2F300ABCA18 /* PSBookmarksViewController.mm */,
+				054BEE6111A3A2F300ABCA18 /* PSBasicBookmarksViewController.h */,
+				054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */,
+				05781F2912D42819005F4890 /* PSBookmark.h */,
+				05781F2A12D42819005F4890 /* PSBookmark.m */,
 			);
 			name = bookmarks;
 			sourceTree = "<group>";
@@ -3785,7 +3791,7 @@
 				054BED8B119F89E800ABCA18 /* PSChapterSelectorController.mm in Sources */,
 				054BED8C119F89E800ABCA18 /* PSVerseSelectorController.mm in Sources */,
 				054BED8D119F89E800ABCA18 /* PSDictionaryOverlayViewController.m in Sources */,
-				054BEE6411A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */,
+				054BEE6411A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */,
 				054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570611AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */,
@@ -3794,6 +3800,7 @@
 				0502EC7A12B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 				0502EEEC12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 				05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
+				05781F2C12D42819005F4890 /* PSBookmark.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4112,7 +4119,7 @@
 				05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */,
 				05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */,
 				05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */,
-				054BEE6311A3A2F300ABCA18 /* PSBookmarksViewController.mm in Sources */,
+				054BEE6311A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */,
 				054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */,
@@ -4121,6 +4128,7 @@
 				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 				0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 				05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
+				05781F2B12D42819005F4890 /* PSBookmark.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
