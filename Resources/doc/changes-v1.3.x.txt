@@ -1,4 +1,9 @@
 
+New in v1.3.6
+- Fixed a bug that prevented the unlocking of locked modules.
+- Fixed a bug with the display of Strong's Numbers in certain Bibles.
+- Fixed a bug present when the device is set to use Romanian.
+
 New in v1.3.5
 - Quick access to the preferences for the currently loaded Bible via the Module Button in the top right corner of the Bible Tab (see the new toolbar at the bottom of that module list).
 - 3-finger downward swipe in the Bible Tab brings up all the preferences for the currently loaded Bible.
