@@ -1,0 +1,229 @@
+﻿/*
+	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
+	Copyright (C) 2008-2010 CrossWire Bible Society
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License along
+	with this program; if not, write to the Free Software Foundation, Inc.,
+	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// English localisation
+// By Nic Carter
+// Last Updated HG
+
+"Edit" = "Broyta";
+"Done" = "Gjørt";
+"Module Download" = "Taka niður modul";
+"Installing" = "Verður lagt inn";
+"Yes" = "Ja";
+"No" = "Nei";
+"ConfirmInstall" = "Vilt tú leggja modulið inn?";
+"Next" = "Næsta";
+"Previous" = "Undanfarna";
+
+"Ok" = "Ok";
+"Cancel" = "Avbrót";
+"Error" = "Feilur";
+
+// Module About
+"AboutModuleName" = "Navn á moduli: ";
+"AboutModuleDescription" = "Lýsing: ";
+"AboutModuleType" = "Slag: ";
+"AboutModuleLang" = "Mál: ";
+"AboutModuleVersion" = "Versión: ";
+"AboutModuleVersionUnspecified" = "(ógreinað)";
+"AboutModuleAboutText" = "Um: ";
+"AboutModuleLicence" = "Útbreiðslulisensur: ";
+"AboutModuleLCSH" = "Library of Congress Subject Heading: ";
+
+
+"Disclaimer" = "Ábyrgdarfráskriving";
+"DisclaimerMsg" = "      -=+* ÁVARÐING *+=-\nSjálvt um 'Install Manager' er ein smidligur máti at leggja inn og upstiga 'SWORD components', so brúkar tað ein hátt til at fara inn á netstøð, sum gevur 'packet sniffer' møguleikar at misnýta - um illa vil til. \nHETTA ER SERLIGA VIÐKOMANDI UM TÚ BÝRT Í EINUM LANDI HAR TRÚÐARFRÆLSI IKKI VERÐUR VIRT OG TÁ EIGUR TÚ IKKI AT BRÚKA 'INSTALL MANAGER' REMOTE SOURCE HENTLEIKAR. \nEisini 'Remote Sources' aðrir enn Crosswire kunnu innihalda modul sum ikki hava nøktandi góðsku ella sum tað ikki er loyvt at útbreiða lógliga. Hesi eru ikki kannaði av av CrossWire og CrossWire kann ikki taka ábyrgd av tí. CAVEAT EMPTOR.\nSkilir tú hetta og ert tú tilreiðar at byrja 'Remote source' hentleikar?";
+
+"WebNoIP" = "Web: Ikki gjørtligt at áseta uttanhýsis IP\n";
+"WiFiNoConnection" = "Wifi: Onki samband\n";
+"NoNetworkConnection" = "Onki netsamband tøkt.";
+
+"manualInstallHelp" = "Fyri manuelt at leggja inn modul er neyðugt við web kagara at velja eitt av støðunum niðanfyri og fylgja møguleikunum har (ella bara at søkja eftir tínari IPhone við at brúka 'Bonjour!'). Tó, mælt verður til at brúka innbygda innleggjaran - hesin manuelli innleggjarin er einans ætlaður fyri brúkarar sum gera teirra egnu modul.";
+"InstallManagerDisabled" = "óvirkin...";
+"InstallTitle" = "Legg inn?";
+"files" = "fílur";
+"InstallProblem" = "Ein trupulleiki er íkomin undir innleggingini.";
+"InstalledButtonTitle" = "Lagt inn";
+"InstallButtonTitle" = "Legg inn";
+"RefreshProblem" = "Ein trupulleiki íkom meðan roynt var av nýggjum.";
+"RefreshingModuleSource" = "Royn umaftur modulkeldur";
+"NoModulesRefresh" = "Onki modul her. Royn umaftur.";
+"NoModulesInstalled" = "Modul ikki løgd inn.";
+
+"InstallSourcesTitle" = "Tikið niður";//changes for v.1.3.3ish
+"PreferencesTitle" = "Uppseting";
+ "PreferencesDisplayPreferencesTitle" = "Vís uppseting";
+"PreferencesDevicePreferencesTitle" = "Tóluppseting";
+"PreferencesFontSizeTitle" = "Bókstavastødd";
+"PreferencesNightModeTitle" = "Kvøldarstøða";
+"PreferencesVPLTitle" = "vers á hvørji linju";
+"PreferencesFontTitle" = "Stavur";
+"PreferencesRedLetterTitle" = "Reyðir bókstarvir";
+ PreferencesRedLetterNote" = "Gev gætur at 'reyðir bókstavir'-støða einans er tøk fyri ávís modul";
+"PreferencesDisableAutoLockTitle" = "Ger auto-lock óvirki";
+"PreferencesModuleMaintainerModeTitle" = "Modulumsitingarstøða";
+"PreferencesModuleMaintainerModeNote" = "Gev gætur at modulumsitingarstøða er fyri brúkarar, sum gera teirra egnu modul og vilja hava ein hátt til manuelt at leggja inn teirra egnu modul. Fyri allar aðrar brúkarar verður mælt til at brúka innbyggja forritið til at taka niður fílur frá Crosswire.";
+
+"AboutTitle" = "Um";
+
+"TabBarTitleBible" = "Bíblia";
+"TabBarTitleCommentary" = "Kommentarir";
+"TabBarTitleDictionary" = "Orðabók";
+"TabBarTitleModules" = "Modulir";
+"TabBarTitlePreferences" = "Uppseting";
+"TabBarTitleAbout" = "Um";
+
+"ModulesTitle" = "Modulir";
+"BookmarksTitle" = "Bókamerki";
+
+"ActivityLabelLoading" = "Innlesur...";
+"MMMBonjourLoading" = "Innlesur Bonjour...";
+"MMMIPLoading" = "IP verður innlisið...";
+
+"Biblical Texts" = "Bíbilskir tekstir";
+"Commentaries" = "Kommentarir";
+"Lexicons / Dictionaries" = "Leksikon / Orðabøkur";
+"Generic Books" = "Aðrar bøkur";
+"Daily Devotional" = "Dagligt andaktstilfar";
+"Glossaries" = "Uppslagstilfar";
+"Cults / Unorthodox / Questionable Material" = "Kultir / Ivasamt tilfar";
+"Essays" = "Stuttar frágreiðingar";
+"Maps" = "Kort";
+"Images" = "Myndir";
+
+"BibleHistoryTitle" = "Bíbliusøga";
+"CommentaryHistoryTitle" = "Kommentarsøga";
+
+"None" = "Ongin";
+"CloseButtonTitle" = "Lat aftur";
+"CacheDictionaryKeysTitle" = "Goym?";
+"CacheDictionaryKeysMsg" = "Henda orðabókin er ikki gjørd klár enn, vilt tú goyma orðabókina nú?";
+"IndexDownloadTitle" = "Takk niður leitiyvirlit/indeks";
+"NoSearchIndexTitle" = "Onki leitiyvirlit/indeks";
+"NoSearchIndexMsg" = "Tú hevur onki leitiyvirlit/indeks lagt inn fyri hetta modulið. Ynskir tú at kanna um tað eru tøkir leitimøguleikar?";
+"SearchDownloaderTitle" = "Leita eftir";
+"FontPreferenceTitle" = "Bókstavur";
+"EmailUsButton" = "Send t-post til okkara";
+"NoSearchIndexInstalled" = "Onki leitiyvirlit/indeks lagt inn";
+"SearchResults" = "Úrslit";
+
+"IndexControllerInstalled" = "Tú hevur longu lagt inn eitt leitiyvirlit/indeks fyri:";
+"IndexControllerDownloadable" = "Vel eitt leitiyvirlit/indeks at taka niður frá fylgjandi lista fyri at kunna gera leitimøguleikar fyri modulið virknar:";
+"IndexControllerNone" = "Kanna netsamband fyri at kunna leita:";
+"IndexControllerNoneRemote" = "Í løtuni er ikki møguligt at taka niður ein leitiyvirlit/indeks fyri:";
+
+"SearchHelpTitle" = "Leitihjálp";
+"IndexControllerConfirmQuestion" = "Ynskir tú at taka niður leitiyvirlit/indeks fyri hetta modulið?\nTHetta kann taka ein løtu fyri Kommentar modulið!";
+
+"PreferencesStrongsPreferencesTitle" = "Strong's Nummør";
+"PreferencesDisplayTitle" = "Vís";
+"PreferencesGreekModuleTitle"= "Grikst modul";
+"PreferencesHebrewModuleTitle" = "Hebraiskt modul";
+"PreferencesMorphologyPreferencesTitle" = "Morfologi uppseting";
+"PreferencesOriginalLanguagePreferencesTitle" = "Upprunamál";
+"PreferencesGreekAccentsTitle" = "Grisk úttalutekn";
+"PreferencesHVPTitle" = "Hebraisk sjálvljóðstekn";
+"PreferencesHebrewCantillationTitle" = "Hebraisk Cantillation (sanguppseting)";
+"PreferencesGreekStrongsLexiconTitle" = "Strong's leksikon á griskum";
+"PreferencesHebrewStrongsLexiconTitle" = "Strong's leksikon á hebraiskum";
+ "PreferencesGreekMorphLexiconTitle" = "Grikst morfologiskt leksikon";
+"PreferencesCrossReferencesTitle" = "Krosstilvísingar";
+"PreferencesFootnotesTitle" = "Fótnotur";
+
+"NoHebrewStrongsNumbersModuleInstalled" = "Strong's leksikon á hebraiskum er ikki innlisið. Tú kanst leggja tað inn (t.d. 'strongshebrew') við Meiri->Tak niður knøttinum.";
+ "NoGreekStrongsNumbersModuleInstalled" = "Strong's leksikon á griskum er ikki innlisið. Tú kanst leggja tað inn (t.d 'strongsgreek') við Meiri->Takk niður knøttinum.";
+
+"NoMorphGreekModuleInstalled" = "Onki grikst morfologisk leksikon lagt inn. Legg inn (t.d 'Robinson') við Meiri->Tak niður knøttinum";
+"MorphHebrewNotSupported" = "Tíverri eru morfologisku koturnar einans tøkar fyri grisk orð.  Um tú hevur neyðugu málførleikarnar og er til reiðar at hjálpa til við at fáa henda hentleikan - hygg so eftir <br /> openscriptures.org<br />and kom við í tjakbólkin har.";
+
+"AboutModuleFeaturesTitle" = "Modul hendleikar";
+"AboutModuleContainsStrongsNumbers" = "Inniheldur Strong's nummør";
+"AboutModuleContainsMorphTags" = "Inniheldur morfologisk merkir";
+"AboutModuleContainsFootnotes" = "Inniheldur fótnotur";
+"AboutModuleContainsHeadings" = "Inniheldur yvirskriftir";
+"AboutModuleContainsRedLetterWords" = "Orð Jesusar við reyðum";
+"AboutModuleContainsVariants" = "Inniheldur tekstfrábrigdi";
+"AboutModuleContainsGreekAccents" = "Contains Greek Accents";
+"AboutModuleContainsScriptref" = "Contains Scriptual Cross-References";
+"AboutModuleContainsLemma" = "Navnháttur";
+"AboutModuleContainsCantillation" = "Inniheldur 'Cantillation' (sanguppsetingar) merki";
+"AboutModuleContainsHebrewPoints" = "Inniheldur hebraisk tekn";
+"AboutModuleContainsMorphSegmentation" = "Hetta er ein 'morpheme'-uppbýttur hebraiskur tekstur";
+"AboutModuleContainsGreekDef" = "Lýsir Strong's grisku nummør";
+"AboutModuleContainsHebrewDef" = "Lýsir Strong's hebraisku nummør";
+"AboutModuleContainsGreekParse" = "Lýsir griskar morfologiskar greiningarkotur";
+"AboutModuleContainsHebrewParse" = "Lýsir hebraiskar morfologiskar greiningarkotur";
+"AboutModuleContainsDailyDevotion" = "Inniheldur dagligt andaktsstykkið";
+"AboutModuleContainsImages" = "Inniheldur myndir";
+
+"NotSupported" = "Hetta modulið kann ikki brúkast";
+"ConfirmDeleteTitle" = "Tak burtur?";
+"ConfirmDeleteQuestion" = "Ert tú vissur í at hetta modulið skal takast burtur?";
+"EmptyChapterWarning" = "Hesin kapitullin er tómur viðvíkjandi hesum modulinum.";
+"ModuleNotInstalled" = "er ikki lagt inn.";
+"AboutModuleCurrentVersion" = "Innløgd versión: ";
+
+// new v1.2.2 strings:
+"ModuleLockedTitle" = "Modulið er læst";
+"ModuleLockedQuestion" = "Hetta modulið er læst í løtuni. Tú mást keypa ein lykil fyri at lata tað upp. Tíverri ber tað ikki til í løtuni at gera tað ígjøgnum PocketSword. Les lýsingina av hesum modulinum fyri at finna út av, hvussu tað kann keypast.\n  Um tú longu hevur keypt ein lykil ber til at seta inn lykil fyri at lata modulið upp. Ynskir tú at seta lykil inn nú?";
+"ModuleEnterKeyTitle" = "Skriva lykil:";
+"ModuleUnlockScreenTitle" = "Læs upp modulið";
+"ModuleUnlockHelpText" = "Fyri at læsa upp modulið er neyðugt at skriva inn lykil tú fekst sendandi tá tú keyptið mobulið. Trýst á 'Gjørt' fyri at kanna lykilin og trýst á 'Goym' um tað sær rætt út.";
+"RefSelectorBookTitle" = "Vel bók";
+"RefSelectorChapterTitle" = "Kapittul";
+"RefSelectorVerseTitle" = "Vers";
+"RefSelectorBackButtonTitle" = "Aftur";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Yvirskrift";
+"DictionarySearchPlaceholderText" = "Leita í orðabók";
+"TabBarTitleDevotional" = "Andaktstilfar";
+"TodayButtonTitle" = "Í dag";
+"ManageSources" = "Umsit keldur";
+"AddFTPSource" = "Legg afturat FTP-keldu";
+"AddHTTPSource" = "Legg afturat HTTP-keldu";
+"DeleteSource" = "Strika keldu";
+"RefreshSourceList" = "Endurnýggja keldulista";
+"AddSourceCaptionTitle" = "Keldunavn";
+"AddSourceServerTitle" = "Ambætari";
+"AddSourcePathTitle" = "Slóð";
+"AddFTPSourceTitle" = "Nýggj FTP kelda";
+"AddHTTPSourceTitle" = "Nýggj HTTP kelda";
+"FillInAllFieldsMessage" = "Tú mást fulla út øll feltini!";
+"Warning" = "Ávarðing";
+"CannotVerifyInstallSourceWarning" = "PocketSword kann ikki sanna at talan er um gyldug modul.  Ynskir tú at goyma hóast hetta?";
+
+// new v1.3.2 strings:
+"AboutModuleLocked" = "** Gev gærur at hetta modulið er læst og at tú mást keypa ein lykil á heimasíðuni hjá útgevaranum. Sí meiri niðanfyri. **";
+"UpgradeButtonTitle" = "Sett ístaðin";
+"ConfirmUpgrade" = "Vilt tú skifta hetta modulið út við tøku versiónina?";
+
+"VerseContextualMenuAddBookmark" = "Sett bókamerki";
+"VerseContextualMenuCommentary" = "Skoða í kommentari";
+
+// new v1.3.3 strings:
+"VoiceOverPreviousChapterButton" = "Undanfarni kapittul";
+"VoiceOverNextChapterButton" = "Næsti kapittul";
+"VoiceOverHistoryAndSearchButton" = "Søga og leita";
+"InstallManagerDownloadsHint" = "Tú kanst taka niður eyka modulir fyri øllum keldunum niðanfyri:";
+"ModuleTypesHeaderText" = "Vel modulslag:";
+"ModuleLanguagesHeaderText" = "Vel mál:";
+"PreferencesModulePreferencesTitle" = "Moduluppseting";
+"PreferencesFullscreenModeTitle" = "Sjálvvirkandi fullan skerm";
+"PreferencesFullscreenNote" = "Við sjálvvirkandi fullari skermmynd sligið frá, kanst tú framvegis skifta til og frá fullum skermi, við at sláa við tveimum fingrum á Bíbliu og Kommentar knøttarnar.";
