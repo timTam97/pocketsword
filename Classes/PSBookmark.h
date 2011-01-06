@@ -6,18 +6,13 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
+#import "PSBookmarkObject.h"
 
-@interface PSBookmark : NSObject {
-	NSString *name;
-	NSDate *dateAdded;
-	NSDate *dateLastAccessed;
-	CGFloat red,green,blue,alpha;
-	BOOL highlight;
-
-	// if this is a folder, ref will be nil & children may contain more bookmarks
-	// if this is a bookmark proper, children will be nil & ref cannot be nil!
-	NSArray *children;
+@interface PSBookmark : PSBookmarkObject {
+	
 	NSString *ref;
 }
+
+@property (retain, readwrite) NSString *ref;
 
 @end

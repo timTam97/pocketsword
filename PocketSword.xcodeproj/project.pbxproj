@@ -64,6 +64,14 @@
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
 		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
 		0515E2D310C8E32900F58382 /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
+		051B4BD112D555C1004982A7 /* PSBookmarksController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BD012D555C1004982A7 /* PSBookmarksController.mm */; };
+		051B4BD212D555C1004982A7 /* PSBookmarksController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BD012D555C1004982A7 /* PSBookmarksController.mm */; };
+		051B4BE812D5A2E5004982A7 /* PSBookmarkObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */; };
+		051B4BE912D5A2E5004982A7 /* PSBookmarkObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */; };
+		051B4BF712D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */; };
+		051B4BF812D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */; };
+		051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */; };
+		051B4C0D12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
@@ -870,6 +878,14 @@
 		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
 		0513AE8310C0DC3900E414D9 /* forward-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "forward-white.png"; path = "Resources/forward-white.png"; sourceTree = "<group>"; };
 		0515E2D210C8E32900F58382 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Downloader.xib; sourceTree = "<group>"; };
+		051B4BCF12D555C1004982A7 /* PSBookmarksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksController.h; path = Classes/PSBookmarksController.h; sourceTree = "<group>"; };
+		051B4BD012D555C1004982A7 /* PSBookmarksController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarksController.mm; path = Classes/PSBookmarksController.mm; sourceTree = "<group>"; };
+		051B4BE612D5A2E5004982A7 /* PSBookmarkObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkObject.h; path = Classes/PSBookmarkObject.h; sourceTree = "<group>"; };
+		051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkObject.m; path = Classes/PSBookmarkObject.m; sourceTree = "<group>"; };
+		051B4BF512D5A6B6004982A7 /* PSBookmarkFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolder.h; path = Classes/PSBookmarkFolder.h; sourceTree = "<group>"; };
+		051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolder.m; path = Classes/PSBookmarkFolder.m; sourceTree = "<group>"; };
+		051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksNavigatorController.h; path = Classes/PSBookmarksNavigatorController.h; sourceTree = "<group>"; };
+		051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarksNavigatorController.m; path = Classes/PSBookmarksNavigatorController.m; sourceTree = "<group>"; };
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -2662,8 +2678,16 @@
 			children = (
 				054BEE6111A3A2F300ABCA18 /* PSBasicBookmarksViewController.h */,
 				054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */,
+				051B4BE612D5A2E5004982A7 /* PSBookmarkObject.h */,
+				051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */,
+				051B4BF512D5A6B6004982A7 /* PSBookmarkFolder.h */,
+				051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */,
 				05781F2912D42819005F4890 /* PSBookmark.h */,
 				05781F2A12D42819005F4890 /* PSBookmark.m */,
+				051B4BCF12D555C1004982A7 /* PSBookmarksController.h */,
+				051B4BD012D555C1004982A7 /* PSBookmarksController.mm */,
+				051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */,
+				051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */,
 			);
 			name = bookmarks;
 			sourceTree = "<group>";
@@ -3801,6 +3825,10 @@
 				0502EEEC12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 				05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
 				05781F2C12D42819005F4890 /* PSBookmark.m in Sources */,
+				051B4BD212D555C1004982A7 /* PSBookmarksController.mm in Sources */,
+				051B4BE912D5A2E5004982A7 /* PSBookmarkObject.m in Sources */,
+				051B4BF812D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */,
+				051B4C0D12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4129,6 +4157,10 @@
 				0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 				05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
 				05781F2B12D42819005F4890 /* PSBookmark.m in Sources */,
+				051B4BD112D555C1004982A7 /* PSBookmarksController.mm in Sources */,
+				051B4BE812D5A2E5004982A7 /* PSBookmarkObject.m in Sources */,
+				051B4BF712D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */,
+				051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

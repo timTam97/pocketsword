@@ -11,4 +11,13 @@
 
 @implementation PSBookmark
 
+@synthesize ref;
+
+- (void)dealloc {
+	self.ref = nil;
+	[super dealloc];
+}
+
+
+
 @end
