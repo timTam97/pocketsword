@@ -102,7 +102,7 @@ int32_t SegmentTermVector::indexOf(const TCHAR* termText) {
 }
 
 void SegmentTermVector::indexesOf(const TCHAR** termNumbers, const int32_t start, const int32_t len, Array<int32_t>& ret) {
-	// TODO: there must be a more efficient way of doing this.
+	//		 there must be a more efficient way of doing this.
 	//       At least, we could advance the lower bound of the terms array
 	//       as we find valid indexes. Also, it might be possible to leverage
 	//       this even more by starting in the middle of the termNumbers array

@@ -245,7 +245,7 @@ void DocumentWriter::invertDocument(const Document* doc) {
 						// this call tries to read the entire stream
 						// this may invalidate the string for the further calls
 						// it may be better to do this via a FilterReader
-						// TODO make a better implementation of this
+						// make a better implementation of this
 						dataLen = r->read(charBuf, LUCENE_INT32_MAX_SHOULDBE);
 						if (dataLen == -1)
 							dataLen = 0;

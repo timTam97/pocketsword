@@ -76,7 +76,7 @@ bool SegmentMergeInfo::next() {
 		term = termEnum->term();
 		return true;
 	} else {
-		_CLDECDELETE(term); //TODO: test HighFreqTerms errors with this
+		_CLDECDELETE(term); // test HighFreqTerms errors with this
 		term = NULL;
 		return false;
 	}

@@ -54,7 +54,7 @@ public:
 	     * useful for long documents and for binary valued fields.
 	     * NOTE: CLucene does not directly support compressed fields, to store a
 	     * compressed field. 
-	     * //TODO: need better documentation on how to add a compressed field
+	     * // need better documentation on how to add a compressed field
 	     * //because actually we still need to write a GZipOutputStream...
 	     */
 	    STORE_COMPRESS=4
