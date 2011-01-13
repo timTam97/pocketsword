@@ -7,14 +7,29 @@
 //
 
 #import "PSBookmarksNavigatorController.h"
+#import "PSBookmark.h"
+#import "PSModuleController.h"
+#import "HistoryController.h"
+//#import "globals.h"
 
 
 @implementation PSBookmarksNavigatorController
 
+@synthesize bookmarkFolder, isAddingBookmark, parentFolders;
 
 #pragma mark -
 #pragma mark Initialization
 
+- (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString {
+	self = [super initWithStyle:UITableViewStyleGrouped];
+	if(self) {
+		self.bookmarkFolder = folder;
+		isAddingBookmark = NO;
+		self.editing = NO;
+		parentFolders = [parentFoldersString copy];
+	}
+	return self;
+}
 /*
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -30,20 +45,20 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-/*
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	if(bookmarkFolder) {
+		self.navigationItem.title = bookmarkFolder.name;
+	}
 }
-*/
 
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
-*/
+
 /*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -71,15 +86,41 @@
 #pragma mark -
 #pragma mark Table view data source
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		cell.backgroundColor = [UIColor blackColor];
+	} else {
+		cell.backgroundColor = [UIColor whiteColor];
+	}
+	
+	if(indexPath.section == 1) {
+		cell.backgroundColor = [UIColor blueColor];
+	}
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 1;
+	if(self.editing || self.isAddingBookmark) {
+		return 2;
+	} else {
+		return 1;
+	}
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 0;
+	if(section == 0) {
+		if(isAddingBookmark) {
+			return [[bookmarkFolder folders] count];
+		} else {
+			return [bookmarkFolder.children count];
+		}
+//	} else if(self.editing) {
+//		return 1;
+	} else {
+		return 1;//0;
+	}
 }
 
 
@@ -90,25 +131,56 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
     
     // Configure the cell...
-    
-    return cell;
+	PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
+	
+	if(indexPath.section == 0) {
+		cell.textLabel.text = rowObject.name;
+		cell.showsReorderControl = YES;
+		if(rowObject.folder) {
+			//tis a folder
+			cell.detailTextLabel.text = @"";
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.imageView.image = [UIImage imageNamed:@""];
+		} else {
+			//tis a bookmark
+			cell.detailTextLabel.text = ((PSBookmark*)rowObject).ref;
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			cell.imageView.image = [UIImage imageNamed:@""];
+		}
+	} else if(indexPath.section == 1) {
+		if(self.editing) {
+			//add folder row!
+			cell.textLabel.text = @"Add Folder";
+		} else {
+			cell.textLabel.text = @"Add Bookmark here";
+		}
+	}
+	return cell;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+	if(!tableView.editing && section == 0 && !self.isAddingBookmark) {
+		return @"To add a bookmark for a verse, tap on the verse number and select 'Add Bookmark'";
+	} else if(!tableView.editing && section == 1 && self.isAddingBookmark) {
+		return @"To add a folder, tap on the Edit button";
+	} else {
+		return nil;
+	}
 }
-*/
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section == 0) {
+		return UITableViewCellEditingStyleDelete;
+	} else {
+		return UITableViewCellEditingStyleInsert;
+	}
 
-/*
+}
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -120,39 +192,60 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }   
 }
-*/
 
-
-/*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 }
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 
 #pragma mark -
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
-    */
+	// tapping on the cell in section 1 will:
+	if(indexPath.section == 1) {
+		if(self.editing) {
+			// add a folder
+			// TODO: add a folder
+			//   This row won't actually be selectable while we're in editing mode, so we actually add a new folder in the commitEditingStyle: method, above.
+		} else {
+			// save the current folder structure & add a bookmark at this position
+			//PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
+			// TODO: post a notification with self.parentFolders to indicate where to save the bookmark to.
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBookmarkInFolder object:self.parentFolders];
+		}
+	} else {
+		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
+		if(rowObject.folder) {
+			// tapping on a folder navigates to that folder.
+			NSString *pfs = [NSString stringWithFormat:@"%@%@%@", self.parentFolders, PSFolderSeparatorString, rowObject.name];
+			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs];
+			[self.navigationController pushViewController:bnc animated:YES];
+			[bnc release];
+		} else {
+			// tapping on a bookmark will open the bookmark.
+			// TODO: need to modify the last accessed field?
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
+			if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
+				NSArray *fullRef = [((PSBookmark*)rowObject).ref componentsSeparatedByString: @":"];
+				NSString *ref = [fullRef objectAtIndex: 0];
+				[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
+				NSString *verse = [fullRef objectAtIndex: 1];
+				if(verse) {
+					[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+					[[NSUserDefaults standardUserDefaults] synchronize];
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+				} else {
+					[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
+					[[NSUserDefaults standardUserDefaults] synchronize];
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+				}
+				[HistoryController addHistoryItem:BibleTab];
+			}
+			
+			[tableView deselectRowAtIndexPath:indexPath animated:NO];
+		}
+	}
 }
-
 
 #pragma mark -
 #pragma mark Memory management
@@ -169,9 +262,10 @@
     // For example: self.myOutlet = nil;
 }
 
-
 - (void)dealloc {
     [super dealloc];
+	self.bookmarkFolder = nil;
+	[parentFolders release];
 }
 
 

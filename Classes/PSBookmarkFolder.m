@@ -7,29 +7,115 @@
 //
 
 #import "PSBookmarkFolder.h"
+#import "PSBookmark.h"
 
 
 @implementation PSBookmarkFolder
 
-@synthesize red, green, blue, alpha, highlight, children;
+@synthesize children;
+
++ (NSString*)hexStringFromColor:(UIColor *)color {
+    const CGFloat *c = CGColorGetComponents(color.CGColor);
+	CGFloat r, g, b;
+	r = c[0];
+	g = c[1];
+	b = c[2];
+	
+	// Fix range if needed
+	if (r < 0.0f) r = 0.0f;
+	if (g < 0.0f) g = 0.0f;
+	if (b < 0.0f) b = 0.0f;
+	
+	if (r > 1.0f) r = 1.0f;
+	if (g > 1.0f) g = 1.0f;
+	if (b > 1.0f) b = 1.0f;
+	
+	// Convert to hex string between 0x00 and 0xFF
+	return [NSString stringWithFormat:@"#%02X%02X%02X", (int)(r * 255), (int)(g * 255), (int)(b * 255)];
+}
+
++ (UIColor*)colorFromHexString:(NSString*)hexString {
+	if(!hexString || [hexString length] < 13)
+		return [UIColor clearColor];
+	NSString *rString = [hexString substringWithRange:NSMakeRange(1, 4)];
+	float r, g, b;
+	[[NSScanner scannerWithString:rString] scanHexFloat:&r];
+	NSString *gString = [hexString substringWithRange:NSMakeRange(5, 4)];
+	[[NSScanner scannerWithString:gString] scanHexFloat:&g];
+	NSString *bString = [hexString substringWithRange:NSMakeRange(9, 4)];
+	[[NSScanner scannerWithString:bString] scanHexFloat:&b];
+	
+	return [UIColor colorWithRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:1.0];
+}
+
+- (id)init {
+	self = [super init];
+	if(self) {
+		folder = YES;
+	}
+	return self;
+}
+
+- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb highlight:(BOOL)h children:(NSArray*)c {
+	self = [super initWithName:n dateAdded:da dateLastAccessed:dla];
+	if(self) {
+		self.rgbHexString = rgb;
+		highlight = h;
+		self.children = c;
+		folder = YES;
+	}
+	return self;
+}
 
 - (void)dealloc {
 	self.children = nil;
+	self.rgbHexString = nil;
 	[super dealloc];
 }
 
 - (void)addChild:(PSBookmarkObject*)child {
-	if(!children) {
-		self.children = [NSMutableArray arrayWithCapacity:1];
-	}
-	[children addObject:child];
+	int capacity = 1;
+	if(children)
+		capacity += [children count];
+	NSMutableArray *tmpArray = [NSMutableArray arrayWithCapacity:capacity];
+	[tmpArray addObject:child];
+	self.children = tmpArray;
 }
 
 - (void)addChildren:(NSArray*)kids {
-	if(!children) {
-		self.children = [NSMutableArray arrayWithCapacity:[kids count]];
+	int capacity = [kids count];
+	if(children)
+		capacity += [children count];
+	NSMutableArray *tmpArray = [NSMutableArray arrayWithCapacity:capacity];
+	[tmpArray addObjectsFromArray:kids];
+	self.children = tmpArray;
+}
+
+- (NSArray*)folders {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:5];
+	for(PSBookmarkObject *obj in children) {
+		if(obj.folder) {
+			[ret addObject:obj];
+		}
 	}
-	[children addObjectsFromArray:kids];
+	return ret;
+}
+
+- (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:1];
+	for(PSBookmarkObject *bookmarkObject in self.children) {
+		if([bookmarkObject isMemberOfClass:[PSBookmark class]]) {
+			//tis a bookmark
+			if([bookmarkObject.name rangeOfString:bookAndChapterRef].location != NSNotFound) {
+				bookmarkObject.rgbHexString = self.rgbHexString;//tmp set the hex string.
+				[ret addObject:bookmarkObject];
+			}
+		} else {
+			//could either be a PSBookmarkFolder or the PSBookmarks
+			[ret addObjectsFromArray:[((PSBookmarkFolder*)bookmarkObject) getBookmarksForBookAndChapterRef:bookAndChapterRef]];
+		}
+	}
+	return ret;
 }
 
 @end

@@ -11,7 +11,25 @@
 
 @implementation PSBookmarkObject
 
-@synthesize name, dateAdded, dateLastAccessed;
+@synthesize name, dateAdded, dateLastAccessed, folder, rgbHexString, highlight;
+
+- (id)init {
+	self = [super init];
+	if(self) {
+		folder = NO;
+	}
+	return self;
+}
+
+- (id)initWithName:(NSString*)n dateAdded:(NSDate*)da dateLastAccessed:(NSDate*)dla {
+	self = [self init];
+	if(self) {
+		self.name = n;
+		self.dateAdded = da;
+		self.dateLastAccessed = dla;
+	}
+	return self;
+}
 
 - (void)dealloc {
 	self.name = nil;

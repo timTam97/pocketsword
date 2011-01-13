@@ -6,9 +6,18 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
+#import "PSBookmarkFolder.h"
 
 @interface PSBookmarksNavigatorController : UITableViewController {
-
+	PSBookmarkFolder *bookmarkFolder;
+	BOOL isAddingBookmark;
+	NSString *parentFolders;
 }
+
+@property (retain, readwrite) PSBookmarkFolder *bookmarkFolder;
+@property (readwrite) BOOL isAddingBookmark;
+@property (readonly) NSString* parentFolders;
+
+- (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString;
 
 @end

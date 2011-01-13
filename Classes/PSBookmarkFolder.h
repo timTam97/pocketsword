@@ -9,17 +9,16 @@
 #import "PSBookmarkObject.h"
 
 @interface PSBookmarkFolder : PSBookmarkObject {
-	CGFloat red,green,blue,alpha;
-	BOOL highlight;
 	
-	NSMutableArray *children;
+	NSArray *children;
 }
 
-@property (retain, readwrite) NSMutableArray *children;
-@property (readwrite) BOOL highlight;
-@property (readwrite) CGFloat red, green, blue, alpha;
+@property (retain, readwrite) NSArray *children;
+
+- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb highlight:(BOOL)h children:(NSArray*)c;
 
 - (void)addChild:(PSBookmarkObject*)child;
 - (void)addChildren:(NSArray*)kids;
+- (NSArray*)folders;
 
 @end

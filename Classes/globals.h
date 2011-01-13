@@ -40,6 +40,7 @@ typedef enum {
 #define DEFAULT_MODULE_PATH_OLD         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_MODULE_PATH         [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_APPSUPPORT_PATH     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
+#define DEFAULT_BOOKMARKS_PATH		[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 
 #define DEFAULT_INSTALLER_PATH		[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/"]
 // define for userdefaults
@@ -85,6 +86,7 @@ typedef enum {
 #define DefaultsHebrewCantillationPreference		@"hebrewCantillationPreference"
 
 #define StrongsFontName								@"Times New Roman"
+#define PSFolderSeparatorString						@":::"
 
 
 // Notification identifiers
@@ -129,6 +131,8 @@ typedef enum {
 #define NotificationBibleToggleFullscreen		@"NotificationBibleToggleFullscreen"
 #define NotificationCommentaryToggleFullscreen	@"NotificationCommentaryToggleFullscreen"
 #define NotificationSwitchToFullscreen			@"NotificationSwitchToFullscreen"
+
+#define NotificationAddBookmarkInFolder			@"NotificationAddBookmarkInFolder"
 
 #define ROTATION_LOCK_POSITION @"rotationLockedPosition"
 

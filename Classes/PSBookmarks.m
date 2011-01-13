@@ -1,0 +1,168 @@
+//
+//  PSBookmarks.m
+//  PocketSword
+//
+//  Created by Nic Carter on 12/01/11.
+//  Copyright 2011 CrossWire Bible Society. All rights reserved.
+//
+
+#import "PSBookmarks.h"
+#import "globals.h"
+#import "PSBookmark.h"
+#import "PSBookmarkFolder.h"
+
+@implementation PSBookmarks
+
+static PSBookmarks *psBookmarks;
+/** the singleton instance */
++ (PSBookmarks *)defaultBookmarks {
+    if(psBookmarks == nil) {
+        psBookmarks = [[PSBookmarks alloc] init];
+    }
+    
+	return psBookmarks;
+}
+
++ (BOOL)addBookmarkObject:(PSBookmarkObject*)bookmark withFolderString:(NSString*)folderString {
+	BOOL ret = NO;
+	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
+	if(!folderString || [folderString isEqualToString:@""]) {
+		[bookmarks addChild:bookmark];
+		return YES;
+	} else {
+		NSArray *folders = [folderString componentsSeparatedByString:PSFolderSeparatorString];
+		PSBookmarkFolder *parentFolder = bookmarks;
+		for(int folderCount=0; folderCount<[folders count];folderCount++) {
+			BOOL foundFolder = NO;
+			for(int kidNumber=0;kidNumber<[parentFolder.children count];kidNumber++) {
+				if([((PSBookmarkObject*)[parentFolder.children objectAtIndex:kidNumber]).name isEqualToString:[folders objectAtIndex:folderCount]]) {
+					parentFolder = [parentFolder.children objectAtIndex:kidNumber];
+					foundFolder = YES;
+					break;
+				}
+			}
+			if(!foundFolder) {
+				// if we don't find the next folder, just place the bookmark here.  This shouldn't be possible!
+				ALog(@"addBookmark: couldn't find the parent folder - %@", [folders objectAtIndex:folderCount]);
+				break;
+			}
+		}
+		[parentFolder addChild:bookmark];
+	}
+	
+	return ret;
+}
+
++ (BOOL)addBookmarkWithRef:(NSString*)r name:(NSString*)n folderString:(NSString*)folderString {
+	NSDate *date = [NSDate date];
+	PSBookmark *bookmark = [[PSBookmark alloc] initWithName:n dateAdded:date dateLastAccessed:date bibleReference:r];
+	BOOL ret = [PSBookmarks addBookmarkObject:bookmark withFolderString:folderString];
+	[bookmark release];
+	return ret;
+}
+
+//+ (BOOL)addBookmarkFolder
+//	PSBookmarkFolder *bookmarkFolder = [[PSBookmarkFolder alloc] initWithName:<#(NSString *)n#> dateAdded:<#(NSDate *)da#> dateLastAccessed:<#(NSDate *)dla#> r:<#(NSNumber *)r#> g:<#(NSNumber *)g#> b:<#(NSNumber *)b#> alpha:<#(NSNumber *)a#> highlight:<#(BOOL)h#> children:<#(NSArray *)c#>
+
+- (PSBookmarkObject *)parseArray:(NSArray *)array {
+	if(!array)
+		return nil;
+	else if([array count] == 0)
+		return nil;
+	
+	NSString *n = [array objectAtIndex:0];
+	NSDate *da = [array objectAtIndex:1];
+	NSDate *dla = [array objectAtIndex:2];
+	NSString *folderString = [array objectAtIndex:3];
+	if([folderString boolValue]) {
+		//tis a folder
+		NSString *rgb = [array objectAtIndex:4];
+		NSString *hi = [array objectAtIndex:5];
+		NSArray *kids = [array objectAtIndex:6];
+		NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:[kids count]];
+		for(NSArray *child in kids) {
+			PSBookmarkObject *kid = [self parseArray:child];
+			[kidsArray addObject:kid];
+			[kid release];
+		}
+		return [[PSBookmarkFolder alloc] initWithName:n dateAdded:da dateLastAccessed:dla rgbHexString:rgb highlight:[hi boolValue] children:kidsArray];
+	} else {
+		//tis a bookmark
+		NSString *r = [array objectAtIndex:4];
+		return [[PSBookmark alloc] initWithName:n dateAdded:da dateLastAccessed:dla bibleReference:r];
+	}
+}
+
+- (void)loadBookmarksFromFile {
+	DLog(@"\nBookmarks: loadBookmarksFromFile");
+    NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
+	NSArray *data = [NSArray arrayWithContentsOfFile:bookmarksPath];
+	NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:2];
+	if(data) {
+		for(NSArray *child in data) {
+			PSBookmarkObject *kid = [self parseArray:child];
+			[kidsArray addObject:kid];
+			[kid release];
+		}
+        self.children = kidsArray;
+    } else {
+        self.children = [NSArray array];
+    }
+	DLog(@"\n-- Bookmarks: finished loadBookmarksFromFile");
+}
+
+- (id)init {
+	self = [super initWithName:nil dateAdded:nil dateLastAccessed:nil rgbHexString:nil highlight:NO children:nil];
+	if(self) {
+		self.name = NSLocalizedString(@"BookmarksTitle", @"");
+		[self loadBookmarksFromFile];
+	}
+	return self;
+}
+
+- (NSArray *)parseBookmarkObject:(PSBookmarkObject*)bookmarkObject {
+	if(!bookmarkObject)
+		return nil;
+	int capacity = (bookmarkObject.folder) ? 7 : 5;
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:capacity];
+	[ret addObject:bookmarkObject.name];
+	[ret addObject:bookmarkObject.dateAdded];
+	[ret addObject:bookmarkObject.dateLastAccessed];
+	if(bookmarkObject.folder) {
+		[ret addObject:@"YES"];
+		[ret addObject:((PSBookmarkFolder*)bookmarkObject).rgbHexString];
+		[ret addObject:((((PSBookmarkFolder*)bookmarkObject).highlight) ? @"YES" : @"NO")];
+		NSMutableArray *kids = [NSMutableArray arrayWithCapacity:[((PSBookmarkFolder*)bookmarkObject).children count]];
+		for(PSBookmarkObject *child in ((PSBookmarkFolder*)bookmarkObject).children) {
+			NSArray *kid = [self parseBookmarkObject:child];
+			[kids addObject:kid];
+			[kid release];
+		}
+		[ret addObject:kids];
+		
+	} else {
+		[ret addObject:@"NO"];
+		[ret addObject:((PSBookmark*)bookmarkObject).ref];
+	}
+	
+	return ret;
+}
+
+- (void)saveBookmarksToFile {
+	DLog(@"\nBookmarks: saveBookmarksToFile");
+    NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
+	if(self.children && [children count] > 0) {
+		NSMutableArray *data = [NSMutableArray arrayWithCapacity:[children count]];
+		for(PSBookmarkObject *child in children) {
+			NSArray *kid = [self parseBookmarkObject:child];
+			[data addObject:kid];
+			[kid release];
+		}
+		[data writeToFile:bookmarksPath atomically:YES];
+	}
+	
+	DLog(@"\n-- Bookmarks: finished saveBookmarksToFile");
+}
+
+
+@end

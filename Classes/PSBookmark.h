@@ -15,4 +15,6 @@
 
 @property (retain, readwrite) NSString *ref;
 
+- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla bibleReference:(NSString*)r;
+
 @end

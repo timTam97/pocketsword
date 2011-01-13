@@ -256,7 +256,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
-	//[viewController setShownTabTo:BibleTab];
 	if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
 		NSArray *fullRef = [[tableView cellForRowAtIndexPath: indexPath].textLabel.text componentsSeparatedByString: @":"];
 		NSString *ref = [fullRef objectAtIndex: 0];
@@ -266,15 +265,11 @@
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreVersePosition];
 		} else {
 			[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 		}
-		//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: BibleTab];
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 		[HistoryController addHistoryItem:BibleTab];
 	}
 	
