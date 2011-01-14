@@ -18,6 +18,8 @@
 }
 
 @property (nonatomic, assign) id <PSBookmarkFolderColourSelectorDelegate> delegate;
+@property (retain, readwrite) NSString *currentSelectedColor;
+@property (retain, readwrite) NSArray *selectableColours;
 
 - (id)initWithColorString:(NSString*)rgbHexString delegate:(id)del;
 

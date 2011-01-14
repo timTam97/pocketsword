@@ -22,7 +22,7 @@
 }
 
 - (id)initWithName:(NSString*)n dateAdded:(NSDate*)da dateLastAccessed:(NSDate*)dla {
-	self = [self init];
+	self = [super init];
 	if(self) {
 		self.name = n;
 		self.dateAdded = da;

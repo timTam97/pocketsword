@@ -84,17 +84,24 @@
 */
 
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+	[super setEditing:editing animated:animated];
+	//[self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationMiddle];
+	[self.tableView reloadData];
+}
 #pragma mark -
 #pragma mark Table view data source
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
 	
-	if(indexPath.section == 1) {
+	if(indexPath.section == 0) {
+		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
+		if(rowObject.folder) {
+			cell.backgroundColor = [PSBookmarkFolder colorFromHexString:((PSBookmarkFolder*)rowObject).rgbHexString];
+		} else {
+			cell.backgroundColor = [UIColor whiteColor];
+		}
+	} else if(indexPath.section == 1) {
 		cell.backgroundColor = [UIColor blueColor];
 	}
 }
@@ -134,9 +141,9 @@
     }
     
     // Configure the cell...
-	PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 	
 	if(indexPath.section == 0) {
+		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		cell.textLabel.text = rowObject.name;
 		cell.showsReorderControl = YES;
 		if(rowObject.folder) {
@@ -193,6 +200,7 @@
 		PSBookmarkFolderAddViewController *favc = [[PSBookmarkFolderAddViewController alloc] initWithParentFolder:self.parentFolders];
 		[self.navigationController pushViewController:favc animated:YES];
 		[favc release];
+		[self setEditing:NO];
     }   
 }
 
@@ -219,7 +227,10 @@
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		if(rowObject.folder) {
 			// tapping on a folder navigates to that folder.
-			NSString *pfs = [NSString stringWithFormat:@"%@%@%@", self.parentFolders, PSFolderSeparatorString, rowObject.name];
+			NSString *pfs = rowObject.name;
+			if(self.parentFolders) {
+				pfs = [NSString stringWithFormat:@"%@%@%@", self.parentFolders, PSFolderSeparatorString, rowObject.name];
+			}
 			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs isAddingBookmark:self.isAddingBookmark];
 			[self.navigationController pushViewController:bnc animated:YES];
 			[bnc release];

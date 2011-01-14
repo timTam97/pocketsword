@@ -28,12 +28,13 @@ static PSBookmarks *psBookmarks;
 	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
 	if(!folderString || [folderString isEqualToString:@""]) {
 		[bookmarks addChild:bookmark];
-		return YES;
+		ret = YES;
 	} else {
 		PSBookmarkFolder *parentFolder = [PSBookmarks getBookmarkFolderForFolderString:folderString];
 		[parentFolder addChild:bookmark];
+		ret = YES;
 	}
-	
+	[bookmarks saveBookmarksToFile];
 	return ret;
 }
 
@@ -164,7 +165,8 @@ static PSBookmarks *psBookmarks;
 	return ret;
 }
 
-- (void)saveBookmarksToFile {
+- (BOOL)saveBookmarksToFile {
+	BOOL ret = NO;
 	DLog(@"\nBookmarks: saveBookmarksToFile");
     NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
 	if(self.children && [children count] > 0) {
@@ -174,10 +176,11 @@ static PSBookmarks *psBookmarks;
 			[data addObject:kid];
 			[kid release];
 		}
-		[data writeToFile:bookmarksPath atomically:YES];
+		ret = [data writeToFile:bookmarksPath atomically:YES];
 	}
 	
 	DLog(@"\n-- Bookmarks: finished saveBookmarksToFile");
+	return ret;
 }
 
 

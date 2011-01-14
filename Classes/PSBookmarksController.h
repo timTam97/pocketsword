@@ -18,20 +18,11 @@
 //		UITableViewCellStyleSubtitle -> text = name && detailText = ref; imageView = either folder or bookmark icon.
 //  Each Bookmark item, therefore, can be a folder or proper bookmark?
 
+#import "PSBookmarksNavigatorController.h"
 
 @interface PSBookmarksController : UIViewController {
-	IBOutlet UITableView *bookmarksTable;
-	IBOutlet UINavigationItem *bookmarksNavItem;
-	IBOutlet UINavigationBar *bookmarksNavBar;
-	
-	//IBOutlet id moduleManager;
-	//IBOutlet id viewController;
+	UINavigationController *containingNavigationController;
+	PSBookmarksNavigatorController *tableViewController;
 }
-
-+ (void)addBookmarkForRef:(NSString*)bookAndChapterRef withVerse:(NSString*)verse;
-
-- (IBAction)toggleBookmarksTableEditing:(id)sender;
-- (IBAction)addBookmark:(id)sender;
-- (void)removeBookmark:(NSString *)ref;
 
 @end

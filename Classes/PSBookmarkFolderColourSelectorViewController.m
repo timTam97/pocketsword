@@ -11,7 +11,7 @@
 
 @implementation PSBookmarkFolderColourSelectorViewController
 
-@synthesize delegate;
+@synthesize delegate, currentSelectedColor, selectableColours;
 
 #pragma mark -
 #pragma mark Initialization
@@ -19,8 +19,8 @@
 - (id)initWithColorString:(NSString*)rgbHexString delegate:(id)del {
 	self = [super initWithStyle:UITableViewStyleGrouped];
 	if(self) {
-		currentSelectedColor = rgbHexString;
-		selectableColours = [[NSArray alloc] initWithObjects: [UIColor whiteColor], 
+		self.currentSelectedColor = rgbHexString;
+		self.selectableColours = [[NSArray alloc] initWithObjects: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0], 
 							 [UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor cyanColor],
 							 [UIColor yellowColor], [UIColor magentaColor], [UIColor orangeColor], [UIColor purpleColor],
 							 [UIColor brownColor], nil];
@@ -100,13 +100,13 @@
     }
     
     // Configure the cell...
-	if([[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]] isEqualToString:[PSBookmarkFolder hexStringFromColor:[UIColor whiteColor]]]) {
-		cell.textLabel.text = NSLocalizedString(@"None", @"None");
+	if([[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]] isEqualToString:[PSBookmarkFolder hexStringFromColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0]]]) {
+		cell.textLabel.text = [PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]];//NSLocalizedString(@"None", @"None");
 	} else {
-		cell.textLabel.text = @"";
+		cell.textLabel.text = [PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]];//@"";
 	}
 	
-	if([[selectableColours objectAtIndex:indexPath.row] isEqualToString:currentSelectedColor]) {
+	if((!currentSelectedColor && indexPath.row == 0) || [[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]] isEqualToString:currentSelectedColor]) {
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	} else {
 		cell.accessoryType = UITableViewCellAccessoryNone;
@@ -119,7 +119,11 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[delegate rgbHexColorStringDidChange:[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]]];
+	if(indexPath.row != 0) {
+		[delegate rgbHexColorStringDidChange:[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]]];
+	} else {
+		[delegate rgbHexColorStringDidChange:nil];
+	}
 }
 
 
@@ -141,7 +145,8 @@
 
 - (void)dealloc {
     [super dealloc];
-	[selectableColours release];
+	self.selectableColours = nil;
+	self.currentSelectedColor = nil;
 }
 
 

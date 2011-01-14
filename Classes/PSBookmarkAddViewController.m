@@ -93,7 +93,7 @@
 	descriptionTextField.returnKeyType = UIReturnKeyDone;
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
 	self.navigationItem.title = NSLocalizedString(@"VerseContextualMenuAddBookmark", @"Add Bookmark");	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(folderUpdated:) name:NotificationAddBookmarkInFolder object:nil];

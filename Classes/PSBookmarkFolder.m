@@ -35,17 +35,21 @@
 }
 
 + (UIColor*)colorFromHexString:(NSString*)hexString {
-	if(!hexString || [hexString length] < 13)
+	//NSLog(@"%@", hexString);
+	if(!hexString || [hexString length] < 7)
 		return [UIColor clearColor];
-	NSString *rString = [hexString substringWithRange:NSMakeRange(1, 4)];
+	NSString *rString = [NSString stringWithFormat:@"0x%@", [hexString substringWithRange:NSMakeRange(1, 2)]];
 	float r, g, b;
 	[[NSScanner scannerWithString:rString] scanHexFloat:&r];
-	NSString *gString = [hexString substringWithRange:NSMakeRange(5, 4)];
+	//NSLog(@"%@ - %f", rString, r);
+	NSString *gString = [NSString stringWithFormat:@"0x%@", [hexString substringWithRange:NSMakeRange(3, 2)]];
 	[[NSScanner scannerWithString:gString] scanHexFloat:&g];
-	NSString *bString = [hexString substringWithRange:NSMakeRange(9, 4)];
+	//NSLog(@"%@ - %f", gString, g);
+	NSString *bString = [NSString stringWithFormat:@"0x%@", [hexString substringWithRange:NSMakeRange(5, 2)]];
 	[[NSScanner scannerWithString:bString] scanHexFloat:&b];
+	//NSLog(@"%@ - %f", bString, b);
 	
-	return [UIColor colorWithRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:1.0];
+	return [UIColor colorWithRed:(r/255.0f) green:(g/255.0f) blue:(b/255.0f) alpha:1.0f];
 }
 
 - (id)init {
@@ -78,6 +82,8 @@
 	if(children)
 		capacity += [children count];
 	NSMutableArray *tmpArray = [NSMutableArray arrayWithCapacity:capacity];
+	if(children)
+		[tmpArray addObjectsFromArray:children];
 	[tmpArray addObject:child];
 	self.children = tmpArray;
 }
@@ -87,6 +93,8 @@
 	if(children)
 		capacity += [children count];
 	NSMutableArray *tmpArray = [NSMutableArray arrayWithCapacity:capacity];
+	if(children)
+		[tmpArray addObjectsFromArray:children];
 	[tmpArray addObjectsFromArray:kids];
 	self.children = tmpArray;
 }
