@@ -153,7 +153,7 @@ static PSBookmarks *psBookmarks;
 		for(PSBookmarkObject *child in ((PSBookmarkFolder*)bookmarkObject).children) {
 			NSArray *kid = [self parseBookmarkObject:child];
 			[kids addObject:kid];
-			[kid release];
+			//[kid release]; -- they're autorelease objects :P
 		}
 		[ret addObject:kids];
 		
@@ -174,7 +174,7 @@ static PSBookmarks *psBookmarks;
 		for(PSBookmarkObject *child in children) {
 			NSArray *kid = [self parseBookmarkObject:child];
 			[data addObject:kid];
-			[kid release];
+			//[kid release]; -- they're autorelease objects :P
 		}
 		ret = [data writeToFile:bookmarksPath atomically:YES];
 	}
