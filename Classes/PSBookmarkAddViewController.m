@@ -106,7 +106,7 @@
 - (void)saveButtonPressed {
 	NSString *ref = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
 	NSString *description = ref;
-	if(![descriptionTextField.text isEqualToString:@""]) {
+	if(descriptionTextField.text && ![descriptionTextField.text isEqualToString:@""]) {
 		description = descriptionTextField.text;
 	}
 	[PSBookmarks addBookmarkWithRef:ref name:description folderString:folder];
