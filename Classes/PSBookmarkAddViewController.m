@@ -263,6 +263,11 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section == 1) {
+		[descriptionTextField becomeFirstResponder];
+	} else if(indexPath.section == 2) {
+		
+	}
     // Navigation logic may go here. Create and push another view controller.
     /*
     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
@@ -288,6 +293,8 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationAddBookmarkInFolder];
+	[descriptionTextField release];
+	descriptionTextField = nil;
 }
 
 

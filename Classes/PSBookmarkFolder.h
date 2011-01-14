@@ -15,6 +15,9 @@
 
 @property (retain, readwrite) NSArray *children;
 
++ (NSString*)hexStringFromColor:(UIColor *)color;
++ (UIColor*)colorFromHexString:(NSString*)hexString;
+
 - (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb highlight:(BOOL)h children:(NSArray*)c;
 
 - (void)addChild:(PSBookmarkObject*)child;

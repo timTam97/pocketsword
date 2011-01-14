@@ -77,6 +77,9 @@ static PSBookmarks *psBookmarks;
 	if([folderString boolValue]) {
 		//tis a folder
 		NSString *rgb = [array objectAtIndex:4];
+		if([rgb isEqualToString:@""]) {
+			rgb = nil;
+		}
 		NSString *hi = [array objectAtIndex:5];
 		NSArray *kids = [array objectAtIndex:6];
 		NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:[kids count]];
@@ -130,7 +133,11 @@ static PSBookmarks *psBookmarks;
 	[ret addObject:bookmarkObject.dateLastAccessed];
 	if(bookmarkObject.folder) {
 		[ret addObject:@"YES"];
-		[ret addObject:((PSBookmarkFolder*)bookmarkObject).rgbHexString];
+		if(((PSBookmarkFolder*)bookmarkObject).rgbHexString) {
+			[ret addObject:((PSBookmarkFolder*)bookmarkObject).rgbHexString];
+		} else {
+			[ret addObject:@""];
+		}
 		[ret addObject:((((PSBookmarkFolder*)bookmarkObject).highlight) ? @"YES" : @"NO")];
 		NSMutableArray *kids = [NSMutableArray arrayWithCapacity:[((PSBookmarkFolder*)bookmarkObject).children count]];
 		for(PSBookmarkObject *child in ((PSBookmarkFolder*)bookmarkObject).children) {

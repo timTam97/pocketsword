@@ -632,6 +632,10 @@
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		056BBE7F12DD78D50029F3A2 /* PSBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBE7E12DD78D50029F3A2 /* PSBookmarks.m */; };
 		056BBE8012DD78D50029F3A2 /* PSBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBE7E12DD78D50029F3A2 /* PSBookmarks.m */; };
+		056BBF9112DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */; };
+		056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */; };
+		056BBFA312DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */; };
+		056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
@@ -1348,6 +1352,10 @@
 		055E352B10F180B1004EBC79 /* libcurl-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libcurl-HOWTO.txt"; path = "Resources/doc/libcurl-HOWTO.txt"; sourceTree = "<group>"; };
 		056BBE7D12DD78D50029F3A2 /* PSBookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarks.h; path = Classes/PSBookmarks.h; sourceTree = "<group>"; };
 		056BBE7E12DD78D50029F3A2 /* PSBookmarks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarks.m; path = Classes/PSBookmarks.m; sourceTree = "<group>"; };
+		056BBF8F12DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolderAddViewController.h; path = Classes/PSBookmarkFolderAddViewController.h; sourceTree = "<group>"; };
+		056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolderAddViewController.m; path = Classes/PSBookmarkFolderAddViewController.m; sourceTree = "<group>"; };
+		056BBFA112DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolderColourSelectorViewController.h; path = Classes/PSBookmarkFolderColourSelectorViewController.h; sourceTree = "<group>"; };
+		056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolderColourSelectorViewController.m; path = Classes/PSBookmarkFolderColourSelectorViewController.m; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
@@ -2693,6 +2701,10 @@
 				051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */,
 				059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */,
 				059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */,
+				056BBF8F12DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.h */,
+				056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */,
+				056BBFA112DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.h */,
+				056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */,
 			);
 			name = bookmarks;
 			sourceTree = "<group>";
@@ -3851,6 +3863,8 @@
 				051B4C0D12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */,
 				059419B112DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */,
 				056BBE7F12DD78D50029F3A2 /* PSBookmarks.m in Sources */,
+				056BBF9112DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
+				056BBFA312DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4185,6 +4199,8 @@
 				051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */,
 				059419B012DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */,
 				056BBE8012DD78D50029F3A2 /* PSBookmarks.m in Sources */,
+				056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
+				056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
