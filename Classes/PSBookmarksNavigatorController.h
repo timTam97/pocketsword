@@ -18,6 +18,6 @@
 @property (readwrite) BOOL isAddingBookmark;
 @property (readonly) NSString* parentFolders;
 
-- (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString;
+- (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString isAddingBookmark:(BOOL)adding;
 
 @end

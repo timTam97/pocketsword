@@ -9,6 +9,7 @@
 #import "PSBookmarkAddViewController.h"
 #import "globals.h"
 #import "PSBookmarks.h"
+#import "PSBookmarksNavigatorController.h"
 
 @implementation PSBookmarkAddViewController
 
@@ -91,10 +92,9 @@
 	descriptionTextField.keyboardType = UIKeyboardTypeDefault;
 	descriptionTextField.returnKeyType = UIReturnKeyDone;
 	
-	//self.navigationItem.leftBarButtonItem = cancelButton
-	//self.navigationItem.rightBarButtonItem = saveButton
-	//self.navigationItem.title = @"Add Bookmark";
-	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+	self.navigationItem.title = NSLocalizedString(@"VerseContextualMenuAddBookmark", @"Add Bookmark");	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(folderUpdated:) name:NotificationAddBookmarkInFolder object:nil];
 }
@@ -113,11 +113,11 @@
 	[self dismissModalViewControllerAnimated:YES];
 }
 
-/*
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	[self.tableView reloadData];
 }
-*/
+
 /*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -266,16 +266,10 @@
 	if(indexPath.section == 1) {
 		[descriptionTextField becomeFirstResponder];
 	} else if(indexPath.section == 2) {
-		
+		PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks getBookmarkFolderForFolderString:folder] parentFolders:folder isAddingBookmark:YES];
+		[self.navigationController pushViewController:bnc animated:YES];
+		[bnc release];
 	}
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
-    */
 }
 
 

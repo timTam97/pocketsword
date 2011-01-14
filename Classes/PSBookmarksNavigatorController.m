@@ -10,7 +10,7 @@
 #import "PSBookmark.h"
 #import "PSModuleController.h"
 #import "HistoryController.h"
-//#import "globals.h"
+#import "PSBookmarkFolderAddViewController.h"
 
 
 @implementation PSBookmarksNavigatorController
@@ -20,11 +20,11 @@
 #pragma mark -
 #pragma mark Initialization
 
-- (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString {
+- (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString isAddingBookmark:(BOOL)adding {
 	self = [super initWithStyle:UITableViewStyleGrouped];
 	if(self) {
 		self.bookmarkFolder = folder;
-		isAddingBookmark = NO;
+		isAddingBookmark = adding;
 		self.editing = NO;
 		parentFolders = [parentFoldersString copy];
 	}
@@ -57,6 +57,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	[self.tableView reloadData];
 }
 
 /*
@@ -107,7 +108,6 @@
 	}
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
 	if(section == 0) {
@@ -122,7 +122,6 @@
 		return 1;//0;
 	}
 }
-
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -186,10 +185,14 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
+		// create a new folder.
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+		PSBookmarkFolderAddViewController *favc = [[PSBookmarkFolderAddViewController alloc] initWithParentFolder:self.parentFolders];
+		[self.navigationController pushViewController:favc animated:YES];
+		[favc release];
     }   
 }
 
@@ -205,7 +208,6 @@
 	if(indexPath.section == 1) {
 		if(self.editing) {
 			// add a folder
-			// TODO: add a folder
 			//   This row won't actually be selectable while we're in editing mode, so we actually add a new folder in the commitEditingStyle: method, above.
 		} else {
 			// save the current folder structure & add a bookmark at this position
@@ -218,7 +220,7 @@
 		if(rowObject.folder) {
 			// tapping on a folder navigates to that folder.
 			NSString *pfs = [NSString stringWithFormat:@"%@%@%@", self.parentFolders, PSFolderSeparatorString, rowObject.name];
-			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs];
+			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs isAddingBookmark:self.isAddingBookmark];
 			[self.navigationController pushViewController:bnc animated:YES];
 			[bnc release];
 		} else {

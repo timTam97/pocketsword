@@ -8,6 +8,7 @@
 
 #import "PSBookmarkFolderAddViewController.h"
 #import "PSBookmarkFolder.h"
+#import "PSBookmarks.h"
 
 
 @implementation PSBookmarkFolderAddViewController
@@ -33,7 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	//self.navigationItem.rightBarButtonItem = save button;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
 	
 	nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,260,25)];
 	[nameTextField setPlaceholder:@""];
@@ -44,7 +45,9 @@
 }
 
 - (void)saveButtonPressed {
-	
+	PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date]];
+	[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 /*

@@ -30,23 +30,7 @@ static PSBookmarks *psBookmarks;
 		[bookmarks addChild:bookmark];
 		return YES;
 	} else {
-		NSArray *folders = [folderString componentsSeparatedByString:PSFolderSeparatorString];
-		PSBookmarkFolder *parentFolder = bookmarks;
-		for(int folderCount=0; folderCount<[folders count];folderCount++) {
-			BOOL foundFolder = NO;
-			for(int kidNumber=0;kidNumber<[parentFolder.children count];kidNumber++) {
-				if([((PSBookmarkObject*)[parentFolder.children objectAtIndex:kidNumber]).name isEqualToString:[folders objectAtIndex:folderCount]]) {
-					parentFolder = [parentFolder.children objectAtIndex:kidNumber];
-					foundFolder = YES;
-					break;
-				}
-			}
-			if(!foundFolder) {
-				// if we don't find the next folder, just place the bookmark here.  This shouldn't be possible!
-				ALog(@"addBookmark: couldn't find the parent folder - %@", [folders objectAtIndex:folderCount]);
-				break;
-			}
-		}
+		PSBookmarkFolder *parentFolder = [PSBookmarks getBookmarkFolderForFolderString:folderString];
 		[parentFolder addChild:bookmark];
 	}
 	
@@ -59,6 +43,31 @@ static PSBookmarks *psBookmarks;
 	BOOL ret = [PSBookmarks addBookmarkObject:bookmark withFolderString:folderString];
 	[bookmark release];
 	return ret;
+}
+
++ (PSBookmarkFolder*)getBookmarkFolderForFolderString:(NSString*)folderString {
+	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
+	if(!folderString || [folderString isEqualToString:@""] || [folderString isEqualToString:NSLocalizedString(@"BookmarksTitle", @"")]) {
+		return bookmarks;
+	}
+	NSArray *folders = [folderString componentsSeparatedByString:PSFolderSeparatorString];
+	PSBookmarkFolder *parentFolder = bookmarks;
+	for(int folderCount=0; folderCount<[folders count];folderCount++) {
+		BOOL foundFolder = NO;
+		for(int kidNumber=0;kidNumber<[parentFolder.children count];kidNumber++) {
+			if([((PSBookmarkObject*)[parentFolder.children objectAtIndex:kidNumber]).name isEqualToString:[folders objectAtIndex:folderCount]]) {
+				parentFolder = [parentFolder.children objectAtIndex:kidNumber];
+				foundFolder = YES;
+				break;
+			}
+		}
+		if(!foundFolder) {
+			// if we don't find the next folder, just place the bookmark here.  This shouldn't be possible!
+			ALog(@"getBookmarkFolderForFolderString: couldn't find the folder - %@", [folders objectAtIndex:folderCount]);
+			break;
+		}
+	}
+	return parentFolder;
 }
 
 //+ (BOOL)addBookmarkFolder

@@ -22,4 +22,6 @@
 @property (retain, readwrite) NSString *parentFolder;
 @property (retain, readwrite) NSString *rgbHexString;
 
+- (id)initWithParentFolder:(NSString*)folder;
+
 @end

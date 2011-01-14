@@ -10,7 +10,8 @@
 #import "PSModuleController.h"
 //#import "ViewController.h"
 #import "SwordDictionary.h"
-#import "PSBasicBookmarksViewController.h"
+//#import "PSBasicBookmarksViewController.h"
+#import "PSBookmarkAddViewController.h"
 #import "PSResizing.h"
 
 
@@ -276,7 +277,11 @@
 	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
 		//add a bookmark!
-		[PSBasicBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
+		//[PSBasicBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
+		PSBookmarkAddViewController *bavc = [[PSBookmarkAddViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] verse:tappedVerse];
+		[self presentModalViewController:bavc animated:YES];
+		[bavc release];
+		
 		self.tappedVerse = nil;
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {
 		//[[NSUserDefaults standardUserDefaults] setObject: tappedVerse forKey: DefaultsCommentaryVersePosition];
