@@ -100,7 +100,7 @@
 }
 
 - (void)cancelButtonPressed {
-	[self dismissModalViewControllerAnimated:YES];
+	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)saveButtonPressed {
@@ -110,7 +110,7 @@
 		description = descriptionTextField.text;
 	}
 	[PSBookmarks addBookmarkWithRef:ref name:description folderString:folder];
-	[self dismissModalViewControllerAnimated:YES];
+	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

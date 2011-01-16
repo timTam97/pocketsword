@@ -70,7 +70,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:(self.navigationController).navigationBar mainView:self.tableView useStatusBar:YES];
-	//[self.tableView reloadData];
+	[self.tableView reloadData];
 }
 
 /*
@@ -183,7 +183,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	if(!tableView.editing && section == 0 && !self.isAddingBookmark) {
-		return @"To add a bookmark for a verse, tap on the verse number and select 'Add Bookmark'";
+		return @"To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
 	} else if(!tableView.editing && section == 1 && self.isAddingBookmark) {
 		return @"To add a folder, tap on the Edit button";
 	} else {
