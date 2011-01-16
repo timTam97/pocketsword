@@ -11,6 +11,7 @@
 #import "PSModuleController.h"
 #import "HistoryController.h"
 #import "PSBookmarkFolderAddViewController.h"
+#import "PSBookmarks.h"
 
 
 @implementation PSBookmarksNavigatorController
@@ -27,6 +28,17 @@
 		isAddingBookmark = adding;
 		self.editing = NO;
 		parentFolders = [parentFoldersString copy];
+	}
+	return self;
+}
+
+- (id)initWithStyle:(UITableViewStyle)style {
+	self = [super initWithStyle:style];
+	if(self) {
+		self.bookmarkFolder = [PSBookmarks defaultBookmarks];
+		isAddingBookmark = NO;
+		self.editing = NO;
+		parentFolders = nil;
 	}
 	return self;
 }
@@ -57,7 +69,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[self.tableView reloadData];
+	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:(self.navigationController).navigationBar mainView:self.tableView useStatusBar:YES];
+	//[self.tableView reloadData];
 }
 
 /*

@@ -26,6 +26,7 @@
 #import "NavigatorSources.h"
 #import "PSModuleSelectorController.h"
 #import "PSPreferencesController.h"
+#import "PSBookmarksNavigatorController.h"
 
 #define INFO_LANDSCAPE_HEIGHT 100.0
 #define INFO_PORTRAIT_HEIGHT 160.0
@@ -118,7 +119,22 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			thisApp.idleTimerDisabled = YES;
 		}
 		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+		//tabController.moreNavigationController.navigationItem.rightBarButtonItem = nil;
 		tabController.delegate = self;
+		
+		//add our customized bookmarks tab:
+		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
+		UINavigationController *bookmarksTab = [[[UINavigationController alloc] initWithRootViewController:bookmarksViewController] retain];
+		bookmarksTab.navigationBar.barStyle = UIBarStyleBlack;
+		UITabBarItem *tbI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
+		bookmarksTab.tabBarItem = tbI;
+		[tbI release];
+		NSMutableArray *tabs = [tabController.viewControllers mutableCopy];
+		[tabs insertObject:bookmarksTab atIndex:3];
+		[tabController setViewControllers:tabs animated:NO];
+		[bookmarksViewController release];
+		[bookmarksTab release];
+		
 		tabController.customizableViewControllers = nil;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationBibleSwipeRight object:nil];

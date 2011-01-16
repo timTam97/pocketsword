@@ -278,9 +278,15 @@
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
 		//add a bookmark!
 		//[PSBasicBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
-		PSBookmarkAddViewController *bavc = [[PSBookmarkAddViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] verse:tappedVerse];
-		[self presentModalViewController:bavc animated:YES];
-		[bavc release];
+		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] andVerse:tappedVerse];
+		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
+		[self presentModalViewController:containingNavigationController animated:YES];
+		[tableViewController release];
+		[containingNavigationController release];
+
+		//PSBookmarkAddViewController *bavc = [[PSBookmarkAddViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] verse:tappedVerse];
+//		[self presentModalViewController:bavc animated:YES];
+//		[bavc release];
 		
 		self.tappedVerse = nil;
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {

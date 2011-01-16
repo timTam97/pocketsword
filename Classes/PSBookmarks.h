@@ -18,4 +18,6 @@
 
 + (PSBookmarkFolder*)getBookmarkFolderForFolderString:(NSString*)folderString;
 
+- (BOOL)saveBookmarksToFile;
+
 @end

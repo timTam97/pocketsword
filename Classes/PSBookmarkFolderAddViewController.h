@@ -13,7 +13,7 @@
 
 #import "PSBookmarkFolderColourSelectorViewController.h"
 
-@interface PSBookmarkFolderAddViewController : UITableViewController <PSBookmarkFolderColourSelectorDelegate> {
+@interface PSBookmarkFolderAddViewController : UITableViewController <PSBookmarkFolderColourSelectorDelegate, UITextFieldDelegate> {
 	NSString *parentFolder;
 	UITextField *nameTextField;
 	NSString *rgbHexString;

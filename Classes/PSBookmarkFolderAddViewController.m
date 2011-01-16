@@ -39,7 +39,7 @@
 	nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,260,25)];
 	[nameTextField setPlaceholder:@""];
 	nameTextField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-	//nameTextField.delegate = self;
+	nameTextField.delegate = self;
 	nameTextField.keyboardType = UIKeyboardTypeDefault;
 	nameTextField.returnKeyType = UIReturnKeyDone;
 }
@@ -51,6 +51,11 @@
 	PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString highlight:h children:nil];
 	[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
 	[self.navigationController popViewControllerAnimated:YES];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
 }
 
 /*
