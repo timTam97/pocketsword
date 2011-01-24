@@ -13,7 +13,8 @@
 //#import "PSBasicBookmarksViewController.h"
 #import "PSBookmarkAddViewController.h"
 #import "PSResizing.h"
-
+#import "PSBookmarks.h"
+#import "PSBookmark.h"
 
 @implementation PSBibleViewController
 
@@ -153,6 +154,21 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+	//highlight bookmarked verses
+	NSArray *shownBookmarks = [PSBookmarks getBookmarksForCurrentRef];
+	if(shownBookmarks && [shownBookmarks count] > 0) {
+		NSString *path = [[NSBundle mainBundle] pathForResource:@"HighlightBookmarks" ofType:@"js"];
+		NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+		[bibleWebView stringByEvaluatingJavaScriptFromString:jsCode];
+		for(PSBookmark *bookmark in shownBookmarks) {
+			NSString *verse = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
+			NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, bookmark.rgbHexString];
+			[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
+		}
+	}
+	
+	//highlight search results
+	// TODO: implement highlighting of search results
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {

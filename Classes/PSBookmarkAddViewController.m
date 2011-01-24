@@ -10,6 +10,7 @@
 #import "globals.h"
 #import "PSBookmarks.h"
 #import "PSBookmarksNavigatorController.h"
+#import "PSModuleController.h"
 
 @implementation PSBookmarkAddViewController
 
@@ -110,6 +111,9 @@
 		description = descriptionTextField.text;
 	}
 	[PSBookmarks addBookmarkWithRef:ref name:description folderString:folder];
+	if([[PSModuleController getCurrentBibleRef] isEqualToString:bookAndChapterRef]) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+	}
 	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
 

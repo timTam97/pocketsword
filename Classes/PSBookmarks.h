@@ -17,6 +17,8 @@
 + (BOOL)addBookmarkWithRef:(NSString*)r name:(NSString*)n folderString:(NSString*)folderString;
 
 + (PSBookmarkFolder*)getBookmarkFolderForFolderString:(NSString*)folderString;
++ (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;
++ (NSMutableArray *)getBookmarksForCurrentRef;
 
 - (BOOL)saveBookmarksToFile;
 

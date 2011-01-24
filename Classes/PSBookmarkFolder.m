@@ -114,7 +114,7 @@
 	for(PSBookmarkObject *bookmarkObject in self.children) {
 		if([bookmarkObject isMemberOfClass:[PSBookmark class]]) {
 			//tis a bookmark
-			if([bookmarkObject.name rangeOfString:bookAndChapterRef].location != NSNotFound) {
+			if([((PSBookmark*)bookmarkObject).ref rangeOfString:bookAndChapterRef].location != NSNotFound) {
 				bookmarkObject.rgbHexString = self.rgbHexString;//tmp set the hex string.
 				[ret addObject:bookmarkObject];
 			}

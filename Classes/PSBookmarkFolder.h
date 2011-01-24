@@ -23,5 +23,6 @@
 - (void)addChild:(PSBookmarkObject*)child;
 - (void)addChildren:(NSArray*)kids;
 - (NSArray*)folders;
+- (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;
 
 @end

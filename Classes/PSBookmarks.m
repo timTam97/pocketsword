@@ -10,6 +10,7 @@
 #import "globals.h"
 #import "PSBookmark.h"
 #import "PSBookmarkFolder.h"
+#import "PSModuleController.h"
 
 @implementation PSBookmarks
 
@@ -71,8 +72,15 @@ static PSBookmarks *psBookmarks;
 	return parentFolder;
 }
 
-//+ (BOOL)addBookmarkFolder
-//	PSBookmarkFolder *bookmarkFolder = [[PSBookmarkFolder alloc] initWithName:<#(NSString *)n#> dateAdded:<#(NSDate *)da#> dateLastAccessed:<#(NSDate *)dla#> r:<#(NSNumber *)r#> g:<#(NSNumber *)g#> b:<#(NSNumber *)b#> alpha:<#(NSNumber *)a#> highlight:<#(BOOL)h#> children:<#(NSArray *)c#>
++ (NSMutableArray *)getBookmarksForCurrentRef {
+	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	return [PSBookmarks getBookmarksForBookAndChapterRef:currentRef];
+}
+
++ (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef {
+	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
+	return [bookmarks getBookmarksForBookAndChapterRef:bookAndChapterRef];
+}
 
 - (PSBookmarkObject *)parseArray:(NSArray *)array {
 	if(!array)
