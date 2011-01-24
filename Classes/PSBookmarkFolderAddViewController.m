@@ -9,6 +9,7 @@
 #import "PSBookmarkFolderAddViewController.h"
 #import "PSBookmarkFolder.h"
 #import "PSBookmarks.h"
+#import "globals.h"
 
 
 @implementation PSBookmarkFolderAddViewController
@@ -45,6 +46,27 @@
 }
 
 - (void)saveButtonPressed {
+	// check for a duplicate folder name:
+	PSBookmarkFolder *parentFolderObject = [PSBookmarks getBookmarkFolderForFolderString:self.parentFolder];
+	BOOL valid = YES;
+	for(PSBookmarkFolder *childFolder in parentFolderObject.children) {
+		if([childFolder.name isEqualToString:nameTextField.text]) {
+			valid = NO;
+			break;
+		}
+	}
+	if(!valid) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		return;
+	}
+	// check for an invalid folder name (ie: contains PSFolderSeparatorString):
+	NSRange position = [nameTextField.text rangeOfString:PSFolderSeparatorString];
+	if(position.location != NSNotFound) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message: NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		return;
+	}
+	
+	
 	BOOL h = NO;
 	if(rgbHexString)
 		h = YES;
@@ -56,6 +78,10 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[textField resignFirstResponder];
 	return YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	[nameTextField becomeFirstResponder];
 }
 
 /*

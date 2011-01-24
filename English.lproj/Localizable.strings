@@ -234,3 +234,9 @@
 
 // new v1.3.5 strings:
 "PreferencesFontDefaultTitle" = "Use custom Font";
+
+// new v1.4.0 strings:
+"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
+"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder";
+"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
+"BookmarksDuplicateFolderMessage" = "You have entered a duplicate folder name. Please choose another name for your folder";
