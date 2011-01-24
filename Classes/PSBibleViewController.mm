@@ -171,7 +171,9 @@
 
 - (void)removeBookmarkHighlights {
 	NSInteger verses = [[PSModuleController defaultModuleController].primaryBible getVerseMax];
-	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d')", verses];
+	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
+	NSString *fontColor = (nightMode) ? @"white" : @"black";
+	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d','%@')", verses, fontColor];
 	[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
 }
 
