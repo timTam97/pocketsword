@@ -62,7 +62,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed)];
+    self.navigationItem.rightBarButtonItem = editButton;
+	[editButton release];
 	if(bookmarkFolder) {
 		self.navigationItem.title = bookmarkFolder.name;
 	}
@@ -99,23 +101,29 @@
 */
 
 
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+- (void)editButtonPressed {
 	displayAddFolderRow = NO;
-	if(editing) {
+	if(!self.editing) {
 		displayAddFolderRow = YES;
 		if(!self.isAddingBookmark) {
 			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		} else {
 			[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		}
-		[super setEditing:editing animated:animated];
+		[self setEditing:YES animated:YES];
+		UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editButtonPressed)];
+		[self.navigationItem setRightBarButtonItem:doneButton animated:YES];
+		[doneButton release];
 	} else {
-		[super setEditing:editing animated:animated];
+		[self setEditing:NO animated:YES];
 		if(!self.isAddingBookmark) {
 			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		} else {
 			[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		}
+		UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed)];
+		[self.navigationItem setRightBarButtonItem:editButton animated:YES];
+		[editButton release];
 	}
 	//[self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationMiddle];
 	//[self.tableView reloadData];
@@ -228,6 +236,8 @@
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		if(rowObject.folder) {
 			// TODO: display confirmation
+			rowToDelete = [indexPath retain];
+			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksConfirmDeleteFolderTitle", @"") message: [NSString stringWithFormat:NSLocalizedString(@"BookmarksConfirmDeleteFolderMessage", @""), rowObject.name] delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 		} else {
 			[self deleteChildAtIndexPath:indexPath];
 		}
@@ -240,6 +250,14 @@
 		[favc release];
 		[self setEditing:NO];
     }   
+}
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	if(buttonIndex == 1) {
+		//yup, delete the folder!
+		[self deleteChildAtIndexPath:rowToDelete];
+	}
+	[rowToDelete release];
+	rowToDelete = nil;
 }
 
 - (void)deleteChildAtIndexPath:(NSIndexPath *)indexPath {
@@ -261,7 +279,13 @@
 
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-	// TODO: implement moving
+	NSMutableArray *kids = [bookmarkFolder.children mutableCopy];
+	NSObject *obj = [kids objectAtIndex:fromIndexPath.row];
+	[kids removeObjectAtIndex:fromIndexPath.row];
+	[kids insertObject:obj atIndex:toIndexPath.row];
+	bookmarkFolder.children = kids;
+	[kids release];
+	[PSBookmarks saveBookmarksToFile];
 }
 
 #pragma mark -

@@ -240,3 +240,5 @@
 "BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder";
 "BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
 "BookmarksDuplicateFolderMessage" = "You have entered a duplicate folder name. Please choose another name for your folder";
+"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
+"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks within it?";//keep the '%@' bit in there - it will be replaced with the folder's name!

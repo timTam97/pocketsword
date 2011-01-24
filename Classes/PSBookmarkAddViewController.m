@@ -151,7 +151,7 @@
 
 - (void)folderUpdated:(NSNotification *)notification
 {
-	DLog(@"%@", [notification object]);
+	//DLog(@"%@", [notification object]);
 	self.folder = [notification object];
 	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
 	[self.navigationController popToViewController:self animated:YES];
@@ -274,9 +274,31 @@
 	if(indexPath.section == 1) {
 		[descriptionTextField becomeFirstResponder];
 	} else if(indexPath.section == 2) {
-		PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks getBookmarkFolderForFolderString:folder] parentFolders:folder isAddingBookmark:YES];
-		[self.navigationController pushViewController:bnc animated:YES];
-		[bnc release];
+		if(!folder) {
+			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks defaultBookmarks] parentFolders:nil isAddingBookmark:YES];
+			[self.navigationController pushViewController:bnc animated:YES];
+			[bnc release];
+		} else {
+			NSArray *components = [folder componentsSeparatedByString:PSFolderSeparatorString];
+			// push the root of our bookmarks:
+			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks defaultBookmarks] parentFolders:nil isAddingBookmark:YES];
+			[self.navigationController pushViewController:bnc animated:NO];
+			[bnc release];
+			NSMutableString *currentFolder = [NSMutableString stringWithString:[components objectAtIndex:0]];
+			for(int i=0; i<[components count];) {
+				BOOL animate = NO;
+				if(i == ([components count] - 1))
+					animate = YES;
+				bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks getBookmarkFolderForFolderString:currentFolder] parentFolders:currentFolder isAddingBookmark:YES];
+				[self.navigationController pushViewController:bnc animated:animate];
+				[bnc release];
+				i++;
+				if(i<[components count]) {
+					[currentFolder appendFormat:@"%@%@", PSFolderSeparatorString, [components objectAtIndex:i]];
+				}
+			}
+			self.folder = nil;//reset the folder to the root.
+		}
 	}
 }
 
