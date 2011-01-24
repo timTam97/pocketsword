@@ -12,6 +12,7 @@
 	PSBookmarkFolder *bookmarkFolder;
 	BOOL isAddingBookmark;
 	NSString *parentFolders;
+	BOOL displayAddFolderRow;
 }
 
 @property (retain, readwrite) PSBookmarkFolder *bookmarkFolder;
@@ -19,5 +20,6 @@
 @property (readonly) NSString* parentFolders;
 
 - (id)initWithBookmarkFolder:(PSBookmarkFolder*)folder parentFolders:(NSString*)parentFoldersString isAddingBookmark:(BOOL)adding;
+- (void)deleteChildAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

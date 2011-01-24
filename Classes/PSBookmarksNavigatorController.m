@@ -28,6 +28,7 @@
 		isAddingBookmark = adding;
 		self.editing = NO;
 		parentFolders = [parentFoldersString copy];
+		displayAddFolderRow = NO;
 	}
 	return self;
 }
@@ -39,6 +40,7 @@
 		isAddingBookmark = NO;
 		self.editing = NO;
 		parentFolders = nil;
+		displayAddFolderRow = NO;
 	}
 	return self;
 }
@@ -98,9 +100,25 @@
 
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-	[super setEditing:editing animated:animated];
+	displayAddFolderRow = NO;
+	if(editing) {
+		displayAddFolderRow = YES;
+		if(!self.isAddingBookmark) {
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		} else {
+			[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		}
+		[super setEditing:editing animated:animated];
+	} else {
+		[super setEditing:editing animated:animated];
+		if(!self.isAddingBookmark) {
+			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		} else {
+			[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		}
+	}
 	//[self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationMiddle];
-	[self.tableView reloadData];
+	//[self.tableView reloadData];
 }
 #pragma mark -
 #pragma mark Table view data source
@@ -121,7 +139,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	if(self.editing || self.isAddingBookmark) {
+	if(displayAddFolderRow || self.isAddingBookmark) {
 		return 2;
 	} else {
 		return 1;
@@ -138,8 +156,10 @@
 		}
 //	} else if(self.editing) {
 //		return 1;
-	} else {
+	} else if(isAddingBookmark || displayAddFolderRow) {
 		return 1;//0;
+	} else {
+		return 0;
 	}
 }
 
@@ -171,7 +191,7 @@
 			cell.imageView.image = [UIImage imageNamed:@""];
 		}
 	} else if(indexPath.section == 1) {
-		if(self.editing) {
+		if(displayAddFolderRow) {
 			//add folder row!
 			cell.textLabel.text = @"Add Folder";
 		} else {
@@ -182,9 +202,9 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-	if(!tableView.editing && section == 0 && !self.isAddingBookmark) {
+	if(section == 0 && !self.isAddingBookmark) {
 		return @"To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-	} else if(!tableView.editing && section == 1 && self.isAddingBookmark) {
+	} else if(!displayAddFolderRow && section == 1 && self.isAddingBookmark) {
 		return @"To add a folder, tap on the Edit button";
 	} else {
 		return nil;
@@ -205,7 +225,12 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source.
-        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
+		if(rowObject.folder) {
+			// TODO: display confirmation
+		} else {
+			[self deleteChildAtIndexPath:indexPath];
+		}
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
 		// create a new folder.
@@ -217,8 +242,26 @@
     }   
 }
 
+- (void)deleteChildAtIndexPath:(NSIndexPath *)indexPath {
+	NSMutableArray *array = [bookmarkFolder.children mutableCopy];
+	[array removeObjectAtIndex:indexPath.row];
+	bookmarkFolder.children = array;
+	[array release];
+	[PSBookmarks saveBookmarksToFile];
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section == 0)
+		return YES;
+	else
+		return NO;
+}
+
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+	// TODO: implement moving
 }
 
 #pragma mark -
@@ -232,8 +275,6 @@
 			//   This row won't actually be selectable while we're in editing mode, so we actually add a new folder in the commitEditingStyle: method, above.
 		} else {
 			// save the current folder structure & add a bookmark at this position
-			//PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
-			// TODO: post a notification with self.parentFolders to indicate where to save the bookmark to.
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBookmarkInFolder object:self.parentFolders];
 		}
 	} else {
@@ -249,7 +290,8 @@
 			[bnc release];
 		} else {
 			// tapping on a bookmark will open the bookmark.
-			// TODO: need to modify the last accessed field?
+			((PSBookmark*)rowObject).dateLastAccessed = [NSDate date];
+			[PSBookmarks saveBookmarksToFile];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
 			if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
 				NSArray *fullRef = [((PSBookmark*)rowObject).ref componentsSeparatedByString: @":"];
@@ -289,9 +331,9 @@
 }
 
 - (void)dealloc {
-    [super dealloc];
 	self.bookmarkFolder = nil;
 	[parentFolders release];
+    [super dealloc];
 }
 
 

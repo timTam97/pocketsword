@@ -30,6 +30,7 @@
 	bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
 }
 
 //- (void)awakeFromNib {
@@ -44,6 +45,7 @@
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationBibleToggleFullscreen];
+	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationBookmarksChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -153,8 +155,7 @@
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-	//highlight bookmarked verses
+- (void)highlightBookmarks {
 	NSArray *shownBookmarks = [PSBookmarks getBookmarksForCurrentRef];
 	if(shownBookmarks && [shownBookmarks count] > 0) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:@"HighlightBookmarks" ofType:@"js"];
@@ -166,6 +167,22 @@
 			[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
 		}
 	}
+}
+
+- (void)removeBookmarkHighlights {
+	NSInteger verses = [[PSModuleController defaultModuleController].primaryBible getVerseMax];
+	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d')", verses];
+	[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
+}
+
+- (void)redoBookmarkHighlights {
+	[self removeBookmarkHighlights];
+	[self highlightBookmarks];
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+	//highlight bookmarked verses
+	[self highlightBookmarks];
 	
 	//highlight search results
 	// TODO: implement highlighting of search results
@@ -296,8 +313,8 @@
 		//[PSBasicBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
 		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] andVerse:tappedVerse];
 		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
-		[self presentModalViewController:containingNavigationController animated:YES];
 		[tableViewController release];
+		[self presentModalViewController:containingNavigationController animated:YES];
 		[containingNavigationController release];
 
 		//PSBookmarkAddViewController *bavc = [[PSBookmarkAddViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] verse:tappedVerse];
@@ -322,10 +339,10 @@
 }
 
 - (void)dealloc {
-    [super dealloc];
 	self.refToShow = nil;
 	self.jsToShow = nil;
 	self.tappedVerse = nil;
+    [super dealloc];
 }
 
 

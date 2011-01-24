@@ -187,9 +187,9 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	[fontStrings release];
 	self.moduleName = nil;
+    [super dealloc];
 }
 
 

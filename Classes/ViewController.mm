@@ -132,6 +132,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		NSMutableArray *tabs = [tabController.viewControllers mutableCopy];
 		[tabs insertObject:bookmarksTab atIndex:3];
 		[tabController setViewControllers:tabs animated:NO];
+		[tabs release];
 		[bookmarksViewController release];
 		[bookmarksTab release];
 		

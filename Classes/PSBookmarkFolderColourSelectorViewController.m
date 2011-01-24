@@ -144,9 +144,9 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	self.selectableColours = nil;
 	self.currentSelectedColor = nil;
+    [super dealloc];
 }
 
 

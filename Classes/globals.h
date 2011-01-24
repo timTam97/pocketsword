@@ -110,6 +110,7 @@ typedef enum {
 #define NotificationRedisplayPrimaryBible		@"NotificationRedisplayPrimaryBible"
 #define NotificationRedisplayPrimaryCommentary	@"NotificationRedisplayPrimaryCommentary"
 #define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
+#define NotificationBookmarksChanged			@"NotificationBookmarksChanged"
 
 //#define NotificationAddBibleHistoryItem			@"NotificationAddBibleHistoryItem"
 //#define NotificationAddCommentaryHistoryItem	@"NotificationAddCommentaryHistoryItem"

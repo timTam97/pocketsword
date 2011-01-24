@@ -113,10 +113,10 @@
 }
 
 - (void)dealloc {
-    [super dealloc];
 	[dictionarySearchBar release];
 	[searchResults release];
 	[overlayViewController release];
+    [super dealloc];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -35,7 +35,7 @@ static PSBookmarks *psBookmarks;
 		[parentFolder addChild:bookmark];
 		ret = YES;
 	}
-	[bookmarks saveBookmarksToFile];
+	[PSBookmarks saveBookmarksToFile];
 	return ret;
 }
 
@@ -173,14 +173,15 @@ static PSBookmarks *psBookmarks;
 	return ret;
 }
 
-- (BOOL)saveBookmarksToFile {
++ (BOOL)saveBookmarksToFile {
+	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
 	BOOL ret = NO;
 	DLog(@"\nBookmarks: saveBookmarksToFile");
     NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
-	if(self.children && [children count] > 0) {
-		NSMutableArray *data = [NSMutableArray arrayWithCapacity:[children count]];
-		for(PSBookmarkObject *child in children) {
-			NSArray *kid = [self parseBookmarkObject:child];
+	if(bookmarks.children && [bookmarks.children count] > 0) {
+		NSMutableArray *data = [NSMutableArray arrayWithCapacity:[bookmarks.children count]];
+		for(PSBookmarkObject *child in bookmarks.children) {
+			NSArray *kid = [bookmarks parseBookmarkObject:child];
 			[data addObject:kid];
 			//[kid release]; -- they're autorelease objects :P
 		}

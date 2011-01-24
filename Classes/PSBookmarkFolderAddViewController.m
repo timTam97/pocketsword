@@ -34,8 +34,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
+	
+	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
+	self.navigationItem.rightBarButtonItem = saveButton;
+	[saveButton release];
 	
 	nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,260,25)];
 	[nameTextField setPlaceholder:@""];
@@ -215,9 +217,9 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	self.parentFolder = nil;
 	self.rgbHexString = nil;
+    [super dealloc];
 }
 
 

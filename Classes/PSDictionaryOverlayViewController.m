@@ -61,9 +61,9 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	[grayView release];
 	[dictionaryViewController release];
+    [super dealloc];
 }
 
 

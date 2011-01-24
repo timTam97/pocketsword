@@ -408,8 +408,8 @@
 - (void)dealloc {
     //[tabBarController release];
     [window release];
-    [super dealloc];
 	[PSLanguageCode doneWithLookupTable];
+    [super dealloc];
 }
 
 @end

@@ -41,9 +41,9 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	self.refToShow = nil;
 	self.jsToShow = nil;
+    [super dealloc];
 }
 
 //- (void)awakeFromNib {

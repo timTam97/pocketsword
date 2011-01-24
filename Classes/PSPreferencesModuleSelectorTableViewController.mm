@@ -154,9 +154,9 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	self.moduleList = nil;
 	self.currentModule = nil;
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

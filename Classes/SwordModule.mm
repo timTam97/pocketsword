@@ -352,6 +352,7 @@
 		[ret appendString: featuresAboutString];
 		[ret appendString: @"</p>"];
 	}
+	[featuresAboutString release];
 	
     // module about
 	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b><br />%@</p>", NSLocalizedString(@"AboutModuleAboutText", @""), [self aboutText]]];

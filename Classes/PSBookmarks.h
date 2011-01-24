@@ -20,6 +20,6 @@
 + (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;
 + (NSMutableArray *)getBookmarksForCurrentRef;
 
-- (BOOL)saveBookmarksToFile;
++ (BOOL)saveBookmarksToFile;
 
 @end

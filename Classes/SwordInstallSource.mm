@@ -85,8 +85,8 @@
 
 - (void)dealloc {
 	[self setSwordManager: nil];
-	[super dealloc];
 	[managerCreationLock release];
+	[super dealloc];
 //	if(swordManagerLoaded) {
 //		[swordManager release];
 //	}

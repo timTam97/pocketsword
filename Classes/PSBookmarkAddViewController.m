@@ -40,11 +40,11 @@
 }
 
 - (void)dealloc {
-	[super dealloc];
 	[tableViewController release];
 	[containingNavigationController release];
 	self.bookAndChapterRef = nil;
 	self.verse = nil;
+	[super dealloc];
 }
 
 
@@ -93,15 +93,19 @@
 	descriptionTextField.keyboardType = UIKeyboardTypeDefault;
 	descriptionTextField.returnKeyType = UIReturnKeyDone;
 	
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
+	self.navigationItem.rightBarButtonItem = saveButton;
+	[saveButton release];
+	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+	self.navigationItem.leftBarButtonItem = cancelButton;
+	[cancelButton release];
 	self.navigationItem.title = NSLocalizedString(@"VerseContextualMenuAddBookmark", @"Add Bookmark");	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(folderUpdated:) name:NotificationAddBookmarkInFolder object:nil];
 }
 
 - (void)cancelButtonPressed {
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)saveButtonPressed {
@@ -112,9 +116,9 @@
 	}
 	[PSBookmarks addBookmarkWithRef:ref name:description folderString:folder];
 	if([[PSModuleController getCurrentBibleRef] isEqualToString:bookAndChapterRef]) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
 	}
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -297,10 +301,10 @@
 
 
 - (void)dealloc {
-    [super dealloc];
 	self.bookAndChapterRef = nil;
 	self.verse = nil;
 	self.folder = nil;
+    [super dealloc];
 }
 
 
