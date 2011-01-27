@@ -98,7 +98,6 @@ static PSBookmarks *psBookmarks;
 		if([rgb isEqualToString:@""]) {
 			rgb = nil;
 		}
-		NSString *hi = [array objectAtIndex:5];
 		NSArray *kids = [array objectAtIndex:6];
 		NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:[kids count]];
 		for(NSArray *child in kids) {
@@ -106,7 +105,7 @@ static PSBookmarks *psBookmarks;
 			[kidsArray addObject:kid];
 			[kid release];
 		}
-		return [[PSBookmarkFolder alloc] initWithName:n dateAdded:da dateLastAccessed:dla rgbHexString:rgb highlight:[hi boolValue] children:kidsArray];
+		return [[PSBookmarkFolder alloc] initWithName:n dateAdded:da dateLastAccessed:dla rgbHexString:rgb children:kidsArray];
 	} else {
 		//tis a bookmark
 		NSString *r = [array objectAtIndex:4];
@@ -133,7 +132,7 @@ static PSBookmarks *psBookmarks;
 }
 
 - (id)init {
-	self = [super initWithName:nil dateAdded:nil dateLastAccessed:nil rgbHexString:nil highlight:NO children:nil];
+	self = [super initWithName:nil dateAdded:nil dateLastAccessed:nil rgbHexString:nil children:nil];
 	if(self) {
 		self.name = NSLocalizedString(@"BookmarksTitle", @"");
 		[self loadBookmarksFromFile];
@@ -156,7 +155,6 @@ static PSBookmarks *psBookmarks;
 		} else {
 			[ret addObject:@""];
 		}
-		[ret addObject:((((PSBookmarkFolder*)bookmarkObject).highlight) ? @"YES" : @"NO")];
 		NSMutableArray *kids = [NSMutableArray arrayWithCapacity:[((PSBookmarkFolder*)bookmarkObject).children count]];
 		for(PSBookmarkObject *child in ((PSBookmarkFolder*)bookmarkObject).children) {
 			NSArray *kid = [self parseBookmarkObject:child];

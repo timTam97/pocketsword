@@ -60,11 +60,10 @@
 	return self;
 }
 
-- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb highlight:(BOOL)h children:(NSArray*)c {
+- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb children:(NSArray*)c {
 	self = [super initWithName:n dateAdded:da dateLastAccessed:dla];
 	if(self) {
 		self.rgbHexString = rgb;
-		highlight = h;
 		self.children = c;
 		folder = YES;
 	}

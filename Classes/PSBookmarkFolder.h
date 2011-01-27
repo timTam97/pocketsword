@@ -18,7 +18,7 @@
 + (NSString*)hexStringFromColor:(UIColor *)color;
 + (UIColor*)colorFromHexString:(NSString*)hexString;
 
-- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb highlight:(BOOL)h children:(NSArray*)c;
+- (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb children:(NSArray*)c;
 
 - (void)addChild:(PSBookmarkObject*)child;
 - (void)addChildren:(NSArray*)kids;

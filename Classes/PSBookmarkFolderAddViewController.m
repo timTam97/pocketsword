@@ -68,11 +68,7 @@
 		return;
 	}
 	
-	
-	BOOL h = NO;
-	if(rgbHexString)
-		h = YES;
-	PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString highlight:h children:nil];
+	PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString children:nil];
 	[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
 	[self.navigationController popViewControllerAnimated:YES];
 }

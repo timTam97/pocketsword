@@ -11,7 +11,7 @@
 
 @implementation PSBookmarkObject
 
-@synthesize name, dateAdded, dateLastAccessed, folder, rgbHexString, highlight;
+@synthesize name, dateAdded, dateLastAccessed, folder, rgbHexString;
 
 - (id)init {
 	self = [super init];
