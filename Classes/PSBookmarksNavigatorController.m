@@ -12,7 +12,7 @@
 #import "HistoryController.h"
 #import "PSBookmarkFolderAddViewController.h"
 #import "PSBookmarks.h"
-
+#import "PSBookmarkTableViewCell.h"
 
 @implementation PSBookmarksNavigatorController
 
@@ -172,9 +172,9 @@
     
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    PSBookmarkTableViewCell *cell = (PSBookmarkTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[PSBookmarkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
     
     // Configure the cell...
@@ -189,10 +189,22 @@
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			cell.imageView.image = [UIImage imageNamed:@"folder.png"];
 		} else {
-			//tis a bookmark
+			//tis a bookmark			
+			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+			[dateFormatter setDateStyle:NSDateFormatterShortStyle];
+			
+			NSString *dateString = [dateFormatter stringFromDate:rowObject.dateLastAccessed];
+			NSString *todayString = [dateFormatter stringFromDate:[NSDate date]];
+			[dateFormatter release];
+			dateFormatter = nil;
+			if([dateString isEqualToString:todayString]) {
+				dateString = NSLocalizedString(@"TodayButtonTitle", @"");
+			}
 			cell.detailTextLabel.text = ((PSBookmark*)rowObject).ref;
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.imageView.image = [UIImage imageNamed:@"bookmark.png"];
+			cell.lastAccessedLabel.text = [NSString stringWithFormat:@"(%@)", dateString];
 		}
 	} else if(indexPath.section == 1) {
 		if(displayAddFolderRow) {
