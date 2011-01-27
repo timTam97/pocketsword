@@ -162,9 +162,12 @@
 		NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
 		[bibleWebView stringByEvaluatingJavaScriptFromString:jsCode];
 		for(PSBookmark *bookmark in shownBookmarks) {
-			NSString *verse = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
-			NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, bookmark.rgbHexString];
-			[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
+			if(bookmark.rgbHexString) {
+				NSString *verse = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
+				NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, bookmark.rgbHexString];
+				DLog(@"%@", jsFunction);
+				[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
+			}
 		}
 	}
 }
