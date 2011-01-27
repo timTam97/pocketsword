@@ -646,6 +646,8 @@
 		056BC73D12F0E8E00029F3A2 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73912F0E8E00029F3A2 /* folder@2x.png */; };
 		056BC84D12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */; };
 		056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */; };
+		056BC97D12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */; };
+		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
@@ -1371,6 +1373,8 @@
 		056BC73912F0E8E00029F3A2 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resources/folder@2x.png"; sourceTree = "<group>"; };
 		056BC84B12F101860029F3A2 /* PSBookmarkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkTableViewCell.h; path = Classes/PSBookmarkTableViewCell.h; sourceTree = "<group>"; };
 		056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkTableViewCell.m; path = Classes/PSBookmarkTableViewCell.m; sourceTree = "<group>"; };
+		056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSLaunchViewController.h; path = Classes/PSLaunchViewController.h; sourceTree = "<group>"; };
+		056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSLaunchViewController.m; path = Classes/PSLaunchViewController.m; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
@@ -2666,6 +2670,8 @@
 				E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */,
 				056BC84B12F101860029F3A2 /* PSBookmarkTableViewCell.h */,
 				056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */,
+				056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */,
+				056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */,
 			);
 			name = base;
 			sourceTree = "<group>";
@@ -3895,6 +3901,7 @@
 				056BBF9112DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
 				056BBFA312DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 				056BC84D12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
+				056BC97D12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4231,6 +4238,7 @@
 				056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
 				056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 				056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
+				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
