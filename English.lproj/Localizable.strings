@@ -252,3 +252,4 @@
 "BookmarksAddBookmarkHereButton" = "Add Bookmark here";
 "BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
 "BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
+"BookmarksImportedFolderName" = "Imported";

@@ -131,7 +131,7 @@
 	
 	if(indexPath.section == 0) {
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
-		if(rowObject.folder) {
+		if(rowObject.folder && ((PSBookmarkFolder*)rowObject).rgbHexString) {
 			cell.backgroundColor = [PSBookmarkFolder colorFromHexString:((PSBookmarkFolder*)rowObject).rgbHexString];
 		} else {
 			cell.backgroundColor = [UIColor whiteColor];

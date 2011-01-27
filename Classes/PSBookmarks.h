@@ -21,5 +21,6 @@
 + (NSMutableArray *)getBookmarksForCurrentRef;
 
 + (BOOL)saveBookmarksToFile;
++ (void)importBookmarksFromV2;
 
 @end

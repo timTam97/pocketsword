@@ -165,7 +165,7 @@
 			if(bookmark.rgbHexString) {
 				NSString *verse = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
 				NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, bookmark.rgbHexString];
-				DLog(@"%@", jsFunction);
+				//DLog(@"%@", jsFunction);
 				[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
 			}
 		}
@@ -186,6 +186,7 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+	
 	//highlight bookmarked verses
 	[self highlightBookmarks];
 	

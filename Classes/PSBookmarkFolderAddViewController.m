@@ -70,6 +70,7 @@
 	
 	PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString children:nil];
 	[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
+	[folder release];
 	[self.navigationController popViewControllerAnimated:YES];
 }
 

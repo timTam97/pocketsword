@@ -367,14 +367,13 @@ static PSModuleController *instance;
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToNextChapter];
 		[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
-		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	if(primaryCommentary && !ret) {
 		[primaryCommentary setChapter: cur];
 		ret = [primaryCommentary setToNextChapter];
 		[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsCommentaryVersePosition];
-		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
+	[[NSUserDefaults standardUserDefaults] synchronize];
 	return ret;
 }
 
@@ -387,7 +386,6 @@ static PSModuleController *instance;
 		ret = [primaryBible setToPreviousChapter];
 		verse = [primaryBible getVerseMax];
 		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsBibleVersePosition];
-		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	if(primaryCommentary) {
 		if(!ret) {
@@ -395,12 +393,11 @@ static PSModuleController *instance;
 			ret = [primaryCommentary setToPreviousChapter];
 			verse = [primaryCommentary getVerseMax];
 			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsCommentaryVersePosition];
-			[[NSUserDefaults standardUserDefaults] synchronize];
 		} else if(verse) {
 			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsCommentaryVersePosition];
-			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 	}
+	[[NSUserDefaults standardUserDefaults] synchronize];
 	return ret;
 }
 

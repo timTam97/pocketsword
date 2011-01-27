@@ -73,7 +73,7 @@ static PSBookmarks *psBookmarks;
 }
 
 + (NSMutableArray *)getBookmarksForCurrentRef {
-	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	NSString *currentRef = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
 	return [PSBookmarks getBookmarksForBookAndChapterRef:currentRef];
 }
 
@@ -114,7 +114,7 @@ static PSBookmarks *psBookmarks;
 }
 
 - (void)loadBookmarksFromFile {
-	DLog(@"\nBookmarks: loadBookmarksFromFile");
+	//DLog(@"\nBookmarks: loadBookmarksFromFile");
     NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
 	NSArray *data = [NSArray arrayWithContentsOfFile:bookmarksPath];
 	NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:2];
@@ -174,7 +174,7 @@ static PSBookmarks *psBookmarks;
 + (BOOL)saveBookmarksToFile {
 	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
 	BOOL ret = NO;
-	DLog(@"\nBookmarks: saveBookmarksToFile");
+	//DLog(@"\nBookmarks: saveBookmarksToFile");
     NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
 	if(bookmarks.children && [bookmarks.children count] > 0) {
 		NSMutableArray *data = [NSMutableArray arrayWithCapacity:[bookmarks.children count]];
@@ -190,5 +190,30 @@ static PSBookmarks *psBookmarks;
 	return ret;
 }
 
++ (void)importBookmarksFromV2 {
+	NSArray *oldBookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
+	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
+	
+	if(oldBookmarks) {
+		BOOL createImportedFolder = YES;
+		for(PSBookmarkObject* obj in bookmarks.children) {
+			if([obj.name isEqualToString:NSLocalizedString(@"BookmarksImportedFolderName", @"")]) {
+				// if there already exists an @"imported" folder, don't recreate it!
+				createImportedFolder = NO;
+				break;
+			}
+		}
+		if(createImportedFolder) {
+			PSBookmarkFolder *importFolder = [[PSBookmarkFolder alloc] initWithName:NSLocalizedString(@"BookmarksImportedFolderName", @"") dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:nil children:nil];
+			[PSBookmarks addBookmarkObject:importFolder withFolderString:nil];
+			[importFolder release];
+		}
+		for(NSString *ref in oldBookmarks) {
+			[PSBookmarks addBookmarkWithRef:[PSModuleController createRefString:ref] name:ref folderString:NSLocalizedString(@"BookmarksImportedFolderName", @"")];
+		}
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bookmarks2"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
+}
 
 @end

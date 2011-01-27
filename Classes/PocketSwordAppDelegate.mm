@@ -70,7 +70,6 @@
 	[moduleManager setPrimaryBible: nil];
 	[moduleManager setPrimaryCommentary: nil];
 	[moduleManager setPrimaryDictionary: nil];
-	//[[moduleManager viewController] redisplayChapter: BibleViewPoll restore: RestoreNoPosition];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 }
 

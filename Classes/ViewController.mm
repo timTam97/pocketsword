@@ -27,6 +27,7 @@
 #import "PSModuleSelectorController.h"
 #import "PSPreferencesController.h"
 #import "PSBookmarksNavigatorController.h"
+#import "PSBookmarks.h"
 
 #define INFO_LANDSCAPE_HEIGHT 100.0
 #define INFO_PORTRAIT_HEIGHT 160.0
@@ -123,6 +124,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		tabController.delegate = self;
 		
 		//add our customized bookmarks tab:
+		[PSBookmarks importBookmarksFromV2];
 		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController *bookmarksTab = [[[UINavigationController alloc] initWithRootViewController:bookmarksViewController] retain];
 		bookmarksTab.navigationBar.barStyle = UIBarStyleBlack;
