@@ -129,9 +129,9 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
-			return @"Folder Name:";
+			return NSLocalizedString(@"BookmarksAddFolderFolderName", @"");
 		case 1:
-			return @"Highlight Colour:";
+			return NSLocalizedString(@"BookmarksAddFolderHighlightColour", @"");
 		default:
 			break;
 	}

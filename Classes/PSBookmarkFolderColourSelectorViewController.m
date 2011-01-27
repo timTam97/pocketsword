@@ -97,9 +97,9 @@
     
     // Configure the cell...
 	if([[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]] isEqualToString:[PSBookmarkFolder hexStringFromColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0]]]) {
-		cell.textLabel.text = [PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]];//NSLocalizedString(@"None", @"None");
+		cell.textLabel.text = NSLocalizedString(@"None", @"None");//[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]];
 	} else {
-		cell.textLabel.text = [PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]];//@"";
+		cell.textLabel.text = @"";//[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]];
 	}
 	
 	if((!currentSelectedColor && indexPath.row == 0) || [[PSBookmarkFolder hexStringFromColor:[selectableColours objectAtIndex:indexPath.row]] isEqualToString:currentSelectedColor]) {

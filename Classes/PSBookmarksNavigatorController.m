@@ -137,7 +137,7 @@
 			cell.backgroundColor = [UIColor whiteColor];
 		}
 	} else if(indexPath.section == 1) {
-		cell.backgroundColor = [UIColor blueColor];
+		cell.backgroundColor = [UIColor whiteColor];
 	}
 }
 
@@ -187,19 +187,21 @@
 			//tis a folder
 			cell.detailTextLabel.text = @"";
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			cell.imageView.image = [UIImage imageNamed:@""];
+			cell.imageView.image = [UIImage imageNamed:@"folder.png"];
 		} else {
 			//tis a bookmark
 			cell.detailTextLabel.text = ((PSBookmark*)rowObject).ref;
 			cell.accessoryType = UITableViewCellAccessoryNone;
-			cell.imageView.image = [UIImage imageNamed:@""];
+			cell.imageView.image = [UIImage imageNamed:@"bookmark.png"];
 		}
 	} else if(indexPath.section == 1) {
 		if(displayAddFolderRow) {
 			//add folder row!
-			cell.textLabel.text = @"Add Folder";
+			cell.imageView.image = [UIImage imageNamed:@"folder.png"];
+			cell.textLabel.text = NSLocalizedString(@"BookmarksAddFolderButton", @"Add Folder");
 		} else {
-			cell.textLabel.text = @"Add Bookmark here";
+			cell.imageView.image = [UIImage imageNamed:@"bookmark.png"];
+			cell.textLabel.text = NSLocalizedString(@"BookmarksAddBookmarkHereButton", @"Add Bookmark here");
 		}
 	}
 	return cell;
@@ -207,9 +209,9 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	if(section == 0 && !self.isAddingBookmark) {
-		return @"To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
+		return NSLocalizedString(@"BookmarksAddBookmarkDescription", @"To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'");
 	} else if(!displayAddFolderRow && section == 1 && self.isAddingBookmark) {
-		return @"To add a folder, tap on the Edit button";
+		return NSLocalizedString(@"BookmarksAddFolderDescription", @"To add a folder, tap on the Edit button");
 	} else {
 		return nil;
 	}

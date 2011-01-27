@@ -313,7 +313,8 @@
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
 		//add a bookmark!
 		//[PSBasicBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
-		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] andVerse:tappedVerse];
+		NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
+		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
 		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
 		[tableViewController release];
 		[self presentModalViewController:containingNavigationController animated:YES];

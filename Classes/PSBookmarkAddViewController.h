@@ -20,17 +20,3 @@
 - (id)initWithBookAndChapterRef:(NSString*)ref andVerse:(NSString*)v;
 
 @end
-
-@interface PSBookmarkAddViewController : UIViewController {
-	UINavigationController *containingNavigationController;
-	PSBookmarksAddTableViewController *tableViewController;
-	NSString *bookAndChapterRef;
-	NSString *verse;
-}
-
-@property (retain, readwrite) NSString *bookAndChapterRef;
-@property (retain, readwrite) NSString *verse;
-
-- (id)initWithBookAndChapterRef:(NSString*)ref verse:(NSString*)v;
-
-@end

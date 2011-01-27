@@ -12,44 +12,6 @@
 #import "PSBookmarksNavigatorController.h"
 #import "PSModuleController.h"
 
-@implementation PSBookmarkAddViewController
-
-@synthesize bookAndChapterRef, verse;
-
-- (id)initWithBookAndChapterRef:(NSString*)ref verse:(NSString*)v {
-	self = [super initWithNibName:nil bundle:nil];
-	if(self) {
-		self.bookAndChapterRef = ref;
-		self.verse = v;
-	}
-	return self;
-}
-
-- (void)loadView {
-	tableViewController = [[[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:bookAndChapterRef andVerse:verse] retain];
-	containingNavigationController = [[[UINavigationController alloc] initWithRootViewController:tableViewController] retain];
-	self.view = containingNavigationController.view;
-}
-
-- (void)viewDidUnload {
-	[super viewDidUnload];
-	[tableViewController release];
-	tableViewController = nil;
-	[containingNavigationController release];
-	containingNavigationController = nil;
-}
-
-- (void)dealloc {
-	[tableViewController release];
-	[containingNavigationController release];
-	self.bookAndChapterRef = nil;
-	self.verse = nil;
-	[super dealloc];
-}
-
-
-@end
-
 @implementation PSBookmarksAddTableViewController
 
 @synthesize bookAndChapterRef, verse, folder;
@@ -176,11 +138,11 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
-			return @"Verse";
+			return NSLocalizedString(@"BookmarksAddBookmarkVerseTitle", @"");
 		case 1:
-			return @"Description";
+			return NSLocalizedString(@"BookmarksAddBookmarkDescriptionTitle", @"");
 		case 2:
-			return @"Folder";
+			return NSLocalizedString(@"BookmarksAddBookmarkFolderTitle", @"");
 		default:
 			break;
 	}
