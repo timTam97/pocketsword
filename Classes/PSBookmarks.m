@@ -98,7 +98,7 @@ static PSBookmarks *psBookmarks;
 		if([rgb isEqualToString:@""]) {
 			rgb = nil;
 		}
-		NSArray *kids = [array objectAtIndex:6];
+		NSArray *kids = [array objectAtIndex:5];
 		NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:[kids count]];
 		for(NSArray *child in kids) {
 			PSBookmarkObject *kid = [self parseArray:child];

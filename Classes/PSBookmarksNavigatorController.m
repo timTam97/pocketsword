@@ -258,7 +258,8 @@
 		PSBookmarkFolderAddViewController *favc = [[PSBookmarkFolderAddViewController alloc] initWithParentFolder:self.parentFolders];
 		[self.navigationController pushViewController:favc animated:YES];
 		[favc release];
-		[self setEditing:NO];
+		//[self setEditing:NO];
+		[self editButtonPressed];
     }   
 }
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
