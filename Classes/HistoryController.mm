@@ -24,34 +24,34 @@
 
 @implementation HistoryController
 
+- (id)init {
+	self = [super initWithNibName:nil bundle:nil];
+	if(self) {
+		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemHistory tag:0];
+		self.tabBarItem = tBI;
+		[tBI release];
+	}
+	return self;
+}
+
 - (IBAction)closeButtonPressed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 }
 
 - (void)setListType:(ShownTab)listT {
 	listType = listT;
-//	if(listType == BibleTab) {
-//		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
-//	} else {
-//		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
-//	}
-//	[historyListTable reloadData];
-//	if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
-//		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
-//		if(ip)
-//			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
-//	}
 }
 
-- (ShownTab)listType {
-	return listType;
-}
+//- (ShownTab)listType {
+//	return listType;
+//}
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
 	historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
+
 }
 
 - (void)viewDidUnload {
@@ -265,6 +265,8 @@
 		[dateFormatter release];
 		dateFormatter = nil;
 		cell.lastAccessedLabel.text = dateString;
+	} else {
+		cell.lastAccessedLabel.text = @"";
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {

@@ -30,7 +30,7 @@
 }
 
 - (void)setListType:(ShownTab)listType;
-- (ShownTab)listType;
+//- (ShownTab)listType;
 - (IBAction)closeButtonPressed;
 
 - (void)addBibleHistoryItem;

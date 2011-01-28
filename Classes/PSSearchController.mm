@@ -16,6 +16,24 @@
 @synthesize results;
 @synthesize searchTerm;
 
+- (id)init {
+	self = [super initWithNibName:nil bundle:nil];
+	if(self) {
+		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
+		self.tabBarItem = tBI;
+		[tBI release];
+	}
+	return self;
+}
+
+- (void)setListType:(ShownTab)listT {
+	listType = listT;
+}
+
+- (IBAction)closeButtonPressed {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
+}
+
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
@@ -23,9 +41,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	ShownTab tab = [historyController listType];
 	BOOL showIndexController = NO;
-	switch(tab) {
+	switch(listType) {
 		case BibleTab:
 			if(![[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
 				showIndexController = YES;
@@ -96,9 +113,8 @@
 }
 
 - (void)refreshView {
-	ShownTab tab = [historyController listType];
 	searchingEnabled = NO;
-	switch(tab) {
+	switch(listType) {
 		case BibleTab:
 			if([[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
 				searchingEnabled = YES;
@@ -193,9 +209,8 @@
 		secondLabel.backgroundColor = [UIColor whiteColor];
 	}
 	if(!((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text || [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text isEqualToString: @""]) {
-		ShownTab tab = [historyController listType];
 		SwordModuleTextEntry *entry;
-		switch(tab) {
+		switch(listType) {
 			case BibleTab:
 				entry = [[[PSModuleController defaultModuleController] primaryBible] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
 				break;
@@ -236,9 +251,8 @@
 		[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
-		ShownTab tab = [historyController listType];
 		//PollingType pt;
-		switch(tab) {
+		switch(listType) {
 			case BibleTab:
 				//pt = BibleViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
@@ -271,10 +285,9 @@
 	[sBar resignFirstResponder];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	//[[PSModuleController defaultModuleController] displayBusyIndicator];
-	ShownTab tab = [historyController listType];
 	self.results = nil;
 	self.searchTerm = [sBar text];
-	switch(tab) {
+	switch(listType) {
 		case BibleTab:
 			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [sBar text]];
 			break;

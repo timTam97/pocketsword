@@ -421,18 +421,28 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
 	
-	if([multiListController.view superview]) {
-	//if(multiListController) {
+	//if([multiListController.view superview]) {
+	if(multiListController) {
 		[tabController dismissModalViewControllerAnimated:YES];
-		//multiListController = nil;
+		multiListController = nil;
 	} else {
-		//multiListController = [[PSMultiListController alloc] initWithNibName:@"PSMultiListController" bundle:nil];
+		
+		multiListController = [[UITabBarController alloc] init];
+		HistoryController *historyController = [[HistoryController alloc] init];
+		PSSearchController *searchController = [[PSSearchController alloc] init];
+		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			[historyController setListType: BibleTab];
+			[searchController setListType:BibleTab];
 		} else {
 			[historyController setListType: CommentaryTab];
+			[searchController setListType: CommentaryTab];
 		}
+		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchController, nil];
+		multiListController.viewControllers = controllers;
+
 		[tabController presentModalViewController:multiListController animated:YES];
+		[multiListController release];
 	}
 	
 }

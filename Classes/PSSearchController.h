@@ -12,7 +12,9 @@
 
 @interface PSSearchController : UIViewController {
 
-	IBOutlet HistoryController *historyController;
+	ShownTab listType;
+
+	//IBOutlet HistoryController *historyController;
 	IBOutlet UITableView *searchResultsTable;
 	IBOutlet UISearchBar *searchBar;
 	IBOutlet UIBarButtonItem *closeButton;
@@ -31,6 +33,10 @@
 - (void)refreshView;
 //- (void)hideKeyboard;
 
+- (void)setListType:(ShownTab)listType;
+//- (ShownTab)listType;
+
 - (IBAction)infoButtonPressed:(id)sender;
+- (IBAction)closeButtonPressed;
 
 @end

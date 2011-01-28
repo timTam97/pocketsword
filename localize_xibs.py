@@ -42,6 +42,7 @@ for root, dirs, files in os.walk(sys.argv[-1]):
       if not os.path.exists(basename + '.strings'):
         print 'Not writing strings for %s.xib' % basename
         continue
-      cmd = 'ibtool --strings-file "%s.strings" --write "%s.xib" "%s/English.lproj/%s"' % (basename, basename, sys.argv[-1], file)
+      #cmd = 'ibtool --strings-file "%s.strings" --write "%s.xib" "%s/English.lproj/%s"' % (basename, basename, sys.argv[-1], file)
+      cmd = 'cp "%s/English.lproj/%s" "%s.xib"' % (sys.argv[-1], file, basename)
       if os.system(cmd) != 0:
         print 'failed to execute command: %s' % cmd

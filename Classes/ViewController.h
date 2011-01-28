@@ -78,9 +78,7 @@ typedef enum {
 	NSTimer								*refTitleSplashTimer;
 
 	// MultiList
-	IBOutlet UITabBarController			*multiListController;
-	IBOutlet id							historyController;
-	//PSMultiListController				*multiListController;
+	UITabBarController					*multiListController;
 
 	id									moduleSelectorViewController;
 	
