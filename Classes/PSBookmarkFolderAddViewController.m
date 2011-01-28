@@ -14,16 +14,21 @@
 
 @implementation PSBookmarkFolderAddViewController
 
-@synthesize parentFolder, rgbHexString;
+@synthesize parentFolder, rgbHexString, bookmarkFolderBeingEdited;
 
 #pragma mark -
 #pragma mark Initialization
 
-- (id)initWithParentFolder:(NSString*)folder {
+- (id)initWithParentFolder:(NSString*)folder bookmarkFolderToEdit:(PSBookmarkFolder*)bookmarkFolder {
 	self = [super initWithStyle:UITableViewStyleGrouped];
 	if(self) {
 		self.parentFolder = folder;
-		self.rgbHexString = nil;
+		self.bookmarkFolderBeingEdited = bookmarkFolder;
+		if(bookmarkFolder) {
+			self.rgbHexString = bookmarkFolder.rgbHexString;
+		} else {
+			self.rgbHexString = nil;
+		}
 	}
 	return self;
 }
@@ -45,16 +50,26 @@
 	nameTextField.delegate = self;
 	nameTextField.keyboardType = UIKeyboardTypeDefault;
 	nameTextField.returnKeyType = UIReturnKeyDone;
+	if(self.bookmarkFolderBeingEdited) {
+		nameTextField.text = bookmarkFolderBeingEdited.name;
+		self.navigationItem.title = NSLocalizedString(@"BookmarksEditFolderTitle", @"Edit Folder");
+	} else {
+		self.navigationItem.title = NSLocalizedString(@"BookmarksAddFolderButton", @"Add Folder");
+	}
 }
 
 - (void)saveButtonPressed {
 	// check for a duplicate folder name:
 	PSBookmarkFolder *parentFolderObject = [PSBookmarks getBookmarkFolderForFolderString:self.parentFolder];
 	BOOL valid = YES;
-	for(PSBookmarkFolder *childFolder in parentFolderObject.children) {
-		if([childFolder.name isEqualToString:nameTextField.text]) {
-			valid = NO;
-			break;
+	if(self.bookmarkFolderBeingEdited && [bookmarkFolderBeingEdited.name isEqualToString:nameTextField.text]) {
+		//tis ok.
+	} else {
+		for(PSBookmarkFolder *childFolder in parentFolderObject.children) {
+			if([childFolder.name isEqualToString:nameTextField.text]) {
+				valid = NO;
+				break;
+			}
 		}
 	}
 	if(!valid) {
@@ -68,9 +83,17 @@
 		return;
 	}
 	
-	PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString children:nil];
-	[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
-	[folder release];
+	if(self.bookmarkFolderBeingEdited) {
+		// save the edited details of the bookmark folder.
+		self.bookmarkFolderBeingEdited.name = nameTextField.text;
+		self.bookmarkFolderBeingEdited.rgbHexString = self.rgbHexString;
+		[PSBookmarks saveBookmarksToFile];
+	} else {
+		// add new folder to the bookmarks.
+		PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString children:nil];
+		[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
+		[folder release];
+	}
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -113,7 +136,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 2;
+	if(self.bookmarkFolderBeingEdited) {
+		return 3;
+	} else {
+		return 2;
+	}
 }
 
 
@@ -129,6 +156,8 @@
 			return NSLocalizedString(@"BookmarksAddFolderFolderName", @"");
 		case 1:
 			return NSLocalizedString(@"BookmarksAddFolderHighlightColour", @"");
+		case 2:
+			return NSLocalizedString(@"BookmarksCreatedTitle", @"");
 		default:
 			break;
 	}
@@ -166,6 +195,20 @@
 			cell.textLabel.text = NSLocalizedString(@"None", @"None");
 		}
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	} else if(indexPath.section == 2) {
+		
+		NSString *dateString = @"";
+		if(self.bookmarkFolderBeingEdited) {
+			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+			[dateFormatter setDateStyle:NSDateFormatterFullStyle];
+
+			dateString = [dateFormatter stringFromDate:bookmarkFolderBeingEdited.dateAdded];
+			[dateFormatter release];
+			dateFormatter = nil;
+		}
+		cell.textLabel.text = dateString;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
     
     return cell;
@@ -177,7 +220,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section == 0) {
 		[nameTextField becomeFirstResponder];
-	} else {
+	} else if(indexPath.section == 1) {
+		[nameTextField resignFirstResponder];
 		PSBookmarkFolderColourSelectorViewController *csvc = [[PSBookmarkFolderColourSelectorViewController alloc] initWithColorString:self.rgbHexString delegate:self];
 		[self.navigationController pushViewController:csvc animated:YES];
 		[csvc release];
@@ -212,6 +256,7 @@
 - (void)dealloc {
 	self.parentFolder = nil;
 	self.rgbHexString = nil;
+	self.bookmarkFolderBeingEdited = nil;
     [super dealloc];
 }
 

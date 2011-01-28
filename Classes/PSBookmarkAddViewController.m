@@ -14,7 +14,7 @@
 
 @implementation PSBookmarksAddTableViewController
 
-@synthesize bookAndChapterRef, verse, folder;
+@synthesize bookAndChapterRef, verse, folder, originalFolder, bookmarkBeingEdited;
 
 #pragma mark -
 #pragma mark Initialization
@@ -25,6 +25,20 @@
 		self.bookAndChapterRef = ref;
 		self.verse = v;
 		self.folder = nil;
+		self.originalFolder = nil;
+		self.bookmarkBeingEdited = nil;
+	}
+	return self;
+}
+
+- (id)initWithBookmarkToEdit:(PSBookmark*)bookmarkToEdit parentFolders:(NSString*)folders {
+	self = [super initWithStyle:UITableViewStyleGrouped];
+	if(self) {
+		self.bookAndChapterRef = nil;
+		self.verse = nil;
+		self.folder = folders;
+		self.originalFolder = folders;
+		self.bookmarkBeingEdited = bookmarkToEdit;
 	}
 	return self;
 }
@@ -51,36 +65,88 @@
 	descriptionTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,260,25)];
 	[descriptionTextField setPlaceholder:@""];
 	descriptionTextField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-	//descriptionTextField.delegate = self;
+	descriptionTextField.delegate = self;
 	descriptionTextField.keyboardType = UIKeyboardTypeDefault;
 	descriptionTextField.returnKeyType = UIReturnKeyDone;
+	if(self.bookmarkBeingEdited) {
+		descriptionTextField.text = bookmarkBeingEdited.name;
+	}
 	
 	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
 	self.navigationItem.rightBarButtonItem = saveButton;
 	[saveButton release];
-	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
-	self.navigationItem.leftBarButtonItem = cancelButton;
-	[cancelButton release];
-	self.navigationItem.title = NSLocalizedString(@"VerseContextualMenuAddBookmark", @"Add Bookmark");	
+	if(!self.bookmarkBeingEdited) {
+		UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+		self.navigationItem.leftBarButtonItem = cancelButton;
+		[cancelButton release];
+		self.navigationItem.title = NSLocalizedString(@"VerseContextualMenuAddBookmark", @"Add Bookmark");	
+	} else {
+		self.navigationItem.title = NSLocalizedString(@"BookmarkEditBookmarkTitle", @"Edit Bookmark");	
+	}
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(folderUpdated:) name:NotificationAddBookmarkInFolder object:nil];
 }
 
 - (void)cancelButtonPressed {
+	// this button only exists if we're adding a bookmark, so it's ok to only do this.
 	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)saveButtonPressed {
-	NSString *ref = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
-	NSString *description = ref;
-	if(descriptionTextField.text && ![descriptionTextField.text isEqualToString:@""]) {
-		description = descriptionTextField.text;
+	BOOL valid = YES;
+	if(self.bookmarkBeingEdited && [bookmarkBeingEdited.name isEqualToString:descriptionTextField.text]) {
+		//tis ok.
+	} else {
+		for(PSBookmarkFolder *childFolder in [PSBookmarks getBookmarkFolderForFolderString:self.folder].children) {
+			if([childFolder.name isEqualToString:descriptionTextField.text]) {
+				valid = NO;
+				break;
+			}
+		}
 	}
-	[PSBookmarks addBookmarkWithRef:ref name:description folderString:folder];
-	if([[PSModuleController getCurrentBibleRef] isEqualToString:bookAndChapterRef]) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
+	if(!valid) {
+		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		return;
+	}	
+	
+	if(self.bookmarkBeingEdited) {
+		NSString *description = descriptionTextField.text;
+		if([description isEqualToString:@""]) {
+			description = bookmarkBeingEdited.ref;
+		}
+		PSBookmark *newBookmark = [[PSBookmark alloc] initWithName:description dateAdded:bookmarkBeingEdited.dateAdded dateLastAccessed:[NSDate date] bibleReference:bookmarkBeingEdited.ref];
+		[PSBookmarks deleteBookmark:bookmarkBeingEdited.name fromFolderString:self.originalFolder];
+		[PSBookmarks addBookmarkObject:newBookmark withFolderString:self.folder];
+		[newBookmark release];
+		
+		NSArray *fullRef = [bookmarkBeingEdited.ref componentsSeparatedByString: @":"];
+		NSString *ref = [fullRef objectAtIndex: 0];
+		if([[PSModuleController createRefString:[PSModuleController getCurrentBibleRef]] isEqualToString:ref]) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
+		}
+		
+		[self.navigationController popViewControllerAnimated:YES];
+	} else {
+		NSString *ref = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
+		NSString *description = ref;
+		if(descriptionTextField.text && ![descriptionTextField.text isEqualToString:@""]) {
+			description = descriptionTextField.text;
+		}
+		[PSBookmarks addBookmarkWithRef:ref name:description folderString:folder];
+		if([[PSModuleController createRefString:[PSModuleController getCurrentBibleRef]] isEqualToString:bookAndChapterRef]) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
+		}
+		[self dismissModalViewControllerAnimated:YES];
 	}
-	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	[descriptionTextField becomeFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -125,7 +191,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 3;
+	if(self.bookmarkBeingEdited) {
+		return 5;
+	} else {
+		return 3;
+	}
 }
 
 
@@ -143,6 +213,10 @@
 			return NSLocalizedString(@"BookmarksAddBookmarkDescriptionTitle", @"");
 		case 2:
 			return NSLocalizedString(@"BookmarksAddBookmarkFolderTitle", @"");
+		case 3:
+			return NSLocalizedString(@"BookmarksCreatedTitle", @"");
+		case 4:
+			return NSLocalizedString(@"BookmarksLastAccessedTitle", @"");
 		default:
 			break;
 	}
@@ -165,11 +239,19 @@
     // Configure the cell...
 	switch (indexPath.section) {
 		case 0:
-			cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
+			if(self.bookmarkBeingEdited) {
+				cell.textLabel.text = bookmarkBeingEdited.ref;
+			} else {
+				cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse];
+			}
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			break;
 		case 1:
-			[descriptionTextField setPlaceholder:[NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse]];
+			if(self.bookmarkBeingEdited) {
+				[descriptionTextField setPlaceholder:bookmarkBeingEdited.ref];
+			} else {
+				[descriptionTextField setPlaceholder:[NSString stringWithFormat:@"%@:%@", bookAndChapterRef, verse]];
+			}
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			break;
 		case 2:
@@ -180,6 +262,30 @@
 				cell.textLabel.text = NSLocalizedString(@"BookmarksTitle", @"");
 			}
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			break;
+		case 3:
+		{
+			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+			[dateFormatter setDateStyle:NSDateFormatterFullStyle];
+			
+			cell.textLabel.text = [dateFormatter stringFromDate:bookmarkBeingEdited.dateAdded];
+			[dateFormatter release];
+			dateFormatter = nil;
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		}
+			break;
+		case 4:
+		{
+			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+			[dateFormatter setDateStyle:NSDateFormatterFullStyle];
+			
+			cell.textLabel.text = [dateFormatter stringFromDate:bookmarkBeingEdited.dateLastAccessed];
+			[dateFormatter release];
+			dateFormatter = nil;
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		}
 			break;
 		default:
 			break;
@@ -283,6 +389,8 @@
 	self.bookAndChapterRef = nil;
 	self.verse = nil;
 	self.folder = nil;
+	self.originalFolder = nil;
+	self.bookmarkBeingEdited = nil;
     [super dealloc];
 }
 

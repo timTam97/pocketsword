@@ -47,6 +47,21 @@ static PSBookmarks *psBookmarks;
 	return ret;
 }
 
++ (void)deleteBookmark:(NSString*)n fromFolderString:(NSString*)folderString {
+	PSBookmarkFolder *parent = [PSBookmarks getBookmarkFolderForFolderString:folderString];
+	NSMutableArray *array = [parent.children mutableCopy];
+	// need to identify which is the correct child
+	for(PSBookmarkObject *obj in array) {
+		if([obj.name isEqualToString:n]) {
+			[array removeObject:obj];
+			break;
+		}
+	}
+	parent.children = array;
+	[array release];
+	[PSBookmarks saveBookmarksToFile];
+}
+
 + (PSBookmarkFolder*)getBookmarkFolderForFolderString:(NSString*)folderString {
 	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
 	if(!folderString || [folderString isEqualToString:@""] || [folderString isEqualToString:NSLocalizedString(@"BookmarksTitle", @"")]) {

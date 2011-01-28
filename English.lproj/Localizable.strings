@@ -240,16 +240,24 @@
 "BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder";
 "BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
 "BookmarksDuplicateFolderMessage" = "You have entered a duplicate folder name. Please choose another name for your folder";
+
+"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
+"BookmarksDuplicateBookmarkMessage" = "You have entered a duplicate bookmark name. Please choose another name for your bookmark";
+
 "BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
 "BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks within it?";//keep the '%@' bit in there - it will be replaced with the folder's name!
 "BookmarksAddFolderFolderName" = "Folder Name:";
 "BookmarksAddFolderHighlightColour" = "Highlight Colour:";
 "BookmarksAddBookmarkVerseTitle" = "Verse";
 "BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Title";
+"BookmarksAddBookmarkFolderTitle" = "Folder";
 
 "BookmarksAddFolderButton" = "Add Folder";
+"BookmarksEditFolderTitle" = "Edit Folder";
 "BookmarksAddBookmarkHereButton" = "Add Bookmark here";
 "BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
 "BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
 "BookmarksImportedFolderName" = "Imported";
+"BookmarksCreatedTitle" = "Created:";
+"BookmarksLastAccessedTitle" = "Last Accessed:";
+"BookmarkEditBookmarkTitle" = "Edit Bookmark";

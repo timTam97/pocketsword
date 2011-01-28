@@ -15,6 +15,7 @@
 + (PSBookmarks *)defaultBookmarks;
 + (BOOL)addBookmarkObject:(PSBookmarkObject*)bookmark withFolderString:(NSString*)folderString;
 + (BOOL)addBookmarkWithRef:(NSString*)r name:(NSString*)n folderString:(NSString*)folderString;
++ (void)deleteBookmark:(NSString*)n fromFolderString:(NSString*)folderString;
 
 + (PSBookmarkFolder*)getBookmarkFolderForFolderString:(NSString*)folderString;
 + (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;

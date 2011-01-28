@@ -13,6 +13,7 @@
 #import "PSBookmarkFolderAddViewController.h"
 #import "PSBookmarks.h"
 #import "PSBookmarkTableViewCell.h"
+#import "PSBookmarkAddViewController.h"
 
 @implementation PSBookmarksNavigatorController
 
@@ -68,6 +69,7 @@
 	if(bookmarkFolder) {
 		self.navigationItem.title = bookmarkFolder.name;
 	}
+	self.tableView.allowsSelectionDuringEditing = YES;
 }
 
 
@@ -204,7 +206,7 @@
 			cell.detailTextLabel.text = ((PSBookmark*)rowObject).ref;
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.imageView.image = [UIImage imageNamed:@"bookmark.png"];
-			cell.lastAccessedLabel.text = [NSString stringWithFormat:@"(%@)", dateString];
+			cell.lastAccessedLabel.text = [NSString stringWithFormat:@"%@", dateString];
 		}
 	} else if(indexPath.section == 1) {
 		if(displayAddFolderRow) {
@@ -238,6 +240,14 @@
 
 }
 
+- (void)insertEditFolderButtonPressed:(PSBookmarkFolder*)folderToEdit {
+	// create a new folder.
+	PSBookmarkFolderAddViewController *favc = [[PSBookmarkFolderAddViewController alloc] initWithParentFolder:self.parentFolders  bookmarkFolderToEdit:folderToEdit];
+	[self.navigationController pushViewController:favc animated:YES];
+	[favc release];
+	//[self editButtonPressed];
+}
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -253,15 +263,10 @@
 		}
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
-		// create a new folder.
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-		PSBookmarkFolderAddViewController *favc = [[PSBookmarkFolderAddViewController alloc] initWithParentFolder:self.parentFolders];
-		[self.navigationController pushViewController:favc animated:YES];
-		[favc release];
-		//[self setEditing:NO];
-		[self editButtonPressed];
+		[self insertEditFolderButtonPressed:nil];
     }   
 }
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if(buttonIndex == 1) {
 		//yup, delete the folder!
@@ -273,7 +278,18 @@
 
 - (void)deleteChildAtIndexPath:(NSIndexPath *)indexPath {
 	NSMutableArray *array = [bookmarkFolder.children mutableCopy];
-	[array removeObjectAtIndex:indexPath.row];
+	if(isAddingBookmark) {
+		// need to identify which is the correct child!
+		NSString *childName = ((PSBookmarkFolder*)[[bookmarkFolder folders] objectAtIndex:indexPath.row]).name;
+		for(PSBookmarkObject *obj in array) {
+			if([obj.name isEqualToString:childName]) {
+				[array removeObject:obj];
+				break;
+			}
+		}
+	} else {
+		[array removeObjectAtIndex:indexPath.row];
+	}
 	bookmarkFolder.children = array;
 	[array release];
 	[PSBookmarks saveBookmarksToFile];
@@ -307,7 +323,7 @@
 	if(indexPath.section == 1) {
 		if(self.editing) {
 			// add a folder
-			//   This row won't actually be selectable while we're in editing mode, so we actually add a new folder in the commitEditingStyle: method, above.
+			[self insertEditFolderButtonPressed:nil];
 		} else {
 			// save the current folder structure & add a bookmark at this position
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBookmarkInFolder object:self.parentFolders];
@@ -315,34 +331,46 @@
 	} else {
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		if(rowObject.folder) {
-			// tapping on a folder navigates to that folder.
-			NSString *pfs = rowObject.name;
-			if(self.parentFolders) {
-				pfs = [NSString stringWithFormat:@"%@%@%@", self.parentFolders, PSFolderSeparatorString, rowObject.name];
-			}
-			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs isAddingBookmark:self.isAddingBookmark];
-			[self.navigationController pushViewController:bnc animated:YES];
-			[bnc release];
-		} else {
-			// tapping on a bookmark will open the bookmark.
-			((PSBookmark*)rowObject).dateLastAccessed = [NSDate date];
-			[PSBookmarks saveBookmarksToFile];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
-			if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
-				NSArray *fullRef = [((PSBookmark*)rowObject).ref componentsSeparatedByString: @":"];
-				NSString *ref = [fullRef objectAtIndex: 0];
-				[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
-				NSString *verse = [fullRef objectAtIndex: 1];
-				if(verse) {
-					[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
-					[[NSUserDefaults standardUserDefaults] synchronize];
-					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-				} else {
-					[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
-					[[NSUserDefaults standardUserDefaults] synchronize];
-					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			if(self.editing) {
+				// edit this folder:
+				[self insertEditFolderButtonPressed:(PSBookmarkFolder*)rowObject];
+			} else {
+				// tapping on a folder navigates to that folder.
+				NSString *pfs = rowObject.name;
+				if(self.parentFolders) {
+					pfs = [NSString stringWithFormat:@"%@%@%@", self.parentFolders, PSFolderSeparatorString, rowObject.name];
 				}
-				[HistoryController addHistoryItem:BibleTab];
+				PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs isAddingBookmark:self.isAddingBookmark];
+				[self.navigationController pushViewController:bnc animated:YES];
+				[bnc release];
+			}
+		} else {
+			if(self.editing) {
+				// edit this bookmark:
+				PSBookmarksAddTableViewController *abc = [[PSBookmarksAddTableViewController alloc] initWithBookmarkToEdit:(PSBookmark*)rowObject parentFolders:self.parentFolders];
+				[self.navigationController pushViewController:abc animated:YES];
+				[abc release];
+			} else {
+				// tapping on a bookmark will open the bookmark.
+				((PSBookmark*)rowObject).dateLastAccessed = [NSDate date];
+				[PSBookmarks saveBookmarksToFile];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
+				if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
+					NSArray *fullRef = [((PSBookmark*)rowObject).ref componentsSeparatedByString: @":"];
+					NSString *ref = [fullRef objectAtIndex: 0];
+					[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
+					NSString *verse = [fullRef objectAtIndex: 1];
+					if(verse) {
+						[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+						[[NSUserDefaults standardUserDefaults] synchronize];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+					} else {
+						[[NSUserDefaults standardUserDefaults] setObject: @"1" forKey: DefaultsBibleVersePosition];
+						[[NSUserDefaults standardUserDefaults] synchronize];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+					}
+					[HistoryController addHistoryItem:BibleTab];
+				}
 			}
 			
 			[tableView deselectRowAtIndexPath:indexPath animated:NO];
