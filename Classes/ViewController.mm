@@ -442,6 +442,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		multiListController.viewControllers = controllers;
 
 		[tabController presentModalViewController:multiListController animated:YES];
+		[historyController release];
+		[searchController release];
 		[multiListController release];
 	}
 	
