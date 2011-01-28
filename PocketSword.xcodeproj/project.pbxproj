@@ -607,8 +607,6 @@
 		054BED93119F89E800ABCA18 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
 		054BED95119F89E800ABCA18 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		054BED96119F89E800ABCA18 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
-		054BEE6311A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */; };
-		054BEE6411A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */; };
 		054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
 		054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570211AE0E6B00633371 /* VerseEnumerator.mm */; };
 		054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
@@ -1306,8 +1304,6 @@
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
 		054BED9B119F89E800ABCA18 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
-		054BEE6111A3A2F300ABCA18 /* PSBasicBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBasicBookmarksViewController.h; path = Classes/PSBasicBookmarksViewController.h; sourceTree = "<group>"; };
-		054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBasicBookmarksViewController.mm; path = Classes/PSBasicBookmarksViewController.mm; sourceTree = "<group>"; };
 		054BEF1311A4E77300ABCA18 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		054BEF1411A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054BEF1511A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -2719,8 +2715,6 @@
 			isa = PBXGroup;
 			children = (
 				059419AD12DAC72500A87B02 /* containers */,
-				054BEE6111A3A2F300ABCA18 /* PSBasicBookmarksViewController.h */,
-				054BEE6211A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm */,
 				051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */,
 				051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */,
 				059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */,
@@ -3883,7 +3877,6 @@
 				054BED8B119F89E800ABCA18 /* PSChapterSelectorController.mm in Sources */,
 				054BED8C119F89E800ABCA18 /* PSVerseSelectorController.mm in Sources */,
 				054BED8D119F89E800ABCA18 /* PSDictionaryOverlayViewController.m in Sources */,
-				054BEE6411A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */,
 				054C570511AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570611AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57BF11AE409000633371 /* PSDevotionalViewController.mm in Sources */,
@@ -4220,7 +4213,6 @@
 				05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */,
 				05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */,
 				05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */,
-				054BEE6311A3A2F300ABCA18 /* PSBasicBookmarksViewController.mm in Sources */,
 				054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				054C57C111AE409000633371 /* PSDevotionalViewController.mm in Sources */,
