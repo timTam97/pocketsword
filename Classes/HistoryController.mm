@@ -164,8 +164,7 @@
 	
 }
 
-+ (void)removeHistoryItem:(NSString*)ref forTab:(ShownTab)tabForHistory {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+- (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory {
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSMutableArray *history;
@@ -179,44 +178,50 @@
 	} else {
 		return;
 	}
+	[history removeObjectAtIndex:historyIndex];
 	
-	for(NSArray *historyItem in history) {
-		if([ref isEqualToString:[historyItem objectAtIndex:0]]) {
-			[history removeObject:historyItem];
-			break;
-		}
-	}
+//	NSInteger i = 0;
+//	for(NSArray *historyItem in history) {
+//		if([ref isEqualToString:[historyItem objectAtIndex:0]]) {
+//			[history removeObjectAtIndex:i];
+//			break;
+//		}
+//		i++;
+//	}
 	[defaults setObject: history forKey: historyName];
 	[defaults synchronize];
 	[history release];
 	
-	[pool release];
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:historyIndex inSection:0];
+	[historyListTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];//UITableViewRowAnimationTop];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	return @"";
-}
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+//	return @"";
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	NSArray *history;
 	switch (listType) {
 		case BibleTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
-			if(history)
+			if(history) {
 				return [history count];
-			else
+			} else {
 				return 0;
+			}
 			break;
 		case CommentaryTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
-			if(history)
+			if(history) {
 				return [history count];
-			else
+			} else {
 				return 0;
+			}
 			break;
 	}
 	return 0;
@@ -334,12 +339,9 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		[tableView beginUpdates];
-		NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		[HistoryController removeHistoryItem:ref forTab:listType];
-		//[tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationMiddle];
-		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];//UITableViewRowAnimationTop];
-		[tableView endUpdates];
+		//NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+		[self removeHistoryItem:indexPath.row forTab:listType];
+		//[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];//UITableViewRowAnimationTop];
 	}
 	
 }
