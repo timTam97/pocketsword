@@ -238,6 +238,10 @@
 		//NSLog(@"already installed %@", lang);
 	}
 	
+	if ([[NSUserDefaults standardUserDefaults] boolForKey: DefaultsInsomniaPreference]) {
+		[UIApplication sharedApplication].idleTimerDisabled = YES;
+	}
+
 	[(NSObject*)delegate performSelectorOnMainThread:@selector(finishedInitializingPocketSword) withObject:nil waitUntilDone:NO];
 	//[delegate finishedInitializingPocketSword];
 	

@@ -85,9 +85,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 		[bibleWebView loadHTMLString: black baseURL: nil];
 		[commentaryWebView loadHTMLString: black baseURL: nil];
-		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		
+				
 		PSModuleController *moduleController = [PSModuleController defaultModuleController];
 		
 		NSString *lastRef = [PSModuleController getCurrentBibleRef];
@@ -115,12 +113,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self setCommentaryTitleViaNotification];
 		[self setDictionaryTitleViaNotification];
 		
-		if ([defaults boolForKey: DefaultsInsomniaPreference]) {
-			UIApplication *thisApp = [UIApplication sharedApplication];
-			thisApp.idleTimerDisabled = YES;
-		}
 		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-		//tabController.moreNavigationController.navigationItem.rightBarButtonItem = nil;
+		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
 		tabController.delegate = self;
 		
 		//add our customized bookmarks tab:
