@@ -20,6 +20,7 @@
 #import "HistoryController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
+#import "PSBookmarkTableViewCell.h"
 
 @implementation HistoryController
 
@@ -136,7 +137,7 @@
 	if(valid) {
 		NSString *ref = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]], verse];
 		
-		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, nil];
+		NSArray *historyItem = [NSArray arrayWithObjects: ref, scroll, mod, [NSDate date], nil];
 		
 		if (!history) {
 			history = [[NSMutableArray alloc] initWithObjects: nil];
@@ -232,34 +233,40 @@
 	NSString *theIdentifier = @"id-mod";
 	
 	// Try to recover a cell from the table view with the given identifier, this is for performance
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: theIdentifier];
+	PSBookmarkTableViewCell *cell = (PSBookmarkTableViewCell*)[tableView dequeueReusableCellWithIdentifier: theIdentifier];
 	
 	// If no cell is available, create a new one using the given identifier - 
 	if (!cell) {
-		cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
+		cell = [[[PSBookmarkTableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 	}
 	
 	NSArray *history;
 	switch (listType) {
 		case BibleTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
-			cell.textLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 0];
-			if([[history objectAtIndex: indexPath.row] count] > 2)
-				cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-			else
-				cell.detailTextLabel.text = @"";
-			cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 			break;
 		case CommentaryTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
-			cell.textLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 0];
-			if([[history objectAtIndex: indexPath.row] count] > 2)
-				cell.detailTextLabel.text = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
-			else
-				cell.detailTextLabel.text = @"";
-			cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 			break;
 	}
+	
+	NSArray *obj = [history objectAtIndex: indexPath.row];
+	cell.textLabel.text = [obj objectAtIndex: 0];
+	if([obj count] > 2)
+		cell.detailTextLabel.text = [obj objectAtIndex: 2];
+	else
+		cell.detailTextLabel.text = @"";
+	if([obj count] > 3) {
+		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
+		
+		NSString *dateString = [dateFormatter stringFromDate:[obj objectAtIndex: 3]];
+		[dateFormatter release];
+		dateFormatter = nil;
+		cell.lastAccessedLabel.text = dateString;
+	}
+	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.textLabel.textColor = [UIColor whiteColor];
 		cell.detailTextLabel.textColor = [UIColor whiteColor];

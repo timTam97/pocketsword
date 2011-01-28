@@ -1373,8 +1373,8 @@
 		056BC73912F0E8E00029F3A2 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resources/folder@2x.png"; sourceTree = "<group>"; };
 		056BC84B12F101860029F3A2 /* PSBookmarkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkTableViewCell.h; path = Classes/PSBookmarkTableViewCell.h; sourceTree = "<group>"; };
 		056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkTableViewCell.m; path = Classes/PSBookmarkTableViewCell.m; sourceTree = "<group>"; };
-		056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSLaunchViewController.h; path = Classes/PSLaunchViewController.h; sourceTree = "<group>"; };
-		056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSLaunchViewController.m; path = Classes/PSLaunchViewController.m; sourceTree = "<group>"; };
+		056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLaunchViewController.h; sourceTree = "<group>"; };
+		056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSLaunchViewController.m; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
@@ -2670,8 +2670,6 @@
 				E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */,
 				056BC84B12F101860029F3A2 /* PSBookmarkTableViewCell.h */,
 				056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */,
-				056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */,
-				056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */,
 			);
 			name = base;
 			sourceTree = "<group>";
@@ -2886,6 +2884,8 @@
 				0545E29A1063A09500DD7F06 /* globals.h */,
 				1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */,
 				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
+				056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */,
+				056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */,
 				05034D2310FD625900884C98 /* SearchWebView.h */,
 				05034D2410FD625900884C98 /* SearchWebView.m */,
 				05F4D0321255D2940088C902 /* PSResizing.h */,
