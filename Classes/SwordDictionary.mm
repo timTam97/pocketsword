@@ -15,6 +15,7 @@
 #import "SwordModuleTextEntry.h"
 #import "utils.h"
 #import "globals.h"
+#import "SwordManager.h"
 
 @interface SwordDictionary (/* Private, class continuation */)
 /** private property */
@@ -79,11 +80,17 @@
 	loaded = YES;
 }
 
+- (NSString*)cachePath {
+	NSString *v = [self configEntryForKey:SWMOD_CONFENTRY_VERSION];
+	if(v == nil)
+		v = @"0.0";//if there's no version information, it's version 0.0!
+    return [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@-%@", [self name], v]];	
+}
+
 - (void)readFromCache {
 	//open cached file
 	//DLog(@"\nSwordDictionary: readFromCache %@", name);
-    NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
-	NSMutableArray *data = [NSArray arrayWithContentsOfFile:cachePath];
+	NSMutableArray *data = [NSArray arrayWithContentsOfFile:[self cachePath]];
     if(data) {
         self.keys = data;
     } else {
@@ -95,8 +102,7 @@
 - (void)writeToCache {
 	// save cached file
 	//DLog(@"\nSwordDictionary: writeToCache %@", name);
-    NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
-	[keys writeToFile:cachePath atomically:NO];
+	[keys writeToFile:[self cachePath] atomically:NO];
 	//DLog(@"\n-- SwordDictionary: finished writeToCache");
 }
 
@@ -107,8 +113,7 @@
 @synthesize keys;
 
 - (void)removeCache {
-    NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
-	[[NSFileManager defaultManager] removeItemAtPath: cachePath error: NULL];
+	[[NSFileManager defaultManager] removeItemAtPath: [self cachePath] error: NULL];
 	DLog(@"\n-- SwordDictionary: removed Cache");
 }
 
@@ -161,9 +166,7 @@
 }
 
 - (BOOL)keysCached {
-	NSString *cachePath = [DEFAULT_APPSUPPORT_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"cache-%@", [self name]]];
-
-	return [[NSFileManager defaultManager] fileExistsAtPath: cachePath];
+	return [[NSFileManager defaultManager] fileExistsAtPath: [self cachePath]];
 }
 
 - (NSString *)fullRefName:(NSString *)ref {
