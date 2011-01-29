@@ -34,6 +34,8 @@
 
 @implementation ViewController
 
+@synthesize savedSearchTerm, savedSearchResults, savedSearchResultsTab;
+
 bool initialized = false;
 
 //NSTimer *timer;
@@ -417,6 +419,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
+- (void)searchTermDidChange:(NSString *)newSearchTerm withResults:(NSMutableArray *)newResults {
+	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		self.savedSearchResultsTab = BibleTab;
+	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		self.savedSearchResultsTab = CommentaryTab;
+	}
+	self.savedSearchTerm = newSearchTerm;
+	self.savedSearchResults = newResults;
+}
+
 - (IBAction)toggleMultiList
 {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
@@ -430,16 +442,29 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		multiListController = [[UITabBarController alloc] init];
 		HistoryController *historyController = [[HistoryController alloc] init];
 		PSSearchController *searchController = [[PSSearchController alloc] init];
+		searchController.delegate = self;
+		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchController, nil];
+		multiListController.viewControllers = controllers;
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			[historyController setListType: BibleTab];
 			[searchController setListType:BibleTab];
+			if(savedSearchResultsTab == BibleTab && savedSearchTerm) {
+				//restore the previous search term:
+				searchController.searchTerm = self.savedSearchTerm;
+				searchController.results = self.savedSearchResults;
+				[multiListController setSelectedViewController:searchController];
+			}
 		} else {
 			[historyController setListType: CommentaryTab];
 			[searchController setListType: CommentaryTab];
+			if(savedSearchResultsTab == CommentaryTab && savedSearchTerm) {
+				//restore the previous search term:
+				searchController.searchTerm = self.savedSearchTerm;
+				searchController.results = self.savedSearchResults;
+				[multiListController setSelectedViewController:searchController];
+			}
 		}
-		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchController, nil];
-		multiListController.viewControllers = controllers;
 
 		[tabController presentModalViewController:multiListController animated:YES];
 		[historyController release];
@@ -583,6 +608,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)dealloc {
+	self.savedSearchTerm = nil;
+	self.savedSearchResults = nil;
 	[toolbarLock release];
 	[moduleSelectorViewController release];
 	//[multiListController release];

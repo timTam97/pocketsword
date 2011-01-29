@@ -9,12 +9,15 @@
 #import "PSSearchController.h"
 #import "PSIndexController.h"
 #import "SwordModuleTextEntry.h"
-
+#import "PSModuleController.h"
+#import "SwordListKey.h"
+#import "HistoryController.h"
 
 @implementation PSSearchController
 
 @synthesize results;
 @synthesize searchTerm;
+@synthesize delegate;
 
 - (id)init {
 	self = [super initWithNibName:nil bundle:nil];
@@ -55,10 +58,12 @@
 	if(showIndexController) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
 	}
-	[self refreshView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	if(self.searchTerm) {
+		searchBar.text = searchTerm;
+	}
 	[super viewWillAppear:animated];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		searchResultsTable.backgroundColor = [UIColor blackColor];
@@ -80,6 +85,7 @@
 		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 44.0);//396,236
 		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);//367.0 instead of 416.0 -- removed 49 (tab bar!)
 	}
+	[self refreshView];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -302,6 +308,13 @@
 			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key])
 				[results removeObjectAtIndex:i+1];//remove the duplicate.
 		}
+	}
+	
+	// call our delegate to say we have a new searchTerm & results.
+	if([searchTerm isEqualToString:@""]) {
+		[delegate searchTermDidChange:nil withResults:nil];
+	} else {
+		[delegate searchTermDidChange:searchTerm withResults:results];
 	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];

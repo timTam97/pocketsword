@@ -25,7 +25,7 @@
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
 #import "PSRefSelectorController.h"
-//#import "PSMultiListController.h"
+#import "PSSearchController.h"
 
 #ifdef __cplusplus
 #include <swmgr.h>
@@ -50,7 +50,7 @@ typedef enum {
 @interface PSWebView : UIWebView {}
 @end
 
-@interface ViewController : NSObject <UITabBarControllerDelegate> {
+@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
 	
@@ -106,7 +106,14 @@ typedef enum {
 	
 	NSLock								*toolbarLock;
 	
+	NSString							*savedSearchTerm;
+	NSMutableArray						*savedSearchResults;
+	ShownTab							savedSearchResultsTab;
 }
+
+@property (retain, readwrite) NSString			*savedSearchTerm;
+@property (retain, readwrite) NSMutableArray	*savedSearchResults;
+@property (assign, readwrite) ShownTab			 savedSearchResultsTab;
 
 + (void)setFirstRefAvailable:(NSString*)first;
 + (void)setLastRefAvailable:(NSString*)last;

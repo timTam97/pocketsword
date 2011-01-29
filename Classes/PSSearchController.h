@@ -6,12 +6,17 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "HistoryController.h"
-#import "PSModuleController.h"
-#import "SwordListKey.h"
+#import "globals.h"
+
+@protocol PSSearchControllerDelegate <NSObject>
+@required
+- (void)searchTermDidChange:(NSString *)newSearchTerm withResults:(NSMutableArray *)newResults;
+@end
 
 @interface PSSearchController : UIViewController {
 
+	id <PSSearchControllerDelegate> delegate;
+	
 	ShownTab listType;
 
 	//IBOutlet HistoryController *historyController;
@@ -29,6 +34,7 @@
 
 @property (retain, readwrite) NSMutableArray *results;
 @property (retain, readwrite) NSString *searchTerm;
+@property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
 
 - (void)refreshView;
 //- (void)hideKeyboard;
