@@ -263,3 +263,14 @@
 "BookmarkEditBookmarkTitle" = "Edit Bookmark";
 
 "StrongsSearchFindAll" = "Find all occurrences";
+"SearchTypeSectionHeader" = "Search Type:";
+"SearchRangeSectionHeader" = "Search Range:";
+"SearchStrongsSectionHeader" = "Strong's Search:";
+
+"SearchTypeAllRow" = "Match ALL words";
+"SearchTypeAnyRow" = "Match ANY word";
+"SearchTypeExactRow" = "Match exact phrase";
+"SearchRangeAllRow" = "Entire Bible";
+"SearchRangeOTRow" = "Old Testament";
+"SearchRangeNTRow" = "New Testament";
+"SearchStrongsRow" = "Search for a Strong's Number";

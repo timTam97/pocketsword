@@ -26,6 +26,19 @@ typedef enum {
 	PreferencesTab
 } ShownTab;
 
+typedef enum {
+	AndSearch = 1,
+	OrSearch,
+	ExactSearch
+} PSSearchType;
+
+typedef enum {
+	AllRange = 1,
+	OTRange,
+	NTRange,
+	BookRange
+} PSSearchRange;
+
 #define DefaultsModuleCipherKeysKey					@"DefaultsModuleCipherKeysKey"
 #define DefaultsLastRef								@"lastRef"
 #define DefaultsLastBible							@"lastBible"

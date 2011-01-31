@@ -1268,13 +1268,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 				// need to also search without the '0' present
 				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
 				[extraSearchTerm deleteCharactersInRange:NSMakeRange(1, 1)];
-				[hebrew appendFormat:@" OR lemma:%@", extraSearchTerm];
+				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
 				[extraSearchTerm release];
 			} else {
 				// need to also search with the '0' present
 				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
 				[extraSearchTerm insertString:@"0" atIndex:1];
-				[hebrew appendFormat:@" OR lemma:%@", extraSearchTerm];
+				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
 				[extraSearchTerm release];
 			}
 			self.searchTermToPerform = hebrew;

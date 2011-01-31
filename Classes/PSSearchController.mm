@@ -18,6 +18,7 @@
 @synthesize results;
 @synthesize searchTerm, searchTermToDisplay;
 @synthesize delegate;
+@synthesize searchRange, searchType, strongsSearch;
 
 - (id)init {
 	self = [super initWithNibName:nil bundle:nil];
@@ -40,6 +41,9 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
+	strongsSearch = NO;
+	searchType = AndSearch;
+	searchRange = AllRange;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -64,45 +68,49 @@
 	if(self.searchTermToDisplay) {
 		searchBar.text = searchTermToDisplay;
 	}
+	[super viewWillAppear:animated];
 	if(self.searchTerm) {
 		// we need to perform a search...  searchTerm should already be well formatted.
+		self.strongsSearch = YES;
 		[self performSelectorInBackground:@selector(search) withObject:nil];
+	} else if(!self.results) {
+		[self.view addSubview:searchQueryView];
 	}
-	[super viewWillAppear:animated];
+	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		searchResultsTable.backgroundColor = [UIColor blackColor];
 	} else {
 		searchResultsTable.backgroundColor = [UIColor whiteColor];
 	}
 	// TODO: when we rip this view to pieces, this needs to be switched to be:
-	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchQueryView useStatusBar:YES];
 
-	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
-	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 32.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);//219.0 instead of 268.0
-	} else {
-		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 44.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);//367.0 instead of 416.0 -- removed 49 (tab bar!)
-	}
+//	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
+//	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+//		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 32.0);//396,236
+//		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);//219.0 instead of 268.0
+//	} else {
+//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+//		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 44.0);//396,236
+//		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);//367.0 instead of 416.0 -- removed 49 (tab bar!)
+//	}
 	[self refreshView];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	//[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 32.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//428.0
-	} else {
-		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 44.0);//396,236
-		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);//256.0
-	}
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchQueryView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+//	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+//		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 32.0);//396,236
+//		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//428.0
+//	} else {
+//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+//		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 44.0);//396,236
+//		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);//256.0
+//	}
 }
 
 
@@ -111,10 +119,8 @@
 	
 	if (buttonIndex == 1) {
 		PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
-		//[indexC setModuleManager:[PSModuleController defaultModuleController]];
 		[indexC setSearchController: self];
 		[self presentModalViewController:indexC animated:YES];
-		//[ViewController showModal:indexC.view withTiming:0.3];
 	} else {
 		
 	}
@@ -142,6 +148,7 @@
 		[searchBar setUserInteractionEnabled: NO];
 	}
 	[searchResultsTable reloadData];
+	[searchQueryTable reloadData];
 }
 
 - (void)dealloc {
@@ -152,38 +159,208 @@
     [super dealloc];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+	// Release any cached data, images, etc that aren't in use.
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([tableView isEqual:searchQueryTable]) {
+		return 40;
+	}
+	return 70;
+}
+
+#define SearchTypeSection		0
+#define SearchRangeSection		1
+#define SearchStrongsSection	2
+
+#define SearchType_All			0
+#define SearchType_Any			1
+#define SearchType_Exact		2
+#define SearchType_ROWS			3
+
+#define SearchRange_All			0
+#define SearchRange_OT			1
+#define SearchRange_NT			2
+#define SearchRange_Book		3
+#define SearchRange_ROWS		4
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	if(searchingEnabled && [tableView isEqual:searchQueryTable]) {
+		switch(listType) {
+			case BibleTab:
+			{
+				SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
+				if([primaryBible hasFeature: SWMOD_FEATURE_STRONGS] || [primaryBible hasFeature: SWMOD_CONF_FEATURE_STRONGS]) {
+					return 3;
+				}
+				return 2;
+			}
+				break;
+			case CommentaryTab:
+				return 2;
+		}
+	}
 	return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	if(!searchingEnabled)
+		return 0;
+	
+	if([tableView isEqual:searchQueryTable]) {
+		switch(section) {
+			case 0:
+				return SearchType_ROWS;
+			case 1:
+				return SearchRange_ROWS;
+			case 2:
+				return 1;
+		}
+	}
+	
 	if(results)
 		return [results count];
 	return 0;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(!searchingEnabled) {
 		return NSLocalizedString(@"NoSearchIndexInstalled", @"No Search Index Installed");
-	} else {
-		if(results)
-			return [NSString stringWithFormat: @"%d %@", [results count], NSLocalizedString(@"SearchResults", @"results")];
 	}
+	if([tableView isEqual:searchQueryTable]) {
+		switch(section) {
+			case SearchTypeSection:
+				return NSLocalizedString(@"SearchTypeSectionHeader", @"");
+			case SearchRangeSection:
+				return NSLocalizedString(@"SearchRangeSectionHeader", @"");
+			case SearchStrongsSection:
+				return NSLocalizedString(@"SearchStrongsSectionHeader", @"");
+		}
+	}
+	if(results)
+		return [NSString stringWithFormat: @"%d %@", [results count], NSLocalizedString(@"SearchResults", @"results")];
 	return @"";
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 70;
+- (UITableViewCell *)searchQueryTableCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	UITableViewCell *cell = [searchQueryTable dequeueReusableCellWithIdentifier:@"queryCell"];
+	
+	if (!cell) {
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"queryCell"] autorelease];
+	}
+	
+	switch(indexPath.section) {
+		case SearchTypeSection:
+		{
+			switch(indexPath.row) {
+				case SearchType_All:
+				{
+					cell.textLabel.text = NSLocalizedString(@"SearchTypeAllRow", @"");
+					if(searchType == AndSearch) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+				case SearchType_Any:
+				{
+					cell.textLabel.text = NSLocalizedString(@"SearchTypeAnyRow", @"");
+					if(searchType == OrSearch) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+				case SearchType_Exact:
+				{
+					cell.textLabel.text = NSLocalizedString(@"SearchTypeExactRow", @"");
+					if(searchType == ExactSearch) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+			}
+		}
+			break;
+		case SearchRangeSection:
+		{
+			switch(indexPath.row) {
+				case SearchRange_All:
+				{
+					cell.textLabel.text = NSLocalizedString(@"SearchRangeAllRow", @"");
+					if(searchRange == AllRange) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+				case SearchRange_OT:
+				{
+					cell.textLabel.text = NSLocalizedString(@"SearchRangeOTRow", @"");
+					if(searchRange == OTRange) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+				case SearchRange_NT:
+				{
+					cell.textLabel.text = NSLocalizedString(@"SearchRangeNTRow", @"");
+					if(searchRange == NTRange) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+				case SearchRange_Book:
+				{
+					NSString *currentBook = [PSModuleController getCurrentBibleRef];
+					NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
+					if(lastSpace.location != NSNotFound) {
+						currentBook = [currentBook substringToIndex:lastSpace.location];
+					}
+					cell.textLabel.text = currentBook;
+					if(searchRange == BookRange) {
+						cell.accessoryType = UITableViewCellAccessoryCheckmark;
+					} else {
+						cell.accessoryType = UITableViewCellAccessoryNone;
+					}
+				}
+					break;
+			}
+		}
+			break;
+		case SearchStrongsSection:
+		{
+			cell.textLabel.text = NSLocalizedString(@"SearchStrongsRow", @"");
+			if(strongsSearch) {
+				cell.accessoryType = UITableViewCellAccessoryCheckmark;
+			} else {
+				cell.accessoryType = UITableViewCellAccessoryNone;
+			}
+		}
+			break;
+	}
+	
+	return cell;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"resultsCell"];
+- (UITableViewCell *)resultsTableCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	UITableViewCell *cell = [searchResultsTable dequeueReusableCellWithIdentifier:@"resultsCell"];
     UILabel *mainLabel, *secondLabel;
-
+	
 	if (!cell)
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"resultsCell"] autorelease];
@@ -242,8 +419,17 @@
 	return cell;
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if([tableView isEqual:searchQueryTable]) {
+		return [self searchQueryTableCellForRowAtIndexPath:indexPath];
+	} else {
+		return [self resultsTableCellForRowAtIndexPath:indexPath];
+	}
+}
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+	if(![tableView isEqual:searchQueryTable] && [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];
@@ -252,7 +438,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if(searchingEnabled && results) {
+	if(searchingEnabled && results && [tableView isEqual:searchResultsTable]) {
 		NSString *ref = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
 		NSString *verse = [[ref componentsSeparatedByString:@":"] objectAtIndex: 1];
 		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
@@ -261,33 +447,151 @@
 		[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
-		//PollingType pt;
 		switch(listType) {
 			case BibleTab:
-				//pt = BibleViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 				[HistoryController addHistoryItem:BibleTab];
 				break;
 			case CommentaryTab:
-				//pt = CommentaryViewPoll;
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 				[HistoryController addHistoryItem:CommentaryTab];
 				break;
 		}
-		//[[[PSModuleController defaultModuleController] viewController] displayChapter: ref withPollingType: pt restoreType: RestoreVersePosition];
-		//self.searchTerm = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
-		//[[[PSModuleController defaultModuleController] viewController] toggleMultiList];
-		//[[[PSModuleController defaultModuleController] viewController] highlightSearchTerm: searchTerm forTab: tab]; -- doesn't work atm 31/7/10 nicc
-//		if(tab == BibleTab) {
-//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-//		} else {
-//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-//		}
-		//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: tab];
+	} else if([tableView isEqual:searchQueryTable]) {
+		switch(indexPath.section) {
+			case SearchTypeSection:
+			{
+				switch(indexPath.row) {
+					case SearchType_All:
+					{
+						searchType = AndSearch;
+					}
+						break;
+					case SearchType_Any:
+					{
+						searchType = OrSearch;
+					}
+						break;
+					case SearchType_Exact:
+					{
+						searchType = ExactSearch;
+					}
+						break;
+				}
+			}
+				break;
+			case SearchRangeSection:
+			{
+				switch(indexPath.row) {
+					case SearchRange_All:
+					{
+						searchRange = AllRange;
+					}
+						break;
+					case SearchRange_OT:
+					{
+						searchRange = OTRange;
+					}
+						break;
+					case SearchRange_NT:
+					{
+						searchRange = NTRange;
+					}
+						break;
+					case SearchRange_Book:
+					{
+						searchRange = BookRange;
+					}
+						break;
+				}
+			}
+				break;
+			case SearchStrongsSection:
+			{
+				strongsSearch = !strongsSearch;
+			}
+				break;
+		}
+		[tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+		//[tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 	}
+}
+
+- (void)createSearchTerm {
+	// TODO: this should be changed to reflect the new searchQueryView.
+	//self.searchTerm = searchTermToDisplay;
+	NSMutableArray *components = [NSMutableArray arrayWithCapacity:1];
+	NSInteger i =0;
+	BOOL insideQuotes = NO;
+	NSMutableString *current = [@"" mutableCopy];
+	for(;i<[searchTermToDisplay length];i++) {
+		if([searchTermToDisplay characterAtIndex:i] == '"') {
+			if(insideQuotes) {
+				insideQuotes = NO;
+				[current appendString:@"\""];
+				[components addObject:current];
+				[current release];
+				current = [@"" mutableCopy];
+			} else {
+				insideQuotes = YES;
+				[current appendString:@"\""];
+			}
+		} else if(insideQuotes) {
+			[current appendFormat:@"%c", [searchTermToDisplay characterAtIndex:i]];
+		} else if([searchTermToDisplay characterAtIndex:i] == ' ') {
+			[components addObject:current];
+			[current release];
+			current = [@"" mutableCopy];
+		} else {
+			[current appendFormat:@"%c", [searchTermToDisplay characterAtIndex:i]];
+		}
+	}
+	
+	if([current length] > 0)
+		[components addObject:current];
+	[current release];
+	current = nil;
+	
+	NSMutableString *fullSearchTerm = [@"" mutableCopy];
+	NSString *joiningString;
+	if(searchType == AndSearch) {
+		joiningString = @" && ";
+	} else if(searchType == OrSearch) {
+		joiningString = @" || ";
+	} else if(searchType == ExactSearch) {
+		joiningString = @" ";
+		[fullSearchTerm appendString:@"\""];
+	}
+	NSString *prefix = @"";
+	if(strongsSearch) {
+		prefix = @"lemma:";
+	}
+	i = 0;
+	for(NSString *component in components) {
+		if(i == ([components count] - 1)) {
+			joiningString = @"";
+		}
+		if(strongsSearch && [component characterAtIndex:0] == 'H') {
+			NSMutableString *hebrew = [component mutableCopy];
+			if([component length] > 1 && [component characterAtIndex:1] == '0') {
+				// also search for this number without the '0' prefix
+				[hebrew deleteCharactersInRange:NSMakeRange(1, 1)];
+			} else if([component length] > 1) {
+				// also search for this number with the '0' prefix
+				[hebrew insertString:@"0" atIndex:1];
+			}
+			[fullSearchTerm appendFormat:@"(%@%@ || %@%@)%@", prefix, hebrew, prefix, component, joiningString];
+		} else {
+			[fullSearchTerm appendFormat:@"%@%@%@", prefix, component, joiningString];
+		}
+		i++;
+	}
+	if(searchType == ExactSearch) {
+		[fullSearchTerm appendString:@"\""];
+	}
+	self.searchTerm = fullSearchTerm;
+	[fullSearchTerm release];
 }
 
 - (void)search {
@@ -299,9 +603,9 @@
 	} else {
 		// need to create the formatted search term
 		self.searchTermToDisplay = searchBar.text;
-		// initially they are the same!
-		self.searchTerm = searchTermToDisplay;
+		[self createSearchTerm];
 	}
+	DLog(@"\nsearchTerm = %@", searchTerm);
 	switch(listType) {
 		case BibleTab:
 			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm];
@@ -335,6 +639,7 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
 	[sBar resignFirstResponder];
 	[self search];
+	[searchQueryView removeFromSuperview];
 //	self.results = nil;
 //	self.searchTerm = [sBar text];
 //	switch(listType) {
@@ -360,6 +665,13 @@
 //	} else {
 //		[delegate searchTermDidChange:searchTerm withResults:results];
 //	}
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
+	[sBar resignFirstResponder];
+	if(self.results) {
+		[searchQueryView removeFromSuperview];
+	}
 }
 
 //- (void)hideKeyboard {
@@ -405,6 +717,7 @@
 	[navBar pushNavigationItem: navItem animated: NO];
 	[navItem release];
 	[helpView addSubview: navBar];
+	[navBar release];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -417,6 +730,17 @@
 		[self createHelpView];
 		[self.view addSubview:helpView];
 	}
+}
+
+- (IBAction)searchButtonPressed:(id)sender {
+	if(![searchQueryView superview]) {
+		[self.view addSubview:searchQueryView];
+	}
+	[searchBar becomeFirstResponder];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+	[searchBar resignFirstResponder];
 }
 
 - (IBAction)infoButtonPressed:(id)sender {
