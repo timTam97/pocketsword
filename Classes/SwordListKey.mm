@@ -65,7 +65,11 @@
     }
     sword::ListKey listKey = vk.ParseVerseList([aRef UTF8String], "Gen1", true);
     sword::ListKey *lk = new sword::ListKey(listKey);
-    return [super initWithSWKey:lk];    
+    self = [super initWithSWKey:lk];
+	if(self) {
+		created = YES;
+	}
+	return self;
 }
 
 - (void)finalize {

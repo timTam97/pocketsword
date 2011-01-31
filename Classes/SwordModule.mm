@@ -929,8 +929,15 @@
 	}
 }
 
-- (NSMutableArray *)search:(NSString *)istr {
-	sword::ListKey results = swModule->search([istr UTF8String], -4);
+- (NSMutableArray *)search:(NSString *)istr withScope:(SwordListKey*)scope {
+	sword::ListKey results;
+	if(scope) {
+		results = swModule->search([istr UTF8String], -4, 0, [scope swListKey]);
+	} else {
+		//SwordListKey *testScope = [SwordListKey listKeyWithRef:@"matt-rev" v11n:[self versification]];
+		//results = swModule->search([istr UTF8String], -4, 0, [testScope swListKey]);
+		results = swModule->search([istr UTF8String], -4);
+	}
 	results.sort();
 	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
 	if(results.Count() > 0) {
@@ -942,6 +949,10 @@
 		}
 	}
 	return retArray;
+}
+
+- (NSMutableArray *)search:(NSString *)istr {
+	return [self search:istr withScope:nil];
 }
 
 /** wrapper around getConfigEntry() */

@@ -172,6 +172,7 @@ typedef enum {
 - (NSString *)configEntryForKey:(NSString *)entryKey;
 - (BOOL)hasSearchIndex;
 
+- (NSMutableArray *)search:(NSString *)istr withScope:(SwordListKey*)scope;
 - (NSMutableArray *)search:(NSString *)istr;
 - (void)setKeyString:(NSString *)aKeyString;
 
