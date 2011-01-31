@@ -27,6 +27,7 @@
 	
 	UIView *helpView;
 	NSString *searchTerm;
+	NSString *searchTermToDisplay;
 	BOOL searchingEnabled;
 
 	NSMutableArray *results;
@@ -34,6 +35,7 @@
 
 @property (retain, readwrite) NSMutableArray *results;
 @property (retain, readwrite) NSString *searchTerm;
+@property (retain, readwrite) NSString *searchTermToDisplay;
 @property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
 
 - (void)refreshView;

@@ -16,7 +16,7 @@
 @implementation PSSearchController
 
 @synthesize results;
-@synthesize searchTerm;
+@synthesize searchTerm, searchTermToDisplay;
 @synthesize delegate;
 
 - (id)init {
@@ -61,8 +61,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	if(self.searchTermToDisplay) {
+		searchBar.text = searchTermToDisplay;
+	}
 	if(self.searchTerm) {
-		searchBar.text = searchTerm;
+		// we need to perform a search...  searchTerm should already be well formatted.
+		[self performSelectorInBackground:@selector(search) withObject:nil];
 	}
 	[super viewWillAppear:animated];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -286,19 +290,24 @@
 	}
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
+- (void)search {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[sBar resignFirstResponder];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-	//[[PSModuleController defaultModuleController] displayBusyIndicator];
 	self.results = nil;
-	self.searchTerm = [sBar text];
+	if(self.searchTerm) {
+		// the search is already formatted
+	} else {
+		// need to create the formatted search term
+		self.searchTermToDisplay = searchBar.text;
+		// initially they are the same!
+		self.searchTerm = searchTermToDisplay;
+	}
 	switch(listType) {
 		case BibleTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [sBar text]];
+			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm];
 			break;
 		case CommentaryTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: [sBar text]];
+			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm];
 			break;
 	}
 
@@ -311,16 +320,46 @@
 	}
 	
 	// call our delegate to say we have a new searchTerm & results.
-	if([searchTerm isEqualToString:@""]) {
+	if([searchTermToDisplay isEqualToString:@""]) {
 		[delegate searchTermDidChange:nil withResults:nil];
 	} else {
-		[delegate searchTermDidChange:searchTerm withResults:results];
+		[delegate searchTermDidChange:searchTermToDisplay withResults:results];
 	}
 	
+	self.searchTerm = nil;
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	[searchResultsTable reloadData];
 	[pool release];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
+	[sBar resignFirstResponder];
+	[self search];
+//	self.results = nil;
+//	self.searchTerm = [sBar text];
+//	switch(listType) {
+//		case BibleTab:
+//			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [sBar text]];
+//			break;
+//		case CommentaryTab:
+//			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: [sBar text]];
+//			break;
+//	}
+//
+//	//remove duplicate entries manually.  why do these appear? *sad face*
+//	if(results && [results count] > 0) {
+//		for(int i = 0; i < ([results count] -1); i++) {
+//			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key])
+//				[results removeObjectAtIndex:i+1];//remove the duplicate.
+//		}
+//	}
+//	
+//	// call our delegate to say we have a new searchTerm & results.
+//	if([searchTerm isEqualToString:@""]) {
+//		[delegate searchTermDidChange:nil withResults:nil];
+//	} else {
+//		[delegate searchTermDidChange:searchTerm withResults:results];
+//	}
 }
 
 //- (void)hideKeyboard {

@@ -113,6 +113,7 @@ typedef enum {
 
 @property (retain, readwrite) NSString			*savedSearchTerm;
 @property (retain, readwrite) NSMutableArray	*savedSearchResults;
+@property (retain, readwrite) NSString			*searchTermToPerform;
 @property (assign, readwrite) ShownTab			 savedSearchResultsTab;
 
 + (void)setFirstRefAvailable:(NSString*)first;

@@ -247,6 +247,12 @@
 					entry = NSLocalizedString(@"NoHebrewStrongsNumbersModuleInstalled", @"");
 				else
 					entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
+			} else {
+				NSString *strongsPrefix = @"G";
+				if(hebrew)
+					strongsPrefix = @"H";
+				entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@%@\">%@</a></div>", entry, strongsPrefix, [rData objectForKey:ATTRTYPE_VALUE], NSLocalizedString(@"StrongsSearchFindAll", @"")];
+				//NSLog(@"%@", entry);
 			}
 			
 			NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
@@ -303,6 +309,7 @@
 		
 		if(entry) {
 			[viewController showInfo: entry];
+			//NSLog(@"%@", entry);
 			load = NO;
 		}
 	}

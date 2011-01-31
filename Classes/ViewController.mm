@@ -34,7 +34,7 @@
 
 @implementation ViewController
 
-@synthesize savedSearchTerm, savedSearchResults, savedSearchResultsTab;
+@synthesize savedSearchTerm, savedSearchResults, savedSearchResultsTab, searchTermToPerform;
 
 bool initialized = false;
 
@@ -449,10 +449,15 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			[historyController setListType: BibleTab];
 			[searchController setListType:BibleTab];
-			if(savedSearchResultsTab == BibleTab && savedSearchTerm) {
+			if(savedSearchResultsTab == BibleTab && savedSearchResults) {
 				//restore the previous search term:
-				searchController.searchTerm = self.savedSearchTerm;
+				searchController.searchTermToDisplay = self.savedSearchTerm;
 				searchController.results = self.savedSearchResults;
+				[multiListController setSelectedViewController:searchController];
+			} else if(searchTermToPerform) {
+				searchController.searchTerm = self.searchTermToPerform;
+				searchController.searchTermToDisplay = self.savedSearchTerm;
+				self.searchTermToPerform = nil;
 				[multiListController setSelectedViewController:searchController];
 			}
 		} else {
@@ -1255,6 +1260,33 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 			return NO;
 		}
+	} else if([[[request URL] scheme] isEqualToString:@"search"]) {
+		NSString *strongsSearchTerm = [[request URL] host];
+		if([strongsSearchTerm rangeOfString:@"H"].location != NSNotFound) {
+			NSMutableString *hebrew = [NSMutableString stringWithFormat:@"lemma:%@", strongsSearchTerm];
+			if([strongsSearchTerm characterAtIndex:1] == '0') {
+				// need to also search without the '0' present
+				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
+				[extraSearchTerm deleteCharactersInRange:NSMakeRange(1, 1)];
+				[hebrew appendFormat:@" OR lemma:%@", extraSearchTerm];
+				[extraSearchTerm release];
+			} else {
+				// need to also search with the '0' present
+				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
+				[extraSearchTerm insertString:@"0" atIndex:1];
+				[hebrew appendFormat:@" OR lemma:%@", extraSearchTerm];
+				[extraSearchTerm release];
+			}
+			self.searchTermToPerform = hebrew;
+		} else {
+			self.searchTermToPerform = [NSString stringWithFormat:@"lemma:%@", strongsSearchTerm];
+		}
+		self.savedSearchTerm = strongsSearchTerm;
+		self.savedSearchResults = nil;
+		[self hideInfo];
+		[self toggleMultiList];
+
+		return NO;
 	}
 	
 	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
@@ -1266,7 +1298,34 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
 		if(swordDictionary) {
 			entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-			//DLog(@"\n%@ = %@\n", mod, entry);
+			
+			BOOL strongs = NO;
+			NSString *strongsSearchTerm = @"";
+			if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF] && [swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
+				// should already have a prefix
+				strongsSearchTerm = [rData objectForKey:ATTRTYPE_VALUE];
+				strongs = YES;
+			} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF]) {
+				NSMutableString *greek = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
+				while([greek characterAtIndex:0] == '0') {
+					[greek deleteCharactersInRange:NSMakeRange(0, 1)];
+				}
+				strongsSearchTerm = [NSString stringWithFormat:@"G%@", greek];
+				[greek release];
+				strongs = YES;
+			} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
+				NSMutableString *hebrew = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
+				while([hebrew characterAtIndex:0] == '0') {
+					[hebrew deleteCharactersInRange:NSMakeRange(0, 1)];
+				}
+				strongsSearchTerm = [NSString stringWithFormat:@"H0%@", hebrew];
+				[hebrew release];
+				strongs = YES;
+			}
+			if(strongs) {
+				entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@\">%@</a></div>", entry, strongsSearchTerm, NSLocalizedString(@"StrongsSearchFindAll", @"")];
+			}
+			DLog(@"\n%@ = %@\n", mod, entry);
 		} else {
 			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
 		}
