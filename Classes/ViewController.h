@@ -106,14 +106,17 @@ typedef enum {
 	
 	NSLock								*toolbarLock;
 	
-	NSString							*savedSearchTerm;
-	NSMutableArray						*savedSearchResults;
+	PSSearchHistoryItem					*savedSearchHistoryItem;
+//	NSString							*savedSearchTerm;
+//	NSString							*searchTermToPerform;
+//	NSMutableArray						*savedSearchResults;
 	ShownTab							savedSearchResultsTab;
 }
 
-@property (retain, readwrite) NSString			*savedSearchTerm;
-@property (retain, readwrite) NSMutableArray	*savedSearchResults;
-@property (retain, readwrite) NSString			*searchTermToPerform;
+@property (retain, readwrite) PSSearchHistoryItem *savedSearchHistoryItem;
+//@property (retain, readwrite) NSString			*savedSearchTerm;
+//@property (retain, readwrite) NSMutableArray	*savedSearchResults;
+//@property (retain, readwrite) NSString			*searchTermToPerform;
 @property (assign, readwrite) ShownTab			 savedSearchResultsTab;
 
 + (void)setFirstRefAvailable:(NSString*)first;

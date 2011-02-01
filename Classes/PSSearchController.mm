@@ -17,9 +17,17 @@
 @implementation PSSearchController
 
 @synthesize results;
-@synthesize searchTerm, searchTermToDisplay;
+@synthesize searchTerm, searchTermToDisplay, bookName;
 @synthesize delegate;
 @synthesize searchRange, searchType, strongsSearch;
+
+- (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
+	self = [self init];
+	if(self) {
+		[self setSearchHistoryItem:searchHistoryItem];
+	}
+	return self;
+}
 
 - (id)init {
 	self = [super initWithNibName:nil bundle:nil];
@@ -27,8 +35,27 @@
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
 		self.tabBarItem = tBI;
 		[tBI release];
+		self.searchTerm = nil;
+		self.searchTermToDisplay = nil;
+		self.results = nil;
+		self.bookName = nil;
+		self.strongsSearch = NO;
+		self.searchType = AndSearch;
+		self.searchRange = AllRange;
 	}
 	return self;
+}
+
+- (void)setSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
+	if(searchHistoryItem) {
+		self.searchTerm = searchHistoryItem.searchTerm;
+		self.searchTermToDisplay = searchHistoryItem.searchTermToDisplay;
+		self.searchType = searchHistoryItem.searchType;
+		self.searchRange = searchHistoryItem.searchRange;
+		self.strongsSearch = searchHistoryItem.strongsSearch;
+		self.results = searchHistoryItem.results;
+		self.bookName = searchHistoryItem.bookName;
+	}
 }
 
 - (void)setListType:(ShownTab)listT {
@@ -42,9 +69,6 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-	strongsSearch = NO;
-	searchType = AndSearch;
-	searchRange = AllRange;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -608,7 +632,6 @@
 }
 
 - (SwordVerseKey *)createSearchScope {
-	//SwordListKey *testScope = [SwordListKey listKeyWithRef:@"matt-rev" v11n:[self versification]];
 	NSString *v11n;
 	if(listType == BibleTab)
 		v11n = [[[PSModuleController defaultModuleController] primaryBible] versification];
@@ -620,45 +643,15 @@
 	switch(searchRange) {
 		case OTRange:
 			scope = [SwordVerseKey verseKeyForOTForVersification:v11n];
-//			[firstKey setTestament:1];
-//			[firstKey setBook:1];
-//			[firstKey setChapter:1];
-//			[firstKey setVerse:1];
-//			[lastKey setTestament:1];
-//			[lastKey setBook:(sword::MAXBOOK)];
-//			[lastKey setChapter:(sword::MAXCHAPTER)];
-//			[lastKey setVerse:(sword::MAXVERSE)];
 			break;
 		case NTRange:
 			scope = [SwordVerseKey verseKeyForNTForVersification:v11n];
-//			[firstKey setTestament:2];
-//			[firstKey setBook:1];
-//			[firstKey setChapter:1];
-//			[firstKey setVerse:1];
-//			[lastKey setTestament:2];
-//			[lastKey setBook:(sword::MAXBOOK)];
-//			[lastKey setChapter:(sword::MAXCHAPTER)];
-//			[lastKey setVerse:(sword::MAXVERSE)];
 			break;
 		case BookRange:
 			scope = [SwordVerseKey verseKeyForWholeBook:[PSModuleController getCurrentBibleRef] v11n:v11n];
-//			[firstKey setKeyText:[PSModuleController getCurrentBibleRef]];
-//			[firstKey setChapter:1];
-//			[firstKey setVerse:1];
-//			[lastKey setKeyText:[PSModuleController getCurrentBibleRef]];
-//			[lastKey setChapter:(sword::MAXCHAPTER)];
-//			[lastKey setVerse:(sword::MAXVERSE)];
 			break;
 		case AllRange:default:
 			scope = [SwordVerseKey verseKeyForWholeBibleForVersification:v11n];
-//			[firstKey setTestament:1];
-//			[firstKey setBook:1];
-//			[firstKey setChapter:1];
-//			[firstKey setVerse:1];
-//			[lastKey setTestament:2];
-//			[lastKey setBook:(sword::MAXBOOK)];
-//			[lastKey setChapter:(sword::MAXCHAPTER)];
-//			[lastKey setVerse:(sword::MAXVERSE)];
 			break;
 	}
 	
@@ -696,9 +689,16 @@
 	
 	// call our delegate to say we have a new searchTerm & results.
 	if([searchTermToDisplay isEqualToString:@""]) {
-		[delegate searchTermDidChange:nil withResults:nil];
+		[delegate searchDidFinish:nil];
 	} else {
-		[delegate searchTermDidChange:searchTermToDisplay withResults:results];
+		NSString *bName = nil;
+		if(searchRange == BookRange) {
+			bName = [PSModuleController getCurrentBibleRef];
+		}
+		PSSearchHistoryItem *searchHistoryItem = [[PSSearchHistoryItem alloc] initWithSearchTermToDisplay:searchTermToDisplay strongs:strongsSearch type:searchType range:searchRange book:bName];
+		searchHistoryItem.results = self.results;
+		[delegate searchDidFinish:searchHistoryItem];
+		[searchHistoryItem release];
 	}
 	
 	self.searchTerm = nil;
@@ -711,31 +711,6 @@
 	[sBar resignFirstResponder];
 	[self search];
 	[searchQueryView removeFromSuperview];
-//	self.results = nil;
-//	self.searchTerm = [sBar text];
-//	switch(listType) {
-//		case BibleTab:
-//			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: [sBar text]];
-//			break;
-//		case CommentaryTab:
-//			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: [sBar text]];
-//			break;
-//	}
-//
-//	//remove duplicate entries manually.  why do these appear? *sad face*
-//	if(results && [results count] > 0) {
-//		for(int i = 0; i < ([results count] -1); i++) {
-//			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key])
-//				[results removeObjectAtIndex:i+1];//remove the duplicate.
-//		}
-//	}
-//	
-//	// call our delegate to say we have a new searchTerm & results.
-//	if([searchTerm isEqualToString:@""]) {
-//		[delegate searchTermDidChange:nil withResults:nil];
-//	} else {
-//		[delegate searchTermDidChange:searchTerm withResults:results];
-//	}
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {

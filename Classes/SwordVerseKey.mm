@@ -46,7 +46,7 @@
 	(*vk)--;
 	//	---- end of workaround
 	vk->UpperBound(*vk);
-	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
 }
 
@@ -59,7 +59,7 @@
 	vk->setPosition(sword::BOTTOM);
 	vk->UpperBound(*vk);
 	
-	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
 }
 
@@ -70,7 +70,7 @@
 	vk->setPosition(sword::BOTTOM);
 	vk->UpperBound(*vk);
 	
-	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
 }
 
@@ -82,7 +82,7 @@
 	vk->setChapter(vk->getChapterMax()); vk->setVerse(vk->getVerseMax());
 	vk->UpperBound(*vk);
 	
-	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
 }
 

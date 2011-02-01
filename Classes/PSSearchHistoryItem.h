@@ -9,7 +9,7 @@
 #import "globals.h"
 
 @interface PSSearchHistoryItem : NSObject {
-	//NSString *searchTerm;
+	NSString *searchTerm;
 	NSString *searchTermToDisplay;
 	
 	BOOL strongsSearch;
@@ -21,6 +21,7 @@
 	
 }
 
+@property (retain, readwrite) NSString *searchTerm;
 @property (retain, readwrite) NSString *searchTermToDisplay;
 @property (assign, readwrite) BOOL strongsSearch;
 @property (assign, readwrite) PSSearchType searchType;
@@ -28,7 +29,9 @@
 @property (retain, readwrite) NSString *bookName;
 @property (retain, readwrite) NSMutableArray *results;
 
-- (id)initWithSearchTerm:(NSString*)sTerm strongs:(BOOL)strongs type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName;
+- (id)initWithSearchTermToDisplay:(NSString*)sTerm strongs:(BOOL)strongs type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName;
+- (id)initWithArray:(NSArray *)array;
+
 - (NSArray *)searchHistoryItemArray;
 
 @end

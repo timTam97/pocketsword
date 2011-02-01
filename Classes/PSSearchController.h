@@ -7,10 +7,11 @@
 //
 
 #import "globals.h"
+#import "PSSearchHistoryItem.h"
 
 @protocol PSSearchControllerDelegate <NSObject>
 @required
-- (void)searchTermDidChange:(NSString *)newSearchTerm withResults:(NSMutableArray *)newResults;
+- (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
 @interface PSSearchController : UIViewController {
@@ -36,23 +37,26 @@
 	BOOL strongsSearch;
 	PSSearchType searchType;
 	PSSearchRange searchRange;
+	NSString *bookName;
 
 	NSMutableArray *results;
 }
 
-@property (retain, readwrite) NSMutableArray *results;
+@property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
 @property (retain, readwrite) NSString *searchTerm;
 @property (retain, readwrite) NSString *searchTermToDisplay;
-@property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
 @property (assign, readwrite) BOOL strongsSearch;
 @property (assign, readwrite) PSSearchType searchType;
 @property (assign, readwrite) PSSearchRange searchRange;
+@property (retain, readwrite) NSString *bookName;
+@property (retain, readwrite) NSMutableArray *results;
+
+- (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem;
+
+- (void)setSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem;
 
 - (void)refreshView;
-//- (void)hideKeyboard;
-
 - (void)setListType:(ShownTab)listType;
-//- (ShownTab)listType;
 
 - (IBAction)infoButtonPressed:(id)sender;
 - (IBAction)closeButtonPressed;

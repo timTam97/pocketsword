@@ -11,23 +11,36 @@
 
 @implementation PSSearchHistoryItem
 
-@synthesize searchTermToDisplay, strongsSearch, searchType, searchRange, bookName, results;
+@synthesize searchTerm, searchTermToDisplay, strongsSearch, searchType, searchRange, bookName, results;
 
-- (id)initWithSearchTerm:(NSString*)sTerm strongs:(BOOL)strongs type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName {
+- (id)init {
 	self = [super init];
+	if(self) {
+		self.searchTerm = nil;
+		self.searchTermToDisplay = nil;
+		self.strongsSearch = NO;
+		self.searchType = AndSearch;
+		self.searchRange = AllRange;
+		self.bookName = nil;
+		self.results = nil;
+	}
+	return self;
+}
+
+- (id)initWithSearchTermToDisplay:(NSString*)sTerm strongs:(BOOL)strongs type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName {
+	self = [self init];
 	if(self) {
 		self.searchTermToDisplay = sTerm;
 		self.strongsSearch = strongs;
 		self.searchType = sType;
 		self.searchRange = sRange;
 		self.bookName = bName;
-		self.results = nil;
 	}
 	return self;
 }
 
 - (id)initWithArray:(NSArray *)array {
-	self = [super init];
+	self = [self init];
 	if(self && array) {
 		if([array count] > 0) {
 			self.searchTermToDisplay = [array objectAtIndex:0];

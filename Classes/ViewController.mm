@@ -34,7 +34,7 @@
 
 @implementation ViewController
 
-@synthesize savedSearchTerm, savedSearchResults, savedSearchResultsTab, searchTermToPerform;
+@synthesize savedSearchHistoryItem, savedSearchResultsTab;//savedSearchTerm, savedSearchResults, searchTermToPerform;
 
 bool initialized = false;
 
@@ -419,14 +419,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[pool release];
 }
 
-- (void)searchTermDidChange:(NSString *)newSearchTerm withResults:(NSMutableArray *)newResults {
+- (void)searchDidFinish:(PSSearchHistoryItem *)newSearchHistoryItem {
 	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		self.savedSearchResultsTab = BibleTab;
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 		self.savedSearchResultsTab = CommentaryTab;
 	}
-	self.savedSearchTerm = newSearchTerm;
-	self.savedSearchResults = newResults;
+	self.savedSearchHistoryItem = newSearchHistoryItem;
 }
 
 - (IBAction)toggleMultiList
@@ -449,24 +448,31 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			[historyController setListType: BibleTab];
 			[searchController setListType:BibleTab];
-			if(savedSearchResultsTab == BibleTab && savedSearchResults) {
+			if(savedSearchResultsTab == BibleTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
 				//restore the previous search term:
-				searchController.searchTermToDisplay = self.savedSearchTerm;
-				searchController.results = self.savedSearchResults;
+				[searchController setSearchHistoryItem:savedSearchHistoryItem];
+//				searchController.searchTermToDisplay = savedSearchHistoryItem.searchTermToDisplay;
+//				searchController.results = savedSearchHistoryItem.results;
+//				//we need to set everything at this point...
+//				asdf;
 				[multiListController setSelectedViewController:searchController];
-			} else if(searchTermToPerform) {
-				searchController.searchTerm = self.searchTermToPerform;
-				searchController.searchTermToDisplay = self.savedSearchTerm;
-				self.searchTermToPerform = nil;
+			} else if(savedSearchHistoryItem && savedSearchHistoryItem.searchTerm) {
+				[searchController setSearchHistoryItem:savedSearchHistoryItem];
+//				searchController.searchTerm = savedSearchHistoryItem.searchTerm;
+//				searchController.searchTermToDisplay = savedSearchHistoryItem.searchTermToDisplay;
+				self.savedSearchHistoryItem = nil;
 				[multiListController setSelectedViewController:searchController];
 			}
 		} else {
 			[historyController setListType: CommentaryTab];
 			[searchController setListType: CommentaryTab];
-			if(savedSearchResultsTab == CommentaryTab && savedSearchTerm) {
+			if(savedSearchResultsTab == CommentaryTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
 				//restore the previous search term:
-				searchController.searchTerm = self.savedSearchTerm;
-				searchController.results = self.savedSearchResults;
+				[searchController setSearchHistoryItem:savedSearchHistoryItem];
+//				searchController.searchTerm = savedSearchHistoryItem.searchTerm;
+//				searchController.results = savedSearchHistoryItem.results;
+//				//we need to set everything at this point...
+//				asdf;
 				[multiListController setSelectedViewController:searchController];
 			}
 		}
@@ -613,8 +619,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)dealloc {
-	self.savedSearchTerm = nil;
-	self.savedSearchResults = nil;
+	self.savedSearchHistoryItem = nil;
 	[toolbarLock release];
 	[moduleSelectorViewController release];
 	//[multiListController release];
@@ -1277,12 +1282,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
 				[extraSearchTerm release];
 			}
-			self.searchTermToPerform = hebrew;
+			self.savedSearchHistoryItem = nil;
+			PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
+			shi.searchTerm = hebrew;
+			self.savedSearchHistoryItem = shi;
+			[shi release];
 		} else {
-			self.searchTermToPerform = [NSString stringWithFormat:@"lemma:%@", strongsSearchTerm];
+			self.savedSearchHistoryItem = nil;
+			PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
+			shi.searchTerm = [NSString stringWithFormat:@"lemma:%@", strongsSearchTerm];
+			self.savedSearchHistoryItem = shi;
+			[shi release];
 		}
-		self.savedSearchTerm = strongsSearchTerm;
-		self.savedSearchResults = nil;
+		savedSearchHistoryItem.searchTermToDisplay = strongsSearchTerm;
 		[self hideInfo];
 		[self toggleMultiList];
 
