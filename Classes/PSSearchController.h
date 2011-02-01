@@ -26,6 +26,7 @@
 	IBOutlet UISearchBar *searchBar;
 	IBOutlet UIBarButtonItem *closeButton;
 	IBOutlet UINavigationBar *searchNavigationBar;
+	IBOutlet UINavigationItem *searchNavigationItem;
 	
 	UIView *helpView;
 	NSString *searchTerm;

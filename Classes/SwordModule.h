@@ -12,7 +12,7 @@
 */
 
 #import "SwordModuleTextEntry.h"
-#import "SwordListKey.h"
+#import "SwordVerseKey.h"
 
 #ifdef __cplusplus
 #include <swtext.h>
@@ -172,7 +172,7 @@ typedef enum {
 - (NSString *)configEntryForKey:(NSString *)entryKey;
 - (BOOL)hasSearchIndex;
 
-- (NSMutableArray *)search:(NSString *)istr withScope:(SwordListKey*)scope;
+- (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope;
 - (NSMutableArray *)search:(NSString *)istr;
 - (void)setKeyString:(NSString *)aKeyString;
 

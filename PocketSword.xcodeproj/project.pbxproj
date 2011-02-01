@@ -650,6 +650,8 @@
 		056BCC7F12F2CD7C0029F3A2 /* HistoryController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC7C12F2CD7C0029F3A2 /* HistoryController.xib */; };
 		056BCC9512F2DE780029F3A2 /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
 		056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
+		056CE8A312F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
+		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
@@ -1401,6 +1403,8 @@
 		056BCCE812F2E5E60029F3A2 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		056BCCE912F2E5E90029F3A2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
 		056BCCEA12F2E5EE0029F3A2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
+		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
+		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
@@ -2766,6 +2770,8 @@
 				05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */,
 				0545549610CA4D8000EE11EC /* PSIndexController.h */,
 				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
+				056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */,
+				056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */,
 			);
 			name = multi;
 			sourceTree = "<group>";
@@ -3931,6 +3937,7 @@
 				056BBFA312DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 				056BC84D12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
 				056BC97D12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
+				056CE8A312F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4267,6 +4274,7 @@
 				056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 				056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
+				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

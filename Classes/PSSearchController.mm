@@ -12,6 +12,7 @@
 #import "PSModuleController.h"
 #import "SwordListKey.h"
 #import "HistoryController.h"
+#import "SwordVerseKey.h"
 
 @implementation PSSearchController
 
@@ -75,6 +76,11 @@
 		[self performSelectorInBackground:@selector(search) withObject:nil];
 	} else if(!self.results) {
 		[self.view addSubview:searchQueryView];
+	}
+	if(strongsSearch) {
+		searchNavigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
+	} else {
+		searchNavigationItem.title = NSLocalizedString(@"SearchTitle", @"");
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -252,6 +258,8 @@
 	if (!cell) {
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"queryCell"] autorelease];
 	}
+	
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
 	switch(indexPath.section) {
 		case SearchTypeSection:
@@ -510,6 +518,11 @@
 			case SearchStrongsSection:
 			{
 				strongsSearch = !strongsSearch;
+				if(strongsSearch) {
+					searchNavigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
+				} else {
+					searchNavigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+				}
 			}
 				break;
 		}
@@ -594,6 +607,64 @@
 	[fullSearchTerm release];
 }
 
+- (SwordVerseKey *)createSearchScope {
+	//SwordListKey *testScope = [SwordListKey listKeyWithRef:@"matt-rev" v11n:[self versification]];
+	NSString *v11n;
+	if(listType == BibleTab)
+		v11n = [[[PSModuleController defaultModuleController] primaryBible] versification];
+	else
+		v11n = [[[PSModuleController defaultModuleController] primaryCommentary] versification];
+	
+	SwordVerseKey *scope;
+
+	switch(searchRange) {
+		case OTRange:
+			scope = [SwordVerseKey verseKeyForOTForVersification:v11n];
+//			[firstKey setTestament:1];
+//			[firstKey setBook:1];
+//			[firstKey setChapter:1];
+//			[firstKey setVerse:1];
+//			[lastKey setTestament:1];
+//			[lastKey setBook:(sword::MAXBOOK)];
+//			[lastKey setChapter:(sword::MAXCHAPTER)];
+//			[lastKey setVerse:(sword::MAXVERSE)];
+			break;
+		case NTRange:
+			scope = [SwordVerseKey verseKeyForNTForVersification:v11n];
+//			[firstKey setTestament:2];
+//			[firstKey setBook:1];
+//			[firstKey setChapter:1];
+//			[firstKey setVerse:1];
+//			[lastKey setTestament:2];
+//			[lastKey setBook:(sword::MAXBOOK)];
+//			[lastKey setChapter:(sword::MAXCHAPTER)];
+//			[lastKey setVerse:(sword::MAXVERSE)];
+			break;
+		case BookRange:
+			scope = [SwordVerseKey verseKeyForWholeBook:[PSModuleController getCurrentBibleRef] v11n:v11n];
+//			[firstKey setKeyText:[PSModuleController getCurrentBibleRef]];
+//			[firstKey setChapter:1];
+//			[firstKey setVerse:1];
+//			[lastKey setKeyText:[PSModuleController getCurrentBibleRef]];
+//			[lastKey setChapter:(sword::MAXCHAPTER)];
+//			[lastKey setVerse:(sword::MAXVERSE)];
+			break;
+		case AllRange:default:
+			scope = [SwordVerseKey verseKeyForWholeBibleForVersification:v11n];
+//			[firstKey setTestament:1];
+//			[firstKey setBook:1];
+//			[firstKey setChapter:1];
+//			[firstKey setVerse:1];
+//			[lastKey setTestament:2];
+//			[lastKey setBook:(sword::MAXBOOK)];
+//			[lastKey setChapter:(sword::MAXCHAPTER)];
+//			[lastKey setVerse:(sword::MAXVERSE)];
+			break;
+	}
+	
+	return scope;
+}
+
 - (void)search {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
@@ -608,10 +679,10 @@
 	DLog(@"\nsearchTerm = %@", searchTerm);
 	switch(listType) {
 		case BibleTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm];
+			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm withScope:[self createSearchScope]];
 			break;
 		case CommentaryTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm];
+			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm withScope:[self createSearchScope]];
 			break;
 	}
 

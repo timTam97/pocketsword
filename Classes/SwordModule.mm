@@ -929,10 +929,10 @@
 	}
 }
 
-- (NSMutableArray *)search:(NSString *)istr withScope:(SwordListKey*)scope {
+- (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope {
 	sword::ListKey results;
 	if(scope) {
-		results = swModule->search([istr UTF8String], -4, 0, [scope swListKey]);
+		results = swModule->search([istr UTF8String], -4, 0, [scope swVerseKey]);
 	} else {
 		//SwordListKey *testScope = [SwordListKey listKeyWithRef:@"matt-rev" v11n:[self versification]];
 		//results = swModule->search([istr UTF8String], -4, 0, [testScope swListKey]);

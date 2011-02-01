@@ -13,7 +13,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="22"/>
-			<integer value="3"/>
+			<integer value="6"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -63,7 +63,7 @@
 									<int key="IBUIStyle">1</int>
 									<reference key="IBUINavigationItem" ref="732500407"/>
 								</object>
-								<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="1042545597">
+								<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="992097358">
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 									<int key="IBUIStyle">1</int>
 									<reference key="IBUINavigationItem" ref="732500407"/>
@@ -101,16 +101,16 @@
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
-			<object class="IBUIView" id="807446757">
+			<object class="IBUIView" id="868460406">
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="IBUITableView" id="900935884">
-						<reference key="NSNextResponder" ref="807446757"/>
+					<object class="IBUITableView" id="860559683">
+						<reference key="NSNextResponder" ref="868460406"/>
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{0, 44}, {320, 323}}</string>
-						<reference key="NSSuperview" ref="807446757"/>
+						<reference key="NSSuperview" ref="868460406"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">10</int>
 							<object class="NSImage" key="NSImage">
@@ -154,11 +154,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<float key="IBUISectionHeaderHeight">10</float>
 						<float key="IBUISectionFooterHeight">10</float>
 					</object>
-					<object class="IBUISearchBar" id="569639759">
-						<reference key="NSNextResponder" ref="807446757"/>
+					<object class="IBUISearchBar" id="926271265">
+						<reference key="NSNextResponder" ref="868460406"/>
 						<int key="NSvFlags">290</int>
 						<string key="NSFrameSize">{320, 44}</string>
-						<reference key="NSSuperview" ref="807446757"/>
+						<reference key="NSSuperview" ref="868460406"/>
 						<int key="IBUIContentMode">3</int>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBBarStyle">1</int>
@@ -238,7 +238,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">searchQueryView</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="807446757"/>
+						<reference key="destination" ref="868460406"/>
 					</object>
 					<int key="connectionID">25</int>
 				</object>
@@ -246,14 +246,14 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">searchQueryTable</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="900935884"/>
+						<reference key="destination" ref="860559683"/>
 					</object>
 					<int key="connectionID">26</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
-						<reference key="source" ref="900935884"/>
+						<reference key="source" ref="860559683"/>
 						<reference key="destination" ref="372490531"/>
 					</object>
 					<int key="connectionID">27</int>
@@ -261,7 +261,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dataSource</string>
-						<reference key="source" ref="900935884"/>
+						<reference key="source" ref="860559683"/>
 						<reference key="destination" ref="372490531"/>
 					</object>
 					<int key="connectionID">28</int>
@@ -269,7 +269,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
-						<reference key="source" ref="569639759"/>
+						<reference key="source" ref="926271265"/>
 						<reference key="destination" ref="372490531"/>
 					</object>
 					<int key="connectionID">29</int>
@@ -278,17 +278,25 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">searchBar</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="569639759"/>
+						<reference key="destination" ref="926271265"/>
 					</object>
 					<int key="connectionID">30</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">searchButtonPressed:</string>
-						<reference key="source" ref="1042545597"/>
+						<reference key="source" ref="992097358"/>
 						<reference key="destination" ref="372490531"/>
 					</object>
 					<int key="connectionID">32</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">searchNavigationItem</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="732500407"/>
+					</object>
+					<int key="connectionID">34</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -341,7 +349,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="1051644106"/>
-							<reference ref="1042545597"/>
+							<reference ref="992097358"/>
 						</object>
 						<reference key="parent" ref="22559259"/>
 					</object>
@@ -352,27 +360,27 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">22</int>
-						<reference key="object" ref="807446757"/>
+						<reference key="object" ref="868460406"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="569639759"/>
-							<reference ref="900935884"/>
+							<reference ref="926271265"/>
+							<reference ref="860559683"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">23</int>
-						<reference key="object" ref="569639759"/>
-						<reference key="parent" ref="807446757"/>
+						<reference key="object" ref="926271265"/>
+						<reference key="parent" ref="868460406"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">24</int>
-						<reference key="object" ref="900935884"/>
-						<reference key="parent" ref="807446757"/>
+						<reference key="object" ref="860559683"/>
+						<reference key="parent" ref="868460406"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">31</int>
-						<reference key="object" ref="1042545597"/>
+						<reference key="object" ref="992097358"/>
 						<reference key="parent" ref="732500407"/>
 					</object>
 				</object>
@@ -432,7 +440,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">33</int>
+			<int key="maxID">34</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -494,6 +502,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>delegate</string>
 							<string>searchBar</string>
 							<string>searchNavigationBar</string>
+							<string>searchNavigationItem</string>
 							<string>searchQueryTable</string>
 							<string>searchQueryView</string>
 							<string>searchResultsTable</string>
@@ -504,6 +513,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>id</string>
 							<string>UISearchBar</string>
 							<string>UINavigationBar</string>
+							<string>UINavigationItem</string>
 							<string>UITableView</string>
 							<string>UIView</string>
 							<string>UITableView</string>
@@ -517,6 +527,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>delegate</string>
 							<string>searchBar</string>
 							<string>searchNavigationBar</string>
+							<string>searchNavigationItem</string>
 							<string>searchQueryTable</string>
 							<string>searchQueryView</string>
 							<string>searchResultsTable</string>
@@ -538,6 +549,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<object class="IBToOneOutletInfo">
 								<string key="name">searchNavigationBar</string>
 								<string key="candidateClassName">UINavigationBar</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">searchNavigationItem</string>
+								<string key="candidateClassName">UINavigationItem</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">searchQueryTable</string>

@@ -274,3 +274,5 @@
 "SearchRangeOTRow" = "Old Testament";
 "SearchRangeNTRow" = "New Testament";
 "SearchStrongsRow" = "Search for a Strong's Number";
+"SearchTitle" = "Search";
+"SearchStrongsTitle" = "Strong's Search";

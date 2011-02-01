@@ -19,6 +19,10 @@
 + (id)verseKeyWithVersification:(NSString *)scheme;
 + (id)verseKeyWithRef:(NSString *)aRef;
 + (id)verseKeyWithRef:(NSString *)aRef v11n:(NSString *)scheme;
++ (id)verseKeyForOTForVersification:(NSString *)scheme;
++ (id)verseKeyForNTForVersification:(NSString *)scheme;
++ (id)verseKeyForWholeBibleForVersification:(NSString *)scheme;
++ (id)verseKeyForWholeBook:(NSString *)aRef v11n:(NSString *)scheme;
 
 #ifdef __cplusplus
 + (id)verseKeyWithSWVerseKey:(sword::VerseKey *)aVk;

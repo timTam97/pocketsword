@@ -35,6 +35,57 @@
     return [[[SwordVerseKey alloc] initWithSWVerseKey:aVk makeCopy:copy] autorelease];    
 }
 
++ (id)verseKeyForOTForVersification:(NSString *)scheme {
+	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+	sword::VerseKey *vk = [retKey swVerseKey];
+	vk->setPosition(sword::TOP);
+	vk->LowerBound(*vk);
+	// doesn't work because MAXBOOK hasn't been implemented in versekey.cpp:1159
+	// vk->setPosition(MAXBOOK); vk->setPosition(MAXCHAPTER); vk->setPosition(MAXVERSE);
+	vk->setTestament(2);
+	(*vk)--;
+	//	---- end of workaround
+	vk->UpperBound(*vk);
+	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	return retKey;
+}
+
++ (id)verseKeyForNTForVersification:(NSString *)scheme {
+	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+	sword::VerseKey *vk = [retKey swVerseKey];
+	vk->setPosition(sword::TOP);	// stupid workaround to set book, chap, and verse to 1 because setTestament doesn't follow suit and do this like setChapter and setBook do.
+	vk->setTestament(2);
+	vk->LowerBound(*vk);
+	vk->setPosition(sword::BOTTOM);
+	vk->UpperBound(*vk);
+	
+	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	return retKey;
+}
+
++ (id)verseKeyForWholeBibleForVersification:(NSString *)scheme {
+	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+	sword::VerseKey *vk = [retKey swVerseKey];
+	vk->LowerBound(*vk);
+	vk->setPosition(sword::BOTTOM);
+	vk->UpperBound(*vk);
+	
+	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	return retKey;
+}
+
++ (id)verseKeyForWholeBook:(NSString *)aRef v11n:(NSString *)scheme {
+	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithRef:aRef v11n:scheme] autorelease];
+	sword::VerseKey *vk = [retKey swVerseKey];
+	vk->setChapter(1); vk->setVerse(1);
+	vk->LowerBound(*vk);
+	vk->setChapter(vk->getChapterMax()); vk->setVerse(vk->getVerseMax());
+	vk->UpperBound(*vk);
+	
+	DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
+	return retKey;
+}
+
 - (id)init {
     return [self initWithRef:nil];
 }
@@ -122,6 +173,10 @@
 
 - (int)verse {
     return ((sword::VerseKey *)sk)->getVerse();
+}
+
+- (void)setVKPosition:(sword::SW_POSITION)position {
+    ((sword::VerseKey *)sk)->setPosition(position);
 }
 
 - (void)setTestament:(int)val {
