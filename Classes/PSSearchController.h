@@ -20,26 +20,24 @@
 	
 	ShownTab listType;
 
-	//IBOutlet HistoryController *historyController;
 	IBOutlet UITableView *searchQueryTable;
 	IBOutlet UIView *searchQueryView;
 	IBOutlet UITableView *searchResultsTable;
 	IBOutlet UISearchBar *searchBar;
-	IBOutlet UIBarButtonItem *closeButton;
-	IBOutlet UINavigationBar *searchNavigationBar;
-	IBOutlet UINavigationItem *searchNavigationItem;
 	
 	UIView *helpView;
+	
+	// the below are basically the current PSSearchHistoryItem
+	//  should we remove them & simply have our own item instead?
 	NSString *searchTerm;
 	NSString *searchTermToDisplay;
 	BOOL searchingEnabled;
-	
 	BOOL strongsSearch;
 	PSSearchType searchType;
 	PSSearchRange searchRange;
 	NSString *bookName;
-
 	NSMutableArray *results;
+	NSArray *savedTablePosition;
 }
 
 @property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
@@ -50,6 +48,7 @@
 @property (assign, readwrite) PSSearchRange searchRange;
 @property (retain, readwrite) NSString *bookName;
 @property (retain, readwrite) NSMutableArray *results;
+@property (retain, readwrite) NSArray *savedTablePosition;
 
 - (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem;
 
@@ -57,6 +56,9 @@
 
 - (void)refreshView;
 - (void)setListType:(ShownTab)listType;
+
+- (void)saveTablePositionFromCurrentPosition;
+- (void)notifyDelegateOfNewHistoryItem;
 
 - (IBAction)infoButtonPressed:(id)sender;
 - (IBAction)closeButtonPressed;

@@ -16,7 +16,7 @@
 
 @implementation PSSearchController
 
-@synthesize results;
+@synthesize results, savedTablePosition;
 @synthesize searchTerm, searchTermToDisplay, bookName;
 @synthesize delegate;
 @synthesize searchRange, searchType, strongsSearch;
@@ -35,6 +35,7 @@
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
 		self.tabBarItem = tBI;
 		[tBI release];
+		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
 		self.searchTerm = nil;
 		self.searchTermToDisplay = nil;
 		self.results = nil;
@@ -42,6 +43,7 @@
 		self.strongsSearch = NO;
 		self.searchType = AndSearch;
 		self.searchRange = AllRange;
+		self.savedTablePosition = nil;
 	}
 	return self;
 }
@@ -55,6 +57,7 @@
 		self.strongsSearch = searchHistoryItem.strongsSearch;
 		self.results = searchHistoryItem.results;
 		self.bookName = searchHistoryItem.bookName;
+		self.savedTablePosition = searchHistoryItem.savedTablePosition;
 	}
 }
 
@@ -68,7 +71,8 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -90,21 +94,22 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	if(self.searchTermToDisplay) {
 		searchBar.text = searchTermToDisplay;
 	}
-	[super viewWillAppear:animated];
 	if(self.searchTerm) {
 		// we need to perform a search...  searchTerm should already be well formatted.
-		self.strongsSearch = YES;
 		[self performSelectorInBackground:@selector(search) withObject:nil];
 	} else if(!self.results) {
+		searchQueryView.bounds = searchResultsTable.bounds;
+		searchQueryView.center = searchResultsTable.center;
 		[self.view addSubview:searchQueryView];
 	}
 	if(strongsSearch) {
-		searchNavigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
+		self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
 	} else {
-		searchNavigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -113,35 +118,46 @@
 		searchResultsTable.backgroundColor = [UIColor whiteColor];
 	}
 	// TODO: when we rip this view to pieces, this needs to be switched to be:
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable useStatusBar:YES];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchQueryView useStatusBar:YES];
+	
+	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchResultsTable useStatusBar:YES];
+	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchQueryView useStatusBar:YES];
 
 //	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
 //	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
+//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
 //		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 32.0);//396,236
 //		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);//219.0 instead of 268.0
 //	} else {
-//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
+//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
 //		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 44.0);//396,236
 //		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);//367.0 instead of 416.0 -- removed 49 (tab bar!)
 //	}
 	[self refreshView];
+	if(self.results) {
+		if(self.savedTablePosition && [savedTablePosition count] > 0) {
+			if([savedTablePosition count] > 1) {
+				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+			} else {
+				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+			}
+		}
+		[searchQueryView removeFromSuperview];
+	}
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchResultsTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:searchNavigationBar mainView:searchQueryView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	//[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchResultsTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	//[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchQueryView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 //	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
+//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
 //		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 32.0);//396,236
 //		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//428.0
 //	} else {
-//		searchNavigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
+//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
 //		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 44.0);//396,236
 //		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);//256.0
 //	}
-}
+//}
 
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -184,6 +200,7 @@
 - (void)dealloc {
 	self.results = nil;
 	self.searchTerm = nil;
+	self.savedTablePosition = nil;
 	if(helpView)
 		[helpView release];
     [super dealloc];
@@ -471,6 +488,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if(searchingEnabled && results && [tableView isEqual:searchResultsTable]) {
+		[self notifyDelegateOfNewHistoryItem];
 		NSString *ref = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
 		NSString *verse = [[ref componentsSeparatedByString:@":"] objectAtIndex: 1];
 		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
@@ -543,9 +561,9 @@
 			{
 				strongsSearch = !strongsSearch;
 				if(strongsSearch) {
-					searchNavigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
+					self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
 				} else {
-					searchNavigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+					self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
 				}
 			}
 				break;
@@ -662,6 +680,7 @@
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	self.results = nil;
+	self.savedTablePosition = nil;
 	if(self.searchTerm) {
 		// the search is already formatted
 	} else {
@@ -688,6 +707,15 @@
 	}
 	
 	// call our delegate to say we have a new searchTerm & results.
+	[self notifyDelegateOfNewHistoryItem];
+	
+	self.searchTerm = nil;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	[searchResultsTable reloadData];
+	[pool release];
+}
+
+- (void)notifyDelegateOfNewHistoryItem {
 	if([searchTermToDisplay isEqualToString:@""]) {
 		[delegate searchDidFinish:nil];
 	} else {
@@ -697,14 +725,11 @@
 		}
 		PSSearchHistoryItem *searchHistoryItem = [[PSSearchHistoryItem alloc] initWithSearchTermToDisplay:searchTermToDisplay strongs:strongsSearch type:searchType range:searchRange book:bName];
 		searchHistoryItem.results = self.results;
+		[self saveTablePositionFromCurrentPosition];
+		searchHistoryItem.savedTablePosition = self.savedTablePosition;
 		[delegate searchDidFinish:searchHistoryItem];
 		[searchHistoryItem release];
 	}
-	
-	self.searchTerm = nil;
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	[searchResultsTable reloadData];
-	[pool release];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
@@ -716,6 +741,13 @@
 - (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
 	[sBar resignFirstResponder];
 	if(self.results) {
+		if(self.savedTablePosition && [savedTablePosition count] > 0) {
+			if([savedTablePosition count] > 1) {
+				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+			} else {
+				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+			}
+		}
 		[searchQueryView removeFromSuperview];
 	}
 }
@@ -778,8 +810,26 @@
 	}
 }
 
+- (void)saveTablePositionFromCurrentPosition {
+	if(self.results && [results count] > 0) {
+		self.savedTablePosition = [searchResultsTable indexPathsForVisibleRows];
+		if(savedTablePosition && [savedTablePosition count] > 0) {
+			NSIndexPath *indexPath = [savedTablePosition objectAtIndex:0];
+			if(indexPath.section == 0 && indexPath.row == 0) {
+				self.savedTablePosition = nil;
+			}
+		}
+	}
+}
+
 - (IBAction)searchButtonPressed:(id)sender {
 	if(![searchQueryView superview]) {
+		if(self.results && [results count] > 0) {
+			[self saveTablePositionFromCurrentPosition];
+			[searchResultsTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+		}
+		searchQueryView.bounds = searchResultsTable.bounds;
+		searchQueryView.center = searchResultsTable.center;
 		[self.view addSubview:searchQueryView];
 	}
 	[searchBar becomeFirstResponder];

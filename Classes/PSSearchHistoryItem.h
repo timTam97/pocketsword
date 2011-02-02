@@ -18,7 +18,7 @@
 	NSString *bookName;// if searchRange == BookRange, we need to save which book we're interested in!
 	
 	NSMutableArray *results;
-	
+	NSArray *savedTablePosition;
 }
 
 @property (retain, readwrite) NSString *searchTerm;
@@ -28,6 +28,7 @@
 @property (assign, readwrite) PSSearchRange searchRange;
 @property (retain, readwrite) NSString *bookName;
 @property (retain, readwrite) NSMutableArray *results;
+@property (retain, readwrite) NSArray *savedTablePosition;
 
 - (id)initWithSearchTermToDisplay:(NSString*)sTerm strongs:(BOOL)strongs type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName;
 - (id)initWithArray:(NSArray *)array;

@@ -441,8 +441,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		multiListController = [[UITabBarController alloc] init];
 		HistoryController *historyController = [[HistoryController alloc] init];
 		PSSearchController *searchController = [[PSSearchController alloc] init];
+		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
+		searchNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		searchController.delegate = self;
-		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchController, nil];
+		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchNavigationController, nil];
 		multiListController.viewControllers = controllers;
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
@@ -455,13 +457,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //				searchController.results = savedSearchHistoryItem.results;
 //				//we need to set everything at this point...
 //				asdf;
-				[multiListController setSelectedViewController:searchController];
+				[multiListController setSelectedViewController:searchNavigationController];
 			} else if(savedSearchHistoryItem && savedSearchHistoryItem.searchTerm) {
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
 //				searchController.searchTerm = savedSearchHistoryItem.searchTerm;
 //				searchController.searchTermToDisplay = savedSearchHistoryItem.searchTermToDisplay;
 				self.savedSearchHistoryItem = nil;
-				[multiListController setSelectedViewController:searchController];
+				[multiListController setSelectedViewController:searchNavigationController];
 			}
 		} else {
 			[historyController setListType: CommentaryTab];
@@ -473,11 +475,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //				searchController.results = savedSearchHistoryItem.results;
 //				//we need to set everything at this point...
 //				asdf;
-				[multiListController setSelectedViewController:searchController];
+				[multiListController setSelectedViewController:searchNavigationController];
 			}
 		}
 
 		[tabController presentModalViewController:multiListController animated:YES];
+		[searchNavigationController release];
 		[historyController release];
 		[searchController release];
 		[multiListController release];
@@ -1295,6 +1298,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[shi release];
 		}
 		savedSearchHistoryItem.searchTermToDisplay = strongsSearchTerm;
+		savedSearchHistoryItem.strongsSearch = YES;
 		[self hideInfo];
 		[self toggleMultiList];
 

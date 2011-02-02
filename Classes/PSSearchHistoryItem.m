@@ -11,7 +11,7 @@
 
 @implementation PSSearchHistoryItem
 
-@synthesize searchTerm, searchTermToDisplay, strongsSearch, searchType, searchRange, bookName, results;
+@synthesize searchTerm, searchTermToDisplay, strongsSearch, searchType, searchRange, bookName, results, savedTablePosition;
 
 - (id)init {
 	self = [super init];
@@ -23,6 +23,7 @@
 		self.searchRange = AllRange;
 		self.bookName = nil;
 		self.results = nil;
+		self.savedTablePosition = nil;
 	}
 	return self;
 }
