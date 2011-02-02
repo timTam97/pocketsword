@@ -35,7 +35,6 @@
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
 		self.tabBarItem = tBI;
 		[tBI release];
-		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
 		self.searchTerm = nil;
 		self.searchTermToDisplay = nil;
 		self.results = nil;
@@ -45,8 +44,19 @@
 		self.searchType = AndSearch;
 		self.searchRange = AllRange;
 		self.savedTablePosition = nil;
+		[self setSearchTitle];
 	}
 	return self;
+}
+
+- (void)setSearchTitle {
+	if(self.results && ![searchQueryView superview] && self.searchTermToDisplay) {
+		self.navigationItem.title = self.searchTermToDisplay;
+	} else if(strongsSearch) {
+		self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
+	} else {
+		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+	}
 }
 
 - (void)setSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
@@ -60,6 +70,7 @@
 		self.results = searchHistoryItem.results;
 		self.bookName = searchHistoryItem.bookName;
 		self.savedTablePosition = searchHistoryItem.savedTablePosition;
+		[self setSearchTitle];
 	}
 }
 
@@ -108,11 +119,11 @@
 		searchQueryView.center = searchResultsTable.center;
 		[self.view addSubview:searchQueryView];
 	}
-	if(strongsSearch) {
-		self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
-	} else {
-		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
-	}
+//	if(strongsSearch) {
+//		self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
+//	} else {
+//		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+//	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		searchResultsTable.backgroundColor = [UIColor blackColor];
@@ -143,8 +154,8 @@
 				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
 			}
 		}
-		//[searchQueryView removeFromSuperview];
 	}
+	[self setSearchTitle];
 }
 
 //- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -203,8 +214,8 @@
 	self.results = nil;
 	self.searchTerm = nil;
 	self.savedTablePosition = nil;
-	if(helpView)
-		[helpView release];
+//	if(helpView)
+//		[helpView release];
     [super dealloc];
 }
 
@@ -679,6 +690,7 @@
 	[sBar resignFirstResponder];
 	[self search];
 	[searchQueryView removeFromSuperview];
+	[self setSearchTitle];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
@@ -693,6 +705,7 @@
 		}
 		[searchQueryView removeFromSuperview];
 	}
+	[self setSearchTitle];
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)sBar {
@@ -710,57 +723,57 @@
 //	[pool release];
 //}
 
-- (void)createHelpView {
-	UIWebView *webView = nil;
-	UINavigationBar *navBar = nil;
-	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
-	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 480, 251)];// 320-69
-		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 480, 212)];//320-113
-		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 480, 44)];
-	} else {
-		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
-		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
-		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
-		
-	}
-	helpView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	navBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	NSString *helpHTML = @"<html><body><font face=\"Helvetica\"><dl><dt>loved one</dt><dd>search for verses that contain \"loved\" or \"one\"<br/>NB: this is the same as searching for loved OR one</dd>\n\
-	<dt>\"loved one\"</dt><dd>search for verses that contain the phrase \"loved one\"</dd>\n\
-	<dt>love*</dt><dd>search for verses that contain a word starting with \"love\" (love OR loves OR loved OR etc...)</dd>\n\
-	<dt>loved AND one</dt><dd>search for verses that contains the word \"loved\" and the word \"one\"<br />NB: && can be used in place of AND</dd>\n\
-	<dt>+loved one</dt><dd>search for verses that must contain \"loved\" and may contain \"one\"</dd>\n\
-	<dt>loved NOT one</dt><dd>search for verses that contain \"loved\" but not \"one\"</dd>\n\
-	<dt>(loved one) AND God</dt><dd>search for verses that contain \"loved\" or \"one\" and \"God\"</dd>\n\
-	</font></body></html>";
-	[webView loadHTMLString: helpHTML baseURL:nil];
-	[helpView addSubview: webView];
-	[webView release];
-	navBar.barStyle = UIBarStyleBlackOpaque;
-	UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
-	navItem.rightBarButtonItem = nil;
-	navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
-	[navBar pushNavigationItem: navItem animated: NO];
-	[navItem release];
-	[helpView addSubview: navBar];
-	[navBar release];
-}
+//- (void)createHelpView {
+//	UIWebView *webView = nil;
+//	UINavigationBar *navBar = nil;
+//	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
+//	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+//	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
+//	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+//		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 480, 251)];// 320-69
+//		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 480, 212)];//320-113
+//		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 480, 44)];
+//	} else {
+//		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
+//		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
+//		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
+//		
+//	}
+//	helpView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//	navBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//	NSString *helpHTML = @"<html><body><font face=\"Helvetica\"><dl><dt>loved one</dt><dd>search for verses that contain \"loved\" or \"one\"<br/>NB: this is the same as searching for loved OR one</dd>\n\
+//	<dt>\"loved one\"</dt><dd>search for verses that contain the phrase \"loved one\"</dd>\n\
+//	<dt>love*</dt><dd>search for verses that contain a word starting with \"love\" (love OR loves OR loved OR etc...)</dd>\n\
+//	<dt>loved AND one</dt><dd>search for verses that contains the word \"loved\" and the word \"one\"<br />NB: && can be used in place of AND</dd>\n\
+//	<dt>+loved one</dt><dd>search for verses that must contain \"loved\" and may contain \"one\"</dd>\n\
+//	<dt>loved NOT one</dt><dd>search for verses that contain \"loved\" but not \"one\"</dd>\n\
+//	<dt>(loved one) AND God</dt><dd>search for verses that contain \"loved\" or \"one\" and \"God\"</dd>\n\
+//	</font></body></html>";
+//	[webView loadHTMLString: helpHTML baseURL:nil];
+//	[helpView addSubview: webView];
+//	[webView release];
+//	navBar.barStyle = UIBarStyleBlackOpaque;
+//	UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
+//	navItem.rightBarButtonItem = nil;
+//	navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
+//	[navBar pushNavigationItem: navItem animated: NO];
+//	[navItem release];
+//	[helpView addSubview: navBar];
+//	[navBar release];
+//}
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	//NSLog(@"rotating...");
-	if(helpView) {
-		//NSLog(@"rotating...2");
-		[helpView removeFromSuperview];
-		[helpView release];
-		helpView = nil;
-		[self createHelpView];
-		[self.view addSubview:helpView];
-	}
-}
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+//	//NSLog(@"rotating...");
+//	if(helpView) {
+//		//NSLog(@"rotating...2");
+//		[helpView removeFromSuperview];
+//		[helpView release];
+//		helpView = nil;
+//		[self createHelpView];
+//		[self.view addSubview:helpView];
+//	}
+//}
 
 - (void)saveTablePositionFromCurrentPosition {
 	if(self.results && [results count] > 0) {
@@ -785,37 +798,38 @@
 		[self.view addSubview:searchQueryView];
 	}
 	[searchBar becomeFirstResponder];
+	[self setSearchTitle];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 	[searchBar resignFirstResponder];
 }
 
-- (IBAction)infoButtonPressed:(id)sender {
-	if(!helpView) {
-		[self createHelpView];
-	}
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-                           forView:self.view
-                             cache:YES]; 
-	
-    [UIView setAnimationDuration:1];
-	[self.view addSubview:helpView];
-    [UIView commitAnimations];
-}
+//- (IBAction)infoButtonPressed:(id)sender {
+//	if(!helpView) {
+//		[self createHelpView];
+//	}
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
+//                           forView:self.view
+//                             cache:YES]; 
+//	
+//    [UIView setAnimationDuration:1];
+//	[self.view addSubview:helpView];
+//    [UIView commitAnimations];
+//}
 
-- (void)closeSearchHelp {
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-                           forView:self.view
-                             cache:YES];
-	
-    [UIView setAnimationDuration:1];
-	[helpView removeFromSuperview];
-    [UIView commitAnimations];
-	[helpView release];
-	helpView = nil;
-}
+//- (void)closeSearchHelp {
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
+//                           forView:self.view
+//                             cache:YES];
+//	
+//    [UIView setAnimationDuration:1];
+//	[helpView removeFromSuperview];
+//    [UIView commitAnimations];
+//	[helpView release];
+//	helpView = nil;
+//}
 
 @end

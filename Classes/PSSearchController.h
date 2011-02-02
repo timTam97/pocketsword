@@ -26,7 +26,7 @@
 	IBOutlet UITableView *searchResultsTable;
 	IBOutlet UISearchBar *searchBar;
 	
-	UIView *helpView;
+	//UIView *helpView;
 	
 	// the below are basically the current PSSearchHistoryItem
 	//  should we remove them & simply have our own item instead?
@@ -56,6 +56,7 @@
 - (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem;
 
 - (void)setSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem;
+- (void)setSearchTitle;
 
 - (void)refreshView;
 - (void)setListType:(ShownTab)listType;
@@ -63,8 +64,8 @@
 - (void)saveTablePositionFromCurrentPosition;
 - (void)notifyDelegateOfNewHistoryItem;
 
-- (IBAction)infoButtonPressed:(id)sender;
-- (IBAction)closeButtonPressed;
+//- (IBAction)infoButtonPressed:(id)sender;
+//- (IBAction)closeButtonPressed;
 
 - (IBAction)searchButtonPressed:(id)sender;
 
