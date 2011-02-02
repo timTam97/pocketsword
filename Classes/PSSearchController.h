@@ -8,13 +8,14 @@
 
 #import "globals.h"
 #import "PSSearchHistoryItem.h"
+#import "PSSearchOptionTableViewController.h"
 
 @protocol PSSearchControllerDelegate <NSObject>
 @required
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
-@interface PSSearchController : UIViewController {
+@interface PSSearchController : UIViewController <PSSearchOptionsDelegate> {
 
 	id <PSSearchControllerDelegate> delegate;
 	
@@ -33,6 +34,7 @@
 	NSString *searchTermToDisplay;
 	BOOL searchingEnabled;
 	BOOL strongsSearch;
+	BOOL fuzzySearch;
 	PSSearchType searchType;
 	PSSearchRange searchRange;
 	NSString *bookName;
@@ -44,6 +46,7 @@
 @property (retain, readwrite) NSString *searchTerm;
 @property (retain, readwrite) NSString *searchTermToDisplay;
 @property (assign, readwrite) BOOL strongsSearch;
+@property (assign, readwrite) BOOL fuzzySearch;
 @property (assign, readwrite) PSSearchType searchType;
 @property (assign, readwrite) PSSearchRange searchRange;
 @property (retain, readwrite) NSString *bookName;

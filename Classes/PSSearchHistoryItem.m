@@ -11,7 +11,7 @@
 
 @implementation PSSearchHistoryItem
 
-@synthesize searchTerm, searchTermToDisplay, strongsSearch, searchType, searchRange, bookName, results, savedTablePosition;
+@synthesize searchTerm, searchTermToDisplay, strongsSearch, fuzzySearch, searchType, searchRange, bookName, results, savedTablePosition;
 
 - (id)init {
 	self = [super init];
@@ -19,6 +19,7 @@
 		self.searchTerm = nil;
 		self.searchTermToDisplay = nil;
 		self.strongsSearch = NO;
+		self.fuzzySearch = NO;
 		self.searchType = AndSearch;
 		self.searchRange = AllRange;
 		self.bookName = nil;
@@ -28,11 +29,12 @@
 	return self;
 }
 
-- (id)initWithSearchTermToDisplay:(NSString*)sTerm strongs:(BOOL)strongs type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName {
+- (id)initWithSearchTermToDisplay:(NSString*)sTerm strongs:(BOOL)strongs fuzzy:(BOOL)fuzzy type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName {
 	self = [self init];
 	if(self) {
 		self.searchTermToDisplay = sTerm;
 		self.strongsSearch = strongs;
+		self.fuzzySearch = fuzzy;
 		self.searchType = sType;
 		self.searchRange = sRange;
 		self.bookName = bName;
@@ -52,12 +54,15 @@
 			self.strongsSearch = [(NSString*)[array objectAtIndex:1] boolValue];
 		}
 		if([array count] > 2) {
-			self.searchType = (PSSearchType)[(NSString*)[array objectAtIndex:2] intValue];
+			self.fuzzySearch = [(NSString*)[array objectAtIndex:1] boolValue];
 		}
 		if([array count] > 3) {
-			self.searchRange = (PSSearchRange)[(NSString*)[array objectAtIndex:3] intValue];
+			self.searchType = (PSSearchType)[(NSString*)[array objectAtIndex:2] intValue];
 		}
 		if([array count] > 4) {
+			self.searchRange = (PSSearchRange)[(NSString*)[array objectAtIndex:3] intValue];
+		}
+		if([array count] > 5) {
 			self.bookName = [array objectAtIndex:4];
 		} else {
 			self.bookName = nil;
@@ -75,9 +80,10 @@
 
 - (NSArray *)searchHistoryItemArray {
 	NSString *strongs = (strongsSearch) ? @"Y" : @"N";
+	NSString *fuzzy = (fuzzySearch) ? @"Y" : @"N";
 	NSString *sType = [NSString stringWithFormat:@"%d", searchType];
 	NSString *sRange = [NSString stringWithFormat:@"%d", searchRange];
-	return [NSArray arrayWithObjects:searchTermToDisplay, strongs, sType, sRange, bookName, nil];
+	return [NSArray arrayWithObjects:searchTermToDisplay, strongs, fuzzy, sType, sRange, bookName, nil];
 }
 
 @end

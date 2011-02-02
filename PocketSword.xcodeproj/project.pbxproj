@@ -652,6 +652,8 @@
 		056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
 		056CE8A312F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
+		056CEB3212F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */; };
+		056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
@@ -1405,6 +1407,8 @@
 		056BCCEA12F2E5EE0029F3A2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
 		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
 		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
+		056CEB3012F8ED1700A7DA37 /* PSSearchOptionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchOptionTableViewController.h; path = Classes/PSSearchOptionTableViewController.h; sourceTree = "<group>"; };
+		056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchOptionTableViewController.m; path = Classes/PSSearchOptionTableViewController.m; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
@@ -2772,6 +2776,8 @@
 				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
 				056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */,
 				056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */,
+				056CEB3012F8ED1700A7DA37 /* PSSearchOptionTableViewController.h */,
+				056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */,
 			);
 			name = multi;
 			sourceTree = "<group>";
@@ -3938,6 +3944,7 @@
 				056BC84D12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
 				056BC97D12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
 				056CE8A312F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
+				056CEB3212F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4275,6 +4282,7 @@
 				056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
 				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
+				056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -262,17 +262,34 @@
 "BookmarksLastAccessedTitle" = "Last Accessed:";
 "BookmarkEditBookmarkTitle" = "Edit Bookmark";
 
+"SearchTitle" = "Search";
+"SearchStrongsTitle" = "Strong's Search";
+"SearchOptionsTitle" = "Search Options";
+
 "StrongsSearchFindAll" = "Find all occurrences";
+
 "SearchTypeSectionHeader" = "Search Type:";
 "SearchRangeSectionHeader" = "Search Range:";
 "SearchStrongsSectionHeader" = "Strong's Search:";
+"SearchFuzzySectionHeader" = "Fuzzy Search:";
+
+"SearchTypeSectionFooter" = "";
+"SearchRangeSectionFooter" = "";
+"SearchStrongsSectionFooter" = "You can search for occurrances of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) search for G11.\nTo search for the Hebrew Number 0430 (God) search for H430.";
+"SearchFuzzySeactionFooter" = "Using Fuzzy Search you can search for rev and it will return results for revile, reveal, revenge, revelation, etc.";
 
 "SearchTypeAllRow" = "Match ALL words";
+"SearchTypeAllRowShort" = "All";
 "SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeExactRow" = "Match exact phrase";
+"SearchTypeAnyRowShort" = "Any";
+"SearchTypeExactRow" = "Match EXACT phrase";
+"SearchTypeExactRowShort" = "Exact";
 "SearchRangeAllRow" = "Entire Bible";
+"SearchRangeAllRowShort" = "Bible";
 "SearchRangeOTRow" = "Old Testament";
+"SearchRangeOTRowShort" = "OT";
 "SearchRangeNTRow" = "New Testament";
+"SearchRangeNTRowShort" = "NT";
 "SearchStrongsRow" = "Search for a Strong's Number";
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
+"On" = "On";
+"Off" = "Off";
