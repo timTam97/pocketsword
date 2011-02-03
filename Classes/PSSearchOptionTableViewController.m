@@ -110,7 +110,7 @@
 		case PSSearchOptionTableStrongsSelector:
 			return NSLocalizedString(@"SearchStrongsSectionHeader", @"");
 		case PSSearchOptionTableFuzzySelector:
-			return NSLocalizedString(@"SearchFuzzySeactionHeader", @"");
+			return NSLocalizedString(@"SearchFuzzySectionHeader", @"");
 	}
 	return @"";
 }
@@ -124,7 +124,7 @@
 		case PSSearchOptionTableStrongsSelector:
 			return NSLocalizedString(@"SearchStrongsSectionFooter", @"");
 		case PSSearchOptionTableFuzzySelector:
-			return NSLocalizedString(@"SearchFuzzySeactionFooter", @"");
+			return NSLocalizedString(@"SearchFuzzySectionFooter", @"");
 	}
 	return @"";
 }

@@ -25,6 +25,7 @@
 	IBOutlet UIView *searchQueryView;
 	IBOutlet UITableView *searchResultsTable;
 	IBOutlet UISearchBar *searchBar;
+//	UILabel *titleLabel;
 	
 	//UIView *helpView;
 	

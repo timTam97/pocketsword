@@ -1409,6 +1409,7 @@
 		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
 		056CEB3012F8ED1700A7DA37 /* PSSearchOptionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchOptionTableViewController.h; path = Classes/PSSearchOptionTableViewController.h; sourceTree = "<group>"; };
 		056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchOptionTableViewController.m; path = Classes/PSSearchOptionTableViewController.m; sourceTree = "<group>"; };
+		056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "UserComments-Requests.txt"; path = "Resources/doc/UserComments-Requests.txt"; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
@@ -2673,6 +2674,7 @@
 		0542F70F10BE7C0B0088A721 /* doc */ = {
 			isa = PBXGroup;
 			children = (
+				056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */,
 				057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */,
 				05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */,
 				053C59DA1150B3630024192C /* S_M_85032342_20091130_20091227.txt */,

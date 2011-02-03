@@ -235,3 +235,62 @@
 
 // new v1.3.5 strings:
 "PreferencesFontDefaultTitle" = "Gebruik aangepast lettertype";
+
+// new v1.4.0 strings:
+"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
+"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
+"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
+"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+
+"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
+"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+
+"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
+"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Folder Name:";
+"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
+"BookmarksAddBookmarkVerseTitle" = "Verse";
+"BookmarksAddBookmarkDescriptionTitle" = "Description";
+"BookmarksAddBookmarkFolderTitle" = "Folder";
+
+"BookmarksAddFolderButton" = "Add Folder";
+"BookmarksEditFolderTitle" = "Edit Folder";
+"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
+"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
+"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
+"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+
+"SearchTitle" = "Search";
+"SearchStrongsTitle" = "Strong's Search";
+"SearchOptionsTitle" = "Search Options";
+
+"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+
+"SearchTypeSectionHeader" = "Search Type:";
+"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Strong's Search:";
+"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+
+"SearchTypeSectionFooter" = "";// currently empty.
+"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
+"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
+"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+
+"SearchTypeAllRow" = "Match ALL words";
+"SearchTypeAllRowShort" = "All words";
+"SearchTypeAnyRow" = "Match ANY word";
+"SearchTypeAnyRowShort" = "Any word";
+"SearchTypeExactRow" = "Match EXACT phrase";
+"SearchTypeExactRowShort" = "Exact phrase";
+"SearchRangeAllRow" = "Entire Bible";
+"SearchRangeAllRowShort" = "Entire Bible";
+"SearchRangeOTRow" = "Old Testament";
+"SearchRangeOTRowShort" = "OT";
+"SearchRangeNTRow" = "New Testament";
+"SearchRangeNTRowShort" = "NT";
+"SearchStrongsRow" = "Search for a Strong's Number";
+"On" = "On";
+"Off" = "Off";

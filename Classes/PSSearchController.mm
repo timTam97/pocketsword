@@ -44,19 +44,43 @@
 		self.searchType = AndSearch;
 		self.searchRange = AllRange;
 		self.savedTablePosition = nil;
+//		titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 30)];
+//		titleLabel.autoresizingMask = (UIViewAutoresizingFlexibleWidth || UIViewAutoresizingFlexibleHeight) && !UIViewAutoresizingFlexibleRightMargin && !UIViewAutoresizingFlexibleLeftMargin;
+//		titleLabel.backgroundColor = [UIColor clearColor];
+//		titleLabel.textAlignment = UITextAlignmentCenter;
+//		titleLabel.textColor = [UIColor whiteColor];
+//		titleLabel.shadowColor = [UIColor blackColor];
+//		titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+//		self.navigationItem.titleView = titleLabel;
 		[self setSearchTitle];
 	}
 	return self;
 }
 
+- (void)dealloc {
+	self.results = nil;
+	self.searchTerm = nil;
+	self.savedTablePosition = nil;
+//	[titleLabel release];
+//	if(helpView)
+//		[helpView release];
+    [super dealloc];
+}
+
 - (void)setSearchTitle {
+	NSString *newTitle = NSLocalizedString(@"SearchTitle", @"");
 	if(self.results && ![searchQueryView superview] && self.searchTermToDisplay) {
-		self.navigationItem.title = self.searchTermToDisplay;
+		newTitle = self.searchTermToDisplay;
 	} else if(strongsSearch) {
-		self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
-	} else {
-		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
+		newTitle = NSLocalizedString(@"SearchStrongsTitle", @"");
 	}
+//	[UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:1.0];
+//    titleLabel.text = newTitle;
+//	[UIView commitAnimations];
+	self.navigationItem.title = newTitle;
+	
 }
 
 - (void)setSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
@@ -108,6 +132,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	searchBar.placeholder = NSLocalizedString(@"SearchTitle", @"");
 	if(self.searchTermToDisplay) {
 		searchBar.text = searchTermToDisplay;
 	}
@@ -210,15 +235,6 @@
 	[searchQueryTable reloadData];
 }
 
-- (void)dealloc {
-	self.results = nil;
-	self.searchTerm = nil;
-	self.savedTablePosition = nil;
-//	if(helpView)
-//		[helpView release];
-    [super dealloc];
-}
-
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -271,7 +287,7 @@
 		return NSLocalizedString(@"NoSearchIndexInstalled", @"No Search Index Installed");
 	}
 	if([tableView isEqual:searchQueryTable]) {
-		return NSLocalizedString(@"SearchOptionsTitle", @"");
+		return [NSString stringWithFormat:@"%@:", NSLocalizedString(@"SearchOptionsTitle", @"")];
 //		switch(section) {
 //			case SearchTypeSection:
 //				return NSLocalizedString(@"SearchTypeSectionHeader", @"");

@@ -1,4 +1,14 @@
 
+New in v1.4.0
+- Improved Bookmarks (existing bookmarks will be moved to the "Imported" folder).
+- Highlighting!
+- Bookmark folders, with the ability to pick a colour that bookmarks inside of the folder are highlighted.
+- Improved Search screen
+- Can restrict searches to OT, NT, entire Bible or the currently open book.
+- Quick search for all occurrances of a Strong's Number (in Bibles with Strong's Numbers).
+- Added datestamp for History items (and bookmarks).
+- fixed a rare crash on first launch bug.
+
 New in v1.3.6
 - Fixed a bug that prevented the unlocking of locked modules.
 - Fixed a bug with the display of Strong's Numbers in certain Bibles.
