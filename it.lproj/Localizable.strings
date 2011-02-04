@@ -230,7 +230,6 @@
 "PreferencesFullscreenNote" = "Disabilitando Tutto schermo Auto, si può attivare e disattivare la modalità a tutto schermo, nelle sezioni Bibbia e Commentario, con un tocco a due dita.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Le preferenze dei moduli sono impostate individualmente. Per cambiarle, tocca il bottone dei moduli nell'angolo in alto a destra della scheda corrispondente poi tocca la freccia a destra del modulo.";
 "PreferencesRotationLock" = "Blocco Rotazione";
 
 // new v1.3.5 strings:
@@ -295,3 +294,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Le preferenze dei moduli sono impostate individualmente. Per cambiarle, tocca il bottone dei moduli nell'angolo in alto a destra della scheda corrispondente poi tocca la freccia a destra del modulo.";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

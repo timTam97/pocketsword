@@ -230,7 +230,6 @@
 "PreferencesFullscreenNote" = "Met Auto Fullscreen uitgeschakeld kunt u nog steeds van en naar fullscreen schakelen door met 2 vingers op het scherm te tikken in de Bijbel en commentaar tabbladen.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Module specifieke instellingen zijn nu ingesteld voor elke afzonderlijke module. Druk op de module-lijst knop in de rechter bovenhoek van het desbetreffende tabblad en druk op de openbaarmaken-knop voor de module.";
 "PreferencesRotationLock" = "Rotatieslot";
 
 // new v1.3.5 strings:
@@ -295,3 +294,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Module specifieke instellingen zijn nu ingesteld voor elke afzonderlijke module. Druk op de module-lijst knop in de rechter bovenhoek van het desbetreffende tabblad en druk op de openbaarmaken-knop voor de module.";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

@@ -229,7 +229,6 @@
 "PreferencesFullscreenNote" = "Con la pantalla completa automática deshabilitada, todavía podrás cambiar a pantalla completa tocando las pestañas de Biblia y Comentario con dos dedos.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Las preferencias específicas de módulo se establecen ahora individualmente para cada módulo. Para cambiarlas, toca el botón de la pestaña relevante en la esquina superior derecha de la Lista de Módulos y luego el botón que corresponde al módulo.";
 "PreferencesRotationLock" = "Bloqueo de rotación";
 
 // new v1.3.5 strings:
@@ -294,3 +293,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Las preferencias específicas de módulo se establecen ahora individualmente para cada módulo. Para cambiarlas, toca el botón de la pestaña relevante en la esquina superior derecha de la Lista de Módulos y luego el botón que corresponde al módulo.";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

@@ -229,7 +229,6 @@
 "PreferencesFullscreenNote" = "若你未使用自动全屏，可以用两个手指击打圣经或注解菜单转到或转离全屏。";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "各个模块有自己的优先选择了。若要改动，击打相关选项右上角模块列表键，再击打模块的发布键。";
 "PreferencesRotationLock" = "旋转锁";
 
 // new v1.3.5 strings:
@@ -294,3 +293,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "各个模块有自己的优先选择了。若要改动，击打相关选项右上角模块列表键，再击打模块的发布键。";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

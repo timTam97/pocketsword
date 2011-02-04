@@ -8,6 +8,7 @@ New in v1.4.0
 - Quick search for all occurrances of a Strong's Number (in Bibles with Strong's Numbers).
 - Added datestamp for History items (and bookmarks).
 - fixed a rare crash on first launch bug.
+- faster launch of app.
 
 New in v1.3.6
 - Fixed a bug that prevented the unlocking of locked modules.

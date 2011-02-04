@@ -230,7 +230,6 @@
 "PreferencesFullscreenNote" = "Если авто полноэкранный режим выключен, вы можете перейти к(из) полноэкранному режиму двухпальцевым касанием на вкладках Библии и Комментария.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Параметры модуля устанавливаются индивидуально для каждого модуля. Для изменения параметров нажмите на кнопку списка модулей в правом верхнем углу на соответствующей вкладке и нажмите стрелку раскрытия информации для модуля.";
 "PreferencesRotationLock" = "Блокировать вращение";
 
 // new v1.3.5 strings:
@@ -295,3 +294,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Параметры модуля устанавливаются индивидуально для каждого модуля. Для изменения параметров нажмите на кнопку списка модулей в правом верхнем углу на соответствующей вкладке и нажмите стрелку раскрытия информации для модуля.";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

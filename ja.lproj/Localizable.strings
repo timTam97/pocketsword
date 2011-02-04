@@ -230,7 +230,6 @@
 "PreferencesFullscreenNote" = "自動フルスクリーンがオフの状態でも、2本の指でタップをする事で聖書・注解書タブで常にフルスクリーン化する事ができます。";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "拡張データごとの設定がなされました。変更する場合には、それぞれのタブ内にて右上端の拡張データ一覧ボタンをタップした後、該当拡張データの公開ボタンをタップしてください。";
 "PreferencesRotationLock" = "傾けによる自動スリープ";
 
 // new v1.3.5 strings:
@@ -295,3 +294,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "拡張データごとの設定がなされました。変更する場合には、それぞれのタブ内にて右上端の拡張データ一覧ボタンをタップした後、該当拡張データの公開ボタンをタップしてください。";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

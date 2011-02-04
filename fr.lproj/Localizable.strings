@@ -229,7 +229,6 @@
 "PreferencesFullscreenNote" = "Avec Plein écran Auto désactivé, il est toujours possible de basculer en mode plein écran par action à 2 doigts dans un onglet Bible ou Commentaire.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Les préférences spécifiques de module sont maintenant réglées pour chaque module. Pour les modifier, tapez sur le bouton Liste des modules dans le coin en haut à droite de l'onglet correspondant puis sur le bouton d'information du module";
 "PreferencesRotationLock" = "Verrouiller la rotation";
 
 // new v1.3.5 strings:
@@ -294,3 +293,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Les préférences spécifiques de module sont maintenant réglées pour chaque module. Pour les modifier, tapez sur le bouton Liste des modules dans le coin en haut à droite de l'onglet correspondant puis sur le bouton d'information du module";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

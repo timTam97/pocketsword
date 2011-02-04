@@ -228,7 +228,6 @@
 "PreferencesFullscreenNote" = "您可在聖經檢視中點擊屏幕屏切換全螢幕功能";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "每一模組可進行個別設定，您可從模組列表中進行編輯";
 "PreferencesRotationLock" = "轉向鎖定";
 
 // new v1.3.5 strings:
@@ -293,3 +292,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "每一模組可進行個別設定，您可從模組列表中進行編輯";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

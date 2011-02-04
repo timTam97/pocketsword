@@ -229,7 +229,6 @@
 "PreferencesFullscreenNote" = "I když je automatické zobrazení na celý display vypnuté, můžete se do něj přepnout poklepáním dvěma prsty během čtení Bible nebo komentáře.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Je možné upravit nastavení pro jednotlivé moduly. V příslušné části programu (např. Bible) otevři seznam modulů klepnutím na tlačítko v pravém horním rohu. Pak klepni na tlačítko podrobností o příslušném modulu.";
 "PreferencesRotationLock" = "Zabránit otáčení dipleje";
 
 // new v1.3.5 strings:
@@ -294,3 +293,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Je možné upravit nastavení pro jednotlivé moduly. V příslušné části programu (např. Bible) otevři seznam modulů klepnutím na tlačítko v pravém horním rohu. Pak klepni na tlačítko podrobností o příslušném modulu.";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";

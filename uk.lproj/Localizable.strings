@@ -230,7 +230,6 @@
 "PreferencesFullscreenNote" = "Якщо авто повноекранний режим виключений, ви можете перейти до(від) повноекранного режиму дотиком двома пальцями у вкладках Біблії і Коментарію.";
 
 // new v1.3.4 strings:
-"PreferencesModuleSectionNote" = "Параметри модуля встановлюються індивідуально для кожного модуля. Щоб змінити параметри, натисніть на кнопку списку модулів у правому верхньому куті на відповідній вкладці і натисніть стрілку розкриття інформації для модуля.";
 "PreferencesRotationLock" = "Замкнути обертання";
 
 // new v1.3.5 strings:
@@ -295,3 +294,5 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
+//"PreferencesModuleSectionNote-old" = "Параметри модуля встановлюються індивідуально для кожного модуля. Щоб змінити параметри, натисніть на кнопку списку модулів у правому верхньому куті на відповідній вкладці і натисніть стрілку розкриття інформації для модуля.";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
