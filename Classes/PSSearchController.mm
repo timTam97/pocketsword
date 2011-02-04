@@ -390,6 +390,7 @@
 				break;
 		}
 	} else if(indexPath.section == 1) {
+		// TODO: make this a proper UIButton?
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.textLabel.text = NSLocalizedString(@"SearchStartSearchButton", @"Start Search");
 		cell.detailTextLabel.text = @"";

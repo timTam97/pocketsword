@@ -22,7 +22,8 @@
 #define FONT_SIZE_ROW		0
 #define FONT_NAME_ROW		1
 #define NIGHT_MODE_ROW		2
-#define DISPLAY__ROWS		3//total rows in section
+#define MOD_BLURB_ROW		3
+#define DISPLAY__ROWS		4//total rows in section
 
 //rows in the MODULE section
 #define VPL_ROW				10
@@ -157,12 +158,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch (indexPath.section) {
-//		case DISPLAY_SECTION :
-//			switch (indexPath.row) {
-//				default :
-//					return 45;
-//			}
-//			break;
+		case DISPLAY_SECTION :
+			switch (indexPath.row) {
+				case MOD_BLURB_ROW:
+					return 100;
+				default :
+					return 45;
+			}
+			break;
 //		case MODULE_SECTION :
 //			switch (indexPath.row) {
 //				case RED_LETTER_NOTE_ROW :
@@ -242,6 +245,15 @@
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
 						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+					}
+				}
+					break;
+				case MOD_BLURB_ROW:
+				{
+					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
+					if(!cell) {
+						//cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub] autorelease];
 					}
 				}
 					break;
@@ -365,6 +377,15 @@
 					[ cell addSubview: nightModeSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
 					[nightModeSwitch release];						
+				}
+					break;
+				case MOD_BLURB_ROW:
+				{
+					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
+					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.numberOfLines = 7;//2;
+					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
 			}
