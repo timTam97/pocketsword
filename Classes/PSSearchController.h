@@ -65,6 +65,8 @@
 - (void)saveTablePositionFromCurrentPosition;
 - (void)notifyDelegateOfNewHistoryItem;
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)sBar;
+
 //- (IBAction)infoButtonPressed:(id)sender;
 //- (IBAction)closeButtonPressed;
 

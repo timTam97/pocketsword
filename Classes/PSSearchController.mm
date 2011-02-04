@@ -254,7 +254,14 @@
 #define SearchStrongsSection	3
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+	if(!searchingEnabled)
+		return 1;
+
+	if([tableView isEqual:searchQueryTable]) {
+		return 2;
+	} else {
+		return 1;
+	}
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -262,18 +269,22 @@
 		return 0;
 	
 	if([tableView isEqual:searchQueryTable]) {
-		switch(listType) {
-			case BibleTab:
-			{
-				SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
-				if([primaryBible hasFeature: SWMOD_FEATURE_STRONGS] || [primaryBible hasFeature: SWMOD_CONF_FEATURE_STRONGS]) {
-					return 4;
+		if(section == 0) {
+			switch(listType) {
+				case BibleTab:
+				{
+					SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
+					if([primaryBible hasFeature: SWMOD_FEATURE_STRONGS] || [primaryBible hasFeature: SWMOD_CONF_FEATURE_STRONGS]) {
+						return 4;
+					}
+					return 3;
 				}
-				return 3;
+					break;
+				case CommentaryTab:
+					return 3;
 			}
-				break;
-			case CommentaryTab:
-				return 3;
+		} else if(section == 1) {
+			return 1;
 		}
 	}
 	
@@ -286,7 +297,7 @@
 	if(!searchingEnabled) {
 		return NSLocalizedString(@"NoSearchIndexInstalled", @"No Search Index Installed");
 	}
-	if([tableView isEqual:searchQueryTable]) {
+	if([tableView isEqual:searchQueryTable] && section == 0) {
 		return [NSString stringWithFormat:@"%@:", NSLocalizedString(@"SearchOptionsTitle", @"")];
 //		switch(section) {
 //			case SearchTypeSection:
@@ -309,73 +320,80 @@
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"queryCell"] autorelease];
 	}
 	
-	//cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	
-	switch(indexPath.row) {
-		case SearchTypeSection:
-		{
-			cell.textLabel.text = NSLocalizedString(@"SearchTypeSectionHeader", @"");
-			switch(searchType) {
-				case AndSearch:
-					cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeAllRowShort", @"");
-					break;
-				case OrSearch:
-					cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeAnyRowShort", @"");
-					break;
-				case ExactSearch:
-					cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeExactRowShort", @"");
-					break;
+	if(indexPath.section == 0) {
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		cell.backgroundColor = [UIColor whiteColor];
+		cell.textLabel.textColor = [UIColor blackColor];
+		switch(indexPath.row) {
+			case SearchTypeSection:
+			{
+				cell.textLabel.text = NSLocalizedString(@"SearchTypeSectionHeader", @"");
+				switch(searchType) {
+					case AndSearch:
+						cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeAllRowShort", @"");
+						break;
+					case OrSearch:
+						cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeAnyRowShort", @"");
+						break;
+					case ExactSearch:
+						cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeExactRowShort", @"");
+						break;
+				}
 			}
-		}
-			break;
-		case SearchRangeSection:
-		{
-			cell.textLabel.text = NSLocalizedString(@"SearchRangeSectionHeader", @"");
-			switch(searchRange) {
-				case AllRange:
-					cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeAllRowShort", @"");
-					break;
-				case OTRange:
-					cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeOTRowShort", @"");
-					break;
-				case NTRange:
-					cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeNTRowShort", @"");
-					break;
-				case BookRange:
-					NSString *currentBook = bookName;
-					if(!self.bookName) {
-						currentBook = [PSModuleController getCurrentBibleRef];
-						NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
-						if(lastSpace.location != NSNotFound) {
-							currentBook = [currentBook substringToIndex:lastSpace.location];
+				break;
+			case SearchRangeSection:
+			{
+				cell.textLabel.text = NSLocalizedString(@"SearchRangeSectionHeader", @"");
+				switch(searchRange) {
+					case AllRange:
+						cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeAllRowShort", @"");
+						break;
+					case OTRange:
+						cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeOTRowShort", @"");
+						break;
+					case NTRange:
+						cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeNTRowShort", @"");
+						break;
+					case BookRange:
+						NSString *currentBook = bookName;
+						if(!self.bookName) {
+							currentBook = [PSModuleController getCurrentBibleRef];
+							NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
+							if(lastSpace.location != NSNotFound) {
+								currentBook = [currentBook substringToIndex:lastSpace.location];
+							}
 						}
-					}
-					cell.detailTextLabel.text = currentBook;
-					break;
+						cell.detailTextLabel.text = currentBook;
+						break;
+				}
 			}
-		}
-			break;
-		case SearchFuzzySection:
-		{
-			cell.textLabel.text = NSLocalizedString(@"SearchFuzzySectionHeader", @"");
-			if(fuzzySearch) {
-				cell.detailTextLabel.text = NSLocalizedString(@"On", @"");
-			} else {
-				cell.detailTextLabel.text = NSLocalizedString(@"Off", @"");
+				break;
+			case SearchFuzzySection:
+			{
+				cell.textLabel.text = NSLocalizedString(@"SearchFuzzySectionHeader", @"");
+				if(fuzzySearch) {
+					cell.detailTextLabel.text = NSLocalizedString(@"On", @"");
+				} else {
+					cell.detailTextLabel.text = NSLocalizedString(@"Off", @"");
+				}
 			}
-		}
-			break;
-		case SearchStrongsSection:
-		{
-			cell.textLabel.text = NSLocalizedString(@"SearchStrongsSectionHeader", @"");
-			if(strongsSearch) {
-				cell.detailTextLabel.text = NSLocalizedString(@"On", @"");
-			} else {
-				cell.detailTextLabel.text = NSLocalizedString(@"Off", @"");
+				break;
+			case SearchStrongsSection:
+			{
+				cell.textLabel.text = NSLocalizedString(@"SearchStrongsSectionHeader", @"");
+				if(strongsSearch) {
+					cell.detailTextLabel.text = NSLocalizedString(@"On", @"");
+				} else {
+					cell.detailTextLabel.text = NSLocalizedString(@"Off", @"");
+				}
 			}
+				break;
 		}
-			break;
+	} else if(indexPath.section == 1) {
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.textLabel.text = NSLocalizedString(@"SearchStartSearchButton", @"Start Search");
+		cell.detailTextLabel.text = @"";
+		cell.textLabel.textColor = [UIColor whiteColor];
 	}
 	
 	return cell;
@@ -456,6 +474,9 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(![tableView isEqual:searchQueryTable] && [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.backgroundColor = [UIColor blackColor];
+	} else if([tableView isEqual:searchQueryTable] && indexPath.section == 1) {
+		// our search row:
+		cell.backgroundColor = [UIColor blueColor];
 	} else {
 		cell.backgroundColor = [UIColor whiteColor];
 	}
@@ -486,46 +507,50 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 	} else if([tableView isEqual:searchQueryTable]) {
 		[searchBar resignFirstResponder];
-		PSSearchOptionTableViewController *optionTVC;
-		switch(indexPath.row) {
-			case SearchTypeSection:
-			{
-				optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableTypeSelector];
-				optionTVC.searchType = self.searchType;
-			}
-				break;
-			case SearchRangeSection:
-			{
-				optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableRangeSelector];
-				optionTVC.searchRange = self.searchRange;
-				NSString *currentBook = bookName;
-				if(!self.bookName) {
-					currentBook = [PSModuleController getCurrentBibleRef];
-					NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
-					if(lastSpace.location != NSNotFound) {
-						currentBook = [currentBook substringToIndex:lastSpace.location];
-					}
+		if(indexPath.section == 0) {
+			PSSearchOptionTableViewController *optionTVC;
+			switch(indexPath.row) {
+				case SearchTypeSection:
+				{
+					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableTypeSelector];
+					optionTVC.searchType = self.searchType;
 				}
-				optionTVC.bookName = currentBook;
+					break;
+				case SearchRangeSection:
+				{
+					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableRangeSelector];
+					optionTVC.searchRange = self.searchRange;
+					NSString *currentBook = bookName;
+					if(!self.bookName) {
+						currentBook = [PSModuleController getCurrentBibleRef];
+						NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
+						if(lastSpace.location != NSNotFound) {
+							currentBook = [currentBook substringToIndex:lastSpace.location];
+						}
+					}
+					optionTVC.bookName = currentBook;
+				}
+					break;
+				case SearchFuzzySection:
+				{
+					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableFuzzySelector];
+					optionTVC.fuzzySearch = self.fuzzySearch;
+				}
+					break;
+				case SearchStrongsSection:
+				{
+					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableStrongsSelector];
+					optionTVC.strongsSearch = self.strongsSearch;
+				}
+					break;
 			}
-				break;
-			case SearchFuzzySection:
-			{
-				optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableFuzzySelector];
-				optionTVC.fuzzySearch = self.fuzzySearch;
-			}
-				break;
-			case SearchStrongsSection:
-			{
-				optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableStrongsSelector];
-				optionTVC.strongsSearch = self.strongsSearch;
-			}
-				break;
+			optionTVC.delegate = self;
+			[self.navigationController pushViewController:optionTVC animated:YES];
+			[optionTVC release];
+		} else if(indexPath.section == 1) {
+			[tableView deselectRowAtIndexPath:indexPath animated:YES];
+			[self searchBarSearchButtonClicked:nil];
 		}
-		optionTVC.delegate = self;
-		[self.navigationController pushViewController:optionTVC animated:YES];
-		[optionTVC release];
-		//[tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
 	}
 }
 
