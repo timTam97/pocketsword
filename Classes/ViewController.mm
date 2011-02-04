@@ -1307,57 +1307,113 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 		//
-		// it's a dictionary entry to show.
+		// it's a Bible ref or dictionary entry to show.
 		//
 		NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
-		
-		SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
-		if(swordDictionary) {
-			entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-			
-			BOOL strongs = NO;
-			NSString *strongsSearchTerm = @"";
-			if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF] && [swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
-				// should already have a prefix
-				strongsSearchTerm = [rData objectForKey:ATTRTYPE_VALUE];
-				strongs = YES;
-			} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF]) {
-				NSMutableString *greek = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
-				while([greek characterAtIndex:0] == '0') {
-					[greek deleteCharactersInRange:NSMakeRange(0, 1)];
+		BOOL isABibleRef = NO;
+		if(mod) {
+			SwordModule *modToUse = [[SwordManager defaultManager] moduleWithName:mod];
+			if(!modToUse || modToUse.type == bible) {
+				isABibleRef = YES;
+			} else {
+				// Should be a dictionary entry:
+				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+				if(swordDictionary) {
+					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+					
+					BOOL strongs = NO;
+					NSString *strongsSearchTerm = @"";
+					if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF] && [swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
+						// should already have a prefix
+						strongsSearchTerm = [rData objectForKey:ATTRTYPE_VALUE];
+						strongs = YES;
+					} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF]) {
+						NSMutableString *greek = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
+						while([greek characterAtIndex:0] == '0') {
+							[greek deleteCharactersInRange:NSMakeRange(0, 1)];
+						}
+						strongsSearchTerm = [NSString stringWithFormat:@"G%@", greek];
+						[greek release];
+						strongs = YES;
+					} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
+						NSMutableString *hebrew = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
+						while([hebrew characterAtIndex:0] == '0') {
+							[hebrew deleteCharactersInRange:NSMakeRange(0, 1)];
+						}
+						strongsSearchTerm = [NSString stringWithFormat:@"H0%@", hebrew];
+						[hebrew release];
+						strongs = YES;
+					}
+					if(strongs) {
+						entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@\">%@</a></div>", entry, strongsSearchTerm, NSLocalizedString(@"StrongsSearchFindAll", @"")];
+					}
+					//DLog(@"\n%@ = %@\n", mod, entry);
+				} else {
+					entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
 				}
-				strongsSearchTerm = [NSString stringWithFormat:@"G%@", greek];
-				[greek release];
-				strongs = YES;
-			} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
-				NSMutableString *hebrew = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
-				while([hebrew characterAtIndex:0] == '0') {
-					[hebrew deleteCharactersInRange:NSMakeRange(0, 1)];
-				}
-				strongsSearchTerm = [NSString stringWithFormat:@"H0%@", hebrew];
-				[hebrew release];
-				strongs = YES;
-			}
-			if(strongs) {
-				entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@\">%@</a></div>", entry, strongsSearchTerm, NSLocalizedString(@"StrongsSearchFindAll", @"")];
-			}
-			DLog(@"\n%@ = %@\n", mod, entry);
-		} else {
-			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
-		}
 
-		NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-		[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
-		[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
-		[[NSUserDefaults standardUserDefaults] synchronize];
+				NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+				[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
+				[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+			}
+		} else {
+			// Bible ref:
+			isABibleRef = YES;
+		}
 		
+		if(isABibleRef) {
+			// handle bible ref:
+			id attributeValue = [[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:NO];
+			if([attributeValue isMemberOfClass:[NSString class]]) {
+				entry = [PSModuleController createInfoHTMLString: (NSString*)attributeValue usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+			} else if([attributeValue isKindOfClass:[NSArray class]]) {
+				NSMutableString *tmpEntry = [@"" mutableCopy];
+				for(NSDictionary *dict in (NSArray*)attributeValue) {
+					NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+					[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+					[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+				}
+				//DLog(@"\n%@\n", tmpEntry);
+				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+				}
+				[tmpEntry release];
+			}
+		}
+		
+	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
+		if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
+			entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
+			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+		} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
+			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
+			NSMutableString *tmpEntry = [@"" mutableCopy];
+			for(NSDictionary *dict in array) {
+				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+				[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+			}
+			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+			}
+			[tmpEntry release];
+		}
 	}
 	
 	if(entry) {
 		[self showInfo: entry];
 		load = NO;
+	} else {
+		if(rData) {
+			//DLog(@"\nempty entry && action = %@", [rData objectForKey:ATTRTYPE_ACTION]);
+		} else {
+			//DLog(@"rData is nil && entry is nil");
+		}
 	}
 	
 	[pool release];
