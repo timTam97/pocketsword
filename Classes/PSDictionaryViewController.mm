@@ -98,6 +98,11 @@
 	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable useStatusBar:YES];
 	[self reloadDictionaryData:NO];
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		dictionaryEntriesTable.backgroundColor = [UIColor blackColor];
+	} else {
+		dictionaryEntriesTable.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
