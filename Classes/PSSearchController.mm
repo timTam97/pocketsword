@@ -575,13 +575,13 @@
 				[current appendString:@"\""];
 			}
 		} else if(insideQuotes) {
-			[current appendFormat:@"%c", [searchTermToDisplay characterAtIndex:i]];
+			[current appendFormat:@"%C", [searchTermToDisplay characterAtIndex:i]];
 		} else if([searchTermToDisplay characterAtIndex:i] == ' ') {
 			[components addObject:current];
 			[current release];
 			current = [@"" mutableCopy];
 		} else {
-			[current appendFormat:@"%c", [searchTermToDisplay characterAtIndex:i]];
+			[current appendFormat:@"%C", [searchTermToDisplay characterAtIndex:i]];
 		}
 	}
 	
