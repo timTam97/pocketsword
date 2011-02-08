@@ -702,13 +702,17 @@
 		[self createSearchTerm];
 	}
 	DLog(@"\nsearchTerm = %@", searchTerm);
-	switch(listType) {
-		case BibleTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm withScope:[self createSearchScope]];
-			break;
-		case CommentaryTab:
-			self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm withScope:[self createSearchScope]];
-			break;
+	if(!searchTerm || searchTerm.length == 0) {
+		self.results = [NSMutableArray arrayWithCapacity:0];
+	} else {
+		switch(listType) {
+			case BibleTab:
+				self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm withScope:[self createSearchScope]];
+				break;
+			case CommentaryTab:
+				self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm withScope:[self createSearchScope]];
+				break;
+		}
 	}
 
 	//remove duplicate entries manually.  why do these appear? *sad face*
