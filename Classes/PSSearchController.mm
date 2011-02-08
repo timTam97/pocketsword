@@ -307,9 +307,11 @@
 //			case SearchStrongsSection:
 //				return NSLocalizedString(@"SearchStrongsSectionHeader", @"");
 //		}
-	}
-	if(results)
+	} else if(section == 1) {
+		return @"";
+	} else if(results) {
 		return [NSString stringWithFormat: @"%d %@", [results count], NSLocalizedString(@"SearchResults", @"results")];
+	}
 	return @"";
 }
 
@@ -556,8 +558,6 @@
 }
 
 - (void)createSearchTerm {
-	// TODO: this should be changed to reflect the new searchQueryView.
-	//self.searchTerm = searchTermToDisplay;
 	NSMutableArray *components = [NSMutableArray arrayWithCapacity:1];
 	NSInteger i =0;
 	BOOL insideQuotes = NO;

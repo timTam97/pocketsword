@@ -386,6 +386,7 @@
 					cell.textLabel.numberOfLines = 7;//2;
 					cell.textLabel.textColor = [UIColor darkGrayColor];
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
+					cell.detailTextLabel.text = @"";
 				}
 					break;
 			}
