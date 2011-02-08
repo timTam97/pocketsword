@@ -443,6 +443,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		PSSearchController *searchController = [[PSSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
 		searchNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+		multiListController.delegate = searchController;
 		searchController.delegate = self;
 		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchNavigationController, nil];
 		multiListController.viewControllers = controllers;

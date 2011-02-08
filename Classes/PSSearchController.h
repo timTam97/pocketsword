@@ -15,7 +15,7 @@
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
-@interface PSSearchController : UIViewController <PSSearchOptionsDelegate> {
+@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate> {
 
 	id <PSSearchControllerDelegate> delegate;
 	
@@ -25,9 +25,7 @@
 	IBOutlet UIView *searchQueryView;
 	IBOutlet UITableView *searchResultsTable;
 	IBOutlet UISearchBar *searchBar;
-//	UILabel *titleLabel;
-	
-	//UIView *helpView;
+	BOOL switchingTabs;
 	
 	// the below are basically the current PSSearchHistoryItem
 	//  should we remove them & simply have our own item instead?

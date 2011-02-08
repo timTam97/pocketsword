@@ -35,6 +35,7 @@
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
 		self.tabBarItem = tBI;
 		[tBI release];
+		switchingTabs = YES;
 		self.searchTerm = nil;
 		self.searchTermToDisplay = nil;
 		self.results = nil;
@@ -127,6 +128,22 @@
 	}
 	if(showIndexController) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+	}
+}
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+	if([[tabBarController selectedViewController] isMemberOfClass:[UINavigationController class]]) {
+		switchingTabs = NO;
+	} else {
+		switchingTabs = YES;
+	}
+	return YES;
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+	if([viewController isMemberOfClass:[UINavigationController class]] && !switchingTabs) {
+		// the only tab with a nav controller is the search tab
+		[self searchButtonPressed:nil];
 	}
 }
 
@@ -839,7 +856,11 @@
 		searchQueryView.center = searchResultsTable.center;
 		[self.view addSubview:searchQueryView];
 	}
-	[searchBar becomeFirstResponder];
+	if([searchBar isFirstResponder]) {
+		[searchBar resignFirstResponder];
+	} else {
+		[searchBar becomeFirstResponder];
+	}
 	[self setSearchTitle];
 }
 
