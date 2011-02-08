@@ -42,8 +42,8 @@ OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) :
 	inXRefNote    = false;
 	suspendLevel = 0;
 	quoteStack = new QuoteStack();
-	wordsOfChristStart = "<font color=\"red\"> ";
-	wordsOfChristEnd   = "</font> ";
+	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
+	wordsOfChristEnd   = "</span> ";
 	if (module) {
 		osisQToTick = ((!module->getConfigEntry("OSISqToTick")) || (strcmp(module->getConfigEntry("OSISqToTick"), "false")));
 		version = module->Name();

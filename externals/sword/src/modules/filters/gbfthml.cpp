@@ -125,10 +125,10 @@ char GBFThML::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 				 continue;
 
 			    case 'R':		// words of Jesus begin
-				 text += "<font color=\"#ff0000\">";
+				 text += "<span class=\"WordOfChrist\">";
 				 continue;
 			    case 'r':		// words of Jesus end
-				 text += "</font>";
+				 text += "</span>";
 				 continue;
 			    case 'U':		// Underline start
 				 text += "<u>";

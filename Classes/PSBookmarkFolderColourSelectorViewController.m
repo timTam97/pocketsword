@@ -22,9 +22,16 @@
 	if(self) {
 		self.currentSelectedColor = rgbHexString;
 		self.selectableColours = [[NSArray alloc] initWithObjects: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0], 
-							 [UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor cyanColor],
-							 [UIColor yellowColor], [UIColor magentaColor], [UIColor orangeColor], [UIColor purpleColor],
-							 [UIColor brownColor], nil];
+								  [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0],
+								  [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:1.0],
+								  [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:1.0],
+								  [UIColor colorWithRed:0.0 green:1.0 blue:1.0 alpha:1.0],
+								  [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:1.0],
+								  [UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:1.0],
+								  [UIColor colorWithRed:1.0 green:0.5 blue:0.0 alpha:1.0],
+								  [UIColor colorWithRed:0.5 green:0.0 blue:0.5 alpha:1.0],
+								  [UIColor colorWithRed:0.6 green:0.4 blue:0.2 alpha:1.0],
+								  nil];
 		self.delegate = del;
 	}
 	return self;

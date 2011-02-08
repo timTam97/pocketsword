@@ -981,6 +981,9 @@ static PSModuleController *instance;
 				font-size: 70%%;\n\
 				font-style: italic;\n\
 			}\n\
+			span.WordOfChrist {\n\
+				color: #D03030;\n\
+			}\n\
 			%@\n\
 			</style>\n\
 			%@\n\

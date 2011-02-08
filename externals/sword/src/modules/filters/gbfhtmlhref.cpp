@@ -51,8 +51,8 @@ GBFHTMLHREF::GBFHTMLHREF() {
 	addTokenSubstitute("Fi", "</i>");
 	addTokenSubstitute("FB", "<b>"); // bold begin
 	addTokenSubstitute("Fb", "</b>");
-	addTokenSubstitute("FR", "<font color=\"#FF0000\">"); // words of Jesus begin
-	addTokenSubstitute("Fr", "</font>");
+	addTokenSubstitute("FR", "<span class=\"WordOfChrist\">"); // words of Jesus begin
+	addTokenSubstitute("Fr", "</span>");
 	addTokenSubstitute("FU", "<u>"); // underline begin
 	addTokenSubstitute("Fu", "</u>");
 	addTokenSubstitute("FO", "<cite>"); //  Old Testament quote begin
