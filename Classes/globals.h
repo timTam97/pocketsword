@@ -27,13 +27,18 @@ typedef enum {
 } ShownTab;
 
 typedef enum {
-	AndSearch = 1,
+	HistoryTab = 0,
+	SearchTab
+} ShownMultiListTab;
+
+typedef enum {
+	AndSearch = 0,
 	OrSearch,
 	ExactSearch
 } PSSearchType;
 
 typedef enum {
-	AllRange = 1,
+	AllRange = 0,
 	OTRange,
 	NTRange,
 	BookRange
@@ -45,6 +50,11 @@ typedef enum {
 #define DefaultsLastCommentary						@"lastCommentary"
 #define DefaultsLastDictionary						@"lastDictionary"
 #define DefaultsLastDevotional						@"lastDevotional"
+
+#define DefaultsLastMultiListTab					@"DefaultsLastMultiListTab"
+#define DefaultsLastSearchFuzzy						@"DefaultsLastSearchFuzzy"
+#define DefaultsLastSearchType						@"DefaultsLastSearchType"
+#define DefaultsLastSearchRange						@"DefaultsLastSearchRange"
 
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
@@ -124,9 +134,6 @@ typedef enum {
 #define NotificationRedisplayPrimaryCommentary	@"NotificationRedisplayPrimaryCommentary"
 #define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
 #define NotificationBookmarksChanged			@"NotificationBookmarksChanged"
-
-//#define NotificationAddBibleHistoryItem			@"NotificationAddBibleHistoryItem"
-//#define NotificationAddCommentaryHistoryItem	@"NotificationAddCommentaryHistoryItem"
 
 #define NotificationToggleMultiList				@"NotificationToggleMultiList"
 #define NotificationToggleModuleList			@"NotificationToggleModuleList"

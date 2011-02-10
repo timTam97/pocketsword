@@ -17,9 +17,7 @@
 	IBOutlet UIWebView *bibleWebView;
 	IBOutlet PSCommentaryViewController *commentaryView;
 	
-	//IBOutlet id moduleManager;
 	IBOutlet id viewController;
-	//IBOutlet UIBarButtonItem *bibleNavBtn;
 	NSString *refToShow;
 	NSString *jsToShow;
 	NSString *tappedVerse;

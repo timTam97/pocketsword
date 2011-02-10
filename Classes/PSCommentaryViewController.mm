@@ -21,7 +21,6 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	isFullScreen = NO;
-	//comm_initialised = false;
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 }
@@ -46,36 +45,28 @@
     [super dealloc];
 }
 
-//- (void)awakeFromNib {
-//	[super awakeFromNib];
-//	if(!comm_initialised) {
-//		isFullScreen = NO;
-//		comm_initialised = true;
-//	}
-//}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:YES];
+	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:YES];
 	if(refToShow) {
 		NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
-		[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		[webView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
 	} else if(jsToShow) {
-		[commentaryWebView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@startDetLocPoll();", jsToShow]];
+		[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@startDetLocPoll();", jsToShow]];
 		self.jsToShow = nil;
 	} else {
-		[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsCommentaryVersePosition]];
 	if(isFullScreen)
 		return;
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:toolbar mainView:webView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -87,17 +78,17 @@
 	} else {
 		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 	}
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:js];
+	[webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
 //	[super viewDidAppear:animated];
-//	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+//	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 //}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 }
 
 - (void)switchToFullscreen {
@@ -111,7 +102,7 @@
 }
 
 - (void)toggleFullscreen {
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	
     [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
@@ -132,22 +123,22 @@
     self.tabBarController.tabBar.alpha = isFullScreen ? 0 : 1;
 	
     //resize webview to be full screen / normal
-    [commentaryWebView removeFromSuperview];
+    [webView removeFromSuperview];
     if(isFullScreen) {
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
-        [self.tabBarController.view addSubview:commentaryWebView];
+        [self.tabBarController.view addSubview:webView];
 		
-        commentaryWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];  //checks orientation to provide the correct rect
+        webView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];  //checks orientation to provide the correct rect
 		
     } else {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:commentaryToolbar mainView:commentaryWebView useStatusBar:NO];
-        [self.view addSubview:commentaryWebView];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:NO];
+        [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
     }
 	
     [UIView commitAnimations];
-	[commentaryWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
 //- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -167,14 +158,14 @@
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"commentaryScrollPosition"];
 			[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsCommentaryVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
-			//NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", [components objectAtIndex:2]];
-			//[bibleWebView stringByEvaluatingJavaScriptFromString:javascript];
 			NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			//[commentaryNavBtn setTitle: ref];
 			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:CommentaryTab];
 		}
 		load = NO;
+	} else if([[[request URL] scheme] isEqualToString:@"sword"]) {
+		//our internal reference to say this is a Bible verse to display in the Bible tab
+		DLog(@"\nCOMMENTARY: requestString: %@", requestString);
 	} else {
 		//NSLog(@"\nBIBLE: requestString: %@", requestString);
 		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];

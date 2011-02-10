@@ -264,14 +264,6 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
-    */
 	switch(tableType) {
 		case PSSearchOptionTableTypeSelector:
 		{
@@ -288,6 +280,7 @@
 			}
 			[self.tableView reloadData];
 			[delegate setSearchType:self.searchType];
+			[[NSUserDefaults standardUserDefaults] setInteger:self.searchType forKey:DefaultsLastSearchType];
 		}
 			break;
 		case PSSearchOptionTableRangeSelector:
@@ -308,6 +301,7 @@
 			}
 			[self.tableView reloadData];
 			[delegate setSearchRange:self.searchRange];
+			[[NSUserDefaults standardUserDefaults] setInteger:self.searchRange forKey:DefaultsLastSearchRange];
 		}
 			break;
 		case PSSearchOptionTableStrongsSelector:
@@ -336,6 +330,7 @@
 			}
 			[self.tableView reloadData];
 			[delegate setFuzzySearch:self.fuzzySearch];
+			[[NSUserDefaults standardUserDefaults] setBool:self.fuzzySearch forKey:DefaultsLastSearchFuzzy];
 		}
 			break;
 	}

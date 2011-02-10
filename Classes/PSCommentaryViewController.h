@@ -10,17 +10,14 @@
 @interface PSCommentaryViewController : UIViewController <UIWebViewDelegate> {
 	IBOutlet UITabBarItem				*commentaryTabBarItem;
 
-	IBOutlet UIWebView *commentaryWebView;
-	IBOutlet UIToolbar *commentaryToolbar;
+	IBOutlet UIWebView *webView;
+	IBOutlet UIToolbar *toolbar;
 	
-	//IBOutlet id moduleManager;
 	IBOutlet id viewController;
-	//IBOutlet UIBarButtonItem *commentaryNavBtn;
 	NSString *refToShow;
 	NSString *jsToShow;
 	BOOL isFullScreen;
 	UIView *previousTabBarView;
-	//bool comm_initialised;
 }
 
 @property (copy, readwrite) NSString *refToShow;

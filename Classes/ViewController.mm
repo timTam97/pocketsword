@@ -454,17 +454,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			if(savedSearchResultsTab == BibleTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
 				//restore the previous search term:
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
-//				searchController.searchTermToDisplay = savedSearchHistoryItem.searchTermToDisplay;
-//				searchController.results = savedSearchHistoryItem.results;
-//				//we need to set everything at this point...
-//				asdf;
-				[multiListController setSelectedViewController:searchNavigationController];
+				//[multiListController setSelectedViewController:searchNavigationController];
 			} else if(savedSearchHistoryItem && savedSearchHistoryItem.searchTerm) {
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
-//				searchController.searchTerm = savedSearchHistoryItem.searchTerm;
-//				searchController.searchTermToDisplay = savedSearchHistoryItem.searchTermToDisplay;
 				self.savedSearchHistoryItem = nil;
-				[multiListController setSelectedViewController:searchNavigationController];
+				//[multiListController setSelectedViewController:searchNavigationController];
 			}
 		} else {
 			[historyController setListType: CommentaryTab];
@@ -472,14 +466,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			if(savedSearchResultsTab == CommentaryTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
 				//restore the previous search term:
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
-//				searchController.searchTerm = savedSearchHistoryItem.searchTerm;
-//				searchController.results = savedSearchHistoryItem.results;
-//				//we need to set everything at this point...
-//				asdf;
-				[multiListController setSelectedViewController:searchNavigationController];
+				//[multiListController setSelectedViewController:searchNavigationController];
 			}
 		}
-
+		
+		if([[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastMultiListTab] == SearchTab) {
+			[multiListController setSelectedViewController:searchNavigationController];
+		}
 		[tabController presentModalViewController:multiListController animated:YES];
 		[searchNavigationController release];
 		[historyController release];
@@ -811,6 +804,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[commentaryJavascript appendString:@"startDetLocPoll();\n"];
 			NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:ref withExtraJS:commentaryJavascript];
 			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+			//NSLog(@"%@", cText);
 			bibleTabController.refToShow = ref;
 			bibleTabController.jsToShow = bibleJavascript;
 		}

@@ -41,20 +41,13 @@
 		self.results = nil;
 		self.bookName = nil;
 		self.strongsSearch = NO;
-		self.fuzzySearch = NO;
-		self.searchType = AndSearch;
-		self.searchRange = AllRange;
 		self.savedTablePosition = nil;
-//		titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 30)];
-//		titleLabel.autoresizingMask = (UIViewAutoresizingFlexibleWidth || UIViewAutoresizingFlexibleHeight) && !UIViewAutoresizingFlexibleRightMargin && !UIViewAutoresizingFlexibleLeftMargin;
-//		titleLabel.backgroundColor = [UIColor clearColor];
-//		titleLabel.textAlignment = UITextAlignmentCenter;
-//		titleLabel.textColor = [UIColor whiteColor];
-//		titleLabel.shadowColor = [UIColor blackColor];
-//		titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
 		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
-//		self.navigationItem.titleView = titleLabel;
 		[self setSearchTitle];
+		
+		self.fuzzySearch = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsLastSearchFuzzy];
+		self.searchType = (PSSearchType)[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastSearchType];
+		self.searchRange = (PSSearchRange)[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastSearchRange];
 	}
 	return self;
 }
@@ -63,9 +56,6 @@
 	self.results = nil;
 	self.searchTerm = nil;
 	self.savedTablePosition = nil;
-//	[titleLabel release];
-//	if(helpView)
-//		[helpView release];
     [super dealloc];
 }
 
@@ -76,10 +66,6 @@
 	} else if(strongsSearch) {
 		newTitle = NSLocalizedString(@"SearchStrongsTitle", @"");
 	}
-//	[UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:1.0];
-//    titleLabel.text = newTitle;
-//	[UIView commitAnimations];
 	self.navigationItem.title = newTitle;
 	
 }
@@ -141,9 +127,16 @@
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-	if([viewController isMemberOfClass:[UINavigationController class]] && !switchingTabs) {
+	if([viewController isMemberOfClass:[UINavigationController class]]) {
 		// the only tab with a nav controller is the search tab
-		[self searchButtonPressed:nil];
+		if(!switchingTabs) {
+			[self searchButtonPressed:nil];
+		}
+		// set search tab as the saved tab.
+		[[NSUserDefaults standardUserDefaults] setInteger: SearchTab forKey:DefaultsLastMultiListTab];
+	} else {
+		// history tab.  set history tab as the saved tab.
+		[[NSUserDefaults standardUserDefaults] setInteger: HistoryTab forKey:DefaultsLastMultiListTab];
 	}
 }
 
