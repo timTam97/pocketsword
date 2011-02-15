@@ -52,7 +52,7 @@
 }
 
 - (void)finishedInitializingPocketSword {
-	DLog(@"finishedInitializing, now to display the tab bar controller");
+	//DLog(@"finishedInitializing, now to display the tab bar controller");
 	[launchViewController.view removeFromSuperview];
     [window addSubview:tabBarController.view];
 	

@@ -448,7 +448,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchNavigationController, nil];
 		multiListController.viewControllers = controllers;
 		
-		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 			[historyController setListType: BibleTab];
 			[searchController setListType:BibleTab];
 			if(savedSearchResultsTab == BibleTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
