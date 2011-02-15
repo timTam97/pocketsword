@@ -1063,6 +1063,8 @@
 				//NSLog(@"preverseHeading = '%@'", preverseHeading);
 				preverseHeading = [NSString stringWithUTF8String:swModule->RenderText([preverseHeading UTF8String])];
 				//NSLog(@"RenderText(preverseHeading) = '%@'\n", preverseHeading);
+				preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+				preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 				[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
 			}
 			else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
@@ -1070,6 +1072,8 @@
 				interverseHeading = [NSString stringWithUTF8String:swModule->RenderText([interverseHeading UTF8String])];
 				//NSLog(@"RenderText(interverseHeading) = '%@'\n", interverseHeading);
 				if((preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) || !preverseHeading) {
+					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
 //				} else if(!preverseHeading) {
 //					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];

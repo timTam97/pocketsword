@@ -1308,7 +1308,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		BOOL isABibleRef = NO;
 		if(mod) {
 			SwordModule *modToUse = [[SwordManager defaultManager] moduleWithName:mod];
-			if(!modToUse || modToUse.type == bible) {
+			if(!modToUse || modToUse.type == bible || modToUse.type == commentary) {
 				isABibleRef = YES;
 			} else {
 				// Should be a dictionary entry:
@@ -1360,8 +1360,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		
 		if(isABibleRef) {
-			// handle bible ref:
-			id attributeValue = [[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:NO];
+			// handle ref:
+			SwordModule *modToUse = [[SwordManager defaultManager] moduleWithName:mod];
+			if(!modToUse) {
+				modToUse = [[PSModuleController defaultModuleController] primaryBible];
+			}
+			id attributeValue = [modToUse attributeValueForEntryData:rData cleanFeed:NO];
 			if([attributeValue isMemberOfClass:[NSString class]]) {
 				entry = [PSModuleController createInfoHTMLString: (NSString*)attributeValue usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			} else if([attributeValue isKindOfClass:[NSArray class]]) {
