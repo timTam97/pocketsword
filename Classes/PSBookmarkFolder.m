@@ -49,7 +49,25 @@
 	[[NSScanner scannerWithString:bString] scanHexFloat:&b];
 	//NSLog(@"%@ - %f", bString, b);
 	
-	return [UIColor colorWithRed:(r/255.0f) green:(g/255.0f) blue:(b/255.0f) alpha:1.0f];
+	return [UIColor colorWithRed:(r/255.0f) green:(g/255.0f) blue:(b/255.0f) alpha:0.8f];
+}
+
++ (NSString*)rgbStringFromHexString:(NSString*)hexString {
+	//NSLog(@"%@", hexString);
+	if(!hexString || [hexString length] < 7)
+		return @"transparent";
+	NSString *rString = [NSString stringWithFormat:@"0x%@", [hexString substringWithRange:NSMakeRange(1, 2)]];
+	float r, g, b;
+	[[NSScanner scannerWithString:rString] scanHexFloat:&r];
+	//NSLog(@"%@ - %f", rString, r);
+	NSString *gString = [NSString stringWithFormat:@"0x%@", [hexString substringWithRange:NSMakeRange(3, 2)]];
+	[[NSScanner scannerWithString:gString] scanHexFloat:&g];
+	//NSLog(@"%@ - %f", gString, g);
+	NSString *bString = [NSString stringWithFormat:@"0x%@", [hexString substringWithRange:NSMakeRange(5, 2)]];
+	[[NSScanner scannerWithString:bString] scanHexFloat:&b];
+	//NSLog(@"%@ - %f", bString, b);
+	
+	return [NSString stringWithFormat:@"rgba(%d,%d,%d,0.8)", (int)r, (int)g, (int)b];
 }
 
 - (id)init {

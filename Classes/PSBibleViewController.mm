@@ -164,7 +164,7 @@
 		for(PSBookmark *bookmark in shownBookmarks) {
 			if(bookmark.rgbHexString) {
 				NSString *verse = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
-				NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, bookmark.rgbHexString];
+				NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, [PSBookmarkFolder rgbStringFromHexString:bookmark.rgbHexString]];
 				//DLog(@"%@", jsFunction);
 				[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
 			}

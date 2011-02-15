@@ -17,6 +17,7 @@
 
 + (NSString*)hexStringFromColor:(UIColor *)color;
 + (UIColor*)colorFromHexString:(NSString*)hexString;
++ (NSString*)rgbStringFromHexString:(NSString*)hexString;
 
 - (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla rgbHexString:(NSString*)rgb children:(NSArray*)c;
 

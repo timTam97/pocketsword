@@ -181,6 +181,9 @@
     
     // Configure the cell...
 	
+	cell.textLabel.backgroundColor = [UIColor clearColor];
+	cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+	
 	if(indexPath.section == 0) {
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		cell.textLabel.text = rowObject.name;
