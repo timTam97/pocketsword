@@ -19,7 +19,7 @@
 
 // Simplified Chinese (zh-Hans) Localisation
 // By Yiguang Hu
-// Last Updated v1.3.5 (28th December, 2010)
+// Last Updated v1.4.0 (17th February, 2011)
 
 "Edit" = "编辑";
 "Done" = "完成";
@@ -235,63 +235,63 @@
 "PreferencesFontDefaultTitle" = "使用自定义字体";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "文件夹名不对";
+"BookmarksInvalidFolderMessage" = "你输入的文件夹名不对。请用另一个文件夹名。";
+"BookmarksDuplicateFolderTitle" = "文件夹名重复";
+"BookmarksDuplicateFolderMessage" = "有一个文件夹已经用了那个名字。请用另一个文件夹名。";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "书签名重复";
+"BookmarksDuplicateBookmarkMessage" = "那个书签名已被占用。请用另一个书签名。";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "删掉文件夹？";
+"BookmarksConfirmDeleteFolderMessage" = "你确信要删掉文件夹'%@'及其中的所有书签？";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "文件夹名：";
+"BookmarksAddFolderHighlightColour" = "集中颜色：";
+"BookmarksAddBookmarkVerseTitle" = "节";
+"BookmarksAddBookmarkDescriptionTitle" = "描述";
+"BookmarksAddBookmarkFolderTitle" = "文件夹";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "加文件夹";
+"BookmarksEditFolderTitle" = "编辑文件夹";
+"BookmarksAddBookmarkHereButton" = "这儿添书签";
+"BookmarksAddBookmarkDescription" = "添经节书签，击打圣经的经节号，然后选择‘加书签’";
+"BookmarksAddFolderDescription" = "加文件夹，击打编辑键";
+"BookmarksImportedFolderName" = "输入的";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "创建的:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "上次的阅读时间:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "编辑书签";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "搜寻";
+"SearchStrongsTitle" = "史特朗搜寻";
+"SearchOptionsTitle" = "搜寻选项";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "找到所有出处";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "搜寻类型：";
+"SearchRangeSectionHeader" = "搜寻范围：";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "史特朗搜寻：";
+"SearchFuzzySectionHeader" = "模糊搜寻：";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "选择你要搜寻的圣经范围。";
+"SearchStrongsSectionFooter" = "你可以搜寻希纳文或希伯来文史特朗码的出现处。\n若要搜寻希纳文码0011（亚伯拉罕），输入G11.\n若要搜寻希伯来文码0430（神），输入H430。";
+"SearchFuzzySectionFooter" = "若你用模糊搜寻搜寻：\nrev\n搜寻结果将含所有以'rev'开头的字。";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
-"SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchTypeAllRow" = "对上所有的字";
+"SearchTypeAllRowShort" = "所有字";
+"SearchTypeAnyRow" = "对上任何字";
+"SearchTypeAnyRowShort" = "任何字";
+"SearchTypeExactRow" = "对上准确词汇";
+"SearchTypeExactRowShort" = "准确词汇";
+"SearchRangeAllRow" = "整本神经";
+"SearchRangeAllRowShort" = "整本神经";
+"SearchRangeOTRow" = "旧约";
+"SearchRangeOTRowShort" = "旧约";
+"SearchRangeNTRow" = "新约";
+"SearchRangeNTRowShort" = "新约";
+"SearchStrongsRow" = "搜寻史特朗码";
+"On" = "开";
+"Off" = "关";
+"SearchStartSearchButton" = "开始搜寻";
 //"PreferencesModuleSectionNote-old" = "各个模块有自己的优先选择了。若要改动，击打相关选项右上角模块列表键，再击打模块的发布键。";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"PreferencesModuleSectionNote" = "各个模块有自己的优先选择(例如史特朗码，红字模式等）。 若要改动，从屏幕底部的列表中选你的模块。";

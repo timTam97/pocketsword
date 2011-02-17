@@ -19,7 +19,7 @@
 
 // Japanese (ja) localisation
 // By Nakamaru Kunio
-// Last Updated v1.3.4 (21st December, 2010)
+// Last Updated v1.4.0 (17th February, 2011)
 
 "Edit" = "編集";
 "Done" = "完了";
@@ -48,7 +48,7 @@
 
 
 "Disclaimer" = "免責条項";
-"DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
+"DisclaimerMsg" = "      -=+* 警告 *+=-\nインストールマネジャーは、拡張データをインストール又更新するのに便利な手段を提供すると同時に、このようなシスマチックな手段でサイトにアクセスする事は、ウェブサイトに対し個人を特定的に禁止するためのパケットスニファーの利用を可能にします。\nもしあなたが迫害を受けている国からアクセスをしており、特定されるリスクを負いたくないのであれば、インストールマネジャーを使うべきではありません。\n又、CrossWire以外のリモートソースは比較的品質の低い拡張データを含む可能性があり、信仰的に非正統的な物や配布に辺り法を犯している可能性もあります。もちろん、多くのリモートソースに素晴らしいコンテンツもたくさんあります。これらのリモートソースは、CrossWireによって維持されているわけではないため、内容に対して責任を持ちません。 \n自己責任\nを理解した上で、リモートソース機能をオンにしますか？";
 
 "WebNoIP" = "Web: 外部IPを検出できません\n";
 "WiFiNoConnection" = "Wifi: 接続がありません\n";
@@ -74,7 +74,7 @@
 "PreferencesNightModeTitle" = "夜モード";
 "PreferencesVPLTitle" = "一文節一節";
 "PreferencesFontTitle" = "フォント";
-"PreferencesRedLetterTitle" = "赤文字";
+"PreferencesRedLetterTitle" = "イエスの発言赤文字";
 "PreferencesRedLetterNote" = "赤文字モードは、一部の拡張データでのみ動作します";
 "PreferencesDisableAutoLockTitle" = "オートスリープをオフ";
 "PreferencesModuleMaintainerModeTitle" = "拡張データメンテモード";
@@ -233,66 +233,66 @@
 "PreferencesRotationLock" = "傾けによる自動スリープ";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "独自フォントを使う";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "無効なフォルダ名";
+"BookmarksInvalidFolderMessage" = "無効なフォルダ名が入力されました。フォルダに別の名前をつけてください。";
+"BookmarksDuplicateFolderTitle" = "重複したフォルダ名";
+"BookmarksDuplicateFolderMessage" = "同名のフォルダ名が既に存在します。別のフォルダ名を入力してください。";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "重複したブックマーク名";
+"BookmarksDuplicateBookmarkMessage" = "同名のブックマークが既に存在します。別のブックマーク名を入力してください。";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "フォルダを削除しますか？";
+"BookmarksConfirmDeleteFolderMessage" = "本当にフォルダ'%@'とその中のブックマークをすべてを削除しても宜しいですか？";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "フォルダ名:";
+"BookmarksAddFolderHighlightColour" = "マーカー塗り:";
+"BookmarksAddBookmarkVerseTitle" = "節";
+"BookmarksAddBookmarkDescriptionTitle" = "説明";
+"BookmarksAddBookmarkFolderTitle" = "フォルダ";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "フォルダを追加";
+"BookmarksEditFolderTitle" = "フォルダを編集";
+"BookmarksAddBookmarkHereButton" = "ここにブックマークを追加";
+"BookmarksAddBookmarkDescription" = "節にブックマーク追加するには、節番をタップし、'ブックマーク'を追加を選択してください。";
+"BookmarksAddFolderDescription" = "フォルダを追加するには、編集ボタンをタップしてください";
+"BookmarksImportedFolderName" = "旧ブックマーク";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "作成日:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "最終アクセス日:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "ブックマーク編集";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "検索";
+"SearchStrongsTitle" = "ストロングズ検索";
+"SearchOptionsTitle" = "検索オプション";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "すべての一致を検索";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "検索種別:";
+"SearchRangeSectionHeader" = "検索範囲:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "ストロングズ検索:";
+"SearchFuzzySectionHeader" = "曖昧検索:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "検索したい聖書の箇所を選択してください。";
+"SearchStrongsSectionFooter" = "ギリシャ語またはヘブライ語のストロングズナンバーと一致しているか検索する事ができます。\nギリシャ語ナンバー0011(Abraham)を検索するには、G11と入力してください。\nヘブライ語の0430(God)を検索するには、H430と入力してください。";
+"SearchFuzzySectionFooter" = "曖昧検索の利用例\nrev\nを検索するとした場合、検索結果には'rev'で始まる単語すべてが表示されます。";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
-"SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchTypeAllRow" = "全キーワード一致Match ALL words";
+"SearchTypeAllRowShort" = "全キーワード";
+"SearchTypeAnyRow" = "いずれかのキーワードの一致Match ANY word";
+"SearchTypeAnyRowShort" = "いずれのキーワード";
+"SearchTypeExactRow" = "検索文の完全一致";
+"SearchTypeExactRowShort" = "文の完全一致";
+"SearchRangeAllRow" = "聖書全体";
+"SearchRangeAllRowShort" = "聖書全体";
+"SearchRangeOTRow" = "旧約";
+"SearchRangeOTRowShort" = "旧";
+"SearchRangeNTRow" = "新訳";
+"SearchRangeNTRowShort" = "新";
+"SearchStrongsRow" = "ストロングズナンバー検索";
+"On" = "オン";
+"Off" = "オフ";
+"SearchStartSearchButton" = "検索開始";
 //"PreferencesModuleSectionNote-old" = "拡張データごとの設定がなされました。変更する場合には、それぞれのタブ内にて右上端の拡張データ一覧ボタンをタップした後、該当拡張データの公開ボタンをタップしてください。";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"PreferencesModuleSectionNote" = "拡張データごとの表示設定(例: ストロングズナンバー表示、イエスの発言赤文字表示)がなされました。変更する場合には、当画面下段に表示されている該当拡張データの一覧から変更したい拡張データ名をタップしてください。";

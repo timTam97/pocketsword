@@ -19,7 +19,7 @@
 
 // Italian (it) localisation
 // By Vincenzo Carrubba
-// Last Updated v1.3.5 (27th December, 2010)
+// Last Updated v1.4.0 (17th February, 2011)
 
 "Edit" = "Modifica";
 "Done" = "Fine";
@@ -90,7 +90,7 @@
 "TabBarTitleAbout" = "Informazioni";
 
 "ModulesTitle" = "Moduli";
-"BookmarksTitle" = "Segnalibri";
+"BookmarksTitle" = "Preferiti";
 
 "ActivityLabelLoading" = "Caricamento...";
 "MMMBonjourLoading" = "Caricamento Bonjour...";
@@ -236,63 +236,63 @@
 "PreferencesFontDefaultTitle" = "Usa carattere specifico";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "Nome cartella non valido";
+"BookmarksInvalidFolderMessage" = "Hai inserito un nome non valido per la cartella. Scegli un altro nome per la cartella.";
+"BookmarksDuplicateFolderTitle" = "Nome cartella duplicato";
+"BookmarksDuplicateFolderMessage" = "Una cartella con quel nome esiste già. Scegli un altro nome per la cartella.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "Nome del preferito duplicato";
+"BookmarksDuplicateBookmarkMessage" = "Un preferito con quel nome esiste già. Scegli un altro nome per il preferito.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "Elimino la cartella?";
+"BookmarksConfirmDeleteFolderMessage" = "Sei sicuro di voler eliminare la cartella '%@' e tutti i preferiti che contiene?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Nome cartella:";
+"BookmarksAddFolderHighlightColour" = "Colore evidenziatore:";
+"BookmarksAddBookmarkVerseTitle" = "Verso";
+"BookmarksAddBookmarkDescriptionTitle" = "Descrizione";
+"BookmarksAddBookmarkFolderTitle" = "Cartella";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "Aggiungi cartella";
+"BookmarksEditFolderTitle" = "Modifica cartella";
+"BookmarksAddBookmarkHereButton" = "Aggiungi qui il preferito";
+"BookmarksAddBookmarkDescription" = "Per aggiungere un preferito, tocca il numero del verso nella Bibbia e scegli 'Aggiungi ai preferiti'";
+"BookmarksAddFolderDescription" = "Per aggiungere una cartella, tocca il bottone modifica";
+"BookmarksImportedFolderName" = "Importati";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Creato:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Ultimo accesso:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Modifica preferito";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "Cerca";
+"SearchStrongsTitle" = "Ricerca Strong";
+"SearchOptionsTitle" = "Opzioni ricerca";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "Trova tutte le istanze";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "Tipo di ricerca:";
+"SearchRangeSectionHeader" = "Ambito di ricerca:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Ricerca Strong:";
+"SearchFuzzySectionHeader" = "Ricerca approssimata:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "Seleziona in quale parte della Bibbia desideri effettuare la ricerca.";
+"SearchStrongsSectionFooter" = "Puoi cercare tutte le istanze dei numeri Strong in Greco ed Ebraico.\nPer cercare il numero Strong Greco 0011 (Abramo) inserisci G11.\nPer cercare il numero Strong Ebraico 0430 (Dio) inserisci H430.";
+"SearchFuzzySectionFooter" = "Usando la ricerca approssimata, se cerchi:\nrev\ni risultati includeranno tutte le parole che iniziano con 'rev'.";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
+"SearchTypeAllRow" = "Trova TUTTE le parole";
+"SearchTypeAllRowShort" = "Ogni parola";
+"SearchTypeAnyRow" = "Trova almeno una parola";
+"SearchTypeAnyRowShort" = "Almeno una";
+"SearchTypeExactRow" = "Trova la frase ESATTA";
+"SearchTypeExactRowShort" = "Frase esatta";
+"SearchRangeAllRow" = "Tutta la Bibbia";
+"SearchRangeAllRowShort" = "Tutta la Bibbia";
+"SearchRangeOTRow" = "Antico Testamento";
+"SearchRangeOTRowShort" = "AT";
+"SearchRangeNTRow" = "Nuovo Testamento";
 "SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchStrongsRow" = "Cerca un numero Strong";
+"On" = "Si";
+"Off" = "No";
+"SearchStartSearchButton" = "Avvia Ricerca";
 //"PreferencesModuleSectionNote-old" = "Le preferenze dei moduli sono impostate individualmente. Per cambiarle, tocca il bottone dei moduli nell'angolo in alto a destra della scheda corrispondente poi tocca la freccia a destra del modulo.";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"PreferencesModuleSectionNote" = "Le preferenze di visualizzazione dei moduli (tipo Numeri Strong, Lettere Rosse etc.) sono impostate individualmente. Per cambiarle, seleziona il modulo dalla lista in fondo a questo schermo.";

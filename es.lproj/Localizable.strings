@@ -19,7 +19,7 @@
 
 // Spanish (es) Localisation
 // By David Bell et al.
-// Last Updated v1.3.5 (27th December, 2010)
+// Last Updated v1.4.0 (17th February, 2011)
 
 "Edit" = "Edición";
 "Done" = "Fin";
@@ -235,63 +235,63 @@
 "PreferencesFontDefaultTitle" = "Usar fuente personalizado";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "Nombre de carpeta no válido";
+"BookmarksInvalidFolderMessage" = "Has introducido un nombre de carpeta no válido. Por favor, introduce otro nombre para tu carpeta.";
+"BookmarksDuplicateFolderTitle" = "Nombre de carpeta duplicado";
+"BookmarksDuplicateFolderMessage" = "Ya existe una carpeta con este nombre. Por favor, elige otro nombre para tu carpeta.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "Nombre de marcador duplicado";
+"BookmarksDuplicateBookmarkMessage" = "Ya existe un marcador con ese nombre. Por favor, elige otro nombre para tu marcador.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "¿Eliminar carpeta?";
+"BookmarksConfirmDeleteFolderMessage" = "¿Estás seguro que quieres eliminar la carpeta '%@' y todos los marcadores que contiene?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Nombre de carpeta:";
+"BookmarksAddFolderHighlightColour" = "Color de resalte:";
+"BookmarksAddBookmarkVerseTitle" = "Versículo";
+"BookmarksAddBookmarkDescriptionTitle" = "Descripción";
+"BookmarksAddBookmarkFolderTitle" = "Carpeta";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "Añadir Carpeta";
+"BookmarksEditFolderTitle" = "Editar Carpeta";
+"BookmarksAddBookmarkHereButton" = "Añadir marcador aquí";
+"BookmarksAddBookmarkDescription" = "Para añadir un marcador para este versículo, toca el número del versículo en la pestaña de Biblia y selecciona 'Añadir marcador'";
+"BookmarksAddFolderDescription" = "Para añadir una carpeta, toca el botón Editar";
+"BookmarksImportedFolderName" = "Importada";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Creada:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Último acceso:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Editar marcador";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "Búsqueda";
+"SearchStrongsTitle" = "Búsqueda de código Strong";
+"SearchOptionsTitle" = "Opciones de búsqueda";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "Buscar todas las ocurrencias ";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "Tipo de búsqueda:";
+"SearchRangeSectionHeader" = "Rango de búsqueda:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Búsqueda de código Strong:";
+"SearchFuzzySectionHeader" = "Búsqueda borrosa:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "Selecciona la parte de la Biblia en la cual quieres buscar.";
+"SearchStrongsSectionFooter" = "Puedes buscar las ocurrencias de códigos Strong para griego o hebreo.\nPara buscar el código griego 001 (Abraham), introduzca G11.\nPara buscar el código hebreo 0430 (Dios) introduzca H430.";
+"SearchFuzzySectionFooter" = "Con Búsqueda borrosa, si buscas:\nrev\nlos resultados incluirán todas las palabras que empiezan por 'rev'.";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
+"SearchTypeAllRow" = "Buscar TODAS las palabras";
+"SearchTypeAllRowShort" = "Todas las palabras";
+"SearchTypeAnyRow" = "Buscar CUALQUIER palabra";
+"SearchTypeAnyRowShort" = "Cualquier palabra";
+"SearchTypeExactRow" = "Buscar la frase EXACTA";
+"SearchTypeExactRowShort" = "Frase Exacta";
+"SearchRangeAllRow" = "La Biblia entera";
+"SearchRangeAllRowShort" = "La Biblia entera";
+"SearchRangeOTRow" = "Antiguo Testamento";
+"SearchRangeOTRowShort" = "AT";
+"SearchRangeNTRow" = "Nuevo Testamento";
 "SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchStrongsRow" = "Buscar un código Strong";
+"On" = "Sí";
+"Off" = "No";
+"SearchStartSearchButton" = "Empezar búsqueda";
 //"PreferencesModuleSectionNote-old" = "Las preferencias específicas de módulo se establecen ahora individualmente para cada módulo. Para cambiarlas, toca el botón de la pestaña relevante en la esquina superior derecha de la Lista de Módulos y luego el botón que corresponde al módulo.";
 "PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
