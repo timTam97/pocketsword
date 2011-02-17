@@ -1361,26 +1361,33 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		if(isABibleRef) {
 			// handle ref:
-			SwordModule *modToUse = [[SwordManager defaultManager] moduleWithName:mod];
-			if(!modToUse) {
+			SwordModule *modToUse;
+			if(mod && ![mod isEqualToString:@""]) {
+				modToUse = [[SwordManager defaultManager] moduleWithName:mod];
+			} else {
 				modToUse = [[PSModuleController defaultModuleController] primaryBible];
 			}
-			id attributeValue = [modToUse attributeValueForEntryData:rData cleanFeed:NO];
-			if([attributeValue isMemberOfClass:[NSString class]]) {
-				entry = [PSModuleController createInfoHTMLString: (NSString*)attributeValue usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-			} else if([attributeValue isKindOfClass:[NSArray class]]) {
-				NSMutableString *tmpEntry = [@"" mutableCopy];
-				for(NSDictionary *dict in (NSArray*)attributeValue) {
-					NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
-					[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
-					[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+			if(mod && !modToUse) {
+				entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:nil];
+			} else {
+				id attributeValue = [modToUse attributeValueForEntryData:rData cleanFeed:NO];
+				if([attributeValue isMemberOfClass:[NSString class]]) {
+					entry = [PSModuleController createInfoHTMLString: (NSString*)attributeValue usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+				} else if([attributeValue isKindOfClass:[NSArray class]]) {
+					NSMutableString *tmpEntry = [@"" mutableCopy];
+					for(NSDictionary *dict in (NSArray*)attributeValue) {
+						NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+						[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+						[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+					}
+					//DLog(@"\n%@\n", tmpEntry);
+					if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+						entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+						entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[modToUse name]];
+					}
+					[tmpEntry release];
 				}
-				//DLog(@"\n%@\n", tmpEntry);
-				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-				}
-				[tmpEntry release];
 			}
 		}
 		

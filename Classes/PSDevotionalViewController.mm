@@ -44,6 +44,13 @@ BOOL loaded;
 //	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDevotional) name:NotificationNightModeChanged object:nil];
+}
+
+- (void)reloadDevotional {
+	if(loaded) {
+		[self loadDevotionalForDate:devotionalDatePicker.date];
+	}
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
