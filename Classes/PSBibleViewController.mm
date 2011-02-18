@@ -217,7 +217,9 @@
 			//DLog(@"    %@", tappedVerse);
 			NSString *sheetTitle = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerse];
 			UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
-			[sheet showInView:bibleWebView];
+			//[sheet showInView:bibleWebView];
+			//[sheet showInView:self.tabBarController.view];
+			[sheet showFromTabBar:self.tabBarController.tabBar];
 		}
 		load = NO;
 	} else {
