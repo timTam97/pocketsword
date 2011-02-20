@@ -236,18 +236,18 @@
 "PreferencesFontDefaultTitle" = "Настроїти особливий шрифт";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Неприпустиме Ім’я Папки";
+"BookmarksInvalidFolderTitle" = "Неприпустиме ім’я папки";
 "BookmarksInvalidFolderMessage" = "Введено неприпустиме ім’я папки. Виберіть інше ім'я папки.";
-"BookmarksDuplicateFolderTitle" = "Повторюване Ім'я Папки";
+"BookmarksDuplicateFolderTitle" = "Повторюване ім'я папки";
 "BookmarksDuplicateFolderMessage" = "Папка з такою назвою уже існує. Виберіть інше ім'я папки.";
 
-"BookmarksDuplicateBookmarkTitle" = "Повторюване Ім'я Закладки";
+"BookmarksDuplicateBookmarkTitle" = "Повторюване ім'я закладки";
 "BookmarksDuplicateBookmarkMessage" = "Закладка з такою назвою уже існує. Виберіть інше ім'я закладки.";
 
 "BookmarksConfirmDeleteFolderTitle" = "Видалити папку?";
 "BookmarksConfirmDeleteFolderMessage" = "Справді видалити папку '%@' і всі закладки в ній?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Ім'я Папки:";
-"BookmarksAddFolderHighlightColour" = "Колір Виділення:";
+"BookmarksAddFolderFolderName" = "Ім'я папки:";
+"BookmarksAddFolderHighlightColour" = "Колір виділення:";
 "BookmarksAddBookmarkVerseTitle" = "Вірш";
 "BookmarksAddBookmarkDescriptionTitle" = "Опис";
 "BookmarksAddBookmarkFolderTitle" = "Папка";
@@ -260,11 +260,11 @@
 "BookmarksImportedFolderName" = "Імпортовані";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
 "BookmarksCreatedTitle" = "Створено:";//created date of the bookmark/folder.
 "BookmarksLastAccessedTitle" = "Останній доступ:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Змінити Закладку";
+"BookmarkEditBookmarkTitle" = "Змінити закладку";
 
 "SearchTitle" = "Пошук";
 "SearchStrongsTitle" = "Пошук ном. Стронга";
-"SearchOptionsTitle" = "Параметри Пошуку";
+"SearchOptionsTitle" = "Параметри пошуку";
 
 "StrongsSearchFindAll" = "Знайти всі повторення";//used to find all occurrences of the current Strong's Number in the Bible.
 
