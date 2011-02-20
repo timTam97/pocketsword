@@ -76,11 +76,15 @@
 		self.searchTermToDisplay = searchHistoryItem.searchTermToDisplay;
 		self.searchType = searchHistoryItem.searchType;
 		self.searchRange = searchHistoryItem.searchRange;
-		self.strongsSearch = searchHistoryItem.strongsSearch;
 		self.fuzzySearch = searchHistoryItem.fuzzySearch;
 		self.results = searchHistoryItem.results;
 		self.bookName = searchHistoryItem.bookName;
 		self.savedTablePosition = searchHistoryItem.savedTablePosition;
+		// only set strongs search if that's allowable.
+		SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
+		if(searchHistoryItem.strongsSearch && ([primaryBible hasFeature: SWMOD_FEATURE_STRONGS] || [primaryBible hasFeature: SWMOD_CONF_FEATURE_STRONGS])) {
+			self.strongsSearch = searchHistoryItem.strongsSearch;
+		}
 		[self setSearchTitle];
 	}
 }
@@ -90,6 +94,7 @@
 }
 
 - (IBAction)closeButtonPressed {
+	[self notifyDelegateOfNewHistoryItem];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 }
 
@@ -184,9 +189,15 @@
 	if(self.results) {
 		if(self.savedTablePosition && [savedTablePosition count] > 0) {
 			if([savedTablePosition count] > 1) {
-				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+				NSIndexPath *iPath = (NSIndexPath*)[savedTablePosition objectAtIndex:1];
+				if(iPath.section < [searchResultsTable numberOfSections] && iPath.row < [searchResultsTable numberOfRowsInSection:iPath.section]) {
+					[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+				}
 			} else {
-				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+				NSIndexPath *iPath = (NSIndexPath*)[savedTablePosition objectAtIndex:0];
+				if(iPath.section < [searchResultsTable numberOfSections] && iPath.row < [searchResultsTable numberOfRowsInSection:iPath.section]) {
+					[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+				}
 			}
 		}
 	}
@@ -520,6 +531,8 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 	} else if([tableView isEqual:searchQueryTable]) {
 		[searchBar resignFirstResponder];
+		//searchBar.text = searchTermToDisplay;
+		self.searchTermToDisplay = searchBar.text;
 		if(indexPath.section == 0) {
 			PSSearchOptionTableViewController *optionTVC;
 			switch(indexPath.row) {
