@@ -19,7 +19,7 @@
 
 // Ukrainian (uk) localisation
 // By Vitaliy K.
-// Last Updated v1.3.5 (30th December, 2010)
+// Last Updated v1.4.0 (20th February, 2011)
 
 "Edit" = "Редагувати";
 "Done" = "Готово";
@@ -236,63 +236,63 @@
 "PreferencesFontDefaultTitle" = "Настроїти особливий шрифт";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "Неприпустиме Ім’я Папки";
+"BookmarksInvalidFolderMessage" = "Введено неприпустиме ім’я папки. Виберіть інше ім'я папки.";
+"BookmarksDuplicateFolderTitle" = "Повторюване Ім'я Папки";
+"BookmarksDuplicateFolderMessage" = "Папка з такою назвою уже існує. Виберіть інше ім'я папки.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "Повторюване Ім'я Закладки";
+"BookmarksDuplicateBookmarkMessage" = "Закладка з такою назвою уже існує. Виберіть інше ім'я закладки.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "Видалити папку?";
+"BookmarksConfirmDeleteFolderMessage" = "Справді видалити папку '%@' і всі закладки в ній?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Ім'я Папки:";
+"BookmarksAddFolderHighlightColour" = "Колір Виділення:";
+"BookmarksAddBookmarkVerseTitle" = "Вірш";
+"BookmarksAddBookmarkDescriptionTitle" = "Опис";
+"BookmarksAddBookmarkFolderTitle" = "Папка";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "Додати папку";
+"BookmarksEditFolderTitle" = "Змінити папку";
+"BookmarksAddBookmarkHereButton" = "Додати закладку тут";
+"BookmarksAddBookmarkDescription" = "Щоб додати закладку для вірша, натисніть на номер вірша у вкладці Біблія і виберіть 'Додати закладку'";
+"BookmarksAddFolderDescription" = "Щоб додати папку, натисніть кнопку Змінити";
+"BookmarksImportedFolderName" = "Імпортовані";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Створено:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Останній доступ:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Змінити Закладку";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "Пошук";
+"SearchStrongsTitle" = "Пошук ном. Стронга";
+"SearchOptionsTitle" = "Параметри Пошуку";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "Знайти всі повторення";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "Тип пошуку:";
+"SearchRangeSectionHeader" = "Діапазон пошуку:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Пошук ном. Стронга:";
+"SearchFuzzySectionHeader" = "Нестрогий пошук:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "Виберіть частину Біблії в якій зробити пошук.";
+"SearchStrongsSectionFooter" = "Можливо шукати грецькі або єврейські номера Стронга.\nЩоб знайти грецький номер 0011 (Авраам) введіть G11.\nЩоб знайти єврейський номер 0430 (Бог) введіть H430.";
+"SearchFuzzySectionFooter" = "Користуючись нестрогим пошуком, якщо шукати:\nрев\nрезультат пошуку буде включати всі слова що починаються з 'рев'.";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
-"SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchTypeAllRow" = "Зіставити ВСІ слова";
+"SearchTypeAllRowShort" = "Всі слова";
+"SearchTypeAnyRow" = "Зіставити БУДЬ-ЯКЕ слово";
+"SearchTypeAnyRowShort" = "Будь-яке слово";
+"SearchTypeExactRow" = "Зіставити ТОЧНУ фразу";
+"SearchTypeExactRowShort" = "Точна фраза";
+"SearchRangeAllRow" = "Вся Біблія";
+"SearchRangeAllRowShort" = "Вся Біблія";
+"SearchRangeOTRow" = "Старий Заповіт";
+"SearchRangeOTRowShort" = "СЗ";
+"SearchRangeNTRow" = "Новий Заповіт";
+"SearchRangeNTRowShort" = "НЗ";
+"SearchStrongsRow" = "Пошук номерів Стронга";
+"On" = "Вкл.";
+"Off" = "Викл.";
+"SearchStartSearchButton" = "Почати пошук";
 //"PreferencesModuleSectionNote-old" = "Параметри модуля встановлюються індивідуально для кожного модуля. Щоб змінити параметри, натисніть на кнопку списку модулів у правому верхньому куті на відповідній вкладці і натисніть стрілку розкриття інформації для модуля.";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"PreferencesModuleSectionNote" = "Параметри модуля (такі як нумерація Стронга, червоні букви, т.д.) встановлюються індивідуально для кожного модуля. Щоб змінити параметри, виберіть модуль з списку внизу цього екрану.";
