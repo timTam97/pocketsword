@@ -458,7 +458,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			} else if(savedSearchHistoryItem && savedSearchHistoryItem.searchTerm) {
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
 				self.savedSearchHistoryItem = nil;
-				//[multiListController setSelectedViewController:searchNavigationController];
+				[multiListController setSelectedViewController:searchNavigationController];
 			}
 		} else {
 			[historyController setListType: CommentaryTab];

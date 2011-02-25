@@ -19,7 +19,7 @@
 
 // French (fr) Localisation
 // By Dominique Corbex
-// Last Updated v1.3.5 (27th December, 2010)
+// Last Updated v1.4.0 (February 20, 2011)
 
 "Edit" = "Éditer";
 "Done" = "Terminé";
@@ -48,7 +48,7 @@
 
 
 "Disclaimer" = "Avis de non-responsabilité";
-"DisclaimerMsg" = "      -=+* ATTENTION *+=-\nBien que le gestionnaire d'installation fournisse un moyen commode d'installer et de mettre à jour les composants Sword, il utilise également une méthode systématique d'acces aux sites internet qui donne aux sniffeurs de paquets une piste pour détecter les utilisateurs. \nSI VOUS VIVEZ DANS UN PAYS OÙ LA PERSÉCUTION EST MANIFESTE ET NE SOUHAITEZ PAS RISQUER UNE TÉLÉDÉTECTION, VOUS *NE DEVEZ PAS* UTILISER LES FONCTIONNALITÉS À DISTANCE DU GESTIONNAIRE D'INSTALLATION. \nDe même, les sources à distance autres que CrossWire peuvent contenir des modules de moins bonne qualité, des modules au contenu peu orthodoxe, voire même des modules qui ne sont pas légitimement distribuables. Mais de nombreux dépots contiennent un contenu parfaitement utile. Ces dépots ne sont tout simplement pas passés en revue ou mis à jour par CrossWire et CrossWire ne peut être tenu pour responsable de leur contenu. CAVEAT EMPTOR.\nComprenez-vous cela et êtes-vous prêt à activer les fonctionnalités à distance?";
+"DisclaimerMsg" = "      -=+* ATTENTION *+=-\nBien que le gestionnaire d'installation soit un système pratique pour installer et mettre à jour des composants Sword, il utilise aussi systématiquement un moyen d'acces à internet, ce qui donne aux sniffeurs de paquets des pistes pour détecter les utilisateurs. \nSI VOUS VIVEZ DANS UN PAYS OÙ LA PERSÉCUTION EST MANIFESTE ET NE SOUHAITEZ PAS RISQUER UNE TÉLÉDÉTECTION, VOUS *NE DEVEZ PAS* UTILISER LES FONCTIONNALITÉS À DISTANCE DU GESTIONNAIRE D'INSTALLATION. \nDe même, les sources à distance autres que CrossWire peuvent contenir des modules de moins bonne qualité, des modules au contenu peu orthodoxe, voire même des modules qui ne sont pas légitimement distribuables. Mais de nombreux dépots contiennent un contenu parfaitement utile. Ces dépots ne sont tout simplement pas passés en revue ou mis à jour par CrossWire et CrossWire ne peut être tenu pour responsable de leur contenu. CAVEAT EMPTOR.\nComprenez-vous cela et êtes-vous prêt à activer les fonctionnalités à distance?";
 
 "WebNoIP" = "Web : Impossible de déterminer l'IP externe\n";
 "WiFiNoConnection" = "Wifi : Pas de connection\n";
@@ -235,63 +235,64 @@
 "PreferencesFontDefaultTitle" = "Police personnalisée";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "Nom de dossier invalide";
+"BookmarksInvalidFolderMessage" = "Vous avez entré un nom de dossier non valide. Veuillez choisir un autre nom pour votre dossier.";
 "BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksDuplicateFolderTitle" = "Nom de dossier déjà utilisé";
+"BookmarksDuplicateFolderMessage" = "Un dossier avec ce nom existe déjà. Veuillez choisir un autre nom pour votre dossier.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "Nom de signet déjà utilisé";
+"BookmarksDuplicateBookmarkMessage" = "Un signet portant ce nom existe déjà. Veuillez choisir un autre nom pour votre signet.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
+"BookmarksConfirmDeleteFolderTitle" = "Supprimer le dossier?";
+"BookmarksConfirmDeleteFolderMessage" = "Êtes-vous sûr de vouloir supprimer le dossier '%@' et tous les signets qu'il contient?";
+"BookmarksAddFolderFolderName" = "Nom du dossier:";
+"BookmarksAddFolderHighlightColour" = "Couleur de surlignement:";
+"BookmarksAddBookmarkVerseTitle" = "Verset";
 "BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksAddBookmarkFolderTitle" = "Dossier";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "Ajouter un dossier";
+"BookmarksEditFolderTitle" = "Éditer le dossier";
+"BookmarksAddBookmarkHereButton" = "Ajouter un signet ici";
+"BookmarksAddBookmarkDescription" = "Pour ajouter un signet à un verset, tapez sur le numéro du verset dans l'onglet Bible et sélectionnez 'Ajouter un signet'";
+"BookmarksAddFolderDescription" = "Pour ajouter un dossier, taper sur le bouton Modifier";
+"BookmarksImportedFolderName" = "Importé";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Créé:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Dernier accès:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Éditer le signet";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "Recherche";
+"SearchStrongsTitle" = "Rechercher Strong";
+"SearchOptionsTitle" = "Options de recherche";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "Trouver toutes les occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "Type de recherche:";
+"SearchRangeSectionHeader" = "Étendue de la recherche:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Recherche nombre de Strong:";
+"SearchFuzzySectionHeader" = "Recherche floue:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "Sélectionnez la partie de la Bible dans laquelle vous souhaitez effectuer la recherche.";
+"SearchStrongsSectionFooter" = "Vous pouvez rechercher des occurrences de nombres de Strong en grec ou en hébreu .\nPour une recherche du nombre grec 0011 (Abraham) entrer G11.\nPour une recherche du nombre hébreu 0430 (Dieu) entrer H430.";
+"SearchFuzzySectionFooter" = "Utilisation de la recherche floue, si vous recherchez:\nrev\nle résultat de la recherche comprendra tous les mots qui commencent par 'rev'.";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
+"SearchTypeAllRow" = "Trouver tous les mots";
+"SearchTypeAllRowShort" = "Tous les mots";
+"SearchTypeAnyRow" = "N'importe quel mot";
+"SearchTypeAnyRowShort" = "N'importe quel mot";
+"SearchTypeExactRow" = "Contient la phrase exacte";
+"SearchTypeExactRowShort" = "Phrase exacte";
+"SearchRangeAllRow" = "Bible entière";
+"SearchRangeAllRowShort" = "Bible entière";
+"SearchRangeOTRow" = "Ancien testament";
+"SearchRangeOTRowShort" = "AT";
+"SearchRangeNTRow" = "Nouveau Testament";
 "SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
+"SearchStrongsRow" = "Rechercher un nombre de Strong";
 "On" = "On";
 "Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchStartSearchButton" = "Commencer la Recherche";
 //"PreferencesModuleSectionNote-old" = "Les préférences spécifiques de module sont maintenant réglées pour chaque module. Pour les modifier, tapez sur le bouton Liste des modules dans le coin en haut à droite de l'onglet correspondant puis sur le bouton d'information du module";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"PreferencesModuleSectionNote" = "Les préférences d'affichage spécifiques aux modules (comme les nombres de Strong, le mode caractères rouges, etc) sont fixés pour chaque module. Pour les modifier, sélectionnez votre module dans la liste au bas de cet écran.";

@@ -632,6 +632,7 @@
 		if(i == ([components count] - 1)) {
 			joiningString = @"";
 		}
+		//nb: a strongsSearch should also search for the actual term, as a kind of backup.  :P
 		if(strongsSearch && [component characterAtIndex:0] == 'H') {
 			NSMutableString *hebrew = [component mutableCopy];
 			if([component length] > 1 && [component characterAtIndex:1] == '0') {
@@ -641,7 +642,9 @@
 				// also search for this number with the '0' prefix
 				[hebrew insertString:@"0" atIndex:1];
 			}
-			[fullSearchTerm appendFormat:@"(%@%@ || %@%@)%@", prefix, hebrew, prefix, component, joiningString];
+			[fullSearchTerm appendFormat:@"(%@%@ || %@%@ || %@)%@", prefix, hebrew, prefix, component, component, joiningString];
+		} else if(strongsSearch) {
+			[fullSearchTerm appendFormat:@"(%@%@ || %@)%@", prefix, component, component, joiningString];
 		} else if((searchType != ExactSearch) && fuzzySearch && ([component length] > 0) && [component characterAtIndex:0] != '"') {
 			// fuzzy search appends a '*' to each component, unless it's a quote && unless it's an exact search.
 			[fullSearchTerm appendFormat:@"%@%@*%@", prefix, component, joiningString];

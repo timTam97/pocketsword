@@ -19,7 +19,7 @@
 
 // Czech (cs) localisation
 // By Jan Bubík
-// Last Updated 1.3.5 (29th December, 2010)
+// Last Updated 1.4.0 (22th February, 2011)
 
 "Edit" = "Edituj";
 "Done" = "Hotovo";
@@ -235,63 +235,64 @@
 "PreferencesFontDefaultTitle" = "Vlastní font";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "Nepřípustné jméno složky";
+"BookmarksInvalidFolderMessage" = "Zadali jste nepřípustné jméno složky. Zvolte si prosím jiné jméno složky.";
+"BookmarksDuplicateFolderTitle" = "Obsazené jméno složky";
+"BookmarksDuplicateFolderMessage" = "Složka s tímto jménem již existuje. Zvolte si prosím jiné jméno složky.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "Obsazené jméno záložky";
+"BookmarksDuplicateBookmarkMessage" = "Záložka s tímto jménem již existuje. Zvolte si prosím jiné jméno záložky.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "Smazat složku?";
+"BookmarksConfirmDeleteFolderMessage" = "Opravdu chcete smazat složku '%@' a všechny záložky v ní?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Jméno složky:";
+"BookmarksAddFolderHighlightColour" = "Barva zvýraznění:";
+"BookmarksAddBookmarkVerseTitle" = "Verš";
+"BookmarksAddBookmarkDescriptionTitle" = "Popis";
+"BookmarksAddBookmarkFolderTitle" = "Složka";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "Přidej složku";
+"BookmarksEditFolderTitle" = "Uprav složku";
+"BookmarksAddBookmarkHereButton" = "Přidat záložku sem";
+"BookmarksAddBookmarkDescription" = "Pro přidání záložky k verši podržte prst na číslu verše v textu Bible a vyberte 'Přidat záložku'";
+"BookmarksAddFolderDescription" = "Pro přidání složky použijte tlačítko 'Edituj'";
+"BookmarksImportedFolderName" = "Starší záložky";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Vytvořeno:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Naposledy použito:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Uprav záložku";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "Hledání";
+"SearchStrongsTitle" = "Hledání Strongových čísel";
+"SearchOptionsTitle" = "Možnosti hledání";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "Najdi všechny výskyty";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "Typ hledání:";
+"SearchRangeSectionHeader" = "Rozsah hledání:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Hledání Strongů:";
+"SearchFuzzySectionHeader" = "Ohebné hledání:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "Zvolte, ve které části Bible hledat.";
+"SearchStrongsSectionFooter" = "Můžete hledat Strongova čísla k Řečtině nebo k Hebrejštině.\nPro hledání řeckého čísla 0011 (Abraham) zadejte G11.\nPro hledání hebrejského čísla 0430 (Bůh) zadejte H430.";
+"SearchFuzzySectionFooter" = "Ohebné hledání najde pro výraz:\nkni\nvšechna slova, která začínají na 'kni' (kniha, knihy, atd.)";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
-"SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
-//"PreferencesModuleSectionNote-old" = "Je možné upravit nastavení pro jednotlivé moduly. V příslušné části programu (např. Bible) otevři seznam modulů klepnutím na tlačítko v pravém horním rohu. Pak klepni na tlačítko podrobností o příslušném modulu.";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"SearchTypeAllRow" = "Hledej všechna slova";
+"SearchTypeAllRowShort" = "Všechna slova";
+"SearchTypeAnyRow" = "Hledej aspoň jedno slovo";
+"SearchTypeAnyRowShort" = "Aspoň jedno";
+"SearchTypeExactRow" = "Hledej přesnou frázi";
+"SearchTypeExactRowShort" = "Přesná fráze";
+"SearchRangeAllRow" = "Celá Bible";
+"SearchRangeAllRowShort" = "Celá Bible";
+"SearchRangeOTRow" = "Starý zákon";
+"SearchRangeOTRowShort" = "SZ";
+"SearchRangeNTRow" = "Nový zákon";
+"SearchRangeNTRowShort" = "NZ";
+"SearchStrongsRow" = "Hledej Strongovo číslo";
+"On" = "Zap";
+"Off" = "Vyp";
+"SearchStartSearchButton" = "Hledej";
+
+"PreferencesModuleSectionNote" = "Je možné upravit nastavení pro jednotlivé moduly. Vyberte si modul ze seznamu uvedeného na konci této obrazovky.";
+
