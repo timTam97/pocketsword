@@ -9,6 +9,7 @@ New in v1.4.0
 - Added datestamp for History items (and bookmarks).
 - fixed a rare crash on first launch bug.
 - faster launch of app.
+- other bug fixes...
 
 New in v1.3.6
 - Fixed a bug that prevented the unlocking of locked modules.
