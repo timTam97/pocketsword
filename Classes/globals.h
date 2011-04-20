@@ -111,6 +111,10 @@ typedef enum {
 #define StrongsFontName								@"Times New Roman"
 #define PSFolderSeparatorString						@":::"
 
+#define BookNameString							@"BookNameString"
+#define ChapterString							@"ChapterString"
+#define VerseString								@"VerseString"
+
 
 // Notification identifiers
 #define NotificationModulesChanged				@"NotificationModulesChanged"
@@ -154,6 +158,8 @@ typedef enum {
 #define NotificationSwitchToFullscreen			@"NotificationSwitchToFullscreen"
 
 #define NotificationAddBookmarkInFolder			@"NotificationAddBookmarkInFolder"
+
+#define NotificationUpdateSelectedReference		@"NotificationUpdateSelectedReference"
 
 #define ROTATION_LOCK_POSITION @"rotationLockedPosition"
 

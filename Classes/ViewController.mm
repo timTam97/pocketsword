@@ -34,11 +34,10 @@
 
 @implementation ViewController
 
-@synthesize savedSearchHistoryItem, savedSearchResultsTab;//savedSearchTerm, savedSearchResults, searchTermToPerform;
+@synthesize savedSearchHistoryItem, savedSearchResultsTab;
 
-bool initialized = false;
+bool ps_viewcontroller_initialized = false;
 
-//NSTimer *timer;
 static NSString *lastRefAvailable = @"Revelation 22";
 static NSString *firstRefAvailable = @"Genesis 1";
 
@@ -61,9 +60,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)awakeFromNib {
 	[super awakeFromNib];
 
-	if (!initialized) {
+	if (!ps_viewcontroller_initialized) {
 		toolbarLock = [[NSLock alloc] init];
-		//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
@@ -165,8 +163,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBibleTabViaNotification) name:NotificationShowBibleTab object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchToFullscreen) name:NotificationSwitchToFullscreen object:nil];
-		//[pool release];
-		initialized = true;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewWithSelectedBookChapterVerse:) name:NotificationUpdateSelectedReference object:nil];
+		ps_viewcontroller_initialized = true;
 	}
 	
 }
@@ -562,6 +560,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //	NSString *bookName = [refSelectorController bookName:book];
 //	[self updateViewWithSelectedBookName:bookName chapter:chapter verse:verse]; 
 //}
+
+- (void)updateViewWithSelectedBookChapterVerse:(NSNotification *)notification {
+	NSDictionary *bcv = nil;
+	if(notification) {
+		bcv = [notification object];
+	}
+	if(!bcv) return;
+	
+	NSString *bookNameString = [bcv objectForKey:BookNameString];
+	NSInteger chapter = [(NSString*)[bcv objectForKey:ChapterString] integerValue];
+	NSInteger verse = [(NSString*)[bcv objectForKey:VerseString] integerValue];
+	[self updateViewWithSelectedBookName:bookNameString chapter:chapter verse:verse];
+}
 
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];

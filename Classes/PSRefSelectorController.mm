@@ -74,8 +74,8 @@
 	//BOOL refPickerMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"refPickerPreference"];
 	
 	if([refNavigationController.view superview]) {
-		//[ViewController hideModal:refNavigationController.view withTiming:0.3];
-		[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
+		//[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
+		[self dismissModalViewControllerAnimated:YES];
 	} else {
 		[self updateRefSelectorBooks];
 		[refTable reloadData];
@@ -85,8 +85,8 @@
 		[cancel release];
 		//refNavigationController.navigationItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
 		[refNavigationController popToRootViewControllerAnimated:NO];
-		//[ViewController showModal:refNavigationController.view withTiming:0.3];
 		[[viewController tabBarController] presentModalViewController:refNavigationController animated:YES];
+		
 
 		NSIndexPath *ip = nil;
 		int bookCount = [refSelectorBooks count];
@@ -327,9 +327,14 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	//jump to ch1, v1 of that book.
-	//[ViewController hideModal:self.navigationController.view withTiming:0.3];
-	[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
-	[viewController updateViewWithSelectedBookName:[[refSelectorBooks objectAtIndex:indexPath.section] name] chapter:1 verse:1];
+	//[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
+	//[viewController updateViewWithSelectedBookName:[[refSelectorBooks objectAtIndex:indexPath.section] name] chapter:1 verse:1];
+	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
+	[bcvDict setObject:[[refSelectorBooks objectAtIndex:indexPath.section] name] forKey:BookNameString];
+	[bcvDict setObject:@"1" forKey:ChapterString];
+	[bcvDict setObject:@"1" forKey:VerseString];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
