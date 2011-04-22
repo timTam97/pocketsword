@@ -64,6 +64,8 @@
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
 		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
 		0515E2D310C8E32900F58382 /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
+		0516CF24136124CD0058E022 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0516CF23136124CD0058E022 /* MainWindow-iPad.xib */; };
+		0516CF25136124CD0058E022 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0516CF23136124CD0058E022 /* MainWindow-iPad.xib */; };
 		051B4BE812D5A2E5004982A7 /* PSBookmarkObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */; };
 		051B4BE912D5A2E5004982A7 /* PSBookmarkObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */; };
 		051B4BF712D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */; };
@@ -898,6 +900,19 @@
 		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
 		0513AE8310C0DC3900E414D9 /* forward-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "forward-white.png"; path = "Resources/forward-white.png"; sourceTree = "<group>"; };
 		0515E2D210C8E32900F58382 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Downloader.xib; sourceTree = "<group>"; };
+		0516CF06136121E70058E022 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = "English.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF27136124F20058E022 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = "sv.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF28136125020058E022 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = "cs.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF29136125060058E022 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = "es.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF2A1361250B0058E022 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = "fr.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF2B136125100058E022 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = "it.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF2C136125150058E022 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = "ja.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF2D136125190058E022 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = "ko.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF2E1361251C0058E022 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = "nl.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF2F136125210058E022 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = "ru.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF30136125240058E022 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = "uk.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF311361252A0058E022 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		0516CF321361252F0058E022 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		051B4BE612D5A2E5004982A7 /* PSBookmarkObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkObject.h; path = Classes/PSBookmarkObject.h; sourceTree = "<group>"; };
 		051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkObject.m; path = Classes/PSBookmarkObject.m; sourceTree = "<group>"; };
 		051B4BF512D5A6B6004982A7 /* PSBookmarkFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolder.h; path = Classes/PSBookmarkFolder.h; sourceTree = "<group>"; };
@@ -1916,6 +1931,14 @@
 			name = "PS-controllers";
 			sourceTree = "<group>";
 		};
+		0516CF04136121DA0058E022 /* Resources-iPad */ = {
+			isa = PBXGroup;
+			children = (
+				0516CF23136124CD0058E022 /* MainWindow-iPad.xib */,
+			);
+			name = "Resources-iPad";
+			sourceTree = "<group>";
+		};
 		0527595E10884F64004FB0E0 /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -2923,6 +2946,7 @@
 				0542F6C110BE75570088A721 /* externals */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				0516CF04136121DA0058E022 /* Resources-iPad */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				052B52841101A32900FFDF01 /* Settings.bundle */,
@@ -3463,6 +3487,7 @@
 				056BC73B12F0E8E00029F3A2 /* folder@2x.png in Resources */,
 				056BCC7F12F2CD7C0029F3A2 /* HistoryController.xib in Resources */,
 				056BCC9512F2DE780029F3A2 /* PSSearchController.xib in Resources */,
+				0516CF25136124CD0058E022 /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3551,6 +3576,7 @@
 				056BC73D12F0E8E00029F3A2 /* folder@2x.png in Resources */,
 				056BCC7E12F2CD7C0029F3A2 /* HistoryController.xib in Resources */,
 				056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */,
+				0516CF24136124CD0058E022 /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4275,6 +4301,26 @@
 			name = Downloader.xib;
 			sourceTree = "<group>";
 		};
+		0516CF23136124CD0058E022 /* MainWindow-iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0516CF06136121E70058E022 /* English */,
+				0516CF27136124F20058E022 /* sv */,
+				0516CF28136125020058E022 /* cs */,
+				0516CF29136125060058E022 /* es */,
+				0516CF2A1361250B0058E022 /* fr */,
+				0516CF2B136125100058E022 /* it */,
+				0516CF2C136125150058E022 /* ja */,
+				0516CF2D136125190058E022 /* ko */,
+				0516CF2E1361251C0058E022 /* nl */,
+				0516CF2F136125210058E022 /* ru */,
+				0516CF30136125240058E022 /* uk */,
+				0516CF311361252A0058E022 /* zh-Hans */,
+				0516CF321361252F0058E022 /* zh-Hant */,
+			);
+			name = "MainWindow-iPad.xib";
+			sourceTree = "<group>";
+		};
 		054EF62210CD0EAF0091D269 /* IndexDownloader.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4534,6 +4580,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -4573,6 +4620,8 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -4580,6 +4629,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				COPY_PHASE_STRIP = YES;
@@ -4617,6 +4667,8 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -4721,6 +4773,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				COPY_PHASE_STRIP = YES;
@@ -4758,6 +4811,8 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "DC236071-1EE6-46FB-89B7-6040464530CE";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DC236071-1EE6-46FB-89B7-6040464530CE";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 			};
 			name = Distribution;
