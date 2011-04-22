@@ -11,8 +11,7 @@
 @interface PSVerseSelectorController : UITableViewController {
 	SwordBook *book;
 	NSInteger chapter;
-	IBOutlet UITableView *verseTable;
-	IBOutlet id viewController;
+	//IBOutlet UITableView *verseTable;
 }
 
 @property (retain, readwrite) SwordBook *book;

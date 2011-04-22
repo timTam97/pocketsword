@@ -72,6 +72,7 @@ typedef enum {
 	
 	// Bible & Commentary tab
 	IBOutlet PSRefSelectorController	*refSelectorController;
+	IBOutlet UINavigationController		*refNavigationController;
 	IBOutlet UIView						*infoView;
 	IBOutlet UIWebView					*infoWebView;
 	UIView								*refTitleSplashView;

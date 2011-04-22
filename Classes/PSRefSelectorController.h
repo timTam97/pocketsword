@@ -15,7 +15,7 @@ typedef enum {
 } RefToucherType;
 
 
-@interface PSRefSelectorController : UIViewController {
+@interface PSRefSelectorController : UITableViewController {
 	NSArray *refSelectorBooks;
 	NSArray *refSelectorBooksIndex;
 	NSString *currentlyViewedBookName;
@@ -24,11 +24,7 @@ typedef enum {
 	NSInteger refSelectorBook;
 	NSInteger refSelectorChapter;
 	
-	IBOutlet UITableView					*refTable;
 	IBOutlet UINavigationController	*refNavigationController;
-
-	//IBOutlet id moduleManager;
-	IBOutlet id viewController;
 }
 
 @property (assign) NSInteger refSelectorBook;
@@ -43,6 +39,6 @@ typedef enum {
 - (NSString*)bookShortName:(NSInteger)bookIndex;
 - (NSString*)bookOSISName:(NSInteger)bookIndex;
 - (NSInteger)bookIndex:(NSString*)bookName;
-- (void)toggleNavigation;
+- (void)willShowNavigation;
 
 @end

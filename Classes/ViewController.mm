@@ -538,28 +538,21 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)toggleNavigation {
-	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	BOOL showingBibleTab = NO;
-	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		// bible tab
-		if(![[PSModuleController defaultModuleController] primaryBible])
-		   return;
-		else
-		   showingBibleTab = YES;
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] && !([[PSModuleController defaultModuleController] primaryCommentary])) {
-		// commentary tab
-		return;
+	if([refNavigationController.view superview]) {
+		[[self tabBarController] dismissModalViewControllerAnimated:YES];
+	} else {
+		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+			// bible tab
+			if(![[PSModuleController defaultModuleController] primaryBible])
+			   return;
+		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] && !([[PSModuleController defaultModuleController] primaryCommentary])) {
+			// commentary tab
+			return;
+		}
+		[refSelectorController willShowNavigation];
+		[[self tabBarController] presentModalViewController:refNavigationController animated:YES];
 	}
-	[refSelectorController toggleNavigation];
-	
-	//[pool release];
 }
-
-// Loads the chapter selected from the picker into the Web View
-//- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse {
-//	NSString *bookName = [refSelectorController bookName:book];
-//	[self updateViewWithSelectedBookName:bookName chapter:chapter verse:verse]; 
-//}
 
 - (void)updateViewWithSelectedBookChapterVerse:(NSNotification *)notification {
 	NSDictionary *bcv = nil;

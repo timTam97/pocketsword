@@ -7,7 +7,7 @@
 //
 
 #import "PSVerseSelectorController.h"
-#import "ViewController.h"
+#import "globals.h"
 
 
 @implementation PSVerseSelectorController
@@ -17,9 +17,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		verseTable.backgroundColor = [UIColor blackColor];
+		self.tableView.backgroundColor = [UIColor blackColor];
 	} else {
-		verseTable.backgroundColor = [UIColor whiteColor];
+		self.tableView.backgroundColor = [UIColor whiteColor];
 	}
 	self.navigationItem.title = [NSString stringWithFormat:@"%@ %d", [book name], chapter];
     [super viewWillAppear:animated];
@@ -87,9 +87,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	//[ViewController hideModal:self.navigationController.view withTiming:0.3];
-	[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
-	[viewController updateViewWithSelectedBookName:[book name] chapter:chapter verse:(indexPath.section+1)];
+	[self dismissModalViewControllerAnimated:YES];
+	//[viewController updateViewWithSelectedBookName:[book name] chapter:chapter verse:(indexPath.section+1)];
+	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
+	[bcvDict setObject:[book name] forKey:BookNameString];
+	[bcvDict setObject:[NSString stringWithFormat:@"%d", chapter] forKey:ChapterString];
+	[bcvDict setObject:[NSString stringWithFormat:@"%d", (indexPath.section+1)] forKey:VerseString];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
 }
 
 - (void)dealloc {

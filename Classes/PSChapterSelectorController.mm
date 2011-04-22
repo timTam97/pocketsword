@@ -9,7 +9,6 @@
 #import "PSChapterSelectorController.h"
 #import "PSVerseSelectorController.h"
 #import "globals.h"
-#import "ViewController.h"
 
 @implementation PSChapterSelectorController
 
@@ -21,13 +20,13 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-//	NSIndexPath *tableSelection = [chapterTable indexPathForSelectedRow];
+//	NSIndexPath *tableSelection = [tableView indexPathForSelectedRow];
 //	if(tableSelection) {
-//		[chapterTable deselectRowAtIndexPath:tableSelection animated:YES];
+//		[tableView deselectRowAtIndexPath:tableSelection animated:YES];
 //	}
 	if(needToScroll && (currentChapter > 0)) {
 		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: (currentChapter-1)];
-		[chapterTable scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+		[self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 		needToScroll = NO;
 	}
 	[super viewDidAppear:animated];
@@ -36,9 +35,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		chapterTable.backgroundColor = [UIColor blackColor];
+		self.tableView.backgroundColor = [UIColor blackColor];
 	} else {
-		chapterTable.backgroundColor = [UIColor whiteColor];
+		self.tableView.backgroundColor = [UIColor whiteColor];
 	}
 	self.navigationItem.title = [book name];//[NSString stringWithFormat:@"%@ %@", [book name], NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter")];
 	NSString *currentBook = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastRef];
@@ -124,10 +123,7 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	PSVerseSelectorController *verseSelectorController = [[PSVerseSelectorController alloc] init];
-	NSDictionary *proxyDict = [NSDictionary dictionaryWithObject:viewController forKey:@"viewController"];
-	NSDictionary *optionsDict = [NSDictionary dictionaryWithObject:proxyDict forKey:UINibExternalObjects];
-	[[NSBundle mainBundle] loadNibNamed:@"PSVerseSelectorController" owner:verseSelectorController options:optionsDict];
+	PSVerseSelectorController *verseSelectorController = [[PSVerseSelectorController alloc] initWithStyle:UITableViewStylePlain];
 	verseSelectorController.book = book;
 	verseSelectorController.chapter = indexPath.section+1;
 	[self.navigationController pushViewController:verseSelectorController animated:YES];
@@ -135,10 +131,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	//jump to ch1, v1 of that book.
-	//[ViewController hideModal:self.navigationController.view withTiming:0.3];
-	[[viewController tabBarController] dismissModalViewControllerAnimated:YES];
-	[viewController updateViewWithSelectedBookName:[book name] chapter:(indexPath.section+1) verse:1];
+	//jump to v1 of that book & ch.
+	[self dismissModalViewControllerAnimated:YES];
+	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
+	[bcvDict setObject:[book name] forKey:BookNameString];
+	[bcvDict setObject:[NSString stringWithFormat:@"%d", (indexPath.section+1)] forKey:ChapterString];
+	[bcvDict setObject:@"1" forKey:VerseString];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
 }
 
 - (void)dealloc {
