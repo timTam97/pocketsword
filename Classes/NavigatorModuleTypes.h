@@ -14,7 +14,6 @@
 	IBOutlet id navigatorModuleLanguages;
 	NSArray *dataArray;
 	IBOutlet NavigatorSources *navigatorSources;
-	//IBOutlet UITabBarController *tabController;
 
 	// Status view
 	IBOutlet UIViewController *statusController;

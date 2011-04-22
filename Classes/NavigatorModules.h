@@ -15,8 +15,6 @@
 	IBOutlet id table;
 	IBOutlet id navigatorLeafView;
 	NSArray *dataArray;
-	//IBOutlet UITabBarController *tabController;
-	IBOutlet NavigatorSources *navigatorSources;
 }
 
 @property (retain, readwrite) NSArray *dataArray;

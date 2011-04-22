@@ -12,8 +12,6 @@
 	IBOutlet id table;
 	IBOutlet id navigatorModules;
 	PSModuleType *data;
-	//IBOutlet UITabBarController *tabController;
-	IBOutlet NavigatorSources *navigatorSources;
 }
 
 @property (retain, readwrite) PSModuleType *data;

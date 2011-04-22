@@ -225,7 +225,6 @@ NSTimer *downloadTimer;
 - (void)hideOperationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	//[tabController dismissModalViewControllerAnimated: YES];
 	[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
 	[downloadTimer invalidate];
 	

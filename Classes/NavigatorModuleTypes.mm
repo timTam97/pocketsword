@@ -95,7 +95,7 @@ NSTimer *refreshTimer;
 	[((NavigatorModuleLanguages*)navigatorModuleLanguages) setData:[dataArray objectAtIndex:indexPath.row]];
 	((NavigatorModuleLanguages*)navigatorModuleLanguages).title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
 	[((NavigatorModuleLanguages*)navigatorModuleLanguages) reloadTable];
-	[[navigatorSources tabController].moreNavigationController pushViewController:navigatorModuleLanguages animated:YES];
+	[self.navigationController pushViewController:navigatorModuleLanguages animated:YES];
 	
 }
 
@@ -124,7 +124,7 @@ NSTimer *refreshTimer;
 		return;
 	}
 	
-	[[navigatorSources tabController].moreNavigationController popViewControllerAnimated: NO];
+	[self.navigationController popViewControllerAnimated: NO];
 	//[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
 	//testing:
 	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
@@ -160,6 +160,7 @@ NSTimer *refreshTimer;
 	[statusText setText: @""];
 	//[ViewController showModal:statusController.view withTiming:0.3];
 	[navigatorSources.tabController presentModalViewController: statusController animated: YES];
+	//[self.navigationController.topViewController.tabBarController presentModalViewController: statusController animated: YES];
 	
 	[pool release];
 }

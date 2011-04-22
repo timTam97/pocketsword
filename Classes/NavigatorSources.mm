@@ -22,6 +22,7 @@
 	[super viewDidLoad];
 	
 	self.navigationItem.title = NSLocalizedString(@"InstallSourcesTitle", @"Sources");
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	[self addManualInstallButton];
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:NotificationModuleMaintainerModeChanged object:nil];
 }
@@ -51,7 +52,7 @@
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
 	}
 	
-	[actionSheet showFromTabBar:tabController.tabBar];
+	[actionSheet showFromTabBar:self.tabBarController.tabBar];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -98,26 +99,10 @@
 	} else {
 		[self performSelectorOnMainThread:@selector(resetTableSelection) withObject:nil waitUntilDone:YES];
 	}
-//	for(int i=0;i<5;i++) {
-//		if([[tabController.viewControllers objectAtIndex:i] isMemberOfClass:[NavigatorSources class]])
-//			NSLog(@"Downloader is NOT in the More Tab (is tab number %d)", i);
-//	}
 }
 
-//- (void)viewDidAppear:(BOOL)animated
-//{
-//}
-
 - (IBAction)manualAddModule:(id)sender {
-//    [UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-//                           forView:tabController.moreNavigationController.view
-//                             cache:YES];
-//	
-//    [UIView setAnimationDuration:1];
-//	[tabController.moreNavigationController.view addSubview:[manualInstallViewController view]];
-//    [UIView commitAnimations];
-	[tabController presentModalViewController:manualInstallViewController animated:YES];
+	[self presentModalViewController:manualInstallViewController animated:YES];
 
 	[manualInstallViewController startServer];
 }
@@ -183,8 +168,7 @@
 	// need to set the current install source, for when we want to install a module.
 	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];
 	
-	[tabController.moreNavigationController pushViewController:navigatorModuleTypes animated:YES];
-	
+	[self.navigationController pushViewController:navigatorModuleTypes animated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

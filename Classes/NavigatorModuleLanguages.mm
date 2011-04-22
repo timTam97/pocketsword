@@ -65,7 +65,7 @@
 	[((NavigatorModules*)navigatorModules) setDataArray:[data.modules objectAtIndex:indexPath.row]];
 	((NavigatorModules*)navigatorModules).title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
 	[((NavigatorModules*)navigatorModules) reloadTable];
-	[[navigatorSources tabController].moreNavigationController pushViewController:navigatorModules animated:YES];
+	[self.navigationController pushViewController:navigatorModules animated:YES];
 	
 }
 

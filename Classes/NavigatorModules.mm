@@ -86,7 +86,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	[((NavigatorLeafView*)navigatorLeafView) setModule:(SwordModule*)[dataArray objectAtIndex:indexPath.row]];
-	[[navigatorSources tabController].moreNavigationController pushViewController:navigatorLeafView animated:YES];
+	[self.navigationController pushViewController:navigatorLeafView animated:YES];
 	
 }
 
