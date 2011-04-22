@@ -8,7 +8,7 @@
 
 #import "PSPreferencesFontTableViewController.h"
 
-@interface PSBasePreferencesController : UIViewController {
+@interface PSBasePreferencesController : UITableViewController {
 
 }
 

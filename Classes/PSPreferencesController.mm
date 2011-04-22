@@ -70,15 +70,17 @@
 	[super viewDidLoad];
 	preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	fontSizeLabel.textColor = [UIColor darkTextColor];
+	fontSizeLabel.backgroundColor = [UIColor clearColor];
 	fontSizeLabel.text = @"12";
 }
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -111,8 +113,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[preferencesTable reloadData];
-	//[preferencesTable reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, PREF__SECTIONS)] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -201,6 +202,18 @@
 //		cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifierPlain] autorelease ];
 //	}
 	BOOL resetCell = YES;
+	CGFloat xx = 0.0;
+	BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		xx = 160.0;
+		if(deviceIsPad) {
+			xx += 95.0;
+		}
+	}
+	if(deviceIsPad) {
+		xx += 420.0;
+	}
 	
 	switch (indexPath.section) {
 		case DISPLAY_SECTION :
@@ -210,8 +223,11 @@
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 					if(!cell) {
 						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
-						
-						UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(170, 0, 125, 50) ];
+						CGFloat fssX = 170.0;
+						if(deviceIsPad) {
+							fssX = 135.0;
+						}
+						UISlider *fontSizeSlider = [[UISlider alloc] initWithFrame:CGRectMake(fssX, 0, 125, 50)];
 						fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 						fontSizeSlider.minimumValue = 10.0;
 						fontSizeSlider.maximumValue = 20.0;
@@ -225,9 +241,9 @@
 						}
 						fontSizeSlider.continuous = YES;
 						[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
-						[ cell addSubview: fontSizeSlider ];
-						[ fontSizeSlider release ];
-						[cell addSubview: fontSizeLabel];
+						[cell addSubview:fontSizeSlider];
+						[fontSizeSlider release];
+						[cell addSubview:fontSizeLabel];
 					}
 					resetCell = NO;
 				}
@@ -336,14 +352,6 @@
 	//cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];//[UIFont systemFontOfSize:12.0];
 	cell.textLabel.textColor = [UIColor darkTextColor];
-	
-	CGFloat xx = 0.0;
-	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
-	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		xx = 160.0;
-	}
 	
 	if(resetCell) {
 		for(UIView *subv in [cell subviews]) {
@@ -737,7 +745,7 @@
 			switch (indexPath.row) {
 				case FONT_NAME_ROW :
 					((PSPreferencesFontTableViewController*)fontTableViewController).moduleName = nil;
-					[tabController.moreNavigationController pushViewController:fontTableViewController animated:YES];
+					[self.navigationController pushViewController:fontTableViewController animated:YES];
 					break;
 			}
 			break;
@@ -746,12 +754,12 @@
 				case STRONGS_G_ROW:
 					//strongs greek
 					[moduleSelectorTableViewController setTableType: StrongsGreek];
-					[tabController.moreNavigationController pushViewController:moduleSelectorTableViewController animated:YES];
+					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
 					break;
 				case STRONGS_H_ROW:
 					//strongs hebrew
 					[moduleSelectorTableViewController setTableType: StrongsHebrew];
-					[tabController.moreNavigationController pushViewController:moduleSelectorTableViewController animated:YES];
+					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
 					break;
 			}
 			break;
@@ -760,7 +768,7 @@
 				case MORPH_G_ROW:
 					//greek morphology
 					[moduleSelectorTableViewController setTableType: MorphGreek];
-					[tabController.moreNavigationController pushViewController:moduleSelectorTableViewController animated:YES];
+					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
 					break;
 			}
 			break;
@@ -768,7 +776,7 @@
 }
 
 - (void)hideFontTableView {
-	[tabController.moreNavigationController popViewControllerAnimated:YES];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)rotationLockChanged:(UISwitch *)sender {
@@ -833,19 +841,19 @@
 - (void)morphGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsMorphGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)strongsGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)strongsHebrewModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsHebrewModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)xrefChanged:(UISwitch *)sender {
@@ -876,8 +884,6 @@
 	NSInteger f = [sender value];
 	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:DefaultsFontSizePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
-	//[preferencesTable reloadData];
 	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
@@ -908,7 +914,7 @@
 - (void)fontNameChanged:(NSString *)newFont {
 	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 

@@ -16,7 +16,7 @@
 @interface PSPreferencesController : PSBasePreferencesController {
 	
 	IBOutlet UITabBarItem *preferencesTabBarItem;
-	IBOutlet UITableView *preferencesTable;
+	//IBOutlet UITableView *preferencesTable;
 	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet id fontTableViewController;
