@@ -44,7 +44,7 @@
 		//tabBarHeight = TAB_BAR_LANDSCAPE_HEIGHT;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
 		width = screen.height;
-		topBarHeight = TOP_BAR_LANDSCAPE_HEIGHT;
+		topBarHeight = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
 		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight;// - [UIApplication sharedApplication].statusBarFrame.size.width;
 		if(useStatusBar) {
 			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.width;
@@ -84,6 +84,10 @@
 }
 
 +(void)resizeViewsOnRotateWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView bottomBar:(UIView*)bottomBar fromOrientation:(UIInterfaceOrientation)fromInterfaceOrientation toOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		return;
+	}	
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	CGFloat topBarHeight, bottomBarHeight, viewHeight, width, bottomBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
@@ -92,14 +96,14 @@
 		width = screen.width;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
 		bottomBarY = screen.height - [UIApplication sharedApplication].statusBarFrame.size.height - (bottomBarHeight / 2.0);
-		topBarHeight = TOP_BAR_LANDSCAPE_HEIGHT;
+		topBarHeight = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
 		viewHeight = screen.height - topBarHeight - tabBarHeight - bottomBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
 		redrawInNewFrames = YES;
 	} else if((toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) && !(fromInterfaceOrientation == UIInterfaceOrientationPortrait || fromInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) {
 		width = screen.height;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_PORTRAIT_HEIGHT : 0.0;
 		bottomBarY = screen.width - [UIApplication sharedApplication].statusBarFrame.size.width - (bottomBarHeight / 2.0);
-		topBarHeight = TOP_BAR_PORTRAIT_HEIGHT;
+		topBarHeight = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
 		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
 		redrawInNewFrames = YES;
 	}

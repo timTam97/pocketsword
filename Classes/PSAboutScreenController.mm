@@ -135,30 +135,30 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
-	CGFloat height = screen.height;
-	CGFloat width = screen.width;
-	CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-	//UIDeviceOrientation toInterfaceOrientation = [[UIDevice currentDevice] orientation];
-	UIInterfaceOrientation intOrientation = [UIApplication sharedApplication].statusBarOrientation;
-	if([UIApplication sharedApplication].statusBarHidden) {
-		intOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-	}
-	if(intOrientation == UIInterfaceOrientationLandscapeLeft || intOrientation == UIInterfaceOrientationLandscapeRight) {
-		height = screen.width;
-		width = screen.height;
-		statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.width;
-	}
-	height -= statusBarHeight + self.tabBarController.tabBar.frame.size.height + self.navigationController.navigationBar.frame.size.height;
-	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//	CGSize screen = [[UIScreen mainScreen] bounds].size;
+//	CGFloat height = screen.height;
+//	CGFloat width = screen.width;
+//	CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+//	UIInterfaceOrientation intOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//	if([UIApplication sharedApplication].statusBarHidden) {
+//		intOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
+//	}
+//	if(intOrientation == UIInterfaceOrientationLandscapeLeft || intOrientation == UIInterfaceOrientationLandscapeRight) {
+//		height = screen.width;
+//		width = screen.height;
+//		statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.width;
+//	}
+//	height -= statusBarHeight + self.tabBarController.tabBar.frame.size.height + self.navigationController.navigationBar.frame.size.height;
+//	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+//	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
 	aboutWebView.delegate = self;
 	
-	[self.view addSubview:aboutWebView];
-	[aboutWebView release];
+//	[self.view addSubview:aboutWebView];
+//	[aboutWebView release];
 	
 	
 	self.navigationItem.rightBarButtonItem = nil;
@@ -175,7 +175,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	[aboutWebView removeFromSuperview];
+//	[aboutWebView removeFromSuperview];
 	self.navigationItem.rightBarButtonItem = nil;
 }
 

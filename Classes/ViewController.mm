@@ -31,6 +31,8 @@
 
 #define INFO_LANDSCAPE_HEIGHT 100.0
 #define INFO_PORTRAIT_HEIGHT 160.0
+#define INFO_IPAD_LANDSCAPE_HEIGHT 200.0
+#define INFO_IPAD_PORTRAIT_HEIGHT 260.0
 
 @implementation ViewController
 
@@ -1159,21 +1161,22 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight)
 //				interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
 		}
+		BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
+			infoView.frame = CGRectMake(0, 0, screen.height, ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT));
 			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, screen.height, INFO_LANDSCAPE_HEIGHT);
+			infoView.frame = CGRectMake(0, 0, screen.height, ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT));
 			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
+			infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
 		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
+			infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
 		}
 		[self showInfoModal: infoView withTiming: 0.3];
 	}
@@ -1206,6 +1209,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			//interfaceOrientation = tabController.interfaceOrientation;
 			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 		}
+		BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
 		CGFloat x,y;
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
