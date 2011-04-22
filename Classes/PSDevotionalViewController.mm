@@ -37,6 +37,7 @@ BOOL loaded;
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
 	//UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:[[PSModuleController defaultModuleController] viewController] action:@selector(toggleModulesList)];
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
 	self.navigationItem.rightBarButtonItem = moduleButton;
 	[moduleButton release];

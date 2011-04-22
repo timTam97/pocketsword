@@ -50,5 +50,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSMainNibFile~ipad</key>
+	<string>MainWindow-iPad</string>
 </dict>
 </plist>

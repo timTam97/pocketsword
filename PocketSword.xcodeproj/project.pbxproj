@@ -1931,12 +1931,12 @@
 			name = "PS-controllers";
 			sourceTree = "<group>";
 		};
-		0516CF04136121DA0058E022 /* Resources-iPad */ = {
+		0516CF04136121DA0058E022 /* xibs-iPad */ = {
 			isa = PBXGroup;
 			children = (
 				0516CF23136124CD0058E022 /* MainWindow-iPad.xib */,
 			);
-			name = "Resources-iPad";
+			name = "xibs-iPad";
 			sourceTree = "<group>";
 		};
 		0527595E10884F64004FB0E0 /* include */ = {
@@ -2946,7 +2946,6 @@
 				0542F6C110BE75570088A721 /* externals */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
-				0516CF04136121DA0058E022 /* Resources-iPad */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				052B52841101A32900FFDF01 /* Settings.bundle */,
@@ -2970,6 +2969,7 @@
 			children = (
 				052851BB1226614600A99ECD /* misc */,
 				052851BA1226613100A99ECD /* xibs */,
+				0516CF04136121DA0058E022 /* xibs-iPad */,
 				052851B91226611C00A99ECD /* zips */,
 				052851B8122660F600A99ECD /* img */,
 			);
