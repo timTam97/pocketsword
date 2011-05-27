@@ -1133,6 +1133,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		case CommentaryTab:
 			[commentaryWebView highlightAllOccurencesOfString: term];
 			break;
+        case DictionaryTab:
+        case DevotionalTab:
+        case DownloadsTab:
+        case PreferencesTab:
+        default:
+            break;
 	}
 }
 
@@ -1209,7 +1215,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			//interfaceOrientation = tabController.interfaceOrientation;
 			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 		}
-		BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+		//BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
 		CGFloat x,y;
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
@@ -1475,6 +1481,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}
 		}
 			break;
+        case DictionaryTab:
+        case DevotionalTab:
+        default:
+            break;
 	}
 }
 
