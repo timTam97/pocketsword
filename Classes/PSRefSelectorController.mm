@@ -55,19 +55,27 @@
 }
 
 - (void)dismissNavigation {
-	[self dismissModalViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
+}
+
+- (void)setupNavigation {
+	[self updateRefSelectorBooks];
+	[self.tableView reloadData];
+	refNavigationController.navigationBar.topItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
+	[refNavigationController popToRootViewControllerAnimated:NO];		
+	refNavigationController.navigationBar.topItem.leftBarButtonItem = nil;
+    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+        //the iPad doesn't want the cancel button
+        return;
+    }
+	UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissNavigation)];
+	refNavigationController.navigationBar.topItem.leftBarButtonItem = cancel;
+	[cancel release];
 }
 
 - (void)willShowNavigation {
 	
-	[self updateRefSelectorBooks];
-	[self.tableView reloadData];
-	refNavigationController.navigationBar.topItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
-	UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissNavigation)];
-	refNavigationController.navigationBar.topItem.leftBarButtonItem = cancel;
-	[cancel release];
-	[refNavigationController popToRootViewControllerAnimated:NO];		
-
 	NSIndexPath *ip = nil;
 	int bookCount = [refSelectorBooks count];
 	for(int i=0;i<bookCount;i++) {
@@ -181,7 +189,8 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	//jump to ch1, v1 of that book.
-	[self dismissModalViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[[refSelectorBooks objectAtIndex:indexPath.section] name] forKey:BookNameString];
 	[bcvDict setObject:@"1" forKey:ChapterString];

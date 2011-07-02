@@ -87,8 +87,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[self dismissModalViewControllerAnimated:YES];
-	//[viewController updateViewWithSelectedBookName:[book name] chapter:chapter verse:(indexPath.section+1)];
+	//[self dismissModalViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[book name] forKey:BookNameString];
 	[bcvDict setObject:[NSString stringWithFormat:@"%d", chapter] forKey:ChapterString];

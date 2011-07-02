@@ -58,6 +58,7 @@ typedef enum {
 	IBOutlet PSWebView					*bibleWebView;
 	IBOutlet UIActivityIndicatorView	*bibleActivity;
 	IBOutlet UISegmentedControl			*bibleSegmentedControl;
+    IBOutlet UIBarButtonItem            *bibleRefButton;
 	IBOutlet UIBarButtonItem			*bibleSearchButton;
 	IBOutlet PSBibleViewController		*bibleTabController;
 	IBOutlet UIBarButtonItem			*bibleTitle;
@@ -66,6 +67,7 @@ typedef enum {
 	IBOutlet PSWebView					*commentaryWebView;
 	IBOutlet UIActivityIndicatorView	*commentaryActivity;
 	IBOutlet UISegmentedControl			*commentarySegmentedControl;
+    IBOutlet UIBarButtonItem            *commentaryRefButton;
 	IBOutlet UIBarButtonItem			*commentarySearchButton;
 	IBOutlet PSCommentaryViewController *commentaryTabController;
 	IBOutlet UIBarButtonItem			*commentaryTitle;
@@ -77,6 +79,7 @@ typedef enum {
 	IBOutlet UIWebView					*infoWebView;
 	UIView								*refTitleSplashView;
 	NSTimer								*refTitleSplashTimer;
+    id                                  refNavigationPopoverController;
 
 	// MultiList
 	UITabBarController					*multiListController;
@@ -91,9 +94,6 @@ typedef enum {
 	IBOutlet UIWebView					*devotionalWebView;
 	
 	// Bookmarks tab
-//	IBOutlet id							bookmarksTable;
-//	IBOutlet id							bookmarksEditBtn;
-//	IBOutlet UINavigationItem			*bookmarksNavBar;
 	
 	// Preferences tab
 	
@@ -108,9 +108,6 @@ typedef enum {
 	NSLock								*toolbarLock;
 	
 	PSSearchHistoryItem					*savedSearchHistoryItem;
-//	NSString							*savedSearchTerm;
-//	NSString							*searchTermToPerform;
-//	NSMutableArray						*savedSearchResults;
 	ShownTab							savedSearchResultsTab;
 }
 

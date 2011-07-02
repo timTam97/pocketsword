@@ -132,7 +132,8 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	//jump to v1 of that book & ch.
-	[self dismissModalViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[book name] forKey:BookNameString];
 	[bcvDict setObject:[NSString stringWithFormat:@"%d", (indexPath.section+1)] forKey:ChapterString];

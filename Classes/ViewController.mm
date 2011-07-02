@@ -64,6 +64,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 	if (!ps_viewcontroller_initialized) {
 		toolbarLock = [[NSLock alloc] init];
+        refNavigationPopoverController = nil;
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
@@ -152,6 +153,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMultiList) name:NotificationToggleMultiList object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList:) name:NotificationToggleModuleList object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleNavigation) name:NotificationToggleNavigation object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
@@ -540,19 +542,47 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (IBAction)toggleNavigation {
-	if([refNavigationController.view superview]) {
-		[[self tabBarController] dismissModalViewControllerAnimated:YES];
+    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+	if([refNavigationController.view superview] || [refNavigationPopoverController isPopoverVisible]) {
+        if(!iPad) {
+            [[self tabBarController] dismissModalViewControllerAnimated:YES];
+        } else {
+            [refNavigationPopoverController dismissPopoverAnimated:YES];
+            //[refNavigationPopoverController release];
+            refNavigationPopoverController = nil;
+        }
 	} else {
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// bible tab
-			if(![[PSModuleController defaultModuleController] primaryBible])
+			if(![[PSModuleController defaultModuleController] primaryBible]) {
+                //no Bible selected, so ignore...
 			   return;
-		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] && !([[PSModuleController defaultModuleController] primaryCommentary])) {
+            }
+            [refSelectorController setupNavigation];
+            if(!iPad) {
+                [refSelectorController willShowNavigation];
+                [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
+            } else {
+                refNavigationPopoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
+                [refNavigationPopoverController presentPopoverFromBarButtonItem:bibleRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                [refSelectorController willShowNavigation];
+            }
+		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
-			return;
-		}
-		[refSelectorController willShowNavigation];
-		[[self tabBarController] presentModalViewController:refNavigationController animated:YES];
+            if(!([[PSModuleController defaultModuleController] primaryCommentary])) {
+                //no Commentary selected, so ignore...
+                return;
+            }
+            [refSelectorController setupNavigation];
+            if(!iPad) {
+                [refSelectorController willShowNavigation];
+                [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
+            } else {
+                refNavigationPopoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
+                [refNavigationPopoverController presentPopoverFromBarButtonItem:commentaryRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                [refSelectorController willShowNavigation];
+            }
+        }
 	}
 }
 

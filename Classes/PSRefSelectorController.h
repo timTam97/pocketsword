@@ -40,5 +40,6 @@ typedef enum {
 - (NSString*)bookOSISName:(NSInteger)bookIndex;
 - (NSInteger)bookIndex:(NSString*)bookName;
 - (void)willShowNavigation;
+- (void)setupNavigation;
 
 @end

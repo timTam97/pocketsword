@@ -141,6 +141,7 @@ typedef enum {
 
 #define NotificationToggleMultiList				@"NotificationToggleMultiList"
 #define NotificationToggleModuleList			@"NotificationToggleModuleList"
+#define NotificationToggleNavigation            @"NotificationToggleNavigation"
 
 #define NotificationHideInfoPane				@"NotificationHideInfoPane"
 #define NotificationShowInfoPane				@"NotificationShowInfoPane"
