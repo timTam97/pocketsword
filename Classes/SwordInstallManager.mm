@@ -72,7 +72,7 @@ float status;
 					
                     // create default HTTP Install source
                     SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
-                    [is setCaption:@"CrossWire 1 (http)"];
+                    [is setCaption:@"CrossWire 1"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/raw"];
 					[is setUID:@"20081216195754"];
@@ -80,7 +80,7 @@ float status;
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
-                    [is setCaption:@"CrossWire 2 (http)"];
+                    [is setCaption:@"CrossWire 2"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/betaraw"];                    
 					[is setUID:@"20090224125400"];//20090224125400
@@ -89,9 +89,9 @@ float status;
                     [self addInstallSource:is withReinitialize:NO];
 					
 					[is setType:INSTALLSOURCE_TYPE_FTP];
-                    [is setCaption:@"CrossWire 3"];
+                    [is setCaption:@"CrossWire 3 (av11n)"];
                     [is setSource:@"ftp.crosswire.org"];
-                    [is setDirectory:@"/pub/sword/avraw"];                    
+                    [is setDirectory:@"/pub/sword/avraw"];
 					[is setUID:@"crosswire-av11n-http"];
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
@@ -127,6 +127,18 @@ float status;
 					[self reinitialize];
                     
                 } else {
+                    BOOL av11n = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedCWav11nRepository"];
+                    if(!av11n) {
+                        SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_FTP] autorelease];
+                        [is setCaption:@"CrossWire 3 (av11n)"];
+                        [is setSource:@"ftp.crosswire.org"];
+                        [is setDirectory:@"/pub/sword/avraw"];                    
+                        [is setUID:@"crosswire-av11n-http"];
+                        // add is
+                        [self addInstallSource:is withReinitialize:NO];
+                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepository"];
+                    }
+
                     // init installMgr
                     [self reinitialize];                
                 }
