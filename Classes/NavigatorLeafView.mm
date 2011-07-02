@@ -15,14 +15,7 @@
 @synthesize module;
 NSTimer *downloadTimer;
 
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	self.title = module.name;
-	self.navigationItem.rightBarButtonItem = nil;
-	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
-	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
-	[detailsView setBackgroundColor:backgroundColor];
-	
+- (NSString*)refreshInstallButton {
 	UIBarButtonItem *installBarButtonItem;
 	NSString *currentInstalledVersion = nil;
 	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
@@ -39,11 +32,33 @@ NSTimer *downloadTimer;
 		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstallButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(confirmInstall)];
 		[installBarButtonItem setEnabled:YES];
 	}
-	self.navigationItem.rightBarButtonItem = installBarButtonItem;
+    
+    if([[statusController view] superview]) {
+		[installBarButtonItem setEnabled:NO];
+    }
+    
+    self.navigationItem.rightBarButtonItem = installBarButtonItem;
 	[installBarButtonItem release];
+    
+    return currentInstalledVersion;
+}
+
+- (void)refreshDetailsView {
+    NSString *currentInstalledVersion = [self refreshInstallButton];
+
 	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
-	//DLog(@"%@", about);
 	[detailsView loadHTMLString:about baseURL:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	self.title = module.name;
+	self.navigationItem.rightBarButtonItem = nil;
+	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
+	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
+	[detailsView setBackgroundColor:backgroundColor];
+    
+    [self refreshDetailsView];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -154,10 +169,18 @@ NSTimer *downloadTimer;
 	[statusText setText: sText];
 	[statusText setLineBreakMode: UILineBreakModeWordWrap];
 
-	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	//[navController setNavigationBarHidden: YES];
-	//[navigationController presentModalViewController: navController animated: YES];
-	[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
+	//[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
+	//[[self navigationController] presentModalViewController: statusController animated: YES];
+    //[self presentModalViewController: statusController animated: YES];
+    [[statusController view] setAlpha:0.0];
+    [self.view addSubview:[statusController view]];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.5];
+    [[statusController view] setAlpha:1.0];
+    [UIView commitAnimations];
+    
+    [self refreshInstallButton];
 	
 	[pool release];
 }
@@ -166,6 +189,16 @@ NSTimer *downloadTimer;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
+    
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+
+    if(backgroundSupported) {
+        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+    }
 	
 	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
 
@@ -186,17 +219,15 @@ NSTimer *downloadTimer;
 	[statusBar setProgress: reporter->fileProgress];
 	[statusOverallBar setProgress: reporter->overallProgress];
 	
-	NSString *desc = [NSString stringWithCString:reporter->getDescription() encoding:[NSString defaultCStringEncoding]];
-	//DLog(@"%@", desc);
-	NSRange dataRange = [desc rangeOfString: @")"];
-	if(dataRange.location != NSNotFound) {
-		//desc = [NSString stringWithFormat: @"%@ %@)", [desc substringToIndex: dataRange.location], NSLocalizedString(@"files", @"")];
-		desc = [NSString stringWithFormat: @"%@ files)", [desc substringToIndex: dataRange.location]];
-	}
-	//DLog(@"%@", desc);
-	[statusOverallText setText: desc];
+//	NSString *desc = [NSString stringWithCString:reporter->getDescription() encoding:[NSString defaultCStringEncoding]];
+//	NSRange dataRange = [desc rangeOfString: @")"];
+//	if(dataRange.location != NSNotFound) {
+//		desc = [NSString stringWithFormat: @"%@ files)", [desc substringToIndex: dataRange.location]];
+//	}
+//	[statusOverallText setText: desc];
 	
 	//DLog(@"updateInstallationStatus: Progress: %f", progress);
+    //DLog(@"backgroundTimeRemaining: %f", [[UIApplication sharedApplication] backgroundTimeRemaining]);
 	
 	if (progress == 1.0) {
 		[[PSModuleController defaultModuleController] reload];
@@ -222,10 +253,39 @@ NSTimer *downloadTimer;
 	[pool release];
 }
 
+- (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    [[statusController view] removeFromSuperview];
+}
+
 - (void)hideOperationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
+	//[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
+    //[[self navigationController] dismissModalViewControllerAnimated: YES];
+    //[self dismissModalViewControllerAnimated: YES];
+
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        [[UIApplication sharedApplication] endBackgroundTask:bti];
+        bti = UIBackgroundTaskInvalid;
+    }
+
+    
+    [self refreshDetailsView];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDidStopSelector:@selector(hideOperationStatusEnded:finished:context:)];
+    [[statusController view] setAlpha:0.0];
+    [UIView commitAnimations];
+
+    
 	[downloadTimer invalidate];
 	
 	[statusText setText: @""];

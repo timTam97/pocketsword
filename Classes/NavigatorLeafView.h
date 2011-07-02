@@ -23,6 +23,7 @@
 	IBOutlet id statusOverallBar;
 		
 	SwordModule *module;
+    NSUInteger bti;
 }
 
 @property (retain, readwrite) SwordModule *module;

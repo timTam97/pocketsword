@@ -23,7 +23,8 @@
 	IBOutlet UIProgressView *statusBar;
 	IBOutlet UIProgressView *statusOverallBar;
 	IBOutlet UIButton *cancelButton;
-	
+
+    NSUInteger bti;
 }
 @property (retain, readwrite) NSArray *dataArray;
 

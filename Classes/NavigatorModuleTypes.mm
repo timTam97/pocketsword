@@ -18,15 +18,23 @@
 
 NSTimer *refreshTimer;
 
+- (void)updateRefreshButton {
+	self.navigationItem.rightBarButtonItem = nil;
+	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
+    if([[statusController view] superview]) {
+		[refreshBarButtonItem setEnabled:NO];
+    } else {
+		[refreshBarButtonItem setEnabled:YES];
+    }
+	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
+	[refreshBarButtonItem release];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 	//[table reloadData];	// populate our table's data
-	
-	self.navigationItem.rightBarButtonItem = nil;
-	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
-	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
-	[refreshBarButtonItem release];
+	[self updateRefreshButton];
 
 	[cancelButton setTitle: NSLocalizedString(@"Cancel", @"Cancel") forState: UIControlStateNormal];
 	
@@ -124,7 +132,8 @@ NSTimer *refreshTimer;
 		return;
 	}
 	
-	[self.navigationController popViewControllerAnimated: NO];
+	//[self.navigationController popViewControllerAnimated: NO];
+    
 	//[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
 	//testing:
 	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
@@ -134,6 +143,16 @@ NSTimer *refreshTimer;
 	//end testing.
 	
 	[self createRefreshTimer];
+	
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+    }
 	
 	[pool release];
 }
@@ -156,11 +175,16 @@ NSTimer *refreshTimer;
 	[statusTitle setText: NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source")];
 	[statusOverallText setText: @""];
 	[statusOverallBar setHidden: YES];
-	
 	[statusText setText: @""];
-	//[ViewController showModal:statusController.view withTiming:0.3];
-	[navigatorSources.tabController presentModalViewController: statusController animated: YES];
-	//[self.navigationController.topViewController.tabBarController presentModalViewController: statusController animated: YES];
+	//[navigatorSources.tabController presentModalViewController: statusController animated: YES];
+    [[statusController view] setAlpha:0.0];
+    [self.view addSubview:[statusController view]];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.5];
+    [[statusController view] setAlpha:1.0];
+    [UIView commitAnimations];
+    [self updateRefreshButton];
 	
 	[pool release];
 }
@@ -206,11 +230,36 @@ NSTimer *refreshTimer;
 	}
 }
 
+- (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    [[statusController view] removeFromSuperview];
+}
+
 - (void)hideOperationStatus {
 	//NSLog(@" ++++++++ hideOperationStatus");
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[navigatorSources.tabController dismissModalViewControllerAnimated: YES];
-	//[ViewController hideModal:statusController.view withTiming:0.3];
+	//[navigatorSources.tabController dismissModalViewControllerAnimated: YES];
+
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        [[UIApplication sharedApplication] endBackgroundTask:bti];
+        bti = UIBackgroundTaskInvalid;
+    }
+    
+    [self updateRefreshButton];
+
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDidStopSelector:@selector(hideOperationStatusEnded:finished:context:)];
+    [[statusController view] setAlpha:0.0];
+    [UIView commitAnimations];
+	[self.navigationController popViewControllerAnimated: YES];
 	
 	[statusText setText: @""];
 	[statusOverallText setText: @""];

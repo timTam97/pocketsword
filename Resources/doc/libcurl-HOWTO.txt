@@ -4,6 +4,9 @@ When updating libcurl from SVN into this project,
 Need to remove all the Makefiles
 & probably better to manually compare the config header files & migrate across that way?  But need to hack it to not use LOCK_DIR...
 
+Create an universal (x86 & arm) lib:
+lipo -create /ipos-release/libcurl.a /ip-sim-release/libcurl.a -output libcurl-release.a
+
 DIFFS:
 
 

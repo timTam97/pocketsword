@@ -89,6 +89,14 @@ float status;
                     [self addInstallSource:is withReinitialize:NO];
 					
 					[is setType:INSTALLSOURCE_TYPE_FTP];
+                    [is setCaption:@"CrossWire 3"];
+                    [is setSource:@"ftp.crosswire.org"];
+                    [is setDirectory:@"/pub/sword/avraw"];                    
+					[is setUID:@"crosswire-av11n-http"];
+                    // add is
+                    [self addInstallSource:is withReinitialize:NO];
+					
+					[is setType:INSTALLSOURCE_TYPE_FTP];
 					[is setCaption:@"NET (Bible.org)"];
 					[is setSource:@"ftp.bible.org"];
 					[is setDirectory:@"/sword"];

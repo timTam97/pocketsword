@@ -11,6 +11,7 @@
 #include <time.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 #ifdef unix
 # include <unistd.h>
 #else
