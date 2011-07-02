@@ -632,17 +632,17 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 								// but it seems like we might want to change any
 								// of the current fields so we don't do this now
 								// InstallSource i("FTP", actions->second);
-								if(it->second->caption == "CrossWire 1 (http)") {
+								if(it->second->caption == "CrossWire 1 (http)" || it->second->caption == "CrossWire 1") {
 									delete it->second;
 									it->second = new InstallSource("HTTP", actions->second.c_str());
 									it->second->uid = actions->first;
-									it->second->caption = "CrossWire 1 (http)";
+									it->second->caption = "CrossWire 1";
 									it->second->directory = "/ftpmirror/pub/sword/raw";
-								} else if(it->second->caption == "CrossWire 2 (http)") {
+								} else if(it->second->caption == "CrossWire 2 (http)" || it->second->caption == "CrossWire 2") {
 									delete it->second;
 									it->second = new InstallSource("HTTP", actions->second.c_str());
 									it->second->uid = actions->first;
-									it->second->caption = "CrossWire 2 (http)";
+									it->second->caption = "CrossWire 2";
 									it->second->directory = "/ftpmirror/pub/sword/betaraw";
 								} else if(it->second->caption == "NET (Bible.org)") {
 									delete it->second;
