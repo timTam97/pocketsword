@@ -15,12 +15,12 @@
 	IBOutlet NavigatorSources *navigatorSources;
 
 	// Status view
-	IBOutlet id statusController;
-	IBOutlet id statusTitle;
-	IBOutlet id statusText;
-	IBOutlet id statusOverallText;
-	IBOutlet id statusBar;
-	IBOutlet id statusOverallBar;
+	IBOutlet UIViewController *statusController;
+	IBOutlet UILabel *statusTitle;
+	IBOutlet UILabel *statusText;
+	IBOutlet UILabel *statusOverallText;
+	IBOutlet UIProgressView *statusBar;
+	IBOutlet UIProgressView *statusOverallBar;
 		
 	SwordModule *module;
     NSUInteger bti;

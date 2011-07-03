@@ -548,7 +548,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
             [[self tabBarController] dismissModalViewControllerAnimated:YES];
         } else {
             [refNavigationPopoverController dismissPopoverAnimated:YES];
-            //[refNavigationPopoverController release];
             refNavigationPopoverController = nil;
         }
 	} else {

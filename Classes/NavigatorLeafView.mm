@@ -173,6 +173,8 @@ NSTimer *downloadTimer;
 	//[[self navigationController] presentModalViewController: statusController animated: YES];
     //[self presentModalViewController: statusController animated: YES];
     [[statusController view] setAlpha:0.0];
+    statusController.view.frame = self.view.frame;
+    statusController.view.center = self.view.center;
     [self.view addSubview:[statusController view]];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];

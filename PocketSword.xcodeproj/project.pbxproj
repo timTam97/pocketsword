@@ -4469,6 +4469,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = "Info-PS-en.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -4487,6 +4488,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "69EEB516-D42A-4499-B7D0-30D0DF884EEB";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "69EEB516-D42A-4499-B7D0-30D0DF884EEB";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -4513,6 +4515,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = "Info-PS-en.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)\\\"",
@@ -4529,6 +4532,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -4556,6 +4560,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = "Info-PS-en.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)\\\"",
@@ -4572,6 +4577,7 @@
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 			};
 			name = Distribution;
@@ -4593,7 +4599,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4602,6 +4608,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -4640,7 +4647,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4649,6 +4656,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -4784,7 +4792,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4793,6 +4801,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
