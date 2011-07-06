@@ -175,7 +175,10 @@ NSTimer *refreshTimer;
 	[statusTitle setText: NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source")];
 	[statusOverallText setText: @""];
 	[statusOverallBar setHidden: YES];
-	[statusText setText: @""];
+    NSString *sText = [NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"RefreshingModuleSource", @""), self.title] ;
+    [statusText setText: sText];
+	[statusText setLineBreakMode: UILineBreakModeWordWrap];
+
 	//[navigatorSources.tabController presentModalViewController: statusController animated: YES];
     [[statusController view] setAlpha:0.0];
     statusController.view.frame = self.view.frame;
