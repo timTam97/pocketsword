@@ -4615,6 +4615,7 @@
 					"\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
@@ -4663,7 +4664,7 @@
 					"\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
@@ -4808,7 +4809,7 @@
 					"\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
