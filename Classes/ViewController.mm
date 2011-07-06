@@ -509,24 +509,26 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
     BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
 	if(moduleSelectorViewController || [popoverController isPopoverVisible]) {
-		if(iPad) {
+		//if(iPad) {
             [popoverController dismissPopoverAnimated:YES];
-		} else {
+		//} else {
 			[tabController dismissModalViewControllerAnimated:animated];
-		}
+		//}
 		moduleSelectorViewController = nil;
 	} else {
 		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil] autorelease];
 		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
 		modSelectorNavController.navigationBarHidden = YES;
-		[popoverController setContentViewController:modSelectorNavController];
 
 		if(swordModule) {
 			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = swordModule;
 			[moduleSelectorViewController setListType: BibleTab];
-			[popoverController presentPopoverFromBarButtonItem:bibleTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			if(iPad) {
+				[tabController presentModalViewController:modSelectorNavController animated:animated];
+			}
 		} else {
 			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = nil;
+			[popoverController setContentViewController:modSelectorNavController];
 			//set the module selector to use the correct module type.
 			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 				[moduleSelectorViewController setListType: BibleTab];

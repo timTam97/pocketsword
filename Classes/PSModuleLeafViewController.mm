@@ -71,8 +71,11 @@
 	if(((PSModuleSelectorController*)moduleSelectorController).moduleToView) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 	} else {
-		//[moduleSelectorController dismissModalViewControllerAnimated:YES];
-		[self.navigationController popViewControllerAnimated:YES];
+		if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+			[self dismissModalViewControllerAnimated:YES];
+		} else {
+			[self.navigationController popViewControllerAnimated:YES];
+		}
 	}
 }
 
