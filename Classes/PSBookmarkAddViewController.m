@@ -62,7 +62,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	descriptionTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,260,25)];
+    CGRect fieldFrames = CGRectMake(20,12,280,25);
+    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+        //different frames for the iPad
+        fieldFrames = CGRectMake(60,12,560,25);
+    }
+    
+	descriptionTextField = [[UITextField alloc] initWithFrame:fieldFrames];
 	[descriptionTextField setPlaceholder:@""];
 	descriptionTextField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	descriptionTextField.delegate = self;

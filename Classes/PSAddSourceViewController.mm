@@ -28,18 +28,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-//	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveButtonPressed)];
-//	navBar.rightBarButtonItem = doneButton;
-//	[doneButton release];
+    CGRect fieldFrames = CGRectMake(20,12,280,25);
+    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+        //different frames for the iPad
+        fieldFrames = CGRectMake(60,12,560,25);
+    }
 
-	captionTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,280,25)];
+    captionTextField = [[UITextField alloc] initWithFrame:fieldFrames];
 	[captionTextField setPlaceholder:@"e.g. CrossWire 1"];
 	captionTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	captionTextField.autocorrectionType = UITextAutocorrectionTypeNo;
 	captionTextField.returnKeyType = UIReturnKeyNext;
 	captionTextField.delegate = self;
 	
-	serverTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,280,25)];
+	serverTextField = [[UITextField alloc] initWithFrame:fieldFrames];
 	[serverTextField setPlaceholder:@"e.g. ftp.crosswire.org"];
 	serverTextField.keyboardType = UIKeyboardTypeURL;
 	serverTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -47,7 +49,7 @@
 	serverTextField.returnKeyType = UIReturnKeyNext;
 	serverTextField.delegate = self;
 	
-	pathTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,12,280,25)];
+	pathTextField = [[UITextField alloc] initWithFrame:fieldFrames];
 	[pathTextField setPlaceholder:@"e.g. /pub/sword/raw"];
 	pathTextField.keyboardType = UIKeyboardTypeURL;
 	pathTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -76,6 +78,10 @@
 
 - (void)keyboardWillShow:(NSNotification *)note {
 	//DLog(@"willShow");
+    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+        //don't do this magic on the iPad
+        return;
+    }
     CGRect r  = addSourceTableView.frame, t;
     [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
     //[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
@@ -125,6 +131,10 @@
 	   
 - (void)keyboardWillHide:(NSNotification *)note {
 	//DLog(@"willHide");
+    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+        //don't do this magic on the iPad
+        return;
+    }
     CGRect r  = addSourceTableView.frame;
 	//CGRect t;
     //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
@@ -216,22 +226,6 @@
 	pathTextField.text = @"";
 }
 
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
-
 #pragma mark -
 #pragma mark Table view data source
 
@@ -286,46 +280,6 @@
 	return @"";
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return NO;
-}
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark -
 #pragma mark Table view delegate
 
@@ -364,6 +318,15 @@
     [super dealloc];
 }
 
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+        return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+    } else {
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    }
+}
 
 @end
 

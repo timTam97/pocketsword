@@ -497,7 +497,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
-	if(moduleSelectorViewController /*&& [((PSModuleSelectorController*)moduleSelectorViewController).view superview]*/) {
+	if(moduleSelectorViewController) {
 		[tabController dismissModalViewControllerAnimated:animated];
 		moduleSelectorViewController = nil;
 	} else {
