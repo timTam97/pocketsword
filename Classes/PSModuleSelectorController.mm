@@ -14,12 +14,22 @@
 
 @implementation PSModuleSelectorController
 
-@synthesize listType;
-@synthesize moduleToView;
+@synthesize listType, moduleToView;
+//@synthesize reloadModuleViews;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	modulesCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
+	//reloadModuleViews = NO;
+	//modulesCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		return;
+	}
+	UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
+	modulesNavigationItem.leftBarButtonItem = modulesCloseButton;
+	[modulesCloseButton release];
+	UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
+	modulesNavigationItem.rightBarButtonItem = modulesAddButton;
+	[modulesAddButton release];
 }
 
 - (void)dealloc {
@@ -27,26 +37,8 @@
 	[super dealloc];
 }
 
-//- (IBAction)toggleLock {
-//	
-//	UIInterfaceOrientation interfaceOrientation = [self interfaceOrientation];
-//	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
-//	
-//	if(rotationLockPosition == RotationEnabled) {
-//		[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight ? RotationLockedInLandscape : RotationLockedInPortrait)] forKey:ROTATION_LOCK_POSITION];
-//		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateLocked.png"];
-//	} else {
-//		[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInt:RotationEnabled] forKey:ROTATION_LOCK_POSITION];
-//		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateUnlocked.png"];
-//	}
-//}
-
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-//	if(self.moduleToView) {
-//		[leafViewController displayInfoForModule:self.moduleToView];
-//		[self presentModalViewController:leafTabBarController animated:NO];
-//	}
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -58,13 +50,11 @@
 		modulesListTable.backgroundColor = [UIColor whiteColor];
 	}
 	
-//	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
-//	if(rotationLockPosition == RotationEnabled) {
-//		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateUnlocked.png"];
-//	} else {
-//		modulesRotationLockButton.image = [UIImage imageNamed:@"rotateLocked.png"];
-//	}
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar useStatusBar:YES];
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		//for the iPad, we don't resize...
+	} else {
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar useStatusBar:YES];
+	}
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	if([self listType] == BibleTab) {
@@ -132,13 +122,18 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		//for the iPad, we don't resize...
+		return;
+	}
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-//	if(reloadModuleViews) {
-//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//		reloadModuleViews = NO;
+//	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+//		if(reloadModuleViews) {
+//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+//		}
 //	}
 }
 
@@ -184,6 +179,9 @@
 		case DevotionalTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] count];
 			break;
+		case DownloadsTab:
+		case PreferencesTab:
+			break;
 	}
 	return 0;
 }
@@ -221,6 +219,9 @@
 			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] name];
 			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] descr];
 			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] isLocked];
+			break;
+		case DownloadsTab:
+		case PreferencesTab:
 			break;
 	}
 	if ([[PSModuleController defaultModuleController] isLoaded:cell.textLabel.text]) {
@@ -299,6 +300,9 @@
 			[moduleController loadPrimaryDevotional:newModule];
 			if([[moduleController primaryDevotional] isLocked])
 				locked = YES;
+			break;
+		case DownloadsTab:
+		case PreferencesTab:
 			break;
 	}
 	if(locked) {
@@ -417,41 +421,60 @@
 	}
 }
 
+- (void)redisplayFromButtonPress {
+	switch (listType) {
+		case BibleTab:
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			break;
+		case CommentaryTab:
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+			break;
+		case DictionaryTab:
+		case DevotionalTab:
+		case DownloadsTab:
+		case PreferencesTab:
+			break;
+	}
+}
+
 - (void)strongsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
 	//reloadModuleViews = YES;
-	//[self dismissModuleSelector];
+	[self redisplayFromButtonPress];
 }
 
 - (void)headingsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
+	//reloadModuleViews = YES;
+	[self redisplayFromButtonPress];
 }
 
 - (void)footnotesButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
+	//reloadModuleViews = YES;
+	[self redisplayFromButtonPress];
 }
 
 - (void)xrefsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
+	//reloadModuleViews = YES;
+	[self redisplayFromButtonPress];
 }
 
 - (void)morphButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	SetBoolPrefForMod(!pref, DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	[self addButtonsToToolbar:YES];
+	//reloadModuleViews = YES;
+	[self redisplayFromButtonPress];
 }
 
 @end

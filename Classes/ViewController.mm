@@ -64,7 +64,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 	if (!ps_viewcontroller_initialized) {
 		toolbarLock = [[NSLock alloc] init];
-        refNavigationPopoverController = nil;
+        popoverController = nil;
+		if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+			popoverController = [[[UIPopoverController alloc] initWithContentViewController:activityController] retain];
+			[popoverController setDelegate:self];
+		}
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
@@ -496,32 +500,51 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[self toggleModulesListAnimated:YES withModule:nil];
 }
 
-- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
 	if(moduleSelectorViewController) {
-		[tabController dismissModalViewControllerAnimated:animated];
+		moduleSelectorViewController = nil;
+	}
+}
+
+- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
+    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+	if(moduleSelectorViewController || [popoverController isPopoverVisible]) {
+		if(iPad) {
+            [popoverController dismissPopoverAnimated:YES];
+		} else {
+			[tabController dismissModalViewControllerAnimated:animated];
+		}
 		moduleSelectorViewController = nil;
 	} else {
 		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil] autorelease];
+		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
+		modSelectorNavController.navigationBarHidden = YES;
+		[popoverController setContentViewController:modSelectorNavController];
 
 		if(swordModule) {
 			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = swordModule;
 			[moduleSelectorViewController setListType: BibleTab];
+			[popoverController presentPopoverFromBarButtonItem:bibleTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else {
 			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = nil;
 			//set the module selector to use the correct module type.
 			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 				[moduleSelectorViewController setListType: BibleTab];
+				[popoverController presentPopoverFromBarButtonItem:bibleTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 				[moduleSelectorViewController setListType: CommentaryTab];
+				[popoverController presentPopoverFromBarButtonItem:commentaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
 				[moduleSelectorViewController setListType: DevotionalTab];
+				[popoverController presentPopoverFromBarButtonItem:devotionalTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			} else {
 				[moduleSelectorViewController setListType: DictionaryTab];
+				[popoverController presentPopoverFromBarButtonItem:dictionaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			}
 		}
-		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
-		modSelectorNavController.navigationBarHidden = YES;
-		[tabController presentModalViewController:modSelectorNavController animated:animated];
+		if(!iPad) {
+			[tabController presentModalViewController:modSelectorNavController animated:animated];
+		}
 	}
 }
 
@@ -543,12 +566,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (IBAction)toggleNavigation {
     BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
-	if([refNavigationController.view superview] || [refNavigationPopoverController isPopoverVisible]) {
+	if([refNavigationController.view superview] || [popoverController isPopoverVisible]) {
         if(!iPad) {
             [[self tabBarController] dismissModalViewControllerAnimated:YES];
         } else {
-            [refNavigationPopoverController dismissPopoverAnimated:YES];
-            refNavigationPopoverController = nil;
+            [popoverController dismissPopoverAnimated:YES];
         }
 	} else {
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
@@ -562,8 +584,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
                 [refSelectorController willShowNavigation];
                 [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
             } else {
-                refNavigationPopoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
-                [refNavigationPopoverController presentPopoverFromBarButtonItem:bibleRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                [popoverController setContentViewController:refNavigationController];
+                [popoverController presentPopoverFromBarButtonItem:bibleRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 [refSelectorController willShowNavigation];
             }
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
@@ -577,8 +599,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
                 [refSelectorController willShowNavigation];
                 [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
             } else {
-                refNavigationPopoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
-                [refNavigationPopoverController presentPopoverFromBarButtonItem:commentaryRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                [popoverController setContentViewController:refNavigationController];
+                [popoverController presentPopoverFromBarButtonItem:commentaryRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 [refSelectorController willShowNavigation];
             }
         }
@@ -654,6 +676,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	self.savedSearchHistoryItem = nil;
 	[toolbarLock release];
 	[moduleSelectorViewController release];
+	[popoverController release];
 	//[multiListController release];
     [super dealloc];
 }

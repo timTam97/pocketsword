@@ -13,6 +13,7 @@
 	IBOutlet UIView *devotionalDatePickerView;
 	IBOutlet UIDatePicker *devotionalDatePicker;
 	IBOutlet UIBarButtonItem *todayButton;
+	IBOutlet UIBarButtonItem *devotionalTitle;
 	
 	//IBOutlet id moduleManager;
 }
@@ -20,5 +21,6 @@
 - (void)loadDevotionalForDate:(NSDate *)date;
 - (IBAction)todayButtonPressed;
 - (IBAction)toggleDatePicker:(id)sender;
+- (IBAction)moduleButtonPressed;
 
 @end

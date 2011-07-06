@@ -17,7 +17,7 @@
 
 BOOL loaded;
 
-- (void)moduleButtonPressed {
+- (IBAction)moduleButtonPressed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 }
 
@@ -36,14 +36,15 @@ BOOL loaded;
 		if(![[PSModuleController defaultModuleController] primaryDevotional])
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
-	//UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:[[PSModuleController defaultModuleController] viewController] action:@selector(toggleModulesList)];
-	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
-	self.navigationItem.rightBarButtonItem = moduleButton;
-	[moduleButton release];
-	
-//	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
-	
+	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+		[devotionalTitle setTitle:devoTitle];
+	} else {
+		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+		UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
+		self.navigationItem.rightBarButtonItem = moduleButton;
+		[moduleButton release];
+	}
+		
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDevotional) name:NotificationNightModeChanged object:nil];
 }

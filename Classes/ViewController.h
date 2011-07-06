@@ -79,7 +79,7 @@ typedef enum {
 	IBOutlet UIWebView					*infoWebView;
 	UIView								*refTitleSplashView;
 	NSTimer								*refTitleSplashTimer;
-    id                                  refNavigationPopoverController;
+    id                                  popoverController;
 
 	// MultiList
 	UITabBarController					*multiListController;
@@ -92,6 +92,7 @@ typedef enum {
 	
 	// Devotional tab
 	IBOutlet UIWebView					*devotionalWebView;
+	IBOutlet UIBarButtonItem			*devotionalTitle;
 	
 	// Bookmarks tab
 	

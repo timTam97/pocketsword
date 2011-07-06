@@ -18,15 +18,15 @@
 	IBOutlet UITableView		*modulesListTable;
 	IBOutlet UINavigationItem	*modulesNavigationItem;
 	IBOutlet UINavigationBar	*modulesNavigationBar;
-	IBOutlet UIBarButtonItem	*modulesCloseButton;
 	
 	IBOutlet UIToolbar			*modulesToolbar;
 	
-	//BOOL reloadModuleViews;
+//	BOOL reloadModuleViews;
 }
 
 @property (assign) ShownTab listType;
 @property (retain, readwrite) SwordModule *moduleToView;
+//@property (assign) BOOL reloadModuleViews;
 
 - (void)addButtonsToToolbar:(BOOL)animated;
 - (IBAction)addModuleButtonPressed;
