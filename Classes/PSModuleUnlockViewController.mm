@@ -133,7 +133,11 @@ line-height: 130%%;\n\
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations.
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+        return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+    } else {
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    }
 }
 
 
