@@ -435,7 +435,7 @@
         mainLabel.tag = 477;
         mainLabel.font = [UIFont boldSystemFontOfSize:14.0];
         mainLabel.textColor = [UIColor blackColor];
-        mainLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);// | UIViewAutoresizingFlexibleHeight;
+        mainLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);
         [cell.contentView addSubview:mainLabel];
 		
         secondLabel = [[[UILabel alloc] initWithFrame:CGRectMake(5.0, 22.0, 310.0, 45.0)] autorelease];
@@ -444,7 +444,7 @@
 		secondLabel.numberOfLines = 3;
 		secondLabel.lineBreakMode = UILineBreakModeWordWrap;
         secondLabel.textColor = [UIColor darkGrayColor];
-        secondLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);// | UIViewAutoresizingFlexibleHeight;
+        secondLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:secondLabel];
 		
 	} else {
