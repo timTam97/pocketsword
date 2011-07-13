@@ -46,11 +46,25 @@
 									 Nic Carter<br />\n\
 									 and the CrossWire team\n\
 								</p>\n\
-								 <p><b>Icons by: </b><br />\n\
-										Cheree Lynley Designs, James Coleman\n\
-								</p>\n\
-							  <p><b>Localisations by: </b><br />\n\
-								  David Bell, Christoffer Björkskog, Jan Bubík, Vincenzo Carrubba, Dominique Corbex, Grace Community Church (HK), Yiguang Hu, Nakamaru Kunio, Vitaliy, Henko van de Weerd\n\
+								 <p><b>With help from: </b><br />\n\
+					  David Bell, \
+					  Manfred Bergmann, \
+					  Christoffer Björkskog, \
+					  Jan Bubík, \
+					  Vincenzo Carrubba, \
+					  Cheree Lynley Designs, \
+					  James Coleman, \
+					  Dominique Corbex, \
+					  Grace Community Church (HK), \
+					  Yiguang Hu, \
+					  John Huss, \
+					  Nakamaru Kunio, \
+					  Vitaliy, \
+					  Ian Wagner, \
+					  Henko van de Weerd\
+					  \n\
+					  <br />\n\
+					  &amp; all the PocketSword beta testers!\n\
 							  </p>\n\
 							  <p><b>Special thanks to: </b><br />\n\
 										David Crowder*Band <i>(<a href=\"http://www.davidcrowderband.com/\">http://www.davidcrowderband.com/</a>)</i><br />\n\
@@ -135,31 +149,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-//	CGSize screen = [[UIScreen mainScreen] bounds].size;
-//	CGFloat height = screen.height;
-//	CGFloat width = screen.width;
-//	CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-//	UIInterfaceOrientation intOrientation = [UIApplication sharedApplication].statusBarOrientation;
-//	if([UIApplication sharedApplication].statusBarHidden) {
-//		intOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
-//	}
-//	if(intOrientation == UIInterfaceOrientationLandscapeLeft || intOrientation == UIInterfaceOrientationLandscapeRight) {
-//		height = screen.width;
-//		width = screen.height;
-//		statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.width;
-//	}
-//	height -= statusBarHeight + self.tabBarController.tabBar.frame.size.height + self.navigationController.navigationBar.frame.size.height;
-//	aboutWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-//	aboutWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
 	aboutWebView.delegate = self;
-	
-//	[self.view addSubview:aboutWebView];
-//	[aboutWebView release];
-	
 	
 	self.navigationItem.rightBarButtonItem = nil;
 	//if([MFMailComposeViewController canSendMail]) {
@@ -175,14 +168,12 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-//	[aboutWebView removeFromSuperview];
 	self.navigationItem.rightBarButtonItem = nil;
 }
 
 -(void)emailFeedback:(id)sender
 {
     NSString *recipients = @"niccarter@mac.com";
-    //NSString *body = @"&body=PocketSword is the bestestest evar!";
 	
 	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [[UIDevice currentDevice] model]];
 	
@@ -223,19 +214,6 @@
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 }
-
-//- (IBAction)done:(id)sender {
-//    [UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-//                           forView:self.view.superview
-//                             cache:YES];
-//	
-//    [UIView setAnimationDuration:1];
-//	[self.view removeFromSuperview];
-//    [UIView commitAnimations];
-//}
-
-
 
 - (void)dealloc {
     [super dealloc];

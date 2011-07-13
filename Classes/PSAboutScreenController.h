@@ -14,7 +14,6 @@
 }
 
 + (NSString*)generateAboutHTML;
--(void)emailFeedback:(id)sender;
-//- (IBAction)done:(id)sender;
+- (void)emailFeedback:(id)sender;
 
 @end
