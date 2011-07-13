@@ -269,6 +269,7 @@
 	// Update the module list to reflect the current module
 	[tableView reloadData];
 	BOOL locked = NO;
+    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
 	switch (listType) {
 		case BibleTab:
 			[moduleController loadPrimaryBible: newModule];
@@ -291,6 +292,9 @@
 			break;
 		case DictionaryTab:
 			[moduleController loadPrimaryDictionary:newModule];
+			if(iPad) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
+			}
 			//[[moduleController viewController] reloadDictionaryData];
 			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			if([[moduleController primaryDictionary] isLocked])

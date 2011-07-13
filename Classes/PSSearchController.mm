@@ -860,6 +860,9 @@
 }
 
 - (IBAction)searchButtonPressed:(id)sender {
+	if(!searchingEnabled) {
+		return;
+	}
 	if(![searchQueryView superview]) {
 		if(self.results && [results count] > 0) {
 			[self saveTablePositionFromCurrentPosition];
