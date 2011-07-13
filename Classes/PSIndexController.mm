@@ -61,6 +61,17 @@
 	[statusBar setProgress: 0.0];
 	[statusOverallBar setProgress: 0.0];
 	[pool release];
+
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        [[UIApplication sharedApplication] endBackgroundTask:bti];
+        bti = UIBackgroundTaskInvalid;
+    }
 }
 
 - (void)showIndexStatus {//needed, move to PSIndexController
@@ -71,6 +82,16 @@
 	[statusOverallBar setHidden: YES];
 	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
 	//[navController setNavigationBarHidden: YES];
+	
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+    }
 	
 	//[tabController presentModalViewController: navController animated: YES];
 	//[ViewController showModal: statusController.view withTiming:0.3];

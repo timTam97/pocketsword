@@ -40,6 +40,8 @@
 	BOOL installedShown;
 	BOOL unavailableShown;
 	BOOL downloadableShown;
+
+    NSUInteger bti;
 }
 
 @property (retain, readwrite) NSArray *downloadableIndices;
