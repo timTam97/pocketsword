@@ -23,6 +23,7 @@
 	IBOutlet id moduleSelectorTableViewController;
 	
 	UILabel *fontSizeLabel;
+	IBOutlet UITableView *preferencesTableView;
 }
 
 //- (void)fullscreenModeChanged:(UISwitch *)sender;

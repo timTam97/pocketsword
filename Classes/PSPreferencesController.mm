@@ -80,7 +80,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[self.tableView reloadData];
+	[preferencesTableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -113,7 +113,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[self.tableView reloadData];
+	[preferencesTableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -841,19 +841,19 @@
 - (void)morphGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsMorphGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[self.tableView reloadData];
+	[preferencesTableView reloadData];
 }
 
 - (void)strongsGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[self.tableView reloadData];
+	[preferencesTableView reloadData];
 }
 
 - (void)strongsHebrewModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsHebrewModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[self.tableView reloadData];
+	[preferencesTableView reloadData];
 }
 
 - (void)xrefChanged:(UISwitch *)sender {
@@ -914,7 +914,7 @@
 - (void)fontNameChanged:(NSString *)newFont {
 	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[self.tableView reloadData];
+	[preferencesTableView reloadData];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
