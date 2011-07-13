@@ -684,6 +684,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)displayTitle:(NSString*)title {
+    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
 	CGRect frame;
 	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
 	//NSString *ref = [PSModuleController getCurrentBibleRef];
@@ -696,13 +697,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	label.textAlignment = UITextAlignmentCenter;
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		frame = CGRectMake(130, 115, 220, 70);
-	} else {// if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+	} else {
 		frame = CGRectMake(50, 195, 220, 70);
 	}
 	
 	if(refTitleSplashView) {
-		//DLog(@"refTitleSplashView");
-		//[self removeTitle:nil];
 		[refTitleSplashView removeFromSuperview];
 		refTitleSplashView = nil;
 		[refTitleSplashTimer invalidate];
@@ -718,21 +717,35 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 		refTitleSplashView.transform = CGAffineTransformIdentity;
-		//refTitleSplashView.frame = CGRectMake(130, 115, 220, 70);
-		refTitleSplashView.center = CGPointMake(160, 230);
+		if(iPad) {
+			refTitleSplashView.center = CGPointMake(384, 502);//768 & 1004
+		} else {
+			refTitleSplashView.center = CGPointMake(160, 230);//320 & 460
+		}
 		refTitleSplashView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		refTitleSplashView.transform = CGAffineTransformIdentity;
-		//refTitleSplashView.frame = CGRectMake(130, 115, 220, 70);
-		refTitleSplashView.center = CGPointMake(160, 230);
+		if(iPad) {
+			refTitleSplashView.center = CGPointMake(384, 502);//768 & 1004
+		} else {
+			refTitleSplashView.center = CGPointMake(160, 230);
+		}
 		refTitleSplashView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		refTitleSplashView.transform = CGAffineTransformIdentity;
 		refTitleSplashView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-		refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
-	} else {// if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+		if(iPad) {
+			refTitleSplashView.frame = CGRectMake(274, 450, 220, 70);
+		} else {
+			refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
+		}
+	} else {
 		refTitleSplashView.transform = CGAffineTransformIdentity;
-		refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
+		if(iPad) {
+			refTitleSplashView.frame = CGRectMake(274, 450, 220, 70);
+		} else {
+			refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
+		}
 	}
 	
 	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
@@ -746,7 +759,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	[refTitleSplashView release];
 	refTitleSplashTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(removeTitle:) userInfo:nil repeats:NO];
-	//[self performSelector:@selector(removeTitle) withObject:nil afterDelay:1.5];
 }
 
 

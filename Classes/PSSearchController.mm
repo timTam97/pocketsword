@@ -116,6 +116,8 @@
 			if(![[[PSModuleController defaultModuleController] primaryCommentary] hasSearchIndex])
 				showIndexController = YES;
 			break;
+		default:
+			break;
 	}
 	if(showIndexController) {
 		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
@@ -244,6 +246,8 @@
 			if([[[PSModuleController defaultModuleController] primaryCommentary] hasSearchIndex])
 				searchingEnabled = YES;
 			break;
+		default:
+			break;
 	}
 	if(searchingEnabled) {
 		//enable search
@@ -302,6 +306,7 @@
 				}
 					break;
 				case CommentaryTab:
+				default:
 					return 3;
 			}
 		} else if(section == 1) {
@@ -471,6 +476,9 @@
 			case CommentaryTab:
 				entry = [[[PSModuleController defaultModuleController] primaryCommentary] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
 				break;
+			default:
+				entry = nil;
+				break;
 		}
 		//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
 		entry.text = [entry.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
@@ -526,6 +534,8 @@
 			case CommentaryTab:
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 				[HistoryController addHistoryItem:CommentaryTab];
+				break;
+			default:
 				break;
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
@@ -720,6 +730,9 @@
 				break;
 			case CommentaryTab:
 				self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm withScope:[self createSearchScope]];
+				break;
+			default:
+				self.results = nil;
 				break;
 		}
 	}
