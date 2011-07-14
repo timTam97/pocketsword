@@ -25,6 +25,14 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 }
 
+- (void)topReloadTriggered {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeRight object:nil];
+}
+
+- (void)bottomReloadTriggered {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentarySwipeLeft object:nil];
+}
+
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];

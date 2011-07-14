@@ -707,6 +707,16 @@
 		05D6ACFF109830EE00A5026E /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF6109830EE00A5026E /* unzip.c */; };
 		05D6AD00109830EE00A5026E /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACF9109830EE00A5026E /* zip.c */; };
 		05D6AD01109830EE00A5026E /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ACFC109830EE00A5026E /* ZipArchive.mm */; };
+		05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */; };
+		05DA778513CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */; };
+		05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */; };
+		05DA778713CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */; };
+		05DA77A113CD754E000A4B97 /* PSWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA77A013CD754D000A4B97 /* PSWebView.m */; };
+		05DA77A213CD754E000A4B97 /* PSWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA77A013CD754D000A4B97 /* PSWebView.m */; };
+		05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A313CD8E51000A4B97 /* blueArrow.png */; };
+		05DA77A613CD8E51000A4B97 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A313CD8E51000A4B97 /* blueArrow.png */; };
+		05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */; };
+		05DA77A813CD8E51000A4B97 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */; };
 		05DD866A122E5EB400115EAD /* bible@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8668122E5EB400115EAD /* bible@2x.png */; };
 		05DD866B122E5EB400115EAD /* commentary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8669122E5EB400115EAD /* commentary@2x.png */; };
 		05DD866C122E5EB400115EAD /* bible@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8668122E5EB400115EAD /* bible@2x.png */; };
@@ -1493,6 +1503,14 @@
 		05D6ACFA109830EE00A5026E /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		05D6ACFB109830EE00A5026E /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		05D6ACFC109830EE00A5026E /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
+		05DA778013CD7160000A4B97 /* EGORefreshTableFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableFooterView.h; sourceTree = "<group>"; };
+		05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableFooterView.m; sourceTree = "<group>"; };
+		05DA778213CD7160000A4B97 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
+		05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		05DA779F13CD754D000A4B97 /* PSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSWebView.h; path = Classes/PSWebView.h; sourceTree = "<group>"; };
+		05DA77A013CD754D000A4B97 /* PSWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSWebView.m; path = Classes/PSWebView.m; sourceTree = "<group>"; };
+		05DA77A313CD8E51000A4B97 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
+		05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueArrow@2x.png"; path = "Resources/blueArrow@2x.png"; sourceTree = "<group>"; };
 		05DD8668122E5EB400115EAD /* bible@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bible@2x.png"; path = "Resources/bible@2x.png"; sourceTree = "<group>"; };
 		05DD8669122E5EB400115EAD /* commentary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "commentary@2x.png"; path = "Resources/commentary@2x.png"; sourceTree = "<group>"; };
 		05DD8676122E5F8D00115EAD /* Daily-Devotional@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Daily-Devotional@2x.png"; path = "Resources/Daily-Devotional@2x.png"; sourceTree = "<group>"; };
@@ -2541,6 +2559,8 @@
 		052851B8122660F600A99ECD /* img */ = {
 			isa = PBXGroup;
 			children = (
+				05DA77A313CD8E51000A4B97 /* blueArrow.png */,
+				05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */,
 				056BC73812F0E8E00029F3A2 /* folder.png */,
 				056BC73912F0E8E00029F3A2 /* folder@2x.png */,
 				056BC70A12F0E3F00029F3A2 /* bookmark.png */,
@@ -2782,6 +2802,8 @@
 				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
 				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
+				05DA779F13CD754D000A4B97 /* PSWebView.h */,
+				05DA77A013CD754D000A4B97 /* PSWebView.m */,
 			);
 			name = "b & c";
 			sourceTree = "<group>";
@@ -2894,6 +2916,17 @@
 			path = minizip;
 			sourceTree = "<group>";
 		};
+		05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				05DA778013CD7160000A4B97 /* EGORefreshTableFooterView.h */,
+				05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */,
+				05DA778213CD7160000A4B97 /* EGORefreshTableHeaderView.h */,
+				05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */,
+			);
+			path = RefreshTableHeaderView;
+			sourceTree = "<group>";
+		};
 		05DF546710A93E69007CB847 /* SnoopWindow */ = {
 			isa = PBXGroup;
 			children = (
@@ -2906,6 +2939,7 @@
 		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
+				05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */,
 				05DF546710A93E69007CB847 /* SnoopWindow */,
 				05D4629E10907130006BFBB1 /* PSLanguageCode.h */,
 				05D4629F10907130006BFBB1 /* PSLanguageCode.m */,
@@ -3488,6 +3522,8 @@
 				056BCC7F12F2CD7C0029F3A2 /* HistoryController.xib in Resources */,
 				056BCC9512F2DE780029F3A2 /* PSSearchController.xib in Resources */,
 				0516CF25136124CD0058E022 /* MainWindow-iPad.xib in Resources */,
+				05DA77A613CD8E51000A4B97 /* blueArrow.png in Resources */,
+				05DA77A813CD8E51000A4B97 /* blueArrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3577,6 +3613,8 @@
 				056BCC7E12F2CD7C0029F3A2 /* HistoryController.xib in Resources */,
 				056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */,
 				0516CF24136124CD0058E022 /* MainWindow-iPad.xib in Resources */,
+				05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */,
+				05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3937,6 +3975,9 @@
 				056BC97D12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
 				056CE8A312F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
 				056CEB3212F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */,
+				05DA778513CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
+				05DA778713CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
+				05DA77A213CD754E000A4B97 /* PSWebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4275,6 +4316,9 @@
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */,
 				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
 				056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */,
+				05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
+				05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
+				05DA77A113CD754E000A4B97 /* PSWebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

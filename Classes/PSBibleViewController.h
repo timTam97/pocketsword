@@ -8,13 +8,12 @@
 
 #import "PSCommentaryViewController.h"
 
-
-@interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate> {
+@interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, PSWebViewDelegate> {
 
 	IBOutlet UITabBarItem				*bibleTabBarItem;
 	IBOutlet UIToolbar *bibleToolbar;
 	
-	IBOutlet UIWebView *bibleWebView;
+	IBOutlet PSWebView *bibleWebView;
 	IBOutlet PSCommentaryViewController *commentaryView;
 	
 	IBOutlet id viewController;

@@ -31,15 +31,16 @@
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
+	bibleWebView.psDelegate = self;
 }
 
-//- (void)awakeFromNib {
-//	[super awakeFromNib];
-//	if(!bib_initialised) {
-//		isFullScreen = NO;
-//		bib_initialised = true;
-//	}
-//}
+- (void)topReloadTriggered {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeRight object:nil];
+}
+
+- (void)bottomReloadTriggered {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeLeft object:nil];
+}
 
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
@@ -189,6 +190,7 @@
 	
 	//highlight bookmarked verses
 	[self highlightBookmarks];
+	[bibleWebView setupRefreshViews];
 	
 	//highlight search results
 	// TODO: implement highlighting of search results

@@ -40,25 +40,6 @@
 
 bool ps_viewcontroller_initialized = false;
 
-static NSString *lastRefAvailable = @"Revelation 22";
-static NSString *firstRefAvailable = @"Genesis 1";
-
-+ (void)setFirstRefAvailable:(NSString*)first
-{
-	if(firstRefAvailable)
-		[firstRefAvailable release];
-	firstRefAvailable = first;
-	[firstRefAvailable retain];
-}
-
-+ (void)setLastRefAvailable:(NSString*)last
-{
-	if(lastRefAvailable)
-		[lastRefAvailable release];
-	lastRefAvailable = last;
-	[lastRefAvailable retain];
-}
-
 - (void)awakeFromNib {
 	[super awakeFromNib];
 
@@ -361,6 +342,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Loads the next chapter into the Web View
 - (IBAction)nextChapter:(id)sender {
+	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
+		return;
+	}
+	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 
@@ -394,6 +380,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Loads the previous chapter into the Web View
 - (IBAction)prevChapter:(id)sender {
+	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	if ([currentRef isEqualToString: [PSModuleController getFirstRefAvailable]]) {
+		return;
+	}
+	
+	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 
@@ -928,12 +920,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 	
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
-	if ([currentRef isEqualToString: lastRefAvailable]) {
+	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
 		[self setEnabledBibleNextButton: NO];
 		[self setEnabledBiblePreviousButton: YES];
 		[self setEnabledCommentaryNextButton: NO];
 		[self setEnabledCommentaryPreviousButton: YES];
-	} else if ([currentRef isEqualToString: firstRefAvailable]) {
+	} else if ([currentRef isEqualToString: [PSModuleController getFirstRefAvailable]]) {
 		[self setEnabledBibleNextButton: YES];
 		[self setEnabledBiblePreviousButton: NO];
 		[self setEnabledCommentaryNextButton: YES];
@@ -1570,16 +1562,5 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
-
-@end
-
-@implementation PSWebView
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference]) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
-	}
-	[super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-}
 
 @end

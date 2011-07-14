@@ -63,6 +63,10 @@
 + (BOOL)checkNetworkConnection;
 + (NSDictionary *)dataForLink:(NSURL *)aURL;
 + (NSString *)getCurrentBibleRef;
++ (void)setFirstRefAvailable:(NSString*)first;
++ (void)setLastRefAvailable:(NSString*)last;
++ (NSString*)getFirstRefAvailable;
++ (NSString*)getLastRefAvailable;
 
 - (id)init;
 - (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip;

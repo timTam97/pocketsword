@@ -26,6 +26,7 @@
 #import "PSCommentaryViewController.h"
 #import "PSRefSelectorController.h"
 #import "PSSearchController.h"
+#import "PSWebView.h"
 
 #ifdef __cplusplus
 #include <swmgr.h>
@@ -46,9 +47,6 @@ typedef enum {
 	CommentaryViewPoll = 2,
 	NoViewPoll = 3
 } PollingType;
-
-@interface PSWebView : UIWebView {}
-@end
 
 @interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate> {
 	// Tab bar
@@ -117,9 +115,6 @@ typedef enum {
 //@property (retain, readwrite) NSMutableArray	*savedSearchResults;
 //@property (retain, readwrite) NSString			*searchTermToPerform;
 @property (assign, readwrite) ShownTab			 savedSearchResultsTab;
-
-+ (void)setFirstRefAvailable:(NSString*)first;
-+ (void)setLastRefAvailable:(NSString*)last;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;

@@ -108,6 +108,33 @@ static PSModuleController *instance;
 	instance = nil;
 }
 
+static NSString *lastRefAvailable = @"Revelation 22";
+static NSString *firstRefAvailable = @"Genesis 1";
+
++ (void)setFirstRefAvailable:(NSString*)first
+{
+	if(firstRefAvailable)
+		[firstRefAvailable release];
+	firstRefAvailable = first;
+	[firstRefAvailable retain];
+}
+
++ (void)setLastRefAvailable:(NSString*)last
+{
+	if(lastRefAvailable)
+		[lastRefAvailable release];
+	lastRefAvailable = last;
+	[lastRefAvailable retain];
+}
+
++ (NSString*)getFirstRefAvailable {
+	return firstRefAvailable;
+}
+
++ (NSString*)getLastRefAvailable {
+	return lastRefAvailable;
+}
+
 // note: this will install all the modules contained within a supplied ZIP file.
 - (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip {
 	
@@ -195,12 +222,12 @@ static PSModuleController *instance;
 		if(!book) {
 			book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSISOLatin1StringEncoding];
 		}
-		[ViewController setFirstRefAvailable: [NSString stringWithFormat: @"%@ 1", book]];
+		[PSModuleController setFirstRefAvailable: [NSString stringWithFormat: @"%@ 1", book]];
 		book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSUTF8StringEncoding];
 		if(!book) {
 			book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSISOLatin1StringEncoding];
 		}
-		[ViewController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
+		[PSModuleController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
 		
 		
 		// This seems to sometimes cause a crash on start-up in the SWORD-lib code.  removing this line fixes it...
