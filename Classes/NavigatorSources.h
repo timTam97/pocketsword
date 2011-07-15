@@ -19,7 +19,7 @@
 	IBOutlet PSAddSourceViewController *addSourceViewController;
 		
 	IBOutlet id manualInstallViewController;
-	
+	BOOL mmmMenuDisplayed;
 }
 
 //@property (readonly) PSModuleController *moduleManager;

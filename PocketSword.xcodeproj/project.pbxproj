@@ -2804,6 +2804,7 @@
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
 				05DA779F13CD754D000A4B97 /* PSWebView.h */,
 				05DA77A013CD754D000A4B97 /* PSWebView.m */,
+				05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */,
 			);
 			name = "b & c";
 			sourceTree = "<group>";
@@ -2924,7 +2925,8 @@
 				05DA778213CD7160000A4B97 /* EGORefreshTableHeaderView.h */,
 				05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */,
 			);
-			path = RefreshTableHeaderView;
+			name = RefreshTableHeaderView;
+			path = Classes/RefreshTableHeaderView;
 			sourceTree = "<group>";
 		};
 		05DF546710A93E69007CB847 /* SnoopWindow */ = {
@@ -2939,7 +2941,6 @@
 		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
-				05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */,
 				05DF546710A93E69007CB847 /* SnoopWindow */,
 				05D4629E10907130006BFBB1 /* PSLanguageCode.h */,
 				05D4629F10907130006BFBB1 /* PSLanguageCode.m */,

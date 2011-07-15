@@ -21,6 +21,7 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	
+	mmmMenuDisplayed = NO;
 	self.navigationItem.title = NSLocalizedString(@"InstallSourcesTitle", @"Sources");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	[self addManualInstallButton];
@@ -45,17 +46,26 @@
 }
 
 - (IBAction)editButtonPressed:(id)sender {
+	if(mmmMenuDisplayed) {
+		return;
+	}
+	mmmMenuDisplayed = YES;
 	UIActionSheet *actionSheet;
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference]) {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), NSLocalizedString(@"AddFTPSource", @""), /*NSLocalizedString(@"AddHTTPSource", @""),*/ NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @""), nil];
 	} else {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
 	}
-	
-	[actionSheet showFromTabBar:self.tabBarController.tabBar];
+	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {//ipad
+		[actionSheet showFromBarButtonItem:sender animated:YES];
+	} else {//iphone
+		[actionSheet showFromTabBar:self.tabBarController.tabBar];
+	}
+	[actionSheet release];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	mmmMenuDisplayed = NO;
 	if(buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 	

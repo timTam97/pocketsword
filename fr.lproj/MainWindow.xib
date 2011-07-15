@@ -3,16 +3,37 @@
 	<data>
 		<int key="IBDocument.SystemTarget">768</int>
 		<string key="IBDocument.SystemVersion">10J869</string>
-		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1306</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">132</string>
+			<string key="NS.object.0">301</string>
 		</object>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="106"/>
-			<integer value="985"/>
+		<array key="IBDocument.IntegratedClassDependencies">
+			<string>IBUITableView</string>
+			<string>IBUIDatePicker</string>
+			<string>IBUILabel</string>
+			<string>IBUIView</string>
+			<string>IBUICustomObject</string>
+			<string>IBUITableViewController</string>
+			<string>IBProxyObject</string>
+			<string>IBUINavigationController</string>
+			<string>IBUISegmentedControl</string>
+			<string>IBUIWebView</string>
+			<string>IBUINavigationItem</string>
+			<string>IBUITabBarController</string>
+			<string>IBUIToolbar</string>
+			<string>IBUIButton</string>
+			<string>IBUIWindow</string>
+			<string>IBUITabBar</string>
+			<string>IBUISearchBar</string>
+			<string>IBUIActivityIndicatorView</string>
+			<string>IBUIViewController</string>
+			<string>IBUIBarButtonItem</string>
+			<string>IBUIImageView</string>
+			<string>IBUINavigationBar</string>
+			<string>IBUITabBarItem</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -31,10 +52,11 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIWindow" id="380026005">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">1316</int>
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 480}</string>
+				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor" id="183709399">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MAA</bytes>
@@ -56,43 +78,88 @@
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<bool key="IBUIWantsFullScreenLayout">YES</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<bool key="IBUIHorizontal">NO</bool>
-				<object class="IBUIViewController" key="IBUISelectedViewController" id="822863">
-					<object class="IBUIWebView" key="IBUIView" id="1053444664">
+				<object class="IBUIViewController" key="IBUISelectedViewController" id="90017793">
+					<object class="IBUIView" key="IBUIView" id="404748505">
 						<reference key="NSNextResponder"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrameSize">{320, 411}</string>
+						<array class="NSMutableArray" key="NSSubviews">
+							<object class="IBUITableView" id="450617303">
+								<reference key="NSNextResponder" ref="404748505"/>
+								<int key="NSvFlags">274</int>
+								<string key="NSFrameSize">{320, 411}</string>
+								<reference key="NSSuperview" ref="404748505"/>
+								<object class="NSColor" key="IBUIBackgroundColor" id="105215499">
+									<int key="NSColorSpace">10</int>
+									<object class="NSImage" key="NSImage">
+										<int key="NSImageFlags">549453824</int>
+										<string key="NSSize">{84, 1}</string>
+										<array class="NSMutableArray" key="NSReps">
+											<array>
+												<integer value="0"/>
+												<object class="NSBitmapImageRep">
+													<object class="NSData" key="NSTIFFRepresentation">
+														<bytes key="NS.bytes">TU0AKgAAAVjFzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
+y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
+xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
+xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
+xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
+xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P8ADQEAAAMAAAABAFQAAAEB
+AAMAAAABAAEAAAECAAMAAAAEAAAB+gEDAAMAAAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAABAAAACAES
+AAMAAAABAAEAAAEVAAMAAAABAAQAAAEWAAMAAAABAAEAAAEXAAQAAAABAAABUAEcAAMAAAABAAEAAAFS
+AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
+													</object>
+												</object>
+											</array>
+										</array>
+										<object class="NSColor" key="NSColor">
+											<int key="NSColorSpace">3</int>
+											<bytes key="NSWhite">MCAwAA</bytes>
+										</object>
+									</object>
+									<string key="IBUIColorCocoaTouchKeyPath">groupTableViewBackgroundColor</string>
+								</object>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<bool key="IBUIBouncesZoom">NO</bool>
+								<int key="IBUIStyle">1</int>
+								<int key="IBUISeparatorStyle">1</int>
+								<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
+								<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
+								<float key="IBUIRowHeight">44</float>
+								<float key="IBUISectionHeaderHeight">10</float>
+								<float key="IBUISectionFooterHeight">10</float>
+							</object>
+						</array>
+						<string key="NSFrame">{{0, 20}, {320, 411}}</string>
 						<reference key="NSSuperview"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MSAxIDEAA</bytes>
-						</object>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<reference key="IBUIBackgroundColor" ref="183709399"/>
+						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<int key="IBUIDataDetectorTypes">1</int>
-						<bool key="IBUIDetectsPhoneNumbers">YES</bool>
 					</object>
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="572841271">
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="954857202">
 						<string key="IBUITitle"/>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">About.png</string>
+							<string key="NSResourceName">gear-24.png</string>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUITabBar"/>
 					</object>
 					<reference key="IBUIParentViewController" ref="1034742383"/>
 					<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 						<int key="IBUIStatusBarStyle">2</int>
 					</object>
 					<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+						<int key="IBUIInterfaceOrientation">1</int>
 						<int key="interfaceOrientation">1</int>
 					</object>
-					<bool key="IBUIWantsFullScreenLayout">YES</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					<bool key="IBUIHorizontal">NO</bool>
 				</object>
@@ -226,10 +293,10 @@
 								<string key="NSResourceName">bible.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -358,11 +425,11 @@
 								<string key="NSResourceName">commentary.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -429,11 +496,11 @@
 								<string key="NSResourceName">dictionary.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -455,7 +522,6 @@
 								<string key="NSResourceName">Daily-Devotional.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<object class="IBUISimulatedTabBarMetrics" key="IBUISimulatedBottomBarMetrics"/>
@@ -465,6 +531,7 @@
 						</object>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -474,102 +541,59 @@
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="726263302">
 							<string key="IBUITitle"/>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<reference key="IBUITabBar"/>
 							<int key="IBUISystemItemIdentifier">9</int>
 						</object>
 						<array key="IBUIToolbarItems" id="0"/>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<string key="IBUINibName">Downloader</string>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIHorizontal">NO</bool>
 					</object>
-					<object class="IBUIViewController" id="90017793">
-						<object class="IBUIView" key="IBUIView" id="404748505">
+					<reference ref="90017793"/>
+					<object class="IBUIViewController" id="822863">
+						<object class="IBUIWebView" key="IBUIView" id="1053444664">
 							<nil key="NSNextResponder"/>
 							<int key="NSvFlags">274</int>
-							<array class="NSMutableArray" key="NSSubviews">
-								<object class="IBUITableView" id="450617303">
-									<reference key="NSNextResponder" ref="404748505"/>
-									<int key="NSvFlags">274</int>
-									<string key="NSFrameSize">{320, 411}</string>
-									<reference key="NSSuperview" ref="404748505"/>
-									<object class="NSColor" key="IBUIBackgroundColor" id="105215499">
-										<int key="NSColorSpace">10</int>
-										<object class="NSImage" key="NSImage">
-											<int key="NSImageFlags">549453824</int>
-											<string key="NSSize">{84, 1}</string>
-											<array class="NSMutableArray" key="NSReps">
-												<array>
-													<integer value="0"/>
-													<object class="NSBitmapImageRep">
-														<object class="NSData" key="NSTIFFRepresentation">
-															<bytes key="NS.bytes">TU0AKgAAAVjFzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
-y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
-xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
-xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
-xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
-xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P8ADQEAAAMAAAABAFQAAAEB
-AAMAAAABAAEAAAECAAMAAAAEAAAB+gEDAAMAAAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAABAAAACAES
-AAMAAAABAAEAAAEVAAMAAAABAAQAAAEWAAMAAAABAAEAAAEXAAQAAAABAAABUAEcAAMAAAABAAEAAAFS
-AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
-														</object>
-													</object>
-												</array>
-											</array>
-											<object class="NSColor" key="NSColor">
-												<int key="NSColorSpace">3</int>
-												<bytes key="NSWhite">MCAwAA</bytes>
-											</object>
-										</object>
-										<string key="IBUIColorCocoaTouchKeyPath">groupTableViewBackgroundColor</string>
-									</object>
-									<bool key="IBUIOpaque">NO</bool>
-									<bool key="IBUIClipsSubviews">YES</bool>
-									<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-									<bool key="IBUIBouncesZoom">NO</bool>
-									<int key="IBUIStyle">1</int>
-									<int key="IBUISeparatorStyle">1</int>
-									<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
-									<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
-									<float key="IBUIRowHeight">44</float>
-									<float key="IBUISectionHeaderHeight">10</float>
-									<float key="IBUISectionFooterHeight">10</float>
-								</object>
-							</array>
-							<string key="NSFrameSize">{320, 411}</string>
-							<reference key="IBUIBackgroundColor" ref="183709399"/>
-							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+							<string key="NSFrame">{{0, 20}, {320, 411}}</string>
+							<object class="NSColor" key="IBUIBackgroundColor">
+								<int key="NSColorSpace">1</int>
+								<bytes key="NSRGB">MSAxIDEAA</bytes>
+							</object>
+							<bool key="IBUIMultipleTouchEnabled">YES</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<int key="IBUIDataDetectorTypes">1</int>
+							<bool key="IBUIDetectsPhoneNumbers">YES</bool>
 						</object>
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="954857202">
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="572841271">
 							<string key="IBUITitle"/>
 							<object class="NSCustomResource" key="IBUIImage">
 								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">gear-24.png</string>
+								<string key="NSResourceName">About.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="1034742383"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 							<int key="IBUIStatusBarStyle">2</int>
 						</object>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
+						<bool key="IBUIWantsFullScreenLayout">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIHorizontal">NO</bool>
 					</object>
-					<reference ref="822863"/>
 				</array>
 				<object class="IBUITabBar" key="IBUITabBar" id="795333663">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">266</int>
-					<string key="NSFrame">{{129, 330}, {163, 49}}</string>
+					<string key="NSFrame">{{0, 431}, {320, 49}}</string>
+					<reference key="NSSuperview"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">1</int>
 						<bytes key="NSRGB">MC4wMTA4Njk1NjMgMC4wMTA4Njk1NjMgMC4wMTA4Njk1NjMgMAA</bytes>
@@ -626,6 +650,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<reference key="IBUISimulatedStatusBarMetrics" ref="980622261"/>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<bool key="IBUIWantsFullScreenLayout">YES</bool>
@@ -652,6 +677,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -747,6 +773,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">3</int>
 					<int key="interfaceOrientation">3</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -773,6 +800,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -787,6 +815,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -826,6 +855,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 						<reference key="IBUIParentViewController" ref="327179536"/>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
 							<int key="interfaceOrientation">1</int>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -834,10 +864,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</array>
 			</object>
 			<object class="IBUISearchBar" id="470879492">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">290</int>
 				<string key="NSFrameSize">{320, 44}</string>
-				<reference key="NSSuperview"/>
 				<bool key="IBUIOpaque">NO</bool>
 				<int key="IBUIContentMode">3</int>
 				<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -904,6 +933,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -991,6 +1021,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</object>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">3</int>
 					<int key="interfaceOrientation">3</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1029,6 +1060,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
 				<bool key="IBUIWantsFullScreenLayout">YES</bool>
@@ -1808,6 +1840,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</object>
 					<int key="connectionID">1401</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">preferencesTableView</string>
+						<reference key="source" ref="90017793"/>
+						<reference key="destination" ref="450617303"/>
+					</object>
+					<int key="connectionID">1402</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -2532,17 +2572,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1401</int>
+			<int key="maxID">1402</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">externals/CocoaHTTPServer/AsyncSocket.h</string>
-					</object>
-				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NavigatorSources</string>
 					<string key="superclassName">UIViewController</string>
@@ -2596,23 +2629,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/NavigatorSources.h</string>
+						<string key="minorKey">./Classes/NavigatorSources.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PSAboutScreenController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">emailFeedback:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">emailFeedback:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">emailFeedback:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">aboutWebView</string>
 						<string key="NS.object.0">UIWebView</string>
@@ -2626,7 +2648,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSAboutScreenController.h</string>
+						<string key="minorKey">./Classes/PSAboutScreenController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2667,7 +2689,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSAddSourceViewController.h</string>
+						<string key="minorKey">./Classes/PSAddSourceViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2675,7 +2697,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string key="superclassName">UITableViewController</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSBasePreferencesController.h</string>
+						<string key="minorKey">./Classes/PSBasePreferencesController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2712,7 +2734,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSBibleViewController.h</string>
+						<string key="minorKey">./Classes/PSBibleViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2744,17 +2766,22 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSCommentaryViewController.h</string>
+						<string key="minorKey">./Classes/PSCommentaryViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PSDevotionalViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="moduleButtonPressed">id</string>
 						<string key="todayButtonPressed">id</string>
 						<string key="toggleDatePicker:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="moduleButtonPressed">
+							<string key="name">moduleButtonPressed</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="todayButtonPressed">
 							<string key="name">todayButtonPressed</string>
 							<string key="candidateClassName">id</string>
@@ -2768,6 +2795,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="devotionalDatePicker">UIDatePicker</string>
 						<string key="devotionalDatePickerView">UIView</string>
 						<string key="devotionalTabBarItem">UITabBarItem</string>
+						<string key="devotionalTitle">UIBarButtonItem</string>
 						<string key="devotionalWebView">UIWebView</string>
 						<string key="todayButton">UIBarButtonItem</string>
 					</dictionary>
@@ -2784,6 +2812,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">devotionalTabBarItem</string>
 							<string key="candidateClassName">UITabBarItem</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="devotionalTitle">
+							<string key="name">devotionalTitle</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="devotionalWebView">
 							<string key="name">devotionalWebView</string>
 							<string key="candidateClassName">UIWebView</string>
@@ -2795,7 +2827,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSDevotionalViewController.h</string>
+						<string key="minorKey">./Classes/PSDevotionalViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2815,9 +2847,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="candidateClassName">UIWebView</string>
 						</object>
 					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="974901718">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSDictionaryViewController.h</string>
+						<string key="minorKey">./Classes/PSDictionaryEntryViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2844,7 +2876,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="dictionarySearchBar">UISearchBar</string>
 						<string key="dictionaryTabBarItem">UITabBarItem</string>
 						<string key="dictionaryTitle">UIBarButtonItem</string>
-						<string key="overlayViewController">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="dictionaryDescriptionTitle">
@@ -2883,12 +2914,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">dictionaryTitle</string>
 							<string key="candidateClassName">UIBarButtonItem</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="overlayViewController">
-							<string key="name">overlayViewController</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
-					<reference key="sourceIdentifier" ref="974901718"/>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PSDictionaryViewController.h</string>
+					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PSLaunchViewController</string>
@@ -2909,15 +2939,15 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSLaunchViewController.h</string>
+						<string key="minorKey">./Classes/PSLaunchViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PSLoadingViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="93210054">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/ViewController.h</string>
+						<string key="minorKey">./Classes/PSLoadingViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2927,6 +2957,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="fontTableViewController">id</string>
 						<string key="moduleSelectorTableViewController">id</string>
 						<string key="preferencesTabBarItem">UITabBarItem</string>
+						<string key="preferencesTableView">UITableView</string>
 						<string key="tabController">UITabBarController</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -2942,6 +2973,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">preferencesTabBarItem</string>
 							<string key="candidateClassName">UITabBarItem</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="preferencesTableView">
+							<string key="name">preferencesTableView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="tabController">
 							<string key="name">tabController</string>
 							<string key="candidateClassName">UITabBarController</string>
@@ -2949,7 +2984,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSPreferencesController.h</string>
+						<string key="minorKey">./Classes/PSPreferencesController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2971,7 +3006,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSPreferencesFontTableViewController.h</string>
+						<string key="minorKey">./Classes/PSPreferencesFontTableViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2993,7 +3028,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSPreferencesModuleSelectorTableViewController.h</string>
+						<string key="minorKey">./Classes/PSPreferencesModuleSelectorTableViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3012,13 +3047,16 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PSRefSelectorController.h</string>
+						<string key="minorKey">./Classes/PSRefSelectorController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PSWebView</string>
 					<string key="superclassName">UIWebView</string>
-					<reference key="sourceIdentifier" ref="93210054"/>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PSWebView.h</string>
+					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PocketSwordAppDelegate</string>
@@ -3047,9 +3085,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="candidateClassName">UIWindow</string>
 						</object>
 					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="616822101">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/PocketSwordAppDelegate.h</string>
+						<string key="minorKey">./Classes/PocketSwordAppDelegate.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3071,22 +3109,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/SnoopWindow/SnoopWindow.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UINavigationController</string>
-					<reference key="sourceIdentifier" ref="616822101"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UITabBarController</string>
-					<reference key="sourceIdentifier" ref="616822101"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIWebView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/SearchWebView.h</string>
+						<string key="minorKey">./Classes/SnoopWindow.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3142,23 +3165,25 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="activityIndicator">UIActivityIndicatorView</string>
 						<string key="activityLoadingLabel">UILabel</string>
 						<string key="bibleActivity">UIActivityIndicatorView</string>
+						<string key="bibleRefButton">UIBarButtonItem</string>
 						<string key="bibleSearchButton">UIBarButtonItem</string>
 						<string key="bibleSegmentedControl">UISegmentedControl</string>
 						<string key="bibleTabController">PSBibleViewController</string>
 						<string key="bibleTitle">UIBarButtonItem</string>
 						<string key="bibleWebView">PSWebView</string>
 						<string key="commentaryActivity">UIActivityIndicatorView</string>
+						<string key="commentaryRefButton">UIBarButtonItem</string>
 						<string key="commentarySearchButton">UIBarButtonItem</string>
 						<string key="commentarySegmentedControl">UISegmentedControl</string>
 						<string key="commentaryTabController">PSCommentaryViewController</string>
 						<string key="commentaryTitle">UIBarButtonItem</string>
 						<string key="commentaryWebView">PSWebView</string>
+						<string key="devotionalTitle">UIBarButtonItem</string>
 						<string key="devotionalWebView">UIWebView</string>
 						<string key="dictionaryTitle">UIBarButtonItem</string>
 						<string key="dictionaryViewController">PSDictionaryViewController</string>
 						<string key="infoView">UIView</string>
 						<string key="infoWebView">UIWebView</string>
-						<string key="moduleSelectorViewController">id</string>
 						<string key="refNavigationController">UINavigationController</string>
 						<string key="refSelectorController">PSRefSelectorController</string>
 						<string key="tabController">UITabBarController</string>
@@ -3184,6 +3209,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">bibleActivity</string>
 							<string key="candidateClassName">UIActivityIndicatorView</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="bibleRefButton">
+							<string key="name">bibleRefButton</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="bibleSearchButton">
 							<string key="name">bibleSearchButton</string>
 							<string key="candidateClassName">UIBarButtonItem</string>
@@ -3208,6 +3237,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">commentaryActivity</string>
 							<string key="candidateClassName">UIActivityIndicatorView</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="commentaryRefButton">
+							<string key="name">commentaryRefButton</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="commentarySearchButton">
 							<string key="name">commentarySearchButton</string>
 							<string key="candidateClassName">UIBarButtonItem</string>
@@ -3227,6 +3260,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="IBToOneOutletInfo" key="commentaryWebView">
 							<string key="name">commentaryWebView</string>
 							<string key="candidateClassName">PSWebView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="devotionalTitle">
+							<string key="name">devotionalTitle</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="devotionalWebView">
 							<string key="name">devotionalWebView</string>
@@ -3248,10 +3285,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="name">infoWebView</string>
 							<string key="candidateClassName">UIWebView</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="moduleSelectorViewController">
-							<string key="name">moduleSelectorViewController</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="refNavigationController">
 							<string key="name">refNavigationController</string>
 							<string key="candidateClassName">UINavigationController</string>
@@ -3265,367 +3298,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string key="candidateClassName">UITabBarController</string>
 						</object>
 					</dictionary>
-					<reference key="sourceIdentifier" ref="93210054"/>
-				</object>
-			</array>
-			<array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
-				<object class="IBPartialClassDescription">
-					<string key="className">NSNotification</string>
-					<string key="superclassName">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSNotification.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSError.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSFileManager.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSKeyValueCoding.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSKeyValueObserving.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSKeyedArchiver.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSObject.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSRunLoop.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSThread.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSURL.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSURLConnection.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">QuartzCore.framework/Headers/CAAnimation.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">QuartzCore.framework/Headers/CALayer.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIAccessibility.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UINibLoading.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="250252966">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIResponder.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIActivityIndicatorView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIActivityIndicatorView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIApplication</string>
-					<string key="superclassName">UIResponder</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIApplication.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIBarButtonItem</string>
-					<string key="superclassName">UIBarItem</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIBarButtonItem.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIBarItem</string>
-					<string key="superclassName">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIBarItem.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIButton</string>
-					<string key="superclassName">UIControl</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIButton.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIControl</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIControl.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIDatePicker</string>
-					<string key="superclassName">UIControl</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIDatePicker.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIImageView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIImageView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UILabel</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UILabel.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UINavigationBar</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="363338681">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UINavigationBar.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UINavigationController</string>
-					<string key="superclassName">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="101261476">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UINavigationController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UINavigationItem</string>
-					<string key="superclassName">NSObject</string>
-					<reference key="sourceIdentifier" ref="363338681"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIResponder</string>
-					<string key="superclassName">NSObject</string>
-					<reference key="sourceIdentifier" ref="250252966"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIScrollView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIScrollView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UISearchBar</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UISearchBar.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UISearchDisplayController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UISearchDisplayController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UISegmentedControl</string>
-					<string key="superclassName">UIControl</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UISegmentedControl.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UITabBar</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UITabBar.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UITabBarController</string>
-					<string key="superclassName">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="598382988">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UITabBarController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UITabBarItem</string>
-					<string key="superclassName">UIBarItem</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UITabBarItem.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UITableView</string>
-					<string key="superclassName">UIScrollView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UITableView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UITableViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UITableViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIToolbar</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIToolbar.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIPrintFormatter.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UITextField.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIView</string>
-					<string key="superclassName">UIResponder</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<reference key="sourceIdentifier" ref="101261476"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIPopoverController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UISplitViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<reference key="sourceIdentifier" ref="598382988"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<string key="superclassName">UIResponder</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIWebView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIWebView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIWindow</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">UIKit.framework/Headers/UIWindow.h</string>
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ViewController.h</string>
 					</object>
 				</object>
 			</array>
@@ -3641,7 +3316,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<integer value="1056" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
-		<string key="IBDocument.LastKnownRelativeProjectPath">../PocketSword.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="About.png">{40, 30}</string>
@@ -3657,6 +3331,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<string key="popup-down-button.png">{20, 20}</string>
 			<string key="popup-top-bar.png">{320, 20}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">132</string>
+		<string key="IBCocoaTouchPluginVersion">301</string>
 	</data>
 </archive>
