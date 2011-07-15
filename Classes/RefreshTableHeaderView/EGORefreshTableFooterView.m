@@ -30,8 +30,9 @@
 @implementation EGORefreshTableFooterView
 
 - (void)setup:(CGRect)frame {
-    _lastUpdatedLabelFrame = CGRectMake(0.0f, 10.0f, self.frame.size.width, 20.0f);
-    _statusLabelFrame      = CGRectMake(0.0f, 28.0f, self.frame.size.width, 20.0f);
+    //_lastUpdatedLabelFrame = CGRectMake(0.0f, 10.0f, self.frame.size.width, 20.0f);
+    //_statusLabelFrame      = CGRectMake(0.0f, 28.0f, self.frame.size.width, 20.0f);
+    _statusLabelFrame      = CGRectMake(0.0f, 20.0f, self.frame.size.width, 20.0f);
     _arrowImageFrame       = CGRectMake(25.0f, 10.0f, 30.0f, 55.0f);
     _activityViewFrame     = CGRectMake(25.0f, 18.0f, 20.0f, 20.0f);
     
@@ -42,7 +43,7 @@
     _pullingLabelText = NSLocalizedString(@"Pull up to refresh...", @"Pull down to refresh status");
     _loadingLabelText = NSLocalizedString(@"Loading...", @"Loading Status");
     
-    _userDefaultsKey = @"EGORefreshTableFooterView_LastRefresh";
+    //_userDefaultsKey = @"EGORefreshTableFooterView_LastRefresh";
 }
 
 @end

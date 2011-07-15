@@ -66,13 +66,13 @@
     }
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
 	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
-		DLog(@"last: %@", currentRef);
+		//DLog(@"last: %@", currentRef);
 		refreshFooterView.hidden = YES;
 	} else if([currentRef isEqualToString: [PSModuleController getFirstRefAvailable]]) {
-		DLog(@"first: %@", currentRef);
+		//DLog(@"first: %@", currentRef);
 		refreshHeaderView.hidden = YES;
 	} else {
-		DLog(@"not last or first: %@", currentRef);
+		//DLog(@"not last or first: %@", currentRef);
 	}
 
 }
@@ -162,12 +162,12 @@
 	
     if ([refreshHeaderView state] != EGOOPullRefreshNormal) {
         [refreshHeaderView setState:EGOOPullRefreshNormal];
-        [refreshHeaderView setCurrentDate];  //  should check if data reload was successful 
+        //[refreshHeaderView setCurrentDate];  //  should check if data reload was successful 
     }
     
     if ([refreshFooterView state] != EGOOPullRefreshNormal) {
         [refreshFooterView setState:EGOOPullRefreshNormal];
-        [refreshFooterView setCurrentDate];  //  should check if data reload was successful 
+        //[refreshFooterView setCurrentDate];  //  should check if data reload was successful 
     }
 }
 

@@ -34,7 +34,7 @@ typedef enum{
 
 @interface EGORefreshTableHeaderView : UIView {
 	
-	UILabel *_lastUpdatedLabel;
+	//UILabel *_lastUpdatedLabel;
 	UILabel *_statusLabel;
 	CALayer *_arrowImage;
 	UIActivityIndicatorView *_activityView;
@@ -42,7 +42,7 @@ typedef enum{
 	EGOPullRefreshState _state;
 
 @protected
-    CGRect _lastUpdatedLabelFrame;
+    //CGRect _lastUpdatedLabelFrame;
     CGRect _statusLabelFrame;
     CGRect _arrowImageFrame;
     CGRect _activityViewFrame;
@@ -54,7 +54,7 @@ typedef enum{
     NSString *_pullingLabelText;
     NSString *_loadingLabelText;
     
-    NSString *_userDefaultsKey;
+    //NSString *_userDefaultsKey;
 }
 
 @property(nonatomic,assign) EGOPullRefreshState state;
@@ -62,7 +62,7 @@ typedef enum{
 @property(nonatomic,retain) NSString *pullingLabelText;
 @property(nonatomic,retain) NSString *loadingLabelText;
 
-- (void)setCurrentDate;
+//- (void)setCurrentDate;
 - (void)setState:(EGOPullRefreshState)aState;
 - (void)setup:(CGRect)frame;
 

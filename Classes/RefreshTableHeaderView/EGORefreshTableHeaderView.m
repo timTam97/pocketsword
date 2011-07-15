@@ -45,25 +45,25 @@
         
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	
-		UILabel *label = [[UILabel alloc] initWithFrame:_lastUpdatedLabelFrame];
-		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont systemFontOfSize:12.0f];
-		label.textColor = TEXT_COLOR;
-		label.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
-		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
-		label.backgroundColor = [UIColor clearColor];
-		label.textAlignment = UITextAlignmentCenter;
-		[self addSubview:label];
-		_lastUpdatedLabel=label;
-		[label release];
-
-		if ([[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey]) {
-			_lastUpdatedLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
-		} else {
-			[self setCurrentDate];
-		}
+//		UILabel *label = [[UILabel alloc] initWithFrame:_lastUpdatedLabelFrame];
+//		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//		label.font = [UIFont systemFontOfSize:12.0f];
+//		label.textColor = TEXT_COLOR;
+//		label.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+//		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
+//		label.backgroundColor = [UIColor clearColor];
+//		label.textAlignment = UITextAlignmentCenter;
+//		[self addSubview:label];
+//		_lastUpdatedLabel=label;
+//		[label release];
+//
+//		if ([[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey]) {
+//			_lastUpdatedLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:_userDefaultsKey];
+//		} else {
+//			[self setCurrentDate];
+//		}
 		
-		label = [[UILabel alloc] initWithFrame:_statusLabelFrame];
+		UILabel *label = [[UILabel alloc] initWithFrame:_statusLabelFrame];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		label.font = [UIFont boldSystemFontOfSize:13.0f];
 		label.textColor = TEXT_COLOR;
@@ -102,16 +102,16 @@
     return self;
 }
 
-- (void)setCurrentDate {
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setAMSymbol:@"AM"];
-	[formatter setPMSymbol:@"PM"];
-	[formatter setDateFormat:@"MM/dd/yyyy hh:mm:a"];
-	_lastUpdatedLabel.text = [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:[NSDate date]]];
-	[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:_userDefaultsKey];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	[formatter release];
-}
+//- (void)setCurrentDate {
+//	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//	[formatter setAMSymbol:@"AM"];
+//	[formatter setPMSymbol:@"PM"];
+//	[formatter setDateFormat:@"MM/dd/yyyy hh:mm:a"];
+//	_lastUpdatedLabel.text = [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:[NSDate date]]];
+//	[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:_userDefaultsKey];
+//	[[NSUserDefaults standardUserDefaults] synchronize];
+//	[formatter release];
+//}
 
 - (void)setState:(EGOPullRefreshState)aState{
 	
@@ -161,8 +161,9 @@
 }
 
 - (void)setup:(CGRect)frame {
-    _lastUpdatedLabelFrame = CGRectMake(0.0f, frame.size.height - 30.0f, self.frame.size.width, 20.0f);
-    _statusLabelFrame      = CGRectMake(0.0f, frame.size.height - 48.0f, self.frame.size.width, 20.0f);
+    //_lastUpdatedLabelFrame = CGRectMake(0.0f, frame.size.height - 30.0f, self.frame.size.width, 20.0f);
+    //_statusLabelFrame      = CGRectMake(0.0f, frame.size.height - 48.0f, self.frame.size.width, 20.0f);
+    _statusLabelFrame      = CGRectMake(0.0f, frame.size.height - 40.0f, self.frame.size.width, 20.0f);
     _arrowImageFrame       = CGRectMake(25.0f, frame.size.height - 65.0f, 30.0f, 55.0f);
     _activityViewFrame     = CGRectMake(25.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
     
@@ -173,14 +174,14 @@
     _pullingLabelText = NSLocalizedString(@"Pull down to refresh...", @"Pull down to refresh status");
     _loadingLabelText = NSLocalizedString(@"Loading...", @"Loading Status");
     
-    _userDefaultsKey = @"EGORefreshTableHeaderView_LastRefresh";
+    //_userDefaultsKey = @"EGORefreshTableHeaderView_LastRefresh";
 }
 
 - (void)dealloc {
 	_activityView = nil;
 	_statusLabel = nil;
 	_arrowImage = nil;
-	_lastUpdatedLabel = nil;
+	//_lastUpdatedLabel = nil;
     [super dealloc];
 }
 
