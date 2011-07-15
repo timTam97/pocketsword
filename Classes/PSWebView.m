@@ -35,7 +35,7 @@
 	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
 	cachedHeight = [heightString floatValue];
 
-	DLog(@"resetting cached height; now tis: %f", cachedHeight);
+	//DLog(@"resetting cached height; now tis: %f", cachedHeight);
 	
 	UIScrollView* currentScrollView;
     for (UIView* subView in self.subviews) {

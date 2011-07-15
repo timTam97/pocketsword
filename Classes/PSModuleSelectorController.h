@@ -12,6 +12,7 @@
 @interface PSModuleSelectorController : UIViewController {
 	ShownTab listType;
 	SwordModule *moduleToView;
+	UITabBarController			*parentTabBarController;
 	IBOutlet PSModuleLeafViewController *leafViewController;
 	IBOutlet UITabBarController *leafTabBarController;
 
@@ -26,6 +27,7 @@
 
 @property (assign) ShownTab listType;
 @property (retain, readwrite) SwordModule *moduleToView;
+@property (assign) UITabBarController *parentTabBarController;
 //@property (assign) BOOL reloadModuleViews;
 
 - (void)addButtonsToToolbar:(BOOL)animated;

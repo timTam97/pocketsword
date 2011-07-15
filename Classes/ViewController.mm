@@ -511,6 +511,7 @@ bool ps_viewcontroller_initialized = false;
 		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil] autorelease];
 		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
 		modSelectorNavController.navigationBarHidden = YES;
+		[moduleSelectorViewController setParentTabBarController:tabController];
 
 		if(swordModule) {
 			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = swordModule;

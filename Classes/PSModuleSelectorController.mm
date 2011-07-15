@@ -14,7 +14,7 @@
 
 @implementation PSModuleSelectorController
 
-@synthesize listType, moduleToView;
+@synthesize listType, moduleToView, parentTabBarController;
 //@synthesize reloadModuleViews;
 
 - (void)viewDidLoad {
@@ -340,7 +340,8 @@
 	[leafViewController displayInfoForModule:mod];
 	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
 		//leafTabBarController.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self presentModalViewController:leafTabBarController animated:YES];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+		[parentTabBarController presentModalViewController:leafTabBarController animated:YES];
 	} else {
 		[self.navigationController pushViewController:leafTabBarController animated:YES];
 	}

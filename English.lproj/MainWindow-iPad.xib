@@ -890,9 +890,10 @@
 			</object>
 			<object class="IBUITableViewController" id="996913943">
 				<object class="IBUITableView" key="IBUIView" id="176012614">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<string key="NSFrame">{{0, 20}, {768, 1004}}</string>
+					<reference key="NSSuperview"/>
 					<reference key="IBUIBackgroundColor" ref="185684040"/>
 					<bool key="IBUIOpaque">NO</bool>
 					<bool key="IBUIClipsSubviews">YES</bool>
@@ -943,9 +944,10 @@
 				<array class="NSMutableArray" key="IBUIViewControllers">
 					<object class="IBUIViewController" id="78384495">
 						<object class="IBUITableView" key="IBUIView" id="151246611">
-							<nil key="NSNextResponder"/>
+							<reference key="NSNextResponder"/>
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 64}, {768, 960}}</string>
+							<reference key="NSSuperview"/>
 							<reference key="IBUIBackgroundColor" ref="866556179"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
