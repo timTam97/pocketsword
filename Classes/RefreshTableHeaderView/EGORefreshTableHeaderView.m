@@ -170,8 +170,8 @@
     _arrowPullingTransform = CATransform3DMakeRotation((M_PI / 180.0) * 180.0f, 0.0f, 0.0f, 1.0f);
     _arrowNormalTransform  = CATransform3DIdentity;
     
-    _releaseLabelText = NSLocalizedString(@"Release to refresh...", @"Release to refresh status");
-    _pullingLabelText = NSLocalizedString(@"Pull down to refresh...", @"Pull down to refresh status");
+    _releaseLabelText = NSLocalizedString(@"Release for previous chapter...", @"Release to refresh status");
+    _pullingLabelText = NSLocalizedString(@"Pull down for previous chapter...", @"Pull down to refresh status");
     _loadingLabelText = NSLocalizedString(@"Loading...", @"Loading Status");
     
     //_userDefaultsKey = @"EGORefreshTableHeaderView_LastRefresh";
