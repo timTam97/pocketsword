@@ -33,5 +33,6 @@
 - (void)reloadTableViewDataSourceBottom;
 - (void)dataSourceDidFinishLoadingNewData;
 - (void)setupRefreshViews;
+- (void)removeRefreshViews;
 
 @end

@@ -41,7 +41,6 @@
 	}
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		redrawInNewFrames = YES;
-		//tabBarHeight = TAB_BAR_LANDSCAPE_HEIGHT;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
 		width = screen.height;
 		topBarHeight = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
@@ -49,11 +48,8 @@
 		if(useStatusBar) {
 			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.width;
 		}
-		//tabBarY = viewHeight+barHeight;
-		//if(useStatusBar) tabBarY += [UIApplication sharedApplication].statusBarFrame.size.width;
 	} else if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		redrawInNewFrames = YES;
-		//tabBarHeight = TAB_BAR_PORTRAIT_HEIGHT;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_PORTRAIT_HEIGHT : 0.0;
 		width = screen.width;
 		topBarHeight = TOP_BAR_PORTRAIT_HEIGHT;
@@ -61,8 +57,6 @@
 		if(useStatusBar) {
 			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.height;
 		}
-		//tabBarY = viewHeight+barHeight;
-		//if(useStatusBar) tabBarY += [UIApplication sharedApplication].statusBarFrame.size.height;
 	}
 	if(redrawInNewFrames) {
 		topBar.frame = CGRectMake(0.0, 0.0, width, topBarHeight);
@@ -74,8 +68,6 @@
 			[bottomBar setNeedsDisplay];
 		}
 		mainView.frame = CGRectMake(0.0, topBarHeight, width, viewHeight);
-		//tabBarController.tabBar.frame = CGRectMake(0.0, tabBarY, width, tabBarHeight);
-		//tabBarController.selectedViewController.view.frame = CGRectMake(0.0, 0.0, width, tabBarY);
 	}
 }
 

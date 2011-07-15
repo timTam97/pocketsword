@@ -72,6 +72,7 @@
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[bibleWebView removeRefreshViews];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -84,6 +85,7 @@
 		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 	}
 	[bibleWebView stringByEvaluatingJavaScriptFromString:js];
+	[bibleWebView setupRefreshViews];
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
@@ -106,16 +108,25 @@
 		[self toggleFullscreen];
 }
 
+- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+	[bibleWebView setupRefreshViews];
+}
+
 - (void)toggleFullscreen {
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
+	[bibleWebView removeRefreshViews];
+	CGRect tmpFrame = CGRectMake(bibleWebView.frame.origin.x, bibleWebView.frame.origin.y, bibleWebView.frame.size.width, (bibleWebView.frame.size.height+400.0f));
+	bibleWebView.frame = tmpFrame;
 	
-    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
 	
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.3];
+    [UIView setAnimationDuration:0.5];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 	
+    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
     //move tab bar up/down
     CGRect tabBarFrame = self.tabBarController.tabBar.frame;
     int tabBarHeight = tabBarFrame.size.height;
@@ -135,9 +146,9 @@
         [self.tabBarController.view addSubview:bibleWebView];
         bibleWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];
     } else {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
         [self.view addSubview:bibleWebView];
         self.tabBarController.view = previousTabBarView;
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
     }
 	
     [UIView commitAnimations];

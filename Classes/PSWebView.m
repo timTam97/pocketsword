@@ -26,6 +26,11 @@
 
 @synthesize reloading=_reloading, psDelegate;
 
+- (void)removeRefreshViews {
+	refreshFooterView.hidden = YES;
+	refreshHeaderView.hidden = YES;
+}
+
 - (void)setupRefreshViews {
 	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
 	cachedHeight = [heightString floatValue];
