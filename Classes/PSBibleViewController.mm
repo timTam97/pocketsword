@@ -118,14 +118,19 @@
 		[UIView commitAnimations];
 	}
 	[bibleWebView setupRefreshViews];
+	//NSString *posJS = [NSString stringWithFormat:@"scrollToPosition(%@);startDetLocPoll();", [[NSUserDefaults standardUserDefaults] objectForKey:@"bibleScrollPosition"]];
+	//[bibleWebView stringByEvaluatingJavaScriptFromString:posJS];
+	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	//bibleWebView.hidden = NO;
 }
 
 - (void)toggleFullscreen {
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	[bibleWebView removeRefreshViews];
-	CGRect tmpFrame = CGRectMake(bibleWebView.frame.origin.x, bibleWebView.frame.origin.y, bibleWebView.frame.size.width, (bibleWebView.frame.size.height+400.0f));
-	bibleWebView.frame = tmpFrame;
+	//bibleWebView.hidden = YES;
+	//CGRect tmpFrame = CGRectMake(bibleWebView.frame.origin.x, bibleWebView.frame.origin.y, bibleWebView.frame.size.width, (bibleWebView.frame.size.height+400.0f));
+	//bibleWebView.frame = tmpFrame;
 	
 	if(!isFullScreen)
 		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
@@ -163,7 +168,6 @@
     [UIView commitAnimations];
 	
 	
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
 //- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

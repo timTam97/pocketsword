@@ -1163,7 +1163,6 @@
 					function detLoc() {\n\
 						document.location = \"pocketsword:currentverse:\" + currentVerse() + \":\" + window.pageYOffset + \":\" + versepos[currentVerse()];\n\
 					}\n\
-					//window.onscroll = detLoc;//this doesn't seem to work properly on the iPhone\n\
 					function startDetLocPoll() {\n\
 						stopDetLocPoll();//we don't want this running more than once, so stop previous polls first...\n\
 						det_loc_poll = setInterval(\"detLoc()\", 1000);\n\
@@ -1174,18 +1173,44 @@
 					function scrollToVerse(verse) {\n\
 						setTimeout(\"_scrollToVerse(\"+verse+\")\", 250);\n\
 					}\n\
+					function scrollToYOffset(iTargetY) {\n\
+						iTargetY = iTargetY < 0 ? 0 : iTargetY;\n\
+						var frameInterval = 20; // 20 milliseconds per frame\n\
+						var totalTime = 750;\n\
+						var startY = window.pageYOffset;\n\
+						var d = iTargetY - startY; // total distance to scroll\n\
+						var freq = Math.PI / (2 * totalTime); // frequency\n\
+						var startTime = new Date().getTime();\n\
+						var tmr = setInterval(\n\
+							function () {\n\
+								// check the time that has passed from the last frame\n\
+								var elapsedTime = new Date().getTime() - startTime;\n\
+								if (elapsedTime < totalTime) { // are we there yet?\n\
+									var f = Math.abs(Math.sin(elapsedTime * freq));\n\
+									window.scrollTo(0, Math.round(f*d) + startY);\n\
+								} else {\n\
+									clearInterval(tmr);\n\
+									window.scrollTo(0, iTargetY);\n\
+								}\n\
+							}\n\
+							, frameInterval);\n\
+					}\n\
 					function scrollToPosition(position) {\n\
-						setTimeout(\"window.scrollTo(0, \"+position+\")\", 250);\n\
+						//setTimeout(\"window.scrollTo(0, \"+position+\")\", 250);\n\
+						setTimeout(\"scrollToYOffset(\"+position+\")\", 250);\n\
 					}\n\
 					function _scrollToVerse(verse) {\n\
-						if(verse == '1' || verse == '0')\n\
-							window.scrollTo(0,0);\n\
-						else if(versepos[verse] != 0) {\n\
-							window.scrollTo(0, versepos[verse]);\n\
+						if(verse == '1' || verse == '0') {\n\
+							//window.scrollTo(0,0);\n\
+							scrollToYOffset(0);\n\
+						} else if(versepos[verse] != 0) {\n\
+							//window.scrollTo(0, versepos[verse]);\n\
+							scrollToYOffset(versepos[verse]);\n\
 						} else {\n\
 							for(var ii = verse; ii > 0; ii--) {\n\
 								if(versepos[ii] != 0) {\n\
-									window.scrollTo(0, versepos[ii]);\n\
+									//window.scrollTo(0, versepos[ii]);\n\
+									scrollToYOffset(versepos[ii]);\n\
 								}\n\
 							}\n\
 						}\n\
