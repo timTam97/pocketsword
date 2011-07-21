@@ -44,6 +44,13 @@
             currentScrollView.delegate = self;
         }
     }
+	
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		currentScrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+	} else {
+		currentScrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+	}
+	
 	[refreshHeaderView removeFromSuperview];
 	refreshHeaderView = nil;
 	[refreshFooterView removeFromSuperview];

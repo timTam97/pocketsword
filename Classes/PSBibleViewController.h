@@ -13,7 +13,7 @@
 	IBOutlet UITabBarItem				*bibleTabBarItem;
 	IBOutlet UIToolbar *bibleToolbar;
 	
-	IBOutlet PSWebView *bibleWebView;
+	IBOutlet PSWebView *webView;
 	IBOutlet PSCommentaryViewController *commentaryView;
 	
 	IBOutlet id viewController;

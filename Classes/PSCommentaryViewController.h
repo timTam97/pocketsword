@@ -11,7 +11,7 @@
 @interface PSCommentaryViewController : UIViewController <UIWebViewDelegate, PSWebViewDelegate> {
 	IBOutlet UITabBarItem				*commentaryTabBarItem;
 
-	IBOutlet UIWebView *webView;
+	IBOutlet PSWebView *webView;
 	IBOutlet UIToolbar *toolbar;
 	
 	IBOutlet id viewController;

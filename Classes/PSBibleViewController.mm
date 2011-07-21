@@ -31,7 +31,7 @@
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
-	bibleWebView.psDelegate = self;
+	webView.psDelegate = self;
 }
 
 - (void)topReloadTriggered {
@@ -54,25 +54,25 @@
 	if(refToShow) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
-		[bibleWebView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+		[webView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	} else {
-		[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 	if(!self.isFullScreen) {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:YES];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:YES];
 	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);", [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsBibleVersePosition]];
 	if(isFullScreen)
 		return;
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-	[bibleWebView removeRefreshViews];
+	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[webView removeRefreshViews];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -84,8 +84,8 @@
 	} else {
 		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 	}
-	[bibleWebView stringByEvaluatingJavaScriptFromString:js];
-	[bibleWebView setupRefreshViews];
+	[webView stringByEvaluatingJavaScriptFromString:js];
+	[webView setupRefreshViews];
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
@@ -95,7 +95,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 }
 
 - (void)switchToFullscreen {
@@ -114,23 +114,23 @@
 		[UIView beginAnimations:@"fullscreen2" context:nil];
 		[UIView setAnimationBeginsFromCurrentState:YES];
 		[UIView setAnimationDuration:0.5];
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
 		[UIView commitAnimations];
 	}
-	[bibleWebView setupRefreshViews];
+	[webView setupRefreshViews];
 	//NSString *posJS = [NSString stringWithFormat:@"scrollToPosition(%@);startDetLocPoll();", [[NSUserDefaults standardUserDefaults] objectForKey:@"bibleScrollPosition"]];
-	//[bibleWebView stringByEvaluatingJavaScriptFromString:posJS];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-	//bibleWebView.hidden = NO;
+	//[webView stringByEvaluatingJavaScriptFromString:posJS];
+	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	//webView.hidden = NO;
 }
 
 - (void)toggleFullscreen {
-	[bibleWebView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
+	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
-	[bibleWebView removeRefreshViews];
-	//bibleWebView.hidden = YES;
-	//CGRect tmpFrame = CGRectMake(bibleWebView.frame.origin.x, bibleWebView.frame.origin.y, bibleWebView.frame.size.width, (bibleWebView.frame.size.height+400.0f));
-	//bibleWebView.frame = tmpFrame;
+	[webView removeRefreshViews];
+	//webView.hidden = YES;
+	//CGRect tmpFrame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, (webView.frame.size.height+400.0f));
+	//webView.frame = tmpFrame;
 	
 	if(!isFullScreen)
 		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
@@ -153,16 +153,16 @@
     self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
 	
     //resize webview to be full screen / normal
-    [bibleWebView removeFromSuperview];
+    [webView removeFromSuperview];
     if(isFullScreen) {
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
-        [self.tabBarController.view addSubview:bibleWebView];
-        bibleWebView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];
+        [self.tabBarController.view addSubview:webView];
+        webView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];
     } else {
-        [self.view addSubview:bibleWebView];
+        [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
-		//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
+		//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
     }
 	
     [UIView commitAnimations];
@@ -187,13 +187,13 @@
 	if(shownBookmarks && [shownBookmarks count] > 0) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:@"HighlightBookmarks" ofType:@"js"];
 		NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-		[bibleWebView stringByEvaluatingJavaScriptFromString:jsCode];
+		[webView stringByEvaluatingJavaScriptFromString:jsCode];
 		for(PSBookmark *bookmark in shownBookmarks) {
 			if(bookmark.rgbHexString) {
 				NSString *verse = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
 				NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, [PSBookmarkFolder rgbStringFromHexString:bookmark.rgbHexString]];
 				//DLog(@"%@", jsFunction);
-				[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
+				[webView stringByEvaluatingJavaScriptFromString:jsFunction];
 			}
 		}
 	}
@@ -204,7 +204,7 @@
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 	NSString *fontColor = (nightMode) ? @"white" : @"black";
 	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d','%@')", verses, fontColor];
-	[bibleWebView stringByEvaluatingJavaScriptFromString:jsFunction];
+	[webView stringByEvaluatingJavaScriptFromString:jsFunction];
 }
 
 - (void)redoBookmarkHighlights {
@@ -212,11 +212,11 @@
 	[self highlightBookmarks];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webViewDidFinishLoad:(UIWebView *)wView {
 	
 	//highlight bookmarked verses
 	[self highlightBookmarks];
-	[bibleWebView setupRefreshViews];
+	[webView setupRefreshViews];
 	
 	//highlight search results
 	// TODO: implement highlighting of search results
@@ -245,7 +245,7 @@
 			//DLog(@"    %@", tappedVerse);
 			NSString *sheetTitle = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerse];
 			UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
-			//[sheet showInView:bibleWebView];
+			//[sheet showInView:webView];
 			//[sheet showInView:self.tabBarController.view];
 			[sheet showFromTabBar:self.tabBarController.tabBar];
 		}

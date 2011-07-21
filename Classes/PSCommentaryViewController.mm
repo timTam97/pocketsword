@@ -23,6 +23,7 @@
 	isFullScreen = NO;
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
+	webView.psDelegate = self;
 }
 
 - (void)topReloadTriggered {
@@ -75,6 +76,7 @@
 	if(isFullScreen)
 		return;
 	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:toolbar mainView:webView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+	[webView removeRefreshViews];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -87,6 +89,7 @@
 		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 	}
 	[webView stringByEvaluatingJavaScriptFromString:js];
+	[webView setupRefreshViews];
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
@@ -109,15 +112,32 @@
 		[self toggleFullscreen];
 }
 
+- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	if(!isFullScreen) {
+		[UIView beginAnimations:@"fullscreen2" context:nil];
+		[UIView setAnimationBeginsFromCurrentState:YES];
+		[UIView setAnimationDuration:0.5];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:NO];
+		[UIView commitAnimations];
+	}
+	[webView setupRefreshViews];
+	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+}
+
 - (void)toggleFullscreen {
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
+	[webView removeRefreshViews];
 	
-    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	if(!isFullScreen)
+		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
 	
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.3];
+    [UIView setAnimationDuration:0.5];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 	
     //move tab bar up/down
     CGRect tabBarFrame = self.tabBarController.tabBar.frame;
@@ -140,18 +160,23 @@
         webView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];  //checks orientation to provide the correct rect
 		
     } else {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:NO];
         [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
+		//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:NO];
     }
 	
     [UIView commitAnimations];
-	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
 //- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 //	[self toggleFullscreen];
 //}
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)wView {
+	
+	[webView setupRefreshViews];
+}
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
