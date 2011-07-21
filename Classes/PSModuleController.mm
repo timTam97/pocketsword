@@ -944,6 +944,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 	NSString *fontSizeMinusOne = [NSString stringWithFormat:@"<font style=\"font-size: %dpt;line-height: 0%%;\">", (fs-2)];
 	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
+	NSString *iPadPadding = @"";
+	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+		iPadPadding = @"padding: 10px;\n";
+	}
+
 
 	//-webkit-user-select: none; needs to be added to the body CSS to disable copy&paste.
 	
@@ -966,6 +971,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 				font-family: %@;\n\
 				line-height: 130%%;\n\
 				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
+				%@\n\
 			}\n\
 			i.transChangeAdded {\n\
 				color: gray;\n\
@@ -1021,6 +1027,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			backgroundColor, 
 			fontSize,
 			fontName,
+			iPadPadding,
 			linkColor,
 			fontColor,
 			RUBY_CSS,
