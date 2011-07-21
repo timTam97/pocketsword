@@ -109,6 +109,14 @@
 }
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	if(!isFullScreen) {
+		[UIView beginAnimations:@"fullscreen2" context:nil];
+		[UIView setAnimationBeginsFromCurrentState:YES];
+		[UIView setAnimationDuration:0.5];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
+		[UIView commitAnimations];
+	}
 	[bibleWebView setupRefreshViews];
 }
 
@@ -119,6 +127,8 @@
 	CGRect tmpFrame = CGRectMake(bibleWebView.frame.origin.x, bibleWebView.frame.origin.y, bibleWebView.frame.size.width, (bibleWebView.frame.size.height+400.0f));
 	bibleWebView.frame = tmpFrame;
 	
+	if(!isFullScreen)
+		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
 	
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
@@ -126,7 +136,7 @@
 	[UIView setAnimationDelegate:self];
 	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 	
-    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	
     //move tab bar up/down
     CGRect tabBarFrame = self.tabBarController.tabBar.frame;
     int tabBarHeight = tabBarFrame.size.height;
@@ -134,8 +144,7 @@
     int tabBarY = tabBarFrame.origin.y + offset;
     tabBarFrame.origin.y = tabBarY;
     self.tabBarController.tabBar.frame = tabBarFrame;
-	
-    //fade it in/out
+    // and fade it in/out
     self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
 	
     //resize webview to be full screen / normal
@@ -148,10 +157,12 @@
     } else {
         [self.view addSubview:bibleWebView];
         self.tabBarController.view = previousTabBarView;
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
+		//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:bibleWebView useStatusBar:NO];
     }
 	
     [UIView commitAnimations];
+	
+	
 	[bibleWebView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 

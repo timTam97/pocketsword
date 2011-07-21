@@ -51,6 +51,7 @@ typedef enum {
 @interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
+    IBOutlet UIWindow *window;
 	
 	// Bible tab
 	IBOutlet PSWebView					*bibleWebView;
@@ -126,6 +127,8 @@ typedef enum {
 - (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
 - (void)setDictionaryTitleViaNotification;
+
+- (void)nightModeChanged;
 
 //- (void)updateInstallationStatus;
 //- (void)updateIndexInstallationStatus:(NSString*)arg;//needed, move to PSIndexController

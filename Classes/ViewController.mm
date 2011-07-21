@@ -44,6 +44,7 @@ bool ps_viewcontroller_initialized = false;
 	[super awakeFromNib];
 
 	if (!ps_viewcontroller_initialized) {
+		[self nightModeChanged];
 		toolbarLock = [[NSLock alloc] init];
         popoverController = nil;
 		if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
@@ -153,9 +154,18 @@ bool ps_viewcontroller_initialized = false;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchToFullscreen) name:NotificationSwitchToFullscreen object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewWithSelectedBookChapterVerse:) name:NotificationUpdateSelectedReference object:nil];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
+
 		ps_viewcontroller_initialized = true;
 	}
 	
+}
+
+- (void)nightModeChanged {
+	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
+	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
+	[window setBackgroundColor:backgroundColor];
 }
 
 - (void)switchToFullscreen {
