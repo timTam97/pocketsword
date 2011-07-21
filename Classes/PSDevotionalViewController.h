@@ -14,13 +14,18 @@
 	IBOutlet UIDatePicker *devotionalDatePicker;
 	IBOutlet UIBarButtonItem *todayButton;
 	IBOutlet UIBarButtonItem *devotionalTitle;
+	IBOutlet UIViewController *devotionalPickerViewController;
 	
-	//IBOutlet id moduleManager;
+	BOOL loaded;
 }
 
+@property (readonly, nonatomic) BOOL loaded;
+
+- (void)loadNewDevotionalEntry;
 - (void)loadDevotionalForDate:(NSDate *)date;
 - (IBAction)todayButtonPressed;
-- (IBAction)toggleDatePicker:(id)sender;
 - (IBAction)moduleButtonPressed;
+- (IBAction)toggleDatePicker;
+- (UIView*)datePickerButton;
 
 @end

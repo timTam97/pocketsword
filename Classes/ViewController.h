@@ -27,6 +27,7 @@
 #import "PSRefSelectorController.h"
 #import "PSSearchController.h"
 #import "PSWebView.h"
+#import "PSDevotionalViewController.h"
 
 #ifdef __cplusplus
 #include <swmgr.h>
@@ -92,6 +93,10 @@ typedef enum {
 	// Devotional tab
 	IBOutlet UIWebView					*devotionalWebView;
 	IBOutlet UIBarButtonItem			*devotionalTitle;
+	IBOutlet PSDevotionalViewController *devotionalViewController;
+	IBOutlet UIViewController			*devotionalDatePickerViewController;
+	IBOutlet UIView						*devotionalDatePickerView;
+	BOOL								devotionalDatePickerIsBeingShown;
 	
 	// Bookmarks tab
 	

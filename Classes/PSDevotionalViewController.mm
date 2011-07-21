@@ -15,7 +15,7 @@
 
 @implementation PSDevotionalViewController
 
-BOOL loaded;
+@synthesize loaded;
 
 - (IBAction)moduleButtonPressed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
@@ -59,38 +59,14 @@ BOOL loaded;
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 }
 
-- (IBAction)toggleDatePicker:(id)sender {
-	if(!loaded)
-		return;
-	if(devotionalDatePickerView.superview) {
-		[ViewController hideModal:devotionalDatePickerView withTiming:0.3];
-		//read in what is set in the date picker and show that day's devo
-		[self loadDevotionalForDate:devotionalDatePicker.date];
-		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-		[dateFormatter setDateFormat:@"MMMM d"];
-		NSString *dateTitle = [dateFormatter stringFromDate:devotionalDatePicker.date];
-		
-		[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
-	} else {
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-		if([UIApplication sharedApplication].statusBarHidden) {
-			interfaceOrientation = [self.tabBarController interfaceOrientation];//(UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-		}
-		//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-			devotionalDatePickerView.transform = CGAffineTransformIdentity;
-			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-			devotionalDatePickerView.transform = CGAffineTransformIdentity;
-			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-			devotionalDatePickerView.transform = CGAffineTransformIdentity;
-		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-			devotionalDatePickerView.transform = CGAffineTransformIdentity;
-			devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-		}
-		[ViewController showModal:devotionalDatePickerView withTiming:0.3];
-	}
+- (void)loadNewDevotionalEntry {
+	//read in what is set in the date picker and show that day's devo
+	[self loadDevotionalForDate:devotionalDatePicker.date];
+	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	[dateFormatter setDateFormat:@"MMMM d"];
+	NSString *dateTitle = [dateFormatter stringFromDate:devotionalDatePicker.date];
+	
+	[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
 }
 
 - (IBAction)todayButtonPressed {
@@ -117,6 +93,14 @@ BOOL loaded;
 	loaded = YES;
 }
 
+- (IBAction)toggleDatePicker {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleDevotionalDatePicker object:nil];
+}
+
+- (UIView*)datePickerButton {
+	return (UIView*)self.navigationItem.titleView;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if(!loaded) {
@@ -132,7 +116,7 @@ BOOL loaded;
 		[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
 		[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		titleButton.frame = CGRectMake(0, 0, 150, 40);
-		[titleButton addTarget: self action: @selector(toggleDatePicker:) forControlEvents: UIControlEventTouchUpInside];
+		[titleButton addTarget: self action: @selector(toggleDatePicker) forControlEvents: UIControlEventTouchUpInside];
 		
 		self.navigationItem.titleView = titleButton;
 		
