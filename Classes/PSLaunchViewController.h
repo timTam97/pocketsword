@@ -15,6 +15,7 @@
 @interface PSLaunchViewController : UIViewController {
 	IBOutlet id <PSLaunchDelegate> delegate;
 	IBOutlet UIActivityIndicatorView *activityIndicator;
+	IBOutlet UIImageView *launchImageView;
 }
 
 @property (nonatomic, assign) id <PSLaunchDelegate> delegate;

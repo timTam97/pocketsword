@@ -94,6 +94,7 @@
 								<int key="NSvFlags">274</int>
 								<string key="NSFrame">{{0, 44}, {768, 911}}</string>
 								<reference key="NSSuperview" ref="782260632"/>
+								<reference key="NSNextKeyView"/>
 								<object class="NSColor" key="IBUIBackgroundColor" id="183709399">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MAA</bytes>
@@ -476,7 +477,6 @@
 									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">274</int>
 									<string key="NSFrame">{{0, 64}, {768, 955}}</string>
-									<reference key="NSNextKeyView" ref="795333663"/>
 									<reference key="IBUIBackgroundColor" ref="183709399"/>
 									<bool key="IBUIMultipleTouchEnabled">YES</bool>
 									<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -487,7 +487,6 @@
 									<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 								</object>
 								<object class="IBUINavigationItem" key="IBUINavigationItem" id="636357867">
-									<reference key="IBUINavigationBar"/>
 									<string key="IBUITitle">Item</string>
 									<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="665207370">
 										<string key="IBUITitle">Item</string>
@@ -708,6 +707,7 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 975}, {768, 49}}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSNextKeyView"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">1</int>
 						<bytes key="NSRGB">MC4wMTA4Njk1NjMgMC4wMTA4Njk1NjMgMC4wMTA4Njk1NjMgMAA</bytes>
@@ -1053,7 +1053,7 @@
 			</object>
 			<object class="IBUIViewController" id="728915025">
 				<object class="IBUIView" key="IBUIView" id="975877878">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUIImageView" id="411431064">
@@ -1062,11 +1062,15 @@
 							<string key="NSFrameSize">{768, 1035}</string>
 							<reference key="NSSuperview" ref="975877878"/>
 							<reference key="NSNextKeyView" ref="217762989"/>
+							<object class="NSColor" key="IBUIBackgroundColor">
+								<int key="NSColorSpace">1</int>
+								<bytes key="NSRGB">MC40MDAwMDAwMDYgMC40MDAwMDAwMDYgMC40MDAwMDAwMDYAA</bytes>
+							</object>
 							<bool key="IBUIUserInteractionEnabled">NO</bool>
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							<object class="NSCustomResource" key="IBUIImage">
 								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">Default.png</string>
+								<string key="NSResourceName">Default-Portrait~ipad.png</string>
 							</object>
 						</object>
 						<object class="IBUIActivityIndicatorView" id="217762989">
@@ -1074,6 +1078,7 @@
 							<int key="NSvFlags">301</int>
 							<string key="NSFrame">{{366, 499}, {37, 37}}</string>
 							<reference key="NSSuperview" ref="975877878"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							<bool key="IBUIHidesWhenStopped">NO</bool>
@@ -1082,6 +1087,7 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{768, 1024}</string>
+					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="411431064"/>
 					<reference key="IBUIBackgroundColor" ref="183709399"/>
 					<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -1096,7 +1102,7 @@
 			</object>
 			<object class="IBUIViewController" id="901796478">
 				<object class="IBUIView" key="IBUIView" id="9173980">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">310</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUIToolbar" id="557132604">
@@ -1164,7 +1170,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						</object>
 					</array>
 					<string key="NSFrameSize">{320, 260}</string>
-					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="557132604"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
@@ -2022,6 +2027,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="901796478"/>
 					</object>
 					<int key="connectionID">1463</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">launchImageView</string>
+						<reference key="source" ref="728915025"/>
+						<reference key="destination" ref="411431064"/>
+					</object>
+					<int key="connectionID">1464</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2898,7 +2911,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1463</int>
+			<int key="maxID">1464</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
@@ -2916,7 +2929,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="About.png">{40, 30}</string>
 			<string key="Daily-Devotional.png">{30, 30}</string>
-			<string key="Default.png">{320, 480}</string>
+			<string key="Default-Portrait~ipad.png">{768, 1004}</string>
 			<string key="back-white.png">{13, 15}</string>
 			<string key="bible.png">{30, 30}</string>
 			<string key="commentary.png">{30, 30}</string>

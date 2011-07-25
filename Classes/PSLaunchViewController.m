@@ -78,6 +78,14 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+		UIInterfaceOrientation interfaceOrientation = [self interfaceOrientation];
+		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+			[launchImageView setImage:[UIImage imageNamed:@"Default-Landscape~ipad.png"]];
+		} else {
+			[launchImageView setImage:[UIImage imageNamed:@"Default-Portrait~ipad.png"]];
+		}
+	}
 	[super viewWillAppear:animated];
 }
 
