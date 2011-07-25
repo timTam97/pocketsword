@@ -51,7 +51,6 @@ bool ps_viewcontroller_initialized = false;
 			popoverController = [[[UIPopoverController alloc] initWithContentViewController:activityController] retain];
 			[popoverController setDelegate:self];
 		}
-		devotionalDatePickerIsBeingShown = NO;
 		
 		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
@@ -141,7 +140,6 @@ bool ps_viewcontroller_initialized = false;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMultiList) name:NotificationToggleMultiList object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList:) name:NotificationToggleModuleList object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleNavigation) name:NotificationToggleNavigation object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleDatePicker) name:NotificationToggleDevotionalDatePicker object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideInfo) name:NotificationHideInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
@@ -226,30 +224,6 @@ bool ps_viewcontroller_initialized = false;
 	}
 	[pool release];
 }
-
-//
-// UIAlertView delegate method
-//
-//- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	
-//	//DLog(@"Clicked button %d", buttonIndex);
-//	if (buttonIndex == 1 && waitingForInstall) {
-//		DLog(@"alertView: didDismissWithButtonIndex: -- waitingForInstall");
-//		waitingForInstall = false;
-//		[self performSelectorInBackground: @selector(runInstallation) withObject: nil];
-//		
-//		SEL method = @selector(updateInstallationStatus);
-//		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
-//		NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-//		[invocation setTarget: self];
-//		[invocation setSelector: method];
-//		
-//		timer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
-//	}
-//	
-//	[pool release];
-//}
 
 - (void)setVoiceOverForRefSegmentedControl {
 	int segmentCount = 0;
@@ -346,11 +320,6 @@ bool ps_viewcontroller_initialized = false;
 		}
 	}
 }
-
-//- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-//	tabBarController.moreNavigationController.navigationBar.topItem.rightBarButtonItem = nil;
-//	DLog(@"\nRemoving Edit button");
-//}
 
 // Loads the next chapter into the Web View
 - (IBAction)nextChapter:(id)sender {
@@ -507,9 +476,6 @@ bool ps_viewcontroller_initialized = false;
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
 	if(moduleSelectorViewController) {
 		moduleSelectorViewController = nil;
-	} else if(devotionalDatePickerIsBeingShown) {
-		devotionalDatePickerIsBeingShown = NO;
-		[devotionalViewController loadNewDevotionalEntry];
 	}
 }
 
@@ -617,49 +583,6 @@ bool ps_viewcontroller_initialized = false;
 	}
 }
 
-- (IBAction)toggleDatePicker {
-    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
-	if(!devotionalViewController.loaded)
-		return;
-	if([devotionalDatePickerView superview] || [popoverController isPopoverVisible]) {
-        if(!iPad) {
-			[ViewController hideModal:devotionalDatePickerView withTiming:0.3];
-        } else {
-            [popoverController dismissPopoverAnimated:YES];
-			devotionalDatePickerIsBeingShown = NO;
-        }
-		[devotionalViewController loadNewDevotionalEntry];
-	} else {
-		if(!iPad) {
-			UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-			if([UIApplication sharedApplication].statusBarHidden) {
-				interfaceOrientation = [[self tabBarController] interfaceOrientation];//(UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-			}
-			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-			} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-			}
-			[ViewController showModal:devotionalDatePickerView withTiming:0.3];
-		} else {
-			devotionalDatePickerIsBeingShown = YES;
-			[popoverController setContentViewController:devotionalDatePickerViewController];
-			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
-			//[popoverController setPopoverContentSize:devotionalDatePickerViewController.view.frame.size];
-			UIView *fromView = [devotionalViewController datePickerButton];
-			CGRect fromRect = CGRectMake((fromView.frame.size.width/2.0f), fromView.frame.size.height, 1, 1);
-			[popoverController presentPopoverFromRect:fromRect inView:fromView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		}
-	}
-}
-
 - (void)updateViewWithSelectedBookChapterVerse:(NSNotification *)notification {
 	NSDictionary *bcv = nil;
 	if(notification) {
@@ -730,7 +653,6 @@ bool ps_viewcontroller_initialized = false;
 	[toolbarLock release];
 	[moduleSelectorViewController release];
 	[popoverController release];
-	//[multiListController release];
     [super dealloc];
 }
 
@@ -1081,6 +1003,7 @@ bool ps_viewcontroller_initialized = false;
 	
 	// Show it with a transition effect
 	[UIView beginAnimations:nil context:nil];
+	//[UIView setAnimationBeginsFromCurrentState:YES];
 	[UIView setAnimationDuration:time]; // animation duration in seconds
 	modalView.center = middleCenter;
 	[UIView commitAnimations];

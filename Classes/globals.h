@@ -59,7 +59,6 @@ typedef enum {
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
 
-//#define DEFAULT_MODULE_PATH         [@"~/Library/Application Support/Sword" stringByExpandingTildeInPath]  
 #define DEFAULT_MODULE_PATH_OLD         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_MODULE_PATH         [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_APPSUPPORT_PATH     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
@@ -142,7 +141,6 @@ typedef enum {
 #define NotificationToggleMultiList				@"NotificationToggleMultiList"
 #define NotificationToggleModuleList			@"NotificationToggleModuleList"
 #define NotificationToggleNavigation            @"NotificationToggleNavigation"
-#define NotificationToggleDevotionalDatePicker	@"NotificationToggleDevotionalDatePicker"
 
 #define NotificationHideInfoPane				@"NotificationHideInfoPane"
 #define NotificationShowInfoPane				@"NotificationShowInfoPane"

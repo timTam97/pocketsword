@@ -15,8 +15,11 @@
 	IBOutlet UIBarButtonItem *todayButton;
 	IBOutlet UIBarButtonItem *devotionalTitle;
 	IBOutlet UIViewController *devotionalPickerViewController;
+	IBOutlet UIViewController *devotionalDatePickerViewController;
 	
+	id popoverController;
 	BOOL loaded;
+	BOOL redisplayDatePicker;
 }
 
 @property (readonly, nonatomic) BOOL loaded;

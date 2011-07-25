@@ -25,6 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	loaded = NO;
+	redisplayDatePicker = NO;
 	
 	devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
 	todayButton.title = NSLocalizedString(@"TodayButtonTitle", @"");
@@ -37,6 +38,8 @@
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
 	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+		popoverController = [[[UIPopoverController alloc] initWithContentViewController:devotionalDatePickerViewController] retain];
+		[popoverController setDelegate:self];
 		[devotionalTitle setTitle:devoTitle];
 	} else {
 		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -53,10 +56,6 @@
 	if(loaded) {
 		[self loadDevotionalForDate:devotionalDatePicker.date];
 	}
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 }
 
 - (void)loadNewDevotionalEntry {
@@ -93,9 +92,75 @@
 	loaded = YES;
 }
 
-- (IBAction)toggleDatePicker {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleDevotionalDatePicker object:nil];
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+	[self loadNewDevotionalEntry];
 }
+
+- (void)displayPopover {
+	UIView *fromView = [self datePickerButton];
+	CGRect fromRect = CGRectMake((fromView.frame.size.width/2.0f), fromView.frame.size.height, 1, 1);
+	[popoverController presentPopoverFromRect:fromRect inView:fromView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if([devotionalDatePickerView superview] && ![popoverController isPopoverVisible]) {
+		[self toggleDatePicker];
+		redisplayDatePicker = YES;
+	}
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+	if([popoverController isPopoverVisible]) {
+		[self displayPopover];
+	} else if(redisplayDatePicker) {
+		redisplayDatePicker = NO;
+		[self toggleDatePicker];
+	}
+}
+		 
+- (IBAction)toggleDatePicker {
+    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+	if(!loaded)
+		return;
+	if([devotionalDatePickerView superview] || [popoverController isPopoverVisible]) {
+        if(!iPad) {
+			[ViewController hideModal:devotionalDatePickerView withTiming:0.3];
+        } else {
+            [popoverController dismissPopoverAnimated:YES];
+        }
+		[self loadNewDevotionalEntry];
+	} else {
+		if(!iPad) {
+			UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+			if([UIApplication sharedApplication].statusBarHidden) {
+				interfaceOrientation = [[self tabBarController] interfaceOrientation];//(UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+			}
+			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+				devotionalDatePickerView.transform = CGAffineTransformIdentity;
+				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+			} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+				devotionalDatePickerView.transform = CGAffineTransformIdentity;
+				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+			} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+				devotionalDatePickerView.transform = CGAffineTransformIdentity;
+			} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+				devotionalDatePickerView.transform = CGAffineTransformIdentity;
+				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+			}
+			[ViewController showModal:devotionalDatePickerView withTiming:0.3];
+		} else {
+			[popoverController setContentViewController:devotionalDatePickerViewController];
+			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
+			//[popoverController setPopoverContentSize:devotionalDatePickerViewController.view.frame.size];
+			[self displayPopover];
+		}
+	}
+}
+
+//- (IBAction)toggleDatePicker {
+//	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleDevotionalDatePicker object:nil];
+//}
 
 - (UIView*)datePickerButton {
 	return (UIView*)self.navigationItem.titleView;
@@ -206,6 +271,8 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+	[popoverController release];
+	popoverController = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
