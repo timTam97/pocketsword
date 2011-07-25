@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">768</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1306</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">11A511</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
+		<string key="IBDocument.AppKitVersion">1138</string>
+		<string key="IBDocument.HIToolboxVersion">566.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">301</string>
+			<string key="NS.object.0">534</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBUITableView</string>
@@ -707,7 +707,6 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 1019}, {768, 49}}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">1</int>
 						<bytes key="NSRGB">MC4wMTA4Njk1NjMgMC4wMTA4Njk1NjMgMC4wMTA4Njk1NjMgMAA</bytes>
@@ -802,7 +801,7 @@
 					<object class="IBUIWebView" id="764216997">
 						<reference key="NSNextResponder" ref="887081261"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{2.13443e-314, 20}, {320, 140}}</string>
+						<string key="NSFrame">{{2.1344299998679708e-314, 20}, {320, 140}}</string>
 						<reference key="NSSuperview" ref="887081261"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -815,7 +814,7 @@
 					<object class="IBUIImageView" id="929479415">
 						<reference key="NSNextResponder" ref="887081261"/>
 						<int key="NSvFlags">294</int>
-						<string key="NSFrame">{{2.13443e-314, 0}, {320, 20}}</string>
+						<string key="NSFrame">{{2.1344299998679708e-314, 0}, {320, 20}}</string>
 						<reference key="NSSuperview" ref="887081261"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -864,7 +863,7 @@
 					<object class="IBUIButton" id="937602460">
 						<reference key="NSNextResponder" ref="887081261"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{2.13443e-314, 0}, {40, 25}}</string>
+						<string key="NSFrame">{{2.1344299998679708e-314, 0}, {40, 25}}</string>
 						<reference key="NSSuperview" ref="887081261"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -1121,12 +1120,6 @@
 									<reference key="IBUIToolbar" ref="557132604"/>
 									<int key="IBUISystemItemIdentifier">5</int>
 								</object>
-								<object class="IBUIBarButtonItem" id="16392816">
-									<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-									<int key="IBUIStyle">1</int>
-									<reference key="IBUIToolbar" ref="557132604"/>
-									<int key="IBUISystemItemIdentifier">0</int>
-								</object>
 							</array>
 						</object>
 						<object class="IBUIDatePicker" id="461031581">
@@ -1134,7 +1127,6 @@
 							<int key="NSvFlags">270</int>
 							<string key="NSFrame">{{0, 44}, {320, 216}}</string>
 							<reference key="NSSuperview" ref="9173980"/>
-							<reference key="NSNextKeyView"/>
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							<int key="IBUIContentHorizontalAlignment">0</int>
 							<int key="IBUIContentVerticalAlignment">0</int>
@@ -1984,22 +1976,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">devotionalDatePickerViewController</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="901796478"/>
-					</object>
-					<int key="connectionID">1455</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">devotionalViewController</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="282359419"/>
-					</object>
-					<int key="connectionID">1456</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">todayButton</string>
 						<reference key="source" ref="282359419"/>
 						<reference key="destination" ref="234783333"/>
@@ -2013,14 +1989,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="282359419"/>
 					</object>
 					<int key="connectionID">1458</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleDatePicker</string>
-						<reference key="source" ref="16392816"/>
-						<reference key="destination" ref="282359419"/>
-					</object>
-					<int key="connectionID">1459</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -2045,6 +2013,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="9173980"/>
 					</object>
 					<int key="connectionID">1462</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">devotionalDatePickerViewController</string>
+						<reference key="source" ref="282359419"/>
+						<reference key="destination" ref="901796478"/>
+					</object>
+					<int key="connectionID">1463</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2732,7 +2708,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<array class="NSMutableArray" key="children">
 							<reference ref="234783333"/>
 							<reference ref="241834570"/>
-							<reference ref="16392816"/>
 						</array>
 						<reference key="parent" ref="9173980"/>
 					</object>
@@ -2747,43 +2722,28 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="parent" ref="557132604"/>
 						<string key="objectName">Bar Button Item - Flexible Space</string>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1454</int>
-						<reference key="object" ref="16392816"/>
-						<reference key="parent" ref="557132604"/>
-					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
 				<string key="-1.CustomClassName">UIApplication</string>
+				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
-				<string key="1013.IBEditorWindowLastContentRect">{{642, 455}, {320, 460}}</string>
+				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1013.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1014.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<object class="NSAffineTransform" key="1014.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABBoAAAwngAAA</bytes>
-				</object>
 				<string key="1015.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1016.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1017.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1018.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<object class="NSAffineTransform" key="1018.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABBoAAAw/WAAA</bytes>
-				</object>
-				<string key="106.IBEditorWindowLastContentRect">{{63, 132}, {768, 1024}}</string>
 				<object class="NSMutableDictionary" key="106.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
 				</object>
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<boolean value="YES" key="106.IBViewEditorWindowController.showingBoundsRectangles"/>
-				<boolean value="YES" key="106.IBViewEditorWindowController.showingLayoutRectangles"/>
-				<string key="1062.IBEditorWindowLastContentRect">{{248, 527}, {320, 160}}</string>
 				<string key="1062.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1063.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1064.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1068.CustomClassName">PSPreferencesModuleSelectorTableViewController</string>
-				<string key="1068.IBEditorWindowLastContentRect">{{157, 227}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="1068.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
@@ -2793,11 +2753,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="107.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="108.CustomClassName">PSBibleViewController</string>
 				<string key="108.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1097.IBEditorWindowLastContentRect">{{255, 356}, {320, 20}}</string>
 				<string key="1097.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1105.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1178.IBEditorWindowLastContentRect">{{189, 264}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="1178.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
@@ -2809,61 +2767,53 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="1181.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1182.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1220.CustomClassName">PSDictionaryEntryViewController</string>
-				<string key="1220.IBEditorWindowLastContentRect">{{381, 474}, {320, 480}}</string>
 				<string key="1220.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1241.CustomClassName">PSDevotionalViewController</string>
-				<string key="1241.IBEditorWindowLastContentRect">{{74, 642}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="1241.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="0" key="NS.object.0"/>
 				</object>
 				<string key="1241.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1242.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="1245.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="126.CustomClassName">ViewController</string>
 				<string key="126.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1373.CustomClassName">PSLaunchViewController</string>
-				<string key="1373.IBEditorWindowLastContentRect">{{352, 132}, {768, 1024}}</string>
 				<string key="1373.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1378.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1379.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<object class="NSAffineTransform" key="1379.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAADBIAAAw+8AAA</bytes>
-				</object>
 				<string key="1380.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<object class="NSAffineTransform" key="1380.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABDDQAAw9GAAA</bytes>
-				</object>
-				<string key="1400.IBEditorWindowLastContentRect">{{623, 19}, {768, 1024}}</string>
 				<string key="1400.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1402.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1407.IBEditorWindowLastContentRect">{{408, 132}, {768, 1024}}</string>
+				<string key="1404.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="1405.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1407.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1408.CustomClassName">NavigatorSources</string>
 				<string key="1408.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1409.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1410.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1413.IBEditorWindowLastContentRect">{{39, -20}, {768, 1024}}</string>
+				<string key="1412.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1413.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1415.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1420.IBEditorWindowLastContentRect">{{116, 52}, {768, 1024}}</string>
+				<string key="1417.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="1418.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1420.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1422.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="1424.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="1425.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1426.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1431.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1447.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1449.IBEditorWindowLastContentRect">{{254, 513}, {320, 260}}</string>
 				<string key="1449.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1450.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1451.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1452.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1453.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1454.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="171.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="188.CustomClassName">PSWebView</string>
 				<string key="188.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.CustomClassName">SnoopWindow</string>
 				<dictionary class="NSMutableDictionary" key="2.IBAttributePlaceholdersKey"/>
-				<string key="2.IBEditorWindowLastContentRect">{{132, 266}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="2.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
@@ -2873,29 +2823,24 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="3.CustomClassName">PocketSwordAppDelegate</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="534.CustomClassName">PSLoadingViewController</string>
-				<string key="534.IBEditorWindowLastContentRect">{{190, 263}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="534.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
 				</object>
 				<string key="534.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="540.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<object class="NSAffineTransform" key="540.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAw+UAAA</bytes>
-				</object>
 				<string key="541.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="554.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="588.CustomClassName">PSPreferencesController</string>
-				<string key="588.IBEditorWindowLastContentRect">{{107, 198}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="588.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
 				</object>
 				<string key="588.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="589.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="630.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="633.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="646.CustomClassName">PSCommentaryViewController</string>
-				<string key="646.IBEditorWindowLastContentRect">{{433, 309}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="646.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="0" key="NS.object.0"/>
@@ -2904,8 +2849,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="656.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="657.CustomClassName">PSWebView</string>
 				<string key="657.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="664.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="722.CustomClassName">PSPreferencesFontTableViewController</string>
-				<string key="722.IBEditorWindowLastContentRect">{{210, 63}, {768, 1024}}</string>
 				<object class="NSMutableDictionary" key="722.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="0" key="NS.object.0"/>
@@ -2913,16 +2858,16 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="722.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="723.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="736.CustomClassName">PSAboutScreenController</string>
-				<string key="736.IBEditorWindowLastContentRect">{{435, 484}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="736.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="2" key="NS.object.0"/>
 				</object>
 				<string key="736.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="760.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="805.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="807.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="821.IBEditorWindowLastContentRect">{{172, 947}, {211, 30}}</string>
 				<string key="821.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="823.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="831.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="832.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="833.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -2932,28 +2877,27 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<string key="864.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="865.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="866.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="868.IBEditorWindowLastContentRect">{{172, 947}, {211, 30}}</string>
+				<string key="867.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="868.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="980.CustomClassName">PSDictionaryViewController</string>
-				<string key="980.IBEditorWindowLastContentRect">{{123, 168}, {320, 480}}</string>
 				<object class="NSMutableDictionary" key="980.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="0" key="NS.object.0"/>
 				</object>
 				<string key="980.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="981.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="985.IBEditorWindowLastContentRect">{{53, 1101}, {320, 44}}</string>
 				<string key="985.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="987.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="988.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="989.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="990.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="991.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1462</int>
+			<int key="maxID">1463</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
@@ -2982,6 +2926,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<string key="popup-down-button.png">{20, 20}</string>
 			<string key="popup-top-bar.png">{320, 20}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">301</string>
+		<string key="IBCocoaTouchPluginVersion">534</string>
 	</data>
 </archive>
