@@ -21,17 +21,19 @@
 	self = [super initWithStyle:UITableViewStyleGrouped];
 	if(self) {
 		self.currentSelectedColor = rgbHexString;
-		self.selectableColours = [[NSArray alloc] initWithObjects: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0], 
-								  [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8],
-								  [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.8],
-								  [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.8],
-								  [UIColor colorWithRed:0.0 green:1.0 blue:1.0 alpha:0.8],
-								  [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.8],
-								  [UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:0.8],
-								  [UIColor colorWithRed:1.0 green:0.5 blue:0.0 alpha:0.8],
-								  [UIColor colorWithRed:0.5 green:0.0 blue:0.5 alpha:0.8],
-								  [UIColor colorWithRed:0.6 green:0.4 blue:0.2 alpha:0.8],
-								  nil];
+		NSArray *colours = [[NSArray alloc] initWithObjects: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0], 
+							[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8],
+							[UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.8],
+							[UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.8],
+							[UIColor colorWithRed:0.0 green:1.0 blue:1.0 alpha:0.8],
+							[UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.8],
+							[UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:0.8],
+							[UIColor colorWithRed:1.0 green:0.5 blue:0.0 alpha:0.8],
+							[UIColor colorWithRed:0.5 green:0.0 blue:0.5 alpha:0.8],
+							[UIColor colorWithRed:0.6 green:0.4 blue:0.2 alpha:0.8],
+							nil];
+		self.selectableColours = colours;
+		[colours release];
 		self.delegate = del;
 	}
 	return self;

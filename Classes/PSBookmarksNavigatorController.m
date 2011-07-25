@@ -260,7 +260,9 @@
 		if(rowObject.folder) {
 			// TODO: display confirmation
 			rowToDelete = [indexPath retain];
-			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksConfirmDeleteFolderTitle", @"") message: [NSString stringWithFormat:NSLocalizedString(@"BookmarksConfirmDeleteFolderMessage", @""), rowObject.name] delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+			UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksConfirmDeleteFolderTitle", @"") message: [NSString stringWithFormat:NSLocalizedString(@"BookmarksConfirmDeleteFolderMessage", @""), rowObject.name] delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+			[av show];
+			[av release];
 		} else {
 			[self deleteChildAtIndexPath:indexPath];
 		}

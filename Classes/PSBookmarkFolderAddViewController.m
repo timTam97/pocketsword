@@ -79,13 +79,17 @@
 		}
 	}
 	if(!valid) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+		[av show];
+		[av release];
 		return;
 	}
 	// check for an invalid folder name (ie: contains PSFolderSeparatorString):
 	NSRange position = [nameTextField.text rangeOfString:PSFolderSeparatorString];
 	if(position.location != NSNotFound) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message: NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message: NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+		[av show];
+		[av release];
 		return;
 	}
 	

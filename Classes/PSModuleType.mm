@@ -50,7 +50,7 @@
 }
 
 -(NSArray*)getModulesByLanguage:(NSString *)lang fromModuleArray:(NSArray *)mods {
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:10];
 	for(SwordModule *mod in mods) {
 		if([[mod lang] isEqualToString:lang]) {
 			[ret addObject:mod];
@@ -60,7 +60,7 @@
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[ret sortUsingDescriptors:sortDescriptors];
 	[sortDescriptor release];
-	return ret;
+	return [ret autorelease];
 }
 
 -(void)setModules:(NSArray *)mods {

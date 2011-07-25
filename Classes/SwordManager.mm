@@ -48,7 +48,7 @@ using std::list;
     
     // loop over modules
     sword::SWModule *mod;
-	NSMutableArray *types = [NSMutableArray arrayWithObjects: nil];
+	NSMutableArray *types = [[NSMutableArray alloc] initWithCapacity:4];
 	//NSMutableArray *langs = [NSMutableArray arrayWithObjects: nil];
 	for(sword::ModMap::iterator it = swManager->Modules.begin(); it != swManager->Modules.end(); it++) {
 		mod = it->second;
@@ -146,9 +146,10 @@ using std::list;
 	//sort the types into alphabetical order
 	[types sortUsingSelector: @selector(compare:)];
     [self setModuleTypes:types];
+	[types release];
     // set modules
     [self setModules:dict];
-	NSMutableArray *arrayList = [[[NSMutableArray alloc] initWithCapacity: [moduleTypes count]] autorelease];
+	NSMutableArray *arrayList = [[NSMutableArray alloc] initWithCapacity: [moduleTypes count]];
 	for (int i = 0; i < [moduleTypes count]; i++) {
 		if([[SwordManager moduleTypes] containsObject: [moduleTypes objectAtIndex: i]]) {
 			PSModuleType *smt = [[PSModuleType alloc] initWithModules:[self modulesForType: [moduleTypes objectAtIndex: i]] withModuleType:[moduleTypes objectAtIndex: i]];
@@ -164,6 +165,7 @@ using std::list;
 	[sortDescriptor release];
 	
 	[self setModuleListByType:arrayList];
+	[arrayList release];
 }
 
 @end

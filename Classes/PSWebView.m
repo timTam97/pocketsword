@@ -37,7 +37,7 @@
 
 	//DLog(@"resetting cached height; now tis: %f", cachedHeight);
 	
-	UIScrollView* currentScrollView;
+	UIScrollView* currentScrollView = nil;
     for (UIView* subView in self.subviews) {
         if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
             currentScrollView = (UIScrollView*)subView;
@@ -46,36 +46,33 @@
     }
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		currentScrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+		[currentScrollView setIndicatorStyle:UIScrollViewIndicatorStyleWhite];
 	} else {
-		currentScrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+		[currentScrollView setIndicatorStyle:UIScrollViewIndicatorStyleBlack];
 	}
 	
 	[refreshHeaderView removeFromSuperview];
 	refreshHeaderView = nil;
 	[refreshFooterView removeFromSuperview];
 	refreshFooterView = nil;
-	CGFloat rectWidth = 320.0f;
-	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
-		rectWidth = 768.0f;;
-	}
-	rectWidth = self.frame.size.width;
+//	CGFloat rectWidth = 320.0f;
+//	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+//		rectWidth = 768.0f;;
+//	}
+	CGFloat rectWidth = self.frame.size.width;
 	
-	if (refreshHeaderView == nil) {
-		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.bounds.size.height, rectWidth, self.bounds.size.height)];
-		refreshHeaderView.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0];
-		[currentScrollView addSubview:refreshHeaderView];
-		//currentScrollView.showsVerticalScrollIndicator = YES;
-		[refreshHeaderView release];
-	}
+	refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.bounds.size.height, rectWidth, self.bounds.size.height)];
+	refreshHeaderView.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0];
+	[currentScrollView addSubview:refreshHeaderView];
+	//currentScrollView.showsVerticalScrollIndicator = YES;
+	[refreshHeaderView release];
     
-    if (refreshFooterView == nil) {
-        refreshFooterView = [[EGORefreshTableFooterView alloc] initWithFrame:CGRectMake(0.0f, [self tableViewHeight], rectWidth, 600.0f)];
-		refreshFooterView.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0];
-		[currentScrollView addSubview:refreshFooterView];
-		//currentScrollView.showsVerticalScrollIndicator = YES;
-		[refreshFooterView release];
-    }
+	refreshFooterView = [[EGORefreshTableFooterView alloc] initWithFrame:CGRectMake(0.0f, [self tableViewHeight], rectWidth, 600.0f)];
+	refreshFooterView.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0];
+	[currentScrollView addSubview:refreshFooterView];
+	//currentScrollView.showsVerticalScrollIndicator = YES;
+	[refreshFooterView release];
+
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
 	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
 		//DLog(@"last: %@", currentRef);
@@ -158,12 +155,12 @@
 }
 
 - (void)dataSourceDidFinishLoadingNewData{
-	UIScrollView* currentScrollView;
-    for (UIView* subView in self.subviews) {
-        if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
-            currentScrollView = (UIScrollView*)subView;
-        }
-    }
+//	UIScrollView* currentScrollView;
+//    for (UIView* subView in self.subviews) {
+//        if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
+//            currentScrollView = (UIScrollView*)subView;
+//        }
+//    }
 	
 	_reloading = NO;
 	

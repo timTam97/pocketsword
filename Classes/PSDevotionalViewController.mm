@@ -38,8 +38,6 @@
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
 	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
-		popoverController = [[[UIPopoverController alloc] initWithContentViewController:devotionalDatePickerViewController] retain];
-		[popoverController setDelegate:self];
 		[devotionalTitle setTitle:devoTitle];
 	} else {
 		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -92,8 +90,10 @@
 	loaded = YES;
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)poverController {
 	[self loadNewDevotionalEntry];
+	[popoverController release];
+	popoverController = nil;
 }
 
 - (void)displayPopover {
@@ -128,6 +128,8 @@
 			[ViewController hideModal:devotionalDatePickerView withTiming:0.3];
         } else {
             [popoverController dismissPopoverAnimated:YES];
+			[popoverController release];
+			popoverController = nil;
         }
 		[self loadNewDevotionalEntry];
 	} else {
@@ -150,6 +152,8 @@
 			}
 			[ViewController showModal:devotionalDatePickerView withTiming:0.3];
 		} else {
+			popoverController = [[UIPopoverController alloc] initWithContentViewController:devotionalDatePickerViewController];
+			[popoverController setDelegate:self];
 			[popoverController setContentViewController:devotionalDatePickerViewController];
 			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
 			//[popoverController setPopoverContentSize:devotionalDatePickerViewController.view.frame.size];

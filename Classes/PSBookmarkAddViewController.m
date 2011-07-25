@@ -111,7 +111,9 @@
 		}
 	}
 	if(!valid) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+		[av show];
+		[av release];
 		return;
 	}	
 	
