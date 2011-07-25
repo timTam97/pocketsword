@@ -852,8 +852,6 @@
 		E94014E20EFDD2D400DA9B7F /* StringBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013E60EFDD2D400DA9B7F /* StringBuffer.cpp */; };
 		E94014E30EFDD2D400DA9B7F /* StringIntern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013E80EFDD2D400DA9B7F /* StringIntern.cpp */; };
 		E94014E40EFDD2D400DA9B7F /* ThreadLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013EC0EFDD2D400DA9B7F /* ThreadLocal.cpp */; };
-		E9617A330FF566F300690108 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
-		E9617A350FF566FF00690108 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
 		E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
@@ -1330,7 +1328,7 @@
 		0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordModuleTextEntry.m; sourceTree = "<group>"; };
 		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
 		054BED9B119F89E800ABCA18 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; path = "Info-PS-en.plist"; sourceTree = "<group>"; };
+		054BED9D119F89E800ABCA18 /* Info-PS-en.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; name = "Info-PS-en.plist"; path = "misc/Info-PS-en.plist"; sourceTree = "<group>"; };
 		054BEF1311A4E77300ABCA18 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		054BEF1411A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/Downloader.xib; sourceTree = "<group>"; };
 		054BEF1511A4E79800ABCA18 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
@@ -1557,10 +1555,10 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		28216C950DB411BC00E5133A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = Classes/ViewController.h; sourceTree = "<group>"; };
 		28216C960DB411BC00E5133A /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ViewController.mm; path = Classes/ViewController.mm; sourceTree = "<group>"; };
-		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSword_Prefix.pch; sourceTree = "<group>"; };
+		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSword_Prefix.pch; path = misc/PocketSword_Prefix.pch; sourceTree = "<group>"; };
 		28AD73870D9D96C1002E5188 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
 		E92217530F0687340089A794 /* HistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryController.h; path = Classes/HistoryController.h; sourceTree = "<group>"; };
 		E92217540F0687340089A794 /* HistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HistoryController.mm; path = Classes/HistoryController.mm; sourceTree = "<group>"; };
 		E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisHeader.cpp; sourceTree = "<group>"; };
@@ -1811,7 +1809,7 @@
 		E9B8FF890FF57557006081E5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		E9B8FF8A0FF57560006081E5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9BD1D530ED34003006A60E9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.txt; path = Resources/doc/LICENSE.txt; sourceTree = "<group>"; };
-		E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = misc/Entitlements.plist; sourceTree = "<group>"; };
 		E9D540F20FA415BA00AD011C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Resources/Icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2973,11 +2971,8 @@
 		29B97314FDCFA39411CA2CEA /* PocketSword */ = {
 			isa = PBXGroup;
 			children = (
-				E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */,
-				8D1107310486CEB800E47090 /* Info.plist */,
-				054BED9D119F89E800ABCA18 /* Info-PS-en.plist */,
 				0545E32710654A8500DD7F06 /* Source */,
-				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97315FDCFA39411CA2CEA /* misc */,
 				0542F6C110BE75570088A721 /* externals */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -2988,15 +2983,18 @@
 			name = PocketSword;
 			sourceTree = "<group>";
 		};
-		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+		29B97315FDCFA39411CA2CEA /* misc */ = {
 			isa = PBXGroup;
 			children = (
+				E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+				054BED9D119F89E800ABCA18 /* Info-PS-en.plist */,
 				E9617A340FF566FF00690108 /* localize_xibs.py */,
 				E9617A320FF566F300690108 /* gen_xib_strings.py */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */,
 			);
-			name = "Other Sources";
+			name = misc;
 			sourceTree = "<group>";
 		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
@@ -3399,6 +3397,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0410;
 				ORGANIZATIONNAME = "CrossWire Bible Society";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PocketSword" */;
@@ -3543,8 +3542,6 @@
 				E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
 				E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */,
-				E9617A330FF566F300690108 /* gen_xib_strings.py in Resources */,
-				E9617A350FF566FF00690108 /* localize_xibs.py in Resources */,
 				E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */,
 				05275ADD10884F72004FB0E0 /* nt.bks in Resources */,
 				05275ADE10884F72004FB0E0 /* nt.cps in Resources */,
@@ -4503,9 +4500,9 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4513,7 +4510,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = "Info-PS-en.plist";
+				INFOPLIST_FILE = "misc/Info-PS-en.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4549,9 +4546,9 @@
 					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4559,7 +4556,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = "Info-PS-en.plist";
+				INFOPLIST_FILE = "misc/Info-PS-en.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4586,6 +4583,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = misc/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
@@ -4594,9 +4592,9 @@
 					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4604,7 +4602,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = "Info-PS-en.plist";
+				INFOPLIST_FILE = "misc/Info-PS-en.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4642,9 +4640,9 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4652,7 +4650,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = misc/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4691,9 +4689,9 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4701,7 +4699,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = misc/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4750,11 +4748,11 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00E08454-5988-448C-AAAA-4F06A5E7C311";
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -4782,11 +4780,11 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A63B2C14-FF49-404C-B77C-AAD2A5EA5C9A";
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -4815,11 +4813,11 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "1CB7BA59-0C7E-4C6E-8148-42DE6C70FA30";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1CB7BA59-0C7E-4C6E-8148-42DE6C70FA30";
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
 		};
@@ -4828,6 +4826,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_ENTITLEMENTS = misc/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				COPY_PHASE_STRIP = YES;
@@ -4836,9 +4835,9 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PocketSword_Prefix.pch;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
@@ -4846,7 +4845,7 @@
 					externals/sword/include,
 					externals/libcurl/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = misc/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
