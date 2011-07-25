@@ -14,8 +14,8 @@
 	NSString *descr;
 }
 
-@property (retain, readwrite) NSString *code;
-@property (retain, readwrite) NSString *descr;
+@property (copy, readwrite) NSString *code;
+@property (copy, readwrite) NSString *descr;
 
 +(NSString*)lookupLanguageCode:(NSString*)aCode;
 +(void)initLookupTable;

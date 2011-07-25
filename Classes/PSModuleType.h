@@ -17,12 +17,12 @@
 }
 
 @property (retain, readwrite) NSString *moduleType;
-@property (retain, readwrite) NSArray *modules;
+@property (retain, readonly) NSArray *modules;
 @property (retain, readwrite) NSArray *moduleLanguages;
 @property (retain, readwrite) NSArray *moduleList;
 
 - (id)initWithModules:(NSArray *)mods withModuleType:(NSString *)modType;
 - (void)dealloc;
-
+- (void)setModules:(NSArray *)mods;
 
 @end

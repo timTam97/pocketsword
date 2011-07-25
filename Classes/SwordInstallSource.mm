@@ -214,10 +214,11 @@
 			if(mgr == nil) {
 				ALog(@"[SwordInstallSource -manager] have a nil SWMgr!");
 			} else {
-				swordManager = [[SwordManager alloc] initWithSWMgr:mgr];
+				[self setSwordManager:[[SwordManager alloc] initWithSWMgr:mgr]];
+				//swordManager = [[SwordManager alloc] initWithSWMgr:mgr];
 			}
 		}
-		swordManagerLoaded = YES;
+		//swordManagerLoaded = YES;
 		[managerCreationLock unlock];
     }
     

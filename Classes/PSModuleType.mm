@@ -27,8 +27,8 @@
 }
 
 -(NSArray*)getAvailableLanguages:(NSArray *)mods {
-	NSMutableArray *ret = [NSMutableArray array];
-	NSMutableArray *tmp = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:10];
+	NSMutableArray *tmp = [[NSMutableArray alloc] initWithCapacity:10];
     
 	for(SwordModule *mod in mods) {
 		if(![tmp containsObject: [mod lang]]) {
@@ -39,6 +39,7 @@
 			[lang release];
 		}
     }
+	[tmp release];
 
     // sort
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"descr" ascending:YES];
@@ -46,7 +47,9 @@
 	[ret sortUsingDescriptors:sortDescriptors];
 	[sortDescriptor release];
     
-	return [NSArray arrayWithArray:ret];
+	NSArray *returnArray = [NSArray arrayWithArray:ret];
+	[ret release];
+	return returnArray;
 }
 
 -(NSArray*)getModulesByLanguage:(NSString *)lang fromModuleArray:(NSArray *)mods {
@@ -63,8 +66,8 @@
 	return [ret autorelease];
 }
 
--(void)setModules:(NSArray *)mods {
-	NSMutableArray *modList = [NSMutableArray array];
+- (void)setModules:(NSArray *)mods {
+	NSMutableArray *modList = [[NSMutableArray alloc] initWithCapacity:10];
 	//we accept a list of mods and need to create a list of mods per language.
 	[self setModuleLanguages:[self getAvailableLanguages:mods]];
 	for(PSLanguageCode *lang in moduleLanguages) {
@@ -74,6 +77,7 @@
 		[modules release];
 	modules = modList;
 	[modules retain];
+	[modList release];
 	[self setModuleList:mods];
 }
 

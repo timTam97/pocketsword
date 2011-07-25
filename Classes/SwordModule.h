@@ -117,7 +117,7 @@ typedef enum {
 @property (readwrite) int status;
 @property (assign, readwrite) NSRecursiveLock *moduleLock;
 @property (assign, readwrite) NSLock *indexLock;
-@property (retain, readwrite) NSString *name;
+@property (copy, readwrite) NSString *name;
 @property (retain, readwrite) SwordManager *swManager;
 
 // -------------- class methods --------------
