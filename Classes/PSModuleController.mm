@@ -243,8 +243,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		 NSLog(@"->		%@", nn);
 			}
 		}
+		*/
 		
-		 */
 		
 		[self setPreferences];
 		[self reloadLastBible];

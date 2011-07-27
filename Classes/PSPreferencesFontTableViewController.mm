@@ -46,6 +46,30 @@
 					   @"Trebuchet MS", 
 					   @"Verdana", 
 					   //@"Zapfino", 
+						//@"Snell Roundhand", 
+						//@"Academy Engraved LET", 
+						//@"Charis SIL", 
+						//@"Padauk", 
+						@"Code2000", 
+						@"Gurmukhi MN", 
+						@"Malayalam Sangam MN", 
+						//@"Bradley Hand", 
+						@"Kannada Sangam MN", 
+						@"Bodoni 72", 
+						@"Cochin", 
+						@"Sinhala Sangam MN", 
+						@"Hoefler Text", 
+						@"Optima", 
+						@"Gujarati Sangam MN", 
+						@"Devanagari Sangam MN", 
+						@"Kailasa", 
+						@"Telugu Sangam MN",
+						//@"Baskerville", 
+						//@"Copperplate", 
+						@"Bangla Sangam MN", 
+						@"Tamil Sangam MN", 
+						@"Gill Sans", 
+						@"Oriya Sangam MN", 
 					   nil] retain];
 	}
 }
@@ -96,6 +120,8 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	[fontStrings release];
+	fontStrings = nil;
 }
 
 
@@ -114,6 +140,7 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"fontPreferencesTable";
     
 	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 	if(self.moduleName)
@@ -121,7 +148,6 @@
 	if(!font)
 		font = @"Helvetica";
 	
-    NSString *CellIdentifier = [NSString stringWithFormat:@"fontPreferencesTable-%d", indexPath.row];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
