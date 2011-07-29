@@ -734,6 +734,7 @@
 		sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 		sword::VerseKey parser(curKey->getShortText());
 		parser.setVersificationSystem([[self versification] UTF8String]);
+		DLog(@"%@", key);
 		sword::ListKey refs = parser.ParseVerseList([key UTF8String], parser, true);
         
 		ret = [NSMutableArray array];
@@ -1112,7 +1113,7 @@
 		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module.")];
 	}
 
-	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
+	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
 //	if([modType isEqualToString: SWMOD_CATEGORY_BIBLES]) {
 //		//only pad the bottom if it's a Bible, don't for commentaries
 //		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
