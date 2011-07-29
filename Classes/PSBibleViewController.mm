@@ -110,18 +110,15 @@
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
-	if(!isFullScreen) {
-		[UIView beginAnimations:@"fullscreen2" context:nil];
-		[UIView setAnimationBeginsFromCurrentState:YES];
-		[UIView setAnimationDuration:0.5];
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
-		[UIView commitAnimations];
-	}
+//	if(!isFullScreen) {
+//		[UIView beginAnimations:@"fullscreen2" context:nil];
+//		[UIView setAnimationBeginsFromCurrentState:YES];
+//		[UIView setAnimationDuration:0.5];
+//		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
+//		[UIView commitAnimations];
+//	}
 	[webView setupRefreshViews];
-	//NSString *posJS = [NSString stringWithFormat:@"scrollToPosition(%@);startDetLocPoll();", [[NSUserDefaults standardUserDefaults] objectForKey:@"bibleScrollPosition"]];
-	//[webView stringByEvaluatingJavaScriptFromString:posJS];
 	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
-	//webView.hidden = NO;
 }
 
 - (void)toggleFullscreen {
@@ -162,7 +159,7 @@
     } else {
         [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
-		//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
     }
 	
     [UIView commitAnimations];
