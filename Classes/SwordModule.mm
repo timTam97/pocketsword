@@ -730,6 +730,7 @@
     } else if([attrType isEqualToString:@"scriptRef"] || [attrType isEqualToString:@"scripRef"]) {
 		NSString *key = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+" 
                                                                                        withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		[self setChapter:[PSModuleController getCurrentBibleRef]];
 		sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 		sword::VerseKey parser(curKey->getShortText());
 		parser.setVersificationSystem([[self versification] UTF8String]);
