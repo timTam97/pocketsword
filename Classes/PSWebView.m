@@ -21,6 +21,7 @@
 
 @end
 
+#define PULL_THRESHOLD -130.0f
 
 @implementation PSWebView
 
@@ -55,10 +56,6 @@
 	refreshHeaderView = nil;
 	[refreshFooterView removeFromSuperview];
 	refreshFooterView = nil;
-//	CGFloat rectWidth = 320.0f;
-//	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
-//		rectWidth = 768.0f;;
-//	}
 	CGFloat rectWidth = self.frame.size.width;
 	
 	refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.bounds.size.height, rectWidth, self.bounds.size.height)];
@@ -86,19 +83,26 @@
 
 }
 
+- (void)clearWebView {
+	
+	[self loadHTMLString: @"" baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+}
+
 - (void)reloadTableViewDataSourceTop{
 	//  should be calling your tableviews model to reload
 	//  put here just for demo
-	[self dataSourceDidFinishLoadingNewData];
+	[self performSelectorOnMainThread:@selector(clearWebView) withObject:nil waitUntilDone:YES];
 	[psDelegate topReloadTriggered];
+	[self dataSourceDidFinishLoadingNewData];
 	//[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
 }
 
 - (void)reloadTableViewDataSourceBottom{
 	//  should be calling your tableviews model to reload
 	//  put here just for demo
-	[self dataSourceDidFinishLoadingNewData];
+	[self performSelectorOnMainThread:@selector(clearWebView) withObject:nil waitUntilDone:YES];
 	[psDelegate bottomReloadTriggered];
+	[self dataSourceDidFinishLoadingNewData];
 	//[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
 }
 
@@ -106,16 +110,16 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
 	
 	if (scrollView.isDragging) {
-		if (refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !_reloading && !refreshHeaderView.hidden) {
+		if (refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > PULL_THRESHOLD && scrollView.contentOffset.y < 0.0f && !_reloading && !refreshHeaderView.hidden) {
 			[refreshHeaderView setState:EGOOPullRefreshNormal];
-		} else if (refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !_reloading && !refreshHeaderView.hidden) {
+		} else if (refreshHeaderView.state == EGOOPullRefreshNormal && scrollView.contentOffset.y < PULL_THRESHOLD && !_reloading && !refreshHeaderView.hidden) {
 			[refreshHeaderView setState:EGOOPullRefreshPulling];
 		}
         
         float endOfTable = [self endOfTableView:scrollView];
-        if (refreshFooterView.state == EGOOPullRefreshPulling && endOfTable < 0.0f && endOfTable > -65.0f && !_reloading && !refreshFooterView.hidden) {
+        if (refreshFooterView.state == EGOOPullRefreshPulling && endOfTable < 0.0f && endOfTable > PULL_THRESHOLD && !_reloading && !refreshFooterView.hidden) {
 			[refreshFooterView setState:EGOOPullRefreshNormal];
-		} else if (refreshFooterView.state == EGOOPullRefreshNormal && endOfTable < -65.0f && !_reloading && !refreshFooterView.hidden) {
+		} else if (refreshFooterView.state == EGOOPullRefreshNormal && endOfTable < PULL_THRESHOLD && !_reloading && !refreshFooterView.hidden) {
 			[refreshFooterView setState:EGOOPullRefreshPulling];
 		}
 	}
@@ -124,7 +128,7 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	BOOL reloadTriggered = NO;
 	
-	if (scrollView.contentOffset.y <= - 65.0f && !_reloading && !refreshHeaderView.hidden) {
+	if (scrollView.contentOffset.y <= PULL_THRESHOLD && !_reloading && !refreshHeaderView.hidden) {
         _reloading = YES;
         [self reloadTableViewDataSourceTop];
         [refreshHeaderView setState:EGOOPullRefreshLoading];
@@ -135,7 +139,7 @@
 		reloadTriggered = YES;
 	}
     
-    if ([self endOfTableView:scrollView] <= -65.0f && !_reloading && !refreshFooterView.hidden) {
+    if ([self endOfTableView:scrollView] <= PULL_THRESHOLD && !_reloading && !refreshFooterView.hidden) {
         _reloading = YES;
         [self reloadTableViewDataSourceBottom];
         [refreshFooterView setState:EGOOPullRefreshLoading];
