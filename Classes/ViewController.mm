@@ -824,6 +824,9 @@ bool ps_viewcontroller_initialized = false;
 		{
 			if(versePosition) {
 				[bibleJavascript appendFormat:@"scrollToVerse(%@);\n", versePosition];
+			}
+			versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsCommentaryVersePosition];
+			if(versePosition) {
 				[commentaryJavascript appendFormat:@"scrollToVerse(%@);\n", versePosition];
 			}
 		}
