@@ -101,6 +101,7 @@ bool ps_viewcontroller_initialized = false;
 		[self setBibleTitleViaNotification];
 		[self setCommentaryTitleViaNotification];
 		[self setDictionaryTitleViaNotification];
+		[bibleTabController viewWillAppear:NO];
 		
 		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
