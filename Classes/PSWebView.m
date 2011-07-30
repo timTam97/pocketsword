@@ -33,6 +33,7 @@
 }
 
 - (void)setupRefreshViews {
+	[self dataSourceDidFinishLoadingNewData];
 	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
 	cachedHeight = [heightString floatValue];
 
@@ -83,30 +84,6 @@
 
 }
 
-- (void)clearWebView {
-	
-	[self loadHTMLString: @"" baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
-}
-
-- (void)reloadTableViewDataSourceTop{
-	//  should be calling your tableviews model to reload
-	//  put here just for demo
-	[self performSelectorOnMainThread:@selector(clearWebView) withObject:nil waitUntilDone:YES];
-	[psDelegate topReloadTriggered];
-	[self dataSourceDidFinishLoadingNewData];
-	//[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
-}
-
-- (void)reloadTableViewDataSourceBottom{
-	//  should be calling your tableviews model to reload
-	//  put here just for demo
-	[self performSelectorOnMainThread:@selector(clearWebView) withObject:nil waitUntilDone:YES];
-	[psDelegate bottomReloadTriggered];
-	[self dataSourceDidFinishLoadingNewData];
-	//[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
-}
-
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
 	
 	if (scrollView.isDragging) {
@@ -130,23 +107,23 @@
 	
 	if (scrollView.contentOffset.y <= PULL_THRESHOLD && !_reloading && !refreshHeaderView.hidden) {
         _reloading = YES;
-        [self reloadTableViewDataSourceTop];
+		[psDelegate topReloadTriggered];
         [refreshHeaderView setState:EGOOPullRefreshLoading];
-//        [UIView beginAnimations:nil context:NULL];
-//        [UIView setAnimationDuration:0.2];
-//        scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-//        [UIView commitAnimations];
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2];
+        scrollView.contentInset = UIEdgeInsetsMake(80.0f, 0.0f, 0.0f, 0.0f);
+        [UIView commitAnimations];
 		reloadTriggered = YES;
 	}
     
     if ([self endOfTableView:scrollView] <= PULL_THRESHOLD && !_reloading && !refreshFooterView.hidden) {
         _reloading = YES;
-        [self reloadTableViewDataSourceBottom];
+		[psDelegate bottomReloadTriggered];
         [refreshFooterView setState:EGOOPullRefreshLoading];
-//        [UIView beginAnimations:nil context:NULL];
-//        [UIView setAnimationDuration:0.2];
-//        scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 60.0f, 0.0f);
-//        [UIView commitAnimations];
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2];
+        scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 80.0f, 0.0f);
+        [UIView commitAnimations];
 		reloadTriggered = YES;
 	}
 
@@ -158,20 +135,20 @@
 	}
 }
 
-- (void)dataSourceDidFinishLoadingNewData{
-//	UIScrollView* currentScrollView;
-//    for (UIView* subView in self.subviews) {
-//        if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
-//            currentScrollView = (UIScrollView*)subView;
-//        }
-//    }
+- (void)dataSourceDidFinishLoadingNewData {
+	UIScrollView* currentScrollView;
+    for (UIView* subView in self.subviews) {
+        if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
+            currentScrollView = (UIScrollView*)subView;
+        }
+    }
 	
 	_reloading = NO;
 	
-//	[UIView beginAnimations:nil context:NULL];
-//	[UIView setAnimationDuration:.3];
-//	[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-//	[UIView commitAnimations];
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:0.3];
+	[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+	[UIView commitAnimations];
 	
     if ([refreshHeaderView state] != EGOOPullRefreshNormal) {
         [refreshHeaderView setState:EGOOPullRefreshNormal];

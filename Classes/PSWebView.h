@@ -29,8 +29,6 @@
 @property (nonatomic, assign) id<PSWebViewDelegate> psDelegate;
 @property(assign,getter=isReloading) BOOL reloading;
 
-- (void)reloadTableViewDataSourceTop;
-- (void)reloadTableViewDataSourceBottom;
 - (void)dataSourceDidFinishLoadingNewData;
 - (void)setupRefreshViews;
 - (void)removeRefreshViews;
