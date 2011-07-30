@@ -78,15 +78,25 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	//DLog(@"running...");
     if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
-		UIInterfaceOrientation interfaceOrientation = [self interfaceOrientation];
-		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(UIDeviceOrientationIsLandscape(deviceOrientation)) {
 			[launchImageView setImage:[UIImage imageNamed:@"Default-Landscape~ipad.png"]];
 		} else {
 			[launchImageView setImage:[UIImage imageNamed:@"Default-Portrait~ipad.png"]];
 		}
+		[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+
+//		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+//			[launchImageView setImage:[UIImage imageNamed:@"Default-Landscape~ipad.png"]];
+//		} else {
+//			[launchImageView setImage:[UIImage imageNamed:@"Default-Portrait~ipad.png"]];
+//		}
 	}
-	[super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -258,7 +268,8 @@
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+	return YES;
+	//return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void)didReceiveMemoryWarning {

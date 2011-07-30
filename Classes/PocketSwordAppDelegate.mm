@@ -42,8 +42,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	self.launchedWithOptions = launchOptions;
-	
-    // Add the tab bar controller's current view as a subview of the window
+	    
+	// Add the tab bar controller's current view as a subview of the window
     //[window addSubview:tabBarController.view];
 	[window addSubview:launchViewController.view];
 	[launchViewController performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];

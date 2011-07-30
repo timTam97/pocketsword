@@ -4510,8 +4510,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4548,8 +4548,8 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "69EEB516-D42A-4499-B7D0-30D0DF884EEB";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "69EEB516-D42A-4499-B7D0-30D0DF884EEB";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -4563,7 +4563,7 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
@@ -4580,9 +4580,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)\\\"",
-					"\\\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/externals/libcurl\\\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/externals/libcurl\"",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
@@ -4609,7 +4609,7 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
@@ -4626,9 +4626,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)\\\"",
-					"\\\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/externals/libcurl\\\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../iPhone/libcurl/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/externals/libcurl\"",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
@@ -4666,7 +4666,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
 					externals/icu,
-					externals/clucene,
+					"externals/clucene/**",
 					externals/sword/include,
 					externals/libcurl/include,
 				);
