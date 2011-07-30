@@ -10,12 +10,12 @@
 @interface PSDevotionalViewController : UIViewController {
 	IBOutlet UITabBarItem				*devotionalTabBarItem;
 	IBOutlet UIWebView *devotionalWebView;
-	IBOutlet UIView *devotionalDatePickerView;
-	IBOutlet UIDatePicker *devotionalDatePicker;
-	IBOutlet UIBarButtonItem *todayButton;
 	IBOutlet UIBarButtonItem *devotionalTitle;
-	IBOutlet UIViewController *devotionalPickerViewController;
-	IBOutlet UIViewController *devotionalDatePickerViewController;
+
+	IBOutlet UIViewController	*devotionalDatePickerViewController;
+	IBOutlet UIView				*devotionalDatePickerView;
+	IBOutlet UIDatePicker		*devotionalDatePicker;
+	IBOutlet UIBarButtonItem	*todayButton;
 	
 	id popoverController;
 	BOOL loaded;

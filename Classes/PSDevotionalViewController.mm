@@ -39,6 +39,7 @@
 	}
 	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
 		[devotionalTitle setTitle:devoTitle];
+		[devotionalDatePickerViewController retain];//try to make our date picker never run away!
 	} else {
 		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 		UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
@@ -277,11 +278,13 @@
     // e.g. self.myOutlet = nil;
 	[popoverController release];
 	popoverController = nil;
+	[devotionalDatePickerViewController release];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
 - (void)dealloc {
+	[devotionalDatePickerViewController release];
     [super dealloc];
 }
 
