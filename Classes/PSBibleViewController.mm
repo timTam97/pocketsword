@@ -32,6 +32,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
 	webView.psDelegate = self;
+	finishedLoading = NO;
 }
 
 - (void)topReloadTriggered {
@@ -85,7 +86,9 @@
 		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 	}
 	[webView stringByEvaluatingJavaScriptFromString:js];
-	[webView setupRefreshViews];
+	if(finishedLoading) {
+		[webView setupRefreshViews];
+	}
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
@@ -214,6 +217,7 @@
 	//highlight bookmarked verses
 	[self highlightBookmarks];
 	[webView setupRefreshViews];
+	finishedLoading = YES;
 	
 	//highlight search results
 	// TODO: implement highlighting of search results

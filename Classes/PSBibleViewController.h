@@ -22,6 +22,7 @@
 	NSString *tappedVerse;
 	BOOL isFullScreen;
 	UIView *previousTabBarView;
+	BOOL finishedLoading;
 }
 
 @property (copy, readwrite) NSString *refToShow;

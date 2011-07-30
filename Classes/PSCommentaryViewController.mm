@@ -24,6 +24,7 @@
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 	webView.psDelegate = self;
+	finishedLoading = NO;
 }
 
 - (void)topReloadTriggered {
@@ -89,7 +90,9 @@
 		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 	}
 	[webView stringByEvaluatingJavaScriptFromString:js];
-	[webView setupRefreshViews];
+	if(finishedLoading) {
+		[webView setupRefreshViews];
+	}
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
@@ -176,6 +179,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)wView {
 	
 	[webView setupRefreshViews];
+	finishedLoading = YES;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
