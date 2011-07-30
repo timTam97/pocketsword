@@ -88,10 +88,10 @@ float status;
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
-					[is setType:INSTALLSOURCE_TYPE_FTP];
+					//[is setType:INSTALLSOURCE_TYPE_FTP];
                     [is setCaption:@"CrossWire 3 (av11n)"];
                     [is setSource:@"ftp.crosswire.org"];
-                    [is setDirectory:@"/pub/sword/avraw"];
+                    [is setDirectory:@"/ftpmirror/pub/sword/avraw"];
 					[is setUID:@"crosswire-av11n-http"];
                     // add is
                     [self addInstallSource:is withReinitialize:NO];
@@ -123,20 +123,23 @@ float status;
                     //[self addInstallSource:is withReinitialize:NO];
 					
 					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories2"];
+					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepositoryV2"];
 					//after we've added all the default Install sources, reinitialize:
 					[self reinitialize];
                     
                 } else {
-                    BOOL av11n = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedCWav11nRepository"];
+                    BOOL av11n = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedCWav11nRepositoryV2"];
                     if(!av11n) {
-                        SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_FTP] autorelease];
+						[self reinitialize];
+						[self removeInstallSourceNamed:@"CrossWire 3 (av11n)" withReinitialize:NO];
+                        SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
                         [is setCaption:@"CrossWire 3 (av11n)"];
                         [is setSource:@"ftp.crosswire.org"];
-                        [is setDirectory:@"/pub/sword/avraw"];                    
+                        [is setDirectory:@"/ftpmirror/pub/sword/avraw"];                    
                         [is setUID:@"crosswire-av11n-http"];
                         // add is
                         [self addInstallSource:is withReinitialize:NO];
-                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepository"];
+                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepositoryV2"];
                     }
 
                     // init installMgr
