@@ -1,4 +1,11 @@
 
+New in v1.4.1
+- iPad version!
+- addition of multitasking support, so you can continue downloading your modules while the app isn't the active app.
+- addition of modules with alternative versification (Appocrapha, Synodal, etc)
+- more fonts for displaying more Asian language scripts
+- minor improvements and bug fixes.
+
 New in v1.4.0
 - Improved Bookmarks (existing bookmarks will be moved to the "Imported" folder).
 - Highlighting!
@@ -57,3 +64,51 @@ New in v1.3.0
 - Updated Download section to add more download sources
 - added Russian & Traditional Chinese localisations
 - Can now define your own download source, for users who create their own modules
+
+
+DESCRIPTION:
+
+PocketSword is a Bible Study app for the iPad, iPhone & iPod Touch (iOS 3.0 and above) that is built upon the powerful SWORD backend developed by the CrossWire Bible Society.
+
+Modules are available for download (offline use) within the app, with permission granted by the various copyright holders to CrossWire to distribute them for use in its apps.  When you download this app, it comes with the KJV & Matthew Henry's Concise Commentary on the Whole Bible pre-installed, but you can use the downloader within PocketSword (located under the More tab) to choose which additional modules you wish to download from CrossWire and have available for offline use.
+
+MODULES
+
+There are free modules (both Bible translations and commentaries) available in over 60 languages, including (but not limited to):
+English, Greek (modern and ancient), Hebrew, German, Dutch, French, Italian, Spanish, Japanese, Chinese (simplified & traditional), Arabic, Afrikaans, Latin, Russian, Tagalog, Thai, Vietnamese and many more.
+
+* Popular Bible translations available in the English language include:
+KJV, AKJV, ASV, ESV, NET, Tyndale, WEB and Young's Literal Translation.
+
+* Popular Commentaries available in the English language include:
+Matthew Henry's Complete Commentary on the Whole Bible (as well as the "Concise" version), Treasury of Scripture Knowledge, John Wesley's Notes on the Bible, Abbot, Barnes, Geneva, Luther and more...
+(See http://crosswire.org/sword/modules/ for a fuller list of the modules).
+
+* Dictionaries are also available within PocketSword, including Easton's Bible Dictionary and Nave's Topical Bible Dictionary.
+
+* Daily Devotionals are also available (under the More tab), including Spurgeon's Morning & Evening.
+
+You can also choose to create your own modules, using the tools available from Crosswire, and install your modules directly from your computer to your iPhone.
+
+FEATURES
+
+The SWORD backend to PocketSword is very powerful and allows for a rich experience for the end user.  Currently implemented are:
+- Built-in module downloader of modules in many different languages
+- Separate Bible, Commentary & Dictionary tabs for quick reference from one to the other: jump to a verse in one and it jumps to the same verse in the other
+- Landscape & fullscreen modes
+- Choose your font & font size for ease of reading
+- Bookmark & History (of Bible & Commentary use) support
+- Red Letter support & choice of reading Verse-Per-Line or using paragraphs.
+- Night mode for easier reading in the dark
+- Install custom-made modules (including those with non-KJV versification, commenly called "Alternative Versification" or av11n)
+- Searching within Bibles and Commentaries
+- Localisations in many languages.
+- Copy and Paste support (of Bible verses, Commentary entries & Dictionary entries).
+- Footnotes, cross-references & headings in modules that support them (ESV and KJV, for example)
+- Strong's Numbers & Morphology in modules that support them
+
+Follow us on Twitter @PocketSword
+
+Please note that we cannot reply to questions you ask in reviews - email us or post a question on the user forums at:
+http://www.crosswire.org/forums/mvnforum/listthreads?forum=16
+

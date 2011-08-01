@@ -8,17 +8,30 @@
 //- highlighter
 //- font per module
 - notes
-- NIV; NKJV
+o NIV; NKJV
 - auto scroll
 - split screen
 - genbook support
 - icon
-- iPad support
+//- iPad support
 
 
 // update 3rd of Feb, 2011
 
 //- highighting
-- iPad version
+//- iPad version
 - split screen
 - personal notes
+
+// update 1st of August, 2011
+
+- clear history button
+o NIV
+- split screen
+//- iPad
+- download queuing
+- note taking
+- improved highlighting
+- Twitter
+
+
