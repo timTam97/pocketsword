@@ -144,14 +144,13 @@
 	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 	
     //move tab bar up/down
-    CGRect tabBarFrame = self.tabBarController.tabBar.frame;
-    int tabBarHeight = tabBarFrame.size.height;
-    int offset = isFullScreen ? tabBarHeight : -1 * tabBarHeight;
-    int tabBarY = tabBarFrame.origin.y + offset;
-    tabBarFrame.origin.y = tabBarY;
-    self.tabBarController.tabBar.frame = tabBarFrame;
-	
-    //fade it in/out
+//    CGRect tabBarFrame = self.tabBarController.tabBar.frame;
+//    int tabBarHeight = tabBarFrame.size.height;
+//    int offset = isFullScreen ? tabBarHeight : -1 * tabBarHeight;
+//    int tabBarY = tabBarFrame.origin.y + offset;
+//    tabBarFrame.origin.y = tabBarY;
+//    self.tabBarController.tabBar.frame = tabBarFrame;
+    // and fade it in/out
     self.tabBarController.tabBar.alpha = isFullScreen ? 0 : 1;
 	
     //resize webview to be full screen / normal
