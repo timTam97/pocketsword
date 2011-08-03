@@ -665,8 +665,6 @@
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781F2B12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
 		05781F2C12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
-		05930F9013E8EAC4001DEF4E /* SearchWebView.js in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
-		05930F9113E8EAC4001DEF4E /* SearchWebView.js in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		05930F9813E8EAEE001DEF4E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		05930F9913E8EAEE001DEF4E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		05930F9A13E8EAEE001DEF4E /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
@@ -4035,7 +4033,6 @@
 				05DA778513CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778713CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A213CD754E000A4B97 /* PSWebView.m in Sources */,
-				05930F9113E8EAC4001DEF4E /* SearchWebView.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4377,7 +4374,6 @@
 				05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.m in Sources */,
-				05930F9013E8EAC4001DEF4E /* SearchWebView.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4932,8 +4928,8 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "AA25E715-B815-4DE8-9AEE-0BE9B505AC1A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AA25E715-B815-4DE8-9AEE-0BE9B505AC1A";
+				PROVISIONING_PROFILE = "FD1253DD-952C-4AA0-ACF9-EADB691C45D7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FD1253DD-952C-4AA0-ACF9-EADB691C45D7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
