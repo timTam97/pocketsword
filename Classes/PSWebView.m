@@ -25,7 +25,8 @@
 
 @implementation PSWebView
 
-@synthesize reloading=_reloading, psDelegate;
+//@synthesize reloading=_reloading;
+@synthesize psDelegate;
 
 - (void)removeRefreshViews {
 	refreshFooterView.hidden = YES;
@@ -41,16 +42,29 @@
 	
 	UIScrollView* currentScrollView = nil;
     for (UIView* subView in self.subviews) {
-        if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
+        if ([subView respondsToSelector:@selector(scrollsToTop)]) {//scrollsToTop
+        //if ([[subView.class description] isEqualToString:@"UIScrollView"]) {//scrollsToTop
+			//DLog(@"subView that seems to work = %@", [subView.class description]);
             currentScrollView = (UIScrollView*)subView;
-            currentScrollView.delegate = self;
+			if([currentScrollView respondsToSelector:@selector(setDelegate:)]) {
+				[currentScrollView setDelegate:self];
+			}
         }
     }
 	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		[currentScrollView setIndicatorStyle:UIScrollViewIndicatorStyleWhite];
-	} else {
-		[currentScrollView setIndicatorStyle:UIScrollViewIndicatorStyleBlack];
+	if(!currentScrollView) {
+		refreshFooterView = nil;
+		refreshHeaderView = nil;
+		ALog(@"cannot find the currentScrollView!");
+		return;
+	}
+	
+	if([currentScrollView respondsToSelector:@selector(setIndicatorStyle:)]) {
+		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+			[currentScrollView setIndicatorStyle:UIScrollViewIndicatorStyleWhite];
+		} else {
+			[currentScrollView setIndicatorStyle:UIScrollViewIndicatorStyleBlack];
+		}
 	}
 	
 	[refreshHeaderView removeFromSuperview];
@@ -136,19 +150,24 @@
 }
 
 - (void)dataSourceDidFinishLoadingNewData {
-	UIScrollView* currentScrollView;
+	UIScrollView* currentScrollView = nil;
     for (UIView* subView in self.subviews) {
-        if ([[subView.class description] isEqualToString:@"UIScrollView"]) {
+        if ([subView respondsToSelector:@selector(scrollsToTop)]) {//scrollsToTop
+			//if ([[subView.class description] isEqualToString:@"UIScrollView"]) {//scrollsToTop
+			//DLog(@"subView that seems to work = %@", [subView.class description]);
             currentScrollView = (UIScrollView*)subView;
+            [currentScrollView setDelegate:self];
         }
     }
 	
 	_reloading = NO;
 	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.3];
-	[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-	[UIView commitAnimations];
+	if([currentScrollView respondsToSelector:@selector(setContentInset:)]) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDuration:0.3];
+		[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+		[UIView commitAnimations];
+	}
 	
     if ([refreshHeaderView state] != EGOOPullRefreshNormal) {
         [refreshHeaderView setState:EGOOPullRefreshNormal];

@@ -58,6 +58,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:YES];
+	[webView setupRefreshViews];
 	if(refToShow) {
 		NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[webView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];

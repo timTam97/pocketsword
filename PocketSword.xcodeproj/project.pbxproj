@@ -665,6 +665,22 @@
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781F2B12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
 		05781F2C12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
+		05930F9013E8EAC4001DEF4E /* SearchWebView.js in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
+		05930F9113E8EAC4001DEF4E /* SearchWebView.js in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
+		05930F9813E8EAEE001DEF4E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
+		05930F9913E8EAEE001DEF4E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
+		05930F9A13E8EAEE001DEF4E /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
+		05930F9B13E8EAEE001DEF4E /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
+		05930F9C13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
+		05930F9D13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
+		05930F9E13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05DE576D120916E9005A636A /* PSModuleSelectorController.xib */; };
+		05930F9F13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05DE576D120916E9005A636A /* PSModuleSelectorController.xib */; };
+		05930FA013E8EAEE001DEF4E /* HistoryController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC7C12F2CD7C0029F3A2 /* HistoryController.xib */; };
+		05930FA113E8EAEE001DEF4E /* HistoryController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC7C12F2CD7C0029F3A2 /* HistoryController.xib */; };
+		05930FA213E8EAEE001DEF4E /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
+		05930FA313E8EAEE001DEF4E /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
+		05930FA513E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0516CF23136124CD0058E022 /* MainWindow-iPad.xib */; };
+		05930FA613E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0516CF23136124CD0058E022 /* MainWindow-iPad.xib */; };
 		059419B012DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */; };
 		059419B112DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */; };
 		059A6CC111B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
@@ -1437,6 +1453,14 @@
 		058E2D2B10F56EFC006E4447 /* canon_german.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_german.h; sourceTree = "<group>"; };
 		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
 		058E2D2D10F56EFC006E4447 /* canon_vulg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_vulg.h; sourceTree = "<group>"; };
+		05930F8F13E8EAC4001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
+		05930F9213E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/Downloader.xib; sourceTree = "<group>"; };
+		05930F9313E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/HistoryController.xib; sourceTree = "<group>"; };
+		05930F9413E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05930F9513E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		05930F9613E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05930F9713E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/PSSearchController.xib; sourceTree = "<group>"; };
+		05930FA413E8EB10001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = "th.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkAddViewController.h; path = Classes/PSBookmarkAddViewController.h; sourceTree = "<group>"; };
 		059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkAddViewController.m; path = Classes/PSBookmarkAddViewController.m; sourceTree = "<group>"; };
 		059A6CBF11B79ABD00B33E54 /* bible.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bible.png; path = Resources/bible.png; sourceTree = "<group>"; };
@@ -3411,7 +3435,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "CrossWire Bible Society";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PocketSword" */;
@@ -3438,6 +3462,7 @@
 				"zh-Hans",
 				"zh-Hant",
 				cs,
+				th,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -3541,6 +3566,13 @@
 				052EC90113DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */,
 				052EC90313DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */,
 				0528685313E012660044A388 /* code2000.ttf in Resources */,
+				05930F9913E8EAEE001DEF4E /* MainWindow.xib in Resources */,
+				05930F9B13E8EAEE001DEF4E /* Downloader.xib in Resources */,
+				05930F9D13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */,
+				05930F9F13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */,
+				05930FA113E8EAEE001DEF4E /* HistoryController.xib in Resources */,
+				05930FA313E8EAEE001DEF4E /* PSSearchController.xib in Resources */,
+				05930FA613E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3633,6 +3665,13 @@
 				052EC90013DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */,
 				052EC90213DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */,
 				0528685213E012660044A388 /* code2000.ttf in Resources */,
+				05930F9813E8EAEE001DEF4E /* MainWindow.xib in Resources */,
+				05930F9A13E8EAEE001DEF4E /* Downloader.xib in Resources */,
+				05930F9C13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */,
+				05930F9E13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */,
+				05930FA013E8EAEE001DEF4E /* HistoryController.xib in Resources */,
+				05930FA213E8EAEE001DEF4E /* PSSearchController.xib in Resources */,
+				05930FA513E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3996,6 +4035,7 @@
 				05DA778513CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778713CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A213CD754E000A4B97 /* PSWebView.m in Sources */,
+				05930F9113E8EAC4001DEF4E /* SearchWebView.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4337,6 +4377,7 @@
 				05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.m in Sources */,
+				05930F9013E8EAC4001DEF4E /* SearchWebView.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4359,6 +4400,7 @@
 				054BEF3311A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3911A4F13200ABCA18 /* zh-Hant */,
 				0501E812121A390B000D9CA3 /* cs */,
+				05930F9213E8EAEE001DEF4E /* th */,
 			);
 			name = Downloader.xib;
 			sourceTree = "<group>";
@@ -4379,6 +4421,7 @@
 				0516CF30136125240058E022 /* uk */,
 				0516CF311361252A0058E022 /* zh-Hans */,
 				0516CF321361252F0058E022 /* zh-Hant */,
+				05930FA413E8EB10001DEF4E /* th */,
 			);
 			name = "MainWindow-iPad.xib";
 			sourceTree = "<group>";
@@ -4399,6 +4442,7 @@
 				054BEF3411A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3A11A4F13200ABCA18 /* zh-Hant */,
 				0501E813121A3912000D9CA3 /* cs */,
+				05930F9413E8EAEE001DEF4E /* th */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -4419,6 +4463,7 @@
 				056BCCDC12F2E5AD0029F3A2 /* uk */,
 				056BCCDD12F2E5B40029F3A2 /* zh-Hans */,
 				056BCCDE12F2E5B90029F3A2 /* zh-Hant */,
+				05930F9313E8EAEE001DEF4E /* th */,
 			);
 			name = HistoryController.xib;
 			sourceTree = "<group>";
@@ -4439,6 +4484,7 @@
 				056BCCE812F2E5E60029F3A2 /* uk */,
 				056BCCE912F2E5E90029F3A2 /* zh-Hans */,
 				056BCCEA12F2E5EE0029F3A2 /* zh-Hant */,
+				05930F9713E8EAEE001DEF4E /* th */,
 			);
 			name = PSSearchController.xib;
 			sourceTree = "<group>";
@@ -4459,6 +4505,7 @@
 				05DE584A12093565005A636A /* zh-Hant */,
 				05DE584B1209356A005A636A /* zh-Hans */,
 				0501E816121A3925000D9CA3 /* cs */,
+				05930F9613E8EAEE001DEF4E /* th */,
 			);
 			name = PSModuleSelectorController.xib;
 			sourceTree = "<group>";
@@ -4479,6 +4526,7 @@
 				054BEF3511A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3B11A4F13200ABCA18 /* zh-Hant */,
 				0501E810121A38EC000D9CA3 /* cs */,
+				05930F8F13E8EAC4001DEF4E /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4499,6 +4547,7 @@
 				054BEF3611A4F11D00ABCA18 /* zh-Hans */,
 				054BEF3C11A4F13200ABCA18 /* zh-Hant */,
 				0501E811121A3904000D9CA3 /* cs */,
+				05930F9513E8EAEE001DEF4E /* th */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";

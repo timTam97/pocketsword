@@ -23,6 +23,9 @@
 }
 
 +(void)resizeViewsOnAppearWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView bottomBar:(UIView*)bottomBar useStatusBar:(BOOL)useStatusBar {
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		return;
+	}
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	CGFloat topBarHeight, bottomBarHeight, viewHeight, width;//, tabBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
@@ -40,6 +43,7 @@
 		}
 	}
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		//DLog(@"landscape");
 		redrawInNewFrames = YES;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
 		width = screen.height;
@@ -49,6 +53,7 @@
 			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.width;
 		}
 	} else if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		//DLog(@"portrait");
 		redrawInNewFrames = YES;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_PORTRAIT_HEIGHT : 0.0;
 		width = screen.width;

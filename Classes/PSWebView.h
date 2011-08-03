@@ -21,13 +21,14 @@
 	EGORefreshTableHeaderView *refreshHeaderView;
     EGORefreshTableFooterView *refreshFooterView;
 	
-	BOOL _reloadingHeader;
-    BOOL _reloadingFooter;
+	//BOOL _reloadingHeader;
+    //BOOL _reloadingFooter;
+	BOOL _reloading;
     float cachedHeight;
 }
 
 @property (nonatomic, assign) id<PSWebViewDelegate> psDelegate;
-@property(assign,getter=isReloading) BOOL reloading;
+//@property(assign,getter=isReloading) BOOL reloading;
 
 - (void)dataSourceDidFinishLoadingNewData;
 - (void)setupRefreshViews;

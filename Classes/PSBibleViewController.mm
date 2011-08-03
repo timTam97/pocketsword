@@ -64,6 +64,9 @@
 	}
 	if(!self.isFullScreen) {
 		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:YES];
+		if(finishedLoading) {
+			[webView setupRefreshViews];
+		}
 	}
 }
 
