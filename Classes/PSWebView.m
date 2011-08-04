@@ -21,7 +21,8 @@
 
 @end
 
-#define PULL_THRESHOLD -130.0f
+#define PULL_THRESHOLD_IPAD -130.0f
+#define PULL_THRESHOLD_IPHONE -65.0f
 
 @implementation PSWebView
 
@@ -98,7 +99,11 @@
 
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{	
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE;
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		PULL_THRESHOLD = PULL_THRESHOLD_IPAD;
+	}
 	
 	if (scrollView.isDragging) {
 		if (refreshHeaderView.state == EGOOPullRefreshPulling && scrollView.contentOffset.y > PULL_THRESHOLD && scrollView.contentOffset.y < 0.0f && !_reloading && !refreshHeaderView.hidden) {
@@ -117,6 +122,10 @@
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE;
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		PULL_THRESHOLD = PULL_THRESHOLD_IPAD;
+	}
 	BOOL reloadTriggered = NO;
 	
 	if (scrollView.contentOffset.y <= PULL_THRESHOLD && !_reloading && !refreshHeaderView.hidden) {
