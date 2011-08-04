@@ -63,7 +63,11 @@
 		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 	if(!self.isFullScreen) {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:YES];
+		if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+			//for the iPad we skip the resize...
+		} else {
+			[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:YES];
+		}
 		if(finishedLoading) {
 			[webView setupRefreshViews];
 		}

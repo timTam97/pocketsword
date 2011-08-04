@@ -274,8 +274,6 @@
 		054BEC39119F89E800ABCA18 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		054BEC3A119F89E800ABCA18 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
 		054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
-		054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A320FF566F300690108 /* gen_xib_strings.py */; };
-		054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */ = {isa = PBXBuildFile; fileRef = E9617A340FF566FF00690108 /* localize_xibs.py */; };
 		054BEC3F119F89E800ABCA18 /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		054BEC40119F89E800ABCA18 /* nt.bks in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1310884F71004FB0E0 /* nt.bks */; };
 		054BEC41119F89E800ABCA18 /* nt.cps in Resources */ = {isa = PBXBuildFile; fileRef = 05275A1410884F71004FB0E0 /* nt.cps */; };
@@ -665,20 +663,6 @@
 		05781DA612D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781F2B12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
 		05781F2C12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
-		05930F9813E8EAEE001DEF4E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
-		05930F9913E8EAEE001DEF4E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
-		05930F9A13E8EAEE001DEF4E /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
-		05930F9B13E8EAEE001DEF4E /* Downloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0515E2D110C8E32900F58382 /* Downloader.xib */; };
-		05930F9C13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
-		05930F9D13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 054EF62210CD0EAF0091D269 /* IndexDownloader.xib */; };
-		05930F9E13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05DE576D120916E9005A636A /* PSModuleSelectorController.xib */; };
-		05930F9F13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05DE576D120916E9005A636A /* PSModuleSelectorController.xib */; };
-		05930FA013E8EAEE001DEF4E /* HistoryController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC7C12F2CD7C0029F3A2 /* HistoryController.xib */; };
-		05930FA113E8EAEE001DEF4E /* HistoryController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC7C12F2CD7C0029F3A2 /* HistoryController.xib */; };
-		05930FA213E8EAEE001DEF4E /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
-		05930FA313E8EAEE001DEF4E /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
-		05930FA513E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0516CF23136124CD0058E022 /* MainWindow-iPad.xib */; };
-		05930FA613E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0516CF23136124CD0058E022 /* MainWindow-iPad.xib */; };
 		059419B012DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */; };
 		059419B112DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */; };
 		059A6CC111B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
@@ -3488,8 +3472,6 @@
 				054BEC39119F89E800ABCA18 /* MainWindow.xib in Resources */,
 				054BEC3A119F89E800ABCA18 /* LICENSE.txt in Resources */,
 				054BEC3C119F89E800ABCA18 /* Localizable.strings in Resources */,
-				054BEC3D119F89E800ABCA18 /* gen_xib_strings.py in Resources */,
-				054BEC3E119F89E800ABCA18 /* localize_xibs.py in Resources */,
 				054BEC3F119F89E800ABCA18 /* Daily-Devotional.png in Resources */,
 				054BEC40119F89E800ABCA18 /* nt.bks in Resources */,
 				054BEC41119F89E800ABCA18 /* nt.cps in Resources */,
@@ -3564,13 +3546,6 @@
 				052EC90113DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */,
 				052EC90313DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */,
 				0528685313E012660044A388 /* code2000.ttf in Resources */,
-				05930F9913E8EAEE001DEF4E /* MainWindow.xib in Resources */,
-				05930F9B13E8EAEE001DEF4E /* Downloader.xib in Resources */,
-				05930F9D13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */,
-				05930F9F13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */,
-				05930FA113E8EAEE001DEF4E /* HistoryController.xib in Resources */,
-				05930FA313E8EAEE001DEF4E /* PSSearchController.xib in Resources */,
-				05930FA613E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3663,13 +3638,6 @@
 				052EC90013DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */,
 				052EC90213DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */,
 				0528685213E012660044A388 /* code2000.ttf in Resources */,
-				05930F9813E8EAEE001DEF4E /* MainWindow.xib in Resources */,
-				05930F9A13E8EAEE001DEF4E /* Downloader.xib in Resources */,
-				05930F9C13E8EAEE001DEF4E /* IndexDownloader.xib in Resources */,
-				05930F9E13E8EAEE001DEF4E /* PSModuleSelectorController.xib in Resources */,
-				05930FA013E8EAEE001DEF4E /* HistoryController.xib in Resources */,
-				05930FA213E8EAEE001DEF4E /* PSSearchController.xib in Resources */,
-				05930FA513E8EB10001DEF4E /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

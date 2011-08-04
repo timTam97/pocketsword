@@ -23,9 +23,6 @@
 }
 
 +(void)resizeViewsOnAppearWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView bottomBar:(UIView*)bottomBar useStatusBar:(BOOL)useStatusBar {
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
-		return;
-	}
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
 	CGFloat topBarHeight, bottomBarHeight, viewHeight, width;//, tabBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;

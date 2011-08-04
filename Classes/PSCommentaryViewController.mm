@@ -57,7 +57,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:YES];
+	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		//for the iPad we skip the resize...
+	} else {
+		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:YES];
+	}
 	[webView setupRefreshViews];
 	if(refToShow) {
 		NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
