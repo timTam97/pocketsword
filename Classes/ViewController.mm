@@ -1258,26 +1258,28 @@ bool ps_viewcontroller_initialized = false;
 			//interfaceOrientation = tabController.interfaceOrientation;
 			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 		}
-		//BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+		BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+		CGFloat info_landscape_height = ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT);// 200 || 100
+		CGFloat info_portrait_height = ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT);
 		CGFloat x,y;
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
-			x = 0.5 * INFO_LANDSCAPE_HEIGHT - 20;
-			y = (0.5 * screen.height) - (0.5 * INFO_LANDSCAPE_HEIGHT);
-			infoView.frame = CGRectMake(x, y, screen.height, INFO_LANDSCAPE_HEIGHT);
+			x = screen.width - (0.5f * screen.height) - (0.5f * info_landscape_height);
+			y = (0.5 * screen.height) - (0.5 * info_landscape_height);
+			infoView.frame = CGRectMake(x, y, screen.height, info_landscape_height);
 			infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			infoView.transform = CGAffineTransformIdentity;
-			x = 0.5 * INFO_LANDSCAPE_HEIGHT - 0.5 * screen.height;
-			y = (0.5 * screen.height) - (0.5 * INFO_LANDSCAPE_HEIGHT);
-			infoView.frame = CGRectMake(x, y, screen.height, INFO_LANDSCAPE_HEIGHT);
+			x = 0.5 * info_landscape_height - 0.5 * screen.height;
+			y = (0.5 * screen.height) - (0.5 * info_landscape_height);
+			infoView.frame = CGRectMake(x, y, screen.height, info_landscape_height);
 			infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 		} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, (screen.height - INFO_PORTRAIT_HEIGHT), screen.width, INFO_PORTRAIT_HEIGHT);
+			infoView.frame = CGRectMake(0, (screen.height - info_portrait_height), screen.width, info_portrait_height);
 		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT);
+			infoView.frame = CGRectMake(0, 0, screen.width, info_portrait_height);
 			infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 		}
 		
