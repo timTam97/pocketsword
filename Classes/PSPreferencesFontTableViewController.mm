@@ -14,64 +14,68 @@
 
 @synthesize moduleName;
 
+- (void)reloadFontStrings {
+	if(!fontStrings) {
+		fontStrings = [[NSArray arrayWithObjects: 
+						//@"Zapfino", 
+						//@"Snell Roundhand", 
+						//@"Academy Engraved LET", 
+						//@"Charis SIL", 
+						//@"Padauk", 
+						//@"DB LCD Temp", 
+						//@"Marker Felt", 
+						//@"Bradley Hand", 
+						//@"Baskerville", 
+						//@"Copperplate", 
+					    @"American Typewriter", 
+					    @"AppleGothic", 
+					    @"Arial", 
+					    @"Courier", 
+					    @"Courier New", 
+					    @"Georgia", 
+					    @"Geeza Pro", 
+					    @"Helvetica",
+					    @"Helvetica Neue", 
+					    @"Times New Roman", 
+					    @"Thonburi", 
+					    @"Trebuchet MS", 
+					    @"Verdana", 
+						//the more weird ones....
+					    @"Arial Hebrew", 
+					    @"Arial Rounded MT Bold", 
+					    @"Arial Unicode MS", 
+						@"Bangla Sangam MN", 
+						@"Bodoni 72", 
+						@"Cochin", 
+						@"Code2000", 
+						@"Devanagari Sangam MN", 
+						@"Gill Sans", 
+						@"Gurmukhi MN", 
+						@"Gujarati Sangam MN", 
+						@"Heiti J", 
+						@"Heiti K", 
+						@"Heiti SC", 
+						@"Heiti TC", 
+						@"Hiragino Kaku Gothic ProN", 
+						@"Hoefler Text", 
+						@"Kailasa", 
+						@"Kannada Sangam MN", 
+						@"Malayalam Sangam MN", 
+						@"Optima", 
+						@"Oriya Sangam MN", 
+						@"Sinhala Sangam MN", 
+						@"Tamil Sangam MN", 
+						@"Telugu Sangam MN",
+					    nil] retain];
+	}
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	self.navigationItem.title = NSLocalizedString(@"FontPreferenceTitle", @"Font");
-	if(!fontStrings) {
-		fontStrings = [[NSArray arrayWithObjects: 
-					   @"American Typewriter", 
-					   @"AppleGothic", 
-					   @"Arial", 
-					   @"Arial Hebrew", 
-					   @"Arial Rounded MT Bold", 
-					   @"Arial Unicode MS", 
-					   @"Courier", 
-					   @"Courier New", 
-					   //@"DB LCD Temp", 
-					   @"Georgia", 
-					   @"Geeza Pro", 
-					   @"Heiti J", 
-					   @"Heiti K", 
-					   @"Heiti SC", 
-					   @"Heiti TC", 
-					   @"Helvetica",
-					   @"Helvetica Neue", 
-					   @"Hiragino Kaku Gothic ProN", 
-					   //@"Marker Felt", 
-					   @"Times New Roman", 
-					   @"Thonburi", 
-					   @"Trebuchet MS", 
-					   @"Verdana", 
-					   //@"Zapfino", 
-						//@"Snell Roundhand", 
-						//@"Academy Engraved LET", 
-						//@"Charis SIL", 
-						//@"Padauk", 
-						@"Code2000", 
-						@"Gurmukhi MN", 
-						@"Malayalam Sangam MN", 
-						//@"Bradley Hand", 
-						@"Kannada Sangam MN", 
-						@"Bodoni 72", 
-						@"Cochin", 
-						@"Sinhala Sangam MN", 
-						@"Hoefler Text", 
-						@"Optima", 
-						@"Gujarati Sangam MN", 
-						@"Devanagari Sangam MN", 
-						@"Kailasa", 
-						@"Telugu Sangam MN",
-						//@"Baskerville", 
-						//@"Copperplate", 
-						@"Bangla Sangam MN", 
-						@"Tamil Sangam MN", 
-						@"Gill Sans", 
-						@"Oriya Sangam MN", 
-					   nil] retain];
-	}
+	[self reloadFontStrings];
 }
 
 
@@ -82,6 +86,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	if(!fontStrings) {
+		[self reloadFontStrings];
+	}
 	[table reloadData];
 	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 	if(self.moduleName)
@@ -115,6 +122,8 @@
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
+	[fontStrings release];
+	fontStrings = nil;
 }
 
 - (void)viewDidUnload {
