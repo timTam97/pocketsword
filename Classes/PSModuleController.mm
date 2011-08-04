@@ -963,6 +963,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			<meta name='viewport' content='width=device-width' />\n\
 			<style type=\"text/css\">\n\
 			html {\n\
+				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
 			}\n\
 			body {\n\
 				color: %@;\n\
@@ -970,7 +971,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 				font-size: %@pt;\n\
 				font-family: %@;\n\
 				line-height: 130%%;\n\
-				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
 				%@\n\
 			}\n\
 			i.transChangeAdded {\n\
