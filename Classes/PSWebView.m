@@ -198,7 +198,10 @@
 }
 
 - (float)endOfTableView:(UIScrollView *)scrollView {
-    return [self tableViewHeight] - scrollView.bounds.size.height - scrollView.bounds.origin.y;
+	CGRect svBounds = scrollView.bounds;
+	CGSize bSize = svBounds.size;
+	CGPoint bOrigin = svBounds.origin;
+    return [self tableViewHeight] - bSize.height - bOrigin.y;
 }
 
 - (void)dealloc {
