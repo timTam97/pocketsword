@@ -37,7 +37,7 @@
 		if(![[PSModuleController defaultModuleController] primaryDevotional])
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
-	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+	if([PSResizing iPad]) {
 		[devotionalTitle setTitle:devoTitle];
 		[devotionalDatePickerViewController retain];//try to make our date picker never run away!
 	} else {
@@ -121,7 +121,7 @@
 }
 		 
 - (IBAction)toggleDatePicker {
-    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+    BOOL iPad = [PSResizing iPad];
 	if(!loaded)
 		return;
 	if([devotionalDatePickerView superview] || [popoverController isPopoverVisible]) {

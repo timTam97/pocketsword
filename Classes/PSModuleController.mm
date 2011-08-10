@@ -945,7 +945,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *fontSizeMinusOne = [NSString stringWithFormat:@"<font style=\"font-size: %dpt;line-height: 0%%;\">", (fs-2)];
 	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
 	NSString *iPadPadding = @"";
-	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";
 	}
 

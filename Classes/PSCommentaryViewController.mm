@@ -57,7 +57,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		//for the iPad we skip the resize...
 	} else {
 		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:toolbar mainView:webView useStatusBar:YES];

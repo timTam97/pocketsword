@@ -292,7 +292,7 @@
 	cell.textLabel.textColor = [UIColor darkTextColor];
 	
 	CGFloat xx = 0.0;
-	BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+	BOOL deviceIsPad = [PSResizing iPad];
 	UIInterfaceOrientation interfaceOrientation = self.navigationController.interfaceOrientation;
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		xx = 160.0;

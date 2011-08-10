@@ -71,7 +71,7 @@
 	if(((PSModuleSelectorController*)moduleSelectorController).moduleToView) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 	} else {
-		if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+		if([PSResizing iPad]) {
 			[self dismissModalViewControllerAnimated:YES];
 		} else {
 			[self.navigationController popViewControllerAnimated:YES];

@@ -25,6 +25,7 @@
 //
 
 #import "EGORefreshTableHeaderView.h"
+#import "PSResizing.h"
 
 
 #define TEXT_COLOR	 [UIColor colorWithRed:87.0/255.0 green:108.0/255.0 blue:137.0/255.0 alpha:1.0]
@@ -161,7 +162,7 @@
 }
 
 - (void)setup:(CGRect)frame {
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		_statusLabelFrame      = CGRectMake(0.0f, frame.size.height - 50.0f, self.frame.size.width, 20.0f);
 		_arrowImageFrame       = CGRectMake(25.0f, frame.size.height - 75.0f, 30.0f, 55.0f);
 		_activityViewFrame     = CGRectMake(25.0f, frame.size.height - 48.0f, 20.0f, 20.0f);

@@ -25,12 +25,13 @@
 //
 
 #import "EGORefreshTableFooterView.h"
+#import "PSResizing.h"
 
 
 @implementation EGORefreshTableFooterView
 
 - (void)setup:(CGRect)frame {
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		_statusLabelFrame      = CGRectMake(0.0f, 30.0f, self.frame.size.width, 20.0f);
 		_arrowImageFrame       = CGRectMake(25.0f, 20.0f, 30.0f, 55.0f);
 		_activityViewFrame     = CGRectMake(25.0f, 28.0f, 20.0f, 20.0f);

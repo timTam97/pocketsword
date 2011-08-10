@@ -65,7 +65,7 @@
 	refNavigationController.navigationBar.topItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
 	[refNavigationController popToRootViewControllerAnimated:NO];		
 	refNavigationController.navigationBar.topItem.leftBarButtonItem = nil;
-    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+    if([PSResizing iPad]) {
         //the iPad doesn't want the cancel button
         return;
     }

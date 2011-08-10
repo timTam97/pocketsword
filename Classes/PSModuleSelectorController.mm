@@ -21,7 +21,7 @@
 	[super viewDidLoad];
 	//reloadModuleViews = NO;
 	//modulesCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		return;
 	}
 	UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
@@ -50,7 +50,7 @@
 		modulesListTable.backgroundColor = [UIColor whiteColor];
 	}
 	
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		//for the iPad, we don't resize...
 	} else {
 		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar useStatusBar:YES];
@@ -122,7 +122,7 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		//for the iPad, we don't resize...
 		return;
 	}
@@ -130,7 +130,7 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-//	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+//	if([PSResizing iPad]) {
 //		if(reloadModuleViews) {
 //			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 //		}
@@ -269,7 +269,7 @@
 	// Update the module list to reflect the current module
 	[tableView reloadData];
 	BOOL locked = NO;
-    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+    BOOL iPad = [PSResizing iPad];
 	switch (listType) {
 		case BibleTab:
 			[moduleController loadPrimaryBible: newModule];
@@ -338,7 +338,7 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
-	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+	if([PSResizing iPad]) {
 		//leafTabBarController.modalPresentationStyle = UIModalPresentationFormSheet;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 		[parentTabBarController presentModalViewController:leafTabBarController animated:YES];

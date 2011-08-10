@@ -47,7 +47,7 @@ bool ps_viewcontroller_initialized = false;
 		[self nightModeChanged];
 		toolbarLock = [[NSLock alloc] init];
         popoverController = nil;
-		if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+		if([PSResizing iPad]) {
 			popoverController = [[[UIPopoverController alloc] initWithContentViewController:activityController] retain];
 			[popoverController setDelegate:self];
 		}
@@ -480,7 +480,7 @@ bool ps_viewcontroller_initialized = false;
 }
 
 - (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
-    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+    BOOL iPad = [PSResizing iPad];
 	if(moduleSelectorViewController || [popoverController isPopoverVisible]) {
 		//if(iPad) {
             [popoverController dismissPopoverAnimated:YES];
@@ -541,7 +541,7 @@ bool ps_viewcontroller_initialized = false;
 }
 
 - (IBAction)toggleNavigation {
-    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+    BOOL iPad = [PSResizing iPad];
 	if([refNavigationController.view superview] || [popoverController isPopoverVisible]) {
         if(!iPad) {
             [[self tabBarController] dismissModalViewControllerAnimated:YES];
@@ -657,7 +657,7 @@ bool ps_viewcontroller_initialized = false;
 }
 
 - (void)displayTitle:(NSString*)title {
-    BOOL iPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+    BOOL iPad = [PSResizing iPad];
 	CGRect frame;
 	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
 	//NSString *ref = [PSModuleController getCurrentBibleRef];
@@ -1210,7 +1210,7 @@ bool ps_viewcontroller_initialized = false;
 //			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight)
 //				interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
 		}
-		BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+		BOOL deviceIsPad = [PSResizing iPad];
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, 0, screen.height, ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT));
@@ -1258,7 +1258,7 @@ bool ps_viewcontroller_initialized = false;
 			//interfaceOrientation = tabController.interfaceOrientation;
 			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 		}
-		BOOL deviceIsPad = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone);
+		BOOL deviceIsPad = [PSResizing iPad];
 		CGFloat info_landscape_height = ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT);// 200 || 100
 		CGFloat info_portrait_height = ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT);
 		CGFloat x,y;

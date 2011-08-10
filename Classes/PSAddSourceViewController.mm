@@ -29,7 +29,7 @@
     [super viewDidLoad];
 	
     CGRect fieldFrames = CGRectMake(20,12,280,25);
-    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+    if([PSResizing iPad]) {
         //different frames for the iPad
         fieldFrames = CGRectMake(60,12,560,25);
     }
@@ -78,7 +78,7 @@
 
 - (void)keyboardWillShow:(NSNotification *)note {
 	//DLog(@"willShow");
-    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+    if([PSResizing iPad]) {
         //don't do this magic on the iPad
         return;
     }
@@ -131,7 +131,7 @@
 	   
 - (void)keyboardWillHide:(NSNotification *)note {
 	//DLog(@"willHide");
-    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+    if([PSResizing iPad]) {
         //don't do this magic on the iPad
         return;
     }
@@ -321,7 +321,7 @@
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations.
-    if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+    if([PSResizing iPad]) {
         return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     } else {
         return (interfaceOrientation == UIInterfaceOrientationPortrait);

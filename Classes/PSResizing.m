@@ -44,7 +44,7 @@
 		redrawInNewFrames = YES;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
 		width = screen.height;
-		topBarHeight = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
+		topBarHeight = ([PSResizing iPad]) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
 		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight;// - [UIApplication sharedApplication].statusBarFrame.size.width;
 		if(useStatusBar) {
 			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.width;
@@ -79,7 +79,7 @@
 
 +(void)resizeViewsOnRotateWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView bottomBar:(UIView*)bottomBar fromOrientation:(UIInterfaceOrientation)fromInterfaceOrientation toOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		return;
 	}
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
@@ -141,6 +141,15 @@
 	if (rotationLockPosition == RotationLockedInPortrait && (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) { return YES; }
 	
 	return NO;
+}
+
++ (BOOL)iPad {
+	if([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		return YES;
+	} else {
+		return NO;
+	}
+
 }
 
 @end

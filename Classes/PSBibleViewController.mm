@@ -63,7 +63,7 @@
 		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 	if(!self.isFullScreen) {
-		if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+		if([PSResizing iPad]) {
 			//for the iPad we skip the resize...
 		} else {
 			[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:YES];

@@ -101,7 +101,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE;
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		PULL_THRESHOLD = PULL_THRESHOLD_IPAD;
 	}
 	
@@ -123,7 +123,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE;
-	if((UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
+	if([PSResizing iPad]) {
 		PULL_THRESHOLD = PULL_THRESHOLD_IPAD;
 	}
 	BOOL reloadTriggered = NO;

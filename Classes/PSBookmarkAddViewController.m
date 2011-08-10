@@ -63,7 +63,7 @@
     [super viewDidLoad];
 
     CGRect fieldFrames = CGRectMake(20,12,280,25);
-    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+    if([PSResizing iPad]) {
         //different frames for the iPad
         fieldFrames = CGRectMake(60,12,560,25);
     }

@@ -56,7 +56,7 @@
 	} else {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
 	}
-	if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {//ipad
+	if([PSResizing iPad]) {//ipad
 		[actionSheet showFromBarButtonItem:sender animated:YES];
 	} else {//iphone
 		[actionSheet showFromTabBar:self.tabBarController.tabBar];

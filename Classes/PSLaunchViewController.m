@@ -80,7 +80,7 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	//DLog(@"running...");
-    if(UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+    if([PSResizing iPad]) {
 		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
 		if(UIDeviceOrientationIsLandscape(deviceOrientation)) {
