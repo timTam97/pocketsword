@@ -473,7 +473,8 @@ bool ps_viewcontroller_initialized = false;
 	[self toggleModulesListAnimated:YES withModule:nil];
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+//- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+- (void)popoverControllerDidDismissPopover:(id)popoverController {
 	if(moduleSelectorViewController) {
 		moduleSelectorViewController = nil;
 	}

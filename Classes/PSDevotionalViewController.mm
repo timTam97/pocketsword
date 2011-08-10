@@ -91,7 +91,8 @@
 	loaded = YES;
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)poverController {
+//- (void)popoverControllerDidDismissPopover:(UIPopoverController *)poverController {
+- (void)popoverControllerDidDismissPopover:(id)poverController {
 	[self loadNewDevotionalEntry];
 	[popoverController release];
 	popoverController = nil;
