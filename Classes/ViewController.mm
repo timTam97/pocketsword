@@ -47,8 +47,9 @@ bool ps_viewcontroller_initialized = false;
 		[self nightModeChanged];
 		toolbarLock = [[NSLock alloc] init];
         popoverController = nil;
-		if([PSResizing iPad]) {
-			popoverController = [[[UIPopoverController alloc] initWithContentViewController:activityController] retain];
+		Class cls = NSClassFromString(@"UIPopoverController");
+		if([PSResizing iPad] && cls) {
+			popoverController = [[[cls alloc] initWithContentViewController:activityController] retain];
 			[popoverController setDelegate:self];
 		}
 		

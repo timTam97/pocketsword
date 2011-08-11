@@ -135,7 +135,15 @@
         }
 		[self loadNewDevotionalEntry];
 	} else {
-		if(!iPad) {
+		Class cls = NSClassFromString(@"UIPopoverController");
+		if(iPad && cls) {
+			popoverController = [[cls alloc] initWithContentViewController:devotionalDatePickerViewController];
+			[popoverController setDelegate:self];
+			[popoverController setContentViewController:devotionalDatePickerViewController];
+			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
+			//[popoverController setPopoverContentSize:devotionalDatePickerViewController.view.frame.size];
+			[self displayPopover];
+		} else {
 			UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
 			if([UIApplication sharedApplication].statusBarHidden) {
 				interfaceOrientation = [[self tabBarController] interfaceOrientation];//(UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
@@ -153,13 +161,6 @@
 				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 			}
 			[ViewController showModal:devotionalDatePickerView withTiming:0.3];
-		} else {
-			popoverController = [[UIPopoverController alloc] initWithContentViewController:devotionalDatePickerViewController];
-			[popoverController setDelegate:self];
-			[popoverController setContentViewController:devotionalDatePickerViewController];
-			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
-			//[popoverController setPopoverContentSize:devotionalDatePickerViewController.view.frame.size];
-			[self displayPopover];
 		}
 	}
 }
