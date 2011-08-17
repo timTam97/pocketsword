@@ -1,0 +1,9 @@
+
+/* Class = "IBUILabel"; text = "ip"; ObjectID = "112"; */
+"112.text" = "ip";
+
+/* Class = "IBUILabel"; text = "bonjour"; ObjectID = "114"; */
+"114.text" = "bonjour";
+
+/* Class = "IBUIButton"; normalTitle = "done"; ObjectID = "115"; */
+"115.normalTitle" = "done";
