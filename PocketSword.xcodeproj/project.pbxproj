@@ -630,8 +630,6 @@
 		0552D1351295230300A4994B /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12F1295230300A4994B /* Icon-Small@2x.png */; };
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
-		0567C1AD13FB4CED00B6619D /* SearchWebView.js in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
-		0567C1AE13FB4CED00B6619D /* SearchWebView.js in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		056BBE7F12DD78D50029F3A2 /* PSBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBE7E12DD78D50029F3A2 /* PSBookmarks.m */; };
 		056BBE8012DD78D50029F3A2 /* PSBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBE7E12DD78D50029F3A2 /* PSBookmarks.m */; };
 		056BBF9112DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */; };
@@ -4016,7 +4014,6 @@
 				05DA778513CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778713CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A213CD754E000A4B97 /* PSWebView.m in Sources */,
-				0567C1AE13FB4CED00B6619D /* SearchWebView.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4358,7 +4355,6 @@
 				05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.m in Sources */,
-				0567C1AD13FB4CED00B6619D /* SearchWebView.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

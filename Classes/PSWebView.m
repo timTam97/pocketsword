@@ -44,10 +44,22 @@
 	}
 	
 	[self dataSourceDidFinishLoadingNewData];
-	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
+	
+    NSString *jsCode = @"function documentHeight() {\n\
+	var body = document.body,\n\
+	html = document.documentElement;\n\
+	\n\
+	var height = Math.max(	body.scrollHeight, body.offsetHeight, \n\
+	html.clientHeight, html.scrollHeight, html.offsetHeight );\n\
+	return height;\n\
+	}";
+    [self stringByEvaluatingJavaScriptFromString:jsCode];
+	
+	//NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
+	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"documentHeight();"];
 	cachedHeight = [heightString floatValue];
 
-	//DLog(@"resetting cached height; now tis: %f", cachedHeight);
+	NSLog(@"Bible tab: cached height now: %f", cachedHeight);
 	
 	UIScrollView* currentScrollView = nil;
     for (UIView* subView in self.subviews) {
