@@ -35,6 +35,14 @@
 }
 
 - (void)setupRefreshViews {
+	
+	if(!NSClassFromString(@"UIPopoverController")) {
+		refreshFooterView = nil;
+		refreshHeaderView = nil;
+		// We're on iOS 3.1.3 or earlier and the refresh views don't seem to work, so disable them for the time being
+		return;
+	}
+	
 	[self dataSourceDidFinishLoadingNewData];
 	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
 	cachedHeight = [heightString floatValue];
