@@ -85,7 +85,7 @@
 		cachedHeight = heightFromJS;
 	}
 	
-	NSLog(@"Bible tab: cached height now: %f", cachedHeight);
+	//DLog(@"Bible tab: cached height now: %f", cachedHeight);
 	
 	if([currentScrollView respondsToSelector:@selector(setIndicatorStyle:)]) {
 		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {

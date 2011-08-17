@@ -53,8 +53,8 @@
 					  Jan Bubík, \
 					  Vincenzo Carrubba, \
 					  Cheree Lynley Designs, \
-					  James Coleman, \
 					  Dominique Corbex, \
+					  Bruno Gätjens González, \
 					  Grace Community Church (HK), \
 					  Yiguang Hu, \
 					  John Huss, \
