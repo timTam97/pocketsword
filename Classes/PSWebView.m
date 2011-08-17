@@ -45,22 +45,6 @@
 	
 	[self dataSourceDidFinishLoadingNewData];
 	
-    NSString *jsCode = @"function documentHeight() {\n\
-	var body = document.body,\n\
-	html = document.documentElement;\n\
-	\n\
-	var height = Math.max(	body.scrollHeight, body.offsetHeight, \n\
-	html.clientHeight, html.scrollHeight, html.offsetHeight );\n\
-	return height;\n\
-	}";
-    [self stringByEvaluatingJavaScriptFromString:jsCode];
-	
-	//NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
-	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"documentHeight();"];
-	cachedHeight = [heightString floatValue];
-
-	NSLog(@"Bible tab: cached height now: %f", cachedHeight);
-	
 	UIScrollView* currentScrollView = nil;
     for (UIView* subView in self.subviews) {
         if ([subView respondsToSelector:@selector(scrollsToTop)]) {//scrollsToTop
@@ -79,6 +63,29 @@
 		ALog(@"cannot find the currentScrollView!");
 		return;
 	}
+	
+    NSString *jsCode = @"function documentHeight() {\n\
+	var body = document.body,\n\
+	html = document.documentElement;\n\
+	\n\
+	var height = Math.max(	body.scrollHeight, body.offsetHeight, \n\
+	html.clientHeight, html.scrollHeight, html.offsetHeight );\n\
+	return height;\n\
+	}";
+    [self stringByEvaluatingJavaScriptFromString:jsCode];
+	
+	//NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight;"];
+	NSString *heightString = [self stringByEvaluatingJavaScriptFromString:@"documentHeight();"];
+	float heightFromJS = [heightString floatValue];
+	cachedHeight = 0.0f;
+	if([currentScrollView respondsToSelector:@selector(contentSize)]) {
+		cachedHeight = [currentScrollView contentSize].height;
+	}
+	if(heightFromJS > cachedHeight) {
+		cachedHeight = heightFromJS;
+	}
+	
+	NSLog(@"Bible tab: cached height now: %f", cachedHeight);
 	
 	if([currentScrollView respondsToSelector:@selector(setIndicatorStyle:)]) {
 		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
