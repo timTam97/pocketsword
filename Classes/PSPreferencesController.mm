@@ -230,7 +230,11 @@
 						UISlider *fontSizeSlider = [[UISlider alloc] initWithFrame:CGRectMake(fssX, 0, 125, 50)];
 						fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 						fontSizeSlider.minimumValue = 10.0;
-						fontSizeSlider.maximumValue = 20.0;
+						if([PSResizing iPad]) {
+							fontSizeSlider.maximumValue = 36.0;
+						} else {
+							fontSizeSlider.maximumValue = 20.0;
+						}
 						NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 						if(fontSize != 0) {//defaults default to 0 if it's not previously set...
 							fontSizeSlider.value = (float)fontSize;
