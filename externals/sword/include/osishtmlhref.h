@@ -37,6 +37,8 @@ protected:
 	public:
 		bool osisQToTick;
 		bool inBold;
+		bool inItalic;
+		bool inBoldFirst;
 		bool inXRefNote;
 		bool BiblicalText;
 		int suspendLevel;

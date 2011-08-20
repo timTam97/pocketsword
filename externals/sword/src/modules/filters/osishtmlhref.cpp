@@ -488,18 +488,25 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				if (type == "bold" || type == "b" || type == "x-b") {
 					outText("<b>", buf, u);
 					u->inBold = true;
+					if(!u->inItalic) u->inBoldFirst = true;
 				}
 				else {	// all other types
 					outText("<i>", buf, u);
-					u->inBold = false;
+					u->inItalic = true;
+					if(!u->inBold) u->inBoldFirst = false;
+					//u->inBold = false;
 				}
 			}
 			else if (tag.isEndTag()) {
-				if(u->inBold) {
+				if(u->inBold && (!u->inBoldFirst || !u->inItalic)) {
 					outText("</b>", buf, u);
 					u->inBold = false;
+					u->inBoldFirst = false;
 				}
-				else outText("</i>", buf, u);
+				else {
+					outText("</i>", buf, u);
+					u->inItalic = false;
+				}
 			}
 		}
 
