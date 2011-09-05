@@ -1,0 +1,296 @@
+﻿/*
+	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
+	Copyright (C) 2008-2010 CrossWire Bible Society
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License along
+	with this program; if not, write to the Free Software Foundation, Inc.,
+	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// Portuguese (pt) localisation
+// By Fábio Medeiros
+// Last Updated v1.4.1 (2nd September, 2011)
+
+"Edit" = "Editar";
+"Done" = "Feito";
+"Module Download" = "Download de Módulo";
+"Installing" = "Instalando:";
+"Yes" = "Sim";
+"No" = "Não";
+"ConfirmInstall" = "Gostaria de instalar este módulo?";
+"Next" = "Próximo";
+"Previous" = "Anterior";
+
+"Ok" = "Ok";
+"Cancel" = "Cancelar";
+"Error" = "Erro";
+
+// Module About
+"AboutModuleName" = "Nome do módulo: ";
+"AboutModuleDescription" = "Descrição: ";
+"AboutModuleType" = "Tipo: ";
+"AboutModuleLang" = "Linguagem: ";
+"AboutModuleVersion" = "Versão: ";
+"AboutModuleVersionUnspecified" = "(não especificado)";
+"AboutModuleAboutText" = "Sobre: ";
+"AboutModuleLicence" = "Licença de Distribuição: ";
+"AboutModuleLCSH" = "Designação do Assunto na Biblioteca do Congresso: ";
+
+
+"Disclaimer" = "Aviso Legal";
+"DisclaimerMsg" = "      -=+* AVISO *+=-\nApesar do Gerenciador de Instalação prover um modo conveniente para instalação e atualização de componentes SWORD, ele também usa um método sistemático para acessar sites que podem bloquear o tráfego de dados do usuário.\nSE VOCÊ VIVE EM UM PAÍS QUE RESTRINGE O ACESSO E NÃO DESEJE CORRER O RISCO DE DETECÇÃO, VOCÊ *NÃO* DEVERIA USAR O GERENCIADOR DE INSTALAÇÃO EM FONTES REMOTAS.\nAlém disso, Fontes Remotas que não são da Crosswire podem conter módulos de qualidade inferior, módulos com conteúo não ortodoxo ou módulos que não podem ser legitimamente distribuídos. Este repositórios simplismente não são revisados or mantidos pela Crosswire e a Crosswire não pode ser responsablizada por seus conteúdos. CAVEAT EMPTOR.\nVocê entende isso e está disposto a ativar o recurso de fontes remotas?";
+
+"WebNoIP" = "Web: Incapaz de determinar o IP externo\n";
+"WiFiNoConnection" = "Wifi: Sem Conexão\n";
+"NoNetworkConnection" = "Nenhuma conexão de rede disponível.";
+
+"manualInstallHelp" = "Para instalar manualmente um módulo você precisa abrir o navegador para uma das localizações abaixo e seguir as instruções (ou apenas procurar pelo seu iPhone usando o Bonjour!). Contudo, sugerimos que você use o instalador de ódulos embutido - este instalador manual é oferecido somente para aqueles usuários que criaram seus próprios módulos.";
+"InstallManagerDisabled" = "desabilitado...";
+"InstallTitle" = "Instalar?";
+"files" = "arquivos";
+"InstallProblem" = "Ocorreu um problema durante a instalação.";
+"InstalledButtonTitle" = "Instalado";
+"InstallButtonTitle" = "Instalar";
+"RefreshProblem" = "Ocorreu um problema durante a atualização.";
+"RefreshingModuleSource" = "Atualizando Módulo Fonte";
+"NoModulesRefresh" = "Sem módulos. Tente atualizar.";
+"NoModulesInstalled" = "Nenhum módulo instalado.";
+
+"InstallSourcesTitle" = "Downloads";//changed for v1.3.3ish
+"PreferencesTitle" = "Preferências";
+"PreferencesDisplayPreferencesTitle" = "Preferências de Exibição";
+"PreferencesDevicePreferencesTitle" = "Preferências do Dispositivo";
+"PreferencesFontSizeTitle" = "Tamanho da Fonte";
+"PreferencesNightModeTitle" = "Modo Noturno";
+"PreferencesVPLTitle" = "Versículo Por Linha";
+"PreferencesFontTitle" = "Fonte";
+"PreferencesRedLetterTitle" = "Letras Vermelhas";
+"PreferencesRedLetterNote" = "Note que o modo Letras Vermelhas está disponíivel somente para certos módulos";
+"PreferencesDisableAutoLockTitle" = "Desabilitar auto-desligar";
+"PreferencesModuleMaintainerModeTitle" = "Modo de Manutenção de Módulo";
+"PreferencesModuleMaintainerModeNote" = "Note que o Modo de Manutenção de Módulo é para usuários que criaram seus próprios módulos e desejam um método de instalar seus módulos manunalmente. Para todos os outros usuários, sugerimos que usem o módulo de download embutido para acessar os módulos oficiais providos pela CrossWire.";
+
+"AboutTitle" = "Sobre";
+
+"TabBarTitleBible" = "Bíblia";
+"TabBarTitleCommentary" = "Comentário";
+"TabBarTitleDictionary" = "Dicionário";
+"TabBarTitleModules" = "Módulos";
+"TabBarTitlePreferences" = "Preferências";
+"TabBarTitleAbout" = "Sobre";
+
+"ModulesTitle" = "Módulos";
+"BookmarksTitle" = "Favoritos";
+
+"ActivityLabelLoading" = "Carregando...";
+"MMMBonjourLoading" = "Carregando Bonjour...";
+"MMMIPLoading" = "Carregando IP...";
+
+"Biblical Texts" = "Textos Bíblicos";
+"Commentaries" = "Comentários";
+"Lexicons / Dictionaries" = "Léxicos / Dicionários";
+"Generic Books" = "Livros Genéricos";
+"Daily Devotional" = "Devocionais Diários";
+"Glossaries" = "Glossários";
+"Cults / Unorthodox / Questionable Material" = "Cultos / Não ortodoxos / Materiais Questionáveis";
+"Essays" = "Ensaios";
+"Maps" = "Mapas";
+"Images" = "Imagens";
+
+"BibleHistoryTitle" = "Histórico da Bíblia";
+"CommentaryHistoryTitle" = "Histórico do Comentário";
+
+"None" = "Nenhum";
+"CloseButtonTitle" = "Fechar";
+"CacheDictionaryKeysTitle" = "Cache?";
+"CacheDictionaryKeysMsg" = "Este Dicionário ainda não foi inicializado, você deseja armazenar em cache este Dicionário agora?";
+"IndexDownloadTitle" = "Download do Índice";
+"NoSearchIndexTitle" = "Sem Índice de Pesquisa";
+"NoSearchIndexMsg" = "Você não tem um índice de pesquisa instalado para este módulo. Você deseja verificar os índices de pesquisa disponíveis agora?";
+"SearchDownloaderTitle" = "Downloader da Pesquisa";
+"FontPreferenceTitle" = "Fonte";
+"EmailUsButton" = "Envie um Email";
+"NoSearchIndexInstalled" = "Nenhum índice de Pesquisa Instalado";
+"SearchResults" = "Resultados";
+
+"IndexControllerInstalled" = "Você já instalou um índice de pesquisa para:";
+"IndexControllerDownloadable" = "Selecione um índice de pesquisa da lista a seguir para habilitar a pesquisa para o módulo:";
+"IndexControllerNone" = "Cheque sua conexão de rede para habilitar a pesquisa para:";
+"IndexControllerNoneRemote" = "No momento não há nenhum índice de pesquisa baixado disponível para:";
+
+"SearchHelpTitle" = "Ajuda da Pesquisa";
+"IndexControllerConfirmQuestion" = "Você gostaria de baixar o índice de pesquisa deste módulo?\nIsto pode demorar um pouco para módulos de Comentário!";
+
+"PreferencesStrongsPreferencesTitle" = "Números de Strong";
+"PreferencesDisplayTitle" = "Exibir";
+"PreferencesGreekModuleTitle" = "Módulo grego";
+"PreferencesHebrewModuleTitle" = "Módulo hebraico";
+"PreferencesMorphologyPreferencesTitle" = "Preferências de Morfologia";
+"PreferencesOriginalLanguagePreferencesTitle" = "Linguagem Original";
+"PreferencesGreekAccentsTitle" = "Acentos Gregos";
+"PreferencesHVPTitle" = "Pontuação de Vogais no Hebraico";
+"PreferencesHebrewCantillationTitle" = "Cantilação Hebraico";
+"PreferencesGreekStrongsLexiconTitle" = "Léxico de Strong Grego";
+"PreferencesHebrewStrongsLexiconTitle" = "Léxico de Strong Hebraico";
+"PreferencesGreekMorphLexiconTitle" = "Léxico Morfológico Grego";
+"PreferencesCrossReferencesTitle" = "Referências cruzadas";
+"PreferencesFootnotesTitle" = "Notas de rodapé";
+
+"NoHebrewStrongsNumbersModuleInstalled" = "Nenhum Léxico de Números Strong Hebraico instalado. Por favor instale um (tal como 'strongshebrew') através de Mais->Downloads.";
+"NoGreekStrongsNumbersModuleInstalled" = "Nenhum Léxico de Números Strong Grego instalado. Por favor instale um (tal como 'strongsgreek') através de Mais->Downloads.";
+
+"NoMorphGreekModuleInstalled" = "Nenhum Léxico de Código de Análise Morfológica Grega instalado. Por favor instale um (tal como 'Robinson') através de Mais->Downloads.";
+"MorphHebrewNotSupported" = "Infelizmente, Códigos de Análise Morfológica estão disponíveis somente para palavras gregas. Se você habilidades de linguagem e estiver disposto a nos ajudar a trazer este recurso ao PocketSword, por favor visite <br />openscriptures.org<br /> e junte-se ao grupo de discussão.";
+
+"AboutModuleFeaturesTitle" = "Recursos do Módulo";
+"AboutModuleContainsStrongsNumbers" = "Contém Números de Strong";
+"AboutModuleContainsMorphTags" = "Contém marcações Morfológicas";
+"AboutModuleContainsFootnotes" = "Contém Notas de rodapé";
+"AboutModuleContainsHeadings" = "Contém Títulos";
+"AboutModuleContainsRedLetterWords" = "Palavras de Cristo em Vermelho";
+"AboutModuleContainsVariants" = "Contém Variantes Textuais";
+"AboutModuleContainsGreekAccents" = "Contém Acentos Gregos";
+"AboutModuleContainsScriptref" = "Contém Escrituras com Referências Cruzadas";
+"AboutModuleContainsLemma" = "Lemmas";
+"AboutModuleContainsCantillation" = "Contém Marcas de Cantilação";
+"AboutModuleContainsHebrewPoints" = "Contém Pontuação Hebraica";
+"AboutModuleContainsMorphSegmentation" = "Este é um morfema texto Hebraico segmentado";
+"AboutModuleContainsGreekDef" = "Definir Números de Strong Grego";
+"AboutModuleContainsHebrewDef" = "Definir Números de Strong Hebraico";
+"AboutModuleContainsGreekParse" = "Definir Códigos de Análise Morfológica Grega";
+"AboutModuleContainsHebrewParse" = "Definir Códigos de Análise Morfológica Hebraica";
+"AboutModuleContainsDailyDevotion" = "Contém um Devocional Diário";
+"AboutModuleContainsImages" = "Contêm Imagens";
+
+"NotSupported" = "Este módulo não é suportado";
+"ConfirmDeleteTitle" = "Apagar?";
+"ConfirmDeleteQuestion" = "Você tem certeza que deseja apagar este módulo?";
+"EmptyChapterWarning" = "Este capítulo está vazio para este módulo.";
+"ModuleNotInstalled" = "não está instalado.";
+"AboutModuleCurrentVersion" = "Versão Instalada: ";
+
+// new v1.2.2 strings:
+"ModuleLockedTitle" = "Módulo Bloqueado";
+"ModuleLockedQuestion" = "Este módulo está bloqueado. Você deve comprar uma chave para desbloquear este módulo. Infelizmente, você não pode fazer isto através do PocketSword neste momento. Por favor leia a descrição deste módulo para saber como comprá-lo.\nSe você já comprou uma chave, pode desbloquear este módulo com ela. Você quer digitar a chave agora?";
+"ModuleEnterKeyTitle" = "Digite a Chave:";
+"ModuleUnlockScreenTitle" = "Desbloquear Módulo";
+"ModuleUnlockHelpText" = "Para desbloquear este módulo, por favor digite a chave que você recebeu quando comprou este módulo. Pressione Feito para testar a chave e então pressione Salvar se estiver correto.";
+"RefSelectorBookTitle" = "Selecionar Livro";
+"RefSelectorChapterTitle" = "Capítulo";
+"RefSelectorVerseTitle" = "Versículo";
+"RefSelectorBackButtonTitle" = "Voltar";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Títulos";
+"DictionarySearchPlaceholderText" = "Pesquisar Dicionário";
+"TabBarTitleDevotional" = "Devocionais Diários";
+"TodayButtonTitle" = "Hoje";
+"ManageSources" = "Gerenciados de Fontes";
+"AddFTPSource" = "Adicionar Fonte FTP";
+"AddHTTPSource" = "Adicionar Fonte HTTP";
+"DeleteSource" = "Apagar Fonte";
+"RefreshSourceList" = "Atualizar Lista de Fontes";
+"AddSourceCaptionTitle" = "Nome da Fonte";
+"AddSourceServerTitle" = "Servidor";
+"AddSourcePathTitle" = "Caminho";
+"AddFTPSourceTitle" = "Nova Fonte FTP";
+"AddHTTPSourceTitle" = "Nova Fonte HTTP";
+"FillInAllFieldsMessage" = "Você deve preencher todos os campos!";
+"Warning" = "Aviso";
+"CannotVerifyInstallSourceWarning" = "PocketSword não foi capz de verificar se esta é uma Fonte de módulos válida. Deseja salvar assim mesmo?";
+
+// new v1.3.2 strings:
+"AboutModuleLocked" = "** Por favor observe que este módulo esta trancado e voê precisa comprar uma chave de desbloqueio no website do editor. Veja abaixo para mais detalhes. **";
+"UpgradeButtonTitle" = "Substituir";
+"ConfirmUpgrade" = "Você gostaria de substituir este módulo com a versão disponível atualmente?";
+
+"VerseContextualMenuAddBookmark" = "Adicionar Favorito";
+"VerseContextualMenuCommentary" = "Ver em Comentário";
+
+// new v1.3.3 strings:
+"VoiceOverPreviousChapterButton" = "Capítulo Anterior";
+"VoiceOverNextChapterButton" = "Próximo Capítulo";
+"VoiceOverHistoryAndSearchButton" = "Histórico e Pesquisa";
+"InstallManagerDownloadsHint" = "Você pode fazer o download de módulos adicionais de qualquer fonte de módulos abaixo:";
+"ModuleTypesHeaderText" = "Selecione o Tipo do Módulo:";
+"ModuleLanguagesHeaderText" = "Selecione o Idioma:";
+"PreferencesModulePreferencesTitle" = "Preferências do Módulo";
+"PreferencesFullscreenModeTitle" = "Modo de Tela Cheia Automático";
+"PreferencesFullscreenNote" = "Com o Modo de Tela Cheia Automático desabilitado você ainda pode trocar de/para tela cheia utilizando toque de 2 dedos nas abas Bíblia e Comentário.";
+
+// new v1.3.4 strings:
+"PreferencesRotationLock" = "Travar Rotação";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Usar Fonte personalizada";
+
+// new v1.4.0 strings:
+"BookmarksInvalidFolderTitle" = "Nome de Pasta Inválido";
+"BookmarksInvalidFolderMessage" = "Você digitou um nome de pasta inválido. Por favor escolha outro nome para a pasta.";
+"BookmarksDuplicateFolderTitle" = "Nome de Pasta Duplicado";
+"BookmarksDuplicateFolderMessage" = "Uma pasta com este nome já existe. Por favor escolha outro nome para a pasta.";
+
+"BookmarksDuplicateBookmarkTitle" = "Nome de Favorito Duplicado";
+"BookmarksDuplicateBookmarkMessage" = "Um favorito com este nome já existe. Por favor escolha outro nome para este favorito.";
+
+"BookmarksConfirmDeleteFolderTitle" = "Apagar Pasta?";
+"BookmarksConfirmDeleteFolderMessage" = "Você quer relamente apagar a pasta '%@' e todos os favoritos que estão nela?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Nome da Pasta:";
+"BookmarksAddFolderHighlightColour" = "Cor de Destaque:";
+"BookmarksAddBookmarkVerseTitle" = "Versísulo";
+"BookmarksAddBookmarkDescriptionTitle" = "Descrição";
+"BookmarksAddBookmarkFolderTitle" = "Pasta";
+
+"BookmarksAddFolderButton" = "Adicionar Pasta";
+"BookmarksEditFolderTitle" = "Editar Pasta";
+"BookmarksAddBookmarkHereButton" = "Adicionar Favorito aqui";
+"BookmarksAddBookmarkDescription" = "Para adicionar um favorito ao versículo, toque no número do versículo na aba Bíblia e selecione 'Adicionar Favorito'";
+"BookmarksAddFolderDescription" = "Para adicionar uma pasta, toque no botão Editar";
+"BookmarksImportedFolderName" = "Importado";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Criado:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Último Acessado:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Editar Favorito";
+
+"SearchTitle" = "Pesquisar";
+"SearchStrongsTitle" = "Pesquisa de Strong";
+"SearchOptionsTitle" = "Opções de Pesquisa";
+
+"StrongsSearchFindAll" = "Encontre todas as ocorrências";//used to find all occurrences of the current Strong's Number in the Bible.
+
+"SearchTypeSectionHeader" = "Tipo de Pesquisa:";
+"SearchRangeSectionHeader" = "Alcande da Pesquisa:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Pesquisa de Strong:";
+"SearchFuzzySectionHeader" = "Pesquisa Fuzzy:";// see the SearchFuzzySectionFooter for a description of what this search does.
+
+"SearchTypeSectionFooter" = "";// currently empty.
+"SearchRangeSectionFooter" = "Selecione em qual parte da Bíblia deseja pesquisar.";
+"SearchStrongsSectionFooter" = "Você pode pesquisar por ocorrências dos Números de Strongs Grego ou Hebraico.\nPara pesquisar pelo Número Grego 0011 (Abraão) entre com G11.\nPara pesquisar pelo Número Hebraico 0430 (Deus) entre com H430.";
+"SearchFuzzySectionFooter" = "Usando a Pesquisa Fuzzy, se pesquisar por:\nrev\nos resultados da pesquisa incluirão todas as palavras que iniciam com 'rev'.";
+
+"SearchTypeAllRow" = "TODAS as palavras";
+"SearchTypeAllRowShort" = "Todas as palavras";
+"SearchTypeAnyRow" = "QUALQUER palavra";
+"SearchTypeAnyRowShort" = "Qualquer palavra";
+"SearchTypeExactRow" = "Frase EXATA";
+"SearchTypeExactRowShort" = "Frase exata";
+"SearchRangeAllRow" = "Bíblia Inteira";
+"SearchRangeAllRowShort" = "Bíblia Inteira";
+"SearchRangeOTRow" = "Antigo Testamento";
+"SearchRangeOTRowShort" = "AT";
+"SearchRangeNTRow" = "Novo Testamento";
+"SearchRangeNTRowShort" = "NT";
+"SearchStrongsRow" = "Pesquisar por Números de Strong";
+"On" = "On";
+"Off" = "Off";
+"SearchStartSearchButton" = "Iniciar Pesquisa";
+"PreferencesModuleSectionNote" = "Preferências do módulo específico de exibição (tais como Números de Strong, modo Letra Vermelha, etc) são configurados para cada módulo individual. Para alterá-los, selecione o módulo na lista na parte inferior da tela.";

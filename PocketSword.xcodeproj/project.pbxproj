@@ -1473,6 +1473,14 @@
 		05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModuleTypes.mm; sourceTree = "<group>"; };
 		05B52BDD107EEB7500826AFE /* NavigatorModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModules.h; sourceTree = "<group>"; };
 		05B52BDE107EEB7500826AFE /* NavigatorModules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModules.mm; sourceTree = "<group>"; };
+		05BAC36E1414767000F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		05BAC371141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/Downloader.xib; sourceTree = "<group>"; };
+		05BAC372141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/HistoryController.xib; sourceTree = "<group>"; };
+		05BAC373141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		05BAC374141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		05BAC375141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		05BAC376141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/PSSearchController.xib; sourceTree = "<group>"; };
+		05BAC383141476CA00F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = "pt.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		05BCB3FD1147711B00984097 /* popup-top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-top-bar.png"; path = "Resources/popup-top-bar.png"; sourceTree = "<group>"; };
 		05BCB41F11477A9A00984097 /* popup-down-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-down-button.png"; path = "Resources/popup-down-button.png"; sourceTree = "<group>"; };
 		05CBE8CF128A840000730CB8 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Resources/Icon@2x.png"; sourceTree = "<group>"; };
@@ -3456,6 +3464,7 @@
 				cs,
 				th,
 				de,
+				pt,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -4379,6 +4388,7 @@
 				0501E812121A390B000D9CA3 /* cs */,
 				05930F9213E8EAEE001DEF4E /* th */,
 				0567C1AF13FB4D4000B6619D /* de */,
+				05BAC371141476B100F94AD1 /* pt */,
 			);
 			name = Downloader.xib;
 			sourceTree = "<group>";
@@ -4401,6 +4411,7 @@
 				0516CF321361252F0058E022 /* zh-Hant */,
 				05930FA413E8EB10001DEF4E /* th */,
 				0567C1C113FB4D8400B6619D /* de */,
+				05BAC383141476CA00F94AD1 /* pt */,
 			);
 			name = "MainWindow-iPad.xib";
 			sourceTree = "<group>";
@@ -4423,6 +4434,7 @@
 				0501E813121A3912000D9CA3 /* cs */,
 				05930F9413E8EAEE001DEF4E /* th */,
 				0567C1B113FB4D4000B6619D /* de */,
+				05BAC373141476B100F94AD1 /* pt */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -4445,6 +4457,7 @@
 				056BCCDE12F2E5B90029F3A2 /* zh-Hant */,
 				05930F9313E8EAEE001DEF4E /* th */,
 				0567C1B013FB4D4000B6619D /* de */,
+				05BAC372141476B100F94AD1 /* pt */,
 			);
 			name = HistoryController.xib;
 			sourceTree = "<group>";
@@ -4467,6 +4480,7 @@
 				056BCCEA12F2E5EE0029F3A2 /* zh-Hant */,
 				05930F9713E8EAEE001DEF4E /* th */,
 				0567C1B413FB4D4000B6619D /* de */,
+				05BAC376141476B100F94AD1 /* pt */,
 			);
 			name = PSSearchController.xib;
 			sourceTree = "<group>";
@@ -4489,6 +4503,7 @@
 				0501E816121A3925000D9CA3 /* cs */,
 				05930F9613E8EAEE001DEF4E /* th */,
 				0567C1B313FB4D4000B6619D /* de */,
+				05BAC375141476B100F94AD1 /* pt */,
 			);
 			name = PSModuleSelectorController.xib;
 			sourceTree = "<group>";
@@ -4511,6 +4526,7 @@
 				0501E810121A38EC000D9CA3 /* cs */,
 				05930F8F13E8EAC4001DEF4E /* th */,
 				0567C1AC13FB4CEC00B6619D /* de */,
+				05BAC36E1414767000F94AD1 /* pt */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4533,6 +4549,7 @@
 				0501E811121A3904000D9CA3 /* cs */,
 				05930F9513E8EAEE001DEF4E /* th */,
 				0567C1B213FB4D4000B6619D /* de */,
+				05BAC374141476B100F94AD1 /* pt */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";

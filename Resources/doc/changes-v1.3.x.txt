@@ -5,7 +5,7 @@ New in v1.4.1
 - addition of modules with alternative versification (Appocrapha, Synodal, etc)
 - more fonts for displaying more Asian language scripts
 - minor improvements and bug fixes.
-- added Thai & German localisations.
+- added Thai, German & Portuguese localisations.
 
 New in v1.4.0
 - Improved Bookmarks (existing bookmarks will be moved to the "Imported" folder).
