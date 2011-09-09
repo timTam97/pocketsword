@@ -1440,7 +1440,7 @@
 		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
 		05781F2A12D42819005F4890 /* PSBookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmark.m; path = Classes/PSBookmark.m; sourceTree = "<group>"; };
 		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "changes-v1.3.x.txt"; path = "Resources/doc/changes-v1.3.x.txt"; sourceTree = "<group>"; };
+		057CC44E127FE5BB00953EEC /* changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = changelog.txt; path = Resources/doc/changelog.txt; sourceTree = "<group>"; };
 		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
 		058E2D2B10F56EFC006E4447 /* canon_german.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_german.h; sourceTree = "<group>"; };
 		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
@@ -2722,7 +2722,7 @@
 			isa = PBXGroup;
 			children = (
 				056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */,
-				057CC44E127FE5BB00953EEC /* changes-v1.3.x.txt */,
+				057CC44E127FE5BB00953EEC /* changelog.txt */,
 				05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */,
 				053C59DA1150B3630024192C /* S_M_85032342_20091130_20091227.txt */,
 				053C59DB1150B3630024192C /* S_M_85032342_20091228_20100131.txt */,
