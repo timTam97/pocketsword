@@ -18,12 +18,12 @@
 */
 
 // Korean (ko) localisation
-// By <none>
-// Last Updated v1.0b2
+// By 쭈도사 (Gilju lee)
+// Last Updated v1.4.1 (1st October, 2011)
 
 "Edit" = "편집";
 "Done" = "완료";
-"Module Download" = "Module Download";
+"Module Download" = "모듈 내려받기";
 "Installing" = "설치 중:";
 "Yes" = "네";
 "No" = "아니오";
@@ -31,268 +31,268 @@
 "Next" = "다음";
 "Previous" = "이전";
 
-"Ok" = "Ok";
-"Cancel" = "Cancel";
-"Error" = "Error";
+"Ok" = "확인";
+"Cancel" = "취소";
+"Error" = "오류";
 
 // Module About
-"AboutModuleName" = "Module name: ";
-"AboutModuleDescription" = "Description: ";
-"AboutModuleType" = "Type: ";
-"AboutModuleLang" = "Language: ";
-"AboutModuleVersion" = "Version: ";
-"AboutModuleVersionUnspecified" = "(unspecified)";
-"AboutModuleAboutText" = "About: ";
-"AboutModuleLicence" = "Distribution Licence: ";
-"AboutModuleLCSH" = "Library of Congress Subject Heading: ";
+"AboutModuleName" = "모듈 이름: ";
+"AboutModuleDescription" = "설명: ";
+"AboutModuleType" = "유형: ";
+"AboutModuleLang" = "언어: ";
+"AboutModuleVersion" = "버전: ";
+"AboutModuleVersionUnspecified" = "(지정되지 않음)";
+"AboutModuleAboutText" = "대하여: ";
+"AboutModuleLicence" = "모듈 라이센스: ";
+"AboutModuleLCSH" = "국회도서관 건명 목록: ";
 
 
-"Disclaimer" = "Disclaimer";
-"DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
+"Disclaimer" = "권한 포기";
+"DisclaimerMsg" = "      -=+* 경고 *+=-\n 인스톨 매니저가 PocketSword 구성요소의 편리한 업그레이드와 설치를 제공하지만, 이 프로그램 역시 패킷스니퍼들에게 정보가 제공될 수 있는 사이트에 접속하는 방법을 사용합니다. \n만약 기독교를 박해하는 국가에 있거나 탐지되기를 원하지 않으신다면 설치 매니저의 원격 소스를 사용해서는 안됩니다. \n또한 원격 소스는 CrossWire가 제공하는 것보다 질이 떨어지는 모듈을 제공할수도 있습니다. 그 모듈은 이단적인 것일수도 있고 비합법적인 것일수도 있습니다. 많은 저장소에는 정말 유용한 내용이 많이 포함되어 있습니다. 하지만 이 저장소들은 CrossWire에 의해 조사되지 않았고 또한 이에 대해 책임지지 도 않습니다. 사용자의 위험부담.\n이것을 이해하고 원격 소스를 이용하길 원하십니가?";
 
-"WebNoIP" = "Web: Unable to determine external IP\n";
-"WiFiNoConnection" = "Wifi: No Connection\n";
-"NoNetworkConnection" = "No network connection available.";
+"WebNoIP" = "웹: 외부 IP를 구분할 수 없음\n";
+"WiFiNoConnection" = "무선랜: 연결안됨\n";
+"NoNetworkConnection" = "네트워크 연결안됨.";
 
-"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
-"InstallManagerDisabled" = "disabled...";
-"InstallTitle" = "Install?";
-"files" = "files";
-"InstallProblem" = "A problem occurred during the installation.";
-"InstalledButtonTitle" = "Installed";
-"InstallButtonTitle" = "Install";
-"RefreshProblem" = "A problem occurred during the refresh.";
-"RefreshingModuleSource" = "Refreshing Module Source";
-"NoModulesRefresh" = "No modules here. Try a refresh.";
-"NoModulesInstalled" = "No modules installed.";
+"manualInstallHelp" = "수동으로 모듈을 설치하기 원하시면 웹 브라우저를 열어 아래 주소 페이지에 나오는 안내를 따르십시오. (아니면 Bonjour를 이용하여 아이폰으로 검색하십시오!).  하지만 앱에 포함된 설치관리자르 이용하시는 것을 권합니다 - 이 수동 설치는 자신의 모듈을 새롭게 만들기 원하는 사용자들을 위해서 존재합니다.";
+"InstallManagerDisabled" = "사용불가...";
+"InstallTitle" = "설치?";
+"files" = "파일";
+"InstallProblem" = "설치중에 문제가 발생했습니다";
+"InstalledButtonTitle" = "설치됨";
+"InstallButtonTitle" = "설치";
+"RefreshProblem" = "새로고침하는 동안 문제가 발생했습니다";
+"RefreshingModuleSource" = "모듈 소스를 새로고침";
+"NoModulesRefresh" = "모듈이 없습니다. 새로고침 하십시오";
+"NoModulesInstalled" = "어떤 모듈도 설치되어 있지 않습니다";
 
-"InstallSourcesTitle" = "Sources";
-"PreferencesTitle" = "Preferences";
-"PreferencesDisplayPreferencesTitle" = "Display Preferences";
-"PreferencesDevicePreferencesTitle" = "Device Preferences";
-"PreferencesFontSizeTitle" = "Font Size";
-"PreferencesNightModeTitle" = "Night Mode";
-"PreferencesVPLTitle" = "Verse Per Line";
-"PreferencesFontTitle" = "Font";
-"PreferencesRedLetterTitle" = "Red Letter";
-"PreferencesRedLetterNote" = "Note that Red Letter mode is only available for certain modules";
-"PreferencesDisableAutoLockTitle" = "Disable auto-lock";
-"PreferencesModuleMaintainerModeTitle" = "Module Maintainer Mode";
-"PreferencesModuleMaintainerModeNote" = "Note that Module Maintainer Mode is for those users who create their own modules & require a method to manually install their own modules.  For all other users, it is suggested that you use the built-in module downloader to access official modules provided by CrossWire.";
+"InstallSourcesTitle" = "소스";
+"PreferencesTitle" = "설정";
+"PreferencesDisplayPreferencesTitle" = "화면 설정";
+"PreferencesDevicePreferencesTitle" = "장치 설정";
+"PreferencesFontSizeTitle" = "글꼴 크기";
+"PreferencesNightModeTitle" = "야간 모드";
+"PreferencesVPLTitle" = "1줄에 한 구절";
+"PreferencesFontTitle" = "글꼴";
+"PreferencesRedLetterTitle" = "빨간 글씨";
+"PreferencesRedLetterNote" = "빨간 글씨 모드는 특정한 모듈에서만 작동됩니다";
+"PreferencesDisableAutoLockTitle" = "자동잠금 해제";
+"PreferencesModuleMaintainerModeTitle" = "모듈 유지 모드";
+"PreferencesModuleMaintainerModeNote" = "메인테이너 모드는 모듈을 직접 제작하여 사용하시는 분을 위한 것입니다. 일반 사용자들께서는 CrossWire에서 기본적으로 제공하는 모듈을 다운로드하여 사용하시기 바랍니다.";
 
-"AboutTitle" = "About";
+"AboutTitle" = "소개";
 
-"TabBarTitleBible" = "Bible";
-"TabBarTitleCommentary" = "Commentary";
-"TabBarTitleDictionary" = "Dictionary";
-"TabBarTitleModules" = "Modules";
-"TabBarTitlePreferences" = "Preferences";
-"TabBarTitleAbout" = "About";
+"TabBarTitleBible" = "성경";
+"TabBarTitleCommentary" = "주석";
+"TabBarTitleDictionary" = "사전";
+"TabBarTitleModules" = "모듈";
+"TabBarTitlePreferences" = "설정";
+"TabBarTitleAbout" = "소개";
 
-"ModulesTitle" = "Modules";
-"BookmarksTitle" = "Bookmarks";
+"ModulesTitle" = "모듈";
+"BookmarksTitle" = "책갈피";
 
-"ActivityLabelLoading" = "Loading...";
-"MMMBonjourLoading" = "Bonjour Loading...";
-"MMMIPLoading" = "IP Loading...";
+"ActivityLabelLoading" = "불러오는중...";
+"MMMBonjourLoading" = "Bonjour 불러오는중...";
+"MMMIPLoading" = "IP 불러오는중...";
 
-"Biblical Texts" = "Biblical Texts";
-"Commentaries" = "Commentaries";
-"Lexicons / Dictionaries" = "Lexicons / Dictionaries";
-"Generic Books" = "Generic Books";
-"Daily Devotional" = "Daily Devotional";
-"Glossaries" = "Glossaries";
-"Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
-"Essays" = "Essays";
-"Maps" = "Maps";
-"Images" = "Images";
+"Biblical Texts" = "성경 텍스트";
+"Commentaries" = "주석";
+"Lexicons / Dictionaries" = "어휘 / 사전";
+"Generic Books" = "일반 책";
+"Daily Devotional" = "매일 묵상";
+"Glossaries" = "소사전";
+"Cults / Unorthodox / Questionable Material" = "컬트 / 비정통 / 의심되는 소스";
+"Essays" = "에세이";
+"Maps" = "지도";
+"Images" = "이미지";
 
-"BibleHistoryTitle" = "Bible History";
-"CommentaryHistoryTitle" = "Commentary History";
+"BibleHistoryTitle" = "성경 검색 결과";
+"CommentaryHistoryTitle" = "주석 검색 결과";
 
-"None" = "None";
-"CloseButtonTitle" = "Close";
-"CacheDictionaryKeysTitle" = "Cache?";
-"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
-"IndexDownloadTitle" = "Index Download";
-"NoSearchIndexTitle" = "No Search Index";
-"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
-"SearchDownloaderTitle" = "Search Downloader";
-"FontPreferenceTitle" = "Font";
-"EmailUsButton" = "Email Us";
-"NoSearchIndexInstalled" = "No Search Index Installed";
-"SearchResults" = "Results";
+"None" = "없음";
+"CloseButtonTitle" = "닫기";
+"CacheDictionaryKeysTitle" = "저장?";
+"CacheDictionaryKeysMsg" = "이 사전은 아직 초기화 되지 않았습니다. 이 사전을 지금 저장 하시겠습니까?";
+"IndexDownloadTitle" = "인덱스 내려받기";
+"NoSearchIndexTitle" = "검색 색인 없음";
+"NoSearchIndexMsg" = "이 모듈의 검색 색인이 없습니다. 사용 가능한 색인을 확인하시겠습니까?";
+"SearchDownloaderTitle" = "다운로드 검색";
+"FontPreferenceTitle" = "글꼴";
+"EmailUsButton" = "이메일 발송";
+"NoSearchIndexInstalled" = "검색 색인이 설치되지 않음";
+"SearchResults" = "결과";
 
-"IndexControllerInstalled" = "You already have installed a search index for:";
-"IndexControllerDownloadable" = "Select a downloadable search index from the following list to enable search for that module:";
-"IndexControllerNone" = "Check your network connection to enable search for:";
-"IndexControllerNoneRemote" = "There is currently no downloadable search index available for:";
+"IndexControllerInstalled" = "이미 검색 색인을 설치하셨습니다:";
+"IndexControllerDownloadable" = "모듈에서 검색을 가능하게 하시려면 다음 목록에서 검색 색인을 선택하십시오:";
+"IndexControllerNone" = "검색을 가능하게 하시려면 네트워크 설정을 확인하십시오:";
+"IndexControllerNoneRemote" = "현재는 내려받을 검색 색인이 없습니다:";
 
-"SearchHelpTitle" = "Search Help";
-"IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";
+"SearchHelpTitle" = "도움말 검색";
+"IndexControllerConfirmQuestion" = "이 모듈 검색을 위한 색인을 다운로드 하시겠습니까?\n 주석 모듈은 시간이 걸릴 수 있습니다!";
 
-"PreferencesStrongsPreferencesTitle" = "Strong's Numbers";
-"PreferencesDisplayTitle" = "Display";
-"PreferencesGreekModuleTitle" = "Greek module";
-"PreferencesHebrewModuleTitle" = "Hebrew module";
-"PreferencesMorphologyPreferencesTitle" = "Morphology Preferences";
-"PreferencesOriginalLanguagePreferencesTitle" = "Original Language";
-"PreferencesGreekAccentsTitle" = "Greek Accents";
-"PreferencesHVPTitle" = "Hebrew Vowel Points";
-"PreferencesHebrewCantillationTitle" = "Hebrew Cantillation";
-"PreferencesGreekStrongsLexiconTitle" = "Greek Strong's lexicon";
-"PreferencesHebrewStrongsLexiconTitle" = "Hebrew Strong's lexicon";
-"PreferencesGreekMorphLexiconTitle" = "Greek Morphological lexicon";
-"PreferencesCrossReferencesTitle" = "Cross-references";
-"PreferencesFootnotesTitle" = "Footnotes";
+"PreferencesStrongsPreferencesTitle" = "스트롱 코드";
+"PreferencesDisplayTitle" = "화면";
+"PreferencesGreekModuleTitle" = "그리스어 모듈";
+"PreferencesHebrewModuleTitle" = "히브리어 모듈";
+"PreferencesMorphologyPreferencesTitle" = "형태 설정";
+"PreferencesOriginalLanguagePreferencesTitle" = "원래 언어";
+"PreferencesGreekAccentsTitle" = "그리스어 엑센트";
+"PreferencesHVPTitle" = "히브리어 모음 부호";
+"PreferencesHebrewCantillationTitle" = "히브리어 영창";
+"PreferencesGreekStrongsLexiconTitle" = "그리스어 스트롱코드 사전";
+"PreferencesHebrewStrongsLexiconTitle" = "히브리어 형태소 사전";
+"PreferencesGreekMorphLexiconTitle" = "그리스어 형태소 사전";
+"PreferencesCrossReferencesTitle" = "상호 참조";
+"PreferencesFootnotesTitle" = "rkrwn";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew Strong's Numbers Lexicon installed. Please install one (such as 'strongshebrew') via the More->Downloads tab.";
-"NoGreekStrongsNumbersModuleInstalled" = "No Greek Strong's Numbers Lexicon installed. Please install one (such as 'strongsgreek') via the More->Downloads tab.";
+"NoHebrewStrongsNumbersModuleInstalled" = "히브리어 스트롱 코드 사전이 설치되지 않았습니다. 더보기->다운로드 탭에서 ('strongshebrew'와 같은 소스) 설치해주십시오.";
+"NoGreekStrongsNumbersModuleInstalled" = "그리스어 스트롱 코드 사전이 설치되지 않았습니다. 더보기->다운로드 탭에서 ('strongsgreek'와 같은 소스) 설치해주십시오.";
 
-"NoMorphGreekModuleInstalled" = "No Greek Morphological Analysis Codes Lexicon installed. Please install one (such as 'Robinson') via the More->Downloads tab";
-"MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+"NoMorphGreekModuleInstalled" = "그리스어 형태소 분석 코드 사전이 설치되지 않았습니다. 더보기->다운로드 탭에서('Robinson'과 같은 소스) 설치해주십시오.";
+"MorphHebrewNotSupported" = "불행하게도 형태소 분석 코드는 현재 그리스어 단어에서만 이용 가능합니다. 만약 언어 능력이 있고 이것을 PocketSword에 적용하시길 원하시면, <br /> openscriptures.org<br /> 이곳을 한번 살펴봐주십시오. 그리고 토론 그룹에 참여해보시기 바랍니다.";
 
-"AboutModuleFeaturesTitle" = "Module Features";
-"AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";
-"AboutModuleContainsMorphTags" = "Contains Morphological tags";
-"AboutModuleContainsFootnotes" = "Contains Footnotes";
-"AboutModuleContainsHeadings" = "Contains Headings";
-"AboutModuleContainsRedLetterWords" = "Words of Christ in Red";
-"AboutModuleContainsVariants" = "Contains Textual Variants";
-"AboutModuleContainsGreekAccents" = "Contains Greek Accents";
-"AboutModuleContainsScriptref" = "Contains Scriptual Cross-References";
-"AboutModuleContainsLemma" = "Lemmas";
-"AboutModuleContainsCantillation" = "Contains Cantillation Marks";
-"AboutModuleContainsHebrewPoints" = "Contains Hebrew Points";
-"AboutModuleContainsMorphSegmentation" = "This is a morpheme segmented Hebrew text";
-"AboutModuleContainsGreekDef" = "Defines Greek Strong's Numbers";
-"AboutModuleContainsHebrewDef" = "Defines Hebrew Strong's Numbers";
-"AboutModuleContainsGreekParse" = "Defines Greek Morphological Analysis Codes";
-"AboutModuleContainsHebrewParse" = "Defines Hebrew Morphological Analysis Codes";
-"AboutModuleContainsDailyDevotion" = "Contains a Daily Devotional";
-"AboutModuleContainsImages" = "Contains Images";
+"AboutModuleFeaturesTitle" = "모듈 특징";
+"AboutModuleContainsStrongsNumbers" = "스트롱 코드 포함";
+"AboutModuleContainsMorphTags" = "형태학 태그 포함";
+"AboutModuleContainsFootnotes" = "각주 포함";
+"AboutModuleContainsHeadings" = "표제어 포함";
+"AboutModuleContainsRedLetterWords" = "예수님 말씀은 빨간색으로 표시";
+"AboutModuleContainsVariants" = "본문 가지 포함";
+"AboutModuleContainsGreekAccents" = "그리스어 악센트 포함";
+"AboutModuleContainsScriptref" = "원어 상호 대조 포함";
+"AboutModuleContainsLemma" = "표제어";
+"AboutModuleContainsCantillation" = "영창 표시 포함";
+"AboutModuleContainsHebrewPoints" = "히브리어 포인트 포함";
+"AboutModuleContainsMorphSegmentation" = "히브리어 본문에서 형태소로 분할된 것입니다.";
+"AboutModuleContainsGreekDef" = "헬라어 스트롱 코드 정의";
+"AboutModuleContainsHebrewDef" = "히브리어 스트롱 코드 정의";
+"AboutModuleContainsGreekParse" = "헬라어 형태 구조 코드 정의";
+"AboutModuleContainsHebrewParse" = "히브리어 형태 구조 코드 정의";
+"AboutModuleContainsDailyDevotion" = "매일 묵상 포함";
+"AboutModuleContainsImages" = "이미지 포함";
 
-"NotSupported" = "This module is not currently supported";
-"ConfirmDeleteTitle" = "Remove?";
-"ConfirmDeleteQuestion" = "Are you sure you wish to remove this module?";
-"EmptyChapterWarning" = "This chapter is empty for this module.";
-"ModuleNotInstalled" = "is not installed.";
-"AboutModuleCurrentVersion" = "Installed Version: ";
+"NotSupported" = "이 모듈은 현재 지원되지 않습니다";
+"ConfirmDeleteTitle" = "제거?";
+"ConfirmDeleteQuestion" = "이 모듈을 제거하기 원하십니까?";
+"EmptyChapterWarning" = "이 모듈에서 이 장은 비어 있습니다.";
+"ModuleNotInstalled" = "설치되지 않았습니다.";
+"AboutModuleCurrentVersion" = "설치된 버전: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Module Locked";
-"ModuleLockedQuestion" = "This module is currently locked.  You must purchase a key to unlock this module.  Unfortunately, you can't do this through PocketSword at this time.  Please read the description of this module to find out how to purchase this module.\n  If you have already purchased a key, you can input your key to unlock this module.  Do you want to input your key now?";
-"ModuleEnterKeyTitle" = "Enter Key:";
-"ModuleUnlockScreenTitle" = "Unlock Module";
-"ModuleUnlockHelpText" = "To unlock this module, please enter the key you were sent when you bought this module.  Press Done to test the key and then press Save if it looks correct.";
-"RefSelectorBookTitle" = "Select Book";
-"RefSelectorChapterTitle" = "Chapter";
-"RefSelectorVerseTitle" = "Verse";
-"RefSelectorBackButtonTitle" = "Back";
+"ModuleLockedTitle" = "모듈 잠김";
+"ModuleLockedQuestion" = "이 모듈은 잠겨있습니다. 해제하기 위해서는 키를 구입하셔야 합니다. 안타깝게도 지금 PocketSword 를 통해서는 하실수 없습니다. 어떻게 구입할 수 있는지 이 모듈의 설명서를 읽어보십시오.\n  이미 키를 가지고 계시면 해제하기 위해 키를 입력하실 수 있습니다. 지금 키를 입력하시겠습니까?";
+"ModuleEnterKeyTitle" = "키 입력:";
+"ModuleUnlockScreenTitle" = "모듈 해제";
+"ModuleUnlockHelpText" = "이 모듈을 해제하기 위해서 이 모듈을 구입한 곳에서 보내준 키를 입력하십시오. 키가 맞는지 확인하신후 저장 버튼을 누르십시오.";
+"RefSelectorBookTitle" = "책 선택";
+"RefSelectorChapterTitle" = "장";
+"RefSelectorVerseTitle" = "절";
+"RefSelectorBackButtonTitle" = "뒤로";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Caption";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"PreferencesHeadingsTitle" = "표제";
+"DictionarySearchPlaceholderText" = "사전 선택";
+"TabBarTitleDevotional" = "매일 묵상";
+"TodayButtonTitle" = "오늘";
+"ManageSources" = "소스 관리";
+"AddFTPSource" = "FTP 소스 추가";
+"AddHTTPSource" = "HTTP 소스 추가";
+"DeleteSource" = "소스 삭제";
+"RefreshSourceList" = "소스 목록 갱신";
+"AddSourceCaptionTitle" = "설명";
+"AddSourceServerTitle" = "서버";
+"AddSourcePathTitle" = "경로";
+"AddFTPSourceTitle" = "새로운 FTP 소스";
+"AddHTTPSourceTitle" = "새로운 HTTP 소스";
+"FillInAllFieldsMessage" = "모든 항목을 다 기록하셔야 합니다!";
+"Warning" = "경고";
+"CannotVerifyInstallSourceWarning" = "PocketSword는 이것이 적절한 모듈 소스인지 확인할 수 없습니다. 그래도 저장하시겠습니까?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+"AboutModuleLocked" = "** 이 모듈은 잠겨있습니다. 모듈 제공 사이트에서 해제 키를 구입하시오. 더 상세한 사항은 아래를 보십시오. **";
+"UpgradeButtonTitle" = "대체";
+"ConfirmUpgrade" = "이 모듈을 현재 사용가능한 버전으로 대체하시겠습니까?";
 
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"VerseContextualMenuAddBookmark" = "북마크 추가";
+"VerseContextualMenuCommentary" = "주석에서 보기";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Auto Fullscreen";
-"PreferencesFullscreenNote" = "With Auto Fullscreen disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "이전 장";
+"VoiceOverNextChapterButton" = "다음 장";
+"VoiceOverHistoryAndSearchButton" = "기록과 검색";
+"InstallManagerDownloadsHint" = "아래 모듈 소스로부터 다른 모듈을 내려받을 수 있습니다:";
+"ModuleTypesHeaderText" = "모듈 유형 선택:";
+"ModuleLanguagesHeaderText" = "언어 선택:";
+"PreferencesModulePreferencesTitle" = "모듈 설정";
+"PreferencesFullscreenModeTitle" = "자동 전체화면";
+"PreferencesFullscreenNote" = "자동 전체화면이 해제되어 있을경우, 성경과 주석 탭에서 두 개의 손가락을 탭하여 화면을 전환할 수 있습니다.";
 
 // new v1.3.4 strings:
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesRotationLock" = "회전 잠금";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "사용자 글꼴 사용";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "폴더 이름 오류";
+"BookmarksInvalidFolderMessage" = "잘못된 이름을 입력하였습니다. 다른 이름을 선택하십시오.";
+"BookmarksDuplicateFolderTitle" = "폴더 이름 중복";
+"BookmarksDuplicateFolderMessage" = "동일한 이름의 폴더가 존재합니다. 다른 이름을 선택하십시오.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "북마크 이름 중복";
+"BookmarksDuplicateBookmarkMessage" = "동일한 이름의 북마크가 존재합니다. 다른 이름을 선택하십시오.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "폴더 삭제?";
+"BookmarksConfirmDeleteFolderMessage" = "정말로 '%@' 폴더와 그 안에 포함된 모든 북마크를 삭제하시겠습니까?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "폴더 이름:";
+"BookmarksAddFolderHighlightColour" = "하이라이트 색깔:";
+"BookmarksAddBookmarkVerseTitle" = "절";
+"BookmarksAddBookmarkDescriptionTitle" = "설명";
+"BookmarksAddBookmarkFolderTitle" = "폴더";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "폴더 추가";
+"BookmarksEditFolderTitle" = "폴더 수정";
+"BookmarksAddBookmarkHereButton" = "여기에 북마크 추가";
+"BookmarksAddBookmarkDescription" = "절을 즐겨찾기에 추가 하시려면 절 숫자를 탭하신후 '북마크 추가'를 선택하십시오.";
+"BookmarksAddFolderDescription" = "폴더를 추가하시려면 '수정' 버튼을 누르십시오";
+"BookmarksImportedFolderName" = "복원됨";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "생성됨:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "마지막 접속:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "북마크 수정";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "검색";
+"SearchStrongsTitle" = "스트롱코드 검색";
+"SearchOptionsTitle" = "검색 옵션";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "모든 유형 검색";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "검색 유형:";
+"SearchRangeSectionHeader" = "검색 범위:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "스트롱코드 검색:";
+"SearchFuzzySectionHeader" = "지능 검색:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
 "SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
-"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
-"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+"SearchRangeSectionFooter" = "어느 부분에서 검색하기를 원하는지 선택하십시오";
+"SearchStrongsSectionFooter" = "헬라어나 히브리어 스트롱 코드 모두를 검색할수 있습니다..\n헬라어 번호 0011 (Abraham)을 검색하시려면 G11을 입력하십시오.\n히브리어 번호 0430 (God) 를 검색하시려면 H430을 입력하십시오.";
+"SearchFuzzySectionFooter" = "지능 검색을 이용할 경우, 만약 \nrev\n로 검색을 한다면 결과는 'rev'로 시작하는 모든 단어가 포함됩니다.";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
-"SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
-"SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchTypeAllRow" = "모든 단어 일치";
+"SearchTypeAllRowShort" = "모든 단어";
+"SearchTypeAnyRow" = "아무 단어라도 일치";
+"SearchTypeAnyRowShort" = "아무 단어";
+"SearchTypeExactRow" = "구절 정확하게 일치";
+"SearchTypeExactRowShort" = "정확한 구절";
+"SearchRangeAllRow" = "성경 전체";
+"SearchRangeAllRowShort" = "성경 전체";
+"SearchRangeOTRow" = "구약성경";
+"SearchRangeOTRowShort" = "구약";
+"SearchRangeNTRow" = "신약성경";
+"SearchRangeNTRowShort" = "신약";
+"SearchStrongsRow" = "스트롱 코드";
+"On" = "설정";
+"Off" = "해제";
+"SearchStartSearchButton" = "검색 시작";
 //"PreferencesModuleSectionNote-old" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+"PreferencesModuleSectionNote" = "모듈 특성 화면 설정 (스트롱 코드와 빨간 글씨 모드와 같은)은 모듈의 개별 설정에 따릅니다. 변경하기 위해서는 화면 아래 목록에서 원하는 모듈을 선택하십시오.";
