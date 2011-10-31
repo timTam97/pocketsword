@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">768</int>
-		<string key="IBDocument.SystemVersion">11A511</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
-		<string key="IBDocument.AppKitVersion">1138</string>
-		<string key="IBDocument.HIToolboxVersion">566.00</string>
+		<string key="IBDocument.SystemVersion">11C74</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
+		<string key="IBDocument.AppKitVersion">1138.23</string>
+		<string key="IBDocument.HIToolboxVersion">567.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">534</string>
+			<string key="NS.object.0">933</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBUITableView</string>
@@ -38,7 +38,10 @@
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 		</array>
-		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
+		<object class="NSMutableDictionary" key="IBDocument.Metadata">
+			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
+			<integer value="1" key="NS.object.0"/>
+		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<object class="IBProxyObject" id="841351856">
 				<string key="IBProxiedObjectIdentifier">IBFilesOwner</string>
@@ -52,10 +55,11 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIWindow" id="380026005">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">1316</int>
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 480}</string>
+				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor" id="183709399">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MAA</bytes>
@@ -83,152 +87,185 @@
 				<bool key="IBUIWantsFullScreenLayout">YES</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<bool key="IBUIHorizontal">NO</bool>
-				<object class="IBUIViewController" key="IBUISelectedViewController" id="1024858337">
-					<object class="IBUIView" key="IBUIView" id="782260632">
+				<object class="IBUIViewController" key="IBUISelectedViewController" id="822863">
+					<object class="IBUIWebView" key="IBUIView" id="1053444664">
 						<reference key="NSNextResponder"/>
 						<int key="NSvFlags">274</int>
-						<array class="NSMutableArray" key="NSSubviews">
-							<object class="IBUIWebView" id="422417741">
-								<reference key="NSNextResponder" ref="782260632"/>
-								<int key="NSvFlags">274</int>
-								<string key="NSFrame">{{0, 44}, {320, 367}}</string>
-								<reference key="NSSuperview" ref="782260632"/>
-								<reference key="NSNextKeyView" ref="795333663"/>
-								<reference key="IBUIBackgroundColor" ref="183709399"/>
-								<bool key="IBUIOpaque">NO</bool>
-								<bool key="IBUIClipsSubviews">YES</bool>
-								<bool key="IBUIMultipleTouchEnabled">YES</bool>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							</object>
-							<object class="IBUIToolbar" id="156794117">
-								<reference key="NSNextResponder" ref="782260632"/>
-								<int key="NSvFlags">290</int>
-								<array class="NSMutableArray" key="NSSubviews">
-									<object class="IBUISegmentedControl" id="240976051">
-										<reference key="NSNextResponder" ref="156794117"/>
-										<int key="NSvFlags">292</int>
-										<string key="NSFrame">{{71, 8}, {178, 30}}</string>
-										<reference key="NSSuperview" ref="156794117"/>
-										<reference key="NSNextKeyView" ref="1056565306"/>
-										<bool key="IBUIOpaque">NO</bool>
-										<int key="IBUIContentMode">3</int>
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<int key="IBSegmentControlStyle">2</int>
-										<int key="IBNumberOfSegments">3</int>
-										<array key="IBSegmentTitles">
-											<string/>
-											<string>Gen 23:23</string>
-											<string/>
-										</array>
-										<array class="NSMutableArray" key="IBSegmentWidths">
-											<real value="0.0"/>
-											<real value="100"/>
-											<real value="0.0"/>
-										</array>
-										<array class="NSMutableArray" key="IBSegmentEnabledStates">
-											<boolean value="YES"/>
-											<boolean value="YES"/>
-											<boolean value="YES"/>
-										</array>
-										<array class="NSMutableArray" key="IBSegmentContentOffsets">
-											<string>{0, 0}</string>
-											<string>{0, 0}</string>
-											<string>{0, 0}</string>
-										</array>
-										<array class="NSMutableArray" key="IBSegmentImages">
-											<object class="NSCustomResource" id="229038249">
-												<string key="NSClassName">NSImage</string>
-												<string key="NSResourceName">back-white.png</string>
-											</object>
-											<object class="NSNull" id="4"/>
-											<object class="NSCustomResource" id="135967398">
-												<string key="NSClassName">NSImage</string>
-												<string key="NSResourceName">forward-white.png</string>
-											</object>
-										</array>
-										<bool key="IBMomentary">YES</bool>
-										<object class="NSColor" key="IBTintColor">
-											<int key="NSColorSpace">1</int>
-											<bytes key="NSRGB">MC4yNzUxMDQzNTk5IDAuMjk2ODk2MTEzNCAwLjMzMTYzMjY1MzEAA</bytes>
-										</object>
-									</object>
-								</array>
-								<string key="NSFrameSize">{320, 44}</string>
-								<reference key="NSSuperview" ref="782260632"/>
-								<reference key="NSNextKeyView" ref="240976051"/>
-								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIBarStyle">1</int>
-								<array class="NSMutableArray" key="IBUIItems">
-									<object class="IBUIBarButtonItem" id="620349161">
-										<object class="NSCustomResource" key="IBUIImage" id="688469699">
-											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">history.png</string>
-										</object>
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<int key="IBUIStyle">1</int>
-										<reference key="IBUIToolbar" ref="156794117"/>
-									</object>
-									<object class="IBUIBarButtonItem" id="725249912">
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<reference key="IBUIToolbar" ref="156794117"/>
-										<int key="IBUISystemItemIdentifier">5</int>
-									</object>
-									<object class="IBUIBarButtonItem" id="478549319">
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<int key="IBUIStyle">1</int>
-										<reference key="IBUICustomView" ref="240976051"/>
-										<reference key="IBUIToolbar" ref="156794117"/>
-									</object>
-									<object class="IBUIBarButtonItem" id="133099459">
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<reference key="IBUIToolbar" ref="156794117"/>
-										<int key="IBUISystemItemIdentifier">5</int>
-									</object>
-									<object class="IBUIBarButtonItem" id="243836230">
-										<string key="IBUITitle">esv</string>
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<int key="IBUIStyle">1</int>
-										<reference key="IBUIToolbar" ref="156794117"/>
-									</object>
-								</array>
-							</object>
-							<object class="IBUIActivityIndicatorView" id="1056565306">
-								<reference key="NSNextResponder" ref="782260632"/>
-								<int key="NSvFlags">-2147483356</int>
-								<string key="NSFrame">{{48, 12}, {20, 20}}</string>
-								<reference key="NSSuperview" ref="782260632"/>
-								<reference key="NSNextKeyView" ref="422417741"/>
-								<bool key="IBUIOpaque">NO</bool>
-								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-								<bool key="IBUIUserInteractionEnabled">NO</bool>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							</object>
-						</array>
 						<string key="NSFrame">{{0, 20}, {320, 411}}</string>
 						<reference key="NSSuperview"/>
-						<reference key="NSNextKeyView" ref="156794117"/>
-						<reference key="IBUIBackgroundColor" ref="183709399"/>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MSAxIDEAA</bytes>
+						</object>
+						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIDataDetectorTypes">1</int>
+						<bool key="IBUIDetectsPhoneNumbers">YES</bool>
 					</object>
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="765670903">
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="572841271">
 						<string key="IBUITitle"/>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">bible.png</string>
+							<string key="NSResourceName">About.png</string>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 					<reference key="IBUIParentViewController" ref="1034742383"/>
+					<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
+						<int key="IBUIStatusBarStyle">2</int>
+					</object>
 					<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
 						<int key="IBUIInterfaceOrientation">1</int>
 						<int key="interfaceOrientation">1</int>
 					</object>
+					<bool key="IBUIWantsFullScreenLayout">YES</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					<bool key="IBUIHorizontal">NO</bool>
 				</object>
 				<array class="NSMutableArray" key="IBUIViewControllers">
-					<reference ref="1024858337"/>
+					<object class="IBUIViewController" id="1024858337">
+						<object class="IBUIView" key="IBUIView" id="782260632">
+							<nil key="NSNextResponder"/>
+							<int key="NSvFlags">274</int>
+							<array class="NSMutableArray" key="NSSubviews">
+								<object class="IBUIWebView" id="422417741">
+									<reference key="NSNextResponder" ref="782260632"/>
+									<int key="NSvFlags">274</int>
+									<string key="NSFrame">{{0, 44}, {320, 367}}</string>
+									<reference key="NSSuperview" ref="782260632"/>
+									<reference key="NSNextKeyView" ref="795333663"/>
+									<reference key="IBUIBackgroundColor" ref="183709399"/>
+									<bool key="IBUIOpaque">NO</bool>
+									<bool key="IBUIClipsSubviews">YES</bool>
+									<bool key="IBUIMultipleTouchEnabled">YES</bool>
+									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								</object>
+								<object class="IBUIToolbar" id="156794117">
+									<reference key="NSNextResponder" ref="782260632"/>
+									<int key="NSvFlags">290</int>
+									<array class="NSMutableArray" key="NSSubviews">
+										<object class="IBUISegmentedControl" id="240976051">
+											<reference key="NSNextResponder" ref="156794117"/>
+											<int key="NSvFlags">292</int>
+											<string key="NSFrame">{{71, 8}, {178, 30}}</string>
+											<reference key="NSSuperview" ref="156794117"/>
+											<reference key="NSNextKeyView" ref="1056565306"/>
+											<bool key="IBUIOpaque">NO</bool>
+											<int key="IBUIContentMode">3</int>
+											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+											<int key="IBSegmentControlStyle">2</int>
+											<int key="IBNumberOfSegments">3</int>
+											<array key="IBSegmentTitles">
+												<string/>
+												<string>Gen 23:23</string>
+												<string/>
+											</array>
+											<array class="NSMutableArray" key="IBSegmentWidths">
+												<real value="0.0"/>
+												<real value="100"/>
+												<real value="0.0"/>
+											</array>
+											<array class="NSMutableArray" key="IBSegmentEnabledStates">
+												<boolean value="YES"/>
+												<boolean value="YES"/>
+												<boolean value="YES"/>
+											</array>
+											<array class="NSMutableArray" key="IBSegmentContentOffsets">
+												<string>{0, 0}</string>
+												<string>{0, 0}</string>
+												<string>{0, 0}</string>
+											</array>
+											<array class="NSMutableArray" key="IBSegmentImages">
+												<object class="NSCustomResource" id="229038249">
+													<string key="NSClassName">NSImage</string>
+													<string key="NSResourceName">back-white.png</string>
+												</object>
+												<object class="NSNull" id="4"/>
+												<object class="NSCustomResource" id="135967398">
+													<string key="NSClassName">NSImage</string>
+													<string key="NSResourceName">forward-white.png</string>
+												</object>
+											</array>
+											<bool key="IBMomentary">YES</bool>
+											<object class="NSColor" key="IBTintColor">
+												<int key="NSColorSpace">1</int>
+												<bytes key="NSRGB">MC4yNzUxMDQzNTk5IDAuMjk2ODk2MTEzNCAwLjMzMTYzMjY1MzEAA</bytes>
+											</object>
+										</object>
+									</array>
+									<string key="NSFrameSize">{320, 44}</string>
+									<reference key="NSSuperview" ref="782260632"/>
+									<reference key="NSNextKeyView" ref="240976051"/>
+									<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+									<int key="IBUIBarStyle">1</int>
+									<array class="NSMutableArray" key="IBUIItems">
+										<object class="IBUIBarButtonItem" id="620349161">
+											<object class="NSCustomResource" key="IBUIImage" id="688469699">
+												<string key="NSClassName">NSImage</string>
+												<string key="NSResourceName">history.png</string>
+											</object>
+											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+											<int key="IBUIStyle">1</int>
+											<reference key="IBUIToolbar" ref="156794117"/>
+										</object>
+										<object class="IBUIBarButtonItem" id="725249912">
+											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+											<reference key="IBUIToolbar" ref="156794117"/>
+											<int key="IBUISystemItemIdentifier">5</int>
+										</object>
+										<object class="IBUIBarButtonItem" id="478549319">
+											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+											<int key="IBUIStyle">1</int>
+											<reference key="IBUICustomView" ref="240976051"/>
+											<reference key="IBUIToolbar" ref="156794117"/>
+										</object>
+										<object class="IBUIBarButtonItem" id="133099459">
+											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+											<reference key="IBUIToolbar" ref="156794117"/>
+											<int key="IBUISystemItemIdentifier">5</int>
+										</object>
+										<object class="IBUIBarButtonItem" id="243836230">
+											<string key="IBUITitle">esv</string>
+											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+											<int key="IBUIStyle">1</int>
+											<reference key="IBUIToolbar" ref="156794117"/>
+										</object>
+									</array>
+								</object>
+								<object class="IBUIActivityIndicatorView" id="1056565306">
+									<reference key="NSNextResponder" ref="782260632"/>
+									<int key="NSvFlags">-2147483356</int>
+									<string key="NSFrame">{{48, 12}, {20, 20}}</string>
+									<reference key="NSSuperview" ref="782260632"/>
+									<reference key="NSNextKeyView" ref="422417741"/>
+									<bool key="IBUIOpaque">NO</bool>
+									<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+									<bool key="IBUIUserInteractionEnabled">NO</bool>
+									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								</object>
+							</array>
+							<string key="NSFrame">{{0, 20}, {320, 411}}</string>
+							<reference key="NSNextKeyView" ref="156794117"/>
+							<reference key="IBUIBackgroundColor" ref="183709399"/>
+							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						</object>
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="765670903">
+							<string key="IBUITitle"/>
+							<object class="NSCustomResource" key="IBUIImage">
+								<string key="NSClassName">NSImage</string>
+								<string key="NSResourceName">bible.png</string>
+							</object>
+							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						</object>
+						<reference key="IBUIParentViewController" ref="1034742383"/>
+						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+							<int key="IBUIInterfaceOrientation">1</int>
+							<int key="interfaceOrientation">1</int>
+						</object>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<bool key="IBUIHorizontal">NO</bool>
+					</object>
 					<object class="IBUIViewController" id="438882902">
 						<object class="IBUIView" key="IBUIView" id="935842201">
 							<nil key="NSNextResponder"/>
@@ -241,7 +278,7 @@
 										<object class="IBUISegmentedControl" id="362376690">
 											<reference key="NSNextResponder" ref="762539378"/>
 											<int key="NSvFlags">292</int>
-											<string key="NSFrame">{{69, 8}, {178, 30}}</string>
+											<string key="NSFrame">{{71, 8}, {178, 30}}</string>
 											<reference key="NSSuperview" ref="762539378"/>
 											<bool key="IBUIOpaque">NO</bool>
 											<int key="IBUIContentMode">3</int>
@@ -497,21 +534,50 @@
 										<int key="NSColorSpace">10</int>
 										<object class="NSImage" key="NSImage">
 											<int key="NSImageFlags">549453824</int>
-											<string key="NSSize">{84, 1}</string>
+											<string key="NSSize">{512, 1}</string>
 											<array class="NSMutableArray" key="NSReps">
 												<array>
 													<integer value="0"/>
 													<object class="NSBitmapImageRep">
 														<object class="NSData" key="NSTIFFRepresentation">
-															<bytes key="NS.bytes">TU0AKgAAAVjFzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
+															<bytes key="NS.bytes">TU0AKgAACAjFzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
 y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
 xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
 xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
 xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
-xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P8ADQEAAAMAAAABAFQAAAEB
-AAMAAAABAAEAAAECAAMAAAAEAAAB+gEDAAMAAAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAABAAAACAES
-AAMAAAABAAEAAAEVAAMAAAABAAQAAAEWAAMAAAABAAEAAAEXAAQAAAABAAABUAEcAAMAAAABAAEAAAFS
-AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
+xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/
+xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/
+y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
+y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
+xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
+xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
+xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
+xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/
+xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/
+y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
+y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
+xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
+xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
+xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
+xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/
+xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/
+y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
+y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
+xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
+xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
+xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
+xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/
+xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/
+y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/
+y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/
+xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/
+xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/
+xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/xczS/8vS2P/L0tj/xczU/8XM1P/FzNT/
+xczU/8XM0v/L0tj/y9LY/8XM1P/FzNT/xczU/8XM1P/FzNL/y9LY/8vS2P/FzNT/xczU/8XM1P/FzNT/
+xczS/8vS2P/L0tj/xczU/wANAQAAAwAAAAECAAAAAQEAAwAAAAEAAQAAAQIAAwAAAAQAAAiqAQMAAwAA
+AAEAAQAAAQYAAwAAAAEAAgAAAREABAAAAAEAAAAIARIAAwAAAAEAAQAAARUAAwAAAAEABAAAARYAAwAA
+AAEAAQAAARcABAAAAAEAAAgAARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAQAAAiyAAAAAAAI
+AAgACAAIAAEAAQABAAE</bytes>
 														</object>
 													</object>
 												</array>
@@ -562,40 +628,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIHorizontal">NO</bool>
 					</object>
-					<object class="IBUIViewController" id="822863">
-						<object class="IBUIWebView" key="IBUIView" id="1053444664">
-							<nil key="NSNextResponder"/>
-							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{0, 20}, {320, 411}}</string>
-							<object class="NSColor" key="IBUIBackgroundColor">
-								<int key="NSColorSpace">1</int>
-								<bytes key="NSRGB">MSAxIDEAA</bytes>
-							</object>
-							<bool key="IBUIMultipleTouchEnabled">YES</bool>
-							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							<int key="IBUIDataDetectorTypes">1</int>
-							<bool key="IBUIDetectsPhoneNumbers">YES</bool>
-						</object>
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="572841271">
-							<string key="IBUITitle"/>
-							<object class="NSCustomResource" key="IBUIImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">About.png</string>
-							</object>
-							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						</object>
-						<reference key="IBUIParentViewController" ref="1034742383"/>
-						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
-							<int key="IBUIStatusBarStyle">2</int>
-						</object>
-						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
-							<int key="IBUIInterfaceOrientation">1</int>
-							<int key="interfaceOrientation">1</int>
-						</object>
-						<bool key="IBUIWantsFullScreenLayout">YES</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<bool key="IBUIHorizontal">NO</bool>
-					</object>
+					<reference ref="822863"/>
 				</array>
 				<object class="IBUITabBar" key="IBUITabBar" id="795333663">
 					<reference key="NSNextResponder"/>
@@ -646,6 +679,15 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<nil key="IBUIHighlightedColor"/>
 							<int key="IBUIBaselineAdjustment">1</int>
 							<float key="IBUIMinimumFontSize">10</float>
+							<object class="IBUIFontDescription" key="IBUIFontDescription">
+								<int key="type">1</int>
+								<double key="pointSize">17</double>
+							</object>
+							<object class="NSFont" key="IBUIFont">
+								<string key="NSName">Helvetica</string>
+								<double key="NSSize">17</double>
+								<int key="NSfFlags">16</int>
+							</object>
 						</object>
 					</array>
 					<string key="NSFrameSize">{320, 460}</string>
@@ -735,11 +777,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<object class="NSFont" key="IBUIFont" id="878594600">
-							<string key="NSName">Helvetica-Bold</string>
-							<double key="NSSize">15</double>
-							<int key="NSfFlags">16</int>
-						</object>
 						<int key="IBUIButtonType">1</int>
 						<bool key="IBUIShowsTouchWhenHighlighted">YES</bool>
 						<reference key="IBUIHighlightedTitleColor" ref="866556179"/>
@@ -755,6 +792,17 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">popup-down-button.png</string>
 						</object>
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="675835683">
+							<string key="name">Helvetica-Bold</string>
+							<string key="family">Helvetica</string>
+							<int key="traits">2</int>
+							<double key="pointSize">15</double>
+						</object>
+						<object class="NSFont" key="IBUIFont" id="878594600">
+							<string key="NSName">Helvetica-Bold</string>
+							<double key="NSSize">15</double>
+							<int key="NSfFlags">16</int>
+						</object>
 					</object>
 					<object class="IBUIButton" id="937602460">
 						<reference key="NSNextResponder" ref="887081261"/>
@@ -766,11 +814,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAACAgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<reference key="IBUIFont" ref="878594600"/>
 						<bool key="IBUIShowsTouchWhenHighlighted">YES</bool>
 						<reference key="IBUIHighlightedTitleColor" ref="866556179"/>
 						<reference key="IBUINormalTitleColor" ref="183709399"/>
 						<reference key="IBUINormalTitleShadowColor" ref="183709399"/>
+						<reference key="IBUIFontDescription" ref="675835683"/>
+						<reference key="IBUIFont" ref="878594600"/>
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 160}</string>
@@ -1078,14 +1127,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<array class="NSMutableArray" key="connectionRecords">
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">window</string>
-						<reference key="source" ref="664661524"/>
-						<reference key="destination" ref="380026005"/>
-					</object>
-					<int key="connectionID">9</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="664661524"/>
@@ -1094,11 +1135,99 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">bibleWebView</string>
+						<reference key="source" ref="380026005"/>
+						<reference key="destination" ref="422417741"/>
+					</object>
+					<int key="connectionID">729</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">commentaryWebView</string>
+						<reference key="source" ref="380026005"/>
+						<reference key="destination" ref="143824070"/>
+					</object>
+					<int key="connectionID">730</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">window</string>
+						<reference key="source" ref="664661524"/>
+						<reference key="destination" ref="380026005"/>
+					</object>
+					<int key="connectionID">9</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">tabBarController</string>
 						<reference key="source" ref="664661524"/>
 						<reference key="destination" ref="1034742383"/>
 					</object>
 					<int key="connectionID">113</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">viewController</string>
+						<reference key="source" ref="664661524"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1340</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">launchViewController</string>
+						<reference key="source" ref="664661524"/>
+						<reference key="destination" ref="728915025"/>
+					</object>
+					<int key="connectionID">1382</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="1034742383"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1339</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">viewController</string>
+						<reference key="source" ref="1024858337"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1298</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">bibleTabBarItem</string>
+						<reference key="source" ref="1024858337"/>
+						<reference key="destination" ref="765670903"/>
+					</object>
+					<int key="connectionID">1318</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">commentaryView</string>
+						<reference key="source" ref="1024858337"/>
+						<reference key="destination" ref="438882902"/>
+					</object>
+					<int key="connectionID">1325</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">bibleToolbar</string>
+						<reference key="source" ref="1024858337"/>
+						<reference key="destination" ref="156794117"/>
+					</object>
+					<int key="connectionID">1328</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">webView</string>
+						<reference key="source" ref="1024858337"/>
+						<reference key="destination" ref="422417741"/>
+					</object>
+					<int key="connectionID">1404</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1118,115 +1247,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">tabController</string>
-						<reference key="source" ref="77914966"/>
-						<reference key="destination" ref="1034742383"/>
-					</object>
-					<int key="connectionID">687</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="450617303"/>
-						<reference key="destination" ref="90017793"/>
-					</object>
-					<int key="connectionID">698</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="450617303"/>
-						<reference key="destination" ref="90017793"/>
-					</object>
-					<int key="connectionID">699</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">tabController</string>
-						<reference key="source" ref="90017793"/>
-						<reference key="destination" ref="1034742383"/>
-					</object>
-					<int key="connectionID">703</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="143824070"/>
-						<reference key="destination" ref="438882902"/>
-					</object>
-					<int key="connectionID">705</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="422417741"/>
-						<reference key="destination" ref="1024858337"/>
-					</object>
-					<int key="connectionID">707</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">commentaryWebView</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="143824070"/>
 					</object>
 					<int key="connectionID">718</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="561612640"/>
-						<reference key="destination" ref="1006977505"/>
-					</object>
-					<int key="connectionID">724</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="561612640"/>
-						<reference key="destination" ref="1006977505"/>
-					</object>
-					<int key="connectionID">725</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">table</string>
-						<reference key="source" ref="1006977505"/>
-						<reference key="destination" ref="561612640"/>
-					</object>
-					<int key="connectionID">726</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">preferencesController</string>
-						<reference key="source" ref="1006977505"/>
-						<reference key="destination" ref="90017793"/>
-					</object>
-					<int key="connectionID">727</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">fontTableViewController</string>
-						<reference key="source" ref="90017793"/>
-						<reference key="destination" ref="1006977505"/>
-					</object>
-					<int key="connectionID">728</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">bibleWebView</string>
-						<reference key="source" ref="380026005"/>
-						<reference key="destination" ref="422417741"/>
-					</object>
-					<int key="connectionID">729</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">commentaryWebView</string>
-						<reference key="source" ref="380026005"/>
-						<reference key="destination" ref="143824070"/>
-					</object>
-					<int key="connectionID">730</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1302,83 +1327,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="470879492"/>
-						<reference key="destination" ref="210134216"/>
-					</object>
-					<int key="connectionID">1005</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionarySearchBar</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="470879492"/>
-					</object>
-					<int key="connectionID">1006</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryTitle</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="333305739"/>
-					</object>
-					<int key="connectionID">1007</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dictionaryViewController</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="210134216"/>
 					</object>
 					<int key="connectionID">1009</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="114144874"/>
-						<reference key="destination" ref="210134216"/>
-					</object>
-					<int key="connectionID">1010</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="114144874"/>
-						<reference key="destination" ref="210134216"/>
-					</object>
-					<int key="connectionID">1011</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryEntriesTable</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="114144874"/>
-					</object>
-					<int key="connectionID">1012</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryDescriptionTitle</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="67201263"/>
-					</object>
-					<int key="connectionID">1024</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">hideDescription:</string>
-						<reference key="source" ref="1057790052"/>
-						<reference key="destination" ref="210134216"/>
-					</object>
-					<int key="connectionID">1025</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryDescriptionWebView</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="307303948"/>
-					</object>
-					<int key="connectionID">1026</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1414,70 +1367,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="176012614"/>
-						<reference key="destination" ref="996913943"/>
-					</object>
-					<int key="connectionID">1070</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="176012614"/>
-						<reference key="destination" ref="996913943"/>
-					</object>
-					<int key="connectionID">1071</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">preferencesController</string>
-						<reference key="source" ref="996913943"/>
-						<reference key="destination" ref="90017793"/>
-					</object>
-					<int key="connectionID">1072</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">table</string>
-						<reference key="source" ref="996913943"/>
-						<reference key="destination" ref="176012614"/>
-					</object>
-					<int key="connectionID">1073</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">moduleSelectorTableViewController</string>
-						<reference key="source" ref="90017793"/>
-						<reference key="destination" ref="996913943"/>
-					</object>
-					<int key="connectionID">1074</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="764216997"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">1102</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="307303948"/>
-						<reference key="destination" ref="210134216"/>
-					</object>
-					<int key="connectionID">1103</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">refNavigationController</string>
-						<reference key="source" ref="78384495"/>
-						<reference key="destination" ref="327179536"/>
-					</object>
-					<int key="connectionID">1210</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">refSelectorController</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="78384495"/>
@@ -1486,91 +1375,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="151246611"/>
-						<reference key="destination" ref="78384495"/>
-					</object>
-					<int key="connectionID">1214</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="151246611"/>
-						<reference key="destination" ref="78384495"/>
-					</object>
-					<int key="connectionID">1215</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryNavItem</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="463402401"/>
-					</object>
-					<int key="connectionID">1219</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryDescriptionViewController</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="768611766"/>
-					</object>
-					<int key="connectionID">1221</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="80540714"/>
-						<reference key="destination" ref="282359419"/>
-					</object>
-					<int key="connectionID">1243</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">devotionalWebView</string>
-						<reference key="source" ref="282359419"/>
-						<reference key="destination" ref="80540714"/>
-					</object>
-					<int key="connectionID">1244</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">devotionalWebView</string>
 						<reference key="source" ref="44889390"/>
 						<reference key="destination" ref="80540714"/>
 					</object>
 					<int key="connectionID">1247</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">devotionalDatePickerView</string>
-						<reference key="source" ref="282359419"/>
-						<reference key="destination" ref="323918044"/>
-					</object>
-					<int key="connectionID">1262</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">todayButtonPressed</string>
-						<reference key="source" ref="488078422"/>
-						<reference key="destination" ref="282359419"/>
-					</object>
-					<int key="connectionID">1264</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">devotionalDatePicker</string>
-						<reference key="source" ref="282359419"/>
-						<reference key="destination" ref="210256850"/>
-					</object>
-					<int key="connectionID">1271</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">todayButton</string>
-						<reference key="source" ref="282359419"/>
-						<reference key="destination" ref="488078422"/>
-					</object>
-					<int key="connectionID">1279</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1597,78 +1406,60 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<int key="connectionID">1287</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleMultiList</string>
-						<reference key="source" ref="301983801"/>
-						<reference key="destination" ref="44889390"/>
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">aboutTabBarItem</string>
+						<reference key="source" ref="44889390"/>
+						<reference key="destination" ref="572841271"/>
 					</object>
-					<int key="connectionID">1294</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleMultiList</string>
-						<reference key="source" ref="620349161"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">1297</int>
+					<int key="connectionID">1324</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">viewController</string>
-						<reference key="source" ref="1024858337"/>
-						<reference key="destination" ref="44889390"/>
+						<string key="label">refNavigationController</string>
+						<reference key="source" ref="44889390"/>
+						<reference key="destination" ref="327179536"/>
 					</object>
-					<int key="connectionID">1298</int>
+					<int key="connectionID">1399</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">viewController</string>
-						<reference key="source" ref="438882902"/>
-						<reference key="destination" ref="44889390"/>
+						<string key="label">window</string>
+						<reference key="source" ref="44889390"/>
+						<reference key="destination" ref="380026005"/>
 					</object>
-					<int key="connectionID">1299</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">hideInfo</string>
-						<reference key="source" ref="937602460"/>
-						<reference key="destination" ref="44889390"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">1306</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">hideInfo</string>
-						<reference key="source" ref="413016242"/>
-						<reference key="destination" ref="44889390"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">1307</int>
+					<int key="connectionID">1403</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">bibleTabBarItem</string>
-						<reference key="source" ref="1024858337"/>
-						<reference key="destination" ref="765670903"/>
+						<string key="label">delegate</string>
+						<reference key="source" ref="422417741"/>
+						<reference key="destination" ref="1024858337"/>
 					</object>
-					<int key="connectionID">1318</int>
+					<int key="connectionID">707</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">commentaryTabBarItem</string>
-						<reference key="source" ref="438882902"/>
-						<reference key="destination" ref="392986042"/>
+						<string key="label">tabController</string>
+						<reference key="source" ref="90017793"/>
+						<reference key="destination" ref="1034742383"/>
 					</object>
-					<int key="connectionID">1319</int>
+					<int key="connectionID">703</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryTabBarItem</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="849396155"/>
+						<string key="label">fontTableViewController</string>
+						<reference key="source" ref="90017793"/>
+						<reference key="destination" ref="1006977505"/>
 					</object>
-					<int key="connectionID">1320</int>
+					<int key="connectionID">728</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">moduleSelectorTableViewController</string>
+						<reference key="source" ref="90017793"/>
+						<reference key="destination" ref="996913943"/>
+					</object>
+					<int key="connectionID">1074</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1680,123 +1471,43 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">devotionalTabBarItem</string>
-						<reference key="source" ref="282359419"/>
-						<reference key="destination" ref="425256809"/>
+						<string key="label">preferencesTableView</string>
+						<reference key="source" ref="90017793"/>
+						<reference key="destination" ref="450617303"/>
 					</object>
-					<int key="connectionID">1322</int>
+					<int key="connectionID">1402</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">aboutTabBarItem</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="572841271"/>
+						<string key="label">dataSource</string>
+						<reference key="source" ref="450617303"/>
+						<reference key="destination" ref="90017793"/>
 					</object>
-					<int key="connectionID">1324</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">commentaryView</string>
-						<reference key="source" ref="1024858337"/>
-						<reference key="destination" ref="438882902"/>
-					</object>
-					<int key="connectionID">1325</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">bibleToolbar</string>
-						<reference key="source" ref="1024858337"/>
-						<reference key="destination" ref="156794117"/>
-					</object>
-					<int key="connectionID">1328</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryNavBar</string>
-						<reference key="source" ref="210134216"/>
-						<reference key="destination" ref="992730069"/>
-					</object>
-					<int key="connectionID">1330</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryDescriptionToolbar</string>
-						<reference key="source" ref="768611766"/>
-						<reference key="destination" ref="623639369"/>
-					</object>
-					<int key="connectionID">1333</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dictionaryDescriptionWebView</string>
-						<reference key="source" ref="768611766"/>
-						<reference key="destination" ref="307303948"/>
-					</object>
-					<int key="connectionID">1334</int>
+					<int key="connectionID">698</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
-						<reference key="source" ref="1034742383"/>
-						<reference key="destination" ref="44889390"/>
+						<reference key="source" ref="450617303"/>
+						<reference key="destination" ref="90017793"/>
 					</object>
-					<int key="connectionID">1339</int>
+					<int key="connectionID">699</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">viewController</string>
-						<reference key="source" ref="664661524"/>
+						<reference key="source" ref="438882902"/>
 						<reference key="destination" ref="44889390"/>
 					</object>
-					<int key="connectionID">1340</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleModulesListFromButton:</string>
-						<reference key="source" ref="333305739"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">1341</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleModulesListFromButton:</string>
-						<reference key="source" ref="897856777"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">1342</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleModulesListFromButton:</string>
-						<reference key="source" ref="243836230"/>
-						<reference key="destination" ref="44889390"/>
-					</object>
-					<int key="connectionID">1343</int>
+					<int key="connectionID">1299</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="728915025"/>
-						<reference key="destination" ref="664661524"/>
+						<string key="label">commentaryTabBarItem</string>
+						<reference key="source" ref="438882902"/>
+						<reference key="destination" ref="392986042"/>
 					</object>
-					<int key="connectionID">1374</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">activityIndicator</string>
-						<reference key="source" ref="728915025"/>
-						<reference key="destination" ref="217762989"/>
-					</object>
-					<int key="connectionID">1381</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">launchViewController</string>
-						<reference key="source" ref="664661524"/>
-						<reference key="destination" ref="728915025"/>
-					</object>
-					<int key="connectionID">1382</int>
+					<int key="connectionID">1319</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1816,11 +1527,51 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">refNavigationController</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="327179536"/>
+						<string key="label">delegate</string>
+						<reference key="source" ref="143824070"/>
+						<reference key="destination" ref="438882902"/>
 					</object>
-					<int key="connectionID">1399</int>
+					<int key="connectionID">705</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">tabController</string>
+						<reference key="source" ref="77914966"/>
+						<reference key="destination" ref="1034742383"/>
+					</object>
+					<int key="connectionID">687</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">table</string>
+						<reference key="source" ref="1006977505"/>
+						<reference key="destination" ref="561612640"/>
+					</object>
+					<int key="connectionID">726</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">preferencesController</string>
+						<reference key="source" ref="1006977505"/>
+						<reference key="destination" ref="90017793"/>
+					</object>
+					<int key="connectionID">727</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="561612640"/>
+						<reference key="destination" ref="1006977505"/>
+					</object>
+					<int key="connectionID">724</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="561612640"/>
+						<reference key="destination" ref="1006977505"/>
+					</object>
+					<int key="connectionID">725</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1831,28 +1582,310 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<int key="connectionID">1401</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">preferencesTableView</string>
-						<reference key="source" ref="90017793"/>
-						<reference key="destination" ref="450617303"/>
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">toggleMultiList</string>
+						<reference key="source" ref="620349161"/>
+						<reference key="destination" ref="44889390"/>
 					</object>
-					<int key="connectionID">1402</int>
+					<int key="connectionID">1297</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">toggleModulesListFromButton:</string>
+						<reference key="source" ref="243836230"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1343</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">toggleModulesListFromButton:</string>
+						<reference key="source" ref="897856777"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1342</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">toggleMultiList</string>
+						<reference key="source" ref="301983801"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1294</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">window</string>
-						<reference key="source" ref="44889390"/>
-						<reference key="destination" ref="380026005"/>
+						<string key="label">dictionarySearchBar</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="470879492"/>
 					</object>
-					<int key="connectionID">1403</int>
+					<int key="connectionID">1006</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">webView</string>
-						<reference key="source" ref="1024858337"/>
-						<reference key="destination" ref="422417741"/>
+						<string key="label">dictionaryTitle</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="333305739"/>
 					</object>
-					<int key="connectionID">1404</int>
+					<int key="connectionID">1007</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryEntriesTable</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="114144874"/>
+					</object>
+					<int key="connectionID">1012</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryDescriptionTitle</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="67201263"/>
+					</object>
+					<int key="connectionID">1024</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryDescriptionWebView</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="307303948"/>
+					</object>
+					<int key="connectionID">1026</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryNavItem</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="463402401"/>
+					</object>
+					<int key="connectionID">1219</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryDescriptionViewController</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="768611766"/>
+					</object>
+					<int key="connectionID">1221</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryTabBarItem</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="849396155"/>
+					</object>
+					<int key="connectionID">1320</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryNavBar</string>
+						<reference key="source" ref="210134216"/>
+						<reference key="destination" ref="992730069"/>
+					</object>
+					<int key="connectionID">1330</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="470879492"/>
+						<reference key="destination" ref="210134216"/>
+					</object>
+					<int key="connectionID">1005</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">toggleModulesListFromButton:</string>
+						<reference key="source" ref="333305739"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1341</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="114144874"/>
+						<reference key="destination" ref="210134216"/>
+					</object>
+					<int key="connectionID">1010</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="114144874"/>
+						<reference key="destination" ref="210134216"/>
+					</object>
+					<int key="connectionID">1011</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">hideDescription:</string>
+						<reference key="source" ref="1057790052"/>
+						<reference key="destination" ref="210134216"/>
+					</object>
+					<int key="connectionID">1025</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="307303948"/>
+						<reference key="destination" ref="210134216"/>
+					</object>
+					<int key="connectionID">1103</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="764216997"/>
+						<reference key="destination" ref="44889390"/>
+					</object>
+					<int key="connectionID">1102</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">hideInfo</string>
+						<reference key="source" ref="413016242"/>
+						<reference key="destination" ref="44889390"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">1307</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">preferencesController</string>
+						<reference key="source" ref="996913943"/>
+						<reference key="destination" ref="90017793"/>
+					</object>
+					<int key="connectionID">1072</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">table</string>
+						<reference key="source" ref="996913943"/>
+						<reference key="destination" ref="176012614"/>
+					</object>
+					<int key="connectionID">1073</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="176012614"/>
+						<reference key="destination" ref="996913943"/>
+					</object>
+					<int key="connectionID">1070</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="176012614"/>
+						<reference key="destination" ref="996913943"/>
+					</object>
+					<int key="connectionID">1071</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">hideInfo</string>
+						<reference key="source" ref="937602460"/>
+						<reference key="destination" ref="44889390"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">1306</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">refNavigationController</string>
+						<reference key="source" ref="78384495"/>
+						<reference key="destination" ref="327179536"/>
+					</object>
+					<int key="connectionID">1210</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="151246611"/>
+						<reference key="destination" ref="78384495"/>
+					</object>
+					<int key="connectionID">1214</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="151246611"/>
+						<reference key="destination" ref="78384495"/>
+					</object>
+					<int key="connectionID">1215</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryDescriptionToolbar</string>
+						<reference key="source" ref="768611766"/>
+						<reference key="destination" ref="623639369"/>
+					</object>
+					<int key="connectionID">1333</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dictionaryDescriptionWebView</string>
+						<reference key="source" ref="768611766"/>
+						<reference key="destination" ref="307303948"/>
+					</object>
+					<int key="connectionID">1334</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">devotionalWebView</string>
+						<reference key="source" ref="282359419"/>
+						<reference key="destination" ref="80540714"/>
+					</object>
+					<int key="connectionID">1244</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">devotionalDatePickerView</string>
+						<reference key="source" ref="282359419"/>
+						<reference key="destination" ref="323918044"/>
+					</object>
+					<int key="connectionID">1262</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">devotionalDatePicker</string>
+						<reference key="source" ref="282359419"/>
+						<reference key="destination" ref="210256850"/>
+					</object>
+					<int key="connectionID">1271</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">todayButton</string>
+						<reference key="source" ref="282359419"/>
+						<reference key="destination" ref="488078422"/>
+					</object>
+					<int key="connectionID">1279</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">devotionalTabBarItem</string>
+						<reference key="source" ref="282359419"/>
+						<reference key="destination" ref="425256809"/>
+					</object>
+					<int key="connectionID">1322</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="80540714"/>
+						<reference key="destination" ref="282359419"/>
+					</object>
+					<int key="connectionID">1243</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">todayButtonPressed</string>
+						<reference key="source" ref="488078422"/>
+						<reference key="destination" ref="282359419"/>
+					</object>
+					<int key="connectionID">1264</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -1861,6 +1894,22 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="282359419"/>
 					</object>
 					<int key="connectionID">1409</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="728915025"/>
+						<reference key="destination" ref="664661524"/>
+					</object>
+					<int key="connectionID">1374</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">activityIndicator</string>
+						<reference key="source" ref="728915025"/>
+						<reference key="destination" ref="217762989"/>
+					</object>
+					<int key="connectionID">1381</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2572,7 +2621,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<integer value="1056" key="NS.object.0"/>
+			<real value="1280" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
@@ -2590,6 +2639,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 			<string key="popup-down-button.png">{20, 20}</string>
 			<string key="popup-top-bar.png">{320, 20}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">534</string>
+		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>
 </archive>
