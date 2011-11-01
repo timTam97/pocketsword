@@ -1017,6 +1017,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			span.WordOfChrist {\n\
 				color: #D03030;\n\
 			}\n\
+			span.underline {\n\
+				border-bottom: 1px solid;\n\
+			}\n\
 			%@\n\
 			</style>\n\
 			%@\n\

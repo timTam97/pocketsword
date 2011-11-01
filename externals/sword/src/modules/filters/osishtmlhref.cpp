@@ -40,6 +40,9 @@ class OSISHTMLHREF::QuoteStack : public std::stack<char *> {
 OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	inBold = false;
 	inXRefNote    = false;
+	inUnderline = false;
+	inItalic = false;
+	inBoldFirst = false;
 	suspendLevel = 0;
 	quoteStack = new QuoteStack();
 	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
@@ -490,6 +493,10 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					u->inBold = true;
 					if(!u->inItalic) u->inBoldFirst = true;
 				}
+				else if(type == "underline") { //underline!
+					outText("<span class=\"underline\">", buf, u);
+					u->inUnderline = true;
+				}
 				else {	// all other types
 					outText("<i>", buf, u);
 					u->inItalic = true;
@@ -502,6 +509,10 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					outText("</b>", buf, u);
 					u->inBold = false;
 					u->inBoldFirst = false;
+				}
+				else if(u->inUnderline) {
+					outText("</span>", buf, u);
+					u->inUnderline = false;
 				}
 				else {
 					outText("</i>", buf, u);

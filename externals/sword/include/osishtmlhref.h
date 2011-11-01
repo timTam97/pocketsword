@@ -39,6 +39,7 @@ protected:
 		bool inBold;
 		bool inItalic;
 		bool inBoldFirst;
+		bool inUnderline;
 		bool inXRefNote;
 		bool BiblicalText;
 		int suspendLevel;
