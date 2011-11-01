@@ -1028,7 +1028,7 @@
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
 {
     [moduleLock lock];
-	BOOL printf = NO;//[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
+	BOOL printf = NO; //[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
 
 	[self setPreferences];
 
@@ -1058,36 +1058,35 @@
 	do {
 		lastKey = swModule->Key();
 		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->RenderText()];
-		if(headings) {
-			preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
-			interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
-			if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
-				//NSLog(@"preverseHeading = '%@'", preverseHeading);
-				preverseHeading = [NSString stringWithUTF8String:swModule->RenderText([preverseHeading UTF8String])];
-				//NSLog(@"RenderText(preverseHeading) = '%@'\n", preverseHeading);
-				preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
-				preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-				[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
-			}
-			else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
-				//NSLog(@"interverseHeading = '%@'", interverseHeading);
-				interverseHeading = [NSString stringWithUTF8String:swModule->RenderText([interverseHeading UTF8String])];
-				//NSLog(@"RenderText(interverseHeading) = '%@'\n", interverseHeading);
-				if((preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) || !preverseHeading) {
-					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
-					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
-//				} else if(!preverseHeading) {
-//					[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
-				}
-			}
-		}
 		//replace *X and *N with simply X and N for xrefs and footnotes
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-
+		
 		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
+
+			if(headings) {
+				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
+				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
+				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
+					//NSLog(@"preverseHeading = '%@'", preverseHeading);
+					preverseHeading = [NSString stringWithUTF8String:swModule->RenderText([preverseHeading UTF8String])];
+					//NSLog(@"RenderText(preverseHeading) = '%@'\n", preverseHeading);
+					preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+					preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+					[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
+				}
+				else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
+					//NSLog(@"interverseHeading = '%@'", interverseHeading);
+					interverseHeading = [NSString stringWithUTF8String:swModule->RenderText([interverseHeading UTF8String])];
+					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+					//NSLog(@"RenderText(interverseHeading) = '%@'\n", interverseHeading);
+					if((preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) || !preverseHeading) {
+						[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+					}
+				}
+			}
 			
 			if ([modType isEqualToString: SWMOD_CATEGORY_COMMENTARIES]) {
 				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
