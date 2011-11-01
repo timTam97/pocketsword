@@ -220,7 +220,7 @@
 	}
 	SwordDictionary *devo = (SwordDictionary *)[defSwordManager moduleWithName:lastModule];
 	NSString *devoHTMLString = [PSModuleController createHTMLString:[devo entryForKey:dateKey] usingPreferences:YES withJS:@"" usingModuleForPreferences:devo.name];
-	devoHTMLString = [[devoHTMLString stringByReplacingOccurrencesOfString:@"<!P><br />" withString:@"<p>"] stringByReplacingOccurrencesOfString:@"<!/P>" withString:@"</p>"];
+	devoHTMLString = [[devoHTMLString stringByReplacingOccurrencesOfString:@"<!P><br />" withString:@"<p>"] stringByReplacingOccurrencesOfString:@"<!/P><br />" withString:@"</p>"];
 	[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 	loaded = YES;
 }
