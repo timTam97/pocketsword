@@ -933,6 +933,7 @@
 
 - (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope {
 	sword::ListKey results;
+	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
 	if(scope) {
 		results = swModule->search([istr UTF8String], -4, 0, [scope swVerseKey]);
 	} else {
@@ -941,7 +942,6 @@
 		results = swModule->search([istr UTF8String], -4);
 	}
 	results.sort();
-	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
 	if(results.Count() > 0) {
 		while(!results.Error()) {
 			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
@@ -1096,6 +1096,7 @@
 				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
 			} else {
 				NSString *entryToAppend = thisEntry;
+				// paragraphing can be annoying, as different module creators can do things differently!
 				if([entryToAppend hasPrefix:@"<!P><br />"]) {
 					[verses appendString:@"<p>"];
 					entryToAppend = [entryToAppend substringFromIndex:10];

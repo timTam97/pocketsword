@@ -152,6 +152,8 @@
 	searchBar.placeholder = NSLocalizedString(@"SearchTitle", @"");
 	if(self.searchTermToDisplay) {
 		searchBar.text = searchTermToDisplay;
+	} else {
+		searchBar.text = @"";
 	}
 	if(self.searchTerm) {
 		// we need to perform a search...  searchTerm should already be well formatted.
@@ -720,16 +722,16 @@
 		self.searchTermToDisplay = searchBar.text;
 		[self createSearchTerm];
 	}
-	DLog(@"\nsearchTerm = %@", searchTerm);
-	if(!searchTerm || searchTerm.length == 0) {
+	DLog(@"\nsearchTerm = %@\nsearchTerm length = %d", self.searchTerm, [self.searchTerm length]);
+	if(!self.searchTerm || self.searchTerm.length <= 0 || [self.searchTerm isEqualToString:@"\"\""]) {
 		self.results = [NSMutableArray arrayWithCapacity:0];
 	} else {
 		switch(listType) {
 			case BibleTab:
-				self.results = [[[PSModuleController defaultModuleController] primaryBible] search: searchTerm withScope:[self createSearchScope]];
+				self.results = [[[PSModuleController defaultModuleController] primaryBible] search: self.searchTerm withScope:[self createSearchScope]];
 				break;
 			case CommentaryTab:
-				self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: searchTerm withScope:[self createSearchScope]];
+				self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: self.searchTerm withScope:[self createSearchScope]];
 				break;
 			default:
 				self.results = nil;
