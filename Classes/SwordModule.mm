@@ -1061,6 +1061,10 @@
 		//replace *X and *N with simply X and N for xrefs and footnotes
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+		NSRange nonWhitespaceRange = [thisEntry rangeOfCharacterFromSet:[[NSCharacterSet whitespaceAndNewlineCharacterSet] invertedSet]];
+		if(nonWhitespaceRange.location != NSNotFound && nonWhitespaceRange.location != 0) {
+			thisEntry = [thisEntry substringFromIndex:nonWhitespaceRange.location];
+		}
 		
 		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
@@ -1091,10 +1095,24 @@
 			if ([modType isEqualToString: SWMOD_CATEGORY_COMMENTARIES]) {
 				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
 			} else {
-				if(vpl)
-					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, thisEntry];
-				else
-					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span>\n", i, i, i, i, thisEntry];
+				NSString *entryToAppend = thisEntry;
+				if([entryToAppend hasPrefix:@"<!P><br />"]) {
+					[verses appendString:@"<p>"];
+					entryToAppend = [entryToAppend substringFromIndex:10];
+				}
+				BOOL appendParaMarker = NO;
+				if([entryToAppend hasSuffix:@"<!/P><br />"]) {
+					appendParaMarker = YES;
+					entryToAppend = [entryToAppend substringToIndex:([entryToAppend length] - 11)];
+				}
+				if(vpl) {
+					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
+				} else {
+					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span>\n", i, i, i, i, entryToAppend];
+				}
+				if(appendParaMarker) {
+					[verses appendString:@"</p>"];
+				}
 			}
 		}
 		lastEntry = thisEntry;
