@@ -80,7 +80,9 @@ LocaleMgr::LocaleMgr(const char *iConfigPath) {
 	
 	if (!iConfigPath) {
 		SWLog::getSystemLog()->logDebug("LOOKING UP LOCALE DIRECTORY...");
+#ifndef _APPLE_IOS_
 		//SWMgr::findConfig(&configType, &prefixPath, &configPath, &augPaths, &sysConf);//nicc
+#endif
 		if (sysConf) {
 			if ((entry = sysConf->Sections["Install"].find("LocalePath")) != sysConf->Sections["Install"].end()) {
 				configType = 9;	// our own
