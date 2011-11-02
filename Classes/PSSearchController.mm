@@ -7,12 +7,12 @@
 //
 
 #import "PSSearchController.h"
-#import "PSIndexController.h"
 #import "SwordModuleTextEntry.h"
 #import "PSModuleController.h"
 #import "SwordListKey.h"
 #import "HistoryController.h"
 #import "SwordVerseKey.h"
+#import "PSIndexController.h"
 
 @implementation PSSearchController
 
@@ -107,6 +107,10 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	BOOL showIndexController = NO;
+	if(indexController) {
+		[indexController release];
+		indexController = nil;
+	}
 	switch(listType) {
 		case BibleTab:
 			if(![[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
@@ -120,7 +124,9 @@
 			break;
 	}
 	if(showIndexController) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+		[alertView show];
+		[alertView release];
 	}
 }
 
@@ -225,11 +231,16 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	if(indexController) {
+		[indexController release];
+		indexController = nil;
+	}
 	
 	if (buttonIndex == 1) {
-		PSIndexController *indexC = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
-		[indexC setSearchController: self];
-		[self presentModalViewController:indexC animated:YES];
+		indexController = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
+		[indexController setSearchController: self];
+		[self presentModalViewController:indexController animated:YES];
+		//[indexC release];
 	} else {
 		
 	}
@@ -546,7 +557,7 @@
 		//searchBar.text = searchTermToDisplay;
 		self.searchTermToDisplay = searchBar.text;
 		if(indexPath.section == 0) {
-			PSSearchOptionTableViewController *optionTVC;
+			PSSearchOptionTableViewController *optionTVC = nil;
 			switch(indexPath.row) {
 				case SearchTypeSection:
 				{
@@ -626,10 +637,10 @@
 	current = nil;
 	
 	NSMutableString *fullSearchTerm = [@"" mutableCopy];
-	NSString *joiningString;
-	if(searchType == AndSearch) {
+	NSString *joiningString = @" && ";
+	/*if(searchType == AndSearch) {
 		joiningString = @" && ";
-	} else if(searchType == OrSearch) {
+	} else*/ if(searchType == OrSearch) {
 		joiningString = @" || ";
 	} else if(searchType == ExactSearch) {
 		joiningString = @" ";
@@ -655,6 +666,8 @@
 				[hebrew insertString:@"0" atIndex:1];
 			}
 			[fullSearchTerm appendFormat:@"(%@%@ || %@%@ || %@)%@", prefix, hebrew, prefix, component, component, joiningString];
+			[hebrew release];
+			hebrew = nil;
 		} else if(strongsSearch) {
 			[fullSearchTerm appendFormat:@"(%@%@ || %@)%@", prefix, component, component, joiningString];
 		} else if((searchType != ExactSearch) && fuzzySearch && ([component length] > 0) && [component characterAtIndex:0] != '"') {

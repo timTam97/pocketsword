@@ -69,15 +69,18 @@ NSTimer *downloadTimer;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if(![PSModuleController checkNetworkConnection]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];		
+		[alertView show];
+		[alertView release];
 		[pool release];
 		return;
 	}
 	
 	if([[module name] isEqualToString: @"Personal"]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		[pool release];
 		return;
 	}
@@ -88,8 +91,10 @@ NSTimer *downloadTimer;
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
 	
 	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
-	[[[UIAlertView alloc] initWithTitle: messageTitle message: message
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: message
+							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+	[alertView show];
+	[alertView release];
 	
 	[pool release];
 }
@@ -98,15 +103,18 @@ NSTimer *downloadTimer;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if(![PSModuleController checkNetworkConnection]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		[pool release];
 		return;
 	}
 	
 	if([[module name] isEqualToString: @"Personal"]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
+								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		[pool release];
 		return;
 	}
@@ -117,8 +125,10 @@ NSTimer *downloadTimer;
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
 	
 	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
-	[[[UIAlertView alloc] initWithTitle: messageTitle message: message
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: message
+							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+	[alertView show];
+	[alertView release];
 
 	[pool release];
 }
@@ -249,8 +259,9 @@ NSTimer *downloadTimer;
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
 		//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
 		//[moduleTable reloadData];
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 	}
 	[pool release];
 }

@@ -126,8 +126,9 @@ NSTimer *refreshTimer;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if(![PSModuleController checkNetworkConnection]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		[pool release];
 		return;
 	}
@@ -231,7 +232,9 @@ NSTimer *refreshTimer;
 			refreshTimer = nil;
 		}
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 	}
 }
 

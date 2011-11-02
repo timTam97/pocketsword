@@ -55,15 +55,15 @@ using std::list;
         
         // create module instances
         NSString *type;
-        NSString *name;
+        //NSString *name;
 		//NSString *mLang;
         if(mod->isUnicode()) {
             type = [NSString stringWithUTF8String:mod->Type()];
-            name = [NSString stringWithUTF8String:mod->Name()];
+            //name = [NSString stringWithUTF8String:mod->Name()];
             //mLang = [NSString stringWithUTF8String:mod->Lang()];
         } else {
             type = [NSString stringWithCString:mod->Type() encoding:NSISOLatin1StringEncoding];
-            name = [NSString stringWithCString:mod->Name() encoding:NSISOLatin1StringEncoding];
+            //name = [NSString stringWithCString:mod->Name() encoding:NSISOLatin1StringEncoding];
             //mLang = [NSString stringWithCString:mod->Lang() encoding:NSISOLatin1StringEncoding];
         }
         
@@ -481,13 +481,13 @@ static SwordManager *instance;
             } else if([type isEqualToString:SWMOD_CATEGORY_COMMENTARIES]) {
                 ret = [[[SwordBible alloc] initWithName:name swordManager:self] autorelease];
                 //ret = [[[SwordCommentary alloc] initWithName:name swordManager:self] autorelease];
-            } else if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES]) {
-                ret = [[[SwordDictionary alloc] initWithName:name swordManager:self] autorelease];
-            } else if([type isEqualToString:SWMOD_CATEGORY_GENBOOKS]) {
+            } else*/ if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES]) {
+                ret = [[SwordDictionary alloc] initWithName:name swordManager:self];
+            }/* else if([type isEqualToString:SWMOD_CATEGORY_GENBOOKS]) {
                 ret = [[[SwordGenBook alloc] initWithName:name swordManager:self] autorelease];
-            } else {*/
+            }*/ else {
                 ret = [[SwordModule alloc] initWithName:name swordManager:self];
-            //}
+            }
             [dict setObject:ret forKey:name];
 			[ret release];
             self.modules = dict;

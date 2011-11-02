@@ -108,7 +108,7 @@
 	NSString *verse;
 	NSString *scroll;
 	NSString *mod;
-	NSMutableArray *history;
+	NSMutableArray *history = nil;
 	NSString *historyName;
 	BOOL valid = NO;
 	
@@ -224,6 +224,8 @@
 				return 0;
 			}
 			break;
+		default:
+			break;
 	}
 	return 0;
 }
@@ -240,13 +242,15 @@
 		cell = [[[PSBookmarkTableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 	}
 	
-	NSArray *history;
+	NSArray *history = nil;
 	switch (listType) {
 		case BibleTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bibleHistory"];
 			break;
 		case CommentaryTab:
 			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
+			break;
+		default:
 			break;
 	}
 	
@@ -337,6 +341,8 @@
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 			[HistoryController addHistoryItem:CommentaryTab];
 			//[[[PSModuleController defaultModuleController] viewController] addHistoryItem: CommentaryTab];
+			break;
+		default:
 			break;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];

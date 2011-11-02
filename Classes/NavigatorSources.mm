@@ -80,7 +80,9 @@
 		//not currently implemented...
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
 		if(![PSModuleController checkNetworkConnection]) {
-			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+			[alertView show];
+			[alertView release];
 			return;
 		}
 		[[[PSModuleController defaultModuleController] swordInstallManager] refreshMasterRemoteInstallSourceList];
@@ -102,7 +104,9 @@
 	//DLog(@"  (SINC)  ");
 	
 	if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+		[alertView show];
+		[alertView release];
 	}
 	if([NSThread isMainThread]) {
 		[self resetTableSelection];

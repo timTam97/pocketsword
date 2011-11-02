@@ -174,7 +174,10 @@
 		}
 		
 		for (int n = 1; n < [multipartData count] - 1; n++) {
-			DLog(@"%@", [[NSString alloc] initWithBytes:[[multipartData objectAtIndex:n] bytes] length:[[multipartData objectAtIndex:n] length] encoding:NSUTF8StringEncoding]);
+//			NSString *debugMsg = [[NSString alloc] initWithBytes:[[multipartData objectAtIndex:n] bytes] length:[[multipartData objectAtIndex:n] length] encoding:NSUTF8StringEncoding];
+//			DLog(@"%@", debugMsg);
+//			[debugMsg release];
+//			debugMsg = nil;
 		}
 		
 		[postInfo release];

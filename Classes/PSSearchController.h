@@ -10,6 +10,8 @@
 #import "PSSearchHistoryItem.h"
 #import "PSSearchOptionTableViewController.h"
 
+@class PSIndexController;
+
 @protocol PSSearchControllerDelegate <NSObject>
 @required
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
@@ -39,6 +41,7 @@
 	NSString *bookName;
 	NSMutableArray *results;
 	NSArray *savedTablePosition;
+	PSIndexController *indexController;
 }
 
 @property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;

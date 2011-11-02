@@ -110,7 +110,7 @@ bool ps_viewcontroller_initialized = false;
 		//add our customized bookmarks tab:
 		[PSBookmarks importBookmarksFromV2];
 		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
-		UINavigationController *bookmarksTab = [[[UINavigationController alloc] initWithRootViewController:bookmarksViewController] retain];
+		UINavigationController *bookmarksTab = [[UINavigationController alloc] initWithRootViewController:bookmarksViewController];//nicc
 		bookmarksTab.navigationBar.barStyle = UIBarStyleBlack;
 		UITabBarItem *tbI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
 		bookmarksTab.tabBarItem = tbI;
@@ -901,6 +901,7 @@ bool ps_viewcontroller_initialized = false;
 	if([[PSModuleController defaultModuleController] primaryBible]) {
 		[self setTabTitle: titleString ofTab:BibleTab];
 	}
+	titleString = [NSString stringWithFormat:@"%@:%@", [PSModuleController createRefString:ref], cVersePosition];
 	if([[PSModuleController defaultModuleController] primaryCommentary]) {
 		[self setTabTitle: titleString ofTab:CommentaryTab];
 	}

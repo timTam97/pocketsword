@@ -627,7 +627,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 	installationProgress = 0.01;
 	SwordInstallSource *sIS = self.currentInstallSource;
-	SwordModule *swordModule;
+	SwordModule *swordModule = nil;
 	if(!sIS) {
 		for (int i = 0; i < [[[self swordInstallManager] installSourceList] count]; i++) {
 			sIS = [[swordInstallManager installSourceList] objectAtIndex: i];
@@ -812,11 +812,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Grabs the bible text for a given chapter (e.g. "Gen 1")
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
-	NSString *ref = chapter;
-	NSRange colonRange = [chapter rangeOfString:@":"];
-	if(colonRange.location != NSNotFound) {
-		ref = [chapter substringToIndex: colonRange.location];
-	}
+//	NSString *ref = chapter;
+//	NSRange colonRange = [chapter rangeOfString:@":"];
+//	if(colonRange.location != NSNotFound) {
+//		ref = [chapter substringToIndex: colonRange.location];
+//	}
 	if (!primaryBible) {
 		[self reload];
 		
@@ -841,11 +841,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Grabs the commentary text for a given chapter (e.g. "Gen 1")
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
-	NSString *ref = chapter;
-	NSRange colonRange = [chapter rangeOfString:@":"];
-	if(colonRange.location != NSNotFound) {
-		ref = [chapter substringToIndex: colonRange.location];
-	}
+//	NSString *ref = chapter;
+//	NSRange colonRange = [chapter rangeOfString:@":"];
+//	if(colonRange.location != NSNotFound) {
+//		ref = [chapter substringToIndex: colonRange.location];
+//	}
 	if (!primaryCommentary) {
 		[self reload];
 		

@@ -43,7 +43,9 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if(![PSModuleController checkNetworkConnection]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		return;
 	}
 	if(downloadableShown)
@@ -55,7 +57,6 @@
 - (void)hideIndexStatus {//needed, move to PSIndexController
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	//[ViewController hideModal: statusController.view withTiming:0.3];
-	[self dismissModalViewControllerAnimated:YES];
 	[statusText setText: @""];
 	[statusOverallText setText: @""];
 	[statusBar setProgress: 0.0];
@@ -72,6 +73,7 @@
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)showIndexStatus {//needed, move to PSIndexController
@@ -176,7 +178,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if(downloadableShown && (indexPath.section == 1)) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"InstallTitle", @"Install?") message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"Download the search index for this module?  This may take a while for Commentary modules!") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"InstallTitle", @"Install?") message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"Download the search index for this module?  This may take a while for Commentary modules!") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+		[alertView show];
+		[alertView release];
 	} else {
 		//deselect the row
 		[tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -226,7 +230,7 @@
 			return;
 		}
 		
-		NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
+		NSString *dataString = [[[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]] autorelease];
 		self.files = [NSMutableArray arrayWithObjects: nil];
 		NSRange dataRange;
 		
@@ -244,6 +248,7 @@
 				}
 			}
 		}
+		dataString = nil;
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	
@@ -343,7 +348,7 @@
 
 	// Download the data file
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-	[[NSURLConnection alloc] initWithRequest:request delegate:self];
+	[[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -420,10 +425,7 @@
 	
 	installationProgress = 1.0;
 	[self updateInstalledIndexList];
-	 //[indicesTable reloadData];
-	 //ViewController *mm = [[PSModuleController defaultModuleController] viewController];
 	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
-	//[[[PSModuleController defaultModuleController] viewController] hideOperationStatus];
 	[searchController refreshView];
 }
 

@@ -256,6 +256,7 @@
 			//[sheet showInView:webView];
 			//[sheet showInView:self.tabBarController.view];
 			[sheet showFromTabBar:self.tabBarController.tabBar];
+			[sheet release];
 		}
 		load = NO;
 	} else {

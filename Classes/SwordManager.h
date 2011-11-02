@@ -123,7 +123,7 @@ class sword::SWModule;
 	NSDictionary *modules;
 	NSArray *moduleListByType;
     NSString *modulesPath;
-	NSLock *managerLock;
+	NSRecursiveLock *managerLock;
     BOOL temporaryManager;
 	NSArray *moduleTypes;//types that are present in this instance.
 }
@@ -132,7 +132,7 @@ class sword::SWModule;
 @property (retain, readwrite) NSDictionary *modules;
 @property (retain, readwrite) NSArray *moduleListByType;
 @property (retain, readwrite) NSString *modulesPath;
-@property (assign, readwrite) NSLock *managerLock;
+@property (assign, readwrite) NSRecursiveLock *managerLock;
 @property (readwrite) BOOL temporaryManager;
 @property (retain) NSArray *moduleTypes;
 

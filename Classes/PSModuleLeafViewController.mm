@@ -44,8 +44,10 @@
 			NSString *messageTitle = NSLocalizedString(@"ModuleLockedTitle", @"Module Locked");
 			
 			//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
-			[[[UIAlertView alloc] initWithTitle: messageTitle message: question
-									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil] show];
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: question
+									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil];
+			[alertView show];
+			[alertView release];
 			askToUnlock = NO;
 		}
 	}
@@ -84,8 +86,10 @@
 	NSString *messageTitle = NSLocalizedString(@"ConfirmDeleteTitle", @"Remove?");
 	trashModule = YES;
 	//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
-	[[[UIAlertView alloc] initWithTitle: messageTitle message: question
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: question
+							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+	[alertView show];
+	[alertView release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

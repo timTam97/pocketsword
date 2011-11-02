@@ -197,10 +197,7 @@
 	static NSString *CellIdentifierFS = @"prefs-fs";
 	static NSString *CellIdenfifierSub = @"prefs-subtitle";
 		
-    UITableViewCell *cell;// = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
-//	if(!cell) {
-//		cell = [ [ [ UITableViewCell alloc ] initWithFrame: CGRectZero reuseIdentifier: CellIdentifierPlain] autorelease ];
-//	}
+    UITableViewCell *cell = nil;
 	BOOL resetCell = YES;
 	CGFloat xx = 0.0;
 	BOOL deviceIsPad = [PSResizing iPad];

@@ -63,7 +63,6 @@
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardDidShow:) name: UIKeyboardDidShowNotification object:nil];
-	//[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
 	NSString *t = [NSString stringWithFormat:@"Add%@SourceTitle", serverType];
 	navBar.title = NSLocalizedString(t, @"");
 	[captionTextField becomeFirstResponder];
@@ -77,7 +76,6 @@
 }
 
 - (void)keyboardWillShow:(NSNotification *)note {
-	//DLog(@"willShow");
     if([PSResizing iPad]) {
         //don't do this magic on the iPad
         return;
@@ -97,31 +95,24 @@
 
 - (void)keyboardDidShow:(NSNotification *)note {
 	if([captionTextField isFirstResponder]) {
-		//DLog(@"caption");
 		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:CAPTION_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	} else if([serverTextField isFirstResponder]) {
-		//DLog(@"server");
 		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SERVER_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	} else if([pathTextField isFirstResponder]) {
-		//DLog(@"path");
 		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:PATH_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	}
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	if([captionTextField isFirstResponder]) {
-		//DLog(@"caption");
 		[serverTextField becomeFirstResponder];
 		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SERVER_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	} else if([serverTextField isFirstResponder]) {
-		//DLog(@"server");
 		[pathTextField becomeFirstResponder];
 		[addSourceTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:PATH_SECTION] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 	} else if([pathTextField isFirstResponder]) {
-		//DLog(@"path");
 		[self saveButtonPressed];
 	}
-	//[textField resignFirstResponder];
     return YES;
 }
 
@@ -130,7 +121,6 @@
 }
 	   
 - (void)keyboardWillHide:(NSNotification *)note {
-	//DLog(@"willHide");
     if([PSResizing iPad]) {
         //don't do this magic on the iPad
         return;
@@ -143,14 +133,8 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
     addSourceTableView.frame = r;
-	//addSourceTableView.frame.size.height = 416;
 	[UIView commitAnimations];
 }
-
-//- (void)viewDidAppear:(BOOL)animated {
-//	[super viewDidAppear:animated];
-//	[captionTextField becomeFirstResponder];
-//}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if (buttonIndex != [alertView cancelButtonIndex]) {
@@ -171,12 +155,16 @@
 	NSString *path = pathTextField.text;
 	if(!caption || [caption isEqualToString:@""] || !server || [server isEqualToString:@""] || !path || [path isEqualToString:@""]) {
 		//you must fill in all fields to add a new source
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"FillInAllFieldsMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"FillInAllFieldsMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		return;
 	}
 
 	if(![PSModuleController checkNetworkConnection]) {
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil] show];		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+		[alertView show];
+		[alertView release];
 		return;
 	}
 	
@@ -185,7 +173,6 @@
 	application.networkActivityIndicatorVisible = YES;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-	//[[PSModuleController defaultModuleController] displayBusyIndicator];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/mods.d.tar.gz", [serverType lowercaseString], server, path]];
 	NSData *data = nil;
@@ -195,13 +182,14 @@
 	data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	//[[PSModuleController defaultModuleController] hideBusyIndicator];
 
 	application.networkActivityIndicatorVisible = NO;
 
 	if(!data) {
 		//perhaps dodgy, display a warning.
-		[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+		[alertView show];
+		[alertView release];
 		return;
 	} else {
 	}
@@ -218,6 +206,8 @@
 	[is setUID:[NSString stringWithFormat:@"%@-%@", server, caption]];
 	
 	[[[PSModuleController defaultModuleController] swordInstallManager] addInstallSource:is];
+	[is release];
+	is = nil;
 	[navSources resetTableSelection];
 	
 	[navSources dismissModalViewControllerAnimated:YES];
@@ -230,18 +220,15 @@
 #pragma mark Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
     return SECTIONS;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
     return 1;
 }
 
 
-// Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *CellIdentifier = @"Cell";
@@ -284,14 +271,6 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
 }
 
 
@@ -299,15 +278,10 @@
 #pragma mark Memory management
 
 - (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc that aren't in use.
 }
 
 - (void)viewDidUnload {
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
 	[captionTextField release];
 	[serverTextField release];
 	[pathTextField release];
@@ -318,9 +292,7 @@
     [super dealloc];
 }
 
-// Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations.
     if([PSResizing iPad]) {
         return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     } else {

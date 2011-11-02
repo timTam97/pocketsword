@@ -224,7 +224,7 @@
 	static NSString *CellIdentifierStyled = @"prefs-styled";
 	static NSString *CellIdentifierFS = @"prefs-fs";
 	
-    UITableViewCell *cell;
+    UITableViewCell *cell = nil;
 	BOOL resetCell = YES;
 	
 	if(indexPath.section == DisplaySection) {
