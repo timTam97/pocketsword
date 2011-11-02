@@ -1,7 +1,7 @@
 /******************************************************************************
 *  swbuf.h  - code for SWBuf used as a transport and utility for data buffers
 *
-* $Id: swbuf.h 2378 2009-05-04 23:18:51Z scribe $
+* $Id: swbuf.h 2659 2011-10-25 17:35:20Z scribe $
 *
 * Copyright 2003 CrossWire Bible Society (http://www.crosswire.org)
 *	CrossWire Bible Society
@@ -254,6 +254,19 @@ public:
 	}
 
 	/**
+	* SWBuf::append - appends a wide charachter value to the current value of this SWBuf
+	* If the allocated memory is not enough, it will be resized accordingly.
+	* NOTE: This is dangerous, as wchar_t is currently different sizes on different
+	* platforms (stupid windoze; stupid c++ spec for not mandating 4byte).
+	* @param ch Append this.
+	*/
+	inline void append(wchar_t wch) {
+		assureMore(sizeof(wchar_t)*2);
+		for (unsigned int i = 0; i < sizeof(wchar_t); i++) *end++ = ((char *)&wch)[i];
+		for (unsigned int i = 0; i < sizeof(wchar_t); i++) end[i] = 0;
+	}
+
+	/**
 	* SWBuf::appendFormatted - appends formatted strings to the current value of this SWBuf.
 	*
 	* @warning This function can only write at most JUNKBUFSIZE to the string per call.
@@ -402,6 +415,11 @@ public:
 	 */
 	inline bool endsWith(const SWBuf &postfix) const { return (size() >= postfix.size())?!strncmp(end-postfix.size(), postfix.c_str(), postfix.size()):false; }
 
+	/**
+	 * @return returns the index of a substring if it is found in this buffer; otherwise, returns < 0
+	 */
+	inline long indexOf(const SWBuf &needle) const { const char *ch = strstr(buf, needle.c_str()); return (ch) ? ch - buf : -1; }
+	
 	inline int compare(const SWBuf &other) const { return strcmp(c_str(), other.c_str()); }
 	inline bool operator ==(const SWBuf &other) const { return compare(other) == 0; }
 	inline bool operator !=(const SWBuf &other) const { return compare(other) != 0; }

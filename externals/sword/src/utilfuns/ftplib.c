@@ -126,7 +126,9 @@ struct NetBuf {
     int cmode;
     struct timeval idletime;
     FtpCallback idlecb;
+    FtpCallbackWriter writercb;
     void *idlearg;
+    void *writerarg;
     int xfered;
     int cbbytes;
     int xfered1;
@@ -568,8 +570,10 @@ GLOBALDEF int FtpConnect(const char *host, netbuf **nControl)
     ctrl->ctrl = NULL;
     ctrl->cmode = FTPLIB_DEFMODE;
     ctrl->idlecb = NULL;
+    ctrl->writercb = NULL;
     ctrl->idletime.tv_sec = ctrl->idletime.tv_usec = 0;
     ctrl->idlearg = NULL;
+    ctrl->writerarg = NULL;
     ctrl->xfered = 0;
     ctrl->xfered1 = 0;
     ctrl->cbbytes = 0;
@@ -606,6 +610,10 @@ GLOBALDEF int FtpOptions(int opt, long val, netbuf *nControl)
             nControl->idlecb = (FtpCallback) val;
             rv = 1;
             break;
+        case FTPLIB_CALLBACK_WRITER:
+            nControl->writercb = (FtpCallbackWriter) val;
+            rv = 1;
+            break;
         case FTPLIB_IDLETIME:
             v = (int) val;
             rv = 1;
@@ -615,6 +623,10 @@ GLOBALDEF int FtpOptions(int opt, long val, netbuf *nControl)
         case FTPLIB_CALLBACKARG:
             rv = 1;
             nControl->idlearg = (void *) val;
+            break;
+        case FTPLIB_CALLBACK_WRITERARG:
+            rv = 1;
+            nControl->writerarg = (void *) val;
             break;
         case FTPLIB_CALLBACKBYTES:
             rv = 1;
@@ -806,6 +818,7 @@ static int FtpOpenPort(netbuf *nControl, netbuf **nData, int mode, int dir)
     ctrl->dir = dir;
     ctrl->idletime = nControl->idletime;
     ctrl->idlearg = nControl->idlearg;
+    ctrl->writerarg = nControl->writerarg;
     ctrl->xfered = 0;
     ctrl->xfered1 = 0;
     ctrl->cbbytes = nControl->cbbytes;
@@ -813,6 +826,7 @@ static int FtpOpenPort(netbuf *nControl, netbuf **nData, int mode, int dir)
         ctrl->idlecb = nControl->idlecb;
     else
         ctrl->idlecb = NULL;
+    ctrl->writercb = nControl->writercb;
     *nData = ctrl;
     return 1;
 }
@@ -1202,6 +1216,7 @@ static int FtpXfer(const char *localfile, const char *path,
     FILE *local = NULL;
     netbuf *nData;
     int rv=1;
+    int writeResult = 0;
 
     if (localfile != NULL)
       {
@@ -1236,13 +1251,15 @@ static int FtpXfer(const char *localfile, const char *path,
       }
     else
       {
-          while ((l = FtpRead(dbuf, FTPLIB_BUFSIZ, nData)) > 0)
-              if (fwrite(dbuf, 1, l, local) <= 0)
+          while ((l = FtpRead(dbuf, FTPLIB_BUFSIZ, nData)) > 0) {
+              writeResult = (nData->writercb) ? nData->writercb(nData, dbuf, l, nData->writerarg) : fwrite(dbuf, 1, l, local);
+              if (writeResult <= 0)
                 {
-                    perror("localfile write");
+                    perror("localstore write");
                     rv = 0;
                     break;
                 }
+          }
       }
     free(dbuf);
     fflush(local);

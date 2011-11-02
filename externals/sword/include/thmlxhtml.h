@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * $Id: osishtmlhref.h 2569 2010-10-14 14:13:34Z scribe $
+ * $Id: thmlhtmlhref.h 2157 2008-05-13 23:37:56Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -18,47 +18,39 @@
  *
  */
 
-#ifndef OSISHTMLHREF_H
-#define OSISHTMLHREF_H
+#ifndef _THMLXHTML_H
+#define _THMLXHTML_H
 
 #include <swbasicfilter.h>
+#include <utilxml.h>
 
 SWORD_NAMESPACE_START
 
-/** this filter converts OSIS text to HTML text with hrefs
+/** this filter converts ThML text to classed XHTML
  */
-class SWDLLEXPORT OSISHTMLHREF : public SWBasicFilter {
-private:
-	bool morphFirst;
+class SWDLLEXPORT ThMLXHTML : public SWBasicFilter {
+	SWBuf imgPrefix;
 protected:
-	// used by derived classes so we have it in the header
-	class TagStacks;
-	class SWDLLEXPORT MyUserData : public BasicFilterUserData {
+	class MyUserData : public BasicFilterUserData {
 	public:
-		bool osisQToTick;
-		bool inBold;	// TODO: obsolete. left for binary compat for 1.6.x
-		bool inXRefNote;
+		MyUserData(const SWModule *module, const SWKey *key);//: BasicFilterUserData(module, key) {}
+		bool inscriptRef;
+		bool SecHead;
 		bool BiblicalText;
-		int suspendLevel;
-		SWBuf wordsOfChristStart;
-		SWBuf wordsOfChristEnd;
-                TagStacks *tagStacks;	// TODO: modified to wrap all TagStacks necessary for this filter until 1.7.x
-//                TagStack *hiStack;	// TODO: commented out for binary compat for 1.6.x	 wrapped in tagStacks until 1.7.x
-		SWBuf lastTransChange;
-		SWBuf w;
-		SWBuf fn;
 		SWBuf version;
-		MyUserData(const SWModule *module, const SWKey *key);
-		~MyUserData();
+		XMLTag startTag;
 	};
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
-	OSISHTMLHREF();
-	void setMorphFirst(bool val = true) { morphFirst = val; }
+	ThMLXHTML();
+	virtual const char *getImagePrefix() { return imgPrefix.c_str(); }
+	virtual void setImagePrefix(const char *newImgPrefix) { imgPrefix = newImgPrefix; }
+	virtual const char *getHeader() const;
 };
 
 SWORD_NAMESPACE_END
+
 #endif

@@ -3,7 +3,7 @@
  *		  types of modules (e.g. texts, commentaries, maps, lexicons,
  *		  etc.)
  *
- * $Id: swmodule.h 2318 2009-04-10 21:22:16Z scribe $
+ * $Id: swmodule.h 2645 2011-07-22 11:03:45Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -241,8 +241,12 @@ public:
 	}
 
 
-	virtual long Index() const { return entryIndex; }
-	virtual long Index(long iindex) { entryIndex = iindex; return entryIndex; }
+	virtual long getIndex() const { return entryIndex; }
+	virtual void setIndex(long iindex) { entryIndex = iindex; }
+	// deprecated, use getIndex()
+	long Index() const { return getIndex(); }
+	// deprecated, use setIndex(...)
+	long Index(long iindex) { setIndex(iindex); return getIndex(); }
 
 	/** Calls this module's display object and passes itself
 	 *
@@ -616,6 +620,12 @@ public:
 	 * @return result buffer
 	 */
 	virtual const char *RenderText(const char *buf = 0, int len = -1, bool render = true);
+
+	/** Produces any header data which might be useful which associated with the
+	 *	processing done with this filter.  A typical example is a suggested
+	 *	CSS style block for classed containers.
+	 */
+	virtual const char *getRenderHeader() const;
 
 	/** Produces plain text, without markup, of the module entry at the supplied key
 	 * @param tmpKey desired module entry

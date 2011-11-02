@@ -29,9 +29,6 @@
 SWORD_NAMESPACE_START
 
 GBFWEBIF::GBFWEBIF() : baseURL(""), passageStudyURL(baseURL + "passagestudy.jsp") {
-//all is done in GBFHTMLHREF since it inherits form this class
-	addTokenSubstitute("FR", "<span class=\"wordsOfJesus\">"); // words of Jesus begin
-	addTokenSubstitute("Fr", "</span>");
 }
 
 bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
@@ -52,7 +49,7 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 				*valto = 0;
 
 				if (atoi((!isdigit(*val))?val+1:val) < 5627) {
-					buf += " ";
+					buf += " <small><em>&lt;";
 					url = "";
 					for (tok = val; *tok; tok++) {
 						url += *tok;
@@ -61,12 +58,12 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 						if (isdigit(url[1]))
 							url = url.c_str()+1;
 					}
-					buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\" class=\"strongs\">&lt;", passageStudyURL.c_str(), URL::encode(url).c_str());
+					buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str());
 
 					for (tok = (!isdigit(*val))?val+1:val; *tok; tok++) {
 						buf += *tok;
 					}
-					buf += "&gt;</a> ";
+					buf += "</a>&gt;</em></small> ";
 				}
 			}
 			else {
@@ -77,7 +74,7 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 					*valto = 0;
 
 					if (atoi((!isdigit(*val))?val+1:val) < 5627) {
-						buf += " ";
+						buf += " <small><em>&lt;";
 						url = "";
 						for (tok = val; *tok; tok++) {
 							url += *tok;
@@ -86,12 +83,12 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 							if (isdigit(url[1]))
 								url = url.c_str()+1;
 						}
-						buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\" class=\"strongs\">&lt;", passageStudyURL.c_str(), URL::encode(url).c_str());
+						buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str());
 
 						for (tok = (!isdigit(*val))?val+1:val; *tok; tok++) {
 							buf += *tok;
 						}
-						buf += "&gt;</a> ";
+						buf += "</a>&gt;</em></small> ";
 					}
 				}
 			}
@@ -101,23 +98,23 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 				for (num+=18; ((*num) && (*num != '\"')); num++)
 					*valto++ = *num;
 				*valto = 0;
-				//buf += " ";
+				buf += " <small><em>(";
 				url = "";
 				for (tok = val; *tok; tok++) {
 				// normal robinsons tense
 					buf += *tok;
 				}
-				buf.appendFormatted(" <a href=\"%s?showMorph=%s#cv\">(", passageStudyURL.c_str(), URL::encode(url).c_str());
+				buf.appendFormatted("<a href=\"%s?showMorph=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str());
 
 				for (tok = val; *tok; tok++) {
 					buf += *tok;
 				}
-				buf += ")</a> ";
+				buf += "</a>)</em></small> ";
 			}
 		}
 
 		else if (!strncmp(token, "WG", 2) || !strncmp(token, "WH", 2)) { // strong's numbers
-			buf += " ";
+			buf += " <small><em>&lt;";
 			url = "";
 
 			for (tok = token+1; *tok; tok++) {
@@ -127,16 +124,16 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 				if (isdigit(url[1]))
 					url = url.c_str()+1;
 			}
-			buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\" class=\"strongs\">&lt;", passageStudyURL.c_str(), URL::encode(url).c_str());
+			buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str());
 
 			for (tok = token + 2; *tok; tok++) {
 				buf += *tok;
 			}
-			buf += "&gt;</a>";
+			buf += "</a>&gt;</em></small>";
 		}
 
 		else if (!strncmp(token, "WTG", 3) || !strncmp(token, "WTH", 3)) { // strong's numbers tense
-			buf += " ";
+			buf += " <small><em>(";
 			url = "";
 			for (tok = token + 2; *tok; tok++) {
 				if(*tok != '\"')
@@ -146,27 +143,27 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 				if (isdigit(url[1]))
 					url = url.c_str()+1;
 			}
-			buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\" class=\"strongs\">(", passageStudyURL.c_str(), URL::encode(url).c_str());
+			buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str());
 
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += ")</a>";
+			buf += "</a>)</em></small>";
 		}
 
 		else if (!strncmp(token, "WT", 2) && strncmp(token, "WTH", 3) && strncmp(token, "WTG", 3)) { // morph tags
-			//buf += " ";
+			buf += " <small><em>(";
 			for (tok = token + 2; *tok; tok++) {
 				if(*tok != '\"')
 					buf += *tok;
 			}
-			buf.appendFormatted(" <a href=\"%s?showMorph=%s#cv\">(", passageStudyURL.c_str(), URL::encode(url).c_str());
+			buf.appendFormatted("<a href=\"%s?showMorph=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str());
 
 			for (tok = token + 2; *tok; tok++) {
 				if(*tok != '\"')
 					buf += *tok;
 			}
-			buf += ")</a>";
+			buf += "</a>)</em></small>";
 		}
 
 		else if (!strncmp(token, "RX", 2)) {
@@ -189,7 +186,7 @@ bool GBFWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 		}
 
 		else {
-			return GBFHTMLHREF::handleToken(buf, token, userData);
+			return GBFXHTML::handleToken(buf, token, userData);
 		}
 	}
 	return true;

@@ -1,11 +1,10 @@
-/***************************************************************************
- *                  osishtmlhref.cpp  -  OSIS to HTML with hrefs filter
- *		      -------------------
- *   begin                : 2003-06-24
- *   copyright            : 2003 by CrossWire Bible Society
- * 
+/******************************************************************************
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * osisxhtml -	Render filter for classed XHTML
+ *			of an OSIS module.
+ *
+ *
+ * Copyright 2011 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -23,7 +22,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <osishtmlhref.h>
+#include <osisxhtml.h>
 #include <utilxml.h>
 #include <utilstr.h>
 #include <versekey.h>
@@ -34,8 +33,21 @@
 
 SWORD_NAMESPACE_START
 
+const char *OSISXHTML::getHeader() const {
+	return "\
+		.divineName {\
+			font-variant: small-caps;\
+		}\
+		.wordsOfJesus {\
+			color: red;\
+		}\
+	";
+}
+
+
 namespace {
 	typedef std::stack<SWBuf> TagStack;
+
 // though this might be slightly slower, possibly causing an extra bool check, this is a renderFilter
 // so speed isn't the absolute highest priority, and this is a very minor possible hit
 static inline void outText(const char *t, SWBuf &o, BasicFilterUserData *u) { if (!u->suspendTextPassThru) o += t; else u->lastSuspendSegment += t; }
@@ -64,7 +76,7 @@ void processLemma(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 			//	show = false;
 			//else {
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showStrongs&amp;type=%s&amp;value=%s\" class=\"strongs\">&lt;%s&gt;</a>",
+					buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=%s&value=%s\" class=\"strongs\">%s</a>&gt;</em></small>",
 							(gh.length()) ? gh.c_str() : "", 
 							URL::encode(val2).c_str(),
 							val2);
@@ -94,7 +106,7 @@ void processMorph(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 				if ((*val == 'T') && (strchr("GH", val[1])) && (isdigit(val[2])))
 					val2+=2;
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showMorph&amp;type=%s&amp;value=%s\" class=\"morph\">(%s)</a>",
+					buf.appendFormatted("<small><em class=\"morph\">(<a href=\"passagestudy.jsp?action=showMorph&type=%s&value=%s\" class=\"morph\">%s</a>)</em></small>",
 							URL::encode(tag.getAttribute("morph")).c_str(),
 							URL::encode(val).c_str(), 
 							val2);
@@ -105,18 +117,19 @@ void processMorph(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 }
 }	// end anonymous namespace
 
+
 // TODO: this bridge pattern is to preserve binary compat on 1.6.x
-class OSISHTMLHREF::TagStacks {
+class OSISXHTML::TagStacks {
 public:
 	TagStack quoteStack;
 	TagStack hiStack;
 };
 
-OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
+OSISXHTML::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	inXRefNote    = false;
 	suspendLevel = 0;
 	tagStacks = new TagStacks();
-	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
+	wordsOfChristStart = "<span class=\"wordsOfJesus\"> ";
 	wordsOfChristEnd   = "</span> ";
 	if (module) {
 		osisQToTick = ((!module->getConfigEntry("OSISqToTick")) || (strcmp(module->getConfigEntry("OSISqToTick"), "false")));
@@ -129,11 +142,11 @@ OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) :
 	}
 }
 
-OSISHTMLHREF::MyUserData::~MyUserData() {
+OSISXHTML::MyUserData::~MyUserData() {
 	delete tagStacks;
 }
 
-OSISHTMLHREF::OSISHTMLHREF() {
+OSISXHTML::OSISXHTML() {
 	setTokenStart("<");
 	setTokenEnd(">");
 
@@ -157,8 +170,7 @@ OSISHTMLHREF::OSISHTMLHREF() {
 	morphFirst = false;
 }
 
-
-bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
+bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
 	MyUserData *u = (MyUserData *)userData;
 	SWBuf scratch;
 	bool sub = (u->suspendTextPassThru) ? substituteToken(scratch, token) : substituteToken(buf, token);
@@ -253,7 +265,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 						SWCATCH ( ... ) {	}
 						if (vkey) {
 							//printf("URL = %s\n",URL::encode(vkey->getText()).c_str());
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c</a>",
+							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>",
 								ch, 
 								URL::encode(footnoteNumber.c_str()).c_str(), 
 								URL::encode(u->version.c_str()).c_str(), 
@@ -262,7 +274,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 								ch);
 						}
 						else {
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c</a>",
+							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c</sup></small></a>",
 								ch, 
 								URL::encode(footnoteNumber.c_str()).c_str(), 
 								URL::encode(u->version.c_str()).c_str(), 
@@ -420,10 +432,10 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		// <title>
 		else if (!strcmp(tag.getName(), "title")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				outText("<b>", buf, u);
+				buf += "<h3>";
 			}
 			else if (tag.isEndTag()) {
-				outText("</b><br />", buf, u);
+				buf += "</h3>";
 			}
 		}
 		
@@ -465,18 +477,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				SWBuf lastText = u->lastSuspendSegment.c_str();
 				u->suspendTextPassThru = (--u->suspendLevel);
 				if (lastText.size()) {
-					toupperstr(lastText);
-					scratch.setFormatted("%c<font size=\"-1\">%s</font>", lastText[0], lastText.c_str()+1);
-
-					const unsigned char *tmpBuf = (const unsigned char *)lastText.c_str();
-					getUniCharFromUTF8(&tmpBuf);
-					int char_length = (tmpBuf - (const unsigned char *)lastText.c_str());
-					scratch.setFormatted("%.*s<font size=\"-1\">%s</font>", 
-						char_length, 
-						lastText.c_str(),
-						lastText.c_str() + char_length
-					);
-					
+					scratch.setFormatted("<span class=\"divineName\">%s</span>", lastText.c_str());
 					outText(scratch.c_str(), buf, u);
 				}               
 			} 
@@ -490,9 +491,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
 				if (type == "bold" || type == "b" || type == "x-b") {
 					outText("<b>", buf, u);
-				}
-				else if(type == "underline") { //underline!
-					outText("<span class=\"underline\">", buf, u);
 				}
 				else if (type == "ol") {
 					outText("<span style=\"text-decoration:overline\">", buf, u);
@@ -513,12 +511,10 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				if (type == "bold" || type == "b" || type == "x-b") {
 					outText("</b>", buf, u);
 				}
-				else if(type == "underline" || type == "ol") {
+				else if (type == "ol") {
 					outText("</span>", buf, u);
 				}
-				else {
-					outText("</i>", buf, u);
-				}
+				else outText("</i>", buf, u);
 			}
 		}
 
@@ -594,7 +590,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 
 				// just do all transChange tags this way for now
 				if ((type == "added") || (type == "supplied"))
-					outText("<i class=\"transChangeAdded\">", buf, u);
+					outText("<i>", buf, u);
 				else if (type == "tenseChange")
 					buf += "*";
 			}
@@ -633,6 +629,17 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			outText("\" border=\"0\" />", buf, u);
 
 			outText("</a>", buf, u);
+		}
+
+		// ok to leave these in
+		else if (!strcmp(tag.getName(), "div")) {
+			buf += tag;
+		}
+		else if (!strcmp(tag.getName(), "span")) {
+			buf += tag;
+		}
+		else if (!strcmp(tag.getName(), "br")) {
+			buf += tag;
 		}
 
 		else {

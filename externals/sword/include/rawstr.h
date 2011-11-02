@@ -4,7 +4,7 @@
  *			and provides lookup and parsing functions based on
  *			class StrKey
  *
- * $Id: rawstr.h 2303 2009-04-06 13:38:34Z scribe $
+ * $Id: rawstr.h 2656 2011-09-29 15:46:37Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,6 +36,7 @@ class FileDesc;
 class SWDLLEXPORT RawStr {
 	static int instance;		// number of instantiated RawStr objects or derivitives
 	char *path;
+	bool caseSensitive;
 	mutable long lastoff;	 // for caching and optimizing
 	
 
@@ -48,7 +49,7 @@ protected:
 
 public:
 	static char nl;
-	RawStr(const char *ipath, int fileMode = -1);
+	RawStr(const char *ipath, int fileMode = -1, bool caseSensitive = false);
 	virtual ~RawStr();
 	void getIDXBuf(long ioffset, char **buf) const;
 	void getIDXBufDat(long ioffset, char **buf) const;

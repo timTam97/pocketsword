@@ -31,7 +31,6 @@
 SWORD_NAMESPACE_START
 
 ThMLWEBIF::ThMLWEBIF() : baseURL(""), passageStudyURL(baseURL + "passagestudy.jsp") {
-  //all's done in ThMLHTMLHREF
 }
 
 bool ThMLWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
@@ -49,8 +48,8 @@ bool ThMLWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			}
 
 			if(tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "morph")){
-				//buf += " ";
-				buf.appendFormatted(" <a href=\"%s?showMorph=%s#cv\" class=\"strongs\">(", passageStudyURL.c_str(), URL::encode(url).c_str() );
+				buf += "<small><em> (";
+				buf.appendFormatted("<a href=\"%s?showMorph=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str() );
 			}
 			else {
 				if (value) {
@@ -58,18 +57,18 @@ bool ThMLWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					//url = value;
 				}
 
-				//buf += " ";
-				buf.appendFormatted(" <a href=\"%s?showStrong=%s#cv\" class=\"strongs\">&lt;", passageStudyURL.c_str(), URL::encode(url).c_str() );
+				buf += "<small><em> &lt;";
+				buf.appendFormatted("<a href=\"%s?showStrong=%s#cv\">", passageStudyURL.c_str(), URL::encode(url).c_str() );
 			}
 
 			buf += value;
-			//buf += "";
+			buf += "</a>";
 
 			if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "morph")) {
-				buf += ")</a>";
+				buf += ") </em></small>";
 			}
 			else {
-				buf += "&gt;</a>";
+				buf += "&gt; </em></small>";
 			}
 		}
 		else if (!strcmp(tag.getName(), "scripRef")) {
@@ -100,7 +99,7 @@ bool ThMLWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			}
 		}
 		else {
-			return ThMLHTMLHREF::handleToken(buf,token,userData);
+			return ThMLXHTML::handleToken(buf, token, userData);
 		}
 	}
 	return true;

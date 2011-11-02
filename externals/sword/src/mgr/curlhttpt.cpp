@@ -144,7 +144,7 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 
 		/* Switch on full protocol/debug output */
 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
-		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());//nicc
+		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());
 		
 		/* FTP connection settings */
 
@@ -236,7 +236,7 @@ vector<struct DirEntry> CURLHTTPTransport::getDirList(const char *dirURL) {
 				}
 				struct DirEntry i;
 				i.name = possibleName;
-				i.size = fSize;
+				i.size = (long unsigned int)fSize;
 				i.isDirectory = (possibleName[possibleNameLength-1] == '/');
 				dirList.push_back(i);
 				pBuf = pBufRes;

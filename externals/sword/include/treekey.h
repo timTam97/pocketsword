@@ -1,7 +1,7 @@
 /******************************************************************************
  *  versekey.h - code for class 'versekey'- a standard Biblical verse key
  *
- * $Id: treekey.h 2280 2009-03-07 15:34:36Z scribe $
+ * $Id: treekey.h 2645 2011-07-22 11:03:45Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -123,8 +123,8 @@ public:
 	virtual void decrement(int steps = 1) = 0;
 	virtual void increment(int steps = 1) = 0;
 	virtual bool isTraversable() const { return true; }
-	virtual long Index() const { return getOffset(); }
-	virtual long Index(long iindex) { setOffset(iindex); return getOffset(); }
+	virtual long getIndex() const { return getOffset(); }
+	virtual void setIndex(long iindex) { setOffset(iindex); }
 
 	/** Set the key to this path.  If the path doesn't exist, then
 	 *	nodes are created as necessary

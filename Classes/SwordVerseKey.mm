@@ -140,7 +140,7 @@
 }
 
 - (int)index {
-    return sk->Index();
+    return sk->getIndex();
 }
 
 - (BOOL)headings {

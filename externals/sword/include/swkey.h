@@ -3,7 +3,7 @@
  *				types of keys for indexing into modules (e.g. verse, word,
  *				place, etc.)
  *
- * $Id: swkey.h 2324 2009-04-20 18:40:15Z scribe $
+ * $Id: swkey.h 2646 2011-07-23 17:39:20Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -205,7 +205,7 @@ public:
 
 	/** deprecated, use isTraversible
 	 */
-	char Traversable() { return (isTraversable()) ? 1:0; }
+	SWDEPRECATED char Traversable() { return (isTraversable()) ? 1:0; }
 
 	/** Whether or not this key can be ++ -- incremented
 	 */
@@ -216,11 +216,13 @@ public:
 
 	/** Use this function to get an index position within a module.
 	 */
-	virtual long Index() const { return index; }
+	virtual long getIndex() const { return index; }
+	SWDEPRECATED long Index() const { return getIndex(); }	// deprecated, use getIndex()
 
 	/** See documentation for @ref Index()
 	 */
-	virtual long Index(long iindex) { index = iindex; return index; }
+	virtual void setIndex(long iindex) { index = iindex; }
+	SWDEPRECATED long Index(long iindex) { setIndex(iindex); return getIndex(); }	// deprecated, use setIndex(...)
 
 	SWKEY_OPERATORS
 

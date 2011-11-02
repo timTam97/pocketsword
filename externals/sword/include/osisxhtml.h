@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * $Id: osishtmlhref.h 2569 2010-10-14 14:13:34Z scribe $
+ * osisxhtml.h
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2011 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -18,16 +18,16 @@
  *
  */
 
-#ifndef OSISHTMLHREF_H
-#define OSISHTMLHREF_H
+#ifndef OSISXHTML_H
+#define OSISXHTML_H
 
 #include <swbasicfilter.h>
 
 SWORD_NAMESPACE_START
 
-/** this filter converts OSIS text to HTML text with hrefs
+/** this filter converts OSIS text to classed XHTML
  */
-class SWDLLEXPORT OSISHTMLHREF : public SWBasicFilter {
+class SWDLLEXPORT OSISXHTML : public SWBasicFilter {
 private:
 	bool morphFirst;
 protected:
@@ -56,8 +56,9 @@ protected:
 	}
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
-	OSISHTMLHREF();
+	OSISXHTML();
 	void setMorphFirst(bool val = true) { morphFirst = val; }
+	virtual const char *getHeader() const;
 };
 
 SWORD_NAMESPACE_END

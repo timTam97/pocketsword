@@ -3,7 +3,7 @@
  *			pointing to actual text desired.  Uses standard
  *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: rawfiles.h 1864 2005-11-20 06:06:40Z scribe $
+ * $Id: rawfiles.h 2599 2011-02-12 05:11:09Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,7 +33,7 @@ SWORD_NAMESPACE_START
 
 class SWDLLEXPORT RawFiles : public RawVerse, public SWCom {
 
-	char *getNextFilename();
+	const char *getNextFilename();
 
 public:
 

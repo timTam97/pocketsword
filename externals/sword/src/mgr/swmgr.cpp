@@ -2,7 +2,7 @@
  *  swmgr.cpp   - implementaion of class SWMgr used to interact with an install
  *				base of sword modules.
  *
- * $Id: swmgr.cpp 2374 2009-05-04 03:48:01Z scribe $
+ * $Id: swmgr.cpp 2659 2011-10-25 17:35:20Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -81,6 +81,7 @@
 #include <swfiltermgr.h>
 #include <swcipher.h>
 #include <swoptfilter.h>
+#include <rtfhtml.h>
 
 #include <swlog.h>
 
@@ -123,6 +124,7 @@ void SWMgr::init() {
 	cipherFilters.clear();
 	optionFilters.clear();
 	cleanupFilters.clear();
+	extraFilters.clear();
 	tmpFilter = new ThMLVariants();
 	optionFilters.insert(OptionFilterMap::value_type("ThMLVariants", tmpFilter));
 	cleanupFilters.push_back(tmpFilter);
@@ -250,6 +252,12 @@ void SWMgr::init() {
 
 	teiplain = new TEIPlain();
 	cleanupFilters.push_back(teiplain);
+
+	// filters which aren't really used anywhere but which we want available for a "FilterName" -> filter mapping (e.g., filterText)
+	SWFilter *f = new RTFHTML();
+	extraFilters.insert(FilterMap::value_type("RTFHTML", f));
+	cleanupFilters.push_back(f);
+	
 }
 
 
@@ -715,7 +723,7 @@ void SWMgr::augmentModules(const char *ipath, bool multiMod) {
 			// fix config's Section names to rename modules which are available more than once
 			// find out which sections are in both config objects
 			// inserting all configs first is not good because that overwrites old keys and new modules would share the same config
-			for (SectionMap::iterator it = config->Sections.begin(); it != config->Sections.end(); ++it) {
+			for (SectionMap::iterator it = config->Sections.begin(); it != config->Sections.end();) {
 				if (saveConfig->Sections.find( (*it).first ) != saveConfig->Sections.end()) { //if the new section is already present rename it
 					ConfigEntMap entMap((*it).second);
 					
@@ -727,8 +735,10 @@ void SWMgr::augmentModules(const char *ipath, bool multiMod) {
 					} while (config->Sections.find(name) != config->Sections.end());
 					
 					config->Sections.insert(SectionMap::value_type(name, entMap) );
-					config->Sections.erase(it);
+					SectionMap::iterator toErase = it++;
+					config->Sections.erase(toErase);
 				}
+				else ++it;
 			}
 		}
 		
@@ -819,7 +829,7 @@ signed char SWMgr::Load() {
 	return ret;
 }
 
-SWModule *SWMgr::CreateMod(const char *name, const char *driver, ConfigEntMap &section)
+SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap &section)
 {
 	SWBuf description, datapath, misc1;
 	ConfigEntMap::iterator entry;
@@ -889,7 +899,6 @@ SWModule *SWMgr::CreateMod(const char *name, const char *driver, ConfigEntMap &s
 	if ((!stricmp(driver, "zText")) || (!stricmp(driver, "zCom"))) {
 		SWCompress *compress = 0;
 		int blockType = CHAPTERBLOCKS;
-		int blockNum = 1;
 		misc1 = ((entry = section.find("BlockType")) != section.end()) ? (*entry).second : (SWBuf)"CHAPTER";
 		if (!stricmp(misc1.c_str(), "VERSE"))
 			blockType = VERSEBLOCKS;
@@ -898,9 +907,6 @@ SWModule *SWMgr::CreateMod(const char *name, const char *driver, ConfigEntMap &s
 		else if (!stricmp(misc1.c_str(), "BOOK"))
 			blockType = BOOKBLOCKS;
 		
-		misc1 = ((entry = section.find("BlockNumber")) != section.end()) ? (*entry).second : (SWBuf)"1";
-		blockNum = atoi(misc1.c_str());
-
 		misc1 = ((entry = section.find("CompressType")) != section.end()) ? (*entry).second : (SWBuf)"LZSS";
 #ifndef EXCLUDEZLIB
 		if (!stricmp(misc1.c_str(), "ZIP"))
@@ -949,18 +955,21 @@ SWModule *SWMgr::CreateMod(const char *name, const char *driver, ConfigEntMap &s
 
         int pos = 0;  //used for position of final / in AbsoluteDataPath, but also set to 1 for modules types that need to strip module name
 	if (!stricmp(driver, "RawLD")) {
-		newmod = new RawLD(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str());
+		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
+		newmod = new RawLD(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive);
                 pos = 1;
         }
 
 	if (!stricmp(driver, "RawLD4")) {
-		newmod = new RawLD4(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str());
+		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
+		newmod = new RawLD4(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive);
                 pos = 1;
         }
 
 	if (!stricmp(driver, "zLD")) {
 		SWCompress *compress = 0;
 		int blockCount;
+		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
 		misc1 = ((entry = section.find("BlockCount")) != section.end()) ? (*entry).second : (SWBuf)"200";
 		blockCount = atoi(misc1.c_str());
 		blockCount = (blockCount) ? blockCount : 200;
@@ -975,7 +984,7 @@ SWModule *SWMgr::CreateMod(const char *name, const char *driver, ConfigEntMap &s
 			compress = new LZSSCompress();
 
 		if (compress) {
-			newmod = new zLD(datapath.c_str(), name, description.c_str(), blockCount, compress, 0, enc, direction, markup, lang.c_str());
+			newmod = new zLD(datapath.c_str(), name, description.c_str(), blockCount, compress, 0, enc, direction, markup, lang.c_str(), caseSensitive);
 		}
 		pos = 1;
 	}
@@ -1043,12 +1052,23 @@ void SWMgr::AddGlobalOptions(SWModule *module, ConfigEntMap &section, ConfigEntM
 char SWMgr::filterText(const char *filterName, SWBuf &text, const SWKey *key, const SWModule *module)
  {
 	char retVal = -1;
+	// why didn't we use find here?
 	for (OptionFilterMap::iterator it = optionFilters.begin(); it != optionFilters.end(); it++) {
 		if ((*it).second->getOptionName()) {
-			if (!stricmp(filterName, (*it).second->getOptionName()))
-				retVal = it->second->processText(text, key, module);	// add filter to module
+			if (!stricmp(filterName, (*it).second->getOptionName())) {
+				retVal = it->second->processText(text, key, module);
+				break;
+			}
 		}
 	}
+
+	if (retVal == -1) {
+		FilterMap::iterator it = extraFilters.find(filterName);
+		if (it != extraFilters.end()) {
+			retVal = it->second->processText(text, key, module);
+		}
+	}
+
 	return retVal;
 }
 
@@ -1176,7 +1196,7 @@ void SWMgr::CreateMods(bool multiMod) {
 		
 		driver = ((entry = section.find("ModDrv")) != section.end()) ? (*entry).second : (SWBuf)"";
 		if (driver.length()) {
-			newmod = CreateMod((*it).first, driver, section);
+			newmod = createModule((*it).first, driver, section);
 			if (newmod) {
 				// Filters to add for this module and globally announce as an option to the user
 				// e.g. translit, strongs, redletterwords, etc, so users can turn these on and off globally

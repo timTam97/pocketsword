@@ -39,8 +39,6 @@ OSISWEBIF::OSISWEBIF() : baseURL(""), passageStudyURL(baseURL + "passagestudy.js
 
 BasicFilterUserData *OSISWEBIF::createUserData(const SWModule *module, const SWKey *key) {
 	MyUserData *u = new MyUserData(module, key);
-	u->wordsOfChristStart = "<span class=\"wordsOfJesus\"> ";
-	u->wordsOfChristEnd   = "</span> ";
 	return u;
 }
 
@@ -50,7 +48,8 @@ bool OSISWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 	SWBuf scratch;
 	bool sub = (u->suspendTextPassThru) ? substituteToken(scratch, token) : substituteToken(buf, token);
 	if (!sub) {
-  // manually process if it wasn't a simple substitution
+
+		// manually process if it wasn't a simple substitution
 		XMLTag tag(token);
 
 		// <w> tag
@@ -98,7 +97,7 @@ bool OSISWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 							val2++;
 						if ((!strcmp(val2, "3588")) && (lastText.length() < 1))
 							show = false;
-						else	buf.appendFormatted(" <a href=\"%s?showStrong=%s#cv\" class=\"strongs\">&lt;%s&gt;</a> ", passageStudyURL.c_str(), URL::encode(val2).c_str(), val2);
+						else	buf.appendFormatted(" <small><em>&lt;<a href=\"%s?showStrong=%s#cv\">%s</a>&gt;</em></small> ", passageStudyURL.c_str(), URL::encode(val2).c_str(), val2);
 					} while (++i < count);
 				}
 				if ((attrib = tag.getAttribute("morph")) && (show)) {
@@ -116,7 +115,7 @@ bool OSISWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 							const char *val2 = val;
 							if ((*val == 'T') && (strchr("GH", val[1])) && (isdigit(val[2])))
 								val2+=2;
-							buf.appendFormatted(" <a href=\"%s?showMorph=%s#cv\" class=\"morph\">(%s)</a> ", passageStudyURL.c_str(), URL::encode(val2).c_str(), val2);
+							buf.appendFormatted(" <small><em>(<a href=\"%s?showMorph=%s#cv\">%s</a>)</em></small> ", passageStudyURL.c_str(), URL::encode(val2).c_str(), val2);
 						} while (++i < count);
 					}
 				}
@@ -165,43 +164,10 @@ bool OSISWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			}
 		}
 
-		// <title>
-		else if (!strcmp(tag.getName(), "title")) {
-			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<h3>";
-			}
-			else if (tag.isEndTag()) {
-				buf += "</h3>";
-			}
-		}
-
-                // Milestoned paragraphs, created by osis2mod
-                // <div type="paragraph" sID.../>
-                // <div type="paragraph" eID.../>
-                else if (tag.isEmpty() && !strcmp(tag.getName(), "div") && tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "paragraph")) {
-			// This is properly handled by base class.
-			return OSISHTMLHREF::handleToken(buf, token, userData);
-                }
-
-		// ok to leave these in
-		else if (!strcmp(tag.getName(), "div")) {
-			buf += tag;
-		}
-		else if (!strcmp(tag.getName(), "span")) {
-			buf += tag;
-		}
-		else if (!strcmp(tag.getName(), "br")) {
-			buf += tag;
-		}
 
 		// handled appropriately in base class
-		// <catchWord> & <rdg> tags (italicize)
-		// <hi> text highlighting
-		// <q> quote
-		// <milestone type="cQuote" marker="x"/>
-		// <transChange>
 		else {
-			return OSISHTMLHREF::handleToken(buf, token, userData);
+			return OSISXHTML::handleToken(buf, token, userData);
 		}
 	}
 	return true;

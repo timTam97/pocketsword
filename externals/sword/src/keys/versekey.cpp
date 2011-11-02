@@ -285,7 +285,8 @@ char VerseKey::parse(bool checkAutoNormalize)
 	int error = 0;
 
 	if (keytext) {
-		ListKey tmpListKey = ParseVerseList(keytext);
+		// pass our own copy of keytext as keytext memory may be freshed during parse 
+		ListKey tmpListKey = ParseVerseList(SWBuf(keytext).c_str());
 		if (tmpListKey.Count()) {
 			this->positionFrom(*tmpListKey.getElement(0));
 			error = this->error;
@@ -563,6 +564,17 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 			}
 
 		case '-':
+			if (chap == -1) {
+				book[tobook] = *buf;
+				book[tobook+1] = *(buf+1);
+				book[tobook+2] = 0;
+				int bookno = getBookAbbrev(book);
+				if (bookno > -1) {
+					tobook++;
+					buf++;
+					break;
+				}
+			}
 		case ',': // on number new verse
 		case ';': // on number new chapter
 			number[tonumber] = 0;
@@ -768,6 +780,8 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 		default:
 			if (isdigit(*buf)) {
 				number[tonumber++] = *buf;
+				suffix = 0;
+				doubleF = 0;
 			}
 			else {
 				switch (*buf) {
@@ -944,7 +958,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 						*curKey = MAXCHAPTER;
 					if (partial > 0)
 						*curKey = MAXVERSE;
-						newElement->UpperBound(*curKey);
+					newElement->UpperBound(*curKey);
 					*newElement = TOP;
 					tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
 				}
@@ -971,7 +985,7 @@ VerseKey &VerseKey::LowerBound(const VerseKey &lb)
 {
 	initBounds();
 
-	lowerBound = lb.Index();
+	lowerBound = lb.getIndex();
 	lowerBoundComponents.test   = lb.getTestament();
 	lowerBoundComponents.book   = lb.getBook();
 	lowerBoundComponents.chap   = lb.getChapter();
@@ -996,7 +1010,7 @@ VerseKey &VerseKey::UpperBound(const VerseKey &ub)
 {
 	initBounds();
 
-	upperBound = ub.Index();
+	upperBound = ub.getIndex();
 	upperBoundComponents.test   = ub.getTestament();
 	upperBoundComponents.book   = ub.getBook();
 	upperBoundComponents.chap   = ub.getChapter();
@@ -1025,7 +1039,7 @@ VerseKey &VerseKey::LowerBound() const
 		tmpClone->setVerse   (lowerBoundComponents.verse);
 		tmpClone->setSuffix  (lowerBoundComponents.suffix);
 	}
-	else tmpClone->Index(lowerBound);
+	else tmpClone->setIndex(lowerBound);
 
 	return (*tmpClone);
 }
@@ -1045,7 +1059,7 @@ VerseKey &VerseKey::UpperBound() const
 		tmpClone->setVerse   (upperBoundComponents.verse);
 		tmpClone->setSuffix  (upperBoundComponents.suffix);
 	}
-	else tmpClone->Index(upperBound);
+	else tmpClone->setIndex(upperBound);
 
 	return (*tmpClone);
 }
@@ -1073,7 +1087,7 @@ void VerseKey::initBounds() const
 		tmpClone->Book(BMAX[(BMAX[1])?1:0]);
 		tmpClone->Chapter(tmpClone->getChapterMax());
 		tmpClone->Verse(tmpClone->getVerseMax());
-		upperBound = tmpClone->Index();
+		upperBound = tmpClone->getIndex();
 		upperBoundComponents.test   = tmpClone->getTestament();
 		upperBoundComponents.book   = tmpClone->getBook();
 		upperBoundComponents.chap   = tmpClone->getChapter();
@@ -1200,9 +1214,9 @@ int VerseKey::getVerseMax() const {
 
 void VerseKey::increment(int step) {
 	char ierror = 0;
-	Index(Index() + step);
+	setIndex(getIndex() + step);
 	while ((!verse) && (!headings) && (!ierror)) {
-		Index(Index() + 1);
+		setIndex(getIndex() + 1);
 		ierror = Error();
 	}
 
@@ -1221,9 +1235,9 @@ void VerseKey::increment(int step) {
 void VerseKey::decrement(int step) {
 	char ierror = 0;
 
-	Index(Index() - step);
+	setIndex(getIndex() - step);
 	while ((!verse) && (!headings) && (!ierror)) {
-		Index(Index() - 1);
+		setIndex(getIndex() - 1);
 		ierror = Error();
 	}
 	if ((ierror) && (!headings))
@@ -1245,7 +1259,7 @@ void VerseKey::Normalize(char autocheck)
 
 	if (((!autocheck) || (autonorm))	// only normalize if we were explicitely called or if autonorm is turned on
                &&
-	          ((!headings) || ((verse) && (chapter)))) {		// this is cheeze and temporary until deciding what actions should be taken; so headings should only be turned on when positioning with Index() or incrementors
+	          ((!headings) || ((verse) && (chapter)))) {		// this is cheeze and temporary until deciding what actions should be taken; so headings should only be turned on when positioning with setIndex() or incrementors
 		error = 0;
 
           while ((testament < 3) && (testament > 0)) {
@@ -1554,12 +1568,12 @@ int VerseKey::findindex(long *array, int size, long value)
 
 
 /******************************************************************************
- * VerseKey::Index - Gets index based upon current verse
+ * VerseKey::getIndex - Gets index based upon current verse
  *
  * RET:	offset
  */
 
-long VerseKey::Index() const
+long VerseKey::getIndex() const
 {
 	long  offset;
 
@@ -1577,27 +1591,26 @@ long VerseKey::Index() const
 
 
 /******************************************************************************
- * VerseKey::TestamentIndex - Gets index based upon current verse
+ * VerseKey::getTestamentIndex - Gets index based upon current verse
  *
  * RET:	offset
  */
 
-long VerseKey::TestamentIndex() const
+long VerseKey::getTestamentIndex() const
 {
-	long offset = Index();
+	long offset = getIndex();
 	return (testament > 1) ? offset - refSys->getNTStartOffset() : offset;
 }
 
 
 /******************************************************************************
- * VerseKey::Index - Sets index based upon current verse
+ * VerseKey::setIndex - Sets index based upon current verse
  *
  * ENT:	iindex - value to set index to
  *
- * RET:	offset
  */
 
-long VerseKey::Index(long iindex)
+void VerseKey::setIndex(long iindex)
 {
 	int b;
 	error = refSys->getVerseFromOffset(iindex, &b, &chapter, &verse);
@@ -1611,19 +1624,18 @@ long VerseKey::Index(long iindex)
 	if (book < 0) { testament = 0; book = 0; }
 	if (chapter < 0) { book = 0; chapter = 0; }
 
-	long i = Index();
+	long i = getIndex();
 
 	initBounds();
 	if (i > upperBound) {
-		i = Index(upperBound);
+		setIndex(upperBound);
+		i = getIndex();
 		error = KEYERR_OUTOFBOUNDS;
 	}
 	if (i < lowerBound) {
-		i = Index(lowerBound);
+		setIndex(lowerBound);
 		error = KEYERR_OUTOFBOUNDS;
 	}
-
-	return i;
 }
 
 

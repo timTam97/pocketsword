@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * $Id: osiswebif.h 1946 2006-07-15 20:41:24Z scribe $
+ * $Id: osiswebif.h 2628 2011-06-28 20:40:34Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -21,13 +21,13 @@
 #ifndef OSISWEBIF_H
 #define OSISWEBIF_H
 
-#include <osishtmlhref.h>
+#include <osisxhtml.h>
 
 SWORD_NAMESPACE_START
 
 /** this filter converts OSIS  text to HTML text with hrefs
  */
-class SWDLLEXPORT OSISWEBIF : public OSISHTMLHREF {
+class SWDLLEXPORT OSISWEBIF : public OSISXHTML {
 	const SWBuf baseURL;
 	const SWBuf passageStudyURL;
 	bool javascript;

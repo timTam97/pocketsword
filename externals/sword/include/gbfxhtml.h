@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * $Id: gbfwebif.h 2628 2011-06-28 20:40:34Z scribe $
+ * gbfxhtmlhref.h
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2011 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -18,23 +18,30 @@
  *
  */
 
-#ifndef GBFWEBIF_H
-#define GBFWEBIF_H
+#ifndef GBFXHTML_H
+#define GBFXHTML_H
 
-#include <gbfxhtml.h>
+#include <swbasicfilter.h>
 
 SWORD_NAMESPACE_START
 
-/** this filter converts GBF text to classed XHTML for web interfaces
+/** this filter converts GBF text to classed XHTML text
  */
-class SWDLLEXPORT GBFWEBIF : public GBFXHTML {
-	const SWBuf baseURL;
-	const SWBuf passageStudyURL;
-
+class SWDLLEXPORT GBFXHTML : public SWBasicFilter {
 protected:
+	class MyUserData : public BasicFilterUserData {
+	public:
+		MyUserData(const SWModule *module, const SWKey *key);
+		bool hasFootnotePreTag;
+		SWBuf version;
+	};
+	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
+		return new MyUserData(module, key);
+	}
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
-	GBFWEBIF();
+	GBFXHTML();
+	virtual const char *getHeader() const;
 };
 
 SWORD_NAMESPACE_END

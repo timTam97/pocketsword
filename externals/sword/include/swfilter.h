@@ -2,7 +2,7 @@
  *  swfilter.h	- definition of class SWFilter used to filter text between
  *				different formats
  *
- * $Id: swfilter.h 1864 2005-11-20 06:06:40Z scribe $
+ * $Id: swfilter.h 2629 2011-06-28 20:57:54Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -42,13 +42,20 @@ class SWDLLEXPORT  SWFilter {
 public:
 	virtual ~SWFilter() {}
 
-	/** This is the main filter function
+	/** This method processes and appropriately modifies the text given it
+	 *	for a particular filter task
+	 *
 	 * @param text The text to be filtered/converted
 	 * @param key Current key That was used.
 	 * @param module Current module.
 	 * @return 0
 	 */
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0) = 0;
+
+	/** This method can supply a header associated with the processing done with this filter.
+	 *	A typical example is a suggested CSS style block for classed containers.
+	 */
+	virtual const char *getHeader() const { return ""; }
 };
 
 	SWORD_NAMESPACE_END

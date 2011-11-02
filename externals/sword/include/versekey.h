@@ -1,7 +1,7 @@
 /******************************************************************************
  *	versekey.h - code for class 'versekey'- a standard Biblical verse key
  *
- * $Id: versekey.h 2508 2010-03-23 09:19:15Z scribe $
+ * $Id: versekey.h 2649 2011-07-29 18:34:07Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -64,10 +64,6 @@ class SWDLLEXPORT VerseKey : public SWKey {
 	/** flag for headings on/off
 	*/
 	char headings;
-
-	/** initialize and allocate books array
-	*/
-	void initstatics();
 
 	/** initializes this VerseKey()
 	*/
@@ -262,6 +258,7 @@ public:
 	*/
 	virtual char Testament() const { return getTestament(); }	// deprecated
 	virtual char getTestament() const;
+	virtual int getTestamentMax() const { return 2; }
 
 	/** Gets book
 	*
@@ -269,6 +266,7 @@ public:
 	*/
 	virtual char Book() const { return getBook(); }	// deprecated
 	virtual char getBook() const;
+	virtual int getBookMax() const { return BMAX[testament-1]; }
 
 	/** Gets chapter
 	*
@@ -370,24 +368,28 @@ public:
 	*/
 	virtual char Headings(char iheadings = MAXPOS(char));
 
+
 	/** Gets index based upon current verse
 	*
 	* @return offset
 	*/
-	virtual long Index() const;
+	virtual long getIndex() const;
+
 
 	/** Sets index based upon current verse
 	*
 	* @param iindex value to set index to
 	* @return offset
 	*/
-	virtual long Index(long iindex);
+	virtual void setIndex(long iindex);
+
 
 	/** Gets index into current testament based upon current verse
 	*
 	* @return offset
 	*/
-	virtual long TestamentIndex() const;
+	virtual long getTestamentIndex() const;
+	virtual long TestamentIndex() const { return getTestamentIndex(); }	// deprecated, use getTestamentIndex()
 
 	virtual const char *getOSISRef() const;
 	virtual const char *getOSISBookName() const;

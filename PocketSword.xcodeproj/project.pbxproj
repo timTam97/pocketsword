@@ -679,6 +679,12 @@
 		05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
 		05B52BDF107EEB7500826AFE /* NavigatorModules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDE107EEB7500826AFE /* NavigatorModules.mm */; };
+		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
+		05B67C97146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
+		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; };
+		05B67C99146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; };
+		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
+		05B67C9B146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
 		05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB3FD1147711B00984097 /* popup-top-bar.png */; };
 		05BCB42011477A9A00984097 /* popup-down-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB41F11477A9A00984097 /* popup-down-button.png */; };
 		05CBE8D0128A840000730CB8 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8CF128A840000730CB8 /* Icon@2x.png */; };
@@ -1473,6 +1479,15 @@
 		05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModuleTypes.mm; sourceTree = "<group>"; };
 		05B52BDD107EEB7500826AFE /* NavigatorModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModules.h; sourceTree = "<group>"; };
 		05B52BDE107EEB7500826AFE /* NavigatorModules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModules.mm; sourceTree = "<group>"; };
+		05B67C8D1461046E00B3E605 /* canon_catholic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic.h; sourceTree = "<group>"; };
+		05B67C8E1461046E00B3E605 /* canon_catholic2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic2.h; sourceTree = "<group>"; };
+		05B67C8F1461046E00B3E605 /* canon_synodalp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_synodalp.h; sourceTree = "<group>"; };
+		05B67C901461046E00B3E605 /* gbfxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gbfxhtml.h; sourceTree = "<group>"; };
+		05B67C911461046E00B3E605 /* osisxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osisxhtml.h; sourceTree = "<group>"; };
+		05B67C921461046E00B3E605 /* thmlxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thmlxhtml.h; sourceTree = "<group>"; };
+		05B67C93146104B400B3E605 /* gbfxhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gbfxhtml.cpp; sourceTree = "<group>"; };
+		05B67C94146104B400B3E605 /* osisxhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osisxhtml.cpp; sourceTree = "<group>"; };
+		05B67C95146104B400B3E605 /* thmlxhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thmlxhtml.cpp; sourceTree = "<group>"; };
 		05BAC36E1414767000F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		05BAC371141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/Downloader.xib; sourceTree = "<group>"; };
 		05BAC372141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/HistoryController.xib; sourceTree = "<group>"; };
@@ -1992,19 +2007,22 @@
 		0527595E10884F64004FB0E0 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				05F7106A11520AB700947290 /* canon_synodalprot.h */,
-				058E2D2B10F56EFC006E4447 /* canon_german.h */,
-				058E2D2C10F56EFC006E4447 /* canon_luther.h */,
-				058E2D2D10F56EFC006E4447 /* canon_vulg.h */,
 				0527595F10884F64004FB0E0 /* canon.h */,
 				0527596010884F64004FB0E0 /* canon_abbrevs.h */,
+				05B67C8D1461046E00B3E605 /* canon_catholic.h */,
+				05B67C8E1461046E00B3E605 /* canon_catholic2.h */,
+				058E2D2B10F56EFC006E4447 /* canon_german.h */,
 				0527596110884F64004FB0E0 /* canon_kjva.h */,
 				0527596210884F64004FB0E0 /* canon_leningrad.h */,
+				058E2D2C10F56EFC006E4447 /* canon_luther.h */,
 				0527596310884F64004FB0E0 /* canon_mt.h */,
 				0527596410884F64004FB0E0 /* canon_nrsv.h */,
 				0527596510884F64004FB0E0 /* canon_nrsva.h */,
 				0527596610884F64004FB0E0 /* canon_null.h */,
 				0527596710884F64004FB0E0 /* canon_synodal.h */,
+				05B67C8F1461046E00B3E605 /* canon_synodalp.h */,
+				05F7106A11520AB700947290 /* canon_synodalprot.h */,
+				058E2D2D10F56EFC006E4447 /* canon_vulg.h */,
 				0527596810884F64004FB0E0 /* cipherfil.h */,
 				0527596910884F64004FB0E0 /* config.h */,
 				0527596A10884F64004FB0E0 /* curlftpt.h */,
@@ -2033,6 +2051,7 @@
 				0527598110884F64004FB0E0 /* gbfthml.h */,
 				0527598210884F64004FB0E0 /* gbfwebif.h */,
 				0527598310884F64004FB0E0 /* gbfwordjs.h */,
+				05B67C901461046E00B3E605 /* gbfxhtml.h */,
 				0527598410884F64004FB0E0 /* Greek2Greek.h */,
 				0527598510884F64004FB0E0 /* GreekChars.h */,
 				0527598610884F64004FB0E0 /* greeklexattribs.h */,
@@ -2063,6 +2082,7 @@
 				0527599F10884F64004FB0E0 /* osisvariants.h */,
 				052759A010884F64004FB0E0 /* osiswebif.h */,
 				052759A110884F64004FB0E0 /* osiswordjs.h */,
+				05B67C911461046E00B3E605 /* osisxhtml.h */,
 				052759A210884F64004FB0E0 /* papyriplain.h */,
 				052759A310884F64004FB0E0 /* plainfootnotes.h */,
 				052759A410884F64004FB0E0 /* plainhtml.h */,
@@ -2127,6 +2147,7 @@
 				052759E110884F64004FB0E0 /* thmlvariants.h */,
 				052759E210884F64004FB0E0 /* thmlwebif.h */,
 				052759E310884F64004FB0E0 /* thmlwordjs.h */,
+				05B67C921461046E00B3E605 /* thmlxhtml.h */,
 				052759E410884F64004FB0E0 /* treekey.h */,
 				052759E510884F64004FB0E0 /* treekeyidx.h */,
 				052759E610884F64004FB0E0 /* unicodertf.h */,
@@ -2372,6 +2393,7 @@
 				05275A5710884F71004FB0E0 /* gbfthml.cpp */,
 				05275A5810884F71004FB0E0 /* gbfwebif.cpp */,
 				05275A5910884F71004FB0E0 /* gbfwordjs.cpp */,
+				05B67C93146104B400B3E605 /* gbfxhtml.cpp */,
 				05275A5A10884F71004FB0E0 /* greeklexattribs.cpp */,
 				05275A5B10884F71004FB0E0 /* latin1utf16.cpp */,
 				05275A5C10884F71004FB0E0 /* latin1utf8.cpp */,
@@ -2391,6 +2413,7 @@
 				05275A6A10884F71004FB0E0 /* osisvariants.cpp */,
 				05275A6B10884F71004FB0E0 /* osiswebif.cpp */,
 				05275A6C10884F71004FB0E0 /* osiswordjs.cpp */,
+				05B67C94146104B400B3E605 /* osisxhtml.cpp */,
 				05275A6D10884F71004FB0E0 /* papyriplain.cpp */,
 				05275A6E10884F71004FB0E0 /* plainfootnotes.cpp */,
 				05275A6F10884F71004FB0E0 /* plainhtml.cpp */,
@@ -2415,6 +2438,7 @@
 				05275A8210884F71004FB0E0 /* thmlvariants.cpp */,
 				05275A8310884F71004FB0E0 /* thmlwebif.cpp */,
 				05275A8410884F71004FB0E0 /* thmlwordjs.cpp */,
+				05B67C95146104B400B3E605 /* thmlxhtml.cpp */,
 				05275A8510884F71004FB0E0 /* unicodertf.cpp */,
 				05275A8610884F71004FB0E0 /* utf16utf8.cpp */,
 				05275A8710884F71004FB0E0 /* utf8arabicpoints.cpp */,
@@ -4023,6 +4047,9 @@
 				05DA778513CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778713CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A213CD754E000A4B97 /* PSWebView.m in Sources */,
+				05B67C97146104B400B3E605 /* gbfxhtml.cpp in Sources */,
+				05B67C99146104B400B3E605 /* osisxhtml.cpp in Sources */,
+				05B67C9B146104B400B3E605 /* thmlxhtml.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4364,6 +4391,9 @@
 				05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
 				05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.m in Sources */,
+				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
+				05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */,
+				05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

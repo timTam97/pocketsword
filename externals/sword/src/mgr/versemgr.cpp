@@ -4,7 +4,7 @@
  *
  * $Id: versemgr.cpp 2108 2007-10-13 20:35:02Z scribe $
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2010 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -34,12 +34,15 @@
 #include <canon_mt.h>		// Masoretic Text (MT) v11n system
 #include <canon_kjva.h>		// KJV + Apocrypha v11n system
 #include <canon_nrsv.h>		// NRSV v11n system
-#include <canon_nrsva.h>	// NRSVA + Apocrypha v11n system
+#include <canon_nrsva.h>	// NRSV + Apocrypha v11n system
 #include <canon_synodal.h>	// Russian Synodal v11n system
 #include <canon_synodalprot.h>	// Russian Protestant Synodal v11n system
 #include <canon_vulg.h>		// Vulgate v11n system
 #include <canon_german.h>	// German v11n system
 #include <canon_luther.h>	// Luther v11n system
+#include <canon_catholic.h>	// Catholic v11n system (10 chapter Esther)
+#include <canon_catholic2.h>	// Catholic2 v11n system (16 chapter Esther)
+#include <canon_synodalp.h>	// SynodalP v11n system (KJV with Synodal-like verse counts)
 
 using std::vector;
 using std::map;
@@ -61,8 +64,11 @@ VerseMgr *VerseMgr::getSystemVerseMgr() {
 		systemVerseMgr->registerVersificationSystem("Synodal", otbooks_synodal, ntbooks_synodal, vm_synodal);
 		systemVerseMgr->registerVersificationSystem("SynodalProt", otbooks_synodalprot, ntbooks_synodalprot, vm_synodalprot);
 		systemVerseMgr->registerVersificationSystem("Vulg", otbooks_vulg, ntbooks_vulg, vm_vulg);
-		systemVerseMgr->registerVersificationSystem("German", otbooks_german, ntbooks_german, vm_german);
+		systemVerseMgr->registerVersificationSystem("German", otbooks_german, ntbooks, vm_german);
 		systemVerseMgr->registerVersificationSystem("Luther", otbooks_luther, ntbooks_luther, vm_luther);
+		systemVerseMgr->registerVersificationSystem("Catholic", otbooks_catholic, ntbooks, vm_catholic);
+		systemVerseMgr->registerVersificationSystem("Catholic2", otbooks_catholic2, ntbooks, vm_catholic2);
+		systemVerseMgr->registerVersificationSystem("SynodalP", otbooks, ntbooks, vm_synodalp);
 	}
 	return systemVerseMgr;
 }

@@ -1,7 +1,7 @@
 /******************************************************************************
 *  url.cpp  - code for an URL parser utility class
 *
-* $Id: url.cpp 2250 2009-02-14 05:48:58Z scribe $
+* $Id: url.cpp 2659 2011-10-25 17:35:20Z scribe $
 *
 * Copyright 2003 CrossWire Bible Society (http://www.crosswire.org)
 *	CrossWire Bible Society
@@ -174,6 +174,7 @@ void URL::parse () {
 		SWBuf paramName;
 		SWBuf paramValue;
 				
+		if (checkAnchor) checkAnchor = false;
 /*
 		end = strchr(urlPtr, '#');
 		if (!end) {

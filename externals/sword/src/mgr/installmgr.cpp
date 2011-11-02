@@ -664,16 +664,15 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 					SWBuf key = actions->second.stripPrefix('=');
 					if (key == "FTPSource") {
 						if (actions->second != "REMOVE") {
-							InstallSource *is;
-							is = new InstallSource("FTP", actions->second.c_str());
+							InstallSource *is = new InstallSource("FTP", actions->second.c_str());
 							is->uid = actions->first;
 							if(is->caption == "CrossWire") {
 								is->type = "HTTP";
-								is->caption = "CrossWire 1 (http)";
+								is->caption = "CrossWire 1";
 								is->directory = "/ftpmirror/pub/sword/raw";
 							} else if(is->caption == "CrossWire Beta") {
 								is->type = "HTTP";
-								is->caption = "CrossWire 2 (http)";
+								is->caption = "CrossWire 2";
 								is->directory = "/ftpmirror/pub/sword/betaraw";
 							} else if(is->caption == "Bible.org") {
 								is->caption = "NET (Bible.org)";

@@ -4,7 +4,7 @@
  *			and provides lookup and parsing functions based on
  *			class StrKey
  *
- * $Id: rawstr4.h 2303 2009-04-06 13:38:34Z scribe $
+ * $Id: rawstr4.h 2656 2011-09-29 15:46:37Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,6 +36,7 @@ class SWBuf;
 class SWDLLEXPORT RawStr4 {
 	static int instance;		// number of instantiated RawStr4 objects or derivitives
 	char *path;
+	bool caseSensitive;
 	mutable long lastoff;		// for caching and optimizations
 
 protected:
@@ -47,7 +48,7 @@ protected:
 	void doLinkEntry(const char *destkey, const char *srckey);
 public:
 	char nl;
-	RawStr4(const char *ipath, int fileMode = -1);
+	RawStr4(const char *ipath, int fileMode = -1, bool caseSensitive = false);
 	virtual ~RawStr4();
 	void getIDXBuf(long ioffset, char **buf) const;
 	void getIDXBufDat(long ioffset, char **buf) const;
