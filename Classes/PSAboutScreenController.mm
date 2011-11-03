@@ -72,10 +72,20 @@
 								</p>\n\
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\
-										<i><a href=\"http://xiphos.org/\">Xiphos (Windows, Linux/Unix)</a></i><br />\n\
-										<i><a href=\"http://www.macsword.com/\">MacSword</a></i><br />\n\
-										<i><a href=\"http://www.bibletime.info/\">BibleTime (Linux/Unix and Windows)</a></i><br />\n\
+										&bull; <i><a href=\"http://xiphos.org/\">Xiphos (Windows, Linux/Unix)</a></i><br />\n\
+										&bull; <i><a href=\"http://www.macsword.com/\">Eloquent/MacSword</a></i><br />\n\
+										&bull; <i><a href=\"http://www.bibletime.info/\">BibleTime (Linux/Unix and Windows)</a></i><br />\n\
 									</p>\n\
+								<p>If you would like to see PocketSword in your language and are willing to help translate it, please Email Us using the button in the top right corner &amp; we would love your help!</p>\
+					  \
+					  \n\
+					  \n\
+					  <p>PocketSword takes advantage of different Open Source projects, including:<br />\n\
+					  &bull; <i><a href=\"http://www.crosswire.org/sword/index.jsp\">The SWORD Project</a></i><br />\n\
+					  &bull; <i><a href=\"http://code.google.com/p/cocoahttpserver/\">CocoaHTTPServer</a></i><br />\n\
+					  &bull; <i><a href=\"https://github.com/zbyhoo/EGOTableViewPullRefresh\">zbyhoo's fork of EGOTableViewPullRefresh</a></i><br />\n\
+					  &bull; <i><a href=\"http://code.google.com/p/ziparchive/\">ZipArchive</a></i><br />\n\
+					  </p>\
 					  <br />\n\
 					  <br />\n\
 					  <div class=\"crosswire\">\n\
