@@ -166,6 +166,8 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
   // manually process if it wasn't a simple substitution
 		XMLTag tag(token);
 		
+		//printf("		tag.toString() = %s\n", tag.toString());
+
 		// <w> tag
 		if (!strcmp(tag.getName(), "w")) {
  

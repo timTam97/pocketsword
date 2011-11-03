@@ -25,12 +25,16 @@
 {
 	//DLog(@"");
 	helpInfo.text = NSLocalizedString(@"manualInstallHelp", @"");
-	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	//NSString *root = DEFAULT_MMM_PATH;//[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	
+	[[NSFileManager defaultManager] createDirectoryAtPath: DEFAULT_MMM_PATH withIntermediateDirectories: YES attributes: NULL error: NULL];
+	if (![[NSFileManager defaultManager] fileExistsAtPath: DEFAULT_MMM_PATH]) {
+		ALog(@"Couldn't create MMM folder: %@", DEFAULT_MMM_PATH);
+	}
 	httpServer = [HTTPServer new];
 	[httpServer setType:@"_http._tcp."];
 	[httpServer setConnectionClass:[MyHTTPConnection class]];
-	[httpServer setDocumentRoot:[NSURL fileURLWithPath:root]];
+	[httpServer setDocumentRoot:[NSURL fileURLWithPath:DEFAULT_MMM_PATH]];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInfoUpdate:) name:@"LocalhostAdressesResolved" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNewModule:) name:@"NewFileUploaded" object:nil];
@@ -138,8 +142,8 @@
 - (void)handleNewModule:(NSNotification *)notification
 {
 	DLog(@"%@", [notification object]);
-	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-	NSString *file = [root stringByAppendingPathComponent:[notification object]];
+	//NSString *root = DEFAULT_MMM_PATH;//[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	NSString *file = [DEFAULT_MMM_PATH stringByAppendingPathComponent:[notification object]];
 
 	[[PSModuleController defaultModuleController] installModulesFromZip:file ofType:unknown_type removeZip:YES];
 	

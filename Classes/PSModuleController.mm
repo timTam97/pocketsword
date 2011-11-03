@@ -148,8 +148,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 
 	DLog(@"\n\n%@\n\n", zippedModule);
-	NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-	NSString *outfile = [root stringByAppendingPathComponent:@"out"];
+	//NSString *root = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	NSString *outfile = [DEFAULT_MMM_PATH stringByAppendingPathComponent:@"out"];
 
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	[fileManager removeItemAtPath:outfile error:NULL];

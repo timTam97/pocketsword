@@ -260,6 +260,8 @@
 		[UIApplication sharedApplication].idleTimerDisabled = YES;
 	}
 
+	[[NSFileManager defaultManager] removeItemAtPath: DEFAULT_MMM_PATH error:NULL];//delete our normal tmp folder...
+
 	[(NSObject*)delegate performSelectorOnMainThread:@selector(finishedInitializingPocketSword) withObject:nil waitUntilDone:NO];
 	//[delegate finishedInitializingPocketSword];
 	
