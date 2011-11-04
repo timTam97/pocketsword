@@ -9,12 +9,14 @@
 #import "PSModuleController.h"
 #import "PSAddSourceViewController.h"
 
+@class NavigatorModuleTypes;
+
 @interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate> {
 
 	IBOutlet id table;
 	IBOutlet id refreshButton;
 	//IBOutlet PSModuleController *moduleManager;
-	IBOutlet id navigatorModuleTypes;
+	IBOutlet NavigatorModuleTypes *navigatorModuleTypes;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet PSAddSourceViewController *addSourceViewController;
 		

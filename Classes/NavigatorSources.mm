@@ -168,16 +168,14 @@
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		//[[PSModuleController defaultModuleController] displayBusyIndicator];
 
 		[sIS swordManager];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-		//[[PSModuleController defaultModuleController] hideBusyIndicator];
 	}
-	[((NavigatorModuleTypes*)navigatorModuleTypes) setDataArray:[sIS moduleListByType]];
-	((NavigatorModuleTypes*)navigatorModuleTypes).title = [sIS caption];
-	[((NavigatorModuleTypes*)navigatorModuleTypes) reloadTable];
+	[navigatorModuleTypes setDataArray:[sIS moduleListByType]];
+	navigatorModuleTypes.title = [sIS caption];
+	[navigatorModuleTypes reloadTable];
 	
 	// need to set the current install source, for when we want to install a module.
 	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];

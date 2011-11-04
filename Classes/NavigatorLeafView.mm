@@ -268,6 +268,7 @@ NSTimer *downloadTimer;
 
 - (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     [[statusController view] removeFromSuperview];
+	[self refreshInstallButton];
 }
 
 - (void)hideOperationStatus {
@@ -288,7 +289,6 @@ NSTimer *downloadTimer;
         bti = UIBackgroundTaskInvalid;
     }
 
-    
     [self refreshDetailsView];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.5];

@@ -33,7 +33,6 @@ NSTimer *refreshTimer;
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	//[table reloadData];	// populate our table's data
 	[self updateRefreshButton];
 
 	[cancelButton setTitle: NSLocalizedString(@"Cancel", @"Cancel") forState: UIControlStateNormal];
@@ -51,7 +50,6 @@ NSTimer *refreshTimer;
 	[super viewDidAppear:animated];
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-	//[[PSModuleController defaultModuleController] hideBusyIndicator];
 }
 
 
@@ -64,20 +62,14 @@ NSTimer *refreshTimer;
 //   so we don't display all categories available, but instead only the categories supported by SwordManager.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return [dataArray count];
-//	if ([dataArray count] == 0)
-//		return 0;
-//	else
-//		return [[SwordManager moduleTypes] count];
 }
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if ([dataArray count] == 0) {
-		//((UITableView*)table).sectionHeaderHeight = 40.5;
 		return NSLocalizedString(@"NoModulesRefresh", @"No modules here. Try a refresh.");
 	}
 	else {
-		//((UITableView*)table).sectionHeaderHeight = 1.0;
 		return NSLocalizedString(@"ModuleTypesHeaderText", @"");
 	}
 }
@@ -200,23 +192,17 @@ NSTimer *refreshTimer;
 	BOOL failed = YES;
 	float progress = reporter->fileProgress;
 	[statusBar setProgress: reporter->fileProgress];
-	//[statusOverallBar setProgress: reporter->overallProgress];
-	//NSString *desc = [[NSString alloc] initWithCString: reporter->getDescription() encoding: [NSString defaultCStringEncoding]];
-	//[statusOverallText setText: desc];
-	//[desc release];
 	
 	//DLog(@"  -------  Progress: %f", progress);
 	//if(!refreshTimer)
 		//NSLog(@"######################### borken");
 	
 	if (progress == 1.0) {
-		if(refreshTimer) {// move this to updateRefreshStatus?
+		if(refreshTimer) {
 			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
-			//[refreshTimer invalidate];
 			refreshTimer = nil;
 		}
 		[self performSelectorOnMainThread:@selector(hideOperationStatus) withObject:nil waitUntilDone:YES];
-		//[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 		
 		failed = NO;
 	} else if (progress == -1.0) {
@@ -226,9 +212,8 @@ NSTimer *refreshTimer;
 	}
 	
 	if (failed) {
-		if(refreshTimer) {// move this to updateRefreshStatus?
+		if(refreshTimer) {
 			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
-			//[refreshTimer invalidate];
 			refreshTimer = nil;
 		}
 		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
@@ -240,12 +225,41 @@ NSTimer *refreshTimer;
 
 - (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     [[statusController view] removeFromSuperview];
+    [self updateRefreshButton];
+}
+
+- (void)refreshDataArray {
+	NSArray *installSources = [[[PSModuleController defaultModuleController] swordInstallManager] installSourceList];
+	SwordInstallSource *sIS = nil;
+	for(SwordInstallSource *src in installSources) {
+		if([self.title isEqualToString:[src caption]]) {
+			sIS = src;
+			break;
+		}
+	}
+	if(!sIS) {
+		[self.navigationController popViewControllerAnimated: YES];
+	}
+	if(![sIS isSwordManagerLoaded]) {
+		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		
+		[sIS swordManager];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	}
+	[self setDataArray:[sIS moduleListByType]];
+	//self.title = [sIS caption];
+	[self reloadTable];
+	
+	// need to set the current install source, for when we want to install a module.
+	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];
+
 }
 
 - (void)hideOperationStatus {
 	//NSLog(@" ++++++++ hideOperationStatus");
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[navigatorSources.tabController dismissModalViewControllerAnimated: YES];
 
     UIDevice* device = [UIDevice currentDevice];
     BOOL backgroundSupported = NO;
@@ -257,9 +271,9 @@ NSTimer *refreshTimer;
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
+	
+	[self refreshDataArray];
     
-    [self updateRefreshButton];
-
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView setAnimationDelegate:self];
@@ -267,7 +281,7 @@ NSTimer *refreshTimer;
     [UIView setAnimationDidStopSelector:@selector(hideOperationStatusEnded:finished:context:)];
     [[statusController view] setAlpha:0.0];
     [UIView commitAnimations];
-	[self.navigationController popViewControllerAnimated: YES];
+	//[self.navigationController popViewControllerAnimated: YES];//dodgy pop back to allow the user to reselect this installSource. TODO: fix........
 	
 	[statusText setText: @""];
 	[statusOverallText setText: @""];
