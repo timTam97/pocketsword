@@ -398,7 +398,7 @@
 					case BookRange:
 						NSString *currentBook = bookName;
 						if(!self.bookName) {
-							currentBook = [PSModuleController getCurrentBibleRef];
+							currentBook = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
 							NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
 							if(lastSpace.location != NSNotFound) {
 								currentBook = [currentBook substringToIndex:lastSpace.location];
@@ -571,7 +571,7 @@
 					optionTVC.searchRange = self.searchRange;
 					NSString *currentBook = bookName;
 					if(!self.bookName) {
-						currentBook = [PSModuleController getCurrentBibleRef];
+						currentBook = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
 						NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
 						if(lastSpace.location != NSNotFound) {
 							currentBook = [currentBook substringToIndex:lastSpace.location];
