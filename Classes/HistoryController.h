@@ -24,6 +24,7 @@
 	ShownTab listType;
 
 	IBOutlet UIBarButtonItem	*historyCloseButton;
+	IBOutlet UIBarButtonItem	*historyClearButton;
 	IBOutlet UINavigationItem	*historyNavigationItem;
 	IBOutlet UITableView		*historyListTable;
 	IBOutlet UINavigationBar	*historyNavigationBar;
@@ -37,6 +38,7 @@
 - (void)addCommentaryHistoryItem;
 
 + (void)addHistoryItem:(ShownTab)tabForHistory;
+- (IBAction)trashButtonPressed:(id)sender;
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory;
 
 @end

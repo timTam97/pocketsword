@@ -42,21 +42,13 @@
 	listType = listT;
 }
 
-//- (ShownTab)listType {
-//	return listType;
-//}
-
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addBibleHistoryItem) name:NotificationAddBibleHistoryItem object:nil];
-	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addCommentaryHistoryItem) name:NotificationAddCommentaryHistoryItem object:nil];
 	historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-
+	historyClearButton.title = NSLocalizedString(@"HistoryClearButtonTitle", @"Clear");
 }
 
 - (void)viewDidUnload {
-	//[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddBibleHistoryItem object:nil];
-	//[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationAddCommentaryHistoryItem object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -163,6 +155,20 @@
 	
 	[pool release];
 	
+}
+
+- (IBAction)trashButtonPressed:(id)sender {
+	switch (listType) {
+		case BibleTab:
+			[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"bibleHistory"];
+			break;
+		case CommentaryTab:
+			[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"commentaryHistory"];
+			break;
+		default:
+			break;
+	}
+	[historyListTable reloadData];
 }
 
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory {

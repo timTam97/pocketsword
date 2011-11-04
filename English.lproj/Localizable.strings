@@ -294,3 +294,6 @@
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
 "PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";
