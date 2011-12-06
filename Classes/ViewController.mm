@@ -1474,6 +1474,8 @@ bool ps_viewcontroller_initialized = false;
 	}
 	
 	if(entry) {
+		entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+		entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 		[self showInfo: entry];
 		load = NO;
 	} else {
