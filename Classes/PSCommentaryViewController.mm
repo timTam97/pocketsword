@@ -270,6 +270,9 @@
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
 				entry = (NSString*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
+				entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+				entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryCommentary] name]];
 			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
 				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
@@ -279,19 +282,14 @@
 				}
 				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+					entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryCommentary] name]];
 				}
 				[tmpEntry release];
 			}
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-//			BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
-//			BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
-//			SwordManager *swordManager = [SwordManager defaultManager];
-//			[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
-//			[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
 			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
-//			[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
-//			[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
 			NSMutableString *tmpEntry = [@"" mutableCopy];
 			for(NSDictionary *dict in array) {
 				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
@@ -300,6 +298,8 @@
 			}
 			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+				entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			}
 			[tmpEntry release];

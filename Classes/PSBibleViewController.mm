@@ -328,6 +328,8 @@
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
 				entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
+				entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+				entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
 				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
@@ -339,6 +341,8 @@
 				}
 				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
 					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+					entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 				}
 				[tmpEntry release];
