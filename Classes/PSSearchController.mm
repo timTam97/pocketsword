@@ -642,7 +642,7 @@
 		joiningString = @" && ";
 	} else*/ if(searchType == OrSearch) {
 		joiningString = @" || ";
-	} else if(searchType == ExactSearch) {
+	} else if(searchType == ExactSearch && !strongsSearch) {//strong's search trumps exact!
 		joiningString = @" ";
 		[fullSearchTerm appendString:@"\""];
 	}
@@ -678,7 +678,7 @@
 		}
 		i++;
 	}
-	if(searchType == ExactSearch) {
+	if(searchType == ExactSearch && !strongsSearch) {//strong's search trumps exact!
 		[fullSearchTerm appendString:@"\""];
 	}
 	self.searchTerm = fullSearchTerm;
