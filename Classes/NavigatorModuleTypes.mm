@@ -18,6 +18,35 @@
 
 NSTimer *refreshTimer;
 
+- (void)createRefreshTimer {
+	SEL method = @selector(updateRefreshStatus);
+	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
+	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
+	[invocation setTarget: self];
+	[invocation setSelector: method];
+	
+	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+}
+
+- (void)_refreshDownloadSource {
+	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
+	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
+	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+	
+	[self createRefreshTimer];
+	
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+    }	
+}
+
+
 - (void)updateRefreshButton {
 	self.navigationItem.rightBarButtonItem = nil;
 	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
@@ -50,6 +79,11 @@ NSTimer *refreshTimer;
 	[super viewDidAppear:animated];
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+    if(![[statusController view] superview]) {
+		if([dataArray count] == 0) {
+			[self _refreshDownloadSource];
+		}
+	}
 }
 
 
@@ -99,17 +133,8 @@ NSTimer *refreshTimer;
 	
 }
 
-- (void)createRefreshTimer {
-	SEL method = @selector(updateRefreshStatus);
-	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
-	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-	[invocation setTarget: self];
-	[invocation setSelector: method];
-	
-	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
-}
-
 - (IBAction)cancelRefreshDownloadSource {
+	//incomplete
 	// need to do more than this!!!
 	[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 }
@@ -125,27 +150,7 @@ NSTimer *refreshTimer;
 		return;
 	}
 	
-	//[self.navigationController popViewControllerAnimated: NO];
-    
-	//[self performSelectorInBackground: @selector(runRefreshDownloadSource) withObject: nil];
-	//testing:
-	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
-	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
-	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
-	//[self updateRefreshStatus];
-	//end testing.
-	
-	[self createRefreshTimer];
-	
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-    
-    if(backgroundSupported) {
-        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
-    }
+	[self _refreshDownloadSource];
 	
 	[pool release];
 }
