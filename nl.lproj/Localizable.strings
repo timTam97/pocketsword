@@ -296,3 +296,6 @@
 "SearchStartSearchButton" = "Start met zoeken";
 //"PreferencesModuleSectionNote-old" = "Module specifieke instellingen zijn nu ingesteld voor elke afzonderlijke module. Druk op de module-lijst knop in de rechter bovenhoek van het desbetreffende tabblad en druk op de openbaarmaken-knop voor de module.";
 "PreferencesModuleSectionNote" = "Instellingen voor modules (Zoals Strong's Numbers, rode letters modus, etc) zijn ingesteld voor elke afzonderlijke module. Om ze te veranderen selecteert u de bewuste module uit de lijst aan de onderkant van dit scherm.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

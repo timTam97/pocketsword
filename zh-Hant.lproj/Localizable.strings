@@ -294,3 +294,6 @@
 "SearchStartSearchButton" = "開始搜尋";
 //"PreferencesModuleSectionNote-old" = "每一模組可進行個別設定，您可從模組列表中進行編輯";
 "PreferencesModuleSectionNote" = "模組顯示特定選項 (如史朗特碼，紅字...等) 如要變更，由以下模組列表選取";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

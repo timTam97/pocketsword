@@ -295,3 +295,6 @@
 "SearchStartSearchButton" = "Empezar búsqueda";
 //"PreferencesModuleSectionNote-old" = "Las preferencias específicas de módulo se establecen ahora individualmente para cada módulo. Para cambiarlas, toca el botón de la pestaña relevante en la esquina superior derecha de la Lista de Módulos y luego el botón que corresponde al módulo.";
 "PreferencesModuleSectionNote" = "Las preferencias específicas de visualización de módulo (como los códigos Strong, modo palabras de Cristo en rojo, etc.) se establecen ahora individualmente para cada módulo. Para cambiarlas, selecciona tu módulo de la lista al pie de esta pantalla.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

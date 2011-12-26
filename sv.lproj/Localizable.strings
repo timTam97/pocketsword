@@ -296,3 +296,6 @@
 "SearchStartSearchButton" = "Start Search";
 //"PreferencesModuleSectionNote-old" = "Inställningar som är specifika för moduler ställs in enkilt för varje modul. För att ändra en moduls inställningar, öppna modul-listan genom att trycka i den flik som modulen förekommer i på knappen uppe i högra hörnet. Då får du fram en modul lista. Tryck sedan på expanderingknappen för den modul du vill redigera, för att få fram inställningarna för den modulen.";
 "PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

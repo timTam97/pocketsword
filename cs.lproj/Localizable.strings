@@ -296,3 +296,5 @@
 
 "PreferencesModuleSectionNote" = "Je možné upravit nastavení pro jednotlivé moduly. Vyberte si modul ze seznamu uvedeného na konci této obrazovky.";
 
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

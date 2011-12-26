@@ -296,3 +296,6 @@
 "SearchStartSearchButton" = "検索開始";
 //"PreferencesModuleSectionNote-old" = "拡張データごとの設定がなされました。変更する場合には、それぞれのタブ内にて右上端の拡張データ一覧ボタンをタップした後、該当拡張データの公開ボタンをタップしてください。";
 "PreferencesModuleSectionNote" = "拡張データごとの表示設定(例: ストロングズナンバー表示、イエスの発言赤文字表示)がなされました。変更する場合には、当画面下段に表示されている該当拡張データの一覧から変更したい拡張データ名をタップしてください。";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

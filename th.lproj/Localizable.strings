@@ -294,3 +294,6 @@
 "Off" = "ปิด";
 "SearchStartSearchButton" = "เริ่มค้นหา";
 "PreferencesModuleSectionNote" = "ตั้งค่าการแสดงผลเจาะจงสำหรับโมดูล (เช่น ตัวเลขสตรอง, โหมดอักษรสีแดง, ฯลฯ) ตั้งค่าเจาะจงแต่ละโมดูล โดยเลือกโมดูลจากรายการที่จะตั้งค่าจากด้านล่างของหน้าจอนี้";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

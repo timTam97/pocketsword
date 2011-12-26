@@ -294,3 +294,6 @@
 "Off" = "Off";
 "SearchStartSearchButton" = "Iniciar Pesquisa";
 "PreferencesModuleSectionNote" = "Preferências do módulo específico de exibição (tais como Números de Strong, modo Letra Vermelha, etc) são configurados para cada módulo individual. Para alterá-los, selecione o módulo na lista na parte inferior da tela.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

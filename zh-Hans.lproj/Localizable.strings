@@ -295,3 +295,6 @@
 "SearchStartSearchButton" = "开始搜寻";
 //"PreferencesModuleSectionNote-old" = "各个模块有自己的优先选择了。若要改动，击打相关选项右上角模块列表键，再击打模块的发布键。";
 "PreferencesModuleSectionNote" = "各个模块有自己的优先选择(例如史特朗码，红字模式等）。 若要改动，从屏幕底部的列表中选你的模块。";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

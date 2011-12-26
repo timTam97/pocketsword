@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2010 CrossWire Bible Society
 
@@ -296,3 +296,6 @@
 "SearchStartSearchButton" = "검색 시작";
 //"PreferencesModuleSectionNote-old" = "Module specific preferences are now set for each individual module. To change them, tap on the Module List button in the top right corner of the relevant tab & tap the disclosure button for the module.";
 "PreferencesModuleSectionNote" = "모듈 특성 화면 설정 (스트롱 코드와 빨간 글씨 모드와 같은)은 모듈의 개별 설정에 따릅니다. 변경하기 위해서는 화면 아래 목록에서 원하는 모듈을 선택하십시오.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

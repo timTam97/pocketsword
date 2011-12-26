@@ -294,3 +294,6 @@
 "Off" = "Aus";
 "SearchStartSearchButton" = "Suchen";
 "PreferencesModuleSectionNote" = "Modul-spezifische Einstellungen werden für jedes Modul einzeln gespeichert. Um diese zu ändern, gehen Sie zur Liste der Module unten auf dieser Seite.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";

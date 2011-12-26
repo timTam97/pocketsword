@@ -296,3 +296,6 @@
 "SearchStartSearchButton" = "Commencer la Recherche";
 //"PreferencesModuleSectionNote-old" = "Les préférences spécifiques de module sont maintenant réglées pour chaque module. Pour les modifier, tapez sur le bouton Liste des modules dans le coin en haut à droite de l'onglet correspondant puis sur le bouton d'information du module";
 "PreferencesModuleSectionNote" = "Les préférences d'affichage spécifiques aux modules (comme les nombres de Strong, le mode caractères rouges, etc) sont fixés pour chaque module. Pour les modifier, sélectionnez votre module dans la liste au bas de cet écran.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";
