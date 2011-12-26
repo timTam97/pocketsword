@@ -80,7 +80,7 @@ NSTimer *refreshTimer;
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
     if(![[statusController view] superview]) {
-		if([dataArray count] == 0) {
+		if(([dataArray count] == 0)  && [PSModuleController checkNetworkConnection]) {
 			[self _refreshDownloadSource];
 		}
 	}
