@@ -12,7 +12,7 @@
 #import "ZipArchive.h"
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.3"
-#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-100511"
+#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-261211"
 
 @implementation PSLaunchViewController
 
@@ -140,7 +140,6 @@
 		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary removeZip:NO];
 		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary removeZip:NO];
 		[defaults setObject:@"Robinson" forKey:DefaultsMorphGreekModule];
-		[defaults setObject:@"StrongsRealGreek" forKey:DefaultsStrongsGreekModule];
 		[defaults setObject:@"StrongsRealHebrew" forKey:DefaultsStrongsHebrewModule];
 		[defaults setBool: YES forKey:@"loadedBundledStrongsAndMorph"];
 		[defaults synchronize];
