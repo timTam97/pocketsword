@@ -1216,21 +1216,21 @@
 							, frameInterval);\n\
 					}\n\
 					function scrollToPosition(position) {\n\
-						//setTimeout(\"window.scrollTo(0, \"+position+\")\", 250);\n\
-						setTimeout(\"scrollToYOffset(\"+position+\")\", 250);\n\
+						setTimeout(\"window.scrollTo(0, \"+position+\")\", 250);\n\
+						//setTimeout(\"scrollToYOffset(\"+position+\")\", 250);\n\
 					}\n\
 					function _scrollToVerse(verse) {\n\
 						if(verse == '1' || verse == '0') {\n\
-							//window.scrollTo(0,0);\n\
-							scrollToYOffset(0);\n\
+							window.scrollTo(0,0);\n\
+							//scrollToYOffset(0);\n\
 						} else if(versepos[verse] != 0) {\n\
-							//window.scrollTo(0, versepos[verse]);\n\
-							scrollToYOffset(versepos[verse]);\n\
+							window.scrollTo(0, versepos[verse]);\n\
+							//scrollToYOffset(versepos[verse]);\n\
 						} else {\n\
 							for(var ii = verse; ii > 0; ii--) {\n\
 								if(versepos[ii] != 0) {\n\
-									//window.scrollTo(0, versepos[ii]);\n\
-									scrollToYOffset(versepos[ii]);\n\
+									window.scrollTo(0, versepos[ii]);\n\
+									//scrollToYOffset(versepos[ii]);\n\
 								}\n\
 							}\n\
 						}\n\
