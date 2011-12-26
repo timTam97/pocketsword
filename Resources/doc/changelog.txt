@@ -1,4 +1,11 @@
 
+New in v1.4.2
+- Fixed glitches with the Downloads tab
+- Added Korean localisation
+- Added "delete all" button to the history section
+- Updated Strong's Greek dictionary
+- Bug fixes
+
 New in v1.4.1
 - iPad version!
 - addition of multitasking support, so you can continue downloading your modules while the app isn't the active app.
