@@ -14,6 +14,7 @@
 	NSString *parentFolders;
 	BOOL displayAddFolderRow;
 	NSIndexPath *rowToDelete;
+	BOOL bookmarksEditing;
 }
 
 @property (retain, readwrite) PSBookmarkFolder *bookmarkFolder;

@@ -28,6 +28,7 @@
 		self.bookmarkFolder = folder;
 		isAddingBookmark = adding;
 		self.editing = NO;
+		bookmarksEditing = NO;
 		parentFolders = [parentFoldersString copy];
 		displayAddFolderRow = NO;
 	}
@@ -40,6 +41,7 @@
 		self.bookmarkFolder = [PSBookmarks defaultBookmarks];
 		isAddingBookmark = NO;
 		self.editing = NO;
+		bookmarksEditing = NO;
 		parentFolders = nil;
 		displayAddFolderRow = NO;
 	}
@@ -101,19 +103,22 @@
 
 - (void)editButtonPressed {
 	displayAddFolderRow = NO;
-	if(!self.editing) {
+	if(!bookmarksEditing) {
 		displayAddFolderRow = YES;
 		if(!self.isAddingBookmark) {
 			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		} else {
 			[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		}
+		[self setEditing:NO animated:NO];//if the user has side-swiped to delete, remove that delete button first.
 		[self setEditing:YES animated:YES];
+		bookmarksEditing = YES;
 		UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editButtonPressed)];
 		[self.navigationItem setRightBarButtonItem:doneButton animated:YES];
 		[doneButton release];
 	} else {
 		[self setEditing:NO animated:YES];
+		bookmarksEditing = NO;
 		if(!self.isAddingBookmark) {
 			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		} else {
@@ -160,8 +165,6 @@
 		} else {
 			return [bookmarkFolder.children count];
 		}
-//	} else if(self.editing) {
-//		return 1;
 	} else if(isAddingBookmark || displayAddFolderRow) {
 		return 1;//0;
 	} else {
@@ -326,7 +329,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	// tapping on the cell in section 1 will:
 	if(indexPath.section == 1) {
-		if(self.editing) {
+		if(bookmarksEditing) {
 			// add a folder
 			[self insertEditFolderButtonPressed:nil];
 		} else {
@@ -336,7 +339,7 @@
 	} else {
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		if(rowObject.folder) {
-			if(self.editing) {
+			if(bookmarksEditing) {
 				// edit this folder:
 				[self insertEditFolderButtonPressed:(PSBookmarkFolder*)rowObject];
 			} else {
@@ -350,7 +353,7 @@
 				[bnc release];
 			}
 		} else {
-			if(self.editing) {
+			if(bookmarksEditing) {
 				// edit this bookmark:
 				PSBookmarksAddTableViewController *abc = [[PSBookmarksAddTableViewController alloc] initWithBookmarkToEdit:(PSBookmark*)rowObject parentFolders:self.parentFolders];
 				[self.navigationController pushViewController:abc animated:YES];
