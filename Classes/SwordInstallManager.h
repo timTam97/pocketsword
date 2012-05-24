@@ -13,7 +13,7 @@
 #include <installmgr.h>
 #include <swconfig.h>
 #include <multimapwdef.h>
-#include "PSStatusReporter.h";
+#include "PSStatusReporter.h"
 class sword::SWModule;
 class sword::InstallMgr;
 using sword::SWModule;

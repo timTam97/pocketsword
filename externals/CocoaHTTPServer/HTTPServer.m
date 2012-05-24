@@ -229,7 +229,8 @@
 			// Create the NSNetService with our basic parameters
 			netService = [[NSNetService alloc] initWithDomain:domain type:type name:name port:port];
 			
-			[netService setDelegate:self];
+			//cast to id to get around iOS 3 vs iOS 4 warning...  :P
+			[netService setDelegate:(id)self];
 			[netService publish];
 			
 			// Do not set the txtRecordDictionary prior to publishing!!!
