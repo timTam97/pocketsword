@@ -45,16 +45,27 @@
 	    
 	// Add the tab bar controller's current view as a subview of the window
     //[window addSubview:tabBarController.view];
-	[window addSubview:launchViewController.view];
+	
+	if([window respondsToSelector:@selector(rootViewController)]) {
+		window.rootViewController = launchViewController;
+	} else {
+		[window addSubview:launchViewController.view];
+	}
 	[launchViewController performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
+	
+	[self.window makeKeyAndVisible];
 	
 	return YES;
 }
 
 - (void)finishedInitializingPocketSword {
 	//DLog(@"finishedInitializing, now to display the tab bar controller");
-	[launchViewController.view removeFromSuperview];
-    [window addSubview:tabBarController.view];
+	if([window respondsToSelector:@selector(rootViewController)]) {
+		window.rootViewController = tabBarController;
+	} else {
+		[launchViewController.view removeFromSuperview];
+		[window addSubview:tabBarController.view];
+	}
 	
 	if(self.launchedWithOptions) {
 		NSURL *url = [launchedWithOptions objectForKey:UIApplicationLaunchOptionsURLKey];
