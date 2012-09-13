@@ -749,6 +749,8 @@
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
 		05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
+		05E7F56116018E26006EA9A3 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E7F56016018E26006EA9A3 /* Icon-72@2x.png */; };
+		05E7F56216018E49006EA9A3 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E7F56016018E26006EA9A3 /* Icon-72@2x.png */; };
 		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
@@ -1590,6 +1592,7 @@
 		05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchController.mm; path = Classes/PSSearchController.mm; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
+		05E7F56016018E26006EA9A3 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "Resources/Icon-72@2x.png"; sourceTree = "<group>"; };
 		05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSRefSelectorController.h; path = Classes/PSRefSelectorController.h; sourceTree = "<group>"; };
 		05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSRefSelectorController.mm; path = Classes/PSRefSelectorController.mm; sourceTree = "<group>"; };
 		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -2654,6 +2657,7 @@
 				E9D540F20FA415BA00AD011C /* Icon.png */,
 				05CBE8CF128A840000730CB8 /* Icon@2x.png */,
 				05CBE8F7128A85DF00730CB8 /* Icon-72.png */,
+				05E7F56016018E26006EA9A3 /* Icon-72@2x.png */,
 				05CBE900128A86CA00730CB8 /* Icon-512.png */,
 				059A6CBF11B79ABD00B33E54 /* bible.png */,
 				05DD8668122E5EB400115EAD /* bible@2x.png */,
@@ -3596,6 +3600,7 @@
 				0528685313E012660044A388 /* code2000.ttf in Resources */,
 				05717C9713F27C5D00753423 /* Entitlements.plist in Resources */,
 				05F4D227160189940072620A /* Default-568h@2x.png in Resources */,
+				05E7F56216018E49006EA9A3 /* Icon-72@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3690,6 +3695,7 @@
 				0528685213E012660044A388 /* code2000.ttf in Resources */,
 				05717C9513F27B8000753423 /* Entitlements.plist in Resources */,
 				05F4D226160189940072620A /* Default-568h@2x.png in Resources */,
+				05E7F56116018E26006EA9A3 /* Icon-72@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
