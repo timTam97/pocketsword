@@ -18,6 +18,8 @@
 
 + (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
++ (NSUInteger)supportedInterfaceOrientations;
+
 + (BOOL)iPad;
 
 @end

@@ -143,6 +143,38 @@
 	return NO;
 }
 
++ (NSUInteger)supportedInterfaceOrientations {
+	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+	switch (rotationLockPosition) {
+		case RotationEnabled:
+		{
+			if([PSResizing iPad]) {
+				return UIInterfaceOrientationMaskAll;
+			} else {
+				return UIInterfaceOrientationMaskAllButUpsideDown;
+			}
+		}
+			break;
+		case RotationLockedInLandscape:
+		{
+			return UIInterfaceOrientationMaskLandscape;
+		}
+			break;
+		case RotationLockedInPortrait:
+		{
+			if([PSResizing iPad]) {
+				return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown);
+			} else {
+				return UIInterfaceOrientationMaskPortrait;
+			}
+		}
+			break;
+		default:
+			return UIInterfaceOrientationMaskAll;
+	}
+}
+
+
 + (BOOL)iPad {
 	if([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
 		return YES;

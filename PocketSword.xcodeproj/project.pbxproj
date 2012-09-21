@@ -4698,7 +4698,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nic Carter";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -4724,8 +4724,8 @@
 					"-DUSELUCENE",
 					"-DDEBUG",
 				);
-				PROVISIONING_PROFILE = "6F7CE39F-7550-4D07-AED8-0E11B5B44FC5";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6F7CE39F-7550-4D07-AED8-0E11B5B44FC5";
+				PROVISIONING_PROFILE = "FDC80545-E202-44EA-B418-7BDEFDE12069";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B0860F05-8428-497F-B300-39B5B576BEFE";
 			};
 			name = Debug;
 		};
