@@ -140,15 +140,13 @@
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-	if([viewController isMemberOfClass:[UINavigationController class]]) {
-		// the only tab with a nav controller is the search tab
+	if([viewController.title isEqualToString:NSLocalizedString(@"SearchTitle", @"")]) {
 		if(!switchingTabs) {
 			[self searchButtonPressed:nil];
 		}
 		// set search tab as the saved tab.
 		[[NSUserDefaults standardUserDefaults] setInteger: SearchTab forKey:DefaultsLastMultiListTab];
 	} else {
-		// history tab.  set history tab as the saved tab.
 		[[NSUserDefaults standardUserDefaults] setInteger: HistoryTab forKey:DefaultsLastMultiListTab];
 	}
 }

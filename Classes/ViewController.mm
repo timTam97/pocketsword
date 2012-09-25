@@ -423,13 +423,16 @@ bool ps_viewcontroller_initialized = false;
 		PSSearchController *searchController = [[PSSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
 		searchNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+		searchNavigationController.title = NSLocalizedString(@"SearchTitle", @"");
+		UINavigationController *historyNavigationController = [[UINavigationController alloc] initWithRootViewController:historyController];
+		historyNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		multiListController.delegate = searchController;
 		searchController.delegate = self;
-		NSArray* controllers = [NSArray arrayWithObjects:historyController, searchNavigationController, nil];
+		NSArray* controllers = [NSArray arrayWithObjects:historyNavigationController, searchNavigationController, nil];
 		multiListController.viewControllers = controllers;
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
-			[historyController setListType: BibleTab];
+			[historyController setListType:BibleTab];
 			[searchController setListType:BibleTab];
 			if(savedSearchResultsTab == BibleTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
 				//restore the previous search term:
@@ -441,8 +444,8 @@ bool ps_viewcontroller_initialized = false;
 				[multiListController setSelectedViewController:searchNavigationController];
 			}
 		} else {
-			[historyController setListType: CommentaryTab];
-			[searchController setListType: CommentaryTab];
+			[historyController setListType:CommentaryTab];
+			[searchController setListType:CommentaryTab];
 			if(savedSearchResultsTab == CommentaryTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
 				//restore the previous search term:
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
@@ -455,6 +458,7 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[tabController presentModalViewController:multiListController animated:YES];
 		[searchNavigationController release];
+		[historyNavigationController release];
 		[historyController release];
 		[searchController release];
 		[multiListController release];

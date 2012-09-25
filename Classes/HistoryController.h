@@ -23,15 +23,11 @@
 
 	ShownTab listType;
 
-	IBOutlet UIBarButtonItem	*historyCloseButton;
-	IBOutlet UIBarButtonItem	*historyClearButton;
-	IBOutlet UINavigationItem	*historyNavigationItem;
 	IBOutlet UITableView		*historyListTable;
 	IBOutlet UINavigationBar	*historyNavigationBar;
 }
 
 - (void)setListType:(ShownTab)listType;
-//- (ShownTab)listType;
 - (IBAction)closeButtonPressed;
 
 - (void)addBibleHistoryItem;

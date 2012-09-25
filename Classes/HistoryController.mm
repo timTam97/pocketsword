@@ -44,8 +44,8 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	historyCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-	historyClearButton.title = NSLocalizedString(@"HistoryClearButtonTitle", @"Clear");
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"HistoryClearButtonTitle", @"Clear") style: UIBarButtonItemStyleBordered target: self action: @selector(trashButtonPressed)] autorelease];
 }
 
 - (void)viewDidUnload {
@@ -58,11 +58,11 @@
 	} else {
 		historyListTable.backgroundColor = [UIColor whiteColor];
 	}
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable useStatusBar:YES];
+	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable useStatusBar:YES];
 	if(listType == BibleTab) {
-		historyNavigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
+		self.navigationItem.title = NSLocalizedString(@"BibleHistoryTitle", @"Bible History");
 	} else {
-		historyNavigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
+		self.navigationItem.title = NSLocalizedString(@"CommentaryHistoryTitle", @"Commentary History");
 	}
 	[historyListTable reloadData];
 	if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
@@ -72,9 +72,9 @@
 	}
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-}
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+//}
 
 
 - (void)addBibleHistoryItem {
