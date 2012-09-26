@@ -22,4 +22,6 @@
 
 + (BOOL)iPad;
 
++ (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *)path;
+
 @end

@@ -69,7 +69,7 @@
 + (NSString*)getLastRefAvailable;
 
 - (id)init;
-- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip;
+- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip internalModule:(BOOL)internalModule;
 - (BOOL)isLoaded:(NSString *)module;
 - (void)loadPrimaryBible:(NSString *)newText;
 - (void)loadPrimaryCommentary:(NSString *)newText;

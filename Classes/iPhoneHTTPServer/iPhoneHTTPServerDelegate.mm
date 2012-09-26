@@ -145,7 +145,7 @@
 	//NSString *root = DEFAULT_MMM_PATH;//[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *file = [DEFAULT_MMM_PATH stringByAppendingPathComponent:[notification object]];
 
-	[[PSModuleController defaultModuleController] installModulesFromZip:file ofType:unknown_type removeZip:YES];
+	[[PSModuleController defaultModuleController] installModulesFromZip:file ofType:unknown_type removeZip:YES internalModule:NO];
 	
 }
 

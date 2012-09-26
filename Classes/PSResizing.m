@@ -5,6 +5,7 @@
 //  Created by Nic Carter on 1/10/10.
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
 //
+#import <sys/xattr.h>
 
 #import "PSResizing.h"
 #import "globals.h"
@@ -174,7 +175,6 @@
 	}
 }
 
-
 + (BOOL)iPad {
 	if([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
 		return YES;
@@ -182,6 +182,18 @@
 		return NO;
 	}
 
+}
+
++ (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *)path {
+	// make sure we're not backing up this folder!
+	// using the iOS 5.0.1 method, as this is backwards compatible with iOS 3.0 :P
+	const char* filePath = [path fileSystemRepresentation];
+	
+	const char* attrName = "com.apple.MobileBackup";
+	u_int8_t attrValue = 1;
+	
+	int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+	return result == 0;
 }
 
 @end

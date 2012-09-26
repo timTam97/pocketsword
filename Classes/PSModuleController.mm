@@ -93,6 +93,7 @@ static PSModuleController *instance;
     if(instance == nil) {
 		// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
 		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
 		if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
 			ALog(@"Couldn't create mods.d");
 		}
@@ -136,13 +137,14 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 // note: this will install all the modules contained within a supplied ZIP file.
-- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip {
+- (void)installModulesFromZip:(NSString*)zippedModule ofType:(ModuleType)modType removeZip:(BOOL)temporaryZip internalModule:(BOOL)internalModule {
 	
 	if(!zippedModule)
 		return;
 	
 	// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
 	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
 	if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
 		ALog(@"Couldn't create mods.d");
 	}
@@ -162,7 +164,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[arch release];
 	
 	//install the module/s contained in the archive:
-	[swordManager installModulesFromPath:outfile];
+	if(!internalModule) {
+		[swordManager installModulesFromPath:outfile];
+	} else {
+		SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
+		[swordBuiltInManager installModulesFromPath:outfile];
+		[swordBuiltInManager release];
+		swordBuiltInManager = nil;
+		
+		// make sure we're not backing up this folder, now that we're installing stuff in here...
+		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
+	}
 	[self reload];
 		
 	if(temporaryZip) {
@@ -200,9 +212,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			NSString *fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"];
 			NSString *toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"mods.d"];
 			if([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:NULL]) {
-				DLog(@"moved mods.d from %@ to %@", fromPath, toPath);
+				ALog(@"moved mods.d from %@ to %@", fromPath, toPath);
 			} else {
-				DLog(@"failed to move mods.d folder");
+				ALog(@"failed to move mods.d folder");
 			}
 			fromPath = [DEFAULT_MODULE_PATH_OLD stringByAppendingString:@"modules"];
 			toPath = [DEFAULT_MODULE_PATH stringByAppendingString:@"modules"];
@@ -657,6 +669,25 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	DLog(@"Removing module: %@", name);
 	
+	// if it's a built-in module, don't automatically re-install it at next launch!
+	BOOL possibleBuiltIn = NO;
+	if([name isEqualToString:@"KJV"]) {
+		[userDefaults setBool:YES forKey:DefaultsKJVRemoved];
+		possibleBuiltIn = YES;
+	} else if([name isEqualToString:@"MHCC"]) {
+		[userDefaults setBool:YES forKey:DefaultsMHCCRemoved];
+		possibleBuiltIn = YES;
+	} else if([name isEqualToString:@"StrongsRealHebrew"]) {
+		[userDefaults setBool:YES forKey:DefaultsStrongsRealHebrewRemoved];
+		possibleBuiltIn = YES;
+	} else if([name isEqualToString:@"StrongsRealGreek"]) {
+		[userDefaults setBool:YES forKey:DefaultsStrongsRealGreekRemoved];
+		possibleBuiltIn = YES;
+	} else if([name isEqualToString:@"Robinson"]) {
+		[userDefaults setBool:YES forKey:DefaultsRobinsonRemoved];
+		possibleBuiltIn = YES;
+	}
+	
 	//remove the cipherKey for the module.
 	NSMutableDictionary	*cipherKeys = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:DefaultsModuleCipherKeysKey]];
 	[cipherKeys removeObjectForKey: name];
@@ -693,7 +724,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 
 	if(moduleToRemove) {
-		stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordManager];	
+		BOOL wasBuiltIn = NO;
+		if(possibleBuiltIn) {
+			SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
+			if([swordBuiltInManager isModuleInstalled:name]) {
+				stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordBuiltInManager];
+				wasBuiltIn = YES;
+			}
+			[swordBuiltInManager release];
+			swordBuiltInManager = nil;
+		}
+		if(!wasBuiltIn) {
+			stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordManager];
+		}
 	}
 	
 	BOOL success = (stat == 0) ? YES : NO;

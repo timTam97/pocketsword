@@ -59,18 +59,27 @@ typedef enum {
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
 
-#define DEFAULT_MODULE_PATH_OLD         [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
+#define DEFAULT_MODULE_PATH_OLD     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_MODULE_PATH         [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
+#define DEFAULT_BUILTIN_MODULE_PATH	[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/Built-in/"]
 #define DEFAULT_APPSUPPORT_PATH     [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 #define DEFAULT_BOOKMARKS_PATH		[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/"]
 
 #define DEFAULT_INSTALLER_PATH		[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex: 0] stringByAppendingString: @"/InstallMgr/"]
 #define DEFAULT_MMM_PATH			[NSTemporaryDirectory() stringByAppendingPathComponent:@"MMM"]
+
+
 // define for userdefaults
 #define userDefaults [NSUserDefaults standardUserDefaults]
 // define for default SwordManager
 #define defSwordManager [SwordManager defaultManager]
 
+// Default Modules
+#define DefaultsKJVRemoved							@"DefaultsKJVRemoved"
+#define DefaultsMHCCRemoved							@"DefaultsMHCCRemoved"
+#define DefaultsStrongsRealHebrewRemoved			@"DefaultsStrongsRealHebrewRemoved"
+#define DefaultsRobinsonRemoved						@"DefaultsRobinsonRemoved"
+#define DefaultsStrongsRealGreekRemoved				@"DefaultsStrongsRealGreekRemoved"
 
 // Preferences - general
 #define DefaultsStrongsHebrewModule                 @"DefaultsStrongsHebrewModule"

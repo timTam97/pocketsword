@@ -357,7 +357,11 @@ static SwordManager *instance;
         
         // modulePath is the main sw manager
         //swManager = new sword::SWMgr([modulesPath UTF8String], true, new sword::EncodingFilterMgr(sword::ENC_UTF8));
-		swManager = new sword::SWMgr([modulesPath UTF8String], true, new sword::MarkupFilterMgr(sword::FMT_HTMLHREF, sword::ENC_HTML));
+		swManager = new sword::SWMgr([modulesPath UTF8String], true, new sword::MarkupFilterMgr(sword::FMT_HTMLHREF, sword::ENC_HTML), false, false);
+		
+#if defined (_APPLE_IOS_)
+		[self addPath:DEFAULT_BUILTIN_MODULE_PATH];
+#endif
 
         if(!swManager) {
             ALog(@"[SwordManager -reInit] cannot create SWMgr instance for default module path!");

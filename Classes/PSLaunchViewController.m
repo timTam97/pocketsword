@@ -10,6 +10,7 @@
 #import "globals.h"
 #import "PSModuleController.h"
 #import "ZipArchive.h"
+#import "PSResizing.h"
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.3"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-261211"
@@ -62,6 +63,11 @@
 	[defaults removeObjectForKey: @"commentaryHistory"];
 	[defaults removeObjectForKey: DefaultsModuleCipherKeysKey];
 	[defaults removeObjectForKey: LOCALES_VERSION];
+	[defaults removeObjectForKey: DefaultsKJVRemoved];
+	[defaults removeObjectForKey: DefaultsMHCCRemoved];
+	[defaults removeObjectForKey: DefaultsStrongsRealGreekRemoved];
+	[defaults removeObjectForKey: DefaultsStrongsRealHebrewRemoved];
+	[defaults removeObjectForKey: DefaultsRobinsonRemoved];
 	[defaults synchronize];
 	NSArray *dicts = [[[PSModuleController defaultModuleController] swordManager] modulesForType: SWMOD_CATEGORY_DICTIONARIES];
 	for(SwordDictionary *dict in dicts) {
@@ -131,14 +137,14 @@
 	
 	if(!kjv) {
 		[defaults synchronize];
-		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible removeZip:NO];
-		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary removeZip:NO];
+		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible removeZip:NO internalModule:YES];
+		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary removeZip:NO internalModule:YES];
 		[defaults setBool: YES forKey:@"loadedBundledKJV"];
 	}
 	
 	if(!strongsAndMorph) {
-		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary removeZip:NO];
-		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary removeZip:NO];
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary removeZip:NO internalModule:YES];
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary removeZip:NO internalModule:YES];
 		[defaults setObject:@"Robinson" forKey:DefaultsMorphGreekModule];
 		[defaults setObject:@"StrongsRealHebrew" forKey:DefaultsStrongsHebrewModule];
 		[defaults setBool: YES forKey:@"loadedBundledStrongsAndMorph"];
@@ -153,7 +159,7 @@
 		} else {
 			DLog(@"\nInstalling StrongsRealGreek for the first time...");
 		}
-		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary removeZip:NO];
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary removeZip:NO internalModule:YES];
 		[defaults setBool: YES forKey:STRONGS_REAL_GREEK_VERSION];
 		NSString *curSGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsGreekModule];
 		if(!curSGM || [curSGM isEqualToString: NSLocalizedString(@"None", @"None")]) {
@@ -161,6 +167,46 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 	}
+	
+	// Test if we need to reinstall the built-in modules?
+	BOOL kjvModule = [[moduleManager swordManager] isModuleInstalled:@"KJV"];
+	BOOL kjvModuleRemoved = [defaults boolForKey:DefaultsKJVRemoved];
+	
+	BOOL mhccModule = [[moduleManager swordManager] isModuleInstalled:@"MHCC"];
+	BOOL mhccModuleRemoved = [defaults boolForKey:DefaultsMHCCRemoved];
+	
+	BOOL robinsonModule = [[moduleManager swordManager] isModuleInstalled:@"Robinson"];
+	BOOL robinsonModuleRemoved = [defaults boolForKey:DefaultsRobinsonRemoved];
+	
+	BOOL strongsrealhebrewModule = [[moduleManager swordManager] isModuleInstalled:@"StrongsRealHebrew"];
+	BOOL strongsrealhebrewModuleRemoved = [defaults boolForKey:DefaultsStrongsRealHebrewRemoved];
+	
+	BOOL strongsrealgreekModule = [[moduleManager swordManager] isModuleInstalled:@"StrongsRealGreek"];
+	BOOL strongsrealgreekModuleRemoved = [defaults boolForKey:DefaultsStrongsRealGreekRemoved];
+
+	if(!kjvModule && !kjvModuleRemoved) {
+		//reinstall the kjv module!
+		DLog(@"reinstalling KJV");
+		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible removeZip:NO internalModule:YES];
+	}
+	if(!mhccModule && !mhccModuleRemoved) {
+		//reinstall the mhcc module!
+		DLog(@"reinstalling MHCC");
+		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary removeZip:NO internalModule:YES];
+	}
+	if(!robinsonModule && !robinsonModuleRemoved) {
+		DLog(@"reinstalling Robinson");
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"Robinson" ofType:@"zip"] ofType:dictionary removeZip:NO internalModule:YES];
+	}
+	if(!strongsrealgreekModule && !strongsrealgreekModuleRemoved) {
+		DLog(@"reinstalling StrongsRealGreek");
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealgreek" ofType:@"zip"] ofType:dictionary removeZip:NO internalModule:YES];
+	}
+	if(!strongsrealhebrewModule && !strongsrealhebrewModuleRemoved) {
+		DLog(@"reinstalling StrongsRealHebrew");
+		[moduleManager installModulesFromZip:[[NSBundle mainBundle] pathForResource:@"strongsrealhebrew" ofType:@"zip"] ofType:dictionary removeZip:NO internalModule:YES];
+	}
+	
 	
 	if(!removeModulePrefs) {
 		NSArray *moduleList = [[[PSModuleController defaultModuleController] swordManager] listModules];
@@ -176,7 +222,8 @@
 	//"install" the l10n strings into SWORD for the current locale.
     NSString *localePath = [docPath stringByAppendingPathComponent:@"locales.d"];
 	
-	if(!loadedLocales) {
+	// if there's an update for the locales or if iOS has removed our locales:
+	if(!loadedLocales || ![[NSFileManager defaultManager] fileExistsAtPath: [docPath stringByAppendingPathComponent:@"unused"]]) {
 		NSString *localesZIP = [[NSBundle mainBundle] pathForResource:@"locales.d" ofType:@"zip"];
 		DLog(@"\n\n%@\n\n", localesZIP);
 		[[NSFileManager defaultManager] removeItemAtPath: swLocales error:NULL];//delete it if it already exists
@@ -191,6 +238,9 @@
 		
 		[defaults setBool: YES forKey:LOCALES_VERSION];
 		[defaults synchronize];
+		
+		// make sure we're not backing up this folder, now that we're installing stuff in here...
+		[PSResizing addSkipBackupAttributeToItemAtPath:[docPath stringByAppendingPathComponent:@"unused"]];
 	}
 	
 	NSArray *availLocales = [NSLocale preferredLanguages];//the iPhone locale
