@@ -1106,6 +1106,9 @@
 					appendParaMarker = YES;
 					entryToAppend = [entryToAppend substringToIndex:([entryToAppend length] - 11)];
 				}
+				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><br />" withString:@"<br /> <br />"];
+				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /><!P><br /><br />" withString:@"<br /> <br />"];
+				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><!P><br />" withString:@"<br /> <br />"];
 				if(vpl) {
 					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
 				} else {

@@ -855,11 +855,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Grabs the bible text for a given chapter (e.g. "Gen 1")
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
-//	NSString *ref = chapter;
-//	NSRange colonRange = [chapter rangeOfString:@":"];
-//	if(colonRange.location != NSNotFound) {
-//		ref = [chapter substringToIndex: colonRange.location];
-//	}
 	if (!primaryBible) {
 		[self reload];
 		
@@ -870,10 +865,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	}
-	//[primaryBible hasSearchIndex];
-//	int i = ([[primaryBible name] length] > 5) ? 5 : [[primaryBible name] length];
-//	NSString *title = ([[primaryBible name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryBible name] substringToIndex:i]] : [[primaryBible name] substringToIndex:i];
-//	[bibleTitle setTitle: title];
 	NSString *text = [primaryBible getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);
@@ -884,11 +875,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // Grabs the commentary text for a given chapter (e.g. "Gen 1")
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS {
-//	NSString *ref = chapter;
-//	NSRange colonRange = [chapter rangeOfString:@":"];
-//	if(colonRange.location != NSNotFound) {
-//		ref = [chapter substringToIndex: colonRange.location];
-//	}
 	if (!primaryCommentary) {
 		[self reload];
 		
@@ -899,9 +885,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 	}
-//	int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
-//	NSString *title = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
-//	[commentaryTitle setTitle: title];
 	NSString *text = [primaryCommentary getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);
