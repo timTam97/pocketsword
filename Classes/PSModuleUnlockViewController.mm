@@ -19,7 +19,7 @@ body {\n\
 color: white;\n\
 background-color: black;\n\
 font-size: 12pt;\n\
-font-family: Helvetica;\n\
+font-family: Helvetica Neue;\n\
 line-height: 130%%;\n\
 }\n\
 </style>\n\

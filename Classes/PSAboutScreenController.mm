@@ -116,7 +116,7 @@
 				color: black;\n\
 				background-color: white;\n\
 				font-size: 11pt;\n\
-				font-family: Helvetica;\n\
+				font-family: Helvetica Neue;\n\
 				line-height: 130%%;\n\
 			}\n\
 			#header {\n\

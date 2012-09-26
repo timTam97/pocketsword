@@ -685,7 +685,7 @@
 				{
 					NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 					if(!font)
-						font = @"Helvetica";
+						font = @"Helvetica Neue";
 					cell.detailTextLabel.text = font;
 					cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 				}
