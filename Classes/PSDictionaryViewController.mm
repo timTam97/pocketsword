@@ -231,11 +231,7 @@
 }
 
 - (void)showDescription:(NSString*)description withTitle:(NSString*)t {//-webkit-text-size-adjust: none
-	NSString *javaScript = @"<script type=\"text/javascript\">\n<!--\n\
-							window.onload = function() { document.documentElement.style.webkitTouchCallout = \"none\"; }\n\
-							-->\
-							</script>\n";
-	NSString *descr = [PSModuleController createHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, description] usingPreferences: YES withJS: javaScript usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
+	NSString *descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, description] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
 	if([t length] > 20) {
 		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
 	}

@@ -90,7 +90,7 @@ line-height: 130%%;\n\
 		[html appendFormat:@"<p><b>%@:</b> %@</p>", [PSModuleController createRefString: entry.key], entry.text];
 	}
 	
-	[unlockWebView loadHTMLString:[PSModuleController createHTMLString:html usingPreferences:YES withJS:@"" usingModuleForPreferences:mod.name] baseURL:nil];
+	[unlockWebView loadHTMLString:[PSModuleController createInfoHTMLString:html usingModuleForPreferences:mod.name] baseURL:nil];
 	[mod unlock: nil];
 	return YES;
 }

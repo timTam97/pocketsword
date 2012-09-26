@@ -12,6 +12,7 @@
 #import "SwordDictionary.h"
 #import "PSModuleController.h"
 #import "ViewController.h"
+#import "HistoryController.h"
 
 @implementation PSDevotionalViewController
 
@@ -221,46 +222,88 @@
 	SwordDictionary *devo = (SwordDictionary *)[defSwordManager moduleWithName:lastModule];
 	//NSString *devoHTMLString = [[devo entryForKey:dateKey] stringByAppendingString:@"<p>&nbsp;</p><p>&nbsp;</p>"];
 	NSString *devoHTMLString = [NSString stringWithFormat:@"<br/>%@<p>&nbsp;</p><p>&nbsp;</p>", [devo entryForKey:dateKey]];
-	devoHTMLString = [PSModuleController createHTMLString:devoHTMLString usingPreferences:YES withJS:@"" usingModuleForPreferences:devo.name];
+	devoHTMLString = [PSModuleController createInfoHTMLString:devoHTMLString usingModuleForPreferences:devo.name];
+	//devoHTMLString = [PSModuleController createHTMLString:devoHTMLString usingPreferences:YES withJS:@"" usingModuleForPreferences:devo.name];
 	devoHTMLString = [[devoHTMLString stringByReplacingOccurrencesOfString:@"<!P><br />" withString:@"<p>"] stringByReplacingOccurrencesOfString:@"<!/P><br />" withString:@"</p>"];
 	[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 	loaded = YES;
 }
 
+- (BOOL)isDailyReadingPlanner:(NSString *)module {
+	BOOL planner = NO;
+	if([module isEqualToString:@"BibleCompanion"]) {
+		planner = YES;
+	} else if([module isEqualToString:@"MCheyne"]) {
+		planner = YES;
+	} else if([module isEqualToString:@"OneYearRead"]) {
+		planner = YES;
+	} else if([module isEqualToString:@"CitireAnuala"]) {
+		planner = YES;
+	}
+	return planner;
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL load = YES;
+	NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
+
+	//NSLog(@"\nDictionaryDescription: requestString: %@\nDD: %@", [[request URL] absoluteString], lastModule);
 	
-	//NSLog(@"\nDictionaryDescription: requestString: %@", [[request URL] absoluteString]);
 	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 	NSString *entry = nil;
 	
 	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-//		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
-//		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
-//		SwordManager *swordManager = [SwordManager defaultManager];
-//		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
-//		[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
-		NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
-//		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
-//		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
-		NSMutableString *tmpEntry = [@"" mutableCopy];
-		for(NSDictionary *dict in array) {
-			NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
-			[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
-			[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+		
+		if([self isDailyReadingPlanner:lastModule]) {
+			// if we are going to jump straight to the verse in the Bible tab:
+			NSString *chapter, *verse;
+			
+			NSString *ref = [rData objectForKey:ATTRTYPE_VALUE];
+			NSArray *comps = [ref componentsSeparatedByString:@":"];
+			
+			if([comps count] > 1) {
+				//we have a verse
+				verse = [comps objectAtIndex:1];
+				chapter = [comps objectAtIndex:0];//just the book & ch
+			} else {
+				verse = @"1";
+				chapter = ref;
+			}
+			chapter = [[[chapter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+
+
+			[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+			
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
+			[HistoryController addHistoryItem:BibleTab];
+			entry = nil;
+			load = NO;
+			
+		} else {
+			// otherwise we show the info pane.
+				
+			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
+			NSMutableString *tmpEntry = [@"" mutableCopy];
+			for(NSDictionary *dict in array) {
+				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+				[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+			}
+			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+			}
+			[tmpEntry release];
 		}
-		if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-			entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-		}
-		[tmpEntry release];
 	}
 	
 	
 	if(entry) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-		//[[[PSModuleController defaultModuleController] viewController] showInfo: entry];
 		load = NO;
 	}
 	

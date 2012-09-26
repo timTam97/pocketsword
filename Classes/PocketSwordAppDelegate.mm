@@ -202,7 +202,6 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 		[HistoryController addHistoryItem:BibleTab];
 	} else {			
 		if (module != nil && ![module isEqualToString:LIST]) {
