@@ -116,7 +116,7 @@
 				color: black;\n\
 				background-color: white;\n\
 				font-size: 11pt;\n\
-				font-family: Helvetica Neue;\n\
+				font-family: %@;\n\
 				line-height: 130%%;\n\
 			}\n\
 			#header {\n\
@@ -154,7 +154,7 @@
 			}\n\
 			</style>\n\
 			</head>\n\
-			<body><div>%@</div></body></html>", 
+			<body><div>%@</div></body></html>", PSDefaultFontName,
 			body];
 }
 

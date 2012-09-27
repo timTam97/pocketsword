@@ -940,7 +940,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 // allows you to add extra javascript into the <head> html object.
 + (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName
 {
-	NSString *fontName = @"Helvetica Neue";
+	NSString *fontName = PSDefaultFontName;
 	NSString *fontSize = @"14";
 	NSString *fontColor = @"black";
 	NSString *backgroundColor = @"white";
@@ -959,7 +959,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		
 		if(!fontName)
-			fontName = @"Helvetica Neue";
+			fontName = PSDefaultFontName;
 		BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 		fs = (fs == 0) ? 14 : fs;
 		fontSize = [NSString stringWithFormat:@"%d", fs];

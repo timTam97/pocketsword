@@ -94,7 +94,7 @@
 	if(self.moduleName)
 		font = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
 	if(!font)
-		font = @"Helvetica Neue";
+		font = PSDefaultFontName;
 	
 	int pos = [fontStrings indexOfObject:font];
 	NSIndexPath *ip = [NSIndexPath indexPathForRow:pos inSection:0];
@@ -155,7 +155,7 @@
 	if(self.moduleName)
 		font = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
 	if(!font)
-		font = @"Helvetica Neue";
+		font = PSDefaultFontName;
 	
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];

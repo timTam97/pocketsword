@@ -357,7 +357,7 @@
 			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 			NSString *font = GetStringPrefForMod(DefaultsFontNamePreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 			if(!font)
-				font = @"Helvetica Neue";
+				font = PSDefaultFontName;
 			cell.detailTextLabel.text = font;
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 		}

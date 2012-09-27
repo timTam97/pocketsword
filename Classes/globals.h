@@ -118,7 +118,9 @@ typedef enum {
 #define DefaultsHebrewCantillationPreference		@"hebrewCantillationPreference"
 
 #define StrongsFontName								@"Times New Roman"
+#define PSDefaultFontName							@"Helvetica Neue"
 #define PSFolderSeparatorString						@":::"
+#define PSHistoryMaxEntries							100
 
 #define BookNameString							@"BookNameString"
 #define ChapterString							@"ChapterString"

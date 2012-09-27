@@ -34,7 +34,7 @@
 - (void)addCommentaryHistoryItem;
 
 + (void)addHistoryItem:(ShownTab)tabForHistory;
-- (IBAction)trashButtonPressed:(id)sender;
+- (void)trashButtonPressed;
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory;
 
 @end

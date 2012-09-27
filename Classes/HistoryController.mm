@@ -139,11 +139,30 @@
 			
 			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
 			[prefs release];
+		} else {
+		
+			//check for duplicates:
+			for (int ii = 0; ii < [history count]; ii++) {
+				NSArray *existingItem = [history objectAtIndex:ii];
+				NSString *existingRef = [existingItem objectAtIndex:0];
+				if([ref isEqualToString:existingRef]) {
+					//if the references are the same, 
+					NSString *existingMod = nil;
+					if([existingItem count] > 2) {
+						existingMod = [existingItem objectAtIndex:2];
+					}
+					if(!existingMod || [mod isEqualToString:existingMod]) {
+						//if the mods are the same, or it's an OLD history item without a mod, delete it
+						[history removeObject:existingItem];
+						//ii--;
+						break;
+					}
+				}
+			}
 		}
 		
 		[history insertObject: historyItem atIndex: 0];
-		//[historyItem release];
-		if([history count] >= 50) {
+		if([history count] >= PSHistoryMaxEntries) {
 			[history removeLastObject];
 		}
 		
@@ -157,18 +176,31 @@
 	
 }
 
-- (IBAction)trashButtonPressed:(id)sender {
-	switch (listType) {
-		case BibleTab:
-			[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"bibleHistory"];
-			break;
-		case CommentaryTab:
-			[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"commentaryHistory"];
-			break;
-		default:
-			break;
+- (void)trashButtonPressed {
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"HistoryClearConfirmationTitle", @"Clear All History?") message: NSLocalizedString(@"HistoryClearConfirmationMessage", @"Are you sure?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+	[alertView show];
+	[alertView release];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
+	if (buttonIndex == 1) {
+		switch (listType) {
+			case BibleTab:
+				[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"bibleHistory"];
+				break;
+			case CommentaryTab:
+				[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"commentaryHistory"];
+				break;
+			default:
+				break;
+		}
+		[historyListTable reloadData];
+	} else {
+		
 	}
-	[historyListTable reloadData];
+	[pool release];
 }
 
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory {
