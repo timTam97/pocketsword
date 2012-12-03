@@ -4,6 +4,10 @@ New in v1.4.2
 - Added Korean localisation
 - Added "delete all" button to the history section
 - Updated Strong's Greek dictionary
+- Updated for iOS 6 & iPhone 5
+- Improvements for iCloud (more to come!)
+- Improvements to the History section (including increased item count to 100)
+- Tapping on links in Daily Bible Readers will now jump straight to those Bible passages
 - Bug fixes
 
 New in v1.4.1

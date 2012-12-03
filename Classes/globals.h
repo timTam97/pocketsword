@@ -182,3 +182,22 @@ typedef enum {
 } RotationPosition;
 
 
+#ifndef __IPHONE_6_0	// if iPhoneOS is 6.0 or greater then __IPHONE_6_0 will be defined
+// need to define the rotation masks required for iOS6 if they're not already defined.
+
+typedef enum {
+	UIInterfaceOrientationMaskPortrait = (1 << UIInterfaceOrientationPortrait),
+	UIInterfaceOrientationMaskLandscapeLeft = (1 << UIInterfaceOrientationLandscapeLeft),
+	UIInterfaceOrientationMaskLandscapeRight = (1 << UIInterfaceOrientationLandscapeRight),
+	UIInterfaceOrientationMaskPortraitUpsideDown = (1 << UIInterfaceOrientationPortraitUpsideDown),
+	UIInterfaceOrientationMaskLandscape =
+	(UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
+	UIInterfaceOrientationMaskAll =
+	(UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
+	 UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown),
+	UIInterfaceOrientationMaskAllButUpsideDown =
+	(UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
+	 UIInterfaceOrientationMaskLandscapeRight),
+} UIInterfaceOrientationMask;
+
+#endif // ifndef __IPHONE_6_0

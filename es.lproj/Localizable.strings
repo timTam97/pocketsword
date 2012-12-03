@@ -1,21 +1,20 @@
 /*
-	PocketSword - Un programa diseñado para visualizar los módulos del poyecto SWORD en el iPhone y el iPod Touch
-	Copyright (C) 2008-2010 CrossWire Bible Society
-
-	Este programa es gratis; puedes distribuirlo y/o modificarlo
-	bajo los términos de la licencia pública general GNU publicada por
-	la Fundación de software gratis; o la versión 2 de la licencia o
-	cualquier versión posterior.
-
-	Distribuimos este programa con la esperanza que sea útil,
-	pero SIN NINGUNA GARANTÍA; sin incluso la garantía implícita de
-	COMERCIALIDAD o ÚTILIDAD PARA CUALQUIER PROPÓSITO PARTICULAR. Ver la
-	licencia pública general GNU para más detales.
-
-	Deberías haber recibido una copia de la licencia pública general GNU con
-	este programa; si no es así, escriba a la Fundación de software gratis, S.A.,
-	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ * PocketSword - A frontend for viewing SWORD project modules on iOS
+ *
+ * Copyright 2008-2012 CrossWire Bible Society – http://www.crosswire.org
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ */
 
 // Spanish (es) Localisation
 // By David Bell et al.
@@ -298,3 +297,5 @@
 
 // new v1.4.2 strings:
 "HistoryClearButtonTitle" = "Clear All";
+"HistoryClearConfirmationTitle" = "Clear All History?";
+"HistoryClearConfirmationMessage" = "Are you sure you wish to clear all your history?";
