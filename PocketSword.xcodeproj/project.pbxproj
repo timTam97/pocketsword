@@ -3744,6 +3744,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
