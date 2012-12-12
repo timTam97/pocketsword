@@ -186,14 +186,34 @@
 
 + (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *)path {
 	// make sure we're not backing up this folder!
-	// using the iOS 5.0.1 method, as this is backwards compatible with iOS 3.0 :P
-	const char* filePath = [path fileSystemRepresentation];
+	DLog(@"Don't Backup:\n---\n%@\n---\n", path);
 	
-	const char* attrName = "com.apple.MobileBackup";
-	u_int8_t attrValue = 1;
-	
-	int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
-	return result == 0;
+//	if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.1") && &NSURLIsExcludedFromBackupKey) {
+	if(&NSURLIsExcludedFromBackupKey) {
+		// iOS 5.1 and later:
+		NSURL *URL = [NSURL fileURLWithPath:path isDirectory:YES];
+		
+		assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+		
+		NSError *error = nil;
+		BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES]
+									  forKey: NSURLIsExcludedFromBackupKey error: &error];
+		if(!success){
+			ALog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+		}
+		return success;
+	}
+//	else {
+//		// iOS 5.0.1 and earlier method, as this is backwards compatible with iOS 3.0 :P
+//		const char* filePath = [path fileSystemRepresentation];
+//		
+//		const char* attrName = "com.apple.MobileBackup";
+//		u_int8_t attrValue = 1;
+//		
+//		int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+//		return result == 0;
+//	}
+	return YES;
 }
 
 @end

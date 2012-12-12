@@ -565,6 +565,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[pool release];
 		return NO;
 	}
+	// TEMPORARY HACK FOR v1.4.2 until we do things properly!
+//	[PSResizing addSkipBackupAttributeToItemAtPath:[DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]];
+//	[PSResizing addSkipBackupAttributeToItemAtPath:[DEFAULT_MODULE_PATH stringByAppendingString: @"modules"]];
+
 
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = YES;
