@@ -728,14 +728,14 @@
             }
         }
     } else if([attrType isEqualToString:@"scriptRef"] || [attrType isEqualToString:@"scripRef"]) {
-		NSString *key = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+" 
+		NSString *rawKey = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+"
                                                                                        withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		[self setChapter:[PSModuleController getCurrentBibleRef]];
 		sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 		sword::VerseKey parser(curKey->getShortText());
 		parser.setVersificationSystem([[self versification] UTF8String]);
-		DLog(@"%@", key);
-		sword::ListKey refs = parser.ParseVerseList([key UTF8String], parser, true);
+		DLog(@"%@", rawKey);
+		sword::ListKey refs = parser.ParseVerseList([rawKey UTF8String], parser, true);
         
 		ret = [NSMutableArray array];
 		// collect references
