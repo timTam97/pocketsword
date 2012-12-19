@@ -128,10 +128,11 @@
 
 - (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:1];
+	NSString *searchString = [NSString stringWithFormat:@"%@:", bookAndChapterRef];
 	for(PSBookmarkObject *bookmarkObject in self.children) {
 		if([bookmarkObject isMemberOfClass:[PSBookmark class]]) {
 			//tis a bookmark
-			if([((PSBookmark*)bookmarkObject).ref rangeOfString:bookAndChapterRef].location != NSNotFound) {
+			if([((PSBookmark*)bookmarkObject).ref rangeOfString:searchString].location != NSNotFound) {
 				bookmarkObject.rgbHexString = self.rgbHexString;//tmp set the hex string.
 				[ret addObject:bookmarkObject];
 			}
