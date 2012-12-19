@@ -126,9 +126,13 @@ void VerseKey::setFromOther(const VerseKey &ikey) {
 		verse = ikey.Verse();
 		suffix = ikey.getSuffix();
         }
+	// TODO: versification mapping
         // Here is where we will do v11n system conversions in the future
-        // when we have a conversion mechanism (Ben Morgan has started
-        // thinking about this)
+        // when we have a conversion mechanism
+        // Ben Morgan has started thinking about this
+        // Konstantin Maslyuk <kalemas@mail.ru> has submitted a patch)
+        // Asked Konstantin to try his patch out with his favorite
+        // SWORD frontend and report back how it goes.  Need to follow up
         else {
 	        // For now, this is the best we can do
         	setText(ikey.getText());
@@ -589,7 +593,14 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 			tobook = 0;
 			bookno = -1;
 			if (*book) {
-				for (loop = strlen(book) - 1; loop+1; loop--) {
+				loop = strlen(book) - 1;
+
+				for (; loop+1; loop--) { if (book[loop] == ' ') book[loop] = 0; else break; }
+
+				if (loop > 0 && isdigit(book[loop-1]) && book[loop] >= 'a' && book[loop] <= 'z') {
+					book[loop--] = 0;
+				}
+				for (; loop+1; loop--) {
 					if ((isdigit(book[loop])) || (book[loop] == ' ')) {
 						book[loop] = 0;
 						continue;
@@ -696,7 +707,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 					lastKey->LowerBound(*curKey);
 					lastKey->setPosition(TOP);
 					tmpListKey << *lastKey;
-					tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 				}
 				else {
 					if (!dash) { 	// if last separator was not a dash just add
@@ -709,7 +720,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 							lastKey->UpperBound(*curKey);
 							*lastKey = TOP;
 							tmpListKey << *lastKey;
-							tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+							tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 						}
 						else {
 							bool f = false;
@@ -723,7 +734,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 							lastKey->UpperBound(*curKey);
 							*lastKey = TOP;
 							tmpListKey << *lastKey;
-							tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+							tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 						}
 					}
 					else	if (expandRange) {
@@ -734,8 +745,9 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 							if (partial > 0)
 								*curKey = MAXVERSE;
 							newElement->UpperBound(*curKey);
+							*lastKey = *curKey;
 							*newElement = TOP;
-							tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+							tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 						}
 					}
 				}
@@ -767,7 +779,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 					if ((!isdigit(book[notAllDigits-1])) && (!strchr(" .", book[notAllDigits-1])))
 						break;
 				}
-				if (!notAllDigits)
+				if (!notAllDigits && !isdigit(buf[1]))
 					break;
 
 			number[tonumber] = 0;
@@ -790,9 +802,15 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 					break;
 				default:
 					// suffixes (and oddly 'f'-- ff.)
-					if (((*buf >= 'a' && *buf <= 'z') && (chap >=0)) || *buf == 'f') {
+					if ((*buf >= 'a' && *buf <= 'z' && (chap >=0 || bookno > -1 || lastKey->isBoundSet()))
+							|| *buf == 'f') {
 						// if suffix is already an 'f', then we need to mark if we're doubleF.
 						doubleF = (*buf == 'f' && suffix == 'f');
+						if (suffix && !doubleF) {
+							// we've already had a suffix one, so this is another letter, thus any number is not a number, e.g., '2jn'. We're on 'n'
+							number[tonumber] = 0;
+							tonumber = 0;
+						}
 						suffix = *buf;
 					}
 					else {
@@ -818,7 +836,14 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 	book[tobook] = 0;
 	tobook = 0;
 	if (*book) {
-		for (loop = strlen(book) - 1; loop+1; loop--) {
+		loop = strlen(book) - 1;
+
+		for (; loop+1; loop--) { if (book[loop] == ' ') book[loop] = 0; else break; }
+
+		if (loop > 0 && isdigit(book[loop-1]) && book[loop] >= 'a' && book[loop] <= 'z') {
+			book[loop--] = 0;
+		}
+		for (; loop+1; loop--) {
 			if ((isdigit(book[loop])) || (book[loop] == ' ')) {
 				book[loop] = 0;
 				continue;
@@ -921,7 +946,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 			lastKey->LowerBound(*curKey);
 			*lastKey = TOP;
 			tmpListKey << *lastKey;
-			tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+			tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 		}
 		else {
 			if (!dash) { 	// if last separator was not a dash just add
@@ -934,7 +959,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 					lastKey->UpperBound(*curKey);
 					*lastKey = TOP;
 					tmpListKey << *lastKey;
-					tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 				}
 				else {
 					bool f = false;
@@ -948,7 +973,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 					lastKey->UpperBound(*curKey);
 					*lastKey = TOP;
 					tmpListKey << *lastKey;
-					tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 				}
 			}
 			else if (expandRange) {
@@ -960,7 +985,7 @@ ListKey VerseKey::ParseVerseList(const char *buf, const char *defaultKey, bool e
 						*curKey = MAXVERSE;
 					newElement->UpperBound(*curKey);
 					*newElement = TOP;
-					tmpListKey.GetElement()->userData = (void *)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.GetElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
 				}
 			}
 		}
@@ -1039,7 +1064,10 @@ VerseKey &VerseKey::LowerBound() const
 		tmpClone->setVerse   (lowerBoundComponents.verse);
 		tmpClone->setSuffix  (lowerBoundComponents.suffix);
 	}
-	else tmpClone->setIndex(lowerBound);
+	else {
+		tmpClone->setIndex(lowerBound);
+		tmpClone->setSuffix  (lowerBoundComponents.suffix);
+	}
 
 	return (*tmpClone);
 }
@@ -1059,7 +1087,10 @@ VerseKey &VerseKey::UpperBound() const
 		tmpClone->setVerse   (upperBoundComponents.verse);
 		tmpClone->setSuffix  (upperBoundComponents.suffix);
 	}
-	else tmpClone->setIndex(upperBound);
+	else {
+		tmpClone->setIndex(upperBound);
+		tmpClone->setSuffix  (upperBoundComponents.suffix);
+	}
 
 	return (*tmpClone);
 }
@@ -1612,6 +1643,12 @@ long VerseKey::getTestamentIndex() const
 
 void VerseKey::setIndex(long iindex)
 {
+	// assert we're sane
+	if (iindex < 0) {
+		error = KEYERR_OUTOFBOUNDS;
+		return;
+	}
+
 	int b;
 	error = refSys->getVerseFromOffset(iindex, &b, &chapter, &verse);
 	book = (unsigned char)b;

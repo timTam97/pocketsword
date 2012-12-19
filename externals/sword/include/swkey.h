@@ -3,7 +3,7 @@
  *				types of keys for indexing into modules (e.g. verse, word,
  *				place, etc.)
  *
- * $Id: swkey.h 2646 2011-07-23 17:39:20Z scribe $
+ * $Id: swkey.h 2666 2011-11-05 23:57:38Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,6 +27,7 @@
 #include <swobject.h>
 
 #include <defs.h>
+#include <sysdata.h>
 #include <utilstr.h>
 
 SWORD_NAMESPACE_START
@@ -111,8 +112,8 @@ protected:
 
 public:
 
-	// misc pointer for whatever
-	void *userData;
+	// misc storage for whatever
+	__u64 userData;
 
 	/** initializes instance of SWKey from a string
 	 * All keys can be reduced to a string representation which should be able

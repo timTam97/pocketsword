@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- * $Id: swoptfilter.h 1864 2005-11-20 06:06:40Z scribe $
+ * $Id: swoptfilter.h 2688 2012-03-05 02:02:10Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -35,7 +35,7 @@ typedef std::list < SWBuf > StringList;
 
   /** Base class for all option filters.
   */
-class SWDLLEXPORT SWOptionFilter : public SWFilter {
+class SWDLLEXPORT SWOptionFilter : public virtual SWFilter {
 protected:
 	SWBuf optionValue;
 	const char *optName;

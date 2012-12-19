@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * $Id: thmlhtmlhref.h 2677 2012-02-13 01:48:36Z charcoal $
+ * $Id:
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -18,38 +18,36 @@
  *
  */
 
-#ifndef _THMLHTMLHREF_H
-#define _THMLHTMLHREF_H
+#ifndef TEIXHTML_H
+#define TEIXHTML_H
 
 #include <swbasicfilter.h>
-#include <utilxml.h>
 
 SWORD_NAMESPACE_START
 
-/** this filter converts ThML text to HTML text with hrefs
+/** this filter converts TEI text to XHTML text
  */
-class SWDLLEXPORT ThMLHTMLHREF : public SWBasicFilter {
-	SWBuf imgPrefix;
+class SWDLLEXPORT TEIXHTML : public SWBasicFilter {
+private:
 	bool renderNoteNumbers;
+
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
-		MyUserData(const SWModule *module, const SWKey *key);//: BasicFilterUserData(module, key) {}
-		bool inscriptRef;
-		bool SecHead;
 		bool BiblicalText;
+		SWBuf lastHi;
+		
 		SWBuf version;
-		XMLTag startTag;
+		MyUserData(const SWModule *module, const SWKey *key);
 	};
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
-	ThMLHTMLHREF();
-	virtual const char *getImagePrefix() { return imgPrefix.c_str(); }
-	virtual void setImagePrefix(const char *newImgPrefix) { imgPrefix = newImgPrefix; }
+	TEIXHTML();
 	void setRenderNoteNumbers(bool val = true) { renderNoteNumbers = val; }
 };
+
 SWORD_NAMESPACE_END
-#endif /* _THMLHTMLHREF_H */
+#endif

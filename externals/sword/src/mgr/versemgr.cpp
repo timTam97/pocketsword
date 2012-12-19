@@ -43,6 +43,7 @@
 #include <canon_catholic.h>	// Catholic v11n system (10 chapter Esther)
 #include <canon_catholic2.h>	// Catholic2 v11n system (16 chapter Esther)
 #include <canon_synodalp.h>	// SynodalP v11n system (KJV with Synodal-like verse counts)
+#include <canon_rahlfs.h>	// Rahlfs LXX v11n system
 
 using std::vector;
 using std::map;
@@ -69,6 +70,7 @@ VerseMgr *VerseMgr::getSystemVerseMgr() {
 		systemVerseMgr->registerVersificationSystem("Catholic", otbooks_catholic, ntbooks, vm_catholic);
 		systemVerseMgr->registerVersificationSystem("Catholic2", otbooks_catholic2, ntbooks, vm_catholic2);
 		systemVerseMgr->registerVersificationSystem("SynodalP", otbooks, ntbooks, vm_synodalp);
+		systemVerseMgr->registerVersificationSystem("Rahlfs", otbooks_rahlfs, ntbooks_null, vm_rahlfs);
 	}
 	return systemVerseMgr;
 }

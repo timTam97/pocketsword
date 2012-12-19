@@ -321,6 +321,7 @@
 		05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05E7F56116018E26006EA9A3 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E7F56016018E26006EA9A3 /* Icon-72@2x.png */; };
+		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; };
 		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
@@ -1188,6 +1189,9 @@
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05E7F56016018E26006EA9A3 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "Resources/Icon-72@2x.png"; sourceTree = "<group>"; };
+		05EBBA411681823E005C4FF9 /* canon_rahlfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_rahlfs.h; sourceTree = "<group>"; };
+		05EBBA421681823E005C4FF9 /* teixhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teixhtml.h; sourceTree = "<group>"; };
+		05EBBA431681825C005C4FF9 /* teixhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teixhtml.cpp; sourceTree = "<group>"; };
 		05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSRefSelectorController.h; path = Classes/PSRefSelectorController.h; sourceTree = "<group>"; };
 		05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSRefSelectorController.mm; path = Classes/PSRefSelectorController.mm; sourceTree = "<group>"; };
 		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -1593,6 +1597,8 @@
 		0527595E10884F64004FB0E0 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				05EBBA411681823E005C4FF9 /* canon_rahlfs.h */,
+				05EBBA421681823E005C4FF9 /* teixhtml.h */,
 				0527595F10884F64004FB0E0 /* canon.h */,
 				0527596010884F64004FB0E0 /* canon_abbrevs.h */,
 				05B67C8D1461046E00B3E605 /* canon_catholic.h */,
@@ -1965,6 +1971,7 @@
 		05275A4B10884F71004FB0E0 /* filters */ = {
 			isa = PBXGroup;
 			children = (
+				05EBBA431681825C005C4FF9 /* teixhtml.cpp */,
 				05275A4C10884F71004FB0E0 /* cipherfil.cpp */,
 				05275A4D10884F71004FB0E0 /* gbffootnotes.cpp */,
 				05275A4E10884F71004FB0E0 /* gbfheadings.cpp */,
@@ -3530,6 +3537,7 @@
 				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
 				05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */,
 				05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */,
+				05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

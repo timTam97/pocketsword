@@ -174,11 +174,11 @@ char SWModule::Error()
  * RET:	pointer to modname
  */
 
-char *SWModule::Name(const char *imodname) {
-	return stdstr(&modname, imodname);
+void SWModule::setName(const char *imodname) {
+	stdstr(&modname, imodname);
 }
 
-char *SWModule::Name() const {
+char *SWModule::getName() const {
 	return modname;
 }
 
@@ -192,11 +192,11 @@ char *SWModule::Name() const {
  * RET:	pointer to moddesc
  */
 
-char *SWModule::Description(const char *imoddesc) {
-	return stdstr(&moddesc, imoddesc);
+void SWModule::setDescription(const char *imoddesc) {
+	stdstr(&moddesc, imoddesc);
 }
 
-char *SWModule::Description() const {
+char *SWModule::getDescription() const {
 	return moddesc;
 }
 
@@ -210,11 +210,11 @@ char *SWModule::Description() const {
  * RET:	pointer to modtype
  */
 
-char *SWModule::Type(const char *imodtype) {
-	return stdstr(&modtype, imodtype);
+void SWModule::setType(const char *imodtype) {
+	stdstr(&modtype, imodtype);
 }
 
-char *SWModule::Type() const {
+char *SWModule::getType() const {
 	return modtype;
 }
 
@@ -515,7 +515,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 
 			// iterate thru each good module position that meets the search
 			bool checkBounds = getKey()->isBoundSet();
-			for (unsigned long i = 0; i < (unsigned)h->length(); i++) {
+			for (unsigned long i = 0; i < (unsigned long)h->length(); i++) {
 				Document &doc = h->doc(i);
 
 				// set a temporary verse key to this module position
@@ -529,7 +529,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 					}
 				}
 				listKey << *resultKey;
-				listKey.GetElement()->userData = (void *)((__u32)(h->score(i)*100));
+				listKey.GetElement()->userData = (__u64)((__u32)(h->score(i)*100));
 			}
 			(*percent)(98, percentUserData);
 		}
@@ -1088,7 +1088,9 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 
 	SWBuf proxBuf;
 	SWBuf proxLem;
+	SWBuf proxMorph;
 	SWBuf strong;
+	SWBuf morph;
 
 	char err = Error();
 	while (!err) {
@@ -1096,6 +1098,7 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 
 		proxBuf = "";
 		proxLem = "";
+		proxMorph = "";
 
 		// computer percent complete so we can report to our progress callback
 		float per = (float)mindex / highIndex;
@@ -1124,8 +1127,10 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 			AttributeTypeList::iterator words;
 			AttributeList::iterator word;
 			AttributeValue::iterator strongVal;
+			AttributeValue::iterator morphVal;
 
 			strong="";
+			morph="";
 			words = getEntryAttributes().find("Word");
 			if (words != getEntryAttributes().end()) {
 				for (word = words->second.begin();word != words->second.end(); word++) {
@@ -1142,7 +1147,16 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 									continue;	// no text? let's skip
 							}
 							strong.append(strongVal->second);
+							morph.append(strongVal->second);
+							morph.append('@');
+							SWBuf tmp = "Morph";
+							if (partCount > 1) tmp.appendFormatted(".%d", i+1);
+							morphVal = word->second.find(tmp);
+							if (morphVal != word->second.end()) {
+								morph.append(morphVal->second);
+							}
 							strong.append(' ');
+							morph.append(' ');
 						}
 					}
 				}
@@ -1161,6 +1175,7 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 
 			if (strong.length() > 0) {
 				doc->add(*_CLNEW Field(_T("lemma"), (wchar_t *)utf8ToWChar(strong).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED));
+				doc->add(*_CLNEW Field(_T("morph"), (wchar_t *)utf8ToWChar(morph).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED));
 //printf("setting fields (%s).\ncontent: %s\nlemma: %s\n", (const char *)*key, content, strong.c_str());
 			}
 
@@ -1184,9 +1199,11 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 					if (content && *content) {
 						// build "strong" field
 						strong = "";
+						morph = "";
 						AttributeTypeList::iterator words;
 						AttributeList::iterator word;
 						AttributeValue::iterator strongVal;
+						AttributeValue::iterator morphVal;
 
 						words = getEntryAttributes().find("Word");
 						if (words != getEntryAttributes().end()) {
@@ -1204,7 +1221,16 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 												continue;	// no text? let's skip
 										}
 										strong.append(strongVal->second);
+										morph.append(strongVal->second);
+										morph.append('@');
+										SWBuf tmp = "Morph";
+										if (partCount > 1) tmp.appendFormatted(".%d", i+1);
+										morphVal = word->second.find(tmp);
+										if (morphVal != word->second.end()) {
+											morph.append(morphVal->second);
+										}
 										strong.append(' ');
+										morph.append(' ');
 									}
 								}
 							}
@@ -1212,8 +1238,11 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 						proxBuf += content;
 						proxBuf.append(' ');
 						proxLem += strong;
-						if (proxLem.length())
+						proxMorph += morph;
+						if (proxLem.length()) {
 							proxLem.append("\n");
+							proxMorph.append("\n");
+						}
 					}
 					(*this)++;
 					err = Error();
@@ -1235,9 +1264,11 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 						if (content && *content) {
 							// build "strong" field
 							strong = "";
+							morph = "";
 							AttributeTypeList::iterator words;
 							AttributeList::iterator word;
 							AttributeValue::iterator strongVal;
+							AttributeValue::iterator morphVal;
 
 							words = getEntryAttributes().find("Word");
 							if (words != getEntryAttributes().end()) {
@@ -1255,7 +1286,16 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 													continue;	// no text? let's skip
 											}
 											strong.append(strongVal->second);
+											morph.append(strongVal->second);
+											morph.append('@');
+											SWBuf tmp = "Morph";
+											if (partCount > 1) tmp.appendFormatted(".%d", i+1);
+											morphVal = word->second.find(tmp);
+											if (morphVal != word->second.end()) {
+												morph.append(morphVal->second);
+											}
 											strong.append(' ');
+											morph.append(' ');
 										}
 									}
 								}
@@ -1264,8 +1304,11 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 							proxBuf += content;
 							proxBuf.append(' ');
 							proxLem += strong;
-							if (proxLem.length())
+							proxMorph += morph;
+							if (proxLem.length()) {
 								proxLem.append("\n");
+								proxMorph.append("\n");
+							}
 						}
 					} while (tkcheck->nextSibling());
 					tkcheck->parent();
@@ -1282,6 +1325,7 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 		}
 		if (proxLem.length() > 0) {
 			doc->add(*_CLNEW Field(_T("proxlem"), (wchar_t *)utf8ToWChar(proxLem).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED) );
+			doc->add(*_CLNEW Field(_T("proxmorph"), (wchar_t *)utf8ToWChar(proxMorph).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED) );
 			good = true;
 		}
 		if (good) {

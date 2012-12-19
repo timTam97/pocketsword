@@ -155,6 +155,7 @@ OSISHTMLHREF::OSISHTMLHREF() {
 	//	addTokenSubstitute("/lg", "<br />");
 
 	morphFirst = false;
+	renderNoteNumbers = false;
 }
 
 
@@ -166,8 +167,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
   // manually process if it wasn't a simple substitution
 		XMLTag tag(token);
 		
-		//printf("		tag.toString() = %s\n", tag.toString());
-
 		// <w> tag
 		if (!strcmp(tag.getName(), "w")) {
  
@@ -242,6 +241,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 
 					if (!strongsMarkup) {	// leave strong's markup notes out, in the future we'll probably have different option filters to turn different note types on or off
 						SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
+						SWBuf noteName = tag.getAttribute("n");
 						VerseKey *vkey = NULL;
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
 
@@ -253,25 +253,14 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 							vkey = SWDYNAMIC_CAST(VerseKey, u->key);
 						}
 						SWCATCH ( ... ) {	}
-						if (vkey) {
-							//printf("URL = %s\n",URL::encode(vkey->getText()).c_str());
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c</a>",
-								ch, 
-								URL::encode(footnoteNumber.c_str()).c_str(), 
-								URL::encode(u->version.c_str()).c_str(), 
-								URL::encode(vkey->getText()).c_str(), 
-								ch,
-								ch);
-						}
-						else {
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c</a>",
-								ch, 
-								URL::encode(footnoteNumber.c_str()).c_str(), 
-								URL::encode(u->version.c_str()).c_str(), 
-								URL::encode(u->key->getText()).c_str(),  
-								ch,
-								ch);
-						}
+						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c%s</a>",
+						        ch, 
+							URL::encode(footnoteNumber.c_str()).c_str(), 
+							URL::encode(u->version.c_str()).c_str(), 
+							URL::encode(vkey ? vkey->getText() : u->key->getText()).c_str(), 
+							ch,
+							ch, 
+							(renderNoteNumbers ? noteName.c_str() : ""));
 					}
 				}
 				u->suspendTextPassThru = (++u->suspendLevel);

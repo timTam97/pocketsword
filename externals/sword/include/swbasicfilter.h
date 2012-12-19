@@ -4,7 +4,7 @@
  *  				many filter will need and can use as a starting
  *  				point. 
  *
- * $Id: swbasicfilter.h 1984 2006-10-08 05:06:52Z scribe $
+ * $Id: swbasicfilter.h 2688 2012-03-05 02:02:10Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -55,7 +55,7 @@ public:
  * <code>*buf</code> address and change <code>*buf</code> to point past
  * the last char of the written sequence.
  */
-class SWDLLEXPORT SWBasicFilter : public SWFilter {
+class SWDLLEXPORT SWBasicFilter : public virtual SWFilter {
 
 class Private;
 

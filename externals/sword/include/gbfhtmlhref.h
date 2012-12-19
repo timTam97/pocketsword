@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * $Id: gbfhtmlhref.h 1688 2005-01-01 04:42:26Z scribe $
+ * $Id: gbfhtmlhref.h 2677 2012-02-13 01:48:36Z charcoal $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,6 +28,7 @@ SWORD_NAMESPACE_START
 /** this filter converts GBF  text to HTML text with hrefs
  */
 class SWDLLEXPORT GBFHTMLHREF : public SWBasicFilter {
+	bool renderNoteNumbers;
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
@@ -41,6 +42,7 @@ protected:
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
 	GBFHTMLHREF();
+	void setRenderNoteNumbers(bool val = true) { renderNoteNumbers = val; }
 };
 
 SWORD_NAMESPACE_END

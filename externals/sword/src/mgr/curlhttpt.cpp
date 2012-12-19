@@ -146,6 +146,9 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
 		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());
 		
+		/* Disable checking host certificate */
+		curl_easy_setopt(session, CURLOPT_SSL_VERIFYPEER, false);
+
 		/* FTP connection settings */
 
 #if (LIBCURL_VERSION_MAJOR > 7) || \

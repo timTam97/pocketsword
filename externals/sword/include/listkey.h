@@ -4,7 +4,7 @@
  *				(e.g. verse, word,
  *				place, etc.)
  *
- * $Id: listkey.h 2645 2011-07-22 11:03:45Z scribe $
+ * $Id: listkey.h 2698 2012-04-25 05:22:25Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -127,6 +127,7 @@ public:
 	virtual long getIndex() const { return arraypos; }
 	virtual const char *getRangeText() const;
 	virtual const char *getOSISRefRangeText() const;
+	virtual const char *getShortText() const;
 
 	/**
 	 * Returns the index for the new one given as as parameter.

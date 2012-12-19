@@ -2,7 +2,7 @@
  *  swmgr.h   - definition of class SWMgr used to interact with an install
  *				base of sword modules.
  *
- * $Id: swmgr.h 2650 2011-08-01 13:55:40Z scribe $
+ * $Id: swmgr.h 2680 2012-02-21 08:08:39Z scribe $
  *
  * Copyright 1998-2008 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -84,11 +84,9 @@ class SWOptionFilter;
  * SWMgr exposes an installed module set and can be asked to configure the desired
  *	markup and options which modules will produce.
  *
- * @version $Id: swmgr.h 2650 2011-08-01 13:55:40Z scribe $
+ * @version $Id: swmgr.h 2680 2012-02-21 08:08:39Z scribe $
  */
 class SWDLLEXPORT SWMgr {
-
-
 private:
 	bool mgrModeMultiMod;
 	bool augmentHome;
@@ -158,6 +156,14 @@ protected:
 
 
 public:
+
+	// constants which represent module types used in SWModule::getType
+	static const char *MODTYPE_BIBLES;
+	static const char *MODTYPE_COMMENTARIES;
+	static const char *MODTYPE_LEXDICTS;
+	static const char *MODTYPE_GENBOOKS;
+	static const char *MODTYPE_DAILYDEVOS;
+
 
 	static bool isICU;
 	static const char *globalConfPath;

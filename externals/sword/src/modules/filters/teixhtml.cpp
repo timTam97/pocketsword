@@ -1,8 +1,8 @@
 /***************************************************************************
- *					 teirtf.cpp  -  TEI to HTMLHREF filter
+ *					 teixhtml.cpp  -  TEI to XHTML filter
  *							 -------------------
- *	begin				: 2006-07-03
- *	copyright			: 2006 by CrossWire Bible Society
+ *	begin				: 2012-09-23
+ *	copyright			: 2012 by CrossWire Bible Society
  *
  * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <teihtmlhref.h>
+#include <teixhtml.h>
 #include <utilxml.h>
 #include <swmodule.h>
 #include <url.h>
@@ -32,7 +32,7 @@
 SWORD_NAMESPACE_START
 
 
-TEIHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
+TEIXHTML::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	BiblicalText = false;
 	if (module) {
 		version = module->Name();
@@ -41,7 +41,7 @@ TEIHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : 
 }
 
 
-TEIHTMLHREF::TEIHTMLHREF() {
+TEIXHTML::TEIXHTML() {
 	setTokenStart("<");
 	setTokenEnd(">");
 
@@ -61,7 +61,7 @@ TEIHTMLHREF::TEIHTMLHREF() {
 	renderNoteNumbers = false;
 }
 
-bool TEIHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
+bool TEIXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
   // manually process if it wasn't a simple substitution
 	if (!substituteToken(buf, token)) {
 		MyUserData *u = (MyUserData *)userData;

@@ -2,7 +2,7 @@
  *  swmgr.cpp   - implementaion of class SWMgr used to interact with an install
  *				base of sword modules.
  *
- * $Id: swmgr.cpp 2659 2011-10-25 17:35:20Z scribe $
+ * $Id: swmgr.cpp 2680 2012-02-21 08:08:39Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -110,6 +110,12 @@ const char *SWMgr::globalConfPath = GLOBCONFPATH;
 #else
 const char *SWMgr::globalConfPath = "/etc/sword.conf:/usr/local/etc/sword.conf";
 #endif
+
+const char *SWMgr::MODTYPE_BIBLES = "Biblical Texts";
+const char *SWMgr::MODTYPE_COMMENTARIES = "Commentaries";
+const char *SWMgr::MODTYPE_LEXDICTS = "Lexicons / Dictionaries";
+const char *SWMgr::MODTYPE_GENBOOKS = "Generic Books";
+const char *SWMgr::MODTYPE_DAILYDEVOS = "Daily Devotional";
 
 void SWMgr::init() {
 	SWOptionFilter *tmpFilter = 0;

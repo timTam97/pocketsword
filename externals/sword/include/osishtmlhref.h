@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * $Id: osishtmlhref.h 2569 2010-10-14 14:13:34Z scribe $
+ * $Id: osishtmlhref.h 2677 2012-02-13 01:48:36Z charcoal $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,6 +30,7 @@ SWORD_NAMESPACE_START
 class SWDLLEXPORT OSISHTMLHREF : public SWBasicFilter {
 private:
 	bool morphFirst;
+	bool renderNoteNumbers;
 protected:
 	// used by derived classes so we have it in the header
 	class TagStacks;
@@ -58,6 +59,7 @@ protected:
 public:
 	OSISHTMLHREF();
 	void setMorphFirst(bool val = true) { morphFirst = val; }
+	void setRenderNoteNumbers(bool val = true) { renderNoteNumbers = val; }
 };
 
 SWORD_NAMESPACE_END
