@@ -13,7 +13,7 @@
 #import "PSResizing.h"
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-v2.3"
-#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-261211"
+#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-121223"
 
 @implementation PSLaunchViewController
 
