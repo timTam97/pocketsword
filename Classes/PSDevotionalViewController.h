@@ -30,5 +30,6 @@
 - (IBAction)moduleButtonPressed;
 - (IBAction)toggleDatePicker;
 - (UIView*)datePickerButton;
+- (void)setDevotionalDateTitle:(NSDate*)newDate;
 
 @end

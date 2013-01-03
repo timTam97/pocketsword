@@ -58,14 +58,32 @@
 	}
 }
 
+- (void)setDevotionalDateTitle:(NSDate*)newDate {
+	NSString *dateTitle = @"";
+	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	if([dateFormatter respondsToSelector:@selector(setDoesRelativeDateFormatting:)]) {
+		[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+		[dateFormatter setDateStyle:NSDateFormatterLongStyle];
+		[dateFormatter setDoesRelativeDateFormatting:YES];
+		dateTitle = [dateFormatter stringFromDate:newDate];
+	} else {
+		[dateFormatter setDateFormat:@"MMMM d"];
+		dateTitle = [dateFormatter stringFromDate:newDate];
+	}
+	NSRange foundComma = [dateTitle rangeOfString:@","];
+	if(foundComma.location != NSNotFound) {
+		//[dateFormatter setDateFormat:@"MMMM d"];
+		//dateTitle = [dateFormatter stringFromDate:newDate];
+		dateTitle = [dateTitle substringToIndex:foundComma.location];
+	}
+	
+	[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
+}
+
 - (void)loadNewDevotionalEntry {
 	//read in what is set in the date picker and show that day's devo
 	[self loadDevotionalForDate:devotionalDatePicker.date];
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-	[dateFormatter setDateFormat:@"MMMM d"];
-	NSString *dateTitle = [dateFormatter stringFromDate:devotionalDatePicker.date];
-	
-	[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
+	[self setDevotionalDateTitle:devotionalDatePicker.date];
 }
 
 - (IBAction)todayButtonPressed {
@@ -166,10 +184,6 @@
 	}
 }
 
-//- (IBAction)toggleDatePicker {
-//	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleDevotionalDatePicker object:nil];
-//}
-
 - (UIView*)datePickerButton {
 	return (UIView*)self.navigationItem.titleView;
 }
@@ -177,23 +191,20 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if(!loaded) {
-		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-		[dateFormatter setDateFormat:@"MMMM d"];
-		NSString *todayTitle = [dateFormatter stringFromDate:[NSDate date]];
 		
 		UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		titleButton.backgroundColor = [UIColor clearColor];
 		titleButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
 		titleButton.showsTouchWhenHighlighted = YES;
-		[titleButton setTitle:todayTitle forState:UIControlStateNormal];
+		[titleButton setTitle:@"" forState:UIControlStateNormal];
 		[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
 		[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		titleButton.frame = CGRectMake(0, 0, 150, 40);
 		[titleButton addTarget: self action: @selector(toggleDatePicker) forControlEvents: UIControlEventTouchUpInside];
 		
 		self.navigationItem.titleView = titleButton;
+		[self setDevotionalDateTitle:[NSDate date]];
 		
-		devotionalDatePicker.locale = [NSLocale currentLocale];
 		devotionalDatePicker.timeZone = [NSTimeZone localTimeZone];
 		devotionalDatePicker.calendar = [NSCalendar currentCalendar];
 		[devotionalDatePicker setDate:[NSDate date] animated:NO];
