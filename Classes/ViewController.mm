@@ -226,43 +226,28 @@ bool ps_viewcontroller_initialized = false;
 	[pool release];
 }
 
+- (void)_setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews {
+	for(UIView *segmentView in subviews) {
+		if([segmentView.accessibilityLabel isEqualToString:@"forward-white.png"] ||
+		   [segmentView.accessibilityLabel isEqualToString:NSLocalizedString(@"VoiceOverNextChapterButton", @"")]) {
+			//forward button
+			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+		} else if([segmentView.accessibilityLabel isEqualToString:@"back-white.png"] ||
+				  [segmentView.accessibilityLabel isEqualToString:NSLocalizedString(@"VoiceOverPreviousChapterButton", @"")]) {
+			//backward button
+			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+		} else {
+			//chapter title
+			segmentView.accessibilityLabel = [bibleSegmentedControl titleForSegmentAtIndex:1];
+		}
+	}
+}
+
 - (void)setVoiceOverForRefSegmentedControl {
-	int segmentCount = 0;
 	//VoiceOver support for the prev & next buttons in the Bible tab
-	for(UIView *segmentView in bibleSegmentedControl.subviews) {
-		switch (segmentCount) {
-			case 0:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
-				break;
-			case 1:
-				segmentView.accessibilityLabel = [bibleSegmentedControl titleForSegmentAtIndex:1];
-				break;
-			case 2:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
-				break;
-			default:
-				break;
-		}
-		segmentCount++;
-	}
-	segmentCount = 0;
+	[self _setVoiceOverForRefSegmentedControlSubviews:bibleSegmentedControl.subviews];
 	//VoiceOver support for the prev & next buttons in the commentary tab
-	for(UIView *segmentView in commentarySegmentedControl.subviews) {
-		switch (segmentCount) {
-			case 0:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
-				break;
-			case 1:
-				segmentView.accessibilityLabel = [commentarySegmentedControl titleForSegmentAtIndex:1];
-				break;
-			case 2:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
-				break;
-			default:
-				break;
-		}
-		segmentCount++;
-	}
+	[self _setVoiceOverForRefSegmentedControlSubviews:commentarySegmentedControl.subviews];
 }
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
