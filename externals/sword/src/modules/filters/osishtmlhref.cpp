@@ -390,7 +390,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			else if (!strcmp(tag.getAttribute("type"),"x-p"))  {
 				if (tag.getAttribute("marker"))
 					outText(tag.getAttribute("marker"), buf, u);
-				else outText("<!p>", buf, u);
+				else outText("<!P>", buf, u);
 			}
 			else if (!strcmp(tag.getAttribute("type"), "cQuote")) {
 				const char *tmp = tag.getAttribute("marker");

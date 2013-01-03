@@ -232,13 +232,13 @@ bool ps_viewcontroller_initialized = false;
 	for(UIView *segmentView in bibleSegmentedControl.subviews) {
 		switch (segmentCount) {
 			case 0:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
 				break;
 			case 1:
 				segmentView.accessibilityLabel = [bibleSegmentedControl titleForSegmentAtIndex:1];
 				break;
 			case 2:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
 				break;
 			default:
 				break;
@@ -250,13 +250,13 @@ bool ps_viewcontroller_initialized = false;
 	for(UIView *segmentView in commentarySegmentedControl.subviews) {
 		switch (segmentCount) {
 			case 0:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
 				break;
 			case 1:
 				segmentView.accessibilityLabel = [commentarySegmentedControl titleForSegmentAtIndex:1];
 				break;
 			case 2:
-				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+				segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
 				break;
 			default:
 				break;
