@@ -845,7 +845,6 @@
 		05275AA710884F71004FB0E0 /* rawtext4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rawtext4.cpp; sourceTree = "<group>"; };
 		05275AA810884F71004FB0E0 /* swtext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swtext.cpp; sourceTree = "<group>"; };
 		05275AAA10884F71004FB0E0 /* ztext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ztext.cpp; sourceTree = "<group>"; };
-		05275AAB10884F71004FB0E0 /* removeMakefiles.command */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = removeMakefiles.command; sourceTree = "<group>"; };
 		05275AAD10884F71004FB0E0 /* ftplib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ftplib.c; sourceTree = "<group>"; };
 		05275AAE10884F71004FB0E0 /* ftpparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ftpparse.c; sourceTree = "<group>"; };
 		05275AB010884F71004FB0E0 /* roman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = roman.cpp; sourceTree = "<group>"; };
@@ -1783,7 +1782,6 @@
 				05275A1010884F71004FB0E0 /* keys */,
 				05275A1D10884F71004FB0E0 /* mgr */,
 				05275A2F10884F71004FB0E0 /* modules */,
-				05275AAB10884F71004FB0E0 /* removeMakefiles.command */,
 				05275AAC10884F71004FB0E0 /* utilfuns */,
 			);
 			name = src;

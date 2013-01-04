@@ -6,6 +6,9 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 #import "PSAboutScreenController.h"
 #import "PSModuleController.h"
 
@@ -182,11 +185,120 @@
 	self.navigationItem.rightBarButtonItem = nil;
 }
 
+- (NSString *) platform {
+	int mib[2];
+	size_t len;
+	char *machine;
+	
+	mib[0] = CTL_HW;
+	mib[1] = HW_MACHINE;
+	sysctl(mib, 2, NULL, &len, NULL, 0);
+	machine = (char *)malloc(len);
+	sysctl(mib, 2, machine, &len, NULL, 0);
+	
+	NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
+	free(machine);
+	return platform;
+}
+
+// thanks to erica https://github.com/erica/uidevice-extension
+#define IFPGA_NAMESTRING                @"iFPGA"
+
+#define IPHONE_1G_NAMESTRING            @"iPhone 1G"
+#define IPHONE_3G_NAMESTRING            @"iPhone 3G"
+#define IPHONE_3GS_NAMESTRING           @"iPhone 3GS"
+#define IPHONE_4_NAMESTRING             @"iPhone 4"
+#define IPHONE_4S_NAMESTRING            @"iPhone 4S"
+#define IPHONE_5_NAMESTRING             @"iPhone 5"
+//#define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
+
+#define IPOD_1G_NAMESTRING              @"iPod touch 1G"
+#define IPOD_2G_NAMESTRING              @"iPod touch 2G"
+#define IPOD_3G_NAMESTRING              @"iPod touch 3G"
+#define IPOD_4G_NAMESTRING              @"iPod touch 4G"
+#define IPOD_5G_NAMESTRING              @"iPod touch 5G"
+//#define IPOD_UNKNOWN_NAMESTRING         @"Unknown iPod"
+
+#define IPAD_1G_NAMESTRING              @"iPad 1G"
+#define IPAD_2G_NAMESTRING              @"iPad 2G"
+#define IPAD_3G_NAMESTRING              @"iPad 3G"
+#define IPAD_4G_NAMESTRING              @"iPad 4G"
+//#define IPAD_UNKNOWN_NAMESTRING         @"Unknown iPad"
+
+#define IPAD_MINI_1G_NAMESTRING			@"iPad mini 1G"
+
+//#define APPLETV_2G_NAMESTRING           @"Apple TV 2G"
+//#define APPLETV_3G_NAMESTRING           @"Apple TV 3G"
+//#define APPLETV_4G_NAMESTRING           @"Apple TV 4G"
+//#define APPLETV_UNKNOWN_NAMESTRING      @"Unknown Apple TV"
+
+//#define IOS_FAMILY_UNKNOWN_DEVICE       @"Unknown iOS device"
+
+#define SIMULATOR_NAMESTRING            @"iPhone Simulator"
+#define SIMULATOR_IPHONE_NAMESTRING     @"iPhone Simulator"
+#define SIMULATOR_IPAD_NAMESTRING       @"iPad Simulator"
+#define SIMULATOR_APPLETV_NAMESTRING    @"Apple TV Simulator" // :)
+
+- (NSString *) platformString
+{
+    NSString *platform = [self platform];
+	
+    // The ever mysterious iFPGA
+    if ([platform isEqualToString:@"iFPGA"])        return IFPGA_NAMESTRING;
+	
+    // iPhone
+    if ([platform isEqualToString:@"iPhone1,1"])    return IPHONE_1G_NAMESTRING;
+    if ([platform isEqualToString:@"iPhone1,2"])    return IPHONE_3G_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone2"])            return IPHONE_3GS_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone3"])            return IPHONE_4_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone4"])            return IPHONE_4S_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone5"])            return IPHONE_5_NAMESTRING;
+    
+    // iPod
+    if ([platform hasPrefix:@"iPod1"])              return IPOD_1G_NAMESTRING;
+    if ([platform hasPrefix:@"iPod2"])              return IPOD_2G_NAMESTRING;
+    if ([platform hasPrefix:@"iPod3"])              return IPOD_3G_NAMESTRING;
+    if ([platform hasPrefix:@"iPod4"])              return IPOD_4G_NAMESTRING;
+    if ([platform hasPrefix:@"iPod5"])              return IPOD_5G_NAMESTRING;
+	
+    // iPad
+    if ([platform hasPrefix:@"iPad1"])              return IPAD_1G_NAMESTRING;
+		// mini
+    if ([platform hasPrefix:@"iPad2,5"] ||
+		[platform hasPrefix:@"iPad2,6"] ||
+		[platform hasPrefix:@"iPad2,7"])            return IPAD_MINI_1G_NAMESTRING;
+	// iPad
+    if ([platform hasPrefix:@"iPad2"])              return IPAD_2G_NAMESTRING;
+    if ([platform hasPrefix:@"iPad3,4"] ||
+		[platform hasPrefix:@"iPad3,5"] ||
+		[platform hasPrefix:@"iPad3,6"])            return IPAD_4G_NAMESTRING;
+    if ([platform hasPrefix:@"iPad3"])              return IPAD_3G_NAMESTRING;
+    
+    // Apple TV
+//    if ([platform hasPrefix:@"AppleTV2"])           return UIDeviceAppleTV2;
+//    if ([platform hasPrefix:@"AppleTV3"])           return UIDeviceAppleTV3;
+	
+//    if ([platform hasPrefix:@"iPhone"])             return UIDeviceUnknowniPhone;
+//    if ([platform hasPrefix:@"iPod"])               return UIDeviceUnknowniPod;
+//    if ([platform hasPrefix:@"iPad"])               return UIDeviceUnknowniPad;
+//    if ([platform hasPrefix:@"AppleTV"])            return UIDeviceUnknownAppleTV;
+    
+    // Simulator thanks Jordan Breeding
+    if ([platform hasSuffix:@"86"] || [platform isEqual:@"x86_64"])
+    {
+        BOOL smallerScreen = [[UIScreen mainScreen] bounds].size.width < 768;
+        return smallerScreen ? SIMULATOR_IPHONE_NAMESTRING : SIMULATOR_IPAD_NAMESTRING;
+    }
+	
+    return platform;
+}
+
+
 -(void)emailFeedback:(id)sender
 {
     NSString *recipients = @"niccarter@mac.com";
 	
-	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [[UIDevice currentDevice] model]];
+	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [self platformString]];
 	
 	if([MFMailComposeViewController canSendMail]) {
 		MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
