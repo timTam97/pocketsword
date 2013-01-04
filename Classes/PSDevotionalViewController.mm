@@ -71,10 +71,17 @@
 		dateTitle = [dateFormatter stringFromDate:newDate];
 	}
 	NSRange foundComma = [dateTitle rangeOfString:@","];
+	NSRange foundSpace = [dateTitle rangeOfString:@" "];
 	if(foundComma.location != NSNotFound) {
 		//[dateFormatter setDateFormat:@"MMMM d"];
 		//dateTitle = [dateFormatter stringFromDate:newDate];
 		dateTitle = [dateTitle substringToIndex:foundComma.location];
+	} else if(foundSpace.location != NSNotFound && ([dateTitle length] > 6)) {
+		NSString *yearValue = [dateTitle substringFromIndex:([dateTitle length] - 5)];
+		if([yearValue integerValue] > 2000) {
+			dateTitle = [dateTitle substringToIndex:([dateTitle length] - 5)];
+		}
+		
 	}
 	
 	[(UIButton*)(self.navigationItem.titleView) setTitle:dateTitle forState:UIControlStateNormal];
