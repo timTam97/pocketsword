@@ -661,9 +661,7 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 				InstallSourceMap::iterator it;
 				for (it = sources.begin(); it != sources.end(); ++it) {
 					// is this our UID?
-					SWLog::getSystemLog()->logDebug("uid: %s && actions->first: %s \n", it->second->uid.c_str(), actions->first.c_str());
 					if ((it->second) && (it->second->uid == actions->first)) {
-						SWLog::getSystemLog()->logDebug("uid: %s && (actions->first) \n", it->second->uid.c_str());
 						if (actions->second == "REMOVE") {
 							// be sure to call save/reload after this
 							// or this could be dangerous
@@ -680,23 +678,39 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 								// but it seems like we might want to change any
 								// of the current fields so we don't do this now
 								// InstallSource i("FTP", actions->second);
-								if(it->second->caption == "CrossWire 1 (http)" || it->second->caption == "CrossWire 1") {
+								
+
+								if(it->second->caption == "CrossWire" || it->second->caption == "CrossWire 1") {
 									delete it->second;
 									it->second = new InstallSource("HTTP", actions->second.c_str());
 									it->second->uid = actions->first;
-									it->second->caption = "CrossWire 1";
+									//it->second->caption = "CrossWire 1";
 									it->second->directory = "/ftpmirror/pub/sword/raw";
-								} else if(it->second->caption == "CrossWire 2 (http)" || it->second->caption == "CrossWire 2") {
+								} else if(it->second->caption == "CrossWire Beta" || it->second->caption == "CrossWire 2") {
 									delete it->second;
 									it->second = new InstallSource("HTTP", actions->second.c_str());
 									it->second->uid = actions->first;
-									it->second->caption = "CrossWire 2";
+									//it->second->caption = "CrossWire 2";
 									it->second->directory = "/ftpmirror/pub/sword/betaraw";
-								} else if(it->second->caption == "NET (Bible.org)") {
+								} else if(it->second->caption == "CrossWire Wycliffe") {
+									delete it->second;
+									it->second = new InstallSource("HTTP", actions->second.c_str());
+									it->second->uid = actions->first;
+									it->second->directory = "/ftpmirror/pub/sword/wyclifferaw";
+								} else if(it->second->caption == "CrossWire av11n") {
+									delete it->second;
+									it->second = new InstallSource("HTTP", actions->second.c_str());
+									it->second->uid = actions->first;
+									it->second->directory = "/ftpmirror/pub/sword/avraw";
+								} else if(it->second->caption == "Bible.org" || it->second->caption == "NET (Bible.org)") {
 									delete it->second;
 									it->second = new InstallSource("FTP", actions->second.c_str());
 									it->second->uid = actions->first;
 									it->second->caption = "NET (Bible.org)";
+								} else if(strstr(it->second->caption, " Attic") != NULL) {
+									//manually filter out all the crap old stuff. nicc
+									delete it->second;
+									it->second = 0;
 								} else {
 									delete it->second;
 									it->second = new InstallSource("FTP", actions->second.c_str());
@@ -716,16 +730,25 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 							is->uid = actions->first;
 							if(is->caption == "CrossWire") {
 								is->type = "HTTP";
-								is->caption = "CrossWire 1";
+								//is->caption = "CrossWire 1";
 								is->directory = "/ftpmirror/pub/sword/raw";
 							} else if(is->caption == "CrossWire Beta") {
 								is->type = "HTTP";
-								is->caption = "CrossWire 2";
+								//is->caption = "CrossWire 2";
 								is->directory = "/ftpmirror/pub/sword/betaraw";
+							} else if(is->caption == "CrossWire Wycliffe") {
+								is->type = "HTTP";
+								is->directory = "/ftpmirror/pub/sword/wyclifferaw";
+							} else if(is->caption == "CrossWire av11n") {
+								is->type = "HTTP";
+								is->directory = "/ftpmirror/pub/sword/avraw";
 							} else if(is->caption == "Bible.org") {
 								is->caption = "NET (Bible.org)";
 							}
-							sources[is->caption] = is;
+							if(strstr(is->caption, " Attic") == NULL) {
+								//only add if it's not an attic repo...
+								sources[is->caption] = is;
+							}
 						}
 					}
 				}

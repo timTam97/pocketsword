@@ -58,7 +58,7 @@ float status;
                 // set configFilePath
                 [self setConfigFilePath:[configPath stringByAppendingPathComponent:@"InstallMgr.conf"]];
                 
-				BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedXiphosAndBibleRepositories2"];
+				BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey:@"updatedRepositories-20130114"];
 				if(!xbr) {
 					[fm removeItemAtPath:configFilePath error:NULL];
 				}
@@ -72,79 +72,45 @@ float status;
 					
                     // create default HTTP Install source
                     SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
-                    [is setCaption:@"CrossWire 1"];
+                    [is setCaption:@"CrossWire"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/raw"];
 					[is setUID:@"20081216195754"];
-					//[is setUID:@"crosswire-http"];//20081216195754
-                    // add is
                     [self addInstallSource:is withReinitialize:NO];
 					
-                    [is setCaption:@"CrossWire 2"];
-                    [is setSource:@"ftp.crosswire.org"];
-                    [is setDirectory:@"/ftpmirror/pub/sword/betaraw"];                    
-					[is setUID:@"20090224125400"];//20090224125400
-					//[is setUID:@"crosswire-beta-http"];//20090224125400
-                    // add is
-                    [self addInstallSource:is withReinitialize:NO];
+//					[is setCaption:@"CrossWire 2"];
+//					[is setSource:@"ftp.crosswire.org"];
+//					[is setDirectory:@"/ftpmirror/pub/sword/betaraw"];
+//					[is setUID:@"20090224125400"];
+//					[self addInstallSource:is withReinitialize:NO];
 					
-					//[is setType:INSTALLSOURCE_TYPE_FTP];
-                    [is setCaption:@"CrossWire 3 (av11n)"];
+                    [is setCaption:@"CrossWire av11n"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/avraw"];
-					[is setUID:@"crosswire-av11n-http"];
-                    // add is
+					[is setUID:@"20120224005000"];
                     [self addInstallSource:is withReinitialize:NO];
 					
 					[is setType:INSTALLSOURCE_TYPE_FTP];
 					[is setCaption:@"NET (Bible.org)"];
 					[is setSource:@"ftp.bible.org"];
 					[is setDirectory:@"/sword"];
-					[is setUID:@"20090514005700"];//20090514005700
-					//[is setUID:@"bibleDotOrg-ftp"];//20090514005700
-					// add is
+					[is setUID:@"20090514005700"];
 					[self addInstallSource:is withReinitialize:NO];
 					
 					[is setType:INSTALLSOURCE_TYPE_FTP];
 					[is setCaption:@"Xiphos"];
 					[is setSource:@"ftp.xiphos.org"];
 					[is setDirectory:@"."];                    
-					[is setUID:@"20090514005900"];//20090514005900
-					//[is setUID:@"xiphos-ftp"];//20090514005900
-					// add is
+					[is setUID:@"20090514005900"];
 					[self addInstallSource:is withReinitialize:NO];
-					
-					// create default FTP Install source
-					//[is setType:INSTALLSOURCE_TYPE_FTP];
-                    //[is setCaption:@"CrossWire (ftp)"];
-                    //[is setSource:@"ftp.crosswire.org"];
-                    //[is setDirectory:@"/pub/sword/raw"];
-					//[is setUID:@"crosswire-ftp"];
-                    //[self addInstallSource:is withReinitialize:NO];
 					
 					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories2"];
 					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepositoryV2"];
-					//after we've added all the default Install sources, reinitialize:
-					[self reinitialize];
-                    
-                } else {
-                    BOOL av11n = [[NSUserDefaults standardUserDefaults] boolForKey:@"addedCWav11nRepositoryV2"];
-                    if(!av11n) {
-						[self reinitialize];
-						[self removeInstallSourceNamed:@"CrossWire 3 (av11n)" withReinitialize:NO];
-                        SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
-                        [is setCaption:@"CrossWire 3 (av11n)"];
-                        [is setSource:@"ftp.crosswire.org"];
-                        [is setDirectory:@"/ftpmirror/pub/sword/avraw"];                    
-                        [is setUID:@"crosswire-av11n-http"];
-                        // add is
-                        [self addInstallSource:is withReinitialize:NO];
-                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepositoryV2"];
-                    }
-
-                    // init installMgr
-                    [self reinitialize];                
+					
                 }
+				
+				// init installMgr
+				[self reinitialize];
 
             } else {
                 ALog(@"[SwordInstallManager -setConfigPath:] config path does not exist!");
