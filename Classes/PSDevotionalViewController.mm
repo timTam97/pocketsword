@@ -216,6 +216,8 @@
 		devotionalDatePicker.calendar = [NSCalendar currentCalendar];
 		[devotionalDatePicker setDate:[NSDate date] animated:NO];
 		[self loadDevotionalForDate:devotionalDatePicker.date];
+	} else {
+		[self setDevotionalDateTitle:devotionalDatePicker.date];
 	}
 //	NSLog(@"pre.y = %d", devotionalWebView.frame.origin.y);
 //	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
