@@ -265,14 +265,15 @@
 	NSArray *availStrings = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: swLocales error: NULL];
 	NSEnumerator *iter = [availLocales objectEnumerator];
 	while((loc = [iter nextObject]) && !haveLocale) {
+		
+		// replace "-" with "_" as SWORD and iOS use different ways of signifying locales...
+		loc = [loc stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
+		
 		if([loc isEqualToString: @"en"]) {
 			lang = loc;
 			alreadyInstalled = YES;
 			break;//default, do nothing.
-		} else if([loc isEqualToString:@"zh-Hant"])
-			loc = @"zh_Hant"; // SWORD and Apple use different names for traditional chinese...
-		else if([loc isEqualToString:@"zh-Hans"])
-			loc = @"zh_Hans"; // SWORD and Apple use different names for simplified chinese...
+		}
 		
 		if([currentlyInstalledStrings containsObject: [NSString stringWithFormat:@"%@-utf8.conf", loc]]) {
 			//we do this because it could be the non-primary iPhone locale...
@@ -287,6 +288,22 @@
 				haveLocale = YES;
 				lang = swLoc;
 				break;
+			}
+		}
+		if(!haveLocale) {
+			//perhaps we have something else we can fall back on?
+			NSRange dashRange = [loc rangeOfString:@"_"];
+			if(dashRange.location != NSNotFound) {
+				loc = [loc substringToIndex:dashRange.location];
+				// check if this modified locale is available in SWORD
+				for(NSString *swLoc in availStrings) {
+					//NSLog(@"loc: %@   swLoc: %@", loc, swLoc);
+					if([swLoc hasPrefix: loc]) {
+						haveLocale = YES;
+						lang = swLoc;
+						break;
+					}
+				}
 			}
 		}
 	}

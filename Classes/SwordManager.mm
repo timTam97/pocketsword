@@ -204,10 +204,8 @@ using std::list;
 	sword::StringList localelist = lManager->getAvailableLocales();
     NSEnumerator *iter = [availLocales objectEnumerator];
     while((loc = [iter nextObject]) && !haveLocale) {
-		if([loc isEqualToString:@"zh-Hant"])
-			loc = @"zh_Hant"; // SWORD and Apple use different names for traditional chinese...
-		 else if([loc isEqualToString:@"zh-Hans"])
-			loc = @"zh_Hans"; // SWORD and Apple use different names for traditional chinese...
+		// replace "-" with "_" as SWORD and iOS use different ways of signifying locales...
+		loc = [loc stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
         // check if this locale is available in SWORD
 		sword::StringList::iterator it;
 		sword::SWBuf locale;
@@ -220,8 +218,29 @@ using std::list;
                 lang = swLoc;
                 break;
             }
-        }        
+        }
+		
+		if(!haveLocale) {
+			//perhaps we have something else we can fall back on?
+			NSRange dashRange = [loc rangeOfString:@"_"];
+			if(dashRange.location != NSNotFound) {
+				loc = [loc substringToIndex:dashRange.location];
+				// check if this modified locale is available in SWORD
+				for(it = localelist.begin(); it != localelist.end(); ++it) {
+					locale = *it;
+					NSString *swLoc = [NSString stringWithCString:locale.c_str() encoding:NSUTF8StringEncoding];
+					//DLog(@"\nloc: %@   swLoc: %@", loc, swLoc);
+					if([swLoc hasPrefix:loc]) {
+						haveLocale = YES;
+						lang = swLoc;
+						break;
+					}
+				}
+			}
+		}
+
     }
+	
     
     // if still haveLocale is still NO, we have a problem
     // use english for testing
