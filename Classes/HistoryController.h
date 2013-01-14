@@ -30,9 +30,6 @@
 - (void)setListType:(ShownTab)listType;
 - (IBAction)closeButtonPressed;
 
-- (void)addBibleHistoryItem;
-- (void)addCommentaryHistoryItem;
-
 + (void)addHistoryItem:(ShownTab)tabForHistory;
 - (void)trashButtonPressed;
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory;

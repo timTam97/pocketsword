@@ -298,3 +298,7 @@
 "HistoryClearButtonTitle" = "Clear All";
 "HistoryClearConfirmationTitle" = "Clear All History?";
 "HistoryClearConfirmationMessage" = "Are you sure you wish to clear all your history?";
+
+// new v1.4.3 strings:
+"HistoryTitle" = "History";
+

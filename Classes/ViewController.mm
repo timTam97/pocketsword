@@ -779,11 +779,15 @@ bool ps_viewcontroller_initialized = false;
 
 - (void)redisplayBibleChapter {
 	//[bibleTitle setTitle: NSLocalizedString(@"None", @"None")];
+	bibleTabController.refToShow = nil;
+	bibleTabController.jsToShow = nil;
 	[self redisplayChapter:BibleViewPoll restore:RestoreVersePosition];
 }
 
 - (void)redisplayCommentaryChapter {
 	//[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	commentaryTabController.refToShow = nil;
+	commentaryTabController.jsToShow = nil;
 	[self redisplayChapter:CommentaryViewPoll restore:RestoreVersePosition];
 }
 
