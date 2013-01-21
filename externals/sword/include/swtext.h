@@ -2,7 +2,7 @@
  *  swtext.h   - code for base class 'SWText'.  SWText is the basis for all
  *		 types of text modules
  *
- * $Id: swtext.h 2645 2011-07-22 11:03:45Z scribe $
+ * $Id: swtext.h 2764 2013-01-19 16:19:47Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -57,7 +57,7 @@ public:
 	virtual ~SWText();
 	/** Create the correct key (VerseKey) for use with SWText
 	*/
-	virtual SWKey *CreateKey() const;
+	virtual SWKey *createKey() const;
 
 	virtual long getIndex() const;
 	virtual void setIndex(long iindex);

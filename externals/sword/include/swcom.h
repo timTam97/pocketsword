@@ -14,7 +14,7 @@
  *		 commentary is incremented, it will go to the next ENTRY,
  *		 not the next verse (likely Matt.1.7, from our example above).
  *
- * $Id: swcom.h 2645 2011-07-22 11:03:45Z scribe $
+ * $Id: swcom.h 2764 2013-01-19 16:19:47Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -68,7 +68,7 @@ public:
 			const char *versification = "KJV");
 
 	virtual ~SWCom();
-	virtual SWKey *CreateKey() const;
+	virtual SWKey *createKey() const;
 
 	virtual long getIndex() const;
 	virtual void setIndex(long iindex);

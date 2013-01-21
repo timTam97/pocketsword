@@ -59,11 +59,11 @@
 
 - (id)initWithRef:(NSString *)aRef headings:(BOOL)headings v11n:(NSString *)scheme {
     sword::VerseKey vk;
-    vk.Headings((char)headings);
+	vk.setIntros(headings);
     if(scheme) {
         vk.setVersificationSystem([scheme UTF8String]);
     }
-    sword::ListKey listKey = vk.ParseVerseList([aRef UTF8String], "Gen1", true);
+    sword::ListKey listKey = vk.parseVerseList([aRef UTF8String], "Gen1", true);
     sword::ListKey *lk = new sword::ListKey(listKey);
     self = [super initWithSWKey:lk];
 	if(self) {
@@ -84,7 +84,7 @@
     NSInteger ret = 0;
     
     if(sk) {
-        for(*sk = sword::TOP; !sk->Error(); *sk++) ret++;    
+        for(*sk = sword::TOP; !sk->popError(); *sk++) {++ret;};
     }
     
     return ret;
@@ -115,7 +115,7 @@
     
     if(sk) {
         *sk = [[aVerseKey osisRef] UTF8String];
-        ret = !sk->Error();
+        ret = !sk->popError();
     }
     
     return ret;

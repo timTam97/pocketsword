@@ -344,9 +344,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
-	//refSelectorController.refSelectorBooks = nil;
-	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, newText);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
-	[primaryBible setHeadings:headings];
+//	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, newText);
+//	[primaryBible setIntroductions:headings];
 }
 
 - (void)loadPrimaryCommentary:(NSString *)newText {
@@ -495,9 +494,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if (primaryBible) {
 			sword::VerseKey *curKey = (sword::VerseKey*)([primaryBible swModule])->getKey();
 			curKey->setText([ch cStringUsingEncoding: NSUTF8StringEncoding]);
-			//([primaryBible swModule])->setKey(loc);
-			BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
-			[primaryBible setHeadings:headings];
+//			BOOL headings = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
+//			[primaryBible setIntroductions:headings];
 		}
 	}
 	

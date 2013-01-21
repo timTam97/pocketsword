@@ -173,7 +173,6 @@
 		05275B5710884F72004FB0E0 /* swld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9C10884F71004FB0E0 /* swld.cpp */; };
 		05275B5810884F72004FB0E0 /* zld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A9E10884F71004FB0E0 /* zld.cpp */; };
 		05275B5A10884F72004FB0E0 /* swmodule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA010884F71004FB0E0 /* swmodule.cpp */; };
-		05275B5B10884F72004FB0E0 /* echomod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA210884F71004FB0E0 /* echomod.cpp */; };
 		05275B5C10884F72004FB0E0 /* rawtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA510884F71004FB0E0 /* rawtext.cpp */; };
 		05275B5D10884F72004FB0E0 /* rawtext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA710884F71004FB0E0 /* rawtext4.cpp */; };
 		05275B5E10884F72004FB0E0 /* swtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275AA810884F71004FB0E0 /* swtext.cpp */; };
@@ -544,6 +543,7 @@
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PocketSword.entitlements; sourceTree = "<group>"; };
 		0527595F10884F64004FB0E0 /* canon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon.h; sourceTree = "<group>"; };
 		0527596010884F64004FB0E0 /* canon_abbrevs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_abbrevs.h; sourceTree = "<group>"; };
 		0527596110884F64004FB0E0 /* canon_kjva.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_kjva.h; sourceTree = "<group>"; };
@@ -558,7 +558,6 @@
 		0527596A10884F64004FB0E0 /* curlftpt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlftpt.h; sourceTree = "<group>"; };
 		0527596B10884F64004FB0E0 /* curlhttpt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlhttpt.h; sourceTree = "<group>"; };
 		0527596C10884F64004FB0E0 /* defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = defs.h; sourceTree = "<group>"; };
-		0527596D10884F64004FB0E0 /* echomod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = echomod.h; sourceTree = "<group>"; };
 		0527596E10884F64004FB0E0 /* encfiltmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encfiltmgr.h; sourceTree = "<group>"; };
 		0527596F10884F64004FB0E0 /* entriesblk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entriesblk.h; sourceTree = "<group>"; };
 		0527597010884F64004FB0E0 /* femain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = femain.h; sourceTree = "<group>"; };
@@ -840,7 +839,6 @@
 		05275A9E10884F71004FB0E0 /* zld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zld.cpp; sourceTree = "<group>"; };
 		05275A9F10884F71004FB0E0 /* readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme; sourceTree = "<group>"; };
 		05275AA010884F71004FB0E0 /* swmodule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swmodule.cpp; sourceTree = "<group>"; };
-		05275AA210884F71004FB0E0 /* echomod.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = echomod.cpp; sourceTree = "<group>"; };
 		05275AA510884F71004FB0E0 /* rawtext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rawtext.cpp; sourceTree = "<group>"; };
 		05275AA710884F71004FB0E0 /* rawtext4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rawtext4.cpp; sourceTree = "<group>"; };
 		05275AA810884F71004FB0E0 /* swtext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swtext.cpp; sourceTree = "<group>"; };
@@ -1619,7 +1617,6 @@
 				0527596A10884F64004FB0E0 /* curlftpt.h */,
 				0527596B10884F64004FB0E0 /* curlhttpt.h */,
 				0527596C10884F64004FB0E0 /* defs.h */,
-				0527596D10884F64004FB0E0 /* echomod.h */,
 				0527596E10884F64004FB0E0 /* encfiltmgr.h */,
 				0527596F10884F64004FB0E0 /* entriesblk.h */,
 				0527597010884F64004FB0E0 /* femain.h */,
@@ -1886,7 +1883,6 @@
 				05275A9710884F71004FB0E0 /* lexdict */,
 				05275A9F10884F71004FB0E0 /* readme */,
 				05275AA010884F71004FB0E0 /* swmodule.cpp */,
-				05275AA110884F71004FB0E0 /* tests */,
 				05275AA310884F71004FB0E0 /* texts */,
 			);
 			path = modules;
@@ -2098,14 +2094,6 @@
 				05275A9E10884F71004FB0E0 /* zld.cpp */,
 			);
 			path = zld;
-			sourceTree = "<group>";
-		};
-		05275AA110884F71004FB0E0 /* tests */ = {
-			isa = PBXGroup;
-			children = (
-				05275AA210884F71004FB0E0 /* echomod.cpp */,
-			);
-			path = tests;
 			sourceTree = "<group>";
 		};
 		05275AA310884F71004FB0E0 /* texts */ = {
@@ -2625,6 +2613,7 @@
 		29B97314FDCFA39411CA2CEA /* PocketSword */ = {
 			isa = PBXGroup;
 			children = (
+				051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */,
 				0545E32710654A8500DD7F06 /* Source */,
 				29B97315FDCFA39411CA2CEA /* misc */,
 				0542F6C110BE75570088A721 /* externals */,
@@ -3438,7 +3427,6 @@
 				05275B5710884F72004FB0E0 /* swld.cpp in Sources */,
 				05275B5810884F72004FB0E0 /* zld.cpp in Sources */,
 				05275B5A10884F72004FB0E0 /* swmodule.cpp in Sources */,
-				05275B5B10884F72004FB0E0 /* echomod.cpp in Sources */,
 				05275B5C10884F72004FB0E0 /* rawtext.cpp in Sources */,
 				05275B5D10884F72004FB0E0 /* rawtext4.cpp in Sources */,
 				05275B5E10884F72004FB0E0 /* swtext.cpp in Sources */,
@@ -3732,6 +3720,7 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3766,6 +3755,7 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3910,6 +3900,7 @@
 		E982FA660ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -2,7 +2,7 @@
  *  swdisp.h  - code for base class 'swdisp'.  swdisp is the basis for all
  *		types of displays (e.g. raw textout, curses, xwindow, etc.)
  *
- * $Id: swdisp.h 1825 2005-06-10 09:03:37Z jansorg $
+ * $Id: swdisp.h 2764 2013-01-19 16:19:47Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -46,7 +46,7 @@ public:
   * @param imodule module to display
   * @return error status
   */
-  virtual char Display (SWModule & imodule);
+  virtual char display(SWModule & imodule);
 };
 
 SWORD_NAMESPACE_END

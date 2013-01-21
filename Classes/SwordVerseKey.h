@@ -45,8 +45,8 @@
 - (void)setChapter:(int)val;
 - (int)verse;
 - (void)setVerse:(int)val;
-- (BOOL)headings;
-- (void)setHeadings:(BOOL)flag;
+- (BOOL)introductions;
+- (void)setIntroductions:(BOOL)flag;
 - (BOOL)autoNormalize;
 - (void)setAutoNormalize:(BOOL)flag;
 - (NSString *)bookName;

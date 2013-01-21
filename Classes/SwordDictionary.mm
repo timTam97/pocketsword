@@ -51,11 +51,11 @@
         *swModule = sword::TOP;
         swModule->getRawEntry();        
         while(![self error]) {
-            char *cStrKeyText = (char *)swModule->KeyText();
+            char *cStrKeyText = (char *)swModule->getKeyText();
             if(cStrKeyText) {
                 NSString *keyText = [NSString stringWithUTF8String:cStrKeyText];
                 if(!keyText) {
-                    keyText = [NSString stringWithCString:swModule->KeyText() encoding:NSISOLatin1StringEncoding];
+                    keyText = [NSString stringWithCString:swModule->getKeyText() encoding:NSISOLatin1StringEncoding];
                     if(!keyText) {
                         ALog(@"[SwordCommentary -readKeys] unable to create NSString instance from string: %s", cStrKeyText);
                     }
@@ -172,7 +172,7 @@
 - (NSString *)fullRefName:(NSString *)ref {
 	[moduleLock lock];
 	
-	sword::SWKey *key = swModule->CreateKey();	
+	sword::SWKey *key = swModule->createKey();
 	if([self isUnicode]) {
 		(*key) = toUTF8([ref uppercaseString]);
     } else {
@@ -184,9 +184,9 @@
 	
 	NSString *result;
 	if([self isUnicode]) {
-		result = fromUTF8(swModule->KeyText());
+		result = fromUTF8(swModule->getKeyText());
     } else {
-		result = fromLatin1(swModule->KeyText());
+		result = fromLatin1(swModule->getKeyText());
     }
 	[moduleLock unlock];
 	

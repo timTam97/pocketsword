@@ -2,7 +2,7 @@
  *  osisplain.cpp	- An SWFilter
  *  				impl that provides stripping of OSIS tags
  *
- * $Id: osisplain.cpp 2334 2009-04-24 00:14:12Z scribe $
+ * $Id: osisplain.cpp 2764 2013-01-19 16:19:47Z scribe $
  *
  * Copyright 2001 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -65,7 +65,7 @@ OSISPlain::OSISPlain() {
 BasicFilterUserData *OSISPlain::createUserData(const SWModule *module, const SWKey *key) {
 	MyUserData *u = new MyUserData(module, key);
 	u->vk = SWDYNAMIC_CAST(VerseKey, u->key);
-	u->testament = (u->vk) ? u->vk->Testament() : 2;	// default to NT
+	u->testament = (u->vk) ? u->vk->getTestament() : 2;	// default to NT
 	return u;
 }
 

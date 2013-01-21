@@ -39,13 +39,13 @@
 	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setPosition(sword::TOP);
-	vk->LowerBound(*vk);
+	vk->setLowerBound(*vk);
 	// doesn't work because MAXBOOK hasn't been implemented in versekey.cpp:1159
 	// vk->setPosition(MAXBOOK); vk->setPosition(MAXCHAPTER); vk->setPosition(MAXVERSE);
 	vk->setTestament(2);
 	(*vk)--;
 	//	---- end of workaround
-	vk->UpperBound(*vk);
+	vk->setUpperBound(*vk);
 	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
 }
@@ -55,9 +55,9 @@
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setPosition(sword::TOP);	// stupid workaround to set book, chap, and verse to 1 because setTestament doesn't follow suit and do this like setChapter and setBook do.
 	vk->setTestament(2);
-	vk->LowerBound(*vk);
+	vk->setLowerBound(*vk);
 	vk->setPosition(sword::BOTTOM);
-	vk->UpperBound(*vk);
+	vk->setUpperBound(*vk);
 	
 	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
@@ -66,9 +66,9 @@
 + (id)verseKeyForWholeBibleForVersification:(NSString *)scheme {
 	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
 	sword::VerseKey *vk = [retKey swVerseKey];
-	vk->LowerBound(*vk);
+	vk->setLowerBound(*vk);
 	vk->setPosition(sword::BOTTOM);
-	vk->UpperBound(*vk);
+	vk->setUpperBound(*vk);
 	
 	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
@@ -78,9 +78,9 @@
 	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithRef:aRef v11n:scheme] autorelease];
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setChapter(1); vk->setVerse(1);
-	vk->LowerBound(*vk);
+	vk->setLowerBound(*vk);
 	vk->setChapter(vk->getChapterMax()); vk->setVerse(vk->getVerseMax());
-	vk->UpperBound(*vk);
+	vk->setUpperBound(*vk);
 	
 	//DLog(@"\n%@", [NSString stringWithCString:vk->getRangeText() encoding:NSUTF8StringEncoding]);
 	return retKey;
@@ -143,20 +143,20 @@
     return sk->getIndex();
 }
 
-- (BOOL)headings {
-    return (BOOL)((sword::VerseKey *)sk)->Headings();
+- (BOOL)introductions {
+    return (BOOL)((sword::VerseKey *)sk)->isIntros();
 }
 
-- (void)setHeadings:(BOOL)flag {
-    ((sword::VerseKey *)sk)->Headings((int)flag);
+- (void)setIntroductions:(BOOL)flag {
+    ((sword::VerseKey *)sk)->setIntros(flag);
 }
 
 - (BOOL)autoNormalize {
-    return (BOOL)((sword::VerseKey *)sk)->AutoNormalize();
+    return (BOOL)((sword::VerseKey *)sk)->isAutoNormalize();
 }
 
 - (void)setAutoNormalize:(BOOL)flag {
-    ((sword::VerseKey *)sk)->AutoNormalize((int)flag);    
+    ((sword::VerseKey *)sk)->setAutoNormalize((int)flag);
 }
 
 - (int)testament {

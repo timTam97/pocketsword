@@ -44,7 +44,7 @@
     // nil values
     self.configEntries = [NSMutableDictionary dictionary];
     // set name
-    self.name = [NSString stringWithCString:swModule->Name() encoding:NSUTF8StringEncoding];
+    self.name = [NSString stringWithCString:swModule->getName() encoding:NSUTF8StringEncoding];
 }
 
 @end
@@ -367,17 +367,17 @@
 }
 
 - (NSString *)descr {
-	NSString *res = [NSString stringWithCString:swModule->Description() encoding:NSUTF8StringEncoding];
+	NSString *res = [NSString stringWithCString:swModule->getDescription() encoding:NSUTF8StringEncoding];
 	if(!res) {
-		res = [NSString stringWithCString:swModule->Description() encoding:NSISOLatin1StringEncoding];
+		res = [NSString stringWithCString:swModule->getDescription() encoding:NSISOLatin1StringEncoding];
 	}
 	return res;
 }
 
 - (NSString *)lang {
-    NSString *str = [NSString stringWithCString:swModule->Lang() encoding:NSUTF8StringEncoding];
+    NSString *str = [NSString stringWithCString:swModule->getLanguage() encoding:NSUTF8StringEncoding];
     if(!str) {
-        str = [NSString stringWithCString:swModule->Lang() encoding:NSISOLatin1StringEncoding];
+        str = [NSString stringWithCString:swModule->getLanguage() encoding:NSISOLatin1StringEncoding];
 	}
 	return str;
 }
@@ -390,9 +390,9 @@
 }
 
 - (NSString *)typeString {
-    NSString *str = [NSString stringWithCString:swModule->Type() encoding:NSUTF8StringEncoding];
+    NSString *str = [NSString stringWithCString:swModule->getType() encoding:NSUTF8StringEncoding];
     if(!str) {
-        str = [NSString stringWithCString:swModule->Type() encoding:NSISOLatin1StringEncoding];
+        str = [NSString stringWithCString:swModule->getType() encoding:NSISOLatin1StringEncoding];
     }
     return str;
 }
@@ -519,7 +519,7 @@
 							unicodeChar = [unicodeCharString integerValue];
 							if (negative) unicodeChar = 65536 - unicodeChar;
 							i += j+2;
-							[retStr appendFormat:@"%C", unicodeChar];
+							[retStr appendFormat:@"%u", unicodeChar];
 						}
 						@catch (NSException * e) {
 							[retStr appendFormat:@"%C", c];
@@ -711,11 +711,11 @@
         sword::SWBuf refList = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["refList"];
         sword::VerseKey parser([passage UTF8String]);
         parser.setVersificationSystem([[self versification] UTF8String]);
-        sword::ListKey refs = parser.ParseVerseList(refList, parser, true);
+        sword::ListKey refs = parser.parseVerseList(refList, parser, true);
         
         ret = [NSMutableArray array];
         // collect references
-        for(refs = sword::TOP; !refs.Error(); refs++) {
+        for(refs = sword::TOP; !refs.popError(); refs++) {
             swModule->setKey(refs);
             if(![self error]) {
                 NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
@@ -735,11 +735,11 @@
 		sword::VerseKey parser(curKey->getShortText());
 		parser.setVersificationSystem([[self versification] UTF8String]);
 		DLog(@"%@", rawKey);
-		sword::ListKey refs = parser.ParseVerseList([rawKey UTF8String], parser, true);
+		sword::ListKey refs = parser.parseVerseList([rawKey UTF8String], parser, true);
         
 		ret = [NSMutableArray array];
 		// collect references
-		for(refs = sword::TOP; !refs.Error(); refs++) {
+		for(refs = sword::TOP; !refs.popError(); refs++) {
 			swModule->setKey(refs);
 			if(![self error]) {
 				NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
@@ -943,7 +943,7 @@
 	}
 	results.sort();
 	if(results.Count() > 0) {
-		while(!results.Error()) {
+		while(!results.popError()) {
 			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
 			[retArray addObject: entry];
 			[entry release];
@@ -978,8 +978,8 @@
 	return swModule;
 }
 
-- (void)setHeadings:(BOOL)headings {
-//	((sword::VerseKey *)(swModule->getKey()))->Headings((headings) ? true : false);
+- (void)setIntroductions:(BOOL)intros {
+	((sword::VerseKey *)(swModule->getKey()))->setIntros(intros);
 }
 
 - (void)setChapter:(NSString *)chapter {
@@ -1035,9 +1035,8 @@
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-	sword::SWKey lastKey;
+	//sword::SWKey lastKey;
 	
-	//swModule->RenderText();
 	swModule->StripText();
 	NSMutableString *verses = [@"" mutableCopy];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
@@ -1048,15 +1047,15 @@
 	NSString *lastEntry = @"";
 	NSString *preverseHeading;
 	NSString *interverseHeading;
-	NSString *modType = [NSString stringWithUTF8String: swModule->Type()];
+	NSString *modType = [NSString stringWithUTF8String: swModule->getType()];
 	NSInteger i = 1;
-	BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, self.name);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
-	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, self.name);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
+	BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, self.name);
+	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, self.name);
 	BOOL rawFile = [self isPersonalCommentary];
 	
 	// Grab till the end of the chapter
 	do {
-		lastKey = swModule->Key();
+		//lastKey = *swModule->getKey();
 		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->RenderText()];
 		//replace *X and *N with simply X and N for xrefs and footnotes
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
@@ -1069,7 +1068,8 @@
 		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
 
-			if(headings) {
+			//NSString  *canonicalHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["0"]["canonical"].c_str()];
+			if(headings /*|| [canonicalHeading isEqualToString:@"true"]*/) {
 				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
@@ -1120,15 +1120,14 @@
 			}
 		}
 		lastEntry = thisEntry;
-		swModule->Key()++;
-		lastKey++;
-		//swModule->RenderText();
+		(*swModule->getKey())++;
+		//lastKey++;
 		swModule->StripText();
 		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 		//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
 		//if(printf) NSLog(@"ref = %@", ref);
 		++i;
-	} while ([ref isEqualToString: ch] && (swModule->Key().Error() != KEYERR_OUTOFBOUNDS));
+	} while ([ref isEqualToString: ch] && (swModule->getKey()->popError() != KEYERR_OUTOFBOUNDS));
 
 	if([verses isEqualToString:@""]) {
 		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module.")];
@@ -1262,7 +1261,7 @@
 	
 	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name];
 	[verses release];
-	if (swModule->Direction() == sword::DIRECTION_RTL) {	// Fix RTL modules
+	if (swModule->getDirection() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];
 	}
 

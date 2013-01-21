@@ -196,7 +196,7 @@ typedef enum {
 - (NSString *)setToPreviousChapter;
 - (NSInteger)getVerseMax;
 - (void)setChapter:(NSString *)chapter;
-- (void)setHeadings:(BOOL)headings;
+- (void)setIntroductions:(BOOL)intros;
 
 // ------- SwordModuleAccess ---------
 - (NSArray *)strippedTextEntriesForRef:(NSString *)reference;

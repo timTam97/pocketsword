@@ -2,7 +2,7 @@
  *  ztext.h   - code for class 'zText'- a module that reads compressed text
  *				files: ot and nt using indexs ??.vss
  *
- * $Id: ztext.h 2303 2009-04-06 13:38:34Z scribe $
+ * $Id: ztext.h 2764 2013-01-19 16:19:47Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -59,13 +59,13 @@ public:
 			const char *versification = "KJV");
 
 	virtual ~zText();
-	virtual SWBuf &getRawEntryBuf();
+	virtual SWBuf &getRawEntryBuf() const;
 
 	virtual void increment(int steps = 1);
 	virtual void decrement(int steps = 1) { increment(-steps); }
 
   // write interface ----------------------------
-	virtual bool isWritable();
+	virtual bool isWritable() const;
 	static char createModule(const char *path, int blockBound, const char *v11n = "KJV") {
 		return zVerse::createModule(path, blockBound, v11n);
 	}
@@ -75,7 +75,7 @@ public:
 	virtual void deleteEntry();	// Delete current module entry
   // end write interface ------------------------
   
-	virtual void rawZFilter(SWBuf &buf, char direction = 0) { rawFilter(buf, (SWKey *)(long)direction); }// hack, use key as direction for enciphering
+	virtual void rawZFilter(SWBuf &buf, char direction = 0) const { rawFilter(buf, (SWKey *)(long)direction); }// hack, use key as direction for enciphering
 
 	// swcacher interface ----------------------
 	virtual void flush() { flushCache(); }

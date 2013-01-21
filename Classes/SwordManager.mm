@@ -58,11 +58,11 @@ using std::list;
         //NSString *name;
 		//NSString *mLang;
         if(mod->isUnicode()) {
-            type = [NSString stringWithUTF8String:mod->Type()];
+            type = [NSString stringWithUTF8String:mod->getType()];
             //name = [NSString stringWithUTF8String:mod->Name()];
             //mLang = [NSString stringWithUTF8String:mod->Lang()];
         } else {
-            type = [NSString stringWithCString:mod->Type() encoding:NSISOLatin1StringEncoding];
+            type = [NSString stringWithCString:mod->getType() encoding:NSISOLatin1StringEncoding];
             //name = [NSString stringWithCString:mod->Name() encoding:NSISOLatin1StringEncoding];
             //mLang = [NSString stringWithCString:mod->Lang() encoding:NSISOLatin1StringEncoding];
         }
@@ -491,9 +491,9 @@ static SwordManager *instance;
         if(mod) {
             NSString *type;
             if(mod->isUnicode()) {
-                type = [NSString stringWithUTF8String:mod->Type()];
+                type = [NSString stringWithUTF8String:mod->getType()];
             } else {
-                type = [NSString stringWithCString:mod->Type() encoding:NSISOLatin1StringEncoding];
+                type = [NSString stringWithCString:mod->getType() encoding:NSISOLatin1StringEncoding];
             }
             
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:modules];
@@ -647,7 +647,7 @@ static SwordManager *instance;
 	sword::SWModule *curMod = 0;
 	for (it = tmpManager->Modules.begin(); it != tmpManager->Modules.end(); it++) {
 		curMod = (*it).second;
-		swInstallMgr->installModule(swManager, [path UTF8String], curMod->Name());
+		swInstallMgr->installModule(swManager, [path UTF8String], curMod->getName());
 	}
 	
 	// TODO: now to traverse the subdirectories searching for more modules?

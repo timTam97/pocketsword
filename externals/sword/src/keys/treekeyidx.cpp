@@ -1,7 +1,7 @@
 /******************************************************************************
  *  versekey.h - code for class 'versekey'- a standard Biblical verse key
  *
- * $Id: treekeyidx.cpp 2280 2009-03-07 15:34:36Z scribe $
+ * $Id: treekeyidx.cpp 2764 2013-01-19 16:19:47Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -517,7 +517,7 @@ void TreeKeyIdx::setText(const char *ikey) {
 	SWBuf leaf = strtok(buf, "/");
 	leaf.trim();
 	root();
-	while ((leaf.size()) && (!Error())) {
+	while ((leaf.size()) && (!popError())) {
 		bool ok, inChild = false;
 		error = KEYERR_OUTOFBOUNDS;
 		for (ok = firstChild(); ok; ok = nextSibling()) {
@@ -562,7 +562,7 @@ void TreeKeyIdx::setPosition(SW_POSITION p) {
 		break;
 	} 
 	positionChanged();
-	Error();	// clear error from normalize
+	popError();	// clear error from normalize
 }
 
 
