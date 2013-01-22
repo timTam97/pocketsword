@@ -424,34 +424,56 @@
 	NSArray *cloudHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUbiquitousKeyValueStore defaultStore] arrayForKey:PSHistoryName]];
 	NSArray *localHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName]];
 	
-	if([cloudHistory isEqualToArray:localHistory])
+	if([PSHistoryItem arraysAreEqual:cloudHistory secondArray:localHistory])
 		return;
 	
 	NSMutableArray *history = [NSMutableArray arrayWithArray:localHistory];
 	[history addObjectsFromArray:cloudHistory];
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:YES];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[history sortUsingDescriptors:sortDescriptors];
 	[sortDescriptor release];
+	
+	//check for duplicates:
+	for (int ii = 0; ii < [history count]; ++ii) {
+		
+		PSHistoryItem *newItem = [history objectAtIndex:ii];
+		NSString *ref = newItem.bibleReference;
+		NSString *mod = newItem.moduleName;
+		
+		for (int jj = (ii+1); jj < [history count]; ++jj) {
+			
+			PSHistoryItem *existingItem = [history objectAtIndex:jj];
+			NSString *existingRef = existingItem.bibleReference;
+			if([ref isEqualToString:existingRef]) {
+				//if the references are the same,
+				NSString *existingMod = existingItem.moduleName;
+				if([mod isEqualToString:existingMod]) {
+					//if the mods are the same, or it's an OLD history item without a mod, delete it
+					[history removeObjectAtIndex:jj];
+					--jj;
+				}
+			}
+		}
+	}
+
 
 	while([history count] >= PSHistoryMaxEntries) {
 		[history removeLastObject];
 	}
+	
+	NSArray *combinedHistory = [PSHistoryItem arrayArrayFromHistoryItems:history];
 
-	[[NSUserDefaults standardUserDefaults] setObject: history forKey: PSHistoryName];
+	[[NSUserDefaults standardUserDefaults] setObject: combinedHistory forKey: PSHistoryName];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	// synchronize with iCloud as well, if available:
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
 		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
-		[kvStore setArray:history forKey:PSHistoryName];
+		[kvStore setArray:combinedHistory forKey:PSHistoryName];
 	}
 
-	
-	// reset the preferred color in NSUserDefaults to keep a local value
-//	[[NSUserDefaults standardUserDefaults] setInteger:self.selectedColor
-//											   forKey:kBackgroundColorKey];
 }
 
 

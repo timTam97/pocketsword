@@ -37,6 +37,30 @@
 	return returnArray;
 }
 
++ (BOOL)arraysAreEqual:(NSArray*)firstArray secondArray:(NSArray*)secondArray {
+	if([firstArray count] != [secondArray count])
+		return NO;
+	
+	for(int i = 0; i < [firstArray count]; ++i) {
+		PSHistoryItem *firstHI = [firstArray objectAtIndex:i];
+		PSHistoryItem *secondHI = [secondArray objectAtIndex:i];
+		if(![firstHI.bibleReference isEqualToString:secondHI.bibleReference] ||
+		   ![firstHI.moduleName isEqualToString:secondHI.moduleName]) {
+//			NSLog(@"\nitem %d: refs: %@ = %@\nmods: %@ = %@\ndates: %@ = %@\n", i, firstHI.bibleReference, secondHI.bibleReference, firstHI.moduleName, secondHI.moduleName, firstHI.dateAdded, secondHI.dateAdded);
+//			if(![firstHI.bibleReference isEqualToString:secondHI.bibleReference]) {
+//				NSLog(@"refs not equal!");
+//			} else if(![firstHI.moduleName isEqualToString:secondHI.moduleName]) {
+//				NSLog(@"mods not equal!");
+//			} else if(![firstHI.dateAdded isEqualToDate:secondHI.dateAdded]) {
+//				NSLog(@"dates not equal!");
+//			}
+			return NO;
+		}
+	}
+//	NSLog(@"\narrays ARE equal :P");
+	return YES;
+}
+
 - (id)initWithReference:(NSString*)ref scrollAmount:(NSString*)scrollString moduleName:(NSString*)mod dateAdded:(NSDate*)da {
 	self = [super init];
 	if(self) {
@@ -73,20 +97,6 @@
 		}
 	}
 	return self;
-}
-
-- (BOOL)isEqual:(id)object {
-	if(!object)
-		return NO;
-	if(![object isMemberOfClass:[PSHistoryItem class]])
-		return NO;
-	
-	if([self.bibleReference isEqualToString:[object bibleReference]] &&
-	   [self.moduleName isEqualToString:[object moduleName]] &&
-	   [self.dateAdded isEqualToDate:[object dateAdded]])
-		return YES;
-	
-	return NO;
 }
 
 - (NSArray *)array {

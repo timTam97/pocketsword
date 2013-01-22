@@ -75,6 +75,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+	if(cls) {
+		// register to observe notifications from the store
+		[[NSNotificationCenter defaultCenter] addObserver: self
+												 selector: @selector(storeDidChange:)
+													 name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
+												   object: [NSUbiquitousKeyValueStore defaultStore]];
+		
+		// get changes that might have happened while this
+		// instance of your app wasn't running
+		//[[NSUbiquitousKeyValueStore defaultStore] setString:@"testValue" forKey:@"testKey"];//dummy to get the pipes flowing!
+		//[[NSUbiquitousKeyValueStore defaultStore] synchronize];
+	}
+
 	self.launchedWithOptions = launchOptions;
 	    
 	// Add the tab bar controller's current view as a subview of the window
@@ -87,21 +101,6 @@
 	}
 	
 	[launchViewController performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
-	
-	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
-	if(cls) {
-		// register to observe notifications from the store
-		[[NSNotificationCenter defaultCenter]
-		 addObserver: self
-		 selector: @selector (storeDidChange:)
-		 name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
-         object: [NSUbiquitousKeyValueStore defaultStore]];
-		
-		// get changes that might have happened while this
-		// instance of your app wasn't running
-		[[NSUbiquitousKeyValueStore defaultStore] setString:@"testValue" forKey:@"testKey"];//dummy to get the pipes flowing!
-		[[NSUbiquitousKeyValueStore defaultStore] synchronize];
-	}
 	
 	[self.window makeKeyAndVisible];
 	

@@ -23,10 +23,10 @@
 
 - (id)initWithReference:(NSString*)ref scrollAmount:(NSString*)scrollString moduleName:(NSString*)mod dateAdded:(NSDate*)da;
 - (id)initWithArray:(NSArray*)historyArray;
-- (BOOL)isEqual:(id)object;
 - (NSArray *)array;
 
 + (NSArray *)parseHistoryArrayArray:(NSArray*)arrays;
 + (NSArray *)arrayArrayFromHistoryItems:(NSArray*)arrayOfHistoryItems;
++ (BOOL)arraysAreEqual:(NSArray*)firstArray secondArray:(NSArray*)secondArray;
 
 @end

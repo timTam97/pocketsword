@@ -38,6 +38,7 @@
 @property (nonatomic, retain) NSDictionary *launchedWithOptions;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate;
+- (void)storeDidChange:(NSNotification *)notification;
 
 @end
 
