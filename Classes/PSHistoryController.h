@@ -19,12 +19,10 @@
 
 #import "globals.h"
 
-@interface PSHistoryController : UIViewController {
+@interface PSHistoryController : UITableViewController {
 
 	ShownTab listType;
 
-	IBOutlet UITableView		*historyListTable;
-	IBOutlet UINavigationBar	*historyNavigationBar;
 }
 
 - (void)setListType:(ShownTab)listType;

@@ -56,18 +56,27 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		historyListTable.backgroundColor = [UIColor blackColor];
+		self.tableView.backgroundColor = [UIColor blackColor];
+//		historyListTable.backgroundColor = [UIColor blackColor];
 	} else {
-		historyListTable.backgroundColor = [UIColor whiteColor];
+		self.tableView.backgroundColor = [UIColor whiteColor];
+//		historyListTable.backgroundColor = [UIColor whiteColor];
 	}
 	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable useStatusBar:YES];
 	self.navigationItem.title = NSLocalizedString(@"HistoryTitle", @"History");
-	[historyListTable reloadData];
-	if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
+	[self.tableView reloadData];
+//	[historyListTable reloadData];
+	
+	if(([self.tableView numberOfSections] > 0) && [self.tableView numberOfRowsInSection: 0] > 0) {
 		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
 		if(ip)
-			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
+			[self.tableView scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
 	}
+//	if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
+//		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
+//		if(ip)
+//			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
+//	}
 }
 
 // This should be called just AFTER:
@@ -84,8 +93,7 @@
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSString *verse;
 	NSString *mod;
-	NSString *historyName = PSHistoryName;
-	NSMutableArray *history = [[defaults arrayForKey: historyName] mutableCopy];
+	NSMutableArray *history = [[defaults arrayForKey: PSHistoryName] mutableCopy];
 	BOOL valid = NO;
 	
 	if(tabForHistory == BibleTab) {
@@ -117,7 +125,7 @@
 			history = [[NSMutableArray alloc] initWithObjects: nil];
 			
 			NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-			[prefs setObject: history forKey: historyName];
+			[prefs setObject: history forKey: PSHistoryName];
 			
 			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
 			[prefs release];
@@ -147,14 +155,14 @@
 			[history removeLastObject];
 		}
 		
-		[defaults setObject: history forKey: historyName];
+		[defaults setObject: history forKey: PSHistoryName];
 		[defaults synchronize];
 		
 		// synchronize with iCloud as well, if available:
 		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 		if(cls) {
 			NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
-            [kvStore setArray:history forKey:historyName];
+            [kvStore setArray:history forKey:PSHistoryName];
 		}
 	}
 	if(history)
@@ -175,6 +183,12 @@
 
 	if (buttonIndex == 1) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PSHistoryName];
+		// synchronize with iCloud as well, if available:
+		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+		if(cls) {
+			NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+            [kvStore removeObjectForKey:PSHistoryName];
+		}
 //		switch (listType) {
 //			case BibleTab:
 //				[[NSUserDefaults standardUserDefaults] removeObjectForKey: PS_HISTORY_NAME];
@@ -185,7 +199,8 @@
 //			default:
 //				break;
 //		}
-		[historyListTable reloadData];
+		[self.tableView reloadData];
+//		[historyListTable reloadData];
 	} else {
 		
 	}
@@ -213,7 +228,8 @@
 	[history release];
 	
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:historyIndex inSection:0];
-	[historyListTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];//UITableViewRowAnimationTop];
+//	[historyListTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

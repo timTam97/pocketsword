@@ -3727,7 +3727,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3754,7 +3753,6 @@
 					"-DUSELUCENE",
 					"-DDEBUG",
 				);
-				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -3762,7 +3760,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3787,7 +3784,6 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -3822,7 +3818,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "FDC80545-E202-44EA-B418-7BDEFDE12069";
+				PROVISIONING_PROFILE = "6C15FAB7-6A5B-4580-A767-C17882EC3A25";
 				SDKROOT = iphoneos5.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv6 armv7";
@@ -3837,44 +3833,6 @@
 					armv6,
 					armv7,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"icu/common/**",
-					"clucene/**",
-					include,
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_CFLAGS = (
-					"-Dunix",
-					"-D__unix__",
-					"-DUSELUCENE",
-				);
-				OTHER_LDFLAGS = "-licucore";
-				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "82449140-BD83-4224-B318-4C8B28D487DC";
-				SDKROOT = iphoneos5.1;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv6 armv7";
-			};
-			name = Release;
-		};
-		E982FA650ED9D6100028DFEC /* Distribution */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3899,6 +3857,44 @@
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos5.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv6 armv7";
+			};
+			name = Release;
+		};
+		E982FA650ED9D6100028DFEC /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"icu/common/**",
+					"clucene/**",
+					include,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
+				OTHER_CFLAGS = (
+					"-Dunix",
+					"-D__unix__",
+					"-DUSELUCENE",
+				);
+				OTHER_LDFLAGS = "-licucore";
+				PRODUCT_NAME = PocketSword;
+				PROVISIONING_PROFILE = "07C63215-D672-44AA-84A5-C078970BD156";
+				SDKROOT = iphoneos5.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Distribution;
@@ -3907,7 +3903,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3932,7 +3927,6 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PROVISIONING_PROFILE = "B761CFF6-F635-4FB9-B9C2-007232B3040D";
 			};
 			name = Distribution;
 		};
