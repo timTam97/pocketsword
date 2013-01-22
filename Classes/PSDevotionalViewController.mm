@@ -12,7 +12,7 @@
 #import "SwordDictionary.h"
 #import "PSModuleController.h"
 #import "ViewController.h"
-#import "HistoryController.h"
+#import "PSHistoryController.h"
 
 @implementation PSDevotionalViewController
 
@@ -299,7 +299,7 @@
 			
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
-			[HistoryController addHistoryItem:BibleTab];
+			[PSHistoryController addHistoryItem:BibleTab];
 			entry = nil;
 			load = NO;
 			

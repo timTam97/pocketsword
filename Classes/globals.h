@@ -121,6 +121,7 @@ typedef enum {
 #define PSDefaultFontName							@"Helvetica Neue"
 #define PSFolderSeparatorString						@":::"
 #define PSHistoryMaxEntries							100
+#define PSHistoryName								@"bibleHistory"
 
 #define BookNameString							@"BookNameString"
 #define ChapterString							@"ChapterString"

@@ -47,6 +47,7 @@
 		051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
+		051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.m */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
 		05275ADA10884F72004FB0E0 /* swlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0D10884F71004FB0E0 /* swlog.cpp */; };
 		05275ADC10884F72004FB0E0 /* listkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1210884F71004FB0E0 /* listkey.cpp */; };
@@ -331,7 +332,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		28216C970DB411BC00E5133A /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* ViewController.mm */; };
-		E92217550F0687340089A794 /* HistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* HistoryController.mm */; };
+		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E92B85040F1410C9003183CA /* dirent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013D20EFDD2D300DA9B7F /* dirent.cpp */; };
 		E94014700EFDD2D400DA9B7F /* AnalysisHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */; };
 		E94014710EFDD2D400DA9B7F /* Analyzers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012F30EFDD2D200DA9B7F /* Analyzers.cpp */; };
@@ -544,6 +545,9 @@
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PocketSword.entitlements; sourceTree = "<group>"; };
+		051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryController.h; path = Classes/PSHistoryController.h; sourceTree = "<group>"; };
+		051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryItem.h; path = Classes/PSHistoryItem.h; sourceTree = "<group>"; };
+		051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSHistoryItem.m; path = Classes/PSHistoryItem.m; sourceTree = "<group>"; };
 		0527595F10884F64004FB0E0 /* canon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon.h; sourceTree = "<group>"; };
 		0527596010884F64004FB0E0 /* canon_abbrevs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_abbrevs.h; sourceTree = "<group>"; };
 		0527596110884F64004FB0E0 /* canon_kjva.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_kjva.h; sourceTree = "<group>"; };
@@ -1210,8 +1214,7 @@
 		28AD73870D9D96C1002E5188 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
-		E92217530F0687340089A794 /* HistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryController.h; path = Classes/HistoryController.h; sourceTree = "<group>"; };
-		E92217540F0687340089A794 /* HistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HistoryController.mm; path = Classes/HistoryController.mm; sourceTree = "<group>"; };
+		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisHeader.cpp; sourceTree = "<group>"; };
 		E94012F20EFDD2D200DA9B7F /* AnalysisHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisHeader.h; sourceTree = "<group>"; };
 		E94012F30EFDD2D200DA9B7F /* Analyzers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Analyzers.cpp; sourceTree = "<group>"; };
@@ -2422,8 +2425,10 @@
 		054C55BB11AD0AA900633371 /* multi */ = {
 			isa = PBXGroup;
 			children = (
-				E92217530F0687340089A794 /* HistoryController.h */,
-				E92217540F0687340089A794 /* HistoryController.mm */,
+				051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */,
+				E92217540F0687340089A794 /* PSHistoryController.mm */,
+				051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */,
+				051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.m */,
 				05E3FCC710CF535E00DFEB77 /* PSSearchController.h */,
 				05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */,
 				0545549610CA4D8000EE11EC /* PSIndexController.h */,
@@ -3293,7 +3298,7 @@
 				E94014E20EFDD2D400DA9B7F /* StringBuffer.cpp in Sources */,
 				E94014E30EFDD2D400DA9B7F /* StringIntern.cpp in Sources */,
 				E94014E40EFDD2D400DA9B7F /* ThreadLocal.cpp in Sources */,
-				E92217550F0687340089A794 /* HistoryController.mm in Sources */,
+				E92217550F0687340089A794 /* PSHistoryController.mm in Sources */,
 				E92B85040F1410C9003183CA /* dirent.cpp in Sources */,
 				0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */,
 				0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */,
@@ -3524,6 +3529,7 @@
 				05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */,
 				05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */,
 				05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */,
+				051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

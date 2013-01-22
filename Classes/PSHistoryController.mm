@@ -17,14 +17,14 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "HistoryController.h"
+#import "PSHistoryController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
 #import "PSBookmarkTableViewCell.h"
+#import "PSHistoryItem.h"
 
-#define PS_HISTORY_NAME @"bibleHistory"
 
-@implementation HistoryController
+@implementation PSHistoryController
 
 - (id)init {
 	self = [super initWithNibName:nil bundle:nil];
@@ -84,7 +84,7 @@
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSString *verse;
 	NSString *mod;
-	NSString *historyName = PS_HISTORY_NAME;
+	NSString *historyName = PSHistoryName;
 	NSMutableArray *history = [[defaults arrayForKey: historyName] mutableCopy];
 	BOOL valid = NO;
 	
@@ -136,7 +136,6 @@
 					if(!existingMod || [mod isEqualToString:existingMod]) {
 						//if the mods are the same, or it's an OLD history item without a mod, delete it
 						[history removeObject:existingItem];
-						//ii--;
 						break;
 					}
 				}
@@ -150,6 +149,13 @@
 		
 		[defaults setObject: history forKey: historyName];
 		[defaults synchronize];
+		
+		// synchronize with iCloud as well, if available:
+		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+		if(cls) {
+			NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+            [kvStore setArray:history forKey:historyName];
+		}
 	}
 	if(history)
 		[history release];
@@ -168,7 +174,7 @@
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
 	if (buttonIndex == 1) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PS_HISTORY_NAME];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PSHistoryName];
 //		switch (listType) {
 //			case BibleTab:
 //				[[NSUserDefaults standardUserDefaults] removeObjectForKey: PS_HISTORY_NAME];
@@ -189,7 +195,7 @@
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory {
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSMutableArray *history = [[defaults arrayForKey: PS_HISTORY_NAME] mutableCopy];
+	NSMutableArray *history = [[defaults arrayForKey: PSHistoryName] mutableCopy];
 //	NSString *historyName;
 //	if(tabForHistory == BibleTab) {
 //		historyName = PS_HISTORY_NAME;
@@ -202,7 +208,7 @@
 //	}
 	[history removeObjectAtIndex:historyIndex];
 	
-	[defaults setObject: history forKey: PS_HISTORY_NAME];
+	[defaults setObject: history forKey: PSHistoryName];
 	[defaults synchronize];
 	[history release];
 	
@@ -215,7 +221,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	NSArray *history = [[NSUserDefaults standardUserDefaults] arrayForKey: PS_HISTORY_NAME];
+	NSArray *history = [[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName];
 	if(history) {
 		return [history count];
 	}
@@ -254,7 +260,7 @@
 		cell = [[[PSBookmarkTableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
 	}
 	
-	NSArray *history = [[NSUserDefaults standardUserDefaults] arrayForKey: PS_HISTORY_NAME];
+	NSArray *history = [[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName];
 //	switch (listType) {
 //		case BibleTab:
 //			history = [[NSUserDefaults standardUserDefaults] arrayForKey: PS_HISTORY_NAME];
@@ -313,7 +319,7 @@
 	NSString *mod;
 	
 	BOOL moduleIsCommentary = NO;
-	history = [[NSUserDefaults standardUserDefaults] arrayForKey: PS_HISTORY_NAME];
+	history = [[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName];
 	ref = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	verse = [[[[history objectAtIndex: indexPath.row] objectAtIndex: 0] componentsSeparatedByString: @":"] objectAtIndex: 1];
 	if([[history objectAtIndex: indexPath.row] count] > 2) {
@@ -334,13 +340,13 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
-		[HistoryController addHistoryItem:CommentaryTab];
+		[PSHistoryController addHistoryItem:CommentaryTab];
 	} else {
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
-		[HistoryController addHistoryItem:BibleTab];
+		[PSHistoryController addHistoryItem:BibleTab];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 
@@ -361,7 +367,7 @@
 //			[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 //			[[NSUserDefaults standardUserDefaults] synchronize];
 //			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-//			[HistoryController addHistoryItem:BibleTab];
+//			[PSHistoryController addHistoryItem:BibleTab];
 //			break;
 //		case CommentaryTab:
 //			history = [[NSUserDefaults standardUserDefaults] arrayForKey: @"commentaryHistory"];
@@ -378,7 +384,7 @@
 //			[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
 //			[[NSUserDefaults standardUserDefaults] synchronize];
 //			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-//			[HistoryController addHistoryItem:CommentaryTab];
+//			[PSHistoryController addHistoryItem:CommentaryTab];
 //			break;
 //		default:
 //			break;
@@ -398,6 +404,39 @@
 	
 }
 
++ (void)synchronizeHistoryItemsFromCloud {
+	NSArray *cloudHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUbiquitousKeyValueStore defaultStore] arrayForKey:PSHistoryName]];
+	NSArray *localHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName]];
+	
+	if([cloudHistory isEqualToArray:localHistory])
+		return;
+	
+	NSMutableArray *history = [NSMutableArray arrayWithArray:localHistory];
+	[history addObjectsFromArray:cloudHistory];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:YES];
+	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+	[history sortUsingDescriptors:sortDescriptors];
+	[sortDescriptor release];
+
+	while([history count] >= PSHistoryMaxEntries) {
+		[history removeLastObject];
+	}
+
+	[[NSUserDefaults standardUserDefaults] setObject: history forKey: PSHistoryName];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+	// synchronize with iCloud as well, if available:
+	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+	if(cls) {
+		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+		[kvStore setArray:history forKey:PSHistoryName];
+	}
+
+	
+	// reset the preferred color in NSUserDefaults to keep a local value
+//	[[NSUserDefaults standardUserDefaults] setInteger:self.selectedColor
+//											   forKey:kBackgroundColorKey];
+}
 
 
 @end

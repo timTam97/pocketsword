@@ -9,7 +9,7 @@
 #import "PSBookmarksNavigatorController.h"
 #import "PSBookmark.h"
 #import "PSModuleController.h"
-#import "HistoryController.h"
+#import "PSHistoryController.h"
 #import "PSBookmarkFolderAddViewController.h"
 #import "PSBookmarks.h"
 #import "PSBookmarkTableViewCell.h"
@@ -377,7 +377,7 @@
 						[[NSUserDefaults standardUserDefaults] synchronize];
 						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 					}
-					[HistoryController addHistoryItem:BibleTab];
+					[PSHistoryController addHistoryItem:BibleTab];
 				}
 			}
 			

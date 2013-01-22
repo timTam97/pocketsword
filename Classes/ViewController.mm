@@ -22,7 +22,7 @@
 #import "ViewController.h"
 #import "PSIndexController.h"
 #import "SearchWebView.h"
-#import "HistoryController.h"
+#import "PSHistoryController.h"
 #import "NavigatorSources.h"
 #import "PSModuleSelectorController.h"
 #import "PSPreferencesController.h"
@@ -327,7 +327,7 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		[HistoryController addHistoryItem:BibleTab];
+		[PSHistoryController addHistoryItem:BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
@@ -335,7 +335,7 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		[HistoryController addHistoryItem:CommentaryTab];
+		[PSHistoryController addHistoryItem:CommentaryTab];
 	} else {
 		// weird & undefined
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
@@ -366,7 +366,7 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		[HistoryController addHistoryItem:BibleTab];
+		[PSHistoryController addHistoryItem:BibleTab];
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
@@ -374,7 +374,7 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		[HistoryController addHistoryItem:CommentaryTab];
+		[PSHistoryController addHistoryItem:CommentaryTab];
 	} else {
 		// weird & undefined
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
@@ -404,7 +404,7 @@ bool ps_viewcontroller_initialized = false;
 	} else {
 		
 		multiListController = [[UITabBarController alloc] init];
-		HistoryController *historyController = [[HistoryController alloc] init];
+		PSHistoryController *historyController = [[PSHistoryController alloc] init];
 		PSSearchController *searchController = [[PSSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
 		searchNavigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -617,7 +617,7 @@ bool ps_viewcontroller_initialized = false;
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			[HistoryController addHistoryItem:BibleTab];
+			[PSHistoryController addHistoryItem:BibleTab];
 		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
@@ -625,7 +625,7 @@ bool ps_viewcontroller_initialized = false;
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-			[HistoryController addHistoryItem:CommentaryTab];
+			[PSHistoryController addHistoryItem:CommentaryTab];
 		} else {
 			//something tab???
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
@@ -1314,7 +1314,7 @@ bool ps_viewcontroller_initialized = false;
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-			[HistoryController addHistoryItem:BibleTab];
+			[PSHistoryController addHistoryItem:BibleTab];
 
 			return NO;
 		}

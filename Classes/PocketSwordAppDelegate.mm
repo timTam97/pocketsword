@@ -23,7 +23,7 @@
 #import "ZipArchive.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
-#import "HistoryController.h"
+#import "PSHistoryController.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -39,6 +39,40 @@
 	}
 }
 
+- (void)storeDidChange:(NSNotification *)notification {
+	// We get more information from the notification, by using:
+    //  NSUbiquitousKeyValueStoreChangeReasonKey or NSUbiquitousKeyValueStoreChangedKeysKey constants
+    // against the notification's useInfo.
+	//
+    NSDictionary *userInfo = [notification userInfo];
+    // get the reason (initial download, external change or quota violation change)
+    
+    NSNumber* reasonForChange = [userInfo objectForKey:NSUbiquitousKeyValueStoreChangeReasonKey];
+    if (reasonForChange) {
+        // reason was deduced, go ahead and check for the change
+        //
+        NSInteger reason = [[userInfo objectForKey:NSUbiquitousKeyValueStoreChangeReasonKey] integerValue];
+        if (reason == NSUbiquitousKeyValueStoreServerChange ||
+			// the value changed from the remote server
+            reason == NSUbiquitousKeyValueStoreInitialSyncChange) {
+			// initial syncs happen the first time the device is synced
+
+            NSArray *changedKeys = [userInfo objectForKey:NSUbiquitousKeyValueStoreChangedKeysKey];
+            
+            // in case you have more than one key,
+            // loop through and check for the one we want (PSHistoryName)
+            //
+            for (NSString *changedKey in changedKeys) {
+                if ([changedKey isEqualToString:PSHistoryName]) {
+					
+					[PSHistoryController synchronizeHistoryItemsFromCloud];
+					
+                }
+            }
+        }
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	self.launchedWithOptions = launchOptions;
@@ -51,7 +85,23 @@
 	} else {
 		[window addSubview:launchViewController.view];
 	}
+	
 	[launchViewController performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
+	
+	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+	if(cls) {
+		// register to observe notifications from the store
+		[[NSNotificationCenter defaultCenter]
+		 addObserver: self
+		 selector: @selector (storeDidChange:)
+		 name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
+         object: [NSUbiquitousKeyValueStore defaultStore]];
+		
+		// get changes that might have happened while this
+		// instance of your app wasn't running
+		[[NSUbiquitousKeyValueStore defaultStore] setString:@"testValue" forKey:@"testKey"];//dummy to get the pipes flowing!
+		[[NSUbiquitousKeyValueStore defaultStore] synchronize];
+	}
 	
 	[self.window makeKeyAndVisible];
 	
@@ -202,7 +252,7 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-		[HistoryController addHistoryItem:BibleTab];
+		[PSHistoryController addHistoryItem:BibleTab];
 	} else {			
 		if (module != nil && ![module isEqualToString:LIST]) {
 			// they requested a specific module and it is available
@@ -218,7 +268,7 @@
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		[HistoryController addHistoryItem:CommentaryTab];
+		[PSHistoryController addHistoryItem:CommentaryTab];
 	}
 	
 	if (module != nil && [module isEqualToString:LIST]) {

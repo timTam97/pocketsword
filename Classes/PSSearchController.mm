@@ -10,7 +10,7 @@
 #import "SwordModuleTextEntry.h"
 #import "PSModuleController.h"
 #import "SwordListKey.h"
-#import "HistoryController.h"
+#import "PSHistoryController.h"
 #import "SwordVerseKey.h"
 #import "PSIndexController.h"
 
@@ -540,11 +540,11 @@
 		switch(listType) {
 			case BibleTab:
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-				[HistoryController addHistoryItem:BibleTab];
+				[PSHistoryController addHistoryItem:BibleTab];
 				break;
 			case CommentaryTab:
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-				[HistoryController addHistoryItem:CommentaryTab];
+				[PSHistoryController addHistoryItem:CommentaryTab];
 				break;
 			default:
 				break;

@@ -1,0 +1,32 @@
+//
+//  PSHistoryItem.h
+//  PocketSword
+//
+//  Created by Nic Carter on 22/01/13.
+//  Copyright (c) 2013 CrossWire Bible Society. All rights reserved.
+//
+
+#import "globals.h"
+
+@interface PSHistoryItem : NSObject {
+
+	NSString *bibleReference;
+	NSString *scrollAmount;
+	NSString *moduleName;
+	NSDate *dateAdded;
+}
+
+@property (retain, readwrite) NSString *bibleReference;
+@property (retain, readwrite) NSString *scrollAmount;
+@property (retain, readwrite) NSString *moduleName;
+@property (retain, readwrite) NSDate *dateAdded;
+
+- (id)initWithReference:(NSString*)ref scrollAmount:(NSString*)scrollString moduleName:(NSString*)mod dateAdded:(NSDate*)da;
+- (id)initWithArray:(NSArray*)historyArray;
+- (BOOL)isEqual:(id)object;
+- (NSArray *)array;
+
++ (NSArray *)parseHistoryArrayArray:(NSArray*)arrays;
++ (NSArray *)arrayArrayFromHistoryItems:(NSArray*)arrayOfHistoryItems;
+
+@end

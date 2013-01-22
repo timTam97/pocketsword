@@ -19,7 +19,7 @@
 
 #import "globals.h"
 
-@interface HistoryController : UIViewController {
+@interface PSHistoryController : UIViewController {
 
 	ShownTab listType;
 
@@ -33,5 +33,6 @@
 + (void)addHistoryItem:(ShownTab)tabForHistory;
 - (void)trashButtonPressed;
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory;
++ (void)synchronizeHistoryItemsFromCloud;
 
 @end
