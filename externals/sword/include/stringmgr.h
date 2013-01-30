@@ -2,7 +2,7 @@
  *	stringmgr.h - A class which provides string handling functions which can 
  *			be reimplemented by frontends
  *
- * $Id: stringmgr.h 2098 2007-10-07 18:57:07Z scribe $
+ * $Id: stringmgr.h 2773 2013-01-24 18:14:45Z scribe $
  *
  * Copyright 2005 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -108,7 +108,7 @@ inline char *toupperstr_utf8(char *t, unsigned int max = 0) {
 inline SWBuf &toupperstr(SWBuf &b) {
 	char *utf8 = 0;
 	stdstr(&utf8, b.c_str(), 2);
-	toupperstr(utf8, strlen(utf8)*2);
+	toupperstr(utf8, (unsigned int)strlen(utf8)*2);
 	b = utf8;
 	delete [] utf8;
 	return b;

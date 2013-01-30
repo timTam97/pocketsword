@@ -2,7 +2,7 @@
  *  swdisp.h  - code for base class 'swdisp'.  swdisp is the basis for all
  *		types of displays (e.g. raw textout, curses, xwindow, etc.)
  *
- * $Id: swdisp.h 2764 2013-01-19 16:19:47Z scribe $
+ * $Id: swdisp.h 2777 2013-01-25 18:04:31Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,7 +36,7 @@ class SWModule;
 class SWDLLEXPORT SWDisplay : public SWObject {
   static SWClass classdef;
 public:
-  SWDisplay () { myclass = &classdef; };
+  SWDisplay() { myclass = &classdef; };
   virtual ~SWDisplay() {};
   
   /** casts a module to a character pointer and displays it to
@@ -46,7 +46,8 @@ public:
   * @param imodule module to display
   * @return error status
   */
-  virtual char display(SWModule & imodule);
+  virtual char display(SWModule &imodule) = 0;
+  SWDEPRECATED char Display(SWModule &imodule) { return display(imodule); }
 };
 
 SWORD_NAMESPACE_END
