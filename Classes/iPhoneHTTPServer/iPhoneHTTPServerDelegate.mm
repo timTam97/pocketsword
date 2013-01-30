@@ -82,19 +82,15 @@
 	[self performSelectorOnMainThread: @selector(_displayInfoUpdate:) withObject: notification waitUntilDone: NO];
 }
 
-- (void)_displayInfoUpdate:(NSNotification *) notification
-{
-	//DLog(@"displayInfoUpdate:");
+- (void)_displayInfoUpdate:(NSNotification *) notification {
 
-	if(notification)
-	{
+	if(notification) {
 		[addresses release];
 		addresses = [[notification object] copy];
 		DLog(@"addresses: %@", addresses);
 	}
 
-	if(addresses == nil)
-	{
+	if(!addresses) {
 		return;
 	}
 	
@@ -104,12 +100,15 @@
 	
 	localIP = [addresses objectForKey:@"en0"];
 	
-	if (!localIP)
-	{
+	if(!localIP) {
 		localIP = [addresses objectForKey:@"en1"];
 	}
+	
+	if(!localIP) {
+		localIP = [addresses objectForKey:@"en2"];
+	}
 
-	if (!localIP) {
+	if(!localIP) {
 		bonjourInfo.text = NSLocalizedString(@"WiFiNoConnection", @"");
 		ipInfo.text = NSLocalizedString(@"WiFiNoConnection", @"");
 	}
@@ -121,16 +120,16 @@
 
 	NSString *wwwIP = [addresses objectForKey:@"www"];
 
-	if (wwwIP)
+	if(wwwIP) {
 		wwwInfo.text = [NSString stringWithFormat:@"Web: http://%@:%d\n", wwwIP, port];
-	else
+	} else {
 		wwwInfo.text = NSLocalizedString(@"WebNoIP", @"");
+	}
 
 }
 
 
-- (void)dealloc 
-{
+- (void)dealloc {
 	if(addresses)
 		[addresses release];
 	if(httpServer)
@@ -139,8 +138,7 @@
 }
 
 
-- (void)handleNewModule:(NSNotification *)notification
-{
+- (void)handleNewModule:(NSNotification *)notification {
 	DLog(@"%@", [notification object]);
 	//NSString *root = DEFAULT_MMM_PATH;//[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	NSString *file = [DEFAULT_MMM_PATH stringByAppendingPathComponent:[notification object]];

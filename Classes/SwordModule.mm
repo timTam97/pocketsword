@@ -692,12 +692,12 @@
             swModule->setKey([passage cStringUsingEncoding:NSISOLatin1StringEncoding]);
         }
         //swModule->RenderText(); // force processing of key
-        swModule->StripText(); // force processing of key
+        swModule->stripText(); // force processing of key
         
         sword::SWBuf footnoteText = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["body"].c_str();
         // convert from base markup to display markup
         //char *fText = (char *)swModule->StripText(footnoteText);
-        char *fText = (char *)swModule->RenderText(footnoteText);
+        char *fText = (char *)swModule->renderText(footnoteText);
         ret = [NSString stringWithUTF8String:fText];
     } else if([attrType isEqualToString:@"x"]) {
         if([self isUnicode]) {
@@ -706,7 +706,7 @@
             swModule->setKey([passage cStringUsingEncoding:NSISOLatin1StringEncoding]);
         }
         //swModule->RenderText(); // force processing of key
-        swModule->StripText(); // force processing of key
+        swModule->stripText(); // force processing of key
         
         sword::SWBuf refList = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["refList"];
         sword::VerseKey parser([passage UTF8String]);
@@ -719,7 +719,7 @@
             swModule->setKey(refs);
             if(![self error]) {
                 NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
-                NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
+                NSString *text = [NSString stringWithUTF8String:swModule->stripText()];
                 
                 NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
                 [dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
@@ -744,7 +744,7 @@
 			if(![self error]) {
 				NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
 				//NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
-				NSString *text = [NSString stringWithUTF8String:swModule->RenderText()];
+				NSString *text = [NSString stringWithUTF8String:swModule->renderText()];
 				
 				NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
 				[dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
@@ -759,7 +759,7 @@
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
         ret = dict;
         if(![self error]) {
-            NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
+            NSString *text = [NSString stringWithUTF8String:swModule->stripText()];
             
             [dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
             [dict setObject:key forKey:SW_OUTPUT_REF_KEY];            
@@ -783,14 +783,14 @@
             NSString *key = aKey;
             NSString *txt = nil;
             if(aType == TextTypeRendered) {
-				txt = [NSString stringWithUTF8String:swModule->RenderText()];
+				txt = [NSString stringWithUTF8String:swModule->renderText()];
 				if(!txt) {
-					txt = [NSString stringWithCString:swModule->RenderText() encoding:NSISOLatin1StringEncoding];
+					txt = [NSString stringWithCString:swModule->renderText() encoding:NSISOLatin1StringEncoding];
 				}
             } else {
-				txt = [NSString stringWithUTF8String:swModule->StripText()];
+				txt = [NSString stringWithUTF8String:swModule->stripText()];
 				if(!txt) {
-					txt = [NSString stringWithCString:swModule->StripText() encoding:NSISOLatin1StringEncoding];
+					txt = [NSString stringWithCString:swModule->stripText() encoding:NSISOLatin1StringEncoding];
 				}
             }
             
@@ -858,36 +858,36 @@
 
 - (NSString *)renderedText {
     NSString *ret = @"";
-    ret = [NSString stringWithUTF8String:swModule->RenderText()];
+    ret = [NSString stringWithUTF8String:swModule->renderText()];
     if(!ret) {
-        ret = [NSString stringWithCString:swModule->RenderText() encoding:NSISOLatin1StringEncoding];
+        ret = [NSString stringWithCString:swModule->renderText() encoding:NSISOLatin1StringEncoding];
     }
     return ret;
 }
 
 - (NSString *)renderedTextFromString:(NSString *)aString {
     NSString *ret = @"";
-    ret = [NSString stringWithUTF8String:swModule->RenderText([aString UTF8String])];
+    ret = [NSString stringWithUTF8String:swModule->renderText([aString UTF8String])];
     if(!ret) {
-        ret = [NSString stringWithCString:swModule->RenderText([aString UTF8String]) encoding:NSISOLatin1StringEncoding];
+        ret = [NSString stringWithCString:swModule->renderText([aString UTF8String]) encoding:NSISOLatin1StringEncoding];
     }
     return ret;
 }
 
 - (NSString *)strippedText {
     NSString *ret = @"";
-    ret = [NSString stringWithUTF8String:swModule->StripText()];
+    ret = [NSString stringWithUTF8String:swModule->stripText()];
     if(!ret) {
-        ret = [NSString stringWithCString:swModule->StripText() encoding:NSISOLatin1StringEncoding];
+        ret = [NSString stringWithCString:swModule->stripText() encoding:NSISOLatin1StringEncoding];
     }
     return ret;
 }
 
 - (NSString *)strippedTextFromString:(NSString *)aString {
     NSString *ret = @"";
-    ret = [NSString stringWithUTF8String:swModule->RenderText([aString UTF8String])];
+    ret = [NSString stringWithUTF8String:swModule->renderText([aString UTF8String])];
     if(!ret) {
-        ret = [NSString stringWithCString:swModule->RenderText([aString UTF8String]) encoding:NSISOLatin1StringEncoding];
+        ret = [NSString stringWithCString:swModule->renderText([aString UTF8String]) encoding:NSISOLatin1StringEncoding];
     }
     return ret;
 }
@@ -988,7 +988,7 @@
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 //	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	//swModule->RenderText();
-	swModule->StripText();
+	swModule->stripText();
 }
 
 - (NSString *)setToNextChapter {
@@ -996,7 +996,7 @@
 	int c = curKey->getChapter();
 	curKey->setChapter(c+1);
 	//swModule->RenderText();
-	swModule->StripText();
+	swModule->stripText();
 	
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
@@ -1009,7 +1009,7 @@
 	int c = curKey->getChapter();
 	curKey->setChapter(c-1);
 	//swModule->RenderText();
-	swModule->StripText();
+	swModule->stripText();
 
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	NSString *ref = [NSString stringWithString: ch];
@@ -1037,7 +1037,7 @@
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	//sword::SWKey lastKey;
 	
-	swModule->StripText();
+	swModule->stripText();
 	NSMutableString *verses = [@"" mutableCopy];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 	//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
@@ -1056,7 +1056,7 @@
 	// Grab till the end of the chapter
 	do {
 		//lastKey = *swModule->getKey();
-		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->RenderText()];
+		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->renderText()];
 		//replace *X and *N with simply X and N for xrefs and footnotes
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
@@ -1074,7 +1074,7 @@
 				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
 					//NSLog(@"preverseHeading = '%@'", preverseHeading);
-					preverseHeading = [NSString stringWithUTF8String:swModule->RenderText([preverseHeading UTF8String])];
+					preverseHeading = [NSString stringWithUTF8String:swModule->renderText([preverseHeading UTF8String])];
 					//NSLog(@"RenderText(preverseHeading) = '%@'\n", preverseHeading);
 					preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 					preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
@@ -1082,7 +1082,7 @@
 				}
 				else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
 					//NSLog(@"interverseHeading = '%@'", interverseHeading);
-					interverseHeading = [NSString stringWithUTF8String:swModule->RenderText([interverseHeading UTF8String])];
+					interverseHeading = [NSString stringWithUTF8String:swModule->renderText([interverseHeading UTF8String])];
 					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 					//NSLog(@"RenderText(interverseHeading) = '%@'\n", interverseHeading);
@@ -1122,7 +1122,7 @@
 		lastEntry = thisEntry;
 		(*swModule->getKey())++;
 		//lastKey++;
-		swModule->StripText();
+		swModule->stripText();
 		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
 		//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
 		//if(printf) NSLog(@"ref = %@", ref);

@@ -43,10 +43,12 @@
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"LocalhostAdressesResolved" object:result];
 
-	NSURL *netIPURL = [NSURL URLWithString:@"http://whatismyip.org"];
+	NSURL *netIPURL = [NSURL URLWithString:@"http://www.networksecuritytoolkit.org/nst/cgi-bin/ip.cgi"];
 	NSString *netIP = [NSString stringWithContentsOfURL:netIPURL encoding:NSUTF8StringEncoding error:nil];
-	if (netIP)
+	if (netIP) {
+		netIP = [netIP stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 		[result setObject:netIP forKey:@"www"];
+	}
 	//DLog(@"IP addresses: %@", result);
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"LocalhostAdressesResolved" object:result];
 	

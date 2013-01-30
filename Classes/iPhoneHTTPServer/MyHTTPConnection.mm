@@ -38,15 +38,21 @@
     [mods sortUsingDescriptors:sortDescriptors];
 	[sortDescriptor release];
     
-    NSMutableString *outdata = [NSMutableString new];
+    NSMutableString *outdata = [NSMutableString stringWithCapacity:1000];
 	[outdata appendString:@"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"];
 	[outdata appendString:@"<html dir=\"ltr\" xmlns=\"http://www.w3.org/1999/xhtml\"\n xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n xml:lang=\"en\" >\n"];
-	[outdata appendFormat:@"<head>\n<title>Installed Modules (%@)</title>\n", server.name];
+	NSString *displayName = server.name;
+	if(!displayName || ![displayName canBeConvertedToEncoding:NSUTF8StringEncoding]) {
+		displayName = @"";
+	} else {
+		displayName = [NSString stringWithFormat:@" (%@)", displayName];
+	}
+	[outdata appendFormat:@"<head>\n<title>Installed Modules%@</title>\n", displayName];
 	[outdata appendString: @"<meta http-equiv=\"content-type\" content=\"application/xhtml+xml;charset=utf-8\" />"];
     [outdata appendString:@"<style type=\"text/css\">html {background-color:#eeeeee} body { background-color:#FFFFFF; font-family:Helvetica,Tahoma,Arial,sans-serif; font-size:18x; margin-left:15%; margin-right:15%; border:3px groove #006600; padding:15px; } </style>\n"];
     [outdata appendString:@"</head>\n<body>\n"];
-	[outdata appendFormat:@"<h1>Installed Modules (%@)</h1>\n", server.name];
-    [outdata appendFormat:@"<p>The following modules are currently installed in PocketSword on the iPhone %@:</p>\n", server.name];
+	[outdata appendFormat:@"<h1>Installed Modules%@</h1>\n", displayName];
+    [outdata appendFormat:@"<p>The following modules are currently installed in PocketSword%@:</p>\n", displayName];
     [outdata appendString:@"<p>\n"];
 	//[outdata appendFormat:@"<a href=\"..\">..</a><br />\n"];
     //for (NSString *fname in array)
@@ -72,13 +78,13 @@
 		[outdata appendString:@"</p></form>\n"];
 	}
 	[outdata appendString:@"<p>The format of the raw zipped module expected is the same format as can be found in the <a href=\"http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/\">Crosswire repository</a>.</p>\n\
-	 <p>However, if you wish to be able to search in any modules installed in this way, you need to create the clucene indexes yourself &amp; place them in the correct location within the zip file.</p>\n\
-	 <p>If you haven't realised that this method of installing modules isn't for the faint of heart and is only suggested for those who know what they're doing.  It is provided as a courtesy for Module Maintainers.</p>\n\
-	 <p>If the upload and install is successful, the new module will be added to the above list.  If it fails, it will fail silently.  This may be modified in the future if there are enough requests for improved functionality, but it is hoped and assumed that users will use the inbuilt module installer.</p>\n\
+	 <p>However, if you wish to be able to search in any modules installed in this way, you will need to create the clucene indexes yourself &amp; place them in the correct location within the zip file.</p>\n\
+	 <p>If you haven't realised, this method of installing modules isn't for the faint of heart and is only suggested for those who know what they're doing.  It is provided as a courtesy for Module Maintainers.</p>\n\
+	 <p>If the upload and install is successful, the new module will be added to the above list.  If it fails, it will fail silently.  This may be modified in the future if there are enough requests for improved functionality, but it is hoped and assumed that users will use the in-built module installer.</p>\n\
 	 </body>\n</html>\n"];
     
 	//DLog(@"outData: %@", outdata);
-    return [outdata autorelease];
+    return outdata;
 }
 
 
