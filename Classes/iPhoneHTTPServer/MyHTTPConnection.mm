@@ -41,10 +41,12 @@
     NSMutableString *outdata = [NSMutableString stringWithCapacity:1000];
 	[outdata appendString:@"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"];
 	[outdata appendString:@"<html dir=\"ltr\" xmlns=\"http://www.w3.org/1999/xhtml\"\n xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n xml:lang=\"en\" >\n"];
-	NSString *displayName = server.name;
-	if(!displayName || ![displayName canBeConvertedToEncoding:NSUTF8StringEncoding]) {
-		displayName = @"";
+	//NSMutableString *displayName = [NSMutableString stringWithString:@"noë & noemi"]; // used for debug purposes!
+	NSMutableString *displayName = [NSMutableString stringWithString:server.name];
+	if(!displayName) {
+		displayName = [NSMutableString stringWithString:@""];
 	} else {
+		CFStringTransform((CFMutableStringRef)displayName, NULL, CFSTR("Any-Hex/XML"), FALSE); // go nuclear on the name to make it safe :P
 		displayName = [NSString stringWithFormat:@" (%@)", displayName];
 	}
 	[outdata appendFormat:@"<head>\n<title>Installed Modules%@</title>\n", displayName];
