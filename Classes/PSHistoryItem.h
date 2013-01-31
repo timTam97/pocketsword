@@ -8,6 +8,13 @@
 
 #import "globals.h"
 
+typedef enum {
+	PSHistoryItemOlder = 0,
+	PSHistoryItemEqual,
+	PSHistoryItemNewer,
+	PSHistoryItemInvalidAge
+} PSHistoryItemAge;
+
 @interface PSHistoryItem : NSObject {
 
 	NSString *bibleReference;
@@ -24,6 +31,9 @@
 - (id)initWithReference:(NSString*)ref scrollAmount:(NSString*)scrollString moduleName:(NSString*)mod dateAdded:(NSDate*)da;
 - (id)initWithArray:(NSArray*)historyArray;
 - (NSArray *)array;
+- (BOOL)isEqualToHistoryItem:(PSHistoryItem*)otherHistoryItem;
+// determines if self is older than otherHistoryItem
+- (PSHistoryItemAge)ageComparisonToHistoryItem:(PSHistoryItem*)otherHistoryItem;
 
 + (NSArray *)parseHistoryArrayArray:(NSArray*)arrays;
 + (NSArray *)arrayArrayFromHistoryItems:(NSArray*)arrayOfHistoryItems;

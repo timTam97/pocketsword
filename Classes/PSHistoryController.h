@@ -31,6 +31,6 @@
 + (void)addHistoryItem:(ShownTab)tabForHistory;
 - (void)trashButtonPressed;
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory;
-+ (void)synchronizeHistoryItemsFromCloud;
++ (void)synchronizeHistoryItemsFromCloud:(BOOL)initialSync;
 
 @end

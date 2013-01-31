@@ -56,6 +56,11 @@
 			// the value changed from the remote server
             reason == NSUbiquitousKeyValueStoreInitialSyncChange) {
 			// initial syncs happen the first time the device is synced
+			
+			BOOL initialSync = NO;
+			if(reason == NSUbiquitousKeyValueStoreInitialSyncChange) {
+				initialSync = YES;
+			}
 
             NSArray *changedKeys = [userInfo objectForKey:NSUbiquitousKeyValueStoreChangedKeysKey];
             
@@ -65,7 +70,7 @@
             for (NSString *changedKey in changedKeys) {
                 if ([changedKey isEqualToString:PSHistoryName]) {
 					
-					[PSHistoryController synchronizeHistoryItemsFromCloud];
+					[PSHistoryController synchronizeHistoryItemsFromCloud:initialSync];
 					
                 }
             }

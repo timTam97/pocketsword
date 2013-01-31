@@ -46,18 +46,9 @@
 		PSHistoryItem *secondHI = [secondArray objectAtIndex:i];
 		if(![firstHI.bibleReference isEqualToString:secondHI.bibleReference] ||
 		   ![firstHI.moduleName isEqualToString:secondHI.moduleName]) {
-//			NSLog(@"\nitem %d: refs: %@ = %@\nmods: %@ = %@\ndates: %@ = %@\n", i, firstHI.bibleReference, secondHI.bibleReference, firstHI.moduleName, secondHI.moduleName, firstHI.dateAdded, secondHI.dateAdded);
-//			if(![firstHI.bibleReference isEqualToString:secondHI.bibleReference]) {
-//				NSLog(@"refs not equal!");
-//			} else if(![firstHI.moduleName isEqualToString:secondHI.moduleName]) {
-//				NSLog(@"mods not equal!");
-//			} else if(![firstHI.dateAdded isEqualToDate:secondHI.dateAdded]) {
-//				NSLog(@"dates not equal!");
-//			}
 			return NO;
 		}
 	}
-//	NSLog(@"\narrays ARE equal :P");
 	return YES;
 }
 
@@ -101,6 +92,41 @@
 
 - (NSArray *)array {
 	return [NSArray arrayWithObjects: self.bibleReference, @"0"/*scroll*/, self.moduleName, self.dateAdded, nil];
+}
+
+- (BOOL)isEqualToHistoryItem:(PSHistoryItem*)otherHistoryItem {
+	
+	if(!otherHistoryItem)
+		return NO;
+	
+	if([self.bibleReference isEqualToString:otherHistoryItem.bibleReference]
+	   && [self.moduleName isEqualToString:otherHistoryItem.moduleName]
+	   && [self.dateAdded isEqualToDate:otherHistoryItem.dateAdded])
+		return YES;
+	
+	return NO;
+}
+
+// determines if self is older than otherHistoryItem
+- (PSHistoryItemAge)ageComparisonToHistoryItem:(PSHistoryItem*)otherHistoryItem {
+	
+	if(!otherHistoryItem)
+		return PSHistoryItemInvalidAge;
+	
+	NSTimeInterval timeInterval = [self.dateAdded timeIntervalSinceDate:otherHistoryItem.dateAdded];
+	
+	if(timeInterval < 0) {
+		//self is before otherHistoryItem
+		return PSHistoryItemOlder;
+	} else if(timeInterval == 0) {
+		//should be equal?
+		return PSHistoryItemEqual;
+	} else if(timeInterval > 0) {
+		//self is after otherHistoryItem
+		return PSHistoryItemNewer;
+	}
+	
+	return PSHistoryItemInvalidAge;
 }
 
 - (void)dealloc {

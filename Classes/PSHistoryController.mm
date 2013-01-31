@@ -44,39 +44,40 @@
 	listType = listT;
 }
 
+// used for iCloud sync just in case our history changes while we're viewing it.
+- (void)reloadTableViewFromNotification {
+	[self.tableView reloadData];
+}
+
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"HistoryClearButtonTitle", @"Clear") style: UIBarButtonItemStyleBordered target: self action: @selector(trashButtonPressed)] autorelease];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableViewFromNotification) name:NotificationHistoryChanged object:nil];
 }
 
 - (void)viewDidUnload {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationHistoryChanged object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+	
 	[super viewWillAppear:animated];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		self.tableView.backgroundColor = [UIColor blackColor];
-//		historyListTable.backgroundColor = [UIColor blackColor];
 	} else {
 		self.tableView.backgroundColor = [UIColor whiteColor];
-//		historyListTable.backgroundColor = [UIColor whiteColor];
 	}
-	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:historyListTable useStatusBar:YES];
+	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:historyNavigationBar mainView:self.tableView useStatusBar:YES];
 	self.navigationItem.title = NSLocalizedString(@"HistoryTitle", @"History");
 	[self.tableView reloadData];
-//	[historyListTable reloadData];
 	
 	if(([self.tableView numberOfSections] > 0) && [self.tableView numberOfRowsInSection: 0] > 0) {
 		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
 		if(ip)
 			[self.tableView scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
 	}
-//	if(([historyListTable numberOfSections] > 0) && [historyListTable numberOfRowsInSection: 0] > 0) {
-//		NSIndexPath *ip = [NSIndexPath indexPathForRow: 0 inSection: 0];
-//		if(ip)
-//			[historyListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionTop animated:NO];
-//	}
+	
 }
 
 // This should be called just AFTER:
@@ -86,8 +87,8 @@
 //    or when the user selects a new module to view.
 //    or when the user selects a bookmark.
 //    or when the user selects a search result.
-+ (void)addHistoryItem:(ShownTab)tabForHistory
-{
++ (void)addHistoryItem:(ShownTab)tabForHistory {
+	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -165,8 +166,10 @@
             [kvStore setArray:history forKey:PSHistoryName];
 		}
 	}
-	if(history)
+	if(history) {
 		[history release];
+		history = nil;
+	}
 	
 	[pool release];
 	
@@ -183,12 +186,18 @@
 
 	if (buttonIndex == 1) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PSHistoryName];
+		
 		// synchronize with iCloud as well, if available:
 		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 		if(cls) {
 			NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
             [kvStore removeObjectForKey:PSHistoryName];
+			NSMutableArray *history = [[NSMutableArray alloc] initWithObjects: nil];
+			[kvStore setArray:history forKey:PSHistoryName];
+			[history release];
+			history = nil;
 		}
+		
 //		switch (listType) {
 //			case BibleTab:
 //				[[NSUserDefaults standardUserDefaults] removeObjectForKey: PS_HISTORY_NAME];
@@ -200,7 +209,6 @@
 //				break;
 //		}
 		[self.tableView reloadData];
-//		[historyListTable reloadData];
 	} else {
 		
 	}
@@ -225,10 +233,20 @@
 	
 	[defaults setObject: history forKey: PSHistoryName];
 	[defaults synchronize];
-	[history release];
+	
+	// synchronize with iCloud as well, if available:
+	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+	if(cls) {
+		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+		[kvStore setArray:history forKey:PSHistoryName];
+	}
+
+	if(history) {
+		[history release];
+		history = nil;
+	}
 	
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:historyIndex inSection:0];
-//	[historyListTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
 	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
@@ -341,7 +359,10 @@
 	if([[history objectAtIndex: indexPath.row] count] > 2) {
 		mod = [[history objectAtIndex: indexPath.row] objectAtIndex: 2];
 		SwordModule *swordModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:mod];
-		if(swordModule && (swordModule.type == commentary)) {
+		if(!swordModule) {
+			mod = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastBible];
+			swordModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:mod];
+		} else if(swordModule && (swordModule.type == commentary)) {
 			moduleIsCommentary = YES;
 		}
 		if(moduleIsCommentary) {
@@ -413,22 +434,141 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		//NSString *ref = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 		[self removeHistoryItem:indexPath.row forTab:listType];
-		//[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];//UITableViewRowAnimationTop];
 	}
 	
 }
 
-+ (void)synchronizeHistoryItemsFromCloud {
-	NSArray *cloudHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUbiquitousKeyValueStore defaultStore] arrayForKey:PSHistoryName]];
-	NSArray *localHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName]];
-	
-	if([PSHistoryItem arraysAreEqual:cloudHistory secondArray:localHistory])
-		return;
++ (void)initialSynchronizeWithCloud:(NSArray*)cloudHistory withLocalHistory:(NSArray*)localHistory {
 	
 	NSMutableArray *history = [NSMutableArray arrayWithArray:localHistory];
 	[history addObjectsFromArray:cloudHistory];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
+	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+	[history sortUsingDescriptors:sortDescriptors];
+	[sortDescriptor release];
+	
+	//check for duplicates:
+	for (int ii = 0; ii < [history count]; ++ii) {
+		
+		PSHistoryItem *newItem = [history objectAtIndex:ii];
+		NSString *ref = newItem.bibleReference;
+		NSString *mod = newItem.moduleName;
+		
+		for (int jj = (ii+1); jj < [history count]; ++jj) {
+			
+			PSHistoryItem *existingItem = [history objectAtIndex:jj];
+			NSString *existingRef = existingItem.bibleReference;
+			if([ref isEqualToString:existingRef]) {
+				//if the references are the same,
+				NSString *existingMod = existingItem.moduleName;
+				if([mod isEqualToString:existingMod]) {
+					//if the mods are the same, or it's an OLD history item without a mod, delete it
+					[history removeObjectAtIndex:jj];
+					--jj;
+				}
+			}
+		}
+	}
+	
+	
+	while([history count] >= PSHistoryMaxEntries) {
+		[history removeLastObject];
+	}
+	
+	NSArray *combinedHistory = [PSHistoryItem arrayArrayFromHistoryItems:history];
+	
+	[[NSUserDefaults standardUserDefaults] setObject: combinedHistory forKey: PSHistoryName];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHistoryChanged object:nil];
+	
+	if([PSHistoryItem arraysAreEqual:cloudHistory secondArray:history]) {
+		// if our resulting history is the same as what's in the cloud, don't update the cloud version!
+		return;
+	}
+	
+	// synchronize with iCloud as well, if available:
+	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
+	if(cls) {
+		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+		[kvStore setArray:combinedHistory forKey:PSHistoryName];
+	}
+}
+
++ (NSMutableArray*)synchronizeHistoryArray:(NSMutableArray*)firstArray withArray:(NSMutableArray*)secondArray {
+	
+	if(!firstArray || !secondArray || [firstArray count] == 0 || [secondArray count] == 0) {
+		return nil;
+	}
+	NSUInteger capacity = ([firstArray count] > [secondArray count]) ? [secondArray count] : [firstArray count];
+	NSMutableArray *returnArray = [NSMutableArray arrayWithCapacity:capacity];
+	
+	PSHistoryItem *firstArrayNewest = [firstArray objectAtIndex:0];
+	PSHistoryItem *secondArrayNewest = [secondArray objectAtIndex:0];
+	
+	if([firstArrayNewest isEqualToHistoryItem:secondArrayNewest]) {
+		DLog(@"\nhistoryArrays are now (?) equal");
+		return ([firstArray count] > [secondArray count]) ? secondArray : firstArray;
+	}
+	
+	switch([firstArrayNewest ageComparisonToHistoryItem:secondArrayNewest]) {
+		case PSHistoryItemOlder:
+			//firstArrayNewist is OLDER than secondArrayNewest
+			[returnArray addObject:secondArrayNewest];
+			[secondArray removeObjectAtIndex:0];
+			[returnArray addObjectsFromArray:[PSHistoryController synchronizeHistoryArray:firstArray withArray:secondArray]];
+			break;
+		case PSHistoryItemNewer:
+			[returnArray addObject:firstArrayNewest];
+			[firstArray removeObjectAtIndex:0];
+			[returnArray addObjectsFromArray:[PSHistoryController synchronizeHistoryArray:firstArray withArray:secondArray]];
+			break;
+		default:
+			//items aren't equal but equal age! so add them both as a tie-breaker...
+			DLog(@"tie-breaker!");
+			[returnArray addObject:firstArrayNewest];
+			[returnArray addObject:secondArrayNewest];
+			[firstArray removeObjectAtIndex:0];
+			[secondArray removeObjectAtIndex:0];
+			[returnArray addObjectsFromArray:[PSHistoryController synchronizeHistoryArray:firstArray withArray:secondArray]];
+			break;
+	}
+	
+	return returnArray;
+
+}
+
++ (void)synchronizeHistoryItemsFromCloud:(BOOL)initialSync {
+	
+	NSArray *cloudHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUbiquitousKeyValueStore defaultStore] arrayForKey:PSHistoryName]];
+	NSMutableArray *localHistory = [[[PSHistoryItem parseHistoryArrayArray:[[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName]] mutableCopy] autorelease];
+	NSMutableArray *cloudHistoryCopy = [[cloudHistory mutableCopy] autorelease];
+	
+	if([PSHistoryItem arraysAreEqual:cloudHistory secondArray:localHistory]) {
+		DLog(@"\ninitial arrays are equal, don't need to do anything! :)");
+		return;
+	}
+	
+	NSMutableArray *history;
+	
+	if(initialSync) {
+		[PSHistoryController initialSynchronizeWithCloud:cloudHistoryCopy withLocalHistory:localHistory];
+		return;
+	} else if(!cloudHistory || [cloudHistory count] == 0) {
+		// we have deleted the history in the cloud & so locally delete it as well
+		DLog(@"\ndeleting local history due to iCloud deletion");
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PSHistoryName];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHistoryChanged object:nil];
+		return;
+	} else if(!localHistory || [localHistory count] == 0) {
+		DLog(@"\nlocal history was blank, but we now need to update it from the changed iCloud version.");
+		history = cloudHistoryCopy;
+	} else {
+		history = [PSHistoryController synchronizeHistoryArray:cloudHistoryCopy withArray:localHistory];
+	}
+	
+	
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[history sortUsingDescriptors:sortDescriptors];
@@ -461,15 +601,23 @@
 	while([history count] >= PSHistoryMaxEntries) {
 		[history removeLastObject];
 	}
-	
+		
 	NSArray *combinedHistory = [PSHistoryItem arrayArrayFromHistoryItems:history];
 
 	[[NSUserDefaults standardUserDefaults] setObject: combinedHistory forKey: PSHistoryName];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHistoryChanged object:nil];
 	
+	if([PSHistoryItem arraysAreEqual:cloudHistory secondArray:history]) {
+		// if our resulting history is the same as what's in the cloud, don't update the cloud version!
+		DLog(@"\nOur new local history now equals the iCloud version, so don't re-update the cloud copy :P");
+		return;
+	}
+
 	// synchronize with iCloud as well, if available:
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
+		DLog(@"\nAfter our sync, we have a new history item & so we need to update the iCloud version as well...");
 		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
 		[kvStore setArray:combinedHistory forKey:PSHistoryName];
 	}

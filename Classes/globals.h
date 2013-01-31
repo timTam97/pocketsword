@@ -150,6 +150,7 @@ typedef enum {
 #define NotificationRedisplayPrimaryCommentary	@"NotificationRedisplayPrimaryCommentary"
 #define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
 #define NotificationBookmarksChanged			@"NotificationBookmarksChanged"
+#define NotificationHistoryChanged				@"NotificationHistoryChanged"
 
 #define NotificationToggleMultiList				@"NotificationToggleMultiList"
 #define NotificationToggleModuleList			@"NotificationToggleModuleList"

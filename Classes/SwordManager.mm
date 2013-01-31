@@ -486,7 +486,7 @@ static SwordManager *instance;
 		return nil;
     
 	SwordModule	*ret = [modules objectForKey:name];
-    if(ret == nil) {
+    if(!ret) {
         sword::SWModule *mod = [self getSWModuleWithName:name];
         if(mod) {
             NSString *type;
@@ -514,7 +514,7 @@ static SwordManager *instance;
             [dict setObject:ret forKey:name];
 			[ret release];
             self.modules = dict;
-        }        
+        }
     }
     
 	return ret;
