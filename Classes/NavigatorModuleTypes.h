@@ -9,9 +9,11 @@
 #import "PSModuleController.h"
 #import "NavigatorSources.h"
 
+@class NavigatorModuleLanguages;
+
 @interface NavigatorModuleTypes : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
-	IBOutlet id table;
-	IBOutlet id navigatorModuleLanguages;
+	IBOutlet UITableView *table;
+	IBOutlet NavigatorModuleLanguages *navigatorModuleLanguages;
 	NSArray *dataArray;
 	IBOutlet NavigatorSources *navigatorSources;
 

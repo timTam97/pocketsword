@@ -8,6 +8,8 @@
 
 #import "SwordInstallSource.h"
 
+@class NavigatorSources;
+
 @interface PSAddSourceViewController : UITableViewController <UITextFieldDelegate> {
 	UITextField *captionTextField;
 	UITextField *serverTextField;
@@ -17,7 +19,7 @@
 	
 	IBOutlet UINavigationItem *navBar;
 	IBOutlet UITableView *addSourceTableView;
-	IBOutlet id navSources;
+	IBOutlet NavigatorSources *navSources;
 }
 
 @property (nonatomic, retain) NSString *serverType;

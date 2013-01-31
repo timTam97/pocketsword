@@ -20,6 +20,8 @@
 #import "PSResizing.h"
 #import "PSLaunchViewController.h"
 
+@class ViewController;
+
 @interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate, PSLaunchDelegate> {
     IBOutlet UIWindow *window;
     IBOutlet UITabBarController *tabBarController;
@@ -29,7 +31,7 @@
 	NSURL *urlToOpen;
 	NSDictionary *launchedWithOptions;
 	//IBOutlet id moduleManager;
-	IBOutlet id viewController;
+	IBOutlet ViewController *viewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

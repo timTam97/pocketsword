@@ -12,6 +12,7 @@
 //#import "PSPreferencesFontTableViewController.h"
 #import "PSBasePreferencesController.h"
 
+@class PSPreferencesFontTableViewController;
 
 @interface PSPreferencesController : PSBasePreferencesController {
 	
@@ -19,7 +20,7 @@
 	//IBOutlet UITableView *preferencesTable;
 	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;
-	IBOutlet id fontTableViewController;
+	IBOutlet PSPreferencesFontTableViewController *fontTableViewController;
 	IBOutlet id moduleSelectorTableViewController;
 	
 	UILabel *fontSizeLabel;

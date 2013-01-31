@@ -126,9 +126,9 @@ NSTimer *refreshTimer;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[((NavigatorModuleLanguages*)navigatorModuleLanguages) setData:[dataArray objectAtIndex:indexPath.row]];
-	((NavigatorModuleLanguages*)navigatorModuleLanguages).title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
-	[((NavigatorModuleLanguages*)navigatorModuleLanguages) reloadTable];
+	[navigatorModuleLanguages setData:[dataArray objectAtIndex:indexPath.row]];
+	navigatorModuleLanguages.title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
+	[navigatorModuleLanguages reloadTable];
 	[self.navigationController pushViewController:navigatorModuleLanguages animated:YES];
 	
 }

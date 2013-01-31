@@ -11,7 +11,7 @@
 #import "NavigatorSources.h"
 
 @interface NavigatorLeafView : UIViewController <UINavigationBarDelegate> {
-	IBOutlet id detailsView;
+	IBOutlet UIWebView *detailsView;
 	IBOutlet NavigatorSources *navigatorSources;
 
 	// Status view

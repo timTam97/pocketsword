@@ -148,7 +148,7 @@
 		mod = [[moduleList objectAtIndex: (indexPath.row - 1)] name];
 	}
 
-	[(PSPreferencesController*)preferencesController performSelector:moduleChanged withObject: mod];
+	[preferencesController performSelector:moduleChanged withObject: mod];
 	[self.navigationController popViewControllerAnimated:YES];
 }
 

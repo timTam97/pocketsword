@@ -10,17 +10,18 @@
 #import "PSAddSourceViewController.h"
 
 @class NavigatorModuleTypes;
+@class iPhoneHTTPServerDelegate;
 
 @interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate> {
 
-	IBOutlet id table;
-	IBOutlet id refreshButton;
+	IBOutlet UITableView *table;
+	//IBOutlet id refreshButton;
 	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet NavigatorModuleTypes *navigatorModuleTypes;
 	IBOutlet UITabBarController *tabController;
 	IBOutlet PSAddSourceViewController *addSourceViewController;
-		
-	IBOutlet id manualInstallViewController;
+	
+	IBOutlet iPhoneHTTPServerDelegate *manualInstallViewController;
 	BOOL mmmMenuDisplayed;
 }
 

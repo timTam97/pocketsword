@@ -37,6 +37,8 @@
 #include <localemgr.h>
 #endif
 
+@class PSModuleSelectorController;
+
 typedef enum {
     RestoreScrollPosition = 1,
     RestoreVersePosition = 2,
@@ -84,7 +86,7 @@ typedef enum {
 	// MultiList
 	UITabBarController					*multiListController;
 
-	id									moduleSelectorViewController;
+	PSModuleSelectorController			*moduleSelectorViewController;
 	
 	// Dictionary tab
 	IBOutlet PSDictionaryViewController	*dictionaryViewController;

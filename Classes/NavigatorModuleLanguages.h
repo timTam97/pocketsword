@@ -7,10 +7,11 @@
 //
 
 #import "NavigatorSources.h"
+@class NavigatorModules;
 
 @interface NavigatorModuleLanguages : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
-	IBOutlet id table;
-	IBOutlet id navigatorModules;
+	IBOutlet UITableView *table;
+	IBOutlet NavigatorModules *navigatorModules;
 	PSModuleType *data;
 }
 

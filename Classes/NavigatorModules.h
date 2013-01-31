@@ -10,10 +10,11 @@
 #import "PSModuleController.h"
 #import "SwordModule.h"
 
+@class NavigatorLeafView;
 
 @interface NavigatorModules : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
-	IBOutlet id table;
-	IBOutlet id navigatorLeafView;
+	IBOutlet UITableView *table;
+	IBOutlet NavigatorLeafView *navigatorLeafView;
 	NSArray *dataArray;
 }
 

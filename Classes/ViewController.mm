@@ -486,13 +486,13 @@ bool ps_viewcontroller_initialized = false;
 		[moduleSelectorViewController setParentTabBarController:tabController];
 
 		if(swordModule) {
-			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = swordModule;
+			moduleSelectorViewController.moduleToView = swordModule;
 			[moduleSelectorViewController setListType: BibleTab];
 			if(iPad) {
 				[tabController presentModalViewController:modSelectorNavController animated:animated];
 			}
 		} else {
-			((PSModuleSelectorController*)moduleSelectorViewController).moduleToView = nil;
+			moduleSelectorViewController.moduleToView = nil;
 			[popoverController setContentViewController:modSelectorNavController];
 			//set the module selector to use the correct module type.
 			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {

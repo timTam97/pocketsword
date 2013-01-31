@@ -745,7 +745,7 @@
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case FONT_NAME_ROW :
-					((PSPreferencesFontTableViewController*)fontTableViewController).moduleName = nil;
+					fontTableViewController.moduleName = nil;
 					[self.navigationController pushViewController:fontTableViewController animated:YES];
 					break;
 			}

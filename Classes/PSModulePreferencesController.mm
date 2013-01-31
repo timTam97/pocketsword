@@ -504,7 +504,7 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section == DisplaySection && indexPath.row == FontNameRow) {
-		((PSPreferencesFontTableViewController*)fontTableViewController).moduleName = preferencesNavigationItem.title;
+		fontTableViewController.moduleName = preferencesNavigationItem.title;
 		//fontTableViewController.moduleName = preferencesNavigationItem.title;
 		[self presentModalViewController:fontTableViewController animated:YES];
 		//[self.tabBarController.moreNavigationController pushViewController:fontTableViewController animated:YES];

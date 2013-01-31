@@ -13,9 +13,10 @@ typedef enum {
 	MorphHebrew
 } ModuleFeatureRequired;
 
+@class PSPreferencesController;
 
 @interface PSPreferencesModuleSelectorTableViewController : UITableViewController {
-	IBOutlet id preferencesController;
+	IBOutlet PSPreferencesController *preferencesController;
 	IBOutlet UITableView *table;
 	
 	ModuleFeatureRequired tableType;

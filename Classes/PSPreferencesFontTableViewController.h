@@ -6,9 +6,10 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+@class PSBasePreferencesController;
 
 @interface PSPreferencesFontTableViewController : UITableViewController {
-	IBOutlet id preferencesController;
+	IBOutlet PSBasePreferencesController *preferencesController;
 	IBOutlet UITableView *table;
 	
 	NSString *moduleName;

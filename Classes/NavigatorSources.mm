@@ -100,8 +100,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	//[table reloadData];	// populate our table's data
-	//DLog(@"  (SINC)  ");
 	
 	if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
@@ -136,10 +134,8 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
-		//((UITableView*)table).sectionHeaderHeight = 40.5;
 		return NSLocalizedString(@"InstallManagerDisabled", @"");
 	} else {
-		//((UITableView*)table).sectionHeaderHeight = 80.0;
 		return NSLocalizedString(@"InstallManagerDownloadsHint", @"");
 	}
 }
@@ -192,42 +188,19 @@
 	}
 }
 
-/*- (void)navigationController:(UINavigationController *)navController willShowViewController:(UIViewController *)vController animated:(BOOL)animated {
-	if([vController.title isEqualToString:@"Sources"]) {
-		if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
-			[[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"")
-									   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil] show];
-		}
-		NSIndexPath *tableSelection = [table indexPathForSelectedRow];
-		[table deselectRowAtIndexPath:tableSelection animated:NO];
-		// to make the navigation faster, try to pre-load the mod.d .conf files...
-		//  unfortunately, this seems to cause a crash.  Removing this until the source of the crash is discovered...
-		//[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
-	}
-}*/
-
-
 //
 // UIAlertView delegate method
 //
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	//DLog(@"Clicked button %d", buttonIndex);
 	if (buttonIndex == 1) {
-		//DLog(@"alertView: didDismissWithButtonIndex:  %d", buttonIndex);
 		[[[PSModuleController defaultModuleController] swordInstallManager] setUserDisclainerConfirmed: YES];
 		[self addManualInstallButton];
 		[table reloadData];
-		//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		//NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
-		//[prefs setObject: @"YES" forKey: @"userDisclaimer"];
-		//[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
 		[[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"userDisclaimerAccepted"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	
-	[pool release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

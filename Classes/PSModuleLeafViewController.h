@@ -11,16 +11,18 @@
 #import "PSModulePreferencesController.h"
 #import "PSModuleUnlockViewController.h"
 
-@interface PSModuleLeafViewController : UIViewController {
-	IBOutlet UIWebView			*infoWebView;
-	IBOutlet UINavigationItem	*infoNavItem;
-	IBOutlet UINavigationBar	*infoNavBar;
-	IBOutlet UITabBarItem		*preferencesTabBarItem;
-	IBOutlet PSModulePreferencesController *prefController;
+@class PSModuleSelectorController;
 
-	IBOutlet UIBarButtonItem			*closeButton;
-	IBOutlet id moduleSelectorController;
-	IBOutlet PSModuleUnlockViewController *unlockViewController;
+@interface PSModuleLeafViewController : UIViewController {
+	IBOutlet UIWebView						*infoWebView;
+	IBOutlet UINavigationItem				*infoNavItem;
+	IBOutlet UINavigationBar				*infoNavBar;
+	IBOutlet UITabBarItem					*preferencesTabBarItem;
+	IBOutlet PSModulePreferencesController	*prefController;
+
+	IBOutlet UIBarButtonItem				*closeButton;
+	IBOutlet PSModuleSelectorController		*moduleSelectorController;
+	IBOutlet PSModuleUnlockViewController	*unlockViewController;
 	
 	BOOL trashModule, askToUnlock;
 }

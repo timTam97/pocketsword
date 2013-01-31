@@ -17,7 +17,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	//[table reloadData];	// populate our table's data
 	
 	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
 	[table deselectRowAtIndexPath:tableSelection animated:YES];
@@ -62,9 +61,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	[((NavigatorModules*)navigatorModules) setDataArray:[data.modules objectAtIndex:indexPath.row]];
-	((NavigatorModules*)navigatorModules).title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
-	[((NavigatorModules*)navigatorModules) reloadTable];
+	[navigatorModules setDataArray:[data.modules objectAtIndex:indexPath.row]];
+	navigatorModules.title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
+	[navigatorModules reloadTable];
 	[self.navigationController pushViewController:navigatorModules animated:YES];
 	
 }

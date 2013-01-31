@@ -175,8 +175,8 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[(PSBasePreferencesController*)preferencesController fontNameChanged:[fontStrings objectAtIndex:indexPath.row]];
-	[(PSBasePreferencesController*)preferencesController hideFontTableView];
+	[preferencesController fontNameChanged:[fontStrings objectAtIndex:indexPath.row]];
+	[preferencesController hideFontTableView];
 	//[self.navigationController popViewControllerAnimated:YES];
 }
 
