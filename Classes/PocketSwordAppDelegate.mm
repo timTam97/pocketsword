@@ -24,6 +24,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
+#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -78,8 +79,15 @@
     }
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	
+	[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
+#define TESTING YES
+#ifdef TESTING
+	NSLog(@"Testing, so using UDID");
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+#endif
+	
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
 		// register to observe notifications from the store
