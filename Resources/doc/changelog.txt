@@ -2,11 +2,12 @@
 New in v1.4.3
 - updated Greek Strong's dictionary
 - fixed VoiceOver bugs (please let us know if you find any more!)
-- updated libsword to latest svn
+- updated libsword to latest svn (r2779 for those curious!)
 - updated locales
 - updated Repositories listings
 - fix so Canonical Psalm titles appear correctly
 - moved history listings to iCloud so it will be in sync across all devices
+- fixed a couple of bugs in Module Maintainer Mode
 
 New in v1.4.2
 - Fixed glitches with the Downloads tab
