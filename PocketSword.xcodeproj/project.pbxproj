@@ -2277,7 +2277,6 @@
 			children = (
 				0528685113E012660044A388 /* code2000.ttf */,
 				0528684E13E00D300044A388 /* Padauk.ttf */,
-				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
 				056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */,
 				0550A0C310A8407C00363295 /* CharisSILR.ttf */,
@@ -2629,6 +2628,7 @@
 			isa = PBXGroup;
 			children = (
 				051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */,
+				E9A6CF9C0FF5508400399E78 /* Localizable.strings */,
 				0545E32710654A8500DD7F06 /* Source */,
 				29B97315FDCFA39411CA2CEA /* misc */,
 				0542F6C110BE75570088A721 /* externals */,

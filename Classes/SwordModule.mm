@@ -1112,7 +1112,20 @@
 				if(vpl) {
 					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
 				} else {
-					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span>\n", i, i, i, i, entryToAppend];
+					// if the verse starts with a blockquote or an indented line div, push the verse number to after that.
+					if([entryToAppend hasPrefix:@"<div class=\"indentedLineOfWidth-"]) {
+						// insert at i=35
+						NSMutableString *indentedString = [NSMutableString stringWithString:entryToAppend];
+						[indentedString insertString:[NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>", i, i, i] atIndex:35];
+						[verses appendFormat:@"<span id=\"vvv%d\">%@</span>\n", i, indentedString];
+					} else if([entryToAppend hasPrefix:@"<blockquote class=\"lg\">"]) {
+						// insert at i=23
+						NSMutableString *indentedString = [NSMutableString stringWithString:entryToAppend];
+						[indentedString insertString:[NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>", i, i, i] atIndex:23];
+						[verses appendFormat:@"<span id=\"vvv%d\">%@</span>\n", i, indentedString];
+					} else {
+						[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span>\n", i, i, i, i, entryToAppend];
+					}
 				}
 				if(appendParaMarker) {
 					[verses appendString:@"</p>"];

@@ -114,6 +114,7 @@ public:
 
 OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	inXRefNote    = false;
+	inLIndent        = false;
 	suspendLevel = 0;
 	tagStacks = new TagStacks();
 	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
@@ -272,13 +273,29 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			}
 		}
 
-		// <p> paragraph and <lg> linegroup tags
-		else if (!strcmp(tag.getName(), "p") || !strcmp(tag.getName(), "lg")) {
+		// <p> paragraph tags
+		else if (!strcmp(tag.getName(), "p")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {	// non-empty start tag
 				outText("<!P><br />", buf, u);
 			}
 			else if (tag.isEndTag()) {	// end tag
 				outText("<!/P><br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
+			}
+			else {					// empty paragraph break marker
+				outText("<!P><br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
+			}
+		}
+		
+		// nicc – <lg> linegroup tags
+		else if (!strcmp(tag.getName(), "lg")) {
+			if ((!tag.isEndTag()) && tag.getAttribute("sID")) {	// non-empty start tag
+				outText("<blockquote class=\"lg\">", buf, u);
+				userData->supressAdjacentWhitespace = true;
+			}
+			else if (tag.isEndTag() || tag.getAttribute("eID")) {	// end tag
+				outText("</blockquote>", buf, u);
 				userData->supressAdjacentWhitespace = true;
 			}
 			else {					// empty paragraph break marker
@@ -358,7 +375,12 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		else if (!strcmp(tag.getName(), "l")) {
 			// end line marker
 			if (tag.getAttribute("eID")) {
-				outText("<br />", buf, u);
+				if(u->inLIndent) {
+					outText("</div><br />", buf, u);
+					u->inLIndent = false;
+				} else {
+					outText("<br />", buf, u);
+				}
 			}
 			// <l/> without eID or sID
 			// Note: this is improper osis. This should be <lb/>
@@ -368,6 +390,25 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			// end of the line
 			else if (tag.isEndTag()) {
 				outText("<br />", buf, u);
+			}
+			// start tag, if we want to open a div
+			else if(tag.getAttribute("sID")) {
+				int indent = 0;
+				// could contain a level tag, which makes life easy!
+				if(tag.getAttribute("level")) {
+					indent = 2 * ((int)tag.getAttribute("level") - 1);
+				} else if(tag.getAttribute("type")) {
+					//time to go fishing for the appropriate value
+					if(!strcmp(tag.getAttribute("type"), "x-indent") || !strcmp(tag.getAttribute("type"), "x-secondary")) {
+						indent = 2;
+					} else if(!strcmp(tag.getAttribute("type"), "x-indent-2")) {
+						indent = 4;
+					} else if(!strcmp(tag.getAttribute("type"), "x-declares") || !strcmp(tag.getAttribute("type"), "x-psalm-doxology")) {
+						indent = 6;
+					}
+				}
+				u->inLIndent = true;
+				buf.appendFormatted("<div class=\"indentedLineOfWidth-%d\">", indent);
 			}
 		}
 

@@ -84,7 +84,7 @@
 	[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
 #define TESTING YES
 #ifdef TESTING
-	NSLog(@"Testing, so using UDID");
+	NSLog(@"Testing, so using UDID %@", [[UIDevice currentDevice] uniqueIdentifier]);
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
 	
