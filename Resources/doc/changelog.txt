@@ -1,6 +1,8 @@
 
 New in v1.4.3
 - updated Greek Strong's dictionary
+- adjusted text spacing for easier reading
+- Poetry is now properly formatted
 - fixed VoiceOver bugs (please let us know if you find any more!)
 - updated libsword to latest svn (r2779 for those curious!)
 - updated locales
