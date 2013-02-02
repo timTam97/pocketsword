@@ -973,99 +973,84 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
 	NSString *iPadPadding = @"";
 	NSString *lineHeight = @"1.4";
+	int normalPaddingStart = 3, largePaddingStart = 5;
+	int smallIndent = 3, mediumIndent = 2, largeIndent = 1;
 	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";
 		lineHeight = @"1.6";
+		normalPaddingStart = 5;
+		largePaddingStart = 7;
+		smallIndent = 5;
+		mediumIndent = 3;
+		largeIndent = 1;
 	}
 
-
-	//-webkit-user-select: none; needs to be added to the body CSS to disable copy&paste.
+	NSMutableString *returnString = [NSMutableString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+									 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n\
+									 \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\
+									 <html dir=\"ltr\" xmlns=\"http://www.w3.org/1999/xhtml\"\n\
+									 xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\
+									 xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n\
+									 xml:lang=\"en\" >\n\
+									 <head>\n\
+									 <meta name='viewport' content='width=device-width' />\n\
+									 <style type=\"text/css\">\n\
+									 html { -webkit-text-size-adjust: none; /* Never autoresize text */ }\n\
+									 body { color: %@; background-color: %@; font-size: %@pt; font-family: %@; line-height: %@; %@ }\n\"",
+											fontColor, backgroundColor,		 fontSize,		  fontName,		   lineHeight,	iPadPadding];
 	
-	return [NSString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-			<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n\
-			\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\
-			<html dir=\"ltr\" xmlns=\"http://www.w3.org/1999/xhtml\"\n\
-			xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\
-			xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n\
-			xml:lang=\"en\" >\n\
-			<head>\n\
-			<meta name='viewport' content='width=device-width' />\n\
-			<style type=\"text/css\">\n\
-			html {\n\
-				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
+	[returnString appendFormat:@"i.transChangeAdded { color: gray; }\n\
+	 a { color: %@; /* linkColour */ text-decoration: none; }\n\
+	 a.verse { font-size: 70%%; vertical-align: super; line-height: 130%%; color: %@; /* fontColour */ }\n\
+	 a.x { color: gray; font-size: small; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
+	 a.n { color: gray; font-size: small; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
+	 a.strongs { color: gray; text-decoration: none; vertical-align: super; font-size: 70%%; font-style: italic; }\n\
+	 a.morph { color: gray; text-decoration: none; vertical-align: super; font-size: 70%%; font-style: italic; }\n\
+	 span.WordOfChrist { color: #D03030; }\n\
+	 span.underline { border-bottom: 1px solid; }",
+	 linkColor,
+	 fontColor
+	 ];
+		
+	[returnString appendFormat:
+			@"blockquote.lg {\n\
+				margin: 0.5em 0em 0.5em 1em;\n\
 			}\n\
-			body {\n\
-				color: %@;\n\
-				background-color: %@;\n\
-				font-size: %@pt;\n\
-				font-family: %@;\n\
-				line-height: %@;\n\
-				%@\n\
+			div.indentedLineOfWidth-0 {\n\
+				display: inline-block;\n\
+				-webkit-padding-start: %dem;\n\
+				text-indent: -%dem;\n\
 			}\n\
-			i.transChangeAdded {\n\
-				color: gray;\n\
+			div.indentedLineOfWidth-2 {\n\
+				display: inline-block;\n\
+				-webkit-padding-start: %dem;\n\
+				text-indent: -%dem;\n\
 			}\n\
-			a {\n\
-				color: %@;\n\
-				text-decoration: none;\n\
+			div.indentedLineOfWidth-4 {\n\
+				display: inline-block;\n\
+				-webkit-padding-start: %dem;\n\
+				text-indent: -%dem;\n\
 			}\n\
-			a.verse {\n\
-				font-size: 70%%;\n\
-				vertical-align: super;\n\
-				line-height: 0%%;\n\
-				color: %@;\n\
-			}\n\
-			a.x {\n\
-				color: gray;\n\
-				font-size: small;\n\
-				vertical-align: super;\n\
-				line-height: 0%%;\n\
-				font-variant: small-caps;\n\
-			}\n\
-			a.n {\n\
-				color: gray;\n\
-				font-size: small;\n\
-				vertical-align: super;\n\
-				line-height: 0%%;\n\
-				font-variant: small-caps;\n\
-			}\n\
-			a.strongs {\n\
-				color: gray;\n\
-				text-decoration: none;\n\
-				vertical-align: super;\n\
-				font-size: 70%%;\n\
-				font-style: italic;\n\
-			}\n\
-			a.morph {\n\
-				color: gray;\n\
-				text-decoration: none;\n\
-				vertical-align: super;\n\
-				font-size: 70%%;\n\
-				font-style: italic;\n\
-			}\n\
-			span.WordOfChrist {\n\
-				color: #D03030;\n\
-			}\n\
-			span.underline {\n\
-				border-bottom: 1px solid;\n\
+			div.indentedLineOfWidth-6 {\n\
+				display: inline-block;\n\
+				-webkit-padding-start: %dem;\n\
+				text-indent: -%dem;\n\
 			}\n\
 			%@\n\
 			</style>\n\
 			%@\n\
 			<title>PocketSword</title>\n\
-			</head>\n\
-			<body>\n<div>%@</div>\n</body>\n</html>", 
-			fontColor,
-			backgroundColor, 
-			fontSize,
-			fontName,
-			lineHeight,
-			iPadPadding,
-			linkColor,
-			fontColor,
-			RUBY_CSS,
-			javascript,
+			</head>",
+			normalPaddingStart, smallIndent,
+			normalPaddingStart, mediumIndent,
+			normalPaddingStart, largeIndent,
+			largePaddingStart, largeIndent,
+			RUBY_CSS, javascript];
+
+	 [returnString appendFormat:@"<body>\n<div>%@</div>\n</body>\n</html>",
 			finalBody];
+	
+	return returnString;
 }
 
 + (BOOL)checkNetworkConnection {
