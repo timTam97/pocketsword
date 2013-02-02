@@ -1034,8 +1034,9 @@
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	//curKey->setIntros(YES);
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-	//sword::SWKey lastKey;
+	//curKey->setVerse(0);
 	
 	swModule->stripText();
 	NSMutableString *verses = [@"" mutableCopy];
@@ -1109,6 +1110,9 @@
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><br />" withString:@"<br /> <br />"];
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /><!P><br /><br />" withString:@"<br /> <br />"];
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><!P><br />" withString:@"<br /> <br />"];
+				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /></blockquote><br />" withString:@"<br /></blockquote>"];
+				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> </blockquote><br />" withString:@"<br /></blockquote>"];
+				
 				if(vpl) {
 					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
 				} else {
