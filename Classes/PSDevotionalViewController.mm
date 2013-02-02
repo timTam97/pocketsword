@@ -16,7 +16,7 @@
 
 @implementation PSDevotionalViewController
 
-@synthesize loaded;
+@synthesize loaded, currentDevotionalDate;
 
 - (IBAction)moduleButtonPressed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
@@ -50,11 +50,33 @@
 		
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDevotional) name:NotificationNightModeChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDevotionalTitle) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+	[popoverController release];
+	popoverController = nil;
+	[devotionalDatePickerViewController release];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+- (void)dealloc {
+	[devotionalDatePickerViewController release];
+    [super dealloc];
+}
+
+- (void)refreshDevotionalTitle {
+	[self setDevotionalDateTitle:devotionalDatePicker.date];
 }
 
 - (void)reloadDevotional {
 	if(loaded) {
 		[self loadDevotionalForDate:devotionalDatePicker.date];
+		[self setDevotionalDateTitle:devotionalDatePicker.date];
 	}
 }
 
@@ -337,22 +359,6 @@
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-	[popoverController release];
-	popoverController = nil;
-	[devotionalDatePickerViewController release];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
-- (void)dealloc {
-	[devotionalDatePickerViewController release];
-    [super dealloc];
 }
 
 

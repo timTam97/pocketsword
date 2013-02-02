@@ -16,6 +16,8 @@
 	IBOutlet UIView				*devotionalDatePickerView;
 	IBOutlet UIDatePicker		*devotionalDatePicker;
 	IBOutlet UIBarButtonItem	*todayButton;
+
+	NSDate *currentDevotionalDate;
 	
 	id popoverController;
 	BOOL loaded;
@@ -23,6 +25,7 @@
 }
 
 @property (readonly, nonatomic) BOOL loaded;
+@property (readwrite, retain) NSDate *currentDevotionalDate;
 
 - (void)loadNewDevotionalEntry;
 - (void)loadDevotionalForDate:(NSDate *)date;
