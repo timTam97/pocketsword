@@ -972,8 +972,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *fontSizeMinusOne = [NSString stringWithFormat:@"<font style=\"font-size: %dpt;line-height: 0%%;\">", (fs-2)];
 	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
 	NSString *iPadPadding = @"";
+	NSString *lineHeight = @"1.4";
 	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";
+		lineHeight = @"1.6";
 	}
 
 
@@ -997,7 +999,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 				background-color: %@;\n\
 				font-size: %@pt;\n\
 				font-family: %@;\n\
-				line-height: 130%%;\n\
+				line-height: %@;\n\
 				%@\n\
 			}\n\
 			i.transChangeAdded {\n\
@@ -1057,6 +1059,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			backgroundColor, 
 			fontSize,
 			fontName,
+			lineHeight,
 			iPadPadding,
 			linkColor,
 			fontColor,
