@@ -158,6 +158,8 @@ bool ps_viewcontroller_initialized = false;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapterAfterBookmarksChange) name:NotificationBookmarksChanged object:nil];
+
 		ps_viewcontroller_initialized = true;
 	}
 	
@@ -775,6 +777,12 @@ bool ps_viewcontroller_initialized = false;
 - (void)redisplayChapterWithDefaults {
 	NSString *ref = [PSModuleController getCurrentBibleRef];
 	[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
+}
+
+- (void)redisplayBibleChapterAfterBookmarksChange {
+	bibleTabController.refToShow = nil;
+	bibleTabController.jsToShow = nil;
+	[self redisplayChapter:BibleViewPoll restore:RestoreScrollPosition];
 }
 
 - (void)redisplayBibleChapter {

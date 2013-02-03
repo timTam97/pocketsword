@@ -16,9 +16,9 @@
 #import "utils.h"
 #import "SwordManager.h"
 #import "globals.h"
-//#import "MBPreferenceController.h"
 #import "PSModuleController.h"
 #import "PSLanguageCode.h"
+#import "PSBookmarks.h"
 
 @interface SwordModule (/* Private, class continuation */)
 /** private property */
@@ -1023,6 +1023,76 @@
 	return curKey->getVerseMax();
 }
 
+- (NSRange)findNextBlockElement:(NSString*)searchString range:(NSRange)range {
+	
+	NSRange currentStartRange = [searchString rangeOfString:@"<" options:0 range:range];
+	if(currentStartRange.location == NSNotFound) {
+		return currentStartRange;
+	}
+	
+	NSRange currentEndRange;
+	currentEndRange = [searchString rangeOfString:@">" options:0 range:NSMakeRange(currentStartRange.location, ([searchString length] - currentStartRange.location))];
+	if(currentEndRange.location == NSNotFound) {
+		ALog(@"\nERROR: could not find corresponding '>'");
+		return currentStartRange;
+	}
+	
+	if([searchString characterAtIndex:(currentEndRange.location-1)] == '/') {
+		// not a block element, simply an empty tag.
+		return [self findNextBlockElement:searchString range:NSMakeRange(currentEndRange.location, ([searchString length] - currentEndRange.location))];
+	}
+	
+	NSRange returnRange = NSMakeRange(currentStartRange.location, (currentEndRange.location + 1 - currentStartRange.location));
+	
+	//DLog(@"\nFound a tag: %@", [searchString substringWithRange:returnRange]);
+	
+	return returnRange;
+}
+
+- (NSString *)highlightVerse:(NSString *)verseHTML withClass:(NSString *)cssClass {
+	
+	NSString *spanOpen = [NSString stringWithFormat:@"<span style=\"background-color:%@;color:black;\">", cssClass];
+	static NSString *spanClose = @"</span>";
+	NSMutableString *currentVerse = [NSMutableString stringWithString:verseHTML];
+	
+	// go past initial block tags & then add <span class=\"<cssClass>\"> and increment blocksOpen;
+	// add </span> before any block opens or closes & then reopen the span after that.
+	// close the span at the end of the verse!
+	
+	NSRange currentBlockRange = [self findNextBlockElement:currentVerse range:NSMakeRange(0, [currentVerse length])];
+	if(currentBlockRange.location == NSNotFound) {
+		[currentVerse insertString:spanOpen atIndex:0];
+	} else if(currentBlockRange.location != 0) {
+		[currentVerse insertString:spanOpen atIndex:0];
+		currentBlockRange.location += [spanOpen length];
+	} else {
+		NSInteger testLoc = currentBlockRange.length;
+		NSRange testRange = [self findNextBlockElement:currentVerse range:NSMakeRange(testLoc, ([currentVerse length] - testLoc))];
+		while(testRange.location == (testLoc + 1)) {
+			// skip all consecutive blocks at start of the verse
+			testLoc += testRange.length;
+			testRange = [self findNextBlockElement:currentVerse range:NSMakeRange(testLoc, ([currentVerse length] - testLoc))];
+		}
+		[currentVerse insertString:spanOpen atIndex:testLoc];
+		NSInteger newStart = testLoc + [spanOpen length];
+		currentBlockRange = [self findNextBlockElement:currentVerse range:NSMakeRange(newStart, ([currentVerse length] - newStart))];
+	}
+	
+	while(currentBlockRange.location != NSNotFound) {
+		
+		[currentVerse insertString:spanClose atIndex:currentBlockRange.location];
+		currentBlockRange.location += [spanClose length];
+		NSInteger newStart = currentBlockRange.location + currentBlockRange.length;
+		[currentVerse insertString:spanOpen atIndex:newStart];
+		newStart += [spanOpen length];
+		currentBlockRange = [self findNextBlockElement:currentVerse range:NSMakeRange(newStart, ([currentVerse length] - newStart))];
+		
+	}
+	
+	[currentVerse insertString:spanClose atIndex:[currentVerse length]];
+	
+	return currentVerse;
+}
 
 // Grabs the text for a given chapter (e.g. "Gen 1")
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
@@ -1034,9 +1104,9 @@
 
 	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
-	//curKey->setIntros(YES);
+	curKey->setIntros(YES);
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-	//curKey->setVerse(0);
+	curKey->setVerse(0);
 	
 	swModule->stripText();
 	NSMutableString *verses = [@"" mutableCopy];
@@ -1049,7 +1119,7 @@
 	NSString *preverseHeading;
 	NSString *interverseHeading;
 	NSString *modType = [NSString stringWithUTF8String: swModule->getType()];
-	NSInteger i = 1;
+	NSInteger i = 0;
 	BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, self.name);
 	BOOL headings = GetBoolPrefForMod(DefaultsHeadingsPreference, self.name);
 	BOOL rawFile = [self isPersonalCommentary];
@@ -1094,45 +1164,32 @@
 			}
 			
 			if ([modType isEqualToString: SWMOD_CATEGORY_COMMENTARIES]) {
-				[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
+				if(i == 0) {
+					[verses appendString:thisEntry];
+				} else {
+					[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
+				}
 			} else {
 				NSString *entryToAppend = thisEntry;
 				// paragraphing can be annoying, as different module creators can do things differently!
-				if([entryToAppend hasPrefix:@"<!P><br />"]) {
-					[verses appendString:@"<p>"];
-					entryToAppend = [entryToAppend substringFromIndex:10];
-				}
-				BOOL appendParaMarker = NO;
-				if([entryToAppend hasSuffix:@"<!/P><br />"]) {
-					appendParaMarker = YES;
-					entryToAppend = [entryToAppend substringToIndex:([entryToAppend length] - 11)];
-				}
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><br />" withString:@"<br /> <br />"];
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /><!P><br /><br />" withString:@"<br /> <br />"];
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><!P><br />" withString:@"<br /> <br />"];
-				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /></blockquote><br />" withString:@"<br /></blockquote>"];
-				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> </blockquote><br />" withString:@"<br /></blockquote>"];
+				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"</blockquote><br />" withString:@"</blockquote>"];
 				
-				if(vpl) {
+				NSString *highlightColour = [PSBookmarks getHighlightRGBColourStringForBookAndChapterRef:chapter withVerse:i];
+				if(highlightColour) {
+					entryToAppend = [self highlightVerse:entryToAppend withClass:highlightColour];
+				}
+				
+				if(i == 0) {
+					if(![entryToAppend isEqualToString:@"<br />"]) {
+						[verses appendString:entryToAppend];
+					}
+				} else if(vpl) {
 					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
 				} else {
-					// if the verse starts with a blockquote or an indented line div, push the verse number to after that.
-					if([entryToAppend hasPrefix:@"<div class=\"indentedLineOfWidth-"]) {
-						// insert at i=35
-						NSMutableString *indentedString = [NSMutableString stringWithString:entryToAppend];
-						[indentedString insertString:[NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>", i, i, i] atIndex:35];
-						[verses appendFormat:@"<span id=\"vvv%d\">%@</span>\n", i, indentedString];
-					} else if([entryToAppend hasPrefix:@"<blockquote class=\"lg\">"]) {
-						// insert at i=23
-						NSMutableString *indentedString = [NSMutableString stringWithString:entryToAppend];
-						[indentedString insertString:[NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>", i, i, i] atIndex:23];
-						[verses appendFormat:@"<span id=\"vvv%d\">%@</span>\n", i, indentedString];
-					} else {
-						[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span>\n", i, i, i, i, entryToAppend];
-					}
-				}
-				if(appendParaMarker) {
-					[verses appendString:@"</p>"];
+					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, entryToAppend];
 				}
 			}
 		}
@@ -1282,6 +1339,7 @@
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];
 	}
 
+	curKey->setIntros(NO);
     [moduleLock unlock];
 	
 	return text;

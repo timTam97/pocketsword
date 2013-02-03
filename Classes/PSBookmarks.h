@@ -20,6 +20,7 @@
 + (PSBookmarkFolder*)getBookmarkFolderForFolderString:(NSString*)folderString;
 + (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;
 + (NSMutableArray *)getBookmarksForCurrentRef;
++ (NSString *)getHighlightRGBColourStringForBookAndChapterRef:(NSString*)bookAndChapterRef withVerse:(NSInteger)verse;
 
 + (BOOL)saveBookmarksToFile;
 + (void)importBookmarksFromV2;

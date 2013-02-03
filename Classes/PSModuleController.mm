@@ -973,18 +973,27 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
 	NSString *iPadPadding = @"";
 	NSString *lineHeight = @"1.4";
-	int normalPaddingStart = 3, largePaddingStart = 5;
-	int smallIndent = 3, mediumIndent = 2, largeIndent = 1;
+	//int normalPaddingStart = 3, largePaddingStart = 5;
+	int smallPadding = 3, mediumPadding = 4, largePadding = 5, hugePadding = 6;// was 3, 3, 3, 5.
+	int smallIndent = 3, mediumIndent = 3, largeIndent = 3, hugeIndent = 3;// was 3, 2, 1, 1
 	int lgMarginLeft = 1, lgMarginRight = 0;
+	NSString *lgVersePadding = @"left";
+	NSString *lgVersePaddingInt = @"1.6";
+	int lgVerseWidth = 1;
 	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";
 		lineHeight = @"1.6";
 		lgMarginLeft = 3;
-		normalPaddingStart = 5;
-		largePaddingStart = 7;
+		//normalPaddingStart = 5;
+		//largePaddingStart = 7;
+		smallPadding = mediumPadding = largePadding = 5;
+		hugePadding = 7;
 		smallIndent = 5;
 		mediumIndent = 3;
 		largeIndent = 1;
+		hugeIndent = 1;
+		lgVersePaddingInt = @"4";
+		lgVerseWidth = 3;
 	}
 	if(moduleName) {
 		// check if module is RTL or LTR
@@ -993,6 +1002,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			if([mod isRTL]) {
 				lgMarginRight = lgMarginLeft;
 				lgMarginLeft = 0;
+				lgVersePadding = @"right";
 			}
 		}
 	}
@@ -1028,23 +1038,27 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			@"blockquote.lg {\n\
 				margin: 0.5em %dem 0.5em %dem;\n\
 			}\n\
+			blockquote.lg > a.verse {\n\
+				position: relative;\n\
+				float: left;\n\
+				%@: -%@em;\n\
+				width: %dem;\n\
+				text-align: center;\n\
+				line-height: inherit;\n\
+			}\n\
 			div.indentedLineOfWidth-0 {\n\
-				display: inline-block;\n\
 				-webkit-padding-start: %dem;\n\
 				text-indent: -%dem;\n\
 			}\n\
 			div.indentedLineOfWidth-2 {\n\
-				display: inline-block;\n\
 				-webkit-padding-start: %dem;\n\
 				text-indent: -%dem;\n\
 			}\n\
 			div.indentedLineOfWidth-4 {\n\
-				display: inline-block;\n\
 				-webkit-padding-start: %dem;\n\
 				text-indent: -%dem;\n\
 			}\n\
 			div.indentedLineOfWidth-6 {\n\
-				display: inline-block;\n\
 				-webkit-padding-start: %dem;\n\
 				text-indent: -%dem;\n\
 			}\n\
@@ -1054,10 +1068,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			<title>PocketSword</title>\n\
 			</head>",
 			lgMarginRight, lgMarginLeft,
-			normalPaddingStart, smallIndent,
-			normalPaddingStart, mediumIndent,
-			normalPaddingStart, largeIndent,
-			largePaddingStart, largeIndent,
+			lgVersePadding, lgVersePaddingInt, lgVerseWidth,
+			smallPadding, smallIndent,
+			mediumPadding, mediumIndent,
+			largePadding, largeIndent,
+			hugePadding, hugeIndent,
 			RUBY_CSS, javascript];
 
 	 [returnString appendFormat:@"<body>\n<div>%@</div>\n</body>\n</html>",

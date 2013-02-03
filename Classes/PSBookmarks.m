@@ -87,6 +87,10 @@ static PSBookmarks *psBookmarks;
 	return parentFolder;
 }
 
++ (NSString *)getHighlightRGBColourStringForBookAndChapterRef:(NSString*)bookAndChapterRef withVerse:(NSInteger)verse {
+	return [[PSBookmarks defaultBookmarks] getHighlightRGBColourStringForBookAndChapterRef:bookAndChapterRef withVerse:[NSString stringWithFormat:@"%d", verse]];
+}
+
 + (NSMutableArray *)getBookmarksForCurrentRef {
 	NSString *currentRef = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
 	return [PSBookmarks getBookmarksForBookAndChapterRef:currentRef];

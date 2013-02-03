@@ -126,31 +126,45 @@
 	return ret;
 }
 
+- (NSString *)getHighlightRGBColourStringForBookAndChapterRef:(NSString*)bookAndChapterRef withVerse:(NSString *)verse {
+	NSArray *possibleBookmarks = [self getBookmarksForBookAndChapterRef:bookAndChapterRef];
+	if(possibleBookmarks && [possibleBookmarks count] > 0) {
+		for(PSBookmark *bookmark in possibleBookmarks) {
+			if(bookmark.rgbHexString) {
+				NSString *v = [[bookmark.ref componentsSeparatedByString:@":"] objectAtIndex: 1];
+				if([v isEqualToString:verse]) {
+					//return bookmark.rgbHexString;
+					return [PSBookmarkFolder rgbStringFromHexString:bookmark.rgbHexString];
+				}
+				//NSString *jsFunction = [NSString stringWithFormat:@"PS_HighlightVerseWithHexColour('%@','%@')", verse, [PSBookmarkFolder rgbStringFromHexString:bookmark.rgbHexString]];
+			}
+		}
+	}
+	return nil;
+}
+
 - (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef {
+	
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:1];
-//	NSString *searchString = [NSString stringWithFormat:@"%@:", bookAndChapterRef];
 	for(PSBookmarkObject *bookmarkObject in self.children) {
 		if([bookmarkObject isMemberOfClass:[PSBookmark class]]) {
-			//tis a bookmark
+			// tis a bookmark
 			NSRange colonLocation = [((PSBookmark*)bookmarkObject).ref rangeOfString:@":"];
 			if(colonLocation.location != NSNotFound) {
 				NSString *bookmarkBookAndChapterRef = [((PSBookmark*)bookmarkObject).ref substringToIndex:colonLocation.location];
 				if([bookmarkBookAndChapterRef isEqualToString:bookAndChapterRef]) {
-					bookmarkObject.rgbHexString = self.rgbHexString;//tmp set the hex string.
+					// tmp set the colour hex string to the colour of the enclosing folder (us/self!).
+					bookmarkObject.rgbHexString = self.rgbHexString;
 					[ret addObject:bookmarkObject];
 				}
 			}
-			
-//			if([((PSBookmark*)bookmarkObject).ref rangeOfString:searchString].location != NSNotFound) {
-//				bookmarkObject.rgbHexString = self.rgbHexString;//tmp set the hex string.
-//				[ret addObject:bookmarkObject];
-//			}
 		} else {
-			//could either be a PSBookmarkFolder or the PSBookmarks
+			// or could either be a PSBookmarkFolder or the PSBookmarks
 			[ret addObjectsFromArray:[((PSBookmarkFolder*)bookmarkObject) getBookmarksForBookAndChapterRef:bookAndChapterRef]];
 		}
 	}
 	return ret;
+	
 }
 
 @end

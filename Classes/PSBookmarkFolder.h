@@ -24,6 +24,7 @@
 - (void)addChild:(PSBookmarkObject*)child;
 - (void)addChildren:(NSArray*)kids;
 - (NSArray*)folders;
+- (NSString *)getHighlightRGBColourStringForBookAndChapterRef:(NSString*)bookAndChapterRef withVerse:(NSString *)verse;
 - (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;
 
 @end

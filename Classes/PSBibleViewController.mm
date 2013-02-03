@@ -222,7 +222,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)wView {
 	
 	//highlight bookmarked verses
-	[self highlightBookmarks];
+	//[self highlightBookmarks];
 	[webView setupRefreshViews];
 	finishedLoading = YES;
 	

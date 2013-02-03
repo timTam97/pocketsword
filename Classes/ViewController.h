@@ -163,6 +163,7 @@ typedef enum {
 - (void)redisplayChapterWithDefaults;
 - (void)redisplayBibleChapter;
 - (void)redisplayCommentaryChapter;
+- (void)redisplayBibleChapterAfterBookmarksChange;
 
 - (void)displayBusyIndicator;
 - (void)hideBusyIndicator;
