@@ -376,7 +376,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			// end line marker
 			if (tag.getAttribute("eID")) {
 				if(u->inLIndent) {
-					outText("</div><br />", buf, u);
+					outText("</div>", buf, u);
 					u->inLIndent = false;
 				} else {
 					outText("<br />", buf, u);
