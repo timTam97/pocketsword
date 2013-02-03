@@ -975,14 +975,26 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *lineHeight = @"1.4";
 	int normalPaddingStart = 3, largePaddingStart = 5;
 	int smallIndent = 3, mediumIndent = 2, largeIndent = 1;
+	int lgMarginLeft = 1, lgMarginRight = 0;
 	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";
 		lineHeight = @"1.6";
+		lgMarginLeft = 3;
 		normalPaddingStart = 5;
 		largePaddingStart = 7;
 		smallIndent = 5;
 		mediumIndent = 3;
 		largeIndent = 1;
+	}
+	if(moduleName) {
+		// check if module is RTL or LTR
+		SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleName];
+		if(mod) {
+			if([mod isRTL]) {
+				lgMarginRight = lgMarginLeft;
+				lgMarginLeft = 0;
+			}
+		}
 	}
 
 	NSMutableString *returnString = [NSMutableString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -1014,7 +1026,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 	[returnString appendFormat:
 			@"blockquote.lg {\n\
-				margin: 0.5em 0em 0.5em 1em;\n\
+				margin: 0.5em %dem 0.5em %dem;\n\
 			}\n\
 			div.indentedLineOfWidth-0 {\n\
 				display: inline-block;\n\
@@ -1041,6 +1053,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			%@\n\
 			<title>PocketSword</title>\n\
 			</head>",
+			lgMarginRight, lgMarginLeft,
 			normalPaddingStart, smallIndent,
 			normalPaddingStart, mediumIndent,
 			normalPaddingStart, largeIndent,
