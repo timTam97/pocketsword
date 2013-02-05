@@ -1054,6 +1054,13 @@
 	NSMutableString *returnChapter = [NSMutableString stringWithString:chapterString];
 	BOOL inLG = NO;
 	NSRange currentTagRange = [self findNextBlockElement:returnChapter range:NSMakeRange(0, [returnChapter length])];
+	NSString *oneTag = nil;
+	NSString *twoTag = nil;
+	NSString *threeTag = nil;
+	NSString *fourTag = nil;
+	NSString *fiveTag = nil;
+	NSString *sixTag = nil;
+	NSInteger oneI = 0, twoI = 0, threeI = 0, fourI = 0, fiveI = 0, sixI = 0;
 	
 	while(currentTagRange.location != NSNotFound) {
 		// interested in: @"<blockquote class=\"lg\">"
@@ -1068,11 +1075,30 @@
 		} else if(!inLG && [currentTag hasPrefix:@"<div class=\"indentedLineOfWidth-"]) {
 			// TODO: if the previous tag is "</span>" & it closes an empty verse highlighting span, move the blockquote to just before it.
 			// TODO: if the previous tag is "</a>" from a verse number, move the blockquote to before the verse number!
-			
-			[returnChapter insertString:@"<blockquote class=\"lg\">" atIndex:currentTagRange.location];
+			if(oneTag && [oneTag isEqualToString:@"</span>"] && threeTag && [threeTag isEqualToString:@"</a>"] && sixTag && [sixTag hasPrefix:@"<a href=\"pocketsword:versemenu:"]) {
+				// highlighted verse && this is the start of the verse. insert the blockquote at the start of this verse.
+				[returnChapter insertString:@"<blockquote class=\"lg\">" atIndex:sixI];
+			} else if(oneTag && [oneTag isEqualToString:@"</a>"] && twoTag && [twoTag hasPrefix:@"<a href=\"pocketsword:versemenu:"]) {
+				// this is the start of the verse. insert the blockquote at the start of this verse.
+				[returnChapter insertString:@"<blockquote class=\"lg\">" atIndex:twoI];
+			} else {
+				[returnChapter insertString:@"<blockquote class=\"lg\">" atIndex:currentTagRange.location];
+			}
 			inLG = YES;
 			newStart += [@"<blockquote class=\"lg\">" length];
 		}
+		sixTag = fiveTag;
+		sixI = fiveI;
+		fiveTag = fourTag;
+		fiveI = fourI;
+		fourTag = threeTag;
+		fourI = threeI;
+		threeTag = twoTag;
+		threeI = twoI;
+		twoTag = oneTag;
+		twoI = oneI;
+		oneTag = currentTag;
+		oneI = currentTagRange.location;
 		currentTagRange = [self findNextBlockElement:returnChapter range:NSMakeRange(newStart, ([returnChapter length] - newStart))];
 	}
 	
@@ -1211,10 +1237,17 @@
 					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
 				} else {
 					
-					// if the end of verses is "\">\n", then check to see if the previous tag is a div of class "indentedLineOfWidth=X" & if so, need to move the verse a href to before that div.
 					BOOL insertedVerse = NO;
-					if([verses hasPrefix:@"\">\n"]) {
-						
+					if([verses hasSuffix:@"\">\n"]) {
+						// if the end of verses is "\">\n", then check to see if the previous tag is a div of class "indentedLineOfWidth=X" & if so, need to move the verse a href to before that div.
+						// this is found in the WEB module.
+						//   Don't think we'll bother fixing this. :P
+					}
+					
+					if([entryToAppend hasPrefix:@"<blockquote class=\"lg\">"]) {
+						// if this verse starts a blockquote, we want the verse number to be within the blockquote.
+						entryToAppend = [NSString stringWithFormat:@"<blockquote class=\"lg\"><a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, [entryToAppend substringFromIndex:23]];
+						insertedVerse = YES;
 					}
 					
 					if(!insertedVerse) {
