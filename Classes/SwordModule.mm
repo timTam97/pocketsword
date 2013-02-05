@@ -1066,6 +1066,9 @@
 		} else if([returnChapter compare:@"</blockquote>" options:NSAnchoredSearch range:currentTagRange] == NSOrderedSame) {
 			inLG = NO;
 		} else if(!inLG && [currentTag hasPrefix:@"<div class=\"indentedLineOfWidth-"]) {
+			// TODO: if the previous tag is "</span>" & it closes an empty verse highlighting span, move the blockquote to just before it.
+			// TODO: if the previous tag is "</a>" from a verse number, move the blockquote to before the verse number!
+			
 			[returnChapter insertString:@"<blockquote class=\"lg\">" atIndex:currentTagRange.location];
 			inLG = YES;
 			newStart += [@"<blockquote class=\"lg\">" length];
@@ -1078,7 +1081,7 @@
 
 - (NSString *)highlightVerse:(NSString *)verseHTML withClass:(NSString *)cssClass {
 	
-	NSString *spanOpen = [NSString stringWithFormat:@"<span style=\"background-color:%@;color:black;\">", cssClass];
+	NSString *spanOpen = [NSString stringWithFormat:@"<span class=\"highlightedVerse\" style=\"background-color:%@;color:black;\">", cssClass];
 	static NSString *spanClose = @"</span>";
 	NSMutableString *currentVerse = [NSMutableString stringWithString:verseHTML];
 	
@@ -1095,8 +1098,10 @@
 	} else {
 		NSInteger testLoc = currentBlockRange.length;
 		NSRange testRange = [self findNextBlockElement:currentVerse range:NSMakeRange(testLoc, ([currentVerse length] - testLoc))];
-		while(testRange.location == (testLoc + 1)) {
+		//while(testRange.location == (testLoc + 1)) {
+		while(testRange.location == (testLoc)) {
 			// skip all consecutive blocks at start of the verse
+			//testLoc += testRange.length + 1;
 			testLoc += testRange.length;
 			testRange = [self findNextBlockElement:currentVerse range:NSMakeRange(testLoc, ([currentVerse length] - testLoc))];
 		}
@@ -1198,20 +1203,31 @@
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"<br /> <!P><br /><!P><br />" withString:@"<br /> <br />"];
 				entryToAppend = [entryToAppend stringByReplacingOccurrencesOfString:@"</blockquote><br />" withString:@"</blockquote>"];
 				
+				if(i == 0) {
+					if([entryToAppend isEqualToString:@"<br />"]) {
+						entryToAppend = @"";
+					}
+				} else if(vpl) {
+					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
+				} else {
+					
+					// if the end of verses is "\">\n", then check to see if the previous tag is a div of class "indentedLineOfWidth=X" & if so, need to move the verse a href to before that div.
+					BOOL insertedVerse = NO;
+					if([verses hasPrefix:@"\">\n"]) {
+						
+					}
+					
+					if(!insertedVerse) {
+						entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, entryToAppend];
+					}
+				}
+				
 				NSString *highlightColour = [PSBookmarks getHighlightRGBColourStringForBookAndChapterRef:chapter withVerse:i];
 				if(highlightColour) {
 					entryToAppend = [self highlightVerse:entryToAppend withClass:highlightColour];
 				}
 				
-				if(i == 0) {
-					if(![entryToAppend isEqualToString:@"<br />"]) {
-						[verses appendString:entryToAppend];
-					}
-				} else if(vpl) {
-					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
-				} else {
-					[verses appendFormat: @"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, entryToAppend];
-				}
+				[verses appendString:entryToAppend];
 			}
 		}
 		lastEntry = thisEntry;

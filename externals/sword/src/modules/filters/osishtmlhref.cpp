@@ -403,7 +403,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				int indent = 0;
 				// could contain a level tag, which makes life easy!
 				if(tag.getAttribute("level")) {
-					indent = 2 * ((int)tag.getAttribute("level") - 1);
+					indent = 2 * (atoi(tag.getAttribute("level")) - 1);
 				} else if(tag.getAttribute("type")) {
 					//time to go fishing for the appropriate value
 					if(!strcmp(tag.getAttribute("type"), "x-indent") || !strcmp(tag.getAttribute("type"), "x-secondary")) {
