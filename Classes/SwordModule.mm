@@ -1049,6 +1049,33 @@
 	return returnRange;
 }
 
+- (NSMutableString *)hackChapterToAccommodateBrokenLG:(NSString *)chapterString {
+	
+	NSMutableString *returnChapter = [NSMutableString stringWithString:chapterString];
+	BOOL inLG = NO;
+	NSRange currentTagRange = [self findNextBlockElement:returnChapter range:NSMakeRange(0, [returnChapter length])];
+	
+	while(currentTagRange.location != NSNotFound) {
+		// interested in: @"<blockquote class=\"lg\">"
+		//		@"<div class=\"indentedLineOfWidth-"    <div class="indentedLineOfWidth
+		//		@"</blockquote>"
+		NSInteger newStart = currentTagRange.location + currentTagRange.length;
+		NSString *currentTag = [returnChapter substringWithRange:currentTagRange];
+		if([returnChapter compare:@"<blockquote class=\"lg\">" options:NSAnchoredSearch range:currentTagRange] == NSOrderedSame) {
+			inLG = YES;
+		} else if([returnChapter compare:@"</blockquote>" options:NSAnchoredSearch range:currentTagRange] == NSOrderedSame) {
+			inLG = NO;
+		} else if(!inLG && [currentTag hasPrefix:@"<div class=\"indentedLineOfWidth-"]) {
+			[returnChapter insertString:@"<blockquote class=\"lg\">" atIndex:currentTagRange.location];
+			inLG = YES;
+			newStart += [@"<blockquote class=\"lg\">" length];
+		}
+		currentTagRange = [self findNextBlockElement:returnChapter range:NSMakeRange(newStart, ([returnChapter length] - newStart))];
+	}
+	
+	return returnChapter;
+}
+
 - (NSString *)highlightVerse:(NSString *)verseHTML withClass:(NSString *)cssClass {
 	
 	NSString *spanOpen = [NSString stringWithFormat:@"<span style=\"background-color:%@;color:black;\">", cssClass];
@@ -1098,21 +1125,17 @@
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
 {
     [moduleLock lock];
-	BOOL printf = NO; //[[self typeString] isEqualToString:SWMOD_CATEGORY_BIBLES];
 
 	[self setPreferences];
 
-	if(printf) NSLog(@"SwordModule::getChapter:%@", chapter);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setIntros(YES);
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	curKey->setVerse(0);
 	
 	swModule->stripText();
-	NSMutableString *verses = [@"" mutableCopy];
+	NSMutableString *verses = [NSMutableString stringWithString:@""];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
-	//if(printf) NSLog(@"ch = %@", ch);
 	NSString *ref = [NSString stringWithString: ch];
 	NSString *thisEntry = @"";
 	NSString *lastEntry = @"";
@@ -1126,8 +1149,7 @@
 	
 	// Grab till the end of the chapter
 	do {
-		//lastKey = *swModule->getKey();
-		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->renderText()];
+		thisEntry = (rawFile) ? [NSString stringWithUTF8String: swModule->getRawEntry()] : [NSString stringWithUTF8String: swModule->renderText(0, -1, true)];
 		//replace *X and *N with simply X and N for xrefs and footnotes
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 		thisEntry = [thisEntry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
@@ -1136,7 +1158,6 @@
 			thisEntry = [thisEntry substringFromIndex:nonWhitespaceRange.location];
 		}
 		
-		//if(printf) NSLog(@"thisEntry (%d) = %@", i, thisEntry);
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
 
 			NSString  *canonicalHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["0"]["canonical"].c_str()];
@@ -1195,14 +1216,19 @@
 		}
 		lastEntry = thisEntry;
 		(*swModule->getKey())++;
-		//lastKey++;
 		swModule->stripText();
 		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-		//if(printf) NSLog(@"getKeyText() = %@", [NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding]);
-		//if(printf) NSLog(@"ref = %@", ref);
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->getKey()->popError() != KEYERR_OUTOFBOUNDS));
-
+	
+	if([verses rangeOfString:@"<div class=\"indentedLineOfWidth-"].location != NSNotFound) {
+		verses = [self hackChapterToAccommodateBrokenLG:verses];
+	}
+	
+	if([verses rangeOfString:@"<blockquote class=\"lg\">"].location != NSNotFound && [verses rangeOfString:@"</blockquote>"].location == NSNotFound) {
+		[verses appendString:@"</blockquote>"];
+	}
+	
 	if([verses isEqualToString:@""]) {
 		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module.")];
 	}
@@ -1219,11 +1245,7 @@
 //			}
 //		}
 //	}
-	
-	
-	
-	if(printf) NSLog(@"verses:\n%@", verses);
-	
+		
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);// Set the key back to what we had it at
 	
 	// add JS for navigating through the chapter.
@@ -1334,7 +1356,6 @@
 	
 	
 	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name];
-	[verses release];
 	if (swModule->getDirection() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];
 	}

@@ -114,7 +114,7 @@ public:
 
 OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	inXRefNote    = false;
-	inLIndent        = false;
+//	inLG        = false;
 	suspendLevel = 0;
 	tagStacks = new TagStacks();
 	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
@@ -277,6 +277,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		else if (!strcmp(tag.getName(), "p")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {	// non-empty start tag
 				outText("<!P><br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
 			}
 			else if (tag.isEndTag()) {	// end tag
 				outText("<!/P><br />", buf, u);
@@ -288,22 +289,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			}
 		}
 		
-		// nicc – <lg> linegroup tags
-		else if (!strcmp(tag.getName(), "lg")) {
-			if ((!tag.isEndTag()) && tag.getAttribute("sID")) {	// non-empty start tag
-				outText("<blockquote class=\"lg\">", buf, u);
-				userData->supressAdjacentWhitespace = true;
-			}
-			else if (tag.isEndTag() || tag.getAttribute("eID")) {	// end tag
-				outText("</blockquote>", buf, u);
-				userData->supressAdjacentWhitespace = true;
-			}
-			else {					// empty paragraph break marker
-				outText("<!P><br />", buf, u);
-				userData->supressAdjacentWhitespace = true;
-			}
-		}
-
 		// Milestoned paragraphs, created by osis2mod
 		// <div type="paragraph" sID.../>
 		// <div type="paragraph" eID.../>
@@ -311,6 +296,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			// <div type="paragraph"  sID... />
 			if (tag.getAttribute("sID")) {	// non-empty start tag
 				outText("<!P><br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
 			}
 			// <div type="paragraph"  eID... />
 			else if (tag.getAttribute("eID")) {
@@ -371,28 +357,49 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			}
 		}
 
+		// nicc – <lg> linegroup tags
+		else if (!strcmp(tag.getName(), "lg")) {
+			if ((!tag.isEndTag()) && tag.getAttribute("sID")) {	// non-empty start tag
+				outText("<blockquote class=\"lg\">", buf, u);
+				userData->supressAdjacentWhitespace = true;
+//				u->inLG = true;
+			}
+			else if (tag.isEndTag() || tag.getAttribute("eID")) {	// end tag
+				outText("</blockquote>", buf, u);
+				userData->supressAdjacentWhitespace = true;
+//				u->inLG = false;
+			}
+			else {					// empty paragraph break marker
+				outText("<!P><br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
+			}
+		}
+		
 		// <l> poetry, etc
 		else if (!strcmp(tag.getName(), "l")) {
 			// end line marker
 			if (tag.getAttribute("eID")) {
-				if(u->inLIndent) {
-					outText("</div>", buf, u);
-					u->inLIndent = false;
-				} else {
-					outText("<br />", buf, u);
-				}
+				outText("</div>", buf, u);
+				userData->supressAdjacentWhitespace = true;
 			}
 			// <l/> without eID or sID
 			// Note: this is improper osis. This should be <lb/>
 			else if (tag.isEmpty() && !tag.getAttribute("sID")) {
 				outText("<br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
 			}
 			// end of the line
 			else if (tag.isEndTag()) {
 				outText("<br />", buf, u);
+				userData->supressAdjacentWhitespace = true;
 			}
 			// start tag, if we want to open a div
 			else if(tag.getAttribute("sID")) {
+//				if(!u->inLG) {
+//					// Note: this is improper OSIS, but is in v1.0 of the ESV, so hack to accommodate it.
+//					outText("<blockquote class=\"lg\">", buf, u);
+//					u->inLG = true;
+//				}
 				int indent = 0;
 				// could contain a level tag, which makes life easy!
 				if(tag.getAttribute("level")) {
@@ -407,8 +414,8 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 						indent = 6;
 					}
 				}
-				u->inLIndent = true;
 				buf.appendFormatted("<div class=\"indentedLineOfWidth-%d\">", indent);
+				userData->supressAdjacentWhitespace = true;
 			}
 		}
 
@@ -429,9 +436,11 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				userData->supressAdjacentWhitespace = true;
 			}
 			else if (!strcmp(tag.getAttribute("type"),"x-p"))  {
-				if (tag.getAttribute("marker"))
+				if (tag.getAttribute("marker")) {
 					outText(tag.getAttribute("marker"), buf, u);
-				else outText("<!P>", buf, u);
+				} else {
+					outText("<!P>", buf, u);
+				}
 			}
 			else if (!strcmp(tag.getAttribute("type"), "cQuote")) {
 				const char *tmp = tag.getAttribute("marker");
