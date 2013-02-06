@@ -54,10 +54,11 @@
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 			</object>
 			<object class="IBUIWindow" id="380026005">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">1316</int>
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{768, 1024}</string>
+				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor" id="544662931">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -1080,52 +1081,6 @@
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 				<bool key="IBUIHorizontal">NO</bool>
 			</object>
-			<object class="IBUIViewController" id="728915025">
-				<object class="IBUIView" key="IBUIView" id="975877878">
-					<nil key="NSNextResponder"/>
-					<int key="NSvFlags">274</int>
-					<array class="NSMutableArray" key="NSSubviews">
-						<object class="IBUIImageView" id="411431064">
-							<reference key="NSNextResponder" ref="975877878"/>
-							<int key="NSvFlags">274</int>
-							<string key="NSFrameSize">{768, 1035}</string>
-							<reference key="NSSuperview" ref="975877878"/>
-							<reference key="NSNextKeyView" ref="217762989"/>
-							<object class="NSColor" key="IBUIBackgroundColor">
-								<int key="NSColorSpace">1</int>
-								<bytes key="NSRGB">MC40MDAwMDAwMDYgMC40MDAwMDAwMDYgMC40MDAwMDAwMDYAA</bytes>
-							</object>
-							<bool key="IBUIUserInteractionEnabled">NO</bool>
-							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-							<object class="NSCustomResource" key="IBUIImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">Default-Portrait~ipad.png</string>
-							</object>
-						</object>
-						<object class="IBUIActivityIndicatorView" id="217762989">
-							<reference key="NSNextResponder" ref="975877878"/>
-							<int key="NSvFlags">301</int>
-							<string key="NSFrame">{{366, 499}, {37, 37}}</string>
-							<reference key="NSSuperview" ref="975877878"/>
-							<bool key="IBUIOpaque">NO</bool>
-							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-							<bool key="IBUIHidesWhenStopped">NO</bool>
-							<bool key="IBUIAnimating">YES</bool>
-							<int key="IBUIStyle">0</int>
-						</object>
-					</array>
-					<string key="NSFrameSize">{768, 1024}</string>
-					<reference key="NSNextKeyView" ref="411431064"/>
-					<reference key="IBUIBackgroundColor" ref="183709399"/>
-					<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-				</object>
-				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
-					<int key="IBUIInterfaceOrientation">1</int>
-					<int key="interfaceOrientation">1</int>
-				</object>
-				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-				<bool key="IBUIHorizontal">NO</bool>
-			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
@@ -1176,14 +1131,6 @@
 						<reference key="destination" ref="44889390"/>
 					</object>
 					<int key="connectionID">1340</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">launchViewController</string>
-						<reference key="source" ref="664661524"/>
-						<reference key="destination" ref="728915025"/>
-					</object>
-					<int key="connectionID">1382</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1885,30 +1832,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="728915025"/>
-						<reference key="destination" ref="664661524"/>
-					</object>
-					<int key="connectionID">1374</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">activityIndicator</string>
-						<reference key="source" ref="728915025"/>
-						<reference key="destination" ref="217762989"/>
-					</object>
-					<int key="connectionID">1381</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">launchImageView</string>
-						<reference key="source" ref="728915025"/>
-						<reference key="destination" ref="411431064"/>
-					</object>
-					<int key="connectionID">1464</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">tabController</string>
 						<reference key="source" ref="469737588"/>
 						<reference key="destination" ref="1034742383"/>
@@ -2363,34 +2286,6 @@
 						<reference key="parent" ref="402845121"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">1373</int>
-						<reference key="object" ref="728915025"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="975877878"/>
-						</array>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">Launch View Controller</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1378</int>
-						<reference key="object" ref="975877878"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="411431064"/>
-							<reference ref="217762989"/>
-						</array>
-						<reference key="parent" ref="728915025"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1379</int>
-						<reference key="object" ref="411431064"/>
-						<reference key="parent" ref="975877878"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1380</int>
-						<reference key="object" ref="217762989"/>
-						<reference key="parent" ref="975877878"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">1400</int>
 						<reference key="object" ref="889931611"/>
 						<array class="NSMutableArray" key="children">
@@ -2635,11 +2530,6 @@
 				<string key="1245.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="126.CustomClassName">ViewController</string>
 				<string key="126.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1373.CustomClassName">PSLaunchViewController</string>
-				<string key="1373.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1378.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1379.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="1380.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1400.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1402.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1404.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -2766,7 +2656,6 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="About.png">{40, 30}</string>
 			<string key="Daily-Devotional.png">{30, 30}</string>
-			<string key="Default-Portrait~ipad.png">{768, 1004}</string>
 			<string key="back-white.png">{13, 15}</string>
 			<string key="bible.png">{30, 30}</string>
 			<string key="commentary.png">{30, 30}</string>

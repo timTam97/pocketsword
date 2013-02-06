@@ -19,29 +19,66 @@
 
 @synthesize delegate;
 
-// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-/*
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization.
-    }
-    return self;
-}
-*/
-
-/*
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
+	UIImage *defaultImg;
+	CGRect aiFrame;
+	if([PSResizing iPad]) {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(UIDeviceOrientationIsLandscape(deviceOrientation)) {
+			defaultImg = [UIImage imageNamed:@"Default-Landscape~ipad.png"];
+			aiFrame = CGRectMake(494, 370, 37, 37);
+		} else {
+			defaultImg = [UIImage imageNamed:@"Default-Portrait~ipad.png"];
+			aiFrame = CGRectMake(366, 499, 37, 37);
+		}
+	} else {
+		int displayMultiplier = 1;
+		if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+			([UIScreen mainScreen].scale == 2.0)) {
+			// Retina display
+			displayMultiplier = 2;
+		} else {
+			// non-Retina display
+		}
+		CGRect screenRect = [[UIScreen mainScreen] bounds];
+		if(screenRect.size.height > 500) {
+			// 4 inch display.
+			defaultImg = [UIImage imageNamed:@"Default-568h.png"];
+		} else {
+			// 3.5 inch display.
+			defaultImg = [UIImage imageNamed:@"Default.png"];
+		}
+		int x=0, y=20, w=[defaultImg size].width, h=[defaultImg size].height;
+		CGImageRef imageRef = CGImageCreateWithImageInRect([defaultImg CGImage], CGRectMake(x, y*displayMultiplier, w*displayMultiplier, h*displayMultiplier));
+		defaultImg = [UIImage imageWithCGImage:imageRef];
+		CGImageRelease(imageRef);
+		aiFrame = CGRectMake(141, 388, 37, 37);
+	}
+	
+	UIImageView *launchImgView = [[UIImageView alloc] initWithImage:defaultImg];
+	if([PSResizing iPad]) {
+		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+			launchImgView.transform = CGAffineTransformIdentity;
+			launchImgView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
+			launchImgView.transform = CGAffineTransformIdentity;
+			launchImgView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
+			launchImgView.transform = CGAffineTransformIdentity;
+			launchImgView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+		}
+	}
+	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	activityInd.hidesWhenStopped = NO;
+	[launchImgView addSubview:activityInd];
+	activityInd.frame = aiFrame;
+	[activityInd startAnimating];
+	[activityInd release];
+	self.view = launchImgView;
+	[launchImgView release];
 }
-*/
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-*/
 
 + (void)resetPreferences {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -83,37 +120,19 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	//DLog(@"running...");
-    if([PSResizing iPad]) {
-		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(UIDeviceOrientationIsLandscape(deviceOrientation)) {
-			[launchImageView setImage:[UIImage imageNamed:@"Default-Landscape~ipad.png"]];
-		} else {
-			[launchImageView setImage:[UIImage imageNamed:@"Default-Portrait~ipad.png"]];
-		}
-		[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+//- (void)viewWillAppear:(BOOL)animated {
+//	[super viewWillAppear:animated];
+//}
 
-//		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-//		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//			[launchImageView setImage:[UIImage imageNamed:@"Default-Landscape~ipad.png"]];
-//		} else {
-//			[launchImageView setImage:[UIImage imageNamed:@"Default-Portrait~ipad.png"]];
-//		}
-	}
-}
+//- (void)viewWillDisappear:(BOOL)animated {
+//	//[activityInd stopAnimating];
+//	[super viewWillDisappear:animated];
+//}
 
-- (void)viewWillDisappear:(BOOL)animated {
-	[activityIndicator stopAnimating];
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-
-}
+//- (void)viewDidAppear:(BOOL)animated {
+//	[super viewDidAppear:animated];
+//
+//}
 
 - (void)startInitializingPocketSword {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -328,8 +347,7 @@
 
 	[[NSFileManager defaultManager] removeItemAtPath: DEFAULT_MMM_PATH error:NULL];//delete our normal tmp folder...
 
-	[(NSObject*)delegate performSelectorOnMainThread:@selector(finishedInitializingPocketSword) withObject:nil waitUntilDone:NO];
-	//[delegate finishedInitializingPocketSword];
+	[(NSObject*)delegate performSelectorOnMainThread:@selector(finishedInitializingPocketSword:) withObject:self waitUntilDone:NO];
 	
 	[pool release];
 }
@@ -338,6 +356,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return YES;
 	//return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	DLog(@"\nwe are about to rotate the launch view controller...");
+	[self loadView];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -82,11 +82,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
 	[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
-#define TESTING YES
-#ifdef TESTING
-	NSLog(@"Testing, so using UDID %@", [[UIDevice currentDevice] uniqueIdentifier]);
-    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-#endif
 	
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
@@ -104,28 +99,29 @@
 
 	self.launchedWithOptions = launchOptions;
 	    
-	// Add the tab bar controller's current view as a subview of the window
-    //[window addSubview:tabBarController.view];
-	
+	PSLaunchViewController *lVC = [[PSLaunchViewController alloc] init];
+	[lVC setDelegate:self];
+		
 	if([window respondsToSelector:@selector(rootViewController)]) {
-		window.rootViewController = launchViewController;
+		window.rootViewController = lVC;
 	} else {
-		[window addSubview:launchViewController.view];
+		[lVC loadView];
+		[window addSubview:lVC.view];
 	}
 	
-	[launchViewController performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
+	[lVC performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
 	
 	[self.window makeKeyAndVisible];
 	
 	return YES;
 }
 
-- (void)finishedInitializingPocketSword {
+- (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
 	//DLog(@"finishedInitializing, now to display the tab bar controller");
 	if([window respondsToSelector:@selector(rootViewController)]) {
 		window.rootViewController = tabBarController;
 	} else {
-		[launchViewController.view removeFromSuperview];
+		[lVC.view removeFromSuperview];
 		[window addSubview:tabBarController.view];
 	}
 	
@@ -145,6 +141,7 @@
 		}
 		self.launchedWithOptions = nil;
 	}
+	[lVC release];
 }
 
 /*

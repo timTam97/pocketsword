@@ -26,16 +26,12 @@
     IBOutlet UIWindow *window;
     IBOutlet UITabBarController *tabBarController;
 	
-	IBOutlet PSLaunchViewController *launchViewController;
-
 	NSURL *urlToOpen;
 	NSDictionary *launchedWithOptions;
-	//IBOutlet id moduleManager;
 	IBOutlet ViewController *viewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-//@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain) NSURL *urlToOpen;
 @property (nonatomic, retain) NSDictionary *launchedWithOptions;
 
