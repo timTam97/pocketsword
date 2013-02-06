@@ -50,6 +50,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDevotional) name:NotificationNightModeChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDevotionalTitle) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDevotionalTitle) name:UIApplicationSignificantTimeChangeNotification object:nil];
 }
 
 - (void)viewDidUnload {

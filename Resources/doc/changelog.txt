@@ -9,7 +9,8 @@ New in v1.4.3
 - updated Repositories listings
 - fix so Canonical Psalm titles appear correctly
 - moved history listings to iCloud so it will be in sync across all devices
-- fixed a couple of bugs in Module Maintainer Mode
+- fixed a couple of bugs in Module Maintainer Mode & Daily Devotionals
+- improved launch speed & decreased memory footprint
 
 New in v1.4.2
 - Fixed glitches with the Downloads tab
