@@ -16,7 +16,7 @@
 
 @implementation PSDevotionalViewController
 
-@synthesize loaded, currentDevotionalDate;
+@synthesize loaded, currentDevotionalDate, devDatePicker, devPickerView;
 
 - (IBAction)moduleButtonPressed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
@@ -27,9 +27,9 @@
     [super viewDidLoad];
 	loaded = NO;
 	redisplayDatePicker = NO;
+	self.currentDevotionalDate = [NSDate date];
 	
 	devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
-	todayButton.title = NSLocalizedString(@"TodayButtonTitle", @"");
 	
 	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 	if(!devoTitle)
@@ -40,7 +40,6 @@
 	}
 	if([PSResizing iPad]) {
 		[devotionalTitle setTitle:devoTitle];
-		[devotionalDatePickerViewController retain];//try to make our date picker never run away!
 	} else {
 		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 		UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
@@ -56,27 +55,27 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 	[popoverController release];
 	popoverController = nil;
-	[devotionalDatePickerViewController release];
+	self.devDatePicker = nil;
+	self.devPickerView = nil;
+	self.currentDevotionalDate = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
 - (void)dealloc {
-	[devotionalDatePickerViewController release];
     [super dealloc];
 }
 
 - (void)refreshDevotionalTitle {
-	[self setDevotionalDateTitle:devotionalDatePicker.date];
+	[self setDevotionalDateTitle:self.currentDevotionalDate];
 }
 
 - (void)reloadDevotional {
 	if(loaded) {
-		[self loadDevotionalForDate:devotionalDatePicker.date];
-		[self setDevotionalDateTitle:devotionalDatePicker.date];
+		[self loadDevotionalForDate:self.currentDevotionalDate];
+		[self setDevotionalDateTitle:self.currentDevotionalDate];
 	}
 }
 
@@ -95,8 +94,6 @@
 	NSRange foundComma = [dateTitle rangeOfString:@","];
 	NSRange foundSpace = [dateTitle rangeOfString:@" "];
 	if(foundComma.location != NSNotFound) {
-		//[dateFormatter setDateFormat:@"MMMM d"];
-		//dateTitle = [dateFormatter stringFromDate:newDate];
 		dateTitle = [dateTitle substringToIndex:foundComma.location];
 	} else if(foundSpace.location != NSNotFound && ([dateTitle length] > 6)) {
 		NSString *yearValue = [dateTitle substringFromIndex:([dateTitle length] - 5)];
@@ -111,12 +108,12 @@
 
 - (void)loadNewDevotionalEntry {
 	//read in what is set in the date picker and show that day's devo
-	[self loadDevotionalForDate:devotionalDatePicker.date];
-	[self setDevotionalDateTitle:devotionalDatePicker.date];
+	[self loadDevotionalForDate:self.currentDevotionalDate];
+	[self setDevotionalDateTitle:self.currentDevotionalDate];
 }
 
-- (IBAction)todayButtonPressed {
-	[devotionalDatePicker setDate:[NSDate date] animated:YES];
+- (void)todayButtonPressed {
+	[self.devDatePicker setDate:[NSDate date] animated:YES];
 }
 
 - (void)devotionalChanged:(id)object {
@@ -135,25 +132,27 @@
 	NSString *t = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
 	
 	self.navigationItem.rightBarButtonItem.title = t;
-	[self loadDevotionalForDate:devotionalDatePicker.date];
+	[self loadDevotionalForDate:self.currentDevotionalDate];
 	loaded = YES;
 }
 
-//- (void)popoverControllerDidDismissPopover:(UIPopoverController *)poverController {
 - (void)popoverControllerDidDismissPopover:(id)poverController {
+	self.currentDevotionalDate = [self.devDatePicker date];
 	[self loadNewDevotionalEntry];
 	[popoverController release];
 	popoverController = nil;
+	self.devDatePicker = nil;
+	self.devPickerView = nil;
 }
 
 - (void)displayPopover {
-	UIView *fromView = [self datePickerButton];
+	UIView *fromView = (UIView*)self.navigationItem.titleView;
 	CGRect fromRect = CGRectMake((fromView.frame.size.width/2.0f), fromView.frame.size.height, 1, 1);
 	[popoverController presentPopoverFromRect:fromRect inView:fromView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if([devotionalDatePickerView superview] && ![popoverController isPopoverVisible]) {
+	if(self.devPickerView && ![popoverController isPopoverVisible]) {
 		[self toggleDatePicker];
 		redisplayDatePicker = YES;
 	}
@@ -168,53 +167,89 @@
 		[self toggleDatePicker];
 	}
 }
-		 
-- (IBAction)toggleDatePicker {
+
+- (void)createPicker {
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 260)];
+	baseView.autoresizingMask = UIViewAutoresizingNone;
+	UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
+	datePicker.datePickerMode = UIDatePickerModeDate;
+	[datePicker setDate:self.currentDevotionalDate];
+	datePicker.autoresizingMask = UIViewAutoresizingNone;
+	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+	toolbar.barStyle = UIBarStyleBlack;
+	UIBarButtonItem *todayToolbarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"TodayButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(todayButtonPressed)];
+	UIBarButtonItem *spaceToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *doneToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(toggleDatePicker)];
+	//toolbarButtons = @[ todayToolbarButton, spaceToolbarButton, doneToolbarButton ];
+	NSArray *toolbarButtons = [NSArray arrayWithObjects:todayToolbarButton, spaceToolbarButton, doneToolbarButton, nil];
+	[todayToolbarButton release];
+	[spaceToolbarButton release];
+	[doneToolbarButton release];
+	toolbar.items = toolbarButtons;
+	
+	[baseView addSubview:datePicker];
+	[baseView addSubview:toolbar];
+	[toolbar release];
+	
+	// need to keep a reference to the UIDatePicker for when the today button is tapped.
+	//    or we bite the bullet and start using blocks & do it all here? :P
+	self.devDatePicker = datePicker;
+	[datePicker release];
+	
+	// need to keep a reference to the baseView to show/hide it.
+	self.devPickerView = baseView;
+	[baseView release];
+	
+}
+
+- (void)toggleDatePicker {
     BOOL iPad = [PSResizing iPad];
 	if(!loaded)
 		return;
-	if([devotionalDatePickerView superview] || [popoverController isPopoverVisible]) {
+	if(self.devPickerView || [popoverController isPopoverVisible]) {
+		self.currentDevotionalDate = [self.devDatePicker date];
         if(!iPad) {
-			[ViewController hideModal:devotionalDatePickerView withTiming:0.3];
+			[ViewController hideModal:self.devPickerView withTiming:0.3];
         } else {
             [popoverController dismissPopoverAnimated:YES];
 			[popoverController release];
 			popoverController = nil;
         }
+		self.devDatePicker = nil;
+		self.devPickerView = nil;
 		[self loadNewDevotionalEntry];
 	} else {
 		Class cls = NSClassFromString(@"UIPopoverController");
+		[self createPicker];
 		if(iPad && cls) {
-			popoverController = [[cls alloc] initWithContentViewController:devotionalDatePickerViewController];
+			UIViewController *dpVC = [[UIViewController alloc] init];
+			dpVC.view = self.devPickerView;
+			popoverController = [[cls alloc] initWithContentViewController:dpVC];
 			[popoverController setDelegate:self];
-			[popoverController setContentViewController:devotionalDatePickerViewController];
 			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
-			//[popoverController setPopoverContentSize:devotionalDatePickerViewController.view.frame.size];
 			[self displayPopover];
+			[dpVC release];
 		} else {
 			UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
 			if([UIApplication sharedApplication].statusBarHidden) {
-				interfaceOrientation = [[self tabBarController] interfaceOrientation];//(UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+				interfaceOrientation = [[self tabBarController] interfaceOrientation];
 			}
 			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+				self.devPickerView.transform = CGAffineTransformIdentity;
+				self.devPickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
 			} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+				self.devPickerView.transform = CGAffineTransformIdentity;
+				self.devPickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
 			} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
+				self.devPickerView.transform = CGAffineTransformIdentity;
 			} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-				devotionalDatePickerView.transform = CGAffineTransformIdentity;
-				devotionalDatePickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+				self.devPickerView.transform = CGAffineTransformIdentity;
+				self.devPickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 			}
-			[ViewController showModal:devotionalDatePickerView withTiming:0.3];
+			self.devDatePicker.frame = CGRectMake(0, 44, 320, 216);
+			[ViewController showModal:self.devPickerView withTiming:0.3];
 		}
 	}
-}
-
-- (UIView*)datePickerButton {
-	return (UIView*)self.navigationItem.titleView;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -234,16 +269,11 @@
 		self.navigationItem.titleView = titleButton;
 		[self setDevotionalDateTitle:[NSDate date]];
 		
-		devotionalDatePicker.timeZone = [NSTimeZone localTimeZone];
-		devotionalDatePicker.calendar = [NSCalendar currentCalendar];
-		[devotionalDatePicker setDate:[NSDate date] animated:NO];
-		[self loadDevotionalForDate:devotionalDatePicker.date];
+		self.currentDevotionalDate = [NSDate date];
+		[self loadDevotionalForDate:self.currentDevotionalDate];
 	} else {
-		[self setDevotionalDateTitle:devotionalDatePicker.date];
+		[self setDevotionalDateTitle:self.currentDevotionalDate];
 	}
-//	NSLog(@"pre.y = %d", devotionalWebView.frame.origin.y);
-//	devotionalWebView.frame = CGRectMake(0, 44, 320, 367);
-//	NSLog(@"post.y = %d", devotionalWebView.frame.origin.y);
 }
 
 - (void)loadDevotionalForDate:(NSDate *)date {
@@ -262,10 +292,8 @@
 		return;
 	}
 	SwordDictionary *devo = (SwordDictionary *)[defSwordManager moduleWithName:lastModule];
-	//NSString *devoHTMLString = [[devo entryForKey:dateKey] stringByAppendingString:@"<p>&nbsp;</p><p>&nbsp;</p>"];
 	NSString *devoHTMLString = [NSString stringWithFormat:@"<br/>%@<p>&nbsp;</p><p>&nbsp;</p>", [devo entryForKey:dateKey]];
 	devoHTMLString = [PSModuleController createInfoHTMLString:devoHTMLString usingModuleForPreferences:devo.name];
-	//devoHTMLString = [PSModuleController createHTMLString:devoHTMLString usingPreferences:YES withJS:@"" usingModuleForPreferences:devo.name];
 	devoHTMLString = [[devoHTMLString stringByReplacingOccurrencesOfString:@"<!P><br />" withString:@"<p>"] stringByReplacingOccurrencesOfString:@"<!/P><br />" withString:@"</p>"];
 	[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 	loaded = YES;
