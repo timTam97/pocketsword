@@ -978,7 +978,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	int smallIndent = 3, mediumIndent = 3, largeIndent = 3, hugeIndent = 3;// was 3, 2, 1, 1
 	int lgMarginLeft = 1, lgMarginRight = 0;
 	NSString *lgVersePadding = @"left";
-	NSString *lgVersePaddingInt = @"1.6";
+	NSString *lgVersePaddingInt = @"1.7";
 	int lgVerseWidth = 1;
 	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";

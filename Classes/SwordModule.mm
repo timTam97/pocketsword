@@ -1192,7 +1192,7 @@
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
 
 			NSString  *canonicalHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["0"]["canonical"].c_str()];
-			if(headings || [canonicalHeading isEqualToString:@"true"]) {
+			if(i != 0 && (headings || [canonicalHeading isEqualToString:@"true"])) {
 				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {

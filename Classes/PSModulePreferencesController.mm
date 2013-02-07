@@ -26,7 +26,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:preferencesNavigationBar mainView:preferencesTable useStatusBar:YES];
+//	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:preferencesNavigationBar mainView:preferencesTable useStatusBar:YES];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {

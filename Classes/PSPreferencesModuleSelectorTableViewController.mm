@@ -49,6 +49,8 @@
 			moduleChanged = @selector(morphGreekModuleChanged:);
 			[table reloadData];
 			break;
+		default:
+			break;
 //		case MorphHebrew:
 //			self.moduleList = [[SwordManager defaultManager] modulesForFeature: @"HebrewParse"];
 //			moduleChanged = @selector(strongsGreekModuleChanged:);
@@ -109,6 +111,8 @@
 			return NSLocalizedString(@"PreferencesHebrewStrongsLexiconTitle", @"Hebrew Strong's lexicon");
 		case MorphGreek:
 			return NSLocalizedString(@"PreferencesGreekMorphLexiconTitle", @"Greek Morphological lexicon");
+		case MorphHebrew:
+			return @"";
 	}
 	return @"";
 }
