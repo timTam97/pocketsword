@@ -162,7 +162,7 @@
 		// synchronize with iCloud as well, if available:
 		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 		if(cls) {
-			NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+			id kvStore = [cls defaultStore];
             [kvStore setArray:history forKey:PSHistoryName];
 		}
 	}
@@ -190,7 +190,7 @@
 		// synchronize with iCloud as well, if available:
 		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 		if(cls) {
-			NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+			id kvStore = [cls defaultStore];
             [kvStore removeObjectForKey:PSHistoryName];
 			NSMutableArray *history = [[NSMutableArray alloc] initWithObjects: nil];
 			[kvStore setArray:history forKey:PSHistoryName];
@@ -237,7 +237,7 @@
 	// synchronize with iCloud as well, if available:
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
-		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+		id kvStore = [cls defaultStore];
 		[kvStore setArray:history forKey:PSHistoryName];
 	}
 
@@ -490,7 +490,7 @@
 	// synchronize with iCloud as well, if available:
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
-		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+		id kvStore = [cls defaultStore];
 		[kvStore setArray:combinedHistory forKey:PSHistoryName];
 	}
 }
@@ -618,7 +618,7 @@
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls) {
 		DLog(@"\nAfter our sync, we have a new history item & so we need to update the iCloud version as well...");
-		NSUbiquitousKeyValueStore *kvStore = [NSUbiquitousKeyValueStore defaultStore];
+		id kvStore = [cls defaultStore];
 		[kvStore setArray:combinedHistory forKey:PSHistoryName];
 	}
 

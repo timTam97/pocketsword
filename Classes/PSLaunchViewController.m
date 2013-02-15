@@ -136,7 +136,7 @@
 
 - (void)startInitializingPocketSword {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	//DLog(@"start the Launch configuring...");
+	DLog(@"start the Launch configuring...");
 	PSModuleController *moduleManager = [PSModuleController defaultModuleController];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	

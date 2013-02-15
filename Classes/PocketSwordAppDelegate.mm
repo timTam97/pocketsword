@@ -24,7 +24,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
-#import "TestFlight.h"
+//#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -81,20 +81,24 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
-	[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
+	DLog(@"\nlaunched app, now to start our stuff...");
 	
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
-	if(cls) {
+	if(cls && NSUbiquitousKeyValueStoreDidChangeExternallyNotification) {
 		// register to observe notifications from the store
 		[[NSNotificationCenter defaultCenter] addObserver: self
 												 selector: @selector(storeDidChange:)
 													 name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
-												   object: [NSUbiquitousKeyValueStore defaultStore]];
+												   object: [cls defaultStore]];
 		
 		// get changes that might have happened while this
 		// instance of your app wasn't running
 		//[[NSUbiquitousKeyValueStore defaultStore] setString:@"testValue" forKey:@"testKey"];//dummy to get the pipes flowing!
 		//[[NSUbiquitousKeyValueStore defaultStore] synchronize];
+		
+		
+		// Also, only use TestFlight under iOS 5 or later (aka, when we have NSUbiquitousKeyValueStore)
+//		[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
 	}
 
 	self.launchedWithOptions = launchOptions;
@@ -117,7 +121,7 @@
 }
 
 - (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
-	//DLog(@"finishedInitializing, now to display the tab bar controller");
+	DLog(@"finishedInitializing, now to display the tab bar controller");
 	if([window respondsToSelector:@selector(rootViewController)]) {
 		window.rootViewController = tabBarController;
 	} else {
@@ -142,6 +146,7 @@
 		self.launchedWithOptions = nil;
 	}
 	[lVC release];
+	lVC = nil;
 }
 
 /*

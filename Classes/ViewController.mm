@@ -42,6 +42,8 @@ bool ps_viewcontroller_initialized = false;
 
 - (void)awakeFromNib {
 	[super awakeFromNib];
+	
+	DLog(@"\nare we dying somewhere here?");
 
 	if (!ps_viewcontroller_initialized) {
 		[self nightModeChanged];
@@ -68,9 +70,12 @@ bool ps_viewcontroller_initialized = false;
 		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
 		
 		//VoiceOver hints:
-		[self setVoiceOverForRefSegmentedControl];
-		bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
-		commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+		// only iOS 4 or later:
+		if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"4.0")) {
+			[self setVoiceOverForRefSegmentedControl];
+			bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+			commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+		}
 		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 		[bibleWebView loadHTMLString: black baseURL: nil];
@@ -124,11 +129,11 @@ bool ps_viewcontroller_initialized = false;
 		
 		tabController.customizableViewControllers = nil;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationBibleSwipeRight object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter:) name:NotificationCommentarySwipeRight object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationBibleSwipeRight object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationCommentarySwipeRight object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationBibleSwipeLeft object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter:) name:NotificationCommentarySwipeLeft object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter) name:NotificationBibleSwipeLeft object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter) name:NotificationCommentarySwipeLeft object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayChapterWithDefaults) name:NotificationResetBibleAndCommentaryView object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationRedisplayPrimaryBible object:nil];
@@ -163,6 +168,7 @@ bool ps_viewcontroller_initialized = false;
 		ps_viewcontroller_initialized = true;
 	}
 	
+	DLog(@"\nnope, not dying somewhere here...");
 }
 
 - (void)nightModeChanged {
@@ -246,6 +252,11 @@ bool ps_viewcontroller_initialized = false;
 }
 
 - (void)setVoiceOverForRefSegmentedControl {
+	// only iOS 4 or later:
+	if (SYSTEM_VERSION_LESS_THAN(@"4.0")) {
+		return;
+	}
+	
 	//VoiceOver support for the prev & next buttons in the Bible tab
 	[self _setVoiceOverForRefSegmentedControlSubviews:bibleSegmentedControl.subviews];
 	//VoiceOver support for the prev & next buttons in the commentary tab
@@ -286,14 +297,14 @@ bool ps_viewcontroller_initialized = false;
 	[commentarySegmentedControl setEnabled: enabled forSegmentAtIndex: 0];
 }
 
-- (IBAction)segmentedControlAction:(id)sender
+- (void)segmentedControlAction:(id)sender
 {
 	UISegmentedControl *segControl = sender;
 	switch (segControl.selectedSegmentIndex)
 	{
 		case 0:	// previous
 		{
-			[self prevChapter: sender];
+			[self prevChapter];
 			break;
 		}
 		case 1: // Ref
@@ -303,14 +314,14 @@ bool ps_viewcontroller_initialized = false;
 		}
 		case 2:	// next
 		{
-			[self nextChapter: sender];
+			[self nextChapter];
 			break;
 		}
 	}
 }
 
 // Loads the next chapter into the Web View
-- (IBAction)nextChapter:(id)sender {
+- (void)nextChapter {
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
 	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
 		return;
@@ -348,7 +359,7 @@ bool ps_viewcontroller_initialized = false;
 }
 
 // Loads the previous chapter into the Web View
-- (IBAction)prevChapter:(id)sender {
+- (void)prevChapter {
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
 	if ([currentRef isEqualToString: [PSModuleController getFirstRefAvailable]]) {
 		return;

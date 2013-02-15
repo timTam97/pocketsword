@@ -13,7 +13,7 @@
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
-		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; };
+		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0505FE8D12C9A55800A3C65B /* disabled-Footnotes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */; };
 		0505FE8E12C9A55800A3C65B /* disabled-Headings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7A12C9A55800A3C65B /* disabled-Headings@2x.png */; };
 		0505FE8F12C9A55800A3C65B /* disabled-Morph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7B12C9A55800A3C65B /* disabled-Morph@2x.png */; };
@@ -251,10 +251,9 @@
 		056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */; };
 		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */; };
 		056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
-		056CD38216BB6D0700AA0674 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD37E16BB6D0700AA0674 /* libTestFlight.a */; };
 		056CD38316BB6D0700AA0674 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 056CD37F16BB6D0700AA0674 /* README.md */; };
 		056CD38416BB6D0700AA0674 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 056CD38016BB6D0700AA0674 /* release_notes.md */; };
-		056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.dylib */; };
+		056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */; };
 		05717C9513F27B8000753423 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
@@ -275,6 +274,7 @@
 		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
 		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; };
 		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
+		05B7780E16CDF29E009E3F65 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD37E16BB6D0700AA0674 /* libTestFlight.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB3FD1147711B00984097 /* popup-top-bar.png */; };
 		05BCB42011477A9A00984097 /* popup-down-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB41F11477A9A00984097 /* popup-down-button.png */; };
 		05CBE8D1128A840000730CB8 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8CF128A840000730CB8 /* Icon@2x.png */; };
@@ -1467,6 +1467,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05B7780E16CDF29E009E3F65 /* libTestFlight.a in Frameworks */,
 				0562FD7C16BB8BCF003A8C70 /* libSystem.dylib in Frameworks */,
 				056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -1477,7 +1478,6 @@
 				05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */,
 				05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */,
 				050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */,
-				056CD38216BB6D0700AA0674 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3795,6 +3795,7 @@
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -3832,6 +3833,7 @@
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -3871,6 +3873,7 @@
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -3886,7 +3889,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "5748FB1D-18E8-4D52-AFCC-E50331F4B897";
+				PROVISIONING_PROFILE = "5F1D6538-B96D-4E52-916F-B26A90769254";
 				SDKROOT = iphoneos5.1;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

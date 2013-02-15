@@ -444,13 +444,13 @@ base path of the module installation
     NSMutableArray *ar = [NSMutableArray array];
     std::map<sword::SWModule *, int> modStats = swInstallMgr->getModuleStatus(*[baseMgr swManager], *[[is swordManager] swManager]);
     sword::SWModule *module;
-	int status;
+	int modStatus;
 	for(std::map<sword::SWModule *, int>::iterator it = modStats.begin(); it != modStats.end(); it++) {
 		module = it->first;
-		status = it->second;
+		modStatus = it->second;
         
         SwordModule *mod = [[SwordModule alloc] initWithSWModule:module];
-        [mod setStatus:status];
+        [mod setStatus:modStatus];
         [ar addObject:mod];
 		[mod release];
 	}

@@ -32,9 +32,9 @@
 	devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
 	
 	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
-	if(!devoTitle)
+	if(!devoTitle) {
 		devoTitle = NSLocalizedString(@"None", @"");
-	else {
+	} else {
 		if(![[PSModuleController defaultModuleController] primaryDevotional])
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
@@ -49,8 +49,10 @@
 		
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDevotional) name:NotificationNightModeChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDevotionalTitle) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDevotionalTitle) name:UIApplicationSignificantTimeChangeNotification object:nil];
+	if(UIApplicationWillEnterForegroundNotification) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDevotionalTitle) name:UIApplicationWillEnterForegroundNotification object:nil];
+	}
 }
 
 - (void)viewDidUnload {

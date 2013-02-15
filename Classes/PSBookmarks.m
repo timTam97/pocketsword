@@ -14,15 +14,23 @@
 
 @implementation PSBookmarks
 
-static PSBookmarks *psBookmarks;
+static PSBookmarks *psDefaultBookmarks;// = nil;
 /** the singleton instance */
 + (PSBookmarks *)defaultBookmarks {
-    if(psBookmarks == nil) {
-        psBookmarks = [[PSBookmarks alloc] init];
+	DLog(@"\nattempting access to our bookmarks...");
+    if(psDefaultBookmarks == nil) {
+		DLog(@"\nOur bookmarks object doesn't exist! :P");
+        psDefaultBookmarks = [[PSBookmarks alloc] initLocalBookmarks];
     }
-    
-	return psBookmarks;
+	return psDefaultBookmarks;
 }
+
+//+ (void)initialize {
+//	if (self == [PSBookmarks class]) {
+//		DLog(@"\ninitialize");
+//        psDefaultBookmarks = [[self alloc] initLocalBookmarks];
+//    }
+//}
 
 + (BOOL)addBookmarkObject:(PSBookmarkObject*)bookmark withFolderString:(NSString*)folderString {
 	BOOL ret = NO;
@@ -132,13 +140,11 @@ static PSBookmarks *psBookmarks;
 	}
 }
 
-- (void)loadBookmarksFromFile {
+- (void)loadBookmarksFromArray:(NSArray *)dataArray {
 	//DLog(@"\nBookmarks: loadBookmarksFromFile");
-    NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
-	NSArray *data = [NSArray arrayWithContentsOfFile:bookmarksPath];
 	NSMutableArray *kidsArray = [NSMutableArray arrayWithCapacity:2];
-	if(data) {
-		for(NSArray *child in data) {
+	if(dataArray) {
+		for(NSArray *child in dataArray) {
 			PSBookmarkObject *kid = [self parseArray:child];
 			[kidsArray addObject:kid];
 			[kid release];
@@ -150,16 +156,66 @@ static PSBookmarks *psBookmarks;
 	DLog(@"\n-- Bookmarks: finished loadBookmarksFromFile");
 }
 
-- (id)init {
+- (id)initLocalBookmarks {
 	self = [super initWithName:nil dateAdded:nil dateLastAccessed:nil rgbHexString:nil children:nil];
 	if(self) {
 		self.name = NSLocalizedString(@"BookmarksTitle", @"");
-		[self loadBookmarksFromFile];
+		NSString *bookmarksPath = [DEFAULT_BOOKMARKS_PATH stringByAppendingPathComponent:@"PSBookmarks.plist"];
+		NSArray *dataArray = [NSArray arrayWithContentsOfFile:bookmarksPath];
+		[self loadBookmarksFromArray:dataArray];
 	}
+	DLog(@"\n***\ncreated a local PSBookmarks object...\n***\n");
 	return self;
 }
 
-- (NSArray *)parseBookmarkObject:(PSBookmarkObject*)bookmarkObject {
+- (id)initCloudBookmarks {
+	self = [super initWithName:nil dateAdded:nil dateLastAccessed:nil rgbHexString:nil children:nil];
+	if(self) {
+		self.name = NSLocalizedString(@"BookmarksTitle", @"");
+		NSData *data = [@"plistStringToCreateADataThingo" dataUsingEncoding:NSUTF8StringEncoding];
+		//format should be NSPropertyListXMLFormat_v1_0
+		NSArray *array = [NSPropertyListSerialization
+						  propertyListWithData:data
+						  options:NSPropertyListImmutable
+						  format:NULL
+						  error:NULL];
+		[self loadBookmarksFromArray:array];
+	}
+	DLog(@"\n***\ncreated a cloud PSBookmarks object...\n***\n");
+	return self;
+
+	// to write back, use:
+//	[NSPropertyListSerialization dataWithPropertyList:array format:NSPropertyListXMLFormat_v1_0 options:NSPropertyListImmutable error:NULL];
+//	+ (NSData *)dataWithPropertyList:(id)plist format:(NSPropertyListFormat)format options:(NSPropertyListWriteOptions)opt error:(NSError **)error
+
+
+}
+
++ (NSDate *)lastModified:(PSBookmarkObject *)bookmarkObject {
+	
+	NSDate *returnDate = bookmarkObject.dateLastAccessed;
+	if(bookmarkObject.folder) {
+		for(PSBookmarkObject *child in ((PSBookmarkFolder *)bookmarkObject).children) {
+			NSDate *childDate = [PSBookmarks lastModified:child];
+			if([childDate compare:returnDate] == NSOrderedDescending) {
+				returnDate = child.dateLastAccessed;
+			}
+		}
+	}
+	return returnDate;
+	
+}
+
++ (NSDate *)lastModified {
+	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
+	return [PSBookmarks lastModified:bookmarks];
+}
+
+// if our current bookmarks have been modified more recently than the new one we're sent via the cloud
+//    combine the bookmarks rather than deleting any.
+//    and create a copy of iCloud + local as backups.
+
++ (NSArray *)parseBookmarkObject:(PSBookmarkObject*)bookmarkObject {
 	if(!bookmarkObject)
 		return nil;
 	int capacity = (bookmarkObject.folder) ? 7 : 5;
@@ -176,7 +232,7 @@ static PSBookmarks *psBookmarks;
 		}
 		NSMutableArray *kids = [NSMutableArray arrayWithCapacity:[((PSBookmarkFolder*)bookmarkObject).children count]];
 		for(PSBookmarkObject *child in ((PSBookmarkFolder*)bookmarkObject).children) {
-			NSArray *kid = [self parseBookmarkObject:child];
+			NSArray *kid = [PSBookmarks parseBookmarkObject:child];
 			[kids addObject:kid];
 			//[kid release]; -- they're autorelease objects :P
 		}
@@ -198,7 +254,7 @@ static PSBookmarks *psBookmarks;
 	if(bookmarks.children && [bookmarks.children count] > 0) {
 		NSMutableArray *data = [NSMutableArray arrayWithCapacity:[bookmarks.children count]];
 		for(PSBookmarkObject *child in bookmarks.children) {
-			NSArray *kid = [bookmarks parseBookmarkObject:child];
+			NSArray *kid = [PSBookmarks parseBookmarkObject:child];
 			[data addObject:kid];
 			//[kid release]; -- they're autorelease objects :P
 		}
@@ -211,9 +267,9 @@ static PSBookmarks *psBookmarks;
 
 + (void)importBookmarksFromV2 {
 	NSArray *oldBookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey: @"bookmarks2"];
-	PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
 	
 	if(oldBookmarks) {
+		PSBookmarks *bookmarks = [PSBookmarks defaultBookmarks];
 		BOOL createImportedFolder = YES;
 		for(PSBookmarkObject* obj in bookmarks.children) {
 			if([obj.name isEqualToString:NSLocalizedString(@"BookmarksImportedFolderName", @"")]) {

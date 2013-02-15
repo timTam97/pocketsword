@@ -12,6 +12,9 @@
 
 }
 
+- (id)initLocalBookmarks;
+- (id)initCloudBookmarks;
+
 + (PSBookmarks *)defaultBookmarks;
 + (BOOL)addBookmarkObject:(PSBookmarkObject*)bookmark withFolderString:(NSString*)folderString;
 + (BOOL)addBookmarkWithRef:(NSString*)r name:(NSString*)n folderString:(NSString*)folderString;
@@ -21,6 +24,8 @@
 + (NSMutableArray *)getBookmarksForBookAndChapterRef:(NSString*)bookAndChapterRef;
 + (NSMutableArray *)getBookmarksForCurrentRef;
 + (NSString *)getHighlightRGBColourStringForBookAndChapterRef:(NSString*)bookAndChapterRef withVerse:(NSInteger)verse;
+
++ (NSDate *)lastModified;
 
 + (BOOL)saveBookmarksToFile;
 + (void)importBookmarksFromV2;

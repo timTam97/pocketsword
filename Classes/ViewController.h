@@ -141,8 +141,8 @@ typedef enum {
 
 - (void)displayTitle:(NSString*)title;
 - (void)removeTitle:(NSTimer*)theTimer;
-- (IBAction)nextChapter:(id)sender;
-- (IBAction)prevChapter:(id)sender;
+- (void)nextChapter;
+- (void)prevChapter;
 - (IBAction)toggleNavigation;
 //- (IBAction)updateViewWithSelectedChapter:(id)sender;
 //- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
@@ -187,6 +187,13 @@ typedef enum {
 - (void) showInfoModal:(UIView*)modalView withTiming:(float)time;
 - (void) hideInfoModal:(UIView*) modalView withTiming:(float)time;
 - (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
+
+- (void)segmentedControlAction:(id)sender;
+- (void)displayBusyIndicatorViaNotification;
+- (void)displayCommentaryTabViaNotification;
+- (void)displayBibleTabViaNotification;
+- (void)startAnimateChapterChange;
+- (void)stopAnimateChapterChange;
 
 @end
 
