@@ -164,7 +164,7 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 		NSArray *dataArray = [NSArray arrayWithContentsOfFile:bookmarksPath];
 		[self loadBookmarksFromArray:dataArray];
 	}
-	DLog(@"\n***\ncreated a local PSBookmarks object...\n***\n");
+//	DLog(@"\n***\ncreated a local PSBookmarks object...\n***\n");
 	return self;
 }
 
@@ -181,7 +181,7 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 						  error:NULL];
 		[self loadBookmarksFromArray:array];
 	}
-	DLog(@"\n***\ncreated a cloud PSBookmarks object...\n***\n");
+//	DLog(@"\n***\ncreated a cloud PSBookmarks object...\n***\n");
 	return self;
 
 	// to write back, use:

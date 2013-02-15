@@ -24,7 +24,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
-//#import "TestFlight.h"
+#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -81,7 +81,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
-	DLog(@"\nlaunched app, now to start our stuff...");
+//	DLog(@"\nlaunched app, now to start our stuff...");
 	
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls && NSUbiquitousKeyValueStoreDidChangeExternallyNotification) {
@@ -98,7 +98,7 @@
 		
 		
 		// Also, only use TestFlight under iOS 5 or later (aka, when we have NSUbiquitousKeyValueStore)
-//		[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
+		[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
 	}
 
 	self.launchedWithOptions = launchOptions;
@@ -121,7 +121,7 @@
 }
 
 - (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
-	DLog(@"finishedInitializing, now to display the tab bar controller");
+//	DLog(@"finishedInitializing, now to display the tab bar controller");
 	if([window respondsToSelector:@selector(rootViewController)]) {
 		window.rootViewController = tabBarController;
 	} else {
