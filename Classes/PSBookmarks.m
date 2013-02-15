@@ -17,9 +17,9 @@
 static PSBookmarks *psDefaultBookmarks;// = nil;
 /** the singleton instance */
 + (PSBookmarks *)defaultBookmarks {
-	DLog(@"\nattempting access to our bookmarks...");
+	//DLog(@"\nattempting access to our bookmarks...");
     if(psDefaultBookmarks == nil) {
-		DLog(@"\nOur bookmarks object doesn't exist! :P");
+		//DLog(@"\nOur bookmarks object doesn't exist! :P");
         psDefaultBookmarks = [[PSBookmarks alloc] initLocalBookmarks];
     }
 	return psDefaultBookmarks;
@@ -153,7 +153,7 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
     } else {
         self.children = [NSArray array];
     }
-	DLog(@"\n-- Bookmarks: finished loadBookmarksFromFile");
+	//DLog(@"\n-- Bookmarks: finished loadBookmarksFromFile");
 }
 
 - (id)initLocalBookmarks {

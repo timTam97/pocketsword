@@ -46,6 +46,7 @@ bool ps_viewcontroller_initialized = false;
 	DLog(@"\nare we dying somewhere here?");
 
 	if (!ps_viewcontroller_initialized) {
+		DLog(@"\nnot initialized yet!");
 		[self nightModeChanged];
 		toolbarLock = [[NSLock alloc] init];
         popoverController = nil;
@@ -166,6 +167,7 @@ bool ps_viewcontroller_initialized = false;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapterAfterBookmarksChange) name:NotificationBookmarksChanged object:nil];
 
 		ps_viewcontroller_initialized = true;
+		DLog(@"\nnope, not dying in the if...");
 	}
 	
 	DLog(@"\nnope, not dying somewhere here...");

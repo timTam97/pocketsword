@@ -8,7 +8,7 @@
 
 @class PSBasePreferencesController;
 
-@interface PSPreferencesFontTableViewController : UITableViewController {
+@interface PSPreferencesFontTableViewController : UIViewController { // should be UITableViewController
 	IBOutlet PSBasePreferencesController *preferencesController;
 	IBOutlet UITableView *table;
 	

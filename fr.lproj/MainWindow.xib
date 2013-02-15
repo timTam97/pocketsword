@@ -740,7 +740,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 				<bool key="IBUIHorizontal">NO</bool>
 			</object>
 			<object class="IBUIView" id="887081261">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">310</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIWebView" id="764216997">
@@ -829,7 +829,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 160}</string>
-				<reference key="NSSuperview"/>
 				<reference key="IBUIBackgroundColor" ref="183709399"/>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
@@ -840,10 +839,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 			</object>
 			<object class="IBUITableViewController" id="996913943">
 				<object class="IBUITableView" key="IBUIView" id="176012614">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<string key="NSFrame">{{0, 20}, {320, 460}}</string>
-					<reference key="NSSuperview"/>
 					<reference key="IBUIBackgroundColor" ref="105215499"/>
 					<bool key="IBUIOpaque">NO</bool>
 					<bool key="IBUIClipsSubviews">YES</bool>
@@ -894,10 +892,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 				<array class="NSMutableArray" key="IBUIViewControllers">
 					<object class="IBUIViewController" id="78384495">
 						<object class="IBUITableView" key="IBUIView" id="151246611">
-							<reference key="NSNextResponder"/>
+							<nil key="NSNextResponder"/>
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 64}, {320, 416}}</string>
-							<reference key="NSSuperview"/>
 							<reference key="IBUIBackgroundColor" ref="866556179"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -926,10 +923,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 				</array>
 			</object>
 			<object class="IBUISearchBar" id="470879492">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">290</int>
 				<string key="NSFrameSize">{320, 44}</string>
-				<reference key="NSSuperview"/>
 				<bool key="IBUIOpaque">NO</bool>
 				<int key="IBUIContentMode">3</int>
 				<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -947,7 +943,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 			</object>
 			<object class="IBUIViewController" id="768611766">
 				<object class="IBUIView" key="IBUIView" id="500585933">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">310</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUIToolbar" id="623639369">
@@ -991,7 +987,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{320, 460}</string>
-					<reference key="NSSuperview"/>
 					<reference key="IBUIBackgroundColor" ref="183709399"/>
 					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>

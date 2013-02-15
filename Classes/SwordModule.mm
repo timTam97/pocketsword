@@ -1167,7 +1167,7 @@
 	swModule->stripText();
 	NSMutableString *verses = [NSMutableString stringWithString:@""];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
-	NSString *ref = [NSString stringWithString: ch];
+	NSString *ref = nil;
 	NSString *thisEntry = @"";
 	NSString *lastEntry = @"";
 	NSString *preverseHeading;

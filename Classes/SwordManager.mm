@@ -314,7 +314,9 @@ static SwordManager *instance;
         self.modulesPath = path;
 
 		self.modules = [NSDictionary dictionary];
-		self.managerLock = [[NSRecursiveLock alloc] init];
+		NSRecursiveLock *rl = [[NSRecursiveLock alloc] init];
+		self.managerLock = rl;
+		[rl release];
 
         // setting locale
         [SwordManager initLocale];
@@ -343,7 +345,9 @@ static SwordManager *instance;
         temporaryManager = YES;
         
 		self.modules = [NSDictionary dictionary];
-        self.managerLock = [[NSRecursiveLock alloc] init];
+		NSRecursiveLock *rl = [[NSRecursiveLock alloc] init];
+		self.managerLock = rl;
+		[rl release];
         
 		[self refreshModules];
     }
@@ -355,13 +359,13 @@ static SwordManager *instance;
     if(!temporaryManager) {
 		if(swManager != nil)
 			delete swManager;
-		[modules release];
-		[moduleListByType release];
-		[modulesPath release];
-		[managerLock release];
-		[moduleTypes release];
-		[super dealloc];
 	}
+	[modules release];
+	[moduleListByType release];
+	[modulesPath release];
+	self.managerLock = nil;
+	[moduleTypes release];
+	[super dealloc];
 }
 
 

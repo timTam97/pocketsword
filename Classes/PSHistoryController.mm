@@ -361,7 +361,7 @@
 		SwordModule *swordModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:mod];
 		if(!swordModule) {
 			mod = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastBible];
-			swordModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:mod];
+			//swordModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:mod];
 		} else if(swordModule && (swordModule.type == commentary)) {
 			moduleIsCommentary = YES;
 		}

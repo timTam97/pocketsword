@@ -308,11 +308,9 @@
 }
 
 - (void)dealloc {
-    //[tabBarController release];
 	self.window = nil;
 	self.urlToOpen = nil;
 	self.launchedWithOptions = nil;
-    //[window release];
 	[PSLanguageCode doneWithLookupTable];
     [super dealloc];
 }

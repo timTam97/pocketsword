@@ -457,7 +457,7 @@ base path of the module installation
     
     if(ar) {
         ret = [NSArray arrayWithArray:ar];
-		[ar release];
+		//[ar release];
     }
     
     return ret;
