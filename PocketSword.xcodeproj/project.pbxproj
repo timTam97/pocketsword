@@ -3729,6 +3729,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = misc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3763,6 +3764,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = misc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3811,7 +3813,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "6C15FAB7-6A5B-4580-A767-C17882EC3A25";
+				PROVISIONING_PROFILE = "5A1EE75E-6B35-4E6C-92F0-34A91FC85ED4";
 				SDKROOT = iphoneos5.1;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3889,7 +3891,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "5F1D6538-B96D-4E52-916F-B26A90769254";
+				PROVISIONING_PROFILE = "3EEEAC6D-7E1A-4CA3-AACF-1256EAE30906";
 				SDKROOT = iphoneos5.1;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3912,6 +3914,7 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = misc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
