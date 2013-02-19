@@ -11,6 +11,8 @@ New in v1.4.3
 - moved history listings to iCloud so it will be in sync across all devices
 - fixed a couple of bugs in Module Maintainer Mode & Daily Devotionals
 - improved launch speed & decreased memory footprint
+** Due to changes that Apple have made, PocketSword now requires iOS 4.2 and later. Sorry about that! **
+** But, if you got your device in 2008 or later, you will be ok :) **
 
 New in v1.4.2
 - Fixed glitches with the Downloads tab
