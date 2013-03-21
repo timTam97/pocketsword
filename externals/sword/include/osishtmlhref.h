@@ -39,7 +39,6 @@ protected:
 		bool osisQToTick;
 		bool inBold;	// TODO: obsolete. left for binary compat for 1.6.x
 		bool inXRefNote;
-//		bool inLG;
 		bool BiblicalText;
 		int suspendLevel;
 		SWBuf wordsOfChristStart;

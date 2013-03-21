@@ -2,7 +2,7 @@
  *  swlocale.cpp   - implementation of Class SWLocale used for retrieval
  *				of locale lookups
  *
- * $Id: swlocale.cpp 2463 2009-10-14 22:14:55Z chrislit $
+ * $Id: swlocale.cpp 2781 2013-02-16 15:03:08Z scribe $
  *
  * Copyright 2000 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -25,7 +25,7 @@
 #include <map>
 #include <swconfig.h>
 #include <versekey.h>
-#include <versemgr.h>
+#include <versificationmgr.h>
 
 SWORD_NAMESPACE_START
 

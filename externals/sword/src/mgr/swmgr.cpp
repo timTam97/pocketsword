@@ -2,7 +2,7 @@
  *  swmgr.cpp   - implementaion of class SWMgr used to interact with an install
  *				base of sword modules.
  *
- * $Id: swmgr.cpp 2764 2013-01-19 16:19:47Z scribe $
+ * $Id: swmgr.cpp 2780 2013-02-01 09:11:52Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -962,13 +962,15 @@ SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap
         int pos = 0;  //used for position of final / in AbsoluteDataPath, but also set to 1 for modules types that need to strip module name
 	if (!stricmp(driver, "RawLD")) {
 		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
-		newmod = new RawLD(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive);
+		bool strongsPadding = ((entry = section.find("StrongsPadding")) != section.end()) ? (*entry).second == "true": true;
+		newmod = new RawLD(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive, strongsPadding);
                 pos = 1;
         }
 
 	if (!stricmp(driver, "RawLD4")) {
 		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
-		newmod = new RawLD4(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive);
+		bool strongsPadding = ((entry = section.find("StrongsPadding")) != section.end()) ? (*entry).second == "true": true;
+		newmod = new RawLD4(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive, strongsPadding);
                 pos = 1;
         }
 
@@ -976,6 +978,7 @@ SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap
 		SWCompress *compress = 0;
 		int blockCount;
 		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
+		bool strongsPadding = ((entry = section.find("StrongsPadding")) != section.end()) ? (*entry).second == "true": true;
 		misc1 = ((entry = section.find("BlockCount")) != section.end()) ? (*entry).second : (SWBuf)"200";
 		blockCount = atoi(misc1.c_str());
 		blockCount = (blockCount) ? blockCount : 200;
@@ -990,7 +993,7 @@ SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap
 			compress = new LZSSCompress();
 
 		if (compress) {
-			newmod = new zLD(datapath.c_str(), name, description.c_str(), blockCount, compress, 0, enc, direction, markup, lang.c_str(), caseSensitive);
+			newmod = new zLD(datapath.c_str(), name, description.c_str(), blockCount, compress, 0, enc, direction, markup, lang.c_str(), caseSensitive, strongsPadding);
 		}
 		pos = 1;
 	}
