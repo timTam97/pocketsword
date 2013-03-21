@@ -6,17 +6,17 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#include <versemgr.h>
+#import <versificationmgr.h>
 
 
 
 @interface SwordBook : NSObject {
-	const sword::VerseMgr::Book *book;
+	const sword::VersificationMgr::Book *book;
 	NSString *name;
 	NSInteger chapters;
 }
 
--(id)initWithBook:(const sword::VerseMgr::Book *)aBook;
+-(id)initWithBook:(const sword::VersificationMgr::Book *)aBook;
 -(void)dealloc;
 
 -(NSInteger)verses:(NSInteger)chapter;

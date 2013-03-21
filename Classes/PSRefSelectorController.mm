@@ -9,7 +9,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "PSRefSelectorController.h"
-#import <versemgr.h>
 #import "SwordBook.h"
 #import "PSModuleController.h"
 #import "PSChapterSelectorController.h"
@@ -93,9 +92,9 @@
 		currentRefSystemName = [[[PSModuleController defaultModuleController] primaryCommentary] versification];
 	if(!currentRefSystemName)
 		currentRefSystemName = @"KJV";//if no ref system, default to kjv
-	const sword::VerseMgr::System *refSystem = sword::VerseMgr::getSystemVerseMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
+	const sword::VersificationMgr::System *refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
 	if(!refSystem) {
-		refSystem = sword::VerseMgr::getSystemVerseMgr()->getVersificationSystem("KJV");
+		refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem("KJV");
 	}
 	int numberOfBooks = refSystem->getBookCount();
 	refSelectorOTBookCount = refSystem->getBMAX()[0];

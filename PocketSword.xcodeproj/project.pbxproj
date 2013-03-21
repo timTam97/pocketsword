@@ -77,7 +77,6 @@
 		05275AF410884F72004FB0E0 /* swlocale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2B10884F71004FB0E0 /* swlocale.cpp */; };
 		05275AF510884F72004FB0E0 /* swmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2C10884F71004FB0E0 /* swmgr.cpp */; };
 		05275AF610884F72004FB0E0 /* swsearchable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2D10884F71004FB0E0 /* swsearchable.cpp */; };
-		05275AF710884F72004FB0E0 /* versemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2E10884F71004FB0E0 /* versemgr.cpp */; };
 		05275AF810884F72004FB0E0 /* hrefcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3210884F71004FB0E0 /* hrefcom.cpp */; };
 		05275AF910884F72004FB0E0 /* rawcom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3410884F71004FB0E0 /* rawcom.cpp */; };
 		05275AFA10884F72004FB0E0 /* rawcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3610884F71004FB0E0 /* rawcom4.cpp */; };
@@ -284,6 +283,7 @@
 		05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
 		05CFBE1F12C823C3002DA812 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CFBE1D12C823C3002DA812 /* Default@2x.png */; };
+		05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */; };
 		05D46215108FFF22006BFBB1 /* NavigatorModuleLanguages.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */; };
 		05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D4629F10907130006BFBB1 /* PSLanguageCode.m */; };
 		05D6AB7C1097E76400A5026E /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB671097E76400A5026E /* AsyncSocket.m */; };
@@ -703,7 +703,6 @@
 		052759F610884F64004FB0E0 /* utilstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilstr.h; sourceTree = "<group>"; };
 		052759F710884F64004FB0E0 /* utilxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilxml.h; sourceTree = "<group>"; };
 		052759F810884F64004FB0E0 /* versekey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versekey.h; sourceTree = "<group>"; };
-		052759F910884F64004FB0E0 /* versemgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versemgr.h; sourceTree = "<group>"; };
 		052759FA10884F64004FB0E0 /* versetreekey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versetreekey.h; sourceTree = "<group>"; };
 		052759FB10884F64004FB0E0 /* zcom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zcom.h; sourceTree = "<group>"; };
 		052759FC10884F64004FB0E0 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
@@ -747,7 +746,6 @@
 		05275A2B10884F71004FB0E0 /* swlocale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swlocale.cpp; sourceTree = "<group>"; };
 		05275A2C10884F71004FB0E0 /* swmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swmgr.cpp; sourceTree = "<group>"; };
 		05275A2D10884F71004FB0E0 /* swsearchable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = swsearchable.cpp; sourceTree = "<group>"; };
-		05275A2E10884F71004FB0E0 /* versemgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = versemgr.cpp; sourceTree = "<group>"; };
 		05275A3210884F71004FB0E0 /* hrefcom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hrefcom.cpp; sourceTree = "<group>"; };
 		05275A3410884F71004FB0E0 /* rawcom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rawcom.cpp; sourceTree = "<group>"; };
 		05275A3610884F71004FB0E0 /* rawcom4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rawcom4.cpp; sourceTree = "<group>"; };
@@ -1078,7 +1076,6 @@
 		05B52BDE107EEB7500826AFE /* NavigatorModules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModules.mm; sourceTree = "<group>"; };
 		05B67C8D1461046E00B3E605 /* canon_catholic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic.h; sourceTree = "<group>"; };
 		05B67C8E1461046E00B3E605 /* canon_catholic2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic2.h; sourceTree = "<group>"; };
-		05B67C8F1461046E00B3E605 /* canon_synodalp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_synodalp.h; sourceTree = "<group>"; };
 		05B67C901461046E00B3E605 /* gbfxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gbfxhtml.h; sourceTree = "<group>"; };
 		05B67C911461046E00B3E605 /* osisxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osisxhtml.h; sourceTree = "<group>"; };
 		05B67C921461046E00B3E605 /* thmlxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thmlxhtml.h; sourceTree = "<group>"; };
@@ -1103,6 +1100,8 @@
 		05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBibleViewController.mm; path = Classes/PSBibleViewController.mm; sourceTree = "<group>"; };
 		05CD458210A013DD00853E48 /* gear-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear-24.png"; path = "Resources/gear-24.png"; sourceTree = "<group>"; };
 		05CFBE1D12C823C3002DA812 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/Default@2x.png"; sourceTree = "<group>"; };
+		05D3E48E16FA9F5700B9DEBF /* versificationmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versificationmgr.h; sourceTree = "<group>"; };
+		05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = versificationmgr.cpp; sourceTree = "<group>"; };
 		05D461E8108EEB00006BFBB1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
 		05D46213108FFF22006BFBB1 /* NavigatorModuleLanguages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorModuleLanguages.h; sourceTree = "<group>"; };
 		05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorModuleLanguages.mm; sourceTree = "<group>"; };
@@ -1197,7 +1196,6 @@
 		05F4D0321255D2940088C902 /* PSResizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSResizing.h; sourceTree = "<group>"; };
 		05F4D0331255D2940088C902 /* PSResizing.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = PSResizing.m; sourceTree = "<group>"; };
 		05F4D225160189940072620A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
-		05F7106A11520AB700947290 /* canon_synodalprot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_synodalprot.h; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSwordAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PocketSwordAppDelegate.mm; sourceTree = "<group>"; };
@@ -1611,8 +1609,6 @@
 				0527596510884F64004FB0E0 /* canon_nrsva.h */,
 				0527596610884F64004FB0E0 /* canon_null.h */,
 				0527596710884F64004FB0E0 /* canon_synodal.h */,
-				05B67C8F1461046E00B3E605 /* canon_synodalp.h */,
-				05F7106A11520AB700947290 /* canon_synodalprot.h */,
 				058E2D2D10F56EFC006E4447 /* canon_vulg.h */,
 				0527596810884F64004FB0E0 /* cipherfil.h */,
 				0527596910884F64004FB0E0 /* config.h */,
@@ -1759,7 +1755,7 @@
 				052759F610884F64004FB0E0 /* utilstr.h */,
 				052759F710884F64004FB0E0 /* utilxml.h */,
 				052759F810884F64004FB0E0 /* versekey.h */,
-				052759F910884F64004FB0E0 /* versemgr.h */,
+				05D3E48E16FA9F5700B9DEBF /* versificationmgr.h */,
 				052759FA10884F64004FB0E0 /* versetreekey.h */,
 				052759FB10884F64004FB0E0 /* zcom.h */,
 				052759FC10884F64004FB0E0 /* zconf.h */,
@@ -1870,7 +1866,7 @@
 				05275A2B10884F71004FB0E0 /* swlocale.cpp */,
 				05275A2C10884F71004FB0E0 /* swmgr.cpp */,
 				05275A2D10884F71004FB0E0 /* swsearchable.cpp */,
-				05275A2E10884F71004FB0E0 /* versemgr.cpp */,
+				05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */,
 			);
 			path = mgr;
 			sourceTree = "<group>";
@@ -3348,7 +3344,6 @@
 				05275AF410884F72004FB0E0 /* swlocale.cpp in Sources */,
 				05275AF510884F72004FB0E0 /* swmgr.cpp in Sources */,
 				05275AF610884F72004FB0E0 /* swsearchable.cpp in Sources */,
-				05275AF710884F72004FB0E0 /* versemgr.cpp in Sources */,
 				05275AF810884F72004FB0E0 /* hrefcom.cpp in Sources */,
 				05275AF910884F72004FB0E0 /* rawcom.cpp in Sources */,
 				05275AFA10884F72004FB0E0 /* rawcom4.cpp in Sources */,
@@ -3543,6 +3538,7 @@
 				05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */,
 				05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */,
 				051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.m in Sources */,
+				05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

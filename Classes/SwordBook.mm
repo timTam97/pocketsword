@@ -12,7 +12,7 @@
 
 @implementation SwordBook
 
--(id)initWithBook:(const sword::VerseMgr::Book *)aBook {
+-(id)initWithBook:(const sword::VersificationMgr::Book *)aBook {
     self = [super init];
 	if(self) {
 		book = aBook;
