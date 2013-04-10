@@ -104,8 +104,7 @@ float status;
 					[is setUID:@"20090514005900"];
 					[self addInstallSource:is withReinitialize:NO];
 					
-					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedXiphosAndBibleRepositories2"];
-					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"addedCWav11nRepositoryV2"];
+					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"updatedRepositories-20130114"];
 					
                 }
 				
