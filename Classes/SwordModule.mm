@@ -1167,6 +1167,7 @@
 	swModule->stripText();
 	NSMutableString *verses = [NSMutableString stringWithString:@""];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+	//NSLog(@"ch  = %@", ch);
 	NSString *ref = nil;
 	NSString *thisEntry = @"";
 	NSString *lastEntry = @"";
@@ -1193,6 +1194,7 @@
 
 			NSString  *canonicalHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["0"]["canonical"].c_str()];
 			if(i != 0 && (headings || [canonicalHeading isEqualToString:@"true"])) {
+				// TODO: create a cache of the previous title & if this is now v1 & the previous title is the same as this one, then we don't display it.
 				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
@@ -1267,6 +1269,7 @@
 		(*swModule->getKey())++;
 		swModule->stripText();
 		ref = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+		//NSLog(@"ref = %@ (%d)", ref, i);
 		++i;
 	} while ([ref isEqualToString: ch] && (swModule->getKey()->popError() != KEYERR_OUTOFBOUNDS));
 	
@@ -1279,7 +1282,7 @@
 	}
 	
 	if([verses isEqualToString:@""]) {
-		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module.")];
+		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ (%@)</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module."), ch];
 	}
 
 	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];

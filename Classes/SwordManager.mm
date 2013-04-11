@@ -359,13 +359,13 @@ static SwordManager *instance;
     if(!temporaryManager) {
 		if(swManager != nil)
 			delete swManager;
+		[modules release];
+		[moduleListByType release];
+		[modulesPath release];
+		self.managerLock = nil;
+		[moduleTypes release];
+		[super dealloc];
 	}
-	[modules release];
-	[moduleListByType release];
-	[modulesPath release];
-	self.managerLock = nil;
-	[moduleTypes release];
-	[super dealloc];
 }
 
 
