@@ -161,11 +161,9 @@
 			NSString *kjvExtension = @"modules/texts/ztext/kjv";
 			NSString *luceneExtension = [kjvExtension stringByAppendingPathComponent:@"lucene"];
 			NSString *kjvLucene = [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingPathComponent:luceneExtension];
-			NSLog(@"kjvLucene = %@", kjvLucene);
 			if([[NSFileManager defaultManager] fileExistsAtPath:kjvLucene]) {
 				// to be nice, let's move their kjv lucene index across for them :P
 				NSString *kjvNewLucene = [DEFAULT_MODULE_PATH stringByAppendingPathComponent:luceneExtension];
-				NSLog(@"kjvNewLucene = %@", kjvNewLucene);
 				[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingPathComponent:kjvExtension] withIntermediateDirectories: YES attributes: NULL error: NULL];
 				[[NSFileManager defaultManager] moveItemAtPath:kjvLucene toPath:kjvNewLucene error:NULL];
 			}
