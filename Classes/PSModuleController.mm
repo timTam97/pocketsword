@@ -92,7 +92,7 @@ static PSModuleController *instance;
     if(instance == nil) {
 		// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
 		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
-		[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+		//[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
 		if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
 			ALog(@"Couldn't create mods.d");
 		}
@@ -143,7 +143,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 	// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
 	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
-	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
+	//[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_BUILTIN_MODULE_PATH stringByAppendingString: @"mods.d"] withIntermediateDirectories: YES attributes: NULL error: NULL];
 	if (![[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]]) {
 		ALog(@"Couldn't create mods.d");
 	}
@@ -163,17 +163,17 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[arch release];
 	
 	//install the module/s contained in the archive:
-	if(!internalModule) {
+//	if(!internalModule) {
 		[swordManager installModulesFromPath:outfile];
-	} else {
-		SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
-		[swordBuiltInManager installModulesFromPath:outfile];
-		[swordBuiltInManager release];
-		swordBuiltInManager = nil;
-		
-		// make sure we're not backing up this folder, now that we're installing stuff in here...
-		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
-	}
+//	} else {
+//		SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
+//		[swordBuiltInManager installModulesFromPath:outfile];
+//		[swordBuiltInManager release];
+//		swordBuiltInManager = nil;
+//		
+//		// make sure we're not backing up this folder, now that we're installing stuff in here...
+//		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
+//	}
 	[self reload];
 		
 	if(temporaryZip) {
@@ -725,19 +725,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 
 	if(moduleToRemove) {
-		BOOL wasBuiltIn = NO;
-		if(possibleBuiltIn) {
-			SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
-			if([swordBuiltInManager isModuleInstalled:name]) {
-				stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordBuiltInManager];
-				wasBuiltIn = YES;
-			}
-			[swordBuiltInManager release];
-			swordBuiltInManager = nil;
-		}
-		if(!wasBuiltIn) {
+//		BOOL wasBuiltIn = NO;
+//		if(possibleBuiltIn) {
+//			SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
+//			if([swordBuiltInManager isModuleInstalled:name]) {
+//				stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordBuiltInManager];
+//				wasBuiltIn = YES;
+//			}
+//			[swordBuiltInManager release];
+//			swordBuiltInManager = nil;
+//		}
+//		if(!wasBuiltIn) {
 			stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordManager];
-		}
+//		}
 	}
 	
 	BOOL success = (stat == 0) ? YES : NO;
