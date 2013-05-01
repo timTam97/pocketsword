@@ -749,12 +749,14 @@
 				break;
 		}
 	}
-
+	
 	//remove duplicate entries manually.  why do these appear? *sad face*
 	if(results && [results count] > 0) {
 		for(int i = 0; i < ([results count] -1); i++) {
-			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key])
+			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key]) {
 				[results removeObjectAtIndex:i+1];//remove the duplicate.
+				--i;
+			}
 		}
 	}
 	
