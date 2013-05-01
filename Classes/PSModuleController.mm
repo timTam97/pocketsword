@@ -869,7 +869,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *text = [primaryBible getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);
-	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+	[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;
 }
@@ -889,7 +889,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *text = [primaryCommentary getChapter:chapter withExtraJS:extraJS];
 	
 	//DLog(@"\n%@", text);
-	[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+	[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;
 }

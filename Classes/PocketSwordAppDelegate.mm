@@ -261,7 +261,7 @@
 		
 		[viewController setShownTabTo:BibleTab];
 
-		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+		[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
@@ -275,7 +275,7 @@
 		
 		[viewController setShownTabTo:CommentaryTab];
 
-		[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+		[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
 		[[NSUserDefaults standardUserDefaults] synchronize];

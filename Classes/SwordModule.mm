@@ -1257,7 +1257,7 @@
 					}
 				}
 				
-				NSString *highlightColour = [PSBookmarks getHighlightRGBColourStringForBookAndChapterRef:chapter withVerse:i];
+				NSString *highlightColour = [PSBookmarks getHighlightRGBColourStringForBookAndChapterRef:[PSModuleController createRefString:chapter] withVerse:i];
 				if(highlightColour) {
 					entryToAppend = [self highlightVerse:entryToAppend withClass:highlightColour];
 				}

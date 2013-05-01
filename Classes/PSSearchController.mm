@@ -534,7 +534,7 @@
 		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
-		[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
+		[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:ref] forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 
 		switch(listType) {

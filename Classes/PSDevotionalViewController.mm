@@ -345,8 +345,7 @@
 			}
 			chapter = [[[chapter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 
-
-			[[NSUserDefaults standardUserDefaults] setObject: chapter forKey: DefaultsLastRef];
+			[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			

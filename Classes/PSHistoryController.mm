@@ -371,7 +371,7 @@
 			[[PSModuleController defaultModuleController] loadPrimaryBible: mod];
 		}
 	}
-	[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
+	[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:ref] forKey: DefaultsLastRef];
 	if(moduleIsCommentary) {
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
 		[[NSUserDefaults standardUserDefaults] synchronize];

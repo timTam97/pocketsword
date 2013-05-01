@@ -49,7 +49,7 @@
 	return [[[[name stringByReplacingOccurrencesOfString: @"III " withString: @"3 "]
 			  stringByReplacingOccurrencesOfString: @"II " withString: @"2 "]
 			 stringByReplacingOccurrencesOfString: @"I " withString: @"1 "]
-			stringByReplacingOccurrencesOfString: @" of John" withString: @" "];
+			stringByReplacingOccurrencesOfString: @" of John" withString: @""];
 }
 
 - (NSString*)shortName {

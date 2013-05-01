@@ -366,7 +366,7 @@
 				if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
 					NSArray *fullRef = [((PSBookmark*)rowObject).ref componentsSeparatedByString: @":"];
 					NSString *ref = [fullRef objectAtIndex: 0];
-					[[NSUserDefaults standardUserDefaults] setObject: ref forKey: DefaultsLastRef];
+					[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:ref] forKey: DefaultsLastRef];
 					NSString *verse = [fullRef objectAtIndex: 1];
 					if(verse) {
 						[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
