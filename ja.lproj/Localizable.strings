@@ -303,3 +303,6 @@
 
 // new v1.4.3 strings:
 "HistoryTitle" = "History";
+
+// new v1.4.4 strings:
+"DictionaryNoneLoaded" = "There is no dictionary currently loaded. You need to download a dictionary from the Downloads section before using this feature.";

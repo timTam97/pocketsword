@@ -175,12 +175,14 @@
 		return 0;
 }
 
-
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if(searching && ([searchResults count] > 0))
+	if(searching && ([searchResults count] > 0)) {
 		return [NSString stringWithFormat: @"%d %@", [searchResults count], NSLocalizedString(@"SearchResults", @"results")];
-	else
+	} else if(!dictionaryEnabled) {
+		return NSLocalizedString(@"DictionaryNoneLoaded", @"DictionaryNoneLoaded");
+	} else {
 		return @"";
+	}
 }
 
 
@@ -191,10 +193,11 @@
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dict-id"] autorelease];
 	}
-	if(searching)
+	if(searching) {
 		cell.textLabel.text = [searchResults objectAtIndex:indexPath.row];
-	else
+	} else if(dictionaryEnabled) {
 		cell.textLabel.text = [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex:indexPath.row];
+	}
 	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -271,7 +274,7 @@
 	searching = YES;
 
 	if([dictionarySearchBar.text length] <= 0) {
-		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+		//dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
 		[dictionaryEntriesTable insertSubview:((PSDictionaryOverlayViewController*)overlayViewController).view aboveSubview:self.parentViewController.view];
 		letUserSelectRow = NO;
 		dictionaryEntriesTable.scrollEnabled = NO;
