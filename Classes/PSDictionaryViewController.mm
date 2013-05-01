@@ -100,11 +100,11 @@
 	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable useStatusBar:YES];
 	[self reloadDictionaryData:NO];
 	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		dictionaryEntriesTable.backgroundColor = [UIColor blackColor];
-	} else {
-		dictionaryEntriesTable.backgroundColor = [UIColor whiteColor];
-	}
+//	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+//		dictionaryEntriesTable.backgroundColor = [UIColor blackColor];
+//	} else {
+//		dictionaryEntriesTable.backgroundColor = [UIColor whiteColor];
+//	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -200,22 +200,22 @@
 	}
 	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.textLabel.textColor = [UIColor whiteColor];
-	} else {
-		cell.textLabel.textColor = [UIColor blackColor];
-	}
+//	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+//		cell.textLabel.textColor = [UIColor whiteColor];
+//	} else {
+//		cell.textLabel.textColor = [UIColor blackColor];
+//	}
 
 	return cell;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
-}
+//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+//	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+//		cell.backgroundColor = [UIColor blackColor];
+//	} else {
+//		cell.backgroundColor = [UIColor whiteColor];
+//	}
+//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[dictionarySearchBar resignFirstResponder];
