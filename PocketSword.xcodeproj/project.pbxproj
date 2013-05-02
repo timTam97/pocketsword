@@ -250,8 +250,6 @@
 		056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */; };
 		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */; };
 		056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
-		056CD38316BB6D0700AA0674 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 056CD37F16BB6D0700AA0674 /* README.md */; };
-		056CD38416BB6D0700AA0674 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 056CD38016BB6D0700AA0674 /* release_notes.md */; };
 		056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */; };
@@ -984,6 +982,10 @@
 		0552D12D1295230300A4994B /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
 		0552D12E1295230300A4994B /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "Resources/Icon-Small.png"; sourceTree = "<group>"; };
 		0552D12F1295230300A4994B /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
+		0556CD4317320788004CD6CD /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		0556CD4417320788004CD6CD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		0556CD4517320788004CD6CD /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		0556CD4617320788004CD6CD /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		055E308310E74288004EBC79 /* SwordListKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordListKey.h; sourceTree = "<group>"; };
 		055E308410E74288004EBC79 /* SwordListKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordListKey.mm; sourceTree = "<group>"; };
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
@@ -2281,6 +2283,7 @@
 		0542F6C110BE75570088A721 /* externals */ = {
 			isa = PBXGroup;
 			children = (
+				0556CD4217320788004CD6CD /* TestFlightSDK1.2.4 */,
 				056CD37D16BB6D0700AA0674 /* TestFlightSDK1.1 */,
 				0542F6CB10BE770C0088A721 /* curl */,
 				0542F6CA10BE76ED0088A721 /* sword */,
@@ -2445,6 +2448,17 @@
 				05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */,
 			);
 			name = "b & c";
+			sourceTree = "<group>";
+		};
+		0556CD4217320788004CD6CD /* TestFlightSDK1.2.4 */ = {
+			isa = PBXGroup;
+			children = (
+				0556CD4317320788004CD6CD /* libTestFlight.a */,
+				0556CD4417320788004CD6CD /* README.md */,
+				0556CD4517320788004CD6CD /* release_notes.md */,
+				0556CD4617320788004CD6CD /* TestFlight.h */,
+			);
+			path = TestFlightSDK1.2.4;
 			sourceTree = "<group>";
 		};
 		056CD37D16BB6D0700AA0674 /* TestFlightSDK1.1 */ = {
@@ -3168,8 +3182,6 @@
 				05717C9513F27B8000753423 /* Entitlements.plist in Resources */,
 				05F4D226160189940072620A /* Default-568h@2x.png in Resources */,
 				05E7F56116018E26006EA9A3 /* Icon-72@2x.png in Resources */,
-				056CD38316BB6D0700AA0674 /* README.md in Resources */,
-				056CD38416BB6D0700AA0674 /* release_notes.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3714,6 +3726,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"$(SDKROOT)/usr/lib",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
@@ -3729,6 +3742,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 					"\"$(SRCROOT)/TestFlightSDK1.1\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.4\"",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -3749,6 +3763,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"$(SDKROOT)/usr/lib",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
@@ -3764,6 +3779,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 					"\"$(SRCROOT)/TestFlightSDK1.1\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.4\"",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
@@ -3899,6 +3915,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"$(SDKROOT)/usr/lib",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/include/c++/4.2.1/armv6-apple-darwin9",
@@ -3914,6 +3931,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 					"\"$(SRCROOT)/TestFlightSDK1.1\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.4\"",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
