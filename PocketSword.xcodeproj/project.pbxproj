@@ -273,7 +273,6 @@
 		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
 		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; };
 		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
-		05B7780E16CDF29E009E3F65 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD37E16BB6D0700AA0674 /* libTestFlight.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB3FD1147711B00984097 /* popup-top-bar.png */; };
 		05BCB42011477A9A00984097 /* popup-down-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB41F11477A9A00984097 /* popup-down-button.png */; };
 		05CBE8D1128A840000730CB8 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8CF128A840000730CB8 /* Icon@2x.png */; };
@@ -1465,7 +1464,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05B7780E16CDF29E009E3F65 /* libTestFlight.a in Frameworks */,
 				0562FD7C16BB8BCF003A8C70 /* libSystem.dylib in Frameworks */,
 				056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,

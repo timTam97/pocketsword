@@ -24,7 +24,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
-#import "TestFlight.h"
+//#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate
 
@@ -98,7 +98,8 @@
 		
 		
 		// Also, only use TestFlight under iOS 5 or later (aka, when we have NSUbiquitousKeyValueStore)
-		[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];
+		//[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];//1.1
+		//[TestFlight takeOff:@"6139398f-b442-43b1-baa8-200a071c0426"];//1.2
 	}
 
 	self.launchedWithOptions = launchOptions;

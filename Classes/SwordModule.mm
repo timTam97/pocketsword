@@ -1193,8 +1193,7 @@
 		if (![thisEntry isEqualToString: lastEntry] && ![thisEntry isEqualToString:@""]) {
 
 			NSString  *canonicalHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["0"]["canonical"].c_str()];
-			if(i != 0 && (headings || [canonicalHeading isEqualToString:@"true"])) {
-				// TODO: create a cache of the previous title & if this is now v1 & the previous title is the same as this one, then we don't display it.
+			if((headings || [canonicalHeading isEqualToString:@"true"])) {
 				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
@@ -1205,16 +1204,16 @@
 					preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 					[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
 				}
-				else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
-					//NSLog(@"interverseHeading = '%@'", interverseHeading);
-					interverseHeading = [NSString stringWithUTF8String:swModule->renderText([interverseHeading UTF8String])];
-					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
-					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-					//NSLog(@"RenderText(interverseHeading) = '%@'\n", interverseHeading);
-					if((preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) || !preverseHeading) {
-						[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
-					}
-				}
+//				else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
+//					//NSLog(@"interverseHeading = '%@'", interverseHeading);
+//					interverseHeading = [NSString stringWithUTF8String:swModule->renderText([interverseHeading UTF8String])];
+//					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+//					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+//					//NSLog(@"RenderText(interverseHeading) = '%@'\n", interverseHeading);
+//					if((preverseHeading && ![preverseHeading isEqualToString:interverseHeading]) || !preverseHeading) {
+//						[verses appendFormat:@"<p><b>%@</b></p>", interverseHeading];
+//					}
+//				}
 			}
 			
 			if ([modType isEqualToString: SWMOD_CATEGORY_COMMENTARIES]) {
