@@ -1329,19 +1329,12 @@
 						}\n\
 						return 1;\n\
 					}\n\
-					function execute(url) {\n\
-						var iframe = document.createElement(\"IFRAME\");\n\
-						iframe.setAttribute(\"src\", url);\n\
-						document.documentElement.appendChild(iframe);\n\
-						iframe.parentNode.removeChild(iframe);\n\
-						iframe = null;\n\
-					}\n\
 					function detLoc() {\n\
-						execute(\"pocketsword:currentverse:\" + currentVerse() + \":\" + window.pageYOffset + \":\" + versepos[currentVerse()]);\n\
+						document.location = \"pocketsword:currentverse:\" + currentVerse() + \":\" + window.pageYOffset + \":\" + versepos[currentVerse()];\n\
 					}\n\
 					function startDetLocPoll() {\n\
 						stopDetLocPoll();//we don't want this running more than once, so stop previous polls first...\n\
-						/*det_loc_poll = setInterval(\"detLoc()\", 1000);*/\n\
+						det_loc_poll = setInterval(\"detLoc()\", 1000);\n\
 					}\n\
 					function stopDetLocPoll() {\n\
 						clearInterval(det_loc_poll);\n\
@@ -1405,8 +1398,6 @@
 						}\n\
 						document.location = tmpstr;\n\
 					}\n\
-					document.addEventListener(\"touchmove\", detLoc, false);\n\
-					document.addEventListener(\"scroll\", detLoc, false);\n\
 					window.onload = function() {\n\
 						document.documentElement.style.webkitTouchCallout = \"none\";\n\
 						resetArrays()\n\
