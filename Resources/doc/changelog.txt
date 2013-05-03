@@ -1,4 +1,13 @@
 
+New in v1.4.4
+- fixed install sources bug
+- fixed crashing bug on startup
+- solved the case of the missing OT (thanks to Holmes & Watson)
+- fixed repeated search results that appeared in some modules (not mentioning any names!!!)
+- fixed highlighting in the book of Revelation
+- fixed bug when your device is set to display in Romanian (all one of you?)
+- updated libsword (r2793)
+
 New in v1.4.3
 - updated Greek Strong's dictionary
 - adjusted text spacing for easier reading
