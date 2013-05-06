@@ -17,9 +17,6 @@
 
 + (NSString*)generateAboutHTML
 {
-
-	//										
-
 	NSString *body = [NSString stringWithFormat:
 							 @"<div id=\"header\">\n\
 								 <div class=\"title\">PocketSword</div>\n\
@@ -83,7 +80,12 @@
 					  <p> &nbsp; &nbsp; &nbsp;The name was a pun of sorts, with the original idea that the Cross of Christ is our wire to God.  Over the years, the meaning has grown into one more appropriate to what a Bible society is.  The main purpose of a Bible Society is to distribute Scripture to as many people within a domain as possible.  Some examples are the American Bible Society, the German Bible Society, the Canadian Bible Society, the United Bible Societies-- under which most of the Bible societies of the world collaborate-- and many others.  You can view most of their stats of Scripture distribution to their region by visiting <a href=\"http://www.biblesociety.org/bs-find.htm\">http://www.biblesociety.org/bs-find.htm</a>, then selecting a region and the Bible Society that serves that region.  Instead of having a geographic domain, CrossWire's domain is software users-- predominantly the global Internet-- or anyone we can reach across the wire.  Our Scripture distribution compares with the largest of the Bible Societies listed.</p>\n\
 \n\
 					  <p> &nbsp; &nbsp; &nbsp;Some examples of recent collaboration include traveling to Wycliffe Bible Translators to present and counsel on strategies to open source their software, participation with the American Bible Society to realize and promote the Bible Technologies Conference (<a href=\"http://www.bibletechnologies.org\">http://www.bibletechnologies.org</a>), and subsequently, the OSIS initiative (of which the newsgroups and listservs for the working groups are hosted on our servers at <a href=\"news://bibletechnologieswg.org\">news://bibletechnologieswg.org</a>).<br /> </p>\n\
-					  </div><br />&nbsp;<br />", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];//CFBundleShortVersionString
+					  </div>\n\
+					  <div class=\"crosswire\">\n\
+					  <h2 class=\"headbar\">Ezra SIL and Gentium Plus: </h2>\n\
+					  %@\n\
+					  </div>\n\
+					  <br />&nbsp;<br />", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"OFL" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil]];//CFBundleShortVersionString
 	
 	
 	return [NSString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\

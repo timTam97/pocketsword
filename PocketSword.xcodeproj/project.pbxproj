@@ -47,6 +47,9 @@
 		051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.m */; };
 		051CF1891084199400154E44 /* NavigatorLeafView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051CF1881084199400154E44 /* NavigatorLeafView.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
+		051F22B61737549600DDFF13 /* GentiumPlus-R.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */; };
+		051F22B71737549600DDFF13 /* SILEOT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B51737549600DDFF13 /* SILEOT.ttf */; };
+		051F22B9173758AD00DDFF13 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B8173758AD00DDFF13 /* OFL.txt */; };
 		051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.m */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
 		05275ADA10884F72004FB0E0 /* swlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0D10884F71004FB0E0 /* swlog.cpp */; };
@@ -552,6 +555,9 @@
 		051F22A71737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
 		051F22A81737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		051F22A91737348900DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = "ar.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "GentiumPlus-R.ttf"; path = "Resources/fonts/GentiumPlus-R.ttf"; sourceTree = "<group>"; };
+		051F22B51737549600DDFF13 /* SILEOT.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SILEOT.ttf; path = Resources/fonts/SILEOT.ttf; sourceTree = "<group>"; };
+		051F22B8173758AD00DDFF13 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = OFL.txt; path = Resources/fonts/OFL.txt; sourceTree = "<group>"; };
 		051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PocketSword.entitlements; sourceTree = "<group>"; };
 		051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryController.h; path = Classes/PSHistoryController.h; sourceTree = "<group>"; };
 		051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryItem.h; path = Classes/PSHistoryItem.h; sourceTree = "<group>"; };
@@ -898,7 +904,7 @@
 		052851C3122664DE00A99ECD /* About@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "About@2x.png"; path = "Resources/About@2x.png"; sourceTree = "<group>"; };
 		052851C81226670900A99ECD /* gear-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear-24@2x.png"; path = "Resources/gear-24@2x.png"; sourceTree = "<group>"; };
 		0528684E13E00D300044A388 /* Padauk.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Padauk.ttf; path = Resources/Padauk.ttf; sourceTree = "<group>"; };
-		0528685113E012660044A388 /* code2000.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = code2000.ttf; path = Resources/code2000.ttf; sourceTree = "<group>"; };
+		0528685113E012660044A388 /* code2000.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = code2000.ttf; path = Resources/fonts/code2000.ttf; sourceTree = "<group>"; };
 		052B52841101A32900FFDF01 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		052B52ED1101D6DF00FFDF01 /* locales.d.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = locales.d.zip; path = Resources/locales.d.zip; sourceTree = "<group>"; };
 		052EC8FE13DD45CF001B66DC /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "Resources/Default-Landscape~ipad.png"; sourceTree = "<group>"; };
@@ -985,7 +991,7 @@
 		05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesFontTableViewController.h; sourceTree = "<group>"; };
 		05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesFontTableViewController.mm; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
-		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/CharisSILR.ttf; sourceTree = "<group>"; };
+		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/fonts/CharisSILR.ttf; sourceTree = "<group>"; };
 		0552D12D1295230300A4994B /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
 		0552D12E1295230300A4994B /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "Resources/Icon-Small.png"; sourceTree = "<group>"; };
 		0552D12F1295230300A4994B /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
@@ -1595,6 +1601,18 @@
 				0516CF23136124CD0058E022 /* MainWindow-iPad.xib */,
 			);
 			name = "xibs-iPad";
+			sourceTree = "<group>";
+		};
+		051F22AA1737544C00DDFF13 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				051F22B8173758AD00DDFF13 /* OFL.txt */,
+				051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */,
+				051F22B51737549600DDFF13 /* SILEOT.ttf */,
+				0550A0C310A8407C00363295 /* CharisSILR.ttf */,
+				0528685113E012660044A388 /* code2000.ttf */,
+			);
+			name = fonts;
 			sourceTree = "<group>";
 		};
 		0527595E10884F64004FB0E0 /* include */ = {
@@ -2278,11 +2296,9 @@
 		052851BB1226614600A99ECD /* misc */ = {
 			isa = PBXGroup;
 			children = (
-				0528685113E012660044A388 /* code2000.ttf */,
 				0528684E13E00D300044A388 /* Padauk.ttf */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
 				056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */,
-				0550A0C310A8407C00363295 /* CharisSILR.ttf */,
 			);
 			name = misc;
 			sourceTree = "<group>";
@@ -2672,6 +2688,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				051F22AA1737544C00DDFF13 /* fonts */,
 				052851BB1226614600A99ECD /* misc */,
 				052851BA1226613100A99ECD /* xibs */,
 				0516CF04136121DA0058E022 /* xibs-iPad */,
@@ -3190,6 +3207,9 @@
 				05717C9513F27B8000753423 /* Entitlements.plist in Resources */,
 				05F4D226160189940072620A /* Default-568h@2x.png in Resources */,
 				05E7F56116018E26006EA9A3 /* Icon-72@2x.png in Resources */,
+				051F22B61737549600DDFF13 /* GentiumPlus-R.ttf in Resources */,
+				051F22B71737549600DDFF13 /* SILEOT.ttf in Resources */,
+				051F22B9173758AD00DDFF13 /* OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

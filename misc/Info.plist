@@ -6,8 +6,6 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
-	<key>CFBundleDocumentTypes</key>
-	<array/>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -72,6 +70,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>code2000.ttf</string>
+		<string>GentiumPlus-R.ttf</string>
+		<string>SILEOT.ttf</string>
 	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
@@ -84,9 +84,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array/>
-	<key>UTImportedTypeDeclarations</key>
-	<array/>
 </dict>
 </plist>
