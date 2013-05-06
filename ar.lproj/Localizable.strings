@@ -1,0 +1,306 @@
+/*
+ * PocketSword - A frontend for viewing SWORD project modules on iOS
+ *
+ * Copyright 2008-2012 CrossWire Bible Society – http://www.crosswire.org
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ */
+
+// Arabic (ar) localisation
+// By Laurence Rezkalla
+// Last Updated v1.4.4 (5th May, 2013)
+
+"Edit" = "ليدعت";
+"Done" = "مت";
+"Module Download" = "جمانرب ليمحت";
+"Installing" = ":تيبثت";
+"Yes" = "معن";
+"No" = "ال";
+"ConfirmInstall" = "؟جمانربلا اذه تيبثت ديرت له";
+"Next" = "يلاتلا";
+"Previous" = "قباسلا";
+
+"Ok" = "معن";
+"Cancel" = "ءاغلا";
+"Error" = "أطخ";
+
+// Module About
+"AboutModuleName" = ":ةدحولا مسا ";
+"AboutModuleDescription" = ":فصولا ";
+"AboutModuleType" = ":عونلا ";
+"AboutModuleLang" = ":ةغللا ";
+"AboutModuleVersion" = ":ةخسنلا ";
+"AboutModuleVersionUnspecified" = "(ددحم ريغ)";
+"AboutModuleAboutText" = ":انب لصتا ";
+"AboutModuleLicence" = ":عيزوتلا ةصخر ";
+"AboutModuleLCSH" = ":سرجنوكلا ةبتكم يسيئرلا عوضوملا ";
+
+
+"Disclaimer" = "ةيلوئسم ءالخا";
+"DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
+
+"WebNoIP" = "Web: ن\يجراخلا IP ديدحت يلع رداق ريغ";
+"WiFiNoConnection" = "Wifi: ن\لاصتا دجويال";
+"NoNetworkConnection" = ".ةرفوتم ةكبش لاصتا دجويال";
+
+"manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
+"InstallManagerDisabled" = "...لطعم";
+"InstallTitle" = "؟تيبثت";
+"files" = "تافلم";
+"InstallProblem" = ".تيبثتلا ءانثا ةلكشم تثدح";
+"InstalledButtonTitle" = "تيبثتلا مت";
+"InstallButtonTitle" = "تيبثت";
+"RefreshProblem" = ".ثيدحتلا ءانثا ةلشكم تثدح";
+"RefreshingModuleSource" = "ةدحولا ردصم ثيدحت";
+"NoModulesRefresh" = ".يرخأ ةرم ثيدحتلا لواح .ةدحو يأ دجوتال انه";
+"NoModulesInstalled" = ".ةدحو يأ تيبثت متي مل";
+
+"InstallSourcesTitle" = "ليمحتلا";//changed for v1.3.3ish
+"PreferencesTitle" = "تاليضفتلا";
+"PreferencesDisplayPreferencesTitle" = "تاليضفتلا ضرع";
+"PreferencesDevicePreferencesTitle" = "زاهجلا تاليضفت";
+"PreferencesFontSizeTitle" = "فورحلا مجح";
+"PreferencesNightModeTitle" = "ليللا لالخ راهظالا";
+"PreferencesVPLTitle" = "رطس لكل ددع";
+"PreferencesFontTitle" = "فورحلا";
+"PreferencesRedLetterTitle" = "رمحالا نوللا فورحلا";
+"PreferencesRedLetterNote" = "تادحولا ضعب يف طقف ةحاتم رمحالا نوللاب فورحلا";
+"PreferencesDisableAutoLockTitle" = "auto-sleep ليطعت";
+"PreferencesModuleMaintainerModeTitle" = "ةدحولل رمتسملا ضرعلا";
+"PreferencesModuleMaintainerModeNote" = ".CrossWire لالخ نم ةروشنملا تادحولا يلإ لوخدلا نوديري اوناك اذا البق ةجمربملا تادحولا هذه لامعتساب مهحصننف نييداعلا نيمدختسملا اما .ةيلاتتملا تاوطخلا ةقيرطب تادحولا هذه تيبثتب مايقلا بلطتيو مهب ةصاخلا مهتادحو اوركتبا نيذلا نيمدختسملا كئلوال وه ةدحولل رمتسملا ضرعلا نا ظحال";
+
+"AboutTitle" = "نحن نم";
+
+"TabBarTitleBible" = "سدقملا باتكلا";
+"TabBarTitleCommentary" = "ريسافت";
+"TabBarTitleDictionary" = "سيماوق";
+"TabBarTitleModules" = "تادحو";
+"TabBarTitlePreferences" = "تاليضفتلا";
+"TabBarTitleAbout" = "انب لصتا";
+
+"ModulesTitle" = "Modules";
+"BookmarksTitle" = "Bookmarks";
+
+"ActivityLabelLoading" = "Loading...";
+"MMMBonjourLoading" = "Bonjour Loading...";
+"MMMIPLoading" = "IP Loading...";
+
+"Biblical Texts" = "Biblical Texts";
+"Commentaries" = "Commentaries";
+"Lexicons / Dictionaries" = "Lexicons / Dictionaries";
+"Generic Books" = "Generic Books";
+"Daily Devotional" = "Daily Devotionals";
+"Glossaries" = "Glossaries";
+"Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
+"Essays" = "Essays";
+"Maps" = "Maps";
+"Images" = "Images";
+
+"BibleHistoryTitle" = "Bible History";
+"CommentaryHistoryTitle" = "Commentary History";
+
+"None" = "None";
+"CloseButtonTitle" = "Close";
+"CacheDictionaryKeysTitle" = "Cache?";
+"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
+"IndexDownloadTitle" = "Index Download";
+"NoSearchIndexTitle" = "No Search Index";
+"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
+"SearchDownloaderTitle" = "Search Downloader";
+"FontPreferenceTitle" = "Font";
+"EmailUsButton" = "Email Us";
+"NoSearchIndexInstalled" = "No Search Index Installed";
+"SearchResults" = "Results";
+
+"IndexControllerInstalled" = "You already have installed a search index for:";
+"IndexControllerDownloadable" = "Select a downloadable search index from the following list to enable search for that module:";
+"IndexControllerNone" = "Check your network connection to enable search for:";
+"IndexControllerNoneRemote" = "There is currently no downloadable search index available for:";
+
+"SearchHelpTitle" = "Search Help";
+"IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";
+
+"PreferencesStrongsPreferencesTitle" = "Strong's Numbers";
+"PreferencesDisplayTitle" = "Display";
+"PreferencesGreekModuleTitle" = "Greek module";
+"PreferencesHebrewModuleTitle" = "Hebrew module";
+"PreferencesMorphologyPreferencesTitle" = "Morphology Preferences";
+"PreferencesOriginalLanguagePreferencesTitle" = "Original Language";
+"PreferencesGreekAccentsTitle" = "Greek Accents";
+"PreferencesHVPTitle" = "Hebrew Vowel Points";
+"PreferencesHebrewCantillationTitle" = "Hebrew Cantillation";
+"PreferencesGreekStrongsLexiconTitle" = "Greek Strong's lexicon";
+"PreferencesHebrewStrongsLexiconTitle" = "Hebrew Strong's lexicon";
+"PreferencesGreekMorphLexiconTitle" = "Greek Morphological lexicon";
+"PreferencesCrossReferencesTitle" = "Cross-references";
+"PreferencesFootnotesTitle" = "Footnotes";
+
+"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew Strong's Numbers Lexicon installed. Please install one (such as 'strongshebrew') via the More->Downloads tab.";
+"NoGreekStrongsNumbersModuleInstalled" = "No Greek Strong's Numbers Lexicon installed. Please install one (such as 'strongsgreek') via the More->Downloads tab.";
+
+"NoMorphGreekModuleInstalled" = "No Greek Morphological Analysis Codes Lexicon installed. Please install one (such as 'Robinson') via the More->Downloads tab";
+"MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+
+"AboutModuleFeaturesTitle" = "Module Features";
+"AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";
+"AboutModuleContainsMorphTags" = "Contains Morphological tags";
+"AboutModuleContainsFootnotes" = "Contains Footnotes";
+"AboutModuleContainsHeadings" = "Contains Headings";
+"AboutModuleContainsRedLetterWords" = "Words of Christ in Red";
+"AboutModuleContainsVariants" = "Contains Textual Variants";
+"AboutModuleContainsGreekAccents" = "Contains Greek Accents";
+"AboutModuleContainsScriptref" = "Contains Scriptual Cross-References";
+"AboutModuleContainsLemma" = "Lemmas";
+"AboutModuleContainsCantillation" = "Contains Cantillation Marks";
+"AboutModuleContainsHebrewPoints" = "Contains Hebrew Points";
+"AboutModuleContainsMorphSegmentation" = "This is a morpheme segmented Hebrew text";
+"AboutModuleContainsGreekDef" = "Defines Greek Strong's Numbers";
+"AboutModuleContainsHebrewDef" = "Defines Hebrew Strong's Numbers";
+"AboutModuleContainsGreekParse" = "Defines Greek Morphological Analysis Codes";
+"AboutModuleContainsHebrewParse" = "Defines Hebrew Morphological Analysis Codes";
+"AboutModuleContainsDailyDevotion" = "Contains a Daily Devotional";
+"AboutModuleContainsImages" = "Contains Images";
+
+"NotSupported" = "This module is not currently supported";
+"ConfirmDeleteTitle" = "Remove?";
+"ConfirmDeleteQuestion" = "Are you sure you wish to remove this module?";
+"EmptyChapterWarning" = "This chapter is empty for this module.";
+"ModuleNotInstalled" = "is not installed.";
+"AboutModuleCurrentVersion" = "Installed Version: ";
+
+// new v1.2.2 strings:
+"ModuleLockedTitle" = "Module Locked";
+"ModuleLockedQuestion" = "This module is currently locked.  You must purchase a key to unlock this module.  Unfortunately, you can't do this through PocketSword at this time.  Please read the description of this module to find out how to purchase this module.\n  If you have already purchased a key, you can input your key to unlock this module.  Do you want to input your key now?";
+"ModuleEnterKeyTitle" = "Enter Key:";
+"ModuleUnlockScreenTitle" = "Unlock Module";
+"ModuleUnlockHelpText" = "To unlock this module, please enter the key you were sent when you bought this module.  Press Done to test the key and then press Save if it looks correct.";
+"RefSelectorBookTitle" = "Select Book";
+"RefSelectorChapterTitle" = "Chapter";
+"RefSelectorVerseTitle" = "Verse";
+"RefSelectorBackButtonTitle" = "Back";
+
+// new v1.3.0 strings:
+"PreferencesHeadingsTitle" = "Headings";
+"DictionarySearchPlaceholderText" = "Search Dictionary";
+"TabBarTitleDevotional" = "Daily Devotionals";
+"TodayButtonTitle" = "Today";
+"ManageSources" = "Manage Sources";
+"AddFTPSource" = "Add FTP Source";
+"AddHTTPSource" = "Add HTTP Source";
+"DeleteSource" = "Delete Source";
+"RefreshSourceList" = "Refresh Source List";
+"AddSourceCaptionTitle" = "Source Name";
+"AddSourceServerTitle" = "Server";
+"AddSourcePathTitle" = "Path";
+"AddFTPSourceTitle" = "New FTP Source";
+"AddHTTPSourceTitle" = "New HTTP Source";
+"FillInAllFieldsMessage" = "You must fill in all the fields!";
+"Warning" = "Warning";
+"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+
+// new v1.3.2 strings:
+"AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
+"UpgradeButtonTitle" = "Replace";
+"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+
+"VerseContextualMenuAddBookmark" = "Add Bookmark";
+"VerseContextualMenuCommentary" = "View in Commentary";
+
+// new v1.3.3 strings:
+"VoiceOverPreviousChapterButton" = "Previous Chapter";
+"VoiceOverNextChapterButton" = "Next Chapter";
+"VoiceOverHistoryAndSearchButton" = "History and Search";
+"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
+"ModuleTypesHeaderText" = "Select Module Type:";
+"ModuleLanguagesHeaderText" = "Select Language:";
+"PreferencesModulePreferencesTitle" = "Module Preferences";
+"PreferencesFullscreenModeTitle" = "Automatic Fullscreen Mode";
+"PreferencesFullscreenNote" = "With Automatic Fullscreen Mode disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+
+// new v1.3.4 strings:
+"PreferencesRotationLock" = "Rotation Lock";
+
+// new v1.3.5 strings:
+"PreferencesFontDefaultTitle" = "Use custom Font";
+
+// new v1.4.0 strings:
+"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
+"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
+"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
+"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+
+"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
+"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+
+"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
+"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "Folder Name:";
+"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
+"BookmarksAddBookmarkVerseTitle" = "Verse";
+"BookmarksAddBookmarkDescriptionTitle" = "Description";
+"BookmarksAddBookmarkFolderTitle" = "Folder";
+
+"BookmarksAddFolderButton" = "Add Folder";
+"BookmarksEditFolderTitle" = "Edit Folder";
+"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
+"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
+"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
+"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+
+"SearchTitle" = "Search";
+"SearchStrongsTitle" = "Strong's Search";
+"SearchOptionsTitle" = "Search Options";
+
+"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+
+"SearchTypeSectionHeader" = "Search Type:";
+"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "Strong's Search:";
+"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+
+"SearchTypeSectionFooter" = "";// currently empty.
+"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
+"SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
+"SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
+
+"SearchTypeAllRow" = "Match ALL words";
+"SearchTypeAllRowShort" = "All words";
+"SearchTypeAnyRow" = "Match ANY word";
+"SearchTypeAnyRowShort" = "Any word";
+"SearchTypeExactRow" = "Match EXACT phrase";
+"SearchTypeExactRowShort" = "Exact phrase";
+"SearchRangeAllRow" = "Entire Bible";
+"SearchRangeAllRowShort" = "Entire Bible";
+"SearchRangeOTRow" = "Old Testament";
+"SearchRangeOTRowShort" = "OT";
+"SearchRangeNTRow" = "New Testament";
+"SearchRangeNTRowShort" = "NT";
+"SearchStrongsRow" = "Search for a Strong's Number";
+"On" = "On";
+"Off" = "Off";
+"SearchStartSearchButton" = "Start Search";
+"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
+
+// new v1.4.2 strings:
+"HistoryClearButtonTitle" = "Clear All";
+"HistoryClearConfirmationTitle" = "Clear All History?";
+"HistoryClearConfirmationMessage" = "Are you sure you wish to clear all your history?";
+
+// new v1.4.3 strings:
+"HistoryTitle" = "History";
+
+// new v1.4.4 strings:
+"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";

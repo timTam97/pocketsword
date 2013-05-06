@@ -545,6 +545,13 @@
 		051CF1871084199400154E44 /* NavigatorLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigatorLeafView.h; sourceTree = "<group>"; };
 		051CF1881084199400154E44 /* NavigatorLeafView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavigatorLeafView.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		051F22A3173733AE00DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		051F22A41737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/Downloader.xib; sourceTree = "<group>"; };
+		051F22A51737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/IndexDownloader.xib; sourceTree = "<group>"; };
+		051F22A61737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		051F22A71737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
+		051F22A81737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/PSSearchController.xib; sourceTree = "<group>"; };
+		051F22A91737348900DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = "ar.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PocketSword.entitlements; sourceTree = "<group>"; };
 		051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryController.h; path = Classes/PSHistoryController.h; sourceTree = "<group>"; };
 		051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryItem.h; path = Classes/PSHistoryItem.h; sourceTree = "<group>"; };
@@ -3080,6 +3087,7 @@
 				th,
 				de,
 				pt,
+				ar,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* PocketSword */;
 			projectDirPath = "";
@@ -3574,6 +3582,7 @@
 				05930F9213E8EAEE001DEF4E /* th */,
 				0567C1AF13FB4D4000B6619D /* de */,
 				05BAC371141476B100F94AD1 /* pt */,
+				051F22A41737347700DDFF13 /* ar */,
 			);
 			name = Downloader.xib;
 			sourceTree = "<group>";
@@ -3597,6 +3606,7 @@
 				05930FA413E8EB10001DEF4E /* th */,
 				0567C1C113FB4D8400B6619D /* de */,
 				05BAC383141476CA00F94AD1 /* pt */,
+				051F22A91737348900DDFF13 /* ar */,
 			);
 			name = "MainWindow-iPad.xib";
 			sourceTree = "<group>";
@@ -3620,6 +3630,7 @@
 				05930F9413E8EAEE001DEF4E /* th */,
 				0567C1B113FB4D4000B6619D /* de */,
 				05BAC373141476B100F94AD1 /* pt */,
+				051F22A51737347700DDFF13 /* ar */,
 			);
 			name = IndexDownloader.xib;
 			sourceTree = "<group>";
@@ -3643,6 +3654,7 @@
 				05930F9713E8EAEE001DEF4E /* th */,
 				0567C1B413FB4D4000B6619D /* de */,
 				05BAC376141476B100F94AD1 /* pt */,
+				051F22A81737347700DDFF13 /* ar */,
 			);
 			name = PSSearchController.xib;
 			sourceTree = "<group>";
@@ -3666,6 +3678,7 @@
 				05930F9613E8EAEE001DEF4E /* th */,
 				0567C1B313FB4D4000B6619D /* de */,
 				05BAC375141476B100F94AD1 /* pt */,
+				051F22A71737347700DDFF13 /* ar */,
 			);
 			name = PSModuleSelectorController.xib;
 			sourceTree = "<group>";
@@ -3689,6 +3702,7 @@
 				05930F8F13E8EAC4001DEF4E /* th */,
 				0567C1AC13FB4CEC00B6619D /* de */,
 				05BAC36E1414767000F94AD1 /* pt */,
+				051F22A3173733AE00DDFF13 /* ar */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -3712,6 +3726,7 @@
 				05930F9513E8EAEE001DEF4E /* th */,
 				0567C1B213FB4D4000B6619D /* de */,
 				05BAC374141476B100F94AD1 /* pt */,
+				051F22A61737347700DDFF13 /* ar */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
