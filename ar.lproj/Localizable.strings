@@ -20,91 +20,91 @@
 // By Laurence Rezkalla
 // Last Updated v1.4.4 (5th May, 2013)
 
-"Edit" = "ليدعت";
+"Edit" = "تعديل";
 "Done" = "مت";
-"Module Download" = "جمانرب ليمحت";
-"Installing" = ":تيبثت";
-"Yes" = "معن";
-"No" = "ال";
-"ConfirmInstall" = "؟جمانربلا اذه تيبثت ديرت له";
-"Next" = "يلاتلا";
-"Previous" = "قباسلا";
+"Module Download" = "تحميل برنامج";
+"Installing" = "تثبيت:";
+"Yes" = "نعم";
+"No" = "لا";
+"ConfirmInstall" = "هل تريد تثبيت هذا البرنامج؟";
+"Next" = "التاي";
+"Previous" = "السابق";
 
-"Ok" = "معن";
-"Cancel" = "ءاغلا";
-"Error" = "أطخ";
+"Ok" = "نعم";
+"Cancel" = "الغاء";
+"Error" = "خطأ";
 
 // Module About
-"AboutModuleName" = ":ةدحولا مسا ";
-"AboutModuleDescription" = ":فصولا ";
-"AboutModuleType" = ":عونلا ";
-"AboutModuleLang" = ":ةغللا ";
-"AboutModuleVersion" = ":ةخسنلا ";
-"AboutModuleVersionUnspecified" = "(ددحم ريغ)";
-"AboutModuleAboutText" = ":انب لصتا ";
-"AboutModuleLicence" = ":عيزوتلا ةصخر ";
-"AboutModuleLCSH" = ":سرجنوكلا ةبتكم يسيئرلا عوضوملا ";
+"AboutModuleName" = "اسم الوحدة: ";
+"AboutModuleDescription" = "الوصف: ";
+"AboutModuleType" = "النوع:";
+"AboutModuleLang" = "اللغة: ";
+"AboutModuleVersion" = "النسخ:";
+"AboutModuleVersionUnspecified" = "(غير محمد)";
+"AboutModuleAboutText" = "اتصل: ";
+"AboutModuleLicence" = "رخصة التوزيع:";
+"AboutModuleLCSH" = "الموضوع الرئيسي مكتبة الكونجرس: ";
 
 
-"Disclaimer" = "ةيلوئسم ءالخا";
+"Disclaimer" = "اخلاء مسئولية";
 "DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
 
-"WebNoIP" = "Web: ن\يجراخلا IP ديدحت يلع رداق ريغ";
-"WiFiNoConnection" = "Wifi: ن\لاصتا دجويال";
-"NoNetworkConnection" = ".ةرفوتم ةكبش لاصتا دجويال";
+"WebNoIP" = "Web: ن\الخارجي IP غير قادر علي تحديد";
+"WiFiNoConnection" = "Wifi: ن\لايوجد اتصال";
+"NoNetworkConnection" = "لاتوجد شبكة اتصال موجودة.";
 
 "manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
-"InstallManagerDisabled" = "...لطعم";
-"InstallTitle" = "؟تيبثت";
-"files" = "تافلم";
-"InstallProblem" = ".تيبثتلا ءانثا ةلكشم تثدح";
-"InstalledButtonTitle" = "تيبثتلا مت";
-"InstallButtonTitle" = "تيبثت";
-"RefreshProblem" = ".ثيدحتلا ءانثا ةلشكم تثدح";
-"RefreshingModuleSource" = "ةدحولا ردصم ثيدحت";
-"NoModulesRefresh" = ".يرخأ ةرم ثيدحتلا لواح .ةدحو يأ دجوتال انه";
-"NoModulesInstalled" = ".ةدحو يأ تيبثت متي مل";
+"InstallManagerDisabled" = "معطل...";
+"InstallTitle" = "تثبيت؟";
+"files" = "ملفات";
+"InstallProblem" = "حدثت مشكلة اثناء التثبيت";
+"InstalledButtonTitle" = "تم التثبيت";
+"InstallButtonTitle" = "تثبيت";
+"RefreshProblem" = "مشكلة اثتاء التحديث.";
+"RefreshingModuleSource" = "تحديث مصدر الوحدة";
+"NoModulesRefresh" = "لاتوجد هنا اي وحدة. حاول التحديث مرة اخري.";
+"NoModulesInstalled" = "تثبيت الوحدة لم يتم.";
 
-"InstallSourcesTitle" = "ليمحتلا";//changed for v1.3.3ish
-"PreferencesTitle" = "تاليضفتلا";
-"PreferencesDisplayPreferencesTitle" = "تاليضفتلا ضرع";
-"PreferencesDevicePreferencesTitle" = "زاهجلا تاليضفت";
-"PreferencesFontSizeTitle" = "فورحلا مجح";
-"PreferencesNightModeTitle" = "ليللا لالخ راهظالا";
-"PreferencesVPLTitle" = "رطس لكل ددع";
-"PreferencesFontTitle" = "فورحلا";
-"PreferencesRedLetterTitle" = "رمحالا نوللا فورحلا";
-"PreferencesRedLetterNote" = "تادحولا ضعب يف طقف ةحاتم رمحالا نوللاب فورحلا";
-"PreferencesDisableAutoLockTitle" = "auto-sleep ليطعت";
-"PreferencesModuleMaintainerModeTitle" = "ةدحولل رمتسملا ضرعلا";
+"InstallSourcesTitle" = "التحميل";//changed for v1.3.3ish
+"PreferencesTitle" = "مفضلات";
+"PreferencesDisplayPreferencesTitle" = "عرض المفضلات";
+"PreferencesDevicePreferencesTitle" = "مفضلات الجهاز";
+"PreferencesFontSizeTitle" = "حجم الحروف";
+"PreferencesNightModeTitle" = "الاظهار الليلي";
+"PreferencesVPLTitle" = "سطر لكل عدد";
+"PreferencesFontTitle" = "حروف";
+"PreferencesRedLetterTitle" = "حروف باللون الاحمر";
+"PreferencesRedLetterNote" = "الحروف باللون الاحمر متاحة فقط لبعض الوحدات";
+"PreferencesDisableAutoLockTitle" = "auto-sleep تعطيل";
+"PreferencesModuleMaintainerModeTitle" = "العرض المستمر للوحدة";
 "PreferencesModuleMaintainerModeNote" = ".CrossWire لالخ نم ةروشنملا تادحولا يلإ لوخدلا نوديري اوناك اذا البق ةجمربملا تادحولا هذه لامعتساب مهحصننف نييداعلا نيمدختسملا اما .ةيلاتتملا تاوطخلا ةقيرطب تادحولا هذه تيبثتب مايقلا بلطتيو مهب ةصاخلا مهتادحو اوركتبا نيذلا نيمدختسملا كئلوال وه ةدحولل رمتسملا ضرعلا نا ظحال";
 
-"AboutTitle" = "نحن نم";
+"AboutTitle" = "من نحن";
 
-"TabBarTitleBible" = "سدقملا باتكلا";
-"TabBarTitleCommentary" = "ريسافت";
-"TabBarTitleDictionary" = "سيماوق";
-"TabBarTitleModules" = "تادحو";
-"TabBarTitlePreferences" = "تاليضفتلا";
-"TabBarTitleAbout" = "انب لصتا";
+"TabBarTitleBible" = "الكتاب المقدس";
+"TabBarTitleCommentary" = "تفاسير";
+"TabBarTitleDictionary" = "قواميس";
+"TabBarTitleModules" = "وحدات";
+"TabBarTitlePreferences" = "تفضيلات";
+"TabBarTitleAbout" = "اتصل بنا";
 
-"ModulesTitle" = "Modules";
-"BookmarksTitle" = "Bookmarks";
+"ModulesTitle" = "وحدات";
+"BookmarksTitle" = "علامة كتابية";
 
 "ActivityLabelLoading" = "Loading...";
 "MMMBonjourLoading" = "Bonjour Loading...";
 "MMMIPLoading" = "IP Loading...";
 
-"Biblical Texts" = "Biblical Texts";
-"Commentaries" = "Commentaries";
-"Lexicons / Dictionaries" = "Lexicons / Dictionaries";
-"Generic Books" = "Generic Books";
-"Daily Devotional" = "Daily Devotionals";
-"Glossaries" = "Glossaries";
+"Biblical Texts" = "نصوص الكتاب المقدس";
+"Commentaries" = "تفاسير";
+"Lexicons / Dictionaries" = "معاجم / قواميس";
+"Generic Books" = "كتب اخري";
+"Daily Devotional" = "تأملات يومية";
+"Glossaries" = "معاني كلمات";
 "Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
-"Essays" = "Essays";
-"Maps" = "Maps";
-"Images" = "Images";
+"Essays" = "مقالات";
+"Maps" = "خرائط";
+"Images" = "صور";
 
 "BibleHistoryTitle" = "Bible History";
 "CommentaryHistoryTitle" = "Commentary History";
