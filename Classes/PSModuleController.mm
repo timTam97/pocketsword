@@ -983,17 +983,20 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if([PSResizing iPad]) {
 		iPadPadding = @"padding: 10px;\n";
 		lineHeight = @"1.6";
-		lgMarginLeft = 3;
-		//normalPaddingStart = 5;
-		//largePaddingStart = 7;
-		smallPadding = mediumPadding = largePadding = 5;
-		hugePadding = 7;
-		smallIndent = 5;
-		mediumIndent = 3;
-		largeIndent = 1;
-		hugeIndent = 1;
-		lgVersePaddingInt = @"4";
-		lgVerseWidth = 3;
+		if(fs <= 24) {
+			// increase indenting!
+			lgMarginLeft = 3;
+			//normalPaddingStart = 5;
+			//largePaddingStart = 7;
+			smallPadding = mediumPadding = largePadding = 5;
+			hugePadding = 7;
+			smallIndent = 5;
+			mediumIndent = 3;
+			largeIndent = 1;
+			hugeIndent = 1;
+			lgVersePaddingInt = @"4";
+			lgVerseWidth = 3;
+		}
 	}
 	if(moduleName) {
 		// check if module is RTL or LTR
@@ -1024,8 +1027,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[returnString appendFormat:@"i.transChangeAdded { color: gray; }\n\
 	 a { color: %@; /* linkColour */ text-decoration: none; }\n\
 	 a.verse { font-size: 70%%; vertical-align: super; line-height: 130%%; color: %@; /* fontColour */ }\n\
-	 a.x { color: gray; font-size: small; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
-	 a.n { color: gray; font-size: small; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
+	 a.x { color: gray; font-size: 70%%; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
+	 a.n { color: gray; font-size: 70%%; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
 	 a.strongs { color: gray; text-decoration: none; vertical-align: super; font-size: 70%%; font-style: italic; }\n\
 	 a.morph { color: gray; text-decoration: none; vertical-align: super; font-size: 70%%; font-style: italic; }\n\
 	 span.WordOfChrist { color: #D03030; }\n\
