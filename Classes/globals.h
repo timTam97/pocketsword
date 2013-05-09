@@ -118,6 +118,8 @@ typedef enum {
 #define DefaultsHebrewCantillationPreference		@"hebrewCantillationPreference"
 
 #define StrongsFontName								@"Times New Roman"
+#define PSGreekStrongsFontName						@"Gentium Plus"
+#define PSHebrewStrongsFontName						@"Ezra SIL"
 #define PSDefaultFontName							@"Helvetica Neue"
 #define PSFolderSeparatorString						@":::"
 #define PSHistoryMaxEntries							100

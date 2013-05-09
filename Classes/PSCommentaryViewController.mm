@@ -237,7 +237,11 @@
 			}
 
 			NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-			[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+			if(!hebrew) {
+				[[NSUserDefaults standardUserDefaults] setObject:PSGreekStrongsFontName forKey:DefaultsFontNamePreference];
+			} else  {
+				[[NSUserDefaults standardUserDefaults] setObject:PSHebrewStrongsFontName forKey:DefaultsFontNamePreference];
+			}
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
 			[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];

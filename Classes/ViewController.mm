@@ -1389,10 +1389,11 @@ bool ps_viewcontroller_initialized = false;
 			} else {
 				// Should be a dictionary entry:
 				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+				BOOL strongs = NO;
+				BOOL greekStrongs = YES;
 				if(swordDictionary) {
 					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
 					
-					BOOL strongs = NO;
 					NSString *strongsSearchTerm = @"";
 					if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF] && [swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
 						// should already have a prefix
@@ -1405,14 +1406,17 @@ bool ps_viewcontroller_initialized = false;
 						}
 						strongsSearchTerm = [NSString stringWithFormat:@"G%@", greek];
 						[greek release];
+						greek = nil;
 						strongs = YES;
 					} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
+						greekStrongs = NO;
 						NSMutableString *hebrew = [[rData objectForKey:ATTRTYPE_VALUE] mutableCopy];
 						while([hebrew characterAtIndex:0] == '0') {
 							[hebrew deleteCharactersInRange:NSMakeRange(0, 1)];
 						}
 						strongsSearchTerm = [NSString stringWithFormat:@"H0%@", hebrew];
 						[hebrew release];
+						hebrew = nil;
 						strongs = YES;
 					}
 					if(strongs) {
@@ -1424,7 +1428,13 @@ bool ps_viewcontroller_initialized = false;
 				}
 
 				NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-				[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+				if(strongs && greekStrongs) {
+					[[NSUserDefaults standardUserDefaults] setObject:PSGreekStrongsFontName forKey:DefaultsFontNamePreference];
+				} else if(strongs && !greekStrongs) {
+					[[NSUserDefaults standardUserDefaults] setObject:PSHebrewStrongsFontName forKey:DefaultsFontNamePreference];
+				} else {
+					[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
+				}
 				[[NSUserDefaults standardUserDefaults] synchronize];
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
 				[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
