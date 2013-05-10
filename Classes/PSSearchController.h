@@ -9,6 +9,7 @@
 #import "globals.h"
 #import "PSSearchHistoryItem.h"
 #import "PSSearchOptionTableViewController.h"
+#import "MBProgressHUD.h"
 
 @class PSIndexController;
 
@@ -17,7 +18,7 @@
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
-@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate> {
+@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate> {
 
 	id <PSSearchControllerDelegate> delegate;
 	

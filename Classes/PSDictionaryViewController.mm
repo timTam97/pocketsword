@@ -10,6 +10,7 @@
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
+#import "MBProgressHUD.h"
 
 
 @implementation PSDictionaryViewController
@@ -21,6 +22,10 @@
 
 - (void)reloadDictionaryData {
 	[self reloadDictionaryData:YES];
+}
+
+- (void)showHUD {
+	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
@@ -51,13 +56,16 @@
 				return;
 			} else {
 				//need to load it
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-				//[[PSModuleController defaultModuleController] displayBusyIndicator];
+				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+				[self performSelectorInBackground:@selector(showHUD) withObject:nil];
+				dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+					[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[MBProgressHUD hideHUDForView:self.view animated:YES];
+					});
+				});
 				
-				[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
-				
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-				//[[PSModuleController defaultModuleController] hideBusyIndicator];
+				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 				needsReload = YES;
 			}
 		}
@@ -75,13 +83,16 @@
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if (buttonIndex == 1) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		//[[PSModuleController defaultModuleController] displayBusyIndicator];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		[self performSelectorInBackground:@selector(showHUD) withObject:nil];
+		dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+			[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[MBProgressHUD hideHUDForView:self.view animated:YES];
+			});
+		});
 		
-		[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
-		
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-		//[[PSModuleController defaultModuleController] hideBusyIndicator];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 		dictionaryEnabled = YES;
 		[dictionarySearchBar setUserInteractionEnabled: YES];
 	} else {

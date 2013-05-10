@@ -86,7 +86,9 @@
 	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 	//t = [mainWindow convertRect:t fromWindow:nil];
     ////r.size.height -=  t.size.height;
-    r.size.height = 416 - t.size.height;
+	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - navigationBar.bounds.size.height - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
+
+    r.size.height = baseHeight - t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
     addSourceTableView.frame = r;
@@ -129,7 +131,8 @@
 	//CGRect t;
     //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
     //r.size.height +=  t.size.height;
-	r.size.height = 416;
+	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - navigationBar.bounds.size.height - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
+	r.size.height = baseHeight;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
     addSourceTableView.frame = r;
@@ -149,6 +152,49 @@
 	[navSources dismissModalViewControllerAnimated:YES];
 }
 
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    indexData = [[NSMutableData alloc] init];
+	expectedDataLength = [response expectedContentLength];
+	currentDataLength = 0.0;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [indexData appendData:data];
+	currentDataLength = [indexData length];
+	indexDownloadHUD.progress = (float)currentDataLength / (float) expectedDataLength;
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [indexData release];
+	indexData = nil;
+	
+	[indexDownloadHUD hide:YES];
+	
+	//perhaps dodgy, display a warning.
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+	[alertView show];
+	[alertView release];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	if(indexData) {
+		indexDownloadHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] autorelease];
+		indexDownloadHUD.mode = MBProgressHUDModeCustomView;
+		[indexDownloadHUD hide:YES afterDelay:2];
+		[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];
+	} else {
+		[indexDownloadHUD hide:YES];
+		//perhaps dodgy, display a warning.
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+		[alertView show];
+		[alertView release];
+	}
+    [indexData release];
+	indexData = nil;
+}
+
 - (IBAction)saveButtonPressed {
 	NSString *caption = captionTextField.text;
 	NSString *server = serverTextField.text;
@@ -160,7 +206,7 @@
 		[alertView release];
 		return;
 	}
-
+	
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
@@ -168,33 +214,22 @@
 		return;
 	}
 	
-	
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/mods.d.tar.gz", [serverType lowercaseString], server, path]];
-	NSData *data = nil;
-
-	NSURLResponse *response = [[[NSURLResponse alloc] init] autorelease]; 
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
-	data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	[connection start];
+	[connection release];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	indexDownloadHUD = [[MBProgressHUD showHUDAddedTo:self.view.window animated:YES] retain];
+	indexDownloadHUD.delegate = self;
+}
 
-	application.networkActivityIndicatorVisible = NO;
-
-	if(!data) {
-		//perhaps dodgy, display a warning.
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-		[alertView show];
-		[alertView release];
-		return;
-	} else {
-	}
-	
-	[self addInstallSource:caption withPath:path andServer:server];
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
 }
 
 - (void)addInstallSource:(NSString*)caption withPath:(NSString*)path andServer:(NSString*)server {

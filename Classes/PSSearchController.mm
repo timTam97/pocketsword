@@ -721,9 +721,9 @@
 	return scope;
 }
 
-- (void)search {
+- (void)_search {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	self.results = nil;
 	self.savedTablePosition = nil;
 	if(self.searchTerm) {
@@ -764,9 +764,30 @@
 	[self notifyDelegateOfNewHistoryItem];
 	
 	self.searchTerm = nil;
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	[searchResultsTable reloadData];
+	[searchQueryView removeFromSuperview];
+	[self setSearchTitle];
+
 	[pool release];
+}
+
+- (void)search {
+	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view.window];
+	[self.view.window addSubview:HUD];
+	
+	// Regiser for HUD callbacks so we can remove it from the window at the right time
+	HUD.delegate = self;
+	
+	// Show the HUD while the provided method executes in a new thread
+	[HUD showWhileExecuting:@selector(_search) onTarget:self withObject:nil animated:YES];
+}
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
 }
 
 - (void)notifyDelegateOfNewHistoryItem {
@@ -789,8 +810,8 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
 	[sBar resignFirstResponder];
 	[self search];
-	[searchQueryView removeFromSuperview];
-	[self setSearchTitle];
+	//[searchQueryView removeFromSuperview];
+	//[self setSearchTitle];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {

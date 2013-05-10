@@ -53,12 +53,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	if(refToShow) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		NSString *bText = [[PSModuleController defaultModuleController] getBibleChapter:refToShow withExtraJS:[NSString stringWithFormat:@"%@\nstartDetLocPoll();\n", jsToShow]];
 		[webView loadHTMLString: bText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
 		self.jsToShow = nil;
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	} else {
 		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}

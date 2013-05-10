@@ -239,6 +239,9 @@
 		0552D1301295230300A4994B /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12D1295230300A4994B /* Icon-Small-50.png */; };
 		0552D1311295230300A4994B /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12E1295230300A4994B /* Icon-Small.png */; };
 		0552D1321295230300A4994B /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12F1295230300A4994B /* Icon-Small@2x.png */; };
+		055C8A55173C9F49009FF47D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 055C8A54173C9F49009FF47D /* MBProgressHUD.m */; };
+		055C8A58173CC53D009FF47D /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 055C8A56173CC53D009FF47D /* 37x-Checkmark.png */; };
+		055C8A59173CC53D009FF47D /* 37x-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 055C8A57173CC53D009FF47D /* 37x-Checkmark@2x.png */; };
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		0562FD7C16BB8BCF003A8C70 /* libSystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0562FD7B16BB8BCF003A8C70 /* libSystem.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -446,36 +449,6 @@
 		E9A6CFA20FF559F700399E78 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CFA10FF559F700399E78 /* MainWindow.xib */; };
 		E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildRule section */
-		053E3AC91666EB5C005E92DB /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.llvmgcc42;
-			filePatterns = "*.[mc]";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-			);
-		};
-		059DB852166706EE00E99573 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.llvmgcc42;
-			filePatterns = "*.mm";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-			);
-		};
-		059DB8531667088700E99573 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.llvmgcc42;
-			filePatterns = "*.cpp";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-			);
-		};
-/* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
 		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -999,6 +972,10 @@
 		0556CD4417320788004CD6CD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		0556CD4517320788004CD6CD /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
 		0556CD4617320788004CD6CD /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		055C8A53173C9F49009FF47D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		055C8A54173C9F49009FF47D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		055C8A56173CC53D009FF47D /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "37x-Checkmark.png"; path = "Resources/37x-Checkmark.png"; sourceTree = "<group>"; };
+		055C8A57173CC53D009FF47D /* 37x-Checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "37x-Checkmark@2x.png"; path = "Resources/37x-Checkmark@2x.png"; sourceTree = "<group>"; };
 		055E308310E74288004EBC79 /* SwordListKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordListKey.h; sourceTree = "<group>"; };
 		055E308410E74288004EBC79 /* SwordListKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordListKey.mm; sourceTree = "<group>"; };
 		055E308810E74308004EBC79 /* SwordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordKey.h; sourceTree = "<group>"; };
@@ -1040,10 +1017,6 @@
 		056BCCE812F2E5E60029F3A2 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		056BCCE912F2E5E90029F3A2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
 		056BCCEA12F2E5EE0029F3A2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
-		056CD37E16BB6D0700AA0674 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		056CD37F16BB6D0700AA0674 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		056CD38016BB6D0700AA0674 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		056CD38116BB6D0700AA0674 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		056CD38516BB6D6200AA0674 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
 		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
@@ -2217,6 +2190,8 @@
 		052851B8122660F600A99ECD /* img */ = {
 			isa = PBXGroup;
 			children = (
+				055C8A56173CC53D009FF47D /* 37x-Checkmark.png */,
+				055C8A57173CC53D009FF47D /* 37x-Checkmark@2x.png */,
 				05F4D225160189940072620A /* Default-568h@2x.png */,
 				052EC8FE13DD45CF001B66DC /* Default-Landscape~ipad.png */,
 				052EC8FF13DD45CF001B66DC /* Default-Portrait~ipad.png */,
@@ -2306,8 +2281,8 @@
 		0542F6C110BE75570088A721 /* externals */ = {
 			isa = PBXGroup;
 			children = (
+				055C8A52173C9F49009FF47D /* MBProgressHUD */,
 				0556CD4217320788004CD6CD /* TestFlightSDK1.2.4 */,
-				056CD37D16BB6D0700AA0674 /* TestFlightSDK1.1 */,
 				0542F6CB10BE770C0088A721 /* curl */,
 				0542F6CA10BE76ED0088A721 /* sword */,
 				05D6AB631097E76400A5026E /* CocoaHTTPServer */,
@@ -2484,15 +2459,14 @@
 			path = TestFlightSDK1.2.4;
 			sourceTree = "<group>";
 		};
-		056CD37D16BB6D0700AA0674 /* TestFlightSDK1.1 */ = {
+		055C8A52173C9F49009FF47D /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
-				056CD37E16BB6D0700AA0674 /* libTestFlight.a */,
-				056CD37F16BB6D0700AA0674 /* README.md */,
-				056CD38016BB6D0700AA0674 /* release_notes.md */,
-				056CD38116BB6D0700AA0674 /* TestFlight.h */,
+				055C8A53173C9F49009FF47D /* MBProgressHUD.h */,
+				055C8A54173C9F49009FF47D /* MBProgressHUD.m */,
 			);
-			path = TestFlightSDK1.1;
+			name = MBProgressHUD;
+			path = externals/MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		059419AD12DAC72500A87B02 /* containers */ = {
@@ -3057,9 +3031,6 @@
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
 			);
 			buildRules = (
-				059DB8531667088700E99573 /* PBXBuildRule */,
-				059DB852166706EE00E99573 /* PBXBuildRule */,
-				053E3AC91666EB5C005E92DB /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -3210,6 +3181,8 @@
 				051F22B61737549600DDFF13 /* GentiumPlus-R.ttf in Resources */,
 				051F22B71737549600DDFF13 /* SILEOT.ttf in Resources */,
 				051F22B9173758AD00DDFF13 /* OFL.txt in Resources */,
+				055C8A58173CC53D009FF47D /* 37x-Checkmark.png in Resources */,
+				055C8A59173CC53D009FF47D /* 37x-Checkmark@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3577,6 +3550,7 @@
 				05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */,
 				051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.m in Sources */,
 				05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */,
+				055C8A55173C9F49009FF47D /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3830,10 +3804,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -3841,7 +3811,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -3859,10 +3828,9 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "5A1EE75E-6B35-4E6C-92F0-34A91FC85ED4";
-				SDKROOT = iphoneos5.1;
+				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Debug;
 		};
@@ -3870,16 +3838,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -3897,10 +3860,9 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "7F8EDE3C-C318-47E2-80C5-DD9B011069C4";
-				SDKROOT = iphoneos5.1;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Release;
 		};
@@ -3908,10 +3870,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
@@ -3919,7 +3877,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -3937,10 +3894,9 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos5.1;
+				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Distribution;
 		};

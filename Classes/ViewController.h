@@ -104,9 +104,9 @@ typedef enum {
 	IBOutlet UITabBarItem				*aboutTabBarItem;
 	
 	// Busy Indicator
-	IBOutlet UIViewController			*activityController;
-	IBOutlet UIActivityIndicatorView	*activityIndicator;
-	IBOutlet UILabel					*activityLoadingLabel;
+//	IBOutlet UIViewController			*activityController;
+//	IBOutlet UIActivityIndicatorView	*activityIndicator;
+//	IBOutlet UILabel					*activityLoadingLabel;
 	
 	NSLock								*toolbarLock;
 	
@@ -165,9 +165,9 @@ typedef enum {
 - (void)redisplayCommentaryChapter;
 - (void)redisplayBibleChapterAfterBookmarksChange;
 
-- (void)displayBusyIndicator;
-- (void)hideBusyIndicator;
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
+//- (void)displayBusyIndicator;
+//- (void)displayBusyIndicatorViaNotification;
+//- (void)hideBusyIndicator;
 
 - (void)setEnabledBibleNextButton:(BOOL)enabled;
 - (void)setEnabledBiblePreviousButton:(BOOL)enabled;
@@ -189,7 +189,6 @@ typedef enum {
 - (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
 - (void)segmentedControlAction:(id)sender;
-- (void)displayBusyIndicatorViaNotification;
 - (void)displayCommentaryTabViaNotification;
 - (void)displayBibleTabViaNotification;
 - (void)startAnimateChapterChange;

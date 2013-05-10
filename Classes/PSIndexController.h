@@ -10,7 +10,7 @@
 #import "SwordModule.h"
 #import "PSSearchController.h"
 
-@interface PSIndexController : UIViewController {
+@interface PSIndexController : UIViewController <MBProgressHUDDelegate> {
 	PSSearchController *searchController;
 
 	NSArray *downloadableIndices;

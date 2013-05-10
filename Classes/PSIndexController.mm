@@ -207,14 +207,14 @@
 	[pool release];
 }
 
-- (IBAction)updateInstalledIndexListWithRemoteIndices:(id)sender {
+- (void)_updateInstalledIndexListWithRemoteIndices {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	UIApplication *application = [UIApplication sharedApplication];
 	
 	if([PSModuleController checkNetworkConnection]) {
 		application.networkActivityIndicatorVisible = YES;
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 
 		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
 		
@@ -249,7 +249,7 @@
 			}
 		}
 		dataString = nil;
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	
 	[self updateInstalledIndexList];
@@ -257,6 +257,24 @@
 	application.networkActivityIndicatorVisible = NO;
 	//[indicesTable reloadData];
 	[pool release];
+}
+
+- (IBAction)updateInstalledIndexListWithRemoteIndices:(id)sender {
+	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
+	[(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) addSubview:HUD];
+	
+	// Regiser for HUD callbacks so we can remove it from the window at the right time
+	HUD.delegate = self;
+	
+	// Show the HUD while the provided method executes in a new thread
+	[HUD showWhileExecuting:@selector(_updateInstalledIndexListWithRemoteIndices) onTarget:self withObject:nil animated:YES];
+}
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
 }
 
 - (IBAction)closeButtonPressed:(id)sender {

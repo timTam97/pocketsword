@@ -78,7 +78,7 @@ NSTimer *refreshTimer;
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
     if(![[statusController view] superview]) {
 		if(([dataArray count] == 0)  && [PSModuleController checkNetworkConnection]) {
 			[self _refreshDownloadSource];
@@ -233,6 +233,10 @@ NSTimer *refreshTimer;
     [self updateRefreshButton];
 }
 
+- (void)showHUD {
+	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+}
+
 - (void)refreshDataArray {
 	NSArray *installSources = [[[PSModuleController defaultModuleController] swordInstallManager] installSourceList];
 	SwordInstallSource *sIS = nil;
@@ -247,11 +251,19 @@ NSTimer *refreshTimer;
 	}
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
+		[self performSelectorInBackground:@selector(showHUD) withObject:nil];
+		dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+			
+			[sIS swordManager];
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[MBProgressHUD hideHUDForView:self.view animated:YES];
+			});
+		});
 		
-		[sIS swordManager];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	[self setDataArray:[sIS moduleListByType]];
 	//self.title = [sIS caption];

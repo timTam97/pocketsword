@@ -52,11 +52,11 @@ bool ps_viewcontroller_initialized = false;
         popoverController = nil;
 		Class cls = NSClassFromString(@"UIPopoverController");
 		if([PSResizing iPad] && cls) {
-			popoverController = [[[cls alloc] initWithContentViewController:activityController] retain];
+			popoverController = [[[cls alloc] initWithContentViewController:refNavigationController] retain];
 			[popoverController setDelegate:self];
 		}
 		
-		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
+//		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
 		//configure the Bible & commentary segmented controls.
@@ -152,8 +152,8 @@ bool ps_viewcontroller_initialized = false;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotateInfo:) name:NotificationRotateInfoPane object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicatorViaNotification) name:NotificationDisplayBusyIndicator object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBusyIndicatorViaNotification) name:NotificationDisplayBusyIndicator object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBusyIndicator) name:NotificationHideBusyIndicator object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addModuleButtonPressed) name:NotificationShowDownloadsTab object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayCommentaryTabViaNotification) name:NotificationShowCommentaryTab object:nil];
@@ -1118,72 +1118,72 @@ bool ps_viewcontroller_initialized = false;
 	[modalView release];
 }
 
-- (void)displayBusyIndicatorViaNotification {
-	[self performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
-}
+//- (void)displayBusyIndicatorViaNotification {
+//	[self performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
+//}
+//
+//- (void)displayBusyIndicator {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	
+//	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+//	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//	if([UIApplication sharedApplication].statusBarHidden) {
+//		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
+//	}
+//	
+//	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+//		activityLoadingLabel.transform = CGAffineTransformIdentity;
+//		activityLoadingLabel.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+//	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+//		activityLoadingLabel.transform = CGAffineTransformIdentity;
+//		activityLoadingLabel.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+//	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+//		activityLoadingLabel.transform = CGAffineTransformIdentity;
+//	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+//		activityLoadingLabel.transform = CGAffineTransformIdentity;
+//		activityLoadingLabel.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+//	}
+//
+//	
+//	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+//	[activityIndicator startAnimating];
+//	//[tabController presentModalViewController:activityController animated:NO];
+//	activityController.view.alpha = 0.0;
+//	[mainWindow addSubview:activityController.view];
+//	[UIView beginAnimations:nil context:nil];
+//	[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+//	[UIView setAnimationDuration:0.3];
+//	activityController.view.alpha = 0.5;
+//	[UIView commitAnimations];
+//	
+//	[pool release];
+//}
 
-- (void)displayBusyIndicator {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-	if([UIApplication sharedApplication].statusBarHidden) {
-		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-	}
-	
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		activityLoadingLabel.transform = CGAffineTransformIdentity;
-		activityLoadingLabel.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-		activityLoadingLabel.transform = CGAffineTransformIdentity;
-		activityLoadingLabel.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-		activityLoadingLabel.transform = CGAffineTransformIdentity;
-	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-		activityLoadingLabel.transform = CGAffineTransformIdentity;
-		activityLoadingLabel.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-	}
-
-	
-	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	[activityIndicator startAnimating];
-	//[tabController presentModalViewController:activityController animated:NO];
-	activityController.view.alpha = 0.0;
-	[mainWindow addSubview:activityController.view];
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-	[UIView setAnimationDuration:0.3];
-	activityController.view.alpha = 0.5;
-	[UIView commitAnimations];
-	
-	[pool release];
-}
-
-- (void)_hideBusyIndicator {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	if (activityIndicator) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-		[UIView setAnimationDuration:0.3];
-		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-		activityController.view.alpha = 0.0;
-		[UIView commitAnimations];
-		//[tabController dismissModalViewControllerAnimated:NO];
-		//[activityIndicator stopAnimating];
-	}
-	
-	[pool release];
-}
-
-- (void)hideBusyIndicator {
-	[self _hideBusyIndicator];
-	[self performSelector:@selector(_hideBusyIndicator) withObject:nil afterDelay:1];
-}
-
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-	[activityIndicator stopAnimating];
-	[activityController.view removeFromSuperview];
-}
+//- (void)_hideBusyIndicator {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	if (activityIndicator) {
+//		[UIView beginAnimations:nil context:nil];
+//		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+//		[UIView setAnimationDuration:0.3];
+//		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+//		activityController.view.alpha = 0.0;
+//		[UIView commitAnimations];
+//		//[tabController dismissModalViewControllerAnimated:NO];
+//		//[activityIndicator stopAnimating];
+//	}
+//	
+//	[pool release];
+//}
+//
+//- (void)hideBusyIndicator {
+//	[self _hideBusyIndicator];
+//	[self performSelector:@selector(_hideBusyIndicator) withObject:nil afterDelay:1];
+//}
+//
+//- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+//	[activityIndicator stopAnimating];
+//	[activityController.view removeFromSuperview];
+//}
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
 	switch(tab) {
