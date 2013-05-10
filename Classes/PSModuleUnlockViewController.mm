@@ -100,10 +100,10 @@ line-height: 130%%;\n\
 
 - (void)keyboardWillShow:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
-																		   //[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
-																		   //UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-																		   //t = [mainWindow convertRect:t fromWindow:nil];
+    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
+	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
+	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	//t = [mainWindow convertRect:t fromWindow:nil];
     r.origin.y -=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -115,10 +115,10 @@ line-height: 130%%;\n\
 
 - (void)keyboardWillHide:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
-																		   //[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
-																		   //UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-																		   //t = [mainWindow convertRect:t fromWindow:nil];
+    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
+	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
+	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	//t = [mainWindow convertRect:t fromWindow:nil];
     r.origin.y +=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
