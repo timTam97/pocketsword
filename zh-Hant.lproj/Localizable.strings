@@ -184,8 +184,8 @@
 "ModuleUnlockScreenTitle" = "解鎖模組";
 "ModuleUnlockHelpText" = "請輸入你買模組時收到的鑰匙來打開它。按完成以測試模組，如果正確就按存檔（Save）.";
 "RefSelectorBookTitle" = "選擇書名";
-"RefSelectorChapterTitle" = "章 %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
-"RefSelectorVerseTitle" = "節 %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorChapterTitle" = "%d 章"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "%d 節"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "回去";
 
 // new v1.3.0 strings:
