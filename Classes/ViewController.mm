@@ -338,7 +338,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		if(bibleTabController.isFullScreen) {
-			[self displayTitle:ref];
+			[self displayTitle:ref onTab:BibleTab];
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -346,7 +346,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
-			[self displayTitle:ref];
+			[self displayTitle:ref onTab:CommentaryTab];
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -377,7 +377,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		if(bibleTabController.isFullScreen) {
-			[self displayTitle:ref];
+			[self displayTitle:ref onTab:BibleTab];
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -385,7 +385,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
-			[self displayTitle:ref];
+			[self displayTitle:ref onTab:CommentaryTab];
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -662,82 +662,19 @@ bool ps_viewcontroller_initialized = false;
     [super dealloc];
 }
 
-- (void)displayTitle:(NSString*)title {
-    BOOL iPad = [PSResizing iPad];
-	CGRect frame;
-	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
-	//NSString *ref = [PSModuleController getCurrentBibleRef];
-	UILabel *label;
-	label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 200, 50)];
-	label.adjustsFontSizeToFitWidth = YES;
-	label.text = [PSModuleController createRefString:title];
-	label.backgroundColor = [UIColor clearColor];
-	label.textColor = [UIColor whiteColor];
-	label.textAlignment = UITextAlignmentCenter;
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		frame = CGRectMake(130, 115, 220, 70);
+- (void)displayTitle:(NSString*)title onTab:(ShownTab)tab {
+	UIView *addTo;
+	if(tab == CommentaryTab) {
+		addTo = commentaryWebView;
 	} else {
-		frame = CGRectMake(50, 195, 220, 70);
+		addTo = bibleWebView;
 	}
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:addTo animated:YES];
+	hud.mode = MBProgressHUDModeText;
+	hud.labelText = title;
+	hud.removeFromSuperViewOnHide = YES;
 	
-	if(refTitleSplashView) {
-		[refTitleSplashView removeFromSuperview];
-		refTitleSplashView = nil;
-		[refTitleSplashTimer invalidate];
-		refTitleSplashTimer = nil;
-	}
-	refTitleSplashView = [[UIView alloc] initWithFrame:frame];
-	refTitleSplashView.backgroundColor = [UIColor blackColor];
-	refTitleSplashView.alpha = 0.0;
-	refTitleSplashView.layer.cornerRadius = 8;
-	refTitleSplashView.layer.masksToBounds = YES;
-	[refTitleSplashView addSubview:label];
-	[label release];
-	
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-		refTitleSplashView.transform = CGAffineTransformIdentity;
-		if(iPad) {
-			refTitleSplashView.center = CGPointMake(384, 502);//768 & 1004
-		} else {
-			refTitleSplashView.center = CGPointMake(160, 230);//320 & 460
-		}
-		refTitleSplashView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		refTitleSplashView.transform = CGAffineTransformIdentity;
-		if(iPad) {
-			refTitleSplashView.center = CGPointMake(384, 502);//768 & 1004
-		} else {
-			refTitleSplashView.center = CGPointMake(160, 230);
-		}
-		refTitleSplashView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-		refTitleSplashView.transform = CGAffineTransformIdentity;
-		refTitleSplashView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-		if(iPad) {
-			refTitleSplashView.frame = CGRectMake(274, 450, 220, 70);
-		} else {
-			refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
-		}
-	} else {
-		refTitleSplashView.transform = CGAffineTransformIdentity;
-		if(iPad) {
-			refTitleSplashView.frame = CGRectMake(274, 450, 220, 70);
-		} else {
-			refTitleSplashView.frame = CGRectMake(50, 195, 220, 70);
-		}
-	}
-	
-	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	[mainWindow addSubview:refTitleSplashView];
-
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.5]; // animation duration in seconds
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	refTitleSplashView.alpha = 0.7;
-	[UIView commitAnimations];
-	
-	[refTitleSplashView release];
-	refTitleSplashTimer = [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(removeTitle:) userInfo:nil repeats:NO];
+	[hud hide:YES afterDelay:0.75];
 }
 
 
