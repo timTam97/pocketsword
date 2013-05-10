@@ -441,6 +441,8 @@ CL_NS_DEF(queryParser)
 				q = GetFieldQuery(field, quotedValue, islop);
    				_CLDELETE(slop);
 			}
+			default:
+				break;
 		} // end of switch
 
 		_CLDELETE(term);
