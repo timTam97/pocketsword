@@ -68,7 +68,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-	cell.textLabel.text = [NSString stringWithFormat:@"%@ %d", NSLocalizedString(@"RefSelectorVerseTitle", @"Verse"), (indexPath.section+1)];
+	cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @"Verse"), (indexPath.section+1)];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		cell.textLabel.textColor = [UIColor whiteColor];
 	} else {

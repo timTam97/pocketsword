@@ -186,8 +186,8 @@
 "ModuleUnlockScreenTitle" = "拡張データ解除";
 "ModuleUnlockHelpText" = "この拡張データを解除するには、購入時に送られたキーを入力してください。完了を押して、キーをテストし、正しいようであれば、保存を押してください。";
 "RefSelectorBookTitle" = "書選択";
-"RefSelectorChapterTitle" = "章";
-"RefSelectorVerseTitle" = "節";
+"RefSelectorChapterTitle" = "章 %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "節 %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "戻る";
 
 // new v1.3.0 strings:

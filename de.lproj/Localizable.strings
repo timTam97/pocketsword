@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "Modul entsperren";
 "ModuleUnlockHelpText" = "Um dieses Modul zu entsperren, geben Sie bitte den Schlüssel ein. Um den Schlüssel zu testen tippen Sie bitte auf Fertig und um ihn zu speichern auf speichern.";
 "RefSelectorBookTitle" = "Buch auswählen";
-"RefSelectorChapterTitle" = "Kapitel";
-"RefSelectorVerseTitle" = "Vers";
+"RefSelectorChapterTitle" = "Kapitel %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "Vers %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "zurück";
 
 // new v1.3.0 strings:

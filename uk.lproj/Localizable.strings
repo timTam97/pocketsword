@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "Розблокувати Модуль";
 "ModuleUnlockHelpText" = "Щоб відімкнути модуль, введіть ключ отриманий при купівлі модуля.  Притисніть Готово щоб провірити чи працює ключ, опісля притесніть Зберегти якщо ключ правильний.";
 "RefSelectorBookTitle" = "Виділити Книгу";
-"RefSelectorChapterTitle" = "Розділ";
-"RefSelectorVerseTitle" = "Вірш";
+"RefSelectorChapterTitle" = "Розділ %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "Вірш %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "Назад";
 
 // new v1.3.0 strings:

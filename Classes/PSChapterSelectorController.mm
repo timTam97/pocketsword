@@ -98,7 +98,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-	cell.textLabel.text = [NSString stringWithFormat:@"%@ %d", NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter"), (indexPath.section+1)];
+	cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter"), (indexPath.section+1)];
 	if((indexPath.section+1) == currentChapter) {
 		cell.textLabel.textColor = [UIColor blueColor];
 	} else {

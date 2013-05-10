@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "Odemknutí modulu";
 "ModuleUnlockHelpText" = "Pro odemčení tohoto modulu prosím zadejte klíč, který jste dostali při nákupu modulu. Zmáčkněte Hotovo pro otestování a potom Uložit, pokud je vše v pořádku.";
 "RefSelectorBookTitle" = "Výběr knihy";
-"RefSelectorChapterTitle" = "Kapitola";
-"RefSelectorVerseTitle" = "Verš";
+"RefSelectorChapterTitle" = "Kapitola %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "Verš %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "Zpět";
 
 // new v1.3.0 strings:

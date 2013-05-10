@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "Deblokkeer module";
 "ModuleUnlockHelpText" = "Vult u alstublieft de productsleutel in die u toegezonden is nadat u deze module gekocht heeft. Druk op Klaar om de sleutel te testen en druk op Opslaan als de sleutel juist is.";
 "RefSelectorBookTitle" = "Selecteer een boek";
-"RefSelectorChapterTitle" = "Hoofdstuk";
-"RefSelectorVerseTitle" = "Vers";
+"RefSelectorChapterTitle" = "Hoofdstuk %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "Vers %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "Terug";
 
 // new v1.3.0 strings:

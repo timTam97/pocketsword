@@ -184,8 +184,8 @@
 "ModuleUnlockScreenTitle" = "解锁模块";
 "ModuleUnlockHelpText" = "请输入你买模块时收到的钥匙来打开它。按完成以测试模块，如果正确就按存档（Save）.";
 "RefSelectorBookTitle" = "选择书名";
-"RefSelectorChapterTitle" = "章";
-"RefSelectorVerseTitle" = "节";
+"RefSelectorChapterTitle" = "章 %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "节 %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "回去";
 
 // new v1.3.0 strings:

@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "Lås upp modul";
 "ModuleUnlockHelpText" = "För att låsa upp denna modul, vänligen skriv in nyckeln som skickades till dig då du köpte modulen. Tryck på Klar för att testa nyckeln och tryck sedan på Spara om det ser korrekt ut.";
 "RefSelectorBookTitle" = "Välj bok";
-"RefSelectorChapterTitle" = "Kapitel";
-"RefSelectorVerseTitle" = "Vers";
+"RefSelectorChapterTitle" = "Kapitel %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "Vers %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "Tillbaka";
 
 // new v1.3.0 strings:

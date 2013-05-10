@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "모듈 해제";
 "ModuleUnlockHelpText" = "이 모듈을 해제하기 위해서 이 모듈을 구입한 곳에서 보내준 키를 입력하십시오. 키가 맞는지 확인하신후 저장 버튼을 누르십시오.";
 "RefSelectorBookTitle" = "책 선택";
-"RefSelectorChapterTitle" = "장";
-"RefSelectorVerseTitle" = "절";
+"RefSelectorChapterTitle" = "%d 장"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "%d 절"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "뒤로";
 
 // new v1.3.0 strings:

@@ -185,8 +185,8 @@
 "ModuleUnlockScreenTitle" = "ปลดล็อคโมดูล";
 "ModuleUnlockHelpText" = "ปลดล็อคโมดูล กรุณาใส่รหัสที่ได้รับจากการซื้อโมดูลนี้ กดปุ่ม เสร็จ เพื่อตรวจสอบรหัสและกด บันทึก ถ้าถูกต้อง";
 "RefSelectorBookTitle" = "เลือกพระธรรม";
-"RefSelectorChapterTitle" = "บท";
-"RefSelectorVerseTitle" = "ข้อพระคัมภีร์";
+"RefSelectorChapterTitle" = "บท %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "ข้อพระคัมภีร์ %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorBackButtonTitle" = "กลับไป";
 
 // new v1.3.0 strings:
