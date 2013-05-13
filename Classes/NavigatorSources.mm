@@ -85,11 +85,27 @@
 			[alertView release];
 			return;
 		}
-		[[[PSModuleController defaultModuleController] swordInstallManager] refreshMasterRemoteInstallSourceList];
-		[table reloadData];
+		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+		[self.view addSubview:HUD];
+		
+		// Regiser for HUD callbacks so we can remove it from the window at the right time
+		HUD.delegate = self;
+		
+		// Show the HUD while the provided method executes in a new thread
+		[HUD showWhileExecuting:@selector(refreshMasterRemoteInstallSourceList) onTarget:[[PSModuleController defaultModuleController] swordInstallManager] withObject:nil animated:YES];
+		//[[[PSModuleController defaultModuleController] swordInstallManager] refreshMasterRemoteInstallSourceList];
+		//[table reloadData];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
 		[self manualAddModule:nil];
 	}
+}
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
+	[table reloadData];
 }
 
 - (void)resetTableSelection {

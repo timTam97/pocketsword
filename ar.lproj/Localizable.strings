@@ -18,7 +18,7 @@
 
 // Arabic (ar) localisation
 // By Laurence Rezkalla
-// Last Updated v1.4.4 (5th May, 2013)
+// Last Updated v1.4.4 (13th May, 2013)
 
 "Edit" = "تعديل";
 "Done" = "مت";
@@ -46,7 +46,7 @@
 "AboutModuleLCSH" = "الموضوع الرئيسي مكتبة الكونجرس: ";
 
 
-"Disclaimer" = "اخلاء مسئولية";
+"Disclaimer" = "تنبيه";
 "DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
 
 "WebNoIP" = "Web: ن\الخارجي IP غير قادر علي تحديد";
@@ -77,7 +77,7 @@
 "PreferencesRedLetterNote" = "الحروف باللون الاحمر متاحة فقط لبعض الوحدات";
 "PreferencesDisableAutoLockTitle" = "auto-sleep تعطيل";
 "PreferencesModuleMaintainerModeTitle" = "العرض المستمر للوحدة";
-"PreferencesModuleMaintainerModeNote" = ".CrossWire لالخ نم ةروشنملا تادحولا يلإ لوخدلا نوديري اوناك اذا البق ةجمربملا تادحولا هذه لامعتساب مهحصننف نييداعلا نيمدختسملا اما .ةيلاتتملا تاوطخلا ةقيرطب تادحولا هذه تيبثتب مايقلا بلطتيو مهب ةصاخلا مهتادحو اوركتبا نيذلا نيمدختسملا كئلوال وه ةدحولل رمتسملا ضرعلا نا ظحال";
+"PreferencesModuleMaintainerModeNote" = "رجاء ملاحظة ان العرض المستمر للوحدة متاح فقط لاولئك المبتكرين لوحداتهم الخاصة بهم ويتطلب القيام بتثبيت هذه الدات بطريقة الخطوات المتتالية. اما المستخدمين العاديين فننصحهم باستعمال هذه الوحدات الذاتية البرمجة في حال رغبتهم لا ستعمال الوحدات المتاحة من خلال Cross wire.";
 
 "AboutTitle" = "من نحن";
 
@@ -91,9 +91,9 @@
 "ModulesTitle" = "وحدات";
 "BookmarksTitle" = "علامة كتابية";
 
-"ActivityLabelLoading" = "Loading...";
-"MMMBonjourLoading" = "Bonjour Loading...";
-"MMMIPLoading" = "IP Loading...";
+"ActivityLabelLoading" = "تحميل...";
+"MMMBonjourLoading" = "تحميل Bonjour...";
+"MMMIPLoading" = "تحميل IP...";
 
 "Biblical Texts" = "نصوص الكتاب المقدس";
 "Commentaries" = "تفاسير";
@@ -101,206 +101,206 @@
 "Generic Books" = "كتب اخري";
 "Daily Devotional" = "تأملات يومية";
 "Glossaries" = "معاني كلمات";
-"Cults / Unorthodox / Questionable Material" = "Cults / Unorthodox / Questionable Material";
+"Cults / Unorthodox / Questionable Material" = "ملل / غير مستقيم / مادة مشكوك فيها";
 "Essays" = "مقالات";
 "Maps" = "خرائط";
 "Images" = "صور";
 
-"BibleHistoryTitle" = "Bible History";
-"CommentaryHistoryTitle" = "Commentary History";
+"BibleHistoryTitle" = "تاريخ الكتاب المقدس";
+"CommentaryHistoryTitle" = "تاريخ قواميس";
 
-"None" = "None";
-"CloseButtonTitle" = "Close";
+"None" = "لاشئ";
+"CloseButtonTitle" = "غلق";
 "CacheDictionaryKeysTitle" = "Cache?";
-"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
-"IndexDownloadTitle" = "Index Download";
-"NoSearchIndexTitle" = "No Search Index";
-"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
-"SearchDownloaderTitle" = "Search Downloader";
-"FontPreferenceTitle" = "Font";
-"EmailUsButton" = "Email Us";
-"NoSearchIndexInstalled" = "No Search Index Installed";
-"SearchResults" = "Results";
+"CacheDictionaryKeysMsg" = "هذا القاموس لم يبدأ بعد. هل تريد اضافته الان؟";
+"IndexDownloadTitle" = "فهرس التحميل";
+"NoSearchIndexTitle" = "لايوجد هناك فهرس للبحث";
+"NoSearchIndexMsg" = "لايوجد هناك فهرس للبحث مثبت. هل تريد ان تبحث عن هذه الفهارس الان؟";
+"SearchDownloaderTitle" = "بحث عن عامل التحميل";
+"FontPreferenceTitle" = "حروف";
+"EmailUsButton" = "بريدنا الاكتروني";
+"NoSearchIndexInstalled" = "لايوجد فهرس مثبت للبحث";
+"SearchResults" = "النتيجة";
 
-"IndexControllerInstalled" = "You already have installed a search index for:";
-"IndexControllerDownloadable" = "Select a downloadable search index from the following list to enable search for that module:";
-"IndexControllerNone" = "Check your network connection to enable search for:";
-"IndexControllerNoneRemote" = "There is currently no downloadable search index available for:";
+"IndexControllerInstalled" = "فهرس البحث عندك مثبت:";
+"IndexControllerDownloadable" = "اختار عامل التحميل من هذه القائمة لتفعيل فهرس بحث هذه الوحدة";
+"IndexControllerNone" = "تأكد من اتصالك بالشبكة لتفعيل محرك البحث:";
+"IndexControllerNoneRemote" = "تحميل فهرس البحث غير متاح الات:";
 
-"SearchHelpTitle" = "Search Help";
-"IndexControllerConfirmQuestion" = "Do you wish to download the search index for this module?\nThis may take a while for Commentary modules!";
+"SearchHelpTitle" = "البحث";
+"IndexControllerConfirmQuestion" = "هل ترغب في تحميل فهرس البحث لهذه الوحدة؟/nسوف يستغرق هذا وقتا لوحدة القواميس!";
 
-"PreferencesStrongsPreferencesTitle" = "Strong's Numbers";
-"PreferencesDisplayTitle" = "Display";
-"PreferencesGreekModuleTitle" = "Greek module";
-"PreferencesHebrewModuleTitle" = "Hebrew module";
-"PreferencesMorphologyPreferencesTitle" = "Morphology Preferences";
-"PreferencesOriginalLanguagePreferencesTitle" = "Original Language";
-"PreferencesGreekAccentsTitle" = "Greek Accents";
-"PreferencesHVPTitle" = "Hebrew Vowel Points";
-"PreferencesHebrewCantillationTitle" = "Hebrew Cantillation";
-"PreferencesGreekStrongsLexiconTitle" = "Greek Strong's lexicon";
-"PreferencesHebrewStrongsLexiconTitle" = "Hebrew Strong's lexicon";
-"PreferencesGreekMorphLexiconTitle" = "Greek Morphological lexicon";
-"PreferencesCrossReferencesTitle" = "Cross-references";
-"PreferencesFootnotesTitle" = "Footnotes";
+"PreferencesStrongsPreferencesTitle" = "Strong's اعداد";
+"PreferencesDisplayTitle" = "عرض";
+"PreferencesGreekModuleTitle" = "الوحدة باليوناني";
+"PreferencesHebrewModuleTitle" = "الوحدة بالعبرية";
+"PreferencesMorphologyPreferencesTitle" = "مورفولوجيا التفضيلات";
+"PreferencesOriginalLanguagePreferencesTitle" = "اللغة الاصلية";
+"PreferencesGreekAccentsTitle" = "لكنات يونانية";
+"PreferencesHVPTitle" = "علامات التشكيل العبرية";
+"PreferencesHebrewCantillationTitle" = "كانتيلاشن عبري";
+"PreferencesGreekStrongsLexiconTitle" = "معجم سترونج اليوناني";
+"PreferencesHebrewStrongsLexiconTitle" = "معجم سترونج العبري";
+"PreferencesGreekMorphLexiconTitle" = "المعجم المورفولوجي اليوناني";
+"PreferencesCrossReferencesTitle" = "مقارنة مراجع";
+"PreferencesFootnotesTitle" = "ملاحظات";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew Strong's Numbers Lexicon installed. Please install one (such as 'strongshebrew') via the More->Downloads tab.";
-"NoGreekStrongsNumbersModuleInstalled" = "No Greek Strong's Numbers Lexicon installed. Please install one (such as 'strongsgreek') via the More->Downloads tab.";
+"NoHebrewStrongsNumbersModuleInstalled" = "معجم سترونج العبري غير مثبت. من فضللك ثبت احد معاجم سترونج بالضغط علي زر اضافي ثم اضغط زر التحميل.";
+"NoGreekStrongsNumbersModuleInstalled" = "معجم سترونج اليوناني غير مثبت. من فضللك ثبت احد معاجم سترونج بالضغط علي زر اضافي ثم اضغط زر التحميل.";
 
 "NoMorphGreekModuleInstalled" = "No Greek Morphological Analysis Codes Lexicon installed. Please install one (such as 'Robinson') via the More->Downloads tab";
 "MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
 
-"AboutModuleFeaturesTitle" = "Module Features";
-"AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";
-"AboutModuleContainsMorphTags" = "Contains Morphological tags";
-"AboutModuleContainsFootnotes" = "Contains Footnotes";
-"AboutModuleContainsHeadings" = "Contains Headings";
-"AboutModuleContainsRedLetterWords" = "Words of Christ in Red";
-"AboutModuleContainsVariants" = "Contains Textual Variants";
-"AboutModuleContainsGreekAccents" = "Contains Greek Accents";
-"AboutModuleContainsScriptref" = "Contains Scriptual Cross-References";
+"AboutModuleFeaturesTitle" = "خواص الوحدة";
+"AboutModuleContainsStrongsNumbers" = "يحتوي علي اعداد قاموس سترونج";
+"AboutModuleContainsMorphTags" = "يحتوي علي بطاقات موفولوجيا";
+"AboutModuleContainsFootnotes" = "يحتوي علي ملاحظات";
+"AboutModuleContainsHeadings" = "يحتوي علي العنوانين";
+"AboutModuleContainsRedLetterWords" = "كلام المسيح باللون الاحمر";
+"AboutModuleContainsVariants" = "يحتوي علي قرائات مختلفة";
+"AboutModuleContainsGreekAccents" = "يحتوي علي لكنات يونانية";
+"AboutModuleContainsScriptref" = "يحتوي علي مقارنة مارجع انجيلية";
 "AboutModuleContainsLemma" = "Lemmas";
-"AboutModuleContainsCantillation" = "Contains Cantillation Marks";
-"AboutModuleContainsHebrewPoints" = "Contains Hebrew Points";
-"AboutModuleContainsMorphSegmentation" = "This is a morpheme segmented Hebrew text";
-"AboutModuleContainsGreekDef" = "Defines Greek Strong's Numbers";
-"AboutModuleContainsHebrewDef" = "Defines Hebrew Strong's Numbers";
-"AboutModuleContainsGreekParse" = "Defines Greek Morphological Analysis Codes";
-"AboutModuleContainsHebrewParse" = "Defines Hebrew Morphological Analysis Codes";
-"AboutModuleContainsDailyDevotion" = "Contains a Daily Devotional";
-"AboutModuleContainsImages" = "Contains Images";
+"AboutModuleContainsCantillation" = "يحتوي علي علامات كانتيلاسن";
+"AboutModuleContainsHebrewPoints" = "يحتوي علي ملوحظات عبرية";
+"AboutModuleContainsMorphSegmentation" = "هذا نص عبري مقسم";
+"AboutModuleContainsGreekDef" = "شرح لاعداد معجم سترونج اليوناني";
+"AboutModuleContainsHebrewDef" = "شرح لاعداد معجم سترونج العبري";
+"AboutModuleContainsGreekParse" = "شرح تحليلي مورفولوجي للكوات اليونانية";
+"AboutModuleContainsHebrewParse" = "شرح تحليلي مورفولوجي للكوات االعبرية";
+"AboutModuleContainsDailyDevotion" = "يحتوي علي تاملات يومية";
+"AboutModuleContainsImages" = "يحتوي علي صور";
 
-"NotSupported" = "This module is not currently supported";
-"ConfirmDeleteTitle" = "Remove?";
-"ConfirmDeleteQuestion" = "Are you sure you wish to remove this module?";
-"EmptyChapterWarning" = "This chapter is empty for this module.";
-"ModuleNotInstalled" = "is not installed.";
-"AboutModuleCurrentVersion" = "Installed Version: ";
+"NotSupported" = "هذه الوحدة غير متاحة حاليا";
+"ConfirmDeleteTitle" = "امسح؟";
+"ConfirmDeleteQuestion" = "هل انت متاكد انك تريد مسح هذه الوحدة؟";
+"EmptyChapterWarning" = "هذا الفل من الوحدة خالي.";
+"ModuleNotInstalled" = "غير مثبت.";
+"AboutModuleCurrentVersion" = "نسخة مثبتة: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Module Locked";
+"ModuleLockedTitle" = "الوحدة معطلة";
 "ModuleLockedQuestion" = "This module is currently locked.  You must purchase a key to unlock this module.  Unfortunately, you can't do this through PocketSword at this time.  Please read the description of this module to find out how to purchase this module.\n  If you have already purchased a key, you can input your key to unlock this module.  Do you want to input your key now?";
-"ModuleEnterKeyTitle" = "Enter Key:";
-"ModuleUnlockScreenTitle" = "Unlock Module";
-"ModuleUnlockHelpText" = "To unlock this module, please enter the key you were sent when you bought this module.  Press Done to test the key and then press Save if it looks correct.";
-"RefSelectorBookTitle" = "Select Book";
-"RefSelectorChapterTitle" = "Chapter %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
-"RefSelectorVerseTitle" = "Verse %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
-"RefSelectorBackButtonTitle" = "Back";
+"ModuleEnterKeyTitle" = "ادخل المفتاح:";
+"ModuleUnlockScreenTitle" = "فك الوحدة";
+"ModuleUnlockHelpText" = "لفك شفرة هذه الوحدة،ادخل المفتاح الذي ارسل لك عند الشراء اضغط علي زر تم لاختبار هذا المفتاح ثم اضغط علي زر احفظ اذا كان كل شئ علي ما يرام.";
+"RefSelectorBookTitle" = "اختيار الكتاب";
+"RefSelectorChapterTitle" = "%d اصحاح"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorVerseTitle" = "%d عدد"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorBackButtonTitle" = "السابق";
 
 // new v1.3.0 strings:
-"PreferencesHeadingsTitle" = "Headings";
-"DictionarySearchPlaceholderText" = "Search Dictionary";
-"TabBarTitleDevotional" = "Daily Devotionals";
-"TodayButtonTitle" = "Today";
-"ManageSources" = "Manage Sources";
-"AddFTPSource" = "Add FTP Source";
-"AddHTTPSource" = "Add HTTP Source";
-"DeleteSource" = "Delete Source";
+"PreferencesHeadingsTitle" = "العناويين";
+"DictionarySearchPlaceholderText" = "بحث القواميس";
+"TabBarTitleDevotional" = "تاملات يومية";
+"TodayButtonTitle" = "اليو";
+"ManageSources" = "التحكم في نوع المصادر";
+"AddFTPSource" = "FTP اضف مصدر";
+"AddHTTPSource" = "HTTP اضف مصدر";
+"DeleteSource" = "الغاء المصدر";
 "RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Source Name";
-"AddSourceServerTitle" = "Server";
+"AddSourceCaptionTitle" = "اسم المصدر";
+"AddSourceServerTitle" = "السيرفير";
 "AddSourcePathTitle" = "Path";
-"AddFTPSourceTitle" = "New FTP Source";
-"AddHTTPSourceTitle" = "New HTTP Source";
-"FillInAllFieldsMessage" = "You must fill in all the fields!";
-"Warning" = "Warning";
-"CannotVerifyInstallSourceWarning" = "PocketSword cannot verify that this is a valid Source of modules.  Do you wish to save it anyway?";
+"AddFTPSourceTitle" = "جديد FTP مصدر";
+"AddHTTPSourceTitle" = "جديد HTTP مصدر";
+"FillInAllFieldsMessage" = "ينبغي عليك ملء جميع البيانات!";
+"Warning" = "تحذير";
+"CannotVerifyInstallSourceWarning" = " لانعرف المصدر لهذه الوحدات. هل تريد حفظها علي اية حال؟ PocketSword نحن في ";
 
 // new v1.3.2 strings:
 "AboutModuleLocked" = "** Please note that this module is currently locked and you will need to purchase an unlock key from the module publisher's website.  See below for more details. **";
-"UpgradeButtonTitle" = "Replace";
-"ConfirmUpgrade" = "Would you like to replace this module with the currently available version?";
+"UpgradeButtonTitle" = "احلال";
+"ConfirmUpgrade" = "هل تريد احلال هذه الوحدة بالنسخة المتاحة حاليا؟";
 
-"VerseContextualMenuAddBookmark" = "Add Bookmark";
-"VerseContextualMenuCommentary" = "View in Commentary";
+"VerseContextualMenuAddBookmark" = "اضف اشارة مرجعية";
+"VerseContextualMenuCommentary" = "اعرض هذا في التفسير";
 
 // new v1.3.3 strings:
-"VoiceOverPreviousChapterButton" = "Previous Chapter";
-"VoiceOverNextChapterButton" = "Next Chapter";
-"VoiceOverHistoryAndSearchButton" = "History and Search";
-"InstallManagerDownloadsHint" = "You may download additional modules from any of the below module sources:";
-"ModuleTypesHeaderText" = "Select Module Type:";
-"ModuleLanguagesHeaderText" = "Select Language:";
-"PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Automatic Fullscreen Mode";
-"PreferencesFullscreenNote" = "With Automatic Fullscreen Mode disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"VoiceOverPreviousChapterButton" = "الاصحاح السابق";
+"VoiceOverNextChapterButton" = "الاصحاح التاليr";
+"VoiceOverHistoryAndSearchButton" = "مرجعة و بحث";
+"InstallManagerDownloadsHint" = "يمكنك تحميل وحدات اضافية من امصادر الوحدات الموجودة ادناه:";
+"ModuleTypesHeaderText" = "اختيار نوع الوحدة:";
+"ModuleLanguagesHeaderText" = "اختيار اللغة:";
+"PreferencesModulePreferencesTitle" = "تفضيلات الوحدة";
+"PreferencesFullscreenModeTitle" = "نسق الشاشة الكاملة اتوماتيكيا";
+"PreferencesFullscreenNote" = "يمكنك تبديل الشاشة الكاملة بين الكتاب المقدس والتفاسير باستخداو ٢ من اصابعك حتي مع ابطال النسق الاتوماتيكي للشاشة الكاملة.";
 
 // new v1.3.4 strings:
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesRotationLock" = "تعطيل دوران الشاشة";
 
 // new v1.3.5 strings:
-"PreferencesFontDefaultTitle" = "Use custom Font";
+"PreferencesFontDefaultTitle" = "استخدام حروف مفصلة";
 
 // new v1.4.0 strings:
-"BookmarksInvalidFolderTitle" = "Invalid Folder Name";
-"BookmarksInvalidFolderMessage" = "You have entered an invalid folder name. Please choose another name for your folder.";
-"BookmarksDuplicateFolderTitle" = "Duplicate Folder Name";
-"BookmarksDuplicateFolderMessage" = "A folder with that name already exists. Please choose another name for your folder.";
+"BookmarksInvalidFolderTitle" = "اسم باطل لملف";
+"BookmarksInvalidFolderMessage" = "اسم املف الذي ادخلته غير مقبول. من فضللك اختار اسم اخر للملف.";
+"BookmarksDuplicateFolderTitle" = "اسم مكرر لملف";
+"BookmarksDuplicateFolderMessage" = "هناك ملف اخر يحمل نفس الاسم. من فضللك اختار اسم اخر للملف.";
 
-"BookmarksDuplicateBookmarkTitle" = "Duplicate Bookmark Name";
-"BookmarksDuplicateBookmarkMessage" = "A bookmark with that name already exists. Please choose another name for your bookmark.";
+"BookmarksDuplicateBookmarkTitle" = "اسم مكرر لاشارة مرجعية";
+"BookmarksDuplicateBookmarkMessage" = "هناك اشارة مرجعية اخري تحيمل نفس الاسم. من فضللك اختار اسم اخر لهذه الاشارة المرجعية.";
 
-"BookmarksConfirmDeleteFolderTitle" = "Delete Folder?";
-"BookmarksConfirmDeleteFolderMessage" = "Are you sure you want to delete the folder '%@' and all the bookmarks it contains?";//keep the '%@' bit in there - it will be replaced with the folder's name!
-"BookmarksAddFolderFolderName" = "Folder Name:";
-"BookmarksAddFolderHighlightColour" = "Highlight Colour:";
-"BookmarksAddBookmarkVerseTitle" = "Verse";
-"BookmarksAddBookmarkDescriptionTitle" = "Description";
-"BookmarksAddBookmarkFolderTitle" = "Folder";
+"BookmarksConfirmDeleteFolderTitle" = "امسح الملف؟";
+"BookmarksConfirmDeleteFolderMessage" = "وكل ما يحتويه من اشارات مرجغية؟ '%@' هل انت متاكد انك تريد مسح الملف";//keep the '%@' bit in there - it will be replaced with the folder's name!
+"BookmarksAddFolderFolderName" = "اسم الملف:";
+"BookmarksAddFolderHighlightColour" = "اضافة لون:";
+"BookmarksAddBookmarkVerseTitle" = "العدد";
+"BookmarksAddBookmarkDescriptionTitle" = "الوصف";
+"BookmarksAddBookmarkFolderTitle" = "ملف";
 
-"BookmarksAddFolderButton" = "Add Folder";
-"BookmarksEditFolderTitle" = "Edit Folder";
-"BookmarksAddBookmarkHereButton" = "Add Bookmark here";
-"BookmarksAddBookmarkDescription" = "To add a bookmark for a verse, tap on the verse number in the Bible tab and select 'Add Bookmark'";
-"BookmarksAddFolderDescription" = "To add a folder, tap on the Edit button";
-"BookmarksImportedFolderName" = "Imported";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
-"BookmarksCreatedTitle" = "Created:";//created date of the bookmark/folder.
-"BookmarksLastAccessedTitle" = "Last Accessed:";//when the bookmark or folder was last accessed.
-"BookmarkEditBookmarkTitle" = "Edit Bookmark";
+"BookmarksAddFolderButton" = "اضافة ملف";
+"BookmarksEditFolderTitle" = "تعديل ملف";
+"BookmarksAddBookmarkHereButton" = "اضف اشارة مرجعية هنا";
+"BookmarksAddBookmarkDescription" = "لاضافة اشارة مرجيعية لاحد الاعداد، انقر علي رقم العدد في صفحة الكتاب المقدس واختار ؛اضف اشارة مرجعية؛";
+"BookmarksAddFolderDescription" = "لاضافة ملف، انقر علي زر التعديل";
+"BookmarksImportedFolderName" = "منقول";// this is the folder name that the user's old bookmarks will be imported into when they first use v1.4.0
+"BookmarksCreatedTitle" = "تاريخ التصفح";//created date of the bookmark/folder.
+"BookmarksLastAccessedTitle" = "آخر ما تصفح:";//when the bookmark or folder was last accessed.
+"BookmarkEditBookmarkTitle" = "تعديل لاشارة مرجعية";
 
-"SearchTitle" = "Search";
-"SearchStrongsTitle" = "Strong's Search";
-"SearchOptionsTitle" = "Search Options";
+"SearchTitle" = "البحث";
+"SearchStrongsTitle" = "البحث في سترونج";
+"SearchOptionsTitle" = "اختيار نوع البحث";
 
-"StrongsSearchFindAll" = "Find all occurrences";//used to find all occurrences of the current Strong's Number in the Bible.
+"StrongsSearchFindAll" = "تجميع كل الحوادث";//used to find all occurrences of the current Strong's Number in the Bible.
 
-"SearchTypeSectionHeader" = "Search Type:";
-"SearchRangeSectionHeader" = "Search Range:";//eg: OT, NT, entire Bible, etc
-"SearchStrongsSectionHeader" = "Strong's Search:";
-"SearchFuzzySectionHeader" = "Fuzzy Search:";// see the SearchFuzzySectionFooter for a description of what this search does.
+"SearchTypeSectionHeader" = "نوع البحث:";
+"SearchRangeSectionHeader" = "مدي البجث:";//eg: OT, NT, entire Bible, etc
+"SearchStrongsSectionHeader" = "بحث سترونج:";
+"SearchFuzzySectionHeader" = "بحث مبهم:";// see the SearchFuzzySectionFooter for a description of what this search does.
 
-"SearchTypeSectionFooter" = "";// currently empty.
-"SearchRangeSectionFooter" = "Select which part of the Bible you wish to search in.";
+"SearchTypeSectionFooter" = "";// حاليا فارغ.
+"SearchRangeSectionFooter" = "اختار اي جزء من الكتاب المقدس تريد البحث فيه.";
 "SearchStrongsSectionFooter" = "You can search for occurrences of Greek or Hebrew Strong's Numbers.\nTo search for the Greek Number 0011 (Abraham) enter G11.\nTo search for the Hebrew Number 0430 (God) enter H430.";
 "SearchFuzzySectionFooter" = "Using Fuzzy Search, if you search for:\nrev\nthe search results will include all words that start with 'rev'.";
 
-"SearchTypeAllRow" = "Match ALL words";
-"SearchTypeAllRowShort" = "All words";
-"SearchTypeAnyRow" = "Match ANY word";
-"SearchTypeAnyRowShort" = "Any word";
-"SearchTypeExactRow" = "Match EXACT phrase";
-"SearchTypeExactRowShort" = "Exact phrase";
-"SearchRangeAllRow" = "Entire Bible";
-"SearchRangeAllRowShort" = "Entire Bible";
-"SearchRangeOTRow" = "Old Testament";
+"SearchTypeAllRow" = "مطابقة لكل الكلمات";
+"SearchTypeAllRowShort" = "كل الكلمات";
+"SearchTypeAnyRow" = "طابق مع اي كلمة";
+"SearchTypeAnyRowShort" = "اي كلمة";
+"SearchTypeExactRow" = "الجملة حرفيا";
+"SearchTypeExactRowShort" = "نفس الجملة";
+"SearchRangeAllRow" = "كل الكتاب المقدس";
+"SearchRangeAllRowShort" = "كل الكتاب المقدس";
+"SearchRangeOTRow" = "العهد القديم";
 "SearchRangeOTRowShort" = "OT";
-"SearchRangeNTRow" = "New Testament";
+"SearchRangeNTRow" = "العهد الجديد";
 "SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
-"On" = "On";
-"Off" = "Off";
-"SearchStartSearchButton" = "Start Search";
+"SearchStrongsRow" = "ابحث عن عدد من اعداد سترونج";
+"On" = "فتح";
+"Off" = "اغلاق";
+"SearchStartSearchButton" = "ابدا البحث";
 "PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
 
 // new v1.4.2 strings:
-"HistoryClearButtonTitle" = "Clear All";
-"HistoryClearConfirmationTitle" = "Clear All History?";
-"HistoryClearConfirmationMessage" = "Are you sure you wish to clear all your history?";
+"HistoryClearButtonTitle" = "مسح كلي";
+"HistoryClearConfirmationTitle" = "مسح الدخول السابق فقط؟";
+"HistoryClearConfirmationMessage" = "هل تريد فعلا مسح كل الدخول السابق؟";
 
 // new v1.4.3 strings:
-"HistoryTitle" = "History";
+"HistoryTitle" = "السبق الدخول";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
+"DictionaryNoneLoaded" = "لا توجد اي قواميس تم تحميلها، اذا كانت هذه هي المرة الاولي التي تحاول فيها استخدام القواميس، انت تحتاج ال تحميل القواميس من القسم المخصص لذلك.";

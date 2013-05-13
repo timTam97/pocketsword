@@ -12,7 +12,7 @@
 @class NavigatorModuleTypes;
 @class iPhoneHTTPServerDelegate;
 
-@interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate> {
+@interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, MBProgressHUDDelegate> {
 
 	IBOutlet UITableView *table;
 	//IBOutlet id refreshButton;

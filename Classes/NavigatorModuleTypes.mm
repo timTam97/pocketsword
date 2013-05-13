@@ -18,43 +18,39 @@
 
 NSTimer *refreshTimer;
 
-- (void)createRefreshTimer {
-	SEL method = @selector(updateRefreshStatus);
-	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
-	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-	[invocation setTarget: self];
-	[invocation setSelector: method];
-	
-	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
-}
+//- (void)createRefreshTimer {
+//	SEL method = @selector(updateRefreshStatus);
+//	NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: method];
+//	NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
+//	[invocation setTarget: self];
+//	[invocation setSelector: method];
+//	
+//	refreshTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+//}
 
-- (void)_refreshDownloadSource {
-	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
-	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
-	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
-	
-	[self createRefreshTimer];
-	
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-    
-    if(backgroundSupported) {
-        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
-    }	
-}
+//- (void)_refreshDownloadSource {
+//	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
+//	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
+//	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+//	
+//	[self createRefreshTimer];
+//	
+//    UIDevice* device = [UIDevice currentDevice];
+//    BOOL backgroundSupported = NO;
+//    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+//        backgroundSupported = device.multitaskingSupported;
+//    }
+//    
+//    if(backgroundSupported) {
+//        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+//    }	
+//}
 
 
-- (void)updateRefreshButton {
+- (void)updateRefreshButton:(BOOL)enabled {
 	self.navigationItem.rightBarButtonItem = nil;
 	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
-    if([[statusController view] superview]) {
-		[refreshBarButtonItem setEnabled:NO];
-    } else {
-		[refreshBarButtonItem setEnabled:YES];
-    }
+	[refreshBarButtonItem setEnabled:enabled];
 	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
 	[refreshBarButtonItem release];
 }
@@ -62,9 +58,9 @@ NSTimer *refreshTimer;
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	[self updateRefreshButton];
+	[self updateRefreshButton:YES];
 
-	[cancelButton setTitle: NSLocalizedString(@"Cancel", @"Cancel") forState: UIControlStateNormal];
+	//[cancelButton setTitle: NSLocalizedString(@"Cancel", @"Cancel") forState: UIControlStateNormal];
 	
 	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
 	[table deselectRowAtIndexPath:tableSelection animated:YES];
@@ -79,11 +75,11 @@ NSTimer *refreshTimer;
 	[super viewDidAppear:animated];
 	//sometimes the busy modal view doesn't clear properly from the previous view, so we can re-remove it here.
 	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
-    if(![[statusController view] superview]) {
-		if(([dataArray count] == 0)  && [PSModuleController checkNetworkConnection]) {
-			[self _refreshDownloadSource];
-		}
+    //if(![[statusController view] superview]) {
+	if(([dataArray count] == 0)  && [PSModuleController checkNetworkConnection]) {
+		[self _refreshDownloadSource];
 	}
+	//}
 }
 
 
@@ -139,6 +135,44 @@ NSTimer *refreshTimer;
 	[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
 }
 
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
+    [self updateRefreshButton:YES];
+	
+	[self refreshDataArray];
+}
+
+- (void)_refreshDownloadSource {
+	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
+	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view.window];
+	[self.view.window addSubview:HUD];
+	
+	// Regiser for HUD callbacks so we can remove it from the window at the right time
+	HUD.delegate = self;
+	HUD.labelText = NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source");
+	HUD.detailsLabelText = self.title;
+	
+	// Show the HUD while the provided method executes in a new thread
+	[HUD showWhileExecuting:@selector(refreshCurrentInstallSource) onTarget:[PSModuleController defaultModuleController] withObject:nil animated:YES];
+
+//	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
+//	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
+//	
+//	[self createRefreshTimer];
+	
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+    }
+}
 - (IBAction)refreshDownloadSource:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
@@ -150,88 +184,110 @@ NSTimer *refreshTimer;
 		return;
 	}
 	
+    [self updateRefreshButton:NO];
 	[self _refreshDownloadSource];
 	
 	[pool release];
 }
 
-//- (void)runRefreshDownloadSource {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
-//	
-//	[self performSelectorOnMainThread: @selector(showRefreshStatus) withObject: nil waitUntilDone: YES];
-//	
-//	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(refreshCurrentInstallSource) withObject:nil];
-//	
-//	[self updateRefreshStatus];
-//	
-//	[pool release];
-//}
-
-- (void)showRefreshStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[statusTitle setText: NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source")];
-	[statusOverallText setText: @""];
-	[statusOverallBar setHidden: YES];
-    NSString *sText = [NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"RefreshingModuleSource", @""), self.title] ;
-    [statusText setText: sText];
-	[statusText setLineBreakMode: UILineBreakModeWordWrap];
-
-	//[navigatorSources.tabController presentModalViewController: statusController animated: YES];
-    [[statusController view] setAlpha:0.0];
-    statusController.view.frame = self.view.frame;
-    statusController.view.center = self.view.center;
-    [self.view addSubview:[statusController view]];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.5];
-    [[statusController view] setAlpha:1.0];
-    [UIView commitAnimations];
-    [self updateRefreshButton];
-	
-	[pool release];
-}
-
-- (void)updateRefreshStatus {
+- (void)handleRefreshStatus {
 	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
-	BOOL failed = YES;
-	float progress = reporter->fileProgress;
-	[statusBar setProgress: reporter->fileProgress];
-	
-	//DLog(@"  -------  Progress: %f", progress);
-	//if(!refreshTimer)
-		//NSLog(@"######################### borken");
-	
-	if (progress == 1.0) {
-		if(refreshTimer) {
-			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
-			refreshTimer = nil;
+	BOOL failed = NO;
+	float progress = 0.0f;
+	while (progress < 1.0f) {
+		//[statusBar setProgress: reporter->fileProgress];
+		//HUD.progress = progress;
+		usleep(100);
+		reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
+		progress = reporter->fileProgress;
+		if(progress == -1.0) {
+			failed = YES;
+			break;
 		}
-		[self performSelectorOnMainThread:@selector(hideOperationStatus) withObject:nil waitUntilDone:YES];
-		
-		failed = NO;
-	} else if (progress == -1.0) {
-		failed = YES;
-	} else {
-		failed = NO;
 	}
-	
-	if (failed) {
-		if(refreshTimer) {
-			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
-			refreshTimer = nil;
-		}
-		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+	if(failed) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
 		[alertView release];
 	}
+	
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    if(backgroundSupported) {
+        [[UIApplication sharedApplication] endBackgroundTask:bti];
+        bti = UIBackgroundTaskInvalid;
+    }
+	
+	//[self refreshDataArray];
 }
 
-- (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    [[statusController view] removeFromSuperview];
-    [self updateRefreshButton];
-}
+//- (void)showRefreshStatus {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	[statusTitle setText: NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source")];
+//	[statusOverallText setText: @""];
+//	[statusOverallBar setHidden: YES];
+//    NSString *sText = [NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"RefreshingModuleSource", @""), self.title] ;
+//    [statusText setText: sText];
+//	[statusText setLineBreakMode: UILineBreakModeWordWrap];
+//
+//	//[navigatorSources.tabController presentModalViewController: statusController animated: YES];
+//    [[statusController view] setAlpha:0.0];
+//    statusController.view.frame = self.view.frame;
+//    statusController.view.center = self.view.center;
+//    [self.view addSubview:[statusController view]];
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationBeginsFromCurrentState:YES];
+//    [UIView setAnimationDuration:0.5];
+//    [[statusController view] setAlpha:1.0];
+//    [UIView commitAnimations];
+//    [self updateRefreshButton:NO];
+//	
+//	[pool release];
+//}
+
+//- (void)updateRefreshStatus {
+//	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
+//	BOOL failed = YES;
+//	float progress = reporter->fileProgress;
+//	[statusBar setProgress: reporter->fileProgress];
+//	
+//	//DLog(@"  -------  Progress: %f", progress);
+//	//if(!refreshTimer)
+//		//NSLog(@"######################### borken");
+//	
+//	if (progress == 1.0) {
+//		if(refreshTimer) {
+//			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
+//			refreshTimer = nil;
+//		}
+//		[self performSelectorOnMainThread:@selector(hideOperationStatus) withObject:nil waitUntilDone:YES];
+//		
+//		failed = NO;
+//	} else if (progress == -1.0) {
+//		failed = YES;
+//	} else {
+//		failed = NO;
+//	}
+//	
+//	if (failed) {
+//		if(refreshTimer) {
+//			[refreshTimer performSelectorOnMainThread:@selector(invalidate) withObject:nil waitUntilDone:YES];
+//			refreshTimer = nil;
+//		}
+//		[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+//		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
+//		[alertView show];
+//		[alertView release];
+//	}
+//}
+
+//- (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+//    [[statusController view] removeFromSuperview];
+//    [self updateRefreshButton];
+//}
 
 - (void)showHUD {
 	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -274,38 +330,38 @@ NSTimer *refreshTimer;
 
 }
 
-- (void)hideOperationStatus {
-	//NSLog(@" ++++++++ hideOperationStatus");
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-    
-    if(backgroundSupported) {
-        [[UIApplication sharedApplication] endBackgroundTask:bti];
-        bti = UIBackgroundTaskInvalid;
-    }
-	
-	[self refreshDataArray];
-    
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDidStopSelector:@selector(hideOperationStatusEnded:finished:context:)];
-    [[statusController view] setAlpha:0.0];
-    [UIView commitAnimations];
-	//[self.navigationController popViewControllerAnimated: YES];//dodgy pop back to allow the user to reselect this installSource. TODO: fix........
-	
-	[statusText setText: @""];
-	[statusOverallText setText: @""];
-	[statusBar setProgress: 0.0];
-	[statusOverallBar setProgress: 0.0];
-	[pool release];
-}
+//- (void)hideOperationStatus {
+//	//NSLog(@" ++++++++ hideOperationStatus");
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//
+//    UIDevice* device = [UIDevice currentDevice];
+//    BOOL backgroundSupported = NO;
+//    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+//        backgroundSupported = device.multitaskingSupported;
+//    }
+//    
+//    if(backgroundSupported) {
+//        [[UIApplication sharedApplication] endBackgroundTask:bti];
+//        bti = UIBackgroundTaskInvalid;
+//    }
+//	
+//	[self refreshDataArray];
+//    
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationDuration:0.5];
+//    [UIView setAnimationDelegate:self];
+//    [UIView setAnimationBeginsFromCurrentState:YES];
+//    [UIView setAnimationDidStopSelector:@selector(hideOperationStatusEnded:finished:context:)];
+//    [[statusController view] setAlpha:0.0];
+//    [UIView commitAnimations];
+//	//[self.navigationController popViewControllerAnimated: YES];//dodgy pop back to allow the user to reselect this installSource. TODO: fix........
+//	
+//	[statusText setText: @""];
+//	[statusOverallText setText: @""];
+//	[statusBar setProgress: 0.0];
+//	[statusOverallBar setProgress: 0.0];
+//	[pool release];
+//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];

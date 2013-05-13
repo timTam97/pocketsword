@@ -11,20 +11,20 @@
 
 @class NavigatorModuleLanguages;
 
-@interface NavigatorModuleTypes : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface NavigatorModuleTypes : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, MBProgressHUDDelegate> {
 	IBOutlet UITableView *table;
 	IBOutlet NavigatorModuleLanguages *navigatorModuleLanguages;
 	NSArray *dataArray;
 	IBOutlet NavigatorSources *navigatorSources;
 
 	// Status view
-	IBOutlet UIViewController *statusController;
-	IBOutlet UILabel *statusTitle;
-	IBOutlet UILabel *statusText;
-	IBOutlet UILabel *statusOverallText;
-	IBOutlet UIProgressView *statusBar;
-	IBOutlet UIProgressView *statusOverallBar;
-	IBOutlet UIButton *cancelButton;
+//	IBOutlet UIViewController *statusController;
+//	IBOutlet UILabel *statusTitle;
+//	IBOutlet UILabel *statusText;
+//	IBOutlet UILabel *statusOverallText;
+//	IBOutlet UIProgressView *statusBar;
+//	IBOutlet UIProgressView *statusOverallBar;
+//	IBOutlet UIButton *cancelButton;
 
     NSUInteger bti;
 }
@@ -34,9 +34,9 @@
 - (IBAction)refreshDownloadSource:(id)sender;
 - (IBAction)cancelRefreshDownloadSource;
 //- (void)runRefreshDownloadSource;
-- (void)showRefreshStatus;
-- (void)updateRefreshStatus;
-- (void)hideOperationStatus;
+//- (void)showRefreshStatus;
+//- (void)updateRefreshStatus;
+//- (void)hideOperationStatus;
 
 - (void)dealloc;
 
