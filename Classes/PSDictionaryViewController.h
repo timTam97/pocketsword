@@ -6,6 +6,8 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import "MBProgressHUD.h"
+
 
 @interface PSDictionaryEntryViewController : UIViewController {
 	IBOutlet UIToolbar	*dictionaryDescriptionToolbar;
@@ -14,7 +16,7 @@
 
 @end
 
-@interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate> {
+@interface PSDictionaryViewController : UIViewController <UISearchBarDelegate, UITableViewDelegate, MBProgressHUDDelegate> {
 
 	IBOutlet UITabBarItem		*dictionaryTabBarItem;
 	IBOutlet UITableView		*dictionaryEntriesTable;

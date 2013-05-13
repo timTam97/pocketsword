@@ -10,7 +10,6 @@
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
-#import "MBProgressHUD.h"
 
 
 @implementation PSDictionaryViewController
@@ -22,10 +21,6 @@
 
 - (void)reloadDictionaryData {
 	[self reloadDictionaryData:YES];
-}
-
-- (void)showHUD {
-	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
@@ -57,14 +52,15 @@
 			} else {
 				//need to load it
 				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-				[self performSelectorInBackground:@selector(showHUD) withObject:nil];
-				dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-					[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[MBProgressHUD hideHUDForView:self.view animated:YES];
-					});
-				});
+				MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+				[self.view addSubview:HUD];
 				
+				// Regiser for HUD callbacks so we can remove it from the window at the right time
+				HUD.delegate = self;
+				
+				// Show the HUD while the provided method executes in a new thread
+				[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
+								
 				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 				needsReload = YES;
 			}
@@ -72,11 +68,11 @@
 	}
 	[dictionarySearchBar setUserInteractionEnabled: YES];
 	dictionaryEnabled = YES;
-	if(needsReload) {
-		if(searching)
-			[self searchDictionaryEntries];
-		[dictionaryEntriesTable reloadData];
-	}
+//	if(needsReload) {
+//		if(searching)
+//			[self searchDictionaryEntries];
+//		[dictionaryEntriesTable reloadData];
+//	}
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -84,14 +80,15 @@
 	
 	if (buttonIndex == 1) {
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
-		[self performSelectorInBackground:@selector(showHUD) withObject:nil];
-		dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-			[[[PSModuleController defaultModuleController] primaryDictionary] allKeys];
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[MBProgressHUD hideHUDForView:self.view animated:YES];
-			});
-		});
+		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+		[self.view addSubview:HUD];
 		
+		// Regiser for HUD callbacks so we can remove it from the window at the right time
+		HUD.delegate = self;
+		
+		// Show the HUD while the provided method executes in a new thread
+		[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
+
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 		dictionaryEnabled = YES;
 		[dictionarySearchBar setUserInteractionEnabled: YES];
@@ -100,10 +97,20 @@
 		dictionaryEnabled = NO;
 	}
 	
+//	if(searching)
+//		[self searchDictionaryEntries];
+//	[dictionaryEntriesTable reloadData];
+	[pool release];
+}
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
 	if(searching)
 		[self searchDictionaryEntries];
 	[dictionaryEntriesTable reloadData];
-	[pool release];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
