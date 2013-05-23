@@ -9,6 +9,7 @@
 #import "PSAddSourceViewController.h"
 #import "NavigatorSources.h"
 #import "PSModuleController.h"
+#import "PSResizing.h"
 
 
 @implementation PSAddSourceViewController
@@ -180,7 +181,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	if(indexData) {
-		indexDownloadHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] autorelease];
+		indexDownloadHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
 		indexDownloadHUD.mode = MBProgressHUDModeCustomView;
 		[indexDownloadHUD hide:YES afterDelay:2];
 		[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];

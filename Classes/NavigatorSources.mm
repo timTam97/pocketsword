@@ -10,6 +10,7 @@
 #import "NavigatorModuleTypes.h"
 #import "NavigatorModules.h"
 #import "iPhoneHTTPServerDelegate.h"
+#import "PSResizing.h"
 
 @implementation NavigatorSources
 

@@ -8,7 +8,7 @@
 
 #import "NavigatorModules.h"
 #import "NavigatorLeafView.h"
-
+#import "PSResizing.h"
 
 @implementation NavigatorModules
 

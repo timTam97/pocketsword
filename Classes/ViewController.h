@@ -25,9 +25,9 @@
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
 #import "PSRefSelectorController.h"
-#import "PSSearchController.h"
 #import "PSWebView.h"
 #import "PSDevotionalViewController.h"
+#import "PSSearchController.h"
 
 #ifdef __cplusplus
 #include <swmgr.h>

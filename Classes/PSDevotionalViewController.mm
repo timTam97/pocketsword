@@ -13,6 +13,7 @@
 #import "PSModuleController.h"
 #import "ViewController.h"
 #import "PSHistoryController.h"
+#import "PSResizing.h"
 
 @implementation PSDevotionalViewController
 

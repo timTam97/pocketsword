@@ -8,66 +8,40 @@
 
 #import "PSModuleController.h"
 #import "SwordModule.h"
-#import "PSSearchController.h"
+#import "MBProgressHUD.h"
+
+@class PSSearchController;
+
+@protocol PSIndexControllerDelegate <NSObject>
+@required
+// the delegate is responsible for dismissing the PSIndexController :P
+- (void)indexInstalled:(BOOL)success;
+@end
 
 @interface PSIndexController : UIViewController <MBProgressHUDDelegate> {
-	PSSearchController *searchController;
+	
+	id <PSIndexControllerDelegate> delegate;
 
-	NSArray *downloadableIndices;
-	NSArray *installedIndices;
-	NSArray *unavailableIndices;
+	//PSSearchController *searchController;
+
 	NSMutableArray *files;
 	
 	NSMutableData *responseData;
 	NSInteger responseDataExpectedLength;
 	NSInteger responseDataCurrentLength;
 	float installationProgress;
-	NSString *moduleName;
+	NSString *moduleToInstall;
+	MBProgressHUD *installHUD;
 	
-	IBOutlet UIBarButtonItem *closeButton;
-	IBOutlet UITableView *indicesTable;
-	IBOutlet UINavigationItem *navItem;
-
-	// Status view
-	IBOutlet UIViewController *statusController;
-	IBOutlet UILabel *statusTitle;
-	IBOutlet UILabel *statusText;
-	IBOutlet UILabel *statusOverallText;
-	IBOutlet UIProgressView *statusBar;
-	IBOutlet UIProgressView *statusOverallBar;
-
-	int tableSections;
-	BOOL installedShown;
-	BOOL unavailableShown;
-	BOOL downloadableShown;
-
     NSUInteger bti;
 }
 
-@property (retain, readwrite) NSArray *downloadableIndices;
-@property (retain, readwrite) NSArray *installedIndices;
-@property (retain, readwrite) NSArray *unavailableIndices;
 @property (retain, readwrite) NSMutableArray *files;
+@property (nonatomic, assign) id <PSIndexControllerDelegate> delegate;
+@property (copy) NSString *moduleToInstall;
 
-- (void)updateIndexInstallationStatus:(NSString*)arg;//needed, move to PSIndexController
-- (void)showIndexStatus;//needed, move to PSIndexController
-- (void)hideIndexStatus;//needed, move to PSIndexController
-
-//- (void)setModuleManager:(PSModuleController *)mm;
-- (void)setSearchController:(PSSearchController *)sc;
-
-- (IBAction)closeButtonPressed:(id)sender;
-
-- (IBAction)updateInstalledIndexListWithRemoteIndices:(id)sender;
+- (void)updateInstalledIndexListWithRemoteIndices;
 - (void)updateInstalledIndexList;
-- (void)installSearchIndexForModule:(SwordModule *)module;
-
-- (float)getInstallationProgress;
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)installSearchIndexForModule;
 
 @end

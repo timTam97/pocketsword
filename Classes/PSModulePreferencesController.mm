@@ -6,7 +6,11 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import "PSBasePreferencesController.h"
 #import "PSModulePreferencesController.h"
+//#import "ViewController.h"
+#import "PSModuleController.h"
+#import "PSResizing.h"
 
 
 @implementation PSModulePreferencesController

@@ -11,6 +11,7 @@
 #import "EGORefreshTableHeaderView.h"
 #import "EGORefreshTableFooterView.h"
 #import "PSModuleController.h"
+#import "PSResizing.h"
 
 @interface PSWebView (Private)
 

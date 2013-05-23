@@ -24,6 +24,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
+#import "ViewController.h"
 //#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate

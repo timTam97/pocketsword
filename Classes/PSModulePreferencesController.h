@@ -6,11 +6,12 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "ViewController.h"
-#import "PSModuleController.h"
 #import "PSBasePreferencesController.h"
 
 @class PSPreferencesFontTableViewController;
+@class PSModuleController;
+//@class PSBasePreferencesController;
+@class SwordModule;
 
 @interface PSModulePreferencesController : PSBasePreferencesController {
 	

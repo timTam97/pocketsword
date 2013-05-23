@@ -12,7 +12,7 @@
 #import "SwordListKey.h"
 #import "PSHistoryController.h"
 #import "SwordVerseKey.h"
-#import "PSIndexController.h"
+#import "PSSearchHistoryItem.h"
 
 @implementation PSSearchController
 
@@ -93,6 +93,10 @@
 	listType = listT;
 }
 
+- (ShownTab)listType {
+	return listType;
+}
+
 - (IBAction)closeButtonPressed {
 	[self notifyDelegateOfNewHistoryItem];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
@@ -107,10 +111,6 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	BOOL showIndexController = NO;
-	if(indexController) {
-		[indexController release];
-		indexController = nil;
-	}
 	switch(listType) {
 		case BibleTab:
 			if(![[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
@@ -122,6 +122,11 @@
 			break;
 		default:
 			break;
+	}
+	if(indexController) {
+		[indexController release];
+		indexController = nil;
+		showIndexController = NO;
 	}
 	if(showIndexController) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
@@ -226,6 +231,11 @@
 //	}
 //}
 
+- (void)indexInstalled:(BOOL)success {
+	[self refreshView];
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -235,10 +245,21 @@
 	}
 	
 	if (buttonIndex == 1) {
-		indexController = [[PSIndexController alloc] initWithNibName:@"IndexDownloader" bundle:nil];
-		[indexController setSearchController: self];
-		[self presentModalViewController:indexController animated:YES];
-		//[indexC release];
+		SwordModule *mod;
+		if(listType == CommentaryTab) {
+			mod = [[PSModuleController defaultModuleController] primaryCommentary];
+		} else {
+			mod = [[PSModuleController defaultModuleController] primaryBible];
+		}
+		if(mod) {
+			indexController = [[PSIndexController alloc] initWithNibName:nil bundle:nil];
+			indexController.delegate = self;
+			indexController.moduleToInstall = [mod name];
+			indexController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+			[self presentModalViewController:indexController animated:YES];
+		} else {
+			ALog(@"no module to install the index for :P");
+		}
 	} else {
 		
 	}

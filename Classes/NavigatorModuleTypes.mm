@@ -9,6 +9,7 @@
 #import "NavigatorModuleTypes.h"
 #import "PSModuleType.h"
 #import "NavigatorModuleLanguages.h"
+#import "PSResizing.h"
 
 // displaying the Module Types
 

@@ -7,18 +7,20 @@
 //
 
 #import "globals.h"
-#import "PSSearchHistoryItem.h"
-#import "PSSearchOptionTableViewController.h"
+#import "PSIndexController.h"
 #import "MBProgressHUD.h"
+#import "PSResizing.h"
+#import "PSSearchController.h"
+#import "PSSearchOptionTableViewController.h"
 
-@class PSIndexController;
+@class PSSearchHistoryItem;
 
 @protocol PSSearchControllerDelegate <NSObject>
 @required
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
-@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate> {
+@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate, PSIndexControllerDelegate> {
 
 	id <PSSearchControllerDelegate> delegate;
 	
@@ -63,14 +65,14 @@
 
 - (void)refreshView;
 - (void)setListType:(ShownTab)listType;
+- (ShownTab)listType;
 
 - (void)saveTablePositionFromCurrentPosition;
 - (void)notifyDelegateOfNewHistoryItem;
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)sBar;
 
-//- (IBAction)infoButtonPressed:(id)sender;
-//- (IBAction)closeButtonPressed;
+- (void)indexInstalled:(BOOL)success;
 
 - (IBAction)searchButtonPressed:(id)sender;
 

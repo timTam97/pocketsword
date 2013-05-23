@@ -9,202 +9,106 @@
 #import "PSIndexController.h"
 #import "ZipArchive.h"
 #import "ViewController.h"
+#import "PSSearchController.h"
 
 @implementation PSIndexController
 
-@synthesize downloadableIndices;
-@synthesize installedIndices;
-@synthesize unavailableIndices;
 @synthesize files;
+@synthesize delegate;
+@synthesize moduleToInstall;
 
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	//i18n of title
-	navItem.title = NSLocalizedString(@"SearchDownloaderTitle", @"Search Downloader");
-	//i18n of close button
-	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"Close");
-	tableSections = 0;
-	installedShown = NO;
-	unavailableShown = NO;
-	downloadableShown = NO;
+// after loading the listing from online, display a dialogue: asking to download, if available; saying "sad day" otherwise.
+// use MBProgressHUD to show the download progress
+// dismiss the view when done by calling [delegate indexInstalled:(BOOL)success]
+
+- (void)loadView {
+	
+	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
+	BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden ];
+	
+	CGRect frame = [[UIScreen mainScreen] applicationFrame];
+	
+	//check if you should rotate the view, e.g. change width and height of the frame
+	BOOL rotate = NO;
+	if ( UIInterfaceOrientationIsLandscape( [UIApplication sharedApplication].statusBarOrientation ) ) {
+		if (frame.size.width < frame.size.height) {
+			rotate = YES;
+		}
+	}
+	
+	if ( UIInterfaceOrientationIsPortrait( [UIApplication sharedApplication].statusBarOrientation ) ) {
+		if (frame.size.width > frame.size.height) {
+			rotate = YES;
+		}
+	}
+	
+	if (rotate) {
+		CGFloat tmp = frame.size.height;
+		frame.size.height = frame.size.width;
+		frame.size.width = tmp;
+	}
+	
+	
+	if (statusBarHidden) {
+		frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
+	}
+	
+	UIView *v = [[UIView alloc] initWithFrame: frame];
+	v.backgroundColor = [UIColor whiteColor];
+	v.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	
+	// add toolbar with the title
+	UIToolbar *tbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,frame.size.width,44)];
+	tbar.barStyle = UIBarStyleBlack;
+	UIBarButtonItem *titleButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"SearchDownloaderTitle", @"") style:UIBarButtonItemStylePlain target:nil action:nil];
+	UIBarButtonItem *flexLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *flexRight = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	NSArray *tbarButtons = [NSArray arrayWithObjects: flexLeft, titleButton, flexRight, nil];
+	[titleButton release];
+	[flexLeft release];
+	[flexRight release];
+	tbar.items = tbarButtons;
+	[v addSubview:tbar];
+	
+	// add empty UITableView for the funky texture
+	frame.size.height -= tbar.frame.size.height;
+	frame.origin = CGPointMake(0, tbar.frame.size.height);
+	UITableView *tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStyleGrouped];
+	[v addSubview:tableView];
+		
+	self.view = v;
+	[tbar release];
+	[tableView release];
+	[v release];
 }
 
-//- (void)setModuleManager:(PSModuleController *)mm {
-//	moduleManager = mm;
-//	[moduleManager retain];
-//	//[self updateInstalledIndexList];
-//}
-
-- (void)setSearchController:(PSSearchController *)sc {
-	searchController = sc;
-	[searchController retain];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
+- (void)viewDidAppear:(BOOL)animated {
+	//[super viewWillAppear:animated];
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
 		[alertView release];
 		return;
 	}
-	if(downloadableShown)
-		[self updateInstalledIndexList];
-	else
-		[self updateInstalledIndexListWithRemoteIndices:nil];
+	[self updateInstalledIndexListWithRemoteIndices];
 }
 
-- (void)hideIndexStatus {//needed, move to PSIndexController
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[ViewController hideModal: statusController.view withTiming:0.3];
-	[statusText setText: @""];
-	[statusOverallText setText: @""];
-	[statusBar setProgress: 0.0];
-	[statusOverallBar setProgress: 0.0];
-	[pool release];
-
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-    
-    if(backgroundSupported) {
-        [[UIApplication sharedApplication] endBackgroundTask:bti];
-        bti = UIBackgroundTaskInvalid;
-    }
-	[self dismissModalViewControllerAnimated:YES];
-}
-
-- (void)showIndexStatus {//needed, move to PSIndexController
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[statusTitle setText: NSLocalizedString(@"IndexDownloadTitle", @"Index Download")]; 
-	[statusText setText: @""];
-	[statusOverallBar setHidden: YES];
-	//UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: statusController];
-	//[navController setNavigationBarHidden: YES];
-	
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-    
-    if(backgroundSupported) {
-        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
-    }
-	
-	//[tabController presentModalViewController: navController animated: YES];
-	//[ViewController showModal: statusController.view withTiming:0.3];
-	[self presentModalViewController:statusController animated:YES];
-	
-	[pool release];
-}
-
-- (void)updateIndexInstallationStatus:(NSString*)arg {//needed, move to PSIndexController
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[statusBar setProgress: reporter->fileProgress];
-	float p = [arg floatValue];
-	[statusBar setProgress: p];
-	[pool release];
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-	return tableSections;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-	switch (section) {
-		case 0:
-			return [installedIndices count];
-		case 1:
-			if(downloadableShown)
-				return [downloadableIndices count];
-			else
-				return [unavailableIndices count];
-	}
-	//case 2:
-	return [unavailableIndices count];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-	switch (section) {
-		case 0:
-			return NSLocalizedString(@"IndexControllerInstalled", @"Installed search index for:");
-		case 1:
-			if(downloadableShown)
-				return NSLocalizedString(@"IndexControllerDownloadable", @"Downloadable search index for:");
-			else
-				return NSLocalizedString(@"IndexControllerNoneRemote", @"No available search index for:");//used to be "IndexControllerNone"
-	}
-	//case 2:
-	return NSLocalizedString(@"IndexControllerNoneRemote", @"No remote search index for:");
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"indexCell"];
-	if (!cell)
-	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"indexCell"] autorelease];
-	}
-	switch (indexPath.section) {
-		case 0:
-			cell.textLabel.text = [(SwordModule*)[installedIndices objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [(SwordModule*)[installedIndices objectAtIndex:indexPath.row] descr];
-			break;
-		case 1:
-			if(downloadableShown) {
-				cell.textLabel.text = [(SwordModule*)[downloadableIndices objectAtIndex:indexPath.row] name];
-				cell.detailTextLabel.text = [(SwordModule*)[downloadableIndices objectAtIndex:indexPath.row] descr];
-			} else {
-				cell.textLabel.text = [(SwordModule*)[unavailableIndices objectAtIndex:indexPath.row] name];
-				cell.detailTextLabel.text = [(SwordModule*)[unavailableIndices objectAtIndex:indexPath.row] descr];
-			}
-			break;
-		case 2:default:
-			cell.textLabel.text = [(SwordModule*)[unavailableIndices objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [(SwordModule*)[unavailableIndices objectAtIndex:indexPath.row] descr];
-			break;
-	}
-	
-	return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if(downloadableShown && (indexPath.section == 1)) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"InstallTitle", @"Install?") message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"Download the search index for this module?  This may take a while for Commentary modules!") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-		[alertView show];
-		[alertView release];
-	} else {
-		//deselect the row
-		[tableView deselectRowAtIndexPath: indexPath animated: YES];
-	}
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	NSIndexPath *indexPath = [indicesTable indexPathForSelectedRow];
-
-	if (buttonIndex == 1) {
-		if(indexPath) {
-			//ViewController *mm = [[PSModuleController defaultModuleController] viewController];
-			[self performSelectorInBackground: @selector(showIndexStatus) withObject: nil];
-			[self installSearchIndexForModule: (SwordModule*)[downloadableIndices objectAtIndex:indexPath.row]];
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {	
+	// check alertView.message for which dialogue we are dealing with.
+	DLog(@"\nalertView.title = %@", alertView.title);
+	if([alertView.title isEqualToString:NSLocalizedString(@"NoSearchIndexTitle", @"")]) {
+		DLog(@"dismissing no search index alert");
+		if(self.delegate) {
+			[self.delegate indexInstalled:NO];
 		}
-	} else {
-	}
-	if(indexPath) {
-		[indicesTable deselectRowAtIndexPath: indexPath animated: YES];
+		return;
 	}
 	
-	[pool release];
+	if (buttonIndex == 1) {
+		[self installSearchIndexForModule];
+	} else {
+		[self.delegate indexInstalled:NO];
+	}
 }
 
 - (void)_updateInstalledIndexListWithRemoteIndices {
@@ -214,18 +118,16 @@
 	
 	if([PSModuleController checkNetworkConnection]) {
 		application.networkActivityIndicatorVisible = YES;
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 
 		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
 		
 		// Get the index directory listing
 		NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
-												 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
+												 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 10.0];
 		NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
 		if (!data) {
 			DLog(@"Couldn't list remote directory");
-			//as a fallback, call the local version:
-			[self updateInstalledIndexList];
+			application.networkActivityIndicatorVisible = NO;
 			[pool release];
 			return;
 		}
@@ -249,17 +151,13 @@
 			}
 		}
 		dataString = nil;
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	
-	[self updateInstalledIndexList];
-
 	application.networkActivityIndicatorVisible = NO;
-	//[indicesTable reloadData];
 	[pool release];
 }
 
-- (IBAction)updateInstalledIndexListWithRemoteIndices:(id)sender {
+- (void)updateInstalledIndexListWithRemoteIndices {
 	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
 	[(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) addSubview:HUD];
 	
@@ -275,88 +173,66 @@
 	[hud removeFromSuperview];
 	[hud release];
 	hud = nil;
+	// if we were updating, now show the appropriate dialogue
+	if(self.files) {
+		[self updateInstalledIndexList];
+	}
+	// else if we were installing, now finish up.
+	else {
+		[delegate indexInstalled:YES];
+	}
 }
 
-- (IBAction)closeButtonPressed:(id)sender {
-	[searchController refreshView];
-	//[ViewController hideModal:self.view withTiming:0.3];
-	[searchController dismissModalViewControllerAnimated:YES];
-}
-
+// updated 22/05/2013
 - (void)updateInstalledIndexList {
 	
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSMutableArray *modules = [[[[[PSModuleController defaultModuleController] swordManager] listModules] mutableCopy] autorelease];
-	NSMutableArray *ii = [NSMutableArray arrayWithObjects: nil];
-	NSMutableArray *di = [NSMutableArray arrayWithObjects: nil];
-	NSMutableArray *nai = [NSMutableArray arrayWithObjects: nil];
-	
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-	[modules sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
-	
-	for(SwordModule *mod in modules) {
-		if([mod hasSearchIndex]) {
-			[ii addObject: mod];
-			//DLog(@"\ninstalled index for: %@", [mod name]);
-		} else if([mod type] == dictionary) {
-			//ignore cause we don't have support for search in dictionaries atm
-		} else if(self.files) {
-			NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
+	if(self.files) {
+		SwordModule *modToInstall = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
+		if(modToInstall) {
+			NSString *v = [modToInstall configEntryForKey:SWMOD_CONFENTRY_VERSION];
 			if(v == nil)
 				v = @"0.0";//if there's no version information, it's version 0.0!
-			NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
+			NSString *indexName = [NSString stringWithFormat: @"%@-%@", [modToInstall name], v];
 			if([files containsObject: indexName]) {
-				[di addObject: mod];
-				//DLog(@"\ndownloadable index for: %@", [mod name]);
+				DLog(@"\ndownloadable index for: %@", [modToInstall name]);
+				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"InstallTitle", @"Install?") message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+				[alertView show];
+				[alertView release];
+				self.files = nil;
+				return;
 			} else {
-				[nai addObject: mod];
-				//DLog(@"\nno available index for: %@", [mod name]);
+				DLog(@"\nno available index for: %@", [modToInstall name]);
 			}
-		} else {
-			[nai addObject: mod];
-			//DLog(@"\nno available index for: %@", [mod name]);
 		}
 	}
-	
-	self.installedIndices = ii;
-	self.downloadableIndices = di;
-	self.unavailableIndices = nai;
-	
-	//[modules release];
-	
-	tableSections = 1;
-	installedShown = YES;
-	
-	if([downloadableIndices count] > 0) {
-		tableSections++;
-		downloadableShown = YES;
-	} else {
-		downloadableShown = NO;
-	}
-	
-	if([unavailableIndices count] > 0) {
-		tableSections++;
-		unavailableShown = YES;
-	} else {
-		unavailableShown = NO;
-	}
-	[indicesTable reloadData];
-	[pool release];
+	self.files = nil;
+
+	NSString *msg = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"IndexControllerNoneRemote", @"No available search index for:"), moduleToInstall];
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"") message: msg delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
+	[alertView show];
+	[alertView release];
+
 }
 
-// Installs the search index for the primary text
-- (void)installSearchIndexForModule:(SwordModule *)mod {
-	//SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:module];
+// Installs the search index for the provided module.
+- (void)installSearchIndexForModule {
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
 	if (!mod) {
 		return;
 	}
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+    }
 	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
 	if(v == nil)
 		v = @"0.0";//if there's no version information, it's version 0.0!
 	NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
-	moduleName = [mod name];
 	
 	NSString *filename = [NSString stringWithFormat: @"http://www.crosswire.org/pocketsword/indices/v1/%@.zip", indexName];
 	
@@ -364,6 +240,9 @@
 	application.networkActivityIndicatorVisible = YES;
 	application.idleTimerDisabled = YES;//disable auto-lock while we're installing a module, as it could take a while!
 
+	installHUD = [[MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) animated:YES] retain];
+	installHUD.delegate = self;
+	installHUD.labelText = moduleToInstall;
 	// Download the data file
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
@@ -374,34 +253,42 @@
 	responseDataExpectedLength = [response expectedContentLength];
 	responseDataCurrentLength = 0;
 	installationProgress = 0.01;
+	installHUD.mode = MBProgressHUDModeDeterminate;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [responseData appendData:data];
 	responseDataCurrentLength = [responseData length];
 	installationProgress = (float) responseDataCurrentLength / (float) responseDataExpectedLength;
+	installHUD.progress = installationProgress;
 	if(installationProgress >= 1.0)
 		installationProgress = 0.9999;//1.0 is a reserved special value that shouldn't be set here.
-	//ViewController *mm = [[PSModuleController defaultModuleController] viewController];
-	NSString *p = [NSString stringWithFormat: @"%f", installationProgress];
-	[self performSelectorInBackground: @selector(updateIndexInstallationStatus:) withObject: p];
-	//[[[PSModuleController defaultModuleController] viewController] updateIndexInstallationStatus:installationProgress];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     [responseData release];
     [connection release];
     // Show error message
+	installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+	installHUD.mode = MBProgressHUDModeCustomView;
+	[installHUD hide:YES afterDelay:2];
 	UIApplication *application = [UIApplication sharedApplication];
 	application.networkActivityIndicatorVisible = NO;
 	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
-	ALog(@"Couldn't retrieve search index for: %@", moduleName);
+	ALog(@"Couldn't retrieve search index for: %@", moduleToInstall);
 	installationProgress = -1.0;
-	//ViewController *mm = [[PSModuleController defaultModuleController] viewController];
-	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
-	//[[[PSModuleController defaultModuleController] viewController] hideOperationStatus];
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        [[UIApplication sharedApplication] endBackgroundTask:bti];
+        bti = UIBackgroundTaskInvalid;
+    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -412,7 +299,7 @@
 	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 
     // Use responseData
-	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleName];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
 	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
 
 	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
@@ -426,9 +313,16 @@
 		ALog(@"Couldn't write file: %@", zippedIndex);
 		installationProgress = -1.0;
 		[responseData release];
+		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		installHUD.mode = MBProgressHUDModeCustomView;
+		[installHUD hide:YES afterDelay:2];
 		return;
 	}
     [responseData release];
+
+	installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+	installHUD.mode = MBProgressHUDModeCustomView;
+	[installHUD hide:YES afterDelay:2];
 
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:zippedIndex];
@@ -439,25 +333,24 @@
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	[fileManager removeItemAtPath:zippedIndex error:NULL];
 	
-	DLog(@"Index (%@) installed successfully", moduleName);
+	DLog(@"Index (%@) installed successfully", moduleToInstall);
 	
 	installationProgress = 1.0;
-	[self updateInstalledIndexList];
-	[self performSelectorInBackground: @selector(hideIndexStatus) withObject: nil];
-	[searchController refreshView];
-}
-
-- (float)getInstallationProgress {
-	return installationProgress;
+    UIDevice* device = [UIDevice currentDevice];
+    BOOL backgroundSupported = NO;
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+        backgroundSupported = device.multitaskingSupported;
+    }
+    
+    if(backgroundSupported) {
+        [[UIApplication sharedApplication] endBackgroundTask:bti];
+        bti = UIBackgroundTaskInvalid;
+    }
 }
 
 - (void)dealloc {
-	self.downloadableIndices = nil;
-	self.installedIndices = nil;
-	self.unavailableIndices = nil;
 	self.files = nil;
-	//[moduleManager release];
-	[searchController release];
+	self.moduleToInstall = nil;
 	[super dealloc];
 }
 

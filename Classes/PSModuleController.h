@@ -18,7 +18,6 @@
 */
 
 
-#import "ViewController.h"
 #import "SwordManager.h"
 #import "SwordInstallManager.h"
 #import "globals.h"

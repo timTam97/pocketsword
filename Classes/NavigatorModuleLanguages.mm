@@ -8,7 +8,7 @@
 
 #import "NavigatorModuleLanguages.h"
 #import "NavigatorModules.h"
-
+#import "PSResizing.h"
 
 @implementation NavigatorModuleLanguages
 
