@@ -17,10 +17,6 @@
 @synthesize delegate;
 @synthesize moduleToInstall;
 
-// after loading the listing from online, display a dialogue: asking to download, if available; saying "sad day" otherwise.
-// use MBProgressHUD to show the download progress
-// dismiss the view when done by calling [delegate indexInstalled:(BOOL)success]
-
 - (void)loadView {
 	
 	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
@@ -83,24 +79,20 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-	//[super viewWillAppear:animated];
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
 		[alertView release];
 		return;
 	}
-	[self updateInstalledIndexListWithRemoteIndices];
+	[self retrieveRemoteIndexList];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {	
 	// check alertView.message for which dialogue we are dealing with.
 	DLog(@"\nalertView.title = %@", alertView.title);
-	if([alertView.title isEqualToString:NSLocalizedString(@"NoSearchIndexTitle", @"")]) {
-		DLog(@"dismissing no search index alert");
-		if(self.delegate) {
-			[self.delegate indexInstalled:NO];
-		}
+	if([alertView.title isEqualToString:NSLocalizedString(@"NoSearchIndexTitle", @"")] || [alertView.title isEqualToString:NSLocalizedString(@"Error", @"")]) {
+		[self.delegate indexInstalled:NO];
 		return;
 	}
 	
@@ -111,7 +103,7 @@
 	}
 }
 
-- (void)_updateInstalledIndexListWithRemoteIndices {
+- (void)_retrieveRemoteIndexList {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	UIApplication *application = [UIApplication sharedApplication];
@@ -157,7 +149,7 @@
 	[pool release];
 }
 
-- (void)updateInstalledIndexListWithRemoteIndices {
+- (void)retrieveRemoteIndexList {
 	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
 	[(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) addSubview:HUD];
 	
@@ -165,7 +157,7 @@
 	HUD.delegate = self;
 	
 	// Show the HUD while the provided method executes in a new thread
-	[HUD showWhileExecuting:@selector(_updateInstalledIndexListWithRemoteIndices) onTarget:self withObject:nil animated:YES];
+	[HUD showWhileExecuting:@selector(_retrieveRemoteIndexList) onTarget:self withObject:nil animated:YES];
 }
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
@@ -175,7 +167,7 @@
 	hud = nil;
 	// if we were updating, now show the appropriate dialogue
 	if(self.files) {
-		[self updateInstalledIndexList];
+		[self checkForRemoteIndex];
 	}
 	// else if we were installing, now finish up.
 	else {
@@ -183,8 +175,7 @@
 	}
 }
 
-// updated 22/05/2013
-- (void)updateInstalledIndexList {
+- (void)checkForRemoteIndex {
 	
 	if(self.files) {
 		SwordModule *modToInstall = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];

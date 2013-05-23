@@ -40,8 +40,8 @@
 @property (nonatomic, assign) id <PSIndexControllerDelegate> delegate;
 @property (copy) NSString *moduleToInstall;
 
-- (void)updateInstalledIndexListWithRemoteIndices;
-- (void)updateInstalledIndexList;
+- (void)retrieveRemoteIndexList;
+- (void)checkForRemoteIndex;
 - (void)installSearchIndexForModule;
 
 @end
