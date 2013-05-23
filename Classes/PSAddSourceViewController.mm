@@ -25,16 +25,80 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)loadView {
 	
+	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
+	BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden ];
+	
+	CGRect frame = [[UIScreen mainScreen] applicationFrame];
+	
+	//check if you should rotate the view, e.g. change width and height of the frame
+	BOOL rotate = NO;
+	if ( UIInterfaceOrientationIsLandscape( [UIApplication sharedApplication].statusBarOrientation ) ) {
+		if (frame.size.width < frame.size.height) {
+			rotate = YES;
+		}
+	}
+	
+	if ( UIInterfaceOrientationIsPortrait( [UIApplication sharedApplication].statusBarOrientation ) ) {
+		if (frame.size.width > frame.size.height) {
+			rotate = YES;
+		}
+	}
+	
+	if (rotate) {
+		CGFloat tmp = frame.size.height;
+		frame.size.height = frame.size.width;
+		frame.size.width = tmp;
+	}
+	
+	
+	if (statusBarHidden) {
+		frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
+	}
+	
+	UIView *v = [[UIView alloc] initWithFrame: frame];
+	v.backgroundColor = [UIColor whiteColor];
+	v.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	
+	// add toolbar with the title
+	UIToolbar *tbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,frame.size.width,44)];
+	tbar.barStyle = UIBarStyleBlack;
+	NSString *t = [NSString stringWithFormat:@"Add%@SourceTitle", serverType];
+	UIBarButtonItem *titleButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(t, @"") style:UIBarButtonItemStylePlain target:nil action:nil];
+	UIBarButtonItem *flexLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *flexRight = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
+
+	NSArray *tbarButtons = [NSArray arrayWithObjects: cancelButton, flexLeft, titleButton, flexRight, saveButton, nil];
+	[titleButton release];
+	[flexLeft release];
+	[flexRight release];
+	[cancelButton release];
+	[saveButton release];
+	tbar.items = tbarButtons;
+	[v addSubview:tbar];
+	topBarHeight = tbar.frame.size.height;
+	
+	// add empty UITableView
+	frame.size.height -= tbar.frame.size.height;
+	frame.origin = CGPointMake(0, tbar.frame.size.height);
+	addSourceTableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStyleGrouped];
+	[v addSubview:addSourceTableView];
+	addSourceTableView.delegate = self;
+	addSourceTableView.dataSource = self;
+	
+	self.view = v;
+	[tbar release];
+	[v release];
+
     CGRect fieldFrames = CGRectMake(20,12,280,25);
     if([PSResizing iPad]) {
         //different frames for the iPad
         fieldFrames = CGRectMake(60,12,560,25);
     }
-
+	
     captionTextField = [[UITextField alloc] initWithFrame:fieldFrames];
 	[captionTextField setPlaceholder:@"e.g. CrossWire 1"];
 	captionTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -56,16 +120,13 @@
 	pathTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	pathTextField.autocorrectionType = UITextAutocorrectionTypeNo;
 	pathTextField.returnKeyType = UIReturnKeyDone;
-	pathTextField.delegate = self;	
-
+	pathTextField.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
 	[nc addObserver:self selector:@selector(keyboardDidShow:) name: UIKeyboardDidShowNotification object:nil];
-	NSString *t = [NSString stringWithFormat:@"Add%@SourceTitle", serverType];
-	navBar.title = NSLocalizedString(t, @"");
 	[captionTextField becomeFirstResponder];
 	[super viewWillAppear:animated];
 }
@@ -87,7 +148,7 @@
 	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 	//t = [mainWindow convertRect:t fromWindow:nil];
     ////r.size.height -=  t.size.height;
-	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - navigationBar.bounds.size.height - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
+	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
 
     r.size.height = baseHeight - t.size.height;
     [UIView beginAnimations:nil context:NULL];
@@ -132,7 +193,7 @@
 	//CGRect t;
     //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
     //r.size.height +=  t.size.height;
-	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - navigationBar.bounds.size.height - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
+	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
 	r.size.height = baseHeight;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -146,11 +207,11 @@
 	}
 }
 
-- (IBAction)cancelButtonPressed {
+- (void)cancelButtonPressed {
 	[captionTextField resignFirstResponder];
 	[serverTextField resignFirstResponder];
 	[pathTextField resignFirstResponder];
-	[navSources dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -196,7 +257,7 @@
 	indexData = nil;
 }
 
-- (IBAction)saveButtonPressed {
+- (void)saveButtonPressed {
 	NSString *caption = captionTextField.text;
 	NSString *server = serverTextField.text;
 	NSString *path = pathTextField.text;
@@ -228,9 +289,19 @@
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
-	[hud removeFromSuperview];
-	[hud release];
-	hud = nil;
+	BOOL dismissModal = NO;
+	if(indexDownloadHUD.mode == MBProgressHUDModeCustomView) {
+		dismissModal = YES;
+	}
+	[indexDownloadHUD removeFromSuperview];
+	[indexDownloadHUD release];
+	indexDownloadHUD = nil;
+	if(dismissModal) {
+		[self dismissModalViewControllerAnimated:YES];
+		captionTextField.text = @"";
+		serverTextField.text = @"";
+		pathTextField.text = @"";
+	}
 }
 
 - (void)addInstallSource:(NSString*)caption withPath:(NSString*)path andServer:(NSString*)server {
@@ -244,12 +315,15 @@
 	[[[PSModuleController defaultModuleController] swordInstallManager] addInstallSource:is];
 	[is release];
 	is = nil;
-	[navSources resetTableSelection];
-	
-	[navSources dismissModalViewControllerAnimated:YES];
-	captionTextField.text = @"";
-	serverTextField.text = @"";
-	pathTextField.text = @"";
+		
+	if(indexDownloadHUD && indexDownloadHUD.mode == MBProgressHUDModeCustomView) {
+		// we will dismiss ourselves when the HUD is done...
+	} else {
+		[self dismissModalViewControllerAnimated:YES];
+		captionTextField.text = @"";
+		serverTextField.text = @"";
+		pathTextField.text = @"";
+	}
 }
 
 #pragma mark -
@@ -321,6 +395,7 @@
 	[captionTextField release];
 	[serverTextField release];
 	[pathTextField release];
+	[addSourceTableView release];
 }
 
 

@@ -7,7 +7,7 @@
 //
 
 #import "PSModuleController.h"
-#import "PSAddSourceViewController.h"
+#import "MBProgressHUD.h"
 
 @class NavigatorModuleTypes;
 @class iPhoneHTTPServerDelegate;
@@ -15,23 +15,17 @@
 @interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, MBProgressHUDDelegate> {
 
 	IBOutlet UITableView *table;
-	//IBOutlet id refreshButton;
-	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet NavigatorModuleTypes *navigatorModuleTypes;
-	IBOutlet UITabBarController *tabController;
-	IBOutlet PSAddSourceViewController *addSourceViewController;
+	//IBOutlet PSAddSourceViewController *addSourceViewController;
 	
 	IBOutlet iPhoneHTTPServerDelegate *manualInstallViewController;
 	BOOL mmmMenuDisplayed;
 }
 
-//@property (readonly) PSModuleController *moduleManager;
-@property (readonly) UITabBarController *tabController;
-
-- (IBAction)manualAddModule:(id)sender;
+- (void)manualAddModule;
 - (void)addManualInstallButton;
-- (IBAction)editButtonPressed:(id)sender;
-- (void)resetTableSelection;
+- (void)editButtonPressed:(id)sender;
+- (void)resetInstallSourcesListing;
 
 @end
 

@@ -8,6 +8,7 @@
 
 #import "PSModuleController.h"
 #import "NavigatorSources.h"
+#import "MBProgressHUD.h"
 
 @class NavigatorModuleLanguages;
 
@@ -17,15 +18,6 @@
 	NSArray *dataArray;
 	IBOutlet NavigatorSources *navigatorSources;
 
-	// Status view
-//	IBOutlet UIViewController *statusController;
-//	IBOutlet UILabel *statusTitle;
-//	IBOutlet UILabel *statusText;
-//	IBOutlet UILabel *statusOverallText;
-//	IBOutlet UIProgressView *statusBar;
-//	IBOutlet UIProgressView *statusOverallBar;
-//	IBOutlet UIButton *cancelButton;
-
     NSUInteger bti;
 }
 @property (retain, readwrite) NSArray *dataArray;
@@ -33,10 +25,6 @@
 - (void)reloadTable;
 - (IBAction)refreshDownloadSource:(id)sender;
 - (IBAction)cancelRefreshDownloadSource;
-//- (void)runRefreshDownloadSource;
-//- (void)showRefreshStatus;
-//- (void)updateRefreshStatus;
-//- (void)hideOperationStatus;
 
 - (void)dealloc;
 

@@ -179,9 +179,6 @@ NSTimer *downloadTimer;
 	[statusText setText: sText];
 	[statusText setLineBreakMode: UILineBreakModeWordWrap];
 
-	//[[navigatorSources tabController].moreNavigationController presentModalViewController: statusController animated: YES];
-	//[[self navigationController] presentModalViewController: statusController animated: YES];
-    //[self presentModalViewController: statusController animated: YES];
     [[statusController view] setAlpha:0.0];
     statusController.view.frame = self.view.frame;
     statusController.view.center = self.view.center;
@@ -274,10 +271,6 @@ NSTimer *downloadTimer;
 - (void)hideOperationStatus {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	//[[navigatorSources tabController].moreNavigationController dismissModalViewControllerAnimated: YES];
-    //[[self navigationController] dismissModalViewControllerAnimated: YES];
-    //[self dismissModalViewControllerAnimated: YES];
-
     UIDevice* device = [UIDevice currentDevice];
     BOOL backgroundSupported = NO;
     if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {

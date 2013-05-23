@@ -536,7 +536,6 @@
 }
 
 - (void)hideFontTableView {
-	//[tabController.moreNavigationController popViewControllerAnimated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 

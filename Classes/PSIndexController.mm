@@ -155,6 +155,7 @@
 	
 	// Regiser for HUD callbacks so we can remove it from the window at the right time
 	HUD.delegate = self;
+	HUD.dimBackground = YES;
 	
 	// Show the HUD while the provided method executes in a new thread
 	[HUD showWhileExecuting:@selector(_retrieveRemoteIndexList) onTarget:self withObject:nil animated:YES];
@@ -234,6 +235,7 @@
 	installHUD = [[MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) animated:YES] retain];
 	installHUD.delegate = self;
 	installHUD.labelText = moduleToInstall;
+	installHUD.dimBackground = YES;
 	// Download the data file
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...

@@ -11,11 +11,9 @@
 #import "NavigatorModules.h"
 #import "iPhoneHTTPServerDelegate.h"
 #import "PSResizing.h"
+#import "PSAddSourceViewController.h"
 
 @implementation NavigatorSources
-
-//@synthesize moduleManager;
-@synthesize tabController;
 
 // displaying the Install Sources
 
@@ -46,7 +44,7 @@
 	}
 }
 
-- (IBAction)editButtonPressed:(id)sender {
+- (void)editButtonPressed:(id)sender {
 	if(mmmMenuDisplayed) {
 		return;
 	}
@@ -72,11 +70,15 @@
 	
 	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddFTPSource", @"")]) {
+		PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
 		addSourceViewController.serverType = INSTALLSOURCE_TYPE_FTP;
 		[self presentModalViewController:addSourceViewController animated:YES];
+		[addSourceViewController release];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddHTTPSource", @"")]) {
+		PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
 		addSourceViewController.serverType = INSTALLSOURCE_TYPE_HTTP;
 		[self presentModalViewController:addSourceViewController animated:YES];
+		[addSourceViewController release];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"DeleteSource", @"")]) {
 		//not currently implemented...
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
@@ -97,7 +99,7 @@
 		//[[[PSModuleController defaultModuleController] swordInstallManager] refreshMasterRemoteInstallSourceList];
 		//[table reloadData];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
-		[self manualAddModule:nil];
+		[self manualAddModule];
 	}
 }
 
@@ -109,7 +111,7 @@
 	[table reloadData];
 }
 
-- (void)resetTableSelection {
+- (void)resetInstallSourcesListing {
 	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
 	[table deselectRowAtIndexPath:tableSelection animated:YES];
 	[table reloadData];
@@ -124,13 +126,13 @@
 		[alertView release];
 	}
 	if([NSThread isMainThread]) {
-		[self resetTableSelection];
+		[self resetInstallSourcesListing];
 	} else {
-		[self performSelectorOnMainThread:@selector(resetTableSelection) withObject:nil waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(resetInstallSourcesListing) withObject:nil waitUntilDone:YES];
 	}
 }
 
-- (IBAction)manualAddModule:(id)sender {
+- (void)manualAddModule {
 	[self presentModalViewController:manualInstallViewController animated:YES];
 
 	[manualInstallViewController startServer];

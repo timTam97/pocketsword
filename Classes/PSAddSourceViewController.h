@@ -11,17 +11,15 @@
 
 @class NavigatorSources;
 
-@interface PSAddSourceViewController : UITableViewController <UITextFieldDelegate, MBProgressHUDDelegate> {
+@interface PSAddSourceViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
 	UITextField *captionTextField;
 	UITextField *serverTextField;
 	UITextField *pathTextField;
 	
 	NSString *serverType;
 	
-	IBOutlet UINavigationItem *navBar;
-	IBOutlet UINavigationBar *navigationBar;
-	IBOutlet UITableView *addSourceTableView;
-	IBOutlet NavigatorSources *navSources;
+	UITableView *addSourceTableView;
+	NSInteger topBarHeight;
 	
 	NSMutableData *indexData;
 	float expectedDataLength;
@@ -31,8 +29,8 @@
 
 @property (nonatomic, retain) NSString *serverType;
 
-- (IBAction)cancelButtonPressed;
-- (IBAction)saveButtonPressed;
+- (void)cancelButtonPressed;
+- (void)saveButtonPressed;
 
 - (void)addInstallSource:(NSString*)caption withPath:(NSString*)path andServer:(NSString*)server;
 

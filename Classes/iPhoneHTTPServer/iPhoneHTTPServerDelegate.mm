@@ -66,7 +66,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"BonjourServicePublished" object:nil];
 	[httpServer release];
 	//now remove ourselves from the current view...
-	[navigatorSources.tabController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 //    [UIView beginAnimations:nil context:nil];
 //    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
 //                           forView:self.view.superview
