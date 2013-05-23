@@ -16,9 +16,7 @@
 
 	IBOutlet UITableView *table;
 	IBOutlet NavigatorModuleTypes *navigatorModuleTypes;
-	//IBOutlet PSAddSourceViewController *addSourceViewController;
 	
-	IBOutlet iPhoneHTTPServerDelegate *manualInstallViewController;
 	BOOL mmmMenuDisplayed;
 }
 

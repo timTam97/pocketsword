@@ -12,20 +12,15 @@
 	HTTPServer *httpServer;
 	NSDictionary *addresses;
 	
-	IBOutlet UILabel *helpInfo;
-	IBOutlet UILabel *bonjourInfo;
-	IBOutlet UILabel *ipInfo;
-	IBOutlet UILabel *wwwInfo;
-	IBOutlet UIButton *doneButton;
-	IBOutlet NavigatorSources *navigatorSources;
+	UILabel *bonjourInfo;
+	UILabel *ipInfo;
+	UILabel *wwwInfo;
 		
 }
 
 - (void)startServer;
 - (void)displayInfoUpdate:(NSNotification *) notification;
 
-//-(IBAction) startStopServer:(id)sender;
-
--(IBAction)done:(id)sender;
+- (void)doneButtonPressed;
 @end
 

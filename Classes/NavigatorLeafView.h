@@ -12,7 +12,7 @@
 
 @interface NavigatorLeafView : UIViewController <UINavigationBarDelegate> {
 	IBOutlet UIWebView *detailsView;
-	IBOutlet NavigatorSources *navigatorSources;
+	//IBOutlet NavigatorSources *navigatorSources;
 
 	// Status view
 	IBOutlet UIViewController *statusController;

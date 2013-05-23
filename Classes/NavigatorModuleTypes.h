@@ -16,7 +16,7 @@
 	IBOutlet UITableView *table;
 	IBOutlet NavigatorModuleLanguages *navigatorModuleLanguages;
 	NSArray *dataArray;
-	IBOutlet NavigatorSources *navigatorSources;
+	//IBOutlet NavigatorSources *navigatorSources;
 
     NSUInteger bti;
 }

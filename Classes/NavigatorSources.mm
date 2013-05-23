@@ -24,7 +24,6 @@
 	self.navigationItem.title = NSLocalizedString(@"InstallSourcesTitle", @"Sources");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	[self addManualInstallButton];
-	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addManualInstallButton) name:NotificationModuleMaintainerModeChanged object:nil];
 }
 
 // available actions (via Edit button):
@@ -34,11 +33,9 @@
 //		
 
 - (void)addManualInstallButton {
-	//BOOL manualInstallEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference];
 	self.navigationItem.rightBarButtonItem = nil;
 	if([[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(editButtonPressed:)];
-		//UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MMM.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed:)];//manualAddModule
 		self.navigationItem.rightBarButtonItem = iButton;
 		[iButton release];
 	}
@@ -55,9 +52,9 @@
 	} else {
 		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
 	}
-	if([PSResizing iPad]) {//ipad
+	if([PSResizing iPad]) {
 		[actionSheet showFromBarButtonItem:sender animated:YES];
-	} else {//iphone
+	} else {
 		[actionSheet showFromTabBar:self.tabBarController.tabBar];
 	}
 	[actionSheet release];
@@ -90,14 +87,9 @@
 		}
 		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
 		[self.view addSubview:HUD];
-		
-		// Regiser for HUD callbacks so we can remove it from the window at the right time
 		HUD.delegate = self;
-		
 		// Show the HUD while the provided method executes in a new thread
 		[HUD showWhileExecuting:@selector(refreshMasterRemoteInstallSourceList) onTarget:[[PSModuleController defaultModuleController] swordInstallManager] withObject:nil animated:YES];
-		//[[[PSModuleController defaultModuleController] swordInstallManager] refreshMasterRemoteInstallSourceList];
-		//[table reloadData];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
 		[self manualAddModule];
 	}
@@ -133,9 +125,12 @@
 }
 
 - (void)manualAddModule {
+	iPhoneHTTPServerDelegate *manualInstallViewController = [[iPhoneHTTPServerDelegate alloc] initWithNibName:nil bundle:nil];
+	manualInstallViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 	[self presentModalViewController:manualInstallViewController animated:YES];
 
 	[manualInstallViewController startServer];
+	[manualInstallViewController release];
 }
 
 
@@ -185,7 +180,6 @@
 	SwordInstallSource *sIS = [[[[PSModuleController defaultModuleController] swordInstallManager] installSourceList] objectAtIndex:indexPath.row];
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		[self performSelectorInBackground:@selector(showHUD) withObject:nil];
 		dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
 			
@@ -195,9 +189,6 @@
 				[MBProgressHUD hideHUDForView:self.view animated:YES];
 			});
 		});
-
-
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	[navigatorModuleTypes setDataArray:[sIS moduleListByType]];
 	navigatorModuleTypes.title = [sIS caption];
