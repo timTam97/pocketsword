@@ -219,7 +219,8 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
+//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS] autorelease];
 						CGFloat fssX = 170.0;
 						if(deviceIsPad) {
 							fssX = 135.0;
@@ -261,7 +262,8 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
 				}
 					break;
@@ -301,7 +303,8 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
 				}
 					break;
@@ -322,7 +325,8 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
 				}
 					break;
@@ -342,7 +346,8 @@
 		{
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 			}
 		}
 			break;

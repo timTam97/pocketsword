@@ -235,12 +235,14 @@
 		if(indexPath.row == FontDefaultsRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 			}
 		} else if(indexPath.row == FontSizeRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS] autorelease];
+//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
 				
 				[cell addSubview: fontSizeLabel];
 			}
@@ -255,14 +257,16 @@
 		if(indexPath.row == VPLRow || indexPath.row == XrefRow || indexPath.row == FootnotesRow || indexPath.row == HeadingsRow || indexPath.row == RedLetterRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 			}
 		}
 	} else if(indexPath.section == StrongsSection) {
 		if(indexPath.row == StrongsToggleRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 			}
 		} else if(indexPath.row == StrongsGreekRow || indexPath.row == StrongsHebrewRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
@@ -274,7 +278,8 @@
 		if(indexPath.row == MorphToggleRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 			}
 		} else if(indexPath.row == MorphGreekRow /*|| indexPath.row == MORPH_H_ROW*/) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
@@ -285,7 +290,8 @@
 	} else if(indexPath.section == LangSection) {
 		cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 		if(!cell) {
-			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+//			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 		}
 	}
 	

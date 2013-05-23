@@ -84,7 +84,7 @@
     NSInteger ret = 0;
     
     if(sk) {
-        for(*sk = sword::TOP; !sk->popError(); *sk++) {++ret;};
+        for(*sk = sword::TOP; !sk->popError(); (void)*sk++) {++ret;};
     }
     
     return ret;

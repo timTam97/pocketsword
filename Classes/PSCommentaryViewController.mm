@@ -8,7 +8,7 @@
 
 #import "PSCommentaryViewController.h"
 #import "PSModuleController.h"
-
+#import "ViewController.h"
 #import "PSResizing.h"
 
 
@@ -121,7 +121,8 @@
 }
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
+//    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
 //	if(!isFullScreen) {
 //		[UIView beginAnimations:@"fullscreen2" context:nil];
 //		[UIView setAnimationBeginsFromCurrentState:YES];
@@ -138,8 +139,10 @@
     isFullScreen = !isFullScreen;
 	[webView removeRefreshViews];
 	
-	if(!isFullScreen)
-		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	if(!isFullScreen) {
+		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
+//		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	}
 	
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];

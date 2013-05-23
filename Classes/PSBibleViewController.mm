@@ -8,7 +8,7 @@
 
 #import "PSBibleViewController.h"
 #import "PSModuleController.h"
-//#import "ViewController.h"
+#import "ViewController.h"
 #import "SwordDictionary.h"
 //#import "PSBasicBookmarksViewController.h"
 #import "PSBookmarkAddViewController.h"
@@ -117,7 +117,8 @@
 }
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+    //[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
 //	if(!isFullScreen) {
 //		[UIView beginAnimations:@"fullscreen2" context:nil];
 //		[UIView setAnimationBeginsFromCurrentState:YES];
@@ -137,8 +138,10 @@
 	//CGRect tmpFrame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, (webView.frame.size.height+400.0f));
 	//webView.frame = tmpFrame;
 	
-	if(!isFullScreen)
-		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+	if(!isFullScreen) {
+//		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
+		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
+	}
 	
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
@@ -353,7 +356,7 @@
 
 		
 		if(entry) {
-			[viewController showInfo: entry];
+			[(ViewController*)viewController showInfo: entry];
 			//NSLog(@"%@", entry);
 			load = NO;
 		}
