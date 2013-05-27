@@ -227,7 +227,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
     [indexData release];
 	indexData = nil;
 	
@@ -240,7 +240,7 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	if(indexData) {
 		indexDownloadHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
 		indexDownloadHUD.mode = MBProgressHUDModeCustomView;
@@ -275,8 +275,8 @@
 		[alertView release];
 		return;
 	}
-	
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/mods.d.tar.gz", [serverType lowercaseString], server, path]];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];

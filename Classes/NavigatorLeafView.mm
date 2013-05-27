@@ -140,21 +140,19 @@ NSTimer *downloadTimer;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
 	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
+	BOOL performInstall = NO;
 	
 	if (buttonIndex == 1 && !installedModule) {
 		//install the module
-		[self performSelectorInBackground: @selector(runInstallation) withObject: nil];
-		
-		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: @selector(updateInstallationStatus)];
-		NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-		[invocation setTarget: self];
-		[invocation setSelector: @selector(updateInstallationStatus)];
-		
-		downloadTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+		performInstall = YES;
 	} else if(buttonIndex == 1) {
-		//upgrade the module
+		//upgrade the module, so remove it first and then install the new version.
 		[[PSModuleController defaultModuleController] removeModule:module.name];
 		
+		performInstall = YES;
+	}
+	
+	if(performInstall) {
 		[self performSelectorInBackground: @selector(runInstallation) withObject: nil];
 		
 		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: @selector(updateInstallationStatus)];

@@ -10,7 +10,7 @@
 #import "SwordInstallSource.h"
 #import "SwordManager.h"
 #import "SwordModule.h"
-//#import "globals.h"
+#import "globals.h"
 
 #include "installmgr.h"
 //#include "MyInstallMgr.h"
@@ -311,15 +311,14 @@ base path of the module installation
 - (int)refreshMasterRemoteInstallSourceList {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	
     int stat = swInstallMgr->refreshRemoteSourceConfiguration();
     if(stat) {
         ALog(@"[SwordInstallMgr -refreshMasterRemoteInstallSourceList] Unable to refresh with master install source!");
     }
     
-	application.networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	
 	[self reinitialize];
 
@@ -386,8 +385,7 @@ base path of the module installation
 - (int)refreshInstallSource:(SwordInstallSource *)is {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	DLog(@"SwordInstallManager -refreshInstallSource: START");
 	
     int ret = 1;
@@ -404,7 +402,7 @@ base path of the module installation
             DLog(@"[SwordInstallManager -refreshInstallSource:] not refreshing, DIR source");
         }
     }
-	application.networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	if(!ret) // success = 0 for refreshRemoteSource()
 		status = 1.0;
 	else
@@ -418,15 +416,14 @@ base path of the module installation
 - (void)refreshAllInstallSources {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	
 	for (int i = 0; i < [installSourceList count]; i++) {
 		SwordInstallSource *sIS = [installSourceList objectAtIndex: i];
 		[self refreshInstallSource: sIS];
 	}
 	
-	application.networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	DLog(@"refreshAllInstallSources complete...");
 	[pool release];
 }

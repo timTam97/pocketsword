@@ -20,7 +20,7 @@ typedef enum {
 	NSArray *refSelectorBooksIndex;
 	NSString *currentlyViewedBookName;
 	
-	int refSelectorOTBookCount;
+	//int refSelectorOTBookCount;
 	NSInteger refSelectorBook;
 	NSInteger refSelectorChapter;
 	

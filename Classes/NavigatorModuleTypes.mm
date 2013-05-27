@@ -201,7 +201,6 @@
 	}
 	if(![sIS isSwordManagerLoaded]) {
 		// we need to display a busy indicator, cause it can take a LONG time to do file IO on the device...
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		[self performSelectorInBackground:@selector(showHUD) withObject:nil];
 		dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
 			
@@ -213,7 +212,6 @@
 		});
 		
 		
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	}
 	[self setDataArray:[sIS moduleListByType]];
 	//self.title = [sIS caption];

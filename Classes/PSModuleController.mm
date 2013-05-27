@@ -240,10 +240,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		[PSModuleController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
 		
-		
-		// This seems to sometimes cause a crash on start-up in the SWORD-lib code.  removing this line fixes it...
-		//[self performSelectorInBackground: @selector(readSwordInstallSourceModuleConfigFiles) withObject: nil];
-		
+		showNetworkIndicatorCount = 0;
+		disableAutoSleep = 0;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayNetworkIndicator) name:NotificationDisplayNetworkIndicator object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideNetworkIndicator) name:NotificationHideNetworkIndicator object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableAutoSleep) name:NotificationEnableAutoSleep object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disableAutoSleep) name:NotificationDisableAutoSleep object:nil];
+
 		/*
 		// debug code to print out all available fonts...
 		NSArray *names = [UIFont familyNames];
@@ -264,16 +267,30 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return self;
 }
 
-// This method was written to speed up access of the downloads tab.
-//  However, this often causes a crash when there are more than one Install Sources, so it shouldn't be used!
-//- (void)readSwordInstallSourceModuleConfigFiles {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	NSArray *sourceList = [swordInstallManager installSourceList];
-//	for (SwordInstallSource *source in sourceList) {
-//		[source swordManager];
-//	}
-//	[pool release];
-//}
+- (void)disableAutoSleep {
+	if(++disableAutoSleep == 1) {
+		[UIApplication sharedApplication].idleTimerDisabled = YES;
+	}
+}
+
+- (void)enableAutoSleep {
+	if(--disableAutoSleep == 0) {
+		BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
+		[UIApplication sharedApplication].idleTimerDisabled = insomniaMode;//set it to obey the user pref.
+	}
+}
+
+- (void)displayNetworkIndicator {
+	if(++showNetworkIndicatorCount == 1) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+	}
+}
+
+- (void)hideNetworkIndicator {
+	if(--showNetworkIndicatorCount == 0) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	}
+}
 
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/ {
 	if(swordManager) {
@@ -568,15 +585,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[PSResizing addSkipBackupAttributeToItemAtPath:[DEFAULT_MODULE_PATH stringByAppendingString: @"modules"]];
 
 
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
-	application.idleTimerDisabled = YES;//disable auto-lock while we're installing a module, as it could take a while!
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
 	
 	int status = [[self swordInstallManager] installModule: swordModule fromSource: sIS withManager: swordManager];
 	
-	application.networkActivityIndicatorVisible = NO;
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
-	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 	
 	[self reload];
 	
@@ -1086,8 +1101,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 + (BOOL)checkNetworkConnection {
 
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, [@"www.crosswire.org" UTF8String]);
 	SCNetworkReachabilityFlags flags;
@@ -1136,7 +1150,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		DLog(@"NO NETWORK AVAILABLE");
 	}
 	CFRelease(reachability);
-	application.networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	return retVal;
 }
 

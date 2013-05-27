@@ -51,7 +51,6 @@
 				return;
 			} else {
 				//need to load it
-				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 				MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
 				[self.view addSubview:HUD];
 				
@@ -61,7 +60,6 @@
 				// Show the HUD while the provided method executes in a new thread
 				[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
 								
-				//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 				needsReload = YES;
 			}
 		}
@@ -79,7 +77,6 @@
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if (buttonIndex == 1) {
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
 		[self.view addSubview:HUD];
 		
@@ -89,7 +86,6 @@
 		// Show the HUD while the provided method executes in a new thread
 		[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
 
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 		dictionaryEnabled = YES;
 		[dictionarySearchBar setUserInteractionEnabled: YES];
 	} else {

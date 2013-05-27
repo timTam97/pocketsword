@@ -928,8 +928,7 @@
 	BOOL n = [sender isOn];
 	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsInsomniaPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	UIApplication *thisApp = [UIApplication sharedApplication];
-	thisApp.idleTimerDisabled = n;
+	[UIApplication sharedApplication].idleTimerDisabled = n;
 }
 
 - (void)moduleMaintainerModeChanged:(UISwitch *)sender {

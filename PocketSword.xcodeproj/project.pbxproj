@@ -2516,21 +2516,21 @@
 		05D6ABE21097F76B00A5026E /* PS-install */ = {
 			isa = PBXGroup;
 			children = (
-				05D6ABB81097EAF300A5026E /* iPhoneHTTPServer */,
-				050E37BF106D1806001FCC17 /* PSStatusReporter.h */,
-				050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */,
 				05B52A27107DB0D100826AFE /* NavigatorSources.h */,
 				05B52A28107DB0D100826AFE /* NavigatorSources.mm */,
-				05D46213108FFF22006BFBB1 /* NavigatorModuleLanguages.h */,
-				05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */,
-				051CF1871084199400154E44 /* NavigatorLeafView.h */,
-				051CF1881084199400154E44 /* NavigatorLeafView.mm */,
-				05B52BDD107EEB7500826AFE /* NavigatorModules.h */,
-				05B52BDE107EEB7500826AFE /* NavigatorModules.mm */,
 				05B52BDA107EEB5B00826AFE /* NavigatorModuleTypes.h */,
 				05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */,
+				05D46213108FFF22006BFBB1 /* NavigatorModuleLanguages.h */,
+				05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */,
+				05B52BDD107EEB7500826AFE /* NavigatorModules.h */,
+				05B52BDE107EEB7500826AFE /* NavigatorModules.mm */,
+				051CF1871084199400154E44 /* NavigatorLeafView.h */,
+				051CF1881084199400154E44 /* NavigatorLeafView.mm */,
+				05D6ABB81097EAF300A5026E /* iPhoneHTTPServer */,
 				0533EF2B11C0B48900A65DCE /* PSAddSourceViewController.h */,
 				0533EF2C11C0B48900A65DCE /* PSAddSourceViewController.mm */,
+				050E37BF106D1806001FCC17 /* PSStatusReporter.h */,
+				050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */,
 			);
 			name = "PS-install";
 			path = Classes;

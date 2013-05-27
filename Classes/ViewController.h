@@ -133,12 +133,6 @@ typedef enum {
 
 - (void)nightModeChanged;
 
-//- (void)updateInstallationStatus;
-//- (void)updateIndexInstallationStatus:(NSString*)arg;//needed, move to PSIndexController
-//- (void)showIndexStatus;//needed, move to PSIndexController
-//- (void)hideIndexStatus;//needed, move to PSIndexController
-//- (void)hideOperationStatus;
-
 - (void)displayTitle:(NSString*)title onTab:(ShownTab)tab;
 - (void)removeTitle:(NSTimer*)theTimer;
 - (void)nextChapter;

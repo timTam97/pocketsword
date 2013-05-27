@@ -744,7 +744,6 @@
 
 - (void)_search {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayBusyIndicator object:nil];
 	self.results = nil;
 	self.savedTablePosition = nil;
 	if(self.searchTerm) {
@@ -785,7 +784,6 @@
 	[self notifyDelegateOfNewHistoryItem];
 	
 	self.searchTerm = nil;
-	//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideBusyIndicator object:nil];
 	[searchResultsTable reloadData];
 	[searchQueryView removeFromSuperview];
 	[self setSearchTitle];

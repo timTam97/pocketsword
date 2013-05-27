@@ -41,6 +41,8 @@
 
 	NSTimer *busyTimer;
 	float installationProgress;
+	NSInteger showNetworkIndicatorCount;
+	NSInteger disableAutoSleep;
 }
 
 @property (assign) SwordModule *primaryBible;

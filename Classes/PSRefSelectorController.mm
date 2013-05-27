@@ -98,23 +98,17 @@
 		refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem("KJV");
 	}
 	int numberOfBooks = refSystem->getBookCount();
-	refSelectorOTBookCount = refSystem->getBMAX()[0];
+	//refSelectorOTBookCount = refSystem->getBMAX()[0];
 	NSMutableArray *books = [[[NSMutableArray alloc] init] autorelease];
 	NSMutableArray *booksIndex = [[[NSMutableArray alloc] init] autorelease];
 	NSMutableArray *booksFullIndex = [[[NSMutableArray alloc] init] autorelease];
-	//BOOL addNextBook = NO;
 	for(int i = 0; i < numberOfBooks; i++) {
 		SwordBook *book = [[SwordBook alloc] initWithBook:refSystem->getBook(i)];
 		[books addObject:book];
-		//if(!(i%2) || addNextBook) {
-		//if(addNextBook)
-		//addNextBook = NO;
-			if(![booksFullIndex containsObject:[book shortName]])
-				[booksIndex addObject:[book shortName]];
-			else {
-				//addNextBook = YES;
-			}
-		//}
+		if(![booksFullIndex containsObject:[book shortName]]) {
+			[booksIndex addObject:[book shortName]];
+		} else {
+		}
 		[booksFullIndex addObject:[book shortName]];
 		[book release];
 	}

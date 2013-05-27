@@ -105,11 +105,9 @@
 
 - (void)_retrieveRemoteIndexList {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	UIApplication *application = [UIApplication sharedApplication];
-	
+		
 	if([PSModuleController checkNetworkConnection]) {
-		application.networkActivityIndicatorVisible = YES;
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 
 		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
 		
@@ -119,7 +117,7 @@
 		NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
 		if (!data) {
 			DLog(@"Couldn't list remote directory");
-			application.networkActivityIndicatorVisible = NO;
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 			[pool release];
 			return;
 		}
@@ -145,7 +143,7 @@
 		dataString = nil;
 	}
 	
-	application.networkActivityIndicatorVisible = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[pool release];
 }
 
@@ -228,9 +226,8 @@
 	
 	NSString *filename = [NSString stringWithFormat: @"http://www.crosswire.org/pocketsword/indices/v1/%@.zip", indexName];
 	
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = YES;
-	application.idleTimerDisabled = YES;//disable auto-lock while we're installing a module, as it could take a while!
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
 
 	installHUD = [[MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) animated:YES] retain];
 	installHUD.delegate = self;
@@ -265,10 +262,8 @@
 	installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
 	installHUD.mode = MBProgressHUDModeCustomView;
 	[installHUD hide:YES afterDelay:2];
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = NO;
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
-	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
 	ALog(@"Couldn't retrieve search index for: %@", moduleToInstall);
 	installationProgress = -1.0;
@@ -286,10 +281,8 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [connection release];
-	UIApplication *application = [UIApplication sharedApplication];
-	application.networkActivityIndicatorVisible = NO;
-	BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
-	application.idleTimerDisabled = insomniaMode;//set it to obey the user pref.
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
     // Use responseData
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
