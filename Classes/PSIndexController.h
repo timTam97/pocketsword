@@ -11,11 +11,12 @@
 #import "MBProgressHUD.h"
 
 @class PSSearchController;
+@class PSIndexController;
 
 @protocol PSIndexControllerDelegate <NSObject>
 @required
 // the delegate is responsible for dismissing the PSIndexController :P
-- (void)indexInstalled:(BOOL)success;
+- (void)indexInstalled:(PSIndexController*)sender;
 @end
 
 @interface PSIndexController : NSObject <MBProgressHUDDelegate> {

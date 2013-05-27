@@ -51,14 +51,14 @@
 	// check alertView.message for which dialogue we are dealing with.
 	DLog(@"\nalertView.title = %@", alertView.title);
 	if([alertView.title isEqualToString:NSLocalizedString(@"NoSearchIndexTitle", @"")] || [alertView.title isEqualToString:NSLocalizedString(@"Error", @"")]) {
-		[self.delegate indexInstalled:NO];
+		[self.delegate indexInstalled:self];
 		return;
 	}
 	
 	if (buttonIndex == 1) {
 		[self installSearchIndexForModule];
 	} else {
-		[self.delegate indexInstalled:NO];
+		[self.delegate indexInstalled:self];
 	}
 }
 
@@ -84,7 +84,7 @@
 				installHUD.mode = MBProgressHUDModeCustomView;
 				[installHUD hide:YES afterDelay:2];
 			} else {
-				[delegate indexInstalled:NO];
+				[delegate indexInstalled:self];
 			}
 			return;
 		}
@@ -131,7 +131,7 @@
 		if(self.files) {
 			[self checkForRemoteIndex];
 		} else {
-			[delegate indexInstalled:YES];
+			[delegate indexInstalled:self];
 		}
 	}
 }
@@ -147,7 +147,7 @@
 	}
 	// else if we were installing, now finish up.
 	else {
-		[delegate indexInstalled:YES];
+		[delegate indexInstalled:self];
 	}
 }
 
@@ -162,7 +162,7 @@
 			NSString *indexName = [NSString stringWithFormat: @"%@-%@", [modToInstall name], v];
 			if([files containsObject: indexName]) {
 				DLog(@"\ndownloadable index for: %@", [modToInstall name]);
-				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"InstallTitle", @"Install?") message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 				[alertView show];
 				[alertView release];
 				self.files = nil;
@@ -266,7 +266,7 @@
         bti = UIBackgroundTaskInvalid;
     }
 	if(!viewForHUD) {
-		[delegate indexInstalled:YES];
+		[delegate indexInstalled:self];
 	}
 }
 
@@ -295,7 +295,7 @@
 			installHUD.mode = MBProgressHUDModeCustomView;
 			[installHUD hide:YES afterDelay:2];
 		} else {
-			[delegate indexInstalled:YES];
+			[delegate indexInstalled:self];
 		}
 		return;
 	}
@@ -330,7 +330,7 @@
         bti = UIBackgroundTaskInvalid;
     }
 	if(!viewForHUD) {
-		[delegate indexInstalled:YES];
+		[delegate indexInstalled:self];
 	}
 }
 

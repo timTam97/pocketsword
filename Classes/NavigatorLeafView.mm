@@ -9,7 +9,6 @@
 #import "NavigatorLeafView.h"
 #import "ViewController.h"
 
-
 @implementation NavigatorLeafView
 
 @synthesize module;
@@ -50,6 +49,12 @@ NSTimer *downloadTimer;
 	[detailsView loadHTMLString:about baseURL:nil];
 }
 
+- (void)indexInstalled:(PSIndexController*)sender {
+	//[self refreshDetailsView];
+	[indexController release];
+	indexController = nil;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	self.title = module.name;
@@ -59,6 +64,12 @@ NSTimer *downloadTimer;
 	[detailsView setBackgroundColor:backgroundColor];
     
     [self refreshDetailsView];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	if(indexController) {
+		[indexController removeViewForHUD];
+	}
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -133,9 +144,6 @@ NSTimer *downloadTimer;
 	[pool release];
 }
 
-//
-// UIAlertView delegate method
-//
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
@@ -210,7 +218,6 @@ NSTimer *downloadTimer;
 	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
 
 	[self performSelectorOnMainThread: @selector(showDownloadStatus) withObject: nil waitUntilDone: NO];
-	//[self showDownloadStatus];
 	
 	//DLog(@"runInstallation:  calling [moduleManager installModule: %@]", [module name]);
 	[self updateInstallationStatus];
@@ -226,21 +233,8 @@ NSTimer *downloadTimer;
 	[statusBar setProgress: reporter->fileProgress];
 	[statusOverallBar setProgress: reporter->overallProgress];
 	
-//	NSString *desc = [NSString stringWithCString:reporter->getDescription() encoding:[NSString defaultCStringEncoding]];
-//	NSRange dataRange = [desc rangeOfString: @")"];
-//	if(dataRange.location != NSNotFound) {
-//		desc = [NSString stringWithFormat: @"%@ files)", [desc substringToIndex: dataRange.location]];
-//	}
-//	[statusOverallText setText: desc];
-	
-	//DLog(@"updateInstallationStatus: Progress: %f", progress);
-    //DLog(@"backgroundTimeRemaining: %f", [[UIApplication sharedApplication] backgroundTimeRemaining]);
-	
 	if (progress == 1.0) {
 		[[PSModuleController defaultModuleController] reload];
-		//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
-		//[moduleTable reloadData];
-		//[downloadableModulesTable reloadData];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
 		failed = NO;
 	}
@@ -252,8 +246,6 @@ NSTimer *downloadTimer;
 	if (failed) {
 		[[PSModuleController defaultModuleController] reload];
 		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
-		//[[[PSModuleController defaultModuleController] viewController] reloadModuleTable];
-		//[moduleTable reloadData];
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
 		[alertView release];
@@ -297,11 +289,20 @@ NSTimer *downloadTimer;
 	[statusBar setProgress: 0.0];
 	[statusOverallBar setProgress: 0.0];
 	[pool release];
+	
+	if(![module hasSearchIndex]) {
+		indexController = [[PSIndexController alloc] init];
+		indexController.delegate = self;
+		indexController.moduleToInstall = module.name;
+		[indexController addViewForHUD:detailsView];
+		[indexController start];
+	}
 }
 
 - (void)dealloc {
 	[module release];
 	[downloadTimer release];
+	[indexController release];
 	[super dealloc];
 }
 

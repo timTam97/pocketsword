@@ -44,7 +44,6 @@
 	NSString *bookName;
 	NSMutableArray *results;
 	NSArray *savedTablePosition;
-	PSIndexController *indexController;
 }
 
 @property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
@@ -72,7 +71,7 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)sBar;
 
-- (void)indexInstalled:(BOOL)success;
+- (void)indexInstalled:(PSIndexController*)sender;
 
 - (IBAction)searchButtonPressed:(id)sender;
 

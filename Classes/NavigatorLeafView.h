@@ -9,8 +9,9 @@
 #import "PSModuleController.h"
 #import "SwordModule.h"
 #import "NavigatorSources.h"
+#import "PSIndexController.h"
 
-@interface NavigatorLeafView : UIViewController <UINavigationBarDelegate> {
+@interface NavigatorLeafView : UIViewController <UINavigationBarDelegate, PSIndexControllerDelegate> {
 	IBOutlet UIWebView *detailsView;
 	//IBOutlet NavigatorSources *navigatorSources;
 
@@ -24,6 +25,7 @@
 		
 	SwordModule *module;
     NSUInteger bti;
+	PSIndexController *indexController;
 }
 
 @property (retain, readwrite) SwordModule *module;

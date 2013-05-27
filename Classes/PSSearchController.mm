@@ -124,11 +124,6 @@
 		default:
 			break;
 	}
-	if(indexController) {
-		[indexController release];
-		indexController = nil;
-		showIndexController = NO;
-	}
 	if(showIndexController) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 		[alertView show];
@@ -218,35 +213,12 @@
 	[self setSearchTitle];
 }
 
-//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	//[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchResultsTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-	//[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchQueryView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-//	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 32.0);
-//		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 32.0);//396,236
-//		searchResultsTable.frame = CGRectMake(0.0, 32.0, 320.0, 379.0);//428.0
-//	} else {
-//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 44.0);
-//		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 44.0);//396,236
-//		searchResultsTable.frame = CGRectMake(0.0, 44.0, 480.0, 207.0);//256.0
-//	}
-//}
-
-- (void)indexInstalled:(BOOL)success {
+- (void)indexInstalled:(PSIndexController*)sender {
 	[self refreshView];
-	//[self dismissModalViewControllerAnimated:YES];
-	[indexController release];
-	indexController = nil;
+	[sender release];
 }
 
-
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	if(indexController) {
-		[indexController release];
-		indexController = nil;
-	}
-	
 	if (buttonIndex == 1) {
 		SwordModule *mod;
 		if(listType == CommentaryTab) {
@@ -255,7 +227,7 @@
 			mod = [[PSModuleController defaultModuleController] primaryBible];
 		}
 		if(mod) {
-			indexController = [[PSIndexController alloc] init];
+			PSIndexController *indexController = [[PSIndexController alloc] init];
 			indexController.delegate = self;
 			indexController.moduleToInstall = [mod name];
 			[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
@@ -267,7 +239,6 @@
 		
 	}
 	[self refreshView];
-	[pool release];
 }
 
 - (void)refreshView {
