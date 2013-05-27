@@ -18,11 +18,9 @@
 - (void)indexInstalled:(BOOL)success;
 @end
 
-@interface PSIndexController : UIViewController <MBProgressHUDDelegate> {
+@interface PSIndexController : NSObject <MBProgressHUDDelegate> {
 	
 	id <PSIndexControllerDelegate> delegate;
-
-	//PSSearchController *searchController;
 
 	NSMutableArray *files;
 	
@@ -33,12 +31,19 @@
 	NSString *moduleToInstall;
 	MBProgressHUD *installHUD;
 	
+	UIView *viewForHUD;
+	
     NSUInteger bti;
 }
 
 @property (retain, readwrite) NSMutableArray *files;
 @property (nonatomic, assign) id <PSIndexControllerDelegate> delegate;
 @property (copy) NSString *moduleToInstall;
+
+- (void)start;
+
+- (void)addViewForHUD:(UIView*)view;
+- (void)removeViewForHUD;
 
 - (void)retrieveRemoteIndexList;
 - (void)checkForRemoteIndex;

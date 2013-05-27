@@ -8,8 +8,7 @@
 
 #import "PSIndexController.h"
 #import "ZipArchive.h"
-#import "ViewController.h"
-#import "PSSearchController.h"
+#import "PocketSwordAppDelegate.h"
 
 @implementation PSIndexController
 
@@ -17,68 +16,28 @@
 @synthesize delegate;
 @synthesize moduleToInstall;
 
-- (void)loadView {
-	
-	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
-	BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden ];
-	
-	CGRect frame = [[UIScreen mainScreen] applicationFrame];
-	
-	//check if you should rotate the view, e.g. change width and height of the frame
-	BOOL rotate = NO;
-	if ( UIInterfaceOrientationIsLandscape( [UIApplication sharedApplication].statusBarOrientation ) ) {
-		if (frame.size.width < frame.size.height) {
-			rotate = YES;
-		}
+- (void)addViewForHUD:(UIView *)view {
+	viewForHUD = view;
+}
+
+- (void)removeViewForHUD {
+	if(viewForHUD) {
+		[MBProgressHUD hideAllHUDsForView:viewForHUD animated:YES];
 	}
-	
-	if ( UIInterfaceOrientationIsPortrait( [UIApplication sharedApplication].statusBarOrientation ) ) {
-		if (frame.size.width > frame.size.height) {
-			rotate = YES;
-		}
-	}
-	
-	if (rotate) {
-		CGFloat tmp = frame.size.height;
-		frame.size.height = frame.size.width;
-		frame.size.width = tmp;
-	}
-	
-	
-	if (statusBarHidden) {
-		frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
-	}
-	
-	UIView *v = [[UIView alloc] initWithFrame: frame];
-	v.backgroundColor = [UIColor whiteColor];
-	v.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	
-	// add toolbar with the title
-	UIToolbar *tbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,frame.size.width,44)];
-	tbar.barStyle = UIBarStyleBlack;
-	UIBarButtonItem *titleButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"SearchDownloaderTitle", @"") style:UIBarButtonItemStylePlain target:nil action:nil];
-	UIBarButtonItem *flexLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	UIBarButtonItem *flexRight = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	NSArray *tbarButtons = [NSArray arrayWithObjects: flexLeft, titleButton, flexRight, nil];
-	[titleButton release];
-	[flexLeft release];
-	[flexRight release];
-	tbar.items = tbarButtons;
-	[v addSubview:tbar];
-	
-	// add empty UITableView for the funky texture
-	frame.size.height -= tbar.frame.size.height;
-	frame.origin = CGPointMake(0, tbar.frame.size.height);
-	UITableView *tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStyleGrouped];
-	[v addSubview:tableView];
-		
-	self.view = v;
-	[tbar release];
-	[tableView release];
-	[v release];
+	viewForHUD = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+	[self start];
+}
+
+- (void)start {
+	if(!self.moduleToInstall) {
+		NSAssert(moduleToInstall, @"Must set the module to install before starting the Index Installer!");
+	}
+	if(!viewForHUD) {
+		NSAssert(viewForHUD, @"you probably want an initial view set for the HUD to display on for the Index Installer :P");
+	}
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
@@ -118,7 +77,15 @@
 		if (!data) {
 			DLog(@"Couldn't list remote directory");
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
+			self.files = nil;
 			[pool release];
+			if(viewForHUD) {
+				installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+				installHUD.mode = MBProgressHUDModeCustomView;
+				[installHUD hide:YES afterDelay:2];
+			} else {
+				[delegate indexInstalled:NO];
+			}
 			return;
 		}
 		
@@ -148,15 +115,25 @@
 }
 
 - (void)retrieveRemoteIndexList {
-	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
-	[(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) addSubview:HUD];
-	
-	// Regiser for HUD callbacks so we can remove it from the window at the right time
-	HUD.delegate = self;
-	HUD.dimBackground = YES;
-	
-	// Show the HUD while the provided method executes in a new thread
-	[HUD showWhileExecuting:@selector(_retrieveRemoteIndexList) onTarget:self withObject:nil animated:YES];
+	if(viewForHUD) {
+		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:viewForHUD];
+		[viewForHUD addSubview:HUD];
+		
+		// Regiser for HUD callbacks so we can remove it from the window at the right time
+		HUD.delegate = self;
+		HUD.dimBackground = YES;
+		HUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		
+		// Show the HUD while the provided method executes in a new thread
+		[HUD showWhileExecuting:@selector(_retrieveRemoteIndexList) onTarget:self withObject:nil animated:YES];
+	} else {
+		[self _retrieveRemoteIndexList];
+		if(self.files) {
+			[self checkForRemoteIndex];
+		} else {
+			[delegate indexInstalled:YES];
+		}
+	}
 }
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
@@ -229,10 +206,15 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
 
-	installHUD = [[MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window) animated:YES] retain];
-	installHUD.delegate = self;
-	installHUD.labelText = moduleToInstall;
-	installHUD.dimBackground = YES;
+	if(viewForHUD) {
+		installHUD = [[MBProgressHUD showHUDAddedTo:viewForHUD animated:YES] retain];
+		installHUD.delegate = self;
+		installHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		installHUD.detailsLabelText = moduleToInstall;
+		installHUD.dimBackground = YES;
+	} else {
+		installHUD = nil;
+	}
 	// Download the data file
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
@@ -243,14 +225,18 @@
 	responseDataExpectedLength = [response expectedContentLength];
 	responseDataCurrentLength = 0;
 	installationProgress = 0.01;
-	installHUD.mode = MBProgressHUDModeDeterminate;
+	if(viewForHUD) {
+		installHUD.mode = MBProgressHUDModeDeterminate;
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [responseData appendData:data];
 	responseDataCurrentLength = [responseData length];
 	installationProgress = (float) responseDataCurrentLength / (float) responseDataExpectedLength;
-	installHUD.progress = installationProgress;
+	if(viewForHUD) {
+		installHUD.progress = installationProgress;
+	}
 	if(installationProgress >= 1.0)
 		installationProgress = 0.9999;//1.0 is a reserved special value that shouldn't be set here.
 }
@@ -259,9 +245,11 @@
     [responseData release];
     [connection release];
     // Show error message
-	installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
-	installHUD.mode = MBProgressHUDModeCustomView;
-	[installHUD hide:YES afterDelay:2];
+	if(viewForHUD) {
+		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		installHUD.mode = MBProgressHUDModeCustomView;
+		[installHUD hide:YES afterDelay:2];
+	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
@@ -277,6 +265,9 @@
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
+	if(!viewForHUD) {
+		[delegate indexInstalled:YES];
+	}
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -299,16 +290,22 @@
 		ALog(@"Couldn't write file: %@", zippedIndex);
 		installationProgress = -1.0;
 		[responseData release];
-		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
-		installHUD.mode = MBProgressHUDModeCustomView;
-		[installHUD hide:YES afterDelay:2];
+		if(viewForHUD) {
+			installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+			installHUD.mode = MBProgressHUDModeCustomView;
+			[installHUD hide:YES afterDelay:2];
+		} else {
+			[delegate indexInstalled:YES];
+		}
 		return;
 	}
     [responseData release];
 
-	installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
-	installHUD.mode = MBProgressHUDModeCustomView;
-	[installHUD hide:YES afterDelay:2];
+	if(viewForHUD) {
+		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		installHUD.mode = MBProgressHUDModeCustomView;
+		[installHUD hide:YES afterDelay:2];
+	}
 
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:zippedIndex];
@@ -332,6 +329,9 @@
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
+	if(!viewForHUD) {
+		[delegate indexInstalled:YES];
+	}
 }
 
 - (void)dealloc {

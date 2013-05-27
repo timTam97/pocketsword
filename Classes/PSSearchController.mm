@@ -13,6 +13,7 @@
 #import "PSHistoryController.h"
 #import "SwordVerseKey.h"
 #import "PSSearchHistoryItem.h"
+#import "PocketSwordAppDelegate.h"
 
 @implementation PSSearchController
 
@@ -233,7 +234,9 @@
 
 - (void)indexInstalled:(BOOL)success {
 	[self refreshView];
-	[self dismissModalViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
+	[indexController release];
+	indexController = nil;
 }
 
 
@@ -252,11 +255,11 @@
 			mod = [[PSModuleController defaultModuleController] primaryBible];
 		}
 		if(mod) {
-			indexController = [[PSIndexController alloc] initWithNibName:nil bundle:nil];
+			indexController = [[PSIndexController alloc] init];
 			indexController.delegate = self;
 			indexController.moduleToInstall = [mod name];
-			indexController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-			[self presentModalViewController:indexController animated:YES];
+			[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
+			[indexController start];
 		} else {
 			ALog(@"no module to install the index for :P");
 		}
