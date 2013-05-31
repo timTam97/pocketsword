@@ -185,7 +185,7 @@ base path of the module installation
 	statusReporter = new PSStatusReporter();
 	if(swInstallMgr != nil)
 		delete swInstallMgr;
-	swInstallMgr = new sword::InstallMgr([configPath UTF8String], statusReporter, "ftp", "installmgr@pocketsword.iphone.com");
+	swInstallMgr = new sword::InstallMgr([configPath UTF8String], statusReporter, "ftp", "installmgr@pocketsword.crosswire.org");
 	//swInstallMgr = new sword::InstallMgr([configPath UTF8String], statusReporter);
     if(swInstallMgr == nil) {
         ALog(@"[SwordInstallManager -reinitialize] could not initialize InstallMgr!");

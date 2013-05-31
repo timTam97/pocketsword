@@ -87,6 +87,7 @@ class sword::SWModule;
 #define SW_OPTION_SCRIPTREFS            @"Cross-references"
 #define SW_OPTION_VARIANTS              @"Textual Variants" // was "Variants" but that was a MacSword bug....
 #define SW_OPTION_REDLETTERWORDS        @"Words of Christ in Red"
+#define SW_OPTION_GLOSSES				@"Glosses"
 // this is not part of Sword
 #define SW_OPTION_REF                   @"Reference"
 #define SW_OPTION_MODULENAME            @"ModuleName"

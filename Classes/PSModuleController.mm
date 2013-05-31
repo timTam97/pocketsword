@@ -316,7 +316,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		
 		// constants:
 		[swordManager setGlobalOption: SW_OPTION_VARIANTS value: SW_OPTION_VARIANTS_PRIMARY ];//could make this an option?
-		[swordManager setGlobalOption: @"OSIS Ruby" value: SW_ON];		
+		[swordManager setGlobalOption: SW_OPTION_GLOSSES value: SW_ON];
 	}
 	return;
 }
