@@ -766,8 +766,8 @@
 }
 
 - (void)search {
-	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view.window];
-	[self.view.window addSubview:HUD];
+	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window)];
+	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
 	
 	// Regiser for HUD callbacks so we can remove it from the window at the right time
 	HUD.delegate = self;

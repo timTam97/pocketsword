@@ -10,7 +10,7 @@
 #import "NavigatorSources.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
-
+#import "PocketSwordAppDelegate.h"
 
 @implementation PSAddSourceViewController
 
@@ -283,7 +283,7 @@
 	[connection start];
 	[connection release];
 	
-	indexDownloadHUD = [[MBProgressHUD showHUDAddedTo:self.view.window animated:YES] retain];
+	indexDownloadHUD = [[MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES] retain];
 	indexDownloadHUD.delegate = self;
 }
 
