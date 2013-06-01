@@ -12,7 +12,6 @@
 @implementation NavigatorLeafView
 
 @synthesize module;
-NSTimer *downloadTimer;
 
 - (NSString*)refreshInstallButton {
 	UIBarButtonItem *installBarButtonItem;
@@ -32,7 +31,7 @@ NSTimer *downloadTimer;
 		[installBarButtonItem setEnabled:YES];
 	}
     
-    if([[statusController view] superview]) {
+    if([PSModuleController isModuleDownloading:module.name]) {
 		[installBarButtonItem setEnabled:NO];
     }
     
@@ -49,12 +48,6 @@ NSTimer *downloadTimer;
 	[detailsView loadHTMLString:about baseURL:nil];
 }
 
-- (void)indexInstalled:(PSIndexController*)sender {
-	//[self refreshDetailsView];
-	[indexController release];
-	indexController = nil;
-}
-
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	self.title = module.name;
@@ -64,16 +57,12 @@ NSTimer *downloadTimer;
 	[detailsView setBackgroundColor:backgroundColor];
     
     [self refreshDetailsView];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	if(indexController) {
-		[indexController removeViewForHUD];
-	}
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDetailsView) name:NotificationModulesChanged object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[detailsView loadHTMLString:@"" baseURL:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)confirmUpgrade {
@@ -161,148 +150,26 @@ NSTimer *downloadTimer;
 	}
 	
 	if(performInstall) {
-		[self performSelectorInBackground: @selector(runInstallation) withObject: nil];
-		
-		NSMethodSignature* sig = [[self class] instanceMethodSignatureForSelector: @selector(updateInstallationStatus)];
-		NSInvocation* invocation = [NSInvocation invocationWithMethodSignature: sig];
-		[invocation setTarget: self];
-		[invocation setSelector: @selector(updateInstallationStatus)];
-		
-		downloadTimer = [NSTimer scheduledTimerWithTimeInterval: 0.1 invocation: invocation repeats: YES];
+		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsView];
+		[PSModuleController queueModuleDownloadItem:dItem];
+		[dItem release];
+		[self refreshInstallButton];
 	}
 	
 	[pool release];
 }
 
-- (void)showDownloadStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	//DLog(@"showDownloadStatus: %@ -> %@", module.name, [module descr]);
-	[statusTitle setText: NSLocalizedString(@"Module Download", @"Module Download")];
-	[statusOverallText setText: @""];
-	NSString *sText = [NSString stringWithFormat: @"%@ %@", NSLocalizedString(@"Installing", @"Installing"), [module descr]] ;
-	
-	[statusOverallBar setHidden: NO];
-	[statusText setText: sText];
-	[statusText setLineBreakMode: UILineBreakModeWordWrap];
-
-    [[statusController view] setAlpha:0.0];
-    statusController.view.frame = self.view.frame;
-    statusController.view.center = self.view.center;
-    [self.view addSubview:[statusController view]];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.5];
-    [[statusController view] setAlpha:1.0];
-    [UIView commitAnimations];
-    
-    [self refreshInstallButton];
-	
-	[pool release];
+- (void)moduleDownloaded:(PSModuleDownloadItem *)sender {
+	[self refreshDetailsView];
 }
 
-- (void)runInstallation {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	[[[PSModuleController defaultModuleController] swordInstallManager] resetInstallationProgress];
-    
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-
-    if(backgroundSupported) {
-        bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
-    }
-	
-	[[PSModuleController defaultModuleController] performSelectorInBackground: @selector(installModuleWithModule:) withObject: module];
-
-	[self performSelectorOnMainThread: @selector(showDownloadStatus) withObject: nil waitUntilDone: NO];
-	
-	//DLog(@"runInstallation:  calling [moduleManager installModule: %@]", [module name]);
-	[self updateInstallationStatus];
-	
-	[pool release];
-}
-
-- (void)updateInstallationStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
-	BOOL failed = YES;
-	float progress = reporter->overallProgress;
-	[statusBar setProgress: reporter->fileProgress];
-	[statusOverallBar setProgress: reporter->overallProgress];
-	
-	if (progress == 1.0) {
-		[[PSModuleController defaultModuleController] reload];
-		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
-		failed = NO;
-	}
-	else if (progress == -1.0) {
-		failed = YES;
-	} else {
-		failed = NO;
-	}
-	if (failed) {
-		[[PSModuleController defaultModuleController] reload];
-		[self performSelectorOnMainThread: @selector(hideOperationStatus) withObject: nil waitUntilDone: NO];
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"InstallProblem", @"A problem occurred during the installation.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
-		[alertView show];
-		[alertView release];
-	}
-	[pool release];
-}
-
-- (void) hideOperationStatusEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    [[statusController view] removeFromSuperview];
-	[self refreshInstallButton];
-}
-
-- (void)hideOperationStatus {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-    UIDevice* device = [UIDevice currentDevice];
-    BOOL backgroundSupported = NO;
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
-        backgroundSupported = device.multitaskingSupported;
-    }
-    
-    if(backgroundSupported) {
-        [[UIApplication sharedApplication] endBackgroundTask:bti];
-        bti = UIBackgroundTaskInvalid;
-    }
-
-    [self refreshDetailsView];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDidStopSelector:@selector(hideOperationStatusEnded:finished:context:)];
-    [[statusController view] setAlpha:0.0];
-    [UIView commitAnimations];
-
-    
-	[downloadTimer invalidate];
-	
-	[statusText setText: @""];
-	[statusOverallText setText: @""];
-	[statusBar setProgress: 0.0];
-	[statusOverallBar setProgress: 0.0];
-	[pool release];
-	
-	if(![module hasSearchIndex]) {
-		indexController = [[PSIndexController alloc] init];
-		indexController.delegate = self;
-		indexController.moduleToInstall = module.name;
-		[indexController addViewForHUD:detailsView];
-		[indexController start];
-	}
+- (void)viewWillDisappear:(BOOL)animated {
+	[PSModuleController removeViewForHUDForModuleDownloadItem:module.name];
 }
 
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[module release];
-	[downloadTimer release];
-	[indexController release];
 	[super dealloc];
 }
 

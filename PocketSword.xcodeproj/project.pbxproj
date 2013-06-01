@@ -329,6 +329,7 @@
 		05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05E7F56116018E26006EA9A3 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E7F56016018E26006EA9A3 /* Icon-72@2x.png */; };
+		05EB26ED1755B6FA004A8EB7 /* PSModuleDownloadItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EB26EC1755B6FA004A8EB7 /* PSModuleDownloadItem.mm */; };
 		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; };
 		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
@@ -1157,6 +1158,8 @@
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05E7F56016018E26006EA9A3 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "Resources/Icon-72@2x.png"; sourceTree = "<group>"; };
+		05EB26EB1755B6FA004A8EB7 /* PSModuleDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleDownloadItem.h; path = Classes/PSModuleDownloadItem.h; sourceTree = "<group>"; };
+		05EB26EC1755B6FA004A8EB7 /* PSModuleDownloadItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleDownloadItem.mm; path = Classes/PSModuleDownloadItem.mm; sourceTree = "<group>"; };
 		05EBBA411681823E005C4FF9 /* canon_rahlfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_rahlfs.h; sourceTree = "<group>"; };
 		05EBBA421681823E005C4FF9 /* teixhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teixhtml.h; sourceTree = "<group>"; };
 		05EBBA431681825C005C4FF9 /* teixhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teixhtml.cpp; sourceTree = "<group>"; };
@@ -2341,6 +2344,8 @@
 				28216C960DB411BC00E5133A /* ViewController.mm */,
 				E996E5220ED70C6E0034DAF6 /* PSModuleController.h */,
 				E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */,
+				05EB26EB1755B6FA004A8EB7 /* PSModuleDownloadItem.h */,
+				05EB26EC1755B6FA004A8EB7 /* PSModuleDownloadItem.mm */,
 			);
 			name = base;
 			sourceTree = "<group>";
@@ -3539,6 +3544,7 @@
 				051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.m in Sources */,
 				05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */,
 				055C8A55173C9F49009FF47D /* MBProgressHUD.m in Sources */,
+				05EB26ED1755B6FA004A8EB7 /* PSModuleDownloadItem.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

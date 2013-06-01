@@ -9,6 +9,8 @@
 #import "PSIndexController.h"
 #import "ZipArchive.h"
 #import "PocketSwordAppDelegate.h"
+#import "PSModuleController.h"
+#import "SwordModule.h"
 
 @implementation PSIndexController
 
@@ -22,21 +24,20 @@
 
 - (void)removeViewForHUD {
 	if(viewForHUD) {
+		removingHUDViewInProgress = YES;
 		[MBProgressHUD hideAllHUDsForView:viewForHUD animated:YES];
 	}
 	viewForHUD = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-	[self start];
+	[self start:YES];
 }
 
-- (void)start {
+- (void)start:(BOOL)modal {
+	promptForDownload = modal;
 	if(!self.moduleToInstall) {
-		NSAssert(moduleToInstall, @"Must set the module to install before starting the Index Installer!");
-	}
-	if(!viewForHUD) {
-		NSAssert(viewForHUD, @"you probably want an initial view set for the HUD to display on for the Index Installer :P");
+		ALog(@"Must set the module to install before starting the Index Installer!");
 	}
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
@@ -49,7 +50,6 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {	
 	// check alertView.message for which dialogue we are dealing with.
-	DLog(@"\nalertView.title = %@", alertView.title);
 	if([alertView.title isEqualToString:NSLocalizedString(@"NoSearchIndexTitle", @"")] || [alertView.title isEqualToString:NSLocalizedString(@"Error", @"")]) {
 		[self.delegate indexInstalled:self];
 		return;
@@ -74,60 +74,59 @@
 		NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
 												 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 10.0];
 		NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 		if (!data) {
-			DLog(@"Couldn't list remote directory");
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
+			
+			ALog(@"Couldn't list remote directory");
 			self.files = nil;
-			[pool release];
 			if(viewForHUD) {
 				installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
 				installHUD.mode = MBProgressHUDModeCustomView;
-				[installHUD hide:YES afterDelay:2];
+				[installHUD hide:YES afterDelay:1];
 			} else {
 				[delegate indexInstalled:self];
 			}
-			return;
-		}
-		
-		NSString *dataString = [[[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]] autorelease];
-		self.files = [NSMutableArray arrayWithObjects: nil];
-		NSRange dataRange;
-		
-		while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
-			dataString = [dataString substringFromIndex: dataRange.location + dataRange.length];
-			dataRange = [dataString rangeOfString: @"\""];
-			if (dataRange.location != NSNotFound) {
-				NSString *link = [dataString substringToIndex: dataRange.location];
-				//if ([item UTF8String][0] != '/') {
-				//if (![item hasPrefix:@"/"] && ![item hasSuffix:@"/"]) {
-				if ([link hasSuffix:@".zip"]) {
-					link = [link substringToIndex: ([link length] - 4)];
-					[files addObject: link];
-					//DLog(@"\nfound a file: %@", item);
+			
+		} else {
+			
+			NSString *dataString = [[[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]] autorelease];
+			self.files = [NSMutableArray arrayWithObjects: nil];
+			NSRange dataRange;
+			
+			while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
+				dataString = [dataString substringFromIndex: dataRange.location + dataRange.length];
+				dataRange = [dataString rangeOfString: @"\""];
+				if (dataRange.location != NSNotFound) {
+					NSString *link = [dataString substringToIndex: dataRange.location];
+					if ([link hasSuffix:@".zip"]) {
+						link = [link substringToIndex: ([link length] - 4)];
+						[files addObject: link];
+					}
 				}
 			}
+			dataString = nil;
 		}
-		dataString = nil;
 	}
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[pool release];
 }
 
 - (void)retrieveRemoteIndexList {
 	if(viewForHUD) {
-		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:viewForHUD];
-		[viewForHUD addSubview:HUD];
-		
-		// Regiser for HUD callbacks so we can remove it from the window at the right time
-		HUD.delegate = self;
-		HUD.dimBackground = YES;
-		HUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		
-		// Show the HUD while the provided method executes in a new thread
-		[HUD showWhileExecuting:@selector(_retrieveRemoteIndexList) onTarget:self withObject:nil animated:YES];
+		installHUD = [[[MBProgressHUD alloc] initWithView:viewForHUD] autorelease];
+		[viewForHUD addSubview:installHUD];
+		installHUD.delegate = self;
+		installHUD.removeFromSuperViewOnHide = YES;
+		installHUD.dimBackground = YES;
+		installHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		[installHUD show:YES];
+	}
+	
+	[self _retrieveRemoteIndexList];
+	
+	if(viewForHUD) {
+		[installHUD hide:YES];
 	} else {
-		[self _retrieveRemoteIndexList];
 		if(self.files) {
 			[self checkForRemoteIndex];
 		} else {
@@ -138,9 +137,13 @@
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
-	[hud removeFromSuperview];
-	[hud release];
-	hud = nil;
+//	[hud removeFromSuperview];
+//	[hud release];
+//	hud = nil;
+	if(removingHUDViewInProgress) {
+		removingHUDViewInProgress = NO;
+		return;
+	}
 	// if we were updating, now show the appropriate dialogue
 	if(self.files) {
 		[self checkForRemoteIndex];
@@ -162,11 +165,17 @@
 			NSString *indexName = [NSString stringWithFormat: @"%@-%@", [modToInstall name], v];
 			if([files containsObject: indexName]) {
 				DLog(@"\ndownloadable index for: %@", [modToInstall name]);
-				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-				[alertView show];
-				[alertView release];
-				self.files = nil;
-				return;
+				if(promptForDownload) {
+					UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+					[alertView show];
+					[alertView release];
+					self.files = nil;
+					return;
+				} else {
+					self.files = nil;
+					[self installSearchIndexForModule];
+					return;
+				}
 			} else {
 				DLog(@"\nno available index for: %@", [modToInstall name]);
 			}
@@ -207,8 +216,9 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
 
 	if(viewForHUD) {
-		installHUD = [[MBProgressHUD showHUDAddedTo:viewForHUD animated:YES] retain];
+		installHUD = [MBProgressHUD showHUDAddedTo:viewForHUD animated:YES];
 		installHUD.delegate = self;
+		installHUD.removeFromSuperViewOnHide = YES;
 		installHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
 		installHUD.detailsLabelText = moduleToInstall;
 		installHUD.dimBackground = YES;
@@ -244,12 +254,6 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     [responseData release];
     [connection release];
-    // Show error message
-	if(viewForHUD) {
-		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
-		installHUD.mode = MBProgressHUDModeCustomView;
-		[installHUD hide:YES afterDelay:2];
-	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
@@ -265,8 +269,23 @@
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
-	if(!viewForHUD) {
-		[delegate indexInstalled:self];
+    // Show error message
+	if(viewForHUD) {
+		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		installHUD.mode = MBProgressHUDModeCustomView;
+		[installHUD hide:YES afterDelay:1];
+	} else {
+		UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+		MBProgressHUD *finishedHUD = [[[MBProgressHUD alloc] initWithView:viewToUse] autorelease];
+		finishedHUD.delegate = self;
+		finishedHUD.removeFromSuperViewOnHide = YES;
+		finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		finishedHUD.detailsLabelText = moduleToInstall;
+		finishedHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		finishedHUD.mode = MBProgressHUDModeCustomView;
+		[viewToUse addSubview:finishedHUD];
+		[finishedHUD show:YES];
+		[finishedHUD hide:YES afterDelay:1];
 	}
 }
 
@@ -293,19 +312,23 @@
 		if(viewForHUD) {
 			installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
 			installHUD.mode = MBProgressHUDModeCustomView;
-			[installHUD hide:YES afterDelay:2];
+			[installHUD hide:YES afterDelay:1];
 		} else {
-			[delegate indexInstalled:self];
+			UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+			MBProgressHUD *finishedHUD = [[[MBProgressHUD alloc] initWithView:viewToUse] autorelease];
+			finishedHUD.delegate = self;
+			finishedHUD.removeFromSuperViewOnHide = YES;
+			finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+			finishedHUD.detailsLabelText = moduleToInstall;
+			finishedHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+			finishedHUD.mode = MBProgressHUDModeCustomView;
+			[viewToUse addSubview:finishedHUD];
+			[finishedHUD show:YES];
+			[finishedHUD hide:YES afterDelay:1];
 		}
 		return;
 	}
     [responseData release];
-
-	if(viewForHUD) {
-		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
-		installHUD.mode = MBProgressHUDModeCustomView;
-		[installHUD hide:YES afterDelay:2];
-	}
 
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:zippedIndex];
@@ -329,9 +352,24 @@
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
-	if(!viewForHUD) {
-		[delegate indexInstalled:self];
+	if(viewForHUD) {
+		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		installHUD.mode = MBProgressHUDModeCustomView;
+		[installHUD hide:YES afterDelay:1];
+	} else {
+		UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+		MBProgressHUD *finishedHUD = [[[MBProgressHUD alloc] initWithView:viewToUse] autorelease];
+		finishedHUD.delegate = self;
+		finishedHUD.removeFromSuperViewOnHide = YES;
+		finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		finishedHUD.detailsLabelText = moduleToInstall;
+		finishedHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		finishedHUD.mode = MBProgressHUDModeCustomView;
+		[viewToUse addSubview:finishedHUD];
+		[finishedHUD show:YES];
+		[finishedHUD hide:YES afterDelay:1];
 	}
+	
 }
 
 - (void)dealloc {

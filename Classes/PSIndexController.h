@@ -6,12 +6,11 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSModuleController.h"
-#import "SwordModule.h"
 #import "MBProgressHUD.h"
 
 @class PSSearchController;
 @class PSIndexController;
+@class SwordModule;
 
 @protocol PSIndexControllerDelegate <NSObject>
 @required
@@ -33,6 +32,8 @@
 	MBProgressHUD *installHUD;
 	
 	UIView *viewForHUD;
+	BOOL promptForDownload;
+	BOOL removingHUDViewInProgress;
 	
     NSUInteger bti;
 }
@@ -41,7 +42,7 @@
 @property (nonatomic, assign) id <PSIndexControllerDelegate> delegate;
 @property (copy) NSString *moduleToInstall;
 
-- (void)start;
+- (void)start:(BOOL)modal;
 
 - (void)addViewForHUD:(UIView*)view;
 - (void)removeViewForHUD;

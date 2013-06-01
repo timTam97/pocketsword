@@ -231,7 +231,7 @@
 			indexController.delegate = self;
 			indexController.moduleToInstall = [mod name];
 			[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
-			[indexController start];
+			[indexController start:YES];
 		} else {
 			ALog(@"no module to install the index for :P");
 		}

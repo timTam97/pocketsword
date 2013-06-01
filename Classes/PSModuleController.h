@@ -27,8 +27,9 @@
 #import "PSModuleType.h"
 #import "SwordKey.h"
 #import "PSRefSelectorController.h"
+#import "PSModuleDownloadItem.h"
 
-@interface PSModuleController : NSObject {
+@interface PSModuleController : NSObject <PSModuleDownloadDelegate> {
 	
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;
@@ -42,17 +43,19 @@
 	NSTimer *busyTimer;
 	float installationProgress;
 	NSInteger showNetworkIndicatorCount;
-	NSInteger disableAutoSleep;
+	NSInteger disableAutoSleepCount;
+	
+	NSMutableArray *downloadQueue;
 }
 
 @property (assign) SwordModule *primaryBible;
 @property (assign) SwordModule *primaryCommentary;
 @property (assign) SwordDictionary *primaryDictionary;
 @property (assign) SwordDictionary *primaryDevotional;
-//@property (assign) SwordInstallManager *swordInstallManager;
 @property (assign) SwordManager *swordManager;
-@property (retain, readwrite) SwordInstallSource *currentInstallSource;
-@property (retain, readwrite) NSTimer *busyTimer;
+@property (retain) SwordInstallSource *currentInstallSource;
+@property (retain) NSTimer *busyTimer;
+@property (retain) NSMutableArray *downloadQueue;
 
 + (PSModuleController *)defaultModuleController;
 + (void)releaseDefaultModuleController;
@@ -82,8 +85,9 @@
 #ifdef __cplusplus
 - (PSStatusReporter*)getInstallationProgress;
 #endif
-- (BOOL)installModule:(NSString *)name;
+//- (BOOL)installModule:(NSString *)name;
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule;
+- (BOOL)installModuleWithModule:(SwordModule*)swordModule fromSource:(SwordInstallSource*)swordInstallSource;
 - (BOOL)removeModule:(NSString *)name;
 - (void)reloadLastBible;
 - (void)reloadLastCommentary;
@@ -94,6 +98,10 @@
 
 - (void)didReceiveMemoryWarning;//never called by the OS - must be called manually!
 - (void)dealloc;
+
++ (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem;
++ (BOOL)isModuleDownloading:(NSString*)moduleName;
++ (void)removeViewForHUDForModuleDownloadItem:(NSString*)moduleName;
 
 //- (void)displayBusyIndicator;
 //- (void)hideBusyIndicator;

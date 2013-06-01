@@ -80,10 +80,10 @@ rp { display: none; }\n"
 @synthesize primaryCommentary;
 @synthesize primaryDictionary;
 @synthesize primaryDevotional;
-//@synthesize swordInstallManager;
 @synthesize swordManager;
 @synthesize currentInstallSource;
 @synthesize busyTimer;
+@synthesize downloadQueue;
 
 
 static PSModuleController *instance;
@@ -241,7 +241,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[PSModuleController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
 		
 		showNetworkIndicatorCount = 0;
-		disableAutoSleep = 0;
+		disableAutoSleepCount = 0;
+		self.downloadQueue = [NSMutableArray arrayWithCapacity:2];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayNetworkIndicator) name:NotificationDisplayNetworkIndicator object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideNetworkIndicator) name:NotificationHideNetworkIndicator object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableAutoSleep) name:NotificationEnableAutoSleep object:nil];
@@ -268,13 +269,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)disableAutoSleep {
-	if(++disableAutoSleep == 1) {
+	if(++disableAutoSleepCount == 1) {
 		[UIApplication sharedApplication].idleTimerDisabled = YES;
 	}
 }
 
 - (void)enableAutoSleep {
-	if(--disableAutoSleep == 0) {
+	if(--disableAutoSleepCount == 0) {
 		BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
 		[UIApplication sharedApplication].idleTimerDisabled = insomniaMode;//set it to obey the user pref.
 	}
@@ -551,10 +552,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return reporter;
 }
 
-- (BOOL)installModuleWithModule:(SwordModule*)swordModule {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+- (BOOL)installModuleWithModule:(SwordModule *)swordModule {
+	return [self installModuleWithModule:swordModule fromSource:self.currentInstallSource];
+	
+}
 
-	SwordInstallSource *sIS = self.currentInstallSource;
+- (BOOL)installModuleWithModule:(SwordModule*)swordModule fromSource:(SwordInstallSource*)swordInstallSource {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	[swordInstallManager resetInstallationProgress];
+
 	installationProgress = 0.01;
 	BOOL ret = NO;
 
@@ -588,7 +595,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
 	
-	int status = [[self swordInstallManager] installModule: swordModule fromSource: sIS withManager: swordManager];
+	int status = [[self swordInstallManager] installModule: swordModule fromSource: swordInstallSource withManager: swordManager];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
@@ -649,37 +656,37 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return success;
 }
 
-- (BOOL)installModule:(NSString *)name {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	DLog(@"[PSModuleController -installModule: %@ fromSource: %@]", name, [self.currentInstallSource caption]);
-
-	installationProgress = 0.01;
-	SwordInstallSource *sIS = self.currentInstallSource;
-	SwordModule *swordModule = nil;
-	if(!sIS) {
-		for (int i = 0; i < [[[self swordInstallManager] installSourceList] count]; i++) {
-			sIS = [[swordInstallManager installSourceList] objectAtIndex: i];
-			SwordManager *sM = [sIS swordManager];
-			swordModule = [sM moduleWithName: name];
-			if (swordModule) {
-				break;
-			}
-		}
-	} else {
-		SwordManager *sM = [sIS swordManager];
-		swordModule = [sM moduleWithName: name];
-	}
-	if (!swordModule) {
-		ALog(@"Couldn't find module (%@) to install!\n", name);
-		installationProgress = -1.0;
-		[pool release];
-		return NO;
-	}
-	
-	[pool release];
-	return [self installModuleWithModule:swordModule];
-
-}
+//- (BOOL)installModule:(NSString *)name {
+//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+//	DLog(@"[PSModuleController -installModule: %@ fromSource: %@]", name, [self.currentInstallSource caption]);
+//
+//	installationProgress = 0.01;
+//	SwordInstallSource *sIS = self.currentInstallSource;
+//	SwordModule *swordModule = nil;
+//	if(!sIS) {
+//		for (int i = 0; i < [[[self swordInstallManager] installSourceList] count]; i++) {
+//			sIS = [[swordInstallManager installSourceList] objectAtIndex: i];
+//			SwordManager *sM = [sIS swordManager];
+//			swordModule = [sM moduleWithName: name];
+//			if (swordModule) {
+//				break;
+//			}
+//		}
+//	} else {
+//		SwordManager *sM = [sIS swordManager];
+//		swordModule = [sM moduleWithName: name];
+//	}
+//	if (!swordModule) {
+//		ALog(@"Couldn't find module (%@) to install!\n", name);
+//		installationProgress = -1.0;
+//		[pool release];
+//		return NO;
+//	}
+//	
+//	[pool release];
+//	return [self installModuleWithModule:swordModule];
+//
+//}
 
 - (BOOL)removeModule:(NSString *)name {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -1238,5 +1245,43 @@ static NSString *firstRefAvailable = @"Genesis 1";
     return ret;
 }
 
++ (BOOL)isModuleDownloading:(NSString*)moduleName {
+	PSModuleController *mController = [PSModuleController defaultModuleController];
+	for(PSModuleDownloadItem *dItem in mController.downloadQueue) {
+		if([dItem.moduleName isEqualToString:moduleName]) {
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
++ (void)removeViewForHUDForModuleDownloadItem:(NSString*)moduleName {
+	PSModuleController *mController = [PSModuleController defaultModuleController];
+	for(PSModuleDownloadItem *dItem in mController.downloadQueue) {
+		if([dItem.moduleName isEqualToString:moduleName]) {
+			[dItem removeViewForHUD];
+		}
+	}
+}
+
++ (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem {
+	PSModuleController *mController = [PSModuleController defaultModuleController];
+	downloadItem.delegate = mController;
+	[mController.downloadQueue addObject:downloadItem];
+	[mController tryDownloading];
+}
+
+- (void)tryDownloading {
+	if([self.downloadQueue count] > 0) {
+		[(PSModuleDownloadItem*)[self.downloadQueue objectAtIndex:0] startInstall];
+	}
+}
+
+- (void)moduleDownloaded:(PSModuleDownloadItem*)sender {
+	DLog(@"dItem finished with: %@", [sender moduleName]);
+	[self.downloadQueue removeObject:sender];
+	[self tryDownloading];
+}
 
 @end

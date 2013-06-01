@@ -179,7 +179,7 @@ typedef enum {
 
 #define NotificationUpdateSelectedReference		@"NotificationUpdateSelectedReference"
 
-#define ROTATION_LOCK_POSITION @"rotationLockedPosition"
+#define ROTATION_LOCK_POSITION					@"rotationLockedPosition"
 
 typedef enum {
 	RotationEnabled,

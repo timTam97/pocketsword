@@ -384,6 +384,8 @@ base path of the module installation
  */
 - (int)refreshInstallSource:(SwordInstallSource *)is {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	
+	[self resetInstallationProgress];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	DLog(@"SwordInstallManager -refreshInstallSource: START");
