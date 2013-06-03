@@ -11,6 +11,7 @@
 #import "NavigatorSources.h"
 #import "PSHistoryController.h"
 #import "PSResizing.h"
+#import "PocketSwordAppDelegate.h"
 
 @implementation PSModuleSelectorController
 
@@ -410,19 +411,31 @@
 			[buttons addObject:barButton];
 			[barButton release];
 		}
-//		if([swordModule hasFeature: SWMOD_FEATURE_REDLETTERWORDS]) {
-//			if(GetBoolPrefForMod(DefaultsRedLetterPreference, [swordModule name])) {
-//				imageName = @"enabled-RedLetter.png";
-//			} else {
-//				imageName = @"disabled-RedLetter.png";
-//			}
-//			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(redletterButtonPressed:)];
-//			[buttons addObject:barButton];
-//			[barButton release];
-//		}
+		if([swordModule hasFeature: SWMOD_FEATURE_REDLETTERWORDS]) {
+			if(GetBoolPrefForMod(DefaultsRedLetterPreference, [swordModule name])) {
+				imageName = @"enabled-RedLetter.png";
+			} else {
+				imageName = @"disabled-RedLetter.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(redletterButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
+		
+		// add VPL at the end of the toolbar.
+		if(GetBoolPrefForMod(DefaultsVPLPreference, [swordModule name])) {
+			imageName = @"enabled-VPL.png";
+		} else {
+			imageName = @"disabled-VPL.png";
+		}
+		UIBarButtonItem *vplBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(vplButtonPressed:)];
+		[buttons addObject:vplBarButton];
+		[vplBarButton release];
+		vplBarButton = nil;
+
 		
 		// add buttons to the bottom toolbar.
-		[modulesToolbar setItems:buttons animated:animated];
+		[modulesToolbar setItems:buttons animated:NO];
 	}
 }
 
@@ -442,43 +455,83 @@
 	}
 }
 
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[hud removeFromSuperview];
+	[hud release];
+	hud = nil;
+}
+
+- (void)showHUDWithTitle:(NSString*)titleText withTick:(BOOL)tick {
+	UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
+	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:viewToUse];
+	HUD.delegate = self;
+	HUD.labelText = titleText;
+	//HUD.removeFromSuperViewOnHide = YES;
+	if(tick) {
+		HUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+	} else {
+		HUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+	}
+	HUD.mode = MBProgressHUDModeCustomView;
+	[viewToUse addSubview:HUD];
+	[HUD show:YES];
+	[HUD hide:YES afterDelay:0.5];
+}
+
 - (void)strongsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesStrongsPreferencesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self addButtonsToToolbar:YES];
-	//reloadModuleViews = YES;
 	[self redisplayFromButtonPress];
 }
 
 - (void)headingsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesHeadingsTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self addButtonsToToolbar:YES];
-	//reloadModuleViews = YES;
 	[self redisplayFromButtonPress];
 }
 
 - (void)footnotesButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesFootnotesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self addButtonsToToolbar:YES];
-	//reloadModuleViews = YES;
 	[self redisplayFromButtonPress];
 }
 
 - (void)xrefsButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesCrossReferencesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self addButtonsToToolbar:YES];
-	//reloadModuleViews = YES;
 	[self redisplayFromButtonPress];
 }
 
 - (void)morphButtonPressed:(id)sender {
 	BOOL pref = GetBoolPrefForMod(DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesMorphologyPreferencesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self addButtonsToToolbar:YES];
-	//reloadModuleViews = YES;
+	[self redisplayFromButtonPress];
+}
+
+- (void)redletterButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsRedLetterPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesRedLetterTitle", @"") withTick:!pref];
+	SetBoolPrefForMod(!pref, DefaultsRedLetterPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self addButtonsToToolbar:YES];
+	[self redisplayFromButtonPress];
+}
+
+- (void)vplButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsVPLPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesVPLTitle", @"") withTick:!pref];
+	SetBoolPrefForMod(!pref, DefaultsVPLPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self addButtonsToToolbar:YES];
 	[self redisplayFromButtonPress];
 }
 

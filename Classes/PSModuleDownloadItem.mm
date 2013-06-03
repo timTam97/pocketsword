@@ -139,13 +139,14 @@
 		// show success msg
 		if(viewForHUD) {
 			installModuleHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+			installModuleHUD.labelText = NSLocalizedString(@"InstalledButtonTitle", @"");
 			installModuleHUD.mode = MBProgressHUDModeCustomView;
 			[installModuleHUD hide:YES afterDelay:1];
 		} else {
 			UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 			installModuleHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 			installModuleHUD.delegate = self;
-			installModuleHUD.labelText = NSLocalizedString(@"Installing", @"");
+			installModuleHUD.labelText = NSLocalizedString(@"InstalledButtonTitle", @"");
 			installModuleHUD.detailsLabelText = module.name;
 			installModuleHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
 			installModuleHUD.mode = MBProgressHUDModeCustomView;

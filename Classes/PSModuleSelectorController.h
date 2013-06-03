@@ -9,7 +9,7 @@
 #import "PSModuleLeafViewController.h"
 #import "SwordModule.h"
 
-@interface PSModuleSelectorController : UIViewController {
+@interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate> {
 	ShownTab listType;
 	SwordModule *moduleToView;
 	UITabBarController			*parentTabBarController;
