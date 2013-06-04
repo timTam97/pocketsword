@@ -476,7 +476,7 @@
 	HUD.mode = MBProgressHUDModeCustomView;
 	[viewToUse addSubview:HUD];
 	[HUD show:YES];
-	[HUD hide:YES afterDelay:0.5];
+	[HUD hide:YES afterDelay:0.85];
 }
 
 - (void)strongsButtonPressed:(id)sender {
