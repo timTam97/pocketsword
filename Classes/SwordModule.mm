@@ -1305,6 +1305,7 @@
 	NSString *js = [NSString stringWithFormat: @"<script type=\"text/javascript\">\n<!--\n\
 					var versepos;\n\
 					var det_loc_poll;\n\
+					var lastSentVerse;\n\
 					function findPosition(foo) {\n\
 						var curtop = 0;\n\
 						for (var obj = foo; obj != null; obj = obj.offsetParent) {\n\
@@ -1337,7 +1338,11 @@
 						iframe = null;\n\
 					}\n\
 					function detLoc() {\n\
-						execute(\"pocketsword:currentverse:\" + currentVerse() + \":\" + window.pageYOffset + \":\" + versepos[currentVerse()]);\n\
+						var verseToSend = currentVerse();\n\
+						if(verseToSend != lastSentVerse) {\n\
+							execute(\"pocketsword:currentverse:\" + verseToSend + \":\" + window.pageYOffset + \":\" + versepos[currentVerse()]);\n\
+							lastSentVerse = verseToSend;\n\
+						}\n\
 					}\n\
 					function startDetLocPoll() {\n\
 						stopDetLocPoll();//we don't want this running more than once, so stop previous polls first...\n\
@@ -1403,7 +1408,9 @@
 							}\n\
 							tmpstr += versepos[i] + \":\";\n\
 						}\n\
-						document.location = tmpstr;\n\
+						//document.location = tmpstr;\n\
+						execute(tmpstr);\n\
+						lastSentVerse = -1;\n\
 					}\n\
 					document.addEventListener(\"touchmove\", detLoc, false);\n\
 					document.addEventListener(\"scroll\", detLoc, false);\n\
@@ -1411,6 +1418,7 @@
 						document.documentElement.style.webkitTouchCallout = \"none\";\n\
 						resetArrays()\n\
 						%@\n\
+						detLoc();\n\
 					}\n-->\
 					</script>\n", i, i, i, i, extraJS];
 	
