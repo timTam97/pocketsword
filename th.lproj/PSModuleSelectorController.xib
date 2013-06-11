@@ -324,7 +324,7 @@
 			</object>
 			<object class="IBUIViewController" id="370685863">
 				<object class="IBUIView" key="IBUIView" id="947767781">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -490,6 +490,7 @@
 						</object>
 					</object>
 					<string key="NSFrame">{{0, 20}, {320, 460}}</string>
+					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="921229708"/>
 					<reference key="IBUIBackgroundColor" ref="345100784"/>
 					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>

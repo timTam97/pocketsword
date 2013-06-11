@@ -44,12 +44,8 @@ bool ps_viewcontroller_initialized = false;
 - (void)awakeFromNib {
 	[super awakeFromNib];
 	
-//	DLog(@"\nare we dying somewhere here?");
-
 	if (!ps_viewcontroller_initialized) {
-//		DLog(@"\nnot initialized yet!");
 		[self nightModeChanged];
-		toolbarLock = [[NSLock alloc] init];
         popoverController = nil;
 		Class cls = NSClassFromString(@"UIPopoverController");
 		if([PSResizing iPad] && cls) {
@@ -57,7 +53,6 @@ bool ps_viewcontroller_initialized = false;
 			[popoverController setDelegate:self];
 		}
 		
-//		activityLoadingLabel.text = NSLocalizedString(@"ActivityLabelLoading", @"Loading...");
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
 		//configure the Bible & commentary segmented controls.
@@ -72,12 +67,9 @@ bool ps_viewcontroller_initialized = false;
 		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
 		
 		//VoiceOver hints:
-		// only iOS 4 or later:
-		if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"4.0")) {
-			[self setVoiceOverForRefSegmentedControl];
-			bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
-			commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
-		}
+		[self setVoiceOverForRefSegmentedControl];
+		bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+		commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 		[bibleWebView loadHTMLString: black baseURL: nil];
@@ -265,7 +257,6 @@ bool ps_viewcontroller_initialized = false;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
 {
-	[toolbarLock lock];
 	NSString *titleToDisplay = [PSModuleController createTitleRefString:newTitle];
 	
 	if(tab == BibleTab) {
@@ -274,7 +265,6 @@ bool ps_viewcontroller_initialized = false;
 		[commentarySegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
 	}
 	[self setVoiceOverForRefSegmentedControl];
-	[toolbarLock unlock];
 }
 
 - (void)setEnabledBibleNextButton:(BOOL)enabled
@@ -654,7 +644,6 @@ bool ps_viewcontroller_initialized = false;
 
 - (void)dealloc {
 	self.savedSearchHistoryItem = nil;
-	[toolbarLock release];
 	[moduleSelectorViewController release];
 	[popoverController release];
     [super dealloc];
@@ -696,30 +685,10 @@ bool ps_viewcontroller_initialized = false;
 	}
 }
 
-- (void)startAnimateChapterChange
-{
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[toolbarLock lock];
-	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		[bibleActivity startAnimating];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		[commentaryActivity startAnimating];
-	}
-	[toolbarLock unlock];
-	[pool release];
+- (void)startAnimateChapterChange {
 }
 
-- (void)stopAnimateChapterChange
-{
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[toolbarLock lock];
-	if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		[bibleActivity stopAnimating];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
-		[commentaryActivity stopAnimating];
-	}
-	[toolbarLock unlock];
-	[pool release];
+- (void)stopAnimateChapterChange {
 }
 
 - (void)redisplayChapterWithDefaults {

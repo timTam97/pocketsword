@@ -58,7 +58,6 @@ typedef enum {
 	
 	// Bible tab
 	IBOutlet PSWebView					*bibleWebView;
-	IBOutlet UIActivityIndicatorView	*bibleActivity;
 	IBOutlet UISegmentedControl			*bibleSegmentedControl;
     IBOutlet UIBarButtonItem            *bibleRefButton;
 	IBOutlet UIBarButtonItem			*bibleSearchButton;
@@ -67,7 +66,6 @@ typedef enum {
 	
 	// Commentary tab
 	IBOutlet PSWebView					*commentaryWebView;
-	IBOutlet UIActivityIndicatorView	*commentaryActivity;
 	IBOutlet UISegmentedControl			*commentarySegmentedControl;
     IBOutlet UIBarButtonItem            *commentaryRefButton;
 	IBOutlet UIBarButtonItem			*commentarySearchButton;
@@ -102,14 +100,7 @@ typedef enum {
 	
 	// About tab
 	IBOutlet UITabBarItem				*aboutTabBarItem;
-	
-	// Busy Indicator
-//	IBOutlet UIViewController			*activityController;
-//	IBOutlet UIActivityIndicatorView	*activityIndicator;
-//	IBOutlet UILabel					*activityLoadingLabel;
-	
-	NSLock								*toolbarLock;
-	
+		
 	PSSearchHistoryItem					*savedSearchHistoryItem;
 	ShownTab							savedSearchResultsTab;
 }
