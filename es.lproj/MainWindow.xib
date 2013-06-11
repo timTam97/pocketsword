@@ -129,12 +129,12 @@
 											<string>{0, 0}</string>
 										</array>
 										<array class="NSMutableArray" key="IBSegmentImages">
-											<object class="NSCustomResource" id="477063194">
+											<object class="NSCustomResource" id="1009899464">
 												<string key="NSClassName">NSImage</string>
 												<string key="NSResourceName">back-white.png</string>
 											</object>
 											<object class="NSNull" id="4"/>
-											<object class="NSCustomResource" id="167456915">
+											<object class="NSCustomResource" id="32275630">
 												<string key="NSClassName">NSImage</string>
 												<string key="NSResourceName">forward-white.png</string>
 											</object>
@@ -155,7 +155,7 @@
 								<int key="IBUIBarStyle">1</int>
 								<array class="NSMutableArray" key="IBUIItems">
 									<object class="IBUIBarButtonItem" id="301983801">
-										<object class="NSCustomResource" key="IBUIImage" id="340438824">
+										<object class="NSCustomResource" key="IBUIImage" id="458726372">
 											<string key="NSClassName">NSImage</string>
 											<string key="NSResourceName">history.png</string>
 										</object>
@@ -276,9 +276,9 @@
 												<string>{0, 0}</string>
 											</array>
 											<array class="NSMutableArray" key="IBSegmentImages">
-												<reference ref="477063194"/>
+												<reference ref="1009899464"/>
 												<reference ref="4"/>
-												<reference ref="167456915"/>
+												<reference ref="32275630"/>
 											</array>
 											<bool key="IBMomentary">YES</bool>
 											<object class="NSColor" key="IBTintColor">
@@ -295,7 +295,7 @@
 									<int key="IBUIBarStyle">1</int>
 									<array class="NSMutableArray" key="IBUIItems">
 										<object class="IBUIBarButtonItem" id="620349161">
-											<reference key="IBUIImage" ref="340438824"/>
+											<reference key="IBUIImage" ref="458726372"/>
 											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 											<int key="IBUIStyle">1</int>
 											<reference key="IBUIToolbar" ref="156794117"/>

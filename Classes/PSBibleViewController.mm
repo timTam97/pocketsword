@@ -252,7 +252,8 @@
 			//bring up the contextual menu for a verse.
 			self.tappedVerse = [components objectAtIndex:2];
 			//DLog(@"    %@", tappedVerse);
-			NSString *sheetTitle = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerse];
+			NSInteger tappedVerseInt = [tappedVerse integerValue];
+			NSString *sheetTitle = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerseInt];
 			UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
 			//[sheet showInView:webView];
 			//[sheet showInView:self.tabBarController.view];
