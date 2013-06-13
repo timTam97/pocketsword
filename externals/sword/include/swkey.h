@@ -3,7 +3,7 @@
  *				types of keys for indexing into modules (e.g. verse, word,
  *				place, etc.)
  *
- * $Id: swkey.h 2764 2013-01-19 16:19:47Z scribe $
+ * $Id: swkey.h 2812 2013-06-10 07:22:42Z chrislit $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -150,7 +150,7 @@ public:
 	 * @param ipersist value which to set persist;
 	 * @return 1 - persists in module; 0 - a copy is attempted
 	 */
-	SWDEPRECATED char Persist(signed char ipersist) { setPersist(ipersist); return isPersist(); }
+	SWDEPRECATED char Persist(signed char ipersist) { setPersist(ipersist!=0); return isPersist(); }
 	void setPersist(bool ipersist);
 
 	/** Gets and clears error status

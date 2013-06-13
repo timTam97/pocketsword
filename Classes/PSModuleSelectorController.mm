@@ -421,6 +421,16 @@
 			[buttons addObject:barButton];
 			[barButton release];
 		}
+		if([swordModule hasFeature:SWMOD_FEATURE_GLOSSES]) {
+			if(GetBoolPrefForMod(DefaultsGlossesPreference, [swordModule name])) {
+				imageName = @"enabled-Glosses.png";
+			} else {
+				imageName = @"disabled-Glosses.png";
+			}
+			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(glossesButtonPressed:)];
+			[buttons addObject:barButton];
+			[barButton release];
+		}
 		
 		// add VPL at the end of the toolbar.
 		if(GetBoolPrefForMod(DefaultsVPLPreference, [swordModule name])) {
@@ -435,7 +445,7 @@
 
 		
 		// add buttons to the bottom toolbar.
-		[modulesToolbar setItems:buttons animated:NO];
+		[modulesToolbar setItems:buttons animated:animated];
 	}
 }
 
@@ -467,7 +477,6 @@
 	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 	HUD.delegate = self;
 	HUD.labelText = titleText;
-	//HUD.removeFromSuperViewOnHide = YES;
 	if(tick) {
 		HUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
 	} else {
@@ -483,7 +492,7 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesStrongsPreferencesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsStrongsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 
@@ -491,7 +500,7 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesHeadingsTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsHeadingsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 
@@ -499,7 +508,7 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesFootnotesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsFootnotesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 
@@ -507,7 +516,7 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesCrossReferencesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsScriptRefsPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 
@@ -515,7 +524,7 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesMorphologyPreferencesTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsMorphPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 
@@ -523,7 +532,15 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsRedLetterPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesRedLetterTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsRedLetterPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
+	[self redisplayFromButtonPress];
+}
+
+- (void)glossesButtonPressed:(id)sender {
+	BOOL pref = GetBoolPrefForMod(DefaultsGlossesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self showHUDWithTitle:NSLocalizedString(@"PreferencesGlossesTitle", @"") withTick:!pref];
+	SetBoolPrefForMod(!pref, DefaultsGlossesPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 
@@ -531,7 +548,7 @@
 	BOOL pref = GetBoolPrefForMod(DefaultsVPLPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
 	[self showHUDWithTitle:NSLocalizedString(@"PreferencesVPLTitle", @"") withTick:!pref];
 	SetBoolPrefForMod(!pref, DefaultsVPLPreference, [[[PSModuleController defaultModuleController] primaryBible] name]);
-	[self addButtonsToToolbar:YES];
+	[self addButtonsToToolbar:NO];
 	[self redisplayFromButtonPress];
 }
 

@@ -74,6 +74,7 @@ class sword::SWModule;
 #define SWMOD_FEATURE_SCRIPTREF         @"Scripref"     // not Scriptref
 #define SWMOD_FEATURE_VARIANTS          @"Variants"
 #define SWMOD_FEATURE_REDLETTERWORDS    @"RedLetterWords"
+#define SWMOD_FEATURE_GLOSSES			@"Glosses"
 
 /** global options */
 #define SW_OPTION_STRONGS               @"Strong's Numbers"

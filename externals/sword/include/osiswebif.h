@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * $Id: osiswebif.h 2628 2011-06-28 20:40:34Z scribe $
+ * $Id: osiswebif.h 2803 2013-05-30 03:43:52Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -34,7 +34,6 @@ class SWDLLEXPORT OSISWEBIF : public OSISXHTML {
 
 protected:
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
-	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key);
 public:
 	OSISWEBIF();
 	void setJavascript(bool mode) { javascript = mode; }

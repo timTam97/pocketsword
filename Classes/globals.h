@@ -116,6 +116,7 @@ typedef enum {
 #define DefaultsGreekAccentsPreference				@"greekAccentsPreference"
 #define DefaultsHVPPreference						@"hvpPreference"
 #define DefaultsHebrewCantillationPreference		@"hebrewCantillationPreference"
+#define DefaultsGlossesPreference					@"glossesPreference"
 
 #define StrongsFontName								@"Times New Roman"
 #define PSGreekStrongsFontName						@"Gentium Plus"

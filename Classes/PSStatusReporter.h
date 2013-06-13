@@ -7,8 +7,7 @@
  *
  */
 
-#include <ftptrans.h>
-//#include <swbuf.h>
+#include <remotetrans.h>
 
 class PSStatusReporter : public sword::StatusReporter {
 public:

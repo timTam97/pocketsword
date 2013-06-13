@@ -2,7 +2,7 @@
 *  swobject.h  - definition for SWObject used as lowest base class for many
 *	SWORD objects
 *
-* $Id: swobject.h 1790 2005-05-03 03:49:04Z scribe $
+* $Id: swobject.h 2811 2013-06-10 06:59:18Z chrislit $
 *
 * Copyright 2005 CrossWire Bible Society (http://www.crosswire.org)
 *	CrossWire Bible Society
@@ -48,7 +48,7 @@ public:
 * It is used because dynamic_cast is not available on all plattforms supported
 * by Sword. Use SWDYNAMIC_CAST(classname, object) instead of dynamic_cast<classname>(object).
 */
-class SWObject {
+class SWDLLEXPORT SWObject {
 protected:
 	SWClass * myclass;
      

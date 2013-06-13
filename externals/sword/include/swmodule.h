@@ -3,7 +3,7 @@
  *		  types of modules (e.g. texts, commentaries, maps, lexicons,
  *		  etc.)
  *
- * $Id: swmodule.h 2777 2013-01-25 18:04:31Z scribe $
+ * $Id: swmodule.h 2820 2013-06-11 17:21:12Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -644,7 +644,7 @@ public:
 	virtual const char *renderText(const char *buf = 0, int len = -1, bool render = true);
 	SWDEPRECATED const char *RenderText(const char *buf = 0, int len = -1, bool render = true) { return renderText(buf, len, render); }
 
-	/** Produces any header data which might be useful which associated with the
+	/** Produces any header data which might be useful which is associated with the
 	 *	processing done with this filter.  A typical example is a suggested
 	 *	CSS style block for classed containers.
 	 */
