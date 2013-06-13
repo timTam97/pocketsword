@@ -259,6 +259,10 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 			//[kid release]; -- they're autorelease objects :P
 		}
 		ret = [data writeToFile:bookmarksPath atomically:YES];
+	} else {
+		// no bookmarks left! Write out the file to zeros...
+		NSMutableArray *data = [NSMutableArray arrayWithCapacity:1];
+		ret = [data writeToFile:bookmarksPath atomically:NO];
 	}
 	
 	DLog(@"\n-- Bookmarks: finished saveBookmarksToFile");

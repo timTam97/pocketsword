@@ -191,7 +191,7 @@
 	
 	if(!installedModule) {
 		[delegate moduleDownloaded:self];
-	} else if(![installedModule hasSearchIndex]) {
+	} else if(![installedModule hasSearchIndex] && installedModule.type == bible) {
 		indexController = [[PSIndexController alloc] init];
 		indexController.delegate = self;
 		indexController.moduleToInstall = installedModule.name;
