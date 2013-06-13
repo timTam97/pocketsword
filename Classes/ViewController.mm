@@ -55,15 +55,18 @@ bool ps_viewcontroller_initialized = false;
 		
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
+		CGFloat arrowWidth = 50.0;
+		CGFloat refWidth = /*([PSResizing iPad]) ? 138.0 :*/ 78.0;
+		
 		//configure the Bible & commentary segmented controls.
-		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:0];
-		[bibleSegmentedControl setWidth: 78 forSegmentAtIndex:1];
-		[bibleSegmentedControl setWidth: 50  forSegmentAtIndex:2];
+		[bibleSegmentedControl setWidth: arrowWidth  forSegmentAtIndex:0];
+		[bibleSegmentedControl setWidth: refWidth forSegmentAtIndex:1];
+		[bibleSegmentedControl setWidth: arrowWidth  forSegmentAtIndex:2];
 		[bibleSegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
 		
-		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:0];//30
-		[commentarySegmentedControl setWidth: 78 forSegmentAtIndex:1];//138
-		[commentarySegmentedControl setWidth: 50  forSegmentAtIndex:2];//30
+		[commentarySegmentedControl setWidth: arrowWidth  forSegmentAtIndex:0];//30
+		[commentarySegmentedControl setWidth: refWidth forSegmentAtIndex:1];//138
+		[commentarySegmentedControl setWidth: arrowWidth  forSegmentAtIndex:2];//30
 		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
 		
 		//VoiceOver hints:

@@ -984,11 +984,8 @@
 }
 
 - (void)setChapter:(NSString *)chapter {
-//	swModule->setKey([chapter cStringUsingEncoding: NSISOLatin1StringEncoding]);
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-//	swModule->setKey([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
-	//swModule->RenderText();
 	swModule->stripText();
 }
 
@@ -1168,6 +1165,7 @@
 	swModule->stripText();
 	NSMutableString *verses = [NSMutableString stringWithString:@""];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
+
 	//NSLog(@"ch  = %@", ch);
 	NSString *ref = nil;
 	NSString *thisEntry = @"";
