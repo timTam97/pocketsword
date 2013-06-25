@@ -18,12 +18,12 @@
 
 // Arabic (ar) localisation
 // By Laurence Rezkalla
-// Last Updated v1.4.4 (13th May, 2013)
+// Last Updated v1.4.5 (14th June, 2013)
 
-"Edit" = "تعديل";
+"Edit" = "تحرير";
 "Done" = "مت";
 "Module Download" = "تحميل برنامج";
-"Installing" = "تثبيت:";
+"Installing" = "انزال:";
 "Yes" = "نعم";
 "No" = "لا";
 "ConfirmInstall" = "هل تريد تثبيت هذا البرنامج؟";
@@ -55,7 +55,7 @@
 
 "manualInstallHelp" = "To manually install a module you need to point a web browser to one of the locations below and then follow the prompts there (or just search for your iPhone using Bonjour!).  However, it is suggested that you use the built-in module installer - this manual installer is only provided for those users who create their own modules.";
 "InstallManagerDisabled" = "معطل...";
-"InstallTitle" = "تثبيت؟";
+"InstallTitle" = "انزال؟";
 "files" = "ملفات";
 "InstallProblem" = "حدثت مشكلة اثناء التثبيت";
 "InstalledButtonTitle" = "تم التثبيت";
@@ -66,13 +66,13 @@
 "NoModulesInstalled" = "تثبيت الوحدة لم يتم.";
 
 "InstallSourcesTitle" = "التحميل";//changed for v1.3.3ish
-"PreferencesTitle" = "مفضلات";
-"PreferencesDisplayPreferencesTitle" = "عرض المفضلات";
-"PreferencesDevicePreferencesTitle" = "مفضلات الجهاز";
+"PreferencesTitle" = "تفضيلات شخصية";
+"PreferencesDisplayPreferencesTitle" = "عرض التفضيلات";
+"PreferencesDevicePreferencesTitle" = "تفضيلات الجهاز";
 "PreferencesFontSizeTitle" = "حجم الحروف";
 "PreferencesNightModeTitle" = "الاظهار الليلي";
 "PreferencesVPLTitle" = "سطر لكل عدد";
-"PreferencesFontTitle" = "حروف";
+"PreferencesFontTitle" = "نمط الحروف";
 "PreferencesRedLetterTitle" = "حروف باللون الاحمر";
 "PreferencesRedLetterNote" = "الحروف باللون الاحمر متاحة فقط لبعض الوحدات";
 "PreferencesDisableAutoLockTitle" = "auto-sleep تعطيل";
@@ -95,7 +95,7 @@
 "MMMBonjourLoading" = "تحميل Bonjour...";
 "MMMIPLoading" = "تحميل IP...";
 
-"Biblical Texts" = "نصوص الكتاب المقدس";
+"Biblical Texts" = "طبعات الكتاب المقدس";
 "Commentaries" = "تفاسير";
 "Lexicons / Dictionaries" = "معاجم / قواميس";
 "Generic Books" = "كتب اخري";
@@ -109,15 +109,15 @@
 "BibleHistoryTitle" = "تاريخ الكتاب المقدس";
 "CommentaryHistoryTitle" = "تاريخ قواميس";
 
-"None" = "لاشئ";
-"CloseButtonTitle" = "غلق";
+"None" = "لم يحمل بعد";
+"CloseButtonTitle" = "الصفحة السابقة";
 "CacheDictionaryKeysTitle" = "Cache?";
 "CacheDictionaryKeysMsg" = "هذا القاموس لم يبدأ بعد. هل تريد اضافته الان؟";
 "IndexDownloadTitle" = "فهرس التحميل";
 "NoSearchIndexTitle" = "لايوجد هناك فهرس للبحث";
 "NoSearchIndexMsg" = "لايوجد هناك فهرس للبحث مثبت. هل تريد ان تبحث عن هذه الفهارس الان؟";
 "SearchDownloaderTitle" = "بحث عن عامل التحميل";
-"FontPreferenceTitle" = "حروف";
+"FontPreferenceTitle" = "نمط الحروف";
 "EmailUsButton" = "بريدنا الاكتروني";
 "NoSearchIndexInstalled" = "لايوجد فهرس مثبت للبحث";
 "SearchResults" = "النتيجة";
@@ -220,7 +220,7 @@
 "VoiceOverPreviousChapterButton" = "الاصحاح السابق";
 "VoiceOverNextChapterButton" = "الاصحاح التاليr";
 "VoiceOverHistoryAndSearchButton" = "مرجعة و بحث";
-"InstallManagerDownloadsHint" = "يمكنك تحميل وحدات اضافية من امصادر الوحدات الموجودة ادناه:";
+"InstallManagerDownloadsHint" = "يمكنك تحميل وحدات اضافية من المصادر الوحدات الموجودة ادناه:";
 "ModuleTypesHeaderText" = "اختيار نوع الوحدة:";
 "ModuleLanguagesHeaderText" = "اختيار اللغة:";
 "PreferencesModulePreferencesTitle" = "تفضيلات الوحدة";

@@ -23,8 +23,6 @@ typedef enum {
 	//int refSelectorOTBookCount;
 	NSInteger refSelectorBook;
 	NSInteger refSelectorChapter;
-	
-	IBOutlet UINavigationController	*refNavigationController;
 }
 
 @property (assign) NSInteger refSelectorBook;

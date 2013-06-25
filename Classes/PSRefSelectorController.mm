@@ -25,6 +25,9 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetBooks:) name:NotificationRefSelectorResetBooks object:nil];
+	if([self respondsToSelector:@selector(contentSizeForViewInPopover)]) {
+		self.contentSizeForViewInPopover = CGSizeMake(540.0, 1100.0);
+	}
 }
 
 - (void)viewDidUnload {
@@ -33,17 +36,6 @@
 
 - (void)resetBooks:(NSNotification *)notification {
 	self.refSelectorBooks = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		self.tableView.backgroundColor = [UIColor blackColor];
-	} else {
-		self.tableView.backgroundColor = [UIColor whiteColor];
-	}
-	NSIndexPath *tableSelection = [self.tableView indexPathForSelectedRow];
-	[self.tableView deselectRowAtIndexPath:tableSelection animated:YES];
 }
 
 - (void)dealloc {
@@ -55,27 +47,30 @@
 }
 
 - (void)dismissNavigation {
-	//[self dismissModalViewControllerAnimated:YES];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 }
 
 - (void)setupNavigation {
 	[self updateRefSelectorBooks];
 	[self.tableView reloadData];
-	refNavigationController.navigationBar.topItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
-	[refNavigationController popToRootViewControllerAnimated:NO];		
-	refNavigationController.navigationBar.topItem.leftBarButtonItem = nil;
+	self.navigationItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
+	[self.navigationController popToRootViewControllerAnimated:NO];
+	self.navigationItem.leftBarButtonItem = nil;
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		self.tableView.backgroundColor = [UIColor blackColor];
+	} else {
+		self.tableView.backgroundColor = [UIColor whiteColor];
+	}
     if([PSResizing iPad]) {
         //the iPad doesn't want the cancel button
         return;
     }
 	UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissNavigation)];
-	refNavigationController.navigationBar.topItem.leftBarButtonItem = cancel;
+	self.navigationItem.leftBarButtonItem = cancel;
 	[cancel release];
 }
 
 - (void)willShowNavigation {
-	
 	NSIndexPath *ip = nil;
 	int bookCount = [refSelectorBooks count];
 	for(int i=0;i<bookCount;i++) {
@@ -177,13 +172,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	PSChapterSelectorController *chapterSelectorController = [[PSChapterSelectorController alloc] initWithStyle:UITableViewStylePlain];
 	[chapterSelectorController setBookAndInit: [refSelectorBooks objectAtIndex:indexPath.section]];
-	[refNavigationController pushViewController:chapterSelectorController animated:YES];
+	[self.navigationController pushViewController:chapterSelectorController animated:YES];
+	//[refNavigationController pushViewController:chapterSelectorController animated:YES];
 	[chapterSelectorController release];
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	//jump to ch1, v1 of that book.
-	//[self dismissModalViewControllerAnimated:YES];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[[refSelectorBooks objectAtIndex:indexPath.section] name] forKey:BookNameString];

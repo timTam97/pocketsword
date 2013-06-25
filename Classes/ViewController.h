@@ -51,7 +51,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate> {
+@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
     IBOutlet UIWindow *window;
@@ -79,7 +79,7 @@ typedef enum {
 	IBOutlet UIWebView					*infoWebView;
 	UIView								*refTitleSplashView;
 	NSTimer								*refTitleSplashTimer;
-    id                                  popoverController;
+    UIPopoverController					*popoverController;
 
 	// MultiList
 	UITabBarController					*multiListController;

@@ -44,6 +44,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	NSInteger moduleCount = 0;
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		modulesListTable.backgroundColor = [UIColor blackColor];
@@ -61,6 +62,7 @@
 	if([self listType] == BibleTab) {
 		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
+		moduleCount = [array count];
 		int pos = 0;
 		for(; pos < [array count]; pos++) {
 			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryBible] name]]) {
@@ -73,6 +75,7 @@
 	} else if([self listType] == CommentaryTab) {
 		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
+		moduleCount = [array count];
 		int pos = 0;
 		for(; pos < [array count]; pos++) {
 			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryCommentary] name]]) {
@@ -85,6 +88,7 @@
 	} else if([self listType] == DevotionalTab) {
 		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"")];
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
+		moduleCount = [array count];
 		int pos = 0;
 		for(; pos < [array count]; pos++) {
 			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryDevotional] name]]) {
@@ -97,6 +101,7 @@
 	} else {
 		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"")];
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
+		moduleCount = [array count];
 		int pos = 0;
 		for(; pos < [array count]; pos++) {
 			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryDictionary] name]]) {
@@ -119,6 +124,14 @@
 			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
 		}
 		[self addButtonsToToolbar:NO];
+	}
+	
+	if([self respondsToSelector:@selector(contentSizeForViewInPopover)]) {
+		CGFloat height = 0.0;
+		height += modulesToolbar.frame.size.height;
+		height += modulesNavigationBar.frame.size.height;
+		height += moduleCount * 44.0;
+		self.contentSizeForViewInPopover = CGSizeMake(540.0, height);
 	}
 }
 

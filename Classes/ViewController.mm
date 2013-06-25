@@ -47,11 +47,6 @@ bool ps_viewcontroller_initialized = false;
 	if (!ps_viewcontroller_initialized) {
 		[self nightModeChanged];
         popoverController = nil;
-		Class cls = NSClassFromString(@"UIPopoverController");
-		if([PSResizing iPad] && cls) {
-			popoverController = [[[cls alloc] initWithContentViewController:refNavigationController] retain];
-			[popoverController setDelegate:self];
-		}
 		
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
@@ -469,11 +464,16 @@ bool ps_viewcontroller_initialized = false;
 	[self toggleModulesListAnimated:YES withModule:nil];
 }
 
-//- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-- (void)popoverControllerDidDismissPopover:(id)popoverController {
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)poController {
 	if(moduleSelectorViewController) {
 		moduleSelectorViewController = nil;
 	}
+	if(refNavigationController) {
+		refSelectorController = nil;
+		refNavigationController = nil;
+	}
+	[popoverController release];
+	popoverController = nil;
 }
 
 - (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
@@ -499,7 +499,10 @@ bool ps_viewcontroller_initialized = false;
 			}
 		} else {
 			moduleSelectorViewController.moduleToView = nil;
-			[popoverController setContentViewController:modSelectorNavController];
+			if(iPad) {
+				popoverController = [[UIPopoverController alloc] initWithContentViewController:modSelectorNavController];
+				[popoverController setDelegate:self];
+			}
 			//set the module selector to use the correct module type.
 			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 				[moduleSelectorViewController setListType: BibleTab];
@@ -517,6 +520,8 @@ bool ps_viewcontroller_initialized = false;
 		}
 		if(!iPad) {
 			[tabController presentModalViewController:modSelectorNavController animated:animated];
+		} else {
+			[popoverController setPopoverContentSize:moduleSelectorViewController.contentSizeForViewInPopover animated:NO];
 		}
 	}
 }
@@ -539,12 +544,14 @@ bool ps_viewcontroller_initialized = false;
 
 - (IBAction)toggleNavigation {
     BOOL iPad = [PSResizing iPad];
-	if([refNavigationController.view superview] || [popoverController isPopoverVisible]) {
+	if(refNavigationController || [popoverController isPopoverVisible]) {
         if(!iPad) {
             [[self tabBarController] dismissModalViewControllerAnimated:YES];
         } else {
             [popoverController dismissPopoverAnimated:YES];
         }
+		refSelectorController = nil;
+		refNavigationController = nil;
 	} else {
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// bible tab
@@ -552,12 +559,17 @@ bool ps_viewcontroller_initialized = false;
                 //no Bible selected, so ignore...
 			   return;
             }
+			refSelectorController = [[[PSRefSelectorController alloc] initWithStyle:UITableViewStylePlain] autorelease];
             [refSelectorController setupNavigation];
+			refNavigationController = [[[UINavigationController alloc] initWithRootViewController:refSelectorController] autorelease];
+			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
                 [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
             } else {
-                [popoverController setContentViewController:refNavigationController];
+				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
+				[popoverController setDelegate:self];
+				[popoverController setPopoverContentSize:CGSizeMake(320.0, 1100.0)];
                 [popoverController presentPopoverFromBarButtonItem:bibleRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 [refSelectorController willShowNavigation];
             }
@@ -567,12 +579,17 @@ bool ps_viewcontroller_initialized = false;
                 //no Commentary selected, so ignore...
                 return;
             }
+			refSelectorController = [[PSRefSelectorController alloc] initWithStyle:UITableViewStylePlain];
             [refSelectorController setupNavigation];
+			refNavigationController = [[UINavigationController alloc] initWithRootViewController:refSelectorController];
+			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
                 [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
             } else {
-                [popoverController setContentViewController:refNavigationController];
+				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
+				[popoverController setDelegate:self];
+//                [popoverController setContentViewController:refNavigationController];
                 [popoverController presentPopoverFromBarButtonItem:commentaryRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 [refSelectorController willShowNavigation];
             }

@@ -28,7 +28,7 @@
 							 <div id=\"main\">\n\
 								<p><b>Developed by: </b><br />\n\
 									 Nic Carter<br />\n\
-									 and the CrossWire team\n\
+									 and the rest of the CrossWire community!\n\
 								</p>\n\
 								 <p><b>With help from: </b><br />\n\
 					  David Bell, \
@@ -43,9 +43,10 @@
 					  Yiguang Hu, \
 					  John Huss, \
 					  Nakamaru Kunio, \
+					  Laurence Rezkalla, \
 					  Vitaliy, \
 					  Ian Wagner, \
-					  Henko van de Weerd\
+					  Henko van de Weerd \
 					  \n\
 					  <br />\n\
 					  &amp; all the PocketSword beta testers!\n\
@@ -65,7 +66,7 @@
 					  \
 					  \n\
 					  \n\
-					  <p>PocketSword takes advantage of different Open Source projects, including:<br />\n\
+					  <p>PocketSword benefits from the following Open Source projects:<br />\n\
 					  &bull; <i><a href=\"http://www.crosswire.org/sword/index.jsp\">The SWORD Project</a></i><br />\n\
 					  &bull; <i><a href=\"http://code.google.com/p/cocoahttpserver/\">CocoaHTTPServer</a></i><br />\n\
 					  &bull; <i><a href=\"https://github.com/zbyhoo/EGOTableViewPullRefresh\">zbyhoo's fork of EGOTableViewPullRefresh</a></i><br />\n\
@@ -282,7 +283,7 @@
 
 -(void)emailFeedback:(id)sender
 {
-    NSString *recipients = @"niccarter@mac.com";
+    NSString *recipients = @"pocketsword@icloud.com";
 	
 	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [self platformString]];
 	
