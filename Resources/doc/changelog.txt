@@ -1,12 +1,13 @@
 
 New in v1.4.5
 - Added Arabic localisation
-- Added new fonts for Hebrew & Arabic
+- Added new fonts for Hebrew & Greek
 - Dropped support for iPhone 3G
 - Faster launch times
 - Nicer module download screen, now can queue the download of modules!
 - App will automatically download the search index for any new Bibles you download (if there's one available!)
 - Splash screens to tell you which preference you are switching on/off under the Module selector button (top right corner of the screen)
+- Support for Glosses/Ruby in modules (initially only Japanese modules)
 - lots of bug fixes.
 
 New in v1.4.4
