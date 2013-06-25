@@ -85,6 +85,9 @@
 			[alertView release];
 			return;
 		}
+		if([[PSModuleController defaultModuleController] tryDownloading]) {
+			return;//cannot refresh while downloading a module!
+		}
 		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
 		[self.view addSubview:HUD];
 		HUD.delegate = self;
