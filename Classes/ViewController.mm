@@ -46,7 +46,6 @@ bool ps_viewcontroller_initialized = false;
 	
 	if (!ps_viewcontroller_initialized) {
 		[self nightModeChanged];
-        popoverController = nil;
 		
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
@@ -569,7 +568,6 @@ bool ps_viewcontroller_initialized = false;
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
-				[popoverController setPopoverContentSize:CGSizeMake(320.0, 1100.0)];
                 [popoverController presentPopoverFromBarButtonItem:bibleRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 [refSelectorController willShowNavigation];
             }
@@ -589,7 +587,6 @@ bool ps_viewcontroller_initialized = false;
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
-//                [popoverController setContentViewController:refNavigationController];
                 [popoverController presentPopoverFromBarButtonItem:commentaryRefButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 [refSelectorController willShowNavigation];
             }
