@@ -18,10 +18,15 @@
 
 @synthesize dataArray;
 
+- (void)updateRefreshButton {
+	[self updateRefreshButton:YES];
+}
+
 - (void)updateRefreshButton:(BOOL)enabled {
+	BOOL downloading = [[PSModuleController defaultModuleController] tryDownloading];
 	self.navigationItem.rightBarButtonItem = nil;
 	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
-	[refreshBarButtonItem setEnabled:enabled];
+	[refreshBarButtonItem setEnabled:(downloading ? NO : enabled)];
 	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
 	[refreshBarButtonItem release];
 }
@@ -42,11 +47,16 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	if(([dataArray count] == 0)  && [PSModuleController checkNetworkConnection]) {
+	if(([dataArray count] == 0)  && [PSModuleController checkNetworkConnection] && ![[PSModuleController defaultModuleController] tryDownloading]) {
 		[self _refreshDownloadSource];
 	}
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRefreshButton) name:NotificationModulesChanged object:nil];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;

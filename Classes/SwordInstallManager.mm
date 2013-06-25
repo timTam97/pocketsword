@@ -304,7 +304,7 @@ base path of the module installation
     } else {
         stat = swInstallMgr->installModule([manager swManager], 0, [[aModule name] UTF8String], [is installSource]);
     }
-    
+
     return stat;
 }
 

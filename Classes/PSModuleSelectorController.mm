@@ -434,7 +434,7 @@
 			[buttons addObject:barButton];
 			[barButton release];
 		}
-		if([swordModule hasFeature:SWMOD_FEATURE_GLOSSES]) {
+		if([swordModule hasFeature:SWMOD_FEATURE_GLOSSES] || [swordModule hasFeature:@"Ruby"]) {
 			if(GetBoolPrefForMod(DefaultsGlossesPreference, [swordModule name])) {
 				imageName = @"enabled-Glosses.png";
 			} else {

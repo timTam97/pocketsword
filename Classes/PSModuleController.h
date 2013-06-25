@@ -102,6 +102,7 @@
 + (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem;
 + (BOOL)isModuleDownloading:(NSString*)moduleName;
 + (void)removeViewForHUDForModuleDownloadItem:(NSString*)moduleName;
+- (BOOL)tryDownloading;
 
 //- (void)displayBusyIndicator;
 //- (void)hideBusyIndicator;

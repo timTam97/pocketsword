@@ -187,7 +187,6 @@
 		return;
 	}
 	SwordModule *installedModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:[module name]];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:nil];
 	
 	if(!installedModule) {
 		[delegate moduleDownloaded:self];

@@ -25,6 +25,7 @@
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	fontSizeLabel.textColor = [UIColor darkTextColor];
 	fontSizeLabel.text = @"12";
+	fontSizeLabel.backgroundColor = [UIColor clearColor];
 	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 }
 

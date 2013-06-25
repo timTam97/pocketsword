@@ -1272,15 +1272,19 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[mController tryDownloading];
 }
 
-- (void)tryDownloading {
+// returns NO if there are no tasks left.
+- (BOOL)tryDownloading {
 	if([self.downloadQueue count] > 0) {
 		[(PSModuleDownloadItem*)[self.downloadQueue objectAtIndex:0] startInstall];
+		return YES;
 	}
+	return NO;
 }
 
 - (void)moduleDownloaded:(PSModuleDownloadItem*)sender {
 	DLog(@"dItem finished with: %@", [sender moduleName]);
 	[self.downloadQueue removeObject:sender];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:nil];
 	[self tryDownloading];
 }
 
