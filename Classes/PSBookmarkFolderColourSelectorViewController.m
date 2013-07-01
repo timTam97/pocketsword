@@ -6,6 +6,18 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
+/* possible new colours (20130701)
+ Blue: BBDDFF
+ Brown: AA8866
+ Green: BBFFBB
+ Orange: FFCC99
+ Pink: FFBBDD
+ Purple: CCAAFF
+ Red: FF7777 (1.0, 0.47, 0.47, 0.8)
+ Turquoise: 99DDDD
+ Yellow: FFFFCC (1.0, 1.0, 0.8, 0.8)
+*/
+
 #import "PSBookmarkFolderColourSelectorViewController.h"
 #import "PSBookmarkFolder.h"
 #import "PSResizing.h"
@@ -22,15 +34,15 @@
 	if(self) {
 		self.currentSelectedColor = rgbHexString;
 		NSArray *colours = [[NSArray alloc] initWithObjects: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0], 
-							[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8],
-							[UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.8],
-							[UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.8],
-							[UIColor colorWithRed:0.0 green:1.0 blue:1.0 alpha:0.8],
-							[UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.8],
-							[UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:0.8],
-							[UIColor colorWithRed:1.0 green:0.5 blue:0.0 alpha:0.8],
-							[UIColor colorWithRed:0.5 green:0.0 blue:0.5 alpha:0.8],
-							[UIColor colorWithRed:0.6 green:0.4 blue:0.2 alpha:0.8],
+							[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8], // red
+							[UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.8], // green
+							[UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.8], // blue
+							[UIColor colorWithRed:0.0 green:1.0 blue:1.0 alpha:0.8], // Turquoise
+							[UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.8], // yellow
+							[UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:0.8], // pink
+							[UIColor colorWithRed:1.0 green:0.5 blue:0.0 alpha:0.8], // orange
+							[UIColor colorWithRed:0.5 green:0.0 blue:0.5 alpha:0.8], // magenta?/purple
+							[UIColor colorWithRed:0.6 green:0.4 blue:0.2 alpha:0.8], // brown
 							nil];
 		self.selectableColours = colours;
 		[colours release];
