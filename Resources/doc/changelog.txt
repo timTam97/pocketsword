@@ -2,7 +2,7 @@
 New in v1.4.5
 - Added Arabic localisation
 - Added new fonts for Hebrew & Greek
-- Dropped support for iPhone 3G
+- Dropped support for iPhone 3G, now require iOS 4.3 or later, sorry...  :(
 - Faster launch times
 - Nicer module download screen, now can queue the download of modules!
 - App will automatically download the search index for any new Bibles you download (if there's one available!)
