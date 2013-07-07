@@ -304,3 +304,6 @@
 
 // new v1.4.4 strings:
 "DictionaryNoneLoaded" = "لا توجد اي قواميس تم تحميلها، اذا كانت هذه هي المرة الاولي التي تحاول فيها استخدام القواميس، انت تحتاج ال تحميل القواميس من القسم المخصص لذلك.";
+
+// new v1.4.5 strings:
+"PreferencesGlossesTitle" = "Glosses";

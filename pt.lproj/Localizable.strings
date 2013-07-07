@@ -304,3 +304,6 @@
 
 // new v1.4.4 strings:
 "DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
+
+// new v1.4.5 strings:
+"PreferencesGlossesTitle" = "Glosses";

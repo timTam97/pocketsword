@@ -12,7 +12,7 @@
 #import "ZipArchive.h"
 #import "PSResizing.h"
 
-#define LOCALES_VERSION					@"loadedSWORDLocales-130613"
+#define LOCALES_VERSION					@"loadedSWORDLocales-130708"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-121223"
 
 @implementation PSLaunchViewController
