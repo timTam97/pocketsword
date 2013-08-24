@@ -3259,7 +3259,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/gen_xib_strings.py .\n$SRCROOT/localize_xibs.py .";
+			shellScript = "\"$SRCROOT\"/gen_xib_strings.py .\n\"$SRCROOT\"/localize_xibs.py .";
 		};
 /* End PBXShellScriptBuildPhase section */
 
