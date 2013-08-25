@@ -18,7 +18,7 @@
 
 // Korean (ko) localisation
 // By 쭈도사 (Gilju lee)
-// Last Updated v1.4.1 (1st October, 2011)
+// Last Updated v1.4.5 (22nd August, 2013)
 
 "Edit" = "편집";
 "Done" = "완료";
@@ -49,11 +49,11 @@
 "Disclaimer" = "권한 포기";
 "DisclaimerMsg" = "      -=+* 경고 *+=-\n 인스톨 매니저가 PocketSword 구성요소의 편리한 업그레이드와 설치를 제공하지만, 이 프로그램 역시 패킷스니퍼들에게 정보가 제공될 수 있는 사이트에 접속하는 방법을 사용합니다. \n만약 기독교를 박해하는 국가에 있거나 탐지되기를 원하지 않으신다면 설치 매니저의 원격 소스를 사용해서는 안됩니다. \n또한 원격 소스는 CrossWire가 제공하는 것보다 질이 떨어지는 모듈을 제공할수도 있습니다. 그 모듈은 이단적인 것일수도 있고 비합법적인 것일수도 있습니다. 많은 저장소에는 정말 유용한 내용이 많이 포함되어 있습니다. 하지만 이 저장소들은 CrossWire에 의해 조사되지 않았고 또한 이에 대해 책임지지 도 않습니다. 사용자의 위험부담.\n이것을 이해하고 원격 소스를 이용하길 원하십니가?";
 
-"WebNoIP" = "웹: 외부 IP를 구분할 수 없음\n";
-"WiFiNoConnection" = "무선랜: 연결안됨\n";
-"NoNetworkConnection" = "네트워크 연결안됨.";
+"WebNoIP" = "웹: 외부 IP를 확인할 수 없음\n";
+"WiFiNoConnection" = "무선랜: 연결 안 됨\n";
+"NoNetworkConnection" = "네트워크 연결 안 됨";
 
-"manualInstallHelp" = "수동으로 모듈을 설치하기 원하시면 웹 브라우저를 열어 아래 주소 페이지에 나오는 안내를 따르십시오. (아니면 Bonjour를 이용하여 아이폰으로 검색하십시오!).  하지만 앱에 포함된 설치관리자르 이용하시는 것을 권합니다 - 이 수동 설치는 자신의 모듈을 새롭게 만들기 원하는 사용자들을 위해서 존재합니다.";
+"manualInstallHelp" = "수동으로 모듈을 설치하기 원하시면 웹 브라우저를 열어 아래 주소 페이지에 나오는 안내를 따르십시오. (아니면 Bonjour를 이용하여 아이폰으로 검색하십시오!).  하지만 앱에 포함된 설치관리자를 이용하시는 것을 권장합니다 - 이 수동 설치는 직접 새로운 모듈을 만들기 원하는 사용자들을 위해서 존재합니다.";
 "InstallManagerDisabled" = "사용불가...";
 "InstallTitle" = "설치?";
 "files" = "파일";
@@ -113,7 +113,7 @@
 "CloseButtonTitle" = "닫기";
 "CacheDictionaryKeysTitle" = "저장?";
 "CacheDictionaryKeysMsg" = "이 사전은 아직 초기화 되지 않았습니다. 이 사전을 지금 저장 하시겠습니까?";
-"IndexDownloadTitle" = "인덱스 내려받기";
+"IndexDownloadTitle" = "색인 내려받기";
 "NoSearchIndexTitle" = "검색 색인 없음";
 "NoSearchIndexMsg" = "이 모듈의 검색 색인이 없습니다. 사용 가능한 색인을 확인하시겠습니까?";
 "SearchDownloaderTitle" = "다운로드 검색";
@@ -180,7 +180,7 @@
 
 // new v1.2.2 strings:
 "ModuleLockedTitle" = "모듈 잠김";
-"ModuleLockedQuestion" = "이 모듈은 잠겨있습니다. 해제하기 위해서는 키를 구입하셔야 합니다. 안타깝게도 지금 PocketSword 를 통해서는 하실수 없습니다. 어떻게 구입할 수 있는지 이 모듈의 설명서를 읽어보십시오.\n  이미 키를 가지고 계시면 해제하기 위해 키를 입력하실 수 있습니다. 지금 키를 입력하시겠습니까?";
+"ModuleLockedQuestion" = "이 모듈은 잠겨있습니다. 해제하기 위해서는 키를 구입하셔야 합니다. 안타깝게도 지금 PocketSword 를 통해서는 하실 수 없습니다. 어떻게 구입할 수 있는지 이 모듈의 설명서를 읽어보십시오.\n  이미 키를 가지고 계시면 해제하기 위해 키를 입력하실 수 있습니다. 지금 키를 입력하시겠습니까?";
 "ModuleEnterKeyTitle" = "키 입력:";
 "ModuleUnlockScreenTitle" = "모듈 해제";
 "ModuleUnlockHelpText" = "이 모듈을 해제하기 위해서 이 모듈을 구입한 곳에서 보내준 키를 입력하십시오. 키가 맞는지 확인하신후 저장 버튼을 누르십시오.";
@@ -297,15 +297,15 @@
 "PreferencesModuleSectionNote" = "모듈 특성 화면 설정 (스트롱 코드와 빨간 글씨 모드와 같은)은 모듈의 개별 설정에 따릅니다. 변경하기 위해서는 화면 아래 목록에서 원하는 모듈을 선택하십시오.";
 
 // new v1.4.2 strings:
-"HistoryClearButtonTitle" = "Clear All";
-"HistoryClearConfirmationTitle" = "Clear All History?";
-"HistoryClearConfirmationMessage" = "Are you sure you wish to clear all your history?";
+"HistoryClearButtonTitle" = "모두 삭제";
+"HistoryClearConfirmationTitle" = "기록 모두 삭제?";
+"HistoryClearConfirmationMessage" = "기록을 다 삭제하길 원하시는게 맞나요?";
 
 // new v1.4.3 strings:
-"HistoryTitle" = "History";
+"HistoryTitle" = "기록";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
+"DictionaryNoneLoaded" = "현재 로딩된 사전이 없습니다. 사전을 처음 사용하신다면 다운로드 섹션에서 사전을 먼저 다운로드 후에 사용하십시오.";
 
 // new v1.4.5 strings:
-"PreferencesGlossesTitle" = "Glosses";
+"PreferencesGlossesTitle" = "광택";
