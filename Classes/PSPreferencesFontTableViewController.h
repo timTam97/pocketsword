@@ -8,9 +8,8 @@
 
 @class PSBasePreferencesController;
 
-@interface PSPreferencesFontTableViewController : UIViewController { // should be UITableViewController
-	IBOutlet PSBasePreferencesController *preferencesController;
-	IBOutlet UITableView *table;
+@interface PSPreferencesFontTableViewController : UITableViewController {
+	PSBasePreferencesController *preferencesController;
 	
 	NSString *moduleName;
 
@@ -18,5 +17,6 @@
 }
 
 @property (retain, readwrite) NSString *moduleName;
+@property (assign, readwrite) PSBasePreferencesController *preferencesController;
 
 @end

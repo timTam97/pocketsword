@@ -8,9 +8,7 @@
 
 #import "PSBasePreferencesController.h"
 
-@class PSPreferencesFontTableViewController;
 @class PSModuleController;
-//@class PSBasePreferencesController;
 @class SwordModule;
 
 @interface PSModulePreferencesController : PSBasePreferencesController {
@@ -20,9 +18,6 @@
 	IBOutlet UINavigationBar	*preferencesNavigationBar;
 	IBOutlet UINavigationItem	*preferencesNavigationItem;
 	IBOutlet UIBarButtonItem	*closeButton;
-
-	IBOutlet PSPreferencesFontTableViewController *fontTableViewController;
-//	IBOutlet id moduleSelectorTableViewController;
 	
 	UILabel *fontSizeLabel;
 

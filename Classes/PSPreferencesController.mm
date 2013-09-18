@@ -750,8 +750,11 @@
 		case DISPLAY_SECTION :
 			switch (indexPath.row) {
 				case FONT_NAME_ROW :
+					PSPreferencesFontTableViewController *fontTableViewController = [[PSPreferencesFontTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
 					fontTableViewController.moduleName = nil;
+					fontTableViewController.preferencesController = self;
 					[self.navigationController pushViewController:fontTableViewController animated:YES];
+					[fontTableViewController release];
 					break;
 			}
 			break;

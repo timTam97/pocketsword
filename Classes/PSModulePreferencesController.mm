@@ -515,10 +515,11 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section == DisplaySection && indexPath.row == FontNameRow) {
+		PSPreferencesFontTableViewController *fontTableViewController = [[PSPreferencesFontTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		fontTableViewController.moduleName = preferencesNavigationItem.title;
-		//fontTableViewController.moduleName = preferencesNavigationItem.title;
+		fontTableViewController.preferencesController = self;
 		[self presentModalViewController:fontTableViewController animated:YES];
-		//[self.tabBarController.moreNavigationController pushViewController:fontTableViewController animated:YES];
+		[fontTableViewController release];
 	} else if(indexPath.section == StrongsSection) {
 		if(indexPath.row == StrongsGreekRow) {
 			//strongs greek

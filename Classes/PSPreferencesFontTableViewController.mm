@@ -12,7 +12,7 @@
 
 @implementation PSPreferencesFontTableViewController
 
-@synthesize moduleName;
+@synthesize moduleName, preferencesController;
 
 - (void)reloadFontStrings {
 	if(!fontStrings) {
@@ -92,7 +92,7 @@
 	if(!fontStrings) {
 		[self reloadFontStrings];
 	}
-	[table reloadData];
+	[self.tableView reloadData];
 	NSString *font = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
 	if(self.moduleName)
 		font = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
@@ -101,7 +101,7 @@
 	
 	int pos = [fontStrings indexOfObject:font];
 	NSIndexPath *ip = [NSIndexPath indexPathForRow:pos inSection:0];
-	[table scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+	[self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
 }
 
 

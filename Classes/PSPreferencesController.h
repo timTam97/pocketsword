@@ -9,18 +9,12 @@
 #import "ViewController.h"
 #import "PSModuleController.h"
 #import "PSAboutScreenController.h"
-//#import "PSPreferencesFontTableViewController.h"
 #import "PSBasePreferencesController.h"
-
-@class PSPreferencesFontTableViewController;
 
 @interface PSPreferencesController : PSBasePreferencesController {
 	
 	IBOutlet UITabBarItem *preferencesTabBarItem;
-	//IBOutlet UITableView *preferencesTable;
-	//IBOutlet PSModuleController *moduleManager;
 	IBOutlet UITabBarController *tabController;
-	IBOutlet PSPreferencesFontTableViewController *fontTableViewController;
 	IBOutlet id moduleSelectorTableViewController;
 	
 	UILabel *fontSizeLabel;
