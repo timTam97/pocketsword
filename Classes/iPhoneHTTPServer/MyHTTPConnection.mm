@@ -47,7 +47,7 @@
 		displayName = [NSMutableString stringWithString:@""];
 	} else {
 		CFStringTransform((CFMutableStringRef)displayName, NULL, CFSTR("Any-Hex/XML"), FALSE); // go nuclear on the name to make it safe :P
-		displayName = [NSString stringWithFormat:@" (%@)", displayName];
+		displayName = [NSMutableString stringWithFormat:@" (%@)", displayName];
 	}
 	[outdata appendFormat:@"<head>\n<title>Installed Modules%@</title>\n", displayName];
 	[outdata appendString: @"<meta http-equiv=\"content-type\" content=\"application/xhtml+xml;charset=utf-8\" />"];
