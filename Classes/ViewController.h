@@ -51,7 +51,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate> {
+@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
     IBOutlet UIWindow *window;
@@ -75,11 +75,14 @@ typedef enum {
 	// Bible & Commentary tab
 	PSRefSelectorController				*refSelectorController;
 	UINavigationController				*refNavigationController;
-	IBOutlet UIView						*infoView;
-	IBOutlet UIWebView					*infoWebView;
 	UIView								*refTitleSplashView;
 	NSTimer								*refTitleSplashTimer;
     UIPopoverController					*popoverController;
+	
+	// infoView
+	UIView								*infoView;
+	UIWebView							*infoWebView;
+	
 
 	// MultiList
 	UITabBarController					*multiListController;

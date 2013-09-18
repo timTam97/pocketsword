@@ -1133,6 +1133,32 @@ bool ps_viewcontroller_initialized = false;
 	if(![infoView superview]) {
 		//need to show the info pane
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
+		
+		infoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT)];
+		infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		UIImageView *infoTopBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"popup-top-bar.png"]];
+		infoTopBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		infoTopBar.frame = CGRectMake(0, 0, screen.width, 20);
+		[infoView addSubview:infoTopBar];
+		[infoTopBar release];
+		UIButton *closeImgButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		[closeImgButton setImage:[UIImage imageNamed:@"popup-down-button.png"] forState:UIControlStateNormal];
+		closeImgButton.frame = CGRectMake(10, 0, 20, 20);
+		[closeImgButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
+		closeImgButton.showsTouchWhenHighlighted = YES;
+		[infoView addSubview:closeImgButton];
+		UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		clearButton.frame = CGRectMake(0, 0, 40, 25);
+		[clearButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
+		clearButton.showsTouchWhenHighlighted = YES;
+		[infoView addSubview:clearButton];
+		infoWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 20, screen.width, (INFO_PORTRAIT_HEIGHT - 20))];
+		infoWebView.delegate = self;
+		infoWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		[infoView addSubview:infoWebView];
+		[infoWebView release];
+		
+		
 		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
 		if([UIApplication sharedApplication].statusBarHidden) {
 			//we are in fullscreen mode in the Bible or Commentary tab.
@@ -1142,11 +1168,6 @@ bool ps_viewcontroller_initialized = false;
 			} else if(commentaryTabController.isFullScreen) {
 				interfaceOrientation = commentaryTabController.interfaceOrientation;
 			}
-			//interfaceOrientation = tabController.interfaceOrientation;
-//			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-//				interfaceOrientation = UIInterfaceOrientationLandscapeRight;
-//			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight)
-//				interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
 		}
 		BOOL deviceIsPad = [PSResizing iPad];
 		if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
@@ -1167,17 +1188,6 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[self showInfoModal: infoView withTiming: 0.3];
 	}
-//	NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-//	[[NSUserDefaults standardUserDefaults] setObject:StrongsFontName forKey:DefaultsFontNamePreference];
-//	[[NSUserDefaults standardUserDefaults] synchronize];
-
-	//NSLog(@"%@", infoString);
-
-	//NSString *htmlString = [PSModuleController createHTMLString: infoString usingPreferences:YES withJS: @"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>" usingModuleForPreferences:blah];
-	//NSString *htmlString = [PSModuleController createInfoHTMLString: infoString usingModuleForPreferences:blah];
-
-//	[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
-//	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	[infoWebView loadHTMLString: infoString baseURL: nil];
 	
@@ -1227,6 +1237,8 @@ bool ps_viewcontroller_initialized = false;
 
 - (IBAction)hideInfo {
 	[self hideInfoModal: infoView withTiming: 0.3];
+	[infoView release];
+	infoView = nil;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
