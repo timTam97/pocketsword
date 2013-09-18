@@ -13,7 +13,7 @@
 @implementation PSPreferencesModuleSelectorTableViewController
 
 @synthesize moduleList;
-@synthesize currentModule;
+@synthesize currentModule, preferencesController;
 
 - (void)setTableType:(ModuleFeatureRequired)feature {
 	tableType = feature;
@@ -29,7 +29,7 @@
 				self.currentModule = NSLocalizedString(@"None", @"None");
 			self.navigationItem.title = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
 			moduleChanged = @selector(strongsGreekModuleChanged:);
-			[table reloadData];
+			[self.tableView reloadData];
 			break;
 		case StrongsHebrew:
 			self.moduleList = [[SwordManager defaultManager] modulesForFeature: @"HebrewDef"];
@@ -38,7 +38,7 @@
 				self.currentModule = NSLocalizedString(@"None", @"None");
 			self.navigationItem.title = NSLocalizedString(@"PreferencesHebrewModuleTitle", @"Hebrew module");
 			moduleChanged = @selector(strongsHebrewModuleChanged:);
-			[table reloadData];
+			[self.tableView reloadData];
 			break;
 		case MorphGreek:
 			self.moduleList = [[SwordManager defaultManager] modulesForFeature: @"GreekParse"];
@@ -47,7 +47,7 @@
 				self.currentModule = NSLocalizedString(@"None", @"None");
 			self.navigationItem.title = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
 			moduleChanged = @selector(morphGreekModuleChanged:);
-			[table reloadData];
+			[self.tableView reloadData];
 			break;
 		default:
 			break;

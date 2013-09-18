@@ -761,23 +761,38 @@
 		case STRONGS_SECTION:
 			switch (indexPath.row) {
 				case STRONGS_G_ROW:
+				{
 					//strongs greek
+					PSPreferencesModuleSelectorTableViewController *moduleSelectorTableViewController = [[PSPreferencesModuleSelectorTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+					moduleSelectorTableViewController.preferencesController = self;
 					[moduleSelectorTableViewController setTableType: StrongsGreek];
 					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
+					[moduleSelectorTableViewController release];
+				}
 					break;
 				case STRONGS_H_ROW:
+				{
 					//strongs hebrew
+					PSPreferencesModuleSelectorTableViewController *moduleSelectorTableViewController = [[PSPreferencesModuleSelectorTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+					moduleSelectorTableViewController.preferencesController = self;
 					[moduleSelectorTableViewController setTableType: StrongsHebrew];
 					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
+					[moduleSelectorTableViewController release];
+				}
 					break;
 			}
 			break;
 		case MORPH_SECTION:
 			switch (indexPath.row) {
 				case MORPH_G_ROW:
+				{
 					//greek morphology
+					PSPreferencesModuleSelectorTableViewController *moduleSelectorTableViewController = [[PSPreferencesModuleSelectorTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+					moduleSelectorTableViewController.preferencesController = self;
 					[moduleSelectorTableViewController setTableType: MorphGreek];
 					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
+					[moduleSelectorTableViewController release];
+				}
 					break;
 			}
 			break;

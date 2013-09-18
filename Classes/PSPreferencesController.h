@@ -15,7 +15,6 @@
 	
 	IBOutlet UITabBarItem *preferencesTabBarItem;
 	IBOutlet UITabBarController *tabController;
-	IBOutlet id moduleSelectorTableViewController;
 	
 	UILabel *fontSizeLabel;
 	IBOutlet UITableView *preferencesTableView;

@@ -16,8 +16,7 @@ typedef enum {
 @class PSPreferencesController;
 
 @interface PSPreferencesModuleSelectorTableViewController : UITableViewController {
-	IBOutlet PSPreferencesController *preferencesController;
-	IBOutlet UITableView *table;
+	PSPreferencesController *preferencesController;
 	
 	ModuleFeatureRequired tableType;
 	NSArray *moduleList;
@@ -27,6 +26,7 @@ typedef enum {
 
 @property (retain) NSArray *moduleList;
 @property (retain) NSString *currentModule;
+@property (assign, readwrite) PSPreferencesController *preferencesController;
 
 - (void)setTableType:(ModuleFeatureRequired)feature;
 
