@@ -268,6 +268,7 @@
 		057CBD571769839D005BC6BB /* enabled-Glosses.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD531769839D005BC6BB /* enabled-Glosses.png */; };
 		057CBD581769839D005BC6BB /* enabled-Glosses@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD541769839D005BC6BB /* enabled-Glosses@2x.png */; };
 		059419B012DAC76400A87B02 /* PSBookmarkAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */; };
+		059653A917F53B1400018288 /* PSDictionaryEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 059653A817F53B1400018288 /* PSDictionaryEntryViewController.m */; };
 		059A6CC311B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
 		059A6CC411B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
 		05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
@@ -1051,6 +1052,8 @@
 		05930FA413E8EB10001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = "th.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkAddViewController.h; path = Classes/PSBookmarkAddViewController.h; sourceTree = "<group>"; };
 		059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkAddViewController.m; path = Classes/PSBookmarkAddViewController.m; sourceTree = "<group>"; };
+		059653A717F53B1400018288 /* PSDictionaryEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryEntryViewController.h; path = Classes/PSDictionaryEntryViewController.h; sourceTree = "<group>"; };
+		059653A817F53B1400018288 /* PSDictionaryEntryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSDictionaryEntryViewController.m; path = Classes/PSDictionaryEntryViewController.m; sourceTree = "<group>"; };
 		059A6CBF11B79ABD00B33E54 /* bible.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bible.png; path = Resources/bible.png; sourceTree = "<group>"; };
 		059A6CC011B79ABD00B33E54 /* notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notes.png; path = Resources/notes.png; sourceTree = "<group>"; };
 		05A0D09816B8B1E300C2E0FF /* echomod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = echomod.h; sourceTree = "<group>"; };
@@ -2421,6 +2424,8 @@
 				05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */,
 				054C57BC11AE409000633371 /* PSDevotionalViewController.h */,
 				054C57BD11AE409000633371 /* PSDevotionalViewController.mm */,
+				059653A717F53B1400018288 /* PSDictionaryEntryViewController.h */,
+				059653A817F53B1400018288 /* PSDictionaryEntryViewController.m */,
 			);
 			name = Dictionary;
 			sourceTree = "<group>";
@@ -3611,6 +3616,7 @@
 				057CBD4D17697D1C005BC6BB /* osisglosses.cpp in Sources */,
 				057CBD4E17697D1C005BC6BB /* osisxlit.cpp in Sources */,
 				057CBD50176980AB005BC6BB /* untgz.c in Sources */,
+				059653A917F53B1400018288 /* PSDictionaryEntryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

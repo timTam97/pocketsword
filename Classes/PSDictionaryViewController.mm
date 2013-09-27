@@ -10,17 +10,71 @@
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
-
+#import "PSDictionaryEntryViewController.h"
 
 @implementation PSDictionaryViewController
 
+@synthesize dictionarySearchBar, delegate;
+
+- (void)dictionaryModuleSelectorButtonPressed:(id)sender {
+	[delegate toggleModulesListFromButton:sender];
+}
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	self.navigationItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
+	
+	UIBarButtonItem *dictButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"None", @"None") style:UIBarButtonItemStyleBordered target:self action:@selector(dictionaryModuleSelectorButtonPressed:)];
+	self.navigationItem.rightBarButtonItem = dictButton;
+	[dictButton release];
+	
+	UISearchBar *dSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
+	dSB.delegate = self;
+	dSB.barStyle = UIBarStyleBlack;
+	dSB.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
+	self.dictionarySearchBar = dSB;
+	[dSB release];
+	
+	self.tableView.tableHeaderView = dictionarySearchBar;
+	searching = NO;
+	letUserSelectRow = YES;
+	dictionaryEnabled = NO;
+	searchResults = [[NSMutableArray alloc] init];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryData) name:NotificationReloadDictionaryData object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryEntriesTable) name:NotificationNightModeChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDictionaryTitleViaNotification) name:NotificationNewPrimaryDictionary object:nil];
+	//[self setDictionaryTitleViaNotification];
+}
+
+- (void)viewDidUnload {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[searchResults release];
+	searchResults = nil;
+}
+
 
 - (void)primaryDictionaryChanged {
-	[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+	[self.navigationItem.rightBarButtonItem setTitle: NSLocalizedString(@"None", @"None")];
 }
 
 - (void)reloadDictionaryData {
 	[self reloadDictionaryData:YES];
+}
+
+- (void)setDictionaryTitleViaNotification {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	SwordModule *primaryDictionary = [[PSModuleController defaultModuleController] primaryDictionary];
+	if(primaryDictionary) {
+		NSString *newText = [primaryDictionary name];
+		int i = ([newText length] > 8) ? 8 : [newText length];
+		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
+		NSString *newTitle = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
+		[self.navigationItem.rightBarButtonItem setTitle: newTitle];
+	} else {
+		[self.navigationItem.rightBarButtonItem setTitle: NSLocalizedString(@"None", @"None")];
+	}
+	[pool release];
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
@@ -32,10 +86,10 @@
 			[[PSModuleController defaultModuleController] loadPrimaryDictionary: lastDictionary];
 			needsReload = YES;
 		} else {
-			[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
+			[self.navigationItem.rightBarButtonItem setTitle: NSLocalizedString(@"None", @"None")];
 			[dictionarySearchBar setUserInteractionEnabled: NO];
 			dictionaryEnabled = NO;
-			[dictionaryEntriesTable reloadData];
+			[self.tableView reloadData];
 			return;
 		}
 	}
@@ -69,7 +123,7 @@
 //	if(needsReload) {
 //		if(searching)
 //			[self searchDictionaryEntries];
-//		[dictionaryEntriesTable reloadData];
+//		[self.tableView reloadData];
 //	}
 }
 
@@ -91,11 +145,12 @@
 	} else {
 		[dictionarySearchBar setUserInteractionEnabled: NO];
 		dictionaryEnabled = NO;
+		[self.tableView reloadData];
 	}
 	
 //	if(searching)
 //		[self searchDictionaryEntries];
-//	[dictionaryEntriesTable reloadData];
+//	[self.tableView reloadData];
 	[pool release];
 }
 
@@ -106,35 +161,29 @@
 	hud = nil;
 	if(searching)
 		[self searchDictionaryEntries];
-	[dictionaryEntriesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable useStatusBar:YES];
+//	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:self.tableView useStatusBar:YES];
 	[self reloadDictionaryData:NO];
-	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
-//	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-//		dictionaryEntriesTable.backgroundColor = [UIColor blackColor];
-//	} else {
-//		dictionaryEntriesTable.backgroundColor = [UIColor whiteColor];
-//	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:dictionaryNavBar mainView:dictionaryEntriesTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+//	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:self.tableView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-//}
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 }
 
 - (void)dealloc {
-	[dictionarySearchBar release];
+	self.dictionarySearchBar = nil;
 	[searchResults release];
 	[overlayViewController release];
     [super dealloc];
@@ -148,32 +197,7 @@
 }
 
 - (void)reloadDictionaryEntriesTable {
-	[dictionaryEntriesTable reloadData];
-}
-
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	dictionaryTabBarItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
-	dictionaryNavItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
-	dictionarySearchBar.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
-	[dictionarySearchBar retain];//hack to try to make our search bar never run away!
-	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
-	searching = NO;
-	letUserSelectRow = YES;
-	dictionaryEnabled = NO;
-	searchResults = [[NSMutableArray alloc] init];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryData) name:NotificationReloadDictionaryData object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryEntriesTable) name:NotificationNightModeChanged object:nil];
-}
-
-- (void)viewDidUnload {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationPrimaryDictionaryChanged object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationReloadDictionaryData object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationNightModeChanged object:nil];
-	[searchResults release];
-	searchResults = nil;
-	//[dictionarySearchBar release];
+	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -212,30 +236,30 @@
 	} else if(dictionaryEnabled) {
 		cell.textLabel.text = [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex:indexPath.row];
 	}
-	//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	
-//	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-//		cell.textLabel.textColor = [UIColor whiteColor];
-//	} else {
-//		cell.textLabel.textColor = [UIColor blackColor];
-//	}
 
 	return cell;
 }
-
-//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-//	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-//		cell.backgroundColor = [UIColor blackColor];
-//	} else {
-//		cell.backgroundColor = [UIColor whiteColor];
-//	}
-//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[dictionarySearchBar resignFirstResponder];
 	NSString *t = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	NSString *descr = [[[PSModuleController defaultModuleController] primaryDictionary] entryForKey: t];
-	[self showDescription:descr withTitle:t];
+	descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, descr] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
+	
+	PSDictionaryEntryViewController *entryVC = [[PSDictionaryEntryViewController alloc] initWithNibName:nil bundle:nil];
+	[entryVC setDictionaryEntryTitle:t];
+	[entryVC setDictionaryEntryText:descr];
+	if([[[PSModuleController defaultModuleController] primaryDictionary] hasFeature:SWMOD_CONF_FEATURE_IMAGES]) {
+		[entryVC setScalesPageToFit:YES];
+	} else {
+		[entryVC setScalesPageToFit:NO];
+	}
+	if(self.navigationController) {
+		[self.navigationController pushViewController:entryVC animated:YES];
+	} else {
+		[self presentModalViewController:entryVC animated:YES];
+	}
+	[entryVC release];
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -247,99 +271,68 @@
 		return nil;
 }
 
-- (void)showDescription:(NSString*)description withTitle:(NSString*)t {//-webkit-text-size-adjust: none
-	NSString *descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, description] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
-	if([t length] > 20) {
-		t = [NSString stringWithFormat: @"%@...", [t substringToIndex: 20]];
-	}
-	[dictionaryDescriptionTitle setTitle: t];
-	[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
-	//NSLog(@"%@", descr);
-	
-	if(![dictionaryDescriptionViewController.view superview]) {
-		if([[[PSModuleController defaultModuleController] primaryDictionary] hasFeature:SWMOD_CONF_FEATURE_IMAGES]) {
-			dictionaryDescriptionWebView.scalesPageToFit = YES;
-		} else {
-			dictionaryDescriptionWebView.scalesPageToFit = NO;
-		}
-		[self presentModalViewController:dictionaryDescriptionViewController animated:YES];
-		//[self showModal: dictionaryDescriptionView withTiming: 0.3];
-	}
-}
-
 - (void) searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
 	
 	//Add the overlay view.
 	if(!overlayViewController) {
 		overlayViewController = [[PSDictionaryOverlayViewController alloc] initWithNibName:nil bundle:nil];
 	
-		CGFloat yaxis = self.navigationController.navigationBar.frame.size.height;
-		yaxis += dictionaryEntriesTable.tableHeaderView.frame.size.height;
+//		CGFloat yaxis = self.navigationController.navigationBar.frame.size.height;
+//		yaxis += self.tableView.tableHeaderView.frame.size.height;
+		CGFloat yaxis = self.tableView.tableHeaderView.frame.size.height;
 		CGFloat width = self.view.frame.size.width;
 		CGFloat height = self.view.frame.size.height;
 		
 		//Parameters x = origion on x-axis, y = origon on y-axis.
 		CGRect frame = CGRectMake(0, yaxis, width, height);
-		((PSDictionaryOverlayViewController*)overlayViewController).view.frame = frame;
+		overlayViewController.view.frame = frame;
 		
-		((PSDictionaryOverlayViewController*)overlayViewController).dictionaryViewController = self;
+		overlayViewController.dictionaryViewController = self;
 	}
 
 	searching = YES;
 
 	if([dictionarySearchBar.text length] <= 0) {
-		//dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-		[dictionaryEntriesTable insertSubview:((PSDictionaryOverlayViewController*)overlayViewController).view aboveSubview:self.parentViewController.view];
+		//self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+		[self.tableView insertSubview:overlayViewController.view aboveSubview:self.parentViewController.view];
 		letUserSelectRow = NO;
-		dictionaryEntriesTable.scrollEnabled = NO;
+		self.tableView.scrollEnabled = NO;
 	} else {
 		letUserSelectRow = YES;
-		dictionaryEntriesTable.scrollEnabled = YES;
+		self.tableView.scrollEnabled = YES;
 	}
 	
 	[dictionarySearchBar setShowsCancelButton:YES animated:YES];
-//	[dictionaryNavItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelSearch:)] autorelease] animated:YES];
 	[self searchDictionaryEntries];
-	[dictionaryEntriesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-//	int row = 0;
-//	int count = [[[PSModuleController defaultModuleController] primaryDictionary] entryCount];
-//	for(; row < count; row++) {
-//		NSComparisonResult res = [searchText caseInsensitiveCompare: [[[[PSModuleController defaultModuleController] primaryDictionary] allKeys] objectAtIndex: row]];
-//		if(res <= NSOrderedSame)
-//			break;
-//	}
-//	if(row == count)
-//		row--;
-//	NSIndexPath *newIP = [NSIndexPath indexPathForRow: row inSection: 0];
-//	[dictionaryEntriesTable scrollToRowAtIndexPath: newIP atScrollPosition: UITableViewScrollPositionTop animated: YES];
 
 	[searchResults removeAllObjects];
 	
 	if([searchText length] > 0) {
-		[((PSDictionaryOverlayViewController*)overlayViewController).view removeFromSuperview];
-		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+		[overlayViewController.view removeFromSuperview];
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 		searching = YES;
 		letUserSelectRow = YES;
-		dictionaryEntriesTable.scrollEnabled = YES;
+		self.tableView.scrollEnabled = YES;
 		[self searchDictionaryEntries];
 	} else {
-		[dictionaryEntriesTable insertSubview:((PSDictionaryOverlayViewController*)overlayViewController).view aboveSubview:self.parentViewController.view];
-		dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+		[self.tableView insertSubview:overlayViewController.view aboveSubview:self.parentViewController.view];
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		searching = YES;
 		letUserSelectRow = NO;
-		dictionaryEntriesTable.scrollEnabled = NO;
+		self.tableView.scrollEnabled = NO;
 	}
 	
-	[dictionaryEntriesTable reloadData];
+	[self.tableView reloadData];
 	
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
-	dictionaryEntriesTable.tableHeaderView = dictionarySearchBar;
+	self.tableView.tableHeaderView = dictionarySearchBar;
 }
 
 - (void)cancelSearch:(id)sender {
@@ -352,20 +345,16 @@
 	
 	letUserSelectRow = YES;
 	searching = NO;
-	dictionaryEntriesTable.scrollEnabled = YES;
+	self.tableView.scrollEnabled = YES;
 	
-	[((PSDictionaryOverlayViewController*)overlayViewController).view removeFromSuperview];
+	[overlayViewController.view removeFromSuperview];
 	[overlayViewController release];
 	overlayViewController = nil;
-	//[dictionaryNavItem setLeftBarButtonItem:nil animated:YES];
 	[dictionarySearchBar setShowsCancelButton:NO animated:YES];
 
-	dictionaryEntriesTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-//	if([searchResults count] > 0)
-//		[dictionaryEntriesTable reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-//	else
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	[searchResults removeAllObjects];
-	[dictionaryEntriesTable reloadData];
+	[self.tableView reloadData];
 	dictionarySearchBar.text = @"";
 }
 
@@ -385,96 +374,8 @@
 
 - (IBAction)hideDescription:(id)sender {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideInfoPane object:nil];
-	//[[[PSModuleController defaultModuleController] viewController] hideInfo];
 	[self dismissModalViewControllerAnimated:YES];
-	//[self hideModal: dictionaryDescriptionView withTiming: 0.3];
 }
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	BOOL load = YES;
-	
-	//NSLog(@"\nDictionaryDescription: requestString: %@", [[request URL] absoluteString]);
-	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
-	NSString *entry = nil;
-	
-	if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"] && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@""] && ![[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showImage"]) {
-		//
-		// it's a dictionary entry to show. (&& it's not a link on an image.)
-		//
-		NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
-		
-		SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
-		if(swordDictionary) {
-			entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-			//DLog(@"\n%@ = %@\n", mod, entry);
-		} else {
-			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
-		}
-		[self showDescription: entry withTitle:[[rData objectForKey:ATTRTYPE_VALUE] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		entry = nil;
-		
-	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-//		BOOL strongs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
-//		BOOL morphs = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
-//		SwordManager *swordManager = [SwordManager defaultManager];
-//		[swordManager setGlobalOption: SW_OPTION_STRONGS value: SW_OFF ];
-//		[swordManager setGlobalOption: SW_OPTION_MORPHS value: SW_OFF ];
-		NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
-//		[swordManager setGlobalOption: SW_OPTION_STRONGS value: ((strongs) ? SW_ON : SW_OFF) ];
-//		[swordManager setGlobalOption: SW_OPTION_MORPHS value: ((morphs) ? SW_ON : SW_OFF) ];
-		NSMutableString *tmpEntry = [@"" mutableCopy];
-		for(NSDictionary *dict in array) {
-			NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
-			[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
-			[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
-		}
-		if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-			entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-		}
-		[tmpEntry release];
-	}
-	
-	if(entry) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-
-		//[[[PSModuleController defaultModuleController] viewController] showInfo: entry];
-		load = NO;
-	}
-	
-	
-	[pool release];
-	return load;
-}
-
-@end
-
-@implementation PSDictionaryEntryViewController
-
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:dictionaryDescriptionToolbar mainView:dictionaryDescriptionWebView useStatusBar:YES];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:dictionaryDescriptionToolbar mainView:dictionaryDescriptionWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-}
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
-}
-
 
 @end
 

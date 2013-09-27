@@ -288,7 +288,7 @@
 	}
 	
 	if (module != nil && [module isEqualToString:LIST]) {
-		[viewController toggleModulesListAnimated:NO withModule:nil];
+		[viewController toggleModulesListAnimated:NO withModule:nil fromButton:nil];
 	}
 
 	return YES;

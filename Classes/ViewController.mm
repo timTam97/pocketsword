@@ -97,27 +97,45 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[self setBibleTitleViaNotification];
 		[self setCommentaryTitleViaNotification];
-		[self setDictionaryTitleViaNotification];
 		
 		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
 		tabController.delegate = self;
 		
+		NSMutableArray *tabs;
+		
+		//add the Dictionary Tab.
+		PSDictionaryViewController *dictionaryViewController = [[PSDictionaryViewController alloc] initWithStyle:UITableViewStyleGrouped];
+		dictionaryViewController.delegate = self;
+		UINavigationController *dictionaryTab = [[UINavigationController alloc] initWithRootViewController:dictionaryViewController];
+		dictionaryTab.navigationBar.barStyle = UIBarStyleBlack;
+		UITabBarItem *dTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary") image:[UIImage imageNamed:@"dictionary.png"] tag:99];
+		dictionaryTab.tabBarItem = dTBI;
+		[dTBI release];
+		tabs = [tabController.viewControllers mutableCopy];
+		[tabs insertObject:dictionaryTab atIndex:2];
+		[tabController setViewControllers:tabs animated:NO];
+		[tabs release];
+		tabs = nil;
+		[dictionaryViewController release];
+		[dictionaryTab release];
+		
 		//add our customized bookmarks tab:
 		[PSBookmarks importBookmarksFromV2];
 		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
-		UINavigationController *bookmarksTab = [[UINavigationController alloc] initWithRootViewController:bookmarksViewController];//nicc
+		UINavigationController *bookmarksTab = [[UINavigationController alloc] initWithRootViewController:bookmarksViewController];
 		bookmarksTab.navigationBar.barStyle = UIBarStyleBlack;
 		UITabBarItem *tbI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
 		bookmarksTab.tabBarItem = tbI;
 		[tbI release];
-		NSMutableArray *tabs = [tabController.viewControllers mutableCopy];
+		tabs = [tabController.viewControllers mutableCopy];
 		[tabs insertObject:bookmarksTab atIndex:3];
 		[tabController setViewControllers:tabs animated:NO];
 		[tabs release];
+		tabs = nil;
 		[bookmarksViewController release];
 		[bookmarksTab release];
-		
+				
 		tabController.customizableViewControllers = nil;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationBibleSwipeRight object:nil];
@@ -132,7 +150,6 @@ bool ps_viewcontroller_initialized = false;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBibleTitleViaNotification) name:NotificationNewPrimaryBible object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setCommentaryTitleViaNotification) name:NotificationNewPrimaryCommentary object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDictionaryTitleViaNotification) name:NotificationNewPrimaryDictionary object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMultiList) name:NotificationToggleMultiList object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList:) name:NotificationToggleModuleList object:nil];
@@ -204,21 +221,6 @@ bool ps_viewcontroller_initialized = false;
 		[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
 		[self setEnabledCommentaryNextButton: NO];
 		[self setEnabledCommentaryPreviousButton: NO];
-	}
-	[pool release];
-}
-
-- (void)setDictionaryTitleViaNotification {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *primaryDictionary = [[PSModuleController defaultModuleController] primaryDictionary];
-	if(primaryDictionary) {
-		NSString *newText = [primaryDictionary name];
-		int i = ([newText length] > 8) ? 8 : [newText length];
-		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
-		NSString *newTitle = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
-		[dictionaryTitle setTitle: newTitle];
-	} else {
-		[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
 	}
 	[pool release];
 }
@@ -453,14 +455,14 @@ bool ps_viewcontroller_initialized = false;
 
 - (IBAction)toggleModulesList:(NSNotification *)notification {
 	if(notification) {
-		[self toggleModulesListAnimated:YES withModule:[notification object]];
+		[self toggleModulesListAnimated:YES withModule:[notification object] fromButton:nil];
 	} else {
-		[self toggleModulesListAnimated:YES withModule:nil];
+		[self toggleModulesListAnimated:YES withModule:nil fromButton:nil];
 	}
 }
 
 - (IBAction)toggleModulesListFromButton:(id)sender {
-	[self toggleModulesListAnimated:YES withModule:nil];
+	[self toggleModulesListAnimated:YES withModule:nil fromButton:(id)sender];
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)poController {
@@ -475,7 +477,7 @@ bool ps_viewcontroller_initialized = false;
 	popoverController = nil;
 }
 
-- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule {
+- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule fromButton:(id)sender {
     BOOL iPad = [PSResizing iPad];
 	if(moduleSelectorViewController || [popoverController isPopoverVisible]) {
 		//if(iPad) {
@@ -492,7 +494,7 @@ bool ps_viewcontroller_initialized = false;
 
 		if(swordModule) {
 			moduleSelectorViewController.moduleToView = swordModule;
-			[moduleSelectorViewController setListType: BibleTab];
+			[moduleSelectorViewController setListType:BibleTab];
 			if(iPad) {
 				[tabController presentModalViewController:modSelectorNavController animated:animated];
 			}
@@ -504,18 +506,24 @@ bool ps_viewcontroller_initialized = false;
 			}
 			//set the module selector to use the correct module type.
 			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
-				[moduleSelectorViewController setListType: BibleTab];
+				[moduleSelectorViewController setListType:BibleTab];
 				[popoverController presentPopoverFromBarButtonItem:bibleTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
-				[moduleSelectorViewController setListType: CommentaryTab];
+				[moduleSelectorViewController setListType:CommentaryTab];
 				[popoverController presentPopoverFromBarButtonItem:commentaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
-				[moduleSelectorViewController setListType: DevotionalTab];
+				[moduleSelectorViewController setListType:DevotionalTab];
 				[popoverController presentPopoverFromBarButtonItem:devotionalTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			} else {
-				[moduleSelectorViewController setListType: DictionaryTab];
-				[popoverController presentPopoverFromBarButtonItem:dictionaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+				[moduleSelectorViewController setListType:DictionaryTab];
 			}
+			if(sender) {
+				[popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			} else {
+				CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
+				[popoverController presentPopoverFromRect:theSpot inView:tabController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			}
+
 		}
 		if(!iPad) {
 			[tabController presentModalViewController:modSelectorNavController animated:animated];
@@ -1254,7 +1262,6 @@ bool ps_viewcontroller_initialized = false;
 		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 			//error checking, should always get here...
 			[self setShownTabTo:BibleTab];
-			[dictionaryViewController dismissModalViewControllerAnimated:YES];
 			NSString *ref = [rData objectForKey:ATTRTYPE_VALUE];
 			NSArray *comps = [ref componentsSeparatedByString:@":"];
 

@@ -23,11 +23,9 @@
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height)];
 	baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.navigationItem.title = (self.entryTitle) ? entryTitle : @"";
-	CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
+	self.navigationItem.title = (self.entryTitle) ? entryTitle : @"";	
 	
-	
-	dictionaryDescriptionWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, barHeight, screen.width, (screen.height - barHeight))];
+	dictionaryDescriptionWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height)];
 	dictionaryDescriptionWebView.delegate = self;
 	dictionaryDescriptionWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	if(self.entryHTML) {
@@ -79,10 +77,10 @@
 //- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 //	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:dictionaryDescriptionWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 //}
-//
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-//}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+}
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

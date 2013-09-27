@@ -71,6 +71,7 @@
 - (IBAction)closeLeaf:(id)sender {
 	askToUnlock = YES;
 	if(moduleSelectorController.moduleToView) {
+		//notify to close the module list.
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 	} else {
 		if([PSResizing iPad]) {

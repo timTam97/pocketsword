@@ -51,7 +51,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate> {
+@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
 	// Tab bar
 	IBOutlet UITabBarController *tabController;
     IBOutlet UIWindow *window;
@@ -89,10 +89,6 @@ typedef enum {
 
 	PSModuleSelectorController			*moduleSelectorViewController;
 	
-	// Dictionary tab
-	IBOutlet PSDictionaryViewController	*dictionaryViewController;
-	IBOutlet UIBarButtonItem			*dictionaryTitle;
-	
 	// Devotional tab
 	IBOutlet UIWebView					*devotionalWebView;
 	IBOutlet UIBarButtonItem			*devotionalTitle;
@@ -123,7 +119,6 @@ typedef enum {
 - (void)setVoiceOverForRefSegmentedControl;
 - (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
-- (void)setDictionaryTitleViaNotification;
 
 - (void)nightModeChanged;
 
@@ -137,7 +132,7 @@ typedef enum {
 - (void)updateViewWithSelectedBookChapterVerse:(NSNotification *)notification;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 
-- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule;
+- (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule fromButton:(id)sender;
 //- (IBAction)toggleModulesList;
 - (IBAction)toggleModulesList:(NSNotification *)notification;
 - (IBAction)toggleModulesListFromButton:(id)sender;

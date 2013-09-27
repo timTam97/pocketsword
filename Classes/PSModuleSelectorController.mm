@@ -152,19 +152,12 @@
 }
 
 - (IBAction)addModuleButtonPressed {
-//	if(reloadModuleViews) {
-//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//		reloadModuleViews = NO;
-//	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+	//close the selector first, then show the downloads tab.
+	[self dismissModuleSelector];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowDownloadsTab object:nil];
 }
 
 - (IBAction)dismissModuleSelector {
-//	if(reloadModuleViews) {
-//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//		reloadModuleViews = NO;
-//	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 }
 
@@ -273,11 +266,7 @@
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	if(([moduleController primaryBible] && [newModule isEqualToString:[[moduleController primaryBible] name]]) || ([moduleController primaryCommentary] && [newModule isEqualToString:[[moduleController primaryCommentary] name]]) || ([moduleController primaryDictionary] && [newModule isEqualToString:[[moduleController primaryDictionary] name]])) {
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
-//		if(reloadModuleViews) {
-//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//			reloadModuleViews = NO;
-//		}
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+		[self dismissModuleSelector];
 		return; // do nothing, because we selected the currently loaded module, but close the view & return to viewing the module.
 	}
 	// Update the module list to reflect the current module
@@ -326,11 +315,8 @@
 	if(locked) {
 		[self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
-		//[[moduleController viewController] toggleModulesList];
+		[self dismissModuleSelector];
 	}
-	
-	//[pool release];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -353,8 +339,7 @@
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
 	if([PSResizing iPad]) {
-		//leafTabBarController.modalPresentationStyle = UIModalPresentationFormSheet;
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+		[self dismissModuleSelector];
 		[parentTabBarController presentModalViewController:leafTabBarController animated:YES];
 	} else {
 		[self.navigationController pushViewController:leafTabBarController animated:YES];
