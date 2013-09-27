@@ -20,7 +20,7 @@
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
-@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate, PSIndexControllerDelegate> {
+@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate, PSIndexControllerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 
 	id <PSSearchControllerDelegate> delegate;
 	
@@ -45,6 +45,11 @@
 	NSMutableArray *results;
 	NSArray *savedTablePosition;
 }
+
+@property (retain) UITableView *searchQueryTable;
+@property (retain) UIView *searchQueryView;
+@property (retain) UITableView *searchResultsTable;
+@property (retain) UISearchBar *searchBar;
 
 @property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
 @property (retain, readwrite) NSString *searchTerm;

@@ -21,6 +21,7 @@
 @synthesize searchTerm, searchTermToDisplay, bookName;
 @synthesize delegate;
 @synthesize searchRange, searchType, strongsSearch, fuzzySearch;
+@synthesize searchBar, searchResultsTable, searchQueryView, searchQueryTable;
 
 - (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
 	self = [self init];
@@ -53,10 +54,51 @@
 	return self;
 }
 
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *sqView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	UISearchBar *sqSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
+	sqSB.delegate = self;
+	sqSB.barStyle = UIBarStyleBlack;
+	UITableView *sqTable = [[UITableView alloc] initWithFrame:CGRectMake(0, sqSB.frame.size.height, viewWidth, (viewHeight - sqSB.frame.size.height)) style:UITableViewStyleGrouped];
+	sqTable.delegate = self;
+	sqTable.dataSource = self;
+	[sqView addSubview:sqSB];
+	[sqView addSubview:sqTable];
+	self.searchQueryTable = sqTable;
+	[sqTable release];
+	self.searchBar = sqSB;
+	[sqSB release];
+	self.searchQueryView = sqView;
+	[sqView release];
+	
+	UITableView *srTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) style:UITableViewStylePlain];
+	srTable.delegate = self;
+	srTable.dataSource = self;
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	[baseView addSubview:srTable];
+	self.view = baseView;
+	[baseView release];
+	self.searchResultsTable = srTable;
+	[srTable release];
+	
+}
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
+}
+
 - (void)dealloc {
 	self.results = nil;
 	self.searchTerm = nil;
 	self.savedTablePosition = nil;
+	self.searchQueryTable = nil;
+	self.searchBar = nil;
+	
     [super dealloc];
 }
 
@@ -101,12 +143,6 @@
 - (IBAction)closeButtonPressed {
 	[self notifyDelegateOfNewHistoryItem];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
-}
-
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

@@ -245,7 +245,6 @@
 		056BC73D12F0E8E00029F3A2 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73912F0E8E00029F3A2 /* folder@2x.png */; };
 		056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */; };
 		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */; };
-		056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 056BCC9312F2DE780029F3A2 /* PSSearchController.xib */; };
 		056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */; };
@@ -541,7 +540,6 @@
 		051F22A41737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/Downloader.xib; sourceTree = "<group>"; };
 		051F22A61737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		051F22A71737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
-		051F22A81737347700DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = ar.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		051F22A91737348900DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ar; path = "ar.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "GentiumPlus-R.ttf"; path = "Resources/fonts/GentiumPlus-R.ttf"; sourceTree = "<group>"; };
 		051F22B51737549600DDFF13 /* SILEOT.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SILEOT.ttf; path = Resources/fonts/SILEOT.ttf; sourceTree = "<group>"; };
@@ -975,7 +973,6 @@
 		0567C1AF13FB4D4000B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/Downloader.xib; sourceTree = "<group>"; };
 		0567C1B213FB4D4000B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		0567C1B313FB4D4000B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
-		0567C1B413FB4D4000B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		0567C1C113FB4D8400B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = "de.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		056BBE7D12DD78D50029F3A2 /* PSBookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarks.h; path = Classes/PSBookmarks.h; sourceTree = "<group>"; };
 		056BBE7E12DD78D50029F3A2 /* PSBookmarks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarks.m; path = Classes/PSBookmarks.m; sourceTree = "<group>"; };
@@ -992,19 +989,6 @@
 		056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkTableViewCell.m; path = Classes/PSBookmarkTableViewCell.m; sourceTree = "<group>"; };
 		056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLaunchViewController.h; sourceTree = "<group>"; };
 		056BC97C12F1277E0029F3A2 /* PSLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSLaunchViewController.m; sourceTree = "<group>"; };
-		056BCC9412F2DE780029F3A2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCDF12F2E5CC0029F3A2 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE012F2E5CF0029F3A2 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE112F2E5D20029F3A2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE212F2E5D50029F3A2 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE312F2E5D70029F3A2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE412F2E5DA0029F3A2 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = ko.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE512F2E5DD0029F3A2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE612F2E5E00029F3A2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE712F2E5E30029F3A2 /* sv */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = sv; path = sv.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE812F2E5E60029F3A2 /* uk */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = uk; path = uk.lproj/PSSearchController.xib; sourceTree = "<group>"; };
-		056BCCE912F2E5E90029F3A2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
-		056BCCEA12F2E5EE0029F3A2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/PSSearchController.xib"; sourceTree = "<group>"; };
 		056CD38516BB6D6200AA0674 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
 		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
@@ -1048,7 +1032,6 @@
 		05930F9213E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/Downloader.xib; sourceTree = "<group>"; };
 		05930F9513E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		05930F9613E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
-		05930F9713E8EAEE001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		05930FA413E8EB10001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = "th.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkAddViewController.h; path = Classes/PSBookmarkAddViewController.h; sourceTree = "<group>"; };
 		059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkAddViewController.m; path = Classes/PSBookmarkAddViewController.m; sourceTree = "<group>"; };
@@ -1085,7 +1068,6 @@
 		05BAC371141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/Downloader.xib; sourceTree = "<group>"; };
 		05BAC374141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		05BAC375141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/PSModuleSelectorController.xib; sourceTree = "<group>"; };
-		05BAC376141476B100F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = pt.lproj/PSSearchController.xib; sourceTree = "<group>"; };
 		05BAC383141476CA00F94AD1 /* pt */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt; path = "pt.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		05BCB3FD1147711B00984097 /* popup-top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-top-bar.png"; path = "Resources/popup-top-bar.png"; sourceTree = "<group>"; };
 		05BCB41F11477A9A00984097 /* popup-down-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-down-button.png"; path = "Resources/popup-down-button.png"; sourceTree = "<group>"; };
@@ -2307,7 +2289,6 @@
 				E9A6CFA10FF559F700399E78 /* MainWindow.xib */,
 				0515E2D110C8E32900F58382 /* Downloader.xib */,
 				05DE576D120916E9005A636A /* PSModuleSelectorController.xib */,
-				056BCC9312F2DE780029F3A2 /* PSSearchController.xib */,
 			);
 			name = xibs;
 			sourceTree = "<group>";
@@ -3215,7 +3196,6 @@
 				056BC70F12F0E3F00029F3A2 /* bookmark@2x.png in Resources */,
 				056BC73C12F0E8E00029F3A2 /* folder.png in Resources */,
 				056BC73D12F0E8E00029F3A2 /* folder@2x.png in Resources */,
-				056BCC9612F2DE780029F3A2 /* PSSearchController.xib in Resources */,
 				0516CF24136124CD0058E022 /* MainWindow-iPad.xib in Resources */,
 				05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */,
 				05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */,
@@ -3669,30 +3649,6 @@
 				051F22A91737348900DDFF13 /* ar */,
 			);
 			name = "MainWindow-iPad.xib";
-			sourceTree = "<group>";
-		};
-		056BCC9312F2DE780029F3A2 /* PSSearchController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				056BCC9412F2DE780029F3A2 /* English */,
-				056BCCDF12F2E5CC0029F3A2 /* cs */,
-				056BCCE012F2E5CF0029F3A2 /* es */,
-				056BCCE112F2E5D20029F3A2 /* fr */,
-				056BCCE212F2E5D50029F3A2 /* it */,
-				056BCCE312F2E5D70029F3A2 /* ja */,
-				056BCCE412F2E5DA0029F3A2 /* ko */,
-				056BCCE512F2E5DD0029F3A2 /* nl */,
-				056BCCE612F2E5E00029F3A2 /* ru */,
-				056BCCE712F2E5E30029F3A2 /* sv */,
-				056BCCE812F2E5E60029F3A2 /* uk */,
-				056BCCE912F2E5E90029F3A2 /* zh-Hans */,
-				056BCCEA12F2E5EE0029F3A2 /* zh-Hant */,
-				05930F9713E8EAEE001DEF4E /* th */,
-				0567C1B413FB4D4000B6619D /* de */,
-				05BAC376141476B100F94AD1 /* pt */,
-				051F22A81737347700DDFF13 /* ar */,
-			);
-			name = PSSearchController.xib;
 			sourceTree = "<group>";
 		};
 		05DE576D120916E9005A636A /* PSModuleSelectorController.xib */ = {

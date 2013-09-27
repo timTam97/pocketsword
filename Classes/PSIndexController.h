@@ -8,7 +8,6 @@
 
 #import "MBProgressHUD.h"
 
-@class PSSearchController;
 @class PSIndexController;
 @class SwordModule;
 
