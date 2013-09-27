@@ -174,6 +174,7 @@
 
 - (void)createPicker {
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 260)];
+	baseView.backgroundColor = [UIColor whiteColor];
 	baseView.autoresizingMask = UIViewAutoresizingNone;
 	UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
 	datePicker.datePickerMode = UIDatePickerModeDate;
