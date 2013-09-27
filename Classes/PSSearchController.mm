@@ -59,7 +59,7 @@
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
 	
 	UIView *sqView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	UISearchBar *sqSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
+	UISearchBar *sqSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, viewWidth, 44)];
 	sqSB.delegate = self;
 	sqSB.barStyle = UIBarStyleBlack;
 	UITableView *sqTable = [[UITableView alloc] initWithFrame:CGRectMake(0, sqSB.frame.size.height, viewWidth, (viewHeight - sqSB.frame.size.height)) style:UITableViewStyleGrouped];
@@ -84,12 +84,11 @@
 	self.searchResultsTable = srTable;
 	[srTable release];
 	
-}
-
-- (void)viewDidLoad {
-	[super viewDidLoad];
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
+	
+	searchQueryView.bounds = searchResultsTable.bounds;
+	searchQueryView.center = searchResultsTable.center;
 }
 
 - (void)dealloc {
@@ -204,32 +203,13 @@
 		searchQueryView.center = searchResultsTable.center;
 		[self.view addSubview:searchQueryView];
 	}
-//	if(strongsSearch) {
-//		self.navigationItem.title = NSLocalizedString(@"SearchStrongsTitle", @"");
-//	} else {
-//		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
-//	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		searchResultsTable.backgroundColor = [UIColor blackColor];
 	} else {
 		searchResultsTable.backgroundColor = [UIColor whiteColor];
 	}
-	// TODO: when we rip this view to pieces, this needs to be switched to be:
-	
-	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchResultsTable useStatusBar:YES];
-	//[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:searchQueryView useStatusBar:YES];
 
-//	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
-//	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 480.0, 32.0);
-//		searchBar.frame = CGRectMake(97.0, 0.0, 360.0, 32.0);//396,236
-//		searchResultsTable.frame = CGRectMake(0.0, 32.0, 480.0, 219.0);//219.0 instead of 268.0
-//	} else {
-//		self.navigationController.navigationBar.frame = CGRectMake(0.0, 0.0, 320.0, 44.0);
-//		searchBar.frame = CGRectMake(97.0, 0.0, 200.0, 44.0);//396,236
-//		searchResultsTable.frame = CGRectMake(0.0, 44.0, 320.0, 367.0);//367.0 instead of 416.0 -- removed 49 (tab bar!)
-//	}
 	[self refreshView];
 	if(self.results) {
 		if(self.savedTablePosition && [savedTablePosition count] > 0) {
@@ -839,8 +819,6 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
 	[sBar resignFirstResponder];
 	[self search];
-	//[searchQueryView removeFromSuperview];
-	//[self setSearchTitle];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
@@ -865,65 +843,6 @@
 - (void)searchBarTextDidEndEditing:(UISearchBar *)sBar {
 	[sBar setShowsCancelButton:NO animated:YES];
 }
-
-
-//- (void)hideKeyboard {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	[searchBar resignFirstResponder];
-//	[pool release];
-//}
-
-//- (void)createHelpView {
-//	UIWebView *webView = nil;
-//	UINavigationBar *navBar = nil;
-//	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
-//	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-//	//if(deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationLandscapeRight) {
-//	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 480, 251)];// 320-69
-//		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 480, 212)];//320-113
-//		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 480, 44)];
-//	} else {
-//		helpView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 411)];
-//		webView = [[UIWebView alloc] initWithFrame: CGRectMake(0, 44, 320, 367)];
-//		navBar = [[UINavigationBar alloc] initWithFrame: CGRectMake(0, 0, 320, 44)];
-//		
-//	}
-//	helpView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//	navBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//	NSString *helpHTML = @"<html><body><font face=\"Helvetica\"><dl><dt>loved one</dt><dd>search for verses that contain \"loved\" or \"one\"<br/>NB: this is the same as searching for loved OR one</dd>\n\
-//	<dt>\"loved one\"</dt><dd>search for verses that contain the phrase \"loved one\"</dd>\n\
-//	<dt>love*</dt><dd>search for verses that contain a word starting with \"love\" (love OR loves OR loved OR etc...)</dd>\n\
-//	<dt>loved AND one</dt><dd>search for verses that contains the word \"loved\" and the word \"one\"<br />NB: && can be used in place of AND</dd>\n\
-//	<dt>+loved one</dt><dd>search for verses that must contain \"loved\" and may contain \"one\"</dd>\n\
-//	<dt>loved NOT one</dt><dd>search for verses that contain \"loved\" but not \"one\"</dd>\n\
-//	<dt>(loved one) AND God</dt><dd>search for verses that contain \"loved\" or \"one\" and \"God\"</dd>\n\
-//	</font></body></html>";
-//	[webView loadHTMLString: helpHTML baseURL:nil];
-//	[helpView addSubview: webView];
-//	[webView release];
-//	navBar.barStyle = UIBarStyleBlackOpaque;
-//	UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle: NSLocalizedString(@"SearchHelpTitle", @"Search Help") ];
-//	navItem.rightBarButtonItem = nil;
-//	navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeSearchHelp)] autorelease];
-//	[navBar pushNavigationItem: navItem animated: NO];
-//	[navItem release];
-//	[helpView addSubview: navBar];
-//	[navBar release];
-//}
-
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//	//NSLog(@"rotating...");
-//	if(helpView) {
-//		//NSLog(@"rotating...2");
-//		[helpView removeFromSuperview];
-//		[helpView release];
-//		helpView = nil;
-//		[self createHelpView];
-//		[self.view addSubview:helpView];
-//	}
-//}
 
 - (void)saveTablePositionFromCurrentPosition {
 	if(self.results && [results count] > 0) {
@@ -961,32 +880,5 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 	[searchBar resignFirstResponder];
 }
-
-//- (IBAction)infoButtonPressed:(id)sender {
-//	if(!helpView) {
-//		[self createHelpView];
-//	}
-//    [UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft
-//                           forView:self.view
-//                             cache:YES]; 
-//	
-//    [UIView setAnimationDuration:1];
-//	[self.view addSubview:helpView];
-//    [UIView commitAnimations];
-//}
-
-//- (void)closeSearchHelp {
-//    [UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-//                           forView:self.view
-//                             cache:YES];
-//	
-//    [UIView setAnimationDuration:1];
-//	[helpView removeFromSuperview];
-//    [UIView commitAnimations];
-//	[helpView release];
-//	helpView = nil;
-//}
 
 @end

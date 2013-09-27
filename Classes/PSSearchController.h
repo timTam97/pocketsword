@@ -9,7 +9,6 @@
 #import "globals.h"
 #import "PSIndexController.h"
 #import "MBProgressHUD.h"
-#import "PSResizing.h"
 #import "PSSearchController.h"
 #import "PSSearchOptionTableViewController.h"
 
