@@ -6,16 +6,12 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSModuleController.h"
 #import "MBProgressHUD.h"
 
 @class NavigatorModuleTypes;
 @class iPhoneHTTPServerDelegate;
 
-@interface NavigatorSources : UIViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, MBProgressHUDDelegate> {
-
-	IBOutlet UITableView *table;
-	IBOutlet NavigatorModuleTypes *navigatorModuleTypes;
+@interface NavigatorSources : UITableViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, MBProgressHUDDelegate> {
 	
 	BOOL mmmMenuDisplayed;
 }

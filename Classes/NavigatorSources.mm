@@ -12,6 +12,7 @@
 #import "iPhoneHTTPServerDelegate.h"
 #import "PSResizing.h"
 #import "PSAddSourceViewController.h"
+#import "PSModuleController.h"
 
 @implementation NavigatorSources
 
@@ -103,13 +104,13 @@
 	[hud removeFromSuperview];
 	[hud release];
 	hud = nil;
-	[table reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)resetInstallSourcesListing {
-	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
-	[table deselectRowAtIndexPath:tableSelection animated:YES];
-	[table reloadData];
+	NSIndexPath *tableSelection = [self.tableView indexPathForSelectedRow];
+	[self.tableView deselectRowAtIndexPath:tableSelection animated:YES];
+	[self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -193,6 +194,7 @@
 			});
 		});
 	}
+	NavigatorModuleTypes *navigatorModuleTypes = [[NavigatorModuleTypes alloc] initWithStyle:UITableViewStyleGrouped];
 	[navigatorModuleTypes setDataArray:[sIS moduleListByType]];
 	navigatorModuleTypes.title = [sIS caption];
 	[navigatorModuleTypes reloadTable];
@@ -201,6 +203,7 @@
 	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];
 	
 	[self.navigationController pushViewController:navigatorModuleTypes animated:YES];
+	[navigatorModuleTypes release];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -220,7 +223,7 @@
 	if (buttonIndex == 1) {
 		[[[PSModuleController defaultModuleController] swordInstallManager] setUserDisclainerConfirmed: YES];
 		[self addManualInstallButton];
-		[table reloadData];
+		[self.tableView reloadData];
 		[[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"userDisclaimerAccepted"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}

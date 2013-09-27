@@ -6,15 +6,10 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "NavigatorSources.h"
-#import "PSModuleController.h"
-#import "SwordModule.h"
 
 @class NavigatorLeafView;
 
-@interface NavigatorModules : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
-	IBOutlet UITableView *table;
-	IBOutlet NavigatorLeafView *navigatorLeafView;
+@interface NavigatorModules : UITableViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 	NSArray *dataArray;
 }
 

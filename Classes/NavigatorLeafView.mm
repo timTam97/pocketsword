@@ -8,10 +8,23 @@
 
 #import "NavigatorLeafView.h"
 #import "ViewController.h"
+#import "PSModuleController.h"
+#import "SwordModule.h"
+#import "PSIndexController.h"
+
 
 @implementation NavigatorLeafView
 
-@synthesize module;
+@synthesize module, detailsWebView;
+
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	UIWebView *leafWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	self.view = leafWebView;
+	self.detailsWebView = leafWebView;
+	[leafWebView release];
+}
 
 - (NSString*)refreshInstallButton {
 	UIBarButtonItem *installBarButtonItem;
@@ -45,7 +58,7 @@
     NSString *currentInstalledVersion = [self refreshInstallButton];
 
 	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
-	[detailsView loadHTMLString:about baseURL:nil];
+	[detailsWebView loadHTMLString:about baseURL:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -54,14 +67,14 @@
 	self.navigationItem.rightBarButtonItem = nil;
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
-	[detailsView setBackgroundColor:backgroundColor];
+	[detailsWebView setBackgroundColor:backgroundColor];
     
     [self refreshDetailsView];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDetailsView) name:NotificationModulesChanged object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-	[detailsView loadHTMLString:@"" baseURL:nil];
+	[detailsWebView loadHTMLString:@"" baseURL:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -150,7 +163,7 @@
 	}
 	
 	if(performInstall) {
-		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsView];
+		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsWebView];
 		[PSModuleController queueModuleDownloadItem:dItem];
 		[dItem release];
 		[self refreshInstallButton];

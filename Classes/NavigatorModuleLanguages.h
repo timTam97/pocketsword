@@ -6,12 +6,10 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "NavigatorSources.h"
 @class NavigatorModules;
+@class PSModuleType;
 
-@interface NavigatorModuleLanguages : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
-	IBOutlet UITableView *table;
-	IBOutlet NavigatorModules *navigatorModules;
+@interface NavigatorModuleLanguages : UITableViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 	PSModuleType *data;
 }
 

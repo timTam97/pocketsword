@@ -9,6 +9,9 @@
 #import "NavigatorModules.h"
 #import "NavigatorLeafView.h"
 #import "PSResizing.h"
+#import "NavigatorSources.h"
+#import "PSModuleController.h"
+#import "SwordModule.h"
 
 @implementation NavigatorModules
 
@@ -17,7 +20,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
+	NSIndexPath *tableSelection = [self.tableView indexPathForSelectedRow];
 //	NSMutableArray *modules = [self.dataArray mutableCopy];
 //	BOOL resetArray = NO;
 //	for(int i=0;i<[modules count];i++) {
@@ -30,15 +33,15 @@
 //	if(resetArray)
 //		self.dataArray = modules;
 //	[modules release];
-	[table reloadData];	// populate our table's data
+	[self.tableView reloadData];	// populate our table's data
 	if(tableSelection) {
-		[table selectRowAtIndexPath:tableSelection animated:NO scrollPosition:UITableViewScrollPositionMiddle];
-		[table deselectRowAtIndexPath:tableSelection animated:YES];
+		[self.tableView selectRowAtIndexPath:tableSelection animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+		[self.tableView deselectRowAtIndexPath:tableSelection animated:YES];
 	}
 }
 
 - (void)reloadTable {
-	[table reloadData];
+	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -84,10 +87,10 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-	[navigatorLeafView setModule:(SwordModule*)[dataArray objectAtIndex:indexPath.row]];
-	[self.navigationController pushViewController:navigatorLeafView animated:YES];
-	
+	NavigatorLeafView *leafView = [[NavigatorLeafView alloc] initWithNibName:nil bundle:nil];
+	[leafView setModule:(SwordModule*)[dataArray objectAtIndex:indexPath.row]];
+	[self.navigationController pushViewController:leafView animated:YES];
+	[leafView release];
 }
 
 

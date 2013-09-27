@@ -6,9 +6,11 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import "NavigatorSources.h"
 #import "NavigatorModuleLanguages.h"
 #import "NavigatorModules.h"
 #import "PSResizing.h"
+#import "PSModuleType.h"
 
 @implementation NavigatorModuleLanguages
 
@@ -18,12 +20,12 @@
 {
 	[super viewWillAppear:animated];
 	
-	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
-	[table deselectRowAtIndexPath:tableSelection animated:YES];
+	NSIndexPath *tableSelection = [self.tableView indexPathForSelectedRow];
+	[self.tableView deselectRowAtIndexPath:tableSelection animated:YES];
 }
 
 - (void)reloadTable {
-	[table reloadData];
+	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -60,12 +62,12 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-	[navigatorModules setDataArray:[data.modules objectAtIndex:indexPath.row]];
-	navigatorModules.title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
-	[navigatorModules reloadTable];
-	[self.navigationController pushViewController:navigatorModules animated:YES];
-	
+	NavigatorModules *modulesList = [[NavigatorModules alloc] initWithStyle:UITableViewStyleGrouped];
+	[modulesList setDataArray:[data.modules objectAtIndex:indexPath.row]];
+	modulesList.title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
+	[modulesList reloadTable];
+	[self.navigationController pushViewController:modulesList animated:YES];
+	[modulesList release];
 }
 
 

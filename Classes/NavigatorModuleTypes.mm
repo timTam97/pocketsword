@@ -11,6 +11,8 @@
 #import "NavigatorModuleLanguages.h"
 #import "PSResizing.h"
 #import "PocketSwordAppDelegate.h"
+#import "PSModuleController.h"
+#import "NavigatorSources.h"
 
 // displaying the Module Types
 
@@ -36,12 +38,12 @@
 	[super viewWillAppear:animated];
 	[self updateRefreshButton:YES];
 	
-	NSIndexPath *tableSelection = [table indexPathForSelectedRow];
-	[table deselectRowAtIndexPath:tableSelection animated:YES];
+	NSIndexPath *tableSelection = [self.tableView indexPathForSelectedRow];
+	[self.tableView deselectRowAtIndexPath:tableSelection animated:YES];
 }
 
 - (void)reloadTable {
-	[table reloadData];
+	[self.tableView reloadData];
 }
 
 
@@ -97,11 +99,12 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[navigatorModuleLanguages setData:[dataArray objectAtIndex:indexPath.row]];
-	navigatorModuleLanguages.title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
-	[navigatorModuleLanguages reloadTable];
-	[self.navigationController pushViewController:navigatorModuleLanguages animated:YES];
-	
+	NavigatorModuleLanguages *moduleLanguages = [[NavigatorModuleLanguages alloc] initWithStyle:UITableViewStyleGrouped];
+	[moduleLanguages setData:[dataArray objectAtIndex:indexPath.row]];
+	moduleLanguages.title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
+	[moduleLanguages reloadTable];
+	[self.navigationController pushViewController:moduleLanguages animated:YES];
+	[moduleLanguages release];
 }
 
 - (IBAction)cancelRefreshDownloadSource {
@@ -225,7 +228,7 @@
 	}
 	[self setDataArray:[sIS moduleListByType]];
 	//self.title = [sIS caption];
-	[self reloadTable];
+	[self.tableView reloadData];
 	
 	// need to set the current install source, for when we want to install a module.
 	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];

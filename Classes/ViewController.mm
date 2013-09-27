@@ -120,7 +120,7 @@ bool ps_viewcontroller_initialized = false;
 		[dictionaryViewController release];
 		[dictionaryTab release];
 		
-		//add our customized bookmarks tab:
+		//add the bookmarks tab:
 		[PSBookmarks importBookmarksFromV2];
 		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController *bookmarksTab = [[UINavigationController alloc] initWithRootViewController:bookmarksViewController];
@@ -135,6 +135,31 @@ bool ps_viewcontroller_initialized = false;
 		tabs = nil;
 		[bookmarksViewController release];
 		[bookmarksTab release];
+		
+		//add the Downloads tab at index 5
+		NavigatorSources *downloadsViewController = [[NavigatorSources alloc] initWithStyle:UITableViewStyleGrouped];
+		UINavigationController *downloadsIPadTab;
+		UITabBarItem *downloadsTabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemDownloads tag:5];
+		if([PSResizing iPad]) {
+			downloadsIPadTab = [[UINavigationController alloc] initWithRootViewController:downloadsViewController];
+			downloadsIPadTab.navigationBar.barStyle = UIBarStyleBlack;
+			downloadsIPadTab.tabBarItem = downloadsTabBarItem;
+		} else {
+			downloadsViewController.tabBarItem = downloadsTabBarItem;
+		}
+		[downloadsTabBarItem release];
+		tabs = [tabController.viewControllers mutableCopy];
+		if([PSResizing iPad]) {
+			[tabs insertObject:downloadsIPadTab atIndex:5];
+			[downloadsIPadTab release];
+		} else {
+			[tabs insertObject:downloadsViewController atIndex:5];
+		}
+		[tabController setViewControllers:tabs animated:NO];
+		[tabs release];
+		tabs = nil;
+		[downloadsViewController release];
+		
 				
 		tabController.customizableViewControllers = nil;
 		
