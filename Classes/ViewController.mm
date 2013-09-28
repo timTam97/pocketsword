@@ -514,42 +514,35 @@ bool ps_viewcontroller_initialized = false;
 	} else {
 		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil] autorelease];
 		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
-		modSelectorNavController.navigationBarHidden = YES;
+		//modSelectorNavController.navigationBarHidden = YES;
+		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;
+		//modSelectorNavController.toolbarHidden = NO;
 		[moduleSelectorViewController setParentTabBarController:tabController];
 
-		if(swordModule) {
-			moduleSelectorViewController.moduleToView = swordModule;
-			[moduleSelectorViewController setListType:BibleTab];
-			if(iPad) {
-				[tabController presentModalViewController:modSelectorNavController animated:animated];
-			}
-		} else {
-			moduleSelectorViewController.moduleToView = nil;
-			if(iPad) {
-				popoverController = [[UIPopoverController alloc] initWithContentViewController:modSelectorNavController];
-				[popoverController setDelegate:self];
-			}
-			//set the module selector to use the correct module type.
-			if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
-				[moduleSelectorViewController setListType:BibleTab];
-				[popoverController presentPopoverFromBarButtonItem:bibleTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
-				[moduleSelectorViewController setListType:CommentaryTab];
-				[popoverController presentPopoverFromBarButtonItem:commentaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
-				[moduleSelectorViewController setListType:DevotionalTab];
-				[popoverController presentPopoverFromBarButtonItem:devotionalTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			} else {
-				[moduleSelectorViewController setListType:DictionaryTab];
-			}
-			if(sender) {
-				[popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			} else {
-				CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
-				[popoverController presentPopoverFromRect:theSpot inView:tabController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			}
-
+		if(iPad) {
+			popoverController = [[UIPopoverController alloc] initWithContentViewController:modSelectorNavController];
+			[popoverController setDelegate:self];
 		}
+		//set the module selector to use the correct module type.
+		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
+			[moduleSelectorViewController setListType:BibleTab];
+			[popoverController presentPopoverFromBarButtonItem:bibleTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+			[moduleSelectorViewController setListType:CommentaryTab];
+			[popoverController presentPopoverFromBarButtonItem:commentaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
+			[moduleSelectorViewController setListType:DevotionalTab];
+			[popoverController presentPopoverFromBarButtonItem:devotionalTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		} else {
+			[moduleSelectorViewController setListType:DictionaryTab];
+		}
+		if(sender) {
+			[popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		} else {
+			CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
+			[popoverController presentPopoverFromRect:theSpot inView:tabController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		}
+
 		if(!iPad) {
 			[tabController presentModalViewController:modSelectorNavController animated:animated];
 		} else {

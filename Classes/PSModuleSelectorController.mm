@@ -12,34 +12,28 @@
 #import "PSHistoryController.h"
 #import "PSResizing.h"
 #import "PocketSwordAppDelegate.h"
+#import "PSModuleLeafViewController.h"
+#import "SwordModule.h"
 
 @implementation PSModuleSelectorController
 
-@synthesize listType, moduleToView, parentTabBarController;
-//@synthesize reloadModuleViews;
+@synthesize listType, parentTabBarController;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	//reloadModuleViews = NO;
-	//modulesCloseButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
 	if([PSResizing iPad]) {
 		return;
 	}
 	UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
-	modulesNavigationItem.leftBarButtonItem = modulesCloseButton;
+	self.navigationItem.leftBarButtonItem = modulesCloseButton;
 	[modulesCloseButton release];
 	UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
-	modulesNavigationItem.rightBarButtonItem = modulesAddButton;
+	self.navigationItem.rightBarButtonItem = modulesAddButton;
 	[modulesAddButton release];
 }
 
 - (void)dealloc {
-	self.moduleToView = nil;
 	[super dealloc];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -52,15 +46,10 @@
 		modulesListTable.backgroundColor = [UIColor whiteColor];
 	}
 	
-	if([PSResizing iPad]) {
-		//for the iPad, we don't resize...
-	} else {
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar useStatusBar:YES];
-	}
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	if([self listType] == BibleTab) {
-		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"")];
+		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_BIBLES, @"");
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_BIBLES];
 		moduleCount = [array count];
 		int pos = 0;
@@ -73,7 +62,7 @@
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}			
 	} else if([self listType] == CommentaryTab) {
-		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"")];
+		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_COMMENTARIES, @"");
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES];
 		moduleCount = [array count];
 		int pos = 0;
@@ -86,7 +75,7 @@
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}
 	} else if([self listType] == DevotionalTab) {
-		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"")];
+		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"");
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
 		moduleCount = [array count];
 		int pos = 0;
@@ -99,7 +88,7 @@
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}
 	} else {
-		[modulesNavigationItem setTitle: NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"")];
+		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"");
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
 		moduleCount = [array count];
 		int pos = 0;
@@ -112,43 +101,19 @@
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}			
 	}
-	if(self.moduleToView) {
-		[leafViewController displayInfoForModule:self.moduleToView];
-		//[self presentModalViewController:leafTabBarController animated:NO];
-		[leafTabBarController setSelectedIndex:1];
-		[self.navigationController pushViewController:leafTabBarController animated:NO];
-	} else {
-		//reloadModuleViews = NO;
-		[modulesListTable reloadData];
-		if(ip) {
-			[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
-		}
-		[self addButtonsToToolbar:NO];
+	[modulesListTable reloadData];
+	if(ip) {
+		[modulesListTable scrollToRowAtIndexPath: ip atScrollPosition: UITableViewScrollPositionMiddle animated:NO];
 	}
+	[self addButtonsToToolbar:NO];
 	
 	if([self respondsToSelector:@selector(contentSizeForViewInPopover)]) {
 		CGFloat height = 0.0;
 		height += modulesToolbar.frame.size.height;
-		height += modulesNavigationBar.frame.size.height;
+		height += self.navigationController.navigationBar.frame.size.height;
 		height += moduleCount * 44.0;
 		self.contentSizeForViewInPopover = CGSizeMake(540.0, height);
 	}
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if([PSResizing iPad]) {
-		//for the iPad, we don't resize...
-		return;
-	}
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:modulesNavigationBar mainView:modulesListTable bottomBar:modulesToolbar fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-//	if([PSResizing iPad]) {
-//		if(reloadModuleViews) {
-//			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//		}
-//	}
 }
 
 - (IBAction)addModuleButtonPressed {
@@ -259,9 +224,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
-	//NSString *ref = [[PSModuleController defaultModuleController] getCurrentBibleRef];
+
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
 	if(([moduleController primaryBible] && [newModule isEqualToString:[[moduleController primaryBible] name]]) || ([moduleController primaryCommentary] && [newModule isEqualToString:[[moduleController primaryCommentary] name]]) || ([moduleController primaryDictionary] && [newModule isEqualToString:[[moduleController primaryDictionary] name]])) {
@@ -276,10 +239,7 @@
 	switch (listType) {
 		case BibleTab:
 			[moduleController loadPrimaryBible: newModule];
-			//[[moduleController viewController] displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			//[[moduleController viewController] addHistoryItem: BibleTab];
-			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			[PSHistoryController addHistoryItem:BibleTab];
 			if([[moduleController primaryBible] isLocked])
 				locked = YES;
@@ -287,8 +247,6 @@
 		case CommentaryTab:
 			[moduleController loadPrimaryCommentary:newModule];
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
 			[PSHistoryController addHistoryItem:CommentaryTab];
 			if([[moduleController primaryCommentary] isLocked])
 				locked = YES;
@@ -298,8 +256,6 @@
 			if(iPad) {
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
 			}
-			//[[moduleController viewController] reloadDictionaryData];
-			//[[moduleController viewController] displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 			if([[moduleController primaryDictionary] isLocked])
 				locked = YES;
 			break;
@@ -327,7 +283,6 @@
 		[[PSModuleController defaultModuleController] removeModule: module];
 		if(listType == DictionaryTab) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
-			//[[[PSModuleController defaultModuleController] viewController] reloadDictionaryData];
 		}
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 	}
@@ -338,12 +293,9 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	[leafViewController displayInfoForModule:mod];
-	if([PSResizing iPad]) {
-		[self dismissModuleSelector];
-		[parentTabBarController presentModalViewController:leafTabBarController animated:YES];
-	} else {
-		[self.navigationController pushViewController:leafTabBarController animated:YES];
-	}
+	[preferencesViewController displayPrefsForModule:mod];
+	leafTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
+	[self.navigationController pushViewController:leafTabBarController animated:YES];
 }
 
 // Override to allow orientations other than the default portrait orientation.

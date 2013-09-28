@@ -11,12 +11,12 @@
 
 //sections
 #define DISPLAY_SECTION		0
-#define MODULE_SECTION		4
+#define MODULE_SECTION		444
 #define STRONGS_SECTION		1
 #define MORPH_SECTION		2
 #define LANG_SECTION		44
 #define DEVICE_SECTION		3
-#define PREF__SECTIONS		5//total sections in table
+#define PREF__SECTIONS		4//total sections in table
 
 //rows in DISPLAY section
 #define FONT_SIZE_ROW		0
@@ -377,7 +377,8 @@
 				case FONT_NAME_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
-					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				}
 					break;
 				case NIGHT_MODE_ROW :
@@ -507,13 +508,15 @@
 				case STRONGS_G_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
-					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				}
 					break;
 				case STRONGS_H_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewModuleTitle", @"Hebrew module");
-					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				}
 					break;
 			}
@@ -536,13 +539,15 @@
 				case MORPH_G_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
-					cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				}
 					break;
 //                    case MORPH_H_ROW :
 //					{
 //						cell.textLabel.text = NSLocalizedString(@"PreferencesStrongsHebrewTitle", @"Strong's Hebrew module");
-//						cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+//						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//						cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 //					}
 //						break;
 			}
@@ -738,13 +743,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section == MODULE_SECTION) {
-		// only respond if this is a module.
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row]];
-	}
-}
-
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 
 	switch (indexPath.section) {
 		case DISPLAY_SECTION :
@@ -795,6 +793,11 @@
 				}
 					break;
 			}
+			break;
+		case MODULE_SECTION:
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row]];
+		}
 			break;
 	}
 }

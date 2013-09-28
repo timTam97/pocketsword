@@ -57,7 +57,7 @@
 - (void)refreshDetailsView {
     NSString *currentInstalledVersion = [self refreshInstallButton];
 
-	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
+	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
 	[detailsWebView loadHTMLString:about baseURL:nil];
 }
 

@@ -61,7 +61,7 @@
 + (void)releaseDefaultModuleController;
 
 + (NSString *)createInfoHTMLString:(NSString*)body usingModuleForPreferences:(NSString*)moduleName;
-+ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName;
++ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName fixedWidth:(BOOL)fixedWidth;
 + (NSString *)createRefString:(NSString*)ref;
 + (NSString*)createTitleRefString:(NSString *)newTitle;
 + (BOOL)checkNetworkConnection;

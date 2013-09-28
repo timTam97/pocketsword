@@ -13,11 +13,7 @@
 
 @interface PSModulePreferencesController : PSBasePreferencesController {
 	
-	IBOutlet UITabBarItem		*preferencesTabBarItem;
 	IBOutlet UITableView		*preferencesTable;
-	IBOutlet UINavigationBar	*preferencesNavigationBar;
-	IBOutlet UINavigationItem	*preferencesNavigationItem;
-	IBOutlet UIBarButtonItem	*closeButton;
 	
 	UILabel *fontSizeLabel;
 

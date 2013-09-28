@@ -6,19 +6,21 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSModuleLeafViewController.h"
-#import "SwordModule.h"
+#import "globals.h"
+#import "MBProgressHUD.h"
 
-@interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate> {
+@class PSModuleLeafViewController;
+@class PSModulePreferencesController;
+@class SwordModule;
+
+@interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
 	ShownTab listType;
-	SwordModule *moduleToView;
 	UITabBarController			*parentTabBarController;
 	IBOutlet PSModuleLeafViewController *leafViewController;
+	IBOutlet PSModulePreferencesController *preferencesViewController;
 	IBOutlet UITabBarController *leafTabBarController;
 
 	IBOutlet UITableView		*modulesListTable;
-	IBOutlet UINavigationItem	*modulesNavigationItem;
-	IBOutlet UINavigationBar	*modulesNavigationBar;
 	
 	IBOutlet UIToolbar			*modulesToolbar;
 	
@@ -26,7 +28,6 @@
 }
 
 @property (assign) ShownTab listType;
-@property (retain, readwrite) SwordModule *moduleToView;
 @property (assign) UITabBarController *parentTabBarController;
 //@property (assign) BOOL reloadModuleViews;
 

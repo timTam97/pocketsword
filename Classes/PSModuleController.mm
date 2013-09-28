@@ -202,7 +202,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (id)init {
 	self = [super init];
 	if(self) {
-		DLog(@"[PSModuleController init]");
+		//DLog(@"[PSModuleController init]");
 		installationProgress = 0.0;
 		
 		//migration of modules, for v1.3.0: will allow backup of modules with iTunes sync...
@@ -884,7 +884,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self reloadLastBible];
 		
 		if (!primaryBible) {
-			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
+			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 	}
@@ -904,7 +904,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self reloadLastCommentary];
 		
 		if (!primaryCommentary) {
-			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
+			return [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
 	}
@@ -957,11 +957,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 + (NSString *)createInfoHTMLString:(NSString*)body usingModuleForPreferences:(NSString*)moduleName {
-	return [PSModuleController createHTMLString:body usingPreferences:YES withJS:@"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>" usingModuleForPreferences:moduleName];
+	return [PSModuleController createHTMLString:body usingPreferences:YES withJS:@"<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>" usingModuleForPreferences:moduleName fixedWidth:YES];
 }
 
 // allows you to add extra javascript into the <head> html object.
-+ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName
++ (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName fixedWidth:(BOOL)fixedWidth
 {
 	NSString *fontName = PSDefaultFontName;
 	NSString *fontSize = @"14";
@@ -1031,6 +1031,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}
 		}
 	}
+	
+	static NSString *viewportString = @"<meta name='viewport' content='width=device-width' />\n";
 
 	NSMutableString *returnString = [NSMutableString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 									 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n\
@@ -1040,10 +1042,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 									 xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n\
 									 xml:lang=\"en\" >\n\
 									 <head>\n\
-									 <meta name='viewport' content='width=device-width' />\n\
+									 %@\
 									 <style type=\"text/css\">\n\
 									 html { -webkit-text-size-adjust: none; /* Never autoresize text */ }\n\
 									 body { color: %@; background-color: %@; font-size: %@pt; font-family: %@; line-height: %@; %@ }\n\"",
+											((fixedWidth) ? viewportString: @""),
 											fontColor, backgroundColor,		 fontSize,		  fontName,		   lineHeight,	iPadPadding];
 	
 	[returnString appendFormat:@"i.transChangeAdded { color: gray; }\n\

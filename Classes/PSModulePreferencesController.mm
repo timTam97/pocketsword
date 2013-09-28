@@ -8,34 +8,19 @@
 
 #import "PSBasePreferencesController.h"
 #import "PSModulePreferencesController.h"
-//#import "ViewController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
 
 
 @implementation PSModulePreferencesController
 
-//BOOL requireReloadOfModuleView = NO;
-
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	//preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
-	//self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	fontSizeLabel.textColor = [UIColor darkTextColor];
 	fontSizeLabel.text = @"12";
 	fontSizeLabel.backgroundColor = [UIColor clearColor];
-	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-//	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:preferencesNavigationBar mainView:preferencesTable useStatusBar:YES];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:preferencesNavigationBar mainView:preferencesTable fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -45,15 +30,14 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-//	if(requireReloadOfModuleView) {
-//		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-//	}
-//	requireReloadOfModuleView = NO;
 }
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule {
 	//set title to the module name
-	preferencesNavigationItem.title = [swordModule name];
+	self.tabBarController.navigationItem.title = [swordModule name];
+	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ %@", [swordModule name], NSLocalizedString(@"TabBarTitlePreferences", @"")] image:[UIImage imageNamed:@"gear-24.png"] tag:101];
+	self.tabBarItem = tbi;
+	[tbi release];
 	
 	// init sections
 	DisplaySection = ModuleSection = StrongsSection = MorphSection = LangSection = -1;
@@ -68,14 +52,14 @@
 	// Display section:
 	DisplaySection = Sections++;
 	FontDefaultsRow = DisplayRows++;
-	BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
+	BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, self.tabBarController.navigationItem.title);
 	if(fontDefaults) {
 		FontSizeRow = DisplayRows++;
 		FontNameRow = DisplayRows++;
 	}
 	
 	// Module section:
-	//always show the VPL option.
+	//always show the VPL option for Bibles
 	if([swordModule type] == bible) {
 		VPLRow = ModuleRows++;
 	}
@@ -91,6 +75,9 @@
 	if([swordModule hasFeature: SWMOD_FEATURE_REDLETTERWORDS]) {
 		RedLetterRow = ModuleRows++;
 	}
+//	if([swordModule hasFeature: SWMOD_FEATURE_VARIANTS]) {
+//		not currently supported in PocketSword
+//	}
 	if(ModuleRows > 0) {
 		ModuleSection = Sections++;
 	}
@@ -124,8 +111,6 @@
 		LangSection = Sections++;
 	}
 	
-	//	if([swordModule hasFeature: SWMOD_FEATURE_VARIANTS]) //not currently supported in PocketSword
-	//		{}
 	//	if([swordModule hasFeature: SWMOD_FEATURE_LEMMA])
 	//		[featuresAboutString appendFormat: @"&#8226; %@<br />", NSLocalizedString(@"AboutModuleContainsLemma", @"")];
 	
@@ -154,7 +139,6 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	[preferencesTable reloadData];
-	//[preferencesTable reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, PREF__SECTIONS)] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -190,37 +174,6 @@
 	else
 		return @"";
 }
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//	switch (indexPath.section) {
-//		case DISPLAY_SECTION :
-//			switch (indexPath.row) {
-//				case FULLSCREEN_NOTE_ROW :
-//					return 75;
-//				default :
-//					return 45;
-//			}
-//			break;
-//		case MODULE_SECTION :
-//			switch (indexPath.row) {
-//				case RED_LETTER_NOTE_ROW :
-//					return 38;
-//				default :
-//					return 45;
-//			}
-//			break;
-//		case DEVICE_SECTION :
-//			switch (indexPath.row) {
-//				case MMM_NOTE_ROW :
-//					return 110;
-//				default :
-//					return 45;
-//			}
-//			break;
-//	}
-	return 45;
-}
-
 
 // yes, this method is kinda out of control.  *sigh*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -298,8 +251,7 @@
 	
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.accessoryType = UITableViewCellAccessoryNone;
-	//cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];//[UIFont systemFontOfSize:12.0];
+	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
 	cell.textLabel.textColor = [UIColor darkTextColor];
 	
 	CGFloat xx = 0.0;
@@ -312,7 +264,7 @@
 		}
 	}
 	if(deviceIsPad) {
-		xx += 420.0;
+		xx += 220.0;//was 420.0 before we moved this to the popover...
 	}
 	
 	if(resetCell) {
@@ -324,32 +276,30 @@
 	}
 	
 	if(indexPath.section == DisplaySection) {
+		
 		if(indexPath.row == FontDefaultsRow) {
 			UISwitch *fontDefaultsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
+			BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, self.tabBarController.navigationItem.title);
 			fontDefaultsSwitch.on = fontDefaults;
-			//vplSwitch.tag = 4;
 			[fontDefaultsSwitch addTarget:self action:@selector(fontDefaultsChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: fontDefaultsSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesFontDefaultTitle", @"Verse Per Line");
 			[fontDefaultsSwitch release];						
 		} else if(indexPath.row == FontSizeRow) {
 			UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
-			//fontSizeSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 			fontSizeSlider.minimumValue = 10.0;
 			fontSizeSlider.maximumValue = 20.0;
-			NSInteger fontSize = GetIntegerPrefForMod(DefaultsFontSizePreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
+			NSInteger fontSize = GetIntegerPrefForMod(DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 			if(fontSize != 0) {//defaults default to 0 if it's not previously set...
 				fontSizeSlider.value = (float)fontSize;
 			} else {
 				fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 				if(fontSize != 0) {
 					fontSizeSlider.value = (float)fontSize;
-					SetIntegerPrefForMod(fontSize, DefaultsFontSizePreference, preferencesNavigationItem.title);
+					SetIntegerPrefForMod(fontSize, DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 				} else {
 					fontSizeSlider.value = 12.0;
-					SetIntegerPrefForMod(12, DefaultsFontSizePreference, preferencesNavigationItem.title);
+					SetIntegerPrefForMod(12, DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 					[[NSUserDefaults standardUserDefaults] setInteger:12 forKey:DefaultsFontSizePreference];
 					[[NSUserDefaults standardUserDefaults] synchronize];
 				}
@@ -359,111 +309,108 @@
 			[ cell addSubview: fontSizeSlider ];
 			[ fontSizeSlider release ];
 
-			//NSInteger fontSize = GetIntegerPrefForMod(DefaultsFontSizePreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
-			//cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
 			cell.textLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size")];
 			fontSizeLabel.text = [NSString stringWithFormat:@"%d", fontSize];
 		} else if(indexPath.row == FontNameRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-			NSString *font = GetStringPrefForMod(DefaultsFontNamePreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] stringForKey:DefaultsFontNamePreference];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			NSString *font = GetStringPrefForMod(DefaultsFontNamePreference, self.tabBarController.navigationItem.title);
 			if(!font)
 				font = PSDefaultFontName;
 			cell.detailTextLabel.text = font;
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 		}
+		
 	} else if(indexPath.section == ModuleSection) {
+		
 		if(indexPath.row == VPLRow) {
 			UISwitch *vplSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//vplSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsVPLPreference];
+			BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, self.tabBarController.navigationItem.title);
 			vplSwitch.on = vpl;
-			//vplSwitch.tag = 4;
 			[vplSwitch addTarget:self action:@selector(vplChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: vplSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
 			[vplSwitch release];						
 		} else if(indexPath.row == XrefRow) {
-			UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-			//xrefSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL xrefMode = GetBoolPrefForMod(DefaultsScriptRefsPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsScriptRefsPreference];
+			UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+			BOOL xrefMode = GetBoolPrefForMod(DefaultsScriptRefsPreference, self.tabBarController.navigationItem.title);
 			xrefSwitch.on = xrefMode;
 			[xrefSwitch addTarget:self action:@selector(xrefChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: xrefSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
 			[xrefSwitch release];
 		} else if(indexPath.row == FootnotesRow) {
-			UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-			//footnotesSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL footnotesMode = GetBoolPrefForMod(DefaultsFootnotesPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFootnotesPreference];
+			UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+			BOOL footnotesMode = GetBoolPrefForMod(DefaultsFootnotesPreference, self.tabBarController.navigationItem.title);
 			footnotesSwitch.on = footnotesMode;
 			[footnotesSwitch addTarget:self action:@selector(footnotesChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: footnotesSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
 			[footnotesSwitch release];
 		} else if(indexPath.row == HeadingsRow) {
-			UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-			//headingsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL headingsMode = GetBoolPrefForMod(DefaultsHeadingsPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHeadingsPreference];
+			UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+			BOOL headingsMode = GetBoolPrefForMod(DefaultsHeadingsPreference, self.tabBarController.navigationItem.title);
 			headingsSwitch.on = headingsMode;
 			[headingsSwitch addTarget:self action:@selector(headingsChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: headingsSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
 			[headingsSwitch release];
 		} else if(indexPath.row == RedLetterRow) {
-			UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];//x,y,width,height
-			//redLetterModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL redLetterMode = GetBoolPrefForMod(DefaultsRedLetterPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsRedLetterPreference];
+			UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
+			BOOL redLetterMode = GetBoolPrefForMod(DefaultsRedLetterPreference, self.tabBarController.navigationItem.title);
 			redLetterModeSwitch.on = redLetterMode;
-			//redLetterModeSwitch.tag = 2;
 			[redLetterModeSwitch addTarget:self action:@selector(redLetterChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: redLetterModeSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterTitle", @"Red Letter");
 			[redLetterModeSwitch release];
 		}
+		
 	} else if(indexPath.section == StrongsSection) {
+		
 		if(indexPath.row == StrongsToggleRow) {
 			UISwitch *strongsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//strongsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL displayStrongs = GetBoolPrefForMod(DefaultsStrongsPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsStrongsPreference];
+			BOOL displayStrongs = GetBoolPrefForMod(DefaultsStrongsPreference, self.tabBarController.navigationItem.title);
 			strongsSwitch.on = displayStrongs;
-			//strongsSwitch.tag = 9;
 			[strongsSwitch addTarget:self action:@selector(displayStrongsChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: strongsSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
 			[strongsSwitch release];						
 		} else if(indexPath.row == StrongsGreekRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-			NSString *module = GetStringPrefForMod(DefaultsStrongsGreekModule, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsGreekModule];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			NSString *module = GetStringPrefForMod(DefaultsStrongsGreekModule, self.tabBarController.navigationItem.title);
 			if(!module)
 				module = NSLocalizedString(@"None", @"None");
 			cell.detailTextLabel.text = module;
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 		} else if(indexPath.row == StrongsHebrewRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewModuleTitle", @"Hebrew module");
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-			NSString *module = GetStringPrefForMod(DefaultsStrongsHebrewModule, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsHebrewModule];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			NSString *module = GetStringPrefForMod(DefaultsStrongsHebrewModule, self.tabBarController.navigationItem.title);
 			if(!module)
 				module = NSLocalizedString(@"None", @"None");
 			cell.detailTextLabel.text = module;
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
 		}
+		
 	} else if(indexPath.section == MorphSection) {
+		
 		if(indexPath.row == MorphToggleRow) {
 			UISwitch *morphSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//morphSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL displayMorph = GetBoolPrefForMod(DefaultsMorphPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsMorphPreference];
+			BOOL displayMorph = GetBoolPrefForMod(DefaultsMorphPreference, self.tabBarController.navigationItem.title);
 			morphSwitch.on = displayMorph;
-			//morphSwitch.tag = 9;
 			[morphSwitch addTarget:self action:@selector(displayMorphChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: morphSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
 			[morphSwitch release];						
 		} else if(indexPath.row == MorphGreekRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-			NSString *module = GetStringPrefForMod(DefaultsMorphGreekModule, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] stringForKey:DefaultsMorphGreekModule];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			NSString *module = GetStringPrefForMod(DefaultsMorphGreekModule, self.tabBarController.navigationItem.title);
 			if(!module)
 				module = NSLocalizedString(@"None", @"None");
 			cell.detailTextLabel.text = module;
@@ -472,26 +419,25 @@
 //      else if(indexPath.row == MORPH_H_ROW)
 //		{
 //			cell.textLabel.text = NSLocalizedString(@"PreferencesStrongsHebrewTitle", @"Strong's Hebrew module");
-//			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+//			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 //			asdf;
 //		}
+		
 	} else if(indexPath.section == LangSection) {
+		
 		if(indexPath.row == LangGreekAccentsRow) {
 			UISwitch *greekAccentsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//greekAccentsSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL displayGreekAccents = GetBoolPrefForMod(DefaultsGreekAccentsPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsGreekAccentsPreference];
+			BOOL displayGreekAccents = GetBoolPrefForMod(DefaultsGreekAccentsPreference, self.tabBarController.navigationItem.title);
 			greekAccentsSwitch.on = displayGreekAccents;
-			//greekAccentsSwitch.tag = 9;
 			[greekAccentsSwitch addTarget:self action:@selector(displayGreekAccentsChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: greekAccentsSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesGreekAccentsTitle", @"Greek Accents");
 			[greekAccentsSwitch release];
 		} else if(indexPath.row == LangHebrewPointsRow) {
 			UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//hvpSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL displayHVP = GetBoolPrefForMod(DefaultsHVPPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHVPPreference];
+			BOOL displayHVP = GetBoolPrefForMod(DefaultsHVPPreference, self.tabBarController.navigationItem.title);
 			hvpSwitch.on = displayHVP;
-			//hvpSwitch.tag = 9;
 			[hvpSwitch addTarget:self action:@selector(displayHVPChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: hvpSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
@@ -499,28 +445,31 @@
 			[hvpSwitch release];
 		} else if(indexPath.row == LangHebrewCantillationRow)	{
 			UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-			//hebrewCantillationSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			BOOL displayHebrewCantillation = GetBoolPrefForMod(DefaultsHebrewCantillationPreference, preferencesNavigationItem.title);//[[NSUserDefaults standardUserDefaults] boolForKey:DefaultsHebrewCantillationPreference];
+			BOOL displayHebrewCantillation = GetBoolPrefForMod(DefaultsHebrewCantillationPreference, self.tabBarController.navigationItem.title);
 			hebrewCantillationSwitch.on = displayHebrewCantillation;
-			//hebrewCantillationSwitch.tag = 9;
 			[hebrewCantillationSwitch addTarget:self action:@selector(displayHebrewCantillationChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: hebrewCantillationSwitch ];
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewCantillationTitle", @"Hebrew Cantillation");
 			[hebrewCantillationSwitch release];						
 		}
+		
 	}
 		
 	return cell;				
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section == DisplaySection && indexPath.row == FontNameRow) {
+		
 		PSPreferencesFontTableViewController *fontTableViewController = [[PSPreferencesFontTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-		fontTableViewController.moduleName = preferencesNavigationItem.title;
+		fontTableViewController.moduleName = self.tabBarController.navigationItem.title;
 		fontTableViewController.preferencesController = self;
-		[self presentModalViewController:fontTableViewController animated:YES];
+		[self.navigationController pushViewController:fontTableViewController animated:YES];
+		//[self presentModalViewController:fontTableViewController animated:YES];
 		[fontTableViewController release];
+		
 	} else if(indexPath.section == StrongsSection) {
+		
 		if(indexPath.row == StrongsGreekRow) {
 			//strongs greek
 			//[moduleSelectorTableViewController setTableType: StrongsGreek];
@@ -530,20 +479,24 @@
 			//[moduleSelectorTableViewController setTableType: StrongsHebrew];
 			//[self.tabBarController.moreNavigationController pushViewController:moduleSelectorTableViewController animated:YES];
 		}
+		
 	} else if(indexPath.section == MorphSection && indexPath.row == MorphGreekRow) {
+		
 		//greek morphology
 		//[moduleSelectorTableViewController setTableType: MorphGreek];
 		//[self.tabBarController.moreNavigationController pushViewController:moduleSelectorTableViewController animated:YES];
+		
 	}
 }
 
 - (void)hideFontTableView {
-	[self dismissModalViewControllerAnimated:YES];
+	[self.navigationController popViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)fontDefaultsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsFontDefaultsPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsFontDefaultsPreference, self.tabBarController.navigationItem.title);
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	if(n) {
 		// we now need to add the additional rows
@@ -560,8 +513,8 @@
 		DisplayRows -= 2;
 		FontSizeRow = -1;
 		FontNameRow = -1;
-		RemovePrefForMod(DefaultsFontSizePreference, preferencesNavigationItem.title);
-		RemovePrefForMod(DefaultsFontNamePreference, preferencesNavigationItem.title);
+		RemovePrefForMod(DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
+		RemovePrefForMod(DefaultsFontNamePreference, self.tabBarController.navigationItem.title);
 		[preferencesTable deleteRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	}
@@ -569,7 +522,7 @@
 
 - (void)displayStrongsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsStrongsPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsStrongsPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsStrongsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -578,7 +531,7 @@
 
 - (void)displayMorphChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsMorphPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsMorphPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsMorphPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -587,7 +540,7 @@
 
 - (void)displayGreekAccentsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsGreekAccentsPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsGreekAccentsPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsGreekAccentsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -596,7 +549,7 @@
 
 - (void)displayHVPChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsHVPPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsHVPPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHVPPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -605,7 +558,7 @@
 
 - (void)displayHebrewCantillationChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsHebrewCantillationPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsHebrewCantillationPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHebrewCantillationPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -632,7 +585,7 @@
 
 - (void)xrefChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsScriptRefsPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsScriptRefsPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsScriptRefsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -641,7 +594,7 @@
 
 - (void)footnotesChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsFootnotesPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsFootnotesPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsFootnotesPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -650,7 +603,7 @@
 
 - (void)headingsChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsHeadingsPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsHeadingsPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHeadingsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -659,7 +612,7 @@
 
 - (void)fontSizeChanged:(UISlider *)sender {
 	NSInteger f = [sender value];
-	SetIntegerPrefForMod(f, DefaultsFontSizePreference, preferencesNavigationItem.title);
+	SetIntegerPrefForMod(f, DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setInteger:f forKey:DefaultsFontSizePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
@@ -670,7 +623,7 @@
 
 - (void)redLetterChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsRedLetterPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsRedLetterPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsRedLetterPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
@@ -679,14 +632,14 @@
 
 - (void)vplChanged:(UISwitch *)sender {
 	BOOL n = [sender isOn];
-	SetBoolPrefForMod(n, DefaultsVPLPreference, preferencesNavigationItem.title);
+	SetBoolPrefForMod(n, DefaultsVPLPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsVPLPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
-	SetObjectPrefForMod(newFont, DefaultsFontNamePreference, preferencesNavigationItem.title);
+	SetObjectPrefForMod(newFont, DefaultsFontNamePreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[preferencesTable reloadData];

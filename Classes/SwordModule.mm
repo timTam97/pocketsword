@@ -1422,7 +1422,7 @@
 					</script>\n", i, i, i, i, extraJS];
 	
 	
-	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name];
+	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name fixedWidth:YES];
 	if (swModule->getDirection() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];
 	}

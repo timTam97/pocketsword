@@ -10,7 +10,6 @@
 
 
 @interface PSModuleUnlockViewController : UIViewController {
-	IBOutlet UINavigationItem	*infoNavItem;
 	
 	IBOutlet UIBarButtonItem	*unlockEditButton;
 	IBOutlet UIBarButtonItem	*unlockSaveButton;
@@ -21,7 +20,11 @@
 	//IBOutlet UIView				*unlockView;
 	IBOutlet UIToolbar			*unlockToolbar;
 	IBOutlet UINavigationItem	*unlockNavBarItem;
+	
+	NSString *moduleName;
 }
+
+@property (copy) NSString *moduleName;
 
 - (IBAction)unlockEditButtonPressed:(id)sender;
 

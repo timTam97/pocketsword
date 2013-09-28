@@ -13,6 +13,8 @@
 
 @implementation PSModuleUnlockViewController
 
+@synthesize moduleName;
+
 #define UNLOCK_HELP_HTML @"<head>\n\
 <meta name='viewport' content='width=device-width' />\n\
 <style type=\"text/css\">\n\
@@ -63,11 +65,11 @@ line-height: 130%%;\n\
 
 - (IBAction)unlockSaveButtonPressed:(id)sender {
 	//save the key
-	[[[[PSModuleController defaultModuleController] swordManager] moduleWithName: infoNavItem.title] unlock: unlockTextField.text];
+	[[[[PSModuleController defaultModuleController] swordManager] moduleWithName: moduleName] unlock: unlockTextField.text];
 	//redisplay the text if this is the current primary bible/commentary
-	if([infoNavItem.title isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) {
+	if([moduleName isEqualToString:[[[PSModuleController defaultModuleController] primaryBible] name]]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-	} else if([infoNavItem.title isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) {
+	} else if([moduleName isEqualToString:[[[PSModuleController defaultModuleController] primaryCommentary] name]]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
 	}
 	[self closeUnlockView:nil];
@@ -81,7 +83,7 @@ line-height: 130%%;\n\
 	// @"John 3:16"
 	unlockWebView.hidden = NO;
 	NSMutableString *html = [NSMutableString string];
-	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: infoNavItem.title];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: moduleName];
 	[mod unlock: unlockTextField.text];
 	NSArray *refs = [NSArray arrayWithObjects:@"Jeremiah 29:11", @"Psalm 139:5", @"John 3:16", nil];
 	for(NSString *ref in refs) {
@@ -155,6 +157,7 @@ line-height: 130%%;\n\
 
 
 - (void)dealloc {
+	self.moduleName = nil;
     [super dealloc];
 }
 

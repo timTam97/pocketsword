@@ -2395,12 +2395,12 @@
 		054C55B911AD0A4F00633371 /* module selector */ = {
 			isa = PBXGroup;
 			children = (
-				0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */,
-				0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */,
 				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
 				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
 				0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */,
 				0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */,
+				0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */,
+				0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */,
 				05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */,
 				05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */,
 			);

@@ -16,26 +16,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	closeButton.title = NSLocalizedString(@"CloseButtonTitle", @"");
+	UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(trashModule:)];
+	self.tabBarController.navigationItem.rightBarButtonItem = trashButton;
+	[trashButton release];
+
 	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
 	trashModule = NO;
 	askToUnlock = YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView useStatusBar:YES];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView useStatusBar:YES];
+//}
+//
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
+//}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	
-	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: infoNavItem.title];
+	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: self.tabBarController.navigationItem.title];
 	if(askToUnlock && mod) {
 		if([mod isLocked]) {
 			//gotta ask the user if they want to unlock the module!
@@ -61,25 +64,16 @@
 
 - (void)displayInfoForModule:(SwordModule*)swordModule {
 	[self.tabBarController setSelectedIndex:0];
-	infoNavItem.title = [swordModule name];
-	self.tabBarItem.title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AboutTitle", @""), [swordModule name]];
-	preferencesTabBarItem.title = [NSString stringWithFormat:@"%@ %@", [swordModule name], NSLocalizedString(@"TabBarTitlePreferences", @"")];
-	[prefController displayPrefsForModule:swordModule];
-	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil] baseURL:nil];
+	self.tabBarController.navigationItem.title = [swordModule name];
+	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AboutTitle", @""), [swordModule name]] image:[UIImage imageNamed:@"About.png"] tag:101];
+	self.tabBarItem = tbi;
+	[tbi release];
+	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:NO] baseURL:nil];
 }
 
 - (IBAction)closeLeaf:(id)sender {
 	askToUnlock = YES;
-	if(moduleSelectorController.moduleToView) {
-		//notify to close the module list.
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
-	} else {
-		if([PSResizing iPad]) {
-			[self dismissModalViewControllerAnimated:YES];
-		} else {
-			[self.navigationController popViewControllerAnimated:YES];
-		}
-	}
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)trashModule:(id)sender {
@@ -99,9 +93,9 @@
 	//DLog(@"Clicked button %d", buttonIndex);
 	if (buttonIndex == 1 && trashModule) {
 		// user tapped @"Yes" to the trash this module question.
-		DLog(@"\nremoving module: %@", infoNavItem.title);
+		DLog(@"\nremoving module: %@", self.tabBarController.navigationItem.title);
 		trashModule = NO;
-		[[PSModuleController defaultModuleController] removeModule: infoNavItem.title];
+		[[PSModuleController defaultModuleController] removeModule: self.tabBarController.navigationItem.title];
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {
 		// user tapped @"Yes" to unlocking this module question.

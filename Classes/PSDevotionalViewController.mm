@@ -125,7 +125,7 @@
 	if(!lastModule) {
 		loaded = NO;
 		self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"None", @"");
-		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
+		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
 		[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 		return;
 	}
@@ -292,7 +292,7 @@
 	NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 	if(!lastModule) {
 		loaded = NO;
-		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil];
+		NSString *devoHTMLString = [PSModuleController createHTMLString:[NSString stringWithFormat:@"<center>%@</center>", NSLocalizedString(@"NoModulesInstalled", @"")] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
 		[devotionalWebView loadHTMLString:devoHTMLString baseURL:nil];
 		return;
 	}
