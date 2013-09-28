@@ -25,7 +25,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -138,7 +138,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -505,7 +505,7 @@
 		NSIndexPath *rowOne = [NSIndexPath indexPathForRow:FontSizeRow inSection:DisplaySection];
 		NSIndexPath *rowTwo = [NSIndexPath indexPathForRow:FontNameRow inSection:DisplaySection];
 		NSArray *indexPaths = [NSArray arrayWithObjects:rowOne, rowTwo, nil];
-		[preferencesTable insertRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
+		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
 	} else {
 		NSIndexPath *rowOne = [NSIndexPath indexPathForRow:FontSizeRow inSection:DisplaySection];
 		NSIndexPath *rowTwo = [NSIndexPath indexPathForRow:FontNameRow inSection:DisplaySection];
@@ -515,7 +515,7 @@
 		FontNameRow = -1;
 		RemovePrefForMod(DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 		RemovePrefForMod(DefaultsFontNamePreference, self.tabBarController.navigationItem.title);
-		[preferencesTable deleteRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
+		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 	}
 }
@@ -568,19 +568,19 @@
 - (void)morphGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsMorphGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)strongsGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)strongsHebrewModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsHebrewModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)xrefChanged:(UISwitch *)sender {
@@ -615,8 +615,8 @@
 	SetIntegerPrefForMod(f, DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setInteger:f forKey:DefaultsFontSizePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	//[preferencesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
-	//[preferencesTable reloadData];
+	//[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
+	//[self.tableView reloadData];
 	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
@@ -642,7 +642,7 @@
 	SetObjectPrefForMod(newFont, DefaultsFontNamePreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTable reloadData];
+	[self.tableView reloadData];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 

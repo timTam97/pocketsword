@@ -9,22 +9,25 @@
 #import "globals.h"
 
 
-@interface PSModuleUnlockViewController : UIViewController {
+@interface PSModuleUnlockViewController : UIViewController <UITextFieldDelegate> {
 	
-	IBOutlet UIBarButtonItem	*unlockEditButton;
-	IBOutlet UIBarButtonItem	*unlockSaveButton;
-	IBOutlet UIWebView			*unlockWebView;
-	IBOutlet UIWebView			*unlockHelpWebView;
-	IBOutlet UILabel			*unlockLabel;
-	IBOutlet UITextField		*unlockTextField;
-	//IBOutlet UIView				*unlockView;
-	IBOutlet UIToolbar			*unlockToolbar;
-	IBOutlet UINavigationItem	*unlockNavBarItem;
+	UIBarButtonItem		*unlockEditButton;
+	UIBarButtonItem		*unlockSaveButton;
+	UIWebView			*unlockWebView;
+	UIWebView			*unlockHelpWebView;
+	UITextField			*unlockTextField;
+	UIToolbar			*unlockToolbar;
 	
-	NSString *moduleName;
+	NSString			*moduleName;
 }
 
-@property (copy) NSString *moduleName;
+@property (copy)   NSString			*moduleName;
+@property (retain) UIWebView		*unlockHelpWebView;
+@property (retain) UITextField		*unlockTextField;
+@property (retain) UIWebView		*unlockWebView;
+@property (retain) UIToolbar		*unlockToolbar;
+@property (retain) UIBarButtonItem	*unlockEditButton;
+@property (retain) UIBarButtonItem	*unlockSaveButton;
 
 - (IBAction)unlockEditButtonPressed:(id)sender;
 

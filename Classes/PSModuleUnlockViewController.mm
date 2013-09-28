@@ -13,7 +13,7 @@
 
 @implementation PSModuleUnlockViewController
 
-@synthesize moduleName;
+@synthesize moduleName, unlockToolbar, unlockWebView, unlockTextField, unlockHelpWebView, unlockSaveButton, unlockEditButton;
 
 #define UNLOCK_HELP_HTML @"<head>\n\
 <meta name='viewport' content='width=device-width' />\n\
@@ -28,6 +28,81 @@ line-height: 130%%;\n\
 </style>\n\
 </head>"
 
+- (void)disableScrolling:(UIWebView*)webview {
+	UIScrollView* currentScrollView = nil;
+    for (UIView* subView in webview.subviews) {
+        if ([subView respondsToSelector:@selector(scrollsToTop)]) {
+            currentScrollView = (UIScrollView*)subView;
+        }
+    }
+	if([currentScrollView respondsToSelector:@selector(isScrollEnabled)]) {
+		[currentScrollView setScrollEnabled:NO];
+	}
+}
+
+- (void)loadView {
+	static const CGFloat HelpWebViewHeight = 110.0;
+	
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 20, viewWidth, viewHeight)];
+	baseView.backgroundColor = [UIColor blackColor];
+	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeUnlockView:)];
+	self.navigationItem.leftBarButtonItem = cancelButton;
+	[cancelButton release];
+	
+	UIWebView *helpWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, HelpWebViewHeight)];
+	[self disableScrolling:helpWV];
+	[baseView addSubview:helpWV];
+	self.unlockHelpWebView = helpWV;
+	[helpWV release];
+	
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 122, 130, 21)];
+	label.font = [UIFont systemFontOfSize:17.0];
+	label.textColor = [UIColor whiteColor];
+	label.backgroundColor = [UIColor blackColor];
+	label.text = NSLocalizedString(@"ModuleEnterKeyTitle", @"Enter Key:");
+	[baseView addSubview:label];
+	[label release];
+	
+	UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(150, 117, 160, 31)];
+	textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	textField.autocorrectionType = UITextAutocorrectionTypeNo;
+	textField.returnKeyType = UIReturnKeyDone;
+	textField.delegate = self;
+	textField.backgroundColor = [UIColor whiteColor];
+	textField.borderStyle = UITextBorderStyleRoundedRect;
+	[baseView addSubview:textField];
+	self.unlockTextField = textField;
+	[textField release];
+	
+	UIWebView *testWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 183, viewWidth, 193)];
+	[self disableScrolling:testWebView];
+	[baseView addSubview:testWebView];
+	self.unlockWebView = testWebView;
+	[testWebView release];
+	
+	CGFloat tbY = viewHeight - 44.0 - self.navigationController.navigationBar.frame.size.height - 20.0;
+	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, tbY, viewWidth, 44)];
+	toolbar.barStyle = UIBarStyleBlack;
+	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(unlockSaveButtonPressed:)];
+	UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(unlockEditButtonPressed:)];
+	NSArray *toolbarItems = [NSArray arrayWithObjects:saveButton, flexSpace, editButton, nil];
+	[toolbar setItems:toolbarItems animated:NO];
+	self.unlockSaveButton = saveButton;
+	[saveButton release];
+	[flexSpace release];
+	self.unlockEditButton = editButton;
+	[editButton release];
+	[baseView addSubview:toolbar];
+	self.unlockToolbar = toolbar;
+	[toolbar release];
+	
+	self.view = baseView;
+	[baseView release];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,8 +112,7 @@ line-height: 130%%;\n\
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
-	[unlockLabel setText:NSLocalizedString(@"ModuleEnterKeyTitle", @"Enter Key:")];
-	unlockNavBarItem.title = NSLocalizedString(@"ModuleUnlockScreenTitle", @"Unlock Module");
+	self.navigationItem.title = NSLocalizedString(@"ModuleUnlockScreenTitle", @"Unlock Module");
 	[unlockWebView loadHTMLString:@"<html><body bgcolor='black'>&nbsp;</body></html>" baseURL:nil];
 	[unlockHelpWebView loadHTMLString:[NSString stringWithFormat:@"<html>%@<body>%@</body></html>", UNLOCK_HELP_HTML, NSLocalizedString(@"ModuleUnlockHelpText", @"")] baseURL:nil];
 	unlockWebView.hidden = YES;
@@ -46,17 +120,33 @@ line-height: 130%%;\n\
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
-	[nc addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name: UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name: UIKeyboardWillHideNotification object:nil];
 	[unlockTextField becomeFirstResponder];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-	[nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+	self.moduleName = nil;
+	self.unlockHelpWebView = nil;
+	self.unlockTextField = nil;
+	self.unlockWebView = nil;
+	self.unlockToolbar = nil;
+	self.unlockEditButton = nil;
+	self.unlockSaveButton = nil;
+    [super dealloc];
 }
 
 - (IBAction)closeUnlockView:(id)sender {
@@ -103,10 +193,7 @@ line-height: 130%%;\n\
 
 - (void)keyboardWillShow:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
-    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
 	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
-	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	//t = [mainWindow convertRect:t fromWindow:nil];
     r.origin.y -=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -118,10 +205,7 @@ line-height: 130%%;\n\
 
 - (void)keyboardWillHide:(NSNotification *)note {
     CGRect r  = unlockToolbar.frame, t;
-    //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];//use UIKeyboardFrameEndUserInfoKey in iOS4
 	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
-	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	//t = [mainWindow convertRect:t fromWindow:nil];
     r.origin.y +=  t.size.height;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -133,7 +217,6 @@ line-height: 130%%;\n\
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations.
     if([PSResizing iPad]) {
         return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     } else {
@@ -147,18 +230,6 @@ line-height: 130%%;\n\
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc. that aren't in use.
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-
-- (void)dealloc {
-	self.moduleName = nil;
-    [super dealloc];
 }
 
 

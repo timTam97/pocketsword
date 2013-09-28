@@ -512,7 +512,7 @@ bool ps_viewcontroller_initialized = false;
 		//}
 		moduleSelectorViewController = nil;
 	} else {
-		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:@"PSModuleSelectorController" bundle:nil] autorelease];
+		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil] autorelease];
 		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
 		//modSelectorNavController.navigationBarHidden = YES;
 		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;

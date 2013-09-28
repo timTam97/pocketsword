@@ -10,8 +10,28 @@
 #import "PocketSwordAppDelegate.h"
 #import "PSResizing.h"
 #import "PSModuleSelectorController.h"
+#import "SwordModule.h"
+#import "PSModuleController.h"
+#import "PSModulePreferencesController.h"
+#import "PSModuleUnlockViewController.h"
 
 @implementation PSModuleLeafViewController
+
+@synthesize infoWebView, swordModule;
+
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+
+	UIWebView *infoWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	self.infoWebView = infoWV;
+	[baseView addSubview:infoWV];
+	self.view = baseView;
+	[infoWV release];
+	[baseView release];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,16 +44,10 @@
 	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
 	trashModule = NO;
 	askToUnlock = YES;
+	if(self.swordModule) {
+		[self displayInfoForModule:swordModule];
+	}
 }
-
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//	[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView useStatusBar:YES];
-//}
-//
-//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-//	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:infoNavBar mainView:infoWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-//}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
@@ -62,7 +76,8 @@
 }
 
 
-- (void)displayInfoForModule:(SwordModule*)swordModule {
+- (void)displayInfoForModule:(SwordModule*)sModule {
+	self.swordModule = sModule;
 	[self.tabBarController setSelectedIndex:0];
 	self.tabBarController.navigationItem.title = [swordModule name];
 	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AboutTitle", @""), [swordModule name]] image:[UIImage imageNamed:@"About.png"] tag:101];
@@ -99,7 +114,13 @@
 		[self closeLeaf: nil];
 	} else if(buttonIndex == 1) {
 		// user tapped @"Yes" to unlocking this module question.
-		[self presentModalViewController:unlockViewController animated:YES];
+		PSModuleUnlockViewController *unlockViewController = [[PSModuleUnlockViewController alloc] initWithNibName:nil bundle:nil];
+		unlockViewController.moduleName = self.tabBarController.navigationItem.title;
+		UINavigationController *unlockVCN = [[UINavigationController alloc] initWithRootViewController:unlockViewController];
+		unlockVCN.navigationBar.barStyle = UIBarStyleBlack;
+		[self presentModalViewController:unlockVCN animated:YES];
+		[unlockViewController release];
+		[unlockVCN release];
 	}
 	
 	[pool release];
@@ -124,6 +145,8 @@
 }
 
 - (void)dealloc {
+	self.infoWebView = nil;
+	self.swordModule = nil;
     [super dealloc];
 }
 

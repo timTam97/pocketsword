@@ -14,10 +14,39 @@
 #import "PocketSwordAppDelegate.h"
 #import "PSModuleLeafViewController.h"
 #import "SwordModule.h"
+#import "PSModulePreferencesController.h"
 
 @implementation PSModuleSelectorController
 
-@synthesize listType, parentTabBarController;
+@synthesize listType, parentTabBarController, modulesListTable, modulesToolbar;
+
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	
+	UITableView *listTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, (viewHeight - 44.0)) style:UITableViewStylePlain];
+	listTable.delegate = self;
+	listTable.dataSource = self;
+	listTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[baseView addSubview:listTable];
+	self.modulesListTable = listTable;
+	[listTable release];
+	
+	CGFloat y = viewHeight - 44 - self.navigationController.navigationBar.frame.size.height;
+	y -= [[UIApplication sharedApplication] statusBarFrame].size.height;
+
+	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, viewHeight - 44, viewWidth, 44)];
+	toolbar.barStyle = UIBarStyleBlack;
+	toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+	[baseView addSubview:toolbar];
+	self.modulesToolbar = toolbar;
+	[toolbar release];
+	
+	self.view = baseView;
+	[baseView release];
+}
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -292,10 +321,23 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
-	[leafViewController displayInfoForModule:mod];
+	
+	UITabBarController *moduleTabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
+	
+	PSModuleLeafViewController *detailsViewController = [[PSModuleLeafViewController alloc] initWithNibName:nil bundle:nil];
+	[detailsViewController displayInfoForModule:mod];
+	PSModulePreferencesController *preferencesViewController = [[PSModulePreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
 	[preferencesViewController displayPrefsForModule:mod];
-	leafTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
-	[self.navigationController pushViewController:leafTabBarController animated:YES];
+	NSArray *tabs = [NSArray arrayWithObjects:detailsViewController, preferencesViewController, nil];
+	[moduleTabBarController setViewControllers:tabs];
+	moduleTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
+	[self.navigationController pushViewController:moduleTabBarController animated:YES];
+	[detailsViewController release];
+	[preferencesViewController release];
+	[moduleTabBarController release];
+	
+//	leafTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
+//	[self.navigationController pushViewController:leafTabBarController animated:YES];
 }
 
 // Override to allow orientations other than the default portrait orientation.

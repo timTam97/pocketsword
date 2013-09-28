@@ -13,8 +13,6 @@
 
 @interface PSModulePreferencesController : PSBasePreferencesController {
 	
-	IBOutlet UITableView		*preferencesTable;
-	
 	UILabel *fontSizeLabel;
 
 	//sections
@@ -43,19 +41,5 @@
 }
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule;
-
-//- (void)displayStrongsChanged:(UISwitch *)sender;
-//- (void)displayMorphChanged:(UISwitch *)sender;
-//- (void)displayGreekAccentsChanged:(UISwitch *)sender;
-//- (void)displayHVPChanged:(UISwitch *)sender;
-//- (void)displayHebrewCantillationChanged:(UISwitch *)sender;
-//- (void)morphGreekModuleChanged:(NSString *)newModule;
-//- (void)strongsGreekModuleChanged:(NSString *)newModule;
-//- (void)strongsHebrewModuleChanged:(NSString *)newModule;
-//- (void)xrefChanged:(UISwitch *)sender;
-//- (void)footnotesChanged:(UISwitch *)sender;
-//- (void)fontSizeChanged:(UISlider *)sender;
-//- (void)redLetterChanged:(UISwitch *)sender;
-//- (void)fontNameChanged:(NSString *)newFont;
 
 @end

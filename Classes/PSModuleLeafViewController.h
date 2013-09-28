@@ -6,20 +6,20 @@
 //  Copyright 2010 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "SwordModule.h"
-#import "PSModuleController.h"
-#import "PSModulePreferencesController.h"
-#import "PSModuleUnlockViewController.h"
 
 @class PSModuleSelectorController;
+@class SwordModule;
 
 @interface PSModuleLeafViewController : UIViewController {
-	IBOutlet UIWebView						*infoWebView;
-
-	IBOutlet PSModuleUnlockViewController	*unlockViewController;
+	UIWebView *infoWebView;
+	
+	SwordModule *swordModule;
 	
 	BOOL trashModule, askToUnlock;
 }
+
+@property (retain) UIWebView *infoWebView;
+@property (retain) SwordModule *swordModule;
 
 //perhaps a tab with the version history in it?
 

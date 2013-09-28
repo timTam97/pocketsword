@@ -10,26 +10,20 @@
 #import "MBProgressHUD.h"
 
 @class PSModuleLeafViewController;
-@class PSModulePreferencesController;
 @class SwordModule;
 
 @interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
-	ShownTab listType;
-	UITabBarController			*parentTabBarController;
-	IBOutlet PSModuleLeafViewController *leafViewController;
-	IBOutlet PSModulePreferencesController *preferencesViewController;
-	IBOutlet UITabBarController *leafTabBarController;
+	ShownTab				listType;
+	UITabBarController		*parentTabBarController;
 
-	IBOutlet UITableView		*modulesListTable;
-	
-	IBOutlet UIToolbar			*modulesToolbar;
-	
-//	BOOL reloadModuleViews;
+	UITableView				*modulesListTable;
+	UIToolbar				*modulesToolbar;
 }
 
 @property (assign) ShownTab listType;
 @property (assign) UITabBarController *parentTabBarController;
-//@property (assign) BOOL reloadModuleViews;
+@property (retain) UITableView *modulesListTable;
+@property (retain) UIToolbar *modulesToolbar;
 
 - (void)addButtonsToToolbar:(BOOL)animated;
 - (IBAction)addModuleButtonPressed;
