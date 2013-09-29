@@ -11,7 +11,6 @@
 #import "ViewController.h"
 #import "PSResizing.h"
 
-
 @implementation PSCommentaryViewController
 
 @synthesize refToShow;
@@ -22,6 +21,7 @@
 	[super viewDidLoad];
 	isFullScreen = NO;
 	commentaryTabBarItem.title = NSLocalizedString(@"TabBarTitleCommentary", @"Commentary");
+	commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
 	webView.psDelegate = self;
 	finishedLoading = NO;

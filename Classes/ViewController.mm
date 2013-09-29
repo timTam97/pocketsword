@@ -65,8 +65,6 @@ bool ps_viewcontroller_initialized = false;
 		
 		//VoiceOver hints:
 		[self setVoiceOverForRefSegmentedControl];
-		bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
-		commentarySearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 		
 		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 		[bibleWebView loadHTMLString: black baseURL: nil];
@@ -262,7 +260,7 @@ bool ps_viewcontroller_initialized = false;
 			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
 		} else {
 			//chapter title
-			segmentView.accessibilityLabel = [bibleSegmentedControl titleForSegmentAtIndex:1];
+			segmentView.accessibilityLabel = [PSModuleController getCurrentBibleRef];
 		}
 	}
 }
@@ -342,7 +340,6 @@ bool ps_viewcontroller_initialized = false;
 	}
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 
 	NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
 	if(!ref) {
@@ -350,7 +347,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		if(bibleTabController.isFullScreen) {
-			[self displayTitle:ref onTab:BibleTab];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -358,7 +355,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
-			[self displayTitle:ref onTab:CommentaryTab];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -368,7 +365,6 @@ bool ps_viewcontroller_initialized = false;
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
 	}
 	
-	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
 	[pool release];
 }
 
@@ -381,7 +377,6 @@ bool ps_viewcontroller_initialized = false;
 	
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 
 	NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
 	if(!ref) {
@@ -389,7 +384,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([bibleWebView isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
 		// bible tab
 		if(bibleTabController.isFullScreen) {
-			[self displayTitle:ref onTab:BibleTab];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
@@ -397,7 +392,7 @@ bool ps_viewcontroller_initialized = false;
 	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
 		// commentary tab
 		if(commentaryTabController.isFullScreen) {
-			[self displayTitle:ref onTab:CommentaryTab];
+			[self displayTitle:ref];
 		}
 		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
@@ -407,7 +402,6 @@ bool ps_viewcontroller_initialized = false;
 		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 	}
 	
-	[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
 	[pool release];
 }
 
@@ -654,7 +648,6 @@ bool ps_viewcontroller_initialized = false;
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:CommentaryTab];
 		}
 	} else {
-		[self performSelectorInBackground: @selector(startAnimateChapterChange) withObject: nil];
 		
 		if([bibleWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			// bible tab
@@ -679,7 +672,6 @@ bool ps_viewcontroller_initialized = false;
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		}
-		[self performSelectorInBackground: @selector(stopAnimateChapterChange) withObject: nil];
 	}
 	
 	[pool release];
@@ -692,46 +684,13 @@ bool ps_viewcontroller_initialized = false;
     [super dealloc];
 }
 
-- (void)displayTitle:(NSString*)title onTab:(ShownTab)tab {
-	UIView *addTo;
-	if(tab == CommentaryTab) {
-		addTo = commentaryWebView;
-	} else {
-		addTo = bibleWebView;
-	}
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:addTo animated:YES];
+- (void)displayTitle:(NSString*)title {
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
 	hud.mode = MBProgressHUDModeText;
-	hud.labelText = title;
+	hud.labelText = [PSModuleController createRefString:title];
 	hud.removeFromSuperViewOnHide = YES;
 	
 	[hud hide:YES afterDelay:0.75];
-}
-
-
-- (void) removeTitleEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-	[refTitleSplashView removeFromSuperview];
-	refTitleSplashView = nil;
-}
-
-
-
-- (void)removeTitle:(NSTimer*)theTimer {
-	refTitleSplashTimer = nil;
-	if(refTitleSplashView) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.5];
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationBeginsFromCurrentState:YES];
-		[UIView setAnimationDidStopSelector:@selector(removeTitleEnded:finished:context:)];
-		refTitleSplashView.alpha = 0.0;
-		[UIView commitAnimations];
-	}
-}
-
-- (void)startAnimateChapterChange {
-}
-
-- (void)stopAnimateChapterChange {
 }
 
 - (void)redisplayChapterWithDefaults {

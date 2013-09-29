@@ -6,12 +6,13 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSCommentaryViewController.h"
+#import "PSWebView.h"
+@class PSCommentaryViewController;
 
 @interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, PSWebViewDelegate> {
 
-	IBOutlet UITabBarItem				*bibleTabBarItem;
 	IBOutlet UIToolbar *bibleToolbar;
+	IBOutlet UIBarButtonItem			*bibleSearchButton;
 	
 	IBOutlet PSWebView *webView;
 	IBOutlet PSCommentaryViewController *commentaryView;

@@ -10,11 +10,11 @@
 #import "PSModuleController.h"
 #import "ViewController.h"
 #import "SwordDictionary.h"
-//#import "PSBasicBookmarksViewController.h"
 #import "PSBookmarkAddViewController.h"
 #import "PSResizing.h"
 #import "PSBookmarks.h"
 #import "PSBookmark.h"
+#import "PSCommentaryViewController.h"
 
 @implementation PSBibleViewController
 
@@ -23,11 +23,18 @@
 @synthesize tappedVerse;
 @synthesize isFullScreen;
 
-//bool bib_initialised = false;
+
+//- (void)loadView {
+//	
+//}
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
-	bibleTabBarItem.title = NSLocalizedString(@"TabBarTitleBible", @"Bible");
+	
+	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleBible", @"Bible") image:[UIImage imageNamed:@"bible.png"] tag:10];
+	self.tabBarItem = tbi;
+	[tbi release];
+	bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
@@ -134,12 +141,8 @@
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	[webView removeRefreshViews];
-	//webView.hidden = YES;
-	//CGRect tmpFrame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, (webView.frame.size.height+400.0f));
-	//webView.frame = tmpFrame;
 	
 	if(!isFullScreen) {
-//		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
 		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
 	}
 	
@@ -175,13 +178,7 @@
 	
     [UIView commitAnimations];
 	
-	
 }
-
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//	NSLog(@"BibleView will rotate");
-//	[self toggleFullscreen];
-//}
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
@@ -255,9 +252,8 @@
 			NSInteger tappedVerseInt = [tappedVerse integerValue];
 			NSString *sheetTitle = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerseInt];
 			UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
-			//[sheet showInView:webView];
-			//[sheet showInView:self.tabBarController.view];
 			[sheet showFromTabBar:self.tabBarController.tabBar];
+			// TODO: for iPad, use showFromRect:inView:animated: instead, after determining the rect of the verse number.
 			[sheet release];
 		}
 		load = NO;
@@ -369,24 +365,22 @@
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
 	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
+		
 		//add a bookmark!
-		//[PSBasicBookmarksViewController addBookmarkForRef:[PSModuleController getCurrentBibleRef] withVerse:tappedVerse];
 		NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
 		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
 		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
 		[tableViewController release];
 		[self presentModalViewController:containingNavigationController animated:YES];
 		[containingNavigationController release];
-
-		//PSBookmarkAddViewController *bavc = [[PSBookmarkAddViewController alloc] initWithBookAndChapterRef:[PSModuleController getCurrentBibleRef] verse:tappedVerse];
-//		[self presentModalViewController:bavc animated:YES];
-//		[bavc release];
-		
 		self.tappedVerse = nil;
+		
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {
-		//[[NSUserDefaults standardUserDefaults] setObject: tappedVerse forKey: DefaultsCommentaryVersePosition];
+		
+		//switch to the equivalent commentary entry.
 		commentaryView.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", tappedVerse];
 		BOOL fs = [self isFullScreen];
 		if(fs) {
@@ -398,7 +392,9 @@
 			[commentaryView toggleFullscreen];
 		}
 		self.tappedVerse = nil;
+		
 	}
+
 }
 
 - (void)dealloc {

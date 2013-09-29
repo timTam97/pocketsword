@@ -60,7 +60,6 @@ typedef enum {
 	IBOutlet PSWebView					*bibleWebView;
 	IBOutlet UISegmentedControl			*bibleSegmentedControl;
     IBOutlet UIBarButtonItem            *bibleRefButton;
-	IBOutlet UIBarButtonItem			*bibleSearchButton;
 	IBOutlet PSBibleViewController		*bibleTabController;
 	IBOutlet UIBarButtonItem			*bibleTitle;
 	
@@ -68,7 +67,6 @@ typedef enum {
 	IBOutlet PSWebView					*commentaryWebView;
 	IBOutlet UISegmentedControl			*commentarySegmentedControl;
     IBOutlet UIBarButtonItem            *commentaryRefButton;
-	IBOutlet UIBarButtonItem			*commentarySearchButton;
 	IBOutlet PSCommentaryViewController *commentaryTabController;
 	IBOutlet UIBarButtonItem			*commentaryTitle;
 	
@@ -122,8 +120,7 @@ typedef enum {
 
 - (void)nightModeChanged;
 
-- (void)displayTitle:(NSString*)title onTab:(ShownTab)tab;
-- (void)removeTitle:(NSTimer*)theTimer;
+- (void)displayTitle:(NSString*)title;
 - (void)nextChapter;
 - (void)prevChapter;
 - (IBAction)toggleNavigation;
@@ -174,8 +171,6 @@ typedef enum {
 - (void)segmentedControlAction:(id)sender;
 - (void)displayCommentaryTabViaNotification;
 - (void)displayBibleTabViaNotification;
-- (void)startAnimateChapterChange;
-- (void)stopAnimateChapterChange;
 
 @end
 
