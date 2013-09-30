@@ -313,7 +313,7 @@
 		}
 		
 		if(entry) {
-			[viewController showInfo: entry];
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
 			load = NO;
 		}
 	}

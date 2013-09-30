@@ -18,43 +18,249 @@
 
 @implementation PSBibleViewController
 
-@synthesize refToShow;
-@synthesize jsToShow;
-@synthesize tappedVerse;
-@synthesize isFullScreen;
+@synthesize refToShow, jsToShow, tappedVerse, isFullScreen, commentaryView, switchModuleButton, titleSegmentedControl, webView;
 
+- (id)init {
+	self = [super init];
+	if(self) {
+		tabType = BibleTab;
+	}
+	return self;
+}
 
-//- (void)loadView {
-//	
-//}
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	
+	PSWebView *wv = [[PSWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	wv.delegate = self;
+	wv.psDelegate = self;
+	wv.backgroundColor = [UIColor blackColor];
+	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
+	[wv loadHTMLString: black baseURL: nil];
+	[baseView addSubview:wv];
+	self.webView = wv;
+	[wv release];
+	
+	self.view = baseView;
+	[baseView release];
+}
 
-- (void) viewDidLoad {
+- (void)viewDidLoad {
 	[super viewDidLoad];
 	
-	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleBible", @"Bible") image:[UIImage imageNamed:@"bible.png"] tag:10];
-	self.tabBarItem = tbi;
-	[tbi release];
-	bibleSearchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+	switch(tabType) {
+		case BibleTab:
+		{
+			UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleBible", @"Bible") image:[UIImage imageNamed:@"bible.png"] tag:10];
+			self.tabBarItem = tbi;
+			[tbi release];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setModuleNameViaNotification) name:NotificationNewPrimaryBible object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationBibleSwipeRight object:nil];
+		}
+			break;
+		case CommentaryTab:
+		{
+			UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleCommentary", @"Commentary") image:[UIImage imageNamed:@"commentary.png"] tag:10];
+			self.tabBarItem = tbi;
+			[tbi release];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationCommentaryToggleFullscreen object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setModuleNameViaNotification) name:NotificationNewPrimaryCommentary object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationCommentarySwipeRight object:nil];
+		}
+			break;
+		default:
+			break;
+	}
+	
+	
+	NSArray *segments = [NSArray arrayWithObjects:[UIImage imageNamed:@"back-white.png"], @"Gen 23:23", [UIImage imageNamed:@"forward-white.png"], nil];
+	UISegmentedControl *segControl = [[UISegmentedControl alloc] initWithItems:segments];
+	segControl.segmentedControlStyle = UISegmentedControlStyleBar;
+	segControl.momentary = YES;
+	
+	static CGFloat arrowWidth = 50.0;
+	static CGFloat refWidth = /*([PSResizing iPad]) ? 138.0 :*/ 78.0;
+	[segControl setWidth: arrowWidth  forSegmentAtIndex:0];
+	[segControl setWidth: refWidth forSegmentAtIndex:1];
+	[segControl setWidth: arrowWidth  forSegmentAtIndex:2];
+	[segControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
+	self.navigationItem.titleView = segControl;
+	self.titleSegmentedControl = segControl;
+	[segControl release];
+	
+	
 	isFullScreen = NO;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreen) name:NotificationBibleToggleFullscreen object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
-	webView.psDelegate = self;
 	finishedLoading = NO;
 }
 
+- (void)segmentedControlAction:(id)sender {
+	
+	UISegmentedControl *segControl = sender;
+	switch (segControl.selectedSegmentIndex)
+	{
+		case 0:	// previous
+		{
+			[self prevChapter];
+			break;
+		}
+		case 1: // Ref
+		{
+			[delegate toggleNavigation];
+			break;
+		}
+		case 2:	// next
+		{
+			[self nextChapter];
+			break;
+		}
+	}
+	
+}
+
+// Loads the next chapter into the Web View
+- (void)nextChapter {
+	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
+		return;
+	}
+		
+	NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
+	if(!ref) {
+		return;
+	}
+	
+	if(isFullScreen) {
+		[ViewController displayTitle:ref];
+	}
+
+	switch(tabType) {
+		case BibleTab:
+		{
+			[delegate displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+		}
+			break;
+		case CommentaryTab:
+		{
+			[delegate displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+		}
+			break;
+		default:
+			break;
+	}
+	
+}
+
+// Loads the previous chapter into the Web View
+- (void)prevChapter {
+	NSString *currentRef = [PSModuleController getCurrentBibleRef];
+	if ([currentRef isEqualToString: [PSModuleController getFirstRefAvailable]]) {
+		return;
+	}
+	
+	NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
+	if(!ref) {
+		return;
+	}
+	
+	if(isFullScreen) {
+		[ViewController displayTitle:ref];
+	}
+		
+	switch(tabType) {
+		case BibleTab:
+		{
+			[delegate displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+		}
+			break;
+		case CommentaryTab:
+		{
+			[delegate displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+		}
+			break;
+		default:
+			break;
+	}
+	
+}
+
+- (void)setEnabledNextButton:(BOOL)enabled {
+	[titleSegmentedControl setEnabled: enabled forSegmentAtIndex: 2];
+}
+
+- (void)setEnabledPreviousButton:(BOOL)enabled {
+	[titleSegmentedControl setEnabled: enabled forSegmentAtIndex: 0];
+}
+
+- (void)setTabTitle:(NSString*)title {
+	NSString *titleToDisplay = [PSModuleController createTitleRefString:title];
+	[titleSegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
+	[ViewController setVoiceOverForRefSegmentedControlSubviews:titleSegmentedControl.subviews];
+}
+
+- (void)setModuleNameViaNotification {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	SwordModule *module;
+	module = (tabType == BibleTab) ? [[PSModuleController defaultModuleController] primaryBible] : [[PSModuleController defaultModuleController] primaryCommentary];
+	if(module) {
+		int i = ([[module name] length] > 5) ? 5 : [[module name] length];
+		NSString *newTitle = ([[module name] length] > i) ? [NSString stringWithFormat:@"%@..", [[module name] substringToIndex:i]] : [[module name] substringToIndex:i];
+		[switchModuleButton setTitle: newTitle];
+	} else {
+		[switchModuleButton setTitle: NSLocalizedString(@"None", @"None")];
+		[titleSegmentedControl setTitle: @"PocketSword" forSegmentAtIndex: 1];
+		[self setEnabledNextButton: NO];
+		[self setEnabledPreviousButton: NO];
+	}
+	[pool release];
+}
+
+- (ViewController*)delegate {
+	return delegate;
+}
+
+- (void)setDelegate:(ViewController*)vc {
+
+	UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"history.png"] style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleMultiList:)];
+	searchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
+	self.navigationItem.leftBarButtonItem = searchButton;
+	[searchButton release];
+	
+	UIBarButtonItem *switchModuleButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"None" style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleModulesListFromButton:)];
+	self.navigationItem.rightBarButtonItem = switchModuleButtonItem;
+	self.switchModuleButton = switchModuleButtonItem;
+	[switchModuleButtonItem release];
+	[self setModuleNameViaNotification];
+	delegate = vc;
+}
+
+- (void)dealloc {
+	self.refToShow = nil;
+	self.jsToShow = nil;
+	self.tappedVerse = nil;
+	self.switchModuleButton = nil;
+	self.titleSegmentedControl = nil;
+	self.webView = nil;
+    [super dealloc];
+}
+
 - (void)topReloadTriggered {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeRight object:nil];
+	[self prevChapter];
 }
 
 - (void)bottomReloadTriggered {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleSwipeLeft object:nil];
+	[self nextChapter];
 }
 
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
-	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationBibleToggleFullscreen];
-	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationBookmarksChanged];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -68,11 +274,6 @@
 		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
 	if(!self.isFullScreen) {
-		if([PSResizing iPad]) {
-			//for the iPad we skip the resize...
-		} else {
-			[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:YES];
-		}
 		if(finishedLoading) {
 			[webView setupRefreshViews];
 		}
@@ -81,10 +282,10 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
-	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);", [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsBibleVersePosition]];
+	NSString *verseKey = (tabType == BibleTab) ? DefaultsBibleVersePosition : DefaultsCommentaryVersePosition;
+	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);", [[NSUserDefaults standardUserDefaults] objectForKey:verseKey]];
 	if(isFullScreen)
 		return;
-	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 	[webView removeRefreshViews];
 }
 
@@ -126,13 +327,6 @@
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     //[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen animated:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-//	if(!isFullScreen) {
-//		[UIView beginAnimations:@"fullscreen2" context:nil];
-//		[UIView setAnimationBeginsFromCurrentState:YES];
-//		[UIView setAnimationDuration:0.5];
-//		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
-//		[UIView commitAnimations];
-//	}
 	[webView setupRefreshViews];
 	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
@@ -173,7 +367,6 @@
     } else {
         [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
-		[PSResizing resizeViewsOnAppearWithTabBarController:self.tabBarController topBar:bibleToolbar mainView:webView useStatusBar:NO];
     }
 	
     [UIView commitAnimations];
@@ -244,7 +437,7 @@
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
 			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			[viewController setTabTitle: [PSModuleController createRefString:ref] ofTab:BibleTab];
+			[self setTabTitle:[PSModuleController createRefString:ref]];
 		} else if([(NSString *)[components objectAtIndex:1] isEqualToString:@"versemenu"]) {
 			//bring up the contextual menu for a verse.
 			self.tappedVerse = [components objectAtIndex:2];
@@ -353,8 +546,7 @@
 
 		
 		if(entry) {
-			[(ViewController*)viewController showInfo: entry];
-			//NSLog(@"%@", entry);
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
 			load = NO;
 		}
 	}
@@ -395,13 +587,6 @@
 		
 	}
 
-}
-
-- (void)dealloc {
-	self.refToShow = nil;
-	self.jsToShow = nil;
-	self.tappedVerse = nil;
-    [super dealloc];
 }
 
 

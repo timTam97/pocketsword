@@ -8,6 +8,8 @@
 
 #import "PSWebView.h"
 
+@class ViewController;
+
 @interface PSCommentaryViewController : UIViewController <UIWebViewDelegate, PSWebViewDelegate> {
 	IBOutlet UITabBarItem				*commentaryTabBarItem;
 	IBOutlet UIBarButtonItem			*commentarySearchButton;
@@ -15,7 +17,7 @@
 	IBOutlet PSWebView *webView;
 	IBOutlet UIToolbar *toolbar;
 	
-	IBOutlet id viewController;
+	IBOutlet ViewController *viewController;
 	NSString *refToShow;
 	NSString *jsToShow;
 	BOOL isFullScreen;

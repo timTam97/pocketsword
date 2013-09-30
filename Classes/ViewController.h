@@ -57,11 +57,8 @@ typedef enum {
     IBOutlet UIWindow *window;
 	
 	// Bible tab
-	IBOutlet PSWebView					*bibleWebView;
-	IBOutlet UISegmentedControl			*bibleSegmentedControl;
-    IBOutlet UIBarButtonItem            *bibleRefButton;
-	IBOutlet PSBibleViewController		*bibleTabController;
-	IBOutlet UIBarButtonItem			*bibleTitle;
+    //IBOutlet UIBarButtonItem            *bibleRefButton;
+	PSBibleViewController				*bibleTabController;
 	
 	// Commentary tab
 	IBOutlet PSWebView					*commentaryWebView;
@@ -103,10 +100,8 @@ typedef enum {
 }
 
 @property (retain, readwrite) PSSearchHistoryItem *savedSearchHistoryItem;
-//@property (retain, readwrite) NSString			*savedSearchTerm;
-//@property (retain, readwrite) NSMutableArray	*savedSearchResults;
-//@property (retain, readwrite) NSString			*searchTermToPerform;
 @property (assign, readwrite) ShownTab			 savedSearchResultsTab;
+@property (retain) PSBibleViewController *bibleTabController;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;
@@ -114,13 +109,14 @@ typedef enum {
 + (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
++ (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews;
++ (void)displayTitle:(NSString*)title;
+
 - (void)setVoiceOverForRefSegmentedControl;
-- (void)setBibleTitleViaNotification;
 - (void)setCommentaryTitleViaNotification;
 
 - (void)nightModeChanged;
 
-- (void)displayTitle:(NSString*)title;
 - (void)nextChapter;
 - (void)prevChapter;
 - (IBAction)toggleNavigation;
@@ -133,6 +129,7 @@ typedef enum {
 //- (IBAction)toggleModulesList;
 - (IBAction)toggleModulesList:(NSNotification *)notification;
 - (IBAction)toggleModulesListFromButton:(id)sender;
+- (void)toggleMultiList:(id)sender;
 - (IBAction)toggleMultiList;
 - (UITabBarController *)tabBarController;
 - (IBAction)addModuleButtonPressed;
