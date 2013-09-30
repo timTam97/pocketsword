@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */; };
 		0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
 		0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
@@ -466,6 +467,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleViewController.mm; path = Classes/PSModuleViewController.mm; sourceTree = "<group>"; };
+		050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleViewController.h; path = Classes/PSModuleViewController.h; sourceTree = "<group>"; };
 		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0501E811121A3904000D9CA3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModulePreferencesController.h; path = Classes/PSModulePreferencesController.h; sourceTree = "<group>"; };
@@ -2426,6 +2429,8 @@
 		054C55BC11AD0ACA00633371 /* b & c */ = {
 			isa = PBXGroup;
 			children = (
+				050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */,
+				050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */,
 				05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */,
 				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
 				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
@@ -3557,6 +3562,7 @@
 				057CBD4E17697D1C005BC6BB /* osisxlit.cpp in Sources */,
 				057CBD50176980AB005BC6BB /* untgz.c in Sources */,
 				059653A917F53B1400018288 /* PSDictionaryEntryViewController.mm in Sources */,
+				050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
