@@ -215,7 +215,7 @@
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
-		0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */; };
+		0546B3CD1130D29C009D5189 /* PSModuleInfoViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0546B3CB1130D29C009D5189 /* PSModuleInfoViewController.mm */; };
 		0546B59D113537E9009D5189 /* Robinson.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59A113537E9009D5189 /* Robinson.zip */; };
 		0546B59E113537E9009D5189 /* strongsrealgreek.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59B113537E9009D5189 /* strongsrealgreek.zip */; };
 		0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0546B59C113537E9009D5189 /* strongsrealhebrew.zip */; };
@@ -905,8 +905,8 @@
 		0545E26510639A4A00DD7F06 /* SwordManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordManager.mm; sourceTree = "<group>"; };
 		0545E28510639DC400DD7F06 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		0545E29A1063A09500DD7F06 /* globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
-		0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleLeafViewController.h; path = Classes/PSModuleLeafViewController.h; sourceTree = "<group>"; };
-		0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleLeafViewController.mm; path = Classes/PSModuleLeafViewController.mm; sourceTree = "<group>"; };
+		0546B3CA1130D29C009D5189 /* PSModuleInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleInfoViewController.h; path = Classes/PSModuleInfoViewController.h; sourceTree = "<group>"; };
+		0546B3CB1130D29C009D5189 /* PSModuleInfoViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleInfoViewController.mm; path = Classes/PSModuleInfoViewController.mm; sourceTree = "<group>"; };
 		0546B59A113537E9009D5189 /* Robinson.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = Robinson.zip; path = Resources/Robinson.zip; sourceTree = "<group>"; };
 		0546B59B113537E9009D5189 /* strongsrealgreek.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = strongsrealgreek.zip; path = Resources/strongsrealgreek.zip; sourceTree = "<group>"; };
 		0546B59C113537E9009D5189 /* strongsrealhebrew.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = strongsrealhebrew.zip; path = Resources/strongsrealhebrew.zip; sourceTree = "<group>"; };
@@ -2378,8 +2378,8 @@
 			children = (
 				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
 				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
-				0546B3CA1130D29C009D5189 /* PSModuleLeafViewController.h */,
-				0546B3CB1130D29C009D5189 /* PSModuleLeafViewController.mm */,
+				0546B3CA1130D29C009D5189 /* PSModuleInfoViewController.h */,
+				0546B3CB1130D29C009D5189 /* PSModuleInfoViewController.mm */,
 				0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */,
 				0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */,
 				05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */,
@@ -3510,7 +3510,7 @@
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
 				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
 				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
-				0546B3CD1130D29C009D5189 /* PSModuleLeafViewController.mm in Sources */,
+				0546B3CD1130D29C009D5189 /* PSModuleInfoViewController.mm in Sources */,
 				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
 				05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */,
 				05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */,

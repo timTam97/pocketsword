@@ -10,7 +10,7 @@
 @class PSModuleSelectorController;
 @class SwordModule;
 
-@interface PSModuleLeafViewController : UIViewController {
+@interface PSModuleInfoViewController : UIViewController {
 	UIWebView *infoWebView;
 	
 	SwordModule *swordModule;

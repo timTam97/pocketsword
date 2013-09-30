@@ -6,7 +6,7 @@
 //  Copyright 2010 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSModuleLeafViewController.h"
+#import "PSModuleInfoViewController.h"
 #import "PocketSwordAppDelegate.h"
 #import "PSResizing.h"
 #import "PSModuleSelectorController.h"
@@ -16,7 +16,7 @@
 #import "PSModuleUnlockViewController.h"
 #import "SwordManager.h"
 
-@implementation PSModuleLeafViewController
+@implementation PSModuleInfoViewController
 
 @synthesize infoWebView, swordModule;
 

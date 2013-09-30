@@ -12,7 +12,7 @@
 #import "PSHistoryController.h"
 #import "PSResizing.h"
 #import "PocketSwordAppDelegate.h"
-#import "PSModuleLeafViewController.h"
+#import "PSModuleInfoViewController.h"
 #import "SwordModule.h"
 #import "PSModulePreferencesController.h"
 #import "SwordManager.h"
@@ -325,7 +325,7 @@
 	
 	UITabBarController *moduleTabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
 	
-	PSModuleLeafViewController *detailsViewController = [[PSModuleLeafViewController alloc] initWithNibName:nil bundle:nil];
+	PSModuleInfoViewController *detailsViewController = [[PSModuleInfoViewController alloc] initWithNibName:nil bundle:nil];
 	[detailsViewController displayInfoForModule:mod];
 	PSModulePreferencesController *preferencesViewController = [[PSModulePreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
 	[preferencesViewController displayPrefsForModule:mod];

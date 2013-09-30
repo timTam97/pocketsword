@@ -9,7 +9,7 @@
 #import "globals.h"
 #import "MBProgressHUD.h"
 
-@class PSModuleLeafViewController;
+@class PSModuleInfoViewController;
 @class SwordModule;
 
 @interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
