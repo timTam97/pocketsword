@@ -14,6 +14,7 @@
 #import "SwordVerseKey.h"
 #import "PSSearchHistoryItem.h"
 #import "PocketSwordAppDelegate.h"
+#import "SwordManager.h"
 
 @implementation PSSearchController
 

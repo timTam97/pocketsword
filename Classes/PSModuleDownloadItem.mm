@@ -12,6 +12,7 @@
 #import "PSStatusReporter.h"
 #import "PocketSwordAppDelegate.h"
 #import "PSModuleController.h"
+#import "SwordManager.h"
 
 @implementation PSModuleDownloadItem
 

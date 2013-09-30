@@ -11,6 +11,8 @@
 #import "PocketSwordAppDelegate.h"
 #import "PSModuleController.h"
 #import "SwordModule.h"
+#import "globals.h"
+#import "SwordManager.h"
 
 @implementation PSIndexController
 

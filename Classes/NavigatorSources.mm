@@ -13,6 +13,9 @@
 #import "PSResizing.h"
 #import "PSAddSourceViewController.h"
 #import "PSModuleController.h"
+#import "SwordManager.h"
+#import "SwordInstallManager.h"
+#import "globals.h"
 
 @implementation NavigatorSources
 

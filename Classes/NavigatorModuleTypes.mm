@@ -13,6 +13,9 @@
 #import "PocketSwordAppDelegate.h"
 #import "PSModuleController.h"
 #import "NavigatorSources.h"
+#import "globals.h"
+#import "SwordInstallSource.h"
+#import "SwordInstallManager.h"
 
 // displaying the Module Types
 

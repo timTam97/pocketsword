@@ -10,7 +10,8 @@
 #import "PSModulePreferencesController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
-
+#import "globals.h"
+#import "SwordManager.h"
 
 @implementation PSModulePreferencesController
 

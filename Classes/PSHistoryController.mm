@@ -22,6 +22,7 @@
 #import "PSResizing.h"
 #import "PSBookmarkTableViewCell.h"
 #import "PSHistoryItem.h"
+#import "SwordManager.h"
 
 
 @implementation PSHistoryController

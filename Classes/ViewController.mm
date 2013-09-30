@@ -28,7 +28,16 @@
 #import "PSBookmarksNavigatorController.h"
 #import "PSBookmarks.h"
 #import "PSSearchHistoryItem.h"
-
+#import "SwordModule.h"
+#import "PSModuleController.h"
+#import "PocketSwordAppDelegate.h"
+#import "PSBibleViewController.h"
+#import "PSCommentaryViewController.h"
+#import "PSRefSelectorController.h"
+#import "PSWebView.h"
+#import "PSDevotionalViewController.h"
+#import "SwordManager.h"
+#import "SwordDictionary.h"
 
 #define INFO_LANDSCAPE_HEIGHT 100.0
 #define INFO_PORTRAIT_HEIGHT 160.0

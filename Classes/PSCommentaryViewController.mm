@@ -10,6 +10,8 @@
 #import "PSModuleController.h"
 #import "ViewController.h"
 #import "PSResizing.h"
+#import "SwordManager.h"
+#import "SwordDictionary.h"
 
 @implementation PSCommentaryViewController
 

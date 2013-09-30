@@ -14,10 +14,10 @@
 
 @interface PSBibleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, PSWebViewDelegate> {
 
-	UIBarButtonItem			*bibleSearchButton;
-	UISegmentedControl		*titleSegmentedControl;
-	IBOutlet PSWebView		*webView;
-	UIBarButtonItem			*switchModuleButton;
+	UIBarButtonItem				*bibleSearchButton;
+	UISegmentedControl			*titleSegmentedControl;
+	PSWebView					*webView;
+	UIBarButtonItem				*switchModuleButton;
 	
 	PSCommentaryViewController	*commentaryView;
 	ViewController				*delegate;

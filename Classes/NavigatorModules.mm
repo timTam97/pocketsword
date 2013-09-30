@@ -12,6 +12,7 @@
 #import "NavigatorSources.h"
 #import "PSModuleController.h"
 #import "SwordModule.h"
+#import "SwordManager.h"
 
 @implementation NavigatorModules
 

@@ -8,7 +8,8 @@
 
 #import "PSPreferencesFontTableViewController.h"
 #import "PSPreferencesController.h"
-
+#import "PSResizing.h"
+#import "globals.h"
 
 @implementation PSPreferencesFontTableViewController
 

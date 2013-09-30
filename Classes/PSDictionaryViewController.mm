@@ -11,6 +11,10 @@
 #import "PSModuleController.h"
 #import "PSResizing.h"
 #import "PSDictionaryEntryViewController.h"
+#import "globals.h"
+#import "SwordModule.h"
+#import "SwordDictionary.h"
+#import "SwordManager.h"
 
 @implementation PSDictionaryViewController
 

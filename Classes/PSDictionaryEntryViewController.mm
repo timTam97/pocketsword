@@ -9,6 +9,9 @@
 #import "PSDictionaryEntryViewController.h"
 #import "PSResizing.h"
 #import "PSModuleController.h"
+#import "globals.h"
+#import "SwordManager.h"
+#import "SwordDictionary.h"
 
 @interface PSDictionaryEntryViewController ()
 

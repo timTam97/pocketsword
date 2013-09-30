@@ -14,6 +14,7 @@
 #import "PSModuleController.h"
 #import "PSModulePreferencesController.h"
 #import "PSModuleUnlockViewController.h"
+#import "SwordManager.h"
 
 @implementation PSModuleLeafViewController
 

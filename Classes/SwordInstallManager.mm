@@ -13,7 +13,6 @@
 #import "globals.h"
 
 #include "installmgr.h"
-//#include "MyInstallMgr.h"
 
 
 #ifdef __cplusplus

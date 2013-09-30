@@ -17,17 +17,9 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "SwordModule.h"
-#import "PSModuleController.h"
-#import "PocketSwordAppDelegate.h"
 #import "globals.h"
-#import "PSDictionaryViewController.h"
-#import "PSBibleViewController.h"
-#import "PSCommentaryViewController.h"
-#import "PSRefSelectorController.h"
-#import "PSWebView.h"
-#import "PSDevotionalViewController.h"
 #import "PSSearchController.h"
+#import "PSDictionaryViewController.h"
 
 #ifdef __cplusplus
 #include <swmgr.h>
@@ -37,7 +29,13 @@
 #include <localemgr.h>
 #endif
 
+@class PSWebView;//remove after the commentary tab is pulled from the XIB.
+
 @class PSModuleSelectorController;
+@class Swordmodule;
+@class PSBibleViewController;
+@class PSCommentaryViewController;
+@class PSRefSelectorController;
 
 typedef enum {
     RestoreScrollPosition = 1,
@@ -57,7 +55,6 @@ typedef enum {
     IBOutlet UIWindow *window;
 	
 	// Bible tab
-    //IBOutlet UIBarButtonItem            *bibleRefButton;
 	PSBibleViewController				*bibleTabController;
 	
 	// Commentary tab

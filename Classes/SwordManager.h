@@ -29,7 +29,6 @@
 class sword::SWModule;
 #endif
 
-@class SwordModule;
 
 #define SWMOD_CATEGORY_BIBLES			@"Biblical Texts"
 #define SWMOD_CATEGORY_COMMENTARIES     @"Commentaries"

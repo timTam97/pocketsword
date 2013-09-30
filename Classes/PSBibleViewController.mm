@@ -15,6 +15,7 @@
 #import "PSBookmarks.h"
 #import "PSBookmark.h"
 #import "PSCommentaryViewController.h"
+#import "SwordManager.h"
 
 @implementation PSBibleViewController
 

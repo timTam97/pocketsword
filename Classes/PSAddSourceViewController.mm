@@ -11,6 +11,8 @@
 #import "PSModuleController.h"
 #import "PSResizing.h"
 #import "PocketSwordAppDelegate.h"
+#import "globals.h"
+#import "SwordInstallManager.h"
 
 @implementation PSAddSourceViewController
 

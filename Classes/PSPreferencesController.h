@@ -6,9 +6,6 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "ViewController.h"
-#import "PSModuleController.h"
-#import "PSAboutScreenController.h"
 #import "PSBasePreferencesController.h"
 
 @interface PSPreferencesController : PSBasePreferencesController {

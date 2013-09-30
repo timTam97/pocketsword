@@ -22,6 +22,16 @@
 #import "ZipArchive.h"
 #import "ViewController.h"
 #import "SwordDictionary.h"
+#import "PSResizing.h"
+
+#import "SwordManager.h"
+#import "SwordInstallManager.h"
+#import "globals.h"
+#import "SwordInstallSource.h"
+#import "PSModuleType.h"
+#import "SwordKey.h"
+#import "PSRefSelectorController.h"
+
 
 #include <localemgr.h>
 #include <swmgr.h>

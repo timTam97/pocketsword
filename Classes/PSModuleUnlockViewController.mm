@@ -9,6 +9,7 @@
 #import "PSModuleUnlockViewController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
+#import "SwordManager.h"
 
 
 @implementation PSModuleUnlockViewController

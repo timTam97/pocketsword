@@ -8,6 +8,11 @@
 
 #import "PSPreferencesController.h"
 #import "PSPreferencesModuleSelectorTableViewController.h"
+#import "PSResizing.h"
+#import "SwordManager.h"
+#import "ViewController.h"
+#import "PSModuleController.h"
+#import "PSAboutScreenController.h"
 
 //sections
 #define DISPLAY_SECTION		0

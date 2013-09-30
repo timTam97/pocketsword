@@ -18,16 +18,11 @@
 */
 
 
-#import "SwordManager.h"
-#import "SwordInstallManager.h"
-#import "globals.h"
-#import "SwordInstallSource.h"
 #import "SwordModule.h"
-#import "SwordDictionary.h"
-#import "PSModuleType.h"
-#import "SwordKey.h"
-#import "PSRefSelectorController.h"
 #import "PSModuleDownloadItem.h"
+#import "PSStatusReporter.h"
+
+@class SwordManager, SwordInstallManager, SwordInstallSource, SwordDictionary, PSModuleType, SwordKey, SwordModule;
 
 @interface PSModuleController : NSObject <PSModuleDownloadDelegate> {
 	
