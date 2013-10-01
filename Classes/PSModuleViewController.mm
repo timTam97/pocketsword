@@ -271,8 +271,8 @@
 	CGFloat topLength = 0;
 	CGFloat bottomLength = 0;
 	if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-		topLength = [self.topLayoutGuide length];
-		bottomLength = [self.bottomLayoutGuide length];
+		topLength = [[self topLayoutGuide] length];
+		bottomLength = [[self bottomLayoutGuide] length];
 	}
 	[webView setupRefreshViews:topLength bottom:bottomLength];
 }
