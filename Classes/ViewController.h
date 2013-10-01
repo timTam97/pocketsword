@@ -58,11 +58,7 @@ typedef enum {
 	PSBibleViewController				*bibleTabController;
 	
 	// Commentary tab
-	IBOutlet PSWebView					*commentaryWebView;
-	IBOutlet UISegmentedControl			*commentarySegmentedControl;
-    IBOutlet UIBarButtonItem            *commentaryRefButton;
-	IBOutlet PSCommentaryViewController *commentaryTabController;
-	IBOutlet UIBarButtonItem			*commentaryTitle;
+	PSCommentaryViewController			*commentaryTabController;
 	
 	// Bible & Commentary tab
 	PSRefSelectorController				*refSelectorController;
@@ -96,9 +92,10 @@ typedef enum {
 	ShownTab							savedSearchResultsTab;
 }
 
-@property (retain, readwrite) PSSearchHistoryItem *savedSearchHistoryItem;
-@property (assign, readwrite) ShownTab			 savedSearchResultsTab;
-@property (retain) PSBibleViewController *bibleTabController;
+@property (retain, readwrite) PSSearchHistoryItem	*savedSearchHistoryItem;
+@property (assign, readwrite) ShownTab				savedSearchResultsTab;
+@property (retain) PSBibleViewController			*bibleTabController;
+@property (retain) PSCommentaryViewController		*commentaryTabController;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;
@@ -106,16 +103,10 @@ typedef enum {
 + (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
-+ (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews;
 + (void)displayTitle:(NSString*)title;
-
-- (void)setVoiceOverForRefSegmentedControl;
-- (void)setCommentaryTitleViaNotification;
 
 - (void)nightModeChanged;
 
-- (void)nextChapter;
-- (void)prevChapter;
 - (IBAction)toggleNavigation;
 //- (IBAction)updateViewWithSelectedChapter:(id)sender;
 //- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
@@ -162,7 +153,6 @@ typedef enum {
 - (void) hideInfoModal:(UIView*) modalView withTiming:(float)time;
 - (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
-- (void)segmentedControlAction:(id)sender;
 - (void)displayCommentaryTabViaNotification;
 - (void)displayBibleTabViaNotification;
 

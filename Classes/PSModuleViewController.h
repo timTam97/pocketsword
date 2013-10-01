@@ -50,4 +50,6 @@
 - (void)setTabTitle:(NSString*)title;
 - (void)setModuleNameViaNotification;
 
++ (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews;
+
 @end

@@ -130,6 +130,10 @@ typedef enum {
 #define ChapterString							@"ChapterString"
 #define VerseString								@"VerseString"
 
+#define BibleTabTitleString							@"BibleTabTitleString"
+#define CommentaryTabTitleString					@"CommentaryTabTitleString"
+#define DevotionalTabTitleString					@"DevotionalTabTitleString"
+
 
 // Notification identifiers
 #define NotificationModulesChanged				@"NotificationModulesChanged"

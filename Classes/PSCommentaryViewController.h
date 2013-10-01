@@ -6,31 +6,11 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSWebView.h"
+#import "PSModuleViewController.h"
 
 @class ViewController;
 
-@interface PSCommentaryViewController : UIViewController <UIWebViewDelegate, PSWebViewDelegate> {
-	IBOutlet UITabBarItem				*commentaryTabBarItem;
-	IBOutlet UIBarButtonItem			*commentarySearchButton;
-
-	IBOutlet PSWebView *webView;
-	IBOutlet UIToolbar *toolbar;
-	
-	IBOutlet ViewController *viewController;
-	NSString *refToShow;
-	NSString *jsToShow;
-	BOOL isFullScreen;
-	UIView *previousTabBarView;
-	BOOL finishedLoading;
+@interface PSCommentaryViewController : PSModuleViewController {
 }
-
-@property (copy, readwrite) NSString *refToShow;
-@property (copy, readwrite) NSString *jsToShow;
-@property (readonly) BOOL isFullScreen;
-
-- (void)toggleFullscreen;
-- (void)switchToFullscreen;
-- (void)switchToNormalscreen;
 
 @end

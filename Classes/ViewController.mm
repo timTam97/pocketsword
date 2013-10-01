@@ -46,7 +46,7 @@
 
 @implementation ViewController
 
-@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController;
+@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController;
 
 bool ps_viewcontroller_initialized = false;
 
@@ -55,34 +55,9 @@ bool ps_viewcontroller_initialized = false;
 	
 	if (!ps_viewcontroller_initialized) {
 		[self nightModeChanged];
+		[PSModuleController defaultModuleController];//init
 		
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
-		
-		CGFloat arrowWidth = 50.0;
-		CGFloat refWidth = /*([PSResizing iPad]) ? 138.0 :*/ 78.0;
-		
-		//configure the Bible & commentary segmented controls.
-		[commentarySegmentedControl setWidth: arrowWidth  forSegmentAtIndex:0];//30
-		[commentarySegmentedControl setWidth: refWidth forSegmentAtIndex:1];//138
-		[commentarySegmentedControl setWidth: arrowWidth  forSegmentAtIndex:2];//30
-		[commentarySegmentedControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
-		
-		//VoiceOver hints:
-		[self setVoiceOverForRefSegmentedControl];
-		
-		NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-		[commentaryWebView loadHTMLString: black baseURL: nil];
-				
-		PSModuleController *moduleController = [PSModuleController defaultModuleController];
-		
-		if ([[[moduleController swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count] == 0) {
-			[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
-			[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
-			[self setEnabledCommentaryNextButton: NO];
-			[self setEnabledCommentaryPreviousButton: NO];
-		}
-		
-		[self setCommentaryTitleViaNotification];
 		
 		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
@@ -90,11 +65,29 @@ bool ps_viewcontroller_initialized = false;
 		
 		NSMutableArray *tabs;
 		
+		//add the Commentary Tab.
+		PSCommentaryViewController *cvc = [[PSCommentaryViewController alloc] init];
+		cvc.title = CommentaryTabTitleString;
+		[cvc view];//load the view before we continue!
+		[cvc setDelegate:self];
+		UINavigationController *cTab = [[UINavigationController alloc] initWithRootViewController:cvc];
+		cTab.navigationBar.barStyle = UIBarStyleBlack;
+		tabs = [tabController.viewControllers mutableCopy];
+		[tabs insertObject:cTab atIndex:0];
+		[tabController setViewControllers:tabs animated:NO];
+		[tabs release];
+		tabs = nil;
+		self.commentaryTabController = cvc;
+		[cTab release];
+		[cvc release];
+		
 		//add the Bible Tab.
+		// Do this second because we need the commentary tab to initialise the Bible tab!
 		PSBibleViewController *bvc = [[PSBibleViewController alloc] init];
-		bvc.commentaryView = commentaryTabController;
+		bvc.title = BibleTabTitleString;
 		[bvc view];//load the view before we continue!
 		[bvc setDelegate:self];
+		bvc.commentaryView = commentaryTabController;
 		UINavigationController *bTab = [[UINavigationController alloc] initWithRootViewController:bvc];
 		bTab.navigationBar.barStyle = UIBarStyleBlack;
 		tabs = [tabController.viewControllers mutableCopy];
@@ -162,6 +155,8 @@ bool ps_viewcontroller_initialized = false;
 		tabs = nil;
 		[downloadsViewController release];
 		
+		tabController.customizableViewControllers = nil;
+		tabController.selectedIndex = 0;
 				
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 		NSString *lastRef = [PSModuleController getCurrentBibleRef];
@@ -172,20 +167,10 @@ bool ps_viewcontroller_initialized = false;
 			[PocketSwordAppDelegate sharedAppDelegate].urlToOpen = nil;
 			[self displayChapter:lastRef withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 		}
-
-		tabController.customizableViewControllers = nil;
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationBibleSwipeRight object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationCommentarySwipeRight object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter) name:NotificationBibleSwipeLeft object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextChapter) name:NotificationCommentarySwipeLeft object:nil];
-		
+				
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayChapterWithDefaults) name:NotificationResetBibleAndCommentaryView object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapter) name:NotificationRedisplayPrimaryBible object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayCommentaryChapter) name:NotificationRedisplayPrimaryCommentary object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setCommentaryTitleViaNotification) name:NotificationNewPrimaryCommentary object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMultiList) name:NotificationToggleMultiList object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleModulesList:) name:NotificationToggleModuleList object:nil];
@@ -207,10 +192,8 @@ bool ps_viewcontroller_initialized = false;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapterAfterBookmarksChange) name:NotificationBookmarksChanged object:nil];
 
 		ps_viewcontroller_initialized = true;
-//		DLog(@"\nnope, not dying in the if...");
 	}
 	
-//	DLog(@"\nnope, not dying somewhere here...");
 }
 
 - (void)nightModeChanged {
@@ -223,53 +206,10 @@ bool ps_viewcontroller_initialized = false;
 	if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 		// bible tab
 		[bibleTabController switchToFullscreen];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 		// commentary tab
 		[commentaryTabController switchToFullscreen];
 	}
-}
-
-- (void)setCommentaryTitleViaNotification {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *primaryCommentary = [[PSModuleController defaultModuleController] primaryCommentary];
-	if(primaryCommentary) {
-		int i = ([[primaryCommentary name] length] > 5) ? 5 : [[primaryCommentary name] length];
-		NSString *newTitle = ([[primaryCommentary name] length] > i) ? [NSString stringWithFormat:@"%@..", [[primaryCommentary name] substringToIndex:i]] : [[primaryCommentary name] substringToIndex:i];
-		[commentaryTitle setTitle: newTitle];
-	} else {
-		[commentaryTitle setTitle: NSLocalizedString(@"None", @"None")];
-		[self setTabTitle: @"PocketSword" ofTab:CommentaryTab];
-		[self setEnabledCommentaryNextButton: NO];
-		[self setEnabledCommentaryPreviousButton: NO];
-	}
-	[pool release];
-}
-
-+ (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews {
-	for(UIView *segmentView in subviews) {
-		if([segmentView.accessibilityLabel isEqualToString:@"forward-white.png"] ||
-		   [segmentView.accessibilityLabel isEqualToString:NSLocalizedString(@"VoiceOverNextChapterButton", @"")]) {
-			//forward button
-			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
-		} else if([segmentView.accessibilityLabel isEqualToString:@"back-white.png"] ||
-				  [segmentView.accessibilityLabel isEqualToString:NSLocalizedString(@"VoiceOverPreviousChapterButton", @"")]) {
-			//backward button
-			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
-		} else {
-			//chapter title
-			segmentView.accessibilityLabel = [PSModuleController getCurrentBibleRef];
-		}
-	}
-}
-
-- (void)setVoiceOverForRefSegmentedControl {
-	// only iOS 4 or later:
-	if (SYSTEM_VERSION_LESS_THAN(@"4.0")) {
-		return;
-	}
-	
-	//VoiceOver support for the prev & next buttons in the commentary tab
-	[ViewController setVoiceOverForRefSegmentedControlSubviews:commentarySegmentedControl.subviews];
 }
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
@@ -279,9 +219,8 @@ bool ps_viewcontroller_initialized = false;
 	if(tab == BibleTab) {
 		[bibleTabController setTabTitle:titleToDisplay];
 	} else if(tab == CommentaryTab) {
-		[commentarySegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
+		[commentaryTabController setTabTitle:titleToDisplay];
 	}
-	[self setVoiceOverForRefSegmentedControl];
 }
 
 - (void)setEnabledBibleNextButton:(BOOL)enabled
@@ -296,114 +235,18 @@ bool ps_viewcontroller_initialized = false;
 
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled
 {
-	[commentarySegmentedControl setEnabled: enabled forSegmentAtIndex: 2];
+	[commentaryTabController setEnabledNextButton:enabled];
 }
 
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled
 {
-	[commentarySegmentedControl setEnabled: enabled forSegmentAtIndex: 0];
-}
-
-- (void)segmentedControlAction:(id)sender
-{
-	UISegmentedControl *segControl = sender;
-	switch (segControl.selectedSegmentIndex)
-	{
-		case 0:	// previous
-		{
-			[self prevChapter];
-			break;
-		}
-		case 1: // Ref
-		{
-			[self toggleNavigation];
-			break;
-		}
-		case 2:	// next
-		{
-			[self nextChapter];
-			break;
-		}
-	}
-}
-
-// Loads the next chapter into the Web View
-- (void)nextChapter {
-	NSString *currentRef = [PSModuleController getCurrentBibleRef];
-	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
-		return;
-	}
-	
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
-	NSString *ref = [[PSModuleController defaultModuleController] setToNextChapter];
-	if(!ref) {
-		//rats...?
-	} else if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
-		// bible tab
-		if(bibleTabController.isFullScreen) {
-			[ViewController displayTitle:ref];
-		}
-		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		[PSHistoryController addHistoryItem:BibleTab];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
-		// commentary tab
-		if(commentaryTabController.isFullScreen) {
-			[ViewController displayTitle:ref];
-		}
-		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		[PSHistoryController addHistoryItem:CommentaryTab];
-	} else {
-		// weird & undefined
-		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreNoPosition];
-	}
-	
-	[pool release];
-}
-
-// Loads the previous chapter into the Web View
-- (void)prevChapter {
-	NSString *currentRef = [PSModuleController getCurrentBibleRef];
-	if ([currentRef isEqualToString: [PSModuleController getFirstRefAvailable]]) {
-		return;
-	}
-	
-	
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
-	NSString *ref = [[PSModuleController defaultModuleController] setToPreviousChapter];
-	if(!ref) {
-		//rats...?
-	} else if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
-		// bible tab
-		if(bibleTabController.isFullScreen) {
-			[ViewController displayTitle:ref];
-		}
-		[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
-		[PSHistoryController addHistoryItem:BibleTab];
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view] || commentaryTabController.isFullScreen) {
-		// commentary tab
-		if(commentaryTabController.isFullScreen) {
-			[ViewController displayTitle:ref];
-		}
-		[self displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
-		//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddCommentaryHistoryItem object:nil];
-		[PSHistoryController addHistoryItem:CommentaryTab];
-	} else {
-		// weird & undefined
-		[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
-	}
-	
-	[pool release];
+	[commentaryTabController setEnabledPreviousButton:enabled];
 }
 
 - (void)searchDidFinish:(PSSearchHistoryItem *)newSearchHistoryItem {
 	if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 		self.savedSearchResultsTab = BibleTab;
-	} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 		self.savedSearchResultsTab = CommentaryTab;
 	}
 	self.savedSearchHistoryItem = newSearchHistoryItem;
@@ -518,9 +361,8 @@ bool ps_viewcontroller_initialized = false;
 		//set the module selector to use the correct module type.
 		if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:BibleTab];
-		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:CommentaryTab];
-			[popoverController presentPopoverFromBarButtonItem:commentaryTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:DevotionalTab];
 			[popoverController presentPopoverFromBarButtonItem:devotionalTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
@@ -551,7 +393,7 @@ bool ps_viewcontroller_initialized = false;
 }
 
 - (void)displayCommentaryTabViaNotification {
-	[self setShownTabTo:CommentaryTab];//setShownTabTo:BibleTab
+	[self setShownTabTo:CommentaryTab];
 }
 
 - (void)displayBibleTabViaNotification {
@@ -592,7 +434,7 @@ bool ps_viewcontroller_initialized = false;
 				[popoverController presentPopoverFromRect:rect inView:viewToPresentPopoverFrom permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
                 [refSelectorController willShowNavigation];
             }
-		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
             if(!([[PSModuleController defaultModuleController] primaryCommentary])) {
                 //no Commentary selected, so ignore...
@@ -608,7 +450,11 @@ bool ps_viewcontroller_initialized = false;
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
-                [popoverController presentPopoverFromBarButtonItem:commentaryRefButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+				UIView *viewToPresentPopoverFrom = [commentaryTabController titleSegmentedControl];
+				CGRect rect = viewToPresentPopoverFrom.frame;
+				rect.origin.x = 0;
+				rect.origin.y = 0;
+				[popoverController presentPopoverFromRect:rect inView:viewToPresentPopoverFrom permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
                 [refSelectorController willShowNavigation];
             }
         }
@@ -641,7 +487,7 @@ bool ps_viewcontroller_initialized = false;
 		//we only need to move to the selected verse rather than reload the whole chapter
 		NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", verseString];
 		[[bibleTabController webView] stringByEvaluatingJavaScriptFromString:javascript];
-		[commentaryWebView stringByEvaluatingJavaScriptFromString:javascript];
+		[[commentaryTabController webView] stringByEvaluatingJavaScriptFromString:javascript];
 		if([moduleController primaryBible]) {
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:BibleTab];
 		}
@@ -658,7 +504,7 @@ bool ps_viewcontroller_initialized = false;
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			[PSHistoryController addHistoryItem:BibleTab];
-		} else if([commentaryWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 			// commentary tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
@@ -773,7 +619,7 @@ bool ps_viewcontroller_initialized = false;
 		{
 			[commentaryJavascript appendString:@"startDetLocPoll();\n"];
 			NSString *cText = [[PSModuleController defaultModuleController] getCommentaryChapter:ref withExtraJS:commentaryJavascript];
-			[commentaryWebView loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+			[[commentaryTabController webView] loadHTMLString: cText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 			//NSLog(@"%@", cText);
 			bibleTabController.refToShow = ref;
 			bibleTabController.jsToShow = bibleJavascript;
@@ -1024,80 +870,13 @@ bool ps_viewcontroller_initialized = false;
 	[modalView release];
 }
 
-//- (void)displayBusyIndicatorViaNotification {
-//	[self performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
-//}
-//
-//- (void)displayBusyIndicator {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	
-//	//UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-//	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-//	if([UIApplication sharedApplication].statusBarHidden) {
-//		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-//	}
-//	
-//	if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//		activityLoadingLabel.transform = CGAffineTransformIdentity;
-//		activityLoadingLabel.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-//	} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-//		activityLoadingLabel.transform = CGAffineTransformIdentity;
-//		activityLoadingLabel.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-//	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-//		activityLoadingLabel.transform = CGAffineTransformIdentity;
-//	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-//		activityLoadingLabel.transform = CGAffineTransformIdentity;
-//		activityLoadingLabel.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-//	}
-//
-//	
-//	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-//	[activityIndicator startAnimating];
-//	//[tabController presentModalViewController:activityController animated:NO];
-//	activityController.view.alpha = 0.0;
-//	[mainWindow addSubview:activityController.view];
-//	[UIView beginAnimations:nil context:nil];
-//	[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-//	[UIView setAnimationDuration:0.3];
-//	activityController.view.alpha = 0.5;
-//	[UIView commitAnimations];
-//	
-//	[pool release];
-//}
-
-//- (void)_hideBusyIndicator {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	if (activityIndicator) {
-//		[UIView beginAnimations:nil context:nil];
-//		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-//		[UIView setAnimationDuration:0.3];
-//		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-//		activityController.view.alpha = 0.0;
-//		[UIView commitAnimations];
-//		//[tabController dismissModalViewControllerAnimated:NO];
-//		//[activityIndicator stopAnimating];
-//	}
-//	
-//	[pool release];
-//}
-//
-//- (void)hideBusyIndicator {
-//	[self _hideBusyIndicator];
-//	[self performSelector:@selector(_hideBusyIndicator) withObject:nil afterDelay:1];
-//}
-//
-//- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-//	[activityIndicator stopAnimating];
-//	[activityController.view removeFromSuperview];
-//}
-
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
 	switch(tab) {
 		case BibleTab:
 			[[bibleTabController webView] highlightAllOccurencesOfString: term];
 			break;
 		case CommentaryTab:
-			[commentaryWebView highlightAllOccurencesOfString: term];
+			[[commentaryTabController webView] highlightAllOccurencesOfString: term];
 			break;
         case DictionaryTab:
         case DevotionalTab:
@@ -1251,7 +1030,6 @@ bool ps_viewcontroller_initialized = false;
 			} else {
 				[self displayChapter: ref withPollingType: BibleViewPoll restoreType: RestoreNoPosition];
 			}
-			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			[PSHistoryController addHistoryItem:BibleTab];
 
 			return NO;
@@ -1437,7 +1215,7 @@ bool ps_viewcontroller_initialized = false;
 		case BibleTab:
 		{
 			for(UIViewController* uivc in tabController.viewControllers) {
-				if([uivc.view isDescendantOfView:bibleTabController.view]) {
+				if([uivc.title isEqualToString:BibleTabTitleString]) {
 					tabController.selectedViewController = uivc;
 				}
 			}
@@ -1446,7 +1224,7 @@ bool ps_viewcontroller_initialized = false;
 		case CommentaryTab:
 		{
 			for(UIViewController* uivc in tabController.viewControllers) {
-				if([uivc.view isDescendantOfView:commentaryTabController.view]) {
+				if([uivc.title isEqualToString:CommentaryTabTitleString]) {
 					tabController.selectedViewController = uivc;
 				}
 			}

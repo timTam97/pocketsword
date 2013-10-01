@@ -201,7 +201,7 @@
 - (void)setTabTitle:(NSString*)title {
 	NSString *titleToDisplay = [PSModuleController createTitleRefString:title];
 	[titleSegmentedControl setTitle: titleToDisplay forSegmentAtIndex: 1];
-	[ViewController setVoiceOverForRefSegmentedControlSubviews:titleSegmentedControl.subviews];
+	[PSModuleViewController setVoiceOverForRefSegmentedControlSubviews:titleSegmentedControl.subviews];
 }
 
 - (void)setModuleNameViaNotification {
@@ -275,6 +275,10 @@
 		}
 		[webView loadHTMLString: webText baseURL: [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 		self.refToShow = nil;
+		self.jsToShow = nil;
+	} else if(jsToShow) {
+		NSString *jsString = [NSString stringWithFormat:@"%@; startDetLocPoll();", jsToShow];
+		[webView stringByEvaluatingJavaScriptFromString:jsString];
 		self.jsToShow = nil;
 	} else {
 		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
@@ -586,6 +590,23 @@
 	[pool release];
 	return load; // Return YES to make sure regular navigation works as expected.
 	
+}
+
++ (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews {
+	for(UIView *segmentView in subviews) {
+		if([segmentView.accessibilityLabel isEqualToString:@"forward-white.png"] ||
+		   [segmentView.accessibilityLabel isEqualToString:NSLocalizedString(@"VoiceOverNextChapterButton", @"")]) {
+			//forward button
+			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+		} else if([segmentView.accessibilityLabel isEqualToString:@"back-white.png"] ||
+				  [segmentView.accessibilityLabel isEqualToString:NSLocalizedString(@"VoiceOverPreviousChapterButton", @"")]) {
+			//backward button
+			segmentView.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+		} else {
+			//chapter title
+			segmentView.accessibilityLabel = [PSModuleController getCurrentBibleRef];
+		}
+	}
 }
 
 @end
