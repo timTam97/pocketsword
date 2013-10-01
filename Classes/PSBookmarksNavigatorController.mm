@@ -67,6 +67,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	self.view.backgroundColor = [UIColor blackColor];
 	UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed)];
     self.navigationItem.rightBarButtonItem = editButton;
 	[editButton release];

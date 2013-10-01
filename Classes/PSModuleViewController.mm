@@ -267,6 +267,16 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)setupWebViewRefreshViews {
+	CGFloat topLength = 0;
+	CGFloat bottomLength = 0;
+	if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
+		topLength = [self.topLayoutGuide length];
+		bottomLength = [self.bottomLayoutGuide length];
+	}
+	[webView setupRefreshViews:topLength bottom:bottomLength];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	if(refToShow) {
@@ -288,7 +298,7 @@
 	}
 	if(!self.isFullScreen) {
 		if(finishedLoading) {
-			[webView setupRefreshViews];
+			[self setupWebViewRefreshViews];
 		}
 	}
 }
@@ -313,7 +323,7 @@
 	}
 	[webView stringByEvaluatingJavaScriptFromString:js];
 	if(finishedLoading) {
-		[webView setupRefreshViews];
+		[self setupWebViewRefreshViews];
 	}
 }
 
@@ -334,7 +344,7 @@
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-	[webView setupRefreshViews];
+	[self setupWebViewRefreshViews];
 	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
 
@@ -413,7 +423,7 @@
 	
 	//highlight bookmarked verses
 	//[self highlightBookmarks];
-	[webView setupRefreshViews];
+	[self setupWebViewRefreshViews];
 	finishedLoading = YES;
 	
 	//highlight search results

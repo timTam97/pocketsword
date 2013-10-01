@@ -26,6 +26,7 @@
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	baseView.backgroundColor = [UIColor blackColor];
 	
 	UITableView *listTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, (viewHeight - 44.0)) style:UITableViewStylePlain];
 	listTable.delegate = self;

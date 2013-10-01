@@ -26,6 +26,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	self.view.backgroundColor = [UIColor blackColor];
 	self.navigationItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 	
 	UIBarButtonItem *dictButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"None", @"None") style:UIBarButtonItemStyleBordered target:self action:@selector(dictionaryModuleSelectorButtonPressed:)];

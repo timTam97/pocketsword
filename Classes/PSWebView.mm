@@ -28,14 +28,17 @@
 @implementation PSWebView
 
 //@synthesize reloading=_reloading;
-@synthesize psDelegate;
+@synthesize psDelegate, topLength, bottomLength;
 
 - (void)removeRefreshViews {
 	refreshFooterView.hidden = YES;
 	refreshHeaderView.hidden = YES;
 }
 
-- (void)setupRefreshViews {
+- (void)setupRefreshViews:(CGFloat)top bottom:(CGFloat)bottom {
+	
+	self.topLength = top;
+	self.bottomLength = bottom;
 	
 	if(!NSClassFromString(@"UIPopoverController")) {
 		refreshFooterView = nil;
@@ -128,9 +131,9 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE;
+	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE - topLength;
 	if([PSResizing iPad]) {
-		PULL_THRESHOLD = PULL_THRESHOLD_IPAD;
+		PULL_THRESHOLD = PULL_THRESHOLD_IPAD - topLength;
 	}
 	
 	if (scrollView.isDragging) {
@@ -156,7 +159,7 @@
 	}
 	BOOL reloadTriggered = NO;
 	
-	if (scrollView.contentOffset.y <= PULL_THRESHOLD && !_reloading && !refreshHeaderView.hidden) {
+	if (scrollView.contentOffset.y <= (PULL_THRESHOLD - topLength) && !_reloading && !refreshHeaderView.hidden) {
         _reloading = YES;
 		[psDelegate topReloadTriggered];
         [refreshHeaderView setState:EGOOPullRefreshLoading];
@@ -167,7 +170,7 @@
 		reloadTriggered = YES;
 	}
     
-    if ([self endOfTableView:scrollView] <= PULL_THRESHOLD && !_reloading && !refreshFooterView.hidden) {
+    if ([self endOfTableView:scrollView] <= (PULL_THRESHOLD - bottomLength) && !_reloading && !refreshFooterView.hidden) {
         _reloading = YES;
 		[psDelegate bottomReloadTriggered];
         [refreshFooterView setState:EGOOPullRefreshLoading];
@@ -202,7 +205,10 @@
 	if([currentScrollView respondsToSelector:@selector(setContentInset:)]) {
 		[UIView beginAnimations:nil context:NULL];
 		[UIView setAnimationDuration:0.3];
-		[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+//		[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+		[currentScrollView setContentInset:UIEdgeInsetsMake(topLength, 0.0f, bottomLength, 0.0f)];
+		[currentScrollView setScrollIndicatorInsets:UIEdgeInsetsMake(topLength, 0.0f, bottomLength, 0.0f)];
+		//currentScrollView.scrollIndicatorInsets = UIEdgeInsetsZero;
 		[UIView commitAnimations];
 	}
 	

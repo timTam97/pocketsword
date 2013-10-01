@@ -25,13 +25,18 @@
     //BOOL _reloadingFooter;
 	BOOL _reloading;
     float cachedHeight;
+	
+	CGFloat topLength;
+	CGFloat bottomLength;
 }
 
 @property (nonatomic, assign) id<PSWebViewDelegate> psDelegate;
+@property CGFloat topLength;
+@property CGFloat bottomLength;
 //@property(assign,getter=isReloading) BOOL reloading;
 
 - (void)dataSourceDidFinishLoadingNewData;
-- (void)setupRefreshViews;
+- (void)setupRefreshViews:(CGFloat)top bottom:(CGFloat)bottom;
 - (void)removeRefreshViews;
 
 @end
