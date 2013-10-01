@@ -15,9 +15,11 @@
 
 @implementation PSAboutScreenController
 
+@synthesize aboutWebView;
+
 + (NSString*)generateAboutHTML
 {
-	NSString *body = [NSString stringWithFormat:
+	static NSString *body = [NSString stringWithFormat:
 							 @"<div id=\"header\">\n\
 								 <div class=\"title\">PocketSword</div>\n\
 								 <div class=\"version\"> Version %@</div>\n\
@@ -148,28 +150,43 @@
 			body];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	
+	UIWebView *wv = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	wv.delegate = self;
+	wv.backgroundColor = [UIColor blackColor];
+	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
+	[wv loadHTMLString: black baseURL: nil];
+	[baseView addSubview:wv];
+	self.aboutWebView = wv;
+	[wv release];
+	
+	self.view = baseView;
+	[baseView release];
+}
+
+- (void)viewDidLoad {
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+	
+	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
+	self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
+	[emailUsBarButtonItem release];
+
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
-	aboutWebView.delegate = self;
-	
-	self.navigationItem.rightBarButtonItem = nil;
-	//if([MFMailComposeViewController canSendMail]) {
-		//UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
-		UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
-		self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
-		[emailUsBarButtonItem release];
-	//} else {
-		//what should I show here instead?
-	//}
-	
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	self.navigationItem.rightBarButtonItem = nil;
 }
 
 - (NSString *) platform {
@@ -197,6 +214,8 @@
 #define IPHONE_4_NAMESTRING             @"iPhone 4"
 #define IPHONE_4S_NAMESTRING            @"iPhone 4S"
 #define IPHONE_5_NAMESTRING             @"iPhone 5"
+#define IPHONE_5C_NAMESTRING            @"iPhone 5c"
+#define IPHONE_5S_NAMESTRING            @"iPhone 5s"
 //#define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
 
 #define IPOD_1G_NAMESTRING              @"iPod touch 1G"
@@ -239,7 +258,12 @@
     if ([platform hasPrefix:@"iPhone2"])            return IPHONE_3GS_NAMESTRING;
     if ([platform hasPrefix:@"iPhone3"])            return IPHONE_4_NAMESTRING;
     if ([platform hasPrefix:@"iPhone4"])            return IPHONE_4S_NAMESTRING;
-    if ([platform hasPrefix:@"iPhone5"])            return IPHONE_5_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone5,1"])            return IPHONE_5_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone5,2"])            return IPHONE_5_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone5,3"])            return IPHONE_5C_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone5,4"])            return IPHONE_5C_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone6,1"])            return IPHONE_5S_NAMESTRING;
+    if ([platform hasPrefix:@"iPhone6,2"])            return IPHONE_5S_NAMESTRING;
     
     // iPod
     if ([platform hasPrefix:@"iPod1"])              return IPOD_1G_NAMESTRING;
@@ -261,14 +285,6 @@
 		[platform hasPrefix:@"iPad3,6"])            return IPAD_4G_NAMESTRING;
     if ([platform hasPrefix:@"iPad3"])              return IPAD_3G_NAMESTRING;
     
-    // Apple TV
-//    if ([platform hasPrefix:@"AppleTV2"])           return UIDeviceAppleTV2;
-//    if ([platform hasPrefix:@"AppleTV3"])           return UIDeviceAppleTV3;
-	
-//    if ([platform hasPrefix:@"iPhone"])             return UIDeviceUnknowniPhone;
-//    if ([platform hasPrefix:@"iPod"])               return UIDeviceUnknowniPod;
-//    if ([platform hasPrefix:@"iPad"])               return UIDeviceUnknowniPad;
-//    if ([platform hasPrefix:@"AppleTV"])            return UIDeviceUnknownAppleTV;
     
     // Simulator thanks Jordan Breeding
     if ([platform hasSuffix:@"86"] || [platform isEqual:@"x86_64"])
@@ -295,9 +311,6 @@
 		mailComposeViewController.navigationBar.barStyle = UIBarStyleBlack;
 		[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
 		[mailComposeViewController release];
-		//NSString *email = [NSString stringWithFormat:@"mailto:%@?subject=%@", recipients, subject];
-		 //email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		 //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
 	}
 }
 
@@ -326,6 +339,7 @@
 }
 
 - (void)dealloc {
+	self.aboutWebView = nil;
     [super dealloc];
 }
 

@@ -50,10 +50,9 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface ViewController : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
+@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
 	// Tab bar
-	IBOutlet UITabBarController *tabController;
-    IBOutlet UIWindow *window;
+	UITabBarController *tabBarController;
 	
 	// Bible tab
 	PSBibleViewController				*bibleTabController;
@@ -86,8 +85,8 @@ typedef enum {
 	// Preferences tab
 	
 	// About tab
-	IBOutlet UITabBarItem				*aboutTabBarItem;
-		
+
+	// Search tab
 	PSSearchHistoryItem					*savedSearchHistoryItem;
 	ShownTab							savedSearchResultsTab;
 }
@@ -97,6 +96,7 @@ typedef enum {
 @property (retain) PSBibleViewController			*bibleTabController;
 @property (retain) PSCommentaryViewController		*commentaryTabController;
 @property (retain) PSDevotionalViewController		*devotionalTabController;
+@property (retain) UITabBarController				*tabBarController;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;
@@ -120,7 +120,7 @@ typedef enum {
 - (IBAction)toggleModulesListFromButton:(id)sender;
 - (void)toggleMultiList:(id)sender;
 - (IBAction)toggleMultiList;
-- (UITabBarController *)tabBarController;
+//- (UITabBarController *)tabBarController;
 - (IBAction)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;

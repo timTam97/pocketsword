@@ -10,8 +10,10 @@
 
 
 @interface PSAboutScreenController : UIViewController <UIWebViewDelegate, MFMailComposeViewControllerDelegate> {
-	IBOutlet UIWebView *aboutWebView;
+	UIWebView *aboutWebView;
 }
+
+@property (retain) UIWebView *aboutWebView;
 
 + (NSString*)generateAboutHTML;
 - (void)emailFeedback:(id)sender;

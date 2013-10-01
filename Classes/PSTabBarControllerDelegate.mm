@@ -19,7 +19,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 #import "SearchWebView.h"
 #import "PSHistoryController.h"
 #import "NavigatorSources.h"
@@ -38,28 +38,32 @@
 #import "PSDevotionalViewController.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
+#import "PSAboutScreenController.h"
 
 #define INFO_LANDSCAPE_HEIGHT 100.0
 #define INFO_PORTRAIT_HEIGHT 160.0
 #define INFO_IPAD_LANDSCAPE_HEIGHT 200.0
 #define INFO_IPAD_PORTRAIT_HEIGHT 260.0
 
-@implementation ViewController
+@implementation PSTabBarControllerDelegate
 
-@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController, devotionalTabController;
+@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController, devotionalTabController, tabBarController;
 
 bool ps_viewcontroller_initialized = false;
 
-- (void)awakeFromNib {
-	[super awakeFromNib];
-	
-	if (!ps_viewcontroller_initialized) {
+- (id)init {
+	self = [super init];
+	if(self) {
+		
+		UITabBarController *tbc = [[UITabBarController alloc] init];
+		tbc.delegate = self;
+		self.tabBarController = tbc;
+		[tbc release];
+		
 		[self nightModeChanged];
 		[PSModuleController defaultModuleController];//init
 		
-		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
-		
-		NSMutableArray *tabs;
+		NSMutableArray *tabs = [NSMutableArray arrayWithCapacity:8];
 		// Order of the tabs:
 		// 00: Bible
 		// 01: Commentary
@@ -77,11 +81,7 @@ bool ps_viewcontroller_initialized = false;
 		[cvc setDelegate:self];
 		UINavigationController *cTab = [[UINavigationController alloc] initWithRootViewController:cvc];
 		cTab.navigationBar.barStyle = UIBarStyleBlack;
-		tabs = [tabController.viewControllers mutableCopy];
 		[tabs insertObject:cTab atIndex:0];
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		self.commentaryTabController = cvc;
 		[cTab release];
 		[cvc release];
@@ -95,11 +95,7 @@ bool ps_viewcontroller_initialized = false;
 		bvc.commentaryView = commentaryTabController;
 		UINavigationController *bTab = [[UINavigationController alloc] initWithRootViewController:bvc];
 		bTab.navigationBar.barStyle = UIBarStyleBlack;
-		tabs = [tabController.viewControllers mutableCopy];
 		[tabs insertObject:bTab atIndex:0];
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		self.bibleTabController = bvc;
 		[bTab release];
 		[bvc release];
@@ -112,11 +108,7 @@ bool ps_viewcontroller_initialized = false;
 		UITabBarItem *dTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary") image:[UIImage imageNamed:@"dictionary.png"] tag:99];
 		dictionaryTab.tabBarItem = dTBI;
 		[dTBI release];
-		tabs = [tabController.viewControllers mutableCopy];
 		[tabs insertObject:dictionaryTab atIndex:2];
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		[dictionaryViewController release];
 		[dictionaryTab release];
 		
@@ -128,11 +120,7 @@ bool ps_viewcontroller_initialized = false;
 		UITabBarItem *tbI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
 		bookmarksTab.tabBarItem = tbI;
 		[tbI release];
-		tabs = [tabController.viewControllers mutableCopy];
 		[tabs insertObject:bookmarksTab atIndex:3];
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		[bookmarksViewController release];
 		[bookmarksTab release];
 		
@@ -151,16 +139,12 @@ bool ps_viewcontroller_initialized = false;
 		}
 		[devotionalTBI release];
 		self.devotionalTabController = devoViewController;
-		tabs = [tabController.viewControllers mutableCopy];
 		if([PSResizing iPad]) {
 			[tabs insertObject:devoIPadTab atIndex:4];
 			[devoIPadTab release];
 		} else {
 			[tabs insertObject:devoViewController atIndex:4];
 		}
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		[devoViewController release];
 		
 		//add the Downloads tab.
@@ -175,16 +159,12 @@ bool ps_viewcontroller_initialized = false;
 			downloadsViewController.tabBarItem = downloadsTabBarItem;
 		}
 		[downloadsTabBarItem release];
-		tabs = [tabController.viewControllers mutableCopy];
 		if([PSResizing iPad]) {
 			[tabs insertObject:downloadsIPadTab atIndex:5];
 			[downloadsIPadTab release];
 		} else {
 			[tabs insertObject:downloadsViewController atIndex:5];
 		}
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		[downloadsViewController release];
 		
 		//add the Preferences tab.
@@ -199,25 +179,42 @@ bool ps_viewcontroller_initialized = false;
 			preferencesViewController.tabBarItem = preferencesTabBarItem;
 		}
 		[preferencesTabBarItem release];
-		tabs = [tabController.viewControllers mutableCopy];
 		if([PSResizing iPad]) {
 			[tabs insertObject:preferencesIPadTab atIndex:6];
 			[preferencesIPadTab release];
 		} else {
 			[tabs insertObject:preferencesViewController atIndex:6];
 		}
-		[tabController setViewControllers:tabs animated:NO];
-		[tabs release];
-		tabs = nil;
 		[preferencesViewController release];
 		
+		//add the About tab.
+		PSAboutScreenController *aboutViewController = [[PSAboutScreenController alloc] init];
+		UINavigationController *aboutIPadTab;
+		UITabBarItem *aboutTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleAbout", @"About") image:[UIImage imageNamed:@"about.png"] tag:0];
+		if([PSResizing iPad]) {
+			aboutIPadTab = [[UINavigationController alloc] initWithRootViewController:aboutViewController];
+			aboutIPadTab.navigationBar.barStyle = UIBarStyleBlack;
+			aboutIPadTab.tabBarItem = aboutTBI;
+		} else {
+			aboutViewController.tabBarItem = aboutTBI;
+		}
+		[aboutTBI release];
+		if([PSResizing iPad]) {
+			[tabs insertObject:aboutIPadTab atIndex:7];
+			[aboutIPadTab release];
+		} else {
+			[tabs insertObject:aboutViewController atIndex:7];
+		}
+		[aboutViewController release];
 		
-		
-		tabController.customizableViewControllers = nil;
-		tabController.selectedIndex = 0;
-		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
-		tabController.delegate = self;
+		[tabBarController setViewControllers:tabs animated:NO];
+		tabs = nil;
+
+		tabBarController.customizableViewControllers = nil;
+		tabBarController.selectedIndex = 0;
+		tabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+		tabBarController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
+		tabBarController.delegate = self;
 		
 				
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
@@ -255,20 +252,20 @@ bool ps_viewcontroller_initialized = false;
 
 		ps_viewcontroller_initialized = true;
 	}
-	
+	return self;
 }
 
 - (void)nightModeChanged {
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
-	[window setBackgroundColor:backgroundColor];
+	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) setBackgroundColor:backgroundColor];
 }
 
 - (void)switchToFullscreen {
-	if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+	if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 		// bible tab
 		[bibleTabController switchToFullscreen];
-	} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 		// commentary tab
 		[commentaryTabController switchToFullscreen];
 	}
@@ -306,9 +303,9 @@ bool ps_viewcontroller_initialized = false;
 }
 
 - (void)searchDidFinish:(PSSearchHistoryItem *)newSearchHistoryItem {
-	if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+	if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 		self.savedSearchResultsTab = BibleTab;
-	} else if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+	} else if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 		self.savedSearchResultsTab = CommentaryTab;
 	}
 	self.savedSearchHistoryItem = newSearchHistoryItem;
@@ -323,7 +320,7 @@ bool ps_viewcontroller_initialized = false;
 	
 	//if([multiListController.view superview]) {
 	if(multiListController) {
-		[tabController dismissModalViewControllerAnimated:YES];
+		[tabBarController dismissModalViewControllerAnimated:YES];
 		multiListController = nil;
 	} else {
 		
@@ -340,7 +337,7 @@ bool ps_viewcontroller_initialized = false;
 		NSArray* controllers = [NSArray arrayWithObjects:historyNavigationController, searchNavigationController, nil];
 		multiListController.viewControllers = controllers;
 		
-		if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view] || bibleTabController.isFullScreen) {
+		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view] || bibleTabController.isFullScreen) {
 			[historyController setListType:BibleTab];
 			[searchController setListType:BibleTab];
 			if(savedSearchResultsTab == BibleTab && savedSearchHistoryItem && savedSearchHistoryItem.results) {
@@ -365,7 +362,7 @@ bool ps_viewcontroller_initialized = false;
 		if([[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastMultiListTab] == SearchTab) {
 			[multiListController setSelectedViewController:searchNavigationController];
 		}
-		[tabController presentModalViewController:multiListController animated:YES];
+		[tabBarController presentModalViewController:multiListController animated:YES];
 		[searchNavigationController release];
 		[historyNavigationController release];
 		[historyController release];
@@ -405,7 +402,7 @@ bool ps_viewcontroller_initialized = false;
 		//if(iPad) {
             [popoverController dismissPopoverAnimated:YES];
 		//} else {
-			[tabController dismissModalViewControllerAnimated:animated];
+			[tabBarController dismissModalViewControllerAnimated:animated];
 		//}
 		moduleSelectorViewController = nil;
 	} else {
@@ -414,18 +411,18 @@ bool ps_viewcontroller_initialized = false;
 		//modSelectorNavController.navigationBarHidden = YES;
 		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;
 		//modSelectorNavController.toolbarHidden = NO;
-		[moduleSelectorViewController setParentTabBarController:tabController];
+		[moduleSelectorViewController setParentTabBarController:tabBarController];
 
 		if(iPad) {
 			popoverController = [[UIPopoverController alloc] initWithContentViewController:modSelectorNavController];
 			[popoverController setDelegate:self];
 		}
 		//set the module selector to use the correct module type.
-		if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:BibleTab];
-		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:CommentaryTab];
-		} else if([[devotionalTabController devotionalWebView] isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[devotionalTabController devotionalWebView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:DevotionalTab];
 		} else {
 			[moduleSelectorViewController setListType:DictionaryTab];
@@ -435,20 +432,20 @@ bool ps_viewcontroller_initialized = false;
 		} else {
 			DLog(@"We should only be calling toggleModulesList with a sender now!");
 			CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
-			[popoverController presentPopoverFromRect:theSpot inView:tabController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			[popoverController presentPopoverFromRect:theSpot inView:tabBarController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		}
 
 		if(!iPad) {
-			[tabController presentModalViewController:modSelectorNavController animated:animated];
+			[tabBarController presentModalViewController:modSelectorNavController animated:animated];
 		} else {
 			[popoverController setPopoverContentSize:moduleSelectorViewController.contentSizeForViewInPopover animated:NO];
 		}
 	}
 }
 
-- (UITabBarController *)tabBarController {
-	return tabController;
-}
+//- (UITabBarController *)tabBarController {
+//	return tabBarController;
+//}
 
 - (IBAction)addModuleButtonPressed {
 	[self setShownTabTo:DownloadsTab];
@@ -466,14 +463,14 @@ bool ps_viewcontroller_initialized = false;
     BOOL iPad = [PSResizing iPad];
 	if(refNavigationController || [popoverController isPopoverVisible]) {
         if(!iPad) {
-            [[self tabBarController] dismissModalViewControllerAnimated:YES];
+            [tabBarController dismissModalViewControllerAnimated:YES];
         } else {
             [popoverController dismissPopoverAnimated:YES];
         }
 		refSelectorController = nil;
 		refNavigationController = nil;
 	} else {
-		if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			// bible tab
 			if(![[PSModuleController defaultModuleController] primaryBible]) {
                 //no Bible selected, so ignore...
@@ -485,7 +482,7 @@ bool ps_viewcontroller_initialized = false;
 			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
-                [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
+                [tabBarController presentModalViewController:refNavigationController animated:YES];
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
@@ -496,7 +493,7 @@ bool ps_viewcontroller_initialized = false;
 				[popoverController presentPopoverFromRect:rect inView:viewToPresentPopoverFrom permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
                 [refSelectorController willShowNavigation];
             }
-		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			// commentary tab
             if(!([[PSModuleController defaultModuleController] primaryCommentary])) {
                 //no Commentary selected, so ignore...
@@ -508,7 +505,7 @@ bool ps_viewcontroller_initialized = false;
 			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
-                [[self tabBarController] presentModalViewController:refNavigationController animated:YES];
+                [tabBarController presentModalViewController:refNavigationController animated:YES];
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
@@ -558,7 +555,7 @@ bool ps_viewcontroller_initialized = false;
 		}
 	} else {
 		
-		if([[bibleTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			// bible tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
@@ -566,7 +563,7 @@ bool ps_viewcontroller_initialized = false;
 			[self displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationAddBibleHistoryItem object:nil];
 			[PSHistoryController addHistoryItem:BibleTab];
-		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			// commentary tab
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
 			[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
@@ -985,7 +982,7 @@ bool ps_viewcontroller_initialized = false;
 		[infoWebView release];
 		
 		
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
+		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabBarController.interfaceOrientation;
 		if([UIApplication sharedApplication].statusBarHidden) {
 			//we are in fullscreen mode in the Bible or Commentary tab.
 			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
@@ -1027,9 +1024,9 @@ bool ps_viewcontroller_initialized = false;
 		[UIView setAnimationDuration:0.3];
 		
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabController.interfaceOrientation;
+		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabBarController.interfaceOrientation;
 		if([UIApplication sharedApplication].statusBarHidden) {
-			//interfaceOrientation = tabController.interfaceOrientation;
+			//interfaceOrientation = tabBarController.interfaceOrientation;
 			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 		}
 		BOOL deviceIsPad = [PSResizing iPad];
@@ -1276,27 +1273,27 @@ bool ps_viewcontroller_initialized = false;
 	switch(tab) {
 		case BibleTab:
 		{
-			for(UIViewController* uivc in tabController.viewControllers) {
+			for(UIViewController* uivc in tabBarController.viewControllers) {
 				if([uivc.title isEqualToString:BibleTabTitleString]) {
-					tabController.selectedViewController = uivc;
+					tabBarController.selectedViewController = uivc;
 				}
 			}
 		}
 			break;
 		case CommentaryTab:
 		{
-			for(UIViewController* uivc in tabController.viewControllers) {
+			for(UIViewController* uivc in tabBarController.viewControllers) {
 				if([uivc.title isEqualToString:CommentaryTabTitleString]) {
-					tabController.selectedViewController = uivc;
+					tabBarController.selectedViewController = uivc;
 				}
 			}
 		}
 			break;
 		case DownloadsTab:
 		{
-			for(UIViewController *uivc in tabController.viewControllers) {
+			for(UIViewController *uivc in tabBarController.viewControllers) {
 				if([uivc isKindOfClass:[NavigatorSources class]]) {
-					tabController.selectedViewController = uivc;
+					tabBarController.selectedViewController = uivc;
 					break;
 				}
 			}
@@ -1304,9 +1301,9 @@ bool ps_viewcontroller_initialized = false;
 			break;
 		case PreferencesTab:
 		{
-			for(UIViewController *uivc in tabController.viewControllers) {
+			for(UIViewController *uivc in tabBarController.viewControllers) {
 				if([uivc isKindOfClass:[PSPreferencesController class]]) {
-					tabController.selectedViewController = uivc;
+					tabBarController.selectedViewController = uivc;
 					break;
 				}
 			}

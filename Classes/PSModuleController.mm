@@ -20,7 +20,7 @@
 
 #import "PSModuleController.h"
 #import "ZipArchive.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
 #import "PSResizing.h"
 

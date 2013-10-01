@@ -10,7 +10,7 @@
 #import "ZipArchive.h"
 
 #import "PSModuleController.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 
 @implementation iPhoneHTTPServerDelegate
 

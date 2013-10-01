@@ -6,7 +6,7 @@
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
 //
 
-@class ViewController;
+@class PSTabBarControllerDelegate;
 
 @interface PSDevotionalViewController : UIViewController <UIWebViewDelegate> {
 	
@@ -29,7 +29,7 @@
 @property (retain) UIDatePicker *devDatePicker;
 @property (retain) UIWebView *devotionalWebView;
 
-- (void)setDelegate:(ViewController*)delegate;
+- (void)setDelegate:(PSTabBarControllerDelegate*)delegate;
 
 - (void)loadNewDevotionalEntry;
 - (void)loadDevotionalForDate:(NSDate *)date;

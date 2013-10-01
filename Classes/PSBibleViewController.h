@@ -9,7 +9,6 @@
 #import "PSModuleViewController.h"
 
 @class PSCommentaryViewController;
-@class ViewController;
 
 @interface PSBibleViewController : PSModuleViewController {
 

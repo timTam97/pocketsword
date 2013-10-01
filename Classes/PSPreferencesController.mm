@@ -10,7 +10,7 @@
 #import "PSPreferencesModuleSelectorTableViewController.h"
 #import "PSResizing.h"
 #import "SwordManager.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 #import "PSModuleController.h"
 #import "PSAboutScreenController.h"
 

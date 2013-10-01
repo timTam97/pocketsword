@@ -8,7 +8,7 @@
 
 #import "PSCommentaryViewController.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 #import "PSResizing.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"

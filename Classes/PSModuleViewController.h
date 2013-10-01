@@ -9,7 +9,7 @@
 #import "PSWebView.h"
 #import "globals.h"
 
-@class ViewController;
+@class PSTabBarControllerDelegate;
 
 @interface PSModuleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, PSWebViewDelegate> {
 
@@ -17,7 +17,7 @@
 	PSWebView					*webView;
 	UIBarButtonItem				*moduleButton;
 	
-	ViewController				*delegate;
+	PSTabBarControllerDelegate				*delegate;
 	
 	NSString					*refToShow;
 	NSString					*jsToShow;
@@ -35,11 +35,11 @@
 @property (readonly)		BOOL						isFullScreen;
 @property (retain)			UIBarButtonItem				*moduleButton;
 @property (retain)			UISegmentedControl			*titleSegmentedControl;
-@property (assign)			ViewController				*delegate;
+@property (assign)			PSTabBarControllerDelegate	*delegate;
 @property (retain)			PSWebView					*webView;
 
-- (void)setDelegate:(ViewController*)vc;
-- (ViewController*)delegate;
+- (void)setDelegate:(PSTabBarControllerDelegate*)vc;
+- (PSTabBarControllerDelegate*)delegate;
 
 - (void)toggleFullscreen;
 - (void)switchToFullscreen;

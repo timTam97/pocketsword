@@ -24,12 +24,15 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
+#import "SnoopWindow.h"
+#import "PSBibleViewController.h"
+#import "PSCommentaryViewController.h"
 //#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate
 
-@synthesize window, urlToOpen, launchedWithOptions;
+@synthesize window, urlToOpen, launchedWithOptions, tabBarControllerDelegate;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate {
     return (PocketSwordAppDelegate *) [UIApplication sharedApplication].delegate;
@@ -108,11 +111,14 @@
 	PSLaunchViewController *lVC = [[PSLaunchViewController alloc] init];
 	[lVC setDelegate:self];
 		
-	if([window respondsToSelector:@selector(rootViewController)]) {
-		window.rootViewController = lVC;
+	self.window = [[[SnoopWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+	self.window.backgroundColor = [UIColor whiteColor];
+
+	if([self.window respondsToSelector:@selector(rootViewController)]) {
+		self.window.rootViewController = lVC;
 	} else {
 		[lVC loadView];
-		[window addSubview:lVC.view];
+		[self.window addSubview:lVC.view];
 	}
 	
 	[lVC performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
@@ -123,12 +129,18 @@
 }
 
 - (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
+	PSTabBarControllerDelegate *tbcd = [[PSTabBarControllerDelegate alloc] init];
+	self.tabBarControllerDelegate = tbcd;
+	[tbcd release];
+	((SnoopWindow*)self.window).bibleWebView = [tabBarControllerDelegate.bibleTabController webView];
+	((SnoopWindow*)self.window).commentaryWebView = [tabBarControllerDelegate.commentaryTabController webView];
+	
 //	DLog(@"finishedInitializing, now to display the tab bar controller");
-	if([window respondsToSelector:@selector(rootViewController)]) {
-		window.rootViewController = tabBarController;
+	if([self.window respondsToSelector:@selector(rootViewController)]) {
+		self.window.rootViewController = tabBarControllerDelegate.tabBarController;
 	} else {
 		[lVC.view removeFromSuperview];
-		[window addSubview:tabBarController.view];
+		[self.window addSubview:tabBarControllerDelegate.tabBarController.view];
 	}
 	
 	if(self.launchedWithOptions) {
@@ -261,7 +273,7 @@
 			//[[NSUserDefaults standardUserDefaults] setObject: module forKey: DefaultsLastBible];
 		}
 		
-		[viewController setShownTabTo:BibleTab];
+		[tabBarControllerDelegate setShownTabTo:BibleTab];
 
 		[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
@@ -275,7 +287,7 @@
 			[[PSModuleController defaultModuleController] loadPrimaryCommentary:module];
 		}
 		
-		[viewController setShownTabTo:CommentaryTab];
+		[tabBarControllerDelegate setShownTabTo:CommentaryTab];
 
 		[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
@@ -288,7 +300,7 @@
 	}
 	
 	if (module != nil && [module isEqualToString:LIST]) {
-		[viewController toggleModulesListAnimated:NO withModule:nil fromButton:nil];
+		[tabBarControllerDelegate toggleModulesListAnimated:NO withModule:nil fromButton:nil];
 	}
 
 	return YES;
@@ -313,6 +325,7 @@
 	self.window = nil;
 	self.urlToOpen = nil;
 	self.launchedWithOptions = nil;
+	self.tabBarControllerDelegate = nil;
 	[PSLanguageCode doneWithLookupTable];
     [super dealloc];
 }

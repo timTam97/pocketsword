@@ -11,7 +11,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 #import "PSHistoryController.h"
 #import "PSResizing.h"
 
@@ -39,7 +39,7 @@
 	[baseView release];
 }
 
-- (void)setDelegate:(ViewController*)delegate {
+- (void)setDelegate:(PSTabBarControllerDelegate*)delegate {
 	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 	if(!devoTitle) {
 		devoTitle = NSLocalizedString(@"None", @"");
@@ -82,6 +82,7 @@
 
 
 - (void)dealloc {
+	self.devotionalWebView = nil;
     [super dealloc];
 }
 
@@ -227,7 +228,7 @@
 	if(self.devPickerView || [popoverController isPopoverVisible]) {
 		self.currentDevotionalDate = [self.devDatePicker date];
         if(!iPad) {
-			[ViewController hideModal:self.devPickerView withTiming:0.3];
+			[PSTabBarControllerDelegate hideModal:self.devPickerView withTiming:0.3];
         } else {
             [popoverController dismissPopoverAnimated:YES];
 			[popoverController release];
@@ -265,7 +266,7 @@
 				self.devPickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
 			}
 			self.devDatePicker.frame = CGRectMake(0, 44, 320, 216);
-			[ViewController showModal:self.devPickerView withTiming:0.3];
+			[PSTabBarControllerDelegate showModal:self.devPickerView withTiming:0.3];
 		}
 	}
 }

@@ -20,20 +20,21 @@
 #import "PSResizing.h"
 #import "PSLaunchViewController.h"
 
-@class ViewController;
+@class PSTabBarControllerDelegate;
+@class SnoopWindow;
 
 @interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate, PSLaunchDelegate> {
-    IBOutlet UIWindow *window;
-    IBOutlet UITabBarController *tabBarController;
+    UIWindow *window;
 	
 	NSURL *urlToOpen;
 	NSDictionary *launchedWithOptions;
-	IBOutlet ViewController *viewController;
+	PSTabBarControllerDelegate *tabBarControllerDelegate;
 }
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) NSURL *urlToOpen;
 @property (nonatomic, retain) NSDictionary *launchedWithOptions;
+@property (retain) PSTabBarControllerDelegate *tabBarControllerDelegate;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate;
 - (void)storeDidChange:(NSNotification *)notification;

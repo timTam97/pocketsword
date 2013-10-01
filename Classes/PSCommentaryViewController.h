@@ -8,8 +8,6 @@
 
 #import "PSModuleViewController.h"
 
-@class ViewController;
-
 @interface PSCommentaryViewController : PSModuleViewController {
 }
 

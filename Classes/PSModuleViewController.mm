@@ -8,7 +8,7 @@
 
 #import "PSModuleViewController.h"
 #import "PSModuleController.h"
-#import "ViewController.h"
+#import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
 #import "PSBookmarkAddViewController.h"
 #import "PSResizing.h"
@@ -78,8 +78,11 @@
 			break;
 	}
 	
-	
-	NSArray *segments = [NSArray arrayWithObjects:[UIImage imageNamed:@"back-white.png"], @"Gen 23:23", [UIImage imageNamed:@"forward-white.png"], nil];
+	UIImage *backImg = [UIImage imageNamed:@"back-white.png"];
+	backImg.accessibilityLabel = NSLocalizedString(@"VoiceOverPreviousChapterButton", @"");
+	UIImage *forwardImg = [UIImage imageNamed:@"forward-white.png"];
+	forwardImg.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
+	NSArray *segments = [NSArray arrayWithObjects:backImg, @"Gen 23:23", forwardImg, nil];
 	UISegmentedControl *segControl = [[UISegmentedControl alloc] initWithItems:segments];
 	segControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segControl.momentary = YES;
@@ -137,7 +140,7 @@
 	}
 	
 	if(isFullScreen) {
-		[ViewController displayTitle:ref];
+		[PSTabBarControllerDelegate displayTitle:ref];
 	}
 
 	switch(tabType) {
@@ -170,7 +173,7 @@
 	}
 	
 	if(isFullScreen) {
-		[ViewController displayTitle:ref];
+		[PSTabBarControllerDelegate displayTitle:ref];
 	}
 		
 	switch(tabType) {
@@ -221,11 +224,11 @@
 	[pool release];
 }
 
-- (ViewController*)delegate {
+- (PSTabBarControllerDelegate*)delegate {
 	return delegate;
 }
 
-- (void)setDelegate:(ViewController*)vc {
+- (void)setDelegate:(PSTabBarControllerDelegate*)vc {
 
 	UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"history.png"] style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleMultiList:)];
 	searchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
