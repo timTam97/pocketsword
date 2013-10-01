@@ -24,9 +24,20 @@
 	fontSizeLabel.backgroundColor = [UIColor clearColor];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	CGFloat topLength = 0;
+	if([self respondsToSelector:@selector(topLayoutGuide)]) {
+		topLength = [[self topLayoutGuide] length];
+		if(topLength == 0.0f) {
+			topLength = self.navigationController.navigationBar.frame.size.height;
+		}
+		[self.tableView setContentInset:UIEdgeInsetsMake(topLength, 0.0f, 0.0f, 0.0f)];
+	}
+}
+
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[self.tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -35,7 +46,6 @@
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule {
 	//set title to the module name
-	self.tabBarController.navigationItem.title = [swordModule name];
 	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ %@", [swordModule name], NSLocalizedString(@"TabBarTitlePreferences", @"")] image:[UIImage imageNamed:@"gear-24.png"] tag:101];
 	self.tabBarItem = tbi;
 	[tbi release];
