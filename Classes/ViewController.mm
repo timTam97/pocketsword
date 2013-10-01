@@ -59,11 +59,16 @@ bool ps_viewcontroller_initialized = false;
 		
 		aboutTabBarItem.title = NSLocalizedString(@"TabBarTitleAbout", @"About");
 		
-		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
-		tabController.delegate = self;
-		
 		NSMutableArray *tabs;
+		// Order of the tabs:
+		// 00: Bible
+		// 01: Commentary
+		// 02: Dictionary
+		// 03: Bookmarks
+		// 04: Daily Devotionals
+		// 05: Downloads
+		// 06: Preferences
+		// 07: About
 		
 		//add the Commentary Tab.
 		PSCommentaryViewController *cvc = [[PSCommentaryViewController alloc] init];
@@ -115,7 +120,7 @@ bool ps_viewcontroller_initialized = false;
 		[dictionaryViewController release];
 		[dictionaryTab release];
 		
-		//add the bookmarks tab:
+		//add the bookmarks tab.
 		[PSBookmarks importBookmarksFromV2];
 		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController *bookmarksTab = [[UINavigationController alloc] initWithRootViewController:bookmarksViewController];
@@ -131,7 +136,7 @@ bool ps_viewcontroller_initialized = false;
 		[bookmarksViewController release];
 		[bookmarksTab release];
 		
-		//add the Downloads tab at index 5
+		//add the Downloads tab.
 		NavigatorSources *downloadsViewController = [[NavigatorSources alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController *downloadsIPadTab;
 		UITabBarItem *downloadsTabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemDownloads tag:5];
@@ -155,8 +160,36 @@ bool ps_viewcontroller_initialized = false;
 		tabs = nil;
 		[downloadsViewController release];
 		
+		//add the Preferences tab.
+		PSPreferencesController *preferencesViewController = [[PSPreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
+		UINavigationController *preferencesIPadTab;
+		UITabBarItem *preferencesTabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitlePreferences", @"Preferences") image:[UIImage imageNamed:@"gear-24.png"] tag:9];
+		if([PSResizing iPad]) {
+			preferencesIPadTab = [[UINavigationController alloc] initWithRootViewController:preferencesViewController];
+			preferencesIPadTab.navigationBar.barStyle = UIBarStyleBlack;
+			preferencesIPadTab.tabBarItem = preferencesTabBarItem;
+		} else {
+			preferencesViewController.tabBarItem = preferencesTabBarItem;
+		}
+		[preferencesTabBarItem release];
+		tabs = [tabController.viewControllers mutableCopy];
+		if([PSResizing iPad]) {
+			[tabs insertObject:preferencesIPadTab atIndex:6];
+			[preferencesIPadTab release];
+		} else {
+			[tabs insertObject:preferencesViewController atIndex:6];
+		}
+		[tabController setViewControllers:tabs animated:NO];
+		[tabs release];
+		tabs = nil;
+		[preferencesViewController release];
+		
 		tabController.customizableViewControllers = nil;
 		tabController.selectedIndex = 0;
+		tabController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+		tabController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
+		tabController.delegate = self;
+		
 				
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryBible object:nil];
 		NSString *lastRef = [PSModuleController getCurrentBibleRef];

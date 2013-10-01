@@ -69,11 +69,9 @@
 
 @implementation PSPreferencesController
 
-//BOOL requireReloadOfModuleViews = NO;
-
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	preferencesTabBarItem.title = NSLocalizedString(@"TabBarTitlePreferences", @"Preferences");
+	
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
@@ -85,7 +83,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[preferencesTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -118,7 +116,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[preferencesTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -206,7 +204,7 @@
 	BOOL resetCell = YES;
 	CGFloat xx = 0.0;
 	BOOL deviceIsPad = [PSResizing iPad];
-	UIInterfaceOrientation interfaceOrientation = tabController.interfaceOrientation;
+	UIInterfaceOrientation interfaceOrientation = self.tabBarController.interfaceOrientation;
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		xx = 160.0;
 		if(deviceIsPad) {
@@ -873,19 +871,19 @@
 - (void)morphGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsMorphGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)strongsGreekModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsGreekModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)strongsHebrewModuleChanged:(NSString *)newModule {
 	[[NSUserDefaults standardUserDefaults] setObject:newModule forKey:DefaultsStrongsHebrewModule];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)xrefChanged:(UISwitch *)sender {
@@ -946,7 +944,7 @@
 - (void)fontNameChanged:(NSString *)newFont {
 	[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[preferencesTableView reloadData];
+	[self.tableView reloadData];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 
