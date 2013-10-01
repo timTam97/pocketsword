@@ -25,24 +25,28 @@
 - (void)loadView {
 	UIImage *defaultImg;
 	CGRect aiFrame;
+	int displayMultiplier = 1;
+	if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+		([UIScreen mainScreen].scale == 2.0)) {
+		// Retina display
+		displayMultiplier = 2;
+	} else {
+		// non-Retina display
+	}
+	
 	if([PSResizing iPad]) {
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(UIDeviceOrientationIsLandscape(deviceOrientation)) {
+		
+		UIInterfaceOrientation uiOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+		if(uiOrientation == UIInterfaceOrientationLandscapeLeft || uiOrientation == UIInterfaceOrientationLandscapeRight) {
 			defaultImg = [UIImage imageNamed:@"Default-Landscape~ipad.png"];
 			aiFrame = CGRectMake(494, 370, 37, 37);
 		} else {
 			defaultImg = [UIImage imageNamed:@"Default-Portrait~ipad.png"];
 			aiFrame = CGRectMake(366, 499, 37, 37);
 		}
+				
 	} else {
-		int displayMultiplier = 1;
-		if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-			([UIScreen mainScreen].scale == 2.0)) {
-			// Retina display
-			displayMultiplier = 2;
-		} else {
-			// non-Retina display
-		}
+		
 		CGRect screenRect = [[UIScreen mainScreen] bounds];
 		if(screenRect.size.height > 500) {
 			// 4 inch display.
@@ -56,22 +60,10 @@
 		defaultImg = [UIImage imageWithCGImage:imageRef];
 		CGImageRelease(imageRef);
 		aiFrame = CGRectMake(141, 388, 37, 37);
+		
 	}
 	
 	UIImageView *launchImgView = [[UIImageView alloc] initWithImage:defaultImg];
-	if([PSResizing iPad]) {
-		UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-		if(deviceOrientation == UIDeviceOrientationLandscapeLeft) {
-			launchImgView.transform = CGAffineTransformIdentity;
-			launchImgView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-		} else if(deviceOrientation == UIDeviceOrientationLandscapeRight) {
-			launchImgView.transform = CGAffineTransformIdentity;
-			launchImgView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-		} else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown) {
-			launchImgView.transform = CGAffineTransformIdentity;
-			launchImgView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-		}
-	}
 	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	activityInd.hidesWhenStopped = NO;
 	[launchImgView addSubview:activityInd];

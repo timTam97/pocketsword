@@ -57,6 +57,10 @@ bool ps_viewcontroller_initialized = false;
 		
 		UITabBarController *tbc = [[UITabBarController alloc] init];
 		tbc.delegate = self;
+		if([tbc.tabBar respondsToSelector:@selector(isTranslucent)]) {
+			[tbc.tabBar setTranslucent:NO];
+			[tbc.tabBar setBarTintColor:[UIColor blackColor]];
+		}
 		self.tabBarController = tbc;
 		[tbc release];
 		
@@ -190,7 +194,7 @@ bool ps_viewcontroller_initialized = false;
 		//add the About tab.
 		PSAboutScreenController *aboutViewController = [[PSAboutScreenController alloc] init];
 		UINavigationController *aboutIPadTab;
-		UITabBarItem *aboutTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleAbout", @"About") image:[UIImage imageNamed:@"about.png"] tag:0];
+		UITabBarItem *aboutTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleAbout", @"About") image:[UIImage imageNamed:@"About.png"] tag:0];
 		if([PSResizing iPad]) {
 			aboutIPadTab = [[UINavigationController alloc] initWithRootViewController:aboutViewController];
 			aboutIPadTab.navigationBar.barStyle = UIBarStyleBlack;
@@ -325,6 +329,10 @@ bool ps_viewcontroller_initialized = false;
 	} else {
 		
 		multiListController = [[UITabBarController alloc] init];
+		if([multiListController.tabBar respondsToSelector:@selector(isTranslucent)]) {
+			[multiListController.tabBar setTranslucent:NO];
+			[multiListController.tabBar setBarTintColor:[UIColor blackColor]];
+		}
 		PSHistoryController *historyController = [[PSHistoryController alloc] init];
 		PSSearchController *searchController = [[PSSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];

@@ -60,12 +60,16 @@
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
 	
 	UIView *sqView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	sqView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	UISearchBar *sqSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, viewWidth, 44)];
+	sqSB.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	sqSB.delegate = self;
 	sqSB.barStyle = UIBarStyleBlack;
 	UITableView *sqTable = [[UITableView alloc] initWithFrame:CGRectMake(0, sqSB.frame.size.height, viewWidth, (viewHeight - sqSB.frame.size.height)) style:UITableViewStyleGrouped];
+	sqTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	sqTable.delegate = self;
 	sqTable.dataSource = self;
+	//sqTable.tableHeaderView = sqSB;
 	[sqView addSubview:sqSB];
 	[sqView addSubview:sqTable];
 	self.searchQueryTable = sqTable;
@@ -78,7 +82,9 @@
 	UITableView *srTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) style:UITableViewStylePlain];
 	srTable.delegate = self;
 	srTable.dataSource = self;
+	srTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[baseView addSubview:srTable];
 	self.view = baseView;
 	[baseView release];
@@ -88,8 +94,10 @@
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
 	
-	searchQueryView.bounds = searchResultsTable.bounds;
-	searchQueryView.center = searchResultsTable.center;
+}
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
 }
 
 - (void)dealloc {
@@ -164,11 +172,16 @@
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 		[alertView show];
 		[alertView release];
+	} else  if(!self.results) {
+		searchQueryView.bounds = searchResultsTable.bounds;
+		searchQueryView.center = searchResultsTable.center;
+		[self.view addSubview:searchQueryView];
+		//[self searchButtonPressed:nil];
 	}
 }
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
-	if([[tabBarController selectedViewController] isMemberOfClass:[UINavigationController class]]) {
+	if([[tabBarController selectedViewController].title isEqualToString:NSLocalizedString(@"SearchTitle", @"")]) {
 		switchingTabs = NO;
 	} else {
 		switchingTabs = YES;
@@ -200,9 +213,14 @@
 		// we need to perform a search...  searchTerm should already be well formatted.
 		[self performSelectorInBackground:@selector(search) withObject:nil];
 	} else if(!self.results) {
-		searchQueryView.bounds = searchResultsTable.bounds;
-		searchQueryView.center = searchResultsTable.center;
-		[self.view addSubview:searchQueryView];
+//		searchQueryView.bounds = searchResultsTable.bounds;
+//		searchQueryView.center = searchResultsTable.center;
+//		[self.view addSubview:searchQueryView];
+//		CGFloat topLength = 0;
+//		if([self respondsToSelector:@selector(topLayoutGuide)]) {
+//			topLength = [[self topLayoutGuide] length];
+//			DLog(@"topLength = %f", topLength);
+//		}
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -212,6 +230,7 @@
 	}
 
 	[self refreshView];
+	
 	if(self.results) {
 		if(self.savedTablePosition && [savedTablePosition count] > 0) {
 			if([savedTablePosition count] > 1) {

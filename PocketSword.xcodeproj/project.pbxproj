@@ -1518,13 +1518,6 @@
 			name = "PS-controllers";
 			sourceTree = "<group>";
 		};
-		0516CF04136121DA0058E022 /* xibs-iPad */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "xibs-iPad";
-			sourceTree = "<group>";
-		};
 		051F22AA1737544C00DDFF13 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -2213,13 +2206,6 @@
 			name = zips;
 			sourceTree = "<group>";
 		};
-		052851BA1226613100A99ECD /* xibs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = xibs;
-			sourceTree = "<group>";
-		};
 		052851BB1226614600A99ECD /* misc */ = {
 			isa = PBXGroup;
 			children = (
@@ -2622,8 +2608,6 @@
 			children = (
 				051F22AA1737544C00DDFF13 /* fonts */,
 				052851BB1226614600A99ECD /* misc */,
-				052851BA1226613100A99ECD /* xibs */,
-				0516CF04136121DA0058E022 /* xibs-iPad */,
 				052851B91226611C00A99ECD /* zips */,
 				052851B8122660F600A99ECD /* img */,
 			);

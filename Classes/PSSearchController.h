@@ -25,10 +25,10 @@
 	
 	ShownTab listType;
 
-	IBOutlet UITableView *searchQueryTable;
-	IBOutlet UIView *searchQueryView;
-	IBOutlet UITableView *searchResultsTable;
-	IBOutlet UISearchBar *searchBar;
+	UITableView *searchQueryTable;
+	UIView *searchQueryView;
+	UITableView *searchResultsTable;
+	UISearchBar *searchBar;
 	BOOL switchingTabs;
 	
 	// the below are basically the current PSSearchHistoryItem

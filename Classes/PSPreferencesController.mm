@@ -72,7 +72,7 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	
-	self.view.backgroundColor = [UIColor blackColor];
+	//self.view.backgroundColor = [UIColor blackColor];
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];

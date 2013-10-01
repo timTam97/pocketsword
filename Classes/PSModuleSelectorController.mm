@@ -332,7 +332,9 @@
 	[preferencesViewController displayPrefsForModule:mod];
 	NSArray *tabs = [NSArray arrayWithObjects:detailsViewController, preferencesViewController, nil];
 	[moduleTabBarController setViewControllers:tabs];
-	moduleTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
+	CGSize contentSize = self.contentSizeForViewInPopover;
+	contentSize.height = 2200;
+	moduleTabBarController.contentSizeForViewInPopover = contentSize;
 	[self.navigationController pushViewController:moduleTabBarController animated:YES];
 	[detailsViewController release];
 	[preferencesViewController release];
