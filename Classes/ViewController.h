@@ -36,6 +36,7 @@
 @class PSBibleViewController;
 @class PSCommentaryViewController;
 @class PSRefSelectorController;
+@class PSDevotionalViewController;
 
 typedef enum {
     RestoreScrollPosition = 1,
@@ -78,8 +79,7 @@ typedef enum {
 	PSModuleSelectorController			*moduleSelectorViewController;
 	
 	// Devotional tab
-	IBOutlet UIWebView					*devotionalWebView;
-	IBOutlet UIBarButtonItem			*devotionalTitle;
+	PSDevotionalViewController			*devotionalTabController;
 	
 	// Bookmarks tab
 	
@@ -96,6 +96,7 @@ typedef enum {
 @property (assign, readwrite) ShownTab				savedSearchResultsTab;
 @property (retain) PSBibleViewController			*bibleTabController;
 @property (retain) PSCommentaryViewController		*commentaryTabController;
+@property (retain) PSDevotionalViewController		*devotionalTabController;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;

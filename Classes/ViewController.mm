@@ -46,7 +46,7 @@
 
 @implementation ViewController
 
-@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController;
+@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController, devotionalTabController;
 
 bool ps_viewcontroller_initialized = false;
 
@@ -136,6 +136,33 @@ bool ps_viewcontroller_initialized = false;
 		[bookmarksViewController release];
 		[bookmarksTab release];
 		
+		//add the Daily Devotionals tab.
+		PSDevotionalViewController *devoViewController = [[PSDevotionalViewController alloc] init];
+		//[devoViewController view];//init
+		[devoViewController setDelegate:self];
+		UITabBarItem *devotionalTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDevotional", @"Devotional") image:[UIImage imageNamed:@"Daily-Devotional.png"] tag:0];
+		UINavigationController *devoIPadTab;
+		if([PSResizing iPad]) {
+			devoIPadTab = [[UINavigationController alloc] initWithRootViewController:devoViewController];
+			devoIPadTab.navigationBar.barStyle = UIBarStyleBlack;
+			devoIPadTab.tabBarItem = devotionalTBI;
+		} else {
+			devoViewController.tabBarItem = devotionalTBI;
+		}
+		[devotionalTBI release];
+		self.devotionalTabController = devoViewController;
+		tabs = [tabController.viewControllers mutableCopy];
+		if([PSResizing iPad]) {
+			[tabs insertObject:devoIPadTab atIndex:4];
+			[devoIPadTab release];
+		} else {
+			[tabs insertObject:devoViewController atIndex:4];
+		}
+		[tabController setViewControllers:tabs animated:NO];
+		[tabs release];
+		tabs = nil;
+		[devoViewController release];
+		
 		//add the Downloads tab.
 		NavigatorSources *downloadsViewController = [[NavigatorSources alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController *downloadsIPadTab;
@@ -183,6 +210,8 @@ bool ps_viewcontroller_initialized = false;
 		[tabs release];
 		tabs = nil;
 		[preferencesViewController release];
+		
+		
 		
 		tabController.customizableViewControllers = nil;
 		tabController.selectedIndex = 0;
@@ -396,15 +425,15 @@ bool ps_viewcontroller_initialized = false;
 			[moduleSelectorViewController setListType:BibleTab];
 		} else if([[commentaryTabController webView] isDescendantOfView:tabController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:CommentaryTab];
-		} else if([devotionalWebView isDescendantOfView:tabController.selectedViewController.view]) {
+		} else if([[devotionalTabController devotionalWebView] isDescendantOfView:tabController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:DevotionalTab];
-			[popoverController presentPopoverFromBarButtonItem:devotionalTitle permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else {
 			[moduleSelectorViewController setListType:DictionaryTab];
 		}
 		if(sender) {
 			[popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else {
+			DLog(@"We should only be calling toggleModulesList with a sender now!");
 			CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
 			[popoverController presentPopoverFromRect:theSpot inView:tabController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		}

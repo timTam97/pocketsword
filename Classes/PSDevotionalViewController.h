@@ -6,12 +6,11 @@
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
 //
 
+@class ViewController;
 
-@interface PSDevotionalViewController : UIViewController {
+@interface PSDevotionalViewController : UIViewController <UIWebViewDelegate> {
 	
-	IBOutlet UITabBarItem		*devotionalTabBarItem;
 	IBOutlet UIWebView			*devotionalWebView;
-	IBOutlet UIBarButtonItem	*devotionalTitle;
 
 	UIView *devPickerView;
 	UIDatePicker *devDatePicker;
@@ -25,14 +24,16 @@
 }
 
 @property (readonly, nonatomic) BOOL loaded;
-@property (readwrite, retain) NSDate *currentDevotionalDate;
-@property (readwrite, retain) UIView *devPickerView;
-@property (readwrite, retain) UIDatePicker *devDatePicker;
+@property (retain) NSDate *currentDevotionalDate;
+@property (retain) UIView *devPickerView;
+@property (retain) UIDatePicker *devDatePicker;
+@property (retain) UIWebView *devotionalWebView;
+
+- (void)setDelegate:(ViewController*)delegate;
 
 - (void)loadNewDevotionalEntry;
 - (void)loadDevotionalForDate:(NSDate *)date;
 - (void)todayButtonPressed;
-- (IBAction)moduleButtonPressed;
 - (void)toggleDatePicker;
 - (void)setDevotionalDateTitle:(NSDate*)newDate;
 

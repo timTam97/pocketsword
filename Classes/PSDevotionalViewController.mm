@@ -17,10 +17,39 @@
 
 @implementation PSDevotionalViewController
 
-@synthesize loaded, currentDevotionalDate, devDatePicker, devPickerView;
+@synthesize loaded, currentDevotionalDate, devDatePicker, devPickerView, devotionalWebView;
 
-- (IBAction)moduleButtonPressed {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
+- (void)loadView {
+	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
+	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	
+	UIWebView *wv = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	wv.delegate = self;
+	wv.backgroundColor = [UIColor blackColor];
+	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
+	[wv loadHTMLString: black baseURL: nil];
+	[baseView addSubview:wv];
+	self.devotionalWebView = wv;
+	[wv release];
+	
+	self.view = baseView;
+	[baseView release];
+}
+
+- (void)setDelegate:(ViewController*)delegate {
+	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
+	if(!devoTitle) {
+		devoTitle = NSLocalizedString(@"None", @"");
+	} else {
+		if(![[PSModuleController defaultModuleController] primaryDevotional])
+			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
+	}
+	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:delegate action:@selector(toggleModulesListFromButton:)];
+	self.navigationItem.rightBarButtonItem = moduleButton;
+	[moduleButton release];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -29,24 +58,8 @@
 	loaded = NO;
 	redisplayDatePicker = NO;
 	self.currentDevotionalDate = [NSDate date];
-	
-	devotionalTabBarItem.title = NSLocalizedString(@"TabBarTitleDevotional", @"Devotional");
-	
-	NSString *devoTitle = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
-	if(!devoTitle) {
-		devoTitle = NSLocalizedString(@"None", @"");
-	} else {
-		if(![[PSModuleController defaultModuleController] primaryDevotional])
-			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
-	}
-	if([PSResizing iPad]) {
-		[devotionalTitle setTitle:devoTitle];
-	} else {
-		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-		UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:self action:@selector(moduleButtonPressed)];
-		self.navigationItem.rightBarButtonItem = moduleButton;
-		[moduleButton release];
-	}
+		
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 		
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(devotionalChanged:) name:NotificationDevotionalChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDevotional) name:NotificationNightModeChanged object:nil];
