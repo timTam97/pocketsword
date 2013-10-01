@@ -167,14 +167,14 @@
 }
 
 - (void)handleRefreshStatus {
-	PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
+	//PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
 	BOOL failed = NO;
 	float progress = 0.0f;
 	while (progress < 1.0f) {
 		//[statusBar setProgress: reporter->fileProgress];
 		//HUD.progress = progress;
 		usleep(100);
-		reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
+		PSStatusReporter *reporter = [[PSModuleController defaultModuleController] getInstallationProgress];
 		progress = reporter->fileProgress;
 		if(progress == -1.0) {
 			failed = YES;

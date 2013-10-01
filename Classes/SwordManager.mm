@@ -208,10 +208,10 @@ using std::list;
 		loc = [loc stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
         // check if this locale is available in SWORD
 		sword::StringList::iterator it;
-		sword::SWBuf locale;
+		//sword::SWBuf locale;
         for(it = localelist.begin(); it != localelist.end(); ++it) {
-            locale = *it;
-            NSString *swLoc = [NSString stringWithCString:locale.c_str() encoding:NSUTF8StringEncoding];
+            //locale = *it;
+            NSString *swLoc = [NSString stringWithCString:(*it).c_str() encoding:NSUTF8StringEncoding];
 			//DLog(@"\nloc: %@   swLoc: %@", loc, swLoc);
             if([swLoc hasPrefix:loc]) {
                 haveLocale = YES;
@@ -227,8 +227,8 @@ using std::list;
 				loc = [loc substringToIndex:dashRange.location];
 				// check if this modified locale is available in SWORD
 				for(it = localelist.begin(); it != localelist.end(); ++it) {
-					locale = *it;
-					NSString *swLoc = [NSString stringWithCString:locale.c_str() encoding:NSUTF8StringEncoding];
+					//locale = *it;
+					NSString *swLoc = [NSString stringWithCString:(*it).c_str() encoding:NSUTF8StringEncoding];
 					//DLog(@"\nloc: %@   swLoc: %@", loc, swLoc);
 					if([swLoc hasPrefix:loc]) {
 						haveLocale = YES;

@@ -130,85 +130,70 @@ bool ps_viewcontroller_initialized = false;
 		
 		//add the Daily Devotionals tab.
 		PSDevotionalViewController *devoViewController = [[PSDevotionalViewController alloc] init];
-		//[devoViewController view];//init
 		[devoViewController setDelegate:self];
+		self.devotionalTabController = devoViewController;
 		UITabBarItem *devotionalTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDevotional", @"Devotional") image:[UIImage imageNamed:@"Daily-Devotional.png"] tag:0];
-		UINavigationController *devoIPadTab;
 		if([PSResizing iPad]) {
-			devoIPadTab = [[UINavigationController alloc] initWithRootViewController:devoViewController];
+			UINavigationController *devoIPadTab = [[UINavigationController alloc] initWithRootViewController:devoViewController];
 			devoIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			devoIPadTab.tabBarItem = devotionalTBI;
-		} else {
-			devoViewController.tabBarItem = devotionalTBI;
-		}
-		[devotionalTBI release];
-		self.devotionalTabController = devoViewController;
-		if([PSResizing iPad]) {
 			[tabs insertObject:devoIPadTab atIndex:4];
 			[devoIPadTab release];
+			devoIPadTab = nil;
 		} else {
+			devoViewController.tabBarItem = devotionalTBI;
 			[tabs insertObject:devoViewController atIndex:4];
 		}
+		[devotionalTBI release];
 		[devoViewController release];
 		
 		//add the Downloads tab.
 		NavigatorSources *downloadsViewController = [[NavigatorSources alloc] initWithStyle:UITableViewStyleGrouped];
-		UINavigationController *downloadsIPadTab;
 		UITabBarItem *downloadsTabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemDownloads tag:5];
 		if([PSResizing iPad]) {
-			downloadsIPadTab = [[UINavigationController alloc] initWithRootViewController:downloadsViewController];
+			UINavigationController *downloadsIPadTab = [[UINavigationController alloc] initWithRootViewController:downloadsViewController];
 			downloadsIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			downloadsIPadTab.tabBarItem = downloadsTabBarItem;
-		} else {
-			downloadsViewController.tabBarItem = downloadsTabBarItem;
-		}
-		[downloadsTabBarItem release];
-		if([PSResizing iPad]) {
 			[tabs insertObject:downloadsIPadTab atIndex:5];
 			[downloadsIPadTab release];
+			downloadsIPadTab = nil;
 		} else {
+			downloadsViewController.tabBarItem = downloadsTabBarItem;
 			[tabs insertObject:downloadsViewController atIndex:5];
 		}
+		[downloadsTabBarItem release];
 		[downloadsViewController release];
 		
 		//add the Preferences tab.
 		PSPreferencesController *preferencesViewController = [[PSPreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
-		UINavigationController *preferencesIPadTab;
 		UITabBarItem *preferencesTabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitlePreferences", @"Preferences") image:[UIImage imageNamed:@"gear-24.png"] tag:9];
 		if([PSResizing iPad]) {
-			preferencesIPadTab = [[UINavigationController alloc] initWithRootViewController:preferencesViewController];
+			UINavigationController *preferencesIPadTab = [[UINavigationController alloc] initWithRootViewController:preferencesViewController];
 			preferencesIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			preferencesIPadTab.tabBarItem = preferencesTabBarItem;
-		} else {
-			preferencesViewController.tabBarItem = preferencesTabBarItem;
-		}
-		[preferencesTabBarItem release];
-		if([PSResizing iPad]) {
 			[tabs insertObject:preferencesIPadTab atIndex:6];
 			[preferencesIPadTab release];
 		} else {
+			preferencesViewController.tabBarItem = preferencesTabBarItem;
 			[tabs insertObject:preferencesViewController atIndex:6];
 		}
+		[preferencesTabBarItem release];
 		[preferencesViewController release];
 		
 		//add the About tab.
 		PSAboutScreenController *aboutViewController = [[PSAboutScreenController alloc] init];
-		UINavigationController *aboutIPadTab;
 		UITabBarItem *aboutTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleAbout", @"About") image:[UIImage imageNamed:@"About.png"] tag:0];
 		if([PSResizing iPad]) {
-			aboutIPadTab = [[UINavigationController alloc] initWithRootViewController:aboutViewController];
+			UINavigationController *aboutIPadTab = [[UINavigationController alloc] initWithRootViewController:aboutViewController];
 			aboutIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			aboutIPadTab.tabBarItem = aboutTBI;
-		} else {
-			aboutViewController.tabBarItem = aboutTBI;
-		}
-		[aboutTBI release];
-		if([PSResizing iPad]) {
 			[tabs insertObject:aboutIPadTab atIndex:7];
 			[aboutIPadTab release];
 		} else {
+			aboutViewController.tabBarItem = aboutTBI;
 			[tabs insertObject:aboutViewController atIndex:7];
 		}
+		[aboutTBI release];
 		[aboutViewController release];
 		
 		[tabBarController setViewControllers:tabs animated:NO];
@@ -784,13 +769,12 @@ bool ps_viewcontroller_initialized = false;
 	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
-	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+	} else /*if(interfaceOrientation == UIInterfaceOrientationPortrait)*/ {
+		// assume normal portrait otherwise. :P
 		width = offSize.width;
 		height = offSize.height;
 		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
 		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
-	} else {
-		ALog(@"ERROR");
 	}
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];
@@ -829,13 +813,11 @@ bool ps_viewcontroller_initialized = false;
 	} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 		middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
-	} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+	} else /*if(interfaceOrientation == UIInterfaceOrientationPortrait)*/ {
 		width = offSize.width;
 		height = offSize.height;
 		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
 		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
-	} else {
-		ALog(@"ERROR");
 	}
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];

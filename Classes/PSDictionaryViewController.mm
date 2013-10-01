@@ -83,13 +83,13 @@
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
-	BOOL needsReload = reloadData;
+	//BOOL needsReload = reloadData;
 	if(![[PSModuleController defaultModuleController] primaryDictionary]) {
 		NSString *lastDictionary = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDictionary];
 		
 		if (lastDictionary) {
 			[[PSModuleController defaultModuleController] loadPrimaryDictionary: lastDictionary];
-			needsReload = YES;
+			//needsReload = YES;
 		} else {
 			[self.navigationItem.rightBarButtonItem setTitle: NSLocalizedString(@"None", @"None")];
 			[dictionarySearchBar setUserInteractionEnabled: NO];
@@ -119,7 +119,7 @@
 				// Show the HUD while the provided method executes in a new thread
 				[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
 								
-				needsReload = YES;
+				//needsReload = YES;
 			}
 		}
 	}

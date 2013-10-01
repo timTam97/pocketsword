@@ -519,12 +519,13 @@
 				entry = [[[PSModuleController defaultModuleController] primaryCommentary] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
 				break;
 			default:
-				entry = nil;
 				break;
 		}
-		//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
-		entry.text = [entry.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
-		[results replaceObjectAtIndex:indexPath.row withObject:entry];
+		if(entry) {
+			//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
+			entry.text = [entry.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
+			[results replaceObjectAtIndex:indexPath.row withObject:entry];
+		}
 	}
 	mainLabel.text = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
 	NSMutableString *txt = [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text mutableCopy];

@@ -19,7 +19,7 @@
 
 @implementation PSDictionaryEntryViewController
 
-@synthesize entryHTML, entryTitle;
+@synthesize entryHTML, entryTitle, dictionaryDescriptionWebView;
 
 - (void)loadView {
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
@@ -28,16 +28,20 @@
 	baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.navigationItem.title = (self.entryTitle) ? entryTitle : @"";	
 	
-	dictionaryDescriptionWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height)];
-	dictionaryDescriptionWebView.delegate = self;
-	dictionaryDescriptionWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height)];
+	webView.delegate = self;
+	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	if(self.entryHTML) {
-		[dictionaryDescriptionWebView loadHTMLString: entryHTML baseURL: nil];
+		[webView loadHTMLString: entryHTML baseURL: nil];
 	}
-	[baseView addSubview:dictionaryDescriptionWebView];
+	[baseView addSubview:webView];
+	
+	self.dictionaryDescriptionWebView = webView;
+	[webView release];
 	
 	self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	self.view = baseView;
+	[baseView release];
 }
 
 - (void)setDictionaryEntryTitle:(NSString*)title {
@@ -58,15 +62,11 @@
 }
 
 - (void)viewDidUnload {
-	[dictionaryDescriptionWebView release];
-	dictionaryDescriptionWebView = nil;
-	[self.view release];
-	self.view = nil;
+	[super viewDidUnload];
 }
 
 - (void)dealloc {
-	[dictionaryDescriptionWebView release];
-	[self.view release];
+	self.dictionaryDescriptionWebView = nil;
 	self.entryHTML = nil;
 	self.entryTitle = nil;
 	[super dealloc];

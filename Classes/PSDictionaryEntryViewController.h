@@ -14,6 +14,7 @@
 
 @property (retain) NSString *entryHTML;
 @property (retain) NSString *entryTitle;
+@property (retain) UIWebView *dictionaryDescriptionWebView;
 
 - (void)setDictionaryEntryTitle:(NSString*)title;
 - (void)setDictionaryEntryText:(NSString*)entry;

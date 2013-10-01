@@ -40,7 +40,7 @@
 	[self setCat:[SwordModule moduleCategoryForModuleCategoryString:[self configEntryForKey:SWMOD_CONFENTRY_CATEGORY]]];
     // init lock
     self.moduleLock = [[NSRecursiveLock alloc] init];
-    indexLock = [[NSLock alloc] init];
+    self.indexLock = [[NSLock alloc] init];
     // nil values
     self.configEntries = [NSMutableDictionary dictionary];
     // set name
@@ -1171,7 +1171,7 @@
 	NSString *thisEntry = @"";
 	NSString *lastEntry = @"";
 	NSString *preverseHeading;
-	NSString *interverseHeading;
+	//NSString *interverseHeading;
 	NSString *modType = [NSString stringWithUTF8String: swModule->getType()];
 	NSInteger i = 0;
 	BOOL vpl = GetBoolPrefForMod(DefaultsVPLPreference, self.name);
@@ -1194,7 +1194,7 @@
 			NSString  *canonicalHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["0"]["canonical"].c_str()];
 			if((headings || [canonicalHeading isEqualToString:@"true"])) {
 				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
-				interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
+				//interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
 					//NSLog(@"preverseHeading = '%@'", preverseHeading);
 					preverseHeading = [NSString stringWithUTF8String:swModule->renderText([preverseHeading UTF8String])];

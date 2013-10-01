@@ -703,22 +703,22 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	DLog(@"Removing module: %@", name);
 	
 	// if it's a built-in module, don't automatically re-install it at next launch!
-	BOOL possibleBuiltIn = NO;
+//	BOOL possibleBuiltIn = NO;
 	if([name isEqualToString:@"KJV"]) {
 		[userDefaults setBool:YES forKey:DefaultsKJVRemoved];
-		possibleBuiltIn = YES;
+//		possibleBuiltIn = YES;
 	} else if([name isEqualToString:@"MHCC"]) {
 		[userDefaults setBool:YES forKey:DefaultsMHCCRemoved];
-		possibleBuiltIn = YES;
+//		possibleBuiltIn = YES;
 	} else if([name isEqualToString:@"StrongsRealHebrew"]) {
 		[userDefaults setBool:YES forKey:DefaultsStrongsRealHebrewRemoved];
-		possibleBuiltIn = YES;
+//		possibleBuiltIn = YES;
 	} else if([name isEqualToString:@"StrongsRealGreek"]) {
 		[userDefaults setBool:YES forKey:DefaultsStrongsRealGreekRemoved];
-		possibleBuiltIn = YES;
+//		possibleBuiltIn = YES;
 	} else if([name isEqualToString:@"Robinson"]) {
 		[userDefaults setBool:YES forKey:DefaultsRobinsonRemoved];
-		possibleBuiltIn = YES;
+//		possibleBuiltIn = YES;
 	}
 	
 	//remove the cipherKey for the module.

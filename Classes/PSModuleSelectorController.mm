@@ -36,8 +36,8 @@
 	self.modulesListTable = listTable;
 	[listTable release];
 	
-	CGFloat y = viewHeight - 44 - self.navigationController.navigationBar.frame.size.height;
-	y -= [[UIApplication sharedApplication] statusBarFrame].size.height;
+	//CGFloat y = viewHeight - 44 - self.navigationController.navigationBar.frame.size.height;
+	//y -= [[UIApplication sharedApplication] statusBarFrame].size.height;
 
 	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, viewHeight - 44, viewWidth, 44)];
 	toolbar.barStyle = UIBarStyleBlack;
