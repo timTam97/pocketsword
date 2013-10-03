@@ -270,7 +270,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 		*/
 		
-		
 		[self setPreferences];
 		[self reloadLastBible];
 		[self reloadLastCommentary];

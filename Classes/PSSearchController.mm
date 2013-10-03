@@ -250,6 +250,9 @@
 }
 
 - (void)indexInstalled:(PSIndexController*)sender {
+	searchQueryView.bounds = searchResultsTable.bounds;
+	searchQueryView.center = searchResultsTable.center;
+	[self.view addSubview:searchQueryView];
 	[self refreshView];
 	[sender release];
 }
