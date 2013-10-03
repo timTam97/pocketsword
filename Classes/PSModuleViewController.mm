@@ -436,7 +436,8 @@
 	
 	NSString *requestString = [[request URL] absoluteString];
 	NSArray *components = [requestString componentsSeparatedByString:@":"];
-	//DLog(@"\nBIBLE: requestString: %@", requestString);
+//	NSString *moduleViewType = (tabType == BibleTab) ? @"BIBLE" : @"COMMENTARY";
+//	DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
 	
 	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 		if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {

@@ -963,11 +963,17 @@
 		infoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT)];
 		infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		UIImageView *infoTopBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"popup-top-bar.png"]];
+		infoTopBar.backgroundColor = [UIColor darkGrayColor];
+		if([infoTopBar respondsToSelector:@selector(tintColor)]) {
+			infoTopBar.image = nil;
+			infoTopBar.alpha = 0.99f;
+		}
 		infoTopBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		infoTopBar.frame = CGRectMake(0, 0, screen.width, 20);
 		[infoView addSubview:infoTopBar];
 		[infoTopBar release];
 		UIButton *closeImgButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		closeImgButton.tintColor = [UIColor whiteColor];
 		[closeImgButton setImage:[UIImage imageNamed:@"popup-down-button.png"] forState:UIControlStateNormal];
 		closeImgButton.frame = CGRectMake(10, 0, 20, 20);
 		[closeImgButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
