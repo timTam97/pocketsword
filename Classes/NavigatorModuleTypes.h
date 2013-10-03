@@ -18,8 +18,8 @@
 @property (retain, readwrite) NSArray *dataArray;
 
 - (void)reloadTable;
-- (IBAction)refreshDownloadSource:(id)sender;
-- (IBAction)cancelRefreshDownloadSource;
+- (void)refreshDownloadSource:(id)sender;
+- (void)cancelRefreshDownloadSource;
 
 - (void)dealloc;
 

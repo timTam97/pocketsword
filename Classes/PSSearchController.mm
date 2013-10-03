@@ -148,7 +148,7 @@
 	return listType;
 }
 
-- (IBAction)closeButtonPressed {
+- (void)closeButtonPressed {
 	[self notifyDelegateOfNewHistoryItem];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 }
@@ -877,7 +877,7 @@
 	}
 }
 
-- (IBAction)searchButtonPressed:(id)sender {
+- (void)searchButtonPressed:(id)sender {
 	if(!searchingEnabled) {
 		return;
 	}

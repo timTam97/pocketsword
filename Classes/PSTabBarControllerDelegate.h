@@ -108,20 +108,16 @@ typedef enum {
 
 - (void)nightModeChanged;
 
-- (IBAction)toggleNavigation;
-//- (IBAction)updateViewWithSelectedChapter:(id)sender;
-//- (void)updateViewWithSelectedBook:(NSInteger)book chapter:(NSInteger)chapter verse:(NSInteger)verse;
+- (void)toggleNavigation;
 - (void)updateViewWithSelectedBookChapterVerse:(NSNotification *)notification;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;
 
 - (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule fromButton:(id)sender;
-//- (IBAction)toggleModulesList;
-- (IBAction)toggleModulesList:(NSNotification *)notification;
-- (IBAction)toggleModulesListFromButton:(id)sender;
+- (void)toggleModulesList:(NSNotification *)notification;
+- (void)toggleModulesListFromButton:(id)sender;
 - (void)toggleMultiList:(id)sender;
-- (IBAction)toggleMultiList;
-//- (UITabBarController *)tabBarController;
-- (IBAction)addModuleButtonPressed;
+- (void)toggleMultiList;
+- (void)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;
@@ -131,16 +127,10 @@ typedef enum {
 - (void)redisplayCommentaryChapter;
 - (void)redisplayBibleChapterAfterBookmarksChange;
 
-//- (void)displayBusyIndicator;
-//- (void)displayBusyIndicatorViaNotification;
-//- (void)hideBusyIndicator;
-
 - (void)setEnabledBibleNextButton:(BOOL)enabled;
 - (void)setEnabledBiblePreviousButton:(BOOL)enabled;
 - (void)setEnabledCommentaryNextButton:(BOOL)enabled;
 - (void)setEnabledCommentaryPreviousButton:(BOOL)enabled;
-
-//- (void)reloadModuleTable;
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab;
 
@@ -149,7 +139,7 @@ typedef enum {
 - (void)showInfoWithNotification:(NSNotification *)notification;
 - (void)showInfo:(NSString *)infoString;
 - (void)rotateInfo:(NSNotification *)notification;
-- (IBAction)hideInfo;
+- (void)hideInfo;
 - (void) showInfoModal:(UIView*)modalView withTiming:(float)time;
 - (void) hideInfoModal:(UIView*) modalView withTiming:(float)time;
 - (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;

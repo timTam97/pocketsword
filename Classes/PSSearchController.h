@@ -77,6 +77,6 @@
 
 - (void)indexInstalled:(PSIndexController*)sender;
 
-- (IBAction)searchButtonPressed:(id)sender;
+- (void)searchButtonPressed:(id)sender;
 
 @end

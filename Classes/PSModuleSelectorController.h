@@ -26,8 +26,8 @@
 @property (retain) UIToolbar *modulesToolbar;
 
 - (void)addButtonsToToolbar:(BOOL)animated;
-- (IBAction)addModuleButtonPressed;
-- (IBAction)dismissModuleSelector;
+- (void)addModuleButtonPressed;
+- (void)dismissModuleSelector;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
 
 

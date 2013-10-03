@@ -33,7 +33,7 @@
 
 - (void)reloadDictionaryData;
 - (void)reloadDictionaryData:(BOOL)reloadData;
-- (IBAction)hideDescription:(id)sender;
+- (void)hideDescription:(id)sender;
 - (void)searchDictionaryEntries;
 - (void)setDictionaryTitleViaNotification;
 

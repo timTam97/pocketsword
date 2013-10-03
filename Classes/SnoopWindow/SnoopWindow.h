@@ -19,8 +19,8 @@
 	BOOL movement;
 	BOOL ignoreMovementEvents;
 	
-	IBOutlet UIWebView *bibleWebView;
-	IBOutlet UIWebView *commentaryWebView;
+	UIWebView *bibleWebView;
+	UIWebView *commentaryWebView;
 }
 
 @property (nonatomic, assign) UIWebView *bibleWebView;

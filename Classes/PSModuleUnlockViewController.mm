@@ -150,11 +150,11 @@ line-height: 130%%;\n\
     [super dealloc];
 }
 
-- (IBAction)closeUnlockView:(id)sender {
+- (void)closeUnlockView:(id)sender {
 	[self dismissModalViewControllerAnimated:YES];
 }
 
-- (IBAction)unlockSaveButtonPressed:(id)sender {
+- (void)unlockSaveButtonPressed:(id)sender {
 	//save the key
 	[[[[PSModuleController defaultModuleController] swordManager] moduleWithName: moduleName] unlock: unlockTextField.text];
 	//redisplay the text if this is the current primary bible/commentary
@@ -187,7 +187,7 @@ line-height: 130%%;\n\
 	return YES;
 }
 
-- (IBAction)unlockEditButtonPressed:(id)sender {
+- (void)unlockEditButtonPressed:(id)sender {
 	if([unlockTextField canBecomeFirstResponder])
 		[unlockTextField becomeFirstResponder];
 }

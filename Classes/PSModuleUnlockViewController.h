@@ -29,10 +29,10 @@
 @property (retain) UIBarButtonItem	*unlockEditButton;
 @property (retain) UIBarButtonItem	*unlockSaveButton;
 
-- (IBAction)unlockEditButtonPressed:(id)sender;
+- (void)unlockEditButtonPressed:(id)sender;
 
-- (IBAction)unlockSaveButtonPressed:(id)sender;
-- (IBAction)closeUnlockView:(id)sender;
+- (void)unlockSaveButtonPressed:(id)sender;
+- (void)closeUnlockView:(id)sender;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
 - (void)keyboardWillShow:(NSNotification *)note;

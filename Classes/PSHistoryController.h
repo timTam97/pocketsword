@@ -26,7 +26,7 @@
 }
 
 - (void)setListType:(ShownTab)listType;
-- (IBAction)closeButtonPressed;
+- (void)closeButtonPressed;
 
 + (void)addHistoryItem:(ShownTab)tabForHistory;
 - (void)trashButtonPressed;

@@ -10,7 +10,7 @@
 
 @interface PSDevotionalViewController : UIViewController <UIWebViewDelegate> {
 	
-	IBOutlet UIWebView			*devotionalWebView;
+	UIWebView			*devotionalWebView;
 
 	UIView *devPickerView;
 	UIDatePicker *devDatePicker;

@@ -25,7 +25,7 @@
 
 - (void)displayInfoForModule:(SwordModule*)swordModule;
 
-- (IBAction)closeLeaf:(id)sender;
-- (IBAction)trashModule:(id)sender;
+- (void)closeLeaf:(id)sender;
+- (void)trashModule:(id)sender;
 
 @end

@@ -49,8 +49,6 @@
 
 @synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController, devotionalTabController, tabBarController;
 
-bool ps_viewcontroller_initialized = false;
-
 - (id)init {
 	self = [super init];
 	if(self) {
@@ -238,8 +236,6 @@ bool ps_viewcontroller_initialized = false;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapterAfterBookmarksChange) name:NotificationBookmarksChanged object:nil];
-
-		ps_viewcontroller_initialized = true;
 	}
 	return self;
 }
@@ -304,7 +300,7 @@ bool ps_viewcontroller_initialized = false;
 	[self toggleMultiList];
 }
 
-- (IBAction)toggleMultiList {
+- (void)toggleMultiList {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
 	
 	//if([multiListController.view superview]) {
@@ -365,7 +361,7 @@ bool ps_viewcontroller_initialized = false;
 	
 }
 
-- (IBAction)toggleModulesList:(NSNotification *)notification {
+- (void)toggleModulesList:(NSNotification *)notification {
 	if(notification) {
 		[self toggleModulesListAnimated:YES withModule:[notification object] fromButton:nil];
 	} else {
@@ -373,7 +369,7 @@ bool ps_viewcontroller_initialized = false;
 	}
 }
 
-- (IBAction)toggleModulesListFromButton:(id)sender {
+- (void)toggleModulesListFromButton:(id)sender {
 	[self toggleModulesListAnimated:YES withModule:nil fromButton:(id)sender];
 }
 
@@ -440,7 +436,7 @@ bool ps_viewcontroller_initialized = false;
 //	return tabBarController;
 //}
 
-- (IBAction)addModuleButtonPressed {
+- (void)addModuleButtonPressed {
 	[self setShownTabTo:DownloadsTab];
 }
 
@@ -452,7 +448,7 @@ bool ps_viewcontroller_initialized = false;
 	[self setShownTabTo:BibleTab];
 }
 
-- (IBAction)toggleNavigation {
+- (void)toggleNavigation {
     BOOL iPad = [PSResizing iPad];
 	if(refNavigationController || [popoverController isPopoverVisible]) {
         if(!iPad) {
@@ -1048,7 +1044,7 @@ bool ps_viewcontroller_initialized = false;
 	}
 }
 
-- (IBAction)hideInfo {
+- (void)hideInfo {
 	[self hideInfoModal: infoView withTiming: 0.3];
 	[infoView release];
 	infoView = nil;

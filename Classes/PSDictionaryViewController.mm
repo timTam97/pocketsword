@@ -377,7 +377,7 @@
 	}
 }
 
-- (IBAction)hideDescription:(id)sender {
+- (void)hideDescription:(id)sender {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideInfoPane object:nil];
 	[self dismissModalViewControllerAnimated:YES];
 }

@@ -147,13 +147,13 @@
 	}
 }
 
-- (IBAction)addModuleButtonPressed {
+- (void)addModuleButtonPressed {
 	//close the selector first, then show the downloads tab.
 	[self dismissModuleSelector];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowDownloadsTab object:nil];
 }
 
-- (IBAction)dismissModuleSelector {
+- (void)dismissModuleSelector {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 }
 
@@ -325,6 +325,10 @@
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	
 	UITabBarController *moduleTabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
+	if([moduleTabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {
+		[moduleTabBarController.tabBar setTranslucent:NO];
+		[moduleTabBarController.tabBar setBarTintColor:[UIColor blackColor]];
+	}
 	
 	PSModuleInfoViewController *detailsViewController = [[PSModuleInfoViewController alloc] initWithNibName:nil bundle:nil];
 	[detailsViewController displayInfoForModule:mod];

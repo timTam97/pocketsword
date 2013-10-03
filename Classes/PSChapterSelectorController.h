@@ -11,8 +11,6 @@
 
 @interface PSChapterSelectorController : UITableViewController {
 	SwordBook *book;
-	//IBOutlet PSRefSelectorController *refSelectorController;
-	//IBOutlet UITableView *chapterTable;
 
 	int currentChapter;
 	BOOL needToScroll;

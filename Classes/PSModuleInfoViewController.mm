@@ -88,12 +88,12 @@
 	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:NO] baseURL:nil];
 }
 
-- (IBAction)closeLeaf:(id)sender {
+- (void)closeLeaf:(id)sender {
 	askToUnlock = YES;
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)trashModule:(id)sender {
+- (void)trashModule:(id)sender {
 	NSString *question = NSLocalizedString(@"ConfirmDeleteQuestion", @"Are you sure you wish to remove this module?");
 	NSString *messageTitle = NSLocalizedString(@"ConfirmDeleteTitle", @"Remove?");
 	trashModule = YES;

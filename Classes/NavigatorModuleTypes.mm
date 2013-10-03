@@ -110,7 +110,7 @@
 	[moduleLanguages release];
 }
 
-- (IBAction)cancelRefreshDownloadSource {
+- (void)cancelRefreshDownloadSource {
 	//incomplete
 	// need to do more than this!!!
 	[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
@@ -149,7 +149,7 @@
         bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
     }
 }
-- (IBAction)refreshDownloadSource:(id)sender {
+- (void)refreshDownloadSource:(id)sender {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	if(![PSModuleController checkNetworkConnection]) {

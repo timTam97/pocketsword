@@ -13,7 +13,7 @@
 
 
 @interface PSLaunchViewController : UIViewController {
-	IBOutlet id <PSLaunchDelegate> delegate;
+	id <PSLaunchDelegate> delegate;
 }
 
 @property (nonatomic, assign) id <PSLaunchDelegate> delegate;

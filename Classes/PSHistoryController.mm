@@ -37,7 +37,7 @@
 	return self;
 }
 
-- (IBAction)closeButtonPressed {
+- (void)closeButtonPressed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 }
 
