@@ -16,6 +16,7 @@
 #import "SwordModule.h"
 #import "PSModulePreferencesController.h"
 #import "SwordManager.h"
+#import "PSTabBarControllerDelegate.h"
 
 @implementation PSModuleSelectorController
 
@@ -325,10 +326,10 @@
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
 	
 	UITabBarController *moduleTabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
-	if([moduleTabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {
-		[moduleTabBarController.tabBar setTranslucent:NO];
-		[moduleTabBarController.tabBar setBarTintColor:[UIColor blackColor]];
-	}
+//	if([moduleTabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {
+//		[moduleTabBarController.tabBar setTranslucent:[PSTabBarControllerDelegate getBarTranslucentDefault]];
+//		[moduleTabBarController.tabBar setBarTintColor:[PSTabBarControllerDelegate getBarColorDefault]];
+//	}
 	
 	PSModuleInfoViewController *detailsViewController = [[PSModuleInfoViewController alloc] initWithNibName:nil bundle:nil];
 	[detailsViewController displayInfoForModule:mod];

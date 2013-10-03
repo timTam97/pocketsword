@@ -126,13 +126,17 @@ typedef enum {
 #define PSHistoryMaxEntries							100
 #define PSHistoryName								@"bibleHistory"
 
-#define BookNameString							@"BookNameString"
-#define ChapterString							@"ChapterString"
-#define VerseString								@"VerseString"
+#define BookNameString								@"BookNameString"
+#define ChapterString								@"ChapterString"
+#define VerseString									@"VerseString"
 
 #define BibleTabTitleString							@"BibleTabTitleString"
 #define CommentaryTabTitleString					@"CommentaryTabTitleString"
 #define DevotionalTabTitleString					@"DevotionalTabTitleString"
+
+// Colour preferences
+#define DefaultsBarColor							@"DefaultsBarColor"
+#define DefaultsBarTranslucent						@"DefaultsBarTranslucent"
 
 
 // Notification identifiers
@@ -183,6 +187,8 @@ typedef enum {
 #define NotificationAddBookmarkInFolder			@"NotificationAddBookmarkInFolder"
 
 #define NotificationUpdateSelectedReference		@"NotificationUpdateSelectedReference"
+
+#define NotificationBarColorChanged				@"NotificationBarColorChanged"
 
 #define ROTATION_LOCK_POSITION					@"rotationLockedPosition"
 

@@ -346,6 +346,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 + (NSString *)getCurrentBibleRef {
+	
 	NSString *lastRef = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastRef];
 	if (!lastRef) {
 		[[NSUserDefaults standardUserDefaults] setObject: @"Genesis 1" forKey: DefaultsLastRef];
@@ -354,16 +355,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 	return lastRef;
 	
-//	NSString *ref = nil;
-//	if (primaryBible)
-//		ref = [[[NSString stringWithUTF8String: ([primaryBible swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-//	else if(primaryCommentary)
-//		ref = [[[NSString stringWithUTF8String: ([primaryCommentary swModule])->getKeyText()] componentsSeparatedByString: @":"] objectAtIndex: 0];
-//	if(ref) {
-//		return [PSModuleController createRefString:ref];
-//	} else {
-//		return @"Genesis 1"; // hard code to return a default valid result
-//	}
 }
 
 - (void)loadPrimaryBible:(NSString *)newText {

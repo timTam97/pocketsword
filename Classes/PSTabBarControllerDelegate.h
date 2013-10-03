@@ -106,6 +106,11 @@ typedef enum {
 
 + (void)displayTitle:(NSString*)title;
 
++ (UIColor *)getBarColorDefault;
++ (void)setBarColorDefault:(UIColor*)color;
++ (BOOL)getBarTranslucentDefault;
++ (void)setBarTranslucentDefault:(BOOL)translucent;
+
 - (void)nightModeChanged;
 
 - (void)toggleNavigation;

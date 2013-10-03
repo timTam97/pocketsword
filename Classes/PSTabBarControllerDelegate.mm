@@ -55,11 +55,8 @@
 		
 		UITabBarController *tbc = [[UITabBarController alloc] init];
 		tbc.delegate = self;
-		if([tbc.tabBar respondsToSelector:@selector(isTranslucent)]) {
-			[tbc.tabBar setTranslucent:NO];
-			[tbc.tabBar setBarTintColor:[UIColor blackColor]];
-		}
 		self.tabBarController = tbc;
+//		[self tabColorChanged];
 		[tbc release];
 		
 		[self nightModeChanged];
@@ -75,6 +72,16 @@
 		// 05: Downloads
 		// 06: Preferences
 		// 07: About
+		
+		if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {// iOS 7 only
+			[[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+			[[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
+			[[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
+			[[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
+			[[UIToolbar appearance] setBarTintColor:[UIColor blackColor]];
+			[[UITabBar appearance] setTintColor:[UIColor whiteColor]];
+			[[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+		}
 		
 		//add the Commentary Tab.
 		PSCommentaryViewController *cvc = [[PSCommentaryViewController alloc] init];
@@ -236,9 +243,19 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapterAfterBookmarksChange) name:NotificationBookmarksChanged object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabColorChanged) name:NotificationBarColorChanged object:nil];
+		
 	}
 	return self;
 }
+
+//- (void)tabColorChanged {
+//	if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {
+//		tabBarController.tabBar.translucent = [PSTabBarControllerDelegate getBarTranslucentDefault];
+//		tabBarController.tabBar.barTintColor = [PSTabBarControllerDelegate getBarColorDefault];
+//		tabBarController.tabBar.tintColor = [UIColor whiteColor];
+//	}
+//}
 
 - (void)nightModeChanged {
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
@@ -310,10 +327,10 @@
 	} else {
 		
 		multiListController = [[UITabBarController alloc] init];
-		if([multiListController.tabBar respondsToSelector:@selector(isTranslucent)]) {
-			[multiListController.tabBar setTranslucent:NO];
-			[multiListController.tabBar setBarTintColor:[UIColor blackColor]];
-		}
+//		if([multiListController.tabBar respondsToSelector:@selector(isTranslucent)]) {
+//			[multiListController.tabBar setTranslucent:[PSTabBarControllerDelegate getBarTranslucentDefault]];
+//			[multiListController.tabBar setBarTintColor:[PSTabBarControllerDelegate getBarColorDefault]];
+//		}
 		PSHistoryController *historyController = [[PSHistoryController alloc] init];
 		PSSearchController *searchController = [[PSSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
@@ -1307,6 +1324,37 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	// Return YES for supported orientations
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
++ (UIColor *)getBarColorDefault {
+	
+	NSString *colorHexString = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBarColor];
+	if (!colorHexString) {
+		colorHexString = [PSBookmarkFolder hexStringFromColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]];
+		[[NSUserDefaults standardUserDefaults] setObject: colorHexString forKey: DefaultsBarColor];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
+	return [PSBookmarkFolder colorFromHexString:colorHexString];
+	
+}
+
++ (void)setBarColorDefault:(UIColor*)color {
+	if(!color) {
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsBarColor];
+	} else {
+		[[NSUserDefaults standardUserDefaults] setObject:[PSBookmarkFolder hexStringFromColor:color] forKey:DefaultsBarColor];
+	}
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBarColorChanged object:nil];
+}
+
++ (BOOL)getBarTranslucentDefault {
+	return [[NSUserDefaults standardUserDefaults] boolForKey: DefaultsBarTranslucent];
+}
+
++ (void)setBarTranslucentDefault:(BOOL)translucent {
+	[[NSUserDefaults standardUserDefaults] setBool:translucent forKey:DefaultsBarTranslucent];
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBarColorChanged object:nil];
 }
 
 @end

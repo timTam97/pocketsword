@@ -1527,9 +1527,9 @@
 				054C55B911AD0A4F00633371 /* module selector */,
 				054C55B711AD09F600633371 /* ref selector */,
 				054C55B811AD0A2700633371 /* Dictionary */,
+				05D6ABE21097F76B00A5026E /* PS-downloads */,
 				0513ACBC10BFADD600E414D9 /* PS-about */,
 				0513ACBB10BFADC400E414D9 /* PS-preferences */,
-				05D6ABE21097F76B00A5026E /* PS-install */,
 			);
 			name = "PS-controllers";
 			sourceTree = "<group>";
@@ -2494,7 +2494,7 @@
 			path = iPhoneHTTPServer;
 			sourceTree = "<group>";
 		};
-		05D6ABE21097F76B00A5026E /* PS-install */ = {
+		05D6ABE21097F76B00A5026E /* PS-downloads */ = {
 			isa = PBXGroup;
 			children = (
 				05B52A27107DB0D100826AFE /* NavigatorSources.h */,
@@ -2515,7 +2515,7 @@
 				05EB26EB1755B6FA004A8EB7 /* PSModuleDownloadItem.h */,
 				05EB26EC1755B6FA004A8EB7 /* PSModuleDownloadItem.mm */,
 			);
-			name = "PS-install";
+			name = "PS-downloads";
 			path = Classes;
 			sourceTree = "<group>";
 		};
