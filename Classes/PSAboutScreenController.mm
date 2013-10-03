@@ -159,6 +159,7 @@
 	UIWebView *wv = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	wv.delegate = self;
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	wv.backgroundColor = [UIColor whiteColor];
 	NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
 	[wv loadHTMLString: black baseURL: nil];
 	[baseView addSubview:wv];

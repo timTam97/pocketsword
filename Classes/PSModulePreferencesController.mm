@@ -29,19 +29,12 @@
 	CGFloat topLength = 0;
 	if([self respondsToSelector:@selector(topLayoutGuide)]) {
 		topLength = [[self topLayoutGuide] length];
-		if(topLength == 0.0f) {
-			topLength = self.navigationController.navigationBar.frame.size.height;
+		if(topLength == 0.0f || topLength == 20.0f) {
+			topLength += self.navigationController.navigationBar.frame.size.height;
 		}
+		self.tableView.contentSize = [[UIScreen mainScreen] bounds].size;
 		[self.tableView setContentInset:UIEdgeInsetsMake(topLength, 0.0f, 0.0f, 0.0f)];
 	}
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
 }
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule {

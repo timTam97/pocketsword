@@ -28,6 +28,7 @@
 
 	UIWebView *infoWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	infoWV.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	infoWV.backgroundColor = [UIColor whiteColor];
 	self.infoWebView = infoWV;
 	[baseView addSubview:infoWV];
 	self.view = baseView;
