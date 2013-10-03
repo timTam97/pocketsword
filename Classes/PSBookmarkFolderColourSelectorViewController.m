@@ -47,6 +47,11 @@
 		self.selectableColours = colours;
 		[colours release];
 		self.delegate = del;
+		NSString *ourTitle = NSLocalizedString(@"BookmarksAddFolderHighlightColour", @"");
+		if(([ourTitle length] > 0) && ([ourTitle characterAtIndex:([ourTitle length]-1)] == ':')) {
+			ourTitle = [ourTitle substringToIndex:([ourTitle length] - 1)];
+		}
+		self.navigationItem.title = ourTitle;
 	}
 	return self;
 }
