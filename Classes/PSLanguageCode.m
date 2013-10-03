@@ -5719,9 +5719,10 @@ lookup_table =
 [NSArray arrayWithObjects: @"rmm", @"Roma", nil], 
 [NSArray arrayWithObjects: @"rmn", @"Balkan Romani", nil], 
 [NSArray arrayWithObjects: @"rmo", @"Sinte Romani", nil], 
-[NSArray arrayWithObjects: @"rmp", @"Rempi", nil], 
-[NSArray arrayWithObjects: @"rmr", @"Caló", nil], 
-[NSArray arrayWithObjects: @"rms", @"Romanian Sign Language", nil], 
+[NSArray arrayWithObjects: @"rmp", @"Rempi", nil],
+//[NSArray arrayWithObjects: @"rmr", @"Caló", nil], //they changed this on me!
+[NSArray arrayWithObjects: @"rmq", @"Caló", nil],
+[NSArray arrayWithObjects: @"rms", @"Romanian Sign Language", nil],
 [NSArray arrayWithObjects: @"rmt", @"Domari", nil], 
 [NSArray arrayWithObjects: @"rmu", @"Tavringer Romani", nil], 
 [NSArray arrayWithObjects: @"rmv", @"Romanova", nil], 
