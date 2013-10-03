@@ -109,7 +109,17 @@
 		}
 	}
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-	
+
+	UIButton *jumpButton = [UIButton buttonWithType:UIButtonTypeSystem];
+	if([jumpButton respondsToSelector:@selector(tintColor)]) {
+		NSString *buttonString = [NSString stringWithFormat:@"%d:1", (indexPath.section+1)];
+		jumpButton.frame = CGRectMake(0, 0, 60, 30);
+		[jumpButton setTitle:buttonString forState:UIControlStateNormal];
+		jumpButton.tag = (1000 + indexPath.section);
+		[jumpButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		cell.accessoryView = jumpButton;
+	}
+
     return cell;
 }
 
@@ -130,15 +140,23 @@
 	[verseSelectorController release];
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	//jump to v1 of that book & ch.
-	//[self dismissModalViewControllerAnimated:YES];
+- (void)jumpToVerseOne:(NSInteger)chapterIndex {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[book name] forKey:BookNameString];
-	[bcvDict setObject:[NSString stringWithFormat:@"%d", (indexPath.section+1)] forKey:ChapterString];
+	[bcvDict setObject:[NSString stringWithFormat:@"%d", (chapterIndex+1)] forKey:ChapterString];
 	[bcvDict setObject:@"1" forKey:VerseString];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+	//jump to v1 of that book & ch.
+	[self jumpToVerseOne:indexPath.section];
+}
+
+- (void)accessoryButtonPressed:(id)sender {
+	NSInteger chapterIndex = ((UIView*)sender).tag - 1000;
+	[self jumpToVerseOne:chapterIndex];
 }
 
 - (void)dealloc {
