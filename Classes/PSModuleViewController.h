@@ -25,6 +25,9 @@
 	BOOL						isFullScreen;
 	UIView						*previousTabBarView;
 	BOOL						finishedLoading;
+	NSArray						*versePositionArray;
+	NSInteger					currentShownVerse;
+	NSInteger					verseToShow;
 	
 	ShownTab					tabType;
 }
@@ -37,9 +40,13 @@
 @property (retain)			UISegmentedControl			*titleSegmentedControl;
 @property (assign)			PSTabBarControllerDelegate	*delegate;
 @property (retain)			PSWebView					*webView;
+@property (retain)			NSArray						*versePositionArray;
 
 - (void)setDelegate:(PSTabBarControllerDelegate*)vc;
 - (PSTabBarControllerDelegate*)delegate;
+
+- (void)setVerseToShow:(NSInteger)verseNumber;
+- (void)scrollToVerse:(NSInteger)verseNumber;
 
 - (void)toggleFullscreen;
 - (void)switchToFullscreen;

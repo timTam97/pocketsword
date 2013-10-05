@@ -13,6 +13,8 @@
 #import "PSModuleController.h"
 #import "PSResizing.h"
 
+#include <math.h>
+
 @interface PSWebView (Private)
 
 - (void)dataSourceDidFinishLoadingNewData;
@@ -36,6 +38,7 @@
 }
 
 - (void)setupRefreshViews:(CGFloat)top bottom:(CGFloat)bottom {
+	currentOffsetY = 0;
 	
 	self.topLength = top;
 	self.bottomLength = bottom;
@@ -131,6 +134,17 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	CGFloat newOffY = scrollView.contentOffset.y + topLength;
+	if(newOffY < 0) {
+		newOffY = 0.0f;
+	}
+	if(fabsf(currentOffsetY - newOffY) > 2.0f) {
+		// ignore tiny changes
+		currentOffsetY = newOffY;
+		//NSLog(@"new offset: %f (topLength: %f)", currentOffsetY, topLength);
+		[psDelegate scrollHappened:currentOffsetY];
+	}
+
 	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE - topLength;
 	if([PSResizing iPad]) {
 		PULL_THRESHOLD = PULL_THRESHOLD_IPAD - topLength;

@@ -551,7 +551,9 @@
 	if([currentRef isEqualToString:ref]) {
 		//we only need to move to the selected verse rather than reload the whole chapter
 		NSString *javascript = [NSString stringWithFormat:@"scrollToVerse(%@);", verseString];
+		[bibleTabController scrollToVerse:verse];
 		[[bibleTabController webView] stringByEvaluatingJavaScriptFromString:javascript];
+		[commentaryTabController scrollToVerse:verse];
 		[[commentaryTabController webView] stringByEvaluatingJavaScriptFromString:javascript];
 		if([moduleController primaryBible]) {
 			[self setTabTitle: [NSString stringWithFormat:@"%@:%@", ref, verseString] ofTab:BibleTab];
@@ -657,10 +659,12 @@
 		{
 			if(versePosition) {
 				[bibleJavascript appendFormat:@"scrollToVerse(%@);\n", versePosition];
+				[bibleTabController setVerseToShow:[versePosition integerValue]];
 			}
 			versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsCommentaryVersePosition];
 			if(versePosition) {
 				[commentaryJavascript appendFormat:@"scrollToVerse(%@);\n", versePosition];
+				[commentaryTabController setVerseToShow:[versePosition integerValue]];
 			}
 		}
 			break;

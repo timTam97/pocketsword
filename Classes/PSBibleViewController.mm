@@ -47,7 +47,8 @@
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {
 		
 		//switch to the equivalent commentary entry.
-		commentaryView.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", tappedVerse];
+		//commentaryView.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", tappedVerse];
+		[commentaryView setVerseToShow:[tappedVerse integerValue]];
 		BOOL fs = [self isFullScreen];
 		if(fs) {
 			[self toggleFullscreen];

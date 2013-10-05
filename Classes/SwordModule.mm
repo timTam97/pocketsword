@@ -1339,7 +1339,7 @@
 					function detLoc() {\n\
 						var verseToSend = currentVerse();\n\
 						if(verseToSend != lastSentVerse) {\n\
-							execute(\"pocketsword:currentverse:\" + verseToSend + \":\" + window.pageYOffset + \":\" + versepos[currentVerse()]);\n\
+							execute(\"pocketsword:currentverse:\" + verseToSend + \":\" + window.pageYOffset + \":\" + versepos[verseToSend]);\n\
 							lastSentVerse = verseToSend;\n\
 						}\n\
 					}\n\
@@ -1351,7 +1351,7 @@
 						clearInterval(det_loc_poll);\n\
 					}\n\
 					function scrollToVerse(verse) {\n\
-						setTimeout(\"_scrollToVerse(\"+verse+\")\", 250);\n\
+						//setTimeout(\"_scrollToVerse(\"+verse+\")\", 250);\n\
 					}\n\
 					function scrollToYOffset(iTargetY) {\n\
 						iTargetY = iTargetY < 0 ? 0 : iTargetY;\n\
@@ -1411,13 +1411,13 @@
 						execute(tmpstr);\n\
 						lastSentVerse = -1;\n\
 					}\n\
-					document.addEventListener(\"touchmove\", detLoc, false);\n\
-					document.addEventListener(\"scroll\", detLoc, false);\n\
+					//document.addEventListener(\"touchmove\", detLoc, false);\n\
+					//document.addEventListener(\"scroll\", detLoc, false);\n\
 					window.onload = function() {\n\
 						document.documentElement.style.webkitTouchCallout = \"none\";\n\
 						resetArrays()\n\
 						%@\n\
-						detLoc();\n\
+						//detLoc();\n\
 					}\n-->\
 					</script>\n", i, i, i, i, extraJS];
 	

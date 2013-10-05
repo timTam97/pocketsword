@@ -19,7 +19,7 @@
 
 @implementation PSModuleViewController
 
-@synthesize refToShow, jsToShow, tappedVerse, isFullScreen, moduleButton, titleSegmentedControl, webView;
+@synthesize refToShow, jsToShow, tappedVerse, isFullScreen, moduleButton, titleSegmentedControl, webView, versePositionArray;
 
 - (id)init {
 	self = [super init];
@@ -48,6 +48,7 @@
 	
 	self.view = baseView;
 	[baseView release];
+	currentShownVerse = 1;
 }
 
 - (void)viewDidLoad {
@@ -103,6 +104,75 @@
 	finishedLoading = NO;
 }
 
+- (void)scrollToVerse:(NSInteger)verseNumber {
+	CGFloat newYOffset = 0.0f;
+	if(verseNumber > 1 && ([versePositionArray count] > verseNumber)) {
+		newYOffset = [(NSNumber*)[versePositionArray objectAtIndex:(verseNumber-1)] floatValue];
+		CGFloat topLength = 0;
+		CGFloat bottomLength = 0;
+		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
+			topLength = [[self topLayoutGuide] length];
+			bottomLength = [[self bottomLayoutGuide] length];
+		}
+		newYOffset -= topLength;
+		if((newYOffset + webView.frame.size.height) > webView.scrollView.contentSize.height) {
+			newYOffset = webView.scrollView.contentSize.height - webView.frame.size.height + bottomLength;
+		}
+		[self.webView.scrollView setContentOffset:CGPointMake(0, newYOffset) animated:NO];
+		//[self.webView.scrollView scrollRectToVisible:CGRectMake(0, newYOffset, 2.0f, 2.0f) animated:NO];
+		//[self.webView.scrollView setContentOffset:CGPointMake(0, newYOffset) animated:YES];
+	}
+}
+
+- (void)scrollHappened:(CGFloat)newOffsetY {
+	//DLog(@"scrollHappened: %f", newOffsetY);
+	if(!versePositionArray) {
+		return;
+	}
+	NSInteger verseNumber = 0;
+	for(; verseNumber < [versePositionArray count]; verseNumber++) {
+		if(newOffsetY < [(NSNumber*)[versePositionArray objectAtIndex:verseNumber] floatValue]) {
+			break;
+		}
+	}
+	if(verseNumber == 0) {
+		verseNumber = 1;
+	}
+	if(verseNumber == currentShownVerse) {
+		return;
+	}
+	currentShownVerse = verseNumber;
+	//index 0 == verse 1, so we need to add one and then subtract 1, so the resulting verse is the number.
+	//our method of updating the title bar & remembering our position.
+	NSString *verseString = [NSString stringWithFormat:@"%d", verseNumber];
+	if(tabType == BibleTab) {
+		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", (int)newOffsetY] forKey: @"bibleScrollPosition"];
+		[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
+	} else {
+		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", (int)newOffsetY] forKey: @"commentaryScrollPosition"];
+		[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsCommentaryVersePosition];
+	}
+	//[[NSUserDefaults standardUserDefaults] synchronize];
+	NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
+	[ref appendFormat:@":%@", verseString];
+	[self setTabTitle:[PSModuleController createRefString:ref]];
+}
+
+- (void)saveVersePositionArray:(NSArray*)verseArray {
+	if(!verseArray) {
+		return;
+	} else if([verseArray count] == 0) {
+		return;
+	}
+	NSMutableArray *mutVerseArray = [NSMutableArray arrayWithCapacity:[verseArray count]];
+	// ignore the first element in the array, because it is "arraydump"
+	// The rest of the array is the location of each verse.
+	for(int i = 1; i < [verseArray count]; i++) {
+		[mutVerseArray addObject:[NSNumber numberWithFloat:[(NSString*)[verseArray objectAtIndex:i] floatValue]]];
+	}
+	self.versePositionArray = mutVerseArray;
+}
+
 - (void)segmentedControlAction:(id)sender {
 	
 	UISegmentedControl *segControl = sender;
@@ -129,6 +199,7 @@
 
 // Loads the next chapter into the Web View
 - (void)nextChapter {
+	verseToShow = 0;
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
 	if ([currentRef isEqualToString: [PSModuleController getLastRefAvailable]]) {
 		return;
@@ -277,8 +348,13 @@
 	[webView setupRefreshViews:topLength bottom:bottomLength];
 }
 
+- (void)setVerseToShow:(NSInteger)verseNumber {
+	verseToShow = verseNumber;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	//finishedLoading = NO;
 	if(refToShow) {
 		NSString *webText;
 		if(tabType == BibleTab) {
@@ -293,6 +369,10 @@
 		NSString *jsString = [NSString stringWithFormat:@"%@; startDetLocPoll();", jsToShow];
 		[webView stringByEvaluatingJavaScriptFromString:jsString];
 		self.jsToShow = nil;
+	} else if(verseToShow > 0) {
+		// go there.
+		[self scrollToVerse:verseToShow];
+		//verseToShow = 0;
 	} else {
 		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}
@@ -425,9 +505,19 @@
 	//[self highlightBookmarks];
 	[self setupWebViewRefreshViews];
 	finishedLoading = YES;
+	if(verseToShow > 0) {
+		[self scrollToVerse:verseToShow];
+		verseToShow = 0;
+	} else {
+		[self scrollHappened:self.webView.scrollView.contentOffset.y];
+	}
 	
 	//highlight search results
 	// TODO: implement highlighting of search results
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)wView {
+	finishedLoading = NO;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -466,6 +556,9 @@
 			[sheet release];
 		}
 		load = NO;
+	} else if([(NSString *)[components objectAtIndex:0] isEqualToString:@"arraydump"]) {
+		//DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
+		[self saveVersePositionArray:components];
 	} else if([[[request URL] scheme] isEqualToString:@"sword"]) {
 		//our internal reference to say this is a Bible verse to display in the Bible tab
 		// This should only happen in the commentary tab & we allow it to "load" normally.

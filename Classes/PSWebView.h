@@ -12,6 +12,7 @@
 @protocol PSWebViewDelegate
 - (void)topReloadTriggered;
 - (void)bottomReloadTriggered;
+- (void)scrollHappened:(CGFloat)newOffsetY;
 @optional
 @end
 
@@ -28,6 +29,7 @@
 	
 	CGFloat topLength;
 	CGFloat bottomLength;
+	CGFloat currentOffsetY;
 }
 
 @property (nonatomic, assign) id<PSWebViewDelegate> psDelegate;
