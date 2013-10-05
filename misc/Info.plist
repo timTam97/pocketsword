@@ -86,7 +86,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.4.6b1</string>
+	<string>1.4.6b2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
@@ -120,6 +120,8 @@
 	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
+	<key>UIStatusBarHidden~ipad</key>
+	<false/>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleBlackOpaque</string>
 	<key>UISupportedInterfaceOrientations</key>
