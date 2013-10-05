@@ -117,6 +117,7 @@
 		[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
 		
 		entry = nil;
+		load = NO;
 		
 	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 		NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];

@@ -8,11 +8,12 @@
 
 @class EGORefreshTableHeaderView;
 @class EGORefreshTableFooterView;
+@class PSWebView;
 
 @protocol PSWebViewDelegate
-- (void)topReloadTriggered;
-- (void)bottomReloadTriggered;
-- (void)scrollHappened:(CGFloat)newOffsetY;
+- (void)topReloadTriggered:(PSWebView*)psWebView;
+- (void)bottomReloadTriggered:(PSWebView*)psWebView;
+- (void)scrollHappened:(PSWebView*)psWebView newOffsetY:(CGFloat)newOffsetY;
 @optional
 @end
 

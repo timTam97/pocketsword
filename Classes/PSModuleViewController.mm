@@ -124,19 +124,21 @@
 	}
 }
 
-- (void)scrollHappened:(CGFloat)newOffsetY {
+- (void)scrollHappened:(PSWebView*)psWebView newOffsetY:(CGFloat)newOffsetY {
 	//DLog(@"scrollHappened: %f", newOffsetY);
 	if(!versePositionArray) {
 		return;
 	}
 	NSInteger verseNumber = 0;
-	for(; verseNumber < [versePositionArray count]; verseNumber++) {
+	for(; verseNumber < [versePositionArray count]; ++verseNumber) {
 		if(newOffsetY < [(NSNumber*)[versePositionArray objectAtIndex:verseNumber] floatValue]) {
 			break;
 		}
 	}
 	if(verseNumber == 0) {
 		verseNumber = 1;
+	} else if(verseNumber == [versePositionArray count]) {
+		--verseNumber;
 	}
 	if(verseNumber == currentShownVerse) {
 		return;
@@ -324,11 +326,11 @@
     [super dealloc];
 }
 
-- (void)topReloadTriggered {
+- (void)topReloadTriggered:(PSWebView*)psWebView {
 	[self prevChapter];
 }
 
-- (void)bottomReloadTriggered {
+- (void)bottomReloadTriggered:(PSWebView*)psWebView {
 	[self nextChapter];
 }
 
@@ -380,6 +382,13 @@
 		if(finishedLoading) {
 			[self setupWebViewRefreshViews];
 		}
+	}
+	if(finishedLoading) {
+		CGFloat topLength = 0.0f;
+		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
+			topLength = [[self topLayoutGuide] length];
+		}
+		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
 }
 
@@ -509,7 +518,11 @@
 		[self scrollToVerse:verseToShow];
 		verseToShow = 0;
 	} else {
-		[self scrollHappened:self.webView.scrollView.contentOffset.y];
+		CGFloat topLength = 0.0f;
+		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
+			topLength = [[self topLayoutGuide] length];
+		}
+		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
 	
 	//highlight search results

@@ -142,7 +142,7 @@
 		// ignore tiny changes
 		currentOffsetY = newOffY;
 		//NSLog(@"new offset: %f (topLength: %f)", currentOffsetY, topLength);
-		[psDelegate scrollHappened:currentOffsetY];
+		[psDelegate scrollHappened:self newOffsetY:currentOffsetY];
 	}
 
 	CGFloat PULL_THRESHOLD = PULL_THRESHOLD_IPHONE - topLength;
@@ -175,7 +175,7 @@
 	
 	if (scrollView.contentOffset.y <= (PULL_THRESHOLD - topLength) && !_reloading && !refreshHeaderView.hidden) {
         _reloading = YES;
-		[psDelegate topReloadTriggered];
+		[psDelegate topReloadTriggered:self];
         [refreshHeaderView setState:EGOOPullRefreshLoading];
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.2];
@@ -186,7 +186,7 @@
     
     if ([self endOfTableView:scrollView] <= (PULL_THRESHOLD - bottomLength) && !_reloading && !refreshFooterView.hidden) {
         _reloading = YES;
-		[psDelegate bottomReloadTriggered];
+		[psDelegate bottomReloadTriggered:self];
         [refreshFooterView setState:EGOOPullRefreshLoading];
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.2];
