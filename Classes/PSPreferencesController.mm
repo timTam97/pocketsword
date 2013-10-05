@@ -13,15 +13,16 @@
 #import "PSTabBarControllerDelegate.h"
 #import "PSModuleController.h"
 #import "PSAboutScreenController.h"
+#import "PSModuleSelectorController.h"
 
 //sections
 #define DISPLAY_SECTION		0
-#define MODULE_SECTION		444
+#define MODULE_SECTION		4
 #define STRONGS_SECTION		1
 #define MORPH_SECTION		2
 #define LANG_SECTION		44
 #define DEVICE_SECTION		3
-#define PREF__SECTIONS		4//total sections in table
+#define PREF__SECTIONS		5//total sections in table
 
 //rows in DISPLAY section
 #define FONT_SIZE_ROW		0
@@ -129,8 +130,8 @@
 		case DISPLAY_SECTION:
 			return DISPLAY__ROWS;
 		case MODULE_SECTION:
-			return [[[[PSModuleController defaultModuleController] swordManager] listModules] count];
-			//return MODULE__ROWS;
+			//return [[[[PSModuleController defaultModuleController] swordManager] listModules] count];
+			return MODULE__ROWS;
 		case STRONGS_SECTION:
 			return STRONGS__ROWS;
 		case MORPH_SECTION:
@@ -223,7 +224,6 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 					if(!cell) {
-//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierFS] autorelease];
 						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS] autorelease];
 						CGFloat fssX = 170.0;
 						if(deviceIsPad) {
@@ -267,7 +267,6 @@
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
 						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
-//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
 				}
 					break;
@@ -275,7 +274,6 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
 					if(!cell) {
-						//cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub] autorelease];
 					}
 				}
@@ -294,7 +292,6 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
 					if(!cell) {
-						//cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub] autorelease];
 					}
 				}
@@ -307,7 +304,6 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
 				}
@@ -330,7 +326,6 @@
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
 						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
-//						cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 					}
 				}
 					break;
@@ -351,7 +346,6 @@
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
 				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
-//				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifierPlain] autorelease];
 			}
 		}
 			break;
@@ -359,11 +353,11 @@
 	
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.accessoryType = UITableViewCellAccessoryNone;
-	//cell.textLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];//[UIFont systemFontOfSize:12.0];
+	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];//[UIFont systemFontOfSize:[UIFont systemFontSize]];
 	cell.textLabel.textColor = [UIColor darkTextColor];
 	
 	if(resetCell) {
+		cell.accessoryView = nil;
 		for(UIView *subv in [cell subviews]) {
 			if([subv isMemberOfClass:[UISlider class]] || [subv isMemberOfClass:[UISwitch class]]) {
 				[subv removeFromSuperview];
@@ -388,12 +382,11 @@
 				case NIGHT_MODE_ROW :
 				{
 					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					//nightModeSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 					nightModeSwitch.on = nightMode;
-					//nightModeSwitch.tag = 1;
 					[nightModeSwitch addTarget:self action:@selector(nightModeChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: nightModeSwitch ];
+					cell.accessoryView = nightModeSwitch;
+					//[ cell addSubview: nightModeSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
 					[nightModeSwitch release];						
 				}
@@ -413,10 +406,12 @@
 		case MODULE_SECTION :
 		{
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-			//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			// all Bibles are available for setting prefs:
-			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row] descr];
+			cell.textLabel.text = NSLocalizedString(@"PreferencesModulePreferencesTitle", @"Module Preferences");
+			cell.detailTextLabel.text = nil;
+//			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row] name];
+//			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row] descr];
 		}
 			break;
 //			switch (indexPath.row) {
@@ -610,7 +605,8 @@
 					insomniaSwitch.on = insomniaMode;
 					//insomniaSwitch.tag = 3;
 					[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: insomniaSwitch ];
+					//[ cell addSubview: insomniaSwitch ];
+					cell.accessoryView = insomniaSwitch;
 					[insomniaSwitch release];						
 					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"");
 				}
@@ -625,7 +621,8 @@
 						rotationLockSwitch.on = YES;
 					}
 					[rotationLockSwitch addTarget:self action:@selector(rotationLockChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: rotationLockSwitch ];
+					//[ cell addSubview: rotationLockSwitch ];
+					cell.accessoryView = rotationLockSwitch;
 					[rotationLockSwitch release];						
 					cell.textLabel.text = NSLocalizedString(@"PreferencesRotationLock", @"Rotation Lock");
 				}
@@ -638,7 +635,8 @@
 					fullscreenModeSwitch.on = fullscreenMode;
 					//nightModeSwitch.tag = 1;
 					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: fullscreenModeSwitch ];
+					//[ cell addSubview: fullscreenModeSwitch ];
+					cell.accessoryView = fullscreenModeSwitch;
 					[fullscreenModeSwitch release];						
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -662,7 +660,8 @@
 					manualInstallSwitch.on = manualInstallEnabled;
 					//manualInstallSwitch.tag = 3;
 					[manualInstallSwitch addTarget:self action:@selector(moduleMaintainerModeChanged:) forControlEvents:UIControlEventValueChanged];
-					[ cell addSubview: manualInstallSwitch ];
+					//[ cell addSubview: manualInstallSwitch ];
+					cell.accessoryView = manualInstallSwitch;
 					[manualInstallSwitch release];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -800,7 +799,10 @@
 			break;
 		case MODULE_SECTION:
 		{
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row]];
+			PSModuleSelectorController *moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil] autorelease];
+			[moduleSelectorViewController setListType:PreferencesTab];
+			[self.navigationController pushViewController:moduleSelectorViewController animated:YES];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row]];
 		}
 			break;
 	}

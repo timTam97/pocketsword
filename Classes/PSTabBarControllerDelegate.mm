@@ -414,10 +414,7 @@
 	} else {
 		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil] autorelease];
 		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
-		//modSelectorNavController.navigationBarHidden = YES;
 		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;
-		//modSelectorNavController.toolbarHidden = NO;
-		[moduleSelectorViewController setParentTabBarController:tabBarController];
 
 		if(iPad) {
 			popoverController = [[UIPopoverController alloc] initWithContentViewController:modSelectorNavController];

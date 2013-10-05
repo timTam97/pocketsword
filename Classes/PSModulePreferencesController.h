@@ -14,6 +14,7 @@
 @interface PSModulePreferencesController : PSBasePreferencesController {
 	
 	UILabel *fontSizeLabel;
+	BOOL	hackTableView;
 
 	//sections
 	NSInteger DisplaySection, ModuleSection, StrongsSection, MorphSection, LangSection;
@@ -39,6 +40,8 @@
 	NSInteger LangGreekAccentsRow, LangHebrewPointsRow, LangHebrewCantillationRow;
 	NSInteger LangRows;//total rows in section
 }
+
+@property BOOL hackTableView;
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule;
 

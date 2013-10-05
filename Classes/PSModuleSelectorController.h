@@ -14,14 +14,12 @@
 
 @interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
 	ShownTab				listType;
-	UITabBarController		*parentTabBarController;
 
 	UITableView				*modulesListTable;
 	UIToolbar				*modulesToolbar;
 }
 
 @property (assign) ShownTab listType;
-@property (assign) UITabBarController *parentTabBarController;
 @property (retain) UITableView *modulesListTable;
 @property (retain) UIToolbar *modulesToolbar;
 

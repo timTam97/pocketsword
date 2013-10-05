@@ -20,14 +20,18 @@
 
 @implementation PSModuleSelectorController
 
-@synthesize listType, parentTabBarController, modulesListTable, modulesToolbar;
+@synthesize listType, modulesListTable, modulesToolbar;
 
 - (void)loadView {
 	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	baseView.backgroundColor = [UIColor blackColor];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		baseView.backgroundColor = [UIColor blackColor];
+	} else {
+		baseView.backgroundColor = [UIColor whiteColor];
+	}
 	
 	UITableView *listTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, (viewHeight - 44.0)) style:UITableViewStylePlain];
 	listTable.delegate = self;
@@ -51,19 +55,6 @@
 	[baseView release];
 }
 
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	if([PSResizing iPad]) {
-		return;
-	}
-	UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
-	self.navigationItem.leftBarButtonItem = modulesCloseButton;
-	[modulesCloseButton release];
-	UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
-	self.navigationItem.rightBarButtonItem = modulesAddButton;
-	[modulesAddButton release];
-}
-
 - (void)dealloc {
 	[super dealloc];
 }
@@ -71,6 +62,17 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	NSInteger moduleCount = 0;
+	
+	if(listType == PreferencesTab) {
+		modulesToolbar.hidden = YES;
+	} else if(![PSResizing iPad]) {
+		UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
+		self.navigationItem.leftBarButtonItem = modulesCloseButton;
+		[modulesCloseButton release];
+		UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
+		self.navigationItem.rightBarButtonItem = modulesAddButton;
+		[modulesAddButton release];
+	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		modulesListTable.backgroundColor = [UIColor blackColor];
@@ -119,7 +121,7 @@
 		if (pos < [array count]) {
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}
-	} else {
+	} else if([self listType] == DictionaryTab){
 		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"");
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
 		moduleCount = [array count];
@@ -132,6 +134,9 @@
 		if (pos < [array count]) {
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}			
+	} else if([self listType] == PreferencesTab) {
+		self.navigationItem.title = NSLocalizedString(@"PreferencesModulePreferencesTitle", @"Module Preferences");
+		ip = nil;
 	}
 	[modulesListTable reloadData];
 	if(ip) {
@@ -173,18 +178,15 @@
 	switch (listType) {
 		case BibleTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] count];
-			break;
 		case CommentaryTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
-			break;
 		case DictionaryTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] count];
-			break;
 		case DevotionalTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] count];
-			break;
-		case DownloadsTab:
 		case PreferencesTab:
+			return [[[[PSModuleController defaultModuleController] swordManager] moduleNames] count];
+		case DownloadsTab:
 			break;
 	}
 	return 0;
@@ -205,30 +207,49 @@
 	BOOL locked = NO;
 	switch (listType) {
 		case BibleTab:
-			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] descr];
-			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row] isLocked];
+		{
+			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_BIBLES] objectAtIndex:indexPath.row];
+			cell.textLabel.text = [currentModule name];
+			cell.detailTextLabel.text = [currentModule descr];
+			locked = [currentModule isLocked];
+		}
 			break;
 		case CommentaryTab:
-			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] descr];
-			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row] isLocked];
+		{
+			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] objectAtIndex:indexPath.row];
+			cell.textLabel.text = [currentModule name];
+			cell.detailTextLabel.text = [currentModule descr];
+			locked = [currentModule isLocked];
+		}
 			break;
 		case DictionaryTab:
-			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] descr];
-			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row] isLocked];
+		{
+			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] objectAtIndex:indexPath.row];
+			cell.textLabel.text = [currentModule name];
+			cell.detailTextLabel.text = [currentModule descr];
+			locked = [currentModule isLocked];
+		}
 			break;
 		case DevotionalTab:
-			cell.textLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] name];
-			cell.detailTextLabel.text = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] descr];
-			locked = [[[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row] isLocked];
+		{
+			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row];
+			cell.textLabel.text = [currentModule name];
+			cell.detailTextLabel.text = [currentModule descr];
+			locked = [currentModule isLocked];
+		}
+			break;
+		case PreferencesTab:
+		{
+			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row];
+			cell.textLabel.text = [currentModule name];
+			cell.detailTextLabel.text = [currentModule descr];
+			locked = [currentModule isLocked];
+		}
 			break;
 		case DownloadsTab:
-		case PreferencesTab:
 			break;
 	}
-	if ([[PSModuleController defaultModuleController] isLoaded:cell.textLabel.text]) {
+	if ((listType != PreferencesTab) && [[PSModuleController defaultModuleController] isLoaded:cell.textLabel.text]) {
 		cell.textLabel.textColor = [UIColor blueColor];
 		cell.detailTextLabel.textColor = [UIColor blueColor];
 	} else if(locked) {
@@ -243,7 +264,11 @@
 			cell.detailTextLabel.textColor = [UIColor blackColor];
 		}
 	}
-	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	if(listType == PreferencesTab) {
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	} else {
+		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	}
 	return cell;
 }
 
@@ -256,6 +281,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if(listType == PreferencesTab) {
+		[self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+		return;
+	}
 
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	NSString *newModule = [self tableView: tableView cellForRowAtIndexPath: indexPath].textLabel.text;
@@ -334,12 +364,17 @@
 	PSModuleInfoViewController *detailsViewController = [[PSModuleInfoViewController alloc] initWithNibName:nil bundle:nil];
 	[detailsViewController displayInfoForModule:mod];
 	PSModulePreferencesController *preferencesViewController = [[PSModulePreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
+	preferencesViewController.hackTableView = (listType == PreferencesTab) ? NO : YES;
 	[preferencesViewController displayPrefsForModule:mod];
 	NSArray *tabs = [NSArray arrayWithObjects:detailsViewController, preferencesViewController, nil];
 	[moduleTabBarController setViewControllers:tabs];
 	CGSize contentSize = self.contentSizeForViewInPopover;
 	contentSize.height = 2200;
 	moduleTabBarController.contentSizeForViewInPopover = contentSize;
+	if(listType == PreferencesTab) {
+		// jump straight to the preferences tab...
+		[moduleTabBarController setSelectedViewController:preferencesViewController];
+	}
 	[self.navigationController pushViewController:moduleTabBarController animated:YES];
 	[detailsViewController release];
 	[preferencesViewController release];
