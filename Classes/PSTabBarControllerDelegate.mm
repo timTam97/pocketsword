@@ -274,13 +274,11 @@
 }
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
-{
-	NSString *titleToDisplay = [PSModuleController createTitleRefString:newTitle];
-	
+{	
 	if(tab == BibleTab) {
-		[bibleTabController setTabTitle:titleToDisplay];
+		[bibleTabController setTabTitle:newTitle];
 	} else if(tab == CommentaryTab) {
-		[commentaryTabController setTabTitle:titleToDisplay];
+		[commentaryTabController setTabTitle:newTitle];
 	}
 }
 

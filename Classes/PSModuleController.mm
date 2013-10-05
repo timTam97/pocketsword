@@ -248,7 +248,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if(!book) {
 			book = [NSString stringWithCString:lManager->translate("Revelation of John") encoding:NSISOLatin1StringEncoding];
 		}
-		[PSModuleController setLastRefAvailable: [NSString stringWithFormat: @"%@ 22", book]];
+		book = [PSModuleController createRefString:[NSString stringWithFormat: @"%@ 22", book]];
+		[PSModuleController setLastRefAvailable: book];
 		
 		showNetworkIndicatorCount = 0;
 		disableAutoSleepCount = 0;
@@ -931,6 +932,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 + (NSString*)createTitleRefString:(NSString *)newTitle {
+//	sword::VerseKey *vKey = (sword::VerseKey*)([[[PSModuleController defaultModuleController] primaryBible] swModule])->getKey();
+//	vKey->setText([newTitle cStringUsingEncoding: NSUTF8StringEncoding]);
+//	NSString *abbr = [NSString stringWithCString:vKey->getBookAbbrev() encoding:NSUTF8StringEncoding];
+
 	NSMutableString *mutableTitle = [NSMutableString stringWithString:@""];
 	NSString *titleToDisplay;
 	NSRange verseRange = [newTitle rangeOfString:@" " options:NSBackwardsSearch];
@@ -948,6 +953,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}
 		}
 		[mutableTitle appendString: [newTitle substringWithRange: titleMask]];
+//		[mutableTitle appendString: abbr];
 		[mutableTitle appendString: [newTitle substringFromIndex: verseRange.location]];
 		titleToDisplay = mutableTitle;
 	} else {
