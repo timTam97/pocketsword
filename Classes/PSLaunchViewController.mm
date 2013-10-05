@@ -375,9 +375,16 @@
 	//return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+	if(![PSResizing iPad]) {
+		return UIInterfaceOrientationMaskPortrait;
+	}
+	return [PSResizing supportedInterfaceOrientations];
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	DLog(@"\nwe are about to rotate the launch view controller...");
-	[self loadView];
+	//[self loadView];
 }
 
 - (void)didReceiveMemoryWarning {

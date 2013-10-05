@@ -346,4 +346,8 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
+
+- (NSUInteger)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
+}
 @end
