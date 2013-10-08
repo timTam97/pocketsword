@@ -29,8 +29,12 @@
 	wv.delegate = self;
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	wv.backgroundColor = [UIColor whiteColor];
-	NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-	[wv loadHTMLString: black baseURL: nil];
+	NSString *html = @"<html><body bgcolor=\"white\">@nbsp;</body></html>";
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		html = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
+		wv.backgroundColor = [UIColor blackColor];
+	}
+	[wv loadHTMLString: html baseURL: nil];
 	[baseView addSubview:wv];
 	self.devotionalWebView = wv;
 	[wv release];

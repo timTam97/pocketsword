@@ -112,7 +112,10 @@
 	[lVC setDelegate:self];
 		
 	self.window = [[[SnoopWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-	self.window.backgroundColor = [UIColor blackColor];
+	self.window.backgroundColor = [UIColor whiteColor];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		self.window.backgroundColor = [UIColor blackColor];
+	}
 
 	if([self.window respondsToSelector:@selector(rootViewController)]) {
 		self.window.rootViewController = lVC;

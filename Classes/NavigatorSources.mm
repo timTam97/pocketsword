@@ -23,9 +23,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	//self.view.backgroundColor = [UIColor blackColor];
-	
+		
 	mmmMenuDisplayed = NO;
 	self.navigationItem.title = NSLocalizedString(@"InstallSourcesTitle", @"Sources");
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;

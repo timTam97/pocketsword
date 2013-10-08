@@ -38,10 +38,14 @@
 	PSWebView *wv = [[PSWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	wv.delegate = self;
 	wv.psDelegate = self;
-	wv.backgroundColor = [UIColor blackColor];
+	wv.backgroundColor = [UIColor whiteColor];
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	NSString *black = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-	[wv loadHTMLString: black baseURL: nil];
+	NSString *html = @"<html><body bgcolor=\"white\">@nbsp;</body></html>";
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
+		html = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
+		wv.backgroundColor = [UIColor blackColor];
+	}
+	[wv loadHTMLString: html baseURL: nil];
 	[baseView addSubview:wv];
 	self.webView = wv;
 	[wv release];
@@ -49,6 +53,15 @@
 	self.view = baseView;
 	[baseView release];
 	currentShownVerse = 1;
+}
+
+- (void)nightModeChanged {
+	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
+	if(nightMode) {
+		self.webView.backgroundColor = [UIColor blackColor];
+	} else {
+		self.webView.backgroundColor = [UIColor whiteColor];
+	}
 }
 
 - (void)viewDidLoad {
@@ -98,9 +111,9 @@
 	self.titleSegmentedControl = segControl;
 	[segControl release];
 	
-	
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
 	finishedLoading = NO;
 }
 

@@ -74,13 +74,19 @@
 		// 07: About
 		
 		if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {// iOS 7 only
-			[[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-			[[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
-			[[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
-			[[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
-			[[UIToolbar appearance] setBarTintColor:[UIColor blackColor]];
-			[[UITabBar appearance] setTintColor:[UIColor whiteColor]];
-			[[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+			UIColor *tintColor = [UIColor whiteColor];
+//			UIColor *tintColor = [UIColor blackColor];
+//			UIColor *barTintColor = [UIColor yellowColor];
+			UIColor *barTintColor = [UIColor blackColor];
+//			UIColor *barTintColor = [UIColor redColor];
+			
+			[[UINavigationBar appearance] setTintColor:tintColor];
+			[[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
+			[[UINavigationBar appearance] setBarTintColor:barTintColor];
+			[[UIToolbar appearance] setTintColor:tintColor];
+			[[UIToolbar appearance] setBarTintColor:barTintColor];
+			[[UITabBar appearance] setTintColor:tintColor];
+			[[UITabBar appearance] setBarTintColor:barTintColor];
 		}
 		
 		//add the Commentary Tab.
