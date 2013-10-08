@@ -164,6 +164,7 @@
 			[refreshFooterView setState:EGOOPullRefreshPulling];
 		}
 	}
+	[super scrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
