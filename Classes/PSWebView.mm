@@ -164,7 +164,9 @@
 			[refreshFooterView setState:EGOOPullRefreshPulling];
 		}
 	}
-	[super scrollViewDidScroll:scrollView];
+	if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+		[super scrollViewDidScroll:scrollView];
+	}
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

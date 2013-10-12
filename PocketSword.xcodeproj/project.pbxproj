@@ -3013,6 +3013,11 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "CrossWire Bible Society";
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = WLJLX6W97K;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PocketSword" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -3576,6 +3581,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3588,14 +3595,12 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/externals/libcurl\"",
 					"\"$(SRCROOT)/TestFlightSDK1.2.4\"",
 				);
-				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
 					"-DCURLAVAILABLE",
@@ -3604,6 +3609,7 @@
 					"-DUSELUCENE",
 					"-DDEBUG",
 				);
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -3611,6 +3617,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3623,7 +3631,6 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3637,6 +3644,7 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -3660,7 +3668,8 @@
 					"clucene/**",
 					include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-Dunix",
 					"-D__unix__",
@@ -3693,7 +3702,7 @@
 					"clucene/**",
 					include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = (
 					"-Dunix",
 					"-D__unix__",
@@ -3728,7 +3737,7 @@
 					"clucene/**",
 					include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = (
 					"-Dunix",
 					"-D__unix__",
@@ -3746,6 +3755,8 @@
 		E982FA660ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3758,7 +3769,6 @@
 					externals/libcurl/include,
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3772,6 +3782,7 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
+				PROVISIONING_PROFILE = "";
 			};
 			name = Distribution;
 		};

@@ -16,6 +16,7 @@
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-130708"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-121223"
+#define KJV_VERSION						@"loadedKJV-v2.5"
 
 @implementation PSLaunchViewController
 
@@ -114,20 +115,6 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//	[super viewWillAppear:animated];
-//}
-
-//- (void)viewWillDisappear:(BOOL)animated {
-//	//[activityInd stopAnimating];
-//	[super viewWillDisappear:animated];
-//}
-
-//- (void)viewDidAppear:(BOOL)animated {
-//	[super viewDidAppear:animated];
-//
-//}
-
 - (void)startInitializingPocketSword {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 //	DLog(@"start the Launch configuring...");
@@ -142,7 +129,7 @@
 		[PSLaunchViewController resetPreferences];
 	}
 	
-	BOOL kjv = [defaults boolForKey:@"loadedBundledKJV"];
+	BOOL kjv = [defaults boolForKey:KJV_VERSION];
 	BOOL loadedLocales = [defaults boolForKey:LOCALES_VERSION];
 	BOOL strongsAndMorph = [defaults boolForKey:@"loadedBundledStrongsAndMorph"];
 	BOOL strongsRealGreek = [defaults boolForKey:STRONGS_REAL_GREEK_VERSION];
@@ -175,7 +162,7 @@
 		[defaults synchronize];
 		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible removeZip:NO internalModule:YES];
 		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary removeZip:NO internalModule:YES];
-		[defaults setBool: YES forKey:@"loadedBundledKJV"];
+		[defaults setBool: YES forKey:KJV_VERSION];
 	}
 	
 	if(!strongsAndMorph) {

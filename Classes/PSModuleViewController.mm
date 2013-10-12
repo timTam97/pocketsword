@@ -16,6 +16,7 @@
 #import "PSBookmark.h"
 #import "PSCommentaryViewController.h"
 #import "SwordManager.h"
+#import "PSHistoryController.h"
 
 @implementation PSModuleViewController
 
@@ -233,11 +234,13 @@
 		case BibleTab:
 		{
 			[delegate displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreNoPosition];
+			[PSHistoryController addHistoryItem:BibleTab];
 		}
 			break;
 		case CommentaryTab:
 		{
 			[delegate displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreNoPosition];
+			[PSHistoryController addHistoryItem:CommentaryTab];
 		}
 			break;
 		default:
@@ -266,11 +269,13 @@
 		case BibleTab:
 		{
 			[delegate displayChapter:ref withPollingType:BibleViewPoll restoreType:RestoreVersePosition];
+			[PSHistoryController addHistoryItem:BibleTab];
 		}
 			break;
 		case CommentaryTab:
 		{
 			[delegate displayChapter:ref withPollingType:CommentaryViewPoll restoreType:RestoreVersePosition];
+			[PSHistoryController addHistoryItem:CommentaryTab];
 		}
 			break;
 		default:
