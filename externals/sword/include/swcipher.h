@@ -1,9 +1,11 @@
 /******************************************************************************
- *  swcipher.h   - definition of Class SWCipher used for data cipher/decipher
  *
- * $Id: swcipher.h 1864 2005-11-20 06:06:40Z scribe $
+ *  swcipher.h -	definition of Class SWCipher used for data
+ *			cipher/decipher
  *
- * Copyright 1999 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swcipher.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

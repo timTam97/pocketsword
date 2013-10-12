@@ -1,9 +1,10 @@
 /******************************************************************************
- *  utilxml.h   - definition of class that deal with xml constructs 
  *
- * $Id: utilxml.h 2378 2009-05-04 23:18:51Z scribe $
+ *  utilxml.h -	definition of class that deal with xml constructs 
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: utilxml.h 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -46,7 +47,6 @@ private:
 	
 	void parse() const;
 	const char *getPart(const char *buf, int partNum = 0, char partSplit = '|') const;
-	static const char *nullstr;
 	
 public:
 	XMLTag(const char *tagString = 0);
@@ -54,7 +54,7 @@ public:
 	~XMLTag();
 
 	void setText(const char *tagString);
-	inline const char *getName() const { return (name)?name:nullstr; }
+	inline const char *getName() const { return (name) ? name : SWBuf::nullStr; }
 
 	inline bool isEmpty() const {
 		if (!parsed)

@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- * osisxhtml -	Render filter for classed XHTML
- *			of an OSIS module.
+ *  osisxhtml.cpp -	Render filter for classed XHTML of an OSIS module
  *
+ * $Id: osisxhtml.cpp 2984 2013-09-20 12:18:45Z scribe $
  *
- * Copyright 2011 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -549,15 +549,24 @@ bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		// <hi> text highlighting
 		else if (!strcmp(tag.getName(), "hi")) {
 			SWBuf type = tag.getAttribute("type");
-			// handle tei rend attribute
+
+			// handle tei rend attribute if type doesn't exist
 			if (!type.length()) type = tag.getAttribute("rend");
+
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
 				if (type == "bold" || type == "b" || type == "x-b") {
 					outText("<b>", buf, u);
 				}
-				else if (type == "ol") {
+
+				// there is no officially supported OSIS overline attribute,
+				// thus either TEI overline or OSIS x-overline would be best,
+				// but we have used "ol" in the past, as well.  Once a valid
+				// OSIS overline attribute is made available, these should all
+				// eventually be deprecated and never documented that they are supported.
+				else if (type == "ol"  || type == "overline" || type == "x-overline") {
 					outText("<span style=\"text-decoration:overline\">", buf, u);
 				}
+
 				else if (type == "super") {
 					outText("<span class=\"sup\">", buf, u);
 				}

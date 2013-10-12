@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * utf8nfkd - SWFilter descendant to perform NFKD (compatability decomposition
- *                   normalization) on UTF-8 text
+ *  utf8nfkd.cpp -	SWFilter descendant to perform NFKD (compatability
+ *			decomposition normalization) on UTF-8 text
  *
+ * $Id: utf8nfkd.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -29,15 +30,19 @@
 #include <utf8nfkd.h>
 #include <swbuf.h>
 
+
 SWORD_NAMESPACE_START
+
 
 UTF8NFKD::UTF8NFKD() {
         conv = ucnv_open("UTF-8", &err);
 }
 
+
 UTF8NFKD::~UTF8NFKD() {
          ucnv_close(conv);
 }
+
 
 char UTF8NFKD::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 {
@@ -63,6 +68,7 @@ char UTF8NFKD::processText(SWBuf &text, const SWKey *key, const SWModule *module
 
 	return 0;
 }
+
 
 SWORD_NAMESPACE_END
 #endif

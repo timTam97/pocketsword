@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: osisvariants.h 1688 2005-01-01 04:42:26Z scribe $
+ *  osisvariants.h -	Implementation of OSISVariants
  *
- * Copyright 2001 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisvariants.h 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -29,25 +31,11 @@ SWORD_NAMESPACE_START
 /** This Filter shows/hides textual variants
  */
 class SWDLLEXPORT OSISVariants : public SWOptionFilter {
-	char option;
-
-	static const char primary[];
-	static const char secondary[];
-	static const char all[];
-
-	static const char optName[];
-	static const char optTip[];
-	StringList options;
 
 public:
 	OSISVariants();
 	virtual ~OSISVariants();
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
-	virtual const char *getOptionName() { return optName; }
-	virtual const char *getOptionTip() { return optTip; }
-	virtual void setOptionValue(const char *ival);
-	virtual const char *getOptionValue();
-	virtual StringList getOptionValues() { return options; }
 };
 
 SWORD_NAMESPACE_END

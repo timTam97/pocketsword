@@ -1,9 +1,11 @@
 /******************************************************************************
- *  ztext.cpp - code for class 'zText'- a module that reads compressed text
- *				files: ot and nt using indexs ??.vss
  *
+ *  ztext.cpp -	code for class 'zText'- a module that reads compressed text
+ *		files
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: ztext.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -27,9 +29,6 @@
 #include <filemgr.h>
 
 #include <ztext.h>
-
-#include <regex.h>	// GNU
-
 
 SWORD_NAMESPACE_START
 

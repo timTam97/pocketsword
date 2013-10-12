@@ -1,8 +1,11 @@
 /******************************************************************************
- *  rawld.cpp - code for class 'RawLD'- a module that reads raw lexicon and
- *		dictionary files: *.dat *.idx
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *  zld.cpp -	code for class 'zLD'- a module that reads zlib compressed
+ *		lexicon and dictionary files
+ *
+ * $Id: zld.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -27,7 +30,9 @@
 
 #include <stdio.h>
 
+
 SWORD_NAMESPACE_START
+
 
  /******************************************************************************
  * RawLD Constructor - Initializes data for instance of RawLD
@@ -191,3 +196,4 @@ char *zLD::getKeyForEntry(long entry) const
 
 
 SWORD_NAMESPACE_END
+

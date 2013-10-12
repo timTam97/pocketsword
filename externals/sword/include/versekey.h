@@ -1,9 +1,11 @@
 /******************************************************************************
- *	versekey.h - code for class 'versekey'- a standard Biblical verse key
  *
- * $Id: versekey.h 2812 2013-06-10 07:22:42Z chrislit $
+ *  versekey.h -	code for class 'VerseKey'- a standard Biblical verse
+ *			key
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: versekey.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ	85280-2528

@@ -1,23 +1,24 @@
 /******************************************************************************
-*  remotetrans.h  - code for Remote Transport
-*
-* $Id: swbuf.h 2218 2008-12-23 09:33:38Z scribe $
-*
-* Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
-*	CrossWire Bible Society
-*	P. O. Box 2528
-*	Tempe, AZ  85280-2528
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation version 2.
-*
-* This program is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-*/
+ *
+ *  remotetrans.h -	code for Remote Transport
+ *
+ * $Id: remotetrans.h 2932 2013-07-31 14:07:01Z scribe $
+ *
+ * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ */
 
 #ifndef REMOTETRANS_H
 #define REMOTETRANS_H
@@ -38,7 +39,8 @@ public:
 	virtual void preStatus(long totalBytes, long completedBytes, const char *message);
 
 	/** frequently called throughout a download, to report status */
-	virtual void statusUpdate(double dtTotal, double dlNow);
+	SWDEPRECATED virtual void statusUpdate(double dtTotal, double dlNow);
+	virtual void update(unsigned long totalBytes, unsigned long completedBytes);
 };
 
 

@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * utf8html -	SWFilter descendant to convert a UTF-8 stream to HTML escapes
+ *  utf8html.cpp -	SWFilter descendant to convert a UTF-8 stream to
+ *			HTML escapes
  *
+ * $Id: utf8html.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -25,7 +26,9 @@
 #include <utf8html.h>
 #include <swbuf.h>
 
+
 SWORD_NAMESPACE_START
+
 
 UTF8HTML::UTF8HTML() {
 }
@@ -79,4 +82,6 @@ char UTF8HTML::processText(SWBuf &text, const SWKey *key, const SWModule *module
 	return 0;
 }
 
+
 SWORD_NAMESPACE_END
+

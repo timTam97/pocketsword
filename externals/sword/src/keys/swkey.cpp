@@ -1,10 +1,12 @@
 /******************************************************************************
- *  swkey.cpp - code for base class 'SWKey'.  SWKey is the basis for all
- *	        types of keys for indexing into modules (e.g. verse, word,
+ *
+ *  swkey.cpp -	code for base class 'SWKey'.  SWKey is the basis for all
+ *		types of keys for indexing into modules (e.g. verse, word,
  *		place, etc.)
  *
+ * $Id: swkey.cpp 2833 2013-06-29 06:40:28Z chrislit $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

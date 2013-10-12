@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * UTF8HebrewPoints - SWFilter descendant to remove UTF-8 Hebrew vowel points
+ *  utf8hebrewpoints.cpp -	SWFilter descendant to remove UTF-8 Hebrew
+ *				vowel points
  *
+ * $Id: utf8hebrewpoints.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2011 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,17 +25,25 @@
 #include <stdio.h>
 #include <utf8hebrewpoints.h>
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Hebrew Vowel Points";
-const char oTip[] = "Toggles Hebrew Vowel Points";
+namespace {
 
-const SWBuf choices[3] = {"On", "Off", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const char oName[] = "Hebrew Vowel Points";
+	static const char oTip[]  = "Toggles Hebrew Vowel Points";
 
-UTF8HebrewPoints::UTF8HebrewPoints() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("On");
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"On", "Off", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
 }
+
+
+UTF8HebrewPoints::UTF8HebrewPoints() : SWOptionFilter(oName, oTip, oValues()) {
+}
+
 
 UTF8HebrewPoints::~UTF8HebrewPoints(){};
 
@@ -55,5 +64,6 @@ char UTF8HebrewPoints::processText(SWBuf &text, const SWKey *key, const SWModule
      	}
 	return 0;
 }
+
 
 SWORD_NAMESPACE_END

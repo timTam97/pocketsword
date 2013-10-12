@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- * osisenum          -	SWFilter descendant to hide or show word enumations
- *			in an OSIS module.
+ *  osisenum.cpp -	SWFilter descendant to hide or show word enumations
+ *			in an OSIS module
  *
- * $Id: osisenum.cpp 2815 2013-06-10 12:25:58Z chrislit $
+ * $Id: osisenum.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
  * Copyright 2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -25,16 +25,23 @@
 #include <osisenum.h>
 #include <utilxml.h>
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Enumerations";
-const char oTip[] = "Toggles Enumerations On and Off if they exist";
+namespace {
 
-const SWBuf choices[3] = {"Off", "On", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const char oName[] = "Enumerations";
+	static const char oTip[]  = "Toggles Enumerations On and Off if they exist";
 
-OSISEnum::OSISEnum() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("Off");
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"Off", "On", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
+}
+
+
+OSISEnum::OSISEnum() : SWOptionFilter(oName, oTip, oValues()) {
 }
 
 

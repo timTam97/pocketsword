@@ -1,10 +1,11 @@
 /******************************************************************************
- *  zld.cpp - code for class 'zLD'- a module that reads compressed lexicon and
- *				dictionary files.
  *
- * $Id: zld.h 2780 2013-02-01 09:11:52Z scribe $
+ *  zld.cpp -	code for class 'zLD'- a module that reads compressed lexicon
+ *		and dictionary files
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: zld.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

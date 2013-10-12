@@ -1,11 +1,12 @@
 /******************************************************************************
- *  swmodule.h  - code for base class 'module'.  Module is the basis for all
- *		  types of modules (e.g. texts, commentaries, maps, lexicons,
- *		  etc.)
  *
- * $Id: swmodule.h 2820 2013-06-11 17:21:12Z scribe $
+ *  swmodule.h -	code for base class 'module'.  Module is the basis for
+ *		  	all types of modules (e.g. texts, commentaries, maps,
+ *		  	lexicons, etc.)
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swmodule.h 2944 2013-08-03 09:43:40Z scribe $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -46,7 +47,8 @@ class SWFilter;
 #define SEARCHFLAG_MATCHWHOLEENTRY 4096
 
 #define SWMODULE_OPERATORS \
-	operator const char *() { return renderText(); } \
+	SWDEPRECATED operator const char *() { static SWBuf unsafeTmp = renderText(); return unsafeTmp.c_str(); } \
+	operator SWBuf() { return renderText(); } \
 	operator SWKey &() { return *getKey(); } \
 	operator SWKey *() { return getKey(); } \
 	SWModule &operator <<(const char *inbuf) { setEntry(inbuf); return *this; } \
@@ -87,13 +89,14 @@ typedef std::map < SWBuf, AttributeList, std::less < SWBuf > > AttributeTypeList
 // Just leave for now.  This lets us always able to call module->flush()
 // to manually flush a cache, and doesn't hurt if there is no work done.
 
+
 class SWDLLEXPORT SWModule : public SWCacher, public SWSearchable {
 
 class StdOutDisplay : public SWDisplay {
      char display(SWModule &imodule)
      {
      #ifndef	_WIN32_WCE
-          std::cout << (const char *)imodule;
+          std::cout << imodule.renderText();
      #endif
           return 0;
      }
@@ -184,7 +187,7 @@ public:
 	/**
 	 * @return  True if this module is encoded in Unicode, otherwise returns false.
 	 */
-	virtual bool isUnicode() const { return (encoding == (char)ENC_UTF8); }
+	virtual bool isUnicode() const { return (encoding == (char)ENC_UTF8 || encoding == (char)ENC_SCSU); }
 
 	// These methods are useful for modules that come from a standard SWORD install (most do).
 	// SWMgr will call setConfig.  The user may use getConfig and getConfigEntry (if they
@@ -192,6 +195,14 @@ public:
 	virtual void setConfig(ConfigEntMap *config);
 	virtual const ConfigEntMap &getConfig() const { return *config; }
 	virtual const char *getConfigEntry(const char *key) const;
+
+	/**
+	 * Returns bibliographic data for a module in the requested format
+	 *
+	 * @param bibFormat format of the bibliographic data
+	 * @return bibliographic data in the requested format as a string (BibTeX by default)
+	 */
+	virtual SWBuf getBibliography(unsigned char bibFormat = BIB_BIBTEX) const;
 
 	/**
 	 * @return The size of the text entry for the module's current key position.
@@ -641,7 +652,7 @@ public:
 	 * @param render for internal use
 	 * @return result buffer
 	 */
-	virtual const char *renderText(const char *buf = 0, int len = -1, bool render = true);
+	SWBuf renderText(const char *buf = 0, int len = -1, bool render = true);
 	SWDEPRECATED const char *RenderText(const char *buf = 0, int len = -1, bool render = true) { return renderText(buf, len, render); }
 
 	/** Produces any header data which might be useful which is associated with the
@@ -660,7 +671,7 @@ public:
 	 * @param tmpKey key to use to grab text
 	 * @return this module's text at specified key location massaged by Render filters
 	 */
-	virtual const char *renderText(const SWKey *tmpKey);
+	SWBuf renderText(const SWKey *tmpKey);
 
 	/** Whether or not to only hit one entry when iterating encounters
 	 *	consecutive links when iterating

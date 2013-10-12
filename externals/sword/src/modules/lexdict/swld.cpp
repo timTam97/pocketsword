@@ -1,9 +1,11 @@
 /******************************************************************************
- *  swld.cpp   - code for base class 'SWLD'.  SWLD is the basis for all
- *		 types of Lexicon and Dictionary modules (hence the 'LD').
  *
+ *  swld.cpp -	code for base class 'SWLD'.  SWLD is the basis for all
+ *		types of Lexicon and Dictionary modules (hence the 'LD').
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swld.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -25,7 +27,9 @@
 #include <strkey.h>
 #include <swkey.h>
 
+
 SWORD_NAMESPACE_START
+
 
 /******************************************************************************
  * SWLD Constructor - Initializes data for instance of SWLD
@@ -95,6 +99,7 @@ void SWLD::setPosition(SW_POSITION p) {
 	getRawEntryBuf();
 }
 
+
 bool SWLD::hasEntry(const SWKey *key) const {
 	const char *key_str = *key;
 	char *buf = new char [ strlen(key_str) + 6 ];
@@ -107,6 +112,7 @@ bool SWLD::hasEntry(const SWKey *key) const {
 
 	return retVal;
 }
+
 
 /******************************************************************************
  * SWLD::strongsPad	- Pads a key if (it-1) is 100% digits to 5 places
@@ -160,3 +166,4 @@ void SWLD::strongsPad(char *buf)
 
 
 SWORD_NAMESPACE_END
+

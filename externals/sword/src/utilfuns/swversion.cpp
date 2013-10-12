@@ -1,5 +1,10 @@
-/*
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+/******************************************************************************
+ *
+ *  swversion.cpp -	SWVersion: version number utility class
+ *
+ * $Id: swversion.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -15,16 +20,17 @@
  *
  */
 
-#include <config.h>
-
 #include <swversion.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+
 SWORD_NAMESPACE_START
 
-SWVersion SWVersion::currentVersion( VERSION );
+
+SWVersion SWVersion::currentVersion( SWORD_VERSION_STR );
+
 
 /******************************************************************************
  * SWVersion c-tor - Constructs a new SWVersion
@@ -97,4 +103,6 @@ const char *SWVersion::getText() const {
 	return buf;
 }
 
+
 SWORD_NAMESPACE_END
+

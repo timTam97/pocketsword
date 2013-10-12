@@ -1,10 +1,11 @@
 /******************************************************************************
- *  localemgr.h   - definition of class LocaleMgr used to interact with
- *				registered locales for a sword installation
  *
- * $Id: localemgr.h 1864 2005-11-20 06:06:40Z scribe $
+ *  localemgr.h -	definition of class LocaleMgr used to interact with
+ *			registered locales for a sword installation
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: localemgr.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

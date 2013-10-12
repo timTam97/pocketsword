@@ -1,9 +1,11 @@
 /******************************************************************************
- *  rawtext4.cpp - code for class 'RawText4'- a module that reads raw text
- *                 files: ot and nt using indexs ??.bks ??.cps ??.vss
  *
+ *  rawtext4.cpp -	code for class 'RawText4'- a module that reads raw text
+ *			files: ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: rawtext4.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2007-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -31,23 +33,7 @@
 #include <versekey.h>
 #include <stringmgr.h>
 
-#include <regex.h>	// GNU
-#include <map>
-#include <list>
-#include <algorithm>
-
-#ifndef USELUCENE
-using std::map;
-using std::list;
-using std::find;
-#endif
-
 SWORD_NAMESPACE_START
-
-#ifndef USELUCENE
-typedef  map < SWBuf, list<long> > strlist;
-typedef list<long> longlist;
-#endif
 
 /******************************************************************************
  * RawText4 Constructor - Initializes data for instance of RawText4

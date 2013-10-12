@@ -1,9 +1,10 @@
 /******************************************************************************
- *  utilstr.h	- prototypes for string utility functions
  *
- * $Id: utilstr.h 2656 2011-09-29 15:46:37Z scribe $
+ *  utilstr.h -	prototypes for string utility functions
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: utilstr.h 2981 2013-09-15 00:05:26Z scribe $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -55,6 +56,19 @@ extern const unsigned char SW_toupper_array[256];
  */
 
 __u32 getUniCharFromUTF8(const unsigned char **buf);
+
+
+/******************************************************************************
+ * getUTF8FromUniChar - retrieves us UTF8 string from a
+ * 					Unicode codepoint
+ *
+ * ENT:	uchar - unicode codepoint value
+ *
+ * RET:	buf - a UTF8 string which consists of the proper UTF8 sequence of
+ * 				bytes for the given Unicode codepoint
+ */
+
+SWBuf getUTF8FromUniChar(__u32 uchar);
 
 
 /******************************************************************************

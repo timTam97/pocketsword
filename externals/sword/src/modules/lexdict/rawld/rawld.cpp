@@ -1,9 +1,11 @@
 /******************************************************************************
- *  rawld.cpp - code for class 'RawLD'- a module that reads raw lexicon and
- *				dictionary files: *.dat *.idx
  *
+ *  rawld.cpp -	code for class 'RawLD'- a module that reads raw lexicon and
+ *		dictionary files: *.dat *.idx
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: rawld.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -28,7 +30,9 @@
 
 #include <stdio.h>
 
+
 SWORD_NAMESPACE_START
+
 
  /******************************************************************************
  * RawLD Constructor - Initializes data for instance of RawLD
@@ -192,4 +196,6 @@ char *RawLD::getKeyForEntry(long entry) const {
 	return key;
 }
 
+
 SWORD_NAMESPACE_END
+

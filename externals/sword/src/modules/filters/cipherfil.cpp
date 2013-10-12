@@ -1,8 +1,11 @@
 /******************************************************************************
  *
- * cipherfil -	SWFilter descendant to decipher a module
+ *  cipherfil.cpp -	CipherFilter, a SWFilter descendant to decipher
+ *			a module
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: cipherfil.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,7 +27,9 @@
 #include <swcipher.h>
 #include <swbuf.h>
 
+
 SWORD_NAMESPACE_START
+
 
 CipherFilter::CipherFilter(const char *key) {
 	cipher = new SWCipher((unsigned char *)key);
@@ -58,4 +63,6 @@ char CipherFilter::processText(SWBuf &text, const SWKey *key, const SWModule *mo
 	return 0;
 }
 
+
 SWORD_NAMESPACE_END
+

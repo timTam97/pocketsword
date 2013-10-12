@@ -1,9 +1,10 @@
 /******************************************************************************
- *  versekey.h - code for class 'versekey'- a standard Biblical verse key
  *
- * $Id: treekeyidx.cpp 2764 2013-01-19 16:19:47Z scribe $
+ *  treekeyidx.cpp -	
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: treekeyidx.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -32,7 +33,6 @@
 
 SWORD_NAMESPACE_START
 
-static const char nl = '\n';
 static const char *classes[] = {"TreeKeyIdx", "TreeKey", "SWKey", "SWObject", 0};
 SWClass TreeKeyIdx::classdef(classes);
 

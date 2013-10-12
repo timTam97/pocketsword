@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swsearchable.h	- definition of class SWSearchable used to provide an
- *	interface for objects that be searched.
  *
- * $Id: swsearchable.cpp 1959 2006-08-28 00:39:56Z scribe $
+ *  swsearchable.cpp -	used to provide an interface for objects that
+ *			can be searched
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swsearchable.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -23,9 +24,12 @@
 #include <swsearchable.h>
 #include <listkey.h>
 
+
 SWORD_NAMESPACE_START
 
+
 void SWSearchable::nullPercent(char percent, void *percentUserData) {}
+
 
 SWSearchable::SWSearchable() {
 }
@@ -34,7 +38,8 @@ SWSearchable::SWSearchable() {
 SWSearchable::~SWSearchable() {
 }
 
-	// special search framework
+
+// special search framework
 signed char SWSearchable::createSearchFramework(void (*percent)(char, void *), void *percentUserData) {
 	return 0;
 }
@@ -50,4 +55,6 @@ bool SWSearchable::isSearchOptimallySupported(const char *istr, int searchType, 
 	return retVal;
 }
 
+
 SWORD_NAMESPACE_END
+

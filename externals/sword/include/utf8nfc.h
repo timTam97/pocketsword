@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: utf8nfc.h 1688 2005-01-01 04:42:26Z scribe $
+ *  utf8nfc.h -	Implementation of UTF8NFC
  *
- * Copyright 2001 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: utf8nfc.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

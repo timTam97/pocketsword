@@ -1,9 +1,10 @@
 /******************************************************************************
- *  versekey.h - code for class 'versekey'- a standard Biblical verse key
  *
- * $Id: treekey.h 2645 2011-07-22 11:03:45Z scribe $
+ *  treekey.h -	code for class 'TreeKey'
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: treekey.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

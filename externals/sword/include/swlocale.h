@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swlocale.h   - definition of Class SWLocale used for retrieval
- *				of locale lookups
  *
- * $Id: swlocale.h 2191 2008-08-16 16:16:03Z scribe $
+ *  swlocale.h -	definition of Class SWLocale used for retrieval
+ *		       	of locale lookups
  *
- * Copyright 2000 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swlocale.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

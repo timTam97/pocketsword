@@ -1,6 +1,8 @@
 /***************************************************************************
  *
- * $Id: swoptfilter.h 2688 2012-03-05 02:02:10Z scribe $
+ *  swoptfilter.h -	Implenetation of SWOptionFilter
+ *
+ * $Id: swoptfilter.h 2980 2013-09-14 21:51:47Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -42,12 +44,19 @@ protected:
 	const char *optTip;
 	const StringList *optValues;
 	bool option;
+	bool isBooleanVal;
 public:
 
 	SWOptionFilter();
 	SWOptionFilter(const char *oName, const char *oTip, const StringList *oValues);
 	virtual ~SWOptionFilter();
 
+
+	/** many options are simple Off/On boolean type, and frontends may wish to show these
+	 * with checkmarks or the like to the end user.  This is a convenience method
+	 * to allow a frontend to check if this filter has only Off/On values
+	 */
+	bool isBoolean() { return isBooleanVal; }
 
 	/** gets the name of the option of this filter
 	 * @return option name

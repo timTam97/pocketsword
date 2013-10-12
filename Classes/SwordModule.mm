@@ -698,8 +698,8 @@
         sword::SWBuf footnoteText = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["body"].c_str();
         // convert from base markup to display markup
         //char *fText = (char *)swModule->StripText(footnoteText);
-        char *fText = (char *)swModule->renderText(footnoteText);
-        ret = [NSString stringWithUTF8String:fText];
+		sword::SWBuf fText = swModule->renderText(footnoteText);
+        ret = [NSString stringWithUTF8String:fText.c_str()];
     } else if([attrType isEqualToString:@"x"]) {
         if([self isUnicode]) {
             swModule->setKey([passage UTF8String]);

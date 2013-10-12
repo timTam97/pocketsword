@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id:
+ *  teirtf.h -	Implementation of TEIRTF
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: teirtf.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

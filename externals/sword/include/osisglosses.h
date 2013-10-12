@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: osisglosses.h 2815 2013-06-10 12:25:58Z chrislit $
+ *  osisglosses.h -	Implementation of OSISGlosses
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisglosses.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

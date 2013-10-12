@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swfiltermgr.cpp   - definition of class SWFilterMgr used as an interface to
- *				manage filters on a module
  *
- * $Id: swfiltermgr.cpp 1688 2005-01-01 04:42:26Z scribe $
+ *  swfiltermgr.cpp -	Implementation of SWFilterMgr, used as an interface
+ *			to manage filters on a module
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swfiltermgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -21,6 +22,7 @@
  */
 
 #include <swfiltermgr.h>
+
 
 SWORD_NAMESPACE_START
 
@@ -90,4 +92,6 @@ void SWFilterMgr::AddStripFilters(SWModule * module, ConfigEntMap & section) {
 void SWFilterMgr::AddRawFilters(SWModule * module, ConfigEntMap & section) {
 }
 
+
 SWORD_NAMESPACE_END
+

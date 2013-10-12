@@ -1,10 +1,11 @@
 /******************************************************************************
- *  versificationmgr.cpp	- implementation of class VersificationMgr used for managing
- *  					versification systems
  *
- * $Id: versificationmgr.cpp 2108 2007-10-13 20:35:02Z scribe $
+ *  versificationmgr.cpp -	implementation of class VersificationMgr used
+ *				for managing versification systems
  *
- * Copyright 2010 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: versificationmgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2008-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -36,17 +37,20 @@
 #include <canon_nrsv.h>		// NRSV v11n system
 #include <canon_nrsva.h>	// NRSV + Apocrypha v11n system
 #include <canon_synodal.h>	// Russian Synodal v11n system
+#include <canon_synodalprot.h>	// Russian Synodal v11n system
 #include <canon_vulg.h>		// Vulgate v11n system
 #include <canon_german.h>	// German v11n system
 #include <canon_luther.h>	// Luther v11n system
 #include <canon_catholic.h>	// Catholic v11n system (10 chapter Esther)
 #include <canon_catholic2.h>	// Catholic2 v11n system (16 chapter Esther)
-#include <canon_rahlfs.h>	// Rahlfs LXX v11n system
+#include <canon_lxx.h>		// General LXX v11n system (includes GNT, as used in Orthodox Bibles)
+#include <canon_orthodox.h>	// Orthodox v11n system as used in Orthodox Bibles
 
 using std::vector;
 using std::map;
 using std::distance;
 using std::lower_bound;
+
 
 SWORD_NAMESPACE_START
 
@@ -61,12 +65,14 @@ VersificationMgr *VersificationMgr::getSystemVersificationMgr() {
 		systemVersificationMgr->registerVersificationSystem("NRSV", otbooks, ntbooks, vm_nrsv);
 		systemVersificationMgr->registerVersificationSystem("NRSVA", otbooks_nrsva, ntbooks, vm_nrsva);
 		systemVersificationMgr->registerVersificationSystem("Synodal", otbooks_synodal, ntbooks_synodal, vm_synodal);
+		systemVersificationMgr->registerVersificationSystem("SynodalProt", otbooks_synodalProt, ntbooks_synodal, vm_synodalProt);
 		systemVersificationMgr->registerVersificationSystem("Vulg", otbooks_vulg, ntbooks_vulg, vm_vulg);
 		systemVersificationMgr->registerVersificationSystem("German", otbooks_german, ntbooks, vm_german);
 		systemVersificationMgr->registerVersificationSystem("Luther", otbooks_luther, ntbooks_luther, vm_luther);
 		systemVersificationMgr->registerVersificationSystem("Catholic", otbooks_catholic, ntbooks, vm_catholic);
 		systemVersificationMgr->registerVersificationSystem("Catholic2", otbooks_catholic2, ntbooks, vm_catholic2);
-		systemVersificationMgr->registerVersificationSystem("Rahlfs", otbooks_rahlfs, ntbooks_null, vm_rahlfs);
+		systemVersificationMgr->registerVersificationSystem("LXX", otbooks_lxx, ntbooks, vm_lxx);
+		systemVersificationMgr->registerVersificationSystem("Orthodox", otbooks_orthodox, ntbooks, vm_orthodox);
 	}
 	return systemVersificationMgr;
 }
@@ -115,6 +121,7 @@ public:
 	}
 };
 
+
 struct BookOffsetLess {
 	bool operator() (const VersificationMgr::Book &o1, const VersificationMgr::Book &o2) const { return o1.p->offsetPrecomputed[0] < o2.p->offsetPrecomputed[0]; }
 	bool operator() (const long &o1, const VersificationMgr::Book &o2) const { return o1 < o2.p->offsetPrecomputed[0]; }
@@ -122,9 +129,11 @@ struct BookOffsetLess {
 	bool operator() (const long &o1, const long &o2) const { return o1 < o2; }
 };
 
+
 void VersificationMgr::Book::init() {
 	p = new Private();
 }
+
 
 void VersificationMgr::System::init() {
 	p = new Private();
@@ -143,6 +152,7 @@ VersificationMgr::System::System(const System &other) {
 	ntStartOffset = other.ntStartOffset;
 }
 
+
 VersificationMgr::System &VersificationMgr::System::operator =(const System &other) {
 	name = other.name;
 	BMAX[0] = other.BMAX[0];
@@ -156,6 +166,7 @@ VersificationMgr::System &VersificationMgr::System::operator =(const System &oth
 VersificationMgr::System::~System() {
 	delete p;
 }
+
 
 const VersificationMgr::Book *VersificationMgr::System::getBook(int number) const {
 	return (number < (signed int)p->books.size()) ? &(p->books[number]) : 0;
@@ -219,6 +230,7 @@ VersificationMgr::Book::Book(const Book &other) {
 	init();
 	(*p) = *(other.p);
 }
+
 
 VersificationMgr::Book& VersificationMgr::Book::operator =(const Book &other) {
 	longName = other.longName;
@@ -381,3 +393,4 @@ const StringList VersificationMgr::getVersificationSystems() const {
 
 
 SWORD_NAMESPACE_END
+

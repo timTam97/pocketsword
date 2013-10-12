@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swlocale.cpp   - implementation of Class SWLocale used for retrieval
- *				of locale lookups
  *
- * $Id: swlocale.cpp 2781 2013-02-16 15:03:08Z scribe $
+ *  swlocale.cpp -	implementation of Class SWLocale used for retrieval
+ *			of locale lookups
  *
- * Copyright 2000 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swlocale.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -27,13 +28,19 @@
 #include <versekey.h>
 #include <versificationmgr.h>
 
+
 SWORD_NAMESPACE_START
 
-typedef std::map < SWBuf, SWBuf, std::less < SWBuf > >LookupMap;
+
+namespace {
+	typedef std::map < SWBuf, SWBuf, std::less < SWBuf > >LookupMap;
+}
+
 
 const char *SWLocale::DEFAULT_LOCALE_NAME="en";
 
-// I have bridge patterns, but this hides swconfig and map from lots o stuff
+
+// I hate bridge patterns, but this hides swconfig and map from lots o stuff
 class SWLocale::Private {
 public:
 	LookupMap lookupTable;
@@ -144,9 +151,11 @@ const char *SWLocale::getDescription() {
 	return description;
 }
 
+
 const char *SWLocale::getEncoding() {
 	return encoding;
 }
+
 
 void SWLocale::augment(SWLocale &addFrom) {
 	*localeSource += *addFrom.localeSource;
@@ -184,3 +193,4 @@ const struct abbrev *SWLocale::getBookAbbrevs(int *retSize) {
 
 
 SWORD_NAMESPACE_END
+

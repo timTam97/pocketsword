@@ -1,11 +1,10 @@
 /***************************************************************************
- *                    thmlhtmlhref.cpp  -  ThML to HTML filter with hrefs  
- *                            -------------------
- *   begin                    : 2001-09-03
- *   copyright            : 2001 by CrossWire Bible Society
  *
+ *  thmlhtmlhref.cpp -	ThML to HTML filter with hrefs  
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: thmlhtmlhref.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

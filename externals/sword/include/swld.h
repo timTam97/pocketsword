@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swld.h   - code for base class 'SWLD'.  SWLD is the basis for all
- *				types of Lexicon and Dictionary modules (hence the 'LD').
  *
- * $Id: swld.h 2780 2013-02-01 09:11:52Z scribe $
+ *  swld.h -	code for base class 'SWLD'.  SWLD is the basis for all
+ *		types of Lexicon and Dictionary modules (hence the 'LD').
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swld.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

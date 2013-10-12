@@ -1,10 +1,10 @@
 /***************************************************************************
- *                    gbfthml.cpp  -  GBF to ThML filter
- *                            -------------------
- *   begin                : 1999-10-27
- *   copyright            : 2001 by CrossWire Bible Society
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *  gbfthml.cpp -	GBF to ThML filter
+ *
+ * $Id: gbfthml.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,7 +24,9 @@
 #include <gbfthml.h>
 #include <swbuf.h>
 
+
 SWORD_NAMESPACE_START
+
 
 GBFThML::GBFThML()
 {
@@ -216,7 +218,6 @@ char GBFThML::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 	}
 	return 0;
 }
-
 
 
 SWORD_NAMESPACE_END

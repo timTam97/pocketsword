@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: thmlwebif.h 2628 2011-06-28 20:40:34Z scribe $
+ *  thmlwebif.h -	Implementation of ThMLWEBIF
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: thmlwebif.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

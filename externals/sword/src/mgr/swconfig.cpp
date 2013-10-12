@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swconfig.cpp   - implementation of Class SWConfig used for saving and
- *			retrieval of configuration information
  *
- * $Id: swconfig.cpp 2218 2008-12-23 09:33:38Z scribe $
+ *  swconfig.cpp -	used for saving and retrieval of configuration
+ *			information
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swconfig.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -28,8 +29,10 @@
 
 SWORD_NAMESPACE_START
 
+
 SWConfig::SWConfig() {
 }
+
 
 SWConfig::SWConfig(const char * ifilename) {
 	filename = ifilename;
@@ -39,6 +42,7 @@ SWConfig::SWConfig(const char * ifilename) {
 
 SWConfig::~SWConfig() {
 }
+
 
 void SWConfig::Load() {
 
@@ -164,4 +168,6 @@ ConfigEntMap & SWConfig::operator [] (const char *section) {
     return Sections[section];
 }
 
+
 SWORD_NAMESPACE_END
+

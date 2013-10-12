@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: thmlplain.h 2068 2007-08-31 06:40:23Z scribe $
+ *  thmlplain.h -	Implementation of ThMLPlain
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: thmlplain.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

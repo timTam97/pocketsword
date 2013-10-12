@@ -1,12 +1,13 @@
 /******************************************************************************
- *  swbasicfilter.h	- definition of class SWBasicFilter.  An SWFilter
- *  				impl that provides some basic methods that
- *  				many filter will need and can use as a starting
- *  				point. 
  *
- * $Id: swbasicfilter.h 2688 2012-03-05 02:02:10Z scribe $
+ *  swbasicfilter.h -	definition of class SWBasicFilter.  An SWFilter
+ *  		       	impl that provides some basic methods that
+ *  	       		many filter will need and can use as a starting
+ *     			point
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swbasicfilter.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

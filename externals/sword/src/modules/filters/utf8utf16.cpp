@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- * UTF8UTF16 -	SWFilter descendant to convert UTF-8 to UTF-16
+ *  utf8utf16.cpp -	SWFilter descendant to convert UTF-8 to UTF-16
  *
+ * $Id: utf8utf16.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -28,7 +28,9 @@
 #include <utilstr.h>
 #include <swbuf.h>
 
+
 SWORD_NAMESPACE_START
+
 
 UTF8UTF16::UTF8UTF16() {
 }

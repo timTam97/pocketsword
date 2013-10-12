@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: utf8bidireorder.h 1688 2005-01-01 04:42:26Z scribe $
+ *  utf8bidireorder.h -	Implementation of UTF8BiDiReorder
  *
- * Copyright 2001 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: utf8bidireorder.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

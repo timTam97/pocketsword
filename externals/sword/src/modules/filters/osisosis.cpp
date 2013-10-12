@@ -1,10 +1,10 @@
 /***************************************************************************
- *                    osisosis.cpp  -  internal OSIS to public OSIS filter
- *                            -------------------
- *   begin                : 2004-03-13
- *   copyright            : 2003 by CrossWire Bible Society
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *  osisosis.cpp -	internal OSIS to public OSIS filter
+ *
+ * $Id: osisosis.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

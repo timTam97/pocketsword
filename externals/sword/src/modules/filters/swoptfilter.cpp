@@ -1,9 +1,11 @@
 /******************************************************************************
  *
- * swoptfilter - SWFilter descendant and base class for all option filters
+ *  swoptfilter.cpp -	SWFilter descendant and base class for all option
+ * 			filters
  *
+ * $Id: swoptfilter.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -33,10 +35,13 @@ SWOptionFilter::SWOptionFilter() {
 	optValues = &empty;
 }
 
+
 SWOptionFilter::SWOptionFilter(const char *oName, const char *oTip, const StringList *oValues) {
 	optName   = oName;
 	optTip    = oTip;
 	optValues = oValues;
+	if (optValues->begin() != optValues->end()) setOptionValue(*(optValues->begin()));
+	isBooleanVal = optValues->size() == 2 && (optionValue == "On" || optionValue == "Off");
 }
 
 

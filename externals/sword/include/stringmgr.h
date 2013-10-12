@@ -1,10 +1,11 @@
 /******************************************************************************
- *	stringmgr.h - A class which provides string handling functions which can 
- *			be reimplemented by frontends
  *
- * $Id: stringmgr.h 2773 2013-01-24 18:14:45Z scribe $
+ *  stringmgr.h -	A class which provides string handling functions which
+ *			can be reimplemented by frontends
  *
- * Copyright 2005 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: stringmgr.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ	85280-2528

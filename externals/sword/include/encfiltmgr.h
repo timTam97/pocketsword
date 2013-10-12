@@ -1,9 +1,12 @@
 /******************************************************************************
- *  swencodingmgr.h   - definition of class SWEncodingMgr, subclass of
- *                        used to transcode all module text to a requested
- *                        markup.
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ *  encfiltmgr.h -	definition of class SWEncodingMgr, subclass of
+ *			used to transcode all module text to a requested
+ *			markup
+ *
+ * $Id: encfiltmgr.h 2846 2013-06-29 14:48:47Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -37,6 +40,7 @@ class SWDLLEXPORT EncodingFilterMgr : public SWFilterMgr {
 
 protected:
         SWFilter *latin1utf8;
+	SWFilter *scsuutf8;
         SWFilter *targetenc;
 
 

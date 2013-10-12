@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * osisxhtml.h
+ *  osisxhtml.h -	Render filter for classed XHTML of an OSIS module
  *
- * Copyright 2011 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisxhtml.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

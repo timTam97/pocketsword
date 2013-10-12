@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * thmlplain -	SWFilter descendant to strip out all ThML tags or convert to
- *		ASCII rendered symbols.
+ *  thmlplain.cpp -	SWFilter descendant to strip out all ThML tags or
+ *			convert to ASCII rendered symbols
  *
+ * $Id: thmlplain.cpp 2833 2013-06-29 06:40:28Z chrislit $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

@@ -1,7 +1,10 @@
-/*
- * roman.c
+/******************************************************************************
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *  roman.cpp -	
+ *
+ * $Id: roman.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -21,7 +24,9 @@
 #include <string.h>
 #include <roman.h>
 
+
 SWORD_NAMESPACE_START
+
 
 char isroman (const char *str, int maxchars) {
 	char *ch = (char*)str;
@@ -82,4 +87,6 @@ int from_rom(const char* str) {
 	return n;
 }
 
+
 SWORD_NAMESPACE_END
+

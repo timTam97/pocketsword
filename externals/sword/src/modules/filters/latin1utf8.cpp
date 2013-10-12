@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * Latin1UTF8 -	SWFilter descendant to convert a Latin-1 character to UTF-8
+ *  latin1utf8.cpp -	SWFilter descendant Latin1UTF8 to convert a Latin-1
+ *			character to UTF-8
  *
+ * $Id: latin1utf8.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -25,7 +26,9 @@
 #include <latin1utf8.h>
 #include <swmodule.h>
 
+
 SWORD_NAMESPACE_START
+
 
 Latin1UTF8::Latin1UTF8() {
 }
@@ -35,7 +38,7 @@ char Latin1UTF8::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 {
     const unsigned char *from;
 
-	 if ((unsigned long)key < 2)	// hack, we're en(1)/de(0)ciphering
+	if ((unsigned long)key < 2)	// hack, we're en(1)/de(0)ciphering
 		return (char)-1;
 
 	SWBuf orig = text;
@@ -184,5 +187,6 @@ char Latin1UTF8::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 	}
 	return 0;
 }
+
 
 SWORD_NAMESPACE_END

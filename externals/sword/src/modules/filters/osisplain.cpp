@@ -1,10 +1,10 @@
 /******************************************************************************
- *  osisplain.cpp	- An SWFilter
- *  				impl that provides stripping of OSIS tags
  *
- * $Id: osisplain.cpp 2764 2013-01-19 16:19:47Z scribe $
+ *  osisplain.cpp -	An SWFilter that provides stripping of OSIS tags
  *
- * Copyright 2001 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisplain.cpp 2984 2013-09-20 12:18:45Z scribe $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -28,16 +28,20 @@
 
 SWORD_NAMESPACE_START
 
+
 namespace {
-class MyUserData : public BasicFilterUserData {
-public:
-	SWBuf w;
-	XMLTag tag;
-	VerseKey *vk;
-	char testament;
-	MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {}
-};
+
+	class MyUserData : public BasicFilterUserData {
+	public:
+		SWBuf w;
+		XMLTag tag;
+		VerseKey *vk;
+		char testament;
+		SWBuf hiType;
+		MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {}
+	};
 }
+
 
 OSISPlain::OSISPlain() {
 	setTokenStart("<");
@@ -201,6 +205,40 @@ bool OSISPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			char* end = buf.getRawData();
 			end += buf.size() - u->lastTextNode.size();
 			toupperstr(end);
+		}
+		else if (!strncmp(token, "hi", 2)) {
+
+				// handle both OSIS 'type' and TEI 'rend' attributes
+				// there is no officially supported OSIS overline attribute,
+				// thus either TEI overline or OSIS x-overline would be best,
+				// but we have used "ol" in the past, as well.  Once a valid
+				// OSIS overline attribute is made available, these should all
+				// eventually be deprecated and never documented that they are supported.
+				if (strstr(token, "rend=\"ol\"") || strstr(token, "rend=\"x-overline\"") || strstr(token, "rend=\"overline\"")
+				   || strstr(token, "type=\"ol\"") || strstr(token, "type=\"x-overline\"") || strstr(token, "type=\"overline\"")) {
+					u->hiType = "overline";
+				}
+				else u->hiType = "";
+				u->suspendTextPassThru = true;
+			}
+		else if (!strncmp(token, "/hi", 3)) {
+			if (u->hiType == "overline") {
+				const unsigned char *b = (const unsigned char *)u->lastTextNode.c_str();
+				while (*b) {
+					const unsigned char *o = b;
+					if (getUniCharFromUTF8(&b)) {
+						while (o != b) buf.append(*(o++));
+						buf.append((unsigned char)0xCC);
+						buf.append((unsigned char)0x85);
+					}
+				}
+			}
+			else {
+				buf.append("*");
+				buf.append(u->lastTextNode);
+				buf.append("*");
+			}
+			u->suspendTextPassThru = false;
 		}
 
                 // <milestone type="line"/>

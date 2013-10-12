@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- * thmlstrongs -	SWFilter descendant to hide or show strongs number
- *			in a ThML module.
+ *  thmlosis.cpp -	filter to convert ThML to OSIS
  *
+ * $Id: thmlosis.cpp 2833 2013-06-29 06:40:28Z chrislit $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

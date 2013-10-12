@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: osisheadings.h 2688 2012-03-05 02:02:10Z scribe $
+ *  osisheadings.h -	Implementation of OSISHeadings
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisheadings.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

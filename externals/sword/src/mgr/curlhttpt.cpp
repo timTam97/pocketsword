@@ -1,9 +1,10 @@
- /*****************************************************************************
- * CURLHTTPTransport functions
+/*****************************************************************************
  *
+ *  curlhttpt.cpp -	CURLHTTPTransport
  *
+ * $Id: curlhttpt.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -36,82 +37,75 @@
 
 using std::vector;
 
+
 SWORD_NAMESPACE_START
 
+namespace {
 
-struct FtpFile {
-  const char *filename;
-  FILE *stream;
-  SWBuf *destBuf;
-};
+	struct FtpFile {
+		const char *filename;
+		FILE *stream;
+		SWBuf *destBuf;
+	};
 
 
-int my_httpfwrite(void *buffer, size_t size, size_t nmemb, void *stream);
-int my_httpfprogress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
-
-static CURLHTTPTransport_init _CURLHTTPTransport_init;
-
-CURLHTTPTransport_init::CURLHTTPTransport_init() {
-	//curl_global_init(CURL_GLOBAL_DEFAULT);  // curl_easy_init automatically calls it if needed
-}
-
-CURLHTTPTransport_init::~CURLHTTPTransport_init() {
-// CURLFTPT d-tor cleans this up
-//	curl_global_cleanup();
-}
-
-int my_httpfwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-	struct FtpFile *out=(struct FtpFile *)stream;
-	if (out && !out->stream && !out->destBuf) {
-		/* open file for writing */
-		out->stream=fopen(out->filename, "wb");
-		if (!out->stream)
-			return -1; /* failure, can't open file to write */
+	static int my_httpfwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
+		struct FtpFile *out=(struct FtpFile *)stream;
+		if (out && !out->stream && !out->destBuf) {
+			/* open file for writing */
+			out->stream=fopen(out->filename, "wb");
+			if (!out->stream)
+				return -1; /* failure, can't open file to write */
+		}
+		if (out->destBuf) {
+			int s = out->destBuf->size();
+			out->destBuf->size(s+(size*nmemb));
+			memcpy(out->destBuf->getRawData()+s, buffer, size*nmemb);
+			return nmemb;
+		}
+		return fwrite(buffer, size, nmemb, out->stream);
 	}
-	if (out->destBuf) {
-		int s = out->destBuf->size();
-		out->destBuf->size(s+(size*nmemb));
-		memcpy(out->destBuf->getRawData()+s, buffer, size*nmemb);
-		return nmemb;
-	}
-	return fwrite(buffer, size, nmemb, out->stream);
-}
 
 
-int my_httpfprogress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow) {
-	if (clientp) {
-		((StatusReporter *)clientp)->statusUpdate(dltotal, dlnow);
-	}
-	return 0;
-}
-
-
-static int myhttp_trace(CURL *handle, curl_infotype type, unsigned char *data, size_t size, void *userp) {
-	SWBuf header;
-	(void)userp; /* prevent compiler warning */
-	(void)handle; /* prevent compiler warning */
-
-	switch (type) {
-	case CURLINFO_TEXT: header = "TEXT"; break;
-	case CURLINFO_HEADER_OUT: header = "=> Send header"; break;
-	case CURLINFO_HEADER_IN: header = "<= Recv header"; break;
-
-	// these we don't want to log (HUGE)
-	case CURLINFO_DATA_OUT: header = "=> Send data";
-	case CURLINFO_SSL_DATA_OUT: header = "=> Send SSL data";
-	case CURLINFO_DATA_IN: header = "<= Recv data";
-	case CURLINFO_SSL_DATA_IN: header = "<= Recv SSL data";
-	default: /* in case a new one is introduced to shock us */
+	static int my_httpfprogress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow) {
+		if (clientp) {
+			if (dltotal < 0) dltotal = 0;
+			if (dlnow < 0) dlnow = 0;
+			if (dlnow > dltotal) dlnow = dltotal;
+			((StatusReporter *)clientp)->update(dltotal, dlnow);
+		}
 		return 0;
 	}
 
-	if (size > 120) size = 120;
-	SWBuf text;
-	text.size(size);
-	memcpy(text.getRawData(), data, size);
-	SWLog::getSystemLog()->logDebug("CURLHTTPTransport: %s: %s", header.c_str(), text.c_str());
-	return 0;
+
+	static int myhttp_trace(CURL *handle, curl_infotype type, unsigned char *data, size_t size, void *userp) {
+		SWBuf header;
+		(void)userp; /* prevent compiler warning */
+		(void)handle; /* prevent compiler warning */
+
+		switch (type) {
+		case CURLINFO_TEXT: header = "TEXT"; break;
+		case CURLINFO_HEADER_OUT: header = "=> Send header"; break;
+		case CURLINFO_HEADER_IN: header = "<= Recv header"; break;
+
+		// these we don't want to log (HUGE)
+		case CURLINFO_DATA_OUT: header = "=> Send data";
+		case CURLINFO_SSL_DATA_OUT: header = "=> Send SSL data";
+		case CURLINFO_DATA_IN: header = "<= Recv data";
+		case CURLINFO_SSL_DATA_IN: header = "<= Recv SSL data";
+		default: /* in case a new one is introduced to shock us */
+			return 0;
+		}
+
+		if (size > 120) size = 120;
+		SWBuf text;
+		text.size(size);
+		memcpy(text.getRawData(), data, size);
+		SWLog::getSystemLog()->logDebug("CURLHTTPTransport: %s: %s", header.c_str(), text.c_str());
+		return 0;
+	}
 }
+
 
 CURLHTTPTransport::CURLHTTPTransport(const char *host, StatusReporter *sr) : RemoteTransport(host, sr) {
 	session = (CURL *)curl_easy_init();
@@ -138,6 +132,7 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 		if (!passive)
 			curl_easy_setopt(session, CURLOPT_FTPPORT, "-");
 		curl_easy_setopt(session, CURLOPT_NOPROGRESS, 0);
+		curl_easy_setopt(session, CURLOPT_FAILONERROR, 1);
 		curl_easy_setopt(session, CURLOPT_PROGRESSDATA, statusReporter);
 		curl_easy_setopt(session, CURLOPT_PROGRESSFUNCTION, my_httpfprogress);
 		curl_easy_setopt(session, CURLOPT_DEBUGFUNCTION, myhttp_trace);
@@ -171,9 +166,6 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 		res = curl_easy_perform(session);
 		SWLog::getSystemLog()->logDebug("***** Finished performing curl easy action. \n");
 
-		// it seems CURL tries to use this option data later for some reason, so we unset here
-		curl_easy_setopt(session, CURLOPT_PROGRESSDATA, (void*)NULL);
-		
 		if(CURLE_OK != res) {
 			retVal = -1;
 		}
@@ -215,7 +207,7 @@ vector<struct DirEntry> CURLHTTPTransport::getDirList(const char *dirURL) {
 	SWBuf dirBuf;
 	const char *pBuf;
 	char *pBufRes;
-	char possibleName[400];
+	SWBuf possibleName;
 	double fSize;
 	int possibleNameLength = 0;
 	
@@ -224,10 +216,12 @@ vector<struct DirEntry> CURLHTTPTransport::getDirList(const char *dirURL) {
 		while (pBuf != NULL) {
 			pBuf += 9;//move to the start of the actual name.
 			pBufRes = (char *)strchr(pBuf, '\"');//Find the end of the possible file name
+			if (!pBufRes)
+				break;
 			possibleNameLength = pBufRes - pBuf;
-			sprintf(possibleName, "%.*s", possibleNameLength, pBuf);
+			possibleName.setFormatted("%.*s", possibleNameLength, pBuf);
 			if (isalnum(possibleName[0])) {
-				SWLog::getSystemLog()->logDebug("getDirListHTTP: Found a file: %s", possibleName);
+				SWLog::getSystemLog()->logDebug("getDirListHTTP: Found a file: %s", possibleName.c_str());
 				pBuf = pBufRes;
 				pBufRes = (char *)findSizeStart(pBuf);
 				fSize = 0;
@@ -238,13 +232,13 @@ vector<struct DirEntry> CURLHTTPTransport::getDirList(const char *dirURL) {
 						fSize *= 1024;
 					else if (pBufRes[0] == 'M')
 						fSize *= 1048576;
+					pBuf = pBufRes;
 				}
 				struct DirEntry i;
 				i.name = possibleName;
 				i.size = (long unsigned int)fSize;
-				i.isDirectory = (possibleName[possibleNameLength-1] == '/');
+				i.isDirectory = possibleName.endsWith("/");
 				dirList.push_back(i);
-				pBuf = pBufRes;
 			} else {
 				pBuf += possibleNameLength;
 			}

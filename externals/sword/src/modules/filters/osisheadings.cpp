@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * osisheadings -	SWFilter descendant to hide or show headings
- *			in an OSIS module.
+ *  osisheadings.cpp -	SWFilter descendant to hide or show headings
+ *			in an OSIS module
  *
+ * $Id: osisheadings.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -27,16 +28,21 @@
 #include <utilxml.h>
 #include <utilstr.h>
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Headings";
-const char oTip[] = "Toggles Headings On and Off if they exist";
-
-const SWBuf choices[3] = {"Off", "On", ""};
-const StringList oValues(&choices[0], &choices[2]);
-
-
 namespace {
+
+	static const char oName[] = "Headings";
+	static const char oTip[]  = "Toggles Headings On and Off if they exist";
+
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"Off", "On", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
+
+
 	class MyUserData : public BasicFilterUserData {
 	public:
 		SWBuf currentHeadingName;
@@ -58,7 +64,7 @@ namespace {
 			headerNum = 0;
 		}
 	};
-};
+}
 
 
 BasicFilterUserData *OSISHeadings::createUserData(const SWModule *module, const SWKey *key) {
@@ -66,8 +72,7 @@ BasicFilterUserData *OSISHeadings::createUserData(const SWModule *module, const 
 }
 
 
-OSISHeadings::OSISHeadings() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("Off");
+OSISHeadings::OSISHeadings() : SWOptionFilter(oName, oTip, oValues()) {
 	setPassThruUnknownToken(true);
 }
 

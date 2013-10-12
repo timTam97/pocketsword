@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- * UTF8Latin1 -	SWFilter descendant to convert UTF-8 to Latin-1
+ *  utf8latin1.cpp -	SWFilter descendant to convert UTF-8 to Latin-1
  *
+ * $Id: utf8latin1.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -26,7 +26,9 @@
 #include <utf8latin1.h>
 #include <swbuf.h>
 
+
 SWORD_NAMESPACE_START
+
 
 UTF8Latin1::UTF8Latin1(char rchar) : replacementChar(rchar) {
 }
@@ -84,6 +86,7 @@ char UTF8Latin1::processText(SWBuf &text, const SWKey *key, const SWModule *modu
   }
   return 0;
 }
+
 
 SWORD_NAMESPACE_END
 

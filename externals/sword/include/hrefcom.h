@@ -1,11 +1,12 @@
 /******************************************************************************
- *  hrefcom.h - code for class 'HREFCom'- a module that produces HTML HREFs
- *			pointing to actual text desired.  Uses standard
- *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: hrefcom.h 2764 2013-01-19 16:19:47Z scribe $
+ *  hrefcom.h -	code for class 'HREFCom'- a module that produces HTML HREFs
+ *	       	pointing to actual text desired.  Uses standard
+ *		files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: hrefcom.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

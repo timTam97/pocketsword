@@ -1,10 +1,12 @@
 /******************************************************************************
- *  zstr.cpp   - code for class 'zStr'- a module that reads compressed text
+ *
+ *  zstr.cpp -	code for class 'zStr'- a module that reads compressed text
  *		files and provides lookup and parsing functions based on
  *		class StrKey
  *
+ * $Id: zstr.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -58,7 +60,6 @@ zStr::zStr(const char *ipath, int fileMode, long blockCount, SWCompress *icomp, 
 {
 	SWBuf buf;
 
-	nl = '\n';
 	lastoff = -1;
 	path = 0;
 	stdstr(&path, ipath);
@@ -294,7 +295,7 @@ signed char zStr::findKeyIndex(const char *ikey, long *idxoff, long away) const
 				*idxoff = tryoff;
 
 
-			if (((laststart != start) || (lastsize != size)) && (start > 0) && (size)) 
+			if (((laststart != start) || (lastsize != size)) && (size)) 
 				away += (away < 0) ? 1 : -1;
 		}
 	
@@ -431,12 +432,13 @@ void zStr::getCompressedText(long block, long entry, char **buf) const {
 
 void zStr::setText(const char *ikey, const char *buf, long len) {
 
+	static const char nl[] = {13, 10};
+
 	__u32 start, outstart;
 	__u32 size, outsize;
 	__s32 endoff;
 	long idxoff = 0;
 	__s32 shiftSize;
-	static const char nl[] = {13, 10};
 	char *tmpbuf = 0;
 	char *key = 0;
 	char *dbKey = 0;
@@ -584,6 +586,9 @@ void zStr::linkEntry(const char *destkey, const char *srckey) {
 
 
 void zStr::flushCache() const {
+
+	static const char nl[] = {13, 10};
+
 	if (cacheBlock) {
 		if (cacheDirty) {
 			__u32 start = 0;

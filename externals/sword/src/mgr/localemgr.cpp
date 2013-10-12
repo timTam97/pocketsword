@@ -1,10 +1,11 @@
 /******************************************************************************
- *  localemgr.cpp - implementation of class LocaleMgr used to interact with
- *				registered locales for a sword installation
  *
- * $Id: localemgr.cpp 2499 2010-01-02 04:51:05Z scribe $
+ *  localemgr.cpp -	implementation of class LocaleMgr used to interact with
+ *			registered locales for a SWORD installation
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: localemgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -39,7 +40,9 @@
 
 SWORD_NAMESPACE_START
 
+
 LocaleMgr *LocaleMgr::systemLocaleMgr = 0;
+
 
 class __staticsystemLocaleMgr {
 public:
@@ -276,4 +279,6 @@ void LocaleMgr::setDefaultLocaleName(const char *name) {
 	delete [] tmplang;
 }
 
+
 SWORD_NAMESPACE_END
+

@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swfilter.h	- definition of class SWFilter used to filter text between
- *				different formats
  *
- * $Id: swfilter.h 2629 2011-06-28 20:57:54Z scribe $
+ *  swfilter.h -	definition of class SWFilter used to filter text between
+ *		       	different formats
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swfilter.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

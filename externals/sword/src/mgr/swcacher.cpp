@@ -1,10 +1,12 @@
 /******************************************************************************
- *  swcacher.h	- definition of class SWCacher used to provide an interface for
- *  	objects that cache and want a standard interface for cleaning up.
  *
- * $Id: swcacher.cpp 1688 2005-01-01 04:42:26Z scribe $
+ *  swcacher.cpp -	definition of class SWCacher used to provide an
+ *			interface for objects that cache and want a standard
+ *			interface for cleaning up
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swcacher.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -21,6 +23,7 @@
  */
 
 #include <swcacher.h>
+
 
 SWORD_NAMESPACE_START
 
@@ -44,4 +47,6 @@ long SWCacher::lastAccess() {
 	return 0;
 }
 
+
 SWORD_NAMESPACE_END
+

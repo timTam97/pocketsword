@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swmgr.h   - definition of class SWMgr used to interact with an install
- *				base of sword modules.
  *
- * $Id: swmgr.h 2764 2013-01-19 16:19:47Z scribe $
+ *  swmgr.h -	definition of class SWMgr used to interact with an install
+ *		base of sword modules.
  *
- * Copyright 1998-2008 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swmgr.h 2941 2013-08-03 07:08:24Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -42,12 +43,13 @@
  *	some of the existing ones.  They can always use help, and will also prove to be good examples
  *	if you decide to start a new project.
  *
- * Well known frontends are:\n
- *	-BibleTime (http://www.bibletime.info)\n
- *	-BPBible (http://bpbible.com)\n
- *	-MacSword (http://www.macsword.com)\n
- *	-Xiphos (http://xiphos.org)\n
- *	-SWORD for Windows (http://crosswire.org/sword/software/biblecs/)\n
+ * Well known frontends are:
+ *	-BibleTime (http://www.bibletime.info)
+ *	-BPBible (http://bpbible.com)
+ *	-Eloquent (http://www.macsword.com)
+ *	-PocketSword (http://crosswire.org/pocketsword/)
+ *	-SWORD for Windows (http://crosswire.org/sword/software/biblecs/)
+ *	-Xiphos (http://xiphos.org) 
  */
 
 #ifndef SWMGR_H
@@ -84,7 +86,7 @@ class SWOptionFilter;
  * SWMgr exposes an installed module set and can be asked to configure the desired
  *	markup and options which modules will produce.
  *
- * @version $Id: swmgr.h 2764 2013-01-19 16:19:47Z scribe $
+ * @version $Id: swmgr.h 2941 2013-08-03 07:08:24Z chrislit $
  */
 class SWDLLEXPORT SWMgr {
 private:

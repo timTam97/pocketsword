@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: thmlosis.h 1804 2005-05-07 06:26:10Z scribe $
+ *  thmlosis.h -	Implementation of ThMLOSIS
  *
- * Copyright 2003 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: thmlosis.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

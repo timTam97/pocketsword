@@ -1,11 +1,10 @@
 /***************************************************************************
- *                    thmlrtf.cpp  -  ThML to RTF filter
- *                            -------------------
- *   begin                : 1999-10-27
- *   copyright            : 2001 by CrossWire Bible Society
  *
+ *  thmlrtf.cpp -	ThML to RTF filter
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: thmlrtf.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

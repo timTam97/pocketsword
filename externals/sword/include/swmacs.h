@@ -1,9 +1,10 @@
 /******************************************************************************
- *  swmacs.h	- generic macros
  *
- * $Id: swmacs.h 1688 2005-01-01 04:42:26Z scribe $
+ *  swmacs.h -	generic macros
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swmacs.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

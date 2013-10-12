@@ -1,23 +1,24 @@
 /******************************************************************************
-*  swbuf.cpp  - code for SWBuf used as a transport and utility for data buffers
-*
-* $Id: swbuf.cpp 2820 2013-06-11 17:21:12Z scribe $
-*
-* Copyright 2003 CrossWire Bible Society (http://www.crosswire.org)
-*	CrossWire Bible Society
-*	P. O. Box 2528
-*	Tempe, AZ  85280-2528
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation version 2.
-*
-* This program is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-*/
+ *
+ *  swbuf.cpp -	used as a transport and utility for data buffers
+ *
+ * $Id: swbuf.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ */
 
 #include <swbuf.h>
 
@@ -25,10 +26,11 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+
 SWORD_NAMESPACE_START
 
+
 char *SWBuf::nullStr = (char *)"";
-char SWBuf::junkBuf[JUNKBUFSIZE];
 
 /******************************************************************************
 * SWBuf Constructor - Creates an empty SWBuf object or an SWBuf initialized
@@ -81,6 +83,7 @@ SWBuf &SWBuf::setFormatted(const char *format, ...) {
 
 	va_start(argptr, format);
 #ifdef NO_VSNPRINTF
+	static char junkBuf[JUNKBUFSIZE];
 	int len = vsprintf(junkBuf, format, argptr)+1;
 #else
 	int len = vsnprintf(0, 0, format, argptr)+1;
@@ -130,6 +133,7 @@ SWBuf &SWBuf::appendFormatted(const char *format, ...) {
 
 	va_start(argptr, format);
 #ifdef NO_VSNPRINTF
+	static char junkBuf[JUNKBUFSIZE];
 	int len = vsprintf(junkBuf, format, argptr)+1;
 #else
 	int len = vsnprintf(0, 0, format, argptr)+1;

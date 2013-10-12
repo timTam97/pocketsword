@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- * $Id: gbfheadings.h 2068 2007-08-31 06:40:23Z scribe $
+ *  gbfheadings.h -	Implementation of GBFHeadings
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: gbfheadings.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

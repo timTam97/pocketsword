@@ -24,7 +24,6 @@
 #include <osishtmlhref.h>
 #include <thmlhtmlhref.h>
 #include <gbfhtmlhref.h>
-#include <plainhtml.h>
 #include <versekey.h>
 class sword::SWModule;
 #endif

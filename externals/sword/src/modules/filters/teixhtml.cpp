@@ -1,10 +1,10 @@
 /***************************************************************************
- *					 teixhtml.cpp  -  TEI to XHTML filter
- *							 -------------------
- *	begin				: 2012-09-23
- *	copyright			: 2012 by CrossWire Bible Society
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *  teixhtml.cpp -	TEI to XHTML filter
+ *
+ * $Id: teixhtml.cpp 2984 2013-09-20 12:18:45Z scribe $
+ *
+ * Copyright 2012-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -95,6 +95,8 @@ bool TEIXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 					buf += "<b>";
 				else if (rend == "sup")
 					buf += "<small><sup>";
+				else if (rend == "overline")
+					buf += "<span style=\"text-decoration:overline\">";
 
 			}
 			else if (tag.isEndTag()) {
@@ -107,6 +109,8 @@ bool TEIXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 					buf += "</b>";
 				else if (rend == "sup")
 					buf += "</sup></small>";
+				else if (rend == "overline")
+					buf += "</span>";
 			}
 		}
 

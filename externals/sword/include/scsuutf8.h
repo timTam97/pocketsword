@@ -1,8 +1,10 @@
-/***************************************************************************
+/******************************************************************************
  *
- * $Id: plainfootnotes.h 1688 2005-01-01 04:42:26Z scribe $
+ *  scsuutf8.h - SWFilter descendant to convert a SCSU character to UTF-8
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: scsuutf8.h 2846 2013-06-29 14:48:47Z chrislit $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -18,22 +20,21 @@
  *
  */
 
-#ifndef PLAINFOOTNOTES_H
-#define PLAINFOOTNOTES_H
+#ifndef SCSUUTF8_H
+#define SCSUUTF8_H
 
-#include <swoptfilter.h>
+#include <swfilter.h>
 
 SWORD_NAMESPACE_START
 
-class SWKey;
-
-/**Shows or hides footnotes in plain text.
- *@author The team of BibleTime
+/** This filter converts SCSU compressed (encoded) text to UTF-8
  */
-class SWDLLEXPORT PLAINFootnotes : public SWOptionFilter {
+class SWDLLEXPORT SCSUUTF8 : public SWFilter {
+  unsigned long c, d;
+  unsigned char* UTF8Output(unsigned long, unsigned char* text);
+  
 public:
-	PLAINFootnotes();
-	virtual ~PLAINFootnotes();
+	SCSUUTF8();
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
 };
 

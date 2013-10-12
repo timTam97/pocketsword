@@ -1,23 +1,24 @@
 /******************************************************************************
-*  swbuf.h  - code for SWBuf used as a transport and utility for data buffers
-*
-* $Id: swbuf.h 2820 2013-06-11 17:21:12Z scribe $
-*
-* Copyright 2003 CrossWire Bible Society (http://www.crosswire.org)
-*	CrossWire Bible Society
-*	P. O. Box 2528
-*	Tempe, AZ  85280-2528
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation version 2.
-*
-* This program is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-*/
+ *
+ *  swbuf.h -	code for SWBuf used as a transport and utility for data buffers
+ *
+ * $Id: swbuf.h 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ */
 
 #ifndef SWBUF_H
 #define SWBUF_H
@@ -47,8 +48,6 @@ class SWDLLEXPORT SWBuf {
 	char *endAlloc;
 	char fillByte;
 	unsigned long allocSize;
-	static char *nullStr;
-	static char junkBuf[JUNKBUFSIZE];
 
 	inline void assureMore(size_t pastEnd) {
 		if (size_t(endAlloc-end) < pastEnd) {
@@ -80,6 +79,8 @@ class SWDLLEXPORT SWBuf {
 
 
 public:
+
+	static char *nullStr;
 
 	/******************************************************************************
 	* SWBuf Constructor - Creates an empty SWBuf object
@@ -143,7 +144,7 @@ public:
 	*	@param pos The position of the requested character.
 	* @return The character at the specified position
 	*/
-	inline char &charAt(unsigned long pos) { return ((pos <= (unsigned long)(end - buf)) ? buf[pos] : ((*junkBuf=0),*junkBuf)); }
+	inline char &charAt(unsigned long pos) { return ((pos <= (unsigned long)(end - buf)) ? buf[pos] : (*nullStr)); }
 
 	/** 
 	* @return size() and length() return only the number of characters of the string.
@@ -248,6 +249,12 @@ public:
 	* @param ch Append this.
 	*/
 	inline SWBuf &append(char ch) {
+		assureMore(1);
+		*end++ = ch;
+		*end = 0;
+		return *this;
+	}
+	inline SWBuf &append(const unsigned char ch) {
 		assureMore(1);
 		*end++ = ch;
 		*end = 0;

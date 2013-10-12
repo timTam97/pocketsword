@@ -1,10 +1,11 @@
 /******************************************************************************
- *  swsearchable.h	- definition of class SWSearchable used to provide an
- *	interface for objects that be searched.
  *
- * $Id: swsearchable.h 2054 2007-05-25 17:31:39Z scribe $
+ *  swsearchable.h -	definition of class SWSearchable used to provide an
+ *			interface for objects that be searched.
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swsearchable.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

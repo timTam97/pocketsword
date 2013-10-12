@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * UTF8Cantillation - SWFilter descendant to remove UTF-8 Hebrew cantillation
+ *  utf8cantillation.cpp -	SWFilter descendant to remove UTF-8 Hebrew
+ *				cantillation
  *
+ * $Id: utf8cantillation.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,16 +25,23 @@
 #include <stdio.h>
 #include <utf8cantillation.h>
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Hebrew Cantillation";
-const char oTip[] = "Toggles Hebrew Cantillation Marks";
+namespace {
 
-const SWBuf choices[3] = {"On", "Off", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const char oName[] = "Hebrew Cantillation";
+	static const char oTip[]  = "Toggles Hebrew Cantillation Marks";
 
-UTF8Cantillation::UTF8Cantillation() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("Off");
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"Off", "On", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
+}
+
+
+UTF8Cantillation::UTF8Cantillation() : SWOptionFilter(oName, oTip, oValues()) {
 }
 
 

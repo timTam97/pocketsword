@@ -1,10 +1,12 @@
 /******************************************************************************
- *  swmodule.cpp - code for base class 'module'.  Module is the basis for all
- *		   types of modules (e.g. texts, commentaries, maps, lexicons,
- *		   etc.)
  *
+ *  swmodule.cpp -	code for base class 'SWModule'. SWModule is the basis
+ *			for all types of modules (e.g. texts, commentaries,
+ *			maps, lexicons, etc.)
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swmodule.cpp 2976 2013-09-10 14:09:44Z scribe $
+ *
+ * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -27,7 +29,6 @@
 #include <sysdata.h>
 #include <swmodule.h>
 #include <utilstr.h>
-#include <regex.h>	// GNU
 #include <swfilter.h>
 #include <versekey.h>	// KLUDGE for Search
 #include <treekeyidx.h>	// KLUDGE for Search
@@ -36,6 +37,15 @@
 #include <stringmgr.h>
 #ifndef _MSC_VER
 #include <iostream>
+#endif
+
+#ifdef USECXX11REGEX
+#include <regex>
+#ifndef REG_ICASE
+#define REG_ICASE std::regex::icase
+#endif
+#else
+#include <regex.h>	// GNU
 #endif
 
 #ifdef USELUCENE
@@ -124,17 +134,17 @@ SWModule::~SWModule()
 	}
 
 	stripFilters->clear();
-     rawFilters->clear();
-     renderFilters->clear();
-     optionFilters->clear();
-     encodingFilters->clear();
+	rawFilters->clear();
+	renderFilters->clear();
+	optionFilters->clear();
+	encodingFilters->clear();
 	entryAttributes.clear();
 
-     delete stripFilters;
-     delete rawFilters;
-     delete renderFilters;
-     delete optionFilters;
-     delete encodingFilters;
+	delete stripFilters;
+	delete rawFilters;
+	delete renderFilters;
+	delete optionFilters;
+	delete encodingFilters;
 }
 
 
@@ -215,7 +225,7 @@ const char *SWModule::getType() const {
  * RET:	char direction
  */
 char SWModule::getDirection() const {
-        return direction;
+	return direction;
 }
 
 
@@ -243,8 +253,8 @@ void SWModule::setDisplay(SWDisplay *idisp) {
  *     */
 
 char SWModule::display() {
-     disp->display(*this);
-     return 0;
+	disp->display(*this);
+	return 0;
 }
 
 /******************************************************************************
@@ -365,7 +375,7 @@ void SWModule::decrement(int steps) {
 
 ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *scope, bool *justCheckIfSupported, void (*percent)(char, void *), void *percentUserData) {
 
-	listKey.ClearList();
+	listKey.clear();
 	SWBuf term = istr;
 	bool includeComponents = false;	// for entryAttrib e.g., /Lemma.1/ 
 
@@ -391,7 +401,16 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	SWKey *resultKey = createKey();
 	SWKey *lastKey   = createKey();
 	SWBuf lastBuf = "";
+
+#ifdef USECXX11REGEX
+	std::locale oldLocale;
+	std::locale::global(std::locale("en_US.UTF-8"));
+
+	std::regex preg;
+#else
 	regex_t preg;
+#endif
+
 	vector<SWBuf> words;
 	vector<SWBuf> window;
 	const char *sres;
@@ -401,10 +420,10 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 
 	// determine if we might be doing special strip searches.  useful for knowing if we can use shortcuts
 	bool specialStrips = (getConfigEntry("LocalStripFilter")
-                       || (getConfig().has("GlobalOptionFilter", "UTF8GreekAccents"))
-                       || (getConfig().has("GlobalOptionFilter", "UTF8HebrewPoints"))
-                       || (getConfig().has("GlobalOptionFilter", "UTF8ArabicPoints"))
-                       || (strchr(istr, '<')));
+			|| (getConfig().has("GlobalOptionFilter", "UTF8GreekAccents"))
+			|| (getConfig().has("GlobalOptionFilter", "UTF8HebrewPoints"))
+			|| (getConfig().has("GlobalOptionFilter", "UTF8ArabicPoints"))
+			|| (strchr(istr, '<')));
 
 	setProcessEntryAttributes(searchType == -3);
 	
@@ -429,8 +448,12 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 		highIndex = 1;		// avoid division by zero errors.
 	*this = TOP;
 	if (searchType >= 0) {
+#ifdef USECXX11REGEX
+		preg = std::regex((SWBuf(".*")+istr+".*").c_str(), std::regex_constants::extended & flags);
+#else
 		flags |=searchType|REG_NOSUB|REG_EXTENDED;
 		regcomp(&preg, istr, flags);
+#endif
 	}
 
 	(*percent)(++perc, percentUserData);
@@ -471,7 +494,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 					}
 				}
 				listKey << *resultKey;
-				listKey.GetElement()->userData = (__u64)((__u32)(h->score(i)*100));
+				listKey.getElement()->userData = (__u64)((__u32)(h->score(i)*100));
 			}
 			(*percent)(98, percentUserData);
 		}
@@ -562,13 +585,21 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 		}
 		if (searchType >= 0) {
 			SWBuf textBuf = stripText();
+#ifdef USECXX11REGEX
+			if (std::regex_match(std::string(textBuf.c_str()), preg)) {
+#else
 			if (!regexec(&preg, textBuf, 0, 0, 0)) {
+#endif
 				*resultKey = *getKey();
 				resultKey->clearBound();
 				listKey << *resultKey;
 				lastBuf = "";
 			}
+#ifdef USECXX11REGEX
+			else if (std::regex_match(std::string((lastBuf + ' ' + textBuf).c_str()), preg)) {
+#else
 			else if (!regexec(&preg, lastBuf + ' ' + textBuf, 0, 0, 0)) {
+#endif
 				lastKey->clearBound();
 				listKey << *lastKey;
 				lastBuf = textBuf;
@@ -755,8 +786,13 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	
 
 	// cleaup work
-	if (searchType >= 0)
+	if (searchType >= 0) {
+#ifdef USECXX11REGEX
+		std::locale::global(oldLocale);
+#else
 		regfree(&preg);
+#endif
+	}
 
 	setKey(*saveKey);
 
@@ -789,7 +825,9 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
  */
 
 const char *SWModule::stripText(const char *buf, int len) {
-	return renderText(buf, len, false);
+	static SWBuf local;
+	local = renderText(buf, len, false);
+	return local.c_str();
 }
 
 
@@ -815,7 +853,7 @@ const char *SWModule::getRenderHeader() const {
  * RET: this module's text at current key location massaged by renderText filters
  */
 
- const char *SWModule::renderText(const char *buf, int len, bool render) {
+ SWBuf SWModule::renderText(const char *buf, int len, bool render) {
 	bool savePEA = isProcessEntryAttributes();
 	if (!buf) {
 		entryAttributes.clear();
@@ -824,7 +862,7 @@ const char *SWModule::getRenderHeader() const {
 		setProcessEntryAttributes(false);
 	}
 
-	static SWBuf local;
+	SWBuf local;
 	if (buf)
 		local = buf;
 
@@ -864,7 +902,7 @@ const char *SWModule::getRenderHeader() const {
  * RET: this module's text at current key location massaged by RenderFilers
  */
 
- const char *SWModule::renderText(const SWKey *tmpKey) {
+SWBuf SWModule::renderText(const SWKey *tmpKey) {
 	SWKey *saveKey;
 	const char *retVal;
 
@@ -917,6 +955,24 @@ const char *SWModule::stripText(const SWKey *tmpKey) {
 	return retVal;
 }
 
+/******************************************************************************
+ * SWModule::getBibliography	-Returns bibliographic data for a module in the
+ *								requested format
+ *
+ * ENT: bibFormat format of the bibliographic data
+ *
+ * RET: bibliographic data in the requested format as a string (BibTeX by default)
+ */
+
+SWBuf SWModule::getBibliography(unsigned char bibFormat) const {
+	SWBuf s;
+	switch (bibFormat) {
+	case BIB_BIBTEX:
+		s.append("@Book {").append(modname).append(", Title = \"").append(moddesc).append("\", Publisher = \"CrossWire Bible Society\"}");
+		break;
+	}
+	return s;
+}
 
 const char *SWModule::getConfigEntry(const char *key) const {
 	ConfigEntMap::iterator it = config->find(key);
@@ -1022,7 +1078,7 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 	VerseKey *vkcheck = 0;
 	vkcheck = SWDYNAMIC_CAST(VerseKey, key);
 	VerseKey *chapMax = 0;
-        if (vkcheck) chapMax = (VerseKey *)vkcheck->clone();
+	if (vkcheck) chapMax = (VerseKey *)vkcheck->clone();
 
 	TreeKeyIdx *tkcheck = 0;
 	tkcheck = SWDYNAMIC_CAST(TreeKeyIdx, key);
@@ -1339,7 +1395,7 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 	if (searchKey)
 		delete searchKey;
 
-        delete chapMax;
+	delete chapMax;
 
 	setProcessEntryAttributes(savePEA);
 

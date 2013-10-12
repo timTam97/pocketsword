@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: osisplain.h 2187 2008-07-22 11:00:16Z scribe $
+ *  osisplain.h -	Implementation of OSISPlain
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisplain.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

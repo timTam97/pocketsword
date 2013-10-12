@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * osisstrongs -	SWFilter descendant to hide or show strongs number
- *			in a OSIS module.
+ *  osisstrongs.cpp -	SWFilter descendant to hide or show Strong's number
+ *			in a OSIS module
  *
+ * $Id: osisstrongs.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -28,17 +29,23 @@
 #include <versekey.h>
 #include <utilxml.h>
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Strong's Numbers";
-const char oTip[] = "Toggles Strong's Numbers On and Off if they exist";
+namespace {
 
-const SWBuf choices[3] = {"Off", "On", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const char oName[] = "Strong's Numbers";
+	static const char oTip[]  = "Toggles Strong's Numbers On and Off if they exist";
+
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"Off", "On", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
+}
 
 
-OSISStrongs::OSISStrongs() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("Off");
+OSISStrongs::OSISStrongs() : SWOptionFilter(oName, oTip, oValues()) {
 }
 
 

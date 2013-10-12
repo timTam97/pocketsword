@@ -1,9 +1,11 @@
 /******************************************************************************
  *
- * gbfheadings -	SWFilter descendant to hide or show headings
- *			in a GBF module.
+ *  gbfheadings.cpp -	SWFilter descendant to hide or show headings
+ *			in a GBF module
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: gbfheadings.cpp 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -19,20 +21,27 @@
  *
  */
 
+
 #include <stdlib.h>
 #include <gbfheadings.h>
 
+
 SWORD_NAMESPACE_START
 
+namespace {
 
-const char oName[] = "Headings";
-const char oTip[] = "Toggles Headings On and Off if they exist";
+	static const char oName[] = "Headings";
+	static const char oTip[]  = "Toggles Headings On and Off if they exist";
 
-const SWBuf choices[3] = {"Off", "On", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"Off", "On", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
+}
 
-GBFHeadings::GBFHeadings() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("Off");
+
+GBFHeadings::GBFHeadings() : SWOptionFilter(oName, oTip, oValues()) {
 }
 
 
@@ -40,7 +49,7 @@ GBFHeadings::~GBFHeadings() {
 }
 
 
-char GBFHeadings::processText (SWBuf &text, const SWKey *key, const SWModule *module) {
+char GBFHeadings::processText(SWBuf &text, const SWKey *key, const SWModule *module) {
 	if (!option) {	// if we don't want headings
 		char token[2048]; // cheese.  Fix.
 		int tokpos = 0;

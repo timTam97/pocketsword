@@ -1,8 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
- * $Id: plainhtml.h 1688 2005-01-01 04:42:26Z scribe $
+ *  xzcomprs.h -	XzCompress, a driver class that provides xz (LZMA2)
+ *			compression
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: xzcomprs.h 2850 2013-07-02 09:57:20Z chrislit $
+ *
+ * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -18,20 +21,24 @@
  *
  */
 
-#ifndef PLAINHTML_H
-#define PLAINHTML_H
+#ifndef XZCOMPRS_H
+#define XZCOMPRS_H
 
-#include <swfilter.h>
+#include <swcomprs.h>
+
+#include <defs.h>
 
 SWORD_NAMESPACE_START
 
-/** this filter converts plain text to HTML text
- * @author Torsten Uhlmann, begin : Tue Jun 15 15:34:26 CEST 1999
- */
-class SWDLLEXPORT PLAINHTML : public SWFilter {
+class SWDLLEXPORT XzCompress : public SWCompress {
+
+protected:
 public:
-	PLAINHTML();
-	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
+	XzCompress();
+	virtual ~XzCompress();
+
+	virtual void Encode(void);
+	virtual void Decode(void);
 };
 
 SWORD_NAMESPACE_END

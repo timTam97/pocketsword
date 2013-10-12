@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- * gbfstrongs -	SWFilter descendant to hide or show strongs number
- *			in a GBF module.
+ *  gbfwordjs.cpp -	SWFilter descendant for ???
  *
+ * $Id: gbfwordjs.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -28,17 +28,23 @@
 #include <utilstr.h>
 #include <versekey.h>
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Word Javascript";
-const char oTip[] = "Toggles Word Javascript data";
+namespace {
 
-const SWBuf choices[3] = {"Off", "On", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const char oName[] = "Word Javascript";
+	static const char oTip[]  = "Toggles Word Javascript data";
+
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"Off", "On", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
+}
 
 
-GBFWordJS::GBFWordJS() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("Off");
+GBFWordJS::GBFWordJS() : SWOptionFilter(oName, oTip, oValues()) {
 
      defaultGreekLex   = 0;
      defaultHebLex     = 0;

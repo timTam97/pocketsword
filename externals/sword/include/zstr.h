@@ -1,12 +1,13 @@
 /*****************************************************************************
- * zstr.h   - code for class 'zStr'- a module that reads compressed text
- *			files.
- *			and provides lookup and parsing functions based on
- *			class StrKey
  *
- * $Id: zstr.h 2779 2013-01-29 00:06:01Z scribe $
+ *  zstr.h -	code for class 'zStr'- a module that reads compressed text
+ *	       	files.
+ *		and provides lookup and parsing functions based on
+ *		class StrKey
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: zstr.h 2980 2013-09-14 21:51:47Z scribe $
+ *
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -61,7 +62,6 @@ protected:
 	void getKeyFromIdxOffset(long ioffset, char **buf) const;
 
 public:
-	char nl;
 	zStr(const char *ipath, int fileMode = -1, long blockCount = 100, SWCompress *icomp = 0, bool caseSensitive = false);
 	virtual ~zStr();
 	signed char findKeyIndex(const char *ikey, long *idxoff, long away = 0) const;

@@ -1,11 +1,12 @@
 /******************************************************************************
- *  swkey.h	- code for base class 'swkey'.  swkey is the basis for all
- *				types of keys for indexing into modules (e.g. verse, word,
- *				place, etc.)
  *
- * $Id: swkey.h 2812 2013-06-10 07:22:42Z chrislit $
+ *  swkey.h -	code for base class 'swkey'.  swkey is the basis for all
+ *		types of keys for indexing into modules (e.g. verse, word,
+ *		place, etc.)
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swkey.h 2926 2013-07-31 02:06:33Z scribe $
+ *
+ * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -104,7 +105,7 @@ protected:
 	mutable char *rangeText;
 	mutable bool boundSet;
 	bool persist;
-	char error;
+	mutable char error;
 
 	char *localeName;
 	SWLocale *getPrivateLocale() const;
@@ -125,7 +126,7 @@ public:
 	/** Copy Constructor
 	 * @param k The SWKey object to copy.
 	 */
-	SWKey(SWKey const &k);
+	SWKey(const SWKey &k);
 
 	/** Destructor, cleans up this instance of SWKey
 	 */

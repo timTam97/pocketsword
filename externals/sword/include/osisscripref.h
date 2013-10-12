@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: osisscripref.h 1688 2005-01-01 04:42:26Z scribe $
+ *  osisscripref.h -	Implementation of OSISScripRef
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osisscripref.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

@@ -1,10 +1,11 @@
 /******************************************************************************
- *  rawcom.h   - code for class 'RawCom'- a module that reads raw commentary
- *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: rawcom.h 2764 2013-01-19 16:19:47Z scribe $
+ *  rawcom.h -	code for class 'RawCom'- a module that reads raw commentary
+ *		files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: rawcom.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

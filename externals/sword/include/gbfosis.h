@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- * $Id: gbfosis.h 1864 2005-11-20 06:06:40Z scribe $
+ *  gbfosis.h -	Implementation of GBFOSIS
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: gbfosis.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

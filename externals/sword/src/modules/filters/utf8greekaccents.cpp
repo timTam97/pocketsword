@@ -1,10 +1,11 @@
 /******************************************************************************
  *
- * UTF8GreekAccents - SWFilter descendant to remove UTF-8 Greek accents
+ *  utf8greekaccents.cpp -	SWFilter descendant to remove UTF-8 Greek
+ *				accents
  *
+ * $Id: utf8greekaccents.cpp 2980 2013-09-14 21:51:47Z scribe $
  *
- *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -30,19 +31,27 @@
 sword::UTF8NFKD decompose;
 #endif
 
+
 SWORD_NAMESPACE_START
 
-const char oName[] = "Greek Accents";
-const char oTip[] = "Toggles Greek Accents";
+namespace {
 
-const SWBuf choices[3] = {"On", "Off", ""};
-const StringList oValues(&choices[0], &choices[2]);
+	static const char oName[] = "Greek Accents";
+	static const char oTip[]  = "Toggles Greek Accents";
 
-UTF8GreekAccents::UTF8GreekAccents() : SWOptionFilter(oName, oTip, &oValues) {
-	setOptionValue("On");
+	static const StringList *oValues() {
+		static const SWBuf choices[3] = {"On", "Off", ""};
+		static const StringList oVals(&choices[0], &choices[2]);
+		return &oVals;
+	}
 }
 
-UTF8GreekAccents::~UTF8GreekAccents(){};
+
+UTF8GreekAccents::UTF8GreekAccents() : SWOptionFilter(oName, oTip, oValues()) {
+}
+
+
+UTF8GreekAccents::~UTF8GreekAccents() {};
 
 
 char UTF8GreekAccents::processText(SWBuf &text, const SWKey *key, const SWModule *module) {

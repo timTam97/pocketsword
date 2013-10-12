@@ -1,5 +1,10 @@
-/*
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+/******************************************************************************
+ *
+ *  swlog.cpp -	
+ *
+ * $Id: swlog.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -15,8 +20,6 @@
  *
  */
 
-//---------------------------------------------------------------------------
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <iostream>
@@ -26,7 +29,7 @@
 #include <unicode/ustream.h>
 #endif
 #include "swlog.h"
-//---------------------------------------------------------------------------
+
 
 SWORD_NAMESPACE_START
 

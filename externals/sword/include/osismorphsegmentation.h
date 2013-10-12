@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- * $Id: osismorphsegmentation.h,v 1.3 2005/09/02 22:15:30 joachim Exp $
+ *  osismorphsegmentation.h -	Implementation of OSISMorphSegmentation
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: osismorphsegmentation.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  * CrossWire Bible Society
  * P. O. Box 2528
  * Tempe, AZ  85280-2528

@@ -1,5 +1,26 @@
+/******************************************************************************
+ *
+ *  defs.h -	Global defines, mostly platform-specific stuff
+ *
+ * $Id: defs.h 2942 2013-08-03 08:39:02Z chrislit $
+ *
+ * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation version 2.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ */
 // ----------------------------------------------------------------------------
-// Global defines, mostly platform-specific stuff
+// 
 // ----------------------------------------------------------------------------
 #ifndef SWORDDEFS_H
 #define SWORDDEFS_H
@@ -135,7 +156,8 @@ SWORD_NAMESPACE_START
 
 enum {DIRECTION_LTR = 0, DIRECTION_RTL, DIRECTION_BIDI};
 enum {FMT_UNKNOWN = 0, FMT_PLAIN, FMT_THML, FMT_GBF, FMT_HTML, FMT_HTMLHREF, FMT_RTF, FMT_OSIS, FMT_WEBIF, FMT_TEI, FMT_XHTML};
-enum {ENC_UNKNOWN = 0, ENC_LATIN1, ENC_UTF8, ENC_UTF16, ENC_RTF, ENC_HTML};
+enum {ENC_UNKNOWN = 0, ENC_LATIN1, ENC_UTF8, ENC_SCSU, ENC_UTF16, ENC_RTF, ENC_HTML};
+enum {BIB_BIBTEX = 0, /* possible future formats: BIB_MARCXML, BIB_MARC21, BIB_DCMI BIB_OSISHEADER, BIB_SBL_XHTML, BIB_MLA_XHTML, BIB_APA_XHTML, BIB_CHICAGO_XHTML */};
 
 SWORD_NAMESPACE_END
 #endif //SWORDDEFS_H

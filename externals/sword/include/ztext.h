@@ -1,10 +1,11 @@
 /******************************************************************************
- *  ztext.h   - code for class 'zText'- a module that reads compressed text
- *				files: ot and nt using indexs ??.vss
  *
- * $Id: ztext.h 2764 2013-01-19 16:19:47Z scribe $
+ *  ztext.h -	code for class 'zText'- a module that reads compressed text
+ *		files: ot and nt using indexs ??.vss
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: ztext.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
