@@ -1,4 +1,11 @@
 
+New in v1.4.6
+- updated for iOS 7 (lots of under the hood improvements, too!)
+- loads of bug fixes
+- app should be even faster now with those under the hood improvements, giving you more time to actually read the Bible :)
+- Minor update to the KJV module
+- updated libsword to v1.7.0!!!
+
 New in v1.4.5
 - Added Arabic localisation
 - Added new fonts for Hebrew & Greek
