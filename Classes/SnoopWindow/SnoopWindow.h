@@ -2,12 +2,14 @@
 //  SnoopWindow.h
 //  iPhoneIncubator
 //
-//  Created by Nick Dalton on 9/25/09.
-//  Copyright 360mind 2009. All rights reserved.
-//
+//  Originally Created by Nick Dalton on 9/25/09.
+//	Majorly hacked for PocketSword.
 //
 
 #import <UIKit/UIKit.h>
+
+@class PSBibleViewController;
+@class PSCommentaryViewController;
 
 @interface SnoopWindow : UIWindow {
 	NSTimeInterval startTouchTime;
@@ -19,13 +21,12 @@
 	BOOL movement;
 	BOOL ignoreMovementEvents;
 	
-	UIWebView *bibleWebView;
-	UIWebView *commentaryWebView;
+	PSBibleViewController *bibleViewController;
+	PSCommentaryViewController *commentaryViewController;
 }
 
-@property (nonatomic, assign) UIWebView *bibleWebView;
-@property (nonatomic, assign) UIWebView *commentaryWebView;
-//@property (retain, readwrite) NSTimer *holdTimer;
+@property (nonatomic, assign) PSBibleViewController *bibleViewController;
+@property (nonatomic, assign) PSCommentaryViewController *commentaryViewController;
 
 - (void)sendEvent:(UIEvent *)event;
 - (void)setTouchAndHold:(NSTimer *)theTimer;

@@ -30,7 +30,7 @@
 @implementation PSWebView
 
 //@synthesize reloading=_reloading;
-@synthesize psDelegate, topLength, bottomLength;
+@synthesize psDelegate, topLength, bottomLength, autoFullscreenMode;
 
 - (void)removeRefreshViews {
 	refreshFooterView.hidden = YES;
@@ -167,6 +167,10 @@
 	if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
 		[super scrollViewDidScroll:scrollView];
 	}
+//	if(self.autoFullscreenMode) {
+//		// trigger switching to fullscreen.
+//		//[psDelegate switchToFullscreen];
+//	}
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -191,16 +195,16 @@
         _reloading = YES;
 		[psDelegate bottomReloadTriggered:self];
         [refreshFooterView setState:EGOOPullRefreshLoading];
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.2];
-        scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 80.0f, 0.0f);
-        [UIView commitAnimations];
+//        [UIView beginAnimations:nil context:NULL];
+//        [UIView setAnimationDuration:0.2];
+//        scrollView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 80.0f, 0.0f);
+//        [UIView commitAnimations];
 		reloadTriggered = YES;
 	}
 
 	if(!reloadTriggered) {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference]) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationSwitchToFullscreen object:nil];
+		if(self.autoFullscreenMode) {
+			[psDelegate switchToFullscreen];
 		}
 		[super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 	}

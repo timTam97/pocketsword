@@ -14,6 +14,7 @@
 - (void)topReloadTriggered:(PSWebView*)psWebView;
 - (void)bottomReloadTriggered:(PSWebView*)psWebView;
 - (void)scrollHappened:(PSWebView*)psWebView newOffsetY:(CGFloat)newOffsetY;
+- (void)switchToFullscreen;
 @optional
 @end
 
@@ -31,11 +32,14 @@
 	CGFloat topLength;
 	CGFloat bottomLength;
 	CGFloat currentOffsetY;
+	
+	BOOL autoFullscreenMode;
 }
 
 @property (nonatomic, assign) id<PSWebViewDelegate> psDelegate;
 @property CGFloat topLength;
 @property CGFloat bottomLength;
+@property BOOL autoFullscreenMode;
 //@property(assign,getter=isReloading) BOOL reloading;
 
 - (void)dataSourceDidFinishLoadingNewData;

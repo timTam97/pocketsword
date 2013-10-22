@@ -3567,8 +3567,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3595,7 +3593,6 @@
 					"-DUSELUCENE",
 					"-DDEBUG",
 				);
-				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -3603,8 +3600,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3630,7 +3625,6 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -3663,7 +3657,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "5A1EE75E-6B35-4E6C-92F0-34A91FC85ED4";
+				PROVISIONING_PROFILE = "9E83CD32-B022-4E45-B866-0CB20F2398D7";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3675,7 +3669,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter (WLJLX6W97K)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
@@ -3696,7 +3690,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "7F8EDE3C-C318-47E2-80C5-DD9B011069C4";
+				PROVISIONING_PROFILE = "60CD34A0-0AD2-4D33-B299-D8138794F193";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -3709,7 +3703,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = armv7;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter (WLJLX6W97K)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3731,7 +3725,7 @@
 				);
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "364F1024-6052-4CB6-91D2-534C15C1FC5D";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3741,8 +3735,6 @@
 		E982FA660ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3768,7 +3760,6 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 				);
-				PROVISIONING_PROFILE = "";
 			};
 			name = Distribution;
 		};

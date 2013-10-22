@@ -135,8 +135,8 @@
 	PSTabBarControllerDelegate *tbcd = [[PSTabBarControllerDelegate alloc] init];
 	self.tabBarControllerDelegate = tbcd;
 	[tbcd release];
-	((SnoopWindow*)self.window).bibleWebView = [tabBarControllerDelegate.bibleTabController webView];
-	((SnoopWindow*)self.window).commentaryWebView = [tabBarControllerDelegate.commentaryTabController webView];
+	((SnoopWindow*)self.window).bibleViewController = tabBarControllerDelegate.bibleTabController;
+	((SnoopWindow*)self.window).commentaryViewController = tabBarControllerDelegate.commentaryTabController;
 	
 //	DLog(@"finishedInitializing, now to display the tab bar controller");
 	if([self.window respondsToSelector:@selector(rootViewController)]) {

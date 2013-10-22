@@ -17,7 +17,7 @@
 	PSWebView					*webView;
 	UIBarButtonItem				*moduleButton;
 	
-	PSTabBarControllerDelegate				*delegate;
+	PSTabBarControllerDelegate	*delegate;
 	
 	NSString					*refToShow;
 	NSString					*jsToShow;

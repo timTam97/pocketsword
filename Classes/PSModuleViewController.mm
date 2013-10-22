@@ -408,6 +408,11 @@
 		}
 		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference]) {
+		webView.autoFullscreenMode = YES;
+	} else {
+		webView.autoFullscreenMode = NO;
+	}
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -450,7 +455,7 @@
 }
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    [[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
+    //[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
 	[self setupWebViewRefreshViews];
 	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 }
@@ -460,9 +465,9 @@
     isFullScreen = !isFullScreen;
 	[webView removeRefreshViews];
 	
-	if(!isFullScreen) {
+	//if(!isFullScreen) {
 		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-	}
+	//}
 	
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];

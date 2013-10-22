@@ -1,16 +1,14 @@
 //
 //  SnoopWindow.m
-//  iPhoneIncubator
-//
-//  Created by Nick Dalton on 9/25/09.
-//  Copyright 360mind 2009. All rights reserved.
-//
 //
 
 #import "SnoopWindow.h"
 
 #import "globals.h"
 #import "PSModuleController.h"
+#import "PSWebView.h"
+#import "PSBibleViewController.h"
+#import "PSCommentaryViewController.h"
 
 
 #define SWIPE_DRAG_HORIZ_MIN 100
@@ -21,9 +19,7 @@
 
 @implementation SnoopWindow
 
-@synthesize bibleWebView;
-@synthesize commentaryWebView;
-//@synthesize holdTimer;
+@synthesize bibleViewController, commentaryViewController;
 
 #pragma mark -
 #pragma mark Helper functions for generic math operations on CGPoints
@@ -85,8 +81,8 @@ CGPoint CGPointNorm(CGPoint a) {
 		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
 	}
 	
-	if (touchView && ([touchView isDescendantOfView:bibleWebView] || [touchView isDescendantOfView:commentaryWebView])) {
-		bibleEvent = [touchView isDescendantOfView:bibleWebView];
+	if (touchView && ([touchView isDescendantOfView:bibleViewController.webView] || [touchView isDescendantOfView:commentaryViewController.webView])) {
+		bibleEvent = [touchView isDescendantOfView:bibleViewController.webView];
 
 		
 		//
@@ -186,14 +182,20 @@ CGPoint CGPointNorm(CGPoint a) {
 //				self.holdTimer = nil;
 //			}
 			
-			if (!movement && ([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsFullscreenModePreference] || ([[event allTouches] count] == 2))) {
+			if (!movement && (bibleViewController.webView.autoFullscreenMode || ([[event allTouches] count] == 2))) {
 				//DLog(@"toggle-fullscreen-tap");
 				
 				if(bibleEvent) {
-					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
+					[bibleViewController toggleFullscreen];
+					//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
 				} else {
-					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentaryToggleFullscreen object:nil];
+					[commentaryViewController toggleFullscreen];
+					//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentaryToggleFullscreen object:nil];
 				}
+			} else if(!movement && bibleEvent && (!bibleViewController.webView.autoFullscreenMode && bibleViewController.isFullScreen)) {
+				[bibleViewController switchToNormalscreen];
+			} else if(!movement && !bibleEvent && (!commentaryViewController.webView.autoFullscreenMode && commentaryViewController.isFullScreen)) {
+				[commentaryViewController switchToNormalscreen];
 			}
 			
 			CGPoint currentTouchPosition = [touch locationInView:self];
