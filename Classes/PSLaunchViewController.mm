@@ -160,6 +160,11 @@
 	
 	if(!kjv) {
 		[defaults synchronize];
+		SwordModule *kjvModule = [[moduleManager swordManager] moduleWithName:@"KJV"];
+		if(kjvModule) {
+			// if it's already installed, remove the search index because it will now be out of date
+			[kjvModule deleteSearchIndex];
+		}
 		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"KJV" ofType:@"zip"] ofType: bible removeZip:NO internalModule:YES];
 		[moduleManager installModulesFromZip: [[NSBundle mainBundle] pathForResource:@"MHCC" ofType:@"zip"] ofType: commentary removeZip:NO internalModule:YES];
 		[defaults setBool: YES forKey:KJV_VERSION];

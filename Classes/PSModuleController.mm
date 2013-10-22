@@ -741,13 +741,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	int numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
 	int numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
 	
-	if([[moduleToRemove typeString] isEqualToString: SWMOD_CATEGORY_DICTIONARIES]) {
-		//need to remove the dictionary cache, if it exists
-		[((SwordDictionary*)moduleToRemove) removeCache];
-	}
 
 
 	if(moduleToRemove) {
+		if([[moduleToRemove typeString] isEqualToString: SWMOD_CATEGORY_DICTIONARIES]) {
+			//need to remove the dictionary cache, if it exists
+			[((SwordDictionary*)moduleToRemove) removeCache];
+		}
 //		BOOL wasBuiltIn = NO;
 //		if(possibleBuiltIn) {
 //			SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
