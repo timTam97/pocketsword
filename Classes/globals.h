@@ -180,10 +180,6 @@ typedef enum {
 #define NotificationShowCommentaryTab			@"NotificationShowCommentaryTab"
 #define NotificationShowBibleTab				@"NotificationShowBibleTab"
 
-#define NotificationBibleToggleFullscreen		@"NotificationBibleToggleFullscreen"
-#define NotificationCommentaryToggleFullscreen	@"NotificationCommentaryToggleFullscreen"
-#define NotificationSwitchToFullscreen			@"NotificationSwitchToFullscreen"
-
 #define NotificationAddBookmarkInFolder			@"NotificationAddBookmarkInFolder"
 
 #define NotificationUpdateSelectedReference		@"NotificationUpdateSelectedReference"

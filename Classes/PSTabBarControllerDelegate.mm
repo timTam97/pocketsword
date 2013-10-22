@@ -243,7 +243,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayCommentaryTabViaNotification) name:NotificationShowCommentaryTab object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBibleTabViaNotification) name:NotificationShowBibleTab object:nil];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchToFullscreen) name:NotificationSwitchToFullscreen object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewWithSelectedBookChapterVerse:) name:NotificationUpdateSelectedReference object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
@@ -267,16 +266,6 @@
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
 	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) setBackgroundColor:backgroundColor];
-}
-
-- (void)switchToFullscreen {
-	if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
-		// bible tab
-		[bibleTabController switchToFullscreen];
-	} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
-		// commentary tab
-		[commentaryTabController switchToFullscreen];
-	}
 }
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab

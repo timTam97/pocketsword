@@ -55,9 +55,9 @@ CGPoint CGPointNorm(CGPoint a) {
 	DLog(@"Timer Fired");
 	
 	if(bibleEvent) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
+		[bibleViewController toggleFullscreen];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentaryToggleFullscreen object:nil];
+		[commentaryViewController toggleFullscreen];
 	}
 	
 	//touchAndHold = YES;
@@ -187,10 +187,8 @@ CGPoint CGPointNorm(CGPoint a) {
 				
 				if(bibleEvent) {
 					[bibleViewController toggleFullscreen];
-					//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBibleToggleFullscreen object:nil];
 				} else {
 					[commentaryViewController toggleFullscreen];
-					//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationCommentaryToggleFullscreen object:nil];
 				}
 			} else if(!movement && bibleEvent && (!bibleViewController.webView.autoFullscreenMode && bibleViewController.isFullScreen)) {
 				[bibleViewController switchToNormalscreen];
