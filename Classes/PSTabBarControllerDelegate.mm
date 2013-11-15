@@ -81,12 +81,16 @@
 //			UIColor *barTintColor = [UIColor redColor];
 			
 			[[UINavigationBar appearance] setTintColor:tintColor];
+			//[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background.png"] forBarMetrics:UIBarMetricsDefault];
 			[[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
 			[[UINavigationBar appearance] setBarTintColor:barTintColor];
 			[[UIToolbar appearance] setTintColor:tintColor];
+			//[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 			[[UIToolbar appearance] setBarTintColor:barTintColor];
 			[[UITabBar appearance] setTintColor:tintColor];
+			//[[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background TabBar.png"]];
 			[[UITabBar appearance] setBarTintColor:barTintColor];
+			//NSLog(@"%f", self.tabBarController.tabBar.frame.size.height);
 		}
 		
 		//add the Commentary Tab.

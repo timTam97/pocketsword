@@ -83,11 +83,11 @@ float status;
 //					[is setUID:@"20090224125400"];
 //					[self addInstallSource:is withReinitialize:NO];
 					
-                    [is setCaption:@"CrossWire av11n"];
-                    [is setSource:@"ftp.crosswire.org"];
-                    [is setDirectory:@"/ftpmirror/pub/sword/avraw"];
-					[is setUID:@"20120224005000"];
-                    [self addInstallSource:is withReinitialize:NO];
+//                    [is setCaption:@"CrossWire av11n"];
+//                    [is setSource:@"ftp.crosswire.org"];
+//                    [is setDirectory:@"/ftpmirror/pub/sword/avraw"];
+//					[is setUID:@"20120224005000"];
+//                    [self addInstallSource:is withReinitialize:NO];
 					
 					[is setType:INSTALLSOURCE_TYPE_FTP];
 					[is setCaption:@"NET (Bible.org)"];
