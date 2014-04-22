@@ -43,6 +43,9 @@ static NSArray * lookup_table;
 		if([aCode isEqualToString:[[lookup_table objectAtIndex:i] objectAtIndex:0]])
 			return [[lookup_table objectAtIndex:i] objectAtIndex:1];
 	}
+	if([aCode length] > 3) {
+		return [PSLanguageCode lookupLanguageCode:[aCode substringToIndex:3]];
+	}
 	return aCode;
 }
 
