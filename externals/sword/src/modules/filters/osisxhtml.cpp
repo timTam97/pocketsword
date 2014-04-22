@@ -2,7 +2,7 @@
  *
  *  osisxhtml.cpp -	Render filter for classed XHTML of an OSIS module
  *
- * $Id: osisxhtml.cpp 2984 2013-09-20 12:18:45Z scribe $
+ * $Id: osisxhtml.cpp 2991 2013-12-08 07:13:58Z chrislit $
  *
  * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -415,7 +415,7 @@ bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		}
 
 		// <lb.../>
-		else if (!strcmp(tag.getName(), "lb")) {
+		else if (!strcmp(tag.getName(), "lb") && (strcmp(tag.getAttribute("type"), "x-optional"))) {
 				u->outputNewline(buf);
 		}
 		// <milestone type="line"/>

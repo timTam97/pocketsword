@@ -1,11 +1,10 @@
 /***************************************************************************
- *                  osishtmlhref.cpp  -  OSIS to HTML with hrefs filter
- *		      -------------------
- *   begin                : 2003-06-24
- *   copyright            : 2003 by CrossWire Bible Society
- * 
  *
- * Copyright 2009 CrossWire Bible Society (http://www.crosswire.org)
+ *  osishtmlhref.cpp -	OSIS to HTML with hrefs filter
+ * 
+ * $Id: osishtmlhref.cpp 2991 2013-12-08 07:13:58Z chrislit $
+ *
+ * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -420,7 +419,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		}
 
 		// <lb.../>
-		else if (!strcmp(tag.getName(), "lb")) {
+		else if (!strcmp(tag.getName(), "lb") && (strcmp(tag.getAttribute("type"), "x-optional"))) {
 			outText("<br />", buf, u);
 			userData->supressAdjacentWhitespace = true;
 		}
@@ -436,11 +435,9 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				userData->supressAdjacentWhitespace = true;
 			}
 			else if (!strcmp(tag.getAttribute("type"),"x-p"))  {
-				if (tag.getAttribute("marker")) {
+				if (tag.getAttribute("marker"))
 					outText(tag.getAttribute("marker"), buf, u);
-				} else {
-					outText("<!P>", buf, u);
-				}
+				else outText("<!p>", buf, u);
 			}
 			else if (!strcmp(tag.getAttribute("type"), "cQuote")) {
 				const char *tmp = tag.getAttribute("marker");

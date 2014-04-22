@@ -2,7 +2,7 @@
  *
  *  osisrtf.cpp -	OSIS to RTF filter
  *
- * $Id: osisrtf.cpp 2980 2013-09-14 21:51:47Z scribe $ *
+ * $Id: osisrtf.cpp 2991 2013-12-08 07:13:58Z chrislit $ *
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -326,7 +326,7 @@ bool OSISRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *us
 		}
 
 		// <milestone type="line"/> or <lb.../>
-		else if ((!strcmp(tag.getName(), "lb")) || ((!strcmp(tag.getName(), "milestone")) && (tag.getAttribute("type")) && (!strcmp(tag.getAttribute("type"), "line")))) {
+		else if ((!strcmp(tag.getName(), "lb") && (strcmp(tag.getAttribute("type"), "x-optional"))) || ((!strcmp(tag.getName(), "milestone")) && (tag.getAttribute("type")) && (!strcmp(tag.getAttribute("type"), "line")))) {
 			outText("{\\par}", buf, u);
 			userData->supressAdjacentWhitespace = true;
 		}
