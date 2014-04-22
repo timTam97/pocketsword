@@ -365,7 +365,7 @@
 				((PSBookmark*)rowObject).dateLastAccessed = [NSDate date];
 				[PSBookmarks saveBookmarksToFile];
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
-				if (![[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] == 0) {
+				if ([[[[PSModuleController defaultModuleController] swordManager] moduleNames] count] != 0) {
 					NSArray *fullRef = [((PSBookmark*)rowObject).ref componentsSeparatedByString: @":"];
 					NSString *ref = [fullRef objectAtIndex: 0];
 					[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:ref] forKey: DefaultsLastRef];

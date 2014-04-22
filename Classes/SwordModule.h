@@ -18,7 +18,8 @@
 #include <swtext.h>
 #include <versekey.h>
 #include <regex.h>
-class sword::SWModule;
+//class sword::SWModule;
+using sword::SWModule;
 #endif
 
 #define My_SWDYNAMIC_CAST(className, object) (sword::className *)((object)?((object->getClass()->isAssignableFrom(#className))?object:0):0)

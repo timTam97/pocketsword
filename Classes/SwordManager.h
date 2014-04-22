@@ -25,7 +25,8 @@
 #include <thmlhtmlhref.h>
 #include <gbfhtmlhref.h>
 #include <versekey.h>
-class sword::SWModule;
+//class sword::SWModule;
+using sword::SWModule;
 #endif
 
 

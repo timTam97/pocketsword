@@ -14,8 +14,8 @@
 #include <swconfig.h>
 #include <multimapwdef.h>
 #include "PSStatusReporter.h"
-class sword::SWModule;
-class sword::InstallMgr;
+//class sword::SWModule;
+//class sword::InstallMgr;
 using sword::SWModule;
 using sword::InstallMgr;
 #endif
