@@ -207,6 +207,7 @@
 		053CAD8C180942B200BCDBE6 /* osisreferencelinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */; };
 		053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */; };
 		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
+		054509C619A5DAA900E0A702 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 054509C519A5DAA900E0A702 /* libbz2.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
@@ -362,7 +363,6 @@
 		05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDC191F4AB3003350DE /* thmllatex.cpp */; };
 		05F84EE5191F4AC7003350DE /* ztext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EE4191F4AC7003350DE /* ztext4.cpp */; };
 		05F84EE7191F4EF0003350DE /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F84EE6191F4EF0003350DE /* libicucore.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		05F84EE8191F4F8E003350DE /* utf8scsu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDD191F4AB3003350DE /* utf8scsu.cpp */; };
 		1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -886,6 +886,8 @@
 		0542F6D510BE770C0088A721 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesModuleSelectorTableViewController.h; sourceTree = "<group>"; };
 		0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesModuleSelectorTableViewController.mm; sourceTree = "<group>"; };
+		054509C519A5DAA900E0A702 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
+		054509C719A5DAFA00E0A702 /* liblzma.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblzma.dylib; path = usr/lib/liblzma.dylib; sourceTree = SDKROOT; };
 		0545549610CA4D8000EE11EC /* PSIndexController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSIndexController.h; path = Classes/PSIndexController.h; sourceTree = "<group>"; };
 		0545549710CA4D8000EE11EC /* PSIndexController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSIndexController.mm; path = Classes/PSIndexController.mm; sourceTree = "<group>"; };
 		0545E23810638D8400DD7F06 /* SwordInstallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallSource.h; sourceTree = "<group>"; };
@@ -1152,7 +1154,6 @@
 		05F84ECD191F4A4F003350DE /* osislatex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osislatex.h; sourceTree = "<group>"; };
 		05F84ECE191F4A4F003350DE /* teilatex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teilatex.h; sourceTree = "<group>"; };
 		05F84ECF191F4A4F003350DE /* thmllatex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thmllatex.h; sourceTree = "<group>"; };
-		05F84ED0191F4A4F003350DE /* utf8scsu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8scsu.h; sourceTree = "<group>"; };
 		05F84ED1191F4A4F003350DE /* zcom4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zcom4.h; sourceTree = "<group>"; };
 		05F84ED2191F4A4F003350DE /* ztext4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ztext4.h; sourceTree = "<group>"; };
 		05F84ED3191F4A4F003350DE /* zverse4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zverse4.h; sourceTree = "<group>"; };
@@ -1162,7 +1163,6 @@
 		05F84EDA191F4AB3003350DE /* osislatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osislatex.cpp; sourceTree = "<group>"; };
 		05F84EDB191F4AB3003350DE /* teilatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teilatex.cpp; sourceTree = "<group>"; };
 		05F84EDC191F4AB3003350DE /* thmllatex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thmllatex.cpp; sourceTree = "<group>"; };
-		05F84EDD191F4AB3003350DE /* utf8scsu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utf8scsu.cpp; sourceTree = "<group>"; };
 		05F84EE4191F4AC7003350DE /* ztext4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ztext4.cpp; sourceTree = "<group>"; };
 		05F84EE6191F4EF0003350DE /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1429,6 +1429,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054509C619A5DAA900E0A702 /* libbz2.dylib in Frameworks */,
 				05F84EE7191F4EF0003350DE /* libicucore.dylib in Frameworks */,
 				0562FD7C16BB8BCF003A8C70 /* libSystem.dylib in Frameworks */,
 				056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */,
@@ -1577,7 +1578,6 @@
 				05F84ECD191F4A4F003350DE /* osislatex.h */,
 				05F84ECE191F4A4F003350DE /* teilatex.h */,
 				05F84ECF191F4A4F003350DE /* thmllatex.h */,
-				05F84ED0191F4A4F003350DE /* utf8scsu.h */,
 				05F84ED1191F4A4F003350DE /* zcom4.h */,
 				05F84ED2191F4A4F003350DE /* ztext4.h */,
 				05F84ED3191F4A4F003350DE /* zverse4.h */,
@@ -1955,7 +1955,6 @@
 				05F84EDA191F4AB3003350DE /* osislatex.cpp */,
 				05F84EDB191F4AB3003350DE /* teilatex.cpp */,
 				05F84EDC191F4AB3003350DE /* thmllatex.cpp */,
-				05F84EDD191F4AB3003350DE /* utf8scsu.cpp */,
 				053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */,
 				053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */,
 				057CBD4917697D1C005BC6BB /* osisenum.cpp */,
@@ -2697,6 +2696,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				054509C719A5DAFA00E0A702 /* liblzma.dylib */,
+				054509C519A5DAA900E0A702 /* libbz2.dylib */,
 				05F84EE6191F4EF0003350DE /* libicucore.dylib */,
 				0562FD7B16BB8BCF003A8C70 /* libSystem.dylib */,
 				056CD38516BB6D6200AA0674 /* libz.dylib */,
@@ -3311,7 +3312,6 @@
 				E94014AD0EFDD2D400DA9B7F /* BooleanQuery.cpp in Sources */,
 				E94014AE0EFDD2D400DA9B7F /* BooleanScorer.cpp in Sources */,
 				E94014AF0EFDD2D400DA9B7F /* CachingWrapperFilter.cpp in Sources */,
-				05F84EE8191F4F8E003350DE /* utf8scsu.cpp in Sources */,
 				E94014B00EFDD2D400DA9B7F /* ChainedFilter.cpp in Sources */,
 				E94014B10EFDD2D400DA9B7F /* ConjunctionScorer.cpp in Sources */,
 				E94014B20EFDD2D400DA9B7F /* DateFilter.cpp in Sources */,
@@ -3668,6 +3668,7 @@
 					"-D__unix__",
 					"-DUSELUCENE",
 					"-DDEBUG",
+					"-DEXCLUDEXZ",
 				);
 			};
 			name = Debug;
@@ -3700,6 +3701,7 @@
 					"-Dunix",
 					"-D__unix__",
 					"-DUSELUCENE",
+					"-DEXCLUDEXZ",
 				);
 			};
 			name = Release;
@@ -3820,6 +3822,7 @@
 					"-Dunix",
 					"-D__unix__",
 					"-DUSELUCENE",
+					"-DEXCLUDEXZ",
 				);
 			};
 			name = Distribution;
