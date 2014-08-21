@@ -3,9 +3,9 @@
  *  xzcomprs.h -	XzCompress, a driver class that provides xz (LZMA2)
  *			compression
  *
- * $Id: xzcomprs.h 2850 2013-07-02 09:57:20Z chrislit $
+ * $Id: xzcomprs.h 3122 2014-03-14 08:08:28Z chrislit $
  *
- * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,6 +24,8 @@
 #ifndef XZCOMPRS_H
 #define XZCOMPRS_H
 
+#include <stdint.h>
+
 #include <swcomprs.h>
 
 #include <defs.h>
@@ -39,6 +41,9 @@ public:
 
 	virtual void Encode(void);
 	virtual void Decode(void);
+	virtual void setLevel(int l);
+private:
+	uint64_t memlimit; // memory usage limit during decompression
 };
 
 SWORD_NAMESPACE_END

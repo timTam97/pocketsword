@@ -4,7 +4,7 @@
  *			used to transcode all module text to a requested
  *			markup
  *
- * $Id: markupfiltmgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: markupfiltmgr.cpp 3075 2014-03-05 02:27:33Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -38,6 +38,7 @@
 #include <gbfosis.h>
 #include <thmlosis.h>
 #include <osisrtf.h>
+#include <osislatex.h>
 #include <teirtf.h>
 #include <osisosis.h>
 #include <osishtmlhref.h>
@@ -49,7 +50,10 @@
 #include <gbfxhtml.h>
 #include <osisxhtml.h>
 #include <teixhtml.h>
-
+#include <gbflatex.h>
+#include <thmllatex.h>
+#include <teilatex.h>
+ 
 #include <markupfiltmgr.h>
 
 #include <swmgr.h>
@@ -277,6 +281,14 @@ void MarkupFilterMgr::CreateFilters(char markup) {
 		fromgbf   = new GBFRTF();
 		fromosis  = new OSISRTF();
 		fromtei   = new TEIRTF();
+		break;
+
+	case FMT_LATEX:
+		fromplain = NULL;
+		fromthml  = new ThMLLaTeX();
+		fromgbf   = new GBFLaTeX();
+		fromosis  = new OSISLaTeX();
+		fromtei   = new TEILaTeX();
 		break;
 
 	case FMT_OSIS:

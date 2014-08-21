@@ -3,7 +3,7 @@
  *  localemgr.cpp -	implementation of class LocaleMgr used to interact with
  *			registered locales for a SWORD installation
  *
- * $Id: localemgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: localemgr.cpp 3001 2014-01-03 19:23:42Z scribe $
  *
  * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -266,12 +266,12 @@ void LocaleMgr::setDefaultLocaleName(const char *name) {
 	stdstr(&defaultLocaleName, tmplang);
 
 	// First check for what we ask for
-	if (!getLocale(tmplang)) {
+	if (locales->find(tmplang) == locales->end()) {
 		// check for locale without country
 		char *nocntry=0;
 		stdstr(&nocntry, tmplang);
 		strtok(nocntry, "_");
-		if (getLocale(nocntry)) {
+		if (locales->find(nocntry) != locales->end()) {
 			stdstr(&defaultLocaleName, nocntry);
 		}
 		delete [] nocntry;

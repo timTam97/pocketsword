@@ -3,7 +3,7 @@
  *  swld.h -	code for base class 'SWLD'.  SWLD is the basis for all
  *		types of Lexicon and Dictionary modules (hence the 'LD').
  *
- * $Id: swld.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swld.h 3215 2014-05-01 05:13:22Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

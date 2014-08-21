@@ -2,7 +2,7 @@
  *
  *  teixhtml.cpp -	TEI to XHTML filter
  *
- * $Id: teixhtml.cpp 2984 2013-09-20 12:18:45Z scribe $
+ * $Id: teixhtml.cpp 3094 2014-03-11 07:11:44Z refdoc $
  *
  * Copyright 2012-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -87,28 +87,28 @@ bool TEIXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 				SWBuf rend = tag.getAttribute("rend");
 				
 				u->lastHi = rend;
-				if (rend == "ital")
-					buf += "<i>";
-				else if (rend == "italic")
+				if (rend == "italic" || rend == "ital")
 					buf += "<i>";
 				else if (rend == "bold")
 					buf += "<b>";
-				else if (rend == "sup")
-					buf += "<small><sup>";
+				else if (rend == "super" || rend == "sup")
+					buf += "<sup>";
+				else if (rend == "sub")
+					buf += "<sub>";
 				else if (rend == "overline")
 					buf += "<span style=\"text-decoration:overline\">";
 
 			}
 			else if (tag.isEndTag()) {
 				SWBuf rend = u->lastHi;
-				if (rend == "ital")
-					buf += "</i>";
-				else if (rend == "italic")
+				if (rend == "italic" || rend == "ital")
 					buf += "</i>";
 				else if (rend == "bold")
 					buf += "</b>";
-				else if (rend == "sup")
-					buf += "</sup></small>";
+				else if (rend == "super" || rend == "sup")
+					buf += "</sup>";
+				else if (rend == "sub")
+					buf += "</sub>";
 				else if (rend == "overline")
 					buf += "</span>";
 			}

@@ -1,11 +1,11 @@
 /******************************************************************************
  *
- *  ztext.h -	code for class 'zText'- a module that reads compressed text
- *		files: ot and nt using indexs ??.vss
+ *  zcom4.h - 	code for class 'zCom4'- a module that reads compressed text
+ *     	       	files: ot and nt using indexs ??.vss
  *
- * $Id: ztext.h 3126 2014-03-14 11:59:36Z chrislit $
+ * $Id: zcom4.h 3141 2014-03-19 01:24:04Z chrislit $
  *
- * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -21,59 +21,45 @@
  *
  */
 
-#ifndef ZTEXT_H
-#define ZTEXT_H
+#ifndef ZCOM4_H
+#define ZCOM4_H
 
-#include <zverse.h>
-#include <swtext.h>
+#include <swcom.h>
 
 #include <defs.h>
 
-namespace lucene { namespace index {
-class IndexReader;
-}}
-
-namespace lucene { namespace search {
-class IndexSearcher;
-}}
-
 SWORD_NAMESPACE_START
 
-/*** SWModule implementation for compressed modules
-* This class handles compressed modules.
-* It should not be used in frontends, unless you are doing very special things.
-*/
-class SWDLLEXPORT zText:public zVerse, public SWText {
+class SWDLLEXPORT zCom4 : public zVerse4, public SWCom {
 
 	VerseKey *lastWriteKey;
 	bool sameBlock(VerseKey * lastWriteKey, VerseKey * key);
 	int blockType;
 
+
 public:
-	zText(const char *ipath, const char *iname = 0, const char *idesc = 0,
+
+	zCom4(const char *ipath, const char *iname = 0, const char *idesc = 0,
 			int blockType = CHAPTERBLOCKS, SWCompress *icomp = 0,
 			SWDisplay *idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN,
 			SWTextDirection dir = DIRECTION_LTR,
 			SWTextMarkup markup = FMT_UNKNOWN, const char *ilang = 0,
 			const char *versification = "KJV");
-
-	virtual ~zText();
+	virtual ~zCom4();
 	virtual SWBuf &getRawEntryBuf() const;
-
 	virtual void increment(int steps = 1);
 	virtual void decrement(int steps = 1) { increment(-steps); }
 
 	// write interface ----------------------------
 	virtual bool isWritable() const;
 	static char createModule(const char *path, int blockBound, const char *v11n = "KJV") {
-		return zVerse::createModule(path, blockBound, v11n);
+		return zVerse4::createModule(path, blockBound, v11n);
 	}
-
 	virtual void setEntry(const char *inbuf, long len = -1);	// Modify current module entry
-	virtual void linkEntry(const SWKey *linkKey);	// Link current module entry to other module entry
+	virtual void linkEntry(const SWKey * linkKey);	// Link current module entry to other module entry
 	virtual void deleteEntry();	// Delete current module entry
 	// end write interface ------------------------
-  
+
 	virtual void rawZFilter(SWBuf &buf, char direction = 0) const { rawFilter(buf, (SWKey *)(long)direction); }// hack, use key as direction for enciphering
 
 	// swcacher interface ----------------------
@@ -84,7 +70,9 @@ public:
 	virtual bool hasEntry(const SWKey *k) const;
 	
 	SWMODULE_OPERATORS
+
 };
 
 SWORD_NAMESPACE_END
+
 #endif

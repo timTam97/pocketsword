@@ -1,11 +1,11 @@
 /******************************************************************************
  *
- *  zcom.cpp -	code for class 'zCom'- a module that reads raw commentary
- *		files
+ *  ztext4.cpp -	code for class 'zText4'- a module that reads compressed
+ *			text files
  *
- * $Id: zcom.cpp 3073 2014-03-05 00:27:52Z scribe $
+ * $Id: ztext4.cpp 3141 2014-03-19 01:24:04Z chrislit $
  *
- * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,17 +24,16 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <fcntl.h>
-
-#include <swbuf.h>
-#include <zverse.h>
+#include <sysdata.h>
 #include <versekey.h>
-#include <zcom.h>
 #include <filemgr.h>
+
+#include <ztext4.h>
 
 SWORD_NAMESPACE_START
 
 /******************************************************************************
- * zCom Constructor - Initializes data for instance of zCom
+ * zText4 Constructor - Initializes data for instance of zText4
  *
  * ENT:	ipath - path to data files
  *		iname - Internal name for module
@@ -44,38 +43,39 @@ SWORD_NAMESPACE_START
  *		idisp - Display object to use for displaying
  */
 
-zCom::zCom(const char *ipath, const char *iname, const char *idesc, int iblockType, SWCompress *icomp, SWDisplay *idisp, SWTextEncoding enc, SWTextDirection dir, SWTextMarkup mark, const char *ilang, const char *versification) : zVerse(ipath, -1, iblockType, icomp), SWCom(iname, idesc, idisp, enc, dir, mark, ilang, versification)/*, SWCompress()*/
-{
+zText4::zText4(const char *ipath, const char *iname, const char *idesc, int iblockType, SWCompress *icomp, SWDisplay *idisp, SWTextEncoding enc, SWTextDirection dir, SWTextMarkup mark, const char *ilang, const char *versification)
+		: zVerse4(ipath, FileMgr::RDWR, iblockType, icomp), SWText(iname, idesc, idisp, enc, dir, mark, ilang, versification) {
 	blockType = iblockType;
 	lastWriteKey = 0;
 }
 
+
 /******************************************************************************
- * zCom Destructor - Cleans up instance of zCom
+ * zText4 Destructor - Cleans up instance of zText4
  */
 
-zCom::~zCom() {
+zText4::~zText4()
+{
 	flushCache();
 
 	if (lastWriteKey)
 		delete lastWriteKey;
+
 }
 
 
-bool zCom::isWritable() const {
-	return ((idxfp[0]->getFd() > 0) && ((idxfp[0]->mode & FileMgr::RDWR) == FileMgr::RDWR));
-}
+bool zText4::isWritable() const { return ((idxfp[0]->getFd() > 0) && ((idxfp[0]->mode & FileMgr::RDWR) == FileMgr::RDWR)); }
 
 
 /******************************************************************************
- * zCom::getRawEntry	- Returns the current verse buffer
+ * zText4::getRawEntry	- Returns the current verse buffer
  *
  * RET: buffer with verse
  */
 
-SWBuf &zCom::getRawEntryBuf() const {
+SWBuf &zText4::getRawEntryBuf() const {
 	long  start = 0;
-	unsigned short size = 0;
+	unsigned long size = 0;
 	unsigned long buffnum = 0;
 	VerseKey &key = getVerseKey();
 
@@ -94,7 +94,7 @@ SWBuf &zCom::getRawEntryBuf() const {
 }
 
 
-bool zCom::sameBlock(VerseKey *k1, VerseKey *k2) {
+bool zText4::sameBlock(VerseKey *k1, VerseKey *k2) {
 	if (k1->getTestament() != k2->getTestament())
 		return false;
 
@@ -112,57 +112,54 @@ bool zCom::sameBlock(VerseKey *k1, VerseKey *k2) {
 	return true;
 }
 
-void zCom::setEntry(const char *inbuf, long len) {
-	VerseKey *key = &getVerseKey();
+
+void zText4::setEntry(const char *inbuf, long len) {
+	VerseKey &key = getVerseKey();
 
 	// see if we've jumped across blocks since last write
 	if (lastWriteKey) {
-		if (!sameBlock(lastWriteKey, key)) {
+		if (!sameBlock(lastWriteKey, &key)) {
 			flushCache();
 		}
 		delete lastWriteKey;
 	}
 
-	doSetText(key->getTestament(), key->getTestamentIndex(), inbuf, len);
+	doSetText(key.getTestament(), key.getTestamentIndex(), inbuf, len);
 
-	lastWriteKey = (VerseKey *)key->clone();	// must delete
+	lastWriteKey = (VerseKey *)key.clone();	// must delete
 }
 
 
-void zCom::linkEntry(const SWKey *inkey) {
-	VerseKey *destkey = &getVerseKey();
+void zText4::linkEntry(const SWKey *inkey) {
+	VerseKey &destkey = getVerseKey();
 	const VerseKey *srckey = &getVerseKey(inkey);
-
-	doLinkEntry(destkey->getTestament(), destkey->getTestamentIndex(), srckey->getTestamentIndex());
-
-	if (inkey != srckey) // free our key if we created a VerseKey
-		delete srckey;
+	doLinkEntry(destkey.getTestament(), destkey.getTestamentIndex(), srckey->getTestamentIndex());
 }
+
 
 /******************************************************************************
- * zCom::deleteEntry	- deletes this entry
+ * zFiles::deleteEntry	- deletes this entry
  *
- * RET: *this
  */
 
-void zCom::deleteEntry() {
+void zText4::deleteEntry() {
 
-	VerseKey *key = &getVerseKey();
-	doSetText(key->getTestament(), key->getTestamentIndex(), "");
+	VerseKey &key = getVerseKey();
+
+	doSetText(key.getTestament(), key.getTestamentIndex(), "");
 }
 
 
 /******************************************************************************
- * zCom::increment	- Increments module key a number of entries
+ * zText4::increment	- Increments module key a number of entries
  *
  * ENT:	increment	- Number of entries to jump forward
  *
- * RET: *this
  */
 
-void zCom::increment(int steps) {
-	long  start;
-	unsigned short size;
+void zText4::increment(int steps) {
+	long start;
+	unsigned long size;
 	unsigned long buffnum;
 	VerseKey *tmpkey = &getVerseKey();
 
@@ -171,7 +168,7 @@ void zCom::increment(int steps) {
 	SWKey lastgood = *tmpkey;
 	while (steps) {
 		long laststart = start;
-		unsigned short lastsize = size;
+		unsigned long lastsize = size;
 		SWKey lasttry = *tmpkey;
 		(steps > 0) ? ++(*key) : --(*key);
 		tmpkey = &getVerseKey();
@@ -182,11 +179,15 @@ void zCom::increment(int steps) {
 		}
 		long index = tmpkey->getTestamentIndex();
 		findOffset(tmpkey->getTestament(), index, &start, &size, &buffnum);
+
 		if (
-			(((laststart != start) || (lastsize != size))	// we're a different entry
-//				&& (start > 0) 
-				&& (size))	// and we actually have a size
-				||(!skipConsecutiveLinks)) {	// or we don't want to skip consecutive links
+			(
+				((laststart != start) || (lastsize != size))	// we're a different entry
+//				&& (start > 0)
+				&& (size)	// and we actually have a size
+			)
+			|| !skipConsecutiveLinks
+		) {	// or we don't want to skip consecutive links
 			steps += (steps < 0) ? 1 : -1;
 			lastgood = *tmpkey;
 		}
@@ -194,9 +195,10 @@ void zCom::increment(int steps) {
 	error = (error) ? KEYERR_OUTOFBOUNDS : 0;
 }
 
-bool zCom::isLinked(const SWKey *k1, const SWKey *k2) const {
+
+bool zText4::isLinked(const SWKey *k1, const SWKey *k2) const {
 	long start1, start2;
-	unsigned short size1, size2;
+	unsigned long size1, size2;
 	unsigned long buffnum1, buffnum2;
 	VerseKey *vk1 = &getVerseKey(k1);
 	VerseKey *vk2 = &getVerseKey(k2);
@@ -207,14 +209,15 @@ bool zCom::isLinked(const SWKey *k1, const SWKey *k2) const {
 	return start1 == start2 && buffnum1 == buffnum2;
 }
 
-bool zCom::hasEntry(const SWKey *k) const {
+bool zText4::hasEntry(const SWKey *k) const {
 	long start;
-	unsigned short size;
+	unsigned long size;
 	unsigned long buffnum;
 	VerseKey *vk = &getVerseKey(k);
 
 	findOffset(vk->getTestament(), vk->getTestamentIndex(), &start, &size, &buffnum);
 	return size;
 }
+
 
 SWORD_NAMESPACE_END

@@ -2,9 +2,9 @@
  *
  *  swcomprs.cpp - 	a driver class that provides compression utilities
  *
- * $Id: swcomprs.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swcomprs.cpp 3121 2014-03-13 09:44:43Z chrislit $
  *
- * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -35,6 +35,7 @@ SWORD_NAMESPACE_START
 SWCompress::SWCompress()
 {
 	buf = zbuf = 0;
+	level = 6;
 	Init();
 }
 

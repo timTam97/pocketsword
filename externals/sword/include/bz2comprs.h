@@ -3,9 +3,9 @@
  *  bz2comprs.h -	Bzip2Compress, a driver class that provides bzip2
  *			compression (Burrows–Wheeler with Huffman coding)
  *
- * $Id: bz2comprs.h 2858 2013-07-08 03:08:10Z chrislit $
+ * $Id: bz2comprs.h 3045 2014-03-02 07:53:52Z chrislit $
  *
- * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528

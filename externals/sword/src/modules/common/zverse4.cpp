@@ -1,13 +1,13 @@
 /******************************************************************************
  *
- *  zverse.cpp -	code for class 'zVerse'- a module that reads raw text
+ *  zverse4.cpp -	code for class 'zVerse4'- a module that reads raw text
  *			files:  ot and nt using indexs ??.bks ??.cps ??.vss
  *			and provides lookup and parsing functions based on
  *			class VerseKey for compressed modules
  *
- * $Id: zverse.cpp 3136 2014-03-17 09:38:48Z chrislit $
+ * $Id: zverse4.cpp 3141 2014-03-19 01:24:04Z chrislit $
  *
- * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -23,8 +23,6 @@
  *
  */
 
-
-
 #include <ctype.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -33,7 +31,7 @@
 
 #include <utilstr.h>
 #include <versekey.h>
-#include <zverse.h>
+#include <zverse4.h>
 #include <sysdata.h>
 #include <swbuf.h>
 #include <filemgr.h>
@@ -43,15 +41,15 @@
 SWORD_NAMESPACE_START
 
 /******************************************************************************
- * zVerse Statics
+ * zVerse4 Statics
  */
 
-int zVerse::instance = 0;
+int zVerse4::instance = 0;
 
-const char zVerse::uniqueIndexID[] = {'X', 'r', 'v', 'c', 'b'};
+const char zVerse4::uniqueIndexID[] = {'X', 'r', 'v', 'c', 'b'};
 
 /******************************************************************************
- * zVerse Constructor - Initializes data for instance of zVerse
+ * zVerse4 Constructor - Initializes data for instance of zVerse4
  *
  * ENT:	ipath - path of the directory where data and index files are located.
  *		be sure to include the trailing separator (e.g. '/' or '\')
@@ -60,7 +58,7 @@ const char zVerse::uniqueIndexID[] = {'X', 'r', 'v', 'c', 'b'};
  *		blockType - verse, chapter, book, etc.
  */
 
-zVerse::zVerse(const char *ipath, int fileMode, int blockType, SWCompress *icomp)
+zVerse4::zVerse4(const char *ipath, int fileMode, int blockType, SWCompress *icomp)
 {
 	// this line, instead of just defaulting, to keep FileMgr out of header
 	if (fileMode == -1) fileMode = FileMgr::RDONLY;
@@ -106,10 +104,10 @@ zVerse::zVerse(const char *ipath, int fileMode, int blockType, SWCompress *icomp
 
 
 /******************************************************************************
- * zVerse Destructor - Cleans up instance of zVerse
+ * zVerse4 Destructor - Cleans up instance of zVerse4
  */
 
-zVerse::~zVerse()
+zVerse4::~zVerse4()
 {
 	int loop1;
 
@@ -135,7 +133,7 @@ zVerse::~zVerse()
 
 
 /******************************************************************************
- * zVerse::findoffset	- Finds the offset of the key verse from the indexes
+ * zVerse4::findoffset	- Finds the offset of the key verse from the indexes
  *
  *
  *
@@ -147,17 +145,17 @@ zVerse::~zVerse()
  *	size	- address to store the size of the entry
  */
 
-void zVerse::findOffset(char testmt, long idxoff, long *start, unsigned short *size, unsigned long *buffnum) const
+void zVerse4::findOffset(char testmt, long idxoff, long *start, unsigned long *size, unsigned long *buffnum) const
 {
 	__u32 ulBuffNum    = 0;	          // buffer number
 	__u32 ulVerseStart = 0;	       // verse offset within buffer
-	__u16 usVerseSize  = 0;	       // verse size
+	__u32 usVerseSize  = 0;	       // verse size
 	// set start to offset in
 	// set size to
 	// set
 	*start = *size = *buffnum = 0;
 	//fprintf(stderr, "Finding offset %ld\n", idxoff);
-	idxoff *= 10;
+	idxoff *= 12; // TODO: Is this the correct size? (throughout)
 	if (!testmt) {
 		testmt = ((idxfp[0]) ? 1:2);
 	}
@@ -175,12 +173,12 @@ void zVerse::findOffset(char testmt, long idxoff, long *start, unsigned short *s
 	}
 	else return;	
 	
-	if (compfp[testmt-1]->read(&ulVerseStart, 4) < 2)
+	if (compfp[testmt-1]->read(&ulVerseStart, 4) < 4)
 	{
 		fprintf(stderr, "Error reading ulVerseStart\n");
 		return;
 	}
-	if (compfp[testmt-1]->read(&usVerseSize, 2) < 2)
+	if (compfp[testmt-1]->read(&usVerseSize, 4) < 4)
 	{
 		fprintf(stderr, "Error reading usVerseSize\n");
 		return;
@@ -188,13 +186,13 @@ void zVerse::findOffset(char testmt, long idxoff, long *start, unsigned short *s
 
 	*buffnum = swordtoarch32(ulBuffNum);
 	*start = swordtoarch32(ulVerseStart);
-	*size = swordtoarch16(usVerseSize);
+	*size = swordtoarch32(usVerseSize);
 
 }
 
 
 /******************************************************************************
- * zVerse::zreadtext	- gets text at a given offset
+ * zVerse4::zreadtext	- gets text at a given offset
  *
  * ENT:	testmt	- testament file to search in (0 - Old; 1 - New)
  *	start	- starting offset where the text is located in the file
@@ -203,7 +201,7 @@ void zVerse::findOffset(char testmt, long idxoff, long *start, unsigned short *s
  *
  */
 
-void zVerse::zReadText(char testmt, long start, unsigned short size, unsigned long ulBuffNum, SWBuf &inBuf) const {
+void zVerse4::zReadText(char testmt, long start, unsigned long size, unsigned long ulBuffNum, SWBuf &inBuf) const {
 	__u32 ulCompOffset = 0;	       // compressed buffer start
 	__u32 ulCompSize   = 0;	             // buffer size compressed
 	__u32 ulUnCompSize = 0;	          // buffer size uncompressed
@@ -288,7 +286,7 @@ void zVerse::zReadText(char testmt, long start, unsigned short size, unsigned lo
 
 
 /******************************************************************************
- * zVerse::settext	- Sets text for current offset
+ * zVerse4::settext	- Sets text for current offset
  *
  * ENT: testmt	- testament to find (0 - Bible/module introduction)
  *	idxoff	- offset into .vss
@@ -296,7 +294,7 @@ void zVerse::zReadText(char testmt, long start, unsigned short size, unsigned lo
  *      len     - length of buffer (0 - null terminated)
  */
 
-void zVerse::doSetText(char testmt, long idxoff, const char *buf, long len) {
+void zVerse4::doSetText(char testmt, long idxoff, const char *buf, long len) {
 
 	len = (len < 0) ? strlen(buf) : len;
 	if (!testmt) 
@@ -313,10 +311,10 @@ void zVerse::doSetText(char testmt, long idxoff, const char *buf, long len) {
 	dirtyCache = true;
 
 	__u32 start;
-	__u16 size;
+	__u32 size;
 	__u32 outBufIdx = cacheBufIdx;
 
-	idxoff *= 10;
+	idxoff *= 12;
 	size = len;
 
 	start = strlen(cacheBuf);
@@ -326,17 +324,17 @@ void zVerse::doSetText(char testmt, long idxoff, const char *buf, long len) {
 
 	outBufIdx = archtosword32(outBufIdx);
 	start  = archtosword32(start);
-	size   = archtosword16(size);
+	size   = archtosword32(size);
 
 	compfp[testmt-1]->seek(idxoff, SEEK_SET);
 	compfp[testmt-1]->write(&outBufIdx, 4);
 	compfp[testmt-1]->write(&start, 4);
-	compfp[testmt-1]->write(&size, 2);
+	compfp[testmt-1]->write(&size, 4);
 	strcat(cacheBuf, buf);
 }
 
 
-void zVerse::flushCache() const {
+void zVerse4::flushCache() const {
 	if (dirtyCache) {
 		__u32 idxoff;
 		__u32 start, outstart;
@@ -347,10 +345,6 @@ void zVerse::flushCache() const {
 		if (cacheBuf) {
 			size = outsize = zsize = outzsize = strlen(cacheBuf);
 			if (size) {
-	//			if (compressor) {
-	//				delete compressor;
-	//				compressor = new LZSSCompress();
-	//			}
 				compressor->Buf(cacheBuf);
 				unsigned long tmpSize;
 				compressor->zBuf(&tmpSize);
@@ -391,13 +385,13 @@ void zVerse::flushCache() const {
  *	srcidxoff		- source offset into .vss
  */
 
-void zVerse::doLinkEntry(char testmt, long destidxoff, long srcidxoff) {
+void zVerse4::doLinkEntry(char testmt, long destidxoff, long srcidxoff) {
 	__s32 bufidx;
 	__s32 start;
-	__u16 size;
+	__u32 size;
 
-	destidxoff *= 10;
-	srcidxoff  *= 10;
+	destidxoff *= 12;
+	srcidxoff  *= 12;
 
 	if (!testmt)
 		testmt = ((idxfp[1]) ? 1:2);
@@ -406,13 +400,13 @@ void zVerse::doLinkEntry(char testmt, long destidxoff, long srcidxoff) {
 	compfp[testmt-1]->seek(srcidxoff, SEEK_SET);
 	compfp[testmt-1]->read(&bufidx, 4);
 	compfp[testmt-1]->read(&start, 4);
-	compfp[testmt-1]->read(&size, 2);
+	compfp[testmt-1]->read(&size, 4);
 
 	// write dest
 	compfp[testmt-1]->seek(destidxoff, SEEK_SET);
 	compfp[testmt-1]->write(&bufidx, 4);
 	compfp[testmt-1]->write(&start, 4);
-	compfp[testmt-1]->write(&size, 2);
+	compfp[testmt-1]->write(&size, 4);
 }
 
 
@@ -423,14 +417,14 @@ void zVerse::doLinkEntry(char testmt, long destidxoff, long srcidxoff) {
  * RET: error status
  */
 
-char zVerse::createModule(const char *ipath, int blockBound, const char *v11n)
+char zVerse4::createModule(const char *ipath, int blockBound, const char *v11n)
 {
 	char *path = 0;
 	char *buf = new char [ strlen (ipath) + 20 ];
 	char retVal = 0;
 	FileDesc *fd, *fd2;
 	__s32 offset = 0;
-	__s16 size = 0;
+	__s32 size = 0;
 	VerseKey vk;
 
 	stdstr(&path, ipath);
@@ -476,23 +470,23 @@ char zVerse::createModule(const char *ipath, int blockBound, const char *v11n)
 	vk.setIntros(true);
 
 	offset = archtosword32(offset);
-	size   = archtosword16(size);
+	size   = archtosword32(size);
 
 	for (vk = TOP; !vk.popError(); vk++) {
 		if (vk.getTestament() < 2) {
 			if (fd->write(&offset, 4) != 4) goto writefailure;	//compBufIdxOffset
 			if (fd->write(&offset, 4) != 4) goto writefailure;
-			if (fd->write(&size, 2) != 2) goto writefailure;
+			if (fd->write(&size, 4) != 4) goto writefailure;
 		}
 		else {
 			if (fd2->write(&offset, 4) != 4) goto writefailure;	//compBufIdxOffset
 			if (fd2->write(&offset, 4) != 4) goto writefailure;
-			if (fd2->write(&size, 2) != 2) goto writefailure;
+			if (fd2->write(&size, 4) != 4) goto writefailure;
 		}
 	}
 	fd2->write(&offset, 4);	//compBufIdxOffset
 	fd2->write(&offset, 4);
-	fd2->write(&size, 2);
+	fd2->write(&size, 4);
 
 	goto cleanup;
 

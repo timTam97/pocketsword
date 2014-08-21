@@ -5,7 +5,7 @@
  *			and provides lookup and parsing functions based on
  *			class StrKey
  *
- * $Id: rawstr4.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawstr4.cpp 3215 2014-05-01 05:13:22Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -44,6 +44,7 @@ SWORD_NAMESPACE_START
  */
 
 int RawStr4::instance = 0;
+const char RawStr4::nl = '\n';
 const int RawStr4::IDXENTRYSIZE = 8;
 
 
@@ -59,7 +60,6 @@ RawStr4::RawStr4(const char *ipath, int fileMode, bool caseSensitive) : caseSens
 {
 	SWBuf buf;
 
-	nl = '\n';
 	lastoff = -1;
 	path = 0;
 	stdstr(&path, ipath);
@@ -380,7 +380,6 @@ void RawStr4::doSetText(const char *ikey, const char *buf, long len) {
 	__s32 shiftSize;
 	__u32 size;
 	__u32 outsize;
-	static const char nl[] = {13, 10};
 	char *tmpbuf = 0;
 	char *key = 0;
 	char *dbKey = 0;
@@ -460,7 +459,7 @@ void RawStr4::doSetText(const char *ikey, const char *buf, long len) {
 		datfd->write(outbuf, (long)size);
 
 		// add a new line to make data file easier to read in an editor
-		datfd->write(&nl, 2);
+		datfd->write(&nl, 1);
 		
 		idxfd->write(&outstart, 4);
 		idxfd->write(&outsize, 4);

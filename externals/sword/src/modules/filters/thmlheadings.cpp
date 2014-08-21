@@ -3,7 +3,7 @@
  *  thmlheadings.cpp -	SWFilter descendant to hide or show headings
  *			in a ThML module
  *
- * $Id: thmlheadings.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: thmlheadings.cpp 3191 2014-04-19 17:06:38Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -86,13 +86,22 @@ char ThMLHeadings::processText(SWBuf &text, const SWKey *key, const SWModule *mo
 				tag = token;
 				if (hide && tag.isEndTag()) {
 					if (module->isProcessEntryAttributes() && (option || (!preverse))) {
+						SWBuf heading;
+						SWBuf cls = startTag.getAttribute("class");
+						if (!cls.startsWith("fromEntryAttributes")) {
+							cls = SWBuf("fromEntryAttributes ") + cls;
+							startTag.setAttribute("class", cls);
+						}
+						heading += startTag;
+						heading += header;
+						heading += tag;
 						if (preverse) {
 							sprintf(buf, "%i", pvHeaderNum++);
-							module->getEntryAttributes()["Heading"]["Preverse"][buf] = header;
+							module->getEntryAttributes()["Heading"]["Preverse"][buf] = heading;
 						}
 						else {
 							sprintf(buf, "%i", headerNum++);
-							module->getEntryAttributes()["Heading"]["Interverse"][buf] = header;
+							module->getEntryAttributes()["Heading"]["Interverse"][buf] = heading;
 							if (option) {	// we want the tag in the text
 								text.append(header);
 							}
@@ -143,8 +152,17 @@ char ThMLHeadings::processText(SWBuf &text, const SWKey *key, const SWModule *mo
 					}
 */
 				}
-				else
+				else {
 					isheader = false;
+					SWBuf cls = tag.getAttribute("class");
+					if (cls.startsWith("fromEntryAttributes ")) {
+						cls <<  SWBuf("fromEntryAttributes ").size();
+						tag.setAttribute("class", cls);
+						token = tag;
+						token << 1;
+						token.setSize(token.size() - 1);
+					}
+				}
 			}
 
 			if (withinDiv && isheader) {

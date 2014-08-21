@@ -1,13 +1,13 @@
 /******************************************************************************
  *
- *  zverse.h -		code for class 'zVerse'- a module that reads raw text
+ *  zverse4.h -		code for class 'zVerse4'- a module that reads raw text
  *			files:  ot and nt using indexs ??.bks ??.cps ??.vss
  *			and provides lookup and parsing functions based on
  *			class VerseKey
  *
- * $Id: zverse.h 3136 2014-03-17 09:38:48Z chrislit $
+ * $Id: zverse4.h 3141 2014-03-19 01:24:04Z chrislit $
  *
- * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -24,8 +24,8 @@
  */
 
 
-#ifndef ZVERSE_H
-#define ZVERSE_H
+#ifndef ZVERSE4_H
+#define ZVERSE4_H
 
 #include <defs.h>
 
@@ -35,11 +35,11 @@ class FileDesc;
 class SWCompress;
 class SWBuf;
 
-class SWDLLEXPORT zVerse {
+class SWDLLEXPORT zVerse4 {
 	SWCompress *compressor;
 
 protected:
-	static int instance;		// number of instantiated zVerse objects or derivitives
+	static int instance;		// number of instantiated zVerse4 objects or derivitives
 
 	FileDesc *idxfp[2];
 	FileDesc *textfp[2];
@@ -62,12 +62,13 @@ public:
 
 	static const char uniqueIndexID[];
 
-	// fileMode default = RDONLY
-	zVerse(const char *ipath, int fileMode = -1, int blockType = CHAPTERBLOCKS, SWCompress * icomp = 0);
-	virtual ~zVerse();
 
-	void findOffset(char testmt, long idxoff, long *start, unsigned short *size, unsigned long *buffnum) const;
-	void zReadText(char testmt, long start, unsigned short size, unsigned long buffnum, SWBuf &buf) const;
+	// fileMode default = RDONLY
+	zVerse4(const char *ipath, int fileMode = -1, int blockType = CHAPTERBLOCKS, SWCompress * icomp = 0);
+	virtual ~zVerse4();
+
+	void findOffset(char testmt, long idxoff, long *start, unsigned long *size, unsigned long *buffnum) const;
+	void zReadText(char testmt, long start, unsigned long size, unsigned long buffnum, SWBuf &buf) const;
 	virtual void rawZFilter(SWBuf &buf, char direction = 0) const { (void) buf; (void) direction; }
 	static char createModule(const char *path, int blockBound, const char *v11n = "KJV");
 };

@@ -4,7 +4,7 @@
  *			SWFilterMgr, used to transcode all module text to a
  *			requested encoding
  *
- * $Id: encfiltmgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: encfiltmgr.cpp 3083 2014-03-06 08:13:10Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

@@ -2,7 +2,7 @@
  *
  *  utf8nfc.h -	Implementation of UTF8NFC
  *
- * $Id: utf8nfc.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8nfc.h 3081 2014-03-05 19:52:08Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,10 +32,11 @@
 
 SWORD_NAMESPACE_START
 
+/** This filter normalizes UTF-8 encoded text
+ */
 class SWDLLEXPORT UTF8NFC : public SWFilter {
 private:
 	UConverter* conv;
-	UChar *source, *target;
 	UErrorCode err;
 public:
 	UTF8NFC();

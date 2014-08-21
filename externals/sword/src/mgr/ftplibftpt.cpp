@@ -2,7 +2,7 @@
  *
  *  ftplibftpt.cpp -	FTPLibFTPTransport
  *
- * $Id: ftplibftpt.cpp 2983 2013-09-15 16:22:32Z scribe $
+ * $Id: ftplibftpt.cpp 3229 2014-05-09 09:32:36Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -56,9 +56,9 @@ namespace {
 	static int my_fprogress(netbuf *nControl, int xfered, void *arg) {
 		if (arg) {
 			MyProgressData *pd = (MyProgressData *)arg;
-	SWLog::getSystemLog()->logDebug("FTPLibFTPTransport report progress: totalSize: %ld; xfered: %d\n", pd->totalSize, xfered);
+//SWLog::getSystemLog()->logDebug("FTPLibFTPTransport report progress: totalSize: %ld; xfered: %d\n", pd->totalSize, xfered);
 			if (pd->sr) {
-				pd->sr->statusUpdate(pd->totalSize, xfered);
+				pd->sr->update(pd->totalSize, xfered);
 			}
 			if (*(pd->term)) return 0;
 		}

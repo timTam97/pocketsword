@@ -3,7 +3,7 @@
  *  utf8html.cpp -	SWFilter descendant to convert a UTF-8 stream to
  *			HTML escapes
  *
- * $Id: utf8html.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utf8html.cpp 3081 2014-03-05 19:52:08Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -21,7 +21,6 @@
  *
  */
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <utf8html.h>
 #include <swbuf.h>

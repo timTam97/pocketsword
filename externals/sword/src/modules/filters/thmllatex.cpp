@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- *  thmlxhtml.cpp -	ThML to classed XHTML
+ *  thmllatex.cpp -	ThML to classed LaTeX
  *
- * $Id: thmlxhtml.cpp 3203 2014-04-29 14:30:26Z charcoal $
+ * $Id: thmllatex.cpp 3074 2014-03-05 00:30:21Z chrislit $
  *
- * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -21,7 +21,7 @@
  */
 
 #include <stdlib.h>
-#include <thmlxhtml.h>
+#include <thmllatex.h>
 #include <swmodule.h>
 #include <utilxml.h>
 #include <utilstr.h>
@@ -31,13 +31,13 @@
 SWORD_NAMESPACE_START
  
 
-const char *ThMLXHTML::getHeader() const {
+const char *ThMLLaTeX::getHeader() const {
 	return "\
 	";
 }
 
 
-ThMLXHTML::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
+ThMLLaTeX::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	if (module) {
 		version = module->getName();
 		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
@@ -46,7 +46,7 @@ ThMLXHTML::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : Ba
 }
 
 
-ThMLXHTML::ThMLXHTML() {
+ThMLLaTeX::ThMLLaTeX() {
 	setTokenStart("<");
 	setTokenEnd(">");
 
@@ -170,7 +170,7 @@ ThMLXHTML::ThMLXHTML() {
 }
 
 
-bool ThMLXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
+bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
 	if (!substituteToken(buf, token)) { // manually process if it wasn't a simple substitution
 		MyUserData *u = (MyUserData *)userData;		
 
@@ -230,7 +230,7 @@ bool ThMLXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 							URL::encode(vkey->getText()).c_str(), 
 							ch,
 							ch, 
-							(renderNoteNumbers ? noteName.c_str() : ""));
+							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
 					}
 					else {
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
@@ -241,7 +241,7 @@ bool ThMLXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 							URL::encode(u->key->getText()).c_str(),  
 							ch,
 							ch, 
-							(renderNoteNumbers ? noteName.c_str() : ""));
+							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
 					}
 					u->suspendTextPassThru = true;
 				}
@@ -289,7 +289,7 @@ bool ThMLXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(),
 							URL::encode(vkey->getText()).c_str(), 
-							(renderNoteNumbers ? noteName.c_str() : ""));
+							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
 					}
 				}
 
@@ -299,19 +299,17 @@ bool ThMLXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		}
 		else if (tag.getName() && !strcmp(tag.getName(), "div")) {
 			if (tag.isEndTag() && u->SecHead) {
-				buf += "</h";
-				buf += u->SecHead;
-				buf += ">";
+				buf += "</i></b><br />";
 				u->SecHead = false;
 			}
 			else if (tag.getAttribute("class")) {
 				if (!stricmp(tag.getAttribute("class"), "sechead")) {
-					u->SecHead = '3';
-					buf += "<h3>";
+					u->SecHead = true;
+					buf += "<br /><b><i>";
 				}
 				else if (!stricmp(tag.getAttribute("class"), "title")) {
-					u->SecHead = '2';
-					buf += "<h2>";
+					u->SecHead = true;
+					buf += "<br /><b><i>";
 				}
 				else {
 					buf += tag;

@@ -6,7 +6,7 @@
  *			and provides lookup and parsing functions based on
  *			class VerseKey
  *
- * $Id: rawverse4.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawverse4.cpp 3135 2014-03-17 09:32:55Z chrislit $
  *
  * Copyright 2007-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -46,7 +46,7 @@ SWORD_NAMESPACE_START
  */
 
 int RawVerse4::instance = 0;
-const char *RawVerse4::nl = "\r\n";
+const char RawVerse4::nl = '\n';
 
 
 /******************************************************************************
@@ -131,7 +131,7 @@ void RawVerse4::findOffset(char testmt, long idxoff, long *start, unsigned long 
 		*start = swordtoarch32(tmpStart);
 		*size  = swordtoarch32(tmpSize);
 
-		if (len < 2) {
+		if (len < 4) {
 			*size = (unsigned long)((*start) ? (textfp[testmt-1]->seek(0, SEEK_END) - (long)*start) : 0);	// if for some reason we get an error reading size, make size to end of file
 		}
 	}
@@ -195,7 +195,7 @@ void RawVerse4::doSetText(char testmt, long idxoff, const char *buf, long len)
 		textfp[testmt-1]->write(buf, (int)size);
 
 		// add a new line to make data file easier to read in an editor
-		textfp[testmt-1]->write(nl, 2);
+		textfp[testmt-1]->write(&nl, 1);
 	}
 	else {
 		start = 0;

@@ -2,7 +2,7 @@
  *
  *  unicodertf.cpp -	SWFilter descendant to convert UTF-8 to RTF tags
  *
- * $Id: unicodertf.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: unicodertf.cpp 3081 2014-03-05 19:52:08Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -20,7 +20,6 @@
  *
  */
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <unicodertf.h>
 #include <swbuf.h>

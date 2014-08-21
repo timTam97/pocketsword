@@ -4,7 +4,7 @@
  *			for all types of modules (e.g. texts, commentaries,
  *			maps, lexicons, etc.)
  *
- * $Id: swmodule.cpp 2976 2013-09-10 14:09:44Z scribe $
+ * $Id: swmodule.cpp 3146 2014-03-24 19:50:34Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -171,6 +171,7 @@ char SWModule::popError()
 	char retval = error;
 
 	error = 0;
+	if (!retval) retval = key->popError();
 	return retval;
 }
 

@@ -3,7 +3,7 @@
  *  utf8nfkd.cpp -	SWFilter descendant to perform NFKD (compatability
  *			decomposition normalization) on UTF-8 text
  *
- * $Id: utf8nfkd.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utf8nfkd.cpp 3081 2014-03-05 19:52:08Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -22,10 +22,6 @@
  */
 
 #ifdef _ICU_
-
-#include <stdlib.h>
-
-#include <utilstr.h>
 
 #include <utf8nfkd.h>
 #include <swbuf.h>

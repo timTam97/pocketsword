@@ -1,10 +1,10 @@
 /***************************************************************************
  *
- *  teihtmlhref.cpp -	TEI to HTML with hrefs filter
+ *  teilatex.cpp -	TEI to LATEX filter
  *
- * $Id: teihtmlhref.cpp 3091 2014-03-10 06:52:42Z chrislit $
+ * $Id: teilatex.cpp 3091 2014-03-10 06:52:42Z chrislit $
  *
- * Copyright 2008-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2012-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <teihtmlhref.h>
+#include <teilatex.h>
 #include <utilxml.h>
 #include <swmodule.h>
 #include <url.h>
@@ -32,7 +32,7 @@
 SWORD_NAMESPACE_START
 
 
-TEIHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
+TEILaTeX::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	BiblicalText = false;
 	if (module) {
 		version = module->getName();
@@ -41,7 +41,7 @@ TEIHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : 
 }
 
 
-TEIHTMLHREF::TEIHTMLHREF() {
+TEILaTeX::TEILaTeX() {
 	setTokenStart("<");
 	setTokenEnd(">");
 
@@ -61,7 +61,7 @@ TEIHTMLHREF::TEIHTMLHREF() {
 	renderNoteNumbers = false;
 }
 
-bool TEIHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
+bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
   // manually process if it wasn't a simple substitution
 	if (!substituteToken(buf, token)) {
 		MyUserData *u = (MyUserData *)userData;
@@ -88,28 +88,29 @@ bool TEIHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 				
 				u->lastHi = rend;
 				if (rend == "italic" || rend == "ital")
-					buf += "<i>";
+					buf += "\\it{";
 				else if (rend == "bold")
-					buf += "<b>";
+					buf += "\\bd{";
 				else if (rend == "super" || rend == "sup")
-					buf += "<sup>";
+					buf += "^{";
 				else if (rend == "sub")
-					buf += "<sub>";
+					buf += "_{";
 				else if (rend == "overline")
-					buf += "<span style=\"text-decoration:overline\">";
+					buf += "\\overline{";
+
 			}
 			else if (tag.isEndTag()) {
 				SWBuf rend = u->lastHi;
 				if (rend == "italic" || rend == "ital")
-					buf += "</i>";
+					buf += "}";
 				else if (rend == "bold")
-					buf += "</b>";
+					buf += "}";
 				else if (rend == "super" || rend == "sup")
-					buf += "</sup>";
+					buf += "}";
 				else if (rend == "sub")
-					buf += "</sub>";
+					buf += "}";
 				else if (rend == "overline")
-					buf += "</span>";
+					buf += "}";
 			}
 		}
 

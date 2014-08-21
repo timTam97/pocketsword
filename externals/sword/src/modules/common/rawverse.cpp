@@ -5,6 +5,7 @@
  *			and provides lookup and parsing functions based on
  *			class VerseKey
  *
+ * $Id: rawverse.cpp 3134 2014-03-17 09:30:15Z chrislit $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -44,7 +45,7 @@ SWORD_NAMESPACE_START
  */
 
 int RawVerse::instance = 0;
-const char *RawVerse::nl = "\r\n";
+const char RawVerse::nl = '\n';
 
 
 /******************************************************************************
@@ -193,7 +194,7 @@ void RawVerse::doSetText(char testmt, long idxoff, const char *buf, long len)
 		textfp[testmt-1]->write(buf, (int)size);
 
 		// add a new line to make data file easier to read in an editor
-		textfp[testmt-1]->write(nl, 2);
+		textfp[testmt-1]->write(&nl, 1);
 	}
 	else {
 		start = 0;

@@ -2,7 +2,7 @@
  *
  *  utf8latin1.cpp -	SWFilter descendant to convert UTF-8 to Latin-1
  *
- * $Id: utf8latin1.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utf8latin1.cpp 3081 2014-03-05 19:52:08Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -19,9 +19,6 @@
  * General Public License for more details.
  *
  */
-
-#include <stdlib.h>
-#include <stdio.h>
 
 #include <utf8latin1.h>
 #include <swbuf.h>

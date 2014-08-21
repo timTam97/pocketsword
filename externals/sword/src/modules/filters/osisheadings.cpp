@@ -3,7 +3,7 @@
  *  osisheadings.cpp -	SWFilter descendant to hide or show headings
  *			in an OSIS module
  *
- * $Id: osisheadings.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osisheadings.cpp 3190 2014-04-19 16:21:24Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -91,6 +91,7 @@ bool OSISHeadings::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		if (name == u->currentHeadingName) {
 			if (tag.isEndTag(u->sID)) {
 				if (!u->depth-- || u->sID) {
+					// see comment below about preverse div changed and needing to preserve the <title> container tag for old school pre-verse titles
 					// we've just finished a heading.  It's all stored up in u->heading
 					bool canonical = (SWBuf("true") == u->currentHeadingTag.getAttribute("canonical"));
 					bool preverse = (SWBuf("x-preverse") == u->currentHeadingTag.getAttribute("subType") || SWBuf("x-preverse") == u->currentHeadingTag.getAttribute("subtype"));
@@ -98,7 +99,20 @@ bool OSISHeadings::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					// do we want to put anything in EntryAttributes?
 					if (u->module->isProcessEntryAttributes() && (option || canonical || !preverse)) {
 						SWBuf buf; buf.appendFormatted("%i", u->headerNum++);
-						u->module->getEntryAttributes()["Heading"][(preverse)?"Preverse":"Interverse"][buf] = u->heading;
+						// leave the actual <title...> wrapper in if we're part of an old school preverse title
+						// because now frontend have to deal with preverse as a div which may or may not include <title> elements
+						// and they can't simply wrap all preverse material in <h1>, like they probably did previously
+						SWBuf heading;
+						if (u->currentHeadingName == "title") {
+							XMLTag wrapper = u->currentHeadingTag;
+							if (SWBuf("x-preverse") == wrapper.getAttribute("subType")) wrapper.setAttribute("subType", 0);
+							else if (SWBuf("x-preverse") == wrapper.getAttribute("subtype")) wrapper.setAttribute("subtype", 0);
+							heading = wrapper;
+							heading += u->heading;
+							heading += tag;
+						}
+						else heading = u->heading;
+						u->module->getEntryAttributes()["Heading"][(preverse)?"Preverse":"Interverse"][buf] = heading;
 
 						StringList attributes = u->currentHeadingTag.getAttributeNames();
 						for (StringList::const_iterator it = attributes.begin(); it != attributes.end(); it++) {

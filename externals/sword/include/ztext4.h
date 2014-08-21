@@ -1,11 +1,11 @@
 /******************************************************************************
  *
- *  ztext.h -	code for class 'zText'- a module that reads compressed text
+ *  ztext4.h -	code for class 'zText4'- a module that reads compressed text
  *		files: ot and nt using indexs ??.vss
  *
- * $Id: ztext.h 3126 2014-03-14 11:59:36Z chrislit $
+ * $Id: ztext4.h 3141 2014-03-19 01:24:04Z chrislit $
  *
- * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -21,10 +21,10 @@
  *
  */
 
-#ifndef ZTEXT_H
-#define ZTEXT_H
+#ifndef ZTEXT4_H
+#define ZTEXT4_H
 
-#include <zverse.h>
+#include <zverse4.h>
 #include <swtext.h>
 
 #include <defs.h>
@@ -43,21 +43,21 @@ SWORD_NAMESPACE_START
 * This class handles compressed modules.
 * It should not be used in frontends, unless you are doing very special things.
 */
-class SWDLLEXPORT zText:public zVerse, public SWText {
+class SWDLLEXPORT zText4:public zVerse4, public SWText {
 
 	VerseKey *lastWriteKey;
 	bool sameBlock(VerseKey * lastWriteKey, VerseKey * key);
 	int blockType;
 
 public:
-	zText(const char *ipath, const char *iname = 0, const char *idesc = 0,
+	zText4(const char *ipath, const char *iname = 0, const char *idesc = 0,
 			int blockType = CHAPTERBLOCKS, SWCompress *icomp = 0,
 			SWDisplay *idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN,
 			SWTextDirection dir = DIRECTION_LTR,
 			SWTextMarkup markup = FMT_UNKNOWN, const char *ilang = 0,
 			const char *versification = "KJV");
 
-	virtual ~zText();
+	virtual ~zText4();
 	virtual SWBuf &getRawEntryBuf() const;
 
 	virtual void increment(int steps = 1);
@@ -66,7 +66,7 @@ public:
 	// write interface ----------------------------
 	virtual bool isWritable() const;
 	static char createModule(const char *path, int blockBound, const char *v11n = "KJV") {
-		return zVerse::createModule(path, blockBound, v11n);
+		return zVerse4::createModule(path, blockBound, v11n);
 	}
 
 	virtual void setEntry(const char *inbuf, long len = -1);	// Modify current module entry

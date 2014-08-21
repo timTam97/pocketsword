@@ -2,7 +2,7 @@
  *
  *  teirtf.cpp -	TEI to RTF filter
  *
- * $Id: teirtf.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: teirtf.cpp 3091 2014-03-10 06:52:42Z chrislit $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -76,13 +76,14 @@ bool TEIRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *use
 		else if (!strcmp(tag.getName(), "hi") || !strcmp(tag.getName(), "emph")) {
 			SWBuf rend = tag.getAttribute("rend");
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				if (rend == "ital" || rend == "italic")
+				if (rend == "italic" || rend == "ital")
 					buf += "{\\i1 ";
 				else if (rend == "bold")
 					buf += "{\\b1 ";
-				else if (rend == "sup")
+				else if (rend == "super" || rend == "sup")
 				        buf += "{\\super ";
-
+				else if (rend == "sub")
+					buf += "{\\sub ";
 			}
 			else if (tag.isEndTag()) {
 				buf += "}";
@@ -111,6 +112,16 @@ bool TEIRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *use
 				}
 			}
 		}
+
+ 		// <orth>
+ 		else if (!strcmp(tag.getName(), "orth")) {
+ 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+ 				buf += "{\\b1 ";
+ 			}
+ 			else if (tag.isEndTag()) {
+ 			        buf += "}";
+ 			}
+ 		}
 
 		// <div>
 		else if (!strcmp(tag.getName(), "div")) {

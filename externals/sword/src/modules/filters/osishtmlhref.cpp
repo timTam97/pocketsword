@@ -2,9 +2,9 @@
  *
  *  osishtmlhref.cpp -	OSIS to HTML with hrefs filter
  * 
- * $Id: osishtmlhref.cpp 2991 2013-12-08 07:13:58Z chrislit $
+ * $Id: osishtmlhref.cpp 3119 2014-03-13 08:40:20Z chrislit $
  *
- * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2003-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -113,7 +113,6 @@ public:
 
 OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 	inXRefNote    = false;
-//	inLG        = false;
 	suspendLevel = 0;
 	tagStacks = new TagStacks();
 	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
@@ -287,11 +286,11 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				userData->supressAdjacentWhitespace = true;
 			}
 		}
-		
+
 		// Milestoned paragraphs, created by osis2mod
 		// <div type="paragraph" sID.../>
 		// <div type="paragraph" eID.../>
-		else if (tag.isEmpty() && !strcmp(tag.getName(), "div") && tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "paragraph")) {
+		else if (tag.isEmpty() && !strcmp(tag.getName(), "div") && tag.getAttribute("type") && (!strcmp(tag.getAttribute("type"), "x-p") || !strcmp(tag.getAttribute("type"), "paragraph"))) {
 			// <div type="paragraph"  sID... />
 			if (tag.getAttribute("sID")) {	// non-empty start tag
 				outText("<!P><br />", buf, u);
@@ -361,12 +360,10 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			if ((!tag.isEndTag()) && tag.getAttribute("sID")) {	// non-empty start tag
 				outText("<blockquote class=\"lg\">", buf, u);
 				userData->supressAdjacentWhitespace = true;
-//				u->inLG = true;
 			}
 			else if (tag.isEndTag() || tag.getAttribute("eID")) {	// end tag
 				outText("</blockquote>", buf, u);
 				userData->supressAdjacentWhitespace = true;
-//				u->inLG = false;
 			}
 			else {					// empty paragraph break marker
 				outText("<!P><br />", buf, u);
@@ -394,11 +391,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			}
 			// start tag, if we want to open a div
 			else if(tag.getAttribute("sID")) {
-//				if(!u->inLG) {
-//					// Note: this is improper OSIS, but is in v1.0 of the ESV, so hack to accommodate it.
-//					outText("<blockquote class=\"lg\">", buf, u);
-//					u->inLG = true;
-//				}
 				int indent = 0;
 				// could contain a level tag, which makes life easy!
 				if(tag.getAttribute("level")) {
@@ -419,7 +411,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		}
 
 		// <lb.../>
-		else if (!strcmp(tag.getName(), "lb") && (strcmp(tag.getAttribute("type"), "x-optional"))) {
+		else if (!strcmp(tag.getName(), "lb") && (!tag.getAttribute("type") || strcmp(tag.getAttribute("type"), "x-optional"))) {
 			outText("<br />", buf, u);
 			userData->supressAdjacentWhitespace = true;
 		}
@@ -532,8 +524,14 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				else if(type == "underline") { //underline!
 					outText("<span class=\"underline\">", buf, u);
 				}
-				else if (type == "ol") {
+				else if (type == "ol" || type == "overline" || type == "x-overline") {
 					outText("<span style=\"text-decoration:overline\">", buf, u);
+				}
+				else if (type == "super") {
+					outText("<sup>", buf, u);
+				}
+				else if (type == "sub") {
+					outText("<sub>", buf, u);
 				}
 				else {	// all other types
 					outText("<i>", buf, u);
@@ -553,6 +551,12 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				}
 				else if(type == "underline" || type == "ol") {
 					outText("</span>", buf, u);
+				}
+				else if (type == "sup") {
+					outText("</sup>", buf, u);
+				}
+				else if (type == "sub") {
+					outText("</sub>", buf, u);
 				}
 				else {
 					outText("</i>", buf, u);
@@ -630,7 +634,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				SWBuf type = tag.getAttribute("type");
 				u->lastTransChange = type;
 
-				// just do all transChange tags this way for now
 				if ((type == "added") || (type == "supplied"))
 					outText("<i class=\"transChangeAdded\">", buf, u);
 				else if (type == "tenseChange")

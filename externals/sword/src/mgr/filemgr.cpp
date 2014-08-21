@@ -3,7 +3,7 @@
  *  filemgr.cpp -	implementation of class FileMgr used for pooling file
  *			handles
  *
- * $Id: filemgr.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: filemgr.cpp 3147 2014-03-26 07:54:35Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -509,23 +509,24 @@ char FileMgr::isDirectory(const char *path) {
 int FileMgr::copyDir(const char *srcDir, const char *destDir) {
 	DIR *dir;
 	struct dirent *ent;
+	int retVal = 0;
 	if ((dir = opendir(srcDir))) {
 		rewinddir(dir);
-		while ((ent = readdir(dir))) {
+		while ((ent = readdir(dir)) && !retVal) {
 			if ((strcmp(ent->d_name, ".")) && (strcmp(ent->d_name, ".."))) {
 				SWBuf srcPath  = (SWBuf)srcDir  + (SWBuf)"/" + ent->d_name;
 				SWBuf destPath = (SWBuf)destDir + (SWBuf)"/" + ent->d_name;
 				if (!isDirectory(srcPath.c_str())) {
-					copyFile(srcPath.c_str(), destPath.c_str());
+					retVal = copyFile(srcPath.c_str(), destPath.c_str());
 				}
 				else {
-					copyDir(srcPath.c_str(), destPath.c_str());
+					retVal = copyDir(srcPath.c_str(), destPath.c_str());
 				}
 			}
 		}
 		closedir(dir);
 	}
-	return 0;
+	return retVal;
 }
 
 

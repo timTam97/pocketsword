@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- *  thmlxhtml.h -	Implementation of ThMLXHTML
+ *  thmllatex.h -	Implementation of ThMLLaTeX
  *
- * $Id: thmlxhtml.h 3192 2014-04-19 17:26:34Z scribe $
+ * $Id: thmllatex.h 3074 2014-03-05 00:30:21Z chrislit $
  *
- * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -20,17 +20,17 @@
  *
  */
 
-#ifndef _THMLXHTML_H
-#define _THMLXHTML_H
+#ifndef THMLLATEX_H
+#define THMLLATEX_H
 
 #include <swbasicfilter.h>
 #include <utilxml.h>
 
 SWORD_NAMESPACE_START
 
-/** this filter converts ThML text to classed XHTML
+/** this filter converts ThML text to LaTeX
  */
-class SWDLLEXPORT ThMLXHTML : public SWBasicFilter {
+class SWDLLEXPORT ThMLLaTeX : public SWBasicFilter {
 	SWBuf imgPrefix;
 	bool renderNoteNumbers;
 protected:
@@ -38,7 +38,7 @@ protected:
 	public:
 		MyUserData(const SWModule *module, const SWKey *key);//: BasicFilterUserData(module, key) {}
 		bool inscriptRef;
-		char SecHead;
+		bool SecHead;
 		bool BiblicalText;
 		SWBuf version;
 		XMLTag startTag;
@@ -48,7 +48,7 @@ protected:
 	}
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
-	ThMLXHTML();
+	ThMLLaTeX();
 	virtual const char *getImagePrefix() { return imgPrefix.c_str(); }
 	virtual void setImagePrefix(const char *newImgPrefix) { imgPrefix = newImgPrefix; }
 	virtual const char *getHeader() const;

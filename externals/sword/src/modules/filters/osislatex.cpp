@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  osisxhtml.cpp -	Render filter for classed XHTML of an OSIS module
+ *  osislatex.cpp -	Render filter for LaTeX of an OSIS module
  *
- * $Id: osisxhtml.cpp 3203 2014-04-29 14:30:26Z charcoal $
+ * $Id: osislatex.cpp 3119 2014-03-13 08:40:20Z chrislit $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <osisxhtml.h>
+#include <osislatex.h>
 #include <utilxml.h>
 #include <utilstr.h>
 #include <versekey.h>
@@ -33,12 +33,14 @@
 
 SWORD_NAMESPACE_START
 
-const char *OSISXHTML::getHeader() const {
+const char *OSISLaTeX::getHeader() const {
 	const static char *header = "\
 		.divineName { font-variant: small-caps; }\n\
 		.wordsOfJesus { color: red; }\n\
 		.transChangeSupplied { font-style: italic; }\n\
-		.overline        { text-decoration: overline; }\n\
+		.small, .sub, .sup { font-size: .83em }\n\
+		.sub             { vertical-align: sub }\n\
+		.sup             { vertical-align: super }\n\
 		.indent1         { margin-left: 10px }\n\
 		.indent2         { margin-left: 20px }\n\
 		.indent3         { margin-left: 30px }\n\
@@ -123,12 +125,12 @@ void processMorph(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 
 }	// end anonymous namespace
 
-BasicFilterUserData *OSISXHTML::createUserData(const SWModule *module, const SWKey *key) {
+BasicFilterUserData *OSISLaTeX::createUserData(const SWModule *module, const SWKey *key) {
 	return new MyUserData(module, key);
 }
 
 
-OSISXHTML::OSISXHTML() {
+OSISLaTeX::OSISLaTeX() {
 	setTokenStart("<");
 	setTokenEnd(">");
 
@@ -153,10 +155,10 @@ OSISXHTML::OSISXHTML() {
 	renderNoteNumbers = false;
 }
 
-class OSISXHTML::TagStack : public std::stack<SWBuf> {
+class OSISLaTeX::TagStack : public std::stack<SWBuf> {
 };
 
-OSISXHTML::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key), quoteStack(new TagStack()), hiStack(new TagStack()), titleStack(new TagStack()), lineStack(new TagStack()) {
+OSISLaTeX::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key), quoteStack(new TagStack()), hiStack(new TagStack()), titleStack(new TagStack()), lineStack(new TagStack()) {
 	inXRefNote    = false;
 	suspendLevel = 0;
 	wordsOfChristStart = "<span class=\"wordsOfJesus\"> ";
@@ -173,20 +175,20 @@ OSISXHTML::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : Ba
 	consecutiveNewlines = 0;
 }
 
-OSISXHTML::MyUserData::~MyUserData() {
+OSISLaTeX::MyUserData::~MyUserData() {
 	delete quoteStack;
 	delete hiStack;
 	delete titleStack;
 	delete lineStack;
 }
 
-void OSISXHTML::MyUserData::outputNewline(SWBuf &buf) {
+void OSISLaTeX::MyUserData::outputNewline(SWBuf &buf) {
 	if (++consecutiveNewlines <= 2) {
 		outText("<br />\n", buf, this);
 		supressAdjacentWhitespace = true;
 	}
 }
-bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
+bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
 	MyUserData *u = (MyUserData *)userData;
 	SWBuf scratch;
 	bool sub = (u->suspendTextPassThru) ? substituteToken(scratch, token) : substituteToken(buf, token);
@@ -289,7 +291,7 @@ bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 								URL::encode(vkey->getText()).c_str(), 
 								ch,
 								ch, 
-								(renderNoteNumbers ? noteName.c_str() : ""));
+								(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
 						}
 						else {
 							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c%s</sup></small></a>",
@@ -299,7 +301,7 @@ bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 								URL::encode(u->key->getText()).c_str(),  
 								ch,
 								ch, 
-								(renderNoteNumbers ? noteName.c_str() : ""));
+								(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
 						}
 					}
 				}
@@ -562,14 +564,14 @@ bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				// OSIS overline attribute is made available, these should all
 				// eventually be deprecated and never documented that they are supported.
 				else if (type == "ol" || type == "overline" || type == "x-overline") {
-					outText("<span class=\"overline\">", buf, u);
+					outText("<span style=\"text-decoration:overline\">", buf, u);
 				}
 
 				else if (type == "super") {
-					outText("<sup>", buf, u);
+					outText("<span class=\"sup\">", buf, u);
 				}
 				else if (type == "sub") {
-					outText("<sub>", buf, u);
+					outText("<span class=\"sub\">", buf, u);
 				}
 				else {	// all other types
 					outText("<i>", buf, u);
@@ -587,18 +589,12 @@ bool OSISXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				if (type == "bold" || type == "b" || type == "x-b") {
 					outText("</b>", buf, u);
 				}
-				else if (type == "ol") {
+				else if (  	   type == "ol"
+						|| type == "super"
+						|| type == "sub") {
 					outText("</span>", buf, u);
 				}
-				else if (type == "sup") {
-					outText("</sup>", buf, u);
-				}
-				else if (type == "sub") {
-					outText("</sub>", buf, u);
-				}
-				else {
-					outText("</i>", buf, u);
-				}
+				else outText("</i>", buf, u);
 			}
 		}
 

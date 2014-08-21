@@ -2,7 +2,7 @@
  *
  * utf16utf8.cpp -	SWFilter descendant to convert UTF-16 to UTF-8
  *
- * $Id: utf16utf8.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utf16utf8.cpp 3081 2014-03-05 19:52:08Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -20,9 +20,6 @@
  *
  */
 
-
-#include <stdlib.h>
-#include <stdio.h>
 
 #include <utf16utf8.h>
 #include <swbuf.h>

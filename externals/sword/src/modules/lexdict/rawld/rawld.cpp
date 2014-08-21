@@ -3,7 +3,7 @@
  *  rawld.cpp -	code for class 'RawLD'- a module that reads raw lexicon and
  *		dictionary files: *.dat *.idx
  *
- * $Id: rawld.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: rawld.cpp 3223 2014-05-01 05:56:07Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -147,12 +147,26 @@ void RawLD::increment(int steps) {
 
 
 void RawLD::setEntry(const char *inbuf, long len) {
-	doSetText(*key, inbuf, len);
+	char *buf = new char [ strlen(*key) + 6 ];
+	strcpy(buf, *key);
+
+	if (strongsPadding) strongsPad(buf);
+
+	doSetText(buf, inbuf, len);
+
+	delete [] buf;
 }
 
 
 void RawLD::linkEntry(const SWKey *inkey) {
-	doLinkEntry(*key, *inkey);
+	char *buf = new char [ strlen(*key) + 6 ];
+	strcpy(buf, *key);
+
+	if (strongsPadding) strongsPad(buf);
+
+	doLinkEntry(buf, *inkey);
+
+	delete [] buf;
 }
 
 
@@ -163,7 +177,14 @@ void RawLD::linkEntry(const SWKey *inkey) {
  */
 
 void RawLD::deleteEntry() {
-	doSetText(*key, "");
+	char *buf = new char [ strlen(*key) + 6 ];
+	strcpy(buf, *key);
+
+	if (strongsPadding) strongsPad(buf);
+
+	doSetText(buf, "");
+
+	delete [] buf;
 }
 
 

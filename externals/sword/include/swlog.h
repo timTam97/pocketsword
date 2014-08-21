@@ -1,9 +1,10 @@
 /******************************************************************************
- *  swlog.h	- definition of class SWLog used for logging messages
  *
- * $Id: swlog.h 2080 2007-09-17 06:21:29Z scribe $
+ *  swlog.h -	definition of class SWLog used for logging messages
  *
- * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
+ * $Id: swlog.h 2833 2013-06-29 06:40:28Z chrislit $
+ *
+ * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -45,7 +46,6 @@ public:
 	static void setSystemLog(SWLog *newLogger);
 
 	SWLog() { logLevel = 1;	/*default to show only errors*/}
-	//SWLog() { logLevel = 5;	/*default to show only errors*/}
 	virtual ~SWLog() {};
 
 	void setLogLevel(char level) { logLevel = level; }

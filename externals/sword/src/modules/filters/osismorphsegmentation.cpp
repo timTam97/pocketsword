@@ -4,7 +4,7 @@
  *				morphemes (for morpheme segmented Hebrew in
  *				the WLC)
  *
- * $Id: osismorphsegmentation.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osismorphsegmentation.cpp 3153 2014-04-14 16:22:11Z scribe $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -78,13 +78,15 @@ char OSISMorphSegmentation::processText(SWBuf &text, const SWKey * /*key*/, cons
 			if (!strncmp(token.c_str(), "seg ", 4) || !strncmp(token.c_str(), "/seg", 4)) {
 				tag = token;
 
-				if (!tag.isEndTag() && tag.getAttribute("type") && !strcmp("morph", tag.getAttribute("type"))) {  //<seg type="morph"> start tag
+				if (!tag.isEndTag() && tag.getAttribute("type") &&
+					(  !strcmp("morph", tag.getAttribute("type"))
+					|| !strcmp("x-morph", tag.getAttribute("type")))) {  //<seg type="morph"> start tag
 					hide = !option; //only hide if option is Off
 					tagText = "";
 					inMorpheme = true;
 				}
 
-				if (tag.isEndTag()) {
+				if (tag.isEndTag() && inMorpheme) {
 						buf.setFormatted("%.3d", morphemeNum++);
 						module->getEntryAttributes()["Morpheme"][buf]["body"] = tagText;
 						inMorpheme = false;
