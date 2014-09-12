@@ -242,12 +242,11 @@
 		self.devPickerView = nil;
 		[self loadNewDevotionalEntry];
 	} else {
-		Class cls = NSClassFromString(@"UIPopoverController");
 		[self createPicker];
-		if(iPad && cls) {
+		if(iPad) {
 			UIViewController *dpVC = [[UIViewController alloc] init];
 			dpVC.view = self.devPickerView;
-			popoverController = [[cls alloc] initWithContentViewController:dpVC];
+			popoverController = [[UIPopoverController alloc] initWithContentViewController:dpVC];
 			[popoverController setDelegate:self];
 			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
 			[self displayPopover];

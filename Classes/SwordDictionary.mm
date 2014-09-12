@@ -90,7 +90,7 @@
 - (void)readFromCache {
 	//open cached file
 	//DLog(@"\nSwordDictionary: readFromCache %@", name);
-	NSMutableArray *data = [NSArray arrayWithContentsOfFile:[self cachePath]];
+	NSMutableArray *data = [NSMutableArray arrayWithContentsOfFile:[self cachePath]];
     if(data) {
         self.keys = data;
     } else {

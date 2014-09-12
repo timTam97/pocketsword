@@ -8,7 +8,7 @@
 
 @class PSTabBarControllerDelegate;
 
-@interface PSDevotionalViewController : UIViewController <UIWebViewDelegate> {
+@interface PSDevotionalViewController : UIViewController <UIWebViewDelegate, UIPopoverControllerDelegate> {
 	
 	UIWebView			*devotionalWebView;
 
@@ -17,7 +17,7 @@
 
 	NSDate						*currentDevotionalDate;
 	
-	id							popoverController;
+	UIPopoverController			*popoverController;
 	
 	BOOL loaded;
 	BOOL redisplayDatePicker;
