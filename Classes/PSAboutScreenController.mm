@@ -210,6 +210,7 @@
 }
 
 // thanks to erica https://github.com/erica/uidevice-extension
+// Updates from http://theiphonewiki.com/wiki/Models
 #define IFPGA_NAMESTRING                @"iFPGA"
 
 #define IPHONE_1G_NAMESTRING            @"iPhone 1G"
