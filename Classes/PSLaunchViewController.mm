@@ -16,7 +16,7 @@
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-130708"
 #define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-121223"
-#define KJV_VERSION						@"loadedKJV-v2.5"
+#define KJV_VERSION						@"loadedKJV-v2.6.1"
 
 @implementation PSLaunchViewController
 
