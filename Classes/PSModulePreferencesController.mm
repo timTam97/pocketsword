@@ -60,7 +60,7 @@
 	// Display section:
 	DisplaySection = Sections++;
 	FontDefaultsRow = DisplayRows++;
-	BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, self.tabBarController.navigationItem.title);
+	BOOL fontDefaults = GetBoolPrefForMod(DefaultsFontDefaultsPreference, swordModule.name);
 	if(fontDefaults) {
 		FontSizeRow = DisplayRows++;
 		FontNameRow = DisplayRows++;
