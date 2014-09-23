@@ -18,7 +18,7 @@
 */
 
 #import "globals.h"
-#import "PSSearchController.h"
+#import "PSModuleSearchController.h"
 #import "PSDictionaryViewController.h"
 
 #ifdef __cplusplus
@@ -50,7 +50,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
+@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSModuleSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
 	// Tab bar
 	UITabBarController *tabBarController;
 	

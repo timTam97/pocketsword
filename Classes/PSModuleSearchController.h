@@ -1,5 +1,5 @@
 //
-//  PSSearchController.h
+//  PSModuleSearchController.h
 //  PocketSword
 //
 //  Created by Nic Carter on 9/12/09.
@@ -9,19 +9,18 @@
 #import "globals.h"
 #import "PSIndexController.h"
 #import "MBProgressHUD.h"
-#import "PSSearchController.h"
 #import "PSSearchOptionTableViewController.h"
 
 @class PSSearchHistoryItem;
 
-@protocol PSSearchControllerDelegate <NSObject>
+@protocol PSModuleSearchControllerDelegate <NSObject>
 @required
 - (void)searchDidFinish:(PSSearchHistoryItem*)newSearchHistoryItem;
 @end
 
-@interface PSSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate, PSIndexControllerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface PSModuleSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate, PSIndexControllerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 
-	id <PSSearchControllerDelegate> delegate;
+	id <PSModuleSearchControllerDelegate> delegate;
 	
 	ShownTab listType;
 
@@ -50,7 +49,7 @@
 @property (retain) UITableView *searchResultsTable;
 @property (retain) UISearchBar *searchBar;
 
-@property (nonatomic, assign) id <PSSearchControllerDelegate> delegate;
+@property (nonatomic, assign) id <PSModuleSearchControllerDelegate> delegate;
 @property (retain, readwrite) NSString *searchTerm;
 @property (retain, readwrite) NSString *searchTermToDisplay;
 @property (assign, readwrite) BOOL strongsSearch;

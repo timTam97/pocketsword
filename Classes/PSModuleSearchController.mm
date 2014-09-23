@@ -1,12 +1,12 @@
 //
-//  PSMultiListController.mm
+//  PSModuleSearchController.mm
 //  PocketSword
 //
 //  Created by Nic Carter on 9/12/09.
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSSearchController.h"
+#import "PSModuleSearchController.h"
 #import "SwordModuleTextEntry.h"
 #import "PSModuleController.h"
 #import "SwordListKey.h"
@@ -16,7 +16,7 @@
 #import "PocketSwordAppDelegate.h"
 #import "SwordManager.h"
 
-@implementation PSSearchController
+@implementation PSModuleSearchController
 
 @synthesize results, savedTablePosition;
 @synthesize searchTerm, searchTermToDisplay, bookName;

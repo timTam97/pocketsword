@@ -329,7 +329,7 @@
 //			[multiListController.tabBar setBarTintColor:[PSTabBarControllerDelegate getBarColorDefault]];
 //		}
 		PSHistoryController *historyController = [[PSHistoryController alloc] init];
-		PSSearchController *searchController = [[PSSearchController alloc] init];
+		PSModuleSearchController *searchController = [[PSModuleSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
 		searchNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		searchNavigationController.title = NSLocalizedString(@"SearchTitle", @"");

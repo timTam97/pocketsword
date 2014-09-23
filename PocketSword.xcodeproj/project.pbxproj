@@ -332,7 +332,7 @@
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
-		05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */; };
+		05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05E6A75717FADF790063B18C /* splash-iPad-landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75517FADF790063B18C /* splash-iPad-landscape.png */; };
 		05E6A75817FADF790063B18C /* splash-iPad-portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75617FADF790063B18C /* splash-iPad-portrait.png */; };
@@ -1122,8 +1122,8 @@
 		05DF57C610ABC753007CB847 /* About.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = About.png; path = Resources/About.png; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
-		05E3FCC710CF535E00DFEB77 /* PSSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchController.h; path = Classes/PSSearchController.h; sourceTree = "<group>"; };
-		05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchController.mm; path = Classes/PSSearchController.mm; sourceTree = "<group>"; };
+		05E3FCC710CF535E00DFEB77 /* PSModuleSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleSearchController.h; path = Classes/PSModuleSearchController.h; sourceTree = "<group>"; };
+		05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleSearchController.mm; path = Classes/PSModuleSearchController.mm; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05E6A75517FADF790063B18C /* splash-iPad-landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "splash-iPad-landscape.png"; path = "Resources/splash-iPad-landscape.png"; sourceTree = "<group>"; };
@@ -2435,8 +2435,8 @@
 				E92217540F0687340089A794 /* PSHistoryController.mm */,
 				051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */,
 				051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.mm */,
-				05E3FCC710CF535E00DFEB77 /* PSSearchController.h */,
-				05E3FCC810CF535E00DFEB77 /* PSSearchController.mm */,
+				05E3FCC710CF535E00DFEB77 /* PSModuleSearchController.h */,
+				05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */,
 				0545549610CA4D8000EE11EC /* PSIndexController.h */,
 				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
 				056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */,
@@ -3559,7 +3559,7 @@
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
 				0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */,
-				05E3FCC910CF535E00DFEB77 /* PSSearchController.mm in Sources */,
+				05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
 				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
