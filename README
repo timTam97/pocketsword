@@ -1,0 +1,12 @@
+Welcome to PocketSword.
+
+PocketSword is a GPL'd Bible Study app for iOS, based on the CrossWire SWORD C++ API. :)
+Twitter is @PocketSword
+
+Developers should use Jira bug tracking tool at http://www.crosswire.org/tracker/browse/PS.
+
+Code should compile on the latest Xcode (document last updated when it was at 6.0.1) with nothing else special besides what is in this repo.
+
+There are long todo lists and feel free to contact me if you want to help out and access them!
+
+That's all, enjoy. :)
