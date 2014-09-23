@@ -4,7 +4,7 @@
  *		  	all types of modules (e.g. texts, commentaries, maps,
  *		  	lexicons, etc.)
  *
- * $Id: swmodule.h 2944 2013-08-03 09:43:40Z scribe $
+ * $Id: swmodule.h 3249 2014-08-24 01:55:08Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -47,7 +47,6 @@ class SWFilter;
 #define SEARCHFLAG_MATCHWHOLEENTRY 4096
 
 #define SWMODULE_OPERATORS \
-	SWDEPRECATED operator const char *() { static SWBuf unsafeTmp = renderText(); return unsafeTmp.c_str(); } \
 	operator SWBuf() { return renderText(); } \
 	operator SWKey &() { return *getKey(); } \
 	operator SWKey *() { return getKey(); } \
@@ -57,7 +56,8 @@ class SWFilter;
 	SWModule &operator +=(int steps) { increment(steps); return *this; } \
 	SWModule &operator ++(int) { return *this += 1; } \
 	SWModule &operator --(int) { return *this -= 1; } \
-	SWModule &operator =(SW_POSITION p) { setPosition(p); return *this; }
+	SWModule &operator =(SW_POSITION p) { setPosition(p); return *this; } \
+	SWDEPRECATED operator const char *() { static SWBuf unsafeTmp = renderText(); return unsafeTmp.c_str(); }
 
 
 typedef std::list < SWFilter * >FilterList;

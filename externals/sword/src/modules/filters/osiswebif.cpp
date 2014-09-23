@@ -3,7 +3,7 @@
  *  osiswebif.cpp -	OSIS to HTML filter with hrefs for strongs and
  *			morph tags
  * 
- * $Id: osiswebif.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osiswebif.cpp 3257 2014-09-23 01:08:24Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,6 +36,13 @@ SWORD_NAMESPACE_START
 OSISWEBIF::OSISWEBIF() : baseURL(""), passageStudyURL(baseURL + "passagestudy.jsp"), javascript(false) {
 }
 
+
+BasicFilterUserData *OSISWEBIF::createUserData(const SWModule *module, const SWKey *key) {
+	MyUserData *u = (MyUserData *)OSISXHTML::createUserData(module, key);
+	u->interModuleLinkStart = "<a href=\"#\" onclick=\"return im('%s', '%s');\">";
+	u->interModuleLinkEnd = "</a>";
+	return u;
+}
 
 bool OSISWEBIF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
 	MyUserData *u = (MyUserData *)userData;

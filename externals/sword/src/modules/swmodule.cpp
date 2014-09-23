@@ -4,7 +4,7 @@
  *			for all types of modules (e.g. texts, commentaries,
  *			maps, lexicons, etc.)
  *
- * $Id: swmodule.cpp 3146 2014-03-24 19:50:34Z scribe $
+ * $Id: swmodule.cpp 3249 2014-08-24 01:55:08Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -296,7 +296,7 @@ char SWModule::setKey(const SWKey *ikey) {
 	if (oldKey)
 		delete oldKey;
 
-	return 0;
+	return error = key->popError();
 }
 
 
@@ -314,13 +314,13 @@ void SWModule::setPosition(SW_POSITION p) {
 
 	switch (p) {
 	case POS_TOP:
-		(*this)++;
-		(*this)--;
+		this->increment();
+		this->decrement();
 		break;
 
 	case POS_BOTTOM:
-		(*this)--;
-		(*this)++;
+		this->decrement();
+		this->increment();
 		break;
 	}
 

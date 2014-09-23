@@ -81,7 +81,7 @@ void EncodingFilterMgr::AddRawFilters(SWModule *module, ConfigEntMap &section) {
 
 	SWBuf encoding = ((entry = section.find("Encoding")) != section.end()) ? (*entry).second : (SWBuf)"";
 	if (!encoding.length() || !stricmp(encoding.c_str(), "Latin-1")) {
-                module->addRawFilter(latin1utf8);
+		module->addRawFilter(latin1utf8);
 	}
 	else if (!stricmp(encoding.c_str(), "SCSU")) {
 		module->addRawFilter(scsuutf8);

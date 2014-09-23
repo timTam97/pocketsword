@@ -3,7 +3,7 @@
  *  versekey.cpp -	code for class 'VerseKey'- a standard Biblical
  *			verse key
  *
- * $Id: versekey.cpp 2893 2013-07-16 03:07:02Z scribe $
+ * $Id: versekey.cpp 3243 2014-07-12 17:35:56Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -128,18 +128,55 @@ void VerseKey::setFromOther(const VerseKey &ikey) {
 		chapter = ikey.getChapter();
 		verse = ikey.getVerse();
 		suffix = ikey.getSuffix();
-        }
-	// TODO: versification mapping
-        // Here is where we will do v11n system conversions in the future
-        // when we have a conversion mechanism
-        // Ben Morgan has started thinking about this
-        // Konstantin Maslyuk <kalemas@mail.ru> has submitted a patch)
-        // Asked Konstantin to try his patch out with his favorite
-        // SWORD frontend and report back how it goes.  Need to follow up
-        else {
-	        // For now, this is the best we can do
-        	setText(ikey.getText());
-        }
+	}
+	else {
+		// map verse between systems
+		const char* map_book = ikey.getOSISBookName();
+		int map_chapter = ikey.getChapter();
+		int map_verse = ikey.getVerse();
+		int map_range = map_verse;
+
+		ikey.refSys->translateVerse(refSys, &map_book, &map_chapter, &map_verse, &map_range);
+		//printf("verse: %s.%i.%i-%i\n",map_book,map_chapter,map_verse,map_range);
+		
+		book = refSys->getBookNumberByOSISName(map_book);
+
+		// check existence
+		if (book == -1) {
+			book = 1;
+			error = KEYERR_OUTOFBOUNDS;
+		}
+		else if (refSys->getBook(book-1)->getChapterMax() < map_chapter) {
+			map_chapter = refSys->getBook(book-1)->getChapterMax();
+			map_verse = refSys->getBook(book-1)->getVerseMax(map_chapter);
+			error = KEYERR_OUTOFBOUNDS;
+		}
+		else if (map_chapter > 0 && refSys->getBook(book-1)->getVerseMax(map_chapter) < map_verse) {
+			map_verse = refSys->getBook(book-1)->getVerseMax(map_chapter);
+			error = KEYERR_OUTOFBOUNDS;
+		}
+
+		// set values
+		if (book > BMAX[0])
+			book -= BMAX[0], testament = 2;
+		else
+			testament = 1;
+
+		//if (map_verse == 0) Headings(1);
+
+		chapter = map_chapter;
+		verse = map_verse;
+		suffix = ikey.getSuffix();
+		
+		if (map_verse < map_range) {
+			if (map_range > refSys->getBook(((testament>1)?BMAX[0]:0)+book-1)->getVerseMax(chapter))
+				++map_range;
+			verse = map_range;
+			setUpperBound(this);
+			verse = map_verse;
+			setLowerBound(this);
+		}
+	}
 }
 
 
@@ -157,7 +194,9 @@ void VerseKey::positionFrom(const SWKey &ikey) {
 	}
 	else {
 		SWKey::positionFrom(*fromKey);
-		parse();
+// extraneous parse which inadvertently clears error flag
+// SWKey::positionFrom already calls copyFrom which calls setText, which VerseKey::setText already calls parse()
+//		parse();
 	}
 
  	// should we always perform bounds checks?  Tried but seems to cause infinite recursion
@@ -212,7 +251,9 @@ void VerseKey::copyFrom(const SWKey &ikey) {
 	}
 	else {
 		SWKey::copyFrom(*fromKey);
-		parse();
+// extraneous parse which inadvertently clears error flag
+// SWKey::copyFrom already calls setText, which VerseKey::setText already calls parse()
+//		parse();
 	}
 }
 

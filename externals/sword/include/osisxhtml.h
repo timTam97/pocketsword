@@ -2,7 +2,7 @@
  *
  *  osisxhtml.h -	Render filter for classed XHTML of an OSIS module
  *
- * $Id: osisxhtml.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisxhtml.h 3257 2014-09-23 01:08:24Z scribe $
  *
  * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,11 +36,11 @@ private:
 protected:
 
 	class TagStack;
-	// used by derived classes so we have it in the header
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key);
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 
 
+	// used by derived classes so we have it in the header
 	class MyUserData : public BasicFilterUserData {
 	public:
 		bool osisQToTick;
@@ -49,6 +49,8 @@ protected:
 		int suspendLevel;
 		SWBuf wordsOfChristStart;
 		SWBuf wordsOfChristEnd;
+		SWBuf interModuleLinkStart;
+		SWBuf interModuleLinkEnd;
 		TagStack *quoteStack;
 		TagStack *hiStack;
 		TagStack *titleStack;

@@ -2,7 +2,7 @@
  *
  *  osiswebif.h -	Implementation of OSISWEBIF
  *
- * $Id: osiswebif.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osiswebif.h 3257 2014-09-23 01:08:24Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -35,6 +35,7 @@ class SWDLLEXPORT OSISWEBIF : public OSISXHTML {
 	bool javascript;
 
 protected:
+	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key);
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 public:
 	OSISWEBIF();

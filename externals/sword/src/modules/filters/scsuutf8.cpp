@@ -3,9 +3,9 @@
  *  scsuutf8.cpp -	SWFilter descendant to convert a SCSU character to
  *			UTF-8
  *
- * $Id: scsuutf8.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: scsuutf8.cpp 3114 2014-03-12 13:13:05Z chrislit $
  *
- * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
+ * Copyright 2001-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
  *	P. O. Box 2528
  *	Tempe, AZ  85280-2528
@@ -23,20 +23,14 @@
 
 /* This class is based on:
  * http://czyborra.com/scsu/scsu.c written by Roman Czyborra@dds.nl
- * on Andrea's balcony in North Amsterdam on 1998-08-04
- * Thanks to Richard Verhoeven <rcb5@win.tue.nl> for his suggestion
- * to correct the haphazard "if" after UQU to "else if" on 1998-10-01
- * 
+ *
  * This is a deflator to UTF-8 output for input compressed in SCSU,
  * the (Reuters) Standard Compression Scheme for Unicode as described
  * in http://www.unicode.org/unicode/reports/tr6.html
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <swmodule.h>
-
 #include <scsuutf8.h>
+#include <swbuf.h>
 
 
 SWORD_NAMESPACE_START

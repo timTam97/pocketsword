@@ -2,7 +2,7 @@
  *
  *  scsuutf8.h - SWFilter descendant to convert a SCSU character to UTF-8
  *
- * $Id: scsuutf8.h 2846 2013-06-29 14:48:47Z chrislit $
+ * $Id: scsuutf8.h 3083 2014-03-06 08:13:10Z chrislit $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

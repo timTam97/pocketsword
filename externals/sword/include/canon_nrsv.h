@@ -2,7 +2,7 @@
  *
  *  canon_nrsv.h -	Versification data for the NRSV system
  *
- * $Id: canon_nrsv.h 2915 2013-07-23 16:55:54Z chrislit $
+ * $Id: canon_nrsv.h 3240 2014-07-12 16:27:35Z scribe $
  *
  * Copyright 2009-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -264,6 +264,12 @@ int vm_nrsv[] = {
   27, 21
 };
 
+unsigned char mappings_nrsv[] = {
+    0,
+    66,  12,  18,  19,  13,  1,   0,
+    66,  13,  1,   1,   13,  1,   0,
+    0
+};
 
 SWORD_NAMESPACE_END
 
