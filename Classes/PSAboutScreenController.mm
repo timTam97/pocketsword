@@ -220,6 +220,8 @@
 #define IPHONE_5_NAMESTRING             @"iPhone 5"
 #define IPHONE_5C_NAMESTRING            @"iPhone 5c"
 #define IPHONE_5S_NAMESTRING            @"iPhone 5s"
+#define IPHONE_6_NAMESTRING             @"iPhone 6"
+#define IPHONE_6P_NAMESTRING            @"iPhone 6 Plus"
 //#define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
 
 #define IPOD_1G_NAMESTRING              @"iPod touch 1G"
@@ -233,9 +235,11 @@
 #define IPAD_2G_NAMESTRING              @"iPad 2G"
 #define IPAD_3G_NAMESTRING              @"iPad 3G"
 #define IPAD_4G_NAMESTRING              @"iPad 4G"
+#define IPAD_5G_NAMESTRING				@"iPad Air 1G"
 //#define IPAD_UNKNOWN_NAMESTRING         @"Unknown iPad"
 
 #define IPAD_MINI_1G_NAMESTRING			@"iPad mini 1G"
+#define IPAD_MINI_2G_NAMESTRING			@"iPad mini 2G"
 
 //#define APPLETV_2G_NAMESTRING           @"Apple TV 2G"
 //#define APPLETV_3G_NAMESTRING           @"Apple TV 3G"
@@ -268,7 +272,9 @@
     if ([platform hasPrefix:@"iPhone5,4"])            return IPHONE_5C_NAMESTRING;
     if ([platform hasPrefix:@"iPhone6,1"])            return IPHONE_5S_NAMESTRING;
     if ([platform hasPrefix:@"iPhone6,2"])            return IPHONE_5S_NAMESTRING;
-    
+	if ([platform hasPrefix:@"iPhone7,2"])            return IPHONE_6_NAMESTRING;
+	if ([platform hasPrefix:@"iPhone7,1"])            return IPHONE_6P_NAMESTRING;
+	
     // iPod
     if ([platform hasPrefix:@"iPod1"])              return IPOD_1G_NAMESTRING;
     if ([platform hasPrefix:@"iPod2"])              return IPOD_2G_NAMESTRING;
@@ -282,12 +288,16 @@
     if ([platform hasPrefix:@"iPad2,5"] ||
 		[platform hasPrefix:@"iPad2,6"] ||
 		[platform hasPrefix:@"iPad2,7"])            return IPAD_MINI_1G_NAMESTRING;
+	if ([platform hasPrefix:@"iPad4,4"] ||
+		[platform hasPrefix:@"iPad4,5"] ||
+		[platform hasPrefix:@"iPad4,6"])            return IPAD_MINI_2G_NAMESTRING;
 	// iPad
     if ([platform hasPrefix:@"iPad2"])              return IPAD_2G_NAMESTRING;
     if ([platform hasPrefix:@"iPad3,4"] ||
 		[platform hasPrefix:@"iPad3,5"] ||
 		[platform hasPrefix:@"iPad3,6"])            return IPAD_4G_NAMESTRING;
     if ([platform hasPrefix:@"iPad3"])              return IPAD_3G_NAMESTRING;
+	if ([platform hasPrefix:@"iPad4"])				return IPAD_5G_NAMESTRING;
     
     
     // Simulator thanks Jordan Breeding
