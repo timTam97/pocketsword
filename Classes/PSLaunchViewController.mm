@@ -27,10 +27,12 @@
 	UIImage *defaultImg;
 	CGRect aiFrame;
 	int displayMultiplier = 1;
-	if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-		([UIScreen mainScreen].scale == 2.0)) {
+	if ([UIScreen mainScreen].scale > 1.1) {
 		// Retina display
 		displayMultiplier = 2;
+		if([UIScreen mainScreen].scale > 2.1) {
+			displayMultiplier = 3;
+		}
 	} else {
 		// non-Retina display
 	}
@@ -49,18 +51,26 @@
 	} else {
 		
 		CGRect screenRect = [[UIScreen mainScreen] bounds];
-		if(screenRect.size.height > 500) {
+		if(screenRect.size.height > 700) {
+			// 5.5 inch display.
+			defaultImg = [UIImage imageNamed:@"Default-736h.png"];
+		} else if(screenRect.size.height > 600) {
+			// 4.7 inch display.
+			defaultImg = [UIImage imageNamed:@"Default-667h.png"];
+		} else if(screenRect.size.height > 500) {
 			// 4 inch display.
 			defaultImg = [UIImage imageNamed:@"Default-568h.png"];
 		} else {
 			// 3.5 inch display.
 			defaultImg = [UIImage imageNamed:@"Default.png"];
 		}
-		int x=0, y=20, w=[defaultImg size].width, h=[defaultImg size].height;
+		int x=0, y=0, w=[defaultImg size].width, h=[defaultImg size].height;
 		CGImageRef imageRef = CGImageCreateWithImageInRect([defaultImg CGImage], CGRectMake(x, y*displayMultiplier, w*displayMultiplier, h*displayMultiplier));
 		defaultImg = [UIImage imageWithCGImage:imageRef];
 		CGImageRelease(imageRef);
-		aiFrame = CGRectMake(141, 388, 37, 37);
+		x = (int)(screenRect.size.width / 2.0f - (37.0f / 2.0f));
+		y = (int)(screenRect.size.height / 2.0f - (37.0f / 2.0f));
+		aiFrame = CGRectMake(x, y, 37, 37);
 		
 	}
 	
