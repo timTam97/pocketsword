@@ -35,6 +35,7 @@
 		0505FECC12C9A9D900A3C65B /* enabled-Morph.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEB812C9A9D900A3C65B /* enabled-Morph.png */; };
 		0505FECD12C9A9D900A3C65B /* enabled-Strongs.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEB912C9A9D900A3C65B /* enabled-Strongs.png */; };
 		0505FECE12C9A9D900A3C65B /* enabled-Xrefs.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEBA12C9A9D900A3C65B /* enabled-Xrefs.png */; };
+		050CB77D19D16A1200415A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77C19D16A1200415A27 /* Images.xcassets */; };
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
 		05124A9C11B5F02000575BA9 /* devo-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 05124A9A11B5F02000575BA9 /* devo-open.png */; };
 		05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */; };
@@ -511,6 +512,7 @@
 		0505FEB812C9A9D900A3C65B /* enabled-Morph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Morph.png"; path = "Resources/enabled-Morph.png"; sourceTree = "<group>"; };
 		0505FEB912C9A9D900A3C65B /* enabled-Strongs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Strongs.png"; path = "Resources/enabled-Strongs.png"; sourceTree = "<group>"; };
 		0505FEBA12C9A9D900A3C65B /* enabled-Xrefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Xrefs.png"; path = "Resources/enabled-Xrefs.png"; sourceTree = "<group>"; };
+		050CB77C19D16A1200415A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketSword/Images.xcassets; sourceTree = "<group>"; };
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
 		050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PSStatusReporter.cpp; sourceTree = "<group>"; };
 		05124A9A11B5F02000575BA9 /* devo-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "devo-open.png"; path = "Resources/devo-open.png"; sourceTree = "<group>"; };
@@ -2685,6 +2687,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				050CB77C19D16A1200415A27 /* Images.xcassets */,
 				051F22AA1737544C00DDFF13 /* fonts */,
 				052851BB1226614600A99ECD /* misc */,
 				052851B91226611C00A99ECD /* zips */,
@@ -3147,6 +3150,7 @@
 				052B52851101A32900FFDF01 /* Settings.bundle in Resources */,
 				05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */,
 				05E6A75E17FAE06D0063B18C /* Icon-120.png in Resources */,
+				050CB77D19D16A1200415A27 /* Images.xcassets in Resources */,
 				05BCB42011477A9A00984097 /* popup-down-button.png in Resources */,
 				05124A9C11B5F02000575BA9 /* devo-open.png in Resources */,
 				059A6CC311B79ABD00B33E54 /* bible.png in Resources */,
@@ -3642,7 +3646,11 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3670,13 +3678,18 @@
 					"-DDEBUG",
 					"-DEXCLUDEXZ",
 				);
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3703,6 +3716,7 @@
 					"-DUSELUCENE",
 					"-DEXCLUDEXZ",
 				);
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -3798,6 +3812,10 @@
 		E982FA660ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3824,6 +3842,7 @@
 					"-DUSELUCENE",
 					"-DEXCLUDEXZ",
 				);
+				PROVISIONING_PROFILE = "";
 			};
 			name = Distribution;
 		};
