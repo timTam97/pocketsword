@@ -38,7 +38,7 @@ float status;
 }
 
 - (void)setConfigPath:(NSString *)value {
-    //DLog(@"[SwordInstallManager -setConfigPath:]");
+    //DLog(@"[SwordInstallManager -setConfigPath:%@]", value);
     
     if(configPath != value) {
         [configPath release];
@@ -56,8 +56,8 @@ float status;
             if(([fm fileExistsAtPath:configPath isDirectory:&isDir] == YES) && (isDir)) {
                 // set configFilePath
                 [self setConfigFilePath:[configPath stringByAppendingPathComponent:@"InstallMgr.conf"]];
-                
-				BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey:@"updatedRepositories-20130114"];
+                static NSString *LAST_UPDATED_REPOS = @"updatedRepositories-20140924";
+				BOOL xbr = [[NSUserDefaults standardUserDefaults] boolForKey: LAST_UPDATED_REPOS];
 				if(!xbr) {
 					[fm removeItemAtPath:configFilePath error:NULL];
 				}
@@ -103,7 +103,7 @@ float status;
 					[is setUID:@"20090514005900"];
 					[self addInstallSource:is withReinitialize:NO];
 					
-					[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"updatedRepositories-20130114"];
+					[[NSUserDefaults standardUserDefaults] setBool:YES forKey: LAST_UPDATED_REPOS];
 					
                 }
 				
