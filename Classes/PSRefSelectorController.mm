@@ -32,6 +32,7 @@
 
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationRefSelectorResetBooks object:nil];
+	[super viewDidUnload];
 }
 
 - (void)resetBooks:(NSNotification *)notification {

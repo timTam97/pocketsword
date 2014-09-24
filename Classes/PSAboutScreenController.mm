@@ -183,6 +183,7 @@
 	[emailUsBarButtonItem release];
 
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
+	[super viewDidLoad];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -351,6 +352,7 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	[super viewDidUnload];
 }
 
 - (void)dealloc {

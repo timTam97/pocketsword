@@ -515,7 +515,7 @@
 		secondLabel.backgroundColor = [UIColor whiteColor];
 	}
 	if(!((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text || [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text isEqualToString: @""]) {
-		SwordModuleTextEntry *entry;
+		SwordModuleTextEntry *entry = nil;;
 		switch(listType) {
 			case BibleTab:
 				entry = [[[PSModuleController defaultModuleController] primaryBible] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
@@ -526,7 +526,7 @@
 			default:
 				break;
 		}
-		if(entry) {
+		if(entry != nil) {
 			//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
 			entry.text = [entry.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
 			[results replaceObjectAtIndex:indexPath.row withObject:entry];

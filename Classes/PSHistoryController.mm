@@ -59,6 +59,7 @@
 
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationHistoryChanged object:nil];
+	[super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

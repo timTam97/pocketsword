@@ -253,6 +253,7 @@
 }
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;//UIModalTransitionStyleCrossDissolve;
 }
 

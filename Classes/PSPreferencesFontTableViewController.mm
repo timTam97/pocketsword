@@ -139,6 +139,7 @@
 	// e.g. self.myOutlet = nil;
 	[fontStrings release];
 	fontStrings = nil;
+	[super viewDidUnload];
 }
 
 

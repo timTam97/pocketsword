@@ -55,6 +55,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[searchResults release];
 	searchResults = nil;
+	[super viewDidUnload];
 }
 
 

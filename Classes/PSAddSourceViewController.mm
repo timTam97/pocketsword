@@ -398,6 +398,7 @@
 	[serverTextField release];
 	[pathTextField release];
 	[addSourceTableView release];
+	[super viewDidUnload];
 }
 
 

@@ -260,6 +260,7 @@
     // For example: self.myOutlet = nil;
 	[nameTextField release];
 	nameTextField = nil;
+	[super viewDidUnload];
 }
 
 

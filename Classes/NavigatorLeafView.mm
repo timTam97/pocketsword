@@ -77,6 +77,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
 	[detailsWebView loadHTMLString:@"" baseURL:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewDidDisappear:animated];
 }
 
 - (void)confirmUpgrade {
@@ -179,6 +180,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[PSModuleController removeViewForHUDForModuleDownloadItem:module.name];
+	[super viewWillDisappear:animated];
 }
 
 - (void)dealloc {

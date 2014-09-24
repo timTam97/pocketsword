@@ -354,6 +354,7 @@
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewDidUnload];
 }
 
 - (void)setupWebViewRefreshViews {

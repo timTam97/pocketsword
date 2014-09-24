@@ -221,6 +221,7 @@
 	ipInfo = nil;
 	[wwwInfo release];
 	wwwInfo = nil;
+	[super viewDidUnload];
 }
 
 - (void)dealloc {

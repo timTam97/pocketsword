@@ -391,6 +391,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationAddBookmarkInFolder];
 	[descriptionTextField release];
 	descriptionTextField = nil;
+	[super viewDidUnload];
 }
 
 
