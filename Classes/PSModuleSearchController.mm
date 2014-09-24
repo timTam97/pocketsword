@@ -59,37 +59,39 @@
 	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
 	
-	UIView *sqView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	sqView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	UISearchBar *sqSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, viewWidth, 44)];
-	sqSB.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	sqSB.delegate = self;
-	sqSB.barStyle = UIBarStyleBlack;
-	UITableView *sqTable = [[UITableView alloc] initWithFrame:CGRectMake(0, sqSB.frame.size.height, viewWidth, (viewHeight - sqSB.frame.size.height)) style:UITableViewStyleGrouped];
-	sqTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	sqTable.delegate = self;
-	sqTable.dataSource = self;
-	//sqTable.tableHeaderView = sqSB;
-	[sqView addSubview:sqSB];
-	[sqView addSubview:sqTable];
-	self.searchQueryTable = sqTable;
-	[sqTable release];
-	self.searchBar = sqSB;
-	[sqSB release];
-	self.searchQueryView = sqView;
-	[sqView release];
+	UIView *searchQueryBaseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	searchQueryBaseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	
-	UITableView *srTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) style:UITableViewStylePlain];
-	srTable.delegate = self;
-	srTable.dataSource = self;
-	srTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[baseView addSubview:srTable];
-	self.view = baseView;
-	[baseView release];
-	self.searchResultsTable = srTable;
-	[srTable release];
+	UISearchBar *searchQuerySearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, viewWidth, 44)];
+	searchQuerySearchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	searchQuerySearchBar.delegate = self;
+	searchQuerySearchBar.barStyle = UIBarStyleBlack;
+	
+	UITableView *searchQueryOptionsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, searchQuerySearchBar.frame.size.height, viewWidth, (viewHeight - searchQuerySearchBar.frame.size.height)) style:UITableViewStyleGrouped];
+	searchQueryOptionsTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	searchQueryOptionsTable.delegate = self;
+	searchQueryOptionsTable.dataSource = self;
+	
+	[searchQueryBaseView addSubview:searchQuerySearchBar];
+	[searchQueryBaseView addSubview:searchQueryOptionsTable];
+	self.searchQueryTable = searchQueryOptionsTable;
+	[searchQueryOptionsTable release];
+	self.searchBar = searchQuerySearchBar;
+	[searchQuerySearchBar release];
+	self.searchQueryView = searchQueryBaseView;
+	[searchQueryBaseView release];
+	
+	UITableView *searchResultsResultsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) style:UITableViewStylePlain];
+	searchResultsResultsTable.delegate = self;
+	searchResultsResultsTable.dataSource = self;
+	searchResultsResultsTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
+	UIView *searchMainParentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	searchMainParentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
+	[searchMainParentView addSubview:searchResultsResultsTable];
+	self.view = searchMainParentView;
+	[searchMainParentView release];
+	self.searchResultsTable = searchResultsResultsTable;
+	[searchResultsResultsTable release];
 	
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
