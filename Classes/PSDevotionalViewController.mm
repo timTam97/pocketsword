@@ -191,26 +191,45 @@
 }
 
 - (void)createPicker {
-	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 260)];
+	BOOL iPad = [PSResizing iPad];
+	static const int BASE_VIEW_HEIGHT = 260;
+	CGRect screenRect = [[UIScreen mainScreen] bounds];
+
+	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, (iPad ? 320.0f : screenRect.size.width), BASE_VIEW_HEIGHT)];
 	baseView.backgroundColor = [UIColor whiteColor];
 	baseView.autoresizingMask = UIViewAutoresizingNone;
-	UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
+	CGFloat xOffset = (iPad ? 0.0f : (screenRect.size.width - 320.0f) / 2.0f);
+	UIView *dpView = [[UIView alloc] initWithFrame:CGRectMake(xOffset, (iPad ? 44.0f : 0.0f), (iPad ? 320.0f : screenRect.size.width), (BASE_VIEW_HEIGHT - 44.0f))];
+	dpView.autoresizingMask = UIViewAutoresizingNone;
+	dpView.backgroundColor = [UIColor whiteColor];
+	UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, (BASE_VIEW_HEIGHT - 44.0f))];
 	datePicker.datePickerMode = UIDatePickerModeDate;
 	[datePicker setDate:self.currentDevotionalDate];
 	datePicker.autoresizingMask = UIViewAutoresizingNone;
-	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+	[dpView addSubview:datePicker];
+	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, (iPad ? 320.0f : screenRect.size.width), 44.0f)];
 	toolbar.barStyle = UIBarStyleBlack;
 	UIBarButtonItem *todayToolbarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"TodayButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(todayButtonPressed)];
+	[todayToolbarButton setTitleTextAttributes: @{ NSFontAttributeName: [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]], NSForegroundColorAttributeName: [UIColor whiteColor] } forState:UIControlStateNormal];
 	UIBarButtonItem *spaceToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	UIBarButtonItem *doneToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(toggleDatePicker)];
+	[doneToolbarButton setTitleTextAttributes: @{ NSFontAttributeName: [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]], NSForegroundColorAttributeName: [UIColor whiteColor] } forState:UIControlStateNormal];
+	UIBarButtonItem *lSpaceToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+	lSpaceToolbarButton.width = 20.0f;
+	UIBarButtonItem *rSpaceToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+	rSpaceToolbarButton.width = 20.0f;
+
 	//toolbarButtons = @[ todayToolbarButton, spaceToolbarButton, doneToolbarButton ];
-	NSArray *toolbarButtons = [NSArray arrayWithObjects:todayToolbarButton, spaceToolbarButton, doneToolbarButton, nil];
+	NSArray *toolbarButtons = [NSArray arrayWithObjects:lSpaceToolbarButton, todayToolbarButton, spaceToolbarButton, doneToolbarButton, rSpaceToolbarButton, nil];
 	[todayToolbarButton release];
 	[spaceToolbarButton release];
 	[doneToolbarButton release];
+	[lSpaceToolbarButton release];
+	[rSpaceToolbarButton release];
 	toolbar.items = toolbarButtons;
 	
-	[baseView addSubview:datePicker];
+	[baseView addSubview:dpView];
+	[dpView release];
 	[baseView addSubview:toolbar];
 	[toolbar release];
 	
@@ -252,21 +271,23 @@
 			[self displayPopover];
 			[dpVC release];
 		} else {
-			UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-			if([UIApplication sharedApplication].statusBarHidden) {
-				interfaceOrientation = [[self tabBarController] interfaceOrientation];
-			}
-			if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-				self.devPickerView.transform = CGAffineTransformIdentity;
-				self.devPickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-				self.devPickerView.transform = CGAffineTransformIdentity;
-				self.devPickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-				self.devPickerView.transform = CGAffineTransformIdentity;
-			} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-				self.devPickerView.transform = CGAffineTransformIdentity;
-				self.devPickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+			if([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0f) {
+				UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+				if([UIApplication sharedApplication].statusBarHidden) {
+					interfaceOrientation = [[self tabBarController] interfaceOrientation];
+				}
+				if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+					self.devPickerView.transform = CGAffineTransformIdentity;
+					self.devPickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+				} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+					self.devPickerView.transform = CGAffineTransformIdentity;
+					self.devPickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
+				} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
+					self.devPickerView.transform = CGAffineTransformIdentity;
+				} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+					self.devPickerView.transform = CGAffineTransformIdentity;
+					self.devPickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
+				}
 			}
 			self.devDatePicker.frame = CGRectMake(0, 44, 320, 216);
 			[PSTabBarControllerDelegate showModal:self.devPickerView withTiming:0.3];
