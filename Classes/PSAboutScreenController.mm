@@ -88,7 +88,7 @@
 					  <h2 class=\"headbar\">Ezra SIL and Gentium Plus: </h2>\n\
 					  %@\n\
 					  </div>\n\
-					  <br />&nbsp;<br />", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"OFL" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil]];//CFBundleShortVersionString
+					  <br />&nbsp;<br />", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"OFL" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil]];//CFBundleShortVersionString
 	
 	
 	return [NSString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -317,7 +317,7 @@
 {
     NSString *recipients = @"pocketsword@icloud.com";
 	
-	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [self platformString]];
+	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [self platformString]];
 	
 	if([MFMailComposeViewController canSendMail]) {
 		MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
