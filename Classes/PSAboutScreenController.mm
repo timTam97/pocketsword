@@ -23,7 +23,7 @@
 							 @"<div id=\"header\">\n\
 								 <div class=\"title\">PocketSword</div>\n\
 								 <div class=\"version\"> Version %@</div>\n\
-								 <center><i><a href=\"http://crosswire.org/pocketsword\">http://crosswire.org/pocketsword</a></i><br />\n\
+								 <center><i><a href=\"https://bitbucket.org/niccarter/pocketsword/overview\">PocketSword on Bitbucket</a></i><br />\n\
 									<i><a href=\"http://www.crosswire.org/forums/mvnforum/listthreads?forum=16\">User Forums</a></i><br />\n\
 									<i>@<a href=\"http://twitter.com/PocketSword\">PocketSword</a> on Twitter</i></center>\n\
 							 </div>\n\
