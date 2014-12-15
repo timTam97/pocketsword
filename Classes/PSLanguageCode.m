@@ -44,7 +44,19 @@ static NSArray * lookup_table;
 			return [[lookup_table objectAtIndex:i] objectAtIndex:1];
 	}
 	if([aCode length] > 3) {
-		return [PSLanguageCode lookupLanguageCode:[aCode substringToIndex:3]];
+		//NSLog(@"code > 3 : %@", aCode);
+		NSString *codeName = [PSLanguageCode lookupLanguageCode:[aCode substringToIndex:3]];
+		NSRange cRange = [aCode rangeOfString:@"-Cyrl"];
+		if(cRange.location != NSNotFound && cRange.location != 0) {
+			//This is a (Cyrillic) script
+			return [NSString stringWithFormat:@"%@ (Cyrillic)", codeName];
+		}
+		cRange = [aCode rangeOfString:@"-Latn"];
+		if(cRange.location != NSNotFound && cRange.location != 0) {
+			//This is a (Latin) script
+			return [NSString stringWithFormat:@"%@ (Latin)", codeName];
+		}
+		return codeName;
 	}
 	return aCode;
 }
