@@ -441,16 +441,16 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToPreviousChapter];
 		verse = [primaryBible getVerseMax];
-		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsBibleVersePosition];
+		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%ld", (long)verse] forKey: DefaultsBibleVersePosition];
 	}
 	if(primaryCommentary) {
 		if(!ret) {
 			[primaryCommentary setChapter: cur];
 			ret = [primaryCommentary setToPreviousChapter];
 			verse = [primaryCommentary getVerseMax];
-			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsCommentaryVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%ld", (long)verse] forKey: DefaultsCommentaryVersePosition];
 		} else if(verse) {
-			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", verse] forKey: DefaultsCommentaryVersePosition];
+			[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%ld", (long)verse] forKey: DefaultsCommentaryVersePosition];
 		}
 	}
 	[[NSUserDefaults standardUserDefaults] synchronize];
@@ -607,7 +607,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		ALog(@"Couldn't install module (%@)!\n", [swordModule name]);
 		ret = NO;
 	} else {
-		DLog(@"Module %@ installed successfully!\n%d modules installed.", [swordModule name], [[swordManager moduleNames] count]);
+		DLog(@"Module %@ installed successfully!\n%lu modules installed.", [swordModule name], (unsigned long)[[swordManager moduleNames] count]);
 		ret = YES;
 	}
 	if((!primaryBible && ([swordModule type] == bible)) || (!primaryCommentary && [swordModule type] == commentary)) {
@@ -738,8 +738,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if(primaryDevotional) {
 		primaryDevotionalName = [primaryDevotional name];
 	}
-	int numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
-	int numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
+	NSUInteger numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
+	NSUInteger numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
 	
 
 
@@ -991,13 +991,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			fontName = PSDefaultFontName;
 		BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 		fs = (fs == 0) ? 14 : fs;
-		fontSize = [NSString stringWithFormat:@"%d", fs];
+		fontSize = [NSString stringWithFormat:@"%ld", (long)fs];
 		fontColor = (nightMode) ? @"white" : @"black";
 		backgroundColor = (nightMode) ? @"black" : @"white";
 	} else {
 		fs = 14;
 	}
-	NSString *fontSizeMinusOne = [NSString stringWithFormat:@"<font style=\"font-size: %dpt;line-height: 0%%;\">", (fs-2)];
+	NSString *fontSizeMinusOne = [NSString stringWithFormat:@"<font style=\"font-size: %dpt;line-height: 0%%;\">", (int)(fs-2)];
 	NSString *finalBody = [body stringByReplacingOccurrencesOfString:@"<font size=\"-1\">" withString:fontSizeMinusOne];
 	NSString *iPadPadding = @"";
 	NSString *lineHeight = @"1.4";

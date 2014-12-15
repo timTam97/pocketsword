@@ -1,4 +1,10 @@
 
+New in v1.4.7
+- bug fixes for iOS 8
+- (Bookmarking on iPad works again)
+- (Module Maintainer Mode on iPad works again)
+- (Full screen rotation on iPad works again)
+
 New in v1.4.6
 - updated for iOS 8 (lots of under the hood improvements, too!)
 - loads of bug fixes

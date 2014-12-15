@@ -538,8 +538,8 @@
 	
 	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
 	NSString *bookName = [NSString stringWithCString:lmgr->translate([bookNameString cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
-	NSString *verseString = [NSString stringWithFormat:@"%d", verse];
-	NSString *ref = [bookName stringByAppendingFormat: @" %d", chapter];
+	NSString *verseString = [NSString stringWithFormat:@"%ld", (long)verse];
+	NSString *ref = [bookName stringByAppendingFormat: @" %ld", (long)chapter];
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	NSString *currentRef = [PSModuleController getCurrentBibleRef];
 	if([currentRef isEqualToString:ref]) {
