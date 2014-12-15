@@ -10,6 +10,10 @@
 #import "PSResizing.h"
 #import "globals.h"
 
+#ifndef kCFCoreFoundationVersionNumber_iOS_8_0
+#define kCFCoreFoundationVersionNumber_iOS_8_0 1129.15
+#endif
+
 #define TOP_BAR_LANDSCAPE_HEIGHT 32.0
 #define TOP_BAR_PORTRAIT_HEIGHT 44.0
 #define BOTTOM_BAR_LANDSCAPE_HEIGHT 32.0
@@ -117,11 +121,12 @@
 + (CGRect)getOrientationRect:(UIInterfaceOrientation)interfaceOrientation {
 	CGFloat x,y,width,height;
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	BOOL isPreiOS8 = NSFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_8_0;
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		x = 0.0;
 		y = 0.0;
-		width = screen.height;
-		height = screen.width;
+		width = isPreiOS8 ? screen.height : screen.width;
+		height = isPreiOS8 ? screen.width : screen.height;
 	} else {
 		x = 0.0;
 		y = 0.0;

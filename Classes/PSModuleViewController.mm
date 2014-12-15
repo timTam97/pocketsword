@@ -483,7 +483,12 @@
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:webView];
-        webView.frame = [PSResizing getOrientationRect:self.tabBarController.interfaceOrientation];
+		
+		CGFloat width  = [[UIScreen mainScreen] bounds].size.width;
+		CGFloat height = [[UIScreen mainScreen] bounds].size.height;
+		UIInterfaceOrientation uiio = (self.view.frame.size.width == (width * (width < height)) + (height * (width > height)))
+			  ? UIInterfaceOrientationPortrait : UIInterfaceOrientationLandscapeLeft;
+        webView.frame = [PSResizing getOrientationRect:uiio];
     } else {
         [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
