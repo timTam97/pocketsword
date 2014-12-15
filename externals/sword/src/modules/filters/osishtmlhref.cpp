@@ -450,10 +450,10 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		// <title>
 		else if (!strcmp(tag.getName(), "title")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				outText("<b>", buf, u);
+				outText("<p><b>", buf, u); // nicc fix?
 			}
 			else if (tag.isEndTag()) {
-				outText("</b><br />", buf, u);
+				outText("</b></p>", buf, u);
 			}
 		}
 		
