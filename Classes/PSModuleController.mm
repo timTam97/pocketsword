@@ -1074,7 +1074,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			}\n\
 			blockquote.lg > a.verse {\n\
 				position: relative;\n\
-				float: left;\n\
+				float: %@;\n\
 				%@: -%@em;\n\
 				width: %dem;\n\
 				text-align: center;\n\
@@ -1102,7 +1102,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			<title>PocketSword</title>\n\
 			</head>",
 			lgMarginRight, lgMarginLeft,
-			lgVersePadding, lgVersePaddingInt, lgVerseWidth,
+			lgVersePadding, lgVersePadding, lgVersePaddingInt, lgVerseWidth,
 			smallPadding, smallIndent,
 			mediumPadding, mediumIndent,
 			largePadding, largeIndent,
