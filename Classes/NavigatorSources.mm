@@ -64,7 +64,7 @@
 	[actionSheet release];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	mmmMenuDisplayed = NO;
 	if(buttonIndex == actionSheet.cancelButtonIndex)
 		return;

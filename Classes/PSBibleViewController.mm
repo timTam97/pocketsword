@@ -30,7 +30,7 @@
 }
 
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	
 	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
 	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
@@ -40,7 +40,7 @@
 		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
 		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
 		[tableViewController release];
-		[self presentModalViewController:containingNavigationController animated:YES];
+		[self presentViewController:containingNavigationController animated:YES completion:nil];
 		[containingNavigationController release];
 		self.tappedVerse = nil;
 		

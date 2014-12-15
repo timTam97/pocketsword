@@ -1196,7 +1196,7 @@
 				preverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Preverse"]["0"].c_str()];
 				//interverseHeading = [NSString stringWithUTF8String:swModule->getEntryAttributes()["Heading"]["Interverse"]["0"].c_str()];
 				if(preverseHeading && ![preverseHeading isEqualToString:@""]) {
-					//NSLog(@"preverseHeading = '%@'", preverseHeading);
+					//NSLog(@"preverseHeading (i=%d) = '%@'", i, preverseHeading);
 					preverseHeading = [NSString stringWithUTF8String:swModule->renderText([preverseHeading UTF8String])];
 					//NSLog(@"RenderText(preverseHeading) = '%@'\n", preverseHeading);
 					preverseHeading = [preverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
@@ -1204,7 +1204,7 @@
 					[verses appendFormat:@"<p><b>%@</b></p>", preverseHeading];
 				}
 //				else if(interverseHeading && ![interverseHeading isEqualToString:@""]) {
-//					//NSLog(@"interverseHeading = '%@'", interverseHeading);
+//					//NSLog(@"interverseHeading (i=%d) = '%@'", i, interverseHeading);
 //					interverseHeading = [NSString stringWithUTF8String:swModule->renderText([interverseHeading UTF8String])];
 //					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 //					interverseHeading = [interverseHeading stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
@@ -1429,6 +1429,7 @@
 
 	curKey->setIntros(NO);
     [moduleLock unlock];
+	//DLog(@"%@", text);
 	
 	return text;
 }
