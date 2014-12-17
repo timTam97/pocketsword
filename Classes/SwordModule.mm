@@ -404,9 +404,15 @@
         cipherKey = [self configEntryForKey:SWMOD_CONFENTRY_CIPHERKEY];
         if(cipherKey != nil) {
             [configEntries setObject:cipherKey forKey:SWMOD_CONFENTRY_CIPHERKEY];
-        }
+		} else {
+			NSMutableDictionary	*cipherKeys = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:DefaultsModuleCipherKeysKey]];
+			cipherKey = [cipherKeys objectForKey:[self name]];
+			if(cipherKey != nil) {
+				[configEntries setObject:cipherKey forKey:SWMOD_CONFENTRY_CIPHERKEY];
+			}
+		}
     }
-    
+		
     return cipherKey;
 }
 

@@ -713,9 +713,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	}
 	
 	//remove the cipherKey for the module.
-	NSMutableDictionary	*cipherKeys = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:DefaultsModuleCipherKeysKey]];
-	[cipherKeys removeObjectForKey: name];
-    [userDefaults setObject:cipherKeys forKey:DefaultsModuleCipherKeysKey];
+//	NSMutableDictionary	*cipherKeys = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:DefaultsModuleCipherKeysKey]];
+//	[cipherKeys removeObjectForKey: name];
+//    [userDefaults setObject:cipherKeys forKey:DefaultsModuleCipherKeysKey];
 	
 	SwordModule *moduleToRemove = [swordManager moduleWithName: name];
 	int stat = 1;
@@ -1275,6 +1275,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 + (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem {
+	DLog(@"queueing a new download item: %@", [downloadItem moduleName]);
 	PSModuleController *mController = [PSModuleController defaultModuleController];
 	downloadItem.delegate = mController;
 	[mController.downloadQueue addObject:downloadItem];
@@ -1283,6 +1284,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // returns NO if there are no tasks left.
 - (BOOL)tryDownloading {
+	DLog(@"tryDownloading called: count is %d", [self.downloadQueue count]);
 	if([self.downloadQueue count] > 0) {
 		[(PSModuleDownloadItem*)[self.downloadQueue objectAtIndex:0] startInstall];
 		return YES;
