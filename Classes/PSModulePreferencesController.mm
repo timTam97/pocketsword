@@ -292,7 +292,11 @@
 		} else if(indexPath.row == FontSizeRow) {
 			UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
 			fontSizeSlider.minimumValue = 10.0;
-			fontSizeSlider.maximumValue = 20.0;
+			if([PSResizing iPad]) {
+				fontSizeSlider.maximumValue = 36.0;
+			} else {
+				fontSizeSlider.maximumValue = 20.0;
+			}
 			NSInteger fontSize = GetIntegerPrefForMod(DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 			if(fontSize != 0) {//defaults default to 0 if it's not previously set...
 				fontSizeSlider.value = (float)fontSize;
