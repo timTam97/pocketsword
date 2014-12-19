@@ -10,12 +10,11 @@
 #import "PSModulePreferencesController.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
-#import "globals.h"
 #import "SwordManager.h"
 
 @implementation PSModulePreferencesController
 
-@synthesize hackTableView;
+@synthesize hackTableView, listType;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -534,7 +533,7 @@
 		RemovePrefForMod(DefaultsFontSizePreference, self.tabBarController.navigationItem.title);
 		RemovePrefForMod(DefaultsFontNamePreference, self.tabBarController.navigationItem.title);
 		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation: UITableViewRowAnimationTop];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+		[self redisplayFromButtonPress];
 	}
 }
 
@@ -544,7 +543,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsStrongsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)displayMorphChanged:(UISwitch *)sender {
@@ -553,7 +552,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsMorphPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)displayGreekAccentsChanged:(UISwitch *)sender {
@@ -562,7 +561,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsGreekAccentsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)displayHVPChanged:(UISwitch *)sender {
@@ -571,7 +570,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHVPPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)displayHebrewCantillationChanged:(UISwitch *)sender {
@@ -580,7 +579,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHebrewCantillationPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)morphGreekModuleChanged:(NSString *)newModule {
@@ -607,7 +606,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsScriptRefsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)footnotesChanged:(UISwitch *)sender {
@@ -616,7 +615,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsFootnotesPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)headingsChanged:(UISwitch *)sender {
@@ -625,7 +624,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsHeadingsPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)fontSizeChanged:(UISlider *)sender {
@@ -636,7 +635,7 @@
 	//[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
 	//[self.tableView reloadData];
 	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)redLetterChanged:(UISwitch *)sender {
@@ -645,7 +644,7 @@
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsRedLetterPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[PSModuleController defaultModuleController] setPreferences];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)vplChanged:(UISwitch *)sender {
@@ -653,7 +652,7 @@
 	SetBoolPrefForMod(n, DefaultsVPLPreference, self.tabBarController.navigationItem.title);
 	//[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsVPLPreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
 }
 
 - (void)fontNameChanged:(NSString *)newFont {
@@ -661,7 +660,23 @@
 	//[[NSUserDefaults standardUserDefaults] setObject:newFont forKey:DefaultsFontNamePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[self.tableView reloadData];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
+	[self redisplayFromButtonPress];
+}
+
+- (void)redisplayFromButtonPress {
+	switch (listType) {
+		case BibleTab:
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			break;
+		case CommentaryTab:
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+			break;
+		case DictionaryTab:
+		case DevotionalTab:
+		case DownloadsTab:
+		case PreferencesTab:
+			break;
+	}
 }
 
 @end

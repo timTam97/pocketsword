@@ -6,6 +6,7 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import "globals.h"
 #import "PSBasePreferencesController.h"
 
 @class PSModuleController;
@@ -13,8 +14,9 @@
 
 @interface PSModulePreferencesController : PSBasePreferencesController {
 	
-	UILabel *fontSizeLabel;
-	BOOL	hackTableView;
+	UILabel		*fontSizeLabel;
+	BOOL		hackTableView;
+	ShownTab	listType;
 
 	//sections
 	NSInteger DisplaySection, ModuleSection, StrongsSection, MorphSection, LangSection;
@@ -42,7 +44,9 @@
 }
 
 @property BOOL hackTableView;
+@property (assign) ShownTab listType;
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule;
+- (void)redisplayFromButtonPress;
 
 @end

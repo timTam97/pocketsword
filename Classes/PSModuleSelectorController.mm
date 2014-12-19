@@ -364,6 +364,7 @@
 	PSModuleInfoViewController *detailsViewController = [[PSModuleInfoViewController alloc] initWithNibName:nil bundle:nil];
 	[detailsViewController displayInfoForModule:mod];
 	PSModulePreferencesController *preferencesViewController = [[PSModulePreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
+	preferencesViewController.listType = self.listType;
 	preferencesViewController.hackTableView = (listType == PreferencesTab) ? NO : YES;
 	[preferencesViewController displayPrefsForModule:mod];
 	NSArray *tabs = [NSArray arrayWithObjects:detailsViewController, preferencesViewController, nil];
