@@ -1432,6 +1432,8 @@
 	if (swModule->getDirection() == sword::DIRECTION_RTL) {	// Fix RTL modules
 		text = [text stringByReplacingOccurrencesOfString: @"dir=\"ltr\"" withString: @"dir=\"rtl\""];
 	}
+	NSString *xmlLangString = [NSString stringWithFormat:@"xml:lang=\"%@\" lang=\"%@\"", [self lang], [self lang]];
+	text = [text stringByReplacingOccurrencesOfString: @"xml:lang=\"en\"" withString: xmlLangString];
 
 	curKey->setIntros(NO);
     [moduleLock unlock];
