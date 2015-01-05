@@ -60,7 +60,7 @@
 							</div>\n\
 								<p>If you would like to use these same Bible & Commentary modules on another platform, check out the following apps:<br />\n\
 										&bull; <i><a href=\"http://xiphos.org/\">Xiphos (Windows, Linux/Unix)</a></i><br />\n\
-										&bull; <i><a href=\"https://code.google.com/p/and-bible/\">AndBible (Android)</a></i><br />\n\
+										&bull; <i><a href=\"https://code.google.com/p/and-bible/\">AndBible (other mobile)</a></i><br />\n\
 										&bull; <i><a href=\"http://www.macsword.com/\">Eloquent/MacSword</a></i><br />\n\
 										&bull; <i><a href=\"http://www.bibletime.info/\">BibleTime (Linux/Unix and Windows)</a></i><br />\n\
 									</p>\n\
