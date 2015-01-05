@@ -181,8 +181,8 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //		[swordBuiltInManager release];
 //		swordBuiltInManager = nil;
 //		
-//		// make sure we're not backing up this folder, now that we're installing stuff in here...
-//		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
+		// make sure we're not backing up this folder, now that we're installing stuff in here...
+		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
 //	}
 	[self reload];
 		

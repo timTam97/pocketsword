@@ -22,7 +22,7 @@
 	static NSString *body = [NSString stringWithFormat:
 							 @"<div id=\"header\">\n\
 								 <div class=\"title\">PocketSword</div>\n\
-								 <div class=\"version\"> Version %@</div>\n\
+								 <div class=\"version\"> Version %@ (%@)</div>\n\
 								 <center><i><a href=\"https://bitbucket.org/niccarter/pocketsword/overview\">PocketSword on Bitbucket</a></i><br />\n\
 									<i><a href=\"http://www.crosswire.org/forums/mvnforum/listthreads?forum=16\">User Forums</a></i><br />\n\
 									<i>@<a href=\"http://twitter.com/PocketSword\">PocketSword</a> on Twitter</i></center>\n\
@@ -88,7 +88,11 @@
 					  <h2 class=\"headbar\">Ezra SIL and Gentium Plus: </h2>\n\
 					  %@\n\
 					  </div>\n\
-					  <br />&nbsp;<br />", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"OFL" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil]];//CFBundleShortVersionString
+					  <br />&nbsp;<br />",
+							 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
+							 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
+							 [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"OFL" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil]
+							 ];
 	
 	
 	return [NSString stringWithFormat: @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
