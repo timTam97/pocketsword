@@ -175,14 +175,15 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	//install the module/s contained in the archive:
 //	if(!internalModule) {
 		[swordManager installModulesFromPath:outfile];
+		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_MODULE_PATH];
 //	} else {
 //		SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
 //		[swordBuiltInManager installModulesFromPath:outfile];
 //		[swordBuiltInManager release];
 //		swordBuiltInManager = nil;
 //		
-		// make sure we're not backing up this folder, now that we're installing stuff in here...
-		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
+//		// make sure we're not backing up this folder, now that we're installing stuff in here...
+//		[PSResizing addSkipBackupAttributeToItemAtPath:DEFAULT_BUILTIN_MODULE_PATH];
 //	}
 	[self reload];
 		
