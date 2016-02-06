@@ -49,7 +49,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"lvl4-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"lvl4-id"] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"lvl4-id"];
 	}
 	
 	cell.textLabel.text = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
@@ -67,7 +67,6 @@
 	modulesList.title = [[data.moduleLanguages objectAtIndex:indexPath.row] descr];
 	[modulesList reloadTable];
 	[self.navigationController pushViewController:modulesList animated:YES];
-	[modulesList release];
 }
 
 
@@ -76,8 +75,4 @@
 }
 
 
-- (void)dealloc {
-	[data release];
-	[super dealloc];
-}
 @end

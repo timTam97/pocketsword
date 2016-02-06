@@ -37,11 +37,9 @@
 	[baseView addSubview:webView];
 	
 	self.dictionaryDescriptionWebView = webView;
-	[webView release];
 	
 	self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	self.view = baseView;
-	[baseView release];
 }
 
 - (void)setDictionaryEntryTitle:(NSString*)title {
@@ -65,12 +63,6 @@
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-	self.dictionaryDescriptionWebView = nil;
-	self.entryHTML = nil;
-	self.entryTitle = nil;
-	[super dealloc];
-}
 
 //- (void)viewWillAppear:(BOOL)animated {
 //    [super viewWillAppear:animated];
@@ -91,58 +83,57 @@
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	BOOL load = YES;
-	
-	//NSLog(@"\nDictionaryDescription: requestString: %@", [[request URL] absoluteString]);
-	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
-	NSString *entry = nil;
-	
-	if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"] && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@""] && ![[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showImage"]) {
-		//
-		// it's a dictionary entry to show. (&& it's not a link on an image.)
-		//
-		NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
+	@autoreleasepool {
+		BOOL load = YES;
 		
-		SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
-		if(swordDictionary) {
-			entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-			//DLog(@"\n%@ = %@\n", mod, entry);
-		} else {
-			entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
-		}
-		NSString *t = [[rData objectForKey:ATTRTYPE_VALUE] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		NSString *descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, entry] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
-		[self setDictionaryEntryTitle: t];
-		[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
+		//NSLog(@"\nDictionaryDescription: requestString: %@", [[request URL] absoluteString]);
+		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+		NSString *entry = nil;
 		
-		entry = nil;
-		load = NO;
+		if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"] && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@""] && ![[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showImage"]) {
+			//
+			// it's a dictionary entry to show. (&& it's not a link on an image.)
+			//
+			NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
+			
+			SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+			if(swordDictionary) {
+				entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+				//DLog(@"\n%@ = %@\n", mod, entry);
+			} else {
+				entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
+			}
+			NSString *t = [[rData objectForKey:ATTRTYPE_VALUE] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString *descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, entry] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
+			[self setDictionaryEntryTitle: t];
+			[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
+			
+			entry = nil;
+			load = NO;
+			
+		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
+			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
+			NSMutableString *tmpEntry = [@"" mutableCopy];
+			for(NSDictionary *dict in array) {
+				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+				[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+			}
+			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+			}
+		}
 		
-	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-		NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
-		NSMutableString *tmpEntry = [@"" mutableCopy];
-		for(NSDictionary *dict in array) {
-			NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
-			[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
-			[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+		if(entry) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
+			
+			load = NO;
 		}
-		if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-			entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-		}
-		[tmpEntry release];
+		
+		
+		return load;
 	}
-	
-	if(entry) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-		
-		load = NO;
-	}
-	
-	
-	[pool release];
-	return load;
 }
 
 @end

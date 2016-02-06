@@ -35,7 +35,7 @@ using sword::SWModule;
 	BOOL swordManagerLoaded;
 }
 
-@property (assign, readwrite) NSLock *managerCreationLock;
+@property (strong, readwrite) NSLock *managerCreationLock;
 
 // init
 - (id)init;

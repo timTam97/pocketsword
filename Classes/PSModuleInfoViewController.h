@@ -18,8 +18,8 @@
 	BOOL trashModule, askToUnlock;
 }
 
-@property (retain) UIWebView *infoWebView;
-@property (retain) SwordModule *swordModule;
+@property (strong) UIWebView *infoWebView;
+@property (strong) SwordModule *swordModule;
 
 //perhaps a tab with the version history in it?
 

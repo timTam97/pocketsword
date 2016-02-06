@@ -49,10 +49,8 @@
 	[wv loadHTMLString: html baseURL: nil];
 	[baseView addSubview:wv];
 	self.webView = wv;
-	[wv release];
 	
 	self.view = baseView;
-	[baseView release];
 	currentShownVerse = 1;
 }
 
@@ -73,7 +71,6 @@
 		{
 			UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleBible", @"Bible") image:[UIImage imageNamed:@"bible.png"] tag:10];
 			self.tabBarItem = tbi;
-			[tbi release];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setModuleNameViaNotification) name:NotificationNewPrimaryBible object:nil];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationBibleSwipeRight object:nil];
 		}
@@ -82,7 +79,6 @@
 		{
 			UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleCommentary", @"Commentary") image:[UIImage imageNamed:@"commentary.png"] tag:10];
 			self.tabBarItem = tbi;
-			[tbi release];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setModuleNameViaNotification) name:NotificationNewPrimaryCommentary object:nil];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prevChapter) name:NotificationCommentarySwipeRight object:nil];
 		}
@@ -108,7 +104,6 @@
 	[segControl addTarget: self action: @selector(segmentedControlAction:) forControlEvents: UIControlEventValueChanged];
 	self.navigationItem.titleView = segControl;
 	self.titleSegmentedControl = segControl;
-	[segControl release];
 	
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
@@ -297,20 +292,20 @@
 }
 
 - (void)setModuleNameViaNotification {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *module;
-	module = (tabType == BibleTab) ? [[PSModuleController defaultModuleController] primaryBible] : [[PSModuleController defaultModuleController] primaryCommentary];
-	if(module) {
-		int i = ([[module name] length] > 5) ? 5 : [[module name] length];
-		NSString *newTitle = ([[module name] length] > i) ? [NSString stringWithFormat:@"%@..", [[module name] substringToIndex:i]] : [[module name] substringToIndex:i];
-		[moduleButton setTitle: newTitle];
-	} else {
-		[moduleButton setTitle: NSLocalizedString(@"None", @"None")];
-		[titleSegmentedControl setTitle: @"PocketSword" forSegmentAtIndex: 1];
-		[self setEnabledNextButton: NO];
-		[self setEnabledPreviousButton: NO];
+	@autoreleasepool {
+		SwordModule *module;
+		module = (tabType == BibleTab) ? [[PSModuleController defaultModuleController] primaryBible] : [[PSModuleController defaultModuleController] primaryCommentary];
+		if(module) {
+			int i = ([[module name] length] > 5) ? 5 : [[module name] length];
+			NSString *newTitle = ([[module name] length] > i) ? [NSString stringWithFormat:@"%@..", [[module name] substringToIndex:i]] : [[module name] substringToIndex:i];
+			[moduleButton setTitle: newTitle];
+		} else {
+			[moduleButton setTitle: NSLocalizedString(@"None", @"None")];
+			[titleSegmentedControl setTitle: @"PocketSword" forSegmentAtIndex: 1];
+			[self setEnabledNextButton: NO];
+			[self setEnabledPreviousButton: NO];
+		}
 	}
-	[pool release];
 }
 
 - (PSTabBarControllerDelegate*)delegate {
@@ -322,25 +317,14 @@
 	UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"history.png"] style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleMultiList:)];
 	searchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 	self.navigationItem.leftBarButtonItem = searchButton;
-	[searchButton release];
 	
 	UIBarButtonItem *switchModuleButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"None" style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleModulesListFromButton:)];
 	self.navigationItem.rightBarButtonItem = switchModuleButtonItem;
 	self.moduleButton = switchModuleButtonItem;
-	[switchModuleButtonItem release];
 	[self setModuleNameViaNotification];
 	delegate = vc;
 }
 
-- (void)dealloc {
-	self.refToShow = nil;
-	self.jsToShow = nil;
-	self.tappedVerse = nil;
-	self.moduleButton = nil;
-	self.titleSegmentedControl = nil;
-	self.webView = nil;
-    [super dealloc];
-}
 
 - (void)topReloadTriggered:(PSWebView*)psWebView {
 	[self prevChapter];
@@ -561,139 +545,155 @@
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	BOOL load = YES;
-	
-	NSString *requestString = [[request URL] absoluteString];
-	NSArray *components = [requestString componentsSeparatedByString:@":"];
+	@autoreleasepool {
+		BOOL load = YES;
+		
+		NSString *requestString = [[request URL] absoluteString];
+		NSArray *components = [requestString componentsSeparatedByString:@":"];
 //	NSString *moduleViewType = (tabType == BibleTab) ? @"BIBLE" : @"COMMENTARY";
 //	DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
-	
-	if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
-		if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
-			//our method of updating the title bar & remembering our position.
-			if(tabType == BibleTab) {
-				[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
-				[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsBibleVersePosition];
-			} else {
-				[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"commentaryScrollPosition"];
-				[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsCommentaryVersePosition];
-			}
-			[[NSUserDefaults standardUserDefaults] synchronize];
-			NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
-			[ref appendFormat:@":%@", [components objectAtIndex:2]];
-			[self setTabTitle:[PSModuleController createRefString:ref]];
-		} else if([(NSString *)[components objectAtIndex:1] isEqualToString:@"versemenu"] && (tabType == BibleTab)) {
-			// ONLY for BibleTab, not CommentaryTab...
-			//bring up the contextual menu for a verse.
-			self.tappedVerse = [components objectAtIndex:2];
-			//DLog(@"    %@", tappedVerse);
-			NSInteger tappedVerseInt = [tappedVerse integerValue];
-			NSString *sheetTitle = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerseInt];
-			UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
-			[sheet showFromTabBar:self.tabBarController.tabBar];
-			// TODO: for iPad, use showFromRect:inView:animated: instead, after determining the rect of the verse number.
-			[sheet release];
-		}
-		load = NO;
-	} else if([(NSString *)[components objectAtIndex:0] isEqualToString:@"arraydump"]) {
-		//DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
-		[self saveVersePositionArray:components];
-	} else if([[[request URL] scheme] isEqualToString:@"sword"]) {
-		//our internal reference to say this is a Bible verse to display in the Bible tab
-		// This should only happen in the commentary tab & we allow it to "load" normally.
-		DLog(@"\nCOMMENTARY: requestString: %@", requestString);
-	} else {
-		//NSLog(@"\nBIBLE: requestString: %@", requestString);
-		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
-		NSString *entry = nil;
 		
-		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showStrongs"]) {
-			//
-			// Strong's Numbers
-			//
-			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsGreekModule];
-			//NSLog(@"dataType = %@", [rData objectForKey:ATTRTYPE_TYPE]);
-			BOOL hebrew = NO;
-			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"Hebrew"]) {
-				mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule];
-				hebrew = YES;
+		if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
+			if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
+				//our method of updating the title bar & remembering our position.
+				if(tabType == BibleTab) {
+					[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"bibleScrollPosition"];
+					[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsBibleVersePosition];
+				} else {
+					[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:3] forKey: @"commentaryScrollPosition"];
+					[[NSUserDefaults standardUserDefaults] setObject: [components objectAtIndex:2] forKey: DefaultsCommentaryVersePosition];
+				}
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				NSMutableString *ref = [NSMutableString stringWithString:[PSModuleController getCurrentBibleRef]];
+				[ref appendFormat:@":%@", [components objectAtIndex:2]];
+				[self setTabTitle:[PSModuleController createRefString:ref]];
+			} else if([(NSString *)[components objectAtIndex:1] isEqualToString:@"versemenu"] && (tabType == BibleTab)) {
+				// ONLY for BibleTab, not CommentaryTab...
+				//bring up the contextual menu for a verse.
+				self.tappedVerse = [components objectAtIndex:2];
+				//DLog(@"    %@", tappedVerse);
+				NSInteger tappedVerseInt = [tappedVerse integerValue];
+				NSString *sheetTitle = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerseInt];
+				UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
+				[sheet showFromTabBar:self.tabBarController.tabBar];
+				// TODO: for iPad, use showFromRect:inView:animated: instead, after determining the rect of the verse number.
 			}
+			load = NO;
+		} else if([(NSString *)[components objectAtIndex:0] isEqualToString:@"arraydump"]) {
+			//DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
+			[self saveVersePositionArray:components];
+		} else if([[[request URL] scheme] isEqualToString:@"sword"]) {
+			//our internal reference to say this is a Bible verse to display in the Bible tab
+			// This should only happen in the commentary tab & we allow it to "load" normally.
+			DLog(@"\nCOMMENTARY: requestString: %@", requestString);
+		} else {
+			//NSLog(@"\nBIBLE: requestString: %@", requestString);
+			NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+			NSString *entry = nil;
 			
-			SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
-			if(swordDictionary) {
-				entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-				//DLog(@"\n%@ = %@\n", mod, entry);
-			}
-			if(!entry) {
-				if(hebrew)
-					entry = NSLocalizedString(@"NoHebrewStrongsNumbersModuleInstalled", @"");
-				else
-					entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
-			} else if(tabType == BibleTab) {
-				// for the BibleTab only, allow a "search for all occurrences" link...
-				NSString *strongsPrefix = @"G";
-				if(hebrew)
-					strongsPrefix = @"H";
-				entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@%@\">%@</a></div>", entry, strongsPrefix, [rData objectForKey:ATTRTYPE_VALUE], NSLocalizedString(@"StrongsSearchFindAll", @"")];
-				//NSLog(@"%@", entry);
-			}
-			
-			NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-			if(!hebrew) {
-				[[NSUserDefaults standardUserDefaults] setObject:PSGreekStrongsFontName forKey:DefaultsFontNamePreference];
-			} else  {
-				[[NSUserDefaults standardUserDefaults] setObject:PSHebrewStrongsFontName forKey:DefaultsFontNamePreference];
-			}
-			[[NSUserDefaults standardUserDefaults] synchronize];
-			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
-			[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-						
-		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
-			//
-			// Morphological Tags
-			//		type hasPrefix: "robinson"		for Greek
-			//		type isEqualToString: "Greek"	for Greek
-			//		type hasPrefix: "strongMorph"	for Hebrew	???
-			//
-			// for the time being I'm going to test for "strongMorph" & show an error dialogue or otherwise use Greek.
-			
-			NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
-			if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
-				entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
-			} else {
+			if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showStrongs"]) {
+				//
+				// Strong's Numbers
+				//
+				NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsGreekModule];
+				//NSLog(@"dataType = %@", [rData objectForKey:ATTRTYPE_TYPE]);
+				BOOL hebrew = NO;
+				if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"Hebrew"]) {
+					mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule];
+					hebrew = YES;
+				}
+				
 				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
 				if(swordDictionary) {
 					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
 					//DLog(@"\n%@ = %@\n", mod, entry);
 				}
 				if(!entry) {
-					entry = NSLocalizedString(@"NoMorphGreekModuleInstalled", @"");
+					if(hebrew)
+						entry = NSLocalizedString(@"NoHebrewStrongsNumbersModuleInstalled", @"");
+					else
+						entry = NSLocalizedString(@"NoGreekStrongsNumbersModuleInstalled", @"");
+				} else if(tabType == BibleTab) {
+					// for the BibleTab only, allow a "search for all occurrences" link...
+					NSString *strongsPrefix = @"G";
+					if(hebrew)
+						strongsPrefix = @"H";
+					entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@%@\">%@</a></div>", entry, strongsPrefix, [rData objectForKey:ATTRTYPE_VALUE], NSLocalizedString(@"StrongsSearchFindAll", @"")];
+					//NSLog(@"%@", entry);
 				}
-			}
-			entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
-			
-		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
-			if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
-				if(tabType == BibleTab) {
-					entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
-					entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
-					entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+				
+				NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
+				if(!hebrew) {
+					[[NSUserDefaults standardUserDefaults] setObject:PSGreekStrongsFontName forKey:DefaultsFontNamePreference];
+				} else  {
+					[[NSUserDefaults standardUserDefaults] setObject:PSHebrewStrongsFontName forKey:DefaultsFontNamePreference];
+				}
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
+				[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+							
+			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
+				//
+				// Morphological Tags
+				//		type hasPrefix: "robinson"		for Greek
+				//		type isEqualToString: "Greek"	for Greek
+				//		type hasPrefix: "strongMorph"	for Hebrew	???
+				//
+				// for the time being I'm going to test for "strongMorph" & show an error dialogue or otherwise use Greek.
+				
+				NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
+				if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
+					entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
 				} else {
-					entry = (NSString*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
-					entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
-					entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryCommentary] name]];
+					SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
+					if(swordDictionary) {
+						entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
+						//DLog(@"\n%@ = %@\n", mod, entry);
+					}
+					if(!entry) {
+						entry = NSLocalizedString(@"NoMorphGreekModuleInstalled", @"");
+					}
 				}
-			} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
-				NSArray *array;
-				if(tabType == BibleTab) {
-					array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
-				} else {
-					array = (NSArray*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
+				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
+				
+			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
+				if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
+					if(tabType == BibleTab) {
+						entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
+						entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+						entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+						entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+					} else {
+						entry = (NSString*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
+						entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+						entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+						entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryCommentary] name]];
+					}
+				} else if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"x"]) {//x-reference
+					NSArray *array;
+					if(tabType == BibleTab) {
+						array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
+					} else {
+						array = (NSArray*)[[[PSModuleController defaultModuleController] primaryCommentary] attributeValueForEntryData:rData];
+					}
+					NSMutableString *tmpEntry = [@"" mutableCopy];
+					for(NSDictionary *dict in array) {
+						NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+						[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+						[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+					}
+					if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+						entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+						entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
+						entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
+						entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+					}
 				}
+			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"] &&
+					  tabType == CommentaryTab) {
+				// ONLY for CommentaryTab as this is only a feature of Commentaries & dictionaries, etc.
+				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
 				for(NSDictionary *dict in array) {
 					NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
@@ -706,36 +706,17 @@
 					entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 				}
-				[tmpEntry release];
 			}
-		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"] &&
-				  tabType == CommentaryTab) {
-			// ONLY for CommentaryTab as this is only a feature of Commentaries & dictionaries, etc.
-			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
-			NSMutableString *tmpEntry = [@"" mutableCopy];
-			for(NSDictionary *dict in array) {
-				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
-				[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
-				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
-			}
-			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-				entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
-				entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
-				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-			}
-			[tmpEntry release];
-		}
 
-		
-		if(entry) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-			load = NO;
+			
+			if(entry) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
+				load = NO;
+			}
 		}
-	}
-	
-	[pool release];
-	return load; // Return YES to make sure regular navigation works as expected.
+		
+		return load;
+	} // Return YES to make sure regular navigation works as expected.
 	
 }
 

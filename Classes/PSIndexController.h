@@ -19,7 +19,7 @@
 
 @interface PSIndexController : NSObject <MBProgressHUDDelegate> {
 	
-	id <PSIndexControllerDelegate> delegate;
+	id <PSIndexControllerDelegate> __weak delegate;
 
 	NSMutableArray *files;
 	
@@ -37,8 +37,8 @@
     NSUInteger bti;
 }
 
-@property (retain, readwrite) NSMutableArray *files;
-@property (nonatomic, assign) id <PSIndexControllerDelegate> delegate;
+@property (strong, readwrite) NSMutableArray *files;
+@property (nonatomic, weak) id <PSIndexControllerDelegate> delegate;
 @property (copy) NSString *moduleToInstall;
 
 - (void)start:(BOOL)modal;

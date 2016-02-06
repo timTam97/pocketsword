@@ -13,7 +13,7 @@
 	NSInteger chapter;
 }
 
-@property (retain, readwrite) SwordBook *book;
+@property (strong, readwrite) SwordBook *book;
 @property (assign, readwrite) NSInteger chapter;
 
 @end

@@ -13,10 +13,10 @@
 
 
 @interface PSLaunchViewController : UIViewController {
-	id <PSLaunchDelegate> delegate;
+	id <PSLaunchDelegate> __weak delegate;
 }
 
-@property (nonatomic, assign) id <PSLaunchDelegate> delegate;
+@property (nonatomic, weak) id <PSLaunchDelegate> delegate;
 
 + (void)resetPreferences;
 - (void)startInitializingPocketSword;

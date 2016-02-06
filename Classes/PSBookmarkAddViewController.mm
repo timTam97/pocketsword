@@ -81,11 +81,9 @@
 	
 	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
 	self.navigationItem.rightBarButtonItem = saveButton;
-	[saveButton release];
 	if(!self.bookmarkBeingEdited) {
 		UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
 		self.navigationItem.leftBarButtonItem = cancelButton;
-		[cancelButton release];
 		self.navigationItem.title = NSLocalizedString(@"VerseContextualMenuAddBookmark", @"Add Bookmark");	
 	} else {
 		self.navigationItem.title = NSLocalizedString(@"BookmarkEditBookmarkTitle", @"Edit Bookmark");	
@@ -114,7 +112,6 @@
 	if(!valid) {
 		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 		[av show];
-		[av release];
 		return;
 	}	
 	
@@ -126,7 +123,6 @@
 		PSBookmark *newBookmark = [[PSBookmark alloc] initWithName:description dateAdded:bookmarkBeingEdited.dateAdded dateLastAccessed:[NSDate date] bibleReference:bookmarkBeingEdited.ref];
 		[PSBookmarks deleteBookmark:bookmarkBeingEdited.name fromFolderString:self.originalFolder];
 		[PSBookmarks addBookmarkObject:newBookmark withFolderString:self.folder];
-		[newBookmark release];
 		
 		NSArray *fullRef = [bookmarkBeingEdited.ref componentsSeparatedByString: @":"];
 		NSString *ref = [fullRef objectAtIndex: 0];
@@ -239,7 +235,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];//UITableViewCellStyleValue1
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];//UITableViewCellStyleValue1
 		if(indexPath.section == 1) {
 			[cell addSubview:descriptionTextField];
 		}
@@ -279,7 +275,6 @@
 			[dateFormatter setDateStyle:NSDateFormatterFullStyle];
 			
 			cell.textLabel.text = [dateFormatter stringFromDate:bookmarkBeingEdited.dateAdded];
-			[dateFormatter release];
 			dateFormatter = nil;
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
@@ -291,7 +286,6 @@
 			[dateFormatter setDateStyle:NSDateFormatterFullStyle];
 			
 			cell.textLabel.text = [dateFormatter stringFromDate:bookmarkBeingEdited.dateLastAccessed];
-			[dateFormatter release];
 			dateFormatter = nil;
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
@@ -349,13 +343,11 @@
 		if(!folder) {
 			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks defaultBookmarks] parentFolders:nil isAddingBookmark:YES];
 			[self.navigationController pushViewController:bnc animated:YES];
-			[bnc release];
 		} else {
 			NSArray *components = [folder componentsSeparatedByString:PSFolderSeparatorString];
 			// push the root of our bookmarks:
 			PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks defaultBookmarks] parentFolders:nil isAddingBookmark:YES];
 			[self.navigationController pushViewController:bnc animated:NO];
-			[bnc release];
 			NSMutableString *currentFolder = [NSMutableString stringWithString:[components objectAtIndex:0]];
 			for(int i=0; i<[components count];) {
 				BOOL animate = NO;
@@ -363,7 +355,6 @@
 					animate = YES;
 				bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:[PSBookmarks getBookmarkFolderForFolderString:currentFolder] parentFolders:currentFolder isAddingBookmark:YES];
 				[self.navigationController pushViewController:bnc animated:animate];
-				[bnc release];
 				i++;
 				if(i<[components count]) {
 					[currentFolder appendFormat:@"%@%@", PSFolderSeparatorString, [components objectAtIndex:i]];
@@ -389,20 +380,11 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationAddBookmarkInFolder];
-	[descriptionTextField release];
 	descriptionTextField = nil;
 	[super viewDidUnload];
 }
 
 
-- (void)dealloc {
-	self.bookAndChapterRef = nil;
-	self.verse = nil;
-	self.folder = nil;
-	self.originalFolder = nil;
-	self.bookmarkBeingEdited = nil;
-    [super dealloc];
-}
 
 
 @end

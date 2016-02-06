@@ -24,7 +24,6 @@
 	UIWebView *leafWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	self.view = leafWebView;
 	self.detailsWebView = leafWebView;
-	[leafWebView release];
 }
 
 - (NSString*)refreshInstallButton {
@@ -50,7 +49,6 @@
     }
     
     self.navigationItem.rightBarButtonItem = installBarButtonItem;
-	[installBarButtonItem release];
     
     return currentInstalledVersion;
 }
@@ -59,7 +57,10 @@
     NSString *currentInstalledVersion = [self refreshInstallButton];
 
 	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
-	[detailsWebView loadHTMLString:about baseURL:nil];
+    
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [detailsWebView loadHTMLString:about baseURL:nil];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -81,13 +82,9 @@
 }
 
 - (void)confirmUpgrade {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];		
 		[alertView show];
-		[alertView release];
-		[pool release];
 		return;
 	}
 	
@@ -95,8 +92,6 @@
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
-		[pool release];
 		return;
 	}
 	
@@ -109,19 +104,12 @@
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: message
 							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 	[alertView show];
-	[alertView release];
-	
-	[pool release];
 }
 
 - (void)confirmInstall {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
-		[pool release];
 		return;
 	}
 	
@@ -129,8 +117,6 @@
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
 								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
-		[pool release];
 		return;
 	}
 
@@ -143,14 +129,9 @@
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: message
 							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 	[alertView show];
-	[alertView release];
-
-	[pool release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
 	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
 	BOOL performInstall = NO;
 	
@@ -167,11 +148,8 @@
 	if(performInstall) {
 		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsWebView];
 		[PSModuleController queueModuleDownloadItem:dItem];
-		[dItem release];
 		[self refreshInstallButton];
 	}
-	
-	[pool release];
 }
 
 - (void)moduleDownloaded:(PSModuleDownloadItem *)sender {
@@ -185,8 +163,6 @@
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[module release];
-	[super dealloc];
 }
 
 @end

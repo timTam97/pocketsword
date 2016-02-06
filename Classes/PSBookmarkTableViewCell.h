@@ -12,6 +12,6 @@
 	UILabel *lastAccessedLabel;
 }
 
-@property (readwrite, retain) UILabel *lastAccessedLabel;
+@property (readwrite, strong) UILabel *lastAccessedLabel;
 
 @end

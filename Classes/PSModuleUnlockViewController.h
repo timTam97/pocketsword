@@ -22,12 +22,12 @@
 }
 
 @property (copy)   NSString			*moduleName;
-@property (retain) UIWebView		*unlockHelpWebView;
-@property (retain) UITextField		*unlockTextField;
-@property (retain) UIWebView		*unlockWebView;
-@property (retain) UIToolbar		*unlockToolbar;
-@property (retain) UIBarButtonItem	*unlockEditButton;
-@property (retain) UIBarButtonItem	*unlockSaveButton;
+@property (strong) UIWebView		*unlockHelpWebView;
+@property (strong) UITextField		*unlockTextField;
+@property (strong) UIWebView		*unlockWebView;
+@property (strong) UIToolbar		*unlockToolbar;
+@property (strong) UIBarButtonItem	*unlockEditButton;
+@property (strong) UIBarButtonItem	*unlockSaveButton;
 
 - (void)unlockEditButtonPressed:(id)sender;
 

@@ -13,6 +13,6 @@
 	UIView *grayView;
 }
 
-@property (nonatomic, readwrite, retain) PSDictionaryViewController *dictionaryViewController;
+@property (nonatomic, readwrite, strong) PSDictionaryViewController *dictionaryViewController;
 
 @end

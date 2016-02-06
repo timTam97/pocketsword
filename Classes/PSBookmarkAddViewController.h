@@ -17,11 +17,11 @@
 	PSBookmark *bookmarkBeingEdited;
 }
 
-@property (retain, readwrite) NSString *bookAndChapterRef;
-@property (retain, readwrite) NSString *verse;
-@property (retain, readwrite) NSString *folder;
-@property (retain, readwrite) NSString *originalFolder;
-@property (retain, readwrite) PSBookmark *bookmarkBeingEdited;
+@property (strong, readwrite) NSString *bookAndChapterRef;
+@property (strong, readwrite) NSString *verse;
+@property (strong, readwrite) NSString *folder;
+@property (strong, readwrite) NSString *originalFolder;
+@property (strong, readwrite) PSBookmark *bookmarkBeingEdited;
 
 // used to add a bookmark:
 - (id)initWithBookAndChapterRef:(NSString*)ref andVerse:(NSString*)v;

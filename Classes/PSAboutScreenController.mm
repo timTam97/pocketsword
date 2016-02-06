@@ -172,10 +172,8 @@
 	[wv loadHTMLString: html baseURL: nil];
 	[baseView addSubview:wv];
 	self.aboutWebView = wv;
-	[wv release];
 	
 	self.view = baseView;
-	[baseView release];
 }
 
 - (void)viewDidLoad {
@@ -184,7 +182,6 @@
 	
 	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStyleBordered target:self action:@selector(emailFeedback:)];
 	self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
-	[emailUsBarButtonItem release];
 
 	[aboutWebView loadHTMLString:[PSAboutScreenController generateAboutHTML] baseURL:nil];
 	[super viewDidLoad];
@@ -330,7 +327,6 @@
 		mailComposeViewController.mailComposeDelegate = self;
 		mailComposeViewController.navigationBar.barStyle = UIBarStyleBlack;
 		[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
-		[mailComposeViewController release];
 	}
 }
 
@@ -359,10 +355,6 @@
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-	self.aboutWebView = nil;
-    [super dealloc];
-}
 
 
 @end

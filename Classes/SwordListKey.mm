@@ -18,23 +18,23 @@
 @implementation SwordListKey
 
 + (id)listKeyWithRef:(NSString *)aRef {
-    return [[[SwordListKey alloc] initWithRef:aRef] autorelease];
+    return [[SwordListKey alloc] initWithRef:aRef];
 }
 
 + (id)listKeyWithRef:(NSString *)aRef v11n:(NSString *)scheme {
-    return [[[SwordListKey alloc] initWithRef:aRef v11n:scheme] autorelease];
+    return [[SwordListKey alloc] initWithRef:aRef v11n:scheme];
 }
 
 + (id)listKeyWithRef:(NSString *)aRef headings:(BOOL)headings v11n:(NSString *)scheme {
-    return [[[SwordListKey alloc] initWithRef:aRef headings:headings v11n:scheme] autorelease];
+    return [[SwordListKey alloc] initWithRef:aRef headings:headings v11n:scheme];
 }
 
 + (id)listKeyWithSWListKey:(sword::ListKey *)aLk {
-    return [[[SwordListKey alloc] initWithSWListKey:aLk] autorelease];
+    return [[SwordListKey alloc] initWithSWListKey:aLk];
 }
 
 + (id)listKeyWithSWListKey:(sword::ListKey *)aLk makeCopy:(BOOL)copy {
-    return [[[SwordListKey alloc] initWithSWListKey:aLk makeCopy:copy] autorelease];    
+    return [[SwordListKey alloc] initWithSWListKey:aLk makeCopy:copy];    
 }
 
 - (id)init {
@@ -72,13 +72,7 @@
 	return self;
 }
 
-- (void)finalize {
-    [super finalize];
-}
 
-- (void)dealloc {
-    [super dealloc];    
-}
 
 - (NSInteger)numberOfVerses {
     NSInteger ret = 0;
@@ -99,7 +93,7 @@
 }
 
 - (VerseEnumerator *)verseEnumerator {
-    return [[[VerseEnumerator alloc] initWithListKey:self] autorelease];
+    return [[VerseEnumerator alloc] initWithListKey:self];
 }
 
 - (NSInteger)count {

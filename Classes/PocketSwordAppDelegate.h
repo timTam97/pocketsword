@@ -31,10 +31,10 @@
 	PSTabBarControllerDelegate *tabBarControllerDelegate;
 }
 
-@property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) NSURL *urlToOpen;
-@property (nonatomic, retain) NSDictionary *launchedWithOptions;
-@property (retain) PSTabBarControllerDelegate *tabBarControllerDelegate;
+@property (nonatomic, strong) UIWindow *window;
+@property (nonatomic, strong) NSURL *urlToOpen;
+@property (nonatomic, strong) NSDictionary *launchedWithOptions;
+@property (strong) PSTabBarControllerDelegate *tabBarControllerDelegate;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate;
 - (void)storeDidChange:(NSNotification *)notification;

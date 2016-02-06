@@ -21,10 +21,6 @@
 	return self;
 }
 
-- (void)dealloc {
-	self.ref = nil;
-	[super dealloc];
-}
 
 
 

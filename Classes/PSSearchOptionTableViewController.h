@@ -44,7 +44,7 @@ typedef enum {
 @end
 
 @interface PSSearchOptionTableViewController : UITableViewController {
-	id <PSSearchOptionsDelegate> delegate;
+	id <PSSearchOptionsDelegate> __weak delegate;
 	
 	PSSearchOptionTableType tableType;
 	PSSearchRange searchRange;
@@ -54,12 +54,12 @@ typedef enum {
 	NSString *bookName;
 }
 
-@property (nonatomic, assign) id <PSSearchOptionsDelegate> delegate;
+@property (nonatomic, weak) id <PSSearchOptionsDelegate> delegate;
 @property (assign, readwrite) BOOL strongsSearch;
 @property (assign, readwrite) BOOL fuzzySearch;
 @property (assign, readwrite) PSSearchType searchType;
 @property (assign, readwrite) PSSearchRange searchRange;
-@property (retain, readwrite) NSString *bookName;
+@property (strong, readwrite) NSString *bookName;
 
 - (id)initWithTableType:(PSSearchOptionTableType)tType;
 

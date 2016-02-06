@@ -27,7 +27,7 @@
 	MBProgressHUD *indexDownloadHUD;
 }
 
-@property (nonatomic, retain) NSString *serverType;
+@property (nonatomic, strong) NSString *serverType;
 
 - (void)cancelButtonPressed;
 - (void)saveButtonPressed;

@@ -17,7 +17,7 @@
 	BOOL bookmarksEditing;
 }
 
-@property (retain, readwrite) PSBookmarkFolder *bookmarkFolder;
+@property (strong, readwrite) PSBookmarkFolder *bookmarkFolder;
 @property (readwrite) BOOL isAddingBookmark;
 @property (readonly) NSString* parentFolders;
 

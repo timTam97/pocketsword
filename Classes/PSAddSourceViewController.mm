@@ -74,11 +74,6 @@
 	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
 
 	NSArray *tbarButtons = [NSArray arrayWithObjects: cancelButton, flexLeft, titleButton, flexRight, saveButton, nil];
-	[titleButton release];
-	[flexLeft release];
-	[flexRight release];
-	[cancelButton release];
-	[saveButton release];
 	tbar.items = tbarButtons;
 	[v addSubview:tbar];
 	topBarHeight = tbar.frame.size.height;
@@ -92,8 +87,6 @@
 	addSourceTableView.dataSource = self;
 	
 	self.view = v;
-	[tbar release];
-	[v release];
 
     CGRect fieldFrames = CGRectMake(20,12,280,25);
     if([PSResizing iPad]) {
@@ -230,7 +223,6 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
-    [indexData release];
 	indexData = nil;
 	
 	[indexDownloadHUD hide:YES];
@@ -238,13 +230,12 @@
 	//perhaps dodgy, display a warning.
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 	[alertView show];
-	[alertView release];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	if(indexData) {
-		indexDownloadHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		indexDownloadHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		indexDownloadHUD.mode = MBProgressHUDModeCustomView;
 		[indexDownloadHUD hide:YES afterDelay:2];
 		[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];
@@ -253,9 +244,7 @@
 		//perhaps dodgy, display a warning.
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 		[alertView show];
-		[alertView release];
 	}
-    [indexData release];
 	indexData = nil;
 }
 
@@ -267,14 +256,12 @@
 		//you must fill in all fields to add a new source
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"FillInAllFieldsMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
 		return;
 	}
 	
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
 		return;
 	}
 
@@ -283,9 +270,8 @@
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	[connection start];
-	[connection release];
 	
-	indexDownloadHUD = [[MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES] retain];
+	indexDownloadHUD = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
 	indexDownloadHUD.delegate = self;
 }
 
@@ -296,7 +282,6 @@
 		dismissModal = YES;
 	}
 	[indexDownloadHUD removeFromSuperview];
-	[indexDownloadHUD release];
 	indexDownloadHUD = nil;
 	if(dismissModal) {
 		[self dismissModalViewControllerAnimated:YES];
@@ -315,7 +300,6 @@
 	[is setUID:[NSString stringWithFormat:@"%@-%@", server, caption]];
 	
 	[[[PSModuleController defaultModuleController] swordInstallManager] addInstallSource:is];
-	[is release];
 	is = nil;
 		
 	if(indexDownloadHUD && indexDownloadHUD.mode == MBProgressHUDModeCustomView) {
@@ -347,7 +331,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
 	switch(indexPath.section) {
@@ -394,17 +378,10 @@
 }
 
 - (void)viewDidUnload {
-	[captionTextField release];
-	[serverTextField release];
-	[pathTextField release];
-	[addSourceTableView release];
 	[super viewDidUnload];
 }
 
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if([PSResizing iPad]) {

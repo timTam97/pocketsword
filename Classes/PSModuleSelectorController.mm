@@ -17,6 +17,7 @@
 #import "PSModulePreferencesController.h"
 #import "SwordManager.h"
 #import "PSTabBarControllerDelegate.h"
+#import "SwordDictionary.h"
 
 @implementation PSModuleSelectorController
 
@@ -39,7 +40,6 @@
 	listTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[baseView addSubview:listTable];
 	self.modulesListTable = listTable;
-	[listTable release];
 	
 	//CGFloat y = viewHeight - 44 - self.navigationController.navigationBar.frame.size.height;
 	//y -= [[UIApplication sharedApplication] statusBarFrame].size.height;
@@ -49,15 +49,10 @@
 	toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
 	[baseView addSubview:toolbar];
 	self.modulesToolbar = toolbar;
-	[toolbar release];
 	
 	self.view = baseView;
-	[baseView release];
 }
 
-- (void)dealloc {
-	[super dealloc];
-}
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -68,10 +63,8 @@
 	} else if(![PSResizing iPad]) {
 		UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
 		self.navigationItem.leftBarButtonItem = modulesCloseButton;
-		[modulesCloseButton release];
 		UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
 		self.navigationItem.rightBarButtonItem = modulesAddButton;
-		[modulesAddButton release];
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -114,7 +107,7 @@
 		moduleCount = [array count];
 		int pos = 0;
 		for(; pos < [array count]; pos++) {
-			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryDevotional] name]]) {
+			if([[[array objectAtIndex: pos] name] isEqualToString:[[moduleController primaryDevotional] name]]) {
 				break;
 			}
 		}
@@ -127,7 +120,7 @@
 		moduleCount = [array count];
 		int pos = 0;
 		for(; pos < [array count]; pos++) {
-			if([[[array objectAtIndex: pos] name] isEqualToString: [[moduleController primaryDictionary] name]]) {
+			if([[[array objectAtIndex: pos] name] isEqualToString:[[moduleController primaryDictionary] name]]) {
 				break;
 			}
 		}
@@ -201,7 +194,7 @@
 	
 	// If no cell is available, create a new one using the given identifier - 
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier];
 	}
 	
 	BOOL locked = NO;
@@ -338,18 +331,18 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	
-	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
-		[[PSModuleController defaultModuleController] removeModule: module];
-		if(listType == DictionaryTab) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
+		if (editingStyle == UITableViewCellEditingStyleDelete) {
+			NSString *module = [tableView cellForRowAtIndexPath: indexPath].textLabel.text;
+			[[PSModuleController defaultModuleController] removeModule: module];
+			if(listType == DictionaryTab) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
+			}
+			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 		}
-		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
-	}
 	
-	[pool release];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
@@ -377,9 +370,6 @@
 		[moduleTabBarController setSelectedViewController:preferencesViewController];
 	}
 	[self.navigationController pushViewController:moduleTabBarController animated:YES];
-	[detailsViewController release];
-	[preferencesViewController release];
-	[moduleTabBarController release];
 	
 //	leafTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
 //	[self.navigationController pushViewController:leafTabBarController animated:YES];
@@ -406,7 +396,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(strongsButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		if([swordModule hasFeature: SWMOD_FEATURE_MORPH]) {
 			if(GetBoolPrefForMod(DefaultsMorphPreference, [swordModule name])) {
@@ -416,7 +405,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(morphButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		if([swordModule hasFeature: SWMOD_FEATURE_HEADINGS]) {
 			if(GetBoolPrefForMod(DefaultsHeadingsPreference, [swordModule name])) {
@@ -426,7 +414,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(headingsButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		if([swordModule hasFeature: SWMOD_FEATURE_FOOTNOTES]) {
 			if(GetBoolPrefForMod(DefaultsFootnotesPreference, [swordModule name])) {
@@ -436,7 +423,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(footnotesButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		if([swordModule hasFeature: SWMOD_FEATURE_SCRIPTREF]) {
 			if(GetBoolPrefForMod(DefaultsScriptRefsPreference, [swordModule name])) {
@@ -446,7 +432,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(xrefsButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		if([swordModule hasFeature: SWMOD_FEATURE_REDLETTERWORDS]) {
 			if(GetBoolPrefForMod(DefaultsRedLetterPreference, [swordModule name])) {
@@ -456,7 +441,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(redletterButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		if([swordModule hasFeature:SWMOD_FEATURE_GLOSSES] || [swordModule hasFeature:@"Ruby"]) {
 			if(GetBoolPrefForMod(DefaultsGlossesPreference, [swordModule name])) {
@@ -466,7 +450,6 @@
 			}
 			UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(glossesButtonPressed:)];
 			[buttons addObject:barButton];
-			[barButton release];
 		}
 		
 		// add VPL at the end of the toolbar.
@@ -477,7 +460,6 @@
 		}
 		UIBarButtonItem *vplBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName] style:UIBarButtonItemStylePlain target:self action:@selector(vplButtonPressed:)];
 		[buttons addObject:vplBarButton];
-		[vplBarButton release];
 		vplBarButton = nil;
 
 		
@@ -505,7 +487,6 @@
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
-	[hud release];
 	hud = nil;
 }
 
@@ -515,9 +496,9 @@
 	HUD.delegate = self;
 	HUD.labelText = titleText;
 	if(tick) {
-		HUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 	} else {
-		HUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 	}
 	HUD.mode = MBProgressHUDModeCustomView;
 	[viewToUse addSubview:HUD];

@@ -89,9 +89,7 @@
 }
 
 - (void)dealloc {
-	self.children = nil;
 	self.rgbHexString = nil;
-	[super dealloc];
 }
 
 - (void)addChild:(PSBookmarkObject*)child {

@@ -21,7 +21,6 @@
 	for(NSArray *item in arrays) {
 		PSHistoryItem *historyItem = [[PSHistoryItem alloc] initWithArray:item];
 		[returnArray addObject:historyItem];
-		[historyItem release];
 	}
 	return returnArray;
 }
@@ -129,12 +128,5 @@
 	return PSHistoryItemInvalidAge;
 }
 
-- (void)dealloc {
-	self.bibleReference = nil;
-	self.dateAdded = nil;
-	self.scrollAmount = nil;
-	self.moduleName = nil;
-	[super dealloc];
-}
 
 @end

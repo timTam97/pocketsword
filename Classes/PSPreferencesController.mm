@@ -106,13 +106,9 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
-	[fontSizeLabel release];
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
@@ -225,7 +221,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS];
 						CGFloat fssX = 170.0;
 						if(deviceIsPad) {
 							fssX = 135.0;
@@ -249,7 +245,6 @@
 						fontSizeSlider.continuous = YES;
 						[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
 						[cell addSubview:fontSizeSlider];
-						[fontSizeSlider release];
 						[cell addSubview:fontSizeLabel];
 					}
 					resetCell = NO;
@@ -259,7 +254,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled];
 					}
 				}
 					break;
@@ -267,7 +262,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 					}
 				}
 					break;
@@ -275,7 +270,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub];
 					}
 				}
 					break;
@@ -293,7 +288,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdenfifierSub];
 					}
 				}
 					break;
@@ -305,7 +300,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 					}
 				}
 					break;
@@ -314,7 +309,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled];
 					}
 				}
 					break;
@@ -326,7 +321,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 					}
 				}
 					break;
@@ -335,7 +330,7 @@
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
 					if(!cell) {
-						cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled];
 					}
 				}
 					break;
@@ -346,7 +341,7 @@
 		{
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 			}
 		}
 			break;
@@ -389,7 +384,6 @@
 					cell.accessoryView = nightModeSwitch;
 					//[ cell addSubview: nightModeSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
-					[nightModeSwitch release];						
 				}
 					break;
 				case MOD_BLURB_ROW:
@@ -502,7 +496,6 @@
 					[strongsSwitch addTarget:self action:@selector(displayStrongsChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: strongsSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
-					[strongsSwitch release];						
 				}
 					break;
 				case STRONGS_G_ROW :
@@ -533,7 +526,6 @@
 					[morphSwitch addTarget:self action:@selector(displayMorphChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: morphSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
-					[morphSwitch release];						
 				}
 					break;
 				case MORPH_G_ROW :
@@ -564,7 +556,6 @@
 					[greekAccentsSwitch addTarget:self action:@selector(displayGreekAccentsChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: greekAccentsSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesGreekAccentsTitle", @"Greek Accents");
-					[greekAccentsSwitch release];
 				}
 					break;
 				case LANG_HEBREWPTS_ROW:
@@ -578,7 +569,6 @@
 					[ cell addSubview: hvpSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
 					cell.textLabel.font = [UIFont boldSystemFontOfSize:10.0];
-					[hvpSwitch release];
 				}
 					break;
 				case LANG_HEBREWCANT_ROW:
@@ -591,7 +581,6 @@
 					[hebrewCantillationSwitch addTarget:self action:@selector(displayHebrewCantillationChanged:) forControlEvents:UIControlEventValueChanged];
 					[ cell addSubview: hebrewCantillationSwitch ];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewCantillationTitle", @"Hebrew Cantillation");
-					[hebrewCantillationSwitch release];						
 				}
 					break;
 			}
@@ -608,14 +597,13 @@
 					[insomniaSwitch addTarget:self action:@selector(insomniaModeChanged:) forControlEvents:UIControlEventValueChanged];
 					//[ cell addSubview: insomniaSwitch ];
 					cell.accessoryView = insomniaSwitch;
-					[insomniaSwitch release];						
 					cell.textLabel.text = NSLocalizedString(@"PreferencesDisableAutoLockTitle", @"");
 				}
 					break;
 				case ROTATION_LOCK_ROW :
 				{
 					UISwitch *rotationLockSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+					int rotationLockPosition = (int)[[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
 					if(rotationLockPosition == RotationEnabled) {
 						rotationLockSwitch.on = NO;
 					} else {
@@ -624,7 +612,6 @@
 					[rotationLockSwitch addTarget:self action:@selector(rotationLockChanged:) forControlEvents:UIControlEventValueChanged];
 					//[ cell addSubview: rotationLockSwitch ];
 					cell.accessoryView = rotationLockSwitch;
-					[rotationLockSwitch release];						
 					cell.textLabel.text = NSLocalizedString(@"PreferencesRotationLock", @"Rotation Lock");
 				}
 					break;
@@ -638,7 +625,6 @@
 					[fullscreenModeSwitch addTarget:self action:@selector(fullscreenModeChanged:) forControlEvents:UIControlEventValueChanged];
 					//[ cell addSubview: fullscreenModeSwitch ];
 					cell.accessoryView = fullscreenModeSwitch;
-					[fullscreenModeSwitch release];						
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 					cell.textLabel.numberOfLines = 2;
@@ -663,7 +649,6 @@
 					[manualInstallSwitch addTarget:self action:@selector(moduleMaintainerModeChanged:) forControlEvents:UIControlEventValueChanged];
 					//[ cell addSubview: manualInstallSwitch ];
 					cell.accessoryView = manualInstallSwitch;
-					[manualInstallSwitch release];
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
 					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 					cell.textLabel.numberOfLines = 2;
@@ -692,7 +677,7 @@
 					NSInteger fontSize = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 					//cell.textLabel.text = [NSString stringWithFormat:@"%@: %i", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size"), fontSize];
 					cell.textLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size")];
-					fontSizeLabel.text = [NSString stringWithFormat:@"%d", fontSize];
+					fontSizeLabel.text = [NSString stringWithFormat:@"%ld", (long)fontSize];
 				}
 					break;
 				case FONT_NAME_ROW:
@@ -756,7 +741,6 @@
 					fontTableViewController.moduleName = nil;
 					fontTableViewController.preferencesController = self;
 					[self.navigationController pushViewController:fontTableViewController animated:YES];
-					[fontTableViewController release];
 					break;
 			}
 			break;
@@ -769,7 +753,6 @@
 					moduleSelectorTableViewController.preferencesController = self;
 					[moduleSelectorTableViewController setTableType: StrongsGreek];
 					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
-					[moduleSelectorTableViewController release];
 				}
 					break;
 				case STRONGS_H_ROW:
@@ -779,7 +762,6 @@
 					moduleSelectorTableViewController.preferencesController = self;
 					[moduleSelectorTableViewController setTableType: StrongsHebrew];
 					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
-					[moduleSelectorTableViewController release];
 				}
 					break;
 			}
@@ -793,14 +775,13 @@
 					moduleSelectorTableViewController.preferencesController = self;
 					[moduleSelectorTableViewController setTableType: MorphGreek];
 					[self.navigationController pushViewController:moduleSelectorTableViewController animated:YES];
-					[moduleSelectorTableViewController release];
 				}
 					break;
 			}
 			break;
 		case MODULE_SECTION:
 		{
-			PSModuleSelectorController *moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil] autorelease];
+			PSModuleSelectorController *moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil];
 			[moduleSelectorViewController setListType:PreferencesTab];
 			[self.navigationController pushViewController:moduleSelectorViewController animated:YES];
 			//[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:[[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row]];
@@ -918,7 +899,7 @@
 	NSInteger f = [sender value];
 	[[NSUserDefaults standardUserDefaults] setInteger:f forKey:DefaultsFontSizePreference];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
+	fontSizeLabel.text = [NSString stringWithFormat:@"%ld", (long)f];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
 }
 

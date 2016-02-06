@@ -114,7 +114,7 @@ static NSMutableArray *recentNonces;
 	if((self = [super init]))
 	{
 		// Take over ownership of the socket
-		asyncSocket = [newSocket retain];
+		asyncSocket = newSocket;
 		[asyncSocket setDelegate:self];
 		
 		// Ensure pre-buffering is enabled to improve readDataToData performance
@@ -152,25 +152,17 @@ static NSMutableArray *recentNonces;
 {
 	[asyncSocket setDelegate:nil];
 	[asyncSocket disconnect];
-	[asyncSocket release];
 	
 	if(request) CFRelease(request);
 	
-	[nonce release];
 	
 	if([httpResponse respondsToSelector:@selector(connectionDidClose)])
 	{
 		[httpResponse connectionDidClose];
 	}
-	[httpResponse release];
 	
-	[ranges release];
-	[ranges_headers release];
-	[ranges_boundry release];
 	
-	[responseDataSizes release];
 	
-	[super dealloc];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -323,7 +315,7 @@ static NSMutableArray *recentNonces;
 	// We use the Core Foundation UUID class to generate a nonce value for us
 	// UUIDs (Universally Unique Identifiers) are 128-bit values guaranteed to be unique.
 	CFUUIDRef theUUID = CFUUIDCreate(NULL);
-	NSString *newNonce = [NSMakeCollectable(CFUUIDCreateString(NULL, theUUID)) autorelease];
+	NSString *newNonce = CFBridgingRelease(theUUID);
 	CFRelease(theUUID);
 	
 	// We have to remember that the HTTP protocol is stateless.
@@ -352,7 +344,7 @@ static NSMutableArray *recentNonces;
 - (BOOL)isAuthenticated
 {
 	// Extract the authentication information from the Authorization header
-	HTTPAuthenticationRequest *auth = [[[HTTPAuthenticationRequest alloc] initWithRequest:request] autorelease];
+	HTTPAuthenticationRequest *auth = [[HTTPAuthenticationRequest alloc] initWithRequest:request];
 	
 	if([self useDigestAccessAuthentication])
 	{
@@ -378,9 +370,9 @@ static NSMutableArray *recentNonces;
 			return NO;
 		}
 		
-		NSString *method = [NSMakeCollectable(CFHTTPMessageCopyRequestMethod(request)) autorelease];
+		NSString *method = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(request));
 		
-		NSURL *absoluteUrl = [NSMakeCollectable(CFHTTPMessageCopyRequestURL(request)) autorelease];
+		NSURL *absoluteUrl = CFBridgingRelease(CFHTTPMessageCopyRequestURL(request));
 		NSString *url = [absoluteUrl relativeString];
 		
 		if(![url isEqualToString:[auth uri]])
@@ -399,7 +391,6 @@ static NSMutableArray *recentNonces;
 			if([recentNonces containsObject:[auth nonce]])
 			{
 				// Store nonce in local (cached) nonce variable to prevent array searches in the future
-				[nonce release];
 				nonce = [[auth nonce] copy];
 				
 				// The client has switched to using a different nonce value
@@ -456,7 +447,7 @@ static NSMutableArray *recentNonces;
 		
 		NSData *temp = [[base64Credentials dataUsingEncoding:NSUTF8StringEncoding] base64Decoded];
 		
-		NSString *credentials = [[[NSString alloc] initWithData:temp encoding:NSUTF8StringEncoding] autorelease];
+		NSString *credentials = [[NSString alloc] initWithData:temp encoding:NSUTF8StringEncoding];
 		
 		// The credentials should be of the form "username:password"
 		// The username is not allowed to contain a colon
@@ -491,7 +482,7 @@ static NSMutableArray *recentNonces;
 	NSString *authFormat = @"Digest realm=\"%@\", qop=\"auth\", nonce=\"%@\"";
 	NSString *authInfo = [NSString stringWithFormat:authFormat, [self realm], [self generateNonce]];
 	
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("WWW-Authenticate"), (CFStringRef)authInfo);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("WWW-Authenticate"), (__bridge CFStringRef)authInfo);
 }
 
 /**
@@ -502,7 +493,7 @@ static NSMutableArray *recentNonces;
 	NSString *authFormat = @"Basic realm=\"%@\"";
 	NSString *authInfo = [NSString stringWithFormat:authFormat, [self realm]];
 	
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("WWW-Authenticate"), (CFStringRef)authInfo);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("WWW-Authenticate"), (__bridge CFStringRef)authInfo);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -540,8 +531,8 @@ static NSMutableArray *recentNonces;
 	NSUInteger tIndex = eqsignRange.location;
 	NSUInteger fIndex = eqsignRange.location + eqsignRange.length;
 	
-	NSString *rangeType  = [[[rangeHeader substringToIndex:tIndex] mutableCopy] autorelease];
-	NSString *rangeValue = [[[rangeHeader substringFromIndex:fIndex] mutableCopy] autorelease];
+	NSString *rangeType  = [[rangeHeader substringToIndex:tIndex] mutableCopy];
+	NSString *rangeValue = [[rangeHeader substringFromIndex:fIndex] mutableCopy];
 	
 	CFStringTrimWhitespace((CFMutableStringRef)rangeType);
 	CFStringTrimWhitespace((CFMutableStringRef)rangeValue);
@@ -552,7 +543,6 @@ static NSMutableArray *recentNonces;
 	
 	if([rangeComponents count] == 0) return NO;
 	
-	[ranges release];
 	ranges = [[NSMutableArray alloc] initWithCapacity:[rangeComponents count]];
 	
 	rangeIndex = 0;
@@ -666,7 +656,7 @@ static NSMutableArray *recentNonces;
 - (void)replyToHTTPRequest
 {
 	// Check the HTTP version - if it's anything but HTTP version 1.1, we don't support it
-	NSString *version = [NSMakeCollectable(CFHTTPMessageCopyVersion(request)) autorelease];
+	NSString *version = CFBridgingRelease(CFHTTPMessageCopyVersion(request));
 	if(!version || ![version isEqualToString:(NSString *)kCFHTTPVersion1_1])
 	{
 		[self handleVersionNotSupported:version];
@@ -674,12 +664,12 @@ static NSMutableArray *recentNonces;
 	}
 	
 	// Extract the method
-	NSString *method = [NSMakeCollectable(CFHTTPMessageCopyRequestMethod(request)) autorelease];
+	NSString *method = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(request));
 	
 	// Note: We already checked to ensure the method was supported in onSocket:didReadData:withTag:
 	
 	// Extract requested URI
-	NSURL *uri = [NSMakeCollectable(CFHTTPMessageCopyRequestURL(request)) autorelease];
+	NSURL *uri = CFBridgingRelease(CFHTTPMessageCopyRequestURL(request));
 	
 	// Check Authentication (if needed)
 	// If not properly authenticated for resource, issue Unauthorized response
@@ -690,7 +680,7 @@ static NSMutableArray *recentNonces;
 	}
 	
 	// Respond properly to HTTP 'GET' and 'HEAD' commands
-	httpResponse = [[self httpResponseForMethod:method URI:[uri relativeString]] retain];
+	httpResponse = [self httpResponseForMethod:method URI:[uri relativeString]];
 	
 	if(httpResponse == nil)
 	{
@@ -716,7 +706,7 @@ static NSMutableArray *recentNonces;
 	}
 	
 	// Check for specific range request
-	NSString *rangeHeader = [NSMakeCollectable(CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Range"))) autorelease];
+	NSString *rangeHeader = CFBridgingRelease(CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Range")));
 	
 	BOOL isRangeRequest = NO;
 	
@@ -746,7 +736,7 @@ static NSMutableArray *recentNonces;
 		else
 		{
 			NSString *contentLengthStr = [NSString stringWithFormat:@"%qu", contentLength];
-			CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Length"), (CFStringRef)contentLengthStr);
+			CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Length"), (__bridge CFStringRef)contentLengthStr);
 		}
 	}
 	else
@@ -879,11 +869,11 @@ static NSMutableArray *recentNonces;
 	DDRange range = [[ranges objectAtIndex:0] ddrangeValue];
 	
 	NSString *contentLengthStr = [NSString stringWithFormat:@"%qu", range.length];
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Length"), (CFStringRef)contentLengthStr);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Length"), (__bridge CFStringRef)contentLengthStr);
 	
 	NSString *rangeStr = [NSString stringWithFormat:@"%qu-%qu", range.location, DDMaxRange(range) - 1];
 	NSString *contentRangeStr = [NSString stringWithFormat:@"bytes %@/%qu", rangeStr, contentLength];
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Range"), (CFStringRef)contentRangeStr);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Range"), (__bridge CFStringRef)contentRangeStr);
 	
 	return response;
 }
@@ -920,8 +910,7 @@ static NSMutableArray *recentNonces;
 	ranges_headers = [[NSMutableArray alloc] initWithCapacity:[ranges count]];
 	
 	CFUUIDRef theUUID = CFUUIDCreate(NULL);
-	ranges_boundry = NSMakeCollectable(CFUUIDCreateString(NULL, theUUID));
-	CFRelease(theUUID);
+    ranges_boundry = CFBridgingRelease(theUUID);
 	
 	NSString *startingBoundryStr = [NSString stringWithFormat:@"\r\n--%@\r\n", ranges_boundry];
 	NSString *endingBoundryStr = [NSString stringWithFormat:@"\r\n--%@--\r\n", ranges_boundry];
@@ -951,10 +940,10 @@ static NSMutableArray *recentNonces;
 	actualContentLength += [endingBoundryData length];
 	
 	NSString *contentLengthStr = [NSString stringWithFormat:@"%qu", actualContentLength];
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Length"), (CFStringRef)contentLengthStr);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Length"), (__bridge CFStringRef)contentLengthStr);
 	
 	NSString *contentTypeStr = [NSString stringWithFormat:@"multipart/byteranges; boundary=%@", ranges_boundry];
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Type"), (CFStringRef)contentTypeStr);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Type"), (__bridge CFStringRef)contentTypeStr);
 	
 	return response;
 }
@@ -1262,7 +1251,7 @@ static NSMutableArray *recentNonces;
 	
 	if([[NSFileManager defaultManager] fileExistsAtPath:filePath])
 	{
-		return [[[HTTPFileResponse alloc] initWithFilePath:filePath] autorelease];
+		return [[HTTPFileResponse alloc] initWithFilePath:filePath];
 	
 	//	// Use me instead for asynchronous file IO
 	//	
@@ -1445,7 +1434,7 @@ static NSMutableArray *recentNonces;
 {
 	// Example: Sun, 06 Nov 1994 08:49:37 GMT
 	
-	NSDateFormatter *df = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	[df setFormatterBehavior:NSDateFormatterBehavior10_4];
 	[df setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
 	[df setDateFormat:@"EEE, dd MMM y HH:mm:ss 'GMT'"];
@@ -1466,7 +1455,7 @@ static NSMutableArray *recentNonces;
 	
 	// Add standard headers
 	NSString *now = [self dateAsString:[NSDate date]];
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Date"), (CFStringRef)now);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Date"), (__bridge CFStringRef)now);
 	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Content-Type"), CFSTR("application/xhtml+xml"));
 	
 	// Add server capability headers
@@ -1484,12 +1473,12 @@ static NSMutableArray *recentNonces;
 		{
 			NSString *value = [responseHeaders objectForKey:key];
 			
-			CFHTTPMessageSetHeaderFieldValue(response, (CFStringRef)key, (CFStringRef)value);
+			CFHTTPMessageSetHeaderFieldValue(response, (__bridge CFStringRef)key, (__bridge CFStringRef)value);
 		}
 	}
 	
-	NSData *result = NSMakeCollectable(CFHTTPMessageCopySerializedMessage(response));
-	return [result autorelease];
+	NSData *result = CFBridgingRelease(CFHTTPMessageCopySerializedMessage(response));
+	return result;
 }
 
 /**
@@ -1519,7 +1508,7 @@ static NSMutableArray *recentNonces;
 	
 	// Add standard headers
 	NSString *now = [self dateAsString:[NSDate date]];
-	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Date"), (CFStringRef)now);
+	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Date"), (__bridge CFStringRef)now);
 	
 	// Add server capability headers
 	CFHTTPMessageSetHeaderFieldValue(response, CFSTR("Accept-Ranges"), CFSTR("bytes"));
@@ -1536,12 +1525,12 @@ static NSMutableArray *recentNonces;
 		{
 			NSString *value = [responseHeaders objectForKey:key];
 			
-			CFHTTPMessageSetHeaderFieldValue(response, (CFStringRef)key, (CFStringRef)value);
+			CFHTTPMessageSetHeaderFieldValue(response, (__bridge CFStringRef)key, (__bridge CFStringRef)value);
 		}
 	}
 	
-	NSData *result = NSMakeCollectable(CFHTTPMessageCopySerializedMessage(response));
-	return [result autorelease];
+	NSData *result = CFBridgingRelease(CFHTTPMessageCopySerializedMessage(response));
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1638,14 +1627,14 @@ static NSMutableArray *recentNonces;
 			// We have an entire HTTP request header from the client
 			
 			// Extract the method (such as GET, HEAD, POST, etc)
-			NSString *method = [NSMakeCollectable(CFHTTPMessageCopyRequestMethod(request)) autorelease];
+			NSString *method = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(request));
 			
 			// Extract the uri (such as "/index.html")
-			NSURL *uri = [NSMakeCollectable(CFHTTPMessageCopyRequestURL(request)) autorelease];
+			NSURL *uri = CFBridgingRelease(CFHTTPMessageCopyRequestURL(request));
 			
 			// Check for a Content-Length field
 			NSString *contentLength =
-			    [NSMakeCollectable(CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Content-Length"))) autorelease];
+			    CFBridgingRelease(CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Content-Length")));
 			
 			// Content-Length MUST be present for upload methods (such as POST or PUT)
 			// and MUST NOT be present for other methods.
@@ -1809,12 +1798,8 @@ static NSMutableArray *recentNonces;
 			}
 			
 			// Release any resources we no longer need
-			[httpResponse release];
 			httpResponse = nil;
 			
-			[ranges release];
-			[ranges_headers release];
-			[ranges_boundry release];
 			ranges = nil;
 			ranges_headers = nil;
 			ranges_boundry = nil;
@@ -1894,7 +1879,6 @@ static NSMutableArray *recentNonces;
 	}
 	
 	// Release the http response so we don't call it's connectionDidClose method again in our dealloc method
-	[httpResponse release];
 	httpResponse = nil;
 	
 	// Post notification of dead connection

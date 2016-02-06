@@ -22,15 +22,15 @@
 	NSArray *savedTablePosition;
 }
 
-@property (retain, readwrite) NSString *searchTerm;
-@property (retain, readwrite) NSString *searchTermToDisplay;
+@property (strong, readwrite) NSString *searchTerm;
+@property (strong, readwrite) NSString *searchTermToDisplay;
 @property (assign, readwrite) BOOL strongsSearch;
 @property (assign, readwrite) BOOL fuzzySearch;
 @property (assign, readwrite) PSSearchType searchType;
 @property (assign, readwrite) PSSearchRange searchRange;
-@property (retain, readwrite) NSString *bookName;
-@property (retain, readwrite) NSMutableArray *results;
-@property (retain, readwrite) NSArray *savedTablePosition;
+@property (strong, readwrite) NSString *bookName;
+@property (strong, readwrite) NSMutableArray *results;
+@property (strong, readwrite) NSArray *savedTablePosition;
 
 - (id)initWithSearchTermToDisplay:(NSString*)sTerm strongs:(BOOL)strongs fuzzy:(BOOL)fuzzy type:(PSSearchType)sType range:(PSSearchRange)sRange book:(NSString*)bName;
 - (id)initWithArray:(NSArray *)array;

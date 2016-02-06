@@ -74,7 +74,6 @@
 		label.textAlignment = UITextAlignmentCenter;
 		[self addSubview:label];
 		_statusLabel=label;
-		[label release];
 		
 		CALayer *layer = [[CALayer alloc] init];
 		layer.frame = _arrowImageFrame;
@@ -89,13 +88,11 @@
 		
 		[[self layer] addSublayer:layer];
 		_arrowImage=layer;
-		[layer release];
 		
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		view.frame = _activityViewFrame;
 		[self addSubview:view];
 		_activityView = view;
-		[view release];
 		
 		[self setState:EGOOPullRefreshNormal];
 		
@@ -185,7 +182,6 @@
 	_statusLabel = nil;
 	_arrowImage = nil;
 	//_lastUpdatedLabel = nil;
-    [super dealloc];
 }
 
 

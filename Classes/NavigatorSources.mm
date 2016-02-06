@@ -41,7 +41,6 @@
 	if([[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		UIBarButtonItem *iButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(editButtonPressed:)];
 		self.navigationItem.rightBarButtonItem = iButton;
-		[iButton release];
 	}
 }
 
@@ -61,7 +60,6 @@
 	} else {
 		[actionSheet showFromTabBar:self.tabBarController.tabBar];
 	}
-	[actionSheet release];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -74,19 +72,16 @@
 		PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
 		addSourceViewController.serverType = INSTALLSOURCE_TYPE_FTP;
 		[self presentModalViewController:addSourceViewController animated:YES];
-		[addSourceViewController release];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddHTTPSource", @"")]) {
 		PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
 		addSourceViewController.serverType = INSTALLSOURCE_TYPE_HTTP;
 		[self presentModalViewController:addSourceViewController animated:YES];
-		[addSourceViewController release];
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"DeleteSource", @"")]) {
 		//not currently implemented...
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
 		if(![PSModuleController checkNetworkConnection]) {
 			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 			[alertView show];
-			[alertView release];
 			return;
 		}
 		if([[PSModuleController defaultModuleController] tryDownloading]) {
@@ -105,7 +100,6 @@
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
-	[hud release];
 	hud = nil;
 	[self.tableView reloadData];
 }
@@ -122,7 +116,6 @@
 	if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 		[alertView show];
-		[alertView release];
 	}
 	if([NSThread isMainThread]) {
 		[self resetInstallSourcesListing];
@@ -137,7 +130,6 @@
 	[self presentModalViewController:manualInstallViewController animated:YES];
 
 	[manualInstallViewController startServer];
-	[manualInstallViewController release];
 }
 
 
@@ -168,7 +160,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
 	}
 	NSArray *currentArray = [[[PSModuleController defaultModuleController] swordInstallManager] installSourceList];
 	cell.textLabel.text = [[currentArray objectAtIndex:indexPath.row] caption];
@@ -178,7 +170,9 @@
 }
 
 - (void)showHUD {
-	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    });
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -206,7 +200,6 @@
 	[[PSModuleController defaultModuleController] setCurrentInstallSource:sIS];
 	
 	[self.navigationController pushViewController:navigatorModuleTypes animated:YES];
-	[navigatorModuleTypes release];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -240,7 +233,6 @@
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"ManualInstallEnabledChanged" object:nil];
-	[super dealloc];
 }
 
 @end

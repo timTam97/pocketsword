@@ -58,7 +58,6 @@
 	helpInfo.text = NSLocalizedString(@"manualInstallHelp", @"");
 	helpInfo.backgroundColor = [UIColor clearColor];
 	[v addSubview:helpInfo];
-	[helpInfo release];
 	
 	// bonjourInfo UILabel
 	bonjourInfo = [[UILabel alloc] initWithFrame:CGRectMake(20,276,(frame.size.width-40),27)];
@@ -92,12 +91,8 @@
 	UIBarButtonItem *flexRight = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
 	NSArray *tbarButtons = [NSArray arrayWithObjects: flexLeft, titleButton, flexRight, nil];
-	[titleButton release];
-	[flexLeft release];
-	[flexRight release];
 	tbar.items = tbarButtons;
 	[v addSubview:tbar];
-	[tbar release];
 	
 	// add toolbar to bottom, with close button.
 	CGFloat yy = frame.size.height - 44;
@@ -108,15 +103,10 @@
 	flexRight = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(doneButtonPressed)];
 	tbarButtons = [NSArray arrayWithObjects: flexLeft, closeButton, flexRight, nil];
-	[closeButton release];
-	[flexRight release];
-	[flexLeft release];
 	tbar.items = tbarButtons;
 	[v addSubview:tbar];
-	[tbar release];
 	
 	self.view = v;
-	[v release];
 }
 
 - (void)viewDidLoad {
@@ -156,7 +146,6 @@
 {
 	[httpServer stop];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[httpServer release];
 	httpServer = nil;
 	
 	//now remove ourselves from the current view...
@@ -171,7 +160,6 @@
 - (void)_displayInfoUpdate:(NSNotification *) notification {
 
 	if(notification) {
-		[addresses release];
 		addresses = [[notification object] copy];
 		DLog(@"addresses: %@", addresses);
 	}
@@ -215,22 +203,12 @@
 }
 
 - (void)viewDidUnload {
-	[bonjourInfo release];
 	bonjourInfo = nil;
-	[ipInfo release];
 	ipInfo = nil;
-	[wwwInfo release];
 	wwwInfo = nil;
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-	if(addresses)
-		[addresses release];
-	if(httpServer)
-		[httpServer release];
-    [super dealloc];
-}
 
 
 - (void)handleNewModule:(NSNotification *)notification {

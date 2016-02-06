@@ -12,8 +12,8 @@
     NSString *text;
 }
 
-@property (readwrite, retain) NSString *key;
-@property (readwrite, retain) NSString *text;
+@property (readwrite, strong) NSString *key;
+@property (readwrite, strong) NSString *text;
 
 + (SwordModuleTextEntry *)textEntryForKey:(NSString *)aKey andText:(NSString *)aText;
 - (id)initWithKey:(NSString *)aKey andText:(NSString *)aText;

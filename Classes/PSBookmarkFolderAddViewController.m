@@ -42,7 +42,6 @@
 	
 	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
 	self.navigationItem.rightBarButtonItem = saveButton;
-	[saveButton release];
 	
     CGRect fieldFrames = CGRectMake(20,12,280,25);
     if([PSResizing iPad]) {
@@ -81,7 +80,6 @@
 	if(!valid) {
 		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 		[av show];
-		[av release];
 		return;
 	}
 	// check for an invalid folder name (ie: contains PSFolderSeparatorString):
@@ -89,7 +87,6 @@
 	if(position.location != NSNotFound) {
 		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message: NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 		[av show];
-		[av release];
 		return;
 	}
 	
@@ -102,7 +99,6 @@
 		// add new folder to the bookmarks.
 		PSBookmarkFolder *folder = [[PSBookmarkFolder alloc] initWithName:nameTextField.text dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:rgbHexString children:nil];
 		[PSBookmarks addBookmarkObject:folder withFolderString:self.parentFolder];
-		[folder release];
 	}
 	[self.navigationController popViewControllerAnimated:YES];
 }
@@ -189,7 +185,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 		if(indexPath.section == 0) {
 			[cell addSubview:nameTextField];
 		}
@@ -214,7 +210,6 @@
 			[dateFormatter setDateStyle:NSDateFormatterFullStyle];
 
 			dateString = [dateFormatter stringFromDate:bookmarkFolderBeingEdited.dateAdded];
-			[dateFormatter release];
 			dateFormatter = nil;
 		}
 		cell.textLabel.text = dateString;
@@ -234,7 +229,6 @@
 		[nameTextField resignFirstResponder];
 		PSBookmarkFolderColourSelectorViewController *csvc = [[PSBookmarkFolderColourSelectorViewController alloc] initWithColorString:self.rgbHexString delegate:self];
 		[self.navigationController pushViewController:csvc animated:YES];
-		[csvc release];
 	}
 }
 
@@ -258,18 +252,11 @@
 - (void)viewDidUnload {
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
-	[nameTextField release];
 	nameTextField = nil;
 	[super viewDidUnload];
 }
 
 
-- (void)dealloc {
-	self.parentFolder = nil;
-	self.rgbHexString = nil;
-	self.bookmarkFolderBeingEdited = nil;
-    [super dealloc];
-}
 
 
 @end

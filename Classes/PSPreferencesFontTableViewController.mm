@@ -17,7 +17,7 @@
 
 - (void)reloadFontStrings {
 	if(!fontStrings) {
-		fontStrings = [[NSArray arrayWithObjects: 
+		fontStrings = [NSArray arrayWithObjects: 
 						//@"Zapfino", 
 						//@"Snell Roundhand", 
 						//@"Academy Engraved LET", 
@@ -74,7 +74,7 @@
 					    @"Thonburi",
 					    @"Trebuchet MS",
 					    @"Verdana",
-					    nil] retain];
+					    nil];
 	}
 }
 
@@ -130,14 +130,12 @@
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
-	[fontStrings release];
 	fontStrings = nil;
 }
 
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
-	[fontStrings release];
 	fontStrings = nil;
 	[super viewDidUnload];
 }
@@ -169,7 +167,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 	cell.textLabel.text = [fontStrings objectAtIndex:indexPath.row];
 	cell.textLabel.font = [UIFont fontWithName: [fontStrings objectAtIndex:indexPath.row] size:15.0];
@@ -230,11 +228,6 @@
 */
 
 
-- (void)dealloc {
-	[fontStrings release];
-	self.moduleName = nil;
-    [super dealloc];
-}
 
 
 @end

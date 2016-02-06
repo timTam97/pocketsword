@@ -13,9 +13,8 @@
 	NSArray *dataArray;
 }
 
-@property (retain, readwrite) NSArray *dataArray;
+@property (strong, readwrite) NSArray *dataArray;
 
 - (void)reloadTable;
-- (void)dealloc;
 
 @end

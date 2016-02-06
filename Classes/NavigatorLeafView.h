@@ -16,7 +16,7 @@
 	SwordModule *module;
 }
 
-@property (retain, readwrite) SwordModule *module;
-@property (retain) UIWebView *detailsWebView;
+@property (strong, readwrite) SwordModule *module;
+@property (strong) UIWebView *detailsWebView;
 
 @end

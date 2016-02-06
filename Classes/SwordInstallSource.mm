@@ -19,8 +19,6 @@
 @implementation SwordInstallSource (PrivateAPI)
 
 - (void)setSwordManager:(SwordManager *)swManager {
-    [swManager retain];
-    [swordManager release];
     swordManager = swManager;
 	if(swordManager) {
 		swordManagerLoaded = YES;
@@ -84,15 +82,6 @@
 }
 
 - (void)dealloc {
-	[self setSwordManager: nil];
-	[managerCreationLock release];
-	[super dealloc];
-//	if(swordManagerLoaded) {
-//		[swordManager release];
-//	}
-}
-
-- (void)finalize {
     //DLog( @"[SwordInstallSource -finalize]");
 
     if(temporarySource == NO) {
@@ -100,13 +89,12 @@
         //delete swInstallSource;
     }
     
-    [super finalize];
 }
 
 // accessors
 - (NSString *)caption {
     const char *str = swInstallSource->caption;
-    return [[[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding] autorelease];
+    return [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding];
 }
 
 - (void)setCaption:(NSString *)aCaption {
@@ -115,7 +103,7 @@
 
 - (NSString *)type {
     const char *str = swInstallSource->type;
-    return [[[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding] autorelease];
+    return [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding];
 }
 
 - (void)setType:(NSString *)aType {
@@ -128,12 +116,12 @@
 
 - (NSString *)uid {
     const char *str = swInstallSource->uid;
-    return [[[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding] autorelease];
+    return [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding];
 }
 
 - (NSString *)source {
     const char *str = swInstallSource->source;
-    return [[[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding] autorelease];
+    return [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding];
 }
 
 - (void)setSource:(NSString *)aSource {
@@ -142,7 +130,7 @@
 
 - (NSString *)directory {
     const char *str = swInstallSource->directory;
-    return [[[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding] autorelease];
+    return [[NSString alloc] initWithCString:str encoding:NSUTF8StringEncoding];
 }
 
 - (void)setDirectory:(NSString *)aDir {
@@ -216,7 +204,6 @@
 			} else {
 				SwordManager *swM = [[SwordManager alloc] initWithSWMgr:mgr];
 				[self setSwordManager:swM];
-				[swM release];
 				//swordManager = [[SwordManager alloc] initWithSWMgr:mgr];
 			}
 		}

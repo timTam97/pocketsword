@@ -59,16 +59,7 @@
 	[self stop];
 	
 	// Release all instance variables
-	[documentRoot release];
-	[netService release];
-	[domain release];
-	[name release];
-	[type release];
-	[txtRecordDictionary release];
-	[asyncSocket release];
-	[connections release];
 	
-	[super dealloc];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +94,6 @@
 {
     if(![documentRoot isEqual:value])
 	{
-        [documentRoot release];
         documentRoot = [value copy];
     }
 }
@@ -133,7 +123,6 @@
 {
 	if(![domain isEqualToString:value])
 	{
-		[domain release];
         domain = [value copy];
     }
 }
@@ -149,7 +138,6 @@
 {
 	if(![type isEqualToString:value])
 	{
-		[type release];
 		type = [value copy];
     }
 }
@@ -169,7 +157,6 @@
 {
 	if(![name isEqualToString:value])
 	{
-        [name release];
         name = [value copy];
     }
 }
@@ -196,7 +183,6 @@
 {
 	if(![txtRecordDictionary isEqualToDictionary:value])
 	{
-		[txtRecordDictionary release];
 		txtRecordDictionary = [value copy];
 		
 		// And update the txtRecord of the netService if it has already been published
@@ -257,7 +243,6 @@
 	if(netService)
 	{
 		[netService stop];
-		[netService release];
 		netService = nil;
 	}
 	
@@ -304,7 +289,6 @@
 	{
 		[connections addObject:newConnection];
 	}
-	[newConnection release];
 }
 
 /**

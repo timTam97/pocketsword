@@ -130,12 +130,12 @@ using sword::SWModule;
 }
 
 // ------------------- getter / setter -------------------
-@property (retain, readwrite) NSDictionary *modules;
-@property (retain, readwrite) NSArray *moduleListByType;
-@property (retain, readwrite) NSString *modulesPath;
-@property (retain, readwrite) NSRecursiveLock *managerLock;
+@property (strong, readwrite) NSDictionary *modules;
+@property (strong, readwrite) NSArray *moduleListByType;
+@property (strong, readwrite) NSString *modulesPath;
+@property (strong, readwrite) NSRecursiveLock *managerLock;
 @property (readwrite) BOOL temporaryManager;
-@property (retain) NSArray *moduleTypes;
+@property (strong) NSArray *moduleTypes;
 
 // --------------------- methods -----------------------
 
@@ -151,12 +151,9 @@ using sword::SWModule;
 /** Constructor */
 - (id)initWithPath:(NSString *)path;
 - (void)addPath:(NSString*)path;
-- (void)finalize;
 
 /** reinit the swManager */
 - (void)reInit;
-
-- (void)dealloc;
 
 /**
  generate a menu structure

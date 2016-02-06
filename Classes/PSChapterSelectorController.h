@@ -16,7 +16,7 @@
 	BOOL needToScroll;
 }
 
-@property (retain, readwrite) SwordBook *book;
+@property (strong, readwrite) SwordBook *book;
 
 - (void)setBookAndInit:(SwordBook*)newBook;
 @end

@@ -37,6 +37,7 @@
 }
 
 - (void)start:(BOOL)modal {
+    DLog(@"Starting modally? %i", modal);
 	promptForDownload = modal;
 	if(!self.moduleToInstall) {
 		ALog(@"Must set the module to install before starting the Index Installer!");
@@ -44,10 +45,11 @@
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
 		return;
 	}
+    DLog(@"Retrieving remote index list...");
 	[self retrieveRemoteIndexList];
+    DLog(@"Retrieving remote index list...done");
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {	
@@ -64,58 +66,57 @@
 	}
 }
 
-- (void)_retrieveRemoteIndexList {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-		
-	if([PSModuleController checkNetworkConnection]) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
+- (NSMutableArray *)_retrieveRemoteIndexList {
+    if([PSModuleController checkNetworkConnection]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 
-		NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
-		
-		// Get the index directory listing
-		NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
-												 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 10.0];
-		NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
-		if (!data) {
-			
-			ALog(@"Couldn't list remote directory");
-			self.files = nil;
-			if(viewForHUD) {
-				installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
-				installHUD.mode = MBProgressHUDModeCustomView;
-				[installHUD hide:YES afterDelay:1];
-			} else {
-				[delegate indexInstalled:self];
-			}
-			
-		} else {
-			
-			NSString *dataString = [[[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]] autorelease];
-			self.files = [NSMutableArray arrayWithObjects: nil];
-			NSRange dataRange;
-			
-			while ((dataRange = [dataString rangeOfString: @"<a href=\""]).location != NSNotFound) {
-				dataString = [dataString substringFromIndex: dataRange.location + dataRange.length];
-				dataRange = [dataString rangeOfString: @"\""];
-				if (dataRange.location != NSNotFound) {
-					NSString *link = [dataString substringToIndex: dataRange.location];
-					if ([link hasSuffix:@".zip"]) {
-						link = [link substringToIndex: ([link length] - 4)];
-						[files addObject: link];
-					}
-				}
-			}
-			dataString = nil;
-		}
-	}
-	
-	[pool release];
+        NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
+        
+        // Get the index directory listing
+        DLog(@"Making network request to %@", remoteDir);
+        NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
+                                                 cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 10.0];
+        NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
+        if (!data) {
+            
+            ALog(@"Couldn't list remote directory");
+            self.files = nil;
+            if(viewForHUD) {
+                installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
+                installHUD.mode = MBProgressHUDModeCustomView;
+                [installHUD hide:YES afterDelay:1];
+            } else {
+                [delegate indexInstalled:self];
+            }
+            
+        } else {
+            DLog(@"Got data!");
+            NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
+            DLog(@"Data retrieved: %@", dataString);
+            data = nil;
+
+            NSMutableArray *arr = [NSMutableArray array];
+            
+            DLog(@"Searching for index in list...");
+            NSArray *lines = [dataString componentsSeparatedByString:@"</tr>"];
+            NSString *indexName = [self generateIndexName];
+            for(NSString *line in lines) {
+                if([line containsString:indexName]) {
+                    DLog(@"Found index for %@", indexName);
+                    [arr addObject:indexName];
+                    return arr;
+                }
+            }
+        }
+    }
+    
+    return [NSMutableArray array];
 }
 
 - (void)retrieveRemoteIndexList {
 	if(viewForHUD) {
-		installHUD = [[[MBProgressHUD alloc] initWithView:viewForHUD] autorelease];
+		installHUD = [[MBProgressHUD alloc] initWithView:viewForHUD];
 		[viewForHUD addSubview:installHUD];
 		installHUD.delegate = self;
 		installHUD.removeFromSuperViewOnHide = YES;
@@ -124,17 +125,31 @@
 		[installHUD show:YES];
 	}
 	
-	[self _retrieveRemoteIndexList];
+    self.files = [self _retrieveRemoteIndexList];
 	
 	if(viewForHUD) {
 		[installHUD hide:YES];
 	} else {
 		if(self.files) {
+            DLog(@"Checking for remote index...");
 			[self checkForRemoteIndex];
+            DLog(@"Checking for remote index...done");
 		} else {
 			[delegate indexInstalled:self];
 		}
 	}
+}
+
+- (NSString *)generateIndexName {
+    SwordModule *modToInstall = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
+    if(modToInstall) {
+        NSString *v = [modToInstall configEntryForKey:SWMOD_CONFENTRY_VERSION];
+        if(v == nil) v = @"0.0";//if there's no version information, it's version 0.0!
+        
+        NSString *indexName = [NSString stringWithFormat: @"%@-%@", [modToInstall name], v];
+        return indexName;
+    }
+    return @"";
 }
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
@@ -148,7 +163,9 @@
 	}
 	// if we were updating, now show the appropriate dialogue
 	if(self.files) {
+        DLog(@"Checking for remote index...");
 		[self checkForRemoteIndex];
+        DLog(@"Checking for remote index...done");
 	}
 	// else if we were installing, now finish up.
 	else {
@@ -157,23 +174,22 @@
 }
 
 - (void)checkForRemoteIndex {
-	
+    
 	if(self.files) {
+        DLog(@"Have %lu files.", (unsigned long)[self.files count]);
 		SwordModule *modToInstall = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
 		if(modToInstall) {
-			NSString *v = [modToInstall configEntryForKey:SWMOD_CONFENTRY_VERSION];
-			if(v == nil)
-				v = @"0.0";//if there's no version information, it's version 0.0!
-			NSString *indexName = [NSString stringWithFormat: @"%@-%@", [modToInstall name], v];
+			NSString *indexName = [self generateIndexName];
+            DLog(@"IndexName: %@", indexName);
 			if([files containsObject: indexName]) {
 				DLog(@"\ndownloadable index for: %@", [modToInstall name]);
 				if(promptForDownload) {
 					UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 					[alertView show];
-					[alertView release];
 					self.files = nil;
 					return;
 				} else {
+                    DLog(@"Installing search index for module.");
 					self.files = nil;
 					[self installSearchIndexForModule];
 					return;
@@ -188,7 +204,6 @@
 	NSString *msg = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"IndexControllerNoneRemote", @"No available search index for:"), moduleToInstall];
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"") message: msg delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
 	[alertView show];
-	[alertView release];
 
 }
 
@@ -198,21 +213,23 @@
 	if (!mod) {
 		return;
 	}
+    DLog(@"Installing search index for module: %@", [mod name]);
+    
     UIDevice* device = [UIDevice currentDevice];
     BOOL backgroundSupported = NO;
     if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
         backgroundSupported = device.multitaskingSupported;
     }
     
+    DLog(@"Background task supported: %i", backgroundSupported);
     if(backgroundSupported) {
         bti = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
     }
-	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
-	if(v == nil)
-		v = @"0.0";//if there's no version information, it's version 0.0!
-	NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
+    NSString *indexName = [self generateIndexName];
+    DLog(@"Index name: %@", indexName);
 	
 	NSString *filename = [NSString stringWithFormat: @"http://www.crosswire.org/pocketsword/indices/v1/%@.zip", indexName];
+    DLog(@"Filename: %@", filename);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
@@ -228,6 +245,7 @@
 		installHUD = nil;
 	}
 	// Download the data file
+    DLog(@"Start downloading index file...");
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
 }
@@ -254,8 +272,6 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [responseData release];
-    [connection release];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
@@ -267,23 +283,24 @@
         backgroundSupported = device.multitaskingSupported;
     }
     
+    DLog(@"Background task supported: %i", backgroundSupported);
     if(backgroundSupported) {
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
     // Show error message
 	if(viewForHUD) {
-		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 		installHUD.mode = MBProgressHUDModeCustomView;
 		[installHUD hide:YES afterDelay:1];
 	} else {
 		UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-		MBProgressHUD *finishedHUD = [[[MBProgressHUD alloc] initWithView:viewToUse] autorelease];
+		MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 		finishedHUD.delegate = self;
 		finishedHUD.removeFromSuperViewOnHide = YES;
 		finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
 		finishedHUD.detailsLabelText = moduleToInstall;
-		finishedHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+		finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 		finishedHUD.mode = MBProgressHUDModeCustomView;
 		[viewToUse addSubview:finishedHUD];
 		[finishedHUD show:YES];
@@ -292,37 +309,36 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [connection release];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
+    DLog(@"Index file finished downloading.");
+    
     // Use responseData
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
 	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
 
-	NSString *v = [mod configEntryForKey:SWMOD_CONFENTRY_VERSION];
-	if(v == nil)
-		v = @"0.0";//if there's no version information, it's version 0.0!
-	NSString *indexName = [NSString stringWithFormat: @"%@-%@", [mod name], v];
+    NSString *indexName = [self generateIndexName];
+    DLog(@"Index name: %@", indexName);
 	
 	NSString *zippedIndex = [outfileDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.zip", indexName]];
 	NSString *cluceneDir = [outfileDir stringByAppendingPathComponent: @"lucene"];
+    DLog(@"CLucene dir: %@", cluceneDir);
 	if (![responseData writeToFile: zippedIndex atomically: NO]) {
 		ALog(@"Couldn't write file: %@", zippedIndex);
 		installationProgress = -1.0;
-		[responseData release];
 		if(viewForHUD) {
-			installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+			installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 			installHUD.mode = MBProgressHUDModeCustomView;
 			[installHUD hide:YES afterDelay:1];
 		} else {
 			UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-			MBProgressHUD *finishedHUD = [[[MBProgressHUD alloc] initWithView:viewToUse] autorelease];
+			MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 			finishedHUD.delegate = self;
 			finishedHUD.removeFromSuperViewOnHide = YES;
 			finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
 			finishedHUD.detailsLabelText = moduleToInstall;
-			finishedHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]] autorelease];
+			finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 			finishedHUD.mode = MBProgressHUDModeCustomView;
 			[viewToUse addSubview:finishedHUD];
 			[finishedHUD show:YES];
@@ -330,13 +346,14 @@
 		}
 		return;
 	}
-    [responseData release];
 
+    DLog(@"Unzipping index archive...");
 	ZipArchive *arch = [[ZipArchive alloc] init];
 	[arch UnzipOpenFile:zippedIndex];
+    DLog(@"Unzipping to folder: %@", cluceneDir);
 	[arch UnzipFileTo:cluceneDir overWrite:YES];
 	[arch UnzipCloseFile];
-	[arch release];
+    DLog(@"Unzipping index archive...done");
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	[fileManager removeItemAtPath:zippedIndex error:NULL];
@@ -350,22 +367,23 @@
         backgroundSupported = device.multitaskingSupported;
     }
     
+    DLog(@"Background task supported: %i", backgroundSupported);
     if(backgroundSupported) {
         [[UIApplication sharedApplication] endBackgroundTask:bti];
         bti = UIBackgroundTaskInvalid;
     }
 	if(viewForHUD) {
-		installHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		installHUD.mode = MBProgressHUDModeCustomView;
 		[installHUD hide:YES afterDelay:1];
 	} else {
 		UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-		MBProgressHUD *finishedHUD = [[[MBProgressHUD alloc] initWithView:viewToUse] autorelease];
+		MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 		finishedHUD.delegate = self;
 		finishedHUD.removeFromSuperViewOnHide = YES;
 		finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
 		finishedHUD.detailsLabelText = moduleToInstall;
-		finishedHUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]] autorelease];
+		finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		finishedHUD.mode = MBProgressHUDModeCustomView;
 		[viewToUse addSubview:finishedHUD];
 		[finishedHUD show:YES];
@@ -374,10 +392,5 @@
 	
 }
 
-- (void)dealloc {
-	self.files = nil;
-	self.moduleToInstall = nil;
-	[super dealloc];
-}
 
 @end

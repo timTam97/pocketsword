@@ -23,6 +23,8 @@
 
 @synthesize dataArray;
 
+- (void)dealloc {}
+
 - (void)updateRefreshButton {
 	[self updateRefreshButton:YES];
 }
@@ -33,7 +35,6 @@
 	UIBarButtonItem *refreshBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshDownloadSource:)];
 	[refreshBarButtonItem setEnabled:(downloading ? NO : enabled)];
 	self.navigationItem.rightBarButtonItem = refreshBarButtonItem;
-	[refreshBarButtonItem release];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -90,7 +91,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"lvl2-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"lvl2-id"] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"lvl2-id"];
 	}
 	
 	cell.textLabel.text = NSLocalizedString([[dataArray objectAtIndex:indexPath.row] moduleType], @"");
@@ -107,7 +108,6 @@
 	moduleLanguages.title = [(PSModuleType*)[dataArray objectAtIndex:indexPath.row] moduleType];
 	[moduleLanguages reloadTable];
 	[self.navigationController pushViewController:moduleLanguages animated:YES];
-	[moduleLanguages release];
 }
 
 - (void)cancelRefreshDownloadSource {
@@ -119,7 +119,6 @@
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
-	[hud release];
 	hud = nil;
     [self updateRefreshButton:YES];
 	
@@ -150,20 +149,14 @@
     }
 }
 - (void)refreshDownloadSource:(id)sender {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	if(![PSModuleController checkNetworkConnection]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
-		[pool release];
 		return;
 	}
 	
     [self updateRefreshButton:NO];
 	[self _refreshDownloadSource];
-	
-	[pool release];
 }
 
 - (void)handleRefreshStatus {
@@ -184,7 +177,6 @@
 	if(failed) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"RefreshProblem", @"A problem occurred during the refresh.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
 		[alertView show];
-		[alertView release];
 	}
 	
     UIDevice* device = [UIDevice currentDevice];
@@ -200,7 +192,9 @@
 }
 
 - (void)showHUD {
-	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    });
 }
 
 - (void)refreshDataArray {
@@ -242,8 +236,4 @@
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
 }
 
-- (void)dealloc {
-	[dataArray release];
-	[super dealloc];
-}
 @end

@@ -18,7 +18,11 @@
 	#define _LUCENE_CURRTHREADID 1
 	#define _LUCENE_THREADID_TYPE char
 	
-	CL_NS_DEF(util)
+#if defined(_CL_HAVE_PTHREAD)
+	#include <pthread.h>
+#endif
+
+CL_NS_DEF(util)
 	class CLuceneThreadIdCompare
 	{
 	public:

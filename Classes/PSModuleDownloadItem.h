@@ -20,7 +20,7 @@
 
 @interface PSModuleDownloadItem : NSObject <PSIndexControllerDelegate, MBProgressHUDDelegate> {
 	
-	id <PSModuleDownloadDelegate> delegate;
+	id <PSModuleDownloadDelegate> __weak delegate;
 
 	SwordModule *module;
 	SwordInstallSource *sIS;
@@ -35,7 +35,7 @@
 	NSTimer *installModuleTimer;
 }
 
-@property (assign) id <PSModuleDownloadDelegate> delegate;
+@property (weak) id <PSModuleDownloadDelegate> delegate;
 @property (readonly, assign) BOOL downloadStarted;
 
 - (id)initWithModule:(SwordModule*)swordModule swordInstallSource:(SwordInstallSource*)swordInstallSource viewForHUD:(UIView*)view;

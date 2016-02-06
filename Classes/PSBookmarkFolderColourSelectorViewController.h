@@ -12,14 +12,14 @@
 @end
 
 @interface PSBookmarkFolderColourSelectorViewController : UITableViewController {
-	id <PSBookmarkFolderColourSelectorDelegate> delegate;
+	id <PSBookmarkFolderColourSelectorDelegate> __weak delegate;
 	NSString *currentSelectedColor;
 	NSArray *selectableColours;
 }
 
-@property (nonatomic, assign) id <PSBookmarkFolderColourSelectorDelegate> delegate;
-@property (retain, readwrite) NSString *currentSelectedColor;
-@property (retain, readwrite) NSArray *selectableColours;
+@property (nonatomic, weak) id <PSBookmarkFolderColourSelectorDelegate> delegate;
+@property (strong, readwrite) NSString *currentSelectedColor;
+@property (strong, readwrite) NSArray *selectableColours;
 
 - (id)initWithColorString:(NSString*)rgbHexString delegate:(id)del;
 

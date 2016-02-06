@@ -39,13 +39,6 @@
 	self.refSelectorBooks = nil;
 }
 
-- (void)dealloc {
-	[refSelectorBooks release];
-	[refSelectorBooksIndex release];
-//	[refToucherMiscScrollView release];
-	[currentlyViewedBookName release];
-	[super dealloc];
-}
 
 - (void)dismissNavigation {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
@@ -68,7 +61,6 @@
     }
 	UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissNavigation)];
 	self.navigationItem.leftBarButtonItem = cancel;
-	[cancel release];
 }
 
 - (void)willShowNavigation {
@@ -83,48 +75,47 @@
 }
 
 - (void)updateRefSelectorBooks {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSString *currentRefSystemName = [[[PSModuleController defaultModuleController] primaryBible] versification];
-	if(!currentRefSystemName) //if there are no Bibles, fall back to the commentary versification
-		currentRefSystemName = [[[PSModuleController defaultModuleController] primaryCommentary] versification];
-	if(!currentRefSystemName)
-		currentRefSystemName = @"KJV";//if no ref system, default to kjv
-	const sword::VersificationMgr::System *refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
-	if(!refSystem) {
-		refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem("KJV");
-	}
-	int numberOfBooks = refSystem->getBookCount();
-	//refSelectorOTBookCount = refSystem->getBMAX()[0];
-	NSMutableArray *books = [[[NSMutableArray alloc] init] autorelease];
-	NSMutableArray *booksIndex = [[[NSMutableArray alloc] init] autorelease];
-	NSMutableArray *booksFullIndex = [[[NSMutableArray alloc] init] autorelease];
-	for(int i = 0; i < numberOfBooks; i++) {
-		SwordBook *book = [[SwordBook alloc] initWithBook:refSystem->getBook(i)];
-		[books addObject:book];
-		if(![booksFullIndex containsObject:[book shortName]]) {
-			[booksIndex addObject:[book shortName]];
-		} else {
+	@autoreleasepool {
+		NSString *currentRefSystemName = [[[PSModuleController defaultModuleController] primaryBible] versification];
+		if(!currentRefSystemName) //if there are no Bibles, fall back to the commentary versification
+			currentRefSystemName = [[[PSModuleController defaultModuleController] primaryCommentary] versification];
+		if(!currentRefSystemName)
+			currentRefSystemName = @"KJV";//if no ref system, default to kjv
+		const sword::VersificationMgr::System *refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem([currentRefSystemName cStringUsingEncoding:NSUTF8StringEncoding]);
+		if(!refSystem) {
+			refSystem = sword::VersificationMgr::getSystemVersificationMgr()->getVersificationSystem("KJV");
 		}
-		[booksFullIndex addObject:[book shortName]];
-		[book release];
+		int numberOfBooks = refSystem->getBookCount();
+		//refSelectorOTBookCount = refSystem->getBMAX()[0];
+		NSMutableArray *books = [[NSMutableArray alloc] init];
+		NSMutableArray *booksIndex = [[NSMutableArray alloc] init];
+		NSMutableArray *booksFullIndex = [[NSMutableArray alloc] init];
+		for(int i = 0; i < numberOfBooks; i++) {
+			SwordBook *book = [[SwordBook alloc] initWithBook:refSystem->getBook(i)];
+			[books addObject:book];
+			if(![booksFullIndex containsObject:[book shortName]]) {
+				[booksIndex addObject:[book shortName]];
+			} else {
+			}
+			[booksFullIndex addObject:[book shortName]];
+		}
+		//NSLog(@"refSelector: %d books, %d refSelectorOTBookCount", numberOfBooks, refSelectorOTBookCount);
+		NSString *currentBook = [PSModuleController getCurrentBibleRef];
+		currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];
+		NSRange spaceRange = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
+		if(spaceRange.location != NSNotFound) {
+			currentBook = [currentBook substringToIndex: spaceRange.location];
+		}
+
+		[self setRefSelectorBooks:books];
+		[self setRefSelectorBooksIndex:booksIndex];
+		[self setCurrentlyViewedBookName:currentBook];
+
+		//reset the picker.
+		refSelectorBook = 0;
+		refSelectorChapter = 1;
+
 	}
-	//NSLog(@"refSelector: %d books, %d refSelectorOTBookCount", numberOfBooks, refSelectorOTBookCount);
-	NSString *currentBook = [PSModuleController getCurrentBibleRef];
-	currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];
-	NSRange spaceRange = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
-	if(spaceRange.location != NSNotFound) {
-		currentBook = [currentBook substringToIndex: spaceRange.location];
-	}
-
-	[self setRefSelectorBooks:books];
-	[self setRefSelectorBooksIndex:booksIndex];
-	[self setCurrentlyViewedBookName:currentBook];
-
-	//reset the picker.
-	refSelectorBook = 0;
-	refSelectorChapter = 1;
-
-	[pool release];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -144,7 +135,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
 	}
 	
 	cell.textLabel.text = [self bookName:indexPath.section];
@@ -184,7 +175,6 @@
 	[chapterSelectorController setBookAndInit: [refSelectorBooks objectAtIndex:indexPath.section]];
 	[self.navigationController pushViewController:chapterSelectorController animated:YES];
 	//[refNavigationController pushViewController:chapterSelectorController animated:YES];
-	[chapterSelectorController release];
 }
 
 - (void)jumpToVerseOne:(NSInteger)bookIndex {

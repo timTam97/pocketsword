@@ -22,3 +22,4 @@ cs.lproj/PSModuleSelectorController.strings
 cs.lproj/PSVerseSelectorController.strings
 PocketSword\.xcodeproj/project\.xcworkspace/xcuserdata
 PocketSword\.xcodeproj/xcuserdata/nicc\.xcuserdatad
+dependencies/curl-ios-build-scripts

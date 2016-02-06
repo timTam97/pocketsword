@@ -99,7 +99,6 @@ using std::list;
 		} else {
 			[dict setObject:sm forKey:[sm name]];
 		}
-		[sm release];
         
         
         // prepare display filters
@@ -146,7 +145,6 @@ using std::list;
 	//sort the types into alphabetical order
 	[types sortUsingSelector: @selector(compare:)];
     [self setModuleTypes:types];
-	[types release];
     // set modules
     [self setModules:dict];
 	NSMutableArray *arrayList = [[NSMutableArray alloc] initWithCapacity: [moduleTypes count]];
@@ -154,7 +152,6 @@ using std::list;
 		if([[SwordManager moduleTypes] containsObject: [moduleTypes objectAtIndex: i]]) {
 			PSModuleType *smt = [[PSModuleType alloc] initWithModules:[self modulesForType: [moduleTypes objectAtIndex: i]] withModuleType:[moduleTypes objectAtIndex: i]];
 			[arrayList addObject: smt];
-			[smt release];
 			//DLog(@"\nfound a moduleType: %@", [moduleTypes objectAtIndex: i]);
 		}
 	}
@@ -162,10 +159,8 @@ using std::list;
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"moduleType" ascending:YES];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[arrayList sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
 	
 	[self setModuleListByType:arrayList];
-	[arrayList release];
 }
 
 @end
@@ -282,7 +277,7 @@ using std::list;
  return a manager for the specified path
  */
 + (SwordManager *)managerWithPath:(NSString *)path {
-    SwordManager *manager = [[[SwordManager alloc] initWithPath:path] autorelease];
+    SwordManager *manager = [[SwordManager alloc] initWithPath:path];
     return manager;
 }
 
@@ -298,7 +293,6 @@ static SwordManager *instance;
 }
 
 + (void)releaseDefaultManager {
-	[instance release];
 	instance = nil;
 }
 
@@ -316,7 +310,6 @@ static SwordManager *instance;
 		self.modules = [NSDictionary dictionary];
 		NSRecursiveLock *rl = [[NSRecursiveLock alloc] init];
 		self.managerLock = rl;
-		[rl release];
 
         // setting locale
         [SwordManager initLocale];
@@ -347,7 +340,6 @@ static SwordManager *instance;
 		self.modules = [NSDictionary dictionary];
 		NSRecursiveLock *rl = [[NSRecursiveLock alloc] init];
 		self.managerLock = rl;
-		[rl release];
         
 		[self refreshModules];
     }
@@ -359,12 +351,6 @@ static SwordManager *instance;
     if(!temporaryManager) {
 		if(swManager != nil)
 			delete swManager;
-		[modules release];
-		[moduleListByType release];
-		[modulesPath release];
-		self.managerLock = nil;
-		[moduleTypes release];
-		[super dealloc];
 	}
 }
 
@@ -459,15 +445,6 @@ static SwordManager *instance;
 /** 
  Unloads Sword Manager.
 */
-- (void)finalize {
-    DLog(@"[SwordManager -finalize]");
-    
-    if(!temporaryManager) {
-        delete swManager;
-    }
-    
-	[super finalize];
-}
 
 - (BOOL)isModuleInstalled:(NSString *)name {
 	BOOL ret = YES;
@@ -516,7 +493,6 @@ static SwordManager *instance;
                 ret = [[SwordModule alloc] initWithName:name swordManager:self];
             }
             [dict setObject:ret forKey:name];
-			[ret release];
             self.modules = dict;
         }
     }
@@ -554,7 +530,6 @@ static SwordManager *instance;
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor]; 
     [ret sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
 	
 	return [NSArray arrayWithArray:ret];
 }
@@ -578,7 +553,6 @@ static SwordManager *instance;
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor]; 
     [ret sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
 
 	return [NSArray arrayWithArray:ret];
 }
@@ -614,7 +588,6 @@ static SwordManager *instance;
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor]; 
     [ret sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
     
 	return [NSArray arrayWithArray:ret];
 }

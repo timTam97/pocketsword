@@ -32,7 +32,6 @@
 	if(self) {
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemHistory tag:0];
 		self.tabBarItem = tBI;
-		[tBI release];
 	}
 	return self;
 }
@@ -52,8 +51,8 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"HistoryClearButtonTitle", @"Clear") style: UIBarButtonItemStyleBordered target: self action: @selector(trashButtonPressed)] autorelease];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"HistoryClearButtonTitle", @"Clear") style: UIBarButtonItemStyleBordered target: self action: @selector(trashButtonPressed)];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableViewFromNotification) name:NotificationHistoryChanged object:nil];
 }
 
@@ -90,9 +89,6 @@
 //    or when the user selects a bookmark.
 //    or when the user selects a search result.
 + (void)addHistoryItem:(ShownTab)tabForHistory {
-	
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSString *verse;
 	NSString *mod;
@@ -125,13 +121,12 @@
 		NSArray *historyItem = [NSArray arrayWithObjects: ref, @"0"/*scroll*/, mod, [NSDate date], nil];
 		
 		if (!history) {
-			history = [[NSMutableArray alloc] initWithObjects: nil];
+			history = [[NSMutableArray alloc] init];
 			
 			NSMutableDictionary *prefs = [[defaults persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] mutableCopy];
 			[prefs setObject: history forKey: PSHistoryName];
 			
 			[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-			[prefs release];
 		} else {
 		
 			//check for duplicates:
@@ -168,24 +163,14 @@
             [kvStore setArray:history forKey:PSHistoryName];
 		}
 	}
-	if(history) {
-		[history release];
-		history = nil;
-	}
-	
-	[pool release];
-	
 }
 
 - (void)trashButtonPressed {
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"HistoryClearConfirmationTitle", @"Clear All History?") message: NSLocalizedString(@"HistoryClearConfirmationMessage", @"Are you sure?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 	[alertView show];
-	[alertView release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
 	if (buttonIndex == 1) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PSHistoryName];
 		
@@ -194,10 +179,8 @@
 		if(cls) {
 			id kvStore = [cls defaultStore];
             [kvStore removeObjectForKey:PSHistoryName];
-			NSMutableArray *history = [[NSMutableArray alloc] initWithObjects: nil];
+			NSMutableArray *history = [[NSMutableArray alloc] init];
 			[kvStore setArray:history forKey:PSHistoryName];
-			[history release];
-			history = nil;
 		}
 		
 //		switch (listType) {
@@ -211,10 +194,7 @@
 //				break;
 //		}
 		[self.tableView reloadData];
-	} else {
-		
 	}
-	[pool release];
 }
 
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory {
@@ -241,11 +221,6 @@
 	if(cls) {
 		id kvStore = [cls defaultStore];
 		[kvStore setArray:history forKey:PSHistoryName];
-	}
-
-	if(history) {
-		[history release];
-		history = nil;
 	}
 	
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:historyIndex inSection:0];
@@ -293,7 +268,7 @@
 	
 	// If no cell is available, create a new one using the given identifier - 
 	if (!cell) {
-		cell = [[[PSBookmarkTableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier] autorelease];
+		cell = [[PSBookmarkTableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: theIdentifier];
 	}
 	
 	NSArray *history = [[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName];
@@ -320,8 +295,6 @@
 		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 		
 		NSString *dateString = [dateFormatter stringFromDate:[obj objectAtIndex: 3]];
-		[dateFormatter release];
-		dateFormatter = nil;
 		cell.lastAccessedLabel.text = dateString;
 	} else {
 		cell.lastAccessedLabel.text = @"";
@@ -346,8 +319,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	NSArray *history;
 	NSString *ref;
 	//NSString *scroll;
@@ -429,8 +400,6 @@
 //			break;
 //	}
 //	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
-
-	[pool release];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -448,7 +417,6 @@
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[history sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
 	
 	//check for duplicates:
 	for (int ii = 0; ii < [history count]; ++ii) {
@@ -543,8 +511,8 @@
 + (void)synchronizeHistoryItemsFromCloud:(BOOL)initialSync {
 	
 	NSArray *cloudHistory = [PSHistoryItem parseHistoryArrayArray:[[NSUbiquitousKeyValueStore defaultStore] arrayForKey:PSHistoryName]];
-	NSMutableArray *localHistory = [[[PSHistoryItem parseHistoryArrayArray:[[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName]] mutableCopy] autorelease];
-	NSMutableArray *cloudHistoryCopy = [[cloudHistory mutableCopy] autorelease];
+	NSMutableArray *localHistory = [[PSHistoryItem parseHistoryArrayArray:[[NSUserDefaults standardUserDefaults] arrayForKey: PSHistoryName]] mutableCopy];
+	NSMutableArray *cloudHistoryCopy = [cloudHistory mutableCopy];
 	
 	if([PSHistoryItem arraysAreEqual:cloudHistory secondArray:localHistory]) {
 		DLog(@"\ninitial arrays are equal, don't need to do anything! :)");
@@ -574,7 +542,6 @@
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateAdded" ascending:NO];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[history sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
 	
 	//check for duplicates:
 	for (int ii = 0; ii < [history count]; ++ii) {

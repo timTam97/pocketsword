@@ -22,7 +22,7 @@
 
 @interface SwordModule (/* Private, class continuation */)
 /** private property */
-@property(readwrite, retain) NSMutableDictionary *configEntries;
+@property(readwrite, strong) NSMutableDictionary *configEntries;
 @end
 
 @interface SwordModule (PrivateAPI)
@@ -179,20 +179,6 @@
 /**
  gc will cleanup
  */
-- (void)finalize {    
-	[super finalize];
-}
-
-- (void)dealloc {
-	[configEntries release];
-	[swManager release];
-	[moduleLock release];
-	[indexLock release];
-	[name release];
-	//if(swModule != nil)
-	//	delete swModule;
-	[super dealloc];
-}
 
 - (void)aquireModuleLock {
     [moduleLock lock];
@@ -254,7 +240,7 @@
 }
 
 - (NSString *)fullAboutText:(NSString*)currentVersionString {
-    NSMutableString *ret = [[[NSMutableString alloc] init] autorelease];
+    NSMutableString *ret = [[NSMutableString alloc] init];
     
     // module name
 	[ret appendFormat:@"<p><b>%@</b>%@</p>", NSLocalizedString(@"AboutModuleName", @""), [self name]];
@@ -353,7 +339,6 @@
 		[ret appendString: featuresAboutString];
 		[ret appendString: @"</p>"];
 	}
-	[featuresAboutString release];
 	
     // module about
 	[ret appendString:[NSString stringWithFormat:@"<p><b>%@</b><br />%@</p>", NSLocalizedString(@"AboutModuleAboutText", @""), [self aboutText]]];
@@ -386,7 +371,6 @@
 - (NSString *)langString {
 	PSLanguageCode *lang = [[PSLanguageCode alloc] initWithCode:[self lang]];
 	NSString *ret = [NSString stringWithString:[lang descr]];
-	[lang release];
 	return ret;
 }
 
@@ -490,7 +474,7 @@
 - (NSString *)aboutText {
     NSMutableString *aboutText = [configEntries objectForKey:SWMOD_CONFENTRY_ABOUT];
     if(aboutText == nil) {
-        aboutText = [[[self configEntryForKey:SWMOD_CONFENTRY_ABOUT] mutableCopy] autorelease];
+        aboutText = [[self configEntryForKey:SWMOD_CONFENTRY_ABOUT] mutableCopy];
         if(aboutText != nil) {
 			//search & replace the RTF markup:
 			// "\\qc"		- for centering							--->>>  ignore these
@@ -501,7 +485,7 @@
 			[aboutText replaceOccurrencesOfString:@"\\pard" withString:@"" options:0 range:NSMakeRange(0, [aboutText length])];
 			[aboutText replaceOccurrencesOfString:@"\\par" withString:@"<br />" options:0 range:NSMakeRange(0, [aboutText length])];
 
-			NSMutableString *retStr = [[@"" mutableCopy] autorelease];
+			NSMutableString *retStr = [@"" mutableCopy];
 			for(NSUInteger i=0; i<[aboutText length]; i++) {
 				unichar c = [aboutText characterAtIndex:i];
 
@@ -511,7 +495,7 @@
 						//we have an unicode character!
 						@try {
 							NSUInteger unicodeChar = 0;
-							NSMutableString *unicodeCharString = [[@"" mutableCopy] autorelease];
+							NSMutableString *unicodeCharString = [@"" mutableCopy];
 							int j = 0;
 							BOOL negative = NO;
 							if ([aboutText characterAtIndex:(i+2)] == '-') {
@@ -526,7 +510,7 @@
 							unicodeChar = [unicodeCharString integerValue];
 							if (negative) unicodeChar = 65536 - unicodeChar;
 							i += j+2;
-							[retStr appendFormat:@"%u", unicodeChar];
+							[retStr appendFormat:@"%lu", (unsigned long)unicodeChar];
 						}
 						@catch (NSException * e) {
 							[retStr appendFormat:@"%C", c];
@@ -940,7 +924,7 @@
 
 - (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope {
 	sword::ListKey results;
-	NSMutableArray *retArray = [NSMutableArray arrayWithObjects: nil];
+	NSMutableArray *retArray = [NSMutableArray array];
 	if(scope) {
 		results = swModule->search([istr UTF8String], -4, 0, [scope swVerseKey]);
 	} else {
@@ -953,7 +937,6 @@
 		while(!results.popError()) {
 			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
 			[retArray addObject: entry];
-			[entry release];
 			results++;
 		}
 	}
@@ -1225,7 +1208,7 @@
 				if(i == 0) {
 					[verses appendString:thisEntry];
 				} else {
-					[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%d\" class=\"verse\">%d</a><br />%@</p>\n", i, i, i, thisEntry];
+					[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%ld\" class=\"verse\">%ld</a><br />%@</p>\n", i, (long)i, (long)i, thisEntry];
 				}
 			} else {
 				NSString *entryToAppend = thisEntry;
@@ -1240,7 +1223,7 @@
 						entryToAppend = @"";
 					}
 				} else if(vpl) {
-					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%d\">%@</span><br />\n", i, i, i, i, entryToAppend];
+					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%ld\">%@</span><br />\n", i, i, i, (long)i, entryToAppend];
 				} else {
 					
 					BOOL insertedVerse = NO;
@@ -1252,12 +1235,12 @@
 					
 					if([entryToAppend hasPrefix:@"<blockquote class=\"lg\">"]) {
 						// if this verse starts a blockquote, we want the verse number to be within the blockquote.
-						entryToAppend = [NSString stringWithFormat:@"<blockquote class=\"lg\"><a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, [entryToAppend substringFromIndex:23]];
+						entryToAppend = [NSString stringWithFormat:@"<blockquote class=\"lg\"><a href=\"pocketsword:versemenu:%d\" id=\"vv%ld\" class=\"verse\">%ld</a>%@\n", i, (long)i, (long)i, [entryToAppend substringFromIndex:23]];
 						insertedVerse = YES;
 					}
 					
 					if(!insertedVerse) {
-						entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a>%@\n", i, i, i, entryToAppend];
+						entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%ld\" class=\"verse\">%ld</a>%@\n", i, (long)i, (long)i, entryToAppend];
 					}
 				}
 				
@@ -1403,9 +1386,9 @@
 					}\n\
 					function resetArrays() {\n\
 						versepos = null;\n\
-						versepos = new Array(%d);\n\
+						versepos = new Array(%ld);\n\
 						var tmpstr = \"arraydump:\";\n\
-						for (var i=1; i < %d; i++) {\n\
+						for (var i=1; i < %ld; i++) {\n\
 							var curobj = document.getElementById(\"vv\"+i);\n\
 							versepos[i] = findPosition(curobj);\n\
 							if((i != 1) && (versepos[i] == 0)) {\n\
@@ -1425,7 +1408,7 @@
 						%@\n\
 						//detLoc();\n\
 					}\n-->\
-					</script>\n", i, i, i, i, extraJS];
+					</script>\n", i, i, (long)i, (long)i, extraJS];
 	
 	
 	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name fixedWidth:YES];

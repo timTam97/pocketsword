@@ -57,7 +57,6 @@
 		tbc.delegate = self;
 		self.tabBarController = tbc;
 //		[self tabColorChanged];
-		[tbc release];
 		
 		[self nightModeChanged];
 		[PSModuleController defaultModuleController];//init
@@ -102,8 +101,6 @@
 		cTab.navigationBar.barStyle = UIBarStyleBlack;
 		[tabs insertObject:cTab atIndex:0];
 		self.commentaryTabController = cvc;
-		[cTab release];
-		[cvc release];
 		
 		//add the Bible Tab.
 		// Do this second because we need the commentary tab to initialise the Bible tab!
@@ -116,8 +113,6 @@
 		bTab.navigationBar.barStyle = UIBarStyleBlack;
 		[tabs insertObject:bTab atIndex:0];
 		self.bibleTabController = bvc;
-		[bTab release];
-		[bvc release];
 		
 		//add the Dictionary Tab.
 		PSDictionaryViewController *dictionaryViewController = [[PSDictionaryViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -126,10 +121,7 @@
 		dictionaryTab.navigationBar.barStyle = UIBarStyleBlack;
 		UITabBarItem *dTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary") image:[UIImage imageNamed:@"dictionary.png"] tag:99];
 		dictionaryTab.tabBarItem = dTBI;
-		[dTBI release];
 		[tabs insertObject:dictionaryTab atIndex:2];
-		[dictionaryViewController release];
-		[dictionaryTab release];
 		
 		//add the bookmarks tab.
 		[PSBookmarks importBookmarksFromV2];
@@ -138,10 +130,7 @@
 		bookmarksTab.navigationBar.barStyle = UIBarStyleBlack;
 		UITabBarItem *tbI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
 		bookmarksTab.tabBarItem = tbI;
-		[tbI release];
 		[tabs insertObject:bookmarksTab atIndex:3];
-		[bookmarksViewController release];
-		[bookmarksTab release];
 		
 		//add the Daily Devotionals tab.
 		PSDevotionalViewController *devoViewController = [[PSDevotionalViewController alloc] init];
@@ -153,14 +142,11 @@
 			devoIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			devoIPadTab.tabBarItem = devotionalTBI;
 			[tabs insertObject:devoIPadTab atIndex:4];
-			[devoIPadTab release];
 			devoIPadTab = nil;
 		} else {
 			devoViewController.tabBarItem = devotionalTBI;
 			[tabs insertObject:devoViewController atIndex:4];
 		}
-		[devotionalTBI release];
-		[devoViewController release];
 		
 		//add the Downloads tab.
 		NavigatorSources *downloadsViewController = [[NavigatorSources alloc] initWithStyle:UITableViewStyleGrouped];
@@ -170,14 +156,11 @@
 			downloadsIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			downloadsIPadTab.tabBarItem = downloadsTabBarItem;
 			[tabs insertObject:downloadsIPadTab atIndex:5];
-			[downloadsIPadTab release];
 			downloadsIPadTab = nil;
 		} else {
 			downloadsViewController.tabBarItem = downloadsTabBarItem;
 			[tabs insertObject:downloadsViewController atIndex:5];
 		}
-		[downloadsTabBarItem release];
-		[downloadsViewController release];
 		
 		//add the Preferences tab.
 		PSPreferencesController *preferencesViewController = [[PSPreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -187,13 +170,10 @@
 			preferencesIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			preferencesIPadTab.tabBarItem = preferencesTabBarItem;
 			[tabs insertObject:preferencesIPadTab atIndex:6];
-			[preferencesIPadTab release];
 		} else {
 			preferencesViewController.tabBarItem = preferencesTabBarItem;
 			[tabs insertObject:preferencesViewController atIndex:6];
 		}
-		[preferencesTabBarItem release];
-		[preferencesViewController release];
 		
 		//add the About tab.
 		PSAboutScreenController *aboutViewController = [[PSAboutScreenController alloc] init];
@@ -203,13 +183,10 @@
 			aboutIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			aboutIPadTab.tabBarItem = aboutTBI;
 			[tabs insertObject:aboutIPadTab atIndex:7];
-			[aboutIPadTab release];
 		} else {
 			aboutViewController.tabBarItem = aboutTBI;
 			[tabs insertObject:aboutViewController atIndex:7];
 		}
-		[aboutTBI release];
-		[aboutViewController release];
 		
 		[tabBarController setViewControllers:tabs animated:NO];
 		tabs = nil;
@@ -366,11 +343,6 @@
 			[multiListController setSelectedViewController:searchNavigationController];
 		}
 		[tabBarController presentModalViewController:multiListController animated:YES];
-		[searchNavigationController release];
-		[historyNavigationController release];
-		[historyController release];
-		[searchController release];
-		[multiListController release];
 	}
 	
 }
@@ -395,7 +367,6 @@
 		refSelectorController = nil;
 		refNavigationController = nil;
 	}
-	[popoverController release];
 	popoverController = nil;
 }
 
@@ -409,8 +380,8 @@
 		//}
 		moduleSelectorViewController = nil;
 	} else {
-		moduleSelectorViewController = [[[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil] autorelease];
-		UINavigationController *modSelectorNavController = [[[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController] autorelease];
+		moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil];
+		UINavigationController *modSelectorNavController = [[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController];
 		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;
 
 		if(iPad) {
@@ -476,9 +447,9 @@
                 //no Bible selected, so ignore...
 			   return;
             }
-			refSelectorController = [[[PSRefSelectorController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+			refSelectorController = [[PSRefSelectorController alloc] initWithStyle:UITableViewStylePlain];
             [refSelectorController setupNavigation];
-			refNavigationController = [[[UINavigationController alloc] initWithRootViewController:refSelectorController] autorelease];
+			refNavigationController = [[UINavigationController alloc] initWithRootViewController:refSelectorController];
 			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
@@ -534,8 +505,6 @@
 }
 
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
 	NSString *bookName = [NSString stringWithCString:lmgr->translate([bookNameString cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
 	NSString *verseString = [NSString stringWithFormat:@"%ld", (long)verse];
@@ -581,16 +550,8 @@
 			[self displayChapter:ref withPollingType:NoViewPoll restoreType:RestoreVersePosition];
 		}
 	}
-	
-	[pool release];
 }
 
-- (void)dealloc {
-	self.savedSearchHistoryItem = nil;
-	[moduleSelectorViewController release];
-	[popoverController release];
-    [super dealloc];
-}
 
 + (void)displayTitle:(NSString*)title {
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
@@ -631,8 +592,6 @@
 }
 
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-
 	NSMutableString *bibleJavascript = [NSMutableString stringWithString:@""];
 	NSMutableString *commentaryJavascript = [NSMutableString stringWithString:@""];
 	NSString *versePosition = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBibleVersePosition];
@@ -752,8 +711,6 @@
 		[self setEnabledCommentaryNextButton: YES];
 		[self setEnabledCommentaryPreviousButton: YES];
 	}
-	
-	[pool release];
 }
 
 // Use this to show the modal view (pops-up from the bottom)
@@ -876,7 +833,7 @@
 			offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 		}
 	}
-	[UIView beginAnimations:nil context:modalView];
+	[UIView beginAnimations:nil context:(void*)modalView];
 	[UIView setAnimationDuration:time];
 	[UIView setAnimationDelegate:self];
 	[UIView setAnimationBeginsFromCurrentState:YES];
@@ -909,7 +866,7 @@
 			offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
 		}
 	}
-	[UIView beginAnimations:nil context:modalView];
+	[UIView beginAnimations:nil context:(void*)modalView];
 	[UIView setAnimationDuration:time];
 	[UIView setAnimationDelegate:self];
 	[UIView setAnimationBeginsFromCurrentState:YES];
@@ -920,13 +877,13 @@
 
 + (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
-	UIView* modalView = (UIView *)context;
+	UIView* modalView = (__bridge UIView *)context;
 	[modalView removeFromSuperview];
 }
 
 - (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
-	UIView* modalView = (UIView *)context;
+	UIView* modalView = (__bridge UIView *)context;
 	[modalView removeFromSuperview];
 }
 
@@ -935,7 +892,7 @@
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	[UIView beginAnimations:nil context:modalView];
+	[UIView beginAnimations:nil context:(void*)modalView];
 	[UIView setAnimationDuration:time];
 	[UIView setAnimationDelegate:self];
 	[UIView setAnimationBeginsFromCurrentState:YES];
@@ -946,9 +903,8 @@
 
 + (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
-	UIView* modalView = (UIView *)context;
+	UIView* modalView = (__bridge UIView *)context;
 	[modalView removeFromSuperview];
-	[modalView release];
 }
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
@@ -990,7 +946,6 @@
 		infoTopBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		infoTopBar.frame = CGRectMake(0, 0, screen.width, 20);
 		[infoView addSubview:infoTopBar];
-		[infoTopBar release];
 		UIButton *closeImgButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 		closeImgButton.tintColor = [UIColor whiteColor];
 		[closeImgButton setImage:[UIImage imageNamed:@"popup-down-button.png"] forState:UIControlStateNormal];
@@ -1008,7 +963,6 @@
 		infoWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		infoWebView.backgroundColor = ([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference] ? [UIColor blackColor] : [UIColor whiteColor]);
 		[infoView addSubview:infoWebView];
-		[infoWebView release];
 		
 		
 		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabBarController.interfaceOrientation;
@@ -1098,12 +1052,10 @@
 
 - (void)hideInfo {
 	[self hideInfoModal: infoView withTiming: 0.3];
-	[infoView release];
 	infoView = nil;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL load = YES;
 	
 	//NSLog(@"  Info Pane: requestString: %@", [[request URL] absoluteString]);
@@ -1140,25 +1092,21 @@
 				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
 				[extraSearchTerm deleteCharactersInRange:NSMakeRange(1, 1)];
 				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
-				[extraSearchTerm release];
 			} else {
 				// need to also search with the '0' present
 				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
 				[extraSearchTerm insertString:@"0" atIndex:1];
 				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
-				[extraSearchTerm release];
 			}
 			self.savedSearchHistoryItem = nil;
 			PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
 			shi.searchTerm = hebrew;
 			self.savedSearchHistoryItem = shi;
-			[shi release];
 		} else {
 			self.savedSearchHistoryItem = nil;
 			PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
 			shi.searchTerm = [NSString stringWithFormat:@"lemma:%@", strongsSearchTerm];
 			self.savedSearchHistoryItem = shi;
-			[shi release];
 		}
 		savedSearchHistoryItem.searchTermToDisplay = strongsSearchTerm;
 		savedSearchHistoryItem.strongsSearch = YES;
@@ -1197,7 +1145,6 @@
 							[greek deleteCharactersInRange:NSMakeRange(0, 1)];
 						}
 						strongsSearchTerm = [NSString stringWithFormat:@"G%@", greek];
-						[greek release];
 						greek = nil;
 						strongs = YES;
 					} else if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
@@ -1207,7 +1154,6 @@
 							[hebrew deleteCharactersInRange:NSMakeRange(0, 1)];
 						}
 						strongsSearchTerm = [NSString stringWithFormat:@"H0%@", hebrew];
-						[hebrew release];
 						hebrew = nil;
 						strongs = YES;
 					}
@@ -1264,7 +1210,6 @@
 						entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
 						entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[modToUse name]];
 					}
-					[tmpEntry release];
 				}
 			}
 		}
@@ -1285,7 +1230,6 @@
 				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			}
-			[tmpEntry release];
 		}
 	}
 	
@@ -1302,7 +1246,6 @@
 		}
 	}
 	
-	[pool release];
 	return load; // Return YES to make sure regular navigation works as expected.
 	
 }

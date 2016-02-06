@@ -20,7 +20,7 @@
 
 @interface PSModuleSearchController : UIViewController <PSSearchOptionsDelegate, UITabBarControllerDelegate, MBProgressHUDDelegate, PSIndexControllerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource> {
 
-	id <PSModuleSearchControllerDelegate> delegate;
+	id <PSModuleSearchControllerDelegate> __weak delegate;
 	
 	ShownTab listType;
 
@@ -44,21 +44,21 @@
 	NSArray *savedTablePosition;
 }
 
-@property (retain) UITableView *searchQueryTable;
-@property (retain) UIView *searchQueryView;
-@property (retain) UITableView *searchResultsTable;
-@property (retain) UISearchBar *searchBar;
+@property (strong) UITableView *searchQueryTable;
+@property (strong) UIView *searchQueryView;
+@property (strong) UITableView *searchResultsTable;
+@property (strong) UISearchBar *searchBar;
 
-@property (nonatomic, assign) id <PSModuleSearchControllerDelegate> delegate;
-@property (retain, readwrite) NSString *searchTerm;
-@property (retain, readwrite) NSString *searchTermToDisplay;
+@property (nonatomic, weak) id <PSModuleSearchControllerDelegate> delegate;
+@property (strong, readwrite) NSString *searchTerm;
+@property (strong, readwrite) NSString *searchTermToDisplay;
 @property (assign, readwrite) BOOL strongsSearch;
 @property (assign, readwrite) BOOL fuzzySearch;
 @property (assign, readwrite) PSSearchType searchType;
 @property (assign, readwrite) PSSearchRange searchRange;
-@property (retain, readwrite) NSString *bookName;
-@property (retain, readwrite) NSMutableArray *results;
-@property (retain, readwrite) NSArray *savedTablePosition;
+@property (strong, readwrite) NSString *bookName;
+@property (strong, readwrite) NSMutableArray *results;
+@property (strong, readwrite) NSArray *savedTablePosition;
 
 - (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem;
 

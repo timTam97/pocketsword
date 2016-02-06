@@ -12,31 +12,31 @@
 @implementation SwordVerseKey
 
 + (id)verseKey {
-    return [[[SwordVerseKey alloc] init] autorelease];
+    return [[SwordVerseKey alloc] init];
 }
 
 + (id)verseKeyWithVersification:(NSString *)scheme {
-    return [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+    return [[SwordVerseKey alloc] initWithVersification:scheme];
 }
 
 + (id)verseKeyWithRef:(NSString *)aRef {
-    return [[[SwordVerseKey alloc] initWithRef:aRef] autorelease];
+    return [[SwordVerseKey alloc] initWithRef:aRef];
 }
 
 + (id)verseKeyWithRef:(NSString *)aRef v11n:(NSString *)scheme {
-    return [[[SwordVerseKey alloc] initWithRef:aRef v11n:scheme] autorelease];
+    return [[SwordVerseKey alloc] initWithRef:aRef v11n:scheme];
 }
 
 + (id)verseKeyWithSWVerseKey:(sword::VerseKey *)aVk {
-    return [[[SwordVerseKey alloc] initWithSWVerseKey:aVk] autorelease];
+    return [[SwordVerseKey alloc] initWithSWVerseKey:aVk];
 }
 
 + (id)verseKeyWithSWVerseKey:(sword::VerseKey *)aVk makeCopy:(BOOL)copy {
-    return [[[SwordVerseKey alloc] initWithSWVerseKey:aVk makeCopy:copy] autorelease];    
+    return [[SwordVerseKey alloc] initWithSWVerseKey:aVk makeCopy:copy];    
 }
 
 + (id)verseKeyForOTForVersification:(NSString *)scheme {
-	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+	SwordVerseKey *retKey = [[SwordVerseKey alloc] initWithVersification:scheme];
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setPosition(sword::TOP);
 	vk->setLowerBound(*vk);
@@ -51,7 +51,7 @@
 }
 
 + (id)verseKeyForNTForVersification:(NSString *)scheme {
-	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+	SwordVerseKey *retKey = [[SwordVerseKey alloc] initWithVersification:scheme];
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setPosition(sword::TOP);	// stupid workaround to set book, chap, and verse to 1 because setTestament doesn't follow suit and do this like setChapter and setBook do.
 	vk->setTestament(2);
@@ -64,7 +64,7 @@
 }
 
 + (id)verseKeyForWholeBibleForVersification:(NSString *)scheme {
-	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithVersification:scheme] autorelease];
+	SwordVerseKey *retKey = [[SwordVerseKey alloc] initWithVersification:scheme];
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setLowerBound(*vk);
 	vk->setPosition(sword::BOTTOM);
@@ -75,7 +75,7 @@
 }
 
 + (id)verseKeyForWholeBook:(NSString *)aRef v11n:(NSString *)scheme {
-	SwordVerseKey *retKey = [[[SwordVerseKey alloc] initWithRef:aRef v11n:scheme] autorelease];
+	SwordVerseKey *retKey = [[SwordVerseKey alloc] initWithRef:aRef v11n:scheme];
 	sword::VerseKey *vk = [retKey swVerseKey];
 	vk->setChapter(1); vk->setVerse(1);
 	vk->setLowerBound(*vk);
@@ -127,13 +127,7 @@
     return self;
 }
 
-- (void)finalize {
-    [super finalize];
-}
 
-- (void)dealloc {
-    [super dealloc];    
-}
 
 - (id)clone {
     return [SwordVerseKey verseKeyWithSWVerseKey:(sword::VerseKey *)sk];

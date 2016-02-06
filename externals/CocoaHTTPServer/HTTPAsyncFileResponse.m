@@ -43,15 +43,14 @@ static NSOperationQueue *operationQueue;
 	{
 		connection = parent; // Parents retain children, children do NOT retain parents
 		
-		connectionThread = [[NSThread currentThread] retain];
+		connectionThread = [NSThread currentThread];
 		connectionRunLoopModes = [modes copy];
 		
 		filePath = [fpath copy];
-		fileHandle = [[NSFileHandle fileHandleForReadingAtPath:filePath] retain];
+		fileHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
 		
 		if(fileHandle == nil)
 		{
-			[self release];
 			return nil;
 		}
 		
@@ -71,13 +70,7 @@ static NSOperationQueue *operationQueue;
 
 - (void)dealloc
 {
-	[connectionThread release];
-	[connectionRunLoopModes release];
-	[filePath release];
 	[fileHandle closeFile];
-	[fileHandle release];
-	[data release];
-	[super dealloc];
 }
 
 - (UInt64)contentLength
@@ -114,7 +107,6 @@ static NSOperationQueue *operationQueue;
 															   object:[NSNumber numberWithUnsignedInt:length]];
 			
 			[operationQueue addOperation:operation];
-			[operation release];
 		}
 		
 		return nil;
@@ -122,9 +114,8 @@ static NSOperationQueue *operationQueue;
 	
 	connectionReadOffset += [data length];
 	
-	NSData *result = [[data retain] autorelease];
+	NSData *result = data;
 	
-	[data release];
 	data = nil;
 	
 	return result;
@@ -166,7 +157,7 @@ static NSOperationQueue *operationQueue;
 
 - (void)fileHandleDidReadData:(NSData *)readData
 {
-	data = [readData retain];
+	data = readData;
 	
 	fileReadOffset += [data length];
 	

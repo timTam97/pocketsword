@@ -36,19 +36,15 @@
 			NSString *langString = [NSString stringWithString:[mod lang]];
 			[ret addObject:lang];
 			[tmp addObject:langString];
-			[lang release];
 		}
     }
-	[tmp release];
 
     // sort
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"descr" ascending:YES];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[ret sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
     
 	NSArray *returnArray = [NSArray arrayWithArray:ret];
-	[ret release];
 	return returnArray;
 }
 
@@ -62,8 +58,7 @@
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[ret sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
-	return [ret autorelease];
+	return ret;
 }
 
 - (void)setModules:(NSArray *)mods {
@@ -73,20 +68,8 @@
 	for(PSLanguageCode *lang in moduleLanguages) {
 		[modList addObject:[self getModulesByLanguage:lang.code fromModuleArray:mods]];
 	}
-	if(modules)
-		[modules release];
 	modules = modList;
-	[modules retain];
-	[modList release];
 	[self setModuleList:mods];
-}
-
-- (void)dealloc {
-	[modules release];
-	[moduleType release];
-	[moduleLanguages release];
-	[moduleList release];
-	[super dealloc];
 }
 
 @end

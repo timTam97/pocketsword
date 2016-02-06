@@ -19,7 +19,7 @@
 
 @interface SwordDictionary (/* Private, class continuation */)
 /** private property */
-@property(readwrite, retain) NSMutableArray *keys;
+@property(readwrite, strong) NSMutableArray *keys;
 @end
 
 @interface SwordDictionary (PrivateAPI)
@@ -138,14 +138,7 @@
     return self;
 }
 
-- (void)finalize {
-	[super finalize];
-}
 
-- (void)dealloc {
-	self.keys = nil;
-	[super dealloc];
-}
 
 - (NSArray *)allKeys {
     NSArray *ret = self.keys;

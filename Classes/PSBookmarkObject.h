@@ -16,13 +16,13 @@
 	NSString *rgbHexString;
 }
 
-@property (retain, readwrite) NSString *name;
-@property (retain, readwrite) NSDate *dateAdded;
-@property (retain, readwrite) NSDate *dateLastAccessed;
+@property (strong, readwrite) NSString *name;
+@property (strong, readwrite) NSDate *dateAdded;
+@property (strong, readwrite) NSDate *dateLastAccessed;
 @property (readonly)		  BOOL folder;
 
 // rgbHexString is only used for a folder.  bookmarks inherit them from their containing folder.
-@property (retain, readwrite) NSString *rgbHexString;
+@property (strong, readwrite) NSString *rgbHexString;
 
 
 - (id)initWithName:(NSString*)n dateAdded:(NSDate*)da dateLastAccessed:(NSDate*)dla;

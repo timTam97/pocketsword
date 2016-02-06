@@ -16,7 +16,7 @@ typedef enum {
 @class PSPreferencesController;
 
 @interface PSPreferencesModuleSelectorTableViewController : UITableViewController {
-	PSPreferencesController *preferencesController;
+	PSPreferencesController *__weak preferencesController;
 	
 	ModuleFeatureRequired tableType;
 	NSArray *moduleList;
@@ -24,9 +24,9 @@ typedef enum {
 	SEL moduleChanged;
 }
 
-@property (retain) NSArray *moduleList;
-@property (retain) NSString *currentModule;
-@property (assign, readwrite) PSPreferencesController *preferencesController;
+@property (strong) NSArray *moduleList;
+@property (strong) NSString *currentModule;
+@property (weak, readwrite) PSPreferencesController *preferencesController;
 
 - (void)setTableType:(ModuleFeatureRequired)feature;
 

@@ -62,7 +62,7 @@ static char encodingTable[64] = {
         [stringBuffer appendFormat:@"%02lx", (unsigned long)dataBuffer[i]];
 	}
     
-    return [[stringBuffer copy] autorelease];
+    return [stringBuffer copy];
 	
 #else
 	

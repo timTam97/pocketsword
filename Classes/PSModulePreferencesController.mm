@@ -44,7 +44,6 @@
 	//set title to the module name
 	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ %@", [swordModule name], NSLocalizedString(@"TabBarTitlePreferences", @"")] image:[UIImage imageNamed:@"gear-24.png"] tag:101];
 	self.tabBarItem = tbi;
-	[tbi release];
 	
 	// init sections
 	DisplaySection = ModuleSection = StrongsSection = MorphSection = LangSection = -1;
@@ -133,13 +132,9 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
-	[fontSizeLabel release];
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
@@ -197,56 +192,56 @@
 		if(indexPath.row == FontDefaultsRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 			}
 		} else if(indexPath.row == FontSizeRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierFS];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierFS];
 				
 				[cell addSubview: fontSizeLabel];
 			}
 		} else if(indexPath.row == FontNameRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled];
 			}
 		}
 	} else if(indexPath.section == ModuleSection) {
 		if(indexPath.row == VPLRow || indexPath.row == XrefRow || indexPath.row == FootnotesRow || indexPath.row == HeadingsRow || indexPath.row == RedLetterRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 			}
 		}
 	} else if(indexPath.section == StrongsSection) {
 		if(indexPath.row == StrongsToggleRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 			}
 		} else if(indexPath.row == StrongsGreekRow || indexPath.row == StrongsHebrewRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled];
 			}
 		}
 	} else if(indexPath.section == MorphSection) {
 		if(indexPath.row == MorphToggleRow) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 			}
 		} else if(indexPath.row == MorphGreekRow /*|| indexPath.row == MORPH_H_ROW*/) {
 			cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierStyled];
 			if(!cell) {
-				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled] autorelease];
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifierStyled];
 			}
 		}
 	} else if(indexPath.section == LangSection) {
 		cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
 		if(!cell) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain] autorelease];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
 		}
 	}
 	
@@ -287,7 +282,6 @@
 			//[ cell addSubview: fontDefaultsSwitch ];
 			cell.accessoryView = fontDefaultsSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesFontDefaultTitle", @"Verse Per Line");
-			[fontDefaultsSwitch release];						
 		} else if(indexPath.row == FontSizeRow) {
 			UISlider *fontSizeSlider = [ [ UISlider alloc ] initWithFrame: CGRectMake(xx+170, 0, 125, 50) ];
 			fontSizeSlider.minimumValue = 10.0;
@@ -314,7 +308,6 @@
 			fontSizeSlider.continuous = YES;
 			[fontSizeSlider addTarget:self action:@selector(fontSizeChanged:) forControlEvents:UIControlEventValueChanged];
 			[ cell addSubview: fontSizeSlider ];
-			[ fontSizeSlider release ];
 
 			cell.textLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size")];
 			fontSizeLabel.text = [NSString stringWithFormat:@"%d", fontSize];
@@ -339,7 +332,6 @@
 			//[ cell addSubview: vplSwitch ];
 			cell.accessoryView = vplSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line");
-			[vplSwitch release];						
 		} else if(indexPath.row == XrefRow) {
 			UISwitch *xrefSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 			BOOL xrefMode = GetBoolPrefForMod(DefaultsScriptRefsPreference, self.tabBarController.navigationItem.title);
@@ -348,7 +340,6 @@
 			//[ cell addSubview: xrefSwitch ];
 			cell.accessoryView = xrefSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesCrossReferencesTitle", @"Cross-references");
-			[xrefSwitch release];
 		} else if(indexPath.row == FootnotesRow) {
 			UISwitch *footnotesSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 			BOOL footnotesMode = GetBoolPrefForMod(DefaultsFootnotesPreference, self.tabBarController.navigationItem.title);
@@ -357,7 +348,6 @@
 			//[ cell addSubview: footnotesSwitch ];
 			cell.accessoryView = footnotesSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesFootnotesTitle", @"Footnotes");
-			[footnotesSwitch release];
 		} else if(indexPath.row == HeadingsRow) {
 			UISwitch *headingsSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 			BOOL headingsMode = GetBoolPrefForMod(DefaultsHeadingsPreference, self.tabBarController.navigationItem.title);
@@ -366,7 +356,6 @@
 			//[ cell addSubview: headingsSwitch ];
 			cell.accessoryView = headingsSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHeadingsTitle", @"Headings");
-			[headingsSwitch release];
 		} else if(indexPath.row == RedLetterRow) {
 			UISwitch *redLetterModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 			BOOL redLetterMode = GetBoolPrefForMod(DefaultsRedLetterPreference, self.tabBarController.navigationItem.title);
@@ -375,7 +364,6 @@
 			//[ cell addSubview: redLetterModeSwitch ];
 			cell.accessoryView = redLetterModeSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesRedLetterTitle", @"Red Letter");
-			[redLetterModeSwitch release];
 		}
 		
 	} else if(indexPath.section == StrongsSection) {
@@ -388,7 +376,6 @@
 			//[ cell addSubview: strongsSwitch ];
 			cell.accessoryView = strongsSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
-			[strongsSwitch release];						
 		} else if(indexPath.row == StrongsGreekRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -419,7 +406,6 @@
 			//[ cell addSubview: morphSwitch ];
 			cell.accessoryView = morphSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesDisplayTitle", @"Display");
-			[morphSwitch release];						
 		} else if(indexPath.row == MorphGreekRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesGreekModuleTitle", @"Greek module");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -448,7 +434,6 @@
 			//[ cell addSubview: greekAccentsSwitch ];
 			cell.accessoryView = greekAccentsSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesGreekAccentsTitle", @"Greek Accents");
-			[greekAccentsSwitch release];
 		} else if(indexPath.row == LangHebrewPointsRow) {
 			UISwitch *hvpSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 			BOOL displayHVP = GetBoolPrefForMod(DefaultsHVPPreference, self.tabBarController.navigationItem.title);
@@ -458,7 +443,6 @@
 			cell.accessoryView = hvpSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHVPTitle", @"Hebrew Vowel Points");
 			cell.textLabel.font = [UIFont boldSystemFontOfSize:10.0];
-			[hvpSwitch release];
 		} else if(indexPath.row == LangHebrewCantillationRow)	{
 			UISwitch *hebrewCantillationSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
 			BOOL displayHebrewCantillation = GetBoolPrefForMod(DefaultsHebrewCantillationPreference, self.tabBarController.navigationItem.title);
@@ -467,7 +451,6 @@
 			//[ cell addSubview: hebrewCantillationSwitch ];
 			cell.accessoryView = hebrewCantillationSwitch;
 			cell.textLabel.text = NSLocalizedString(@"PreferencesHebrewCantillationTitle", @"Hebrew Cantillation");
-			[hebrewCantillationSwitch release];						
 		}
 		
 	}
@@ -483,7 +466,6 @@
 		fontTableViewController.preferencesController = self;
 		[self.navigationController pushViewController:fontTableViewController animated:YES];
 		//[self presentModalViewController:fontTableViewController animated:YES];
-		[fontTableViewController release];
 		
 	} else if(indexPath.section == StrongsSection) {
 		

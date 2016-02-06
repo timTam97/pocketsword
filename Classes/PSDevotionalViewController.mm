@@ -37,10 +37,8 @@
 	[wv loadHTMLString: html baseURL: nil];
 	[baseView addSubview:wv];
 	self.devotionalWebView = wv;
-	[wv release];
 	
 	self.view = baseView;
-	[baseView release];
 }
 
 - (void)setDelegate:(PSTabBarControllerDelegate*)delegate {
@@ -53,7 +51,6 @@
 	}
 	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:delegate action:@selector(toggleModulesListFromButton:)];
 	self.navigationItem.rightBarButtonItem = moduleButton;
-	[moduleButton release];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -76,7 +73,6 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-	[popoverController release];
 	popoverController = nil;
 	self.devDatePicker = nil;
 	self.devPickerView = nil;
@@ -85,10 +81,6 @@
 }
 
 
-- (void)dealloc {
-	self.devotionalWebView = nil;
-    [super dealloc];
-}
 
 - (void)refreshDevotionalTitle {
 	[self setDevotionalDateTitle:self.currentDevotionalDate];
@@ -103,7 +95,7 @@
 
 - (void)setDevotionalDateTitle:(NSDate*)newDate {
 	NSString *dateTitle = @"";
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	if([dateFormatter respondsToSelector:@selector(setDoesRelativeDateFormatting:)]) {
 		[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
 		[dateFormatter setDateStyle:NSDateFormatterLongStyle];
@@ -161,7 +153,6 @@
 - (void)popoverControllerDidDismissPopover:(id)poverController {
 	self.currentDevotionalDate = [self.devDatePicker date];
 	[self loadNewDevotionalEntry];
-	[popoverController release];
 	popoverController = nil;
 	self.devDatePicker = nil;
 	self.devPickerView = nil;
@@ -221,26 +212,17 @@
 
 	//toolbarButtons = @[ todayToolbarButton, spaceToolbarButton, doneToolbarButton ];
 	NSArray *toolbarButtons = [NSArray arrayWithObjects:lSpaceToolbarButton, todayToolbarButton, spaceToolbarButton, doneToolbarButton, rSpaceToolbarButton, nil];
-	[todayToolbarButton release];
-	[spaceToolbarButton release];
-	[doneToolbarButton release];
-	[lSpaceToolbarButton release];
-	[rSpaceToolbarButton release];
 	toolbar.items = toolbarButtons;
 	
 	[baseView addSubview:dpView];
-	[dpView release];
 	[baseView addSubview:toolbar];
-	[toolbar release];
 	
 	// need to keep a reference to the UIDatePicker for when the today button is tapped.
 	//    or we bite the bullet and start using blocks & do it all here? :P
 	self.devDatePicker = datePicker;
-	[datePicker release];
 	
 	// need to keep a reference to the baseView to show/hide it.
 	self.devPickerView = baseView;
-	[baseView release];
 	
 }
 
@@ -254,7 +236,6 @@
 			[PSTabBarControllerDelegate hideModal:self.devPickerView withTiming:0.3];
         } else {
             [popoverController dismissPopoverAnimated:YES];
-			[popoverController release];
 			popoverController = nil;
         }
 		self.devDatePicker = nil;
@@ -269,7 +250,6 @@
 			[popoverController setDelegate:self];
 			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
 			[self displayPopover];
-			[dpVC release];
 		} else {
 			if([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0f) {
 				UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
@@ -324,7 +304,7 @@
 		loaded = NO;
 		return;
 	}
-	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateFormat:@"MM.dd"];
 	NSString *dateKey = [dateFormatter stringFromDate:date];
 	NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
@@ -357,71 +337,70 @@
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	BOOL load = YES;
-	NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
+	@autoreleasepool {
+		BOOL load = YES;
+		NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 
-	//NSLog(@"\nDictionaryDescription: requestString: %@\nDD: %@", [[request URL] absoluteString], lastModule);
-	
-	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
-	NSString *entry = nil;
-	
-	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
+		//NSLog(@"\nDictionaryDescription: requestString: %@\nDD: %@", [[request URL] absoluteString], lastModule);
 		
-		if([self isDailyReadingPlanner:lastModule]) {
-			// if we are going to jump straight to the verse in the Bible tab:
-			NSString *chapter, *verse;
+		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
+		NSString *entry = nil;
+		
+		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 			
-			NSString *ref = [rData objectForKey:ATTRTYPE_VALUE];
-			NSArray *comps = [ref componentsSeparatedByString:@":"];
-			
-			if([comps count] > 1) {
-				//we have a verse
-				verse = [comps objectAtIndex:1];
-				chapter = [comps objectAtIndex:0];//just the book & ch
-			} else {
-				verse = @"1";
-				chapter = ref;
-			}
-			chapter = [[[chapter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-
-			[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
-			[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-			
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
-			[PSHistoryController addHistoryItem:BibleTab];
-			entry = nil;
-			load = NO;
-			
-		} else {
-			// otherwise we show the info pane.
+			if([self isDailyReadingPlanner:lastModule]) {
+				// if we are going to jump straight to the verse in the Bible tab:
+				NSString *chapter, *verse;
 				
-			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
-			NSMutableString *tmpEntry = [@"" mutableCopy];
-			for(NSDictionary *dict in array) {
-				NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
-				[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
-				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+				NSString *ref = [rData objectForKey:ATTRTYPE_VALUE];
+				NSArray *comps = [ref componentsSeparatedByString:@":"];
+				
+				if([comps count] > 1) {
+					//we have a verse
+					verse = [comps objectAtIndex:1];
+					chapter = [comps objectAtIndex:0];//just the book & ch
+				} else {
+					verse = @"1";
+					chapter = ref;
+				}
+				chapter = [[[chapter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+
+				[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
+				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
+				[PSHistoryController addHistoryItem:BibleTab];
+				entry = nil;
+				load = NO;
+				
+			} else {
+				// otherwise we show the info pane.
+					
+				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
+				NSMutableString *tmpEntry = [@"" mutableCopy];
+				for(NSDictionary *dict in array) {
+					NSString *curRef = [PSModuleController createRefString: [dict objectForKey:SW_OUTPUT_REF_KEY]];
+					[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
+					[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
+				}
+				if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+					entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
+				}
 			}
-			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
-			}
-			[tmpEntry release];
 		}
+		
+		
+		if(entry) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
+			load = NO;
+		}
+		
+		
+		return load;
 	}
-	
-	
-	if(entry) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-		load = NO;
-	}
-	
-	
-	[pool release];
-	return load;
 }
 
 - (void)didReceiveMemoryWarning {

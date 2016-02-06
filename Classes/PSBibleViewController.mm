@@ -39,9 +39,7 @@
 		NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
 		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
 		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
-		[tableViewController release];
 		[self presentViewController:containingNavigationController animated:YES completion:nil];
-		[containingNavigationController release];
 		self.tappedVerse = nil;
 		
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {

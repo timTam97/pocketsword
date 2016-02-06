@@ -23,10 +23,10 @@ typedef enum {
 	NSDate *dateAdded;
 }
 
-@property (retain, readwrite) NSString *bibleReference;
-@property (retain, readwrite) NSString *scrollAmount;
-@property (retain, readwrite) NSString *moduleName;
-@property (retain, readwrite) NSDate *dateAdded;
+@property (strong, readwrite) NSString *bibleReference;
+@property (strong, readwrite) NSString *scrollAmount;
+@property (strong, readwrite) NSString *moduleName;
+@property (strong, readwrite) NSDate *dateAdded;
 
 - (id)initWithReference:(NSString*)ref scrollAmount:(NSString*)scrollString moduleName:(NSString*)mod dateAdded:(NSDate*)da;
 - (id)initWithArray:(NSArray*)historyArray;

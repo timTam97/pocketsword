@@ -36,7 +36,6 @@
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor]; 
     [mods sortUsingDescriptors:sortDescriptors];
-	[sortDescriptor release];
     
     NSMutableString *outdata = [NSMutableString stringWithCapacity:1000];
 	[outdata appendString:@"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"];
@@ -110,10 +109,7 @@
 	//NSLog(@"POST:%@ (aka, [[multipartData alloc] init]", path);
 	
 	dataStartIndex = 0;
-	if(multipartData) {
-		[multipartData release];
-	}
-	multipartData = [[[NSMutableArray alloc] init] retain];
+	multipartData = [[NSMutableArray alloc] init];
 	postHeaderOK = FALSE;
 	
 	return YES;
@@ -188,8 +184,6 @@
 //			debugMsg = nil;
 		}
 		
-		[postInfo release];
-		[multipartData release];
 		requestContentLength = 0;
 		
 	}
@@ -198,7 +192,7 @@
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
 	{
-		return [[[HTTPFileResponse alloc] initWithFilePath:filePath] autorelease];
+		return [[HTTPFileResponse alloc] initWithFilePath:filePath];
 	}
 	else
 	{
@@ -208,7 +202,7 @@
 		{
 			//DLog(@"folder: %@", folder);
 			NSData *browseData = [[self createBrowseableIndex:folder] dataUsingEncoding:NSUTF8StringEncoding];
-			return [[[HTTPDataResponse alloc] initWithData:browseData] autorelease];
+			return [[HTTPDataResponse alloc] initWithData:browseData];
 		}
 	}
 	
@@ -232,7 +226,7 @@
 	// Therefore, this method may be called multiple times for the same POST request.
 	if(!multipartData) {
 		DLog(@"WARNING: initing multipartData ourselves!");
-		multipartData = [[[NSMutableArray alloc] init] retain];
+		multipartData = [[NSMutableArray alloc] init];
 	}
 	//NSString *test = (multipartData) ? @"YES" : @"NO";
 	//NSLog(@"processPostDataChunk:length = %d (%@)", [postDataChunk length], test);
@@ -277,7 +271,7 @@
 					NSRange fileDataRange = {dataStartIndex, [postDataChunk length] - dataStartIndex};
 					
 					[[NSFileManager defaultManager] createFileAtPath:filename contents:[postDataChunk subdataWithRange:fileDataRange] attributes:nil];
-					NSFileHandle *file = [[NSFileHandle fileHandleForUpdatingAtPath:filename] retain];
+					NSFileHandle *file = [NSFileHandle fileHandleForUpdatingAtPath:filename];
 					
 					//NSLog(@"filename = %@", filename);
 					
@@ -285,10 +279,8 @@
 					{
 						[file seekToEndOfFile];
 						[multipartData addObject:file];
-						[file release];
 					}
 					
-					[postInfo release];
 					
 					break;
 				}

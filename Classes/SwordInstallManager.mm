@@ -41,7 +41,6 @@ float status;
     //DLog(@"[SwordInstallManager -setConfigPath:%@]", value);
     
     if(configPath != value) {
-        [configPath release];
         configPath = [value copy];
         
         if(value != nil) {            
@@ -70,7 +69,7 @@ float status;
                     config.Save();
 					
                     // create default HTTP Install source
-                    SwordInstallSource *is = [[[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP] autorelease];
+                    SwordInstallSource *is = [[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP];
                     [is setCaption:@"CrossWire"];
                     [is setSource:@"ftp.crosswire.org"];
                     [is setDirectory:@"/ftpmirror/pub/sword/raw"];
@@ -204,13 +203,11 @@ base path of the module installation
             [installSources setObject:is forKey:[is caption]];
             // also add to list
             [installSourceList addObject:is];
-			[is release];
         }
 		//sort the installSourceList by "caption"
 		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"caption" ascending:YES];
 		NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 		[installSourceList sortUsingDescriptors:sortDescriptors];
-		[sortDescriptor release];
     }
 }
 
@@ -223,13 +220,6 @@ base path of the module installation
 	if(statusReporter != nil) {
 		delete statusReporter;
 	}
-    
-    [self setConfigPath:nil];
-    [self setInstallSources:nil];
-    [self setInstallSourceList:nil];
-    [self setConfigFilePath:nil];
-    
-    [super dealloc];
 }
 
 - (void)addInstallSource:(SwordInstallSource *)is withReinitialize:(BOOL)reinit {
@@ -308,8 +298,6 @@ base path of the module installation
 }
 
 - (int)refreshMasterRemoteInstallSourceList {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	
     int stat = swInstallMgr->refreshRemoteSourceConfiguration();
@@ -321,7 +309,6 @@ base path of the module installation
 	
 	[self reinitialize];
 
-	[pool release];
     return stat;
 }
 
@@ -382,8 +369,6 @@ base path of the module installation
  refreshing the install source is necessary before installation of 
  */
 - (int)refreshInstallSource:(SwordInstallSource *)is {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	[self resetInstallationProgress];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
@@ -409,14 +394,11 @@ base path of the module installation
 	else
 		status = -1.0;
 	
-	[pool release];
 	DLog(@"SwordInstallManager -refreshInstallSource: END");
     return ret;
 }
 
 - (void)refreshAllInstallSources {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	
 	for (int i = 0; i < [installSourceList count]; i++) {
@@ -426,7 +408,6 @@ base path of the module installation
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	DLog(@"refreshAllInstallSources complete...");
-	[pool release];
 }
 
 
@@ -449,7 +430,6 @@ base path of the module installation
         SwordModule *mod = [[SwordModule alloc] initWithSWModule:module];
         [mod setStatus:modStatus];
         [ar addObject:mod];
-		[mod release];
 	}
     
     if(ar) {

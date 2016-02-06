@@ -8,11 +8,10 @@
 	if((self = [super init]))
 	{
 		filePath = [filePathParam copy];
-		fileHandle = [[NSFileHandle fileHandleForReadingAtPath:filePath] retain];
+		fileHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
 		
 		if(fileHandle == nil)
 		{
-			[self release];
 			return nil;
 		}
 		
@@ -25,10 +24,7 @@
 
 - (void)dealloc
 {
-	[filePath release];
 	[fileHandle closeFile];
-	[fileHandle release];
-	[super dealloc];
 }
 
 - (UInt64)contentLength
@@ -74,16 +70,11 @@
 	if((self = [super init]))
 	{
 		offset = 0;
-		data = [dataParam retain];
+		data = dataParam;
 	}
 	return self;
 }
 
-- (void)dealloc
-{
-	[data release];
-	[super dealloc];
-}
 
 - (UInt64)contentLength
 {

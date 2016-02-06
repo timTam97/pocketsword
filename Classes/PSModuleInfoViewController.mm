@@ -32,8 +32,6 @@
 	self.infoWebView = infoWV;
 	[baseView addSubview:infoWV];
 	self.view = baseView;
-	[infoWV release];
-	[baseView release];
 }
 
 - (void)viewDidLoad {
@@ -41,7 +39,6 @@
 
 	UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(trashModule:)];
 	self.tabBarController.navigationItem.rightBarButtonItem = trashButton;
-	[trashButton release];
 
 	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
@@ -67,7 +64,6 @@
 			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: question
 									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil];
 			[alertView show];
-			[alertView release];
 			askToUnlock = NO;
 		}
 	}
@@ -85,7 +81,6 @@
 	self.tabBarController.navigationItem.title = [swordModule name];
 	UITabBarItem *tbi = [[UITabBarItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"AboutTitle", @""), [swordModule name]] image:[UIImage imageNamed:@"About.png"] tag:101];
 	self.tabBarItem = tbi;
-	[tbi release];
 	[infoWebView loadHTMLString:[PSModuleController createHTMLString:[swordModule fullAboutText] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:NO] baseURL:nil];
 }
 
@@ -102,31 +97,28 @@
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: question
 							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 	[alertView show];
-	[alertView release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	
 	//DLog(@"Clicked button %d", buttonIndex);
-	if (buttonIndex == 1 && trashModule) {
-		// user tapped @"Yes" to the trash this module question.
-		DLog(@"\nremoving module: %@", self.tabBarController.navigationItem.title);
-		trashModule = NO;
-		[[PSModuleController defaultModuleController] removeModule: self.tabBarController.navigationItem.title];
-		[self closeLeaf: nil];
-	} else if(buttonIndex == 1) {
-		// user tapped @"Yes" to unlocking this module question.
-		PSModuleUnlockViewController *unlockViewController = [[PSModuleUnlockViewController alloc] initWithNibName:nil bundle:nil];
-		unlockViewController.moduleName = self.tabBarController.navigationItem.title;
-		UINavigationController *unlockVCN = [[UINavigationController alloc] initWithRootViewController:unlockViewController];
-		unlockVCN.navigationBar.barStyle = UIBarStyleBlack;
-		[self presentModalViewController:unlockVCN animated:YES];
-		[unlockViewController release];
-		[unlockVCN release];
-	}
+		if (buttonIndex == 1 && trashModule) {
+			// user tapped @"Yes" to the trash this module question.
+			DLog(@"\nremoving module: %@", self.tabBarController.navigationItem.title);
+			trashModule = NO;
+			[[PSModuleController defaultModuleController] removeModule: self.tabBarController.navigationItem.title];
+			[self closeLeaf: nil];
+		} else if(buttonIndex == 1) {
+			// user tapped @"Yes" to unlocking this module question.
+			PSModuleUnlockViewController *unlockViewController = [[PSModuleUnlockViewController alloc] initWithNibName:nil bundle:nil];
+			unlockViewController.moduleName = self.tabBarController.navigationItem.title;
+			UINavigationController *unlockVCN = [[UINavigationController alloc] initWithRootViewController:unlockViewController];
+			unlockVCN.navigationBar.barStyle = UIBarStyleBlack;
+			[self presentModalViewController:unlockVCN animated:YES];
+		}
 	
-	[pool release];
+	}
 }
 
 
@@ -148,11 +140,6 @@
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-	self.infoWebView = nil;
-	self.swordModule = nil;
-    [super dealloc];
-}
 
 
 @end

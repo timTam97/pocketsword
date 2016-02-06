@@ -28,11 +28,6 @@ static NSArray * lookup_table;
 	return self;
 }
 
-- (void)dealloc {
-	[code release];
-	[descr release];
-	[super dealloc];
-}
 
 +(NSString*)lookupLanguageCode:(NSString*)aCode {
 	if(!lookup_table)
@@ -63,13 +58,11 @@ static NSArray * lookup_table;
 
 //This should be called by the app delegate
 +(void)doneWithLookupTable {
-	if(lookup_table)
-		[lookup_table release];
 }
 
 +(void)initLookupTable {
 lookup_table = 
-[[NSArray arrayWithObjects: 
+[NSArray arrayWithObjects: 
   //
   // This first section is from iso-639-3_Name_Index_20090210.tab
   //
@@ -8116,7 +8109,7 @@ lookup_table =
   [NSArray arrayWithObjects: @"nfg", @"Nyeng", nil], 
   [NSArray arrayWithObjects: @"nfk", @"Shakara", nil], 
   
-nil] retain];
+nil];
 }
 
 @end

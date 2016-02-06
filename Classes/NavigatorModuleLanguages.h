@@ -13,9 +13,8 @@
 	PSModuleType *data;
 }
 
-@property (retain, readwrite) PSModuleType *data;
+@property (strong, readwrite) PSModuleType *data;
 
 - (void)reloadTable;
-- (void)dealloc;
 
 @end

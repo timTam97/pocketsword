@@ -43,16 +43,10 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 	[grayView removeFromSuperview];
-	[grayView release];
 	grayView = nil;
 }
 
 
-- (void)dealloc {
-	[grayView release];
-	[dictionaryViewController release];
-    [super dealloc];
-}
 
 
 @end

@@ -9,14 +9,14 @@
 @class PSBasePreferencesController;
 
 @interface PSPreferencesFontTableViewController : UITableViewController {
-	PSBasePreferencesController *preferencesController;
+	PSBasePreferencesController *__weak preferencesController;
 	
 	NSString *moduleName;
 
 	NSArray *fontStrings;
 }
 
-@property (retain, readwrite) NSString *moduleName;
-@property (assign, readwrite) PSBasePreferencesController *preferencesController;
+@property (strong, readwrite) NSString *moduleName;
+@property (weak, readwrite) PSBasePreferencesController *preferencesController;
 
 @end

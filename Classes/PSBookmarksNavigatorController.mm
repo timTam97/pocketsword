@@ -69,7 +69,6 @@
     [super viewDidLoad];
 	UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed)];
     self.navigationItem.rightBarButtonItem = editButton;
-	[editButton release];
 	if(bookmarkFolder) {
 		self.navigationItem.title = bookmarkFolder.name;
 	}
@@ -117,7 +116,6 @@
 		bookmarksEditing = YES;
 		UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editButtonPressed)];
 		[self.navigationItem setRightBarButtonItem:doneButton animated:YES];
-		[doneButton release];
 	} else {
 		[self setEditing:NO animated:YES];
 		bookmarksEditing = NO;
@@ -128,7 +126,6 @@
 		}
 		UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed)];
 		[self.navigationItem setRightBarButtonItem:editButton animated:YES];
-		[editButton release];
 	}
 	//[self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationMiddle];
 	//[self.tableView reloadData];
@@ -181,7 +178,7 @@
     
     PSBookmarkTableViewCell *cell = (PSBookmarkTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[PSBookmarkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[PSBookmarkTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     // Configure the cell...
@@ -206,7 +203,6 @@
 			
 			NSString *dateString = [dateFormatter stringFromDate:rowObject.dateLastAccessed];
 			NSString *todayString = [dateFormatter stringFromDate:[NSDate date]];
-			[dateFormatter release];
 			dateFormatter = nil;
 			if([dateString isEqualToString:todayString]) {
 				dateString = NSLocalizedString(@"TodayButtonTitle", @"");
@@ -252,7 +248,6 @@
 	// create a new folder.
 	PSBookmarkFolderAddViewController *favc = [[PSBookmarkFolderAddViewController alloc] initWithParentFolder:self.parentFolders  bookmarkFolderToEdit:folderToEdit];
 	[self.navigationController pushViewController:favc animated:YES];
-	[favc release];
 	//[self editButtonPressed];
 }
 
@@ -264,10 +259,9 @@
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		if(rowObject.folder) {
 			// TODO: display confirmation
-			rowToDelete = [indexPath retain];
+			rowToDelete = indexPath;
 			UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksConfirmDeleteFolderTitle", @"") message: [NSString stringWithFormat:NSLocalizedString(@"BookmarksConfirmDeleteFolderMessage", @""), rowObject.name] delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 			[av show];
-			[av release];
 		} else {
 			[self deleteChildAtIndexPath:indexPath];
 		}
@@ -282,7 +276,6 @@
 		//yup, delete the folder!
 		[self deleteChildAtIndexPath:rowToDelete];
 	}
-	[rowToDelete release];
 	rowToDelete = nil;
 }
 
@@ -301,7 +294,6 @@
 		[array removeObjectAtIndex:indexPath.row];
 	}
 	bookmarkFolder.children = array;
-	[array release];
 	[PSBookmarks saveBookmarksToFile];
 	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
@@ -321,7 +313,6 @@
 	[kids removeObjectAtIndex:fromIndexPath.row];
 	[kids insertObject:obj atIndex:toIndexPath.row];
 	bookmarkFolder.children = kids;
-	[kids release];
 	[PSBookmarks saveBookmarksToFile];
 }
 
@@ -352,14 +343,12 @@
 				}
 				PSBookmarksNavigatorController *bnc = [[PSBookmarksNavigatorController alloc] initWithBookmarkFolder:(PSBookmarkFolder*)rowObject parentFolders:pfs isAddingBookmark:self.isAddingBookmark];
 				[self.navigationController pushViewController:bnc animated:YES];
-				[bnc release];
 			}
 		} else {
 			if(bookmarksEditing) {
 				// edit this bookmark:
 				PSBookmarksAddTableViewController *abc = [[PSBookmarksAddTableViewController alloc] initWithBookmarkToEdit:(PSBookmark*)rowObject parentFolders:self.parentFolders];
 				[self.navigationController pushViewController:abc animated:YES];
-				[abc release];
 			} else {
 				// tapping on a bookmark will open the bookmark.
 				((PSBookmark*)rowObject).dateLastAccessed = [NSDate date];
@@ -404,11 +393,6 @@
 	[super viewDidUnload];
 }
 
-- (void)dealloc {
-	self.bookmarkFolder = nil;
-	[parentFolders release];
-    [super dealloc];
-}
 
 
 @end

@@ -42,7 +42,7 @@
 #pragma mark Table view methods
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-	NSMutableArray *array = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray *array = [[NSMutableArray alloc] init];
 	int verses = [book verses:chapter];
 	if(verses < 10)
 		return nil;
@@ -66,7 +66,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
 	cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @"Verse"), (indexPath.section+1)];
@@ -97,10 +97,6 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
 }
 
-- (void)dealloc {
-	[book release];
-    [super dealloc];
-}
 
 @end
 

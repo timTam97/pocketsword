@@ -25,7 +25,6 @@
 		if(!name) {
 			name = [NSString stringWithCString:lmgr->translate(aBook->getLongName()) encoding:NSISOLatin1StringEncoding];
 		}
-        [name retain];
 		
 		//name = [[NSString stringWithCString:aBook->getLongName() encoding:NSUTF8StringEncoding] retain];
 		chapters = aBook->getChapterMax();
@@ -36,6 +35,8 @@
 	}
 	return self;
 }
+
+- (void)dealloc {}
 
 -(NSInteger)verses:(NSInteger)chapter {
 	return book->getVerseMax(chapter);
@@ -65,12 +66,5 @@
 	return [NSString stringWithCString:book->getOSISName() encoding:NSUTF8StringEncoding];
 }
 
--(void)dealloc {
-	[name release];
-	//if(book != nil)
-	//	delete book;
-	[super dealloc];
-	//DLog(@"dealloc'd a SwordBook");
-}
 
 @end

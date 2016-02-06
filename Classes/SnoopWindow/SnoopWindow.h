@@ -21,12 +21,12 @@
 	BOOL movement;
 	BOOL ignoreMovementEvents;
 	
-	PSBibleViewController *bibleViewController;
-	PSCommentaryViewController *commentaryViewController;
+	PSBibleViewController *__weak bibleViewController;
+	PSCommentaryViewController *__weak commentaryViewController;
 }
 
-@property (nonatomic, assign) PSBibleViewController *bibleViewController;
-@property (nonatomic, assign) PSCommentaryViewController *commentaryViewController;
+@property (nonatomic, weak) PSBibleViewController *bibleViewController;
+@property (nonatomic, weak) PSCommentaryViewController *commentaryViewController;
 
 - (void)sendEvent:(UIEvent *)event;
 - (void)setTouchAndHold:(NSTimer *)theTimer;

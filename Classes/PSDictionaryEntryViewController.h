@@ -12,9 +12,9 @@
 	NSString *entryTitle;
 }
 
-@property (retain) NSString *entryHTML;
-@property (retain) NSString *entryTitle;
-@property (retain) UIWebView *dictionaryDescriptionWebView;
+@property (strong) NSString *entryHTML;
+@property (strong) NSString *entryTitle;
+@property (strong) UIWebView *dictionaryDescriptionWebView;
 
 - (void)setDictionaryEntryTitle:(NSString*)title;
 - (void)setDictionaryEntryText:(NSString*)entry;

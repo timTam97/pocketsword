@@ -58,9 +58,9 @@ typedef enum{
 }
 
 @property(nonatomic,assign) EGOPullRefreshState state;
-@property(nonatomic,retain) NSString *releaseLabelText;
-@property(nonatomic,retain) NSString *pullingLabelText;
-@property(nonatomic,retain) NSString *loadingLabelText;
+@property(nonatomic,strong) NSString *releaseLabelText;
+@property(nonatomic,strong) NSString *pullingLabelText;
+@property(nonatomic,strong) NSString *loadingLabelText;
 
 //- (void)setCurrentDate;
 - (void)setState:(EGOPullRefreshState)aState;

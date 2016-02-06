@@ -71,12 +71,6 @@
 	return self;
 }
 
-- (void)dealloc {
-	self.searchTermToDisplay = nil;
-	self.bookName = nil;
-	self.results = nil;
-	[super dealloc];
-}
 
 - (NSArray *)searchHistoryItemArray {
 	NSString *strongs = (strongsSearch) ? @"Y" : @"N";

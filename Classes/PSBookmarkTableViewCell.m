@@ -16,7 +16,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if(self) {
-		self.lastAccessedLabel = [[[UILabel alloc] initWithFrame:CGRectMake(170, 25, 105, 15)] autorelease];
+		self.lastAccessedLabel = [[UILabel alloc] initWithFrame:CGRectMake(170, 25, 105, 15)];
 		lastAccessedLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 		lastAccessedLabel.textColor = [UIColor lightGrayColor];
 		lastAccessedLabel.font = [UIFont systemFontOfSize:12.0];
@@ -39,9 +39,5 @@
 	[super setEditing:editing animated:animated];
 }
 
-- (void)dealloc {
-	self.lastAccessedLabel = nil;
-	[super dealloc];
-}
 
 @end

@@ -13,7 +13,7 @@
 	NSArray *children;
 }
 
-@property (retain, readwrite) NSArray *children;
+@property (strong, readwrite) NSArray *children;
 
 + (NSString*)hexStringFromColor:(UIColor *)color;
 + (UIColor*)colorFromHexString:(NSString*)hexString;

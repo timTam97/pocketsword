@@ -19,7 +19,7 @@
 @end
 
 @interface PSWebView : UIWebView {
-	id<PSWebViewDelegate> psDelegate;
+	id<PSWebViewDelegate> __weak psDelegate;
 
 	EGORefreshTableHeaderView *refreshHeaderView;
     EGORefreshTableFooterView *refreshFooterView;
@@ -36,7 +36,7 @@
 	BOOL autoFullscreenMode;
 }
 
-@property (nonatomic, assign) id<PSWebViewDelegate> psDelegate;
+@property (nonatomic, weak) id<PSWebViewDelegate> psDelegate;
 @property CGFloat topLength;
 @property CGFloat bottomLength;
 @property BOOL autoFullscreenMode;

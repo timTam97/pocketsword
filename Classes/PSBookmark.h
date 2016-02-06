@@ -13,7 +13,7 @@
 	NSString *ref;
 }
 
-@property (retain, readwrite) NSString *ref;
+@property (strong, readwrite) NSString *ref;
 
 - (id)initWithName:(NSString *)n dateAdded:(NSDate *)da dateLastAccessed:(NSDate *)dla bibleReference:(NSString*)r;
 

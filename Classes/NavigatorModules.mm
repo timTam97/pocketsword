@@ -65,7 +65,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"lvl3-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"lvl3-id"] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"lvl3-id"];
 	}
 	
 	cell.textLabel.text = [(SwordModule*)[dataArray objectAtIndex:indexPath.row] name];
@@ -91,14 +91,8 @@
 	NavigatorLeafView *leafView = [[NavigatorLeafView alloc] initWithNibName:nil bundle:nil];
 	[leafView setModule:(SwordModule*)[dataArray objectAtIndex:indexPath.row]];
 	[self.navigationController pushViewController:leafView animated:YES];
-	[leafView release];
 }
 
-
-- (void)dealloc {
-	[dataArray release];
-	[super dealloc];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];

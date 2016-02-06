@@ -33,7 +33,7 @@
     #define _tcscpy wcscpy //copy a string to another string
     #define _tcsncpy wcsncpy //copy a specified amount of one string to another string.
     #define _tcscat wcscat //copy a string onto the end of the other string
-    #define _tcschr wcschr //find location of one character
+    #define _tcschr std::wcschr //find location of one character
     #define _tcsstr wcsstr //find location of a string
     #define _tcslen wcslen //get length of a string
     #define _tcscmp wcscmp //case sensitive compare two strings
@@ -41,13 +41,13 @@
     #define _tcscspn wcscspn //location of any of a set of character in a string
     
     #ifdef _CL_HAVE_WCSICMP
-        #define _tcsicmp wcsicmp //* case insensitive compare two string
+        #define _tcsicmp std::wcsicmp //* case insensitive compare two string
     #else
-        #define _tcsicmp wcscasecmp //* case insensitive compare two string
+        #define _tcsicmp std::wcscasecmp //* case insensitive compare two string
     #endif
     
     //conversion functions
-    #define _tcstod wcstod //convert a string to a double
+    #define _tcstod std::wcstod //convert a string to a double
     #define _tcstoi64 wcstoll //* convers a string to an 64bit bit integer
     #define _i64tot lltow //* converts a 64 bit integer to a string (with base)
     
@@ -68,20 +68,20 @@
     #define _istdigit isdigit
     #define _totlower tolower
     #define _totupper toupper
-    #define _tcslwr strlwr
-    
+    #define _tcslwr std::wcslwr //* convert string to lower case
+
     //these are the string handling functions
-    #define _tcscpy strcpy
-    #define _tcsncpy strncpy
-    #define _tcscat strcat
-    #define _tcschr strchr
-    #define _tcsstr strstr
-    #define _tcslen strlen
-    #define _tcscmp strcmp
-    #define _tcsncmp strncmp
-    #define _tcsicmp strcasecmp
-    #define _tcscspn strcspn
-    
+    #define _tcscpy std::wcscpy //copy a string to another string
+    #define _tcsncpy std::wcsncpy //copy a specified amount of one string to another string.
+    #define _tcscat std::wcscat //copy a string onto the end of the other string
+		#define _tcsncat std::wcsncat
+    #define _tcschr std::wcschr //find location of one character
+    #define _tcsstr std::wcsstr //find location of a string
+    #define _tcslen std::wcslen //get length of a string
+    #define _tcscmp std::wcscmp //case sensitive compare two strings
+    #define _tcsncmp std::wcsncmp //case sensitive compare two strings
+    #define _tcscspn std::wcscspn //location of any of a set of character in a string
+
     //converstion methods
     #define _tcstod strtod
     #define _tcstoi64 strtoll
@@ -93,7 +93,7 @@
  //some tchar headers miss these...
  #ifndef _tcstoi64
  	#if defined(_UCS2)
-		#define _tcstoi64 wcstoll //* convers a string to an 64bit bit integer
+    	#define _tcstoi64 std::wcstoll //* convers a string to an 64bit bit integer
 	#else
 		#define _tcstoi64 strtoll
 	#endif

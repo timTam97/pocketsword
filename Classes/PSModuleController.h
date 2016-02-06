@@ -43,14 +43,14 @@
 	NSMutableArray *downloadQueue;
 }
 
-@property (assign) SwordModule *primaryBible;
-@property (assign) SwordModule *primaryCommentary;
-@property (assign) SwordDictionary *primaryDictionary;
-@property (assign) SwordDictionary *primaryDevotional;
-@property (assign) SwordManager *swordManager;
-@property (retain) SwordInstallSource *currentInstallSource;
-@property (retain) NSTimer *busyTimer;
-@property (retain) NSMutableArray *downloadQueue;
+@property (strong) SwordModule *primaryBible;
+@property (strong) SwordModule *primaryCommentary;
+@property (strong) SwordDictionary *primaryDictionary;
+@property (strong) SwordDictionary *primaryDevotional;
+@property (strong) SwordManager *swordManager;
+@property (strong) SwordInstallSource *currentInstallSource;
+@property (strong) NSTimer *busyTimer;
+@property (strong) NSMutableArray *downloadQueue;
 
 + (PSModuleController *)defaultModuleController;
 + (void)releaseDefaultModuleController;

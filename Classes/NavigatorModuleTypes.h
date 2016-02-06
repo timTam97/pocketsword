@@ -15,7 +15,7 @@
 
     NSUInteger bti;
 }
-@property (retain, readwrite) NSArray *dataArray;
+@property (strong, readwrite) NSArray *dataArray;
 
 - (void)reloadTable;
 - (void)refreshDownloadSource:(id)sender;

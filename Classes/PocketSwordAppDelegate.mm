@@ -111,7 +111,7 @@
 	PSLaunchViewController *lVC = [[PSLaunchViewController alloc] init];
 	[lVC setDelegate:self];
 		
-	self.window = [[[SnoopWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+	self.window = [[SnoopWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.backgroundColor = [UIColor whiteColor];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		self.window.backgroundColor = [UIColor blackColor];
@@ -134,7 +134,6 @@
 - (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
 	PSTabBarControllerDelegate *tbcd = [[PSTabBarControllerDelegate alloc] init];
 	self.tabBarControllerDelegate = tbcd;
-	[tbcd release];
 	((SnoopWindow*)self.window).bibleViewController = tabBarControllerDelegate.bibleTabController;
 	((SnoopWindow*)self.window).commentaryViewController = tabBarControllerDelegate.commentaryTabController;
 	
@@ -162,7 +161,6 @@
 		}
 		self.launchedWithOptions = nil;
 	}
-	[lVC release];
 	lVC = nil;
 }
 
@@ -325,12 +323,7 @@
 }
 
 - (void)dealloc {
-	self.window = nil;
-	self.urlToOpen = nil;
-	self.launchedWithOptions = nil;
-	self.tabBarControllerDelegate = nil;
 	[PSLanguageCode doneWithLookupTable];
-    [super dealloc];
 }
 
 @end

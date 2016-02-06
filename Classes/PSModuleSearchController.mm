@@ -37,7 +37,6 @@
 	if(self) {
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
 		self.tabBarItem = tBI;
-		[tBI release];
 		switchingTabs = YES;
 		self.searchTerm = nil;
 		self.searchTermToDisplay = nil;
@@ -75,11 +74,8 @@
 	[searchQueryBaseView addSubview:searchQuerySearchBar];
 	[searchQueryBaseView addSubview:searchQueryOptionsTable];
 	self.searchQueryTable = searchQueryOptionsTable;
-	[searchQueryOptionsTable release];
 	self.searchBar = searchQuerySearchBar;
-	[searchQuerySearchBar release];
 	self.searchQueryView = searchQueryBaseView;
-	[searchQueryBaseView release];
 	
 	UITableView *searchResultsResultsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) style:UITableViewStylePlain];
 	searchResultsResultsTable.delegate = self;
@@ -89,12 +85,10 @@
 	searchMainParentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
 	[searchMainParentView addSubview:searchResultsResultsTable];
 	self.view = searchMainParentView;
-	[searchMainParentView release];
 	self.searchResultsTable = searchResultsResultsTable;
-	[searchResultsResultsTable release];
 	
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)] autorelease];
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)] autorelease];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)];
 	
 }
 
@@ -102,15 +96,6 @@
 	[super viewDidLoad];
 }
 
-- (void)dealloc {
-	self.results = nil;
-	self.searchTerm = nil;
-	self.savedTablePosition = nil;
-	self.searchQueryTable = nil;
-	self.searchBar = nil;
-	
-    [super dealloc];
-}
 
 - (void)setSearchTitle {
 	NSString *newTitle = NSLocalizedString(@"SearchTitle", @"");
@@ -173,7 +158,6 @@
 	if(showIndexController) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 		[alertView show];
-		[alertView release];
 	} else  if(!self.results) {
 		searchQueryView.bounds = searchResultsTable.bounds;
 		searchQueryView.center = searchResultsTable.center;
@@ -256,7 +240,6 @@
 	searchQueryView.center = searchResultsTable.center;
 	[self.view addSubview:searchQueryView];
 	[self refreshView];
-	[sender release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -383,7 +366,7 @@
 	} else if(section == 1) {
 		return @"";
 	} else if(results) {
-		return [NSString stringWithFormat: @"%d %@", [results count], NSLocalizedString(@"SearchResults", @"results")];
+		return [NSString stringWithFormat: @"%lu %@", (unsigned long)[results count], NSLocalizedString(@"SearchResults", @"results")];
 	}
 	return @"";
 }
@@ -392,7 +375,7 @@
 	UITableViewCell *cell = [searchQueryTable dequeueReusableCellWithIdentifier:@"queryCell"];
 	
 	if (!cell) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"queryCell"] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"queryCell"];
 	}
 	
 	if(indexPath.section == 0) {
@@ -482,15 +465,15 @@
 	
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"resultsCell"] autorelease];
-		mainLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 320.0, 22.0)] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"resultsCell"];
+		mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 320.0, 22.0)];
         mainLabel.tag = 477;
         mainLabel.font = [UIFont boldSystemFontOfSize:14.0];
         mainLabel.textColor = [UIColor blackColor];
         mainLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);
         [cell.contentView addSubview:mainLabel];
 		
-        secondLabel = [[[UILabel alloc] initWithFrame:CGRectMake(5.0, 22.0, 310.0, 45.0)] autorelease];
+        secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 22.0, 310.0, 45.0)];
         secondLabel.tag = 577;
         secondLabel.font = [UIFont systemFontOfSize:12.0];
 		secondLabel.numberOfLines = 3;
@@ -537,7 +520,6 @@
 	[txt replaceOccurrencesOfString:@"\n" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [txt length])];
 	//DLog(@"\n%@", txt);
 	secondLabel.text = txt;
-	[txt release];
 	
 	return cell;
 }
@@ -630,7 +612,6 @@
 			}
 			optionTVC.delegate = self;
 			[self.navigationController pushViewController:optionTVC animated:YES];
-			[optionTVC release];
 		} else if(indexPath.section == 1) {
 			[tableView deselectRowAtIndexPath:indexPath animated:YES];
 			[self searchBarSearchButtonClicked:nil];
@@ -649,7 +630,6 @@
 				insideQuotes = NO;
 				[current appendString:@"\""];
 				[components addObject:current];
-				[current release];
 				current = [@"" mutableCopy];
 			} else {
 				insideQuotes = YES;
@@ -659,7 +639,6 @@
 			[current appendFormat:@"%C", [searchTermToDisplay characterAtIndex:i]];
 		} else if([searchTermToDisplay characterAtIndex:i] == ' ') {
 			[components addObject:current];
-			[current release];
 			current = [@"" mutableCopy];
 		} else {
 			[current appendFormat:@"%C", [searchTermToDisplay characterAtIndex:i]];
@@ -668,7 +647,6 @@
 	
 	if([current length] > 0)
 		[components addObject:current];
-	[current release];
 	current = nil;
 	
 	NSMutableString *fullSearchTerm = [@"" mutableCopy];
@@ -701,7 +679,6 @@
 				[hebrew insertString:@"0" atIndex:1];
 			}
 			[fullSearchTerm appendFormat:@"(%@%@ || %@%@ || %@)%@", prefix, hebrew, prefix, component, component, joiningString];
-			[hebrew release];
 			hebrew = nil;
 		} else if(strongsSearch) {
 			[fullSearchTerm appendFormat:@"(%@%@ || %@)%@", prefix, component, component, joiningString];
@@ -717,7 +694,6 @@
 		[fullSearchTerm appendString:@"\""];
 	}
 	self.searchTerm = fullSearchTerm;
-	[fullSearchTerm release];
 }
 
 - (SwordVerseKey *)createSearchScope {
@@ -759,52 +735,52 @@
 }
 
 - (void)_search {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	self.results = nil;
-	self.savedTablePosition = nil;
-	if(self.searchTerm) {
-		// the search is already formatted
-	} else {
-		// need to create the formatted search term
-		self.searchTermToDisplay = searchBar.text;
-		[self createSearchTerm];
-	}
-	DLog(@"\nsearchTerm = %@\nsearchTerm length = %d", self.searchTerm, [self.searchTerm length]);
-	if(!self.searchTerm || self.searchTerm.length <= 0 || [self.searchTerm isEqualToString:@"\"\""]) {
-		self.results = [NSMutableArray arrayWithCapacity:0];
-	} else {
-		switch(listType) {
-			case BibleTab:
-				self.results = [[[PSModuleController defaultModuleController] primaryBible] search: self.searchTerm withScope:[self createSearchScope]];
-				break;
-			case CommentaryTab:
-				self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: self.searchTerm withScope:[self createSearchScope]];
-				break;
-			default:
-				self.results = nil;
-				break;
+	@autoreleasepool {
+		self.results = nil;
+		self.savedTablePosition = nil;
+		if(self.searchTerm) {
+			// the search is already formatted
+		} else {
+			// need to create the formatted search term
+			self.searchTermToDisplay = searchBar.text;
+			[self createSearchTerm];
 		}
-	}
-	
-	//remove duplicate entries manually.  why do these appear? *sad face*
-	if(results && [results count] > 0) {
-		for(int i = 0; i < ([results count] -1); i++) {
-			if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key]) {
-				[results removeObjectAtIndex:i+1];//remove the duplicate.
-				--i;
+		DLog(@"\nsearchTerm = %@\nsearchTerm length = %lu", self.searchTerm, (unsigned long)[self.searchTerm length]);
+		if(!self.searchTerm || self.searchTerm.length <= 0 || [self.searchTerm isEqualToString:@"\"\""]) {
+			self.results = [NSMutableArray arrayWithCapacity:0];
+		} else {
+			switch(listType) {
+				case BibleTab:
+					self.results = [[[PSModuleController defaultModuleController] primaryBible] search: self.searchTerm withScope:[self createSearchScope]];
+					break;
+				case CommentaryTab:
+					self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: self.searchTerm withScope:[self createSearchScope]];
+					break;
+				default:
+					self.results = nil;
+					break;
 			}
 		}
-	}
-	
-	// call our delegate to say we have a new searchTerm & results.
-	[self notifyDelegateOfNewHistoryItem];
-	
-	self.searchTerm = nil;
-	[searchResultsTable reloadData];
-	[searchQueryView removeFromSuperview];
-	[self setSearchTitle];
+		
+		//remove duplicate entries manually.  why do these appear? *sad face*
+		if(results && [results count] > 0) {
+			for(int i = 0; i < ([results count] -1); i++) {
+				if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key]) {
+					[results removeObjectAtIndex:i+1];//remove the duplicate.
+					--i;
+				}
+			}
+		}
+		
+		// call our delegate to say we have a new searchTerm & results.
+		[self notifyDelegateOfNewHistoryItem];
+		
+		self.searchTerm = nil;
+		[searchResultsTable reloadData];
+		[searchQueryView removeFromSuperview];
+		[self setSearchTitle];
 
-	[pool release];
+	}
 }
 
 - (void)search {
@@ -821,7 +797,6 @@
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
-	[hud release];
 	hud = nil;
 }
 
@@ -838,7 +813,6 @@
 		[self saveTablePositionFromCurrentPosition];
 		searchHistoryItem.savedTablePosition = self.savedTablePosition;
 		[delegate searchDidFinish:searchHistoryItem];
-		[searchHistoryItem release];
 	}
 }
 

@@ -114,7 +114,6 @@ static PSModuleController *instance;
 }
 
 + (void)releaseDefaultModuleController {
-	[instance release];
 	instance = nil;
 }
 
@@ -123,18 +122,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 + (void)setFirstRefAvailable:(NSString*)first
 {
-	if(firstRefAvailable)
-		[firstRefAvailable release];
 	firstRefAvailable = first;
-	[firstRefAvailable retain];
 }
 
 + (void)setLastRefAvailable:(NSString*)last
 {
-	if(lastRefAvailable)
-		[lastRefAvailable release];
 	lastRefAvailable = last;
-	[lastRefAvailable retain];
 }
 
 + (NSString*)getFirstRefAvailable {
@@ -170,7 +163,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[arch UnzipOpenFile:zippedModule];
 	[arch UnzipFileTo:outfile overWrite:YES];
 	[arch UnzipCloseFile];
-	[arch release];
 	
 	//install the module/s contained in the archive:
 //	if(!internalModule) {
@@ -200,7 +192,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 - (SwordInstallManager *)swordInstallManager {
 	if(!swordInstallManager) {
-		swordInstallManager = [[[SwordInstallManager alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES] retain];
+		swordInstallManager = [[SwordInstallManager alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES];
 		
 		BOOL userDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey: @"userDisclaimerAccepted"];
 		if (userDisclaimer) {
@@ -236,7 +228,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			
 		}
 
-		swordManager = [[SwordManager defaultManager] retain];
+		swordManager = [SwordManager defaultManager];
 		swordInstallManager = nil;
 		// set localized book names
 		sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
@@ -560,8 +552,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (BOOL)installModuleWithModule:(SwordModule*)swordModule fromSource:(SwordInstallSource*)swordInstallSource {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	[swordInstallManager resetInstallationProgress];
 
 	installationProgress = 0.01;
@@ -573,7 +563,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if ([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]] != YES) {
 		ALog(@"Couldn't create mods.d");
 		installationProgress = -1.0;
-		[pool release];
 		return NO;
 	}
 	NSString *dataPath = [swordModule configEntryForKey: @"DataPath"];
@@ -586,7 +575,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if ([[NSFileManager defaultManager] fileExistsAtPath: dataPath] != YES) {
 		ALog(@"Couldn't create DataPath (%@)", dataPath);
 		installationProgress = -1.0;
-		[pool release];
 		return NO;
 	}
 	// TEMPORARY HACK FOR v1.4.2 until we do things properly!
@@ -644,17 +632,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 	}
 	
-	[pool release];
-	
 	installationProgress = 1.0;
 	return ret;
 }
 
 - (BOOL)refreshCurrentInstallSource {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	BOOL success = [[self swordInstallManager] refreshInstallSource:self.currentInstallSource];
 	[self.currentInstallSource resetSwordManagerLoaded];
-	[pool release];
 	return success;
 }
 
@@ -691,7 +675,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 //}
 
 - (BOOL)removeModule:(NSString *)name {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	DLog(@"Removing module: %@", name);
 	
 	// if it's a built-in module, don't automatically re-install it at next launch!
@@ -832,7 +815,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	
-	[pool release];
 	return success;
 }
 
@@ -850,7 +832,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[prefs setObject: [primaryBible name] forKey: DefaultsLastBible];
 		
 		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-		[prefs release];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
@@ -872,7 +853,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[prefs setObject: [primaryCommentary name] forKey: DefaultsLastCommentary];
 		
 		[defaults setPersistentDomain: prefs forName: [[NSBundle mainBundle] bundleIdentifier]];
-		[prefs release];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNewPrimaryCommentary object:nil];
@@ -916,13 +896,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	return text;
-}
-
-- (void)dealloc {
-	[swordInstallManager release];
-	[swordManager release];
-	[currentInstallSource release];
-	[super dealloc];
 }
 
 + (NSString *)createRefString:(NSString *)ref {
@@ -1285,7 +1258,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 
 // returns NO if there are no tasks left.
 - (BOOL)tryDownloading {
-	DLog(@"tryDownloading called: count is %d", [self.downloadQueue count]);
+	DLog(@"tryDownloading called: count is %lu", (unsigned long)[self.downloadQueue count]);
 	if([self.downloadQueue count] > 0) {
 		[(PSModuleDownloadItem*)[self.downloadQueue objectAtIndex:0] startInstall];
 		return YES;

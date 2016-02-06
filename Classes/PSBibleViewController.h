@@ -12,9 +12,9 @@
 
 @interface PSBibleViewController : PSModuleViewController {
 
-	PSCommentaryViewController	*commentaryView;
+	PSCommentaryViewController	*__weak commentaryView;
 }
 
-@property (assign)			PSCommentaryViewController	*commentaryView;
+@property (weak)			PSCommentaryViewController	*commentaryView;
 
 @end

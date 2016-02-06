@@ -51,7 +51,6 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 	NSDate *date = [NSDate date];
 	PSBookmark *bookmark = [[PSBookmark alloc] initWithName:n dateAdded:date dateLastAccessed:date bibleReference:r];
 	BOOL ret = [PSBookmarks addBookmarkObject:bookmark withFolderString:folderString];
-	[bookmark release];
 	return ret;
 }
 
@@ -66,7 +65,6 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 		}
 	}
 	parent.children = array;
-	[array release];
 	[PSBookmarks saveBookmarksToFile];
 }
 
@@ -130,7 +128,6 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 		for(NSArray *child in kids) {
 			PSBookmarkObject *kid = [self parseArray:child];
 			[kidsArray addObject:kid];
-			[kid release];
 		}
 		return [[PSBookmarkFolder alloc] initWithName:n dateAdded:da dateLastAccessed:dla rgbHexString:rgb children:kidsArray];
 	} else {
@@ -147,7 +144,6 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 		for(NSArray *child in dataArray) {
 			PSBookmarkObject *kid = [self parseArray:child];
 			[kidsArray addObject:kid];
-			[kid release];
 		}
         self.children = kidsArray;
     } else {
@@ -285,7 +281,6 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 		if(createImportedFolder) {
 			PSBookmarkFolder *importFolder = [[PSBookmarkFolder alloc] initWithName:NSLocalizedString(@"BookmarksImportedFolderName", @"") dateAdded:[NSDate date] dateLastAccessed:[NSDate date] rgbHexString:nil children:nil];
 			[PSBookmarks addBookmarkObject:importFolder withFolderString:nil];
-			[importFolder release];
 		}
 		for(NSString *ref in oldBookmarks) {
 			[PSBookmarks addBookmarkWithRef:[PSModuleController createRefString:ref] name:ref folderString:NSLocalizedString(@"BookmarksImportedFolderName", @"")];

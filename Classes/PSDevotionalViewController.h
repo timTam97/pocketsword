@@ -24,10 +24,10 @@
 }
 
 @property (readonly, nonatomic) BOOL loaded;
-@property (retain) NSDate *currentDevotionalDate;
-@property (retain) UIView *devPickerView;
-@property (retain) UIDatePicker *devDatePicker;
-@property (retain) UIWebView *devotionalWebView;
+@property (strong) NSDate *currentDevotionalDate;
+@property (strong) UIView *devPickerView;
+@property (strong) UIDatePicker *devDatePicker;
+@property (strong) UIWebView *devotionalWebView;
 
 - (void)setDelegate:(PSTabBarControllerDelegate*)delegate;
 

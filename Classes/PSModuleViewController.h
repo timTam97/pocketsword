@@ -36,11 +36,11 @@
 @property (copy, readwrite) NSString					*jsToShow;
 @property (copy, readwrite) NSString					*tappedVerse;
 @property (readonly)		BOOL						isFullScreen;
-@property (retain)			UIBarButtonItem				*moduleButton;
-@property (retain)			UISegmentedControl			*titleSegmentedControl;
-@property (assign)			PSTabBarControllerDelegate	*delegate;
-@property (retain)			PSWebView					*webView;
-@property (retain)			NSArray						*versePositionArray;
+@property (strong)			UIBarButtonItem				*moduleButton;
+@property (strong)			UISegmentedControl			*titleSegmentedControl;
+@property (weak)			PSTabBarControllerDelegate	*delegate;
+@property (strong)			PSWebView					*webView;
+@property (strong)			NSArray						*versePositionArray;
 
 - (void)setDelegate:(PSTabBarControllerDelegate*)vc;
 - (PSTabBarControllerDelegate*)delegate;

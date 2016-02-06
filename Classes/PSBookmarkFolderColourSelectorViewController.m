@@ -45,7 +45,6 @@
 							[UIColor colorWithRed:0.6 green:0.4 blue:0.2 alpha:0.8], // brown
 							nil];
 		self.selectableColours = colours;
-		[colours release];
 		self.delegate = del;
 		NSString *ourTitle = NSLocalizedString(@"BookmarksAddFolderHighlightColour", @"");
 		if(([ourTitle length] > 0) && ([ourTitle characterAtIndex:([ourTitle length]-1)] == ':')) {
@@ -109,7 +108,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     // Configure the cell...
@@ -157,11 +156,6 @@
 }
 
 
-- (void)dealloc {
-	self.selectableColours = nil;
-	self.currentSelectedColor = nil;
-    [super dealloc];
-}
 
 
 @end

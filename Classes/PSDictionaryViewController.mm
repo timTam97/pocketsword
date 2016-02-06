@@ -30,14 +30,12 @@
 	
 	UIBarButtonItem *dictButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"None", @"None") style:UIBarButtonItemStyleBordered target:self action:@selector(dictionaryModuleSelectorButtonPressed:)];
 	self.navigationItem.rightBarButtonItem = dictButton;
-	[dictButton release];
 	
 	UISearchBar *dSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
 	dSB.delegate = self;
 	dSB.barStyle = UIBarStyleBlack;
 	dSB.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
 	self.dictionarySearchBar = dSB;
-	[dSB release];
 	
 	self.tableView.tableHeaderView = dictionarySearchBar;
 	searching = NO;
@@ -53,7 +51,6 @@
 
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[searchResults release];
 	searchResults = nil;
 	[super viewDidUnload];
 }
@@ -68,18 +65,18 @@
 }
 
 - (void)setDictionaryTitleViaNotification {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	SwordModule *primaryDictionary = [[PSModuleController defaultModuleController] primaryDictionary];
-	if(primaryDictionary) {
-		NSString *newText = [primaryDictionary name];
-		int i = ([newText length] > 8) ? 8 : [newText length];
-		//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
-		NSString *newTitle = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
-		[self.navigationItem.rightBarButtonItem setTitle: newTitle];
-	} else {
-		[self.navigationItem.rightBarButtonItem setTitle: NSLocalizedString(@"None", @"None")];
+	@autoreleasepool {
+		SwordModule *primaryDictionary = [[PSModuleController defaultModuleController] primaryDictionary];
+		if(primaryDictionary) {
+			NSString *newText = [primaryDictionary name];
+			int i = ([newText length] > 8) ? 8 : [newText length];
+			//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
+			NSString *newTitle = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
+			[self.navigationItem.rightBarButtonItem setTitle: newTitle];
+		} else {
+			[self.navigationItem.rightBarButtonItem setTitle: NSLocalizedString(@"None", @"None")];
+		}
 	}
-	[pool release];
 }
 
 - (void)reloadDictionaryData:(BOOL)reloadData {
@@ -106,7 +103,6 @@
 				
 				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [NSString stringWithFormat: @"%@ %@", [[[PSModuleController defaultModuleController] primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message: NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 				[alertView show];
-				[alertView release];
 				return;
 			} else {
 				//need to load it
@@ -133,36 +129,35 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	
-	if (buttonIndex == 1) {
-		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-		[self.view addSubview:HUD];
-		
-		// Regiser for HUD callbacks so we can remove it from the window at the right time
-		HUD.delegate = self;
-		
-		// Show the HUD while the provided method executes in a new thread
-		[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
+		if (buttonIndex == 1) {
+			MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+			[self.view addSubview:HUD];
+			
+			// Regiser for HUD callbacks so we can remove it from the window at the right time
+			HUD.delegate = self;
+			
+			// Show the HUD while the provided method executes in a new thread
+			[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
 
-		dictionaryEnabled = YES;
-		[dictionarySearchBar setUserInteractionEnabled: YES];
-	} else {
-		[dictionarySearchBar setUserInteractionEnabled: NO];
-		dictionaryEnabled = NO;
-		[self.tableView reloadData];
-	}
+			dictionaryEnabled = YES;
+			[dictionarySearchBar setUserInteractionEnabled: YES];
+		} else {
+			[dictionarySearchBar setUserInteractionEnabled: NO];
+			dictionaryEnabled = NO;
+			[self.tableView reloadData];
+		}
 	
 //	if(searching)
 //		[self searchDictionaryEntries];
 //	[self.tableView reloadData];
-	[pool release];
+	}
 }
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
-	[hud release];
 	hud = nil;
 	if(searching)
 		[self searchDictionaryEntries];
@@ -187,12 +182,6 @@
 	[super viewWillDisappear:animated];
 }
 
-- (void)dealloc {
-	self.dictionarySearchBar = nil;
-	[searchResults release];
-	[overlayViewController release];
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
@@ -220,7 +209,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(searching && ([searchResults count] > 0)) {
-		return [NSString stringWithFormat: @"%d %@", [searchResults count], NSLocalizedString(@"SearchResults", @"results")];
+		return [NSString stringWithFormat: @"%lu %@", (unsigned long)[searchResults count], NSLocalizedString(@"SearchResults", @"results")];
 	} else if(!dictionaryEnabled) {
 		return NSLocalizedString(@"DictionaryNoneLoaded", @"DictionaryNoneLoaded");
 	} else {
@@ -234,7 +223,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"dict-id"];
 	if (!cell)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dict-id"] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dict-id"];
 	}
 	if(searching) {
 		cell.textLabel.text = [searchResults objectAtIndex:indexPath.row];
@@ -264,7 +253,6 @@
 	} else {
 		[self presentModalViewController:entryVC animated:YES];
 	}
-	[entryVC release];
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -353,7 +341,6 @@
 	self.tableView.scrollEnabled = YES;
 	
 	[overlayViewController.view removeFromSuperview];
-	[overlayViewController release];
 	overlayViewController = nil;
 	[dictionarySearchBar setShowsCancelButton:NO animated:YES];
 

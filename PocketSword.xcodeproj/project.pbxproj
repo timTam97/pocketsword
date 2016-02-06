@@ -273,7 +273,6 @@
 		05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
 		05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */; };
-		05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B30E181070DDD000727E91 /* libcurl-7.19.6-release.a */; };
 		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
 		05B52A29107DB0D100826AFE /* NavigatorSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52A28107DB0D100826AFE /* NavigatorSources.mm */; };
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
@@ -371,6 +370,8 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */; };
+		A951C8561C4EB191000A3B5B /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E01C4D6E69006C755A /* libcurl.a */; };
+		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
 		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E92B85040F1410C9003183CA /* dirent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94013D20EFDD2D300DA9B7F /* dirent.cpp */; };
 		E94014700EFDD2D400DA9B7F /* AnalysisHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */; };
@@ -880,16 +881,6 @@
 		053CAD861809428D00BCDBE6 /* xzcomprs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xzcomprs.cpp; sourceTree = "<group>"; };
 		053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osisreferencelinks.cpp; sourceTree = "<group>"; };
 		053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scsuutf8.cpp; sourceTree = "<group>"; };
-		0542F6CC10BE770C0088A721 /* curl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curl.h; sourceTree = "<group>"; };
-		0542F6CD10BE770C0088A721 /* curlbuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlbuild.h; sourceTree = "<group>"; };
-		0542F6CE10BE770C0088A721 /* curlrules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlrules.h; sourceTree = "<group>"; };
-		0542F6CF10BE770C0088A721 /* curlver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curlver.h; sourceTree = "<group>"; };
-		0542F6D010BE770C0088A721 /* easy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easy.h; sourceTree = "<group>"; };
-		0542F6D110BE770C0088A721 /* mprintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mprintf.h; sourceTree = "<group>"; };
-		0542F6D210BE770C0088A721 /* multi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multi.h; sourceTree = "<group>"; };
-		0542F6D310BE770C0088A721 /* stdcheaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdcheaders.h; sourceTree = "<group>"; };
-		0542F6D410BE770C0088A721 /* typecheck-gcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "typecheck-gcc.h"; sourceTree = "<group>"; };
-		0542F6D510BE770C0088A721 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesModuleSelectorTableViewController.h; sourceTree = "<group>"; };
 		0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesModuleSelectorTableViewController.mm; sourceTree = "<group>"; };
 		054509C519A5DAA900E0A702 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
@@ -1177,6 +1168,21 @@
 		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSword_Prefix.pch; path = misc/PocketSword_Prefix.pch; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
+		A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
+		A98A70521C64CEB70083ECB8 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "dependencies/curl-ios-build-scripts/curl/osx/lib/libcurl.a"; sourceTree = "<group>"; };
+		A9C105D51C4D6C0B006C755A /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "externals/libcurl/ios-appstore/lib/libcurl.a"; sourceTree = "<group>"; };
+		A9C105E01C4D6E69006C755A /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "externals/libcurl/ios-dev/lib/libcurl.a"; sourceTree = "<group>"; };
+		A9C105E21C4D6E9C006C755A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A9C105E41C4D70A6006C755A /* curl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = curl.h; path = "externals/libcurl/ios-dev/include/curl/curl.h"; sourceTree = SOURCE_ROOT; };
+		A9C105E51C4D70A6006C755A /* curlbuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = curlbuild.h; path = "externals/libcurl/ios-dev/include/curl/curlbuild.h"; sourceTree = SOURCE_ROOT; };
+		A9C105E61C4D70A6006C755A /* curlrules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = curlrules.h; path = "externals/libcurl/ios-dev/include/curl/curlrules.h"; sourceTree = SOURCE_ROOT; };
+		A9C105E71C4D70A6006C755A /* curlver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = curlver.h; path = "externals/libcurl/ios-dev/include/curl/curlver.h"; sourceTree = SOURCE_ROOT; };
+		A9C105E81C4D70A6006C755A /* easy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = easy.h; path = "externals/libcurl/ios-dev/include/curl/easy.h"; sourceTree = SOURCE_ROOT; };
+		A9C105E91C4D70A6006C755A /* mprintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mprintf.h; path = "externals/libcurl/ios-dev/include/curl/mprintf.h"; sourceTree = SOURCE_ROOT; };
+		A9C105EA1C4D70A6006C755A /* multi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = multi.h; path = "externals/libcurl/ios-dev/include/curl/multi.h"; sourceTree = SOURCE_ROOT; };
+		A9C105EB1C4D70A6006C755A /* stdcheaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdcheaders.h; path = "externals/libcurl/ios-dev/include/curl/stdcheaders.h"; sourceTree = SOURCE_ROOT; };
+		A9C105EC1C4D70A6006C755A /* typecheck-gcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "typecheck-gcc.h"; path = "externals/libcurl/ios-dev/include/curl/typecheck-gcc.h"; sourceTree = SOURCE_ROOT; };
+		A9C107D11C4D7404006C755A /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = externals/libcurl/osx/lib/libcurl.a; sourceTree = "<group>"; };
 		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E94012F10EFDD2D200DA9B7F /* AnalysisHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisHeader.cpp; sourceTree = "<group>"; };
 		E94012F20EFDD2D200DA9B7F /* AnalysisHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisHeader.h; sourceTree = "<group>"; };
@@ -1431,13 +1437,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A951C8561C4EB191000A3B5B /* libcurl.a in Frameworks */,
+				A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */,
 				054509C619A5DAA900E0A702 /* libbz2.dylib in Frameworks */,
 				05F84EE7191F4EF0003350DE /* libicucore.dylib in Frameworks */,
 				0562FD7C16BB8BCF003A8C70 /* libSystem.dylib in Frameworks */,
 				056CD38616BB6D6200AA0674 /* libz.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				05B30E191070DDD000727E91 /* libcurl-7.19.6-release.a in Frameworks */,
 				051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */,
 				05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */,
 				05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */,
@@ -2308,16 +2315,15 @@
 		0542F6CB10BE770C0088A721 /* curl */ = {
 			isa = PBXGroup;
 			children = (
-				0542F6CC10BE770C0088A721 /* curl.h */,
-				0542F6CD10BE770C0088A721 /* curlbuild.h */,
-				0542F6CE10BE770C0088A721 /* curlrules.h */,
-				0542F6CF10BE770C0088A721 /* curlver.h */,
-				0542F6D010BE770C0088A721 /* easy.h */,
-				0542F6D110BE770C0088A721 /* mprintf.h */,
-				0542F6D210BE770C0088A721 /* multi.h */,
-				0542F6D310BE770C0088A721 /* stdcheaders.h */,
-				0542F6D410BE770C0088A721 /* typecheck-gcc.h */,
-				0542F6D510BE770C0088A721 /* types.h */,
+				A9C105E41C4D70A6006C755A /* curl.h */,
+				A9C105E51C4D70A6006C755A /* curlbuild.h */,
+				A9C105E61C4D70A6006C755A /* curlrules.h */,
+				A9C105E71C4D70A6006C755A /* curlver.h */,
+				A9C105E81C4D70A6006C755A /* easy.h */,
+				A9C105E91C4D70A6006C755A /* mprintf.h */,
+				A9C105EA1C4D70A6006C755A /* multi.h */,
+				A9C105EB1C4D70A6006C755A /* stdcheaders.h */,
+				A9C105EC1C4D70A6006C755A /* typecheck-gcc.h */,
 			);
 			name = curl;
 			path = externals/libcurl/include/curl;
@@ -2689,6 +2695,12 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A98A70521C64CEB70083ECB8 /* libcurl.a */,
+				A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */,
+				A9C107D11C4D7404006C755A /* libcurl.a */,
+				A9C105E21C4D6E9C006C755A /* Security.framework */,
+				A9C105E01C4D6E69006C755A /* libcurl.a */,
+				A9C105D51C4D6C0B006C755A /* libcurl.a */,
 				054509C719A5DAFA00E0A702 /* liblzma.dylib */,
 				054509C519A5DAA900E0A702 /* libbz2.dylib */,
 				05F84EE6191F4EF0003350DE /* libicucore.dylib */,
@@ -3062,11 +3074,19 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "CrossWire Bible Society";
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = WLJLX6W97K;
+						DevelopmentTeam = 27XS5W9C3J;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -3640,7 +3660,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3650,13 +3673,14 @@
 				HEADER_SEARCH_PATHS = (
 					"externals/clucene/**",
 					externals/sword/include,
-					externals/libcurl/include,
+					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/externals/libcurl\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)/externals/libcurl/ios-dev/lib",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
@@ -3667,6 +3691,8 @@
 					"-DDEBUG",
 					"-DEXCLUDEXZ",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.mabe.PocketSword;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -3675,7 +3701,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3684,13 +3713,14 @@
 				HEADER_SEARCH_PATHS = (
 					"externals/clucene/**",
 					externals/sword/include,
-					externals/libcurl/include,
+					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/externals/libcurl\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)/externals/libcurl/ios-dev/lib",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
@@ -3700,6 +3730,8 @@
 					"-DUSELUCENE",
 					"-DEXCLUDEXZ",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.mabe.PocketSword;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -3707,9 +3739,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Nic Carter (WG8DWJ7UBR)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = misc/PocketSword_Prefix.pch;
@@ -3732,7 +3764,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter (WLJLX6W97K)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3755,7 +3786,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Nic Carter (WLJLX6W97K)";
 				COPY_PHASE_STRIP = NO;
@@ -3781,6 +3811,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
@@ -3789,13 +3823,14 @@
 				HEADER_SEARCH_PATHS = (
 					"externals/clucene/**",
 					externals/sword/include,
-					externals/libcurl/include,
+					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/externals/libcurl\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)/externals/libcurl/ios-appstore/lib",
 				);
 				OTHER_CFLAGS = (
 					"-D_APPLE_IOS_",
@@ -3805,6 +3840,8 @@
 					"-DUSELUCENE",
 					"-DEXCLUDEXZ",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.mabe.PocketSword;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Distribution;
 		};

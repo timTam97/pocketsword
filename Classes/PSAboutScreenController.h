@@ -13,7 +13,7 @@
 	UIWebView *aboutWebView;
 }
 
-@property (retain) UIWebView *aboutWebView;
+@property (strong) UIWebView *aboutWebView;
 
 + (NSString*)generateAboutHTML;
 - (void)emailFeedback:(id)sender;

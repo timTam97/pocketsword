@@ -91,12 +91,12 @@ typedef enum {
 	ShownTab							savedSearchResultsTab;
 }
 
-@property (retain, readwrite) PSSearchHistoryItem	*savedSearchHistoryItem;
+@property (strong, readwrite) PSSearchHistoryItem	*savedSearchHistoryItem;
 @property (assign, readwrite) ShownTab				savedSearchResultsTab;
-@property (retain) PSBibleViewController			*bibleTabController;
-@property (retain) PSCommentaryViewController		*commentaryTabController;
-@property (retain) PSDevotionalViewController		*devotionalTabController;
-@property (retain) UITabBarController				*tabBarController;
+@property (strong) PSBibleViewController			*bibleTabController;
+@property (strong) PSCommentaryViewController		*commentaryTabController;
+@property (strong) PSDevotionalViewController		*devotionalTabController;
+@property (strong) UITabBarController				*tabBarController;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;

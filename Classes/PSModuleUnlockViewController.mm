@@ -51,13 +51,11 @@ line-height: 130%%;\n\
 	baseView.backgroundColor = [UIColor blackColor];
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeUnlockView:)];
 	self.navigationItem.leftBarButtonItem = cancelButton;
-	[cancelButton release];
 	
 	UIWebView *helpWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, HelpWebViewHeight)];
 	[self disableScrolling:helpWV];
 	[baseView addSubview:helpWV];
 	self.unlockHelpWebView = helpWV;
-	[helpWV release];
 	
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 122, 130, 21)];
 	label.font = [UIFont systemFontOfSize:17.0];
@@ -65,7 +63,6 @@ line-height: 130%%;\n\
 	label.backgroundColor = [UIColor blackColor];
 	label.text = NSLocalizedString(@"ModuleEnterKeyTitle", @"Enter Key:");
 	[baseView addSubview:label];
-	[label release];
 	
 	UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(150, 117, 160, 31)];
 	textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -76,13 +73,11 @@ line-height: 130%%;\n\
 	textField.borderStyle = UITextBorderStyleRoundedRect;
 	[baseView addSubview:textField];
 	self.unlockTextField = textField;
-	[textField release];
 	
 	UIWebView *testWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 183, viewWidth, 193)];
 	[self disableScrolling:testWebView];
 	[baseView addSubview:testWebView];
 	self.unlockWebView = testWebView;
-	[testWebView release];
 	
 	CGFloat tbY = viewHeight - 44.0 - self.navigationController.navigationBar.frame.size.height - 20.0;
 	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, tbY, viewWidth, 44)];
@@ -93,16 +88,11 @@ line-height: 130%%;\n\
 	NSArray *toolbarItems = [NSArray arrayWithObjects:saveButton, flexSpace, editButton, nil];
 	[toolbar setItems:toolbarItems animated:NO];
 	self.unlockSaveButton = saveButton;
-	[saveButton release];
-	[flexSpace release];
 	self.unlockEditButton = editButton;
-	[editButton release];
 	[baseView addSubview:toolbar];
 	self.unlockToolbar = toolbar;
-	[toolbar release];
 	
 	self.view = baseView;
-	[baseView release];
 }
 
 - (void)viewDidLoad {
@@ -139,16 +129,6 @@ line-height: 130%%;\n\
 }
 
 
-- (void)dealloc {
-	self.moduleName = nil;
-	self.unlockHelpWebView = nil;
-	self.unlockTextField = nil;
-	self.unlockWebView = nil;
-	self.unlockToolbar = nil;
-	self.unlockEditButton = nil;
-	self.unlockSaveButton = nil;
-    [super dealloc];
-}
 
 - (void)closeUnlockView:(id)sender {
 	[self dismissModalViewControllerAnimated:YES];

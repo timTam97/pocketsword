@@ -116,10 +116,10 @@ typedef enum {
 @property (readwrite) ModuleType type;
 @property (readwrite) ModuleCategory cat;
 @property (readwrite) int status;
-@property (assign, readwrite) NSRecursiveLock *moduleLock;
-@property (assign, readwrite) NSLock *indexLock;
+@property (strong, readwrite) NSRecursiveLock *moduleLock;
+@property (strong, readwrite) NSLock *indexLock;
 @property (copy, readwrite) NSString *name;
-@property (retain, readwrite) SwordManager *swManager;
+@property (strong, readwrite) SwordManager *swManager;
 
 // -------------- class methods --------------
 /**
@@ -141,8 +141,6 @@ typedef enum {
 - (id)initWithSWModule:(sword::SWModule *)aModule swordManager:(SwordManager *)aManager;
 - (sword::SWModule *)swModule;
 #endif
-- (void)finalize;
-- (void)dealloc;
 - (void)setPreferences;
 - (void)resetPreferences;
 

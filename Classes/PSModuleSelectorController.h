@@ -20,8 +20,8 @@
 }
 
 @property (assign) ShownTab listType;
-@property (retain) UITableView *modulesListTable;
-@property (retain) UIToolbar *modulesToolbar;
+@property (strong) UITableView *modulesListTable;
+@property (strong) UIToolbar *modulesToolbar;
 
 - (void)addButtonsToToolbar:(BOOL)animated;
 - (void)addModuleButtonPressed;

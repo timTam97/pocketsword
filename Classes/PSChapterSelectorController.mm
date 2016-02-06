@@ -70,7 +70,7 @@
 #pragma mark - Table view methods
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-	NSMutableArray *array = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray *array = [[NSMutableArray alloc] init];
 	int chapters = [book chapters];
 	if(chapters < 10)
 		return nil;
@@ -96,7 +96,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
 	cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter"), (indexPath.section+1)];
@@ -138,7 +138,6 @@
 	verseSelectorController.book = book;
 	verseSelectorController.chapter = indexPath.section+1;
 	[self.navigationController pushViewController:verseSelectorController animated:YES];
-	[verseSelectorController release];
 }
 
 - (void)jumpToVerseOne:(NSInteger)chapterIndex {
@@ -160,10 +159,6 @@
 	[self jumpToVerseOne:chapterIndex];
 }
 
-- (void)dealloc {
-	[book release];
-    [super dealloc];
-}
 
 
 @end

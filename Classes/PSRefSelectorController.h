@@ -27,9 +27,9 @@ typedef enum {
 
 @property (assign) NSInteger refSelectorBook;
 @property (assign) NSInteger refSelectorChapter;
-@property (retain, readwrite) NSArray *refSelectorBooks;
-@property (retain, readwrite) NSArray *refSelectorBooksIndex;
-@property (retain, readwrite) NSString *currentlyViewedBookName;
+@property (strong, readwrite) NSArray *refSelectorBooks;
+@property (strong, readwrite) NSArray *refSelectorBooksIndex;
+@property (strong, readwrite) NSString *currentlyViewedBookName;
 
 - (void)resetBooks:(NSNotification *)notification;
 - (void)updateRefSelectorBooks;

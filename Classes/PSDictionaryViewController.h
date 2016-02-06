@@ -25,11 +25,11 @@
 	BOOL			dictionaryEnabled;
 
 	PSDictionaryOverlayViewController *overlayViewController;
-	id <PSDictionaryViewControllerDelegate> delegate;
+	id <PSDictionaryViewControllerDelegate> __weak delegate;
 }
 
-@property (nonatomic, assign) id <PSDictionaryViewControllerDelegate> delegate;
-@property (retain) UISearchBar *dictionarySearchBar;
+@property (nonatomic, weak) id <PSDictionaryViewControllerDelegate> delegate;
+@property (strong) UISearchBar *dictionarySearchBar;
 
 - (void)reloadDictionaryData;
 - (void)reloadDictionaryData:(BOOL)reloadData;

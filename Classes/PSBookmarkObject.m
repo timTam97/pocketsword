@@ -31,11 +31,5 @@
 	return self;
 }
 
-- (void)dealloc {
-	self.name = nil;
-	self.dateAdded = nil;
-	self.dateLastAccessed = nil;
-	[super dealloc];
-}
 
 @end

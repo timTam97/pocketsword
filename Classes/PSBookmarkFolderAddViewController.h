@@ -22,9 +22,9 @@
 	PSBookmarkFolder *bookmarkFolderBeingEdited;
 }
 
-@property (retain, readwrite) NSString *parentFolder;
-@property (retain, readwrite) NSString *rgbHexString;
-@property (retain, readwrite) PSBookmarkFolder *bookmarkFolderBeingEdited;
+@property (strong, readwrite) NSString *parentFolder;
+@property (strong, readwrite) NSString *rgbHexString;
+@property (strong, readwrite) PSBookmarkFolder *bookmarkFolderBeingEdited;
 
 // if bookmarkFolder is nil, we're creating a new folder,
 // otherwise, we're editing an existing folder.
