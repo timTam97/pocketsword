@@ -93,7 +93,7 @@
         } else {
             DLog(@"Got data!");
             NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
-            DLog(@"Data retrieved: %@", dataString);
+            //DLog(@"Data retrieved: %@", dataString);
             data = nil;
 
             NSMutableArray *arr = [NSMutableArray array];
