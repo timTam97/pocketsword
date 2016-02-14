@@ -29,8 +29,7 @@
 							 </div>\n\
 							 <div id=\"main\">\n\
 								<p><b>Developed by: </b><br />\n\
-									 Nic Carter<br />\n\
-									 and the rest of the CrossWire community!\n\
+									 The CrossWire Bible Society\n\
 								</p>\n\
 								 <p><b>With help from: </b><br />\n\
 					  David Bell, \
@@ -38,6 +37,7 @@
 					  Christoffer Björkskog, \
 					  Jan Bubík, \
 					  Vincenzo Carrubba, \
+					  Nic Carter, \
 					  Cheree Lynley Designs, \
 					  Dominique Corbex, \
 					  Bruno Gätjens González, \
