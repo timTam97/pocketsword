@@ -85,7 +85,7 @@
             if(viewForHUD) {
                 installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
                 installHUD.mode = MBProgressHUDModeCustomView;
-                [installHUD hide:YES afterDelay:1];
+                [installHUD hideAnimated:YES afterDelay:1];
             } else {
                 [delegate indexInstalled:self];
             }
@@ -122,13 +122,13 @@
 		installHUD.removeFromSuperViewOnHide = YES;
 		installHUD.dimBackground = YES;
 		installHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		[installHUD show:YES];
+		[installHUD showAnimated:YES];
 	}
 	
     self.files = [self _retrieveRemoteIndexList];
 	
 	if(viewForHUD) {
-		[installHUD hide:YES];
+		[installHUD hideAnimated:YES];
 	} else {
 		if(self.files) {
             DLog(@"Checking for remote index...");
@@ -292,7 +292,7 @@
 	if(viewForHUD) {
 		installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 		installHUD.mode = MBProgressHUDModeCustomView;
-		[installHUD hide:YES afterDelay:1];
+		[installHUD hideAnimated:YES afterDelay:1];
 	} else {
 		UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 		MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
@@ -303,8 +303,8 @@
 		finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 		finishedHUD.mode = MBProgressHUDModeCustomView;
 		[viewToUse addSubview:finishedHUD];
-		[finishedHUD show:YES];
-		[finishedHUD hide:YES afterDelay:1];
+		[finishedHUD showAnimated:YES];
+		[finishedHUD hideAnimated:YES afterDelay:1];
 	}
 }
 
@@ -330,7 +330,7 @@
 		if(viewForHUD) {
 			installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 			installHUD.mode = MBProgressHUDModeCustomView;
-			[installHUD hide:YES afterDelay:1];
+			[installHUD hideAnimated:YES afterDelay:1];
 		} else {
 			UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 			MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
@@ -341,8 +341,8 @@
 			finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 			finishedHUD.mode = MBProgressHUDModeCustomView;
 			[viewToUse addSubview:finishedHUD];
-			[finishedHUD show:YES];
-			[finishedHUD hide:YES afterDelay:1];
+			[finishedHUD showAnimated:YES];
+			[finishedHUD hideAnimated:YES afterDelay:1];
 		}
 		return;
 	}
@@ -375,7 +375,7 @@
 	if(viewForHUD) {
 		installHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		installHUD.mode = MBProgressHUDModeCustomView;
-		[installHUD hide:YES afterDelay:1];
+		[installHUD hideAnimated:YES afterDelay:1];
 	} else {
 		UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 		MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
@@ -386,8 +386,8 @@
 		finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		finishedHUD.mode = MBProgressHUDModeCustomView;
 		[viewToUse addSubview:finishedHUD];
-		[finishedHUD show:YES];
-		[finishedHUD hide:YES afterDelay:1];
+		[finishedHUD showAnimated:YES];
+		[finishedHUD hideAnimated:YES afterDelay:1];
 	}
 	
 }
