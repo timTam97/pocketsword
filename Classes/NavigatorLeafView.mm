@@ -48,7 +48,9 @@
 		[installBarButtonItem setEnabled:NO];
     }
     
-    self.navigationItem.rightBarButtonItem = installBarButtonItem;
+    dispatch_async(dispatch_get_main_queue(), ^{
+		self.navigationItem.rightBarButtonItem = installBarButtonItem;
+	});
     
     return currentInstalledVersion;
 }
