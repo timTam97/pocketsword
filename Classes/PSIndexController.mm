@@ -121,7 +121,7 @@
 		installHUD.delegate = self;
 		installHUD.removeFromSuperViewOnHide = YES;
 		installHUD.dimBackground = YES;
-		installHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		installHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
 		[installHUD showAnimated:YES];
 	}
 	
@@ -238,8 +238,8 @@
 		installHUD = [MBProgressHUD showHUDAddedTo:viewForHUD animated:YES];
 		installHUD.delegate = self;
 		installHUD.removeFromSuperViewOnHide = YES;
-		installHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		installHUD.detailsLabelText = moduleToInstall;
+		installHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		installHUD.detailsLabel.text = moduleToInstall;
 		installHUD.dimBackground = YES;
 	} else {
 		installHUD = nil;
@@ -298,8 +298,8 @@
 		MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 		finishedHUD.delegate = self;
 		finishedHUD.removeFromSuperViewOnHide = YES;
-		finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		finishedHUD.detailsLabelText = moduleToInstall;
+		finishedHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		finishedHUD.detailsLabel.text = moduleToInstall;
 		finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 		finishedHUD.mode = MBProgressHUDModeCustomView;
 		[viewToUse addSubview:finishedHUD];
@@ -336,8 +336,8 @@
 			MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 			finishedHUD.delegate = self;
 			finishedHUD.removeFromSuperViewOnHide = YES;
-			finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
-			finishedHUD.detailsLabelText = moduleToInstall;
+			finishedHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
+			finishedHUD.detailsLabel.text = moduleToInstall;
 			finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 			finishedHUD.mode = MBProgressHUDModeCustomView;
 			[viewToUse addSubview:finishedHUD];
@@ -381,8 +381,8 @@
 		MBProgressHUD *finishedHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 		finishedHUD.delegate = self;
 		finishedHUD.removeFromSuperViewOnHide = YES;
-		finishedHUD.labelText = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		finishedHUD.detailsLabelText = moduleToInstall;
+		finishedHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
+		finishedHUD.detailsLabel.text = moduleToInstall;
 		finishedHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		finishedHUD.mode = MBProgressHUDModeCustomView;
 		[viewToUse addSubview:finishedHUD];
