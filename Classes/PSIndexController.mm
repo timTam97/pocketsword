@@ -122,7 +122,9 @@
 		installHUD.removeFromSuperViewOnHide = YES;
 		installHUD.dimBackground = YES;
 		installHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		[installHUD showAnimated:YES];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[installHUD showAnimated:YES];
+		});
 	}
 	
     self.files = [self _retrieveRemoteIndexList];
@@ -184,8 +186,10 @@
 			if([files containsObject: indexName]) {
 				DLog(@"\ndownloadable index for: %@", [modToInstall name]);
 				if(promptForDownload) {
-					UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-					[alertView show];
+					dispatch_async(dispatch_get_main_queue(), ^{
+						UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+						[alertView show];
+					});
 					self.files = nil;
 					return;
 				} else {

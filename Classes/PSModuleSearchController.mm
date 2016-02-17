@@ -254,8 +254,10 @@
 			PSIndexController *indexController = [[PSIndexController alloc] init];
 			indexController.delegate = self;
 			indexController.moduleToInstall = [mod name];
-			[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
-			[indexController start:YES];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
+				[indexController start:YES];
+			});
 		} else {
 			ALog(@"no module to install the index for :P");
 		}
@@ -776,8 +778,10 @@
 		[self notifyDelegateOfNewHistoryItem];
 		
 		self.searchTerm = nil;
-		[searchResultsTable reloadData];
-		[searchQueryView removeFromSuperview];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[searchResultsTable reloadData];
+			[searchQueryView removeFromSuperview];
+		});
 		[self setSearchTitle];
 
 	}
