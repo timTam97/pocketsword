@@ -21,7 +21,7 @@
 	} else {
 		self.tableView.backgroundColor = [UIColor whiteColor];
 	}
-	self.navigationItem.title = [NSString stringWithFormat:@"%@ %d", [book name], chapter];
+	self.navigationItem.title = [NSString stringWithFormat:@"%@ %d", [book name], (int)chapter];
     [super viewWillAppear:animated];
 }
 
@@ -43,7 +43,7 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
 	NSMutableArray *array = [[NSMutableArray alloc] init];
-	int verses = [book verses:chapter];
+	int verses = (int)[book verses:chapter];
 	if(verses < 10)
 		return nil;
 	for(int i=1;i<=verses;i++) {
@@ -92,8 +92,8 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[book name] forKey:BookNameString];
-	[bcvDict setObject:[NSString stringWithFormat:@"%d", chapter] forKey:ChapterString];
-	[bcvDict setObject:[NSString stringWithFormat:@"%d", (indexPath.section+1)] forKey:VerseString];
+	[bcvDict setObject:[NSString stringWithFormat:@"%d", (int)chapter] forKey:ChapterString];
+	[bcvDict setObject:[NSString stringWithFormat:@"%d", (int)(indexPath.section+1)] forKey:VerseString];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
 }
 

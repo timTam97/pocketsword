@@ -33,8 +33,8 @@ static NSArray * lookup_table;
 	if(!lookup_table)
 		[PSLanguageCode initLookupTable];
 	
-	int end = [lookup_table count];
-	for(int i=0;i<end;i++) {
+	NSUInteger end = [lookup_table count];
+	for(NSUInteger i=0;i<end;i++) {
 		if([aCode isEqualToString:[[lookup_table objectAtIndex:i] objectAtIndex:0]])
 			return [[lookup_table objectAtIndex:i] objectAtIndex:1];
 	}

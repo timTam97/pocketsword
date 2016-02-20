@@ -104,7 +104,7 @@
 	if(!font)
 		font = PSDefaultFontName;
 	
-	int pos = [fontStrings indexOfObject:font];
+	unsigned int pos = (unsigned int)[fontStrings indexOfObject:font];
 	NSIndexPath *ip = [NSIndexPath indexPathForRow:pos inSection:0];
 	[self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
 }

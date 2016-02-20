@@ -251,13 +251,17 @@
 			mod = [[PSModuleController defaultModuleController] primaryBible];
 		}
 		if(mod) {
+			[self refreshView];
 			PSIndexController *indexController = [[PSIndexController alloc] init];
 			indexController.delegate = self;
 			indexController.moduleToInstall = [mod name];
 			dispatch_async(dispatch_get_main_queue(), ^{
+				
 				[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
+				//[indexController addViewForHUD:];
 				[indexController start:YES];
 			});
+			return;
 		} else {
 			ALog(@"no module to install the index for :P");
 		}
@@ -778,10 +782,8 @@
 		[self notifyDelegateOfNewHistoryItem];
 		
 		self.searchTerm = nil;
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[searchResultsTable reloadData];
-			[searchQueryView removeFromSuperview];
-		});
+		[searchResultsTable reloadData];
+		[searchQueryView removeFromSuperview];
 		[self setSearchTitle];
 
 	}

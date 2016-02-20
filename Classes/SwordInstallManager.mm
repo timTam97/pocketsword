@@ -334,7 +334,7 @@ base path of the module installation
 
 // list all modules in all sources, by type.
 - (NSArray *)listAllModulesByType:(NSString *)type {
-	NSMutableArray *ret = [NSMutableArray arrayWithObjects: nil];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:5];
 	for (int i = 0; i < [installSourceList count]; i++) {
 		SwordInstallSource *sIS = [installSourceList objectAtIndex: i];
 		NSArray *mods = [[sIS swordManager] modulesForType: type];

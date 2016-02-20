@@ -9,7 +9,7 @@
 
 @interface MyHTTPConnection : HTTPConnection
 {
-	int dataStartIndex;
+	NSUInteger dataStartIndex;
 	NSMutableArray* multipartData;
 	BOOL postHeaderOK;
 }

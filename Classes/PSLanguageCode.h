@@ -23,5 +23,4 @@
 
 
 -(id)initWithCode:(NSString*)aCode;
-- (void)dealloc;
 @end

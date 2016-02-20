@@ -47,7 +47,7 @@
 		[alertView show];
 		return;
 	}
-    DLog(@"Retrieving remote index list...");
+    //DLog(@"Retrieving remote index list...");
 	[self retrieveRemoteIndexList];
     DLog(@"Retrieving remote index list...done");
 }
@@ -91,14 +91,14 @@
             }
             
         } else {
-            DLog(@"Got data!");
+            //DLog(@"Got data!");
             NSString *dataString = [[NSString alloc] initWithData: data encoding: [NSString defaultCStringEncoding]];
             //DLog(@"Data retrieved: %@", dataString);
             data = nil;
 
             NSMutableArray *arr = [NSMutableArray array];
             
-            DLog(@"Searching for index in list...");
+            //DLog(@"Searching for index in list...");
             NSArray *lines = [dataString componentsSeparatedByString:@"</tr>"];
             NSString *indexName = [self generateIndexName];
             for(NSString *line in lines) {
@@ -122,24 +122,23 @@
 		installHUD.removeFromSuperViewOnHide = YES;
 		installHUD.dimBackground = YES;
 		installHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[installHUD showAnimated:YES];
-		});
+		[installHUD showAnimated:YES];
 	}
 	
-    self.files = [self _retrieveRemoteIndexList];
+	self.files = [self _retrieveRemoteIndexList];
 	
 	if(viewForHUD) {
 		[installHUD hideAnimated:YES];
 	} else {
 		if(self.files) {
-            DLog(@"Checking for remote index...");
+			DLog(@"Checking for remote index...");
 			[self checkForRemoteIndex];
-            DLog(@"Checking for remote index...done");
+			DLog(@"Checking for remote index...done");
 		} else {
 			[delegate indexInstalled:self];
 		}
 	}
+	
 }
 
 - (NSString *)generateIndexName {
@@ -159,6 +158,7 @@
 //	[hud removeFromSuperview];
 //	[hud release];
 //	hud = nil;
+	DLog(@"hudWasHidden: %@", hud.label.text);
 	if(removingHUDViewInProgress) {
 		removingHUDViewInProgress = NO;
 		return;
@@ -251,7 +251,10 @@
 	// Download the data file
     DLog(@"Start downloading index file...");
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-	[[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
+	NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
+	if(!conn) {
+		ALog(@"Cannot download index: %@", filename);
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {

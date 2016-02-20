@@ -68,7 +68,7 @@
 		return NO;
 	}
 	NSData* data = [ NSData dataWithContentsOfFile:file];
-	unsigned int dataLen = [data length];
+	unsigned int dataLen = (unsigned int)[data length];
 	ret = zipWriteInFileInZip( _zipFile, (const void*)[data bytes], dataLen);
 	if( ret!=Z_OK )
 	{

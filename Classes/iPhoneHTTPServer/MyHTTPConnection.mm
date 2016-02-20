@@ -156,7 +156,7 @@
 			UInt16 separatorBytes = 0x0A0D;
 			NSMutableData* separatorData = [NSMutableData dataWithBytes:&separatorBytes length:2];
 			[separatorData appendData:[multipartData objectAtIndex:0]];
-			int l = [separatorData length];
+			NSUInteger l = [separatorData length];
 			int count = 2;	//number of times the separator shows up at the end of file data
 			
 			NSFileHandle* dataToTrim = [multipartData lastObject];
@@ -236,7 +236,7 @@
 		UInt16 separatorBytes = 0x0A0D;
 		NSData* separatorData = [NSData dataWithBytes:&separatorBytes length:2];
 		
-		int l = [separatorData length];
+		NSUInteger l = [separatorData length];
 
 		for (int i = 0; i < [postDataChunk length] - l; i++)
 		{

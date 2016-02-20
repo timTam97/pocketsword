@@ -39,7 +39,7 @@
 - (void)dealloc {}
 
 -(NSInteger)verses:(NSInteger)chapter {
-	return book->getVerseMax(chapter);
+	return book->getVerseMax((int)chapter);
 }
 
 -(NSInteger)chapters {
@@ -55,9 +55,9 @@
 
 - (NSString*)shortName {
 	NSString *ret = [[self name] stringByReplacingOccurrencesOfString:@" " withString:@""];
-	int maxIndex = 3;
+	unsigned int maxIndex = 3;
 	if([ret length] < maxIndex)
-		maxIndex = [ret length];
+		maxIndex = (unsigned int)[ret length];
 	ret = [ret substringToIndex:maxIndex];
 	return ret;
 }

@@ -1208,7 +1208,7 @@
 				if(i == 0) {
 					[verses appendString:thisEntry];
 				} else {
-					[verses appendFormat: @"<p><a href=\"#verse%d\" id=\"vv%ld\" class=\"verse\">%ld</a><br />%@</p>\n", i, (long)i, (long)i, thisEntry];
+					[verses appendFormat: @"<p><a href=\"#verse%ld\" id=\"vv%ld\" class=\"verse\">%ld</a><br />%@</p>\n", (long)i, (long)i, (long)i, thisEntry];
 				}
 			} else {
 				NSString *entryToAppend = thisEntry;
@@ -1223,7 +1223,7 @@
 						entryToAppend = @"";
 					}
 				} else if(vpl) {
-					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%d\" class=\"verse\">%d</a><span id=\"vvv%ld\">%@</span><br />\n", i, i, i, (long)i, entryToAppend];
+					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%ld\" id=\"vv%ld\" class=\"verse\">%ld</a><span id=\"vvv%ld\">%@</span><br />\n", i, i, i, (long)i, entryToAppend];
 				} else {
 					
 					BOOL insertedVerse = NO;
@@ -1235,12 +1235,12 @@
 					
 					if([entryToAppend hasPrefix:@"<blockquote class=\"lg\">"]) {
 						// if this verse starts a blockquote, we want the verse number to be within the blockquote.
-						entryToAppend = [NSString stringWithFormat:@"<blockquote class=\"lg\"><a href=\"pocketsword:versemenu:%d\" id=\"vv%ld\" class=\"verse\">%ld</a>%@\n", i, (long)i, (long)i, [entryToAppend substringFromIndex:23]];
+						entryToAppend = [NSString stringWithFormat:@"<blockquote class=\"lg\"><a href=\"pocketsword:versemenu:%ld\" id=\"vv%ld\" class=\"verse\">%ld</a>%@\n", (long)i, (long)i, (long)i, [entryToAppend substringFromIndex:23]];
 						insertedVerse = YES;
 					}
 					
 					if(!insertedVerse) {
-						entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%d\" id=\"vv%ld\" class=\"verse\">%ld</a>%@\n", i, (long)i, (long)i, entryToAppend];
+						entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%ld\" id=\"vv%ld\" class=\"verse\">%ld</a>%@\n", (long)i, (long)i, (long)i, entryToAppend];
 					}
 				}
 				
@@ -1304,8 +1304,8 @@
 					function currentVerse() {\n\
 						var now = window.pageYOffset;\n\
 						if(now < 5) return 1;\n\
-						var g = (%d-1);\n\
-						for(var i=1;i<%d;i++) {\n\
+						var g = (%ld-1);\n\
+						for(var i=1;i<%ld;i++) {\n\
 							if(versepos[i] > now) {\n\
 								g = ((i == 1) ? 1 : (i - 1));\n\
 								break;\n\
@@ -1408,7 +1408,7 @@
 						%@\n\
 						//detLoc();\n\
 					}\n-->\
-					</script>\n", i, i, (long)i, (long)i, extraJS];
+					</script>\n", (long)i, (long)i, (long)i, (long)i, extraJS];
 	
 	
 	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name fixedWidth:YES];
