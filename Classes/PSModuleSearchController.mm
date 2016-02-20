@@ -782,9 +782,11 @@
 		[self notifyDelegateOfNewHistoryItem];
 		
 		self.searchTerm = nil;
-		[searchResultsTable reloadData];
-		[searchQueryView removeFromSuperview];
-		[self setSearchTitle];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[searchResultsTable reloadData];
+			[searchQueryView removeFromSuperview];
+			[self setSearchTitle];
+		});
 
 	}
 }
