@@ -46,6 +46,7 @@
 					  John Huss, \
 					  Nakamaru Kunio, \
 					  Laurence Rezkalla, \
+					  Timothy Shen, \
 					  Vitaliy, \
 					  Ian Wagner, \
 					  Henko van de Weerd \
