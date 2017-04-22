@@ -69,7 +69,7 @@
 		SwordModule *primaryDictionary = [[PSModuleController defaultModuleController] primaryDictionary];
 		if(primaryDictionary) {
 			NSString *newText = [primaryDictionary name];
-			int i = ([newText length] > 8) ? 8 : [newText length];
+			NSUInteger i = ([newText length] > 8) ? 8 : [newText length];
 			//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
 			NSString *newTitle = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
 			[self.navigationItem.rightBarButtonItem setTitle: newTitle];
@@ -105,17 +105,40 @@
 				[alertView show];
 				return;
 			} else {
-				//need to load it
-				MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-				[self.view addSubview:HUD];
 				
-				// Regiser for HUD callbacks so we can remove it from the window at the right time
-				HUD.delegate = self;
-				
-				// Show the HUD while the provided method executes in a new thread
-				[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
-								
-				//needsReload = YES;
+                 //need to load it
+                
+                MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                [self.view addSubview:HUD];
+
+                // Regiser for HUD callbacks so we can remove it from the window at the right time
+                HUD.delegate = self;
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                    
+                    
+                    [[[PSModuleController defaultModuleController] primaryDictionary] performSelector:@selector(allKeys) withObject:nil];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [HUD hideAnimated:YES];
+                    });
+                });
+
+                //needsReload = YES;
+                
+                
+                
+                
+//                //need to load it
+//				MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+//				[self.view addSubview:HUD];
+//				
+//				// Regiser for HUD callbacks so we can remove it from the window at the right time
+//				HUD.delegate = self;
+//				
+//				// Show the HUD while the provided method executes in a new thread
+//				[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
+//
+//				needsReload = YES;
 			}
 		}
 	}
@@ -132,15 +155,44 @@
 	@autoreleasepool {
 	
 		if (buttonIndex == 1) {
-			MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-			[self.view addSubview:HUD];
-			
-			// Regiser for HUD callbacks so we can remove it from the window at the right time
-			HUD.delegate = self;
-			
-			// Show the HUD while the provided method executes in a new thread
-			[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
-
+            
+            
+            
+            
+            MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            
+            [self.view addSubview:HUD];
+            
+            // Regiser for HUD callbacks so we can remove it from the window at the right time
+            
+            HUD.delegate = self;
+            
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                
+                [[[PSModuleController defaultModuleController] primaryDictionary] performSelector:@selector(allKeys) withObject:nil];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [HUD hideAnimated:YES];
+                });
+            });
+            
+            
+            
+            ////////////////////////////////////////////////////////////////////////////////
+            // Code updated to newer MBProgressHUD code
+            ////////////////////////////////////////////////////////////////////////////////
+//
+//			MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+//			[self.view addSubview:HUD];
+//			
+//			// Regiser for HUD callbacks so we can remove it from the window at the right time
+//			HUD.delegate = self;
+//			
+//			// Show the HUD while the provided method executes in a new thread
+//			[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
+//            
+            ////////////////////////////////////////////////////////////////////////////////
+            
 			dictionaryEnabled = YES;
 			[dictionarySearchBar setUserInteractionEnabled: YES];
 		} else {
@@ -328,9 +380,9 @@
 	self.tableView.tableHeaderView = dictionarySearchBar;
 }
 
-- (void)cancelSearch:(id)sender {
-	[self searchBarCancelButtonClicked:nil];
-}
+//- (void)cancelSearch:(id)sender {
+//	[self searchBarCancelButtonClicked:nil];
+//}
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	if([dictionarySearchBar isFirstResponder])

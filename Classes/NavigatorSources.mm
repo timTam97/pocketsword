@@ -87,11 +87,46 @@
 		if([[PSModuleController defaultModuleController] tryDownloading]) {
 			return;//cannot refresh while downloading a module!
 		}
-		MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-		[self.view addSubview:HUD];
-		HUD.delegate = self;
-		// Show the HUD while the provided method executes in a new thread
-		[HUD showWhileExecuting:@selector(refreshMasterRemoteInstallSourceList) onTarget:[[PSModuleController defaultModuleController] swordInstallManager] withObject:nil animated:YES];
+		
+        
+        
+        
+        
+//      MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+//		[self.view addSubview:HUD];
+		
+        MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.delegate = self;
+
+        // Show the HUD while the provided method executes in a new thread
+//		[HUD showWhileExecuting:@selector(refreshMasterRemoteInstallSourceList) onTarget:[[PSModuleController defaultModuleController] swordInstallManager] withObject:nil animated:YES];
+        
+//          [self   showAnimated:animated whileExecutingBlock:^{
+//          [HUD    showAnimated:YES whileExecutingBlock:^{
+
+        
+//    #pragma clang diagnostic push
+//  #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            // Start executing the requested task
+         
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+            
+            [[[PSModuleController defaultModuleController] swordInstallManager] performSelector:@selector(refreshMasterRemoteInstallSourceList) withObject:nil];
+
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [HUD hideAnimated:YES];
+             });
+            
+//      [target performSelector:method withObject:object];
+//      #pragma clang diagnostic pop
+        });
+
+        
+        
+        
+        
+        
 	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
 		[self manualAddModule];
 	}

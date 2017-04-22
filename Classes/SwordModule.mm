@@ -349,7 +349,7 @@
 }
 
 - (NSInteger)error {
-    return swModule->Error();
+    return swModule->popError();
 }
 
 - (NSString *)descr {
@@ -920,6 +920,7 @@
 	} else {
 		return NO;
 	}
+	
 }
 
 - (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope {
@@ -928,12 +929,10 @@
 	if(scope) {
 		results = swModule->search([istr UTF8String], -4, 0, [scope swVerseKey]);
 	} else {
-		//SwordListKey *testScope = [SwordListKey listKeyWithRef:@"matt-rev" v11n:[self versification]];
-		//results = swModule->search([istr UTF8String], -4, 0, [testScope swListKey]);
 		results = swModule->search([istr UTF8String], -4);
 	}
 	results.sort();
-	if(results.Count() > 0) {
+	if(results.getCount() > 0) {
 		while(!results.popError()) {
 			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
 			[retArray addObject: entry];
@@ -1223,7 +1222,7 @@
 						entryToAppend = @"";
 					}
 				} else if(vpl) {
-					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%ld\" id=\"vv%ld\" class=\"verse\">%ld</a><span id=\"vvv%ld\">%@</span><br />\n", i, i, i, (long)i, entryToAppend];
+					entryToAppend = [NSString stringWithFormat:@"<a href=\"pocketsword:versemenu:%ld\" id=\"vv%ld\" class=\"verse\">%ld</a><span id=\"vvv%ld\">%@</span><br />\n", (long)i, (long)i, (long)i, (long)i, entryToAppend];
 				} else {
 					
 					BOOL insertedVerse = NO;

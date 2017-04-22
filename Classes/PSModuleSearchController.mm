@@ -195,10 +195,10 @@
 	} else {
 		searchBar.text = @"";
 	}
-	if(self.searchTerm) {
-		// we need to perform a search...  searchTerm should already be well formatted.
-		[self performSelectorInBackground:@selector(search) withObject:nil];
-	} else if(!self.results) {
+//	if(self.searchTerm) {
+//		// we need to perform a search...  searchTerm should already be well formatted.
+//		[self performSelectorInBackground:@selector(search) withObject:nil];
+//	} else if(!self.results) {
 //		searchQueryView.bounds = searchResultsTable.bounds;
 //		searchQueryView.center = searchResultsTable.center;
 //		[self.view addSubview:searchQueryView];
@@ -207,7 +207,7 @@
 //			topLength = [[self topLayoutGuide] length];
 //			DLog(@"topLength = %f", topLength);
 //		}
-	}
+//	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		searchResultsTable.backgroundColor = [UIColor blackColor];
@@ -233,6 +233,12 @@
 		}
 	}
 	[self setSearchTitle];
+
+	if(self.searchTerm) {
+		// we need to perform a search...  searchTerm should already be well formatted.
+		[self search];
+		//[self performSelectorInBackground:@selector(search) withObject:nil];
+	}
 }
 
 - (void)indexInstalled:(PSIndexController*)sender {
@@ -791,15 +797,41 @@
 	}
 }
 
+
 - (void)search {
-	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window)];
-	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
 	
-	// Regiser for HUD callbacks so we can remove it from the window at the right time
-	HUD.delegate = self;
-	
-	// Show the HUD while the provided method executes in a new thread
-	[HUD showWhileExecuting:@selector(_search) onTarget:self withObject:nil animated:YES];
+    MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo: (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
+    [(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
+    
+   	// Regiser for HUD callbacks so we can remove it from the window at the right time
+    HUD.delegate = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        
+        
+        
+        
+        [self performSelector:@selector(_search) withObject:nil];
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [HUD hideAnimated:YES];
+        });
+    });
+    
+    
+    
+    
+    
+    
+    
+//	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window)];
+//	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
+//	
+//	// Regiser for HUD callbacks so we can remove it from the window at the right time
+//	HUD.delegate = self;
+//	
+//	// Show the HUD while the provided method executes in a new thread
+//	[HUD showWhileExecuting:@selector(_search) onTarget:self withObject:nil animated:YES];
 }
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {

@@ -126,17 +126,43 @@
 }
 
 - (void)_refreshDownloadSource {
-	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window)];
-	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
-	
-	// Regiser for HUD callbacks so we can remove it from the window at the right time
-	HUD.delegate = self;
-	HUD.labelText = NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source");
-	HUD.detailsLabelText = self.title;
-	HUD.dimBackground = YES;
-	
-	// Show the HUD while the provided method executes in a new thread
-	[HUD showWhileExecuting:@selector(refreshCurrentInstallSource) onTarget:[PSModuleController defaultModuleController] withObject:nil animated:YES];
+
+     MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
+    
+    [(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
+
+   	// Regiser for HUD callbacks so we can remove it from the window at the right time
+
+    HUD.delegate = self;
+    HUD.label.text = NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source");
+    HUD.detailsLabel.text = self.title;
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    
+  
+        
+        [[PSModuleController defaultModuleController] performSelector:@selector(refreshCurrentInstallSource) withObject:nil];
+        
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [HUD hideAnimated:YES];
+        });
+    });
+    
+    
+    
+//    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window)];
+//	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
+//	
+//	// Regiser for HUD callbacks so we can remove it from the window at the right time
+//	HUD.delegate = self;
+//	HUD.labelText = NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source");
+//	HUD.detailsLabelText = self.title;
+//	HUD.dimBackground = YES;
+//
+   	// Show the HUD while the provided method executes in a new thread
+//	[HUD showWhileExecuting:@selector(refreshCurrentInstallSource) onTarget:[PSModuleController defaultModuleController] withObject:nil animated:YES];
 
     UIDevice* device = [UIDevice currentDevice];
     BOOL backgroundSupported = NO;

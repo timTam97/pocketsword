@@ -70,7 +70,7 @@
     if([PSModuleController checkNetworkConnection]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 
-        NSString *remoteDir = @"http://www.crosswire.org/pocketsword/indices/v1/";
+        NSString *remoteDir = @"https://www.crosswire.org/pocketsword/indices/v1/";
         
         // Get the index directory listing
         DLog(@"Making network request to %@", remoteDir);
@@ -232,7 +232,7 @@
     NSString *indexName = [self generateIndexName];
     DLog(@"Index name: %@", indexName);
 	
-	NSString *filename = [NSString stringWithFormat: @"http://www.crosswire.org/pocketsword/indices/v1/%@.zip", indexName];
+	NSString *filename = [NSString stringWithFormat: @"https://www.crosswire.org/pocketsword/indices/v1/%@.zip", indexName];
     DLog(@"Filename: %@", filename);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
