@@ -15,8 +15,8 @@
 #import "SwordDictionary.h"
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-130708"
-#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.4-121223"
-#define KJV_VERSION						@"loadedKJV-v2.6.1"
+#define STRONGS_REAL_GREEK_VERSION		@"loadedBundledStrongsRealGreek-v1.5-150704"
+#define KJV_VERSION						@"loadedKJV-v2.9"
 
 @implementation PSLaunchViewController
 

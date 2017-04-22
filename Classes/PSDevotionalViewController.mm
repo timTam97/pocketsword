@@ -141,7 +141,7 @@
 	}
 	SwordDictionary *devo = (SwordDictionary *)[defSwordManager moduleWithName:lastModule];
 	NSString *newText = [devo name];
-	int i = ([newText length] > 8) ? 8 : [newText length];
+	NSUInteger i = ([newText length] > 8) ? 8 : [newText length];
 	//but ".." is the equiv of another char, so if length <= 9, use the full name.  eg "Swe1917Of" should display full name.
 	NSString *t = ([newText length] <= 9) ? newText : [NSString stringWithFormat:@"%@..", [newText substringToIndex:i]];
 	

@@ -310,7 +310,8 @@
 			[ cell addSubview: fontSizeSlider ];
 
 			cell.textLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"PreferencesFontSizeTitle", @"Font Size")];
-			fontSizeLabel.text = [NSString stringWithFormat:@"%d", fontSize];
+			// Cast to "int" to account for 64bit "long" version of NSInteger. 
+            fontSizeLabel.text = [NSString stringWithFormat:@"%d", (int)fontSize];
 		} else if(indexPath.row == FontNameRow) {
 			cell.textLabel.text = NSLocalizedString(@"PreferencesFontTitle", @"Font");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -616,7 +617,8 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	//[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:FONT_SIZE_ROW inSection:DISPLAY_SECTION]] withRowAnimation:UITableViewRowAnimationNone];
 	//[self.tableView reloadData];
-	fontSizeLabel.text = [NSString stringWithFormat:@"%d", f];
+    
+	fontSizeLabel.text = [NSString stringWithFormat:@"%d", (int)f];
 	[self redisplayFromButtonPress];
 }
 

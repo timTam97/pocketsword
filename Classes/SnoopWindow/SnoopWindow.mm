@@ -9,7 +9,7 @@
 #import "PSWebView.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
-
+#import <cmath>
 
 #define SWIPE_DRAG_HORIZ_MIN 100
 #define SWIPE_DRAG_VERT_MAX 40
@@ -213,9 +213,9 @@ CGPoint CGPointNorm(CGPoint a) {
 			//DLog(@"%d %f %d %f time: %g",fabsf(startTouchPosition1.x - currentTouchPosition.x) >= SWIPE_DRAG_HORIZ_MIN ? 1 : 0,
 			//	 fabsf(startTouchPosition1.y - currentTouchPosition.y),
 			//	 fabsf(startTouchPosition1.x - currentTouchPosition.x) > fabsf(startTouchPosition1.y - currentTouchPosition.y)  ? 1 : 0, touch.timestamp - startTouchTime, touch.timestamp - startTouchTime);
-			if (([[event allTouches] count] == 1) &&fabsf(startTouchPosition1.x - currentTouchPosition.x) >= SWIPE_DRAG_HORIZ_MIN &&
-				fabsf(startTouchPosition1.y - currentTouchPosition.y) <= SWIPE_DRAG_VERT_MAX &&
-				fabsf(startTouchPosition1.x - currentTouchPosition.x) > fabsf(startTouchPosition1.y - currentTouchPosition.y) &&
+			if (([[event allTouches] count] == 1) && std::abs(startTouchPosition1.x - currentTouchPosition.x) >= SWIPE_DRAG_HORIZ_MIN &&
+				std::abs(startTouchPosition1.y - currentTouchPosition.y) <= SWIPE_DRAG_VERT_MAX &&
+				std::abs(startTouchPosition1.x - currentTouchPosition.x) > std::abs(startTouchPosition1.y - currentTouchPosition.y) &&
 				touch.timestamp - startTouchTime < .7
 				) {
 				// It appears to be a swipe.

@@ -155,8 +155,8 @@
 		mod = [[moduleList objectAtIndex: (indexPath.row - 1)] name];
 	}
 
-	[preferencesController performSelector:moduleChanged withObject: mod];
-	[self.navigationController popViewControllerAnimated:YES];
+    [preferencesController performSelector:moduleChanged withObject: mod];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

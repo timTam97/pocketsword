@@ -92,12 +92,14 @@
 - (SwordInstallManager *)swordInstallManager;
 
 - (void)didReceiveMemoryWarning;//never called by the OS - must be called manually!
-- (void)dealloc;
+//- (void)dealloc;
 
 + (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem;
 + (BOOL)isModuleDownloading:(NSString*)moduleName;
 + (void)removeViewForHUDForModuleDownloadItem:(NSString*)moduleName;
 - (BOOL)tryDownloading;
+
+- (BOOL)refreshCurrentInstallSource;
 
 //- (void)displayBusyIndicator;
 //- (void)hideBusyIndicator;

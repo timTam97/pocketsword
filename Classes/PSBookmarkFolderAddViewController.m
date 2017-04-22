@@ -181,7 +181,8 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSString *CellIdentifier = [NSString stringWithFormat:@"Cell-%d", indexPath.section];
+    // Changed to %ld and casting to "long" in order to compensate for 64bit "long" version of NSInteger
+    NSString *CellIdentifier = [NSString stringWithFormat:@"Cell-%ld", (long)indexPath.section];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {

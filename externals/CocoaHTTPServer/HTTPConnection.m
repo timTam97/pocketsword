@@ -63,7 +63,7 @@
 @interface HTTPConnection (PrivateAPI)
 - (CFHTTPMessageRef)prepareUniRangeResponse:(UInt64)contentLength;
 - (CFHTTPMessageRef)prepareMultiRangeResponse:(UInt64)contentLength;
-- (NSData *)chunkedTransferSizeLineForLength:(uint)length;
+- (NSData *)chunkedTransferSizeLineForLength:(NSUInteger)length;
 - (NSData *)chunkedTransferFooter;
 @end
 
@@ -775,7 +775,7 @@ static NSMutableArray *recentNonces;
 			
 			if([data length] > 0)
 			{
-				[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+				[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 				
 				if(isChunked)
 				{
@@ -819,7 +819,7 @@ static NSMutableArray *recentNonces;
 				
 				if([data length] > 0)
 				{
-					[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+					[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 					
 					long tag = [data length] == range.length ? HTTP_RESPONSE : HTTP_PARTIAL_RANGE_RESPONSE_BODY;
 					[asyncSocket writeData:data withTimeout:WRITE_BODY_TIMEOUT tag:tag];
@@ -845,7 +845,7 @@ static NSMutableArray *recentNonces;
 				
 				if([data length] > 0)
 				{
-					[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+					[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 					
 					[asyncSocket writeData:data withTimeout:WRITE_BODY_TIMEOUT tag:HTTP_PARTIAL_RANGES_RESPONSE_BODY];
 				}
@@ -952,9 +952,9 @@ static NSMutableArray *recentNonces;
  * Returns the chunk size line that must precede each chunk of data when using chunked transfer encoding.
  * This consists of the size of the data, in hexadecimal, followed by a CRLF.
 **/
-- (NSData *)chunkedTransferSizeLineForLength:(uint)length
+- (NSData *)chunkedTransferSizeLineForLength:(NSUInteger)length
 {
-	return [[NSString stringWithFormat:@"%x\r\n", length] dataUsingEncoding:NSUTF8StringEncoding];
+	return [[NSString stringWithFormat:@"%lx\r\n", length] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 /**
@@ -1021,7 +1021,7 @@ static NSMutableArray *recentNonces;
 	
 	if([data length] > 0)
 	{
-		[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+		[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 		
 		BOOL isChunked = NO;
 		
@@ -1097,7 +1097,7 @@ static NSMutableArray *recentNonces;
 		
 		if([data length] > 0)
 		{
-			[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+			[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 			
 			long tag = [data length] == bytesLeft ? HTTP_RESPONSE : HTTP_PARTIAL_RANGE_RESPONSE_BODY;
 			[asyncSocket writeData:data withTimeout:WRITE_BODY_TIMEOUT tag:tag];
@@ -1146,7 +1146,7 @@ static NSMutableArray *recentNonces;
 		
 		if([data length] > 0)
 		{
-			[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+			[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 			
 			[asyncSocket writeData:data withTimeout:WRITE_BODY_TIMEOUT tag:HTTP_PARTIAL_RANGES_RESPONSE_BODY];
 		}
@@ -1171,7 +1171,7 @@ static NSMutableArray *recentNonces;
 			
 			if([data length] > 0)
 			{
-				[responseDataSizes addObject:[NSNumber numberWithUnsignedInt:[data length]]];
+				[responseDataSizes addObject:[NSNumber numberWithUnsignedLong:[data length]]];
 				
 				[asyncSocket writeData:data withTimeout:WRITE_BODY_TIMEOUT tag:HTTP_PARTIAL_RANGES_RESPONSE_BODY];
 			}

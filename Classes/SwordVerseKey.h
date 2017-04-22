@@ -36,7 +36,7 @@
 - (id)initWithRef:(NSString *)aRef;
 - (id)initWithRef:(NSString *)aRef v11n:(NSString *)scheme;
 
-- (int)index;
+- (long)index;
 - (int)testament;
 - (void)setTestament:(int)val;
 - (int)book;

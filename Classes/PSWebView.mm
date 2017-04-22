@@ -12,8 +12,7 @@
 #import "EGORefreshTableFooterView.h"
 #import "PSModuleController.h"
 #import "PSResizing.h"
-
-#include <math.h>
+#import <cmath>
 
 @interface PSWebView (Private)
 
@@ -136,7 +135,7 @@
 	if(newOffY < 0) {
 		newOffY = 0.0f;
 	}
-	if(fabsf(currentOffsetY - newOffY) > 2.0f) {
+	if(std::abs(currentOffsetY - newOffY) > 2.0f) {
 		// ignore tiny changes
 		currentOffsetY = newOffY;
 		//NSLog(@"new offset: %f (topLength: %f)", currentOffsetY, topLength);

@@ -94,7 +94,9 @@ static PSBookmarks *psDefaultBookmarks;// = nil;
 }
 
 + (NSString *)getHighlightRGBColourStringForBookAndChapterRef:(NSString*)bookAndChapterRef withVerse:(NSInteger)verse {
-	return [[PSBookmarks defaultBookmarks] getHighlightRGBColourStringForBookAndChapterRef:bookAndChapterRef withVerse:[NSString stringWithFormat:@"%d", verse]];
+	
+    // Changed to %ld and casting to "long" in order to compensate for 64bit "long" version of NSInteger.
+    return [[PSBookmarks defaultBookmarks] getHighlightRGBColourStringForBookAndChapterRef:bookAndChapterRef withVerse:[NSString stringWithFormat:@"%ld", (long)verse]];
 }
 
 + (NSMutableArray *)getBookmarksForCurrentRef {

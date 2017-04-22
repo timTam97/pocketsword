@@ -104,7 +104,7 @@
 }
 
 - (void)addChildren:(NSArray*)kids {
-	int capacity = [kids count];
+	NSUInteger capacity = [kids count];
 	if(children)
 		capacity += [children count];
 	NSMutableArray *tmpArray = [NSMutableArray arrayWithCapacity:capacity];

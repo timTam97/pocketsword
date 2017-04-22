@@ -71,7 +71,10 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
 	NSMutableArray *array = [[NSMutableArray alloc] init];
-	int chapters = [book chapters];
+	
+    // "int" cast (functional style) because "chapters" returns an NSInteger which is "long" in 64 bit.
+    // It seems that the intent of chapters is to be "int" so there should not be data loss due to truncation when 64bit.
+    int chapters = int([book chapters]);
 	if(chapters < 10)
 		return nil;
 	for(int i=1;i<=chapters;i++) {
@@ -113,7 +116,9 @@
 
 	UIButton *jumpButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	if([jumpButton respondsToSelector:@selector(tintColor)]) {
-		NSString *buttonString = [NSString stringWithFormat:@"%d:1", (indexPath.section+1)];
+        
+        //Changed to %ld due to NSInteger being used. "long" added to cast (functional style) value to long even if in 32bit mode.
+		NSString *buttonString = [NSString stringWithFormat:@"%ld:1", long(indexPath.section+1)];
 		jumpButton.frame = CGRectMake(0, 0, 60, 30);
 		[jumpButton setTitle:buttonString forState:UIControlStateNormal];
 		jumpButton.tag = (1000 + indexPath.section);
@@ -144,7 +149,9 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleNavigation object:nil];
 	NSMutableDictionary *bcvDict = [NSMutableDictionary dictionary];
 	[bcvDict setObject:[book name] forKey:BookNameString];
-	[bcvDict setObject:[NSString stringWithFormat:@"%d", (chapterIndex+1)] forKey:ChapterString];
+
+    //Changed to %ld due to NSInteger being used. "long" added to cast (functional style) value to long even if in 32bit mode.
+	[bcvDict setObject:[NSString stringWithFormat:@"%ld", long(chapterIndex+1)] forKey:ChapterString];
 	[bcvDict setObject:@"1" forKey:VerseString];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSelectedReference object:bcvDict];
 }

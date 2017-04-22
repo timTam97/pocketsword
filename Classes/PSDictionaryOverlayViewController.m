@@ -27,9 +27,9 @@
 }
 
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	[dictionaryViewController searchBarCancelButtonClicked:nil];
-}
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//	[dictionaryViewController searchBarCancelButtonClicked:nil];
+//}
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.

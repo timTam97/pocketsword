@@ -133,7 +133,7 @@
     return [SwordVerseKey verseKeyWithSWVerseKey:(sword::VerseKey *)sk];
 }
 
-- (int)index {
+- (long)index {
     return sk->getIndex();
 }
 

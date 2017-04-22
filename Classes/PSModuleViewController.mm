@@ -153,7 +153,7 @@
 	currentShownVerse = verseNumber;
 	//index 0 == verse 1, so we need to add one and then subtract 1, so the resulting verse is the number.
 	//our method of updating the title bar & remembering our position.
-	NSString *verseString = [NSString stringWithFormat:@"%d", verseNumber];
+	NSString *verseString = [NSString stringWithFormat:@"%d", (int)verseNumber];
 	if(tabType == BibleTab) {
 		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%d", (int)newOffsetY] forKey: @"bibleScrollPosition"];
 		[[NSUserDefaults standardUserDefaults] setObject: verseString forKey: DefaultsBibleVersePosition];
@@ -296,7 +296,7 @@
 		SwordModule *module;
 		module = (tabType == BibleTab) ? [[PSModuleController defaultModuleController] primaryBible] : [[PSModuleController defaultModuleController] primaryCommentary];
 		if(module) {
-			int i = ([[module name] length] > 5) ? 5 : [[module name] length];
+			NSUInteger i = ([[module name] length] > 5) ? 5 : [[module name] length];
 			NSString *newTitle = ([[module name] length] > i) ? [NSString stringWithFormat:@"%@..", [[module name] substringToIndex:i]] : [[module name] substringToIndex:i];
 			[moduleButton setTitle: newTitle];
 		} else {
@@ -510,7 +510,8 @@
 	NSInteger verses = [[PSModuleController defaultModuleController].primaryBible getVerseMax];
 	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 	NSString *fontColor = (nightMode) ? @"white" : @"black";
-	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d','%@')", verses, fontColor];
+    
+	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d','%@')", (int)verses, fontColor];
 	[webView stringByEvaluatingJavaScriptFromString:jsFunction];
 }
 

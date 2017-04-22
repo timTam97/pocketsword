@@ -48,5 +48,8 @@
 
 - (void)displayPrefsForModule:(SwordModule*)swordModule;
 - (void)redisplayFromButtonPress;
+- (void)strongsGreekModuleChanged:(NSString *)newModule;
+- (void)strongsHebrewModuleChanged:(NSString *)newModule;
+- (void)morphGreekModuleChanged:(NSString *)newModule;
 
 @end

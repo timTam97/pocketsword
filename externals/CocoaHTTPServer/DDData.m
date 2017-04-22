@@ -22,7 +22,7 @@ static char encodingTable[64] = {
 	
 	unsigned char result[CC_MD5_DIGEST_LENGTH];
     
-    CC_MD5([self bytes], [self length], result);
+    CC_MD5([self bytes], (CC_LONG)[self length], result);
     return [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
 	
 #else
@@ -38,7 +38,7 @@ static char encodingTable[64] = {
 	
 	unsigned char result[CC_SHA1_DIGEST_LENGTH];
     
-	CC_SHA1([self bytes], [self length], result);
+	CC_SHA1([self bytes], (CC_LONG)[self length], result);
     return [NSData dataWithBytes:result length:CC_SHA1_DIGEST_LENGTH];
 	
 #else

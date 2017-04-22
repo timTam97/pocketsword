@@ -137,7 +137,7 @@
 }
 
 + (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+	NSInteger rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
 	//NSLog(@"rotationLockPosition == %i", rotationLockPosition);
 
 	if (rotationLockPosition == RotationEnabled) { return YES; }
@@ -150,7 +150,7 @@
 }
 
 + (NSUInteger)supportedInterfaceOrientations {
-	int rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
+	NSInteger rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
 	switch (rotationLockPosition) {
 		case RotationEnabled:
 		{
@@ -194,7 +194,7 @@
 	DLog(@"Don't Backup:\n---\n%@\n---\n", path);
 	
 //	if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.1") && &NSURLIsExcludedFromBackupKey) {
-	if(&NSURLIsExcludedFromBackupKey) {
+//	if(&NSURLIsExcludedFromBackupKey) {
 		// iOS 5.1 and later:
 		NSURL *URL = [NSURL fileURLWithPath:path isDirectory:YES];
 		
@@ -207,7 +207,7 @@
 			ALog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
 		}
 		return success;
-	}
+//	}
 //	else {
 //		// iOS 5.0.1 and earlier method, as this is backwards compatible with iOS 3.0 :P
 //		const char* filePath = [path fileSystemRepresentation];
@@ -218,7 +218,7 @@
 //		int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
 //		return result == 0;
 //	}
-	return YES;
+//	return YES;
 }
 
 @end

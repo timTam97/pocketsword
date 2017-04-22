@@ -65,8 +65,8 @@
 
 - (void)willShowNavigation {
 	NSIndexPath *ip = nil;
-	int bookCount = [refSelectorBooks count];
-	for(int i=0;i<bookCount;i++) {
+	NSUInteger bookCount = [refSelectorBooks count];
+	for(NSUInteger i=0;i<bookCount;i++) {
 		if([currentlyViewedBookName isEqualToString:[((SwordBook*)[refSelectorBooks objectAtIndex:i]) name]]) {
 			ip = [NSIndexPath indexPathForRow: 0 inSection: i];
 		}

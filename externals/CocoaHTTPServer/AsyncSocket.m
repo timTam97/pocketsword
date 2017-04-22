@@ -170,9 +170,9 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 		terminator:(NSData *)e
 	  	 maxLength:(CFIndex)m;
 
-- (unsigned)readLengthForTerm;
+- (NSUInteger)readLengthForTerm;
 
-- (unsigned)prebufferReadLengthForTerm;
+- (NSUInteger)prebufferReadLengthForTerm;
 - (CFIndex)searchForTermAfterPreBuffering:(CFIndex)numBytes;
 @end
 
@@ -204,7 +204,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
  * 
  * It is assumed the terminator has not already been read.
 **/
-- (unsigned)readLengthForTerm
+- (NSUInteger)readLengthForTerm
 {
 	NSAssert(term != nil, @"Searching for term in data when there is no term.");
 	
@@ -213,7 +213,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	// and we can only read that amount.
 	// Otherwise, we're safe to read the entire length of the term.
 	
-	unsigned result = [term length];
+	NSUInteger result = [term length];
 	
 	// Shortcut when term is a single byte
 	if(result == 1) return result;
@@ -251,7 +251,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
  * Assuming pre-buffering is enabled, returns the amount of data that can be read
  * without going over the maxLength.
 **/
-- (unsigned)prebufferReadLengthForTerm
+- (NSUInteger)prebufferReadLengthForTerm
 {
 	if(maxLength > 0)
 		return MIN(READALL_CHUNKSIZE, (maxLength - bytesDone));
@@ -517,7 +517,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 
 - (void)runLoopAddSource:(CFRunLoopSourceRef)source
 {
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -527,7 +527,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 
 - (void)runLoopRemoveSource:(CFRunLoopSourceRef)source
 {
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -537,7 +537,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 
 - (void)runLoopAddTimer:(NSTimer *)timer
 {
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -547,7 +547,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 
 - (void)runLoopRemoveTimer:(NSTimer *)timer
 {
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)		
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -557,7 +557,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 
 - (void)runLoopUnscheduleReadStream
 {
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -568,7 +568,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 
 - (void)runLoopUnscheduleWriteStream
 {
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -1362,7 +1362,7 @@ Failed:
 	
 	// Add read and write streams to run loop
 	
-	unsigned i, count = [theRunLoopModes count];
+	NSUInteger i, count = [theRunLoopModes count];
 	for(i = 0; i < count; i++)
 	{
 		CFStringRef runLoopMode = (__bridge CFStringRef)[theRunLoopModes objectAtIndex:i];
@@ -2403,7 +2403,7 @@ Failed:
 				// We don't want to increase the buffer any more than this or we'll waste space.
 				// With prebuffering it's possible to read in a small chunk on the first read.
 				
-				unsigned buffInc = READALL_CHUNKSIZE - ([theCurrentRead->buffer length] - theCurrentRead->bytesDone);
+				NSUInteger buffInc = READALL_CHUNKSIZE - ([theCurrentRead->buffer length] - theCurrentRead->bytesDone);
 				[theCurrentRead->buffer increaseLengthBy:buffInc];
 			}
 
@@ -2417,17 +2417,17 @@ Failed:
 				
 				if(([partialReadBuffer length] > 0) || !(theFlags & kEnablePreBuffering))
 				{
-					unsigned maxToRead = [theCurrentRead readLengthForTerm];
+					NSUInteger maxToRead = [theCurrentRead readLengthForTerm];
 					
-					unsigned bufInc = maxToRead - ([theCurrentRead->buffer length] - theCurrentRead->bytesDone);
+					NSUInteger bufInc = maxToRead - ([theCurrentRead->buffer length] - theCurrentRead->bytesDone);
 					[theCurrentRead->buffer increaseLengthBy:bufInc];
 				}
 				else
 				{
 					didPreBuffer = YES;
-					unsigned maxToRead = [theCurrentRead prebufferReadLengthForTerm];
+					NSUInteger maxToRead = [theCurrentRead prebufferReadLengthForTerm];
 					
-					unsigned buffInc = maxToRead - ([theCurrentRead->buffer length] - theCurrentRead->bytesDone);
+					NSUInteger buffInc = maxToRead - ([theCurrentRead->buffer length] - theCurrentRead->bytesDone);
 					[theCurrentRead->buffer increaseLengthBy:buffInc];
 
 				}
@@ -2482,7 +2482,7 @@ Failed:
 					else
 					{
 						// Search for the terminating sequence at the end of the buffer
-						int termlen = [theCurrentRead->term length];
+						NSUInteger termlen = [theCurrentRead->term length];
 						if(theCurrentRead->bytesDone >= termlen)
 						{
 							const void *buf = [theCurrentRead->buffer bytes] + (theCurrentRead->bytesDone - termlen);
