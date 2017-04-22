@@ -43,7 +43,7 @@
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"LocalhostAdressesResolved" object:result];
 
-		NSURL *netIPURL = [NSURL URLWithString:@"http://www.networksecuritytoolkit.org/nst/cgi-bin/ip.cgi"];
+		NSURL *netIPURL = [NSURL URLWithString:@"https://www.networksecuritytoolkit.org/nst/cgi-bin/ip.cgi"];
 		NSString *netIP = [NSString stringWithContentsOfURL:netIPURL encoding:NSUTF8StringEncoding error:nil];
 		if (netIP) {
 			netIP = [netIP stringByReplacingOccurrencesOfString:@"\n" withString:@""];
