@@ -28,7 +28,7 @@
 	[super viewDidLoad];
 	self.navigationItem.title = NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary");
 	
-	UIBarButtonItem *dictButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"None", @"None") style:UIBarButtonItemStyleBordered target:self action:@selector(dictionaryModuleSelectorButtonPressed:)];
+	UIBarButtonItem *dictButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"None", @"None") style:UIBarButtonItemStylePlain target:self action:@selector(dictionaryModuleSelectorButtonPressed:)];
 	self.navigationItem.rightBarButtonItem = dictButton;
 	
 	UISearchBar *dSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];

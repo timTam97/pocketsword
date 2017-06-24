@@ -87,7 +87,7 @@
 	self.view = searchMainParentView;
 	self.searchResultsTable = searchResultsResultsTable;
 	
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStyleBordered target: self action: @selector(closeButtonPressed)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStylePlain target: self action: @selector(closeButtonPressed)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)];
 	
 }
@@ -237,7 +237,6 @@
 	if(self.searchTerm) {
 		// we need to perform a search...  searchTerm should already be well formatted.
 		[self search];
-		//[self performSelectorInBackground:@selector(search) withObject:nil];
 	}
 }
 
@@ -489,7 +488,7 @@
         secondLabel.tag = 577;
         secondLabel.font = [UIFont systemFontOfSize:12.0];
 		secondLabel.numberOfLines = 3;
-		secondLabel.lineBreakMode = UILineBreakModeWordWrap;
+		secondLabel.lineBreakMode = NSLineBreakByWordWrapping;
         secondLabel.textColor = [UIColor darkGrayColor];
         secondLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:secondLabel];

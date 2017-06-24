@@ -101,7 +101,7 @@
 	tbar.barStyle = UIBarStyleBlack;
 	flexLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	flexRight = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(doneButtonPressed)];
+	UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed)];
 	tbarButtons = [NSArray arrayWithObjects: flexLeft, closeButton, flexRight, nil];
 	tbar.items = tbarButtons;
 	[v addSubview:tbar];

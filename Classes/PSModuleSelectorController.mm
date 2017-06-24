@@ -61,7 +61,7 @@
 	if(listType == PreferencesTab) {
 		modulesToolbar.hidden = YES;
 	} else if(![PSResizing iPad]) {
-		UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismissModuleSelector)];
+		UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismissModuleSelector)];
 		self.navigationItem.leftBarButtonItem = modulesCloseButton;
 		UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
 		self.navigationItem.rightBarButtonItem = modulesAddButton;

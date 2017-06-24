@@ -262,7 +262,7 @@
 			break;
 		case 2:
 			if(self.folder) {
-				cell.textLabel.lineBreakMode = UILineBreakModeHeadTruncation;
+				cell.textLabel.lineBreakMode = NSLineBreakByTruncatingHead;
 				cell.textLabel.text = [folder stringByReplacingOccurrencesOfString:PSFolderSeparatorString withString:@"/"];
 			} else {
 				cell.textLabel.text = NSLocalizedString(@"BookmarksTitle", @"");

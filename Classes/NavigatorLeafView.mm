@@ -33,14 +33,14 @@
 	NSString *availableModuleVersion = [module version];
 	if(installedModule && [availableModuleVersion isEqualToString:[installedModule version]]) {
 		currentInstalledVersion = [installedModule version];
-		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstalledButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:nil];
+		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstalledButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:nil];
 		[installBarButtonItem setEnabled:NO];
 	} else if(installedModule) {
 		currentInstalledVersion = [installedModule version];
-		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"UpgradeButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(confirmUpgrade)];
+		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"UpgradeButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:@selector(confirmUpgrade)];
 		[installBarButtonItem setEnabled:YES];
 	} else {
-		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstallButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(confirmInstall)];
+		installBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"InstallButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:@selector(confirmInstall)];
 		[installBarButtonItem setEnabled:YES];
 	}
     

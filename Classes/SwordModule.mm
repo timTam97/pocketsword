@@ -923,13 +923,19 @@
 	
 }
 
+
 - (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope {
+	int searchType = 0;
+	if([self hasSearchIndex]) {
+		searchType = -4;
+	}
+	
 	sword::ListKey results;
 	NSMutableArray *retArray = [NSMutableArray array];
 	if(scope) {
-		results = swModule->search([istr UTF8String], -4, 0, [scope swVerseKey]);
+		results = swModule->search([istr UTF8String], searchType, 0, [scope swVerseKey]);
 	} else {
-		results = swModule->search([istr UTF8String], -4);
+		results = swModule->search([istr UTF8String], searchType);
 	}
 	results.sort();
 	if(results.getCount() > 0) {

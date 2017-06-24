@@ -49,7 +49,7 @@
 		if(![[PSModuleController defaultModuleController] primaryDevotional])
 			[[PSModuleController defaultModuleController] loadPrimaryDevotional:devoTitle];
 	}
-	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStyleBordered target:delegate action:@selector(toggleModulesListFromButton:)];
+	UIBarButtonItem *moduleButton = [[UIBarButtonItem alloc] initWithTitle:devoTitle style:UIBarButtonItemStylePlain target:delegate action:@selector(toggleModulesListFromButton:)];
 	self.navigationItem.rightBarButtonItem = moduleButton;
 }
 
@@ -200,7 +200,7 @@
 	[dpView addSubview:datePicker];
 	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, (iPad ? 320.0f : screenRect.size.width), 44.0f)];
 	toolbar.barStyle = UIBarStyleBlack;
-	UIBarButtonItem *todayToolbarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"TodayButtonTitle", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(todayButtonPressed)];
+	UIBarButtonItem *todayToolbarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"TodayButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:@selector(todayButtonPressed)];
 	[todayToolbarButton setTitleTextAttributes: @{ NSFontAttributeName: [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]], NSForegroundColorAttributeName: [UIColor whiteColor] } forState:UIControlStateNormal];
 	UIBarButtonItem *spaceToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	UIBarButtonItem *doneToolbarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(toggleDatePicker)];

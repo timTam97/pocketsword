@@ -97,11 +97,11 @@
 }
 
 - (NSInteger)count {
-	return ((sword::ListKey *)sk)->Count();
+	return ((sword::ListKey *)sk)->getCount();
 }
 
 - (NSString *)refForElement:(NSInteger)elt {
-	return [NSString stringWithUTF8String: ((sword::ListKey *)sk)->getElement(elt)->getText()];
+	return [NSString stringWithUTF8String: ((sword::ListKey *)sk)->getElement((int)elt)->getText()];
 }
 
 - (BOOL)containsKey:(SwordVerseKey *)aVerseKey {

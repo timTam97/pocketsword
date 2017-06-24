@@ -389,7 +389,7 @@
 				case MOD_BLURB_ROW:
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 7;//2;
 					cell.textLabel.textColor = [UIColor darkGrayColor];
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
@@ -626,14 +626,14 @@
 					//[ cell addSubview: fullscreenModeSwitch ];
 					cell.accessoryView = fullscreenModeSwitch;
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenModeTitle", @"Fullscreen Mode");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 2;
 				}
 					break;
 				case FULLSCREEN_NOTE_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenNote", @"With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 4;
 					cell.textLabel.textColor = [UIColor darkGrayColor];
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
@@ -650,7 +650,7 @@
 					//[ cell addSubview: manualInstallSwitch ];
 					cell.accessoryView = manualInstallSwitch;
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"Module Maintainer Mode");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 2;
 					cell.textLabel.font = [UIFont boldSystemFontOfSize:10.0];
 				}
@@ -658,7 +658,7 @@
 				case MMM_NOTE_ROW :
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleMaintainerModeNote", @"");
-					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 7;
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 					cell.textLabel.textColor = [UIColor darkGrayColor];

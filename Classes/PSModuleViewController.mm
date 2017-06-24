@@ -314,11 +314,11 @@
 
 - (void)setDelegate:(PSTabBarControllerDelegate*)vc {
 
-	UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"history.png"] style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleMultiList:)];
+	UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"history.png"] style:UIBarButtonItemStylePlain target:vc action:@selector(toggleMultiList:)];
 	searchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 	self.navigationItem.leftBarButtonItem = searchButton;
 	
-	UIBarButtonItem *switchModuleButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"None" style:UIBarButtonItemStyleBordered target:vc action:@selector(toggleModulesListFromButton:)];
+	UIBarButtonItem *switchModuleButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"None" style:UIBarButtonItemStylePlain target:vc action:@selector(toggleModulesListFromButton:)];
 	self.navigationItem.rightBarButtonItem = switchModuleButtonItem;
 	self.moduleButton = switchModuleButtonItem;
 	[self setModuleNameViaNotification];
