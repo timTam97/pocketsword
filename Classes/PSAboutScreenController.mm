@@ -346,7 +346,7 @@
 
 -(void)emailFeedback:(id)sender
 {
-    NSString *recipients = @"pocketsword-support@crosswire.org";//@"pocketsword@icloud.com";
+    NSString *recipients = @"pocketsword@icloud.com";//@"pocketsword-support@crosswire.org";//
 	
 	NSString *subject = [NSString stringWithFormat:@"PocketSword Feedback (v%@ - %@ %@ (%@))", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[UIDevice currentDevice] systemName], [[UIDevice currentDevice] systemVersion], [self platformString]];
 	

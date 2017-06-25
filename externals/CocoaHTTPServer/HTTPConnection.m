@@ -954,7 +954,7 @@ static NSMutableArray *recentNonces;
 **/
 - (NSData *)chunkedTransferSizeLineForLength:(NSUInteger)length
 {
-	return [[NSString stringWithFormat:@"%lx\r\n", length] dataUsingEncoding:NSUTF8StringEncoding];
+	return [[NSString stringWithFormat:@"%lx\r\n", (unsigned long)length] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 /**
