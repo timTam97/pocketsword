@@ -65,6 +65,7 @@ lookup_table =
 [NSArray arrayWithObjects: 
   //
   // This first section is from iso-639-3_Name_Index_20090210.tab
+  // https://iso639-3.sil.org/code_tables/download_tables
   //
 [NSArray arrayWithObjects: @"aaa", @"Ghotuo", nil], 
 [NSArray arrayWithObjects: @"aab", @"Alumu-Tesu", nil], 
