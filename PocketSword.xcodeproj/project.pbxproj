@@ -304,7 +304,6 @@
 		05DD8678122E5F8D00115EAD /* Daily-Devotional@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8676122E5F8D00115EAD /* Daily-Devotional@2x.png */; };
 		05DD867B122E605700115EAD /* history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8679122E605700115EAD /* history@2x.png */; };
 		05DD867E122E60AC00115EAD /* dictionary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD867C122E60AC00115EAD /* dictionary@2x.png */; };
-		05DF546A10A93E69007CB847 /* SnoopWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF546910A93E69007CB847 /* SnoopWindow.mm */; };
 		05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF558E10AA9123007CB847 /* SwordBook.mm */; };
 		05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */; };
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
@@ -996,8 +995,6 @@
 		05DD8676122E5F8D00115EAD /* Daily-Devotional@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Daily-Devotional@2x.png"; path = "Resources/Daily-Devotional@2x.png"; sourceTree = "<group>"; };
 		05DD8679122E605700115EAD /* history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "history@2x.png"; path = "Resources/history@2x.png"; sourceTree = "<group>"; };
 		05DD867C122E60AC00115EAD /* dictionary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dictionary@2x.png"; path = "Resources/dictionary@2x.png"; sourceTree = "<group>"; };
-		05DF546810A93E69007CB847 /* SnoopWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnoopWindow.h; sourceTree = "<group>"; };
-		05DF546910A93E69007CB847 /* SnoopWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnoopWindow.mm; sourceTree = "<group>"; };
 		05DF558D10AA9123007CB847 /* SwordBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordBook.h; sourceTree = "<group>"; };
 		05DF558E10AA9123007CB847 /* SwordBook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordBook.mm; sourceTree = "<group>"; };
 		05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSAboutScreenController.h; sourceTree = "<group>"; };
@@ -2265,15 +2262,6 @@
 			path = Classes/RefreshTableHeaderView;
 			sourceTree = "<group>";
 		};
-		05DF546710A93E69007CB847 /* SnoopWindow */ = {
-			isa = PBXGroup;
-			children = (
-				05DF546810A93E69007CB847 /* SnoopWindow.h */,
-				05DF546910A93E69007CB847 /* SnoopWindow.mm */,
-			);
-			path = SnoopWindow;
-			sourceTree = "<group>";
-		};
 		05F84ED4191F4A82003350DE /* zcom4 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2293,7 +2281,6 @@
 		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
-				05DF546710A93E69007CB847 /* SnoopWindow */,
 				05D4629E10907130006BFBB1 /* PSLanguageCode.h */,
 				05D4629F10907130006BFBB1 /* PSLanguageCode.m */,
 				05B5295B107C529000826AFE /* PSModuleType.h */,
@@ -2958,7 +2945,6 @@
 				05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */,
 				05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */,
 				D2BFE5D125E7788100E04366 /* GCDWebServerDataRequest.m in Sources */,
-				05DF546A10A93E69007CB847 /* SnoopWindow.mm in Sources */,
 				D2BFE5C825E7788100E04366 /* GCDWebServerFileResponse.m in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,

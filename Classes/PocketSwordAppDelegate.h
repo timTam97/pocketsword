@@ -21,7 +21,6 @@
 #import "PSLaunchViewController.h"
 
 @class PSTabBarControllerDelegate;
-@class SnoopWindow;
 
 @interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate, PSLaunchDelegate> {
     UIWindow *window;

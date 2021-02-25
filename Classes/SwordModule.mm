@@ -673,7 +673,7 @@
 	}
     NSString *passage = [data objectForKey:ATTRTYPE_PASSAGE];
     if(passage) {
-        passage = [[passage stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        passage = [[passage stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByRemovingPercentEncoding];
     } 
     NSString *attrType = [data objectForKey:ATTRTYPE_TYPE];
     if([attrType isEqualToString:@"n"]) {
@@ -720,7 +720,7 @@
         }
     } else if([attrType isEqualToString:@"scriptRef"] || [attrType isEqualToString:@"scripRef"]) {
 		NSString *rawKey = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+"
-                                                                                       withString:@" "] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                                                                       withString:@" "] stringByRemovingPercentEncoding];
 		[self setChapter:[PSModuleController getCurrentBibleRef]];
 		sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 		sword::VerseKey parser(curKey->getShortText());

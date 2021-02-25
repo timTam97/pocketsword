@@ -296,7 +296,7 @@
 	
 	//if([multiListController.view superview]) {
 	if(multiListController) {
-		[tabBarController dismissModalViewControllerAnimated:YES];
+		[tabBarController dismissViewControllerAnimated:YES completion:nil];
 		multiListController = nil;
 	} else {
 		

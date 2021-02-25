@@ -156,11 +156,13 @@
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	
-	UIWebView *wv = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	wv.delegate = self;
+    WKWebViewConfiguration *conf = [[WKWebViewConfiguration alloc] init];
+    conf.dataDetectorTypes = WKDataDetectorTypeAll & !WKDataDetectorTypePhoneNumber;
+    
+	WKWebView *wv = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) configuration:conf];
+	wv.navigationDelegate = self;
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	wv.backgroundColor = [UIColor whiteColor];
-	wv.dataDetectorTypes = UIDataDetectorTypeAll & !UIDataDetectorTypePhoneNumber;
 	NSString *html = @"<html><body bgcolor=\"white\">@nbsp;</body></html>";
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		html = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
@@ -269,6 +271,7 @@
 - (NSString *) platformString
 {
     NSString *platform = [self platform];
+    [[UIDevice currentDevice] name];
 	
     // The ever mysterious iFPGA
     if ([platform isEqualToString:@"iFPGA"])        return IFPGA_NAMESTRING;
@@ -356,20 +359,29 @@
 		[mailComposeViewController setToRecipients:[NSArray arrayWithObject:recipients]];
 		mailComposeViewController.mailComposeDelegate = self;
 		mailComposeViewController.navigationBar.barStyle = UIBarStyleBlack;
-		[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
+		//[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
+        [self.tabBarController presentViewController:mailComposeViewController animated:YES completion:nil];
 	}
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-	[self.tabBarController dismissModalViewControllerAnimated:YES];
+	//[self.tabBarController dismissModalViewControllerAnimated:YES];
+    [self.tabBarController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	if(navigationType == UIWebViewNavigationTypeLinkClicked) {
-		[[UIApplication sharedApplication] openURL:[request URL]];
+		//[[UIApplication sharedApplication] openURL:[request URL]];
+        [[UIApplication sharedApplication] openURL:[request URL] options:[NSDictionary dictionaryWithObject:UIApplicationOpenURLOptionUniversalLinksOnly forKey:@"blah"] completionHandler:nil];
 		return NO;
 	}
 	return YES;
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    if(navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+        [[UIApplication sharedApplication] openURL:[navigationAction.request URL] options:[NSDictionary dictionaryWithObject:UIApplicationOpenURLOptionUniversalLinksOnly forKey:@"blah"] completionHandler:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -378,13 +390,6 @@
 	
 	// Release any cached data, images, etc that aren't in use.
 }
-
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-	[super viewDidUnload];
-}
-
 
 
 @end

@@ -7,13 +7,14 @@
 //
 
 #import <MessageUI/MessageUI.h>
+#import <WebKit/WebKit.h>
 
 
-@interface PSAboutScreenController : UIViewController <UIWebViewDelegate, MFMailComposeViewControllerDelegate> {
-	UIWebView *aboutWebView;
+@interface PSAboutScreenController : UIViewController <WKNavigationDelegate, MFMailComposeViewControllerDelegate> {
+	WKWebView *aboutWebView;
 }
 
-@property (strong) UIWebView *aboutWebView;
+@property (strong) WKWebView *aboutWebView;
 
 + (NSString*)generateAboutHTML;
 - (void)emailFeedback:(id)sender;

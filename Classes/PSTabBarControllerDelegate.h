@@ -52,7 +52,7 @@ typedef enum {
 
 @interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSModuleSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
 	// Tab bar
-	UITabBarController *tabBarController;
+	UITabBarController IBOutlet         *tabBarController;
 	
 	// Bible tab
 	PSBibleViewController				*bibleTabController;

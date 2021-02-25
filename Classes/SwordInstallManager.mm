@@ -66,7 +66,7 @@ float status;
                     // create config entry
                     sword::SWConfig config([configFilePath cStringUsingEncoding:NSUTF8StringEncoding]);
                     config["General"]["PassiveFTP"] = "true";
-                    config.Save();
+                    config.save();
 					
                     // create default HTTP Install source
                     SwordInstallSource *is = [[SwordInstallSource alloc] initWithType:INSTALLSOURCE_TYPE_HTTP];
@@ -169,7 +169,7 @@ base path of the module installation
 
     //DLog(@"[SwordInstallManager -reinitialize] loading config!");
     sword::SWConfig config([configFilePath UTF8String]);
-    config.Load();
+    config.load();
 
     // init installMgr
     BOOL disclaimerConfirmed = NO;
@@ -230,7 +230,7 @@ base path of the module installation
 	} else {
 		config["Sources"].insert(ConfigEntMap::value_type(INSTALLSOURCE_SECTION_TYPE_HTTP, [[is configEntry] UTF8String]));
 	}
-    config.Save();
+    config.save();
     
     // reinit
 	if(reinit)
@@ -270,7 +270,7 @@ base path of the module installation
 			config["Sources"].insert(ConfigEntMap::value_type(INSTALLSOURCE_SECTION_TYPE_HTTP, [[sis configEntry] UTF8String]));
 		}
     }
-    config.Save();
+    config.save();
     
     // reinit
 	if(performReinitialize) {

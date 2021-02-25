@@ -25,7 +25,6 @@
 #import "SwordDictionary.h"
 #import "PSHistoryController.h"
 #import "PSTabBarControllerDelegate.h"
-#import "SnoopWindow.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
 //#import "TestFlight.h"
@@ -111,7 +110,7 @@
 	PSLaunchViewController *lVC = [[PSLaunchViewController alloc] init];
 	[lVC setDelegate:self];
 		
-	self.window = [[SnoopWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.backgroundColor = [UIColor whiteColor];
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
 		self.window.backgroundColor = [UIColor blackColor];
@@ -134,8 +133,6 @@
 - (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
 	PSTabBarControllerDelegate *tbcd = [[PSTabBarControllerDelegate alloc] init];
 	self.tabBarControllerDelegate = tbcd;
-	((SnoopWindow*)self.window).bibleViewController = tabBarControllerDelegate.bibleTabController;
-	((SnoopWindow*)self.window).commentaryViewController = tabBarControllerDelegate.commentaryTabController;
 	
 //	DLog(@"finishedInitializing, now to display the tab bar controller");
 	if([self.window respondsToSelector:@selector(rootViewController)]) {
@@ -157,7 +154,7 @@
 		//	url = [NSURL URLWithString:@"sword:///John+3:16?type=commentary&module=list"]; // commentary list
 		//	url = [NSURL URLWithString:@"sword:///John+3:16-18"]; // verse with range (should ignore range)	
 		if (url != nil) {
-			[self application:[UIApplication sharedApplication] handleOpenURL:url];
+			[self application:[UIApplication sharedApplication] handleOpenURL:url options:nil];
 		}
 		self.launchedWithOptions = nil;
 	}
@@ -207,7 +204,7 @@
  * sword:///John+3:16?type=bible&module=list         (verse with list of bible modules)
  * sword:///John+3:16?type=commentary&module=list    (verse with list of commentary modules)
  */
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
     if(!url || ![[url scheme] isEqualToString:@"sword"]) {
 		return NO;
@@ -217,7 +214,7 @@
 	
 	NSString *module = [url host];
 	NSString *reference = [url path];
-	reference = [[[reference stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+	reference = [[[reference stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 
 	NSString *chapter;
 	NSString *verse;
