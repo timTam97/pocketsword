@@ -386,6 +386,34 @@
 		D2BFE55125E7701700E04366 /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFDF9225E73AAB00E04366 /* mz_strm_os.h */; };
 		D2BFE55225E7701700E04366 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFDF9325E73AAB00E04366 /* SSZipArchive.h */; };
 		D2BFE55325E7701700E04366 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFDF9425E73AAB00E04366 /* SSZipCommon.h */; };
+		D2BFE5B825E7788100E04366 /* GCDWebServerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE59A25E7788100E04366 /* GCDWebServerFunctions.h */; };
+		D2BFE5B925E7788100E04366 /* GCDWebServerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE59B25E7788100E04366 /* GCDWebServerPrivate.h */; };
+		D2BFE5BA25E7788100E04366 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE59C25E7788100E04366 /* GCDWebServerResponse.m */; };
+		D2BFE5BB25E7788100E04366 /* GCDWebServerConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE59D25E7788100E04366 /* GCDWebServerConnection.h */; };
+		D2BFE5BC25E7788100E04366 /* GCDWebServer.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE59E25E7788100E04366 /* GCDWebServer.h */; };
+		D2BFE5BD25E7788100E04366 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE59F25E7788100E04366 /* GCDWebServerRequest.m */; };
+		D2BFE5BE25E7788100E04366 /* GCDWebServerHTTPStatusCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5A025E7788100E04366 /* GCDWebServerHTTPStatusCodes.h */; };
+		D2BFE5BF25E7788100E04366 /* GCDWebServerResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5A125E7788100E04366 /* GCDWebServerResponse.h */; };
+		D2BFE5C025E7788100E04366 /* GCDWebServerFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5A225E7788100E04366 /* GCDWebServerFunctions.m */; };
+		D2BFE5C125E7788100E04366 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5A325E7788100E04366 /* GCDWebServer.m */; };
+		D2BFE5C225E7788100E04366 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5A425E7788100E04366 /* GCDWebServerConnection.m */; };
+		D2BFE5C325E7788100E04366 /* GCDWebServerRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5A525E7788100E04366 /* GCDWebServerRequest.h */; };
+		D2BFE5C425E7788100E04366 /* GCDWebServerFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5A725E7788100E04366 /* GCDWebServerFileResponse.h */; };
+		D2BFE5C525E7788100E04366 /* GCDWebServerStreamedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5A825E7788100E04366 /* GCDWebServerStreamedResponse.h */; };
+		D2BFE5C625E7788100E04366 /* GCDWebServerErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5A925E7788100E04366 /* GCDWebServerErrorResponse.m */; };
+		D2BFE5C725E7788100E04366 /* GCDWebServerDataResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5AA25E7788100E04366 /* GCDWebServerDataResponse.h */; };
+		D2BFE5C825E7788100E04366 /* GCDWebServerFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5AB25E7788100E04366 /* GCDWebServerFileResponse.m */; };
+		D2BFE5C925E7788100E04366 /* GCDWebServerDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5AC25E7788100E04366 /* GCDWebServerDataResponse.m */; };
+		D2BFE5CA25E7788100E04366 /* GCDWebServerErrorResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5AD25E7788100E04366 /* GCDWebServerErrorResponse.h */; };
+		D2BFE5CB25E7788100E04366 /* GCDWebServerStreamedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5AE25E7788100E04366 /* GCDWebServerStreamedResponse.m */; };
+		D2BFE5CC25E7788100E04366 /* GCDWebServerDataRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5B025E7788100E04366 /* GCDWebServerDataRequest.h */; };
+		D2BFE5CD25E7788100E04366 /* GCDWebServerMultiPartFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5B125E7788100E04366 /* GCDWebServerMultiPartFormRequest.h */; };
+		D2BFE5CE25E7788100E04366 /* GCDWebServerFileRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5B225E7788100E04366 /* GCDWebServerFileRequest.h */; };
+		D2BFE5CF25E7788100E04366 /* GCDWebServerURLEncodedFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5B325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.m */; };
+		D2BFE5D025E7788100E04366 /* GCDWebServerMultiPartFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5B425E7788100E04366 /* GCDWebServerMultiPartFormRequest.m */; };
+		D2BFE5D125E7788100E04366 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5B525E7788100E04366 /* GCDWebServerDataRequest.m */; };
+		D2BFE5D225E7788100E04366 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5B625E7788100E04366 /* GCDWebServerFileRequest.m */; };
+		D2BFE5D325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */; };
 		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
@@ -1096,6 +1124,34 @@
 		D2BFDF9425E73AAB00E04366 /* SSZipCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
 		D2BFDF9525E73AAB00E04366 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
 		D2BFDFAC25E7448B00E04366 /* swtoupperdata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = swtoupperdata.h; sourceTree = "<group>"; };
+		D2BFE59A25E7788100E04366 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
+		D2BFE59B25E7788100E04366 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerPrivate.h; sourceTree = "<group>"; };
+		D2BFE59C25E7788100E04366 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerResponse.m; sourceTree = "<group>"; };
+		D2BFE59D25E7788100E04366 /* GCDWebServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerConnection.h; sourceTree = "<group>"; };
+		D2BFE59E25E7788100E04366 /* GCDWebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServer.h; sourceTree = "<group>"; };
+		D2BFE59F25E7788100E04366 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerRequest.m; sourceTree = "<group>"; };
+		D2BFE5A025E7788100E04366 /* GCDWebServerHTTPStatusCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerHTTPStatusCodes.h; sourceTree = "<group>"; };
+		D2BFE5A125E7788100E04366 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerResponse.h; sourceTree = "<group>"; };
+		D2BFE5A225E7788100E04366 /* GCDWebServerFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFunctions.m; sourceTree = "<group>"; };
+		D2BFE5A325E7788100E04366 /* GCDWebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServer.m; sourceTree = "<group>"; };
+		D2BFE5A425E7788100E04366 /* GCDWebServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerConnection.m; sourceTree = "<group>"; };
+		D2BFE5A525E7788100E04366 /* GCDWebServerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerRequest.h; sourceTree = "<group>"; };
+		D2BFE5A725E7788100E04366 /* GCDWebServerFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileResponse.h; sourceTree = "<group>"; };
+		D2BFE5A825E7788100E04366 /* GCDWebServerStreamedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerStreamedResponse.h; sourceTree = "<group>"; };
+		D2BFE5A925E7788100E04366 /* GCDWebServerErrorResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerErrorResponse.m; sourceTree = "<group>"; };
+		D2BFE5AA25E7788100E04366 /* GCDWebServerDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataResponse.h; sourceTree = "<group>"; };
+		D2BFE5AB25E7788100E04366 /* GCDWebServerFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileResponse.m; sourceTree = "<group>"; };
+		D2BFE5AC25E7788100E04366 /* GCDWebServerDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataResponse.m; sourceTree = "<group>"; };
+		D2BFE5AD25E7788100E04366 /* GCDWebServerErrorResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerErrorResponse.h; sourceTree = "<group>"; };
+		D2BFE5AE25E7788100E04366 /* GCDWebServerStreamedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerStreamedResponse.m; sourceTree = "<group>"; };
+		D2BFE5B025E7788100E04366 /* GCDWebServerDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataRequest.h; sourceTree = "<group>"; };
+		D2BFE5B125E7788100E04366 /* GCDWebServerMultiPartFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerMultiPartFormRequest.h; sourceTree = "<group>"; };
+		D2BFE5B225E7788100E04366 /* GCDWebServerFileRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileRequest.h; sourceTree = "<group>"; };
+		D2BFE5B325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerURLEncodedFormRequest.m; sourceTree = "<group>"; };
+		D2BFE5B425E7788100E04366 /* GCDWebServerMultiPartFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerMultiPartFormRequest.m; sourceTree = "<group>"; };
+		D2BFE5B525E7788100E04366 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
+		D2BFE5B625E7788100E04366 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
+		D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
 		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
@@ -1934,6 +1990,7 @@
 		0542F6C110BE75570088A721 /* externals */ = {
 			isa = PBXGroup;
 			children = (
+				D2BFE59825E7788100E04366 /* GCDWebServer */,
 				D2BFDF7225E73AAA00E04366 /* ZipArchive */,
 				055C8A52173C9F49009FF47D /* MBProgressHUD */,
 				0542F6CB10BE770C0088A721 /* curl */,
@@ -2382,6 +2439,66 @@
 			path = minizip;
 			sourceTree = "<group>";
 		};
+		D2BFE59825E7788100E04366 /* GCDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				D2BFE59925E7788100E04366 /* Core */,
+				D2BFE5A625E7788100E04366 /* Responses */,
+				D2BFE5AF25E7788100E04366 /* Requests */,
+			);
+			name = GCDWebServer;
+			path = externals/GCDWebServer;
+			sourceTree = "<group>";
+		};
+		D2BFE59925E7788100E04366 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D2BFE59E25E7788100E04366 /* GCDWebServer.h */,
+				D2BFE5A325E7788100E04366 /* GCDWebServer.m */,
+				D2BFE59D25E7788100E04366 /* GCDWebServerConnection.h */,
+				D2BFE5A425E7788100E04366 /* GCDWebServerConnection.m */,
+				D2BFE59A25E7788100E04366 /* GCDWebServerFunctions.h */,
+				D2BFE5A225E7788100E04366 /* GCDWebServerFunctions.m */,
+				D2BFE5A025E7788100E04366 /* GCDWebServerHTTPStatusCodes.h */,
+				D2BFE59B25E7788100E04366 /* GCDWebServerPrivate.h */,
+				D2BFE5A525E7788100E04366 /* GCDWebServerRequest.h */,
+				D2BFE59F25E7788100E04366 /* GCDWebServerRequest.m */,
+				D2BFE5A125E7788100E04366 /* GCDWebServerResponse.h */,
+				D2BFE59C25E7788100E04366 /* GCDWebServerResponse.m */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		D2BFE5A625E7788100E04366 /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				D2BFE5A725E7788100E04366 /* GCDWebServerFileResponse.h */,
+				D2BFE5A825E7788100E04366 /* GCDWebServerStreamedResponse.h */,
+				D2BFE5A925E7788100E04366 /* GCDWebServerErrorResponse.m */,
+				D2BFE5AA25E7788100E04366 /* GCDWebServerDataResponse.h */,
+				D2BFE5AB25E7788100E04366 /* GCDWebServerFileResponse.m */,
+				D2BFE5AC25E7788100E04366 /* GCDWebServerDataResponse.m */,
+				D2BFE5AD25E7788100E04366 /* GCDWebServerErrorResponse.h */,
+				D2BFE5AE25E7788100E04366 /* GCDWebServerStreamedResponse.m */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		D2BFE5AF25E7788100E04366 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				D2BFE5B025E7788100E04366 /* GCDWebServerDataRequest.h */,
+				D2BFE5B125E7788100E04366 /* GCDWebServerMultiPartFormRequest.h */,
+				D2BFE5B225E7788100E04366 /* GCDWebServerFileRequest.h */,
+				D2BFE5B325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.m */,
+				D2BFE5B425E7788100E04366 /* GCDWebServerMultiPartFormRequest.m */,
+				D2BFE5B525E7788100E04366 /* GCDWebServerDataRequest.m */,
+				D2BFE5B625E7788100E04366 /* GCDWebServerFileRequest.m */,
+				D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
 		E94012860EFDD2D000DA9B7F /* clucene */ = {
 			isa = PBXGroup;
 			children = (
@@ -2399,20 +2516,35 @@
 			files = (
 				D2BFE54425E7701700E04366 /* ZipArchive.h in Headers */,
 				D2BFE54525E7701700E04366 /* mz_strm_wzaes.h in Headers */,
+				D2BFE5C725E7788100E04366 /* GCDWebServerDataResponse.h in Headers */,
 				D2BFE54625E7701700E04366 /* mz_compat.h in Headers */,
+				D2BFE5BC25E7788100E04366 /* GCDWebServer.h in Headers */,
+				D2BFE5B925E7788100E04366 /* GCDWebServerPrivate.h in Headers */,
 				D2BFE54725E7701700E04366 /* mz_os.h in Headers */,
 				D2BFE54825E7701700E04366 /* mz_strm_split.h in Headers */,
+				D2BFE5C325E7788100E04366 /* GCDWebServerRequest.h in Headers */,
 				D2BFE54925E7701700E04366 /* mz_strm_buf.h in Headers */,
 				D2BFE54A25E7701700E04366 /* mz_strm.h in Headers */,
+				D2BFE5CE25E7788100E04366 /* GCDWebServerFileRequest.h in Headers */,
 				D2BFE54B25E7701700E04366 /* mz_strm_zlib.h in Headers */,
 				D2BFE54C25E7701700E04366 /* mz_strm_pkcrypt.h in Headers */,
+				D2BFE5CD25E7788100E04366 /* GCDWebServerMultiPartFormRequest.h in Headers */,
+				D2BFE5CC25E7788100E04366 /* GCDWebServerDataRequest.h in Headers */,
 				D2BFE54D25E7701700E04366 /* mz_zip.h in Headers */,
+				D2BFE5BF25E7788100E04366 /* GCDWebServerResponse.h in Headers */,
 				D2BFE54E25E7701700E04366 /* mz.h in Headers */,
 				D2BFE54F25E7701700E04366 /* mz_crypt.h in Headers */,
 				D2BFE55025E7701700E04366 /* mz_strm_mem.h in Headers */,
 				D2BFE55125E7701700E04366 /* mz_strm_os.h in Headers */,
+				D2BFE5C525E7788100E04366 /* GCDWebServerStreamedResponse.h in Headers */,
+				D2BFE5C425E7788100E04366 /* GCDWebServerFileResponse.h in Headers */,
+				D2BFE5D325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
+				D2BFE5BB25E7788100E04366 /* GCDWebServerConnection.h in Headers */,
 				D2BFE55225E7701700E04366 /* SSZipArchive.h in Headers */,
 				D2BFE55325E7701700E04366 /* SSZipCommon.h in Headers */,
+				D2BFE5CA25E7788100E04366 /* GCDWebServerErrorResponse.h in Headers */,
+				D2BFE5B825E7788100E04366 /* GCDWebServerFunctions.h in Headers */,
+				D2BFE5BE25E7788100E04366 /* GCDWebServerHTTPStatusCodes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2697,6 +2829,7 @@
 				05275B0210884F72004FB0E0 /* rawstr4.cpp in Sources */,
 				05275B0310884F72004FB0E0 /* rawverse.cpp in Sources */,
 				05275B0410884F72004FB0E0 /* rawverse4.cpp in Sources */,
+				D2BFE5C225E7788100E04366 /* GCDWebServerConnection.m in Sources */,
 				05275B0510884F72004FB0E0 /* sapphire.cpp in Sources */,
 				05275B0610884F72004FB0E0 /* swcipher.cpp in Sources */,
 				05275B0710884F72004FB0E0 /* swcomprs.cpp in Sources */,
@@ -2720,6 +2853,7 @@
 				05275B1510884F72004FB0E0 /* gbfrtf.cpp in Sources */,
 				05275B1610884F72004FB0E0 /* gbfstrongs.cpp in Sources */,
 				05275B1710884F72004FB0E0 /* gbfthml.cpp in Sources */,
+				D2BFE5CF25E7788100E04366 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				05275B1810884F72004FB0E0 /* gbfwebif.cpp in Sources */,
 				05275B1910884F72004FB0E0 /* gbfwordjs.cpp in Sources */,
 				05275B1A10884F72004FB0E0 /* greeklexattribs.cpp in Sources */,
@@ -2743,6 +2877,7 @@
 				05275B2B10884F72004FB0E0 /* osiswebif.cpp in Sources */,
 				05275B2C10884F72004FB0E0 /* osiswordjs.cpp in Sources */,
 				05275B2D10884F72004FB0E0 /* papyriplain.cpp in Sources */,
+				D2BFE5C625E7788100E04366 /* GCDWebServerErrorResponse.m in Sources */,
 				05275B3010884F72004FB0E0 /* rtfhtml.cpp in Sources */,
 				05275B3110884F72004FB0E0 /* swbasicfilter.cpp in Sources */,
 				05275B3210884F72004FB0E0 /* swoptfilter.cpp in Sources */,
@@ -2766,6 +2901,7 @@
 				05275B4410884F72004FB0E0 /* thmlwordjs.cpp in Sources */,
 				05275B4510884F72004FB0E0 /* unicodertf.cpp in Sources */,
 				05275B4610884F72004FB0E0 /* utf16utf8.cpp in Sources */,
+				D2BFE5CB25E7788100E04366 /* GCDWebServerStreamedResponse.m in Sources */,
 				05275B4710884F72004FB0E0 /* utf8arabicpoints.cpp in Sources */,
 				05275B4810884F72004FB0E0 /* utf8arshaping.cpp in Sources */,
 				05275B4910884F72004FB0E0 /* utf8bidireorder.cpp in Sources */,
@@ -2773,11 +2909,13 @@
 				05275B4B10884F72004FB0E0 /* utf8greekaccents.cpp in Sources */,
 				05275B4C10884F72004FB0E0 /* utf8hebrewpoints.cpp in Sources */,
 				05275B4D10884F72004FB0E0 /* utf8html.cpp in Sources */,
+				D2BFE5C025E7788100E04366 /* GCDWebServerFunctions.m in Sources */,
 				05275B4E10884F72004FB0E0 /* utf8latin1.cpp in Sources */,
 				05275B4F10884F72004FB0E0 /* utf8nfc.cpp in Sources */,
 				05275B5010884F72004FB0E0 /* utf8nfkd.cpp in Sources */,
 				05275B5110884F72004FB0E0 /* utf8transliterator.cpp in Sources */,
 				05275B5210884F72004FB0E0 /* utf8utf16.cpp in Sources */,
+				D2BFE5BD25E7788100E04366 /* GCDWebServerRequest.m in Sources */,
 				05275B5310884F72004FB0E0 /* rawgenbook.cpp in Sources */,
 				05275B5410884F72004FB0E0 /* swgenbook.cpp in Sources */,
 				05275B5510884F72004FB0E0 /* rawld.cpp in Sources */,
@@ -2785,6 +2923,7 @@
 				05275B5710884F72004FB0E0 /* swld.cpp in Sources */,
 				05275B5810884F72004FB0E0 /* zld.cpp in Sources */,
 				05275B5A10884F72004FB0E0 /* swmodule.cpp in Sources */,
+				D2BFE5C925E7788100E04366 /* GCDWebServerDataResponse.m in Sources */,
 				05275B5C10884F72004FB0E0 /* rawtext.cpp in Sources */,
 				05275B5D10884F72004FB0E0 /* rawtext4.cpp in Sources */,
 				05275B5E10884F72004FB0E0 /* swtext.cpp in Sources */,
@@ -2801,6 +2940,7 @@
 				05D46215108FFF22006BFBB1 /* NavigatorModuleLanguages.mm in Sources */,
 				05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */,
 				05D6AB7C1097E76400A5026E /* AsyncSocket.m in Sources */,
+				D2BFE5D225E7788100E04366 /* GCDWebServerFileRequest.m in Sources */,
 				05D6AB7D1097E76400A5026E /* DDData.m in Sources */,
 				05D6AB7E1097E76400A5026E /* DDNumber.m in Sources */,
 				05D6AB7F1097E76400A5026E /* DDRange.m in Sources */,
@@ -2817,7 +2957,9 @@
 				05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */,
 				05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */,
 				05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */,
+				D2BFE5D125E7788100E04366 /* GCDWebServerDataRequest.m in Sources */,
 				05DF546A10A93E69007CB847 /* SnoopWindow.mm in Sources */,
+				D2BFE5C825E7788100E04366 /* GCDWebServerFileResponse.m in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
 				0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */,
@@ -2826,6 +2968,7 @@
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
 				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
 				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
+				D2BFE5C125E7788100E04366 /* GCDWebServer.m in Sources */,
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
@@ -2844,6 +2987,7 @@
 				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
 				0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
 				05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */,
+				D2BFE5D025E7788100E04366 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				05781F2B12D42819005F4890 /* PSBookmark.m in Sources */,
 				051B4BE812D5A2E5004982A7 /* PSBookmarkObject.m in Sources */,
 				051B4BF712D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */,
@@ -2870,6 +3014,7 @@
 				055C8A55173C9F49009FF47D /* MBProgressHUD.m in Sources */,
 				05EB26ED1755B6FA004A8EB7 /* PSModuleDownloadItem.mm in Sources */,
 				053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */,
+				D2BFE5BA25E7788100E04366 /* GCDWebServerResponse.m in Sources */,
 				057CBD4817697CFC005BC6BB /* remotetrans.cpp in Sources */,
 				057CBD4C17697D1C005BC6BB /* osisenum.cpp in Sources */,
 				057CBD4D17697D1C005BC6BB /* osisglosses.cpp in Sources */,
