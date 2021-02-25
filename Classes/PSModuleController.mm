@@ -430,7 +430,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 - (NSString *)setToPreviousChapter {
 	NSString *ret = nil;
 	NSString *cur = [PSModuleController getCurrentBibleRef];
-	NSInteger verse = nil;
+	NSInteger verse = 0;
 	if(primaryBible) {
 		[primaryBible setChapter: cur];
 		ret = [primaryBible setToPreviousChapter];

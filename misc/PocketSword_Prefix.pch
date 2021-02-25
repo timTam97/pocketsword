@@ -23,7 +23,8 @@
 
 // Required #defines for SWORD
 //#define _ICU_ 1
-#define _APPLE_IOS_ 1
+//#define _APPLE_IOS_ 1
+//#define USELUCENE 1
 
 // Required #defines for SSZipArchive
 #define HAVE_INTTYPES_H 1
