@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf8nfkd.h -	Implementation of UTF8NFKD
+ * utf8nfkd.h -	class UTF8NFKD: a Filter to normalize a UTF8 text stream to
+ * 		Unicode Normal Form Decomposed, Compatibility (NFKD)
  *
- * $Id: utf8nfkd.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8nfkd.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -25,21 +26,18 @@
 
 #include <swfilter.h>
 
-#include <unicode/utypes.h>
-#include <unicode/ucnv.h>
-#include <unicode/uchar.h>
-#include <unicode/unorm.h>
-
 SWORD_NAMESPACE_START
 
+struct UTF8NFKDPrivate;
+
 class SWDLLEXPORT UTF8NFKD : public SWFilter {
+
 private:
-	UConverter* conv;
-	UChar *source, *target;
-	UErrorCode err;
+	struct UTF8NFKDPrivate *p;
+
 public:
 	UTF8NFKD();
-	~UTF8NFKD();  
+	~UTF8NFKD();
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
 };
 

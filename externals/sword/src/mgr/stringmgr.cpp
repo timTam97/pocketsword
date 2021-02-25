@@ -2,7 +2,7 @@
  *
  *  stringmgr.cpp -	implementation of class StringMgr
  *
- * $Id: stringmgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: stringmgr.cpp 3844 2021-02-14 18:26:54Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -20,6 +20,7 @@
  *
  */
 
+#include <ctype.h>
 #include <stringmgr.h>
 #include <swlog.h>
 #include <localemgr.h>
@@ -37,7 +38,13 @@
 
 #include <unicode/locid.h>
 
-#elif defined (_APPLE_IOS_)
+#else
+
+#include <swtoupperdata.h>
+
+#endif
+
+#ifdef (_APPLE_IOS_)
 
 #include <unicode/ustring.h>
 
@@ -123,6 +130,21 @@ namespace {
 	#endif
 		return countUTF8 ? 1 : -1;
 	}
+
+	char *lowerLatin1(char *buf, unsigned int maxlen = 0) {
+		if (!buf)
+			return 0;
+			
+		char *ret = buf;
+		bool checkMax = maxlen;
+
+		while (*buf && (!checkMax || maxlen--)) {
+			*buf = SW_tolower(*buf);
+			buf++;
+		}
+
+		return ret;
+	}
 }
 
 
@@ -132,6 +154,11 @@ namespace {
 class ICUStringMgr : public StringMgr {
 public:
 	virtual char *upperUTF8(char *, unsigned int maxlen = 0) const;
+	virtual char *lowerUTF8(char *, unsigned int maxlen = 0) const;
+	virtual bool isUpper(SW_u32 character) const;
+	virtual bool isLower(SW_u32 character) const;
+	virtual bool isDigit(SW_u32 character) const;
+	virtual bool isAlpha(SW_u32 character) const;
 	
 protected:
 	virtual bool supportsUnicode() const { return true; };
@@ -164,9 +191,9 @@ void StringMgr::setSystemStringMgr(StringMgr *newStringMgr) {
 	
 	systemStringMgr = newStringMgr;
 
-   // TODO: this is magic. apparently we have to reset the system localemgr upon changing stringmgr.
-   // setting system stringmgr should be set before localemgr and not possible to change.
-   // rework this design.
+	// TODO: this is magic. apparently we have to reset the system localemgr upon changing stringmgr.
+	// setting system stringmgr should be set before localemgr and not possible to change.
+	// rework this design.
 	LocaleMgr::getSystemLocaleMgr()->setSystemLocaleMgr(new LocaleMgr());
 }
 
@@ -177,10 +204,10 @@ StringMgr* StringMgr::getSystemStringMgr() {
 	if (!systemStringMgr) {
 #if defined (_ICU_) || defined (_APPLE_IOS_)
 		systemStringMgr = new ICUStringMgr();
-// 		SWLog::getSystemLog()->logInformation("created default ICUStringMgr");
+// 		SWLOGI("created default ICUStringMgr");
 #else
 		systemStringMgr = new StringMgr();
-//  		SWLog::getSystemLog()->logInformation("created default StringMgr");
+//  		SWLOGI("created default StringMgr");
 #endif
 	}
 	
@@ -200,12 +227,36 @@ StringMgr* StringMgr::getSystemStringMgr() {
  *
  */	
 char *StringMgr::upperUTF8(char *t, unsigned int maxlen) const {
+
+#ifndef _ICU_ || !defined (_APPLE_IOS_)
+
+	SWBuf orig = t;
+	const unsigned char* from = (unsigned char*)orig.c_str();
+	SWBuf text = "";
+	std::map<SW_u32, SW_u32>::const_iterator it = toUpperData.end();
+	while (*from) {		
+		SW_u32 ch = getUniCharFromUTF8(&from, true);
+		// should we skip conversion if we run into an invalid UTF8 character?
+		// maybe the string isn't intended to be UTF8
+		// Right now, if ch is bad, then convert to replacement char
+		if (!ch) ch = 0xFFFD;
+
+		it = toUpperData.find(ch);
+		getUTF8FromUniChar(it == toUpperData.end() ? ch : it->second, &text);
+	}
+	long len = maxlen ? (text.size() < maxlen ? text.size() : (maxlen - 1)) : 0;
+	if (len) memcpy(t, text.c_str(), len);
+	t[len] = 0;
+#endif
+	return t;
+/* OLD
 	// try to decide if it's worth trying to toupper.  Do we have more
 	// characters which are probably lower latin than not?
 	// we still don't use isValidUTF8 optimally. what if we have 1 unicode
 	// character in the string?  should we not try to upper any of the string?
 	// dunno.  Best solution is to upper all other characters. Don't have
 	// time to write that before release.
+
 	long performOp = 0;
 	if (!isValidUTF8((unsigned char *)t)) {
 		performOp = 1;
@@ -219,9 +270,60 @@ char *StringMgr::upperUTF8(char *t, unsigned int maxlen) const {
 	if (performOp > 0) {
 		return upperLatin1(t);
 	}
+*/
 
 	return t;
 }
+
+
+/**
+ * This is a fallback method.  It should never be called.
+ * If UTF8 support is desired, then a UTF8 StringMgr needs
+ * to be used.
+ *
+ * Here we just do our best.
+ *
+ * Converts the param to a lower case UTF8 string
+ * @param t - The text encoded in utf8 which should be turned into an lower case string
+ *
+ */	
+char *StringMgr::lowerUTF8(char *t, unsigned int maxlen) const {
+	// try to decide if it's worth trying to tolower.  Do we have more
+	// characters which are probably lower latin than not?
+	// we still don't use isValidUTF8 optimally. what if we have 1 unicode
+	// character in the string?  should we not try to lower any of the string?
+	// dunno.  Best solution is to lower all other characters. Don't have
+	// time to write that before release.
+	long performOp = 0;
+	if (!isValidUTF8((unsigned char *)t)) {
+		performOp = 1;
+	}
+	else {
+		for (const char *ch = t; *ch; ch++) {
+			performOp += (*ch > 0) ? 1 : -1;
+		}
+	}
+
+	if (performOp > 0) {
+		return lowerLatin1(t);
+	}
+
+	return t;
+}
+
+bool StringMgr::isUpper(SW_u32 character) const {
+	return isupper(character);
+}
+bool StringMgr::isLower(SW_u32 character) const {
+	return islower(character);
+}
+bool StringMgr::isDigit(SW_u32 character) const {
+	return isdigit(character);
+}
+bool StringMgr::isAlpha(SW_u32 character) const {
+	return isalpha(character);
+}
+
 
 
 /**
@@ -244,7 +346,7 @@ char *StringMgr::upperLatin1(char *buf, unsigned int maxlen) const {
 }
 
 bool StringMgr::supportsUnicode() const {
-	return false; //default impl has no UTF8 support
+	return true; //default impl has no UTF8 support
 }
 
 
@@ -252,7 +354,7 @@ bool StringMgr::supportsUnicode() const {
 
 char *ICUStringMgr::upperUTF8(char *buf, unsigned int maxlen) const {
 	char *ret = buf;
-	int max = (maxlen) ? maxlen : strlen(buf);
+	int max = (int)((maxlen) ? maxlen : strlen(buf));
 		
 	UErrorCode err = U_ZERO_ERROR;
 		
@@ -284,6 +386,55 @@ char *ICUStringMgr::upperUTF8(char *buf, unsigned int maxlen) const {
 	delete [] lowerStr;
 	delete [] upperStr;
 	return ret;
+}
+
+char *ICUStringMgr::lowerUTF8(char *buf, unsigned int maxlen) const {
+	char *ret = buf;
+	int max = (int)((maxlen) ? maxlen : strlen(buf));
+		
+	UErrorCode err = U_ZERO_ERROR;
+		
+	if (!buf || !max) {
+		return ret;
+	}
+		
+	UChar *sourceStr = new UChar[max+10];
+	UChar *resultStr = new UChar[max+10];
+		
+	u_strFromUTF8(sourceStr, max+9, 0, buf, -1, &err);
+	if (err != U_ZERO_ERROR) {
+//		SWLog::getSystemLog()->logError("from: %s", u_errorName(err));
+		delete [] sourceStr;
+		delete [] resultStr;
+		return ret;
+	}
+
+	u_strToLower(resultStr, max+9, sourceStr, -1, 0, &err);
+	if (err != U_ZERO_ERROR) {
+//		SWLog::getSystemLog()->logError("upperCase: %s", u_errorName(err));
+		delete [] sourceStr;
+		delete [] resultStr;
+		return ret;
+	}
+
+	ret = u_strToUTF8(ret, max, 0, resultStr, -1, &err);
+		
+	delete [] sourceStr;
+	delete [] resultStr;
+	return ret;
+}
+
+bool ICUStringMgr::isUpper(SW_u32 character) const {
+	return u_isupper(character);
+}
+bool ICUStringMgr::isLower(SW_u32 character) const {
+	return u_islower(character);
+}
+bool ICUStringMgr::isDigit(SW_u32 character) const {
+	return u_isdigit(character);
+}
+bool ICUStringMgr::isAlpha(SW_u32 character) const {
+	return u_isalpha(character);
 }
 	
 #endif

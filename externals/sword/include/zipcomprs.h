@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  zipcomprs.h -	definition of Class ZipCompress used for data
- *			compression
+ * zipcomprs.h -	class ZipCompress: an SWCompress implemention which
+ * 			uses zip compression
  *
- * $Id: zipcomprs.h 2850 2013-07-02 09:57:20Z chrislit $
+ * $Id: zipcomprs.h 3813 2020-10-17 11:52:15Z scribe $
  *
  * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,15 +30,18 @@
 
 SWORD_NAMESPACE_START
 
+class FileDesc;
+
 class SWDLLEXPORT ZipCompress : public SWCompress {
 
-protected:
 public:
 	ZipCompress();
 	virtual ~ZipCompress();
 
-	virtual void Encode(void);
-	virtual void Decode(void);
+	virtual void encode(void);
+	virtual void decode(void);
+
+	static char unTarGZ(int fd, const char *destPath);
 };
 
 SWORD_NAMESPACE_END

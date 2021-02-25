@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf8html.h -	Implementation of UTF8HTML
+ * utf8html.h -	class UTF8HTML: a Filter to convert UTF8 multi-byte characters
+ * 		into HTML escape sequences
  *
- * $Id: utf8html.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8html.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

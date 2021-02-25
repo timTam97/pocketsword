@@ -3,7 +3,7 @@
  *  gbfplain.cpp -	SWFilter descendant to strip out all GBF tags or
  *			convert to ASCII rendered symbols
  *
- * $Id: gbfplain.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: gbfplain.cpp 3427 2016-07-03 14:30:33Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -103,9 +103,11 @@ char GBFPlain::processText (SWBuf &text, const SWKey *key, const SWModule *modul
 			continue;
 		}
 		if (intoken) {
-			if (tokpos < 2045)
+			if (tokpos < 2045) {
 				token[tokpos++] = *from;
+				// TODO: why is this + 2 ?
 				token[tokpos+2] = 0;
+			}
 		}
 		else	text.append(*from);
 	}

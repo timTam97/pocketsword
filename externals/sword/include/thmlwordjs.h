@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  thmlwordjs.h -	Implementation of ThMLWordJS
+ * thmlwordjs.h -	class ThMLWordJS: an OptionFilter to inject
+ * 			JavaScript for mostly onclick events for modules
+ * 			marked up in ThML
  *
- * $Id: thmlwordjs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlwordjs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,14 +30,17 @@
 SWORD_NAMESPACE_START
 
 class SWMgr;
-  /** This Filter shows/hides strong's numbers in a ThML text
-  */
+
+/** This Filter injects onclick JavaScript into the text stream for ThML modules
+ */
 class SWDLLEXPORT ThMLWordJS : public SWOptionFilter {
-     SWModule *defaultGreekLex;
-     SWModule *defaultHebLex;
-     SWModule *defaultGreekParse;
-     SWModule *defaultHebParse;
-     SWMgr *mgr;
+
+private:
+	SWModule *defaultGreekLex;
+	SWModule *defaultHebLex;
+	SWModule *defaultGreekParse;
+	SWModule *defaultHebParse;
+	SWMgr *mgr;
 
 public:
 	ThMLWordJS();

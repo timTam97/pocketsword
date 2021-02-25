@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  bz2comprs.h -	Bzip2Compress, a driver class that provides bzip2
+ * bz2comprs.h -	class Bzip2Compress, a driver class that provides bzip2
  *			compression (Burrows–Wheeler with Huffman coding)
  *
- * $Id: bz2comprs.h 3045 2014-03-02 07:53:52Z chrislit $
+ * $Id: bz2comprs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -37,8 +37,8 @@ public:
 	Bzip2Compress();
 	virtual ~Bzip2Compress();
 
-	virtual void Encode(void);
-	virtual void Decode(void);
+	virtual void encode(void);
+	virtual void decode(void);
 };
 
 SWORD_NAMESPACE_END

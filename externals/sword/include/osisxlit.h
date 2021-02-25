@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisxlit.h -	Implementation of OSISXlit
+ * osisxlit.h -	class OSISXlit: an OptionFilter to handle transliteration
+ * 		information on words in modules marked up in OSIS
  *
- * $Id: osisxlit.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisxlit.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides headings in a OSIS text
+/** This Filter shows/hides transliterations in an OSIS text
  */
 class SWDLLEXPORT OSISXlit : public SWOptionFilter {
 public:

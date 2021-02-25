@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  swsearchable.h -	definition of class SWSearchable used to provide an
- *			interface for objects that be searched.
+ * swsearchable.h -	class SWSearchable: used to provide an
+ *			interface for objects that can be searched.
  *
- * $Id: swsearchable.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swsearchable.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -34,6 +34,7 @@ class SWKey;
 /** used to provide an interface for objects that be searched.
  */
 class SWDLLEXPORT SWSearchable {
+
 public:
 	SWSearchable();
 	virtual ~SWSearchable();

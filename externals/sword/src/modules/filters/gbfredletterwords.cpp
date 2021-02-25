@@ -3,7 +3,7 @@
  *  gbfredletterwords.cpp -	SWFilter descendant to toggle red coloring of
  *				words of Christ in a GBF module
  *
- * $Id: gbfredletterwords.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: gbfredletterwords.cpp 3427 2016-07-03 14:30:33Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -101,9 +101,12 @@ char GBFRedLetterWords::processText(SWBuf &text, const SWKey *key, const SWModul
 				continue;
 			}
 			if (intoken) {
-				if (tokpos < 4090)
+				if (tokpos < 4090) {
 					token[tokpos++] = *from;
+					// TODO: why is this + 2 ?  The below comment still doesn't help me understand.  The switch statment 
+					// is commented out in this filter
 					token[tokpos+2] = 0;	// +2 cuz we init token with 2 extra '0' because of switch statement
+				}
 			}
 			else {
 				text += *from;

@@ -2,7 +2,7 @@
  *
  *  treekeyidx.cpp -	
  *
- * $Id: treekeyidx.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: treekeyidx.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,8 +33,9 @@
 
 SWORD_NAMESPACE_START
 
+
 static const char *classes[] = {"TreeKeyIdx", "TreeKey", "SWKey", "SWObject", 0};
-SWClass TreeKeyIdx::classdef(classes);
+static const SWClass classdef(classes);
 
 
 TreeKeyIdx::TreeKeyIdx(const TreeKeyIdx &ikey) : currentNode() {
@@ -61,8 +62,10 @@ TreeKeyIdx::TreeKeyIdx(const char *idxPath, int fileMode) : currentNode() {
 	buf.setFormatted("%s.dat", path);
 	datfd = FileMgr::getSystemFileMgr()->open(buf, fileMode, true);
 
-	if (datfd <= 0) {
-		SWLog::getSystemLog()->logError("%d", errno);
+	if (!datfd || datfd->getFd() < 0) {
+// couldn't find datafile but this might be fine if we're
+// merely instantiating a remote InstallMgr SWMgr
+SWLOGD("Couldn't open file: %s. errno: %d", buf.c_str(), errno);
 		error = errno;
 	}
 	else {
@@ -72,7 +75,7 @@ TreeKeyIdx::TreeKeyIdx(const char *idxPath, int fileMode) : currentNode() {
 
 
 void TreeKeyIdx::init() {
-	myclass = &classdef;
+	myClass = &classdef;
 }
 
 
@@ -106,7 +109,7 @@ void TreeKeyIdx::setUserData(const char *userData, int size) {
 		delete currentNode.userData;
 
 	if (!size)
-		size = strlen(userData) + 1;
+		size = (int)strlen(userData) + 1;
 
 	currentNode.userData = new char [ size ];
 	memcpy(currentNode.userData, userData, size);
@@ -174,7 +177,7 @@ bool TreeKeyIdx::nextSibling() {
 
 bool TreeKeyIdx::previousSibling() {
 	TreeNode iterator;
-	__s32 target = currentNode.offset;
+	SW_s32 target = currentNode.offset;
 	if (currentNode.parent > -1) {
 		getTreeNodeFromIdxOffset(currentNode.parent, &iterator);
 		getTreeNodeFromIdxOffset(iterator.firstChild, &iterator);
@@ -204,10 +207,10 @@ void TreeKeyIdx::append() {
 		while (lastSib.next > -1) {
 			getTreeNodeFromIdxOffset(lastSib.next, &lastSib);
 		}
-		__u32 idxOffset = idxfd->seek(0, SEEK_END);
+		SW_u32 idxOffset = (SW_u32)idxfd->seek(0, SEEK_END);
 		lastSib.next = idxOffset;
 		saveTreeNodeOffsets(&lastSib);
-		__u32 parent = currentNode.parent;
+		SW_u32 parent = currentNode.parent;
 		currentNode.clear();
 		currentNode.offset = idxOffset;
 		currentNode.parent = parent;
@@ -221,10 +224,10 @@ void TreeKeyIdx::appendChild() {
 		append();
 	}
 	else {
-		__u32 idxOffset = idxfd->seek(0, SEEK_END);
+		SW_u32 idxOffset = (SW_u32)idxfd->seek(0, SEEK_END);
 		currentNode.firstChild = idxOffset;
 		saveTreeNodeOffsets(&currentNode);
-		__u32 parent = currentNode.offset;
+		SW_u32 parent = currentNode.offset;
 		currentNode.clear();
 		currentNode.offset = idxOffset;
 		currentNode.parent = parent;
@@ -254,19 +257,20 @@ void TreeKeyIdx::remove() {
 		}
 		if (!done) {
 			TreeNode iterator;
-			__s32 target = currentNode.offset;
+			SW_s32 target = currentNode.offset;
 			if (currentNode.parent > -1) {
 				getTreeNodeFromIdxOffset(currentNode.parent, &iterator);
 				getTreeNodeFromIdxOffset(iterator.firstChild, &iterator);
 				if (iterator.offset != target) {
-					while ((iterator.next != target) && (iterator.next > -1))
+					while ((iterator.next != target) && (iterator.next > -1)) {
 						getTreeNodeFromIdxOffset(iterator.next, &iterator);
-						if (iterator.next > -1) {
-							TreeNode prev;
-							getTreeNodeFromIdxOffset(iterator.offset, &prev);
-							prev.next = node.next;
-							saveTreeNodeOffsets(&prev);
-							getTreeNodeFromIdxOffset(prev.offset, &currentNode);
+					}
+					if (iterator.next > -1) {
+						TreeNode prev;
+						getTreeNodeFromIdxOffset(iterator.offset, &prev);
+						prev.next = node.next;
+						saveTreeNodeOffsets(&prev);
+						getTreeNodeFromIdxOffset(prev.offset, &currentNode);
 					}
 				}
 			}
@@ -304,7 +308,6 @@ signed char TreeKeyIdx::create(const char *ipath) {
 	fd2 = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd2->getFd();
 	FileMgr::getSystemFileMgr()->close(fd2);
-
 	TreeKeyIdx newTree(path);
 	TreeKeyIdx::TreeNode root;
 	stdstr(&(root.name), "");
@@ -328,10 +331,10 @@ signed char TreeKeyIdx::create(const char *ipath) {
 void TreeKeyIdx::getTreeNodeFromDatOffset(long ioffset, TreeNode *node) const {
 	unsnappedKeyText = "";
 	char ch;
-	__s32  tmp;
-	__u16  tmp2;
+	SW_s32  tmp;
+	SW_u16  tmp2;
 
-	if (datfd > 0) {
+	if (datfd && datfd->getFd() >= 0) {
 
 		datfd->seek(ioffset, SEEK_SET);
 
@@ -376,7 +379,7 @@ void TreeKeyIdx::getTreeNodeFromDatOffset(long ioffset, TreeNode *node) const {
 
 char TreeKeyIdx::getTreeNodeFromIdxOffset(long ioffset, TreeNode *node) const {
 	unsnappedKeyText = "";
-	__u32 offset;
+	SW_u32 offset;
 	char error = KEYERR_OUTOFBOUNDS;
 	
 	if (ioffset < 0) {
@@ -384,21 +387,19 @@ char TreeKeyIdx::getTreeNodeFromIdxOffset(long ioffset, TreeNode *node) const {
 		error = 77;	// out of bounds but still position to 0;
 	}
 
-	node->offset = ioffset;
-	if (idxfd > 0) {
-		if (idxfd->getFd() > 0) {
-			idxfd->seek(ioffset, SEEK_SET);
+	node->offset = (SW_s32)ioffset;
+	if (idxfd && idxfd->getFd() >= 0) {
+		idxfd->seek(ioffset, SEEK_SET);
+		if (idxfd->read(&offset, 4) == 4) {
+			offset = swordtoarch32(offset);
+			error = (error == 77) ? KEYERR_OUTOFBOUNDS : 0;
+			getTreeNodeFromDatOffset(offset, node);
+		}
+		else {
+			idxfd->seek(-4, SEEK_END);
 			if (idxfd->read(&offset, 4) == 4) {
 				offset = swordtoarch32(offset);
-				error = (error == 77) ? KEYERR_OUTOFBOUNDS : 0;
 				getTreeNodeFromDatOffset(offset, node);
-			}
-			else {
-				idxfd->seek(-4, SEEK_END);
-				if (idxfd->read(&offset, 4) == 4) {
-					offset = swordtoarch32(offset);
-					getTreeNodeFromDatOffset(offset, node);
-				}
 			}
 		}
 	}
@@ -420,13 +421,13 @@ void TreeKeyIdx::setOffset(unsigned long offset) {
 void TreeKeyIdx::saveTreeNodeOffsets(TreeNode *node) {
 	unsnappedKeyText = "";
 	long datOffset = 0;
-	__s32 tmp;
+	SW_s32 tmp;
 
-	if (idxfd > 0) {
+	if (idxfd && idxfd->getFd() >= 0) {
 		idxfd->seek(node->offset, SEEK_SET);
 		if (idxfd->read(&tmp, 4) != 4) {
 			datOffset = datfd->seek(0, SEEK_END);
-			tmp = archtosword32(datOffset);
+			tmp = (SW_s32)archtosword32(datOffset);
 			idxfd->write(&tmp, 4);
 		}
 		else {
@@ -434,13 +435,13 @@ void TreeKeyIdx::saveTreeNodeOffsets(TreeNode *node) {
 			datfd->seek(datOffset, SEEK_SET);
 		}
 
-		tmp = archtosword32(node->parent);
+		tmp = (SW_s32)archtosword32(node->parent);
 		datfd->write(&tmp, 4);
 
-		tmp = archtosword32(node->next);
+		tmp = (SW_s32)archtosword32(node->next);
 		datfd->write(&tmp, 4);
 
-		tmp = archtosword32(node->firstChild);
+		tmp = (SW_s32)archtosword32(node->firstChild);
 		datfd->write(&tmp, 4);
 	}
 }
@@ -487,12 +488,12 @@ void TreeKeyIdx::copyFrom(const TreeKeyIdx &ikey) {
 
 void TreeKeyIdx::saveTreeNode(TreeNode *node) {
 	long datOffset = 0;
-	__s32 tmp;
-	if (idxfd > 0) {
+	SW_s32 tmp;
+	if (idxfd && idxfd->getFd() >= 0) {
 
 		idxfd->seek(node->offset, SEEK_SET);
 		datOffset = datfd->seek(0, SEEK_END);
-		tmp = archtosword32(datOffset);
+		tmp = (SW_s32)archtosword32(datOffset);
 		idxfd->write(&tmp, 4);
 
 		saveTreeNodeOffsets(node);
@@ -501,7 +502,7 @@ void TreeKeyIdx::saveTreeNode(TreeNode *node) {
 		char null = 0;
 		datfd->write(&null, 1);
 
-		__u16 tmp2 = archtosword16(node->dsize);
+		SW_u16 tmp2 = archtosword16(node->dsize);
 		datfd->write(&tmp2, 2);
 
 		if (node->dsize) {
@@ -567,12 +568,12 @@ void TreeKeyIdx::setPosition(SW_POSITION p) {
 
 
 int TreeKeyIdx::_compare (const TreeKeyIdx & ikey) {
-		return (getOffset() - ikey.getOffset());
+		return (int)(getOffset() - ikey.getOffset());
 }
 
 
 int TreeKeyIdx::compare(const SWKey &ikey) {
-	TreeKeyIdx *treeKey = SWDYNAMIC_CAST(TreeKeyIdx, (&ikey));
+	const TreeKeyIdx *treeKey = SWDYNAMIC_CAST(const TreeKeyIdx, (&ikey));
 	if (treeKey)
 		return _compare(*treeKey);
 	return SWKey::compare(ikey);
@@ -587,7 +588,7 @@ void TreeKeyIdx::decrement(int steps) {
 void TreeKeyIdx::increment(int steps) {
 	error = getTreeNodeFromIdxOffset(currentNode.offset + (4*steps), &currentNode);
 	if (error) {
-//		SWLog::getSystemLog()->logError("error: %d", error);
+		SWLog::getSystemLog(); // strange fix for android // ->logError("error: %d", error);
 	}
 	positionChanged();
 
@@ -609,7 +610,6 @@ void TreeKeyIdx::increment(int steps) {
 	}
 */
 }
-
 
 
 const char *TreeKeyIdx::getText() const {
@@ -653,6 +653,7 @@ void TreeKeyIdx::TreeNode::clear() {
 		delete [] userData;
 	userData   = 0;
 }
+
 
 
 TreeKeyIdx::TreeNode::~TreeNode() {

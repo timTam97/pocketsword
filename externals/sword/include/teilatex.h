@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  teilatex.h -	Implementation of TEILaTeX
+ * teilatex.h -	class TEILaTeX: a RenderFilter to render LaTeX from modules
+ * 		marked up in TEI
  *
- * $Id: teilatex.h 3074 2014-03-05 00:30:21Z chrislit $
+ * $Id: teilatex.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2012-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,17 +28,20 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts TEI text to XHTML text
+/** this filter converts TEI text to LaTeX text
  */
 class SWDLLEXPORT TEILaTeX : public SWBasicFilter {
+
 private:
 	bool renderNoteNumbers;
 
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
-		bool BiblicalText;
+		bool isBiblicalText;
 		SWBuf lastHi;
+		bool firstCell; // for tables, indicates whether a cell is the first one in a row
+		int consecutiveNewlines;
 		
 		SWBuf version;
 		MyUserData(const SWModule *module, const SWKey *key);

@@ -1,8 +1,15 @@
 /***************************************************************************
  *
- *  swoptfilter.h -	Implenetation of SWOptionFilter
+ * swoptfilter.h -	class SWOptionFilter: the base for all OptionFilters
+ * 			in SWORD.  An OptionFilter allows the user to turn
+ * 			on and off certain features they may wish to see or
+ * 			not see.  Essentially, an OptionFilter is usually
+ * 			included in a choice for the end user and the result
+ * 			of being turned "Off" is that the filter will strip
+ * 			the markup for that feature from the text stream
+ * 			when it is processed.
  *
- * $Id: swoptfilter.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swoptfilter.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1998 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,12 +39,13 @@ SWORD_NAMESPACE_START
 /**
 * The type definitoin for option types
 */
-typedef std::list < SWBuf > StringList;
+typedef std::list<SWBuf> StringList;
 
 
-  /** Base class for all option filters.
-  */
+/** Base class for all option filters.
+ */
 class SWDLLEXPORT SWOptionFilter : public virtual SWFilter {
+
 protected:
 	SWBuf optionValue;
 	const char *optName;
@@ -45,8 +53,8 @@ protected:
 	const StringList *optValues;
 	bool option;
 	bool isBooleanVal;
-public:
 
+public:
 	SWOptionFilter();
 	SWOptionFilter(const char *oName, const char *oTip, const StringList *oValues);
 	virtual ~SWOptionFilter();
@@ -80,7 +88,7 @@ public:
 	virtual const char *getOptionValue();
 
 	/** sets the value of the option of this filter,
-	 * e.g maybe a strong's filter mioght be set to "on" / "off" -
+	 * e.g maybe a strong's filter might be set to "On" / "Off" -
 	 * that would mean to show or not to show the strongs in the text,
 	 * see also getOptionValues()
 	 * @param ival the new option value

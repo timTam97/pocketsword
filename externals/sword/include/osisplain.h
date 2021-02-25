@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisplain.h -	Implementation of OSISPlain
+ * osisplain.h -	class OSISPlain: a StripFilter for modules marked up
+ * 			in OSIS
  *
- * $Id: osisplain.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisplain.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,13 +29,14 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts OSIS text to plain text
+/** this filter converts OSIS text to plain text; primary stripFilter for OSIS
  */
 class SWDLLEXPORT OSISPlain : public SWBasicFilter {
 public:
 protected:
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key);
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
+	virtual bool processStage(char stage, SWBuf &text, char *&from, BasicFilterUserData *userData);
 public:
 	OSISPlain();
 };

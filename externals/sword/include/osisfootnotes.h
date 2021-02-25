@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisfootnotes.h -	Implementation of OSISFootnotes
+ * osisfootnotes.h -	class OSISFootnotes: an OptionFilter which handles
+ * 			footnotes in modules marked up in OSIS
  *
- * $Id: osisfootnotes.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisfootnotes.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides headings in a OSIS text
+/** This Filter shows/hides footnotes in a OSIS text
  */
 class SWDLLEXPORT OSISFootnotes : public SWOptionFilter {
 public:

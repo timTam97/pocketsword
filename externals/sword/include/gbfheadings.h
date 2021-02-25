@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  gbfheadings.h -	Implementation of GBFHeadings
+ * gbfheadings.h -	class GBFHeadings: an OptionFilter class for
+ * 			handling headings in modules marked up in GBF
  *
- * $Id: gbfheadings.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfheadings.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,8 +28,8 @@
 
 SWORD_NAMESPACE_START
 
-  /** This Filter shows/hides headings in a GBF text
-  */
+/** This Filter shows/hides headings in a GBF text
+ */
 class SWDLLEXPORT GBFHeadings : public SWOptionFilter {
 public:
 	GBFHeadings();

@@ -2,7 +2,7 @@
  *
  *  swgenbook.cpp -	Implementation of SWGenBook class
  *
- * $Id: swgenbook.cpp 2893 2013-07-16 03:07:02Z scribe $
+ * $Id: swgenbook.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -48,29 +48,29 @@ SWGenBook::~SWGenBook() {
 }
 
 
-TreeKey &SWGenBook::getTreeKey(const SWKey *k) const {
+const TreeKey &SWGenBook::getTreeKey(const SWKey *k) const {
 	const SWKey* thiskey = k?k:this->key;
 
-	TreeKey *key = 0;
+	const TreeKey *key = 0;
 
 	SWTRY {
-		key = SWDYNAMIC_CAST(TreeKey, (thiskey));
+		key = SWDYNAMIC_CAST(const TreeKey, (thiskey));
 	}
 	SWCATCH ( ... ) {}
 
 	if (!key) {
-		ListKey *lkTest = 0;
+		const ListKey *lkTest = 0;
 		SWTRY {
-			lkTest = SWDYNAMIC_CAST(ListKey, thiskey);
+			lkTest = SWDYNAMIC_CAST(const ListKey, thiskey);
 		}
 		SWCATCH ( ... ) {	}
 		if (lkTest) {
 			SWTRY {
-				key = SWDYNAMIC_CAST(TreeKey, lkTest->getElement());
+				key = SWDYNAMIC_CAST(const TreeKey, lkTest->getElement());
 				if (!key) {
-					VerseTreeKey *tkey = 0;
+					const VerseTreeKey *tkey = 0;
 					SWTRY {
-						tkey = SWDYNAMIC_CAST(VerseTreeKey, lkTest->getElement());
+						tkey = SWDYNAMIC_CAST(const VerseTreeKey, lkTest->getElement());
 					}
 					SWCATCH ( ... ) {}
 					if (tkey) key = tkey->getTreeKey();
@@ -80,9 +80,9 @@ TreeKey &SWGenBook::getTreeKey(const SWKey *k) const {
 		}
 	}
 	if (!key) {
-		VerseTreeKey *tkey = 0;
+		const VerseTreeKey *tkey = 0;
 		SWTRY {
-			tkey = SWDYNAMIC_CAST(VerseTreeKey, (thiskey));
+			tkey = SWDYNAMIC_CAST(const VerseTreeKey, (thiskey));
 		}
 		SWCATCH ( ... ) {}
 		if (tkey) key = tkey->getTreeKey();

@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlscripref.h -	Implementation of ThMLScripRef
+ * thmlscripref.h -	class ThMLScripRef: an OptionFilter to handle
+ * 			cross-references in modules marked up in ThML
  *
- * $Id: thmlscripref.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlscripref.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

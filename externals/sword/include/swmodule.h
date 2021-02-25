@@ -1,10 +1,9 @@
 /******************************************************************************
  *
- *  swmodule.h -	code for base class 'module'.  Module is the basis for
- *		  	all types of modules (e.g. texts, commentaries, maps,
- *		  	lexicons, etc.)
+ * swmodule.h -	class SWModule: the basis for all types of modules
+ * 		(e.g. Bibles, commentaries, maps, lexicons, general books, etc.)
  *
- * $Id: swmodule.h 3249 2014-08-24 01:55:08Z scribe $
+ * $Id: swmodule.h 3846 2021-02-24 21:04:04Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -41,10 +40,16 @@
 
 SWORD_NAMESPACE_START
 
+
+enum {DIRECTION_LTR = 0, DIRECTION_RTL, DIRECTION_BIDI};
+enum {FMT_UNKNOWN = 0, FMT_PLAIN, FMT_THML, FMT_GBF, FMT_HTML, FMT_HTMLHREF, FMT_RTF, FMT_OSIS, FMT_WEBIF, FMT_TEI, FMT_XHTML, FMT_LATEX};
+enum {ENC_UNKNOWN = 0, ENC_LATIN1, ENC_UTF8, ENC_SCSU, ENC_UTF16, ENC_RTF, ENC_HTML};
+enum {BIB_BIBTEX = 0, /* possible future formats: BIB_MARCXML, BIB_MARC21, BIB_DCMI BIB_OSISHEADER, BIB_SBL_XHTML, BIB_MLA_XHTML, BIB_APA_XHTML, BIB_CHICAGO_XHTML */};
+
+
 class SWOptionFilter;
 class SWFilter;
 
-#define SEARCHFLAG_MATCHWHOLEENTRY 4096
 
 #define SWMODULE_OPERATORS \
 	operator SWBuf() { return renderText(); } \
@@ -57,6 +62,9 @@ class SWFilter;
 	SWModule &operator ++(int) { return *this += 1; } \
 	SWModule &operator --(int) { return *this -= 1; } \
 	SWModule &operator =(SW_POSITION p) { setPosition(p); return *this; } \
+	/**	\
+	 * @deprecated Use renderText instead	\ 
+	 */	\
 	SWDEPRECATED operator const char *() { static SWBuf unsafeTmp = renderText(); return unsafeTmp.c_str(); }
 
 
@@ -92,15 +100,15 @@ typedef std::map < SWBuf, AttributeList, std::less < SWBuf > > AttributeTypeList
 
 class SWDLLEXPORT SWModule : public SWCacher, public SWSearchable {
 
-class StdOutDisplay : public SWDisplay {
-     char display(SWModule &imodule)
-     {
-     #ifndef	_WIN32_WCE
-          std::cout << imodule.renderText();
-     #endif
-          return 0;
-     }
-};
+private:
+	class StdOutDisplay : public SWDisplay {
+		char display(SWModule &imodule) {
+#ifndef	_WIN32_WCE
+			std::cout << imodule.renderText();
+#endif
+			return 0;
+		}
+	};
 
 protected:
 
@@ -153,6 +161,18 @@ protected:
 
 
 public:
+	// used for matching whole entry (not substring) in entry attributes searches.
+	static const signed int SEARCHFLAG_MATCHWHOLEENTRY;
+
+	// used for turning off the default behavior of SWORD to use a sliding search window 
+	// which allows hits across verse boundaries.
+	static const signed int SEARCHFLAG_STRICTBOUNDARIES;
+
+	static const signed int SEARCHTYPE_REGEX;
+	static const signed int SEARCHTYPE_PHRASE;
+	static const signed int SEARCHTYPE_MULTIWORD;
+	static const signed int SEARCHTYPE_ENTRYATTR;
+	static const signed int SEARCHTYPE_EXTERNAL;
 
 	/**
 	 * Set this bool to false to terminate the search which is executed by this module (search()).
@@ -182,6 +202,9 @@ public:
 	 * @return error status
 	 */
 	virtual char popError();
+	/**
+	 * @deprecated Use popError instead.
+	 */
 	SWDEPRECATED virtual char Error() { return popError(); }
 
 	/**
@@ -194,6 +217,16 @@ public:
 	// are not comfortable with, or don't wish to use  stl maps).
 	virtual void setConfig(ConfigEntMap *config);
 	virtual const ConfigEntMap &getConfig() const { return *config; }
+
+	/**
+	 * Gets a configuration property about a module.  These entries are primarily
+	 * pulled from the module's .conf file, but also includes some virtual entries
+	 * such as:
+	 * 	PrefixPath - the absolute filesystem path to the sword module repository
+	 *	location where this module is located.
+	 *	AbsoluteDataPath - the full path to the root folder where the module
+	 *	data is stored.
+	 */
 	virtual const char *getConfigEntry(const char *key) const;
 
 	/**
@@ -218,11 +251,21 @@ public:
 	virtual char setKey(const SWKey *ikey);
 
 	/**
+	 * Sets this module's key to provided keyText without disturbing any settings on the a key itself
+	 * This is simply a shortcut for the common module->getKey()->setText(keyText);
+	 *
+	 * @param keyText key with which to set this module
+	 * @return error status
+	 */
+	inline char setKeyText(const char *keyText) { getKey()->setText(keyText); return key->getError(); }
+
+	/**
 	 * Sets a key to this module for position to a particular record
 	 * @param ikey The SWKey which should be used as new key.
 	 * @return Error status
 	 */
 	char setKey(const SWKey &ikey) { return setKey(&ikey); }
+
 	/**
 	 * @deprecated Use setKey() instead.
 	 */
@@ -265,9 +308,13 @@ public:
 
 	virtual long getIndex() const { return entryIndex; }
 	virtual void setIndex(long iindex) { entryIndex = iindex; }
-	// deprecated, use getIndex()
+	/**
+	 * @deprecated Use getIndex()
+	 */
 	SWDEPRECATED long Index() const { return getIndex(); }
-	// deprecated, use setIndex(...)
+	/**
+	 * @deprecated Use setIndex(...)
+	 */
 	SWDEPRECATED long Index(long iindex) { setIndex(iindex); return getIndex(); }
 
 	/** Calls this module's display object and passes itself
@@ -275,6 +322,9 @@ public:
 	 * @return error status
 	 */
 	virtual char display();
+	/**
+	 * @deprecated Use display
+	 */
 	SWDEPRECATED char Display() { return display(); }
 
 	/** Gets display driver
@@ -299,10 +349,14 @@ public:
 	 * @return pointer to modname
 	 */
 	const char *getName() const;
+	/**
+	 * @deprecated Use getName
+	 */
 	SWDEPRECATED const char *Name() const { return getName(); }
 
 	/** Sets module name
 	 *
+	 * @deprecated Use getName
 	 * @param imodname Value which to set modname; [0]-only get
 	 * @return pointer to modname
 	 */
@@ -313,10 +367,14 @@ public:
 	 * @return pointer to moddesc
 	 */
 	const char *getDescription() const;
+	/**
+	 * @deprecated Use getDescription
+	 */
 	SWDEPRECATED const char *Description() const { return getDescription(); }
 
 	/** Sets module description
 	 *
+	 * @deprecated Use getDescription
 	 * @param imoddesc Value which to set moddesc; [0]-only get
 	 * @return pointer to moddesc
 	 */
@@ -327,76 +385,96 @@ public:
 	 * @return pointer to modtype
 	 */
 	const char *getType() const;
+	/**
+	 * @deprecated Use getType
+	 */
 	SWDEPRECATED const char *Type() const { return getType(); }
 
 	/** Sets module type
 	 *
 	 * @param imodtype Value which to set modtype; [0]-only get
-	 * @return pointer to modtype
+	 */
+	void setType(const char *imodtype) { stdstr(&modtype, imodtype); }
+	/**
+	 * @deprecated Use setType / getType
 	 */
 	SWDEPRECATED const char *Type(const char *imodtype) { setType(imodtype); return getType(); }
-	void setType(const char *imodtype) { stdstr(&modtype, imodtype); }
 
 	/** Sets/gets module direction
 	 *
-	 * @param newdir Value which to set direction; [-1]-only get
 	 * @return new direction
 	 */
 	virtual char getDirection() const;
+	/**
+	 * @deprecated Use getDirection
+	 */
 	SWDEPRECATED char Direction(signed char newdir = -1) { char retVal = getDirection(); if (newdir != -1) return direction = newdir; return retVal; }
 
-	/** Sets/gets module encoding
+	/** Gets module encoding
 	 *
-	 * @param enc Value which to set encoding; [-1]-only get
 	 * @return Encoding
 	 */
 	char getEncoding() const { return encoding; }
+	/**
+	 * @deprecated Use getEncoding
+	 */
 	SWDEPRECATED char Encoding(signed char enc = -1) { char retVal = getEncoding(); if (enc != -1) encoding = enc; return retVal; }
 
-	/** Sets/gets module markup
+	/** Gets module markup
 	 *
-	 * @param markup Value which to set markup; [-1]-only get
 	 * @return Markup
 	 */
 	char getMarkup() const { return markup; }
+	/**
+	 * @deprecated Use getMarkup
+	 */
 	SWDEPRECATED char Markup(signed char imarkup = -1) { char retVal = getMarkup(); if (imarkup != -1) markup = imarkup; return retVal; }
 
-	/** Sets/gets module language
+	/** Gets module language
 	 *
-	 * @param imodlang Value which to set modlang; [0]-only get
 	 * @return pointer to modlang
 	 */
 	const char *getLanguage() const { return modlang; }
+	/**
+	 * @deprecated Use getLanguage
+	 */
 	SWDEPRECATED const char *Lang(char *imodlang = 0) { if (imodlang != 0) stdstr(&modlang, imodlang); return getLanguage(); }
 
 
 	// search interface -------------------------------------------------
 
-	/** Searches a module for a string
+	/** Searches a module
 	 *
 	 * @param istr string for which to search
 	 * @param searchType type of search to perform
-	 *			>=0 - regex
-	 *			-1  - phrase
-	 *			-2  - multiword
-	 *			-3  - entryAttrib (eg. Word//Strongs/G1234/)
-	 *			-4  - Lucene
-	 * @param flags options flags for search
-	 * @param scope Key containing the scope. VerseKey or ListKey are useful here.
-	 * @param justCheckIfSupported if set, don't search,
-	 * only tell if this function supports requested search.
-	 * @param percent Callback function to get the current search status in %.
-	 * @param percentUserData User data that is given to the callback function as parameter.
+	 *			SEARCHTYPE_REGEX     - regex; (for backward compat, if > 0 then used as additional REGEX FLAGS)
+	 *			SEARCHTYPE_PHRASE    - phrase
+	 *			SEARCHTYPE_MULTIWORD - multiword
+	 *			SEARCHTYPE_ENTRYATTR - entryAttrib (eg. Word//Lemma./G1234/)	 (Lemma with dot means check components (Lemma.[1-9]) also)
+	 *			SEARCHTYPE_EXTERNAL  - Use External Search Framework (CLucene, Xapian, etc.)
+	 *			-5  - multilemma window; set 'flags' param to window size (NOT DONE)
+	 * @param flags bitwise options flags for search.  Each search type supports different options.
+	 * 			REG_ICASE	- perform case insensitive search.  Supported by most all search types
+	 * 			SEARCHFLAG_*	- SWORD-specific search flags for various search types.  See SWModule::SEARCHFLAG_ consts
 	 *
-	 * @return ListKey set to verses that contain istr
+	 * @param scope Key containing the scope. VerseKey or ListKey are useful here.
+	 * @param justCheckIfSupported If set, don't search but instead set this variable to true/false if the requested search is supported,
+	 * @param percent Callback function to get the current search status in %.
+	 * @param percentUserData Anything that you might want to send to the precent callback function.
+	 *
+	 * @return ListKey set to entry keys that match
 	 */
 	virtual ListKey &search(const char *istr, int searchType = 0, int flags = 0,
-			SWKey * scope = 0,
-			bool * justCheckIfSupported = 0,
+			SWKey *scope = 0,
+			bool *justCheckIfSupported = 0,
 			void (*percent) (char, void *) = &nullPercent,
 			void *percentUserData = 0);
 
 	// for backward compat-- deprecated
+
+	/**
+	 * @deprecated Use search
+	 */
 	SWDEPRECATED ListKey &Search(const char *istr, int searchType = 0, int flags = 0, SWKey * scope = 0, bool * justCheckIfSupported = 0, void (*percent) (char, void *) = &nullPercent, void *percentUserData = 0) {	return search(istr, searchType, flags, scope, justCheckIfSupported, percent, percentUserData);	}
 
 
@@ -408,6 +486,9 @@ public:
 	 * @return pointer to allocated key. Caller is responsible for deleting the object
 	 */
 	virtual SWKey *createKey() const;
+	/**
+	 * @deprecated Use createKey
+	 */
 	SWDEPRECATED SWKey *CreateKey() const { return createKey(); }
 
 	/** This function is reimplemented by the different kinds
@@ -477,13 +558,16 @@ public:
 	/** Adds a RenderFilter to this module's renderFilters queue.
 	 *	Render Filters are called when the module is asked to produce
 	 *	renderable text.
-	 * @param newfilter the filter to add
+	 * @param newFilter the filter to add
 	 * @return *this
 	 */
 	virtual SWModule &addRenderFilter(SWFilter *newFilter) {
 		renderFilters->push_back(newFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use addRenderFilter
+	 */
 	SWDEPRECATED SWModule &AddRenderFilter(SWFilter *newFilter) { return addRenderFilter(newFilter); }
 
 	/** Retrieves a container of render filters associated with this
@@ -495,18 +579,21 @@ public:
 	}
 
 	/** Removes a RenderFilter from this module's renderFilters queue
-	 * @param oldfilter the filter to remove
+	 * @param oldFilter the filter to remove
 	 * @return *this
 	 */
 	virtual SWModule &removeRenderFilter(SWFilter *oldFilter) {
 		renderFilters->remove(oldFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use removeRenderFilter
+	 */
 	SWDEPRECATED SWModule &RemoveRenderFilter(SWFilter *oldFilter) {	return removeRenderFilter(oldFilter); }
 
 	/** Replaces a RenderFilter in this module's renderfilters queue
-	 * @param oldfilter the filter to remove
-	 * @param newfilter the filter to add in its place
+	 * @param oldFilter the filter to remove
+	 * @param newFilter the filter to add in its place
 	 * @return *this
 	 */
 	virtual SWModule &replaceRenderFilter(SWFilter *oldFilter, SWFilter *newFilter) {
@@ -517,6 +604,9 @@ public:
 		}
 		return *this;
 	}
+	/**
+	 * @deprecated Use replaceRenderFilter
+	 */
 	SWDEPRECATED SWModule &ReplaceRenderFilter(SWFilter *oldFilter, SWFilter *newFilter) { return replaceRenderFilter(oldFilter, newFilter); }
 
 	/** RenderFilter run a buf through this module's Render Filters
@@ -531,28 +621,34 @@ public:
 	 *	Encoding Filters are called immediately when the module is read
 	 *	from data source, to assure we have desired internal data stream
 	 *	(e.g. UTF-8 for text modules)
-	 * @param newfilter the filter to add
+	 * @param newFilter the filter to add
 	 * @return *this
 	 */
 	virtual SWModule &addEncodingFilter(SWFilter *newFilter) {
 		encodingFilters->push_back(newFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use addEncodingFilter
+	 */
 	SWDEPRECATED SWModule &AddEncodingFilter(SWFilter *newFilter) { return addEncodingFilter(newFilter); }
 
 	/** Removes an EncodingFilter from this module's encodingFilters queue
-	 * @param oldfilter the filter to remove
+	 * @param oldFilter the filter to remove
 	 * @return *this
 	 */
 	virtual SWModule &removeEncodingFilter(SWFilter *oldFilter) {
 		encodingFilters->remove(oldFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use removeEncodingFilter
+	 */
 	SWDEPRECATED SWModule &RemoveEncodingFilter(SWFilter *oldFilter) { return removeEncodingFilter(oldFilter); }
 
 	/** Replaces an EncodingFilter in this module's encodingfilters queue
-	 * @param oldfilter the filter to remove
-	 * @param newfilter the filter to add in its place
+	 * @param oldFilter the filter to remove
+	 * @param newFilter the filter to add in its place
 	 * @return *this
 	 */
 	virtual SWModule &replaceEncodingFilter(SWFilter *oldFilter, SWFilter *newFilter) {
@@ -563,6 +659,9 @@ public:
 		}
 		return *this;
 	}
+	/**
+	 * @deprecated Use replaceEncodingFilter
+	 */
 	SWDEPRECATED SWModule &ReplaceEncodingFilter(SWFilter *oldFilter, SWFilter *newFilter) { return replaceEncodingFilter(oldFilter, newFilter); }
 
 	/** encodingFilter run a buf through this module's Encoding Filters
@@ -576,23 +675,29 @@ public:
 	/** Adds a StripFilter to this module's stripFilters queue.
 	 *	Strip filters are called when a module is asked to render
 	 *	an entry without any markup (like when searching).
-	 * @param newfilter the filter to add
+	 * @param newFilter the filter to add
 	 * @return *this
 	 */
 	virtual SWModule &addStripFilter(SWFilter *newFilter) {
 		stripFilters->push_back(newFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use addStripFilter
+	 */
 	SWDEPRECATED SWModule &AddStripFilter(SWFilter *newFilter) { return addStripFilter(newFilter);	}
 
 	/** Adds a RawFilter to this module's rawFilters queue
 	 * @param newFilter the filter to add
 	 * @return *this
 	 */
-	virtual SWModule &addRawFilter(SWFilter *newfilter) {
-		rawFilters->push_back(newfilter);
+	virtual SWModule &addRawFilter(SWFilter *newFilter) {
+		rawFilters->push_back(newFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use addRawFilter
+	 */
 	SWDEPRECATED SWModule &AddRawFilter(SWFilter *newFilter) { return addRawFilter(newFilter); }
 
 	/** StripFilter run a buf through this module's Strip Filters
@@ -616,14 +721,19 @@ public:
 	 *	Option Filters are used to turn options in the text on
 	 *	or off, or so some other state (e.g. Strong's Number,
 	 *	Footnotes, Cross References, etc.)
-	 * @param newfilter the filter to add
+	 * @param newFilter the filter to add
 	 * @return *this
 	 */
 	virtual SWModule &addOptionFilter(SWOptionFilter *newFilter) {
 		optionFilters->push_back(newFilter);
 		return *this;
 	}
+	/**
+	 * @deprecated Use addOptionFilter
+	 */
 	SWDEPRECATED SWModule &AddOptionFilter(SWOptionFilter *newFilter) { return addOptionFilter(newFilter); }
+
+	virtual const OptionFilterList &getOptionFilters() const { return *optionFilters; }
 
 	/** OptionFilter a text buffer
 	 * @param buf the buffer to filter
@@ -642,6 +752,9 @@ public:
 	 * @return result buffer
 	 */
 	virtual const char *stripText(const char *buf = 0, int len = -1);
+	/**
+	 * @deprecated Use stripText
+	 */
 	SWDEPRECATED const char *StripText(const char *buf = 0, int len = -1) { return stripText(buf, len); }
 
 	/** Produces renderable text of the current module entry or supplied text
@@ -652,7 +765,11 @@ public:
 	 * @param render for internal use
 	 * @return result buffer
 	 */
-	SWBuf renderText(const char *buf = 0, int len = -1, bool render = true);
+	SWBuf renderText(const char *buf, int len = -1, bool render = true) const;
+	 SWBuf renderText();
+	/**
+	 * @deprecated Use renderText
+	 */
 	SWDEPRECATED const char *RenderText(const char *buf = 0, int len = -1, bool render = true) { return renderText(buf, len, render); }
 
 	/** Produces any header data which might be useful which is associated with the
@@ -683,6 +800,9 @@ public:
 	 *	consecutive links when iterating
 	 */
 	virtual bool isSkipConsecutiveLinks() { return skipConsecutiveLinks; }
+	/**
+	 * @deprecated Use isSkipConsecutiveLinks
+	 */
 	SWDEPRECATED bool getSkipConsecutiveLinks() { return isSkipConsecutiveLinks(); }
 	
 	virtual bool isLinked(const SWKey *, const SWKey *) const { return false; }
@@ -702,6 +822,9 @@ public:
 	 * optimization.
 	 */
 	virtual void setProcessEntryAttributes(bool val) const { procEntAttr = val; }
+	/**
+	 * @deprecated Use setProcessEntryAttributes
+	 */
 	SWDEPRECATED void processEntryAttributes(bool val) const { setProcessEntryAttributes(val); }
 
 	/** Whether or not we're processing Entry Attributes

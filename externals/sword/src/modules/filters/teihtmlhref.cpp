@@ -2,7 +2,7 @@
  *
  *  teihtmlhref.cpp -	TEI to HTML with hrefs filter
  *
- * $Id: teihtmlhref.cpp 3091 2014-03-10 06:52:42Z chrislit $
+ * $Id: teihtmlhref.cpp 3807 2020-09-27 12:59:54Z scribe $
  *
  * Copyright 2008-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,10 +33,10 @@ SWORD_NAMESPACE_START
 
 
 TEIHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
-	BiblicalText = false;
+	isBiblicalText = false;
 	if (module) {
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}
 }
 
@@ -132,7 +132,7 @@ bool TEIHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 				if (n != "") {
 					buf += "<br /><b>";
 					buf += n;
-					buf += "</b>";
+					buf += "</b> ";
 				}
 			}
 		}
@@ -221,7 +221,7 @@ bool TEIHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 						// Compensate for starting :
 						ref = the_ref + 1;
 
-						int size = target.size() - ref.size() - 1;
+						int size = (int)(target.size() - ref.size() - 1);
 						work.setSize(size);
 						strncpy(work.getRawData(), target, size);
 					}
@@ -275,7 +275,100 @@ bool TEIHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData
 				u->suspendTextPassThru = false;
 			}
 		}
+		// <graphic> image tag
+		else if (!strcmp(tag.getName(), "graphic")) {
+			const char *url = tag.getAttribute("url");
+			if (url) {		// assert we have a url attribute
+				SWBuf filepath;
+				if (userData->module) {
+					filepath = userData->module->getConfigEntry("AbsoluteDataPath");
+					if ((filepath.size()) && (filepath[filepath.size()-1] != '/') && (url[0] != '/'))
+						filepath += '/';
+				}
+				filepath += url;
+				// images become clickable, if the UI supports showImage.
+				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showImage&value=%s&module=%s\"><img src=\"file:%s\" border=\"0\" /></a>",
+						    URL::encode(filepath.c_str()).c_str(),
+						    URL::encode(u->version.c_str()).c_str(),
+						    filepath.c_str());
+				u->suspendTextPassThru = true;
+			}
+		}
+		// <table> <row> <cell>
+		else if (!strcmp(tag.getName(), "table")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "<table><tbody>\n";
+			}
+			else if (tag.isEndTag()) {
+				buf += "</tbody></table>\n";
+				u->supressAdjacentWhitespace = true;
+			}
 
+		}
+		else if (!strcmp(tag.getName(), "row")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\t<tr>";
+			}
+			else if (tag.isEndTag()) {
+				buf += "</tr>\n";
+			}
+		}
+		else if (!strcmp(tag.getName(), "cell")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "<td>";
+			}
+			else if (tag.isEndTag()) {
+				buf += "</td>";
+			}
+		}
+
+		// <list> <item>
+		else if (!strcmp(tag.getName(), "list")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+
+				SWBuf rend = tag.getAttribute("rend");
+				
+				u->lastHi = rend;
+				if (rend == "numbered") {
+					buf += "<ol>\n";
+				}
+				else if (rend == "lettered") {
+					buf += "<ol type=\"A\">\n";
+				}
+				else if (rend == "bulleted") {
+					buf += "<ul>\n";
+				}
+				else {
+					buf += "<ul class=\"list "; 
+					buf += rend.c_str(); 
+					buf += "\">";
+				}
+			}
+			else if (tag.isEndTag()) {
+				SWBuf rend = u->lastHi;
+				if (rend == "numbered") {
+					buf += "</ol>\n>";
+				}
+				else if (rend == "lettered") {
+					buf += "</ol>\n";
+				}
+				else if (rend == "bulleted") {
+					buf += "</ul>\n";
+				}
+				else {
+					buf += "</ul>\n";
+				}
+				u->supressAdjacentWhitespace = true;
+			}
+		}
+		else if (!strcmp(tag.getName(), "item")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "<li>";
+			}
+			else if (tag.isEndTag()) {
+				buf += "</li>\n";
+			}
+		}
 		else {
 			return false;  // we still didn't handle token
 		}

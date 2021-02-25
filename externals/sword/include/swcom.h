@@ -1,9 +1,8 @@
 /******************************************************************************
  *
- *  swcom.h -	code for base class 'SWCom'.  SWCom is the basis for all
- *		types of commentary modules.
- *		It is traditionally close to the same as the SWText
- *		module type, but has defaults set which more
+ * swcom.h -	class SWCom: the basis for all types of commentary modules.
+ *		It is traditionally nearly the same as the SWText driver for
+ *		Bible modules, but has defaults set which more
  *		closely represent how a commentary will be used and how
  *		the bulk of our commentaries expect to be used.  For example,
  *		most commentaries consist of entries for a range of text
@@ -15,7 +14,7 @@
  *		commentary is incremented, it will go to the next ENTRY,
  *		not the next verse (likely Matt.1.7, from our example above).
  *
- * $Id: swcom.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swcom.h 3821 2020-11-02 18:33:02Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -45,17 +44,20 @@ SWORD_NAMESPACE_START
 class VerseKey;
 class SWKey;
 
-  /** The basis for all commentary modules
-  */
+/** The basis for all commentary modules
+ */
 class SWDLLEXPORT SWCom : public SWModule {
 
+private:
 	mutable VerseKey *tmpVK1;
 	mutable VerseKey *tmpVK2;
-        mutable bool tmpSecond;
+	mutable bool tmpSecond;
 	char *versification;
 
 protected:
-	VerseKey &getVerseKey(const SWKey *key = 0) const;
+	VerseKey &getVerseKey(SWKey *key = 0);
+	const VerseKey &getVerseKey(const SWKey *key = 0) const { return getVerseKeyConst(key); }
+	const VerseKey &getVerseKeyConst(const SWKey *key = 0) const;
 
 
 public:

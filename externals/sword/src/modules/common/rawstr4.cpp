@@ -5,7 +5,7 @@
  *			and provides lookup and parsing functions based on
  *			class StrKey
  *
- * $Id: rawstr4.cpp 3215 2014-05-01 05:13:22Z scribe $
+ * $Id: rawstr4.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -74,8 +74,10 @@ RawStr4::RawStr4(const char *ipath, int fileMode, bool caseSensitive) : caseSens
 	buf.setFormatted("%s.dat", path);
 	datfd = FileMgr::getSystemFileMgr()->open(buf, fileMode, true);
 
-	if (datfd < 0) {
-		SWLog::getSystemLog()->logError("%d", errno);
+	if (!datfd || datfd->getFd() < 0) {
+// couldn't find datafile but this might be fine if we're
+// merely instantiating a remote InstallMgr SWMgr
+SWLOGD("Couldn't open file: %s. errno: %d", buf.c_str(), errno);
 	}
 
 	instance++;
@@ -111,7 +113,7 @@ void RawStr4::getIDXBufDat(long ioffset, char **buf) const
 {
 	int size;
 	char ch;
-	if (datfd > 0) {
+	if ((unsigned long)datfd > 0) {
 		datfd->seek(ioffset, SEEK_SET);
 		for (size = 0; datfd->read(&ch, 1) == 1; size++) {
 			if ((ch == '\\') || (ch == 10) || (ch == 13))
@@ -143,9 +145,9 @@ void RawStr4::getIDXBufDat(long ioffset, char **buf) const
 
 void RawStr4::getIDXBuf(long ioffset, char **buf) const
 {
-	__u32 offset;
+	SW_u32 offset;
 	
-	if (idxfd > 0) {
+	if ((unsigned long)idxfd > 0) {
 		idxfd->seek(ioffset, SEEK_SET);
 
 		idxfd->read(&offset, 4);
@@ -177,7 +179,7 @@ void RawStr4::getIDXBuf(long ioffset, char **buf) const
  * RET: error status -1 general error; -2 new file
  */
 
-signed char RawStr4::findOffset(const char *ikey, __u32 *start, __u32 *size, long away, __u32 *idxoff) const
+signed char RawStr4::findOffset(const char *ikey, SW_u32 *start, SW_u32 *size, long away, SW_u32 *idxoff) const
 {
 	char *trybuf, *maxbuf, *key = 0, quitflag = 0;
 	signed char retval = -1;
@@ -193,9 +195,9 @@ signed char RawStr4::findOffset(const char *ikey, __u32 *start, __u32 *size, lon
 			headoff = 0;
 
 			stdstr(&key, ikey, 3);
-			if (!caseSensitive) toupperstr_utf8(key, strlen(key)*3);
+			if (!caseSensitive) toupperstr_utf8(key, (unsigned int)(strlen(key)*3));
 
-			int keylen = strlen(key);
+			int keylen = (int)strlen(key);
 			bool substr = false;
 
 			trybuf = maxbuf = 0;
@@ -247,12 +249,12 @@ signed char RawStr4::findOffset(const char *ikey, __u32 *start, __u32 *size, lon
 
 		idxfd->seek(tryoff, SEEK_SET);
 
-		__u32 tmpStart, tmpSize;
+		SW_u32 tmpStart, tmpSize;
 		*start = *size = tmpStart = tmpSize = 0;
 		idxfd->read(&tmpStart, 4);
 		idxfd->read(&tmpSize, 4);
 		if (idxoff)
-			*idxoff = tryoff;
+			*idxoff = (SW_u32)tryoff;
 
 		*start = swordtoarch32(tmpStart);
 		*size  = swordtoarch32(tmpSize);
@@ -271,17 +273,17 @@ signed char RawStr4::findOffset(const char *ikey, __u32 *start, __u32 *size, lon
 			if (bad) {
 				if(!awayFromSubstrCheck)
 					retval = -1;
-				*start = laststart;
-				*size = lastsize;
+				*start = (SW_u32)laststart;
+				*size = (SW_u32)lastsize;
 				tryoff = lasttry;
 				if (idxoff)
-					*idxoff = tryoff;
+					*idxoff = (SW_u32)tryoff;
 				break;
 			}
 			idxfd->read(&tmpStart, 4);
 			idxfd->read(&tmpSize, 4);
 			if (idxoff)
-				*idxoff = tryoff;
+				*idxoff = (SW_u32)tryoff;
 
 			*start = swordtoarch32(tmpStart);
 			*size  = swordtoarch32(tmpSize);
@@ -313,12 +315,12 @@ signed char RawStr4::findOffset(const char *ikey, __u32 *start, __u32 *size, lon
  *
  */
 
-void RawStr4::readText(__u32 istart, __u32 *isize, char **idxbuf, SWBuf &buf) const
+void RawStr4::readText(SW_u32 istart, SW_u32 *isize, char **idxbuf, SWBuf &buf) const
 {
 	unsigned int ch;
 	char *idxbuflocal = 0;
 	getIDXBufDat(istart, &idxbuflocal);
-	__u32 start = istart;
+	SW_u32 start = istart;
 
 	do {
 		if (*idxbuf)
@@ -355,7 +357,7 @@ void RawStr4::readText(__u32 istart, __u32 *isize, char **idxbuf, SWBuf &buf) co
 	while (true);	// while we're resolving links
 
 	if (idxbuflocal) {
-		unsigned int localsize = strlen(idxbuflocal);
+		unsigned int localsize = (unsigned int)strlen(idxbuflocal);
 		localsize = (localsize < (*isize - 1)) ? localsize : (*isize - 1);
 		strncpy(*idxbuf, idxbuflocal, localsize);
 		(*idxbuf)[localsize] = 0;
@@ -374,12 +376,12 @@ void RawStr4::readText(__u32 istart, __u32 *isize, char **idxbuf, SWBuf &buf) co
 
 void RawStr4::doSetText(const char *ikey, const char *buf, long len) {
 
-	__u32 start, outstart;
-	__u32 idxoff;
-	__u32 endoff;
-	__s32 shiftSize;
-	__u32 size;
-	__u32 outsize;
+	SW_u32 start, outstart;
+	SW_u32 idxoff;
+	SW_u32 endoff;
+	SW_s32 shiftSize;
+	SW_u32 size;
+	SW_u32 outsize;
 	char *tmpbuf = 0;
 	char *key = 0;
 	char *dbKey = 0;
@@ -389,7 +391,7 @@ void RawStr4::doSetText(const char *ikey, const char *buf, long len) {
 
 	char errorStatus = findOffset(ikey, &start, &size, 0, &idxoff);
 	stdstr(&key, ikey, 3);
-	if (!caseSensitive) toupperstr_utf8(key, strlen(key)*3);
+	if (!caseSensitive) toupperstr_utf8(key, (unsigned int)(strlen(key)*3));
 
 	len = (len < 0) ? strlen(buf) : len;
 	getIDXBufDat(start, &dbKey);
@@ -432,7 +434,7 @@ void RawStr4::doSetText(const char *ikey, const char *buf, long len) {
 		while (true);	// while we're resolving links
 	}
 
-	endoff = idxfd->seek(0, SEEK_END);
+	endoff = (SW_u32)idxfd->seek(0, SEEK_END);
 
 	shiftSize = endoff - idxoff;
 
@@ -446,9 +448,9 @@ void RawStr4::doSetText(const char *ikey, const char *buf, long len) {
 	sprintf(outbuf, "%s%c%c", key, 13, 10);
 	size = strlen(outbuf);
 	memcpy(outbuf + size, buf, len);
-	size = outsize = size + len;
+	size = outsize = size + (SW_u32)len;
 
-	start = outstart = datfd->seek(0, SEEK_END);
+	start = outstart = (SW_u32)datfd->seek(0, SEEK_END);
 
 	outstart = archtosword32(start);
 	outsize  = archtosword32(size);

@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  gbffootnotes.h -	Implementation of GBFFootnotes
+ * gbffootnotes.h -	class GBFFootnotes: an OptionFilter for handling
+ * 			footnotes in modules marked up in GBF
  *
- * $Id: gbffootnotes.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbffootnotes.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,7 +29,7 @@
 SWORD_NAMESPACE_START
 
 /** This Filter shows/hides footnotes in a GBF text
-  */
+ */
 class SWDLLEXPORT GBFFootnotes : public SWOptionFilter {
 public:
 	GBFFootnotes();

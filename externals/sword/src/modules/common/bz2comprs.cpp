@@ -3,7 +3,7 @@
  *  bz2comprs.cpp -	Bzip2Compress, a driver class that provides bzip2
  *			compression (Burrows–Wheeler with Huffman coding)
  *				
- * $Id: bz2comprs.cpp 3117 2014-03-13 07:42:32Z chrislit $
+ * $Id: bz2comprs.cpp 3754 2020-07-10 17:45:48Z scribe $
  *
  * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -58,8 +58,7 @@ Bzip2Compress::~Bzip2Compress() {
  * 			compressed buffer.
  */
 
-void Bzip2Compress::Encode(void)
-{
+void Bzip2Compress::encode(void) {
 	direct = 0;	// set direction needed by parent [Get|Send]Chars()
 
 	// get buffer
@@ -68,7 +67,7 @@ void Bzip2Compress::Encode(void)
 	char *chunkbuf = buf;
 	unsigned long chunklen;
 	unsigned long len = 0;
-	while((chunklen = GetChars(chunk, 1023))) {
+	while((chunklen = getChars(chunk, 1023))) {
 		memcpy(chunkbuf, chunk, chunklen);
 		len += chunklen;
 		if (chunklen < 1023)
@@ -83,12 +82,12 @@ void Bzip2Compress::Encode(void)
 	if (len)
 	{
 		//printf("Doing compress\n");
-		if (BZ2_bzBuffToBuffCompress(zbuf, (unsigned int*)&zlen, buf, len, level, 0, 0) != BZ_OK)
+		if (BZ2_bzBuffToBuffCompress(zbuf, (unsigned int*)&zlen, buf, (unsigned int)len, level, 0, 0) != BZ_OK)
 		{
 			printf("ERROR in compression\n");
 		}
 		else {
-			SendChars(zbuf, zlen);
+			sendChars(zbuf, zlen);
 		}
 	}
 	else
@@ -108,8 +107,7 @@ void Bzip2Compress::Encode(void)
  *			i/o.
  */
 
-void Bzip2Compress::Decode(void)
-{
+void Bzip2Compress::decode(void) {
 	direct = 1;	// set direction needed by parent [Get|Send]Chars()
 
 	// get buffer
@@ -118,7 +116,7 @@ void Bzip2Compress::Decode(void)
 	char *chunkbuf = zbuf;
 	int chunklen;
 	unsigned long zlen = 0;
-	while((chunklen = GetChars(chunk, 1023))) {
+	while((chunklen = (int)getChars(chunk, 1023))) {
 		memcpy(chunkbuf, chunk, chunklen);
 		zlen += chunklen;
 		if (chunklen < 1023)
@@ -129,16 +127,16 @@ void Bzip2Compress::Decode(void)
 
 	//printf("Decoding complength{%ld} uncomp{%ld}\n", zlen, blen);
 	if (zlen) {
-		unsigned int blen = zlen*20;	// trust compression is less than 1000%
+		unsigned int blen = (unsigned int)(zlen*20);	// trust compression is less than 1000%
 		char *buf = new char[blen]; 
 		//printf("Doing decompress {%s}\n", zbuf);
 		slen = 0;
-		switch (BZ2_bzBuffToBuffDecompress(buf, &blen, zbuf, zlen, 0, 0)){
-			case BZ_OK: SendChars(buf, blen); slen = blen; break;
+		switch (BZ2_bzBuffToBuffDecompress(buf, &blen, zbuf, (unsigned int)zlen, 0, 0)){
+			case BZ_OK: sendChars(buf, blen); slen = blen; break;
 			case BZ_MEM_ERROR: fprintf(stderr, "ERROR: not enough memory during decompression.\n"); break;
 			case BZ_OUTBUFF_FULL: fprintf(stderr, "ERROR: not enough room in the out buffer during decompression.\n"); break;
 			case BZ_DATA_ERROR: fprintf(stderr, "ERROR: corrupt data during decompression.\n"); break;
-			default: fprintf(stderr, "ERROR: an unknown error occured during decompression.\n"); break;
+			default: fprintf(stderr, "ERROR: an unknown error occurred during decompression.\n"); break;
 		}
 		delete [] buf;
 	}

@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- *  utf8transliterator.h -	Implementation of UTF8Transliterator
+ * utf8transliterator.h -	class UTF8Transliterator: a Filter to
+ * 				transliterate a UTF8 text stream into
+ * 				an alternate script. e.g., Hebrew to Latin
  *
- * $Id: utf8transliterator.h 2906 2013-07-17 22:34:43Z chrislit $
+ * $Id: utf8transliterator.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -50,17 +52,17 @@ SWORD_NAMESPACE_START
 class SWModule;
 
 struct SWTransData {
-	UnicodeString resource;
+	icu::UnicodeString resource;
 	UTransDirection dir;
 };
-typedef std::map<const UnicodeString, SWTransData> SWTransMap;
-typedef std::pair<UnicodeString, SWTransData> SWTransPair;
+typedef std::map<const icu::UnicodeString, SWTransData> SWTransMap;
+typedef std::pair<icu::UnicodeString, SWTransData> SWTransPair;
 
 /** This Filter uses ICU for transliteration
 */
 class SWDLLEXPORT UTF8Transliterator : public SWOptionFilter {
-private:
 
+private:
 	unsigned char option;
 
 	static const char optionstring[NUMTARGETSCRIPTS][16];
@@ -76,12 +78,12 @@ private:
 	static SWTransMap transMap;
 	UErrorCode utf8status;
 
-	void Load(UErrorCode &status);
+	void load(UErrorCode &status);
 	void registerTrans(const UnicodeString& ID, const UnicodeString& resource, UTransDirection dir, UErrorCode &status);	
 	bool checkTrans(const UnicodeString& ID, UErrorCode &status);
 #endif
 	bool addTrans(const char* newTrans, SWBuf* transList);
-	Transliterator *createTrans(const UnicodeString& ID, UTransDirection dir, UErrorCode &status);
+	icu::Transliterator *createTrans(const icu::UnicodeString& ID, UTransDirection dir, UErrorCode &status);
 
 public:
 	UTF8Transliterator();

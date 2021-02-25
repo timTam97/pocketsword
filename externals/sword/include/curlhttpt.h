@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  curlhttpt.h  -	code for CURL impl of HTTP Transport
+ * curlhttpt.h -	CURL HTTP(S) implementation of RemoteTransport
  *
- * $Id: curlhttpt.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: curlhttpt.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2009-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

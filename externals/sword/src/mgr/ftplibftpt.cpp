@@ -2,7 +2,7 @@
  *
  *  ftplibftpt.cpp -	FTPLibFTPTransport
  *
- * $Id: ftplibftpt.cpp 3229 2014-05-09 09:32:36Z scribe $
+ * $Id: ftplibftpt.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -19,7 +19,7 @@
  * General Public License for more details.
  *
  */
- 
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -42,10 +42,16 @@ namespace {
 
 	static int my_swbufwriter(netbuf *nControl, void *buffer, size_t size, void *swbuf) {
 		SWBuf &output = *(SWBuf *)swbuf;
-		int s = output.size();
+		int s = (int)output.size();
 		output.size(s+size);
 		memcpy(output.getRawData()+s, buffer, size);
-		return size;
+		return (int)size;
+	}
+
+	static int my_filewriter(netbuf *nControl, void *buffer, size_t size, void *fd) {
+		int output = *((int *)fd);
+		FileMgr::write(output, buffer, size);
+		return (int)size;
 	}
 
 #if defined(__GNUC__)
@@ -56,7 +62,7 @@ namespace {
 	static int my_fprogress(netbuf *nControl, int xfered, void *arg) {
 		if (arg) {
 			MyProgressData *pd = (MyProgressData *)arg;
-//SWLog::getSystemLog()->logDebug("FTPLibFTPTransport report progress: totalSize: %ld; xfered: %d\n", pd->totalSize, xfered);
+//SWLOGD("FTPLibFTPTransport report progress: totalSize: %ld; xfered: %d\n", pd->totalSize, xfered);
 			if (pd->sr) {
 				pd->sr->update(pd->totalSize, xfered);
 			}
@@ -100,13 +106,14 @@ FTPLibFTPTransport::~FTPLibFTPTransport() {
 char FTPLibFTPTransport::assureLoggedIn() {
 	char retVal = 0;
 	if (ftpConnection == 0) {
-		SWLog::getSystemLog()->logDebug("connecting to host: %s...\n", host.c_str());
+SWLOGD("connecting to host: %s...\n", host.c_str());
 		if (FtpConnect(host, &ftpConnection)) {
 			FtpOptions(FTPLIB_CONNMODE, (passive) ? FTPLIB_PASSIVE : FTPLIB_PORT, ftpConnection);
+			FtpOptions(FTPLIB_IDLETIME, timeoutMillis, ftpConnection);
 
-			SWLog::getSystemLog()->logDebug("connected. logging in...\n");
+SWLOGD("connected. logging in...\n");
 			if (FtpLogin(u.c_str(), p.c_str(), ftpConnection)) {
-				SWLog::getSystemLog()->logDebug("logged in.\n");
+SWLOGD("logged in.\n");
 				retVal = 0;
 			}
 			else {
@@ -116,7 +123,7 @@ char FTPLibFTPTransport::assureLoggedIn() {
 		}
 		else {
 			SWLog::getSystemLog()->logError("Failed to connect to %s\n", host.c_str());
-			retVal = -1;
+			retVal = -2;
 		}
 	}
 	return retVal;
@@ -127,11 +134,11 @@ char FTPLibFTPTransport::getURL(const char *destPath, const char *sourceURL, SWB
 
 	char retVal = 0;
 
-	SWLog::getSystemLog()->logDebug("FTPLibFTPTransport::getURL(%s, %s, ...);\n", (destPath)?destPath:"(null)", sourceURL);
+SWLOGD("FTPLibFTPTransport::getURL(%s, %s, ...);\n", (destPath)?destPath:"(null)", sourceURL);
 	// assert we can login
 	retVal = assureLoggedIn();
 	if (retVal) return retVal;
-	SWLog::getSystemLog()->logDebug("FTPLibFTPTransport - logged in.\n");
+SWLOGD("FTPLibFTPTransport - logged in.\n");
 
 	SWBuf sourcePath = sourceURL;
 
@@ -141,18 +148,20 @@ char FTPLibFTPTransport::getURL(const char *destPath, const char *sourceURL, SWB
 	}
 
 	sourcePath << (6 + host.length()); // shift << "ftp://hostname";
-	SWLog::getSystemLog()->logDebug("getting file %s to %s\n", sourcePath.c_str(), destBuf ? "*internal buffer*" : outFile.c_str());
+SWLOGD("getting file %s to %s\n", sourcePath.c_str(), destBuf ? "*internal buffer*" : outFile.c_str());
 	struct MyProgressData pd;
 	pd.sr = statusReporter;
 	pd.term = &term;
 	pd.totalSize = 0;
-
+	int fd = 0;
 	if (destBuf) {
 		FtpOptions(FTPLIB_CALLBACK_WRITER, (long)&my_swbufwriter, ftpConnection);
 		FtpOptions(FTPLIB_CALLBACK_WRITERARG, (long)destBuf, ftpConnection);
 	}
 	else {
-		FtpOptions(FTPLIB_CALLBACK_WRITER, 0L, ftpConnection);
+		fd = FileMgr::createPathAndFile(outFile);
+		FtpOptions(FTPLIB_CALLBACK_WRITER, (long)&my_filewriter, ftpConnection);
+		FtpOptions(FTPLIB_CALLBACK_WRITERARG, (long)&fd, ftpConnection);
 	}
 
 	FtpOptions(FTPLIB_CALLBACK, (long)&my_fprogress, ftpConnection);
@@ -160,21 +169,21 @@ char FTPLibFTPTransport::getURL(const char *destPath, const char *sourceURL, SWB
 	FtpOptions(FTPLIB_CALLBACKBYTES, (long)2048, ftpConnection);
 
 	if (sourcePath.endsWith("/") || sourcePath.endsWith("\\")) {
-//		SWLog::getSystemLog()->logDebug("getting test directory %s\n", sourcePath.c_str());
+//SWLOGD("getting test directory %s\n", sourcePath.c_str());
 //		FtpDir(NULL, sourcePath, ftpConnection);
-		SWLog::getSystemLog()->logDebug("getting real directory %s\n", sourcePath.c_str());
-		retVal = FtpDir(destBuf ? 0 : outFile.c_str(), sourcePath, ftpConnection) - 1;
-		SWLog::getSystemLog()->logDebug("got real directory %s to %s\n", sourcePath.c_str(), destBuf ? "*internal buffer*" : outFile.c_str());
+SWLOGD("getting real directory %s\n", sourcePath.c_str());
+		retVal = FtpDir(0, sourcePath, ftpConnection) - 1;
+SWLOGD("got real directory %s to %s\n", sourcePath.c_str(), destBuf ? "*internal buffer*" : outFile.c_str());
 	}
 	else {
-		SWLog::getSystemLog()->logDebug("getting file %s\n", sourcePath.c_str());
+SWLOGD("getting file %s\n", sourcePath.c_str());
 		int size;
 		FtpSize(sourcePath, &size, FTPLIB_IMAGE, ftpConnection);
 		pd.totalSize = size;
-		retVal = FtpGet(destBuf ? 0 : outFile.c_str(), sourcePath, FTPLIB_IMAGE, ftpConnection) - 1;
+		retVal = FtpGet(0, sourcePath, FTPLIB_IMAGE, ftpConnection) - 1;
 	}
-
-	SWLog::getSystemLog()->logDebug("FTPLibFTPTransport - returning: %d\n", retVal);
+	if (fd > 0) FileMgr::closeFile(fd);
+SWLOGD("FTPLibFTPTransport - returning: %d\n", retVal);
 	return retVal;
 }
 

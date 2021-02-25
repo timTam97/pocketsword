@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  gbfredletterwords.h -	Implementation of GBFRedLetterWords
+ * gbfredletterwords.h -	class GBFRedLetterWords: an OptionFilter to
+ * 				handle Red Letter Words of Christ in modules
+ * 				marked up in GBF
  *
- * $Id: gbfredletterwords.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfredletterwords.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

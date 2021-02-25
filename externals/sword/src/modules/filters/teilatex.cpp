@@ -2,7 +2,7 @@
  *
  *  teilatex.cpp -	TEI to LATEX filter
  *
- * $Id: teilatex.cpp 3091 2014-03-10 06:52:42Z chrislit $
+ * $Id: teilatex.cpp 3698 2020-02-05 20:15:59Z refdoc $
  *
  * Copyright 2012-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,10 +33,10 @@ SWORD_NAMESPACE_START
 
 
 TEILaTeX::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
-	BiblicalText = false;
+	isBiblicalText = false;
 	if (module) {
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}
 }
 
@@ -69,14 +69,14 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 
 		if (!strcmp(tag.getName(), "p")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {	// non-empty start tag
-				buf += "<!P><br />";
+				buf += "";
 			}
 			else if (tag.isEndTag()) {	// end tag
-				buf += "<!/P><br />";
+				buf += "//\n";
 				//userData->supressAdjacentWhitespace = true;
 			}
 			else {					// empty paragraph break marker
-				buf += "<!P><br />";
+				buf += "//\n";
 				//userData->supressAdjacentWhitespace = true;
 			}
 		}
@@ -100,17 +100,7 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 
 			}
 			else if (tag.isEndTag()) {
-				SWBuf rend = u->lastHi;
-				if (rend == "italic" || rend == "ital")
-					buf += "}";
-				else if (rend == "bold")
-					buf += "}";
-				else if (rend == "super" || rend == "sup")
-					buf += "}";
-				else if (rend == "sub")
-					buf += "}";
-				else if (rend == "overline")
-					buf += "}";
+				buf += "}";
 			}
 		}
 
@@ -119,9 +109,9 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
 				SWBuf n = tag.getAttribute("n");				
 				if (n != "") {
-					buf += "<b>";
+					buf += "\\teiEntryFree{";
 					buf += n;
-					buf += "</b>";
+					buf += "}";
 				}
 			}
 		}
@@ -131,9 +121,9 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
 				SWBuf n = tag.getAttribute("n");
 				if (n != "") {
-					buf += "<br /><b>";
+					buf += "\n\\teiSense{";
 					buf += n;
-					buf += "</b>";
+					buf += "}";
 				}
 			}
 		}
@@ -142,7 +132,7 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 		else if (!strcmp(tag.getName(), "div")) {
 
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<!P>";
+				buf += "";
 			}
 			else if (tag.isEndTag()) {
 			}
@@ -150,7 +140,7 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 
 		// <lb.../>
 		else if (!strcmp(tag.getName(), "lb")) {
-			buf += "<br />";
+			buf += "//\n";
 		}
 
 		// <pos>, <gen>, <case>, <gram>, <number>, <mood>, <pron>, <def>
@@ -159,41 +149,24 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 				 !strcmp(tag.getName(), "case") || 
 				 !strcmp(tag.getName(), "gram") || 
 				 !strcmp(tag.getName(), "number") || 
-				 !strcmp(tag.getName(), "pron") /*||
-				 !strcmp(tag.getName(), "def")*/) {
+				 !strcmp(tag.getName(), "pron") ||
+				 !strcmp(tag.getName(), "tr") || 
+				 !strcmp(tag.getName(), "orth") ||
+				 !strcmp(tag.getName(), "etym") || 
+				 !strcmp(tag.getName(), "usg") ||
+				 
+				 
+				 !strcmp(tag.getName(), "def")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<i>";
+				buf += "\\tei";
+				buf += tag.getName();
+				buf += "{";
 			}
 			else if (tag.isEndTag()) {
-				buf += "</i>";
+				buf += "}";
 			}
 		}
 
-		// <tr>
-		else if (!strcmp(tag.getName(), "tr")) {
-			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<i>";
-			}
-			else if (tag.isEndTag()) {
-				buf += "</i>";
-			}
-		}
-		
-		// orth
-		else if (!strcmp(tag.getName(), "orth")) {
-			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<b>";
-			}
-			else if (tag.isEndTag()) {
-				buf += "</b>";
-			}
-		}
-
-		// <etym>, <usg>
-		else if (!strcmp(tag.getName(), "etym") || 
-				 !strcmp(tag.getName(), "usg")) {
-			// do nothing here
-		}
 		else if (!strcmp(tag.getName(), "ref")) {
 			if (!tag.isEndTag()) {
 				u->suspendTextPassThru = true;
@@ -229,16 +202,16 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 
 					if(was_osisref)
 					{
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showRef&type=scripRef&value=%s&module=%s\">",
-							(ref) ? URL::encode(ref.c_str()).c_str() : "", 
-							(work.size()) ? URL::encode(work.c_str()).c_str() : "");
+						buf.appendFormatted("\\swordref{%s}{%s}{",
+							(ref) ? ref.c_str() : "", 
+							(work.size()) ? work.c_str() : "" );
 					}
 					else
 					{
 						// Dictionary link, or something
-						buf.appendFormatted("<a href=\"sword://%s/%s\">",
-							(work.size()) ? URL::encode(work.c_str()).c_str() : u->version.c_str(),
-							(ref) ? URL::encode(ref.c_str()).c_str() : ""							
+						buf.appendFormatted("\\sworddictref{%s}{%s}{",
+							(work.size()) ? work.c_str() : u->version.c_str(),
+							(ref) ? ref.c_str() : ""							
 							);
 					}
 				}
@@ -250,7 +223,7 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			}
 			else {
 				buf += u->lastTextNode.c_str();
-				buf += "</a>";
+				buf += "}";
 				
 				u->suspendTextPassThru = false;
 			}
@@ -266,20 +239,123 @@ bool TEILaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			if (tag.isEndTag()) {
 				SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
 				SWBuf noteName = tag.getAttribute("n");
-				
-				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=n&value=%s&module=%s&passage=%s\"><small><sup class=\"n\">*n%s</sup></small></a>",
-					URL::encode(footnoteNumber.c_str()).c_str(), 
-					URL::encode(u->version.c_str()).c_str(),
-					URL::encode(u->key->getText()).c_str(), 
-					(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
-				
+				SWBuf footnoteBody = "";
+				if (u->module){
+					footnoteBody += u->module->getEntryAttributes()["Footnote"][footnoteNumber]["body"];
+				}
+										
+				buf.appendFormatted("\\swordfootnote{%s}{%s}{%s}{%s}{",
+					footnoteNumber.c_str(), 
+					u->version.c_str(),
+					u->key->getText(), 
+					renderNoteNumbers ? noteName.c_str() : "");
+					if (u->module) {
+						buf += u->module->renderText(footnoteBody).c_str();
+					}			
 				u->suspendTextPassThru = false;
 			}
 		}
 
+		// <graphic> image tag
+		else if (!strcmp(tag.getName(), "graphic")) {
+			const char *url = tag.getAttribute("url");
+			if (url) {		// assert we have a url attribute
+				SWBuf filepath;
+				if (userData->module) {
+					filepath = userData->module->getConfigEntry("AbsoluteDataPath");
+					if ((filepath.size()) && (filepath[filepath.size()-1] != '/') && (url[0] != '/'))
+						filepath += '/';
+				}
+				filepath += url;
+
+				buf.appendFormatted("\\figure{\\includegraphics{%s}}",
+						    filepath.c_str());
+				u->suspendTextPassThru = false;
+				
+			}
+		}
+
+		// <table> <row> <cell>
+		else if (!strcmp(tag.getName(), "table")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\n\\begin{tabular}";
+			}
+			else if (tag.isEndTag()) {
+				buf += "\n\\end{tabular}";
+				++u->consecutiveNewlines;
+				u->supressAdjacentWhitespace = true;
+			}
+			
+		}
+		else if (!strcmp(tag.getName(), "row")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\n";
+				u->firstCell = true;
+			}
+			else if (tag.isEndTag()) {
+				buf += "//";
+				u->firstCell = false;
+			}
+			
+		}
+		else if (!strcmp(tag.getName(), "cell")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				if (u->firstCell == false) {
+					buf += " & ";
+				}
+				else {
+					u->firstCell = false;
+				}
+			}
+			else if (tag.isEndTag()) {
+				buf += "";
+			}
+		}
+		// <list> <item>
+		else if (!strcmp(tag.getName(), "list")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+
+				SWBuf rend = tag.getAttribute("rend");
+				
+				u->lastHi = rend;
+				if (rend == "numbered") {
+					buf += "\\begin{enumerate}\n";
+					}
+				else if (rend == "bulleted") {
+					buf += "\\begin{itemize}\n";
+				}
+				else {
+					buf += "\\begin{list-"; 
+					buf += rend.c_str(); 
+					buf += "}\n";
+				}
+			}
+			else if (tag.isEndTag()) {
+				SWBuf rend = u->lastHi;
+				if (rend == "numbered") {
+					buf += "\\end{enumerate}\n>";
+				}
+				else if (rend == "bulleted") {
+					buf += "\\end{itemize}\n";
+				
+				}
+				else {
+					buf += "\\end{list-";
+					buf += rend;
+					buf += "}\n";
+				}
+				u->supressAdjacentWhitespace = true;
+			}
+		}
+		else if (!strcmp(tag.getName(), "item")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\\item";
+			}
+		}
 		else {
 			return false;  // we still didn't handle token
 		}
+
 
 	}
 	return true;

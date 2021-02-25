@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  entriesblk.h -	Implementation of EntriesBlock
+ * entriesblk.h -	class EntriesBlock: a helper class for module drivers
+ * 			which support compressed blocks of multiple entries
  *
- * $Id: entriesblk.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: entriesblk.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

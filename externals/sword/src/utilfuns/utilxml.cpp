@@ -3,7 +3,7 @@
  *  utilxml.cpp -	Implementaion of utility classes to handle
  *			XML processing
  *
- * $Id: utilxml.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utilxml.cpp 3719 2020-04-19 03:19:53Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -82,20 +82,17 @@ void XMLTag::parse() const {
 				if (buf[i]) {	// we have attribute value
 					start = i;
 					// Skip until matching quote character
-					for (; ((buf[i]) && (buf[i] != quoteChar)); i++)
-						;
+					for (; ((buf[i]) && (buf[i] != quoteChar)); i++);
 
 					// Allow for empty quotes
-					//if (i-start) {
-						if (value)
-							delete [] value;
-						value = new char [ (i-start) + 1 ];
-						if (i-start) {
-							strncpy(value, buf+start, i-start);
-						}
-						value[i-start] = 0;
-						attributes[name] = value;
-					//}
+					if (value)
+						delete [] value;
+					value = new char [ (i-start) + 1 ];
+					if (i-start) {
+						strncpy(value, buf+start, i-start);
+					}
+					value[i-start] = 0;
+					attributes[name] = value;
 				}
 			}
 		}
@@ -131,12 +128,12 @@ XMLTag::XMLTag(const XMLTag& t) : attributes(t.attributes)  {
 	empty = t.empty;
 	endTag = t.endTag;
 	if (t.buf) {
-		int len = strlen(t.buf);
+		int len = (int)strlen(t.buf);
 		buf = new char[len + 1];
 		memcpy(buf, t.buf, len + 1);
 	}
 	if (t.name) {
-		int len = strlen(t.name);
+		int len = (int)strlen(t.name);
 		name = new char[len + 1];
 		memcpy(name, t.name, len + 1);
 	}
@@ -294,13 +291,16 @@ const char *XMLTag::toString() const {
 		tag.append('/');
 
 	tag.append(getName());
-	for (StringPairMap::iterator it = attributes.begin(); it != attributes.end(); it++) {
-		//tag.appendFormatted(" %s=\"%s\"", it->first.c_str(), it->second.c_str());
-		tag.append(' ');
-		tag.append(it->first.c_str());
-		tag.append((strchr(it->second.c_str(), '\"')) ? "=\'" : "=\"");
-		tag.append(it->second.c_str());
-		tag.append((strchr(it->second.c_str(), '\"'))? '\'' : '\"');
+
+	if (!isEndTag()) {
+		for (StringPairMap::iterator it = attributes.begin(); it != attributes.end(); it++) {
+			//tag.appendFormatted(" %s=\"%s\"", it->first.c_str(), it->second.c_str());
+			tag.append(' ');
+			tag.append(it->first.c_str());
+			tag.append((strchr(it->second.c_str(), '\"')) ? "=\'" : "=\"");
+			tag.append(it->second.c_str());
+			tag.append((strchr(it->second.c_str(), '\"'))? '\'' : '\"');
+		}
 	}
 
 	if (isEmpty())

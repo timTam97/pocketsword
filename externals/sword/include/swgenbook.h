@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  swgenbook.h -	Implementation of SWGenBook
+ * swgenbook.h -	class SWGenBook: representation of a General Book with
+ * 			a TreeKey table of contents for its keyset
  *
- * $Id: swgenbook.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swgenbook.h 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -38,7 +39,7 @@ class SWDLLEXPORT SWGenBook : public SWModule {
 protected:
 	mutable char *entkeytxt;
 	mutable TreeKey *tmpTreeKey;
-	TreeKey &getTreeKey(const SWKey *k = 0) const;
+	const TreeKey &getTreeKey(const SWKey *k = 0) const;
 
 public:
 	/** Initializes data for instance of SWGenBook

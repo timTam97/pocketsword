@@ -2,7 +2,7 @@
  *
  *  thmlrtf.cpp -	ThML to RTF filter
  *
- * $Id: thmlrtf.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlrtf.cpp 3547 2017-12-10 05:06:48Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -44,105 +44,105 @@ ThMLRTF::ThMLRTF() {
 	addEscapeStringSubstitute("amp", "&");
 	addEscapeStringSubstitute("lt", "<");
 	addEscapeStringSubstitute("gt", ">");
-	addEscapeStringSubstitute("brvbar", "\xA6");
-	addEscapeStringSubstitute("sect", "\xA7");
-	addEscapeStringSubstitute("copy", "\xA9");
-	addEscapeStringSubstitute("laquo", "\xAB");
-	addEscapeStringSubstitute("reg", "\xAE");
-	addEscapeStringSubstitute("acute", "\xB4");
-	addEscapeStringSubstitute("para", "\xB6");
-	addEscapeStringSubstitute("raquo", "\xBB");
+	addEscapeStringSubstitute("brvbar", "¦");
+	addEscapeStringSubstitute("sect", "§");
+	addEscapeStringSubstitute("copy", "©");
+	addEscapeStringSubstitute("laquo", "«");
+	addEscapeStringSubstitute("reg", "®");
+	addEscapeStringSubstitute("acute", "´");
+	addEscapeStringSubstitute("para", "¶");
+	addEscapeStringSubstitute("raquo", "»");
 
-	addEscapeStringSubstitute("Aacute", "\xC1");
-	addEscapeStringSubstitute("Agrave", "\xC0");
-	addEscapeStringSubstitute("Acirc", "\xC2");
-	addEscapeStringSubstitute("Auml", "\xC4");
-	addEscapeStringSubstitute("Atilde", "\xC3");
-	addEscapeStringSubstitute("Aring", "\xC5");
-	addEscapeStringSubstitute("aacute", "\xE1");
-	addEscapeStringSubstitute("agrave", "\xE0");
-	addEscapeStringSubstitute("acirc", "\xE2");
-	addEscapeStringSubstitute("auml", "\xE4");
-	addEscapeStringSubstitute("atilde", "\xE3");
-	addEscapeStringSubstitute("aring", "\xE5");
-	addEscapeStringSubstitute("Eacute", "\xC9");
-	addEscapeStringSubstitute("Egrave", "\xC8");
-	addEscapeStringSubstitute("Ecirc", "\xCA");
-	addEscapeStringSubstitute("Euml", "\xCB");
-	addEscapeStringSubstitute("eacute", "\xE9");
-	addEscapeStringSubstitute("egrave", "\xE8");
-	addEscapeStringSubstitute("ecirc", "\xEA");
-	addEscapeStringSubstitute("euml", "\xEB");
-	addEscapeStringSubstitute("Iacute", "\xCD");
-	addEscapeStringSubstitute("Igrave", "\xCC");
-	addEscapeStringSubstitute("Icirc", "\xCE");
-	addEscapeStringSubstitute("Iuml", "\xCF");
-	addEscapeStringSubstitute("iacute", "\xED");
-	addEscapeStringSubstitute("igrave", "\xEC");
-	addEscapeStringSubstitute("icirc", "\xEE");
-	addEscapeStringSubstitute("iuml", "\xEF");
-	addEscapeStringSubstitute("Oacute", "\xD3");
-	addEscapeStringSubstitute("Ograve", "\xD2");
-	addEscapeStringSubstitute("Ocirc", "\xD4");
-	addEscapeStringSubstitute("Ouml", "\xD6");
-	addEscapeStringSubstitute("Otilde", "\xD5");
-	addEscapeStringSubstitute("oacute", "\xF3");
-	addEscapeStringSubstitute("ograve", "\xF2");
-	addEscapeStringSubstitute("ocirc", "\xF4");
-	addEscapeStringSubstitute("ouml", "\xF6");
-	addEscapeStringSubstitute("otilde", "\xF5");
-	addEscapeStringSubstitute("Uacute", "\xDA");
-	addEscapeStringSubstitute("Ugrave", "\xD9");
-	addEscapeStringSubstitute("Ucirc", "\xDB");
-	addEscapeStringSubstitute("Uuml", "\xDC");
-	addEscapeStringSubstitute("uacute", "\xFA");
-	addEscapeStringSubstitute("ugrave", "\xF9");
-	addEscapeStringSubstitute("ucirc", "\xFB");
-	addEscapeStringSubstitute("uuml", "\xFC");
-	addEscapeStringSubstitute("Yacute", "\xDD");
-	addEscapeStringSubstitute("yacute", "\xFD");
-	addEscapeStringSubstitute("yuml", "\xFF");
+	addEscapeStringSubstitute("Aacute", "Á");
+	addEscapeStringSubstitute("Agrave", "À");
+	addEscapeStringSubstitute("Acirc", "Â");
+	addEscapeStringSubstitute("Auml", "Ä");
+	addEscapeStringSubstitute("Atilde", "Ã");
+	addEscapeStringSubstitute("Aring", "Å");
+	addEscapeStringSubstitute("aacute", "á");
+	addEscapeStringSubstitute("agrave", "à");
+	addEscapeStringSubstitute("acirc", "â");
+	addEscapeStringSubstitute("auml", "ä");
+	addEscapeStringSubstitute("atilde", "ã");
+	addEscapeStringSubstitute("aring", "å");
+	addEscapeStringSubstitute("Eacute", "É");
+	addEscapeStringSubstitute("Egrave", "È");
+	addEscapeStringSubstitute("Ecirc", "Ê");
+	addEscapeStringSubstitute("Euml", "Ë");
+	addEscapeStringSubstitute("eacute", "é");
+	addEscapeStringSubstitute("egrave", "è");
+	addEscapeStringSubstitute("ecirc", "ê");
+	addEscapeStringSubstitute("euml", "ë");
+	addEscapeStringSubstitute("Iacute", "Í");
+	addEscapeStringSubstitute("Igrave", "Ì");
+	addEscapeStringSubstitute("Icirc", "Î");
+	addEscapeStringSubstitute("Iuml", "Ï");
+	addEscapeStringSubstitute("iacute", "í");
+	addEscapeStringSubstitute("igrave", "ì");
+	addEscapeStringSubstitute("icirc", "î");
+	addEscapeStringSubstitute("iuml", "ï");
+	addEscapeStringSubstitute("Oacute", "Ó");
+	addEscapeStringSubstitute("Ograve", "Ò");
+	addEscapeStringSubstitute("Ocirc", "Ô");
+	addEscapeStringSubstitute("Ouml", "Ö");
+	addEscapeStringSubstitute("Otilde", "Õ");
+	addEscapeStringSubstitute("oacute", "ó");
+	addEscapeStringSubstitute("ograve", "ò");
+	addEscapeStringSubstitute("ocirc", "ô");
+	addEscapeStringSubstitute("ouml", "ö");
+	addEscapeStringSubstitute("otilde", "õ");
+	addEscapeStringSubstitute("Uacute", "Ú");
+	addEscapeStringSubstitute("Ugrave", "Ù");
+	addEscapeStringSubstitute("Ucirc", "Û");
+	addEscapeStringSubstitute("Uuml", "Ü");
+	addEscapeStringSubstitute("uacute", "ú");
+	addEscapeStringSubstitute("ugrave", "ù");
+	addEscapeStringSubstitute("ucirc", "û");
+	addEscapeStringSubstitute("uuml", "ü");
+	addEscapeStringSubstitute("Yacute", "Ý");
+	addEscapeStringSubstitute("yacute", "ý");
+	addEscapeStringSubstitute("yuml", "ÿ");
 
-	addEscapeStringSubstitute("deg", "\xB0");
-	addEscapeStringSubstitute("plusmn", "\xB1");
-	addEscapeStringSubstitute("sup2", "\xB2");
-	addEscapeStringSubstitute("sup3", "\xB3");
-	addEscapeStringSubstitute("sup1", "\xB9");
-	addEscapeStringSubstitute("nbsp", "\xBA");
-	addEscapeStringSubstitute("pound", "\xA3");
-	addEscapeStringSubstitute("cent", "\xA2");
-	addEscapeStringSubstitute("frac14", "\xBC");
-	addEscapeStringSubstitute("frac12", "\xBD");
-	addEscapeStringSubstitute("frac34", "\xBE");
-	addEscapeStringSubstitute("iquest", "\xBF");
-	addEscapeStringSubstitute("iexcl", "\xA1");
-	addEscapeStringSubstitute("ETH", "\xD0");
-	addEscapeStringSubstitute("eth", "\xF0");
-	addEscapeStringSubstitute("THORN", "\xDE");
-	addEscapeStringSubstitute("thorn", "\xFE");
-	addEscapeStringSubstitute("AElig", "\xC6");
-	addEscapeStringSubstitute("aelig", "\xE6");
-	addEscapeStringSubstitute("Oslash", "\xD8");
-	addEscapeStringSubstitute("curren", "\xA4");
-	addEscapeStringSubstitute("Ccedil", "\xC7");
-	addEscapeStringSubstitute("ccedil", "\xE7");
-	addEscapeStringSubstitute("szlig", "\xDF");
-	addEscapeStringSubstitute("Ntilde", "\xD1");
-	addEscapeStringSubstitute("ntilde", "\xF1");
-	addEscapeStringSubstitute("yen", "\xA5");
-	addEscapeStringSubstitute("not", "\xAC");
-	addEscapeStringSubstitute("ordf", "\xAA");
-	addEscapeStringSubstitute("uml", "\xA8");
-	addEscapeStringSubstitute("shy", "\xAD");
-	addEscapeStringSubstitute("macr", "\xAF");
+	addEscapeStringSubstitute("deg", "°");
+	addEscapeStringSubstitute("plusmn", "±");
+	addEscapeStringSubstitute("sup2", "²");
+	addEscapeStringSubstitute("sup3", "³");
+	addEscapeStringSubstitute("sup1", "¹");
+	addEscapeStringSubstitute("nbsp", "º");
+	addEscapeStringSubstitute("pound", "£");
+	addEscapeStringSubstitute("cent", "¢");
+	addEscapeStringSubstitute("frac14", "¼");
+	addEscapeStringSubstitute("frac12", "½");
+	addEscapeStringSubstitute("frac34", "¾");
+	addEscapeStringSubstitute("iquest", "¿");
+	addEscapeStringSubstitute("iexcl", "¡");
+	addEscapeStringSubstitute("ETH", "Ð");
+	addEscapeStringSubstitute("eth", "ð");
+	addEscapeStringSubstitute("THORN", "Þ");
+	addEscapeStringSubstitute("thorn", "þ");
+	addEscapeStringSubstitute("AElig", "Æ");
+	addEscapeStringSubstitute("aelig", "æ");
+	addEscapeStringSubstitute("Oslash", "Ø");
+	addEscapeStringSubstitute("curren", "¤");
+	addEscapeStringSubstitute("Ccedil", "Ç");
+	addEscapeStringSubstitute("ccedil", "ç");
+	addEscapeStringSubstitute("szlig", "ß");
+	addEscapeStringSubstitute("Ntilde", "Ñ");
+	addEscapeStringSubstitute("ntilde", "ñ");
+	addEscapeStringSubstitute("yen", "¥");
+	addEscapeStringSubstitute("not", "¬");
+	addEscapeStringSubstitute("ordf", "ª");
+	addEscapeStringSubstitute("uml", "¨");
+	addEscapeStringSubstitute("shy", "­");
+	addEscapeStringSubstitute("macr", "¯");
 
-	addEscapeStringSubstitute("micro",  "\xB5");
-	addEscapeStringSubstitute("middot", "\xB7");
-	addEscapeStringSubstitute("cedil",  "\xB8");
-	addEscapeStringSubstitute("ordm",   "\xBA");
-	addEscapeStringSubstitute("times",  "\xD7");
-	addEscapeStringSubstitute("divide", "\xF7");
-	addEscapeStringSubstitute("oslash", "\xF8");
+	addEscapeStringSubstitute("micro",  "µ");
+	addEscapeStringSubstitute("middot", "·");
+	addEscapeStringSubstitute("cedil",  "¸");
+	addEscapeStringSubstitute("ordm",   "º");
+	addEscapeStringSubstitute("times",  "×");
+	addEscapeStringSubstitute("divide", "÷");
+	addEscapeStringSubstitute("oslash", "ø");
 
 	setTokenCaseSensitive(true);
 
@@ -211,11 +211,12 @@ char ThMLRTF::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 
 
 ThMLRTF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
-	this->SecHead = false;
+	isBiblicalText = false;
+	inSecHead = false;
 	XMLTag startTag = "";
 	if (module) {
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}	
 }
 
@@ -253,16 +254,10 @@ bool ThMLRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *us
 				if (!tag.isEmpty()) {
 					SWBuf type = tag.getAttribute("type");
 					SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
-					VerseKey *vkey = NULL;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {	}
-					if (vkey) {
+					if (u->vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-						buf.appendFormatted("{\\super <a href=\"\">*%c%i.%s</a>} ", ch, vkey->getVerse(), footnoteNumber.c_str());
+						buf.appendFormatted("{\\super <a href=\"\">*%c%i.%s</a>} ", ch, u->vkey->getVerse(), footnoteNumber.c_str());
 					}
 					u->suspendTextPassThru = true;
 				}
@@ -280,7 +275,7 @@ bool ThMLRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *us
 				}
 			}
 			if (tag.isEndTag()) {	//	</scripRef>
-				if (!u->BiblicalText) {
+				if (!u->isBiblicalText) {
 					SWBuf refList = u->startTag.getAttribute("passage");
 					if (!refList.length())
 						refList = u->lastTextNode;
@@ -292,15 +287,9 @@ bool ThMLRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *us
 				}
 				else {
 					SWBuf footnoteNumber = u->startTag.getAttribute("swordFootnote");
-					VerseKey *vkey = NULL;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {}
-					if (vkey) {
+					if (u->vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
-						buf.appendFormatted("{\\super <a href=\"\">*x%i.%s</a>} ", vkey->getVerse(), footnoteNumber.c_str());
+						buf.appendFormatted("{\\super <a href=\"\">*x%i.%s</a>} ", u->vkey->getVerse(), footnoteNumber.c_str());
 					}
 				}
 
@@ -310,17 +299,17 @@ bool ThMLRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *us
 		}
 
 		else if (tag.getName() && !strcmp(tag.getName(), "div")) {
-			if (tag.isEndTag() && u->SecHead) {
+			if (tag.isEndTag() && u->inSecHead) {
 				buf += "\\par}";
-				u->SecHead = false;
+				u->inSecHead = false;
 			}
 			else if (tag.getAttribute("class")) {
 				if (!stricmp(tag.getAttribute("class"), "sechead")) {
-					u->SecHead = true;
+					u->inSecHead = true;
 					buf += "{\\par\\i1\\b1 ";
 				}
 				else if (!stricmp(tag.getAttribute("class"), "title")) {
-					u->SecHead = true;
+					u->inSecHead = true;
 					buf += "{\\par\\i1\\b1 ";
 				}
 			}

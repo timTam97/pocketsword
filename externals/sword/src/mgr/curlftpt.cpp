@@ -2,7 +2,7 @@
  *
  *  curlftpt.cpp -	CURLFTPTransport
  *
- * $Id: curlftpt.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: curlftpt.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -22,7 +22,7 @@
 
 #include <curlftpt.h>
 
-#include <fcntl.h>
+#include <filemgr.h>
 
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -36,7 +36,7 @@ namespace {
 
 	struct FtpFile {
 		const char *filename;
-		FILE *stream;
+		int fd;
 		SWBuf *destBuf;
 	};
 
@@ -55,20 +55,20 @@ namespace {
 
 
 	static int my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-		struct FtpFile *out=(struct FtpFile *)stream;
-		if (out && !out->stream && !out->destBuf) {
+		struct FtpFile *out = (struct FtpFile *)stream;
+		if (out && !out->fd && !out->destBuf) {
 			/* open file for writing */
-			out->stream=fopen(out->filename, "wb");
-			if (!out->stream)
+			out->fd = FileMgr::createPathAndFile(out->filename);
+			if (out->fd < 0)
 				return -1; /* failure, can't open file to write */
 		}
 		if (out->destBuf) {
-			int s = out->destBuf->size();
+			int s = (int)out->destBuf->size();
 			out->destBuf->size(s+(size*nmemb));
 			memcpy(out->destBuf->getRawData()+s, buffer, size*nmemb);
-			return nmemb;
+			return (int)nmemb;
 		}
-		return fwrite(buffer, size, nmemb, out->stream);
+		return (int)FileMgr::write(out->fd, buffer, size * nmemb);
 	}
 
 
@@ -81,7 +81,7 @@ namespace {
 	static int my_fprogress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow) {
 		if (clientp) {
 			MyProgressData *pd = (MyProgressData *)clientp;
-			SWLog::getSystemLog()->logDebug("CURLFTPTransport report progress: totalSize: %ld; xfered: %ld\n", (long)dltotal, (long)dlnow);
+SWLOGD("CURLFTPTransport report progress: totalSize: %ld; xfered: %ld\n", (long)dltotal, (long)dlnow);
 			if (pd->sr) {
 				if (dltotal < 0) dltotal = 0;
 				if (dlnow < 0) dlnow = 0;
@@ -117,7 +117,7 @@ namespace {
 		SWBuf text;
 		text.size(size);
 		memcpy(text.getRawData(), data, size);
-		SWLog::getSystemLog()->logDebug("CURLFTPTransport: %s: %s", header.c_str(), text.c_str());
+SWLOGD("CURLFTPTransport: %s: %s", header.c_str(), text.c_str());
 		return 0;
 	}
 }
@@ -155,14 +155,21 @@ char CURLFTPTransport::getURL(const char *destPath, const char *sourceURL, SWBuf
 		curl_easy_setopt(session, CURLOPT_NOPROGRESS, 0);
 		curl_easy_setopt(session, CURLOPT_PROGRESSDATA, &pd);
 		curl_easy_setopt(session, CURLOPT_PROGRESSFUNCTION, my_fprogress);
+
+
 		curl_easy_setopt(session, CURLOPT_DEBUGFUNCTION, my_trace);
 		/* Set a pointer to our struct to pass to the callback */
 		curl_easy_setopt(session, CURLOPT_FILE, &ftpfile);
 
 		/* Switch on full protocol/debug output */
 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
-		curl_easy_setopt(session, CURLOPT_CONNECTTIMEOUT, 45);
-		
+#ifndef OLDCURL
+		curl_easy_setopt(session, CURLOPT_CONNECTTIMEOUT_MS, timeoutMillis);
+		curl_easy_setopt(session, CURLOPT_TIMEOUT_MS, timeoutMillis);
+#else
+		curl_easy_setopt(session, CURLOPT_CONNECTTIMEOUT, timeoutMillis/1000);
+		curl_easy_setopt(session, CURLOPT_TIMEOUT, timeoutMillis/1000);
+#endif
 		/* FTP connection settings */
 
 #if (LIBCURL_VERSION_MAJOR > 7) || \
@@ -173,26 +180,36 @@ char CURLFTPTransport::getURL(const char *destPath, const char *sourceURL, SWBuf
 
 #ifdef EPRT_AVAILABLE
 		curl_easy_setopt(session, CURLOPT_FTP_USE_EPRT, 0);
-		SWLog::getSystemLog()->logDebug("***** using CURLOPT_FTP_USE_EPRT\n");
+SWLOGD("***** using CURLOPT_FTP_USE_EPRT\n");
 #endif
 
-		
-		SWLog::getSystemLog()->logDebug("***** About to perform curl easy action. \n");
-		SWLog::getSystemLog()->logDebug("***** destPath: %s \n", destPath);
-		SWLog::getSystemLog()->logDebug("***** sourceURL: %s \n", sourceURL);
+
+SWLOGD("***** About to perform curl easy action. \n");
+SWLOGD("***** destPath: %s \n", destPath);
+SWLOGD("***** sourceURL: %s \n", sourceURL);
 		res = curl_easy_perform(session);
-		SWLog::getSystemLog()->logDebug("***** Finished performing curl easy action. \n");
+SWLOGD("***** Finished performing curl easy action. \n");
 
 		// it seems CURL tries to use this option data later for some reason, so we unset here
 		curl_easy_setopt(session, CURLOPT_PROGRESSDATA, (void*)NULL);
 
-		if(CURLE_OK != res) {
-			retVal = -1;
+		if (CURLE_OK != res) {
+			if (CURLE_OPERATION_TIMEDOUT == res
+// older CURL doesn't define this
+#ifdef CURLE_FTP_ACCEPT_TIMEOUT
+	               || CURLE_FTP_ACCEPT_TIMEOUT == res
+#endif
+               ) {
+				retVal = -2;
+			}
+			else {
+				retVal = -1;
+			}
 		}
 	}
 
-	if (ftpfile.stream)
-		fclose(ftpfile.stream); /* close the local file */
+	if (ftpfile.fd > 0)
+		FileMgr::closeFile(ftpfile.fd); /* close the local file */
 
 	return retVal;
 }

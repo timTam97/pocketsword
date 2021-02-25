@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  scsuutf8.h - SWFilter descendant to convert a SCSU character to UTF-8
+ * scsuutf8.h - class SCSUUTF8: an Encoding filter which converts SCSU to UTF8
  *
- * $Id: scsuutf8.h 3083 2014-03-06 08:13:10Z chrislit $
+ * $Id: scsuutf8.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -25,16 +25,38 @@
 
 #include <swfilter.h>
 
+#ifdef _ICU_
+#include <unicode/utypes.h>
+#include <unicode/ucnv.h>
+#include <unicode/uchar.h>
+#endif
+
 SWORD_NAMESPACE_START
 
 /** This filter converts SCSU compressed (encoded) text to UTF-8
  */
 class SWDLLEXPORT SCSUUTF8 : public SWFilter {
-  unsigned long c, d;
-  unsigned char* UTF8Output(unsigned long, unsigned char* text);
-  
+private:
+#ifdef _ICU_
+	UConverter* scsuConv;
+	UConverter* utf8Conv;
+	UErrorCode err;
+#else
+	// without ICU, we'll attempt to use Roman Czyborra's SCSU decoder code
+	unsigned char active;
+	bool mode;
+	unsigned long c, d;
+
+	static unsigned short start[8];
+	static unsigned short slide[8];
+	static unsigned short win[256];
+
+	int UTF8Output(unsigned long, SWBuf* utf8Buf);
+#endif
+
 public:
 	SCSUUTF8();
+	~SCSUUTF8();
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
 };
 

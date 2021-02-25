@@ -2,7 +2,7 @@
  *
  *  gbfxhtml.cpp -	GBF to classed XHTML
  *
- * $Id: gbfxhtml.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfxhtml.cpp 3726 2020-04-26 17:53:51Z scribe $
  *
  * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -171,19 +171,20 @@ bool GBFXHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			SWBuf type = tag.getAttribute("type");
 			SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
 			SWBuf noteName = tag.getAttribute("n");
-			VerseKey *vkey = NULL;
-			// see if we have a VerseKey * or descendant
-			SWTRY {
-				vkey = SWDYNAMIC_CAST(VerseKey, u->key);
+			SWBuf classExtras = "";
+
+			if (type.size()) {
+				classExtras.append(" ").append(type);
 			}
-			SWCATCH ( ... ) {	}
-			if (vkey) {
+
+			if (u->vkey) {
 				// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
 				//char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=n&value=%s&module=%s&passage=%s\"><small><sup class=\"n\">*n%s</sup></small></a> ", 
+				buf.appendFormatted("<a class=\"noteMarker%s\" href=\"passagestudy.jsp?action=showNote&type=n&value=%s&module=%s&passage=%s\"><small><sup class=\"n\">*n%s</sup></small></a> ", 
+					classExtras.c_str(),
 					URL::encode(footnoteNumber.c_str()).c_str(),
 					URL::encode(u->version.c_str()).c_str(), 
-					URL::encode(vkey->getText()).c_str(), 
+					URL::encode(u->vkey->getText()).c_str(), 
 					(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str(): ""));
 			}
 			u->suspendTextPassThru = true;

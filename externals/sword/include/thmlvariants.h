@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlvariants.h -	Implementation of ThMLVariants
+ * thmlvariants.h -	class ThMLVariants: an OptionFilter to handle variants
+ * 			in modules marked up in ThML
  *
- * $Id: thmlvariants.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: thmlvariants.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

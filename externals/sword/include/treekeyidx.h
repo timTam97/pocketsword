@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  treekeyidx.h -	code for class 'TreeKeyIdx'
+ * treekeyidx.h -	class TreeKeyIdx: a TreeKey implementation which
+ * 			grabs its structure from an index data file
  *
- * $Id: treekeyidx.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: treekeyidx.h 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,25 +34,24 @@ class FileDesc;
 
 /**
  * Class TreeKeyIdx
- * The TreeKey implementation used for all tree-based modules in Sword, such as GenBooks.
+ * The TreeKey implementation used for tree-based modules in SWORD, such as GenBooks.
  */
 class SWDLLEXPORT TreeKeyIdx : public TreeKey {
 		
+private:
 	class TreeNode {
 	public:
 		TreeNode();
 		~TreeNode();
 		void clear();
-		__s32 offset;
-		__s32 parent;
-		__s32 next;
-		__s32 firstChild;
+		SW_s32 offset;
+		SW_s32 parent;
+		SW_s32 next;
+		SW_s32 firstChild;
 		char *name;
-		__u16 dsize;
+		SW_u16 dsize;
 		char *userData;
 	} currentNode;
-
-	static SWClass classdef;
 
 	char *path;
 
@@ -64,7 +64,6 @@ class SWDLLEXPORT TreeKeyIdx : public TreeKey {
 	char getTreeNodeFromIdxOffset(long ioffset, TreeNode *node) const;
 	void saveTreeNode(TreeNode *node);
 	void saveTreeNodeOffsets(TreeNode *node);
-
 
 public:
 	TreeKeyIdx(const TreeKeyIdx &ikey);
@@ -113,7 +112,7 @@ public:
 	virtual void setText(const char *ikey);
 	virtual void setPosition(SW_POSITION p);
 	virtual const char *getText() const;
-	virtual int _compare (const TreeKeyIdx & ikey);
+	virtual int _compare(const TreeKeyIdx & ikey);
 	virtual int compare(const SWKey &ikey);
 	virtual void decrement(int steps = 1);
 	virtual void increment(int steps = 1);

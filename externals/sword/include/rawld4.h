@@ -1,9 +1,10 @@
 /******************************************************************************
  *
- *  rawld4.cpp -	code for class 'RawLD4'- a module that reads raw
- *			lexicon and dictionary files: *.dat *.idx
+ * rawld4.cpp -		class RawLD4: a module driver that supports
+ *			lexicon and dictionary files
+ *			with entry sizes requiring 4 bytes
  *
- * $Id: rawld4.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawld4.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,11 +33,11 @@
 SWORD_NAMESPACE_START
 
 class SWDLLEXPORT RawLD4 : public RawStr4, public SWLD {
+
+private:
 	char getEntry(long away = 0) const;
 
 public:
-
-
 	RawLD4(const char *ipath, const char *iname = 0, const char *idesc = 0,
 			SWDisplay *idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN,
 			SWTextDirection dir = DIRECTION_LTR,

@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  gbfhtml.h -	Implementation of GBFHTML
+ * gbfhtml.h -	class GBFHTML: a RenderFilter for rendering HTML from
+ * 		modules marked up in GBF
  *
- * $Id: gbfhtml.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfhtml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,15 +28,17 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts GBF  text to HTML text 
+/** this filter converts GBF text to HTML text 
  */
 class SWDLLEXPORT GBFHTML : public SWBasicFilter {
 protected:
+
 	class MyUserData : public BasicFilterUserData {
 	public:
 		MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {}
 		bool hasFootnotePreTag;
 	};
+
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}

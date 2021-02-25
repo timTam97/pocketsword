@@ -1,10 +1,9 @@
 /******************************************************************************
  *
- *  rawgenbook.h -	code for class 'RawGenBook'- a module that reads raw
- *			text files:
- *			ot and nt using indexs ??.bks ??.cps ??.vss
+ * rawgenbook.h -	class RawGenBook- a module driver that support
+ *			Generic Books uncompressed
  *
- * $Id: rawgenbook.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawgenbook.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -34,13 +33,13 @@ SWORD_NAMESPACE_START
 class FileDesc;
 
 class SWDLLEXPORT RawGenBook : public SWGenBook {
+
+private:
 	char *path;
 	FileDesc *bdtfd;
 	bool verseKey;
 
 public:
-  
-    
 	RawGenBook(const char *ipath, const char *iname = 0, const char *idesc = 0,
 			SWDisplay * idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN,
 			SWTextDirection dir = DIRECTION_LTR,

@@ -1,9 +1,11 @@
 /******************************************************************************
  *
- *  stringmgr.h -	A class which provides string handling functions which
- *			can be reimplemented by frontends
+ * stringmgr.h -	class StringMgr: base of string functions. Can be
+ * 			subclassed and methods re-implemented your favorite
+ * 			String library with Unicode support, e.g, ICU,
+ * 			Qt, Java.
  *
- * $Id: stringmgr.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: stringmgr.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,17 +33,19 @@
 
 SWORD_NAMESPACE_START
 
-/** StringMgr is a way to provide UTf8 handling by the Sword frontend
- * Each platform, if it's up-to-date, should provide functions to handle unicode and utf8. This class makes it possible to implement Unicode support on the user-side and not in Sword itself.
+/** StringMgr provide UTF8 handling
+ * This class makes it possible to implement Unicode support on the client-side and not in SWORD itself.
  */
 class SWDLLEXPORT StringMgr {
+private:
+	static StringMgr *systemStringMgr;
 public:
 
 	/** Sets the global StringMgr handle
 	* @param newStringMgr The new global StringMgr. This pointer will be deleted by this StringMgr
 	*/	
 	static void setSystemStringMgr(StringMgr *newStringMgr);
-   
+
 	/** Returns the global StringMgr handle
 	* @return The global string handle
 	*/
@@ -61,7 +65,18 @@ public:
 	* @return text buffer (only for convenience)
 	*/	
 	virtual char *upperUTF8(char *text, unsigned int max = 0) const;
-   
+	/** Converts the param to a lower case Utf8 string
+	* @param text The text encoded in utf8 which should be turned into an upper case string
+	* @param max Max buffer size
+	* @return text buffer (only for convenience)
+	*/	
+	virtual char *lowerUTF8(char *text, unsigned int max = 0) const;
+
+	virtual bool isUpper(SW_u32 character) const;
+	virtual bool isLower(SW_u32 character) const;
+	virtual bool isDigit(SW_u32 character) const;
+	virtual bool isAlpha(SW_u32 character) const;
+
 	/** Converts the param to an uppercase latin1 string
 	* @param text The text encoded in latin1 which should be turned into an upper case string
 	* @param max Max buffer size
@@ -76,44 +91,34 @@ protected:
 	/** Default constructor. Protected to make instances on user side impossible, because this is a Singleton
 	*/		
 	StringMgr();
-   
+
 	/** Copy constructor
 	*/	
 	StringMgr(const StringMgr &);
-   
+
 	/** Destructor
 	*/	
 	virtual ~StringMgr();
 	
 	virtual bool supportsUnicode() const;
-
-private:
-	static StringMgr *systemStringMgr;
 };
+
 
 inline char *toupperstr(char *t, unsigned int max = 0) {
 	return StringMgr::getSystemStringMgr()->upperUTF8(t, max);
 }
+
+inline char *tolowerstr(char *t, unsigned int max = 0) {
+	return StringMgr::getSystemStringMgr()->lowerUTF8(t, max);
+}
 	
+/*
+ * @deprecated - SWBuf assumed to be UTF-8 now.
+ */
 inline char *toupperstr_utf8(char *t, unsigned int max = 0) {
 	return StringMgr::getSystemStringMgr()->upperUTF8(t, max);
 }
-	
-/**
- * Converts an SWBuf filled with UTF-8 to upper case
- *
- * @param b SWBuf to change to upper case
- * 
- * @return b for convenience
- */
-inline SWBuf &toupperstr(SWBuf &b) {
-	char *utf8 = 0;
-	stdstr(&utf8, b.c_str(), 2);
-	toupperstr(utf8, (unsigned int)strlen(utf8)*2);
-	b = utf8;
-	delete [] utf8;
-	return b;
-}
+
 
 SWORD_NAMESPACE_END
 

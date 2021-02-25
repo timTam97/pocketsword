@@ -2,7 +2,7 @@
  *
  *  swmgr.cpp -	used to interact with an install base of sword modules
  *
- * $Id: swmgr.cpp 3138 2014-03-17 10:10:26Z chrislit $
+ * $Id: swmgr.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 1998-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -132,6 +132,33 @@ const char *SWMgr::MODTYPE_LEXDICTS = "Lexicons / Dictionaries";
 const char *SWMgr::MODTYPE_GENBOOKS = "Generic Books";
 const char *SWMgr::MODTYPE_DAILYDEVOS = "Daily Devotional";
 
+namespace {
+	void setSystemLogLevel(SWConfig *sysConf, const char *logLevel = 0) {
+		SWBuf logLevelString = logLevel;
+		// kindof cheese. we should probably pass this in.
+		SWBuf logLocation = (sysConf ? "[SWORD] section of sword.conf" : "SWORD_LOGLEVEL");
+		if (sysConf) {
+			ConfigEntMap::iterator entry;
+			if ((entry = sysConf->getSection("SWORD").find("LogLevel")) != sysConf->getSection("SWORD").end()) {
+				logLevelString = entry->second;
+			}
+		}
+		if (logLevelString.length()) {
+			int logLevel =
+					logLevelString == "ERROR"     ? SWLog::LOG_ERROR:
+					logLevelString == "WARN"      ? SWLog::LOG_WARN:
+					logLevelString == "INFO"      ? SWLog::LOG_INFO:
+					logLevelString == "TIMEDINFO" ? SWLog::LOG_TIMEDINFO:
+					logLevelString == "DEBUG"     ? SWLog::LOG_DEBUG:
+					-1;
+			if (logLevel < 0) SWLog::getSystemLog()->logError("Invalid LogLevel found in %s: LogLevel: %s", logLocation.c_str(), logLevelString.c_str());
+			else {
+				SWLog::getSystemLog()->setLogLevel(logLevel);
+				SWLOGTI("Setting log level from %s to %s", logLocation.c_str(), logLevelString.c_str());
+			}
+		}
+	}
+}
 
 void SWMgr::init() {
 	SWOptionFilter *tmpFilter = 0;
@@ -300,24 +327,11 @@ void SWMgr::init() {
 }
 
 
-SWBuf SWMgr::getHomeDir() {
-
-	// figure out 'home' directory for app data
-	SWBuf homeDir = getenv("HOME");
-	if (!homeDir.length()) {
-		// silly windows
-		homeDir = getenv("APPDATA");
-	}
-	if (homeDir.length()) {
-		if ((homeDir[homeDir.length()-1] != '\\') && (homeDir[homeDir.length()-1] != '/')) {
-			homeDir += "/";
-		}
-	}
-
-	return homeDir;
-}
-
-
+// TODO: because we're still calling deprecated virtual Load. Removed in 2.0
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 void SWMgr::commonInit(SWConfig *iconfig, SWConfig *isysconfig, bool autoload, SWFilterMgr *filterMgr, bool multiMod) {
 
 	init();
@@ -341,6 +355,9 @@ void SWMgr::commonInit(SWConfig *iconfig, SWConfig *isysconfig, bool autoload, S
 	if (autoload)
 		Load();
 }
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 
 SWMgr::SWMgr(SWFilterMgr *filterMgr, bool multiMod) {
@@ -353,6 +370,10 @@ SWMgr::SWMgr(SWConfig *iconfig, SWConfig *isysconfig, bool autoload, SWFilterMgr
 }
 
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 SWMgr::SWMgr(const char *iConfigPath, bool autoload, SWFilterMgr *filterMgr, bool multiMod, bool augmentHome) {
 
 	init();
@@ -367,21 +388,24 @@ SWMgr::SWMgr(const char *iConfigPath, bool autoload, SWFilterMgr *filterMgr, boo
 	this->augmentHome = augmentHome;
 
 	path = iConfigPath;
-	int len = path.length();
+	int len = (int)path.length();
 	if ((len < 1) || ((iConfigPath[len-1] != '\\') && (iConfigPath[len-1] != '/')))
 		path += "/";
+	SWLOGTI("Checking at provided path: %s...", path.c_str());
 	if (FileMgr::existsFile(path.c_str(), "mods.conf")) {
 		stdstr(&prefixPath, path.c_str());
 		path += "mods.conf";
 		stdstr(&configPath, path.c_str());
 	}
+	else if (FileMgr::existsDir(path.c_str(), "mods.d")) {
+		SWLOGTI("Found mods.d/");
+		stdstr(&prefixPath, path.c_str());
+		path += "mods.d";
+		stdstr(&configPath, path.c_str());
+		configType = 1;
+	}
 	else {
-		if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-			stdstr(&prefixPath, path.c_str());
-			path += "mods.d";
-			stdstr(&configPath, path.c_str());
-			configType = 1;
-		}
+		SWLOGTI("Config not found at provided path.");
 	}
 
 	config = 0;
@@ -390,11 +414,14 @@ SWMgr::SWMgr(const char *iConfigPath, bool autoload, SWFilterMgr *filterMgr, boo
 	if (autoload && configPath)
 		Load();
 }
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 
 SWMgr::~SWMgr() {
 
-	DeleteMods();
+	deleteAllModules();
 
 	for (FilterList::iterator it = cleanupFilters.begin(); it != cleanupFilters.end(); it++)
 		delete (*it);
@@ -420,36 +447,47 @@ SWMgr::~SWMgr() {
 
 
 void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, std::list<SWBuf> *augPaths, SWConfig **providedSysConf) {
+	static bool setLogLevel = false;
 	SWBuf path;
 	SWBuf sysConfPath;
 	ConfigEntMap::iterator entry;
 	ConfigEntMap::iterator lastEntry;
+
+	if (!setLogLevel) {
+		SWBuf envLogLevel = FileMgr::getEnvValue("SWORD_LOGLEVEL");
+		if (envLogLevel.length()) {
+			setSystemLogLevel(0, envLogLevel);
+			setLogLevel = true;
+		}
+	}
 
 	SWConfig *sysConf = 0;
 	SWBuf sysConfDataPath = "";
 
 	*configType = 0;
 
-	SWBuf homeDir = getHomeDir();
+	SWBuf homeDir = FileMgr::getSystemFileMgr()->getHomeDir();
 
 	// check for a sysConf passed in to us
-	SWLog::getSystemLog()->logDebug("Checking for provided SWConfig(\"sword.conf\")...");
+	SWLOGTI("Checking for provided SWConfig(\"sword.conf\")...");
 	if (providedSysConf && *providedSysConf) {
 		sysConf = *providedSysConf;
-		SWLog::getSystemLog()->logDebug("found.");
+		SWLOGTI("found.");
+		if (!setLogLevel) { setSystemLogLevel(sysConf); setLogLevel = true; }
 	}
 
 	// if we haven't been given our datapath in a sysconf, we need to track it down
 	if (!sysConf) {
 		// check working directory
-		SWLog::getSystemLog()->logDebug("Checking working directory for sword.conf...");
+		SWLOGTI("Checking working directory for sword.conf...");
 		if (FileMgr::existsFile(".", "sword.conf")) {
-			SWLog::getSystemLog()->logDebug("Overriding any systemwide or ~/.sword/ sword.conf with one found in current directory.");
+			SWLOGTI("Overriding any systemwide or ~/.sword/ sword.conf with one found in current directory.");
 			sysConfPath = "./sword.conf";
 			sysConf = new SWConfig(sysConfPath);
-			if ((entry = sysConf->Sections["Install"].find("DataPath")) != sysConf->Sections["Install"].end()) {
+			if ((entry = sysConf->getSection("Install").find("DataPath")) != sysConf->getSection("Install").end()) {
 				sysConfDataPath = (*entry).second;
 			}
+			if (!setLogLevel) { setSystemLogLevel(sysConf); setLogLevel = true; }
 			if (providedSysConf) {
 				*providedSysConf = sysConf;
 			}
@@ -459,17 +497,17 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 			}
 		}
 		if (!sysConfDataPath.size()) {
-			SWLog::getSystemLog()->logDebug("Checking working directory for mods.conf...");
+			SWLOGTI("Checking working directory for mods.conf...");
 			if (FileMgr::existsFile(".", "mods.conf")) {
-				SWLog::getSystemLog()->logDebug("found.");
+				SWLOGTI("found.");
 				stdstr(prefixPath, "./");
 				stdstr(configPath, "./mods.conf");
 				return;
 			}
 
-			SWLog::getSystemLog()->logDebug("Checking working directory for mods.d...");
+			SWLOGTI("Checking working directory for mods.d...");
 			if (FileMgr::existsDir(".", "mods.d")) {
-				SWLog::getSystemLog()->logDebug("found.");
+				SWLOGTI("found.");
 				stdstr(prefixPath, "./");
 				stdstr(configPath, "./mods.d");
 				*configType = 1;
@@ -477,9 +515,9 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 			}
 
 			// check working directory ../library/
-			SWLog::getSystemLog()->logDebug("Checking working directory ../library/ for mods.d...");
+			SWLOGTI("Checking working directory ../library/ for mods.d...");
 			if (FileMgr::existsDir("../library", "mods.d")) {
-				SWLog::getSystemLog()->logDebug("found.");
+				SWLOGTI("found.");
 				stdstr(prefixPath, "../library/");
 				stdstr(configPath, "../library/mods.d");
 				*configType = 1;
@@ -487,28 +525,28 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 			}
 
 			// check environment variable SWORD_PATH
-			SWLog::getSystemLog()->logDebug("Checking $SWORD_PATH...");
+			SWLOGTI("Checking $SWORD_PATH...");
 
-			SWBuf envsworddir = getenv("SWORD_PATH");
+			SWBuf envsworddir = FileMgr::getEnvValue("SWORD_PATH");
 			if (envsworddir.length()) {
 				
-				SWLog::getSystemLog()->logDebug("found (%s).", envsworddir.c_str());
+				SWLOGTI("found (%s).", envsworddir.c_str());
 				path = envsworddir;
 				if ((envsworddir[envsworddir.length()-1] != '\\') && (envsworddir[envsworddir.length()-1] != '/'))
 					path += "/";
 
-				SWLog::getSystemLog()->logDebug("Checking $SWORD_PATH for mods.conf...");
+				SWLOGTI("Checking $SWORD_PATH for mods.conf...");
 				if (FileMgr::existsFile(path.c_str(), "mods.conf")) {
-					SWLog::getSystemLog()->logDebug("found.");
+					SWLOGTI("found.");
 					stdstr(prefixPath, path.c_str());
 					path += "mods.conf";
 					stdstr(configPath, path.c_str());
 					return;
 				}
 
-				SWLog::getSystemLog()->logDebug("Checking $SWORD_PATH for mods.d...");
+				SWLOGTI("Checking $SWORD_PATH for mods.d...");
 				if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-					SWLog::getSystemLog()->logDebug("found.");
+					SWLOGTI("found.");
 					stdstr(prefixPath, path.c_str());
 					path += "mods.d";
 					stdstr(configPath, path.c_str());
@@ -520,14 +558,14 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 
 			// check for systemwide globalConfPath
 
-			SWLog::getSystemLog()->logDebug("Parsing %s...", globalConfPath);
+			SWLOGTI("Parsing %s...", globalConfPath);
 			char *globPaths = 0;
 			char *gfp;
 			stdstr(&globPaths, globalConfPath);
 			for (gfp = strtok(globPaths, ":"); gfp; gfp = strtok(0, ":")) {
-				SWLog::getSystemLog()->logDebug("Checking for %s...", gfp);
+				SWLOGTI("Checking for %s...", gfp);
 				if (FileMgr::existsFile(gfp)) {
-					SWLog::getSystemLog()->logDebug("found.");
+					SWLOGTI("found.");
 					break;
 				}
 			}
@@ -539,14 +577,14 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 				SWBuf tryPath = homeDir;
 				tryPath += ".sword/sword.conf";
 				if (FileMgr::existsFile(tryPath)) {
-					SWLog::getSystemLog()->logDebug("Overriding any systemwide sword.conf with one found in users home directory (%s)", tryPath.c_str());
+					SWLOGTI("Overriding any systemwide sword.conf with one found in users home directory (%s)", tryPath.c_str());
 					sysConfPath = tryPath;
 				}
 				else {
 					SWBuf tryPath = homeDir;
 					tryPath += "sword/sword.conf";
 					if (FileMgr::existsFile(tryPath)) {
-						SWLog::getSystemLog()->logDebug("Overriding any systemwide sword.conf with one found in users home directory (%s)", tryPath.c_str());
+						SWLOGTI("Overriding any systemwide sword.conf with one found in users home directory (%s)", tryPath.c_str());
 						sysConfPath = tryPath;
 					}
 				}
@@ -559,7 +597,8 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 	}
 
 	if (sysConf) {
-		if ((entry = sysConf->Sections["Install"].find("DataPath")) != sysConf->Sections["Install"].end()) {
+		if (!setLogLevel) { setSystemLogLevel(sysConf); setLogLevel = true; }
+		if ((entry = sysConf->getSection("Install").find("DataPath")) != sysConf->getSection("Install").end()) {
 			sysConfDataPath = (*entry).second;
 		}
 		if (sysConfDataPath.size()) {
@@ -567,21 +606,21 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 				sysConfDataPath += "/";
 
 			path = sysConfDataPath;
-			SWLog::getSystemLog()->logDebug("DataPath in %s is set to %s.", sysConfPath.c_str(), path.c_str());
-			SWLog::getSystemLog()->logDebug("Checking for mods.conf in DataPath...");
+			SWLOGTI("DataPath in %s is set to %s.", sysConfPath.c_str(), path.c_str());
+			SWLOGTI("Checking for mods.conf in DataPath...");
 			
 			if (FileMgr::existsFile(path.c_str(), "mods.conf")) {
-				SWLog::getSystemLog()->logDebug("found.");
+				SWLOGTI("found.");
 				stdstr(prefixPath, path.c_str());
 				path += "mods.conf";
 				stdstr(configPath, path.c_str());
 				*configType = 1;
 			}
 
-			SWLog::getSystemLog()->logDebug("Checking for mods.d in DataPath...");
+			SWLOGTI("Checking for mods.d in DataPath...");
 
 			if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-				SWLog::getSystemLog()->logDebug("found.");
+				SWLOGTI("found.");
 				stdstr(prefixPath, path.c_str());
 				path += "mods.d";
 				stdstr(configPath, path.c_str());
@@ -592,10 +631,11 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 
 	// do some extra processing of sysConf if we have one
 	if (sysConf) {
+		if (!setLogLevel) { setSystemLogLevel(sysConf); setLogLevel = true; }
 		if (augPaths) {
 			augPaths->clear();
-			entry     = sysConf->Sections["Install"].lower_bound("AugmentPath");
-			lastEntry = sysConf->Sections["Install"].upper_bound("AugmentPath");
+			entry     = sysConf->getSection("Install").lower_bound("AugmentPath");
+			lastEntry = sysConf->getSection("Install").upper_bound("AugmentPath");
 			for (;entry != lastEntry; entry++) {
 				path = entry->second;
 				if ((entry->second.c_str()[strlen(entry->second.c_str())-1] != '\\') && (entry->second.c_str()[strlen(entry->second.c_str())-1] != '/'))
@@ -618,19 +658,19 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 	// for various flavors of windoze...
 	// check %ALLUSERSPROFILE%/Application Data/sword/
 
-	SWLog::getSystemLog()->logDebug("Checking $ALLUSERSPROFILE/Application Data/sword/...");
+	SWLOGTI("Checking $ALLUSERSPROFILE/Application Data/sword/...");
 
-	SWBuf envallusersdir  = getenv("ALLUSERSPROFILE");
+	SWBuf envallusersdir = FileMgr::getEnvValue("ALLUSERSPROFILE");
 	if (envallusersdir.length()) {
-		SWLog::getSystemLog()->logDebug("found (%s).", envallusersdir.c_str());
+		SWLOGTI("found (%s).", envallusersdir.c_str());
 		path = envallusersdir;
 		if ((!path.endsWith("\\")) && (!path.endsWith("/")))
 			path += "/";
 
 		path += "Application Data/sword/";
-		SWLog::getSystemLog()->logDebug("Checking %s for mods.d...", path.c_str());
+		SWLOGTI("Checking %s for mods.d...", path.c_str());
 		if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-			SWLog::getSystemLog()->logDebug("found.");
+			SWLOGTI("found.");
 			stdstr(prefixPath, path.c_str());
 			path += "mods.d";
 			stdstr(configPath, path.c_str());
@@ -642,18 +682,18 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 	// for Mac OSX...
 	// check $HOME/Library/Application Support/Sword/
 
-	SWLog::getSystemLog()->logDebug("Checking $HOME/Library/Application Support/Sword/...");
+	SWLOGTI("Checking $HOME/Library/Application Support/Sword/...");
 
-	SWBuf pathCheck = getHomeDir();
+	SWBuf pathCheck = FileMgr::getSystemFileMgr()->getHomeDir();
 	if (pathCheck.length()) {
-		SWLog::getSystemLog()->logDebug("found (%s).", pathCheck.c_str());
+		SWLOGTI("found (%s).", pathCheck.c_str());
 		path = pathCheck;
 		if ((!path.endsWith("\\")) && (!path.endsWith("/")))
 			path += "/";
 
-		SWLog::getSystemLog()->logDebug("Checking %s for mods.d...", path.c_str());
+		SWLOGTI("Checking %s for mods.d...", path.c_str());
 		if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-			SWLog::getSystemLog()->logDebug("found.");
+			SWLOGTI("found.");
 			stdstr(prefixPath, path.c_str());
 			path += "mods.d";
 			stdstr(configPath, path.c_str());
@@ -665,23 +705,23 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 	// FINALLY CHECK PERSONAL HOME DIRECTORY LOCATIONS
 	// check ~/.sword/
 
-	SWLog::getSystemLog()->logDebug("Checking home directory for ~/.sword...");
+	SWLOGTI("Checking home directory for ~/.sword...");
 
 	if (homeDir.length()) {
 		path = homeDir;
 		path += ".sword/";
-		SWLog::getSystemLog()->logDebug("  Checking for %smods.conf...", path.c_str());
+		SWLOGTI("  Checking for %smods.conf...", path.c_str());
 		if (FileMgr::existsFile(path.c_str(), "mods.conf")) {
-			SWLog::getSystemLog()->logDebug("found.");
+			SWLOGTI("found.");
 			stdstr(prefixPath, path.c_str());
 			path += "mods.conf";
 			stdstr(configPath, path.c_str());
 			return;
 		}
 
-		SWLog::getSystemLog()->logDebug("  Checking for %smods.d...", path.c_str());
+		SWLOGTI("  Checking for %smods.d...", path.c_str());
 		if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-			SWLog::getSystemLog()->logDebug("found.");
+			SWLOGTI("found.");
 			stdstr(prefixPath, path.c_str());
 			path += "mods.d";
 			stdstr(configPath, path.c_str());
@@ -691,9 +731,9 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 
 		path = homeDir;
 		path += "sword/";
-		SWLog::getSystemLog()->logDebug("  Checking for %smods.d...", path.c_str());
+		SWLOGTI("  Checking for %smods.d...", path.c_str());
 		if (FileMgr::existsDir(path.c_str(), "mods.d")) {
-			SWLog::getSystemLog()->logDebug("found.");
+			SWLOGTI("found.");
 			stdstr(prefixPath, path.c_str());
 			path += "mods.d";
 			stdstr(configPath, path.c_str());
@@ -706,45 +746,36 @@ void SWMgr::findConfig(char *configType, char **prefixPath, char **configPath, s
 
 void SWMgr::loadConfigDir(const char *ipath)
 {
-	DIR *dir;
-	struct dirent *ent;
-	SWBuf newmodfile;
- 
-	if ((dir = opendir(ipath))) {
-		rewinddir(dir);
-		while ((ent = readdir(dir))) {
-			//check whether it ends with .conf, if it doesn't skip it!
-			if (!ent->d_name || (strlen(ent->d_name) <= 5) || strncmp(".conf", (ent->d_name + strlen(ent->d_name) - 5), 5 )) {
-				continue;
-			}
-			
-			newmodfile = ipath;
-			if ((ipath[strlen(ipath)-1] != '\\') && (ipath[strlen(ipath)-1] != '/'))
-				newmodfile += "/";
-			newmodfile += ent->d_name;
-			if (config) {
-				SWConfig tmpConfig(newmodfile.c_str());
-				*config += tmpConfig;
-			}
-			else	config = myconfig = new SWConfig(newmodfile.c_str());
+	SWBuf basePath = ipath;
+	if (!basePath.endsWith("/") && !basePath.endsWith("\\")) basePath += "/";
+
+	SWBuf newModFile;
+
+	std::vector<DirEntry> dirList = FileMgr::getDirList(ipath);
+	for (unsigned int i = 0; i < dirList.size(); ++i) {
+		//check whether it ends with .conf, if it doesn't skip it!
+		if (!dirList[i].name.endsWith(".conf")) {
+			continue;
 		}
-		closedir(dir);
-		
-		if (!config) {	// if no .conf file exist yet, create a default
-			newmodfile = ipath;
-			if ((ipath[strlen(ipath)-1] != '\\') && (ipath[strlen(ipath)-1] != '/'))
-				newmodfile += "/";
-			newmodfile += "globals.conf";
-			config = myconfig = new SWConfig(newmodfile.c_str());
+
+		newModFile = basePath + dirList[i].name;
+		if (config) {
+			SWConfig tmpConfig(newModFile);
+			config->augment(tmpConfig);
 		}
+		else	config = myconfig = new SWConfig(newModFile);
+	}
+
+	if (!config) {	// if no .conf file exist yet, create a default
+		newModFile = basePath + "globals.conf";
+		config = myconfig = new SWConfig(newModFile);
 	}
 }
 
 
 void SWMgr::augmentModules(const char *ipath, bool multiMod) {
 	SWBuf path = ipath;
-	if ((ipath[strlen(ipath)-1] != '\\') && (ipath[strlen(ipath)-1] != '/'))
-		path += "/";
+	if (!path.endsWith("/") && !path.endsWith("\\")) path += "/";
 	if (FileMgr::existsDir(path.c_str(), "mods.d")) {
 		char *savePrefixPath = 0;
 		char *saveConfigPath = 0;
@@ -762,8 +793,8 @@ void SWMgr::augmentModules(const char *ipath, bool multiMod) {
 			// fix config's Section names to rename modules which are available more than once
 			// find out which sections are in both config objects
 			// inserting all configs first is not good because that overwrites old keys and new modules would share the same config
-			for (SectionMap::iterator it = config->Sections.begin(); it != config->Sections.end();) {
-				if (saveConfig->Sections.find( (*it).first ) != saveConfig->Sections.end()) { //if the new section is already present rename it
+			for (SectionMap::iterator it = config->getSections().begin(); it != config->getSections().end();) {
+				if (saveConfig->getSections().find((*it).first) != saveConfig->getSections().end()) { //if the new section is already present rename it
 					ConfigEntMap entMap((*it).second);
 					
 					SWBuf name;
@@ -771,17 +802,17 @@ void SWMgr::augmentModules(const char *ipath, bool multiMod) {
 					do { //module name already used?
 						name.setFormatted("%s_%d", (*it).first.c_str(), i);
 						i++;
-					} while (config->Sections.find(name) != config->Sections.end());
+					} while (config->getSections().find(name) != config->getSections().end());
 					
-					config->Sections.insert(SectionMap::value_type(name, entMap) );
+					config->getSections().insert(SectionMap::value_type(name, entMap) );
 					SectionMap::iterator toErase = it++;
-					config->Sections.erase(toErase);
+					config->getSections().erase(toErase);
 				}
 				else ++it;
 			}
 		}
 		
-		CreateMods(multiMod);
+		createAllModules(multiMod);
 
 		stdstr(&prefixPath, savePrefixPath);
 		delete []savePrefixPath;
@@ -797,37 +828,42 @@ void SWMgr::augmentModules(const char *ipath, bool multiMod) {
 
 
 /***********************************************************************
- * SWMgr::Load - loads actual modules
+ * SWMgr::load - loads actual modules
  *
  * RET: status - 0 = ok; -1 no config found; 1 = no modules installed
  *
  */
 
-signed char SWMgr::Load() {
+signed char SWMgr::load() {
 	signed char ret = 0;
 
 	if (!config) {	// If we weren't passed a config object at construction, find a config file
 		if (!configPath) {	// If we weren't passed a config path at construction...
-			SWLog::getSystemLog()->logDebug("LOOKING UP MODULE CONFIGURATION...");
+			SWLOGTI("LOOKING UP MODULE CONFIGURATION...");
 			SWConfig *externalSysConf = sysConfig;	// if we have a sysConf before findConfig, then we were provided one from an external source.
 			findConfig(&configType, &prefixPath, &configPath, &augPaths, &sysConfig);
 			if (!externalSysConf) mysysconfig = sysConfig;	// remind us to delete our own sysConfig in d-tor
-			SWLog::getSystemLog()->logDebug("LOOKING UP MODULE CONFIGURATION COMPLETE.");
+			SWLOGTI("LOOKING UP MODULE CONFIGURATION COMPLETE.");
 		}
 		if (configPath) {
+			SWLOGTI("LOADING MODULE CONFIGURATIONS...");
 			if (configType)
 				loadConfigDir(configPath);
 			else	config = myconfig = new SWConfig(configPath);
+			SWLOGTI("LOADING MODULE CONFIGURATIONS COMPLETE.");
 		}
 	}
 
 	if (config) {
+
+		SWLOGTI("LOADING MODULE LIBRARY...");
+
 		SectionMap::iterator Sectloop, Sectend;
 		ConfigEntMap::iterator Entryloop, Entryend;
 
-		DeleteMods();
+		deleteAllModules();
 
-		for (Sectloop = config->Sections.lower_bound("Globals"), Sectend = config->Sections.upper_bound("Globals"); Sectloop != Sectend; Sectloop++) {		// scan thru all 'Globals' sections
+		for (Sectloop = config->getSections().lower_bound("Globals"), Sectend = config->getSections().upper_bound("Globals"); Sectloop != Sectend; Sectloop++) {		// scan thru all 'Globals' sections
 			for (Entryloop = (*Sectloop).second.lower_bound("AutoInstall"), Entryend = (*Sectloop).second.upper_bound("AutoInstall"); Entryloop != Entryend; Entryloop++)	// scan thru all AutoInstall entries
 				InstallScan((*Entryloop).second.c_str());		// Scan AutoInstall entry directory for new modules and install
 		}		
@@ -836,16 +872,16 @@ signed char SWMgr::Load() {
 			config = myconfig = 0;
 			loadConfigDir(configPath);
 		}
-		else	config->Load();
+		else	config->load();
 
-		CreateMods(mgrModeMultiMod);
+		createAllModules(mgrModeMultiMod);
 
 		for (std::list<SWBuf>::iterator pathIt = augPaths.begin(); pathIt != augPaths.end(); pathIt++) {
 			augmentModules(pathIt->c_str(), mgrModeMultiMod);
 		}
 		if (augmentHome) {
 			// augment config with ~/.sword/mods.d if it exists ---------------------
-			SWBuf homeDir = getHomeDir();
+			SWBuf homeDir = FileMgr::getSystemFileMgr()->getHomeDir();
 			if (homeDir.length() && configType != 2) { // 2 = user only
 				SWBuf path = homeDir;
 				path += ".sword/";
@@ -856,9 +892,10 @@ signed char SWMgr::Load() {
 			}
 		}
 // -------------------------------------------------------------------------
-		if (!Modules.size()) // config exists, but no modules
+		if (!getModules().size()) // config exists, but no modules
 			ret = 1;
 
+		SWLOGTI("LOADING MODULE LIBRARY COMPLETE.");
 	}
 	else {
 		SWLog::getSystemLog()->logError("SWMgr: Can't find 'mods.conf' or 'mods.d'.  Try setting:\n\tSWORD_PATH=<directory containing mods.conf>\n\tOr see the README file for a full description of setup options (%s)", (configPath) ? configPath : "<configPath is null>");
@@ -1014,20 +1051,20 @@ SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap
 		newmod = new HREFCom(datapath.c_str(), misc1.c_str(), name, description.c_str());
 	}
 
-        int pos = 0;  //used for position of final / in AbsoluteDataPath, but also set to 1 for modules types that need to strip module name
+	int pos = 0;  //used for position of final / in AbsoluteDataPath, but also set to 1 for modules types that need to strip module name
 	if (!stricmp(driver, "RawLD")) {
 		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
 		bool strongsPadding = ((entry = section.find("StrongsPadding")) != section.end()) ? (*entry).second == "true": true;
 		newmod = new RawLD(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive, strongsPadding);
-                pos = 1;
-        }
+		pos = 1;
+	}
 
 	if (!stricmp(driver, "RawLD4")) {
 		bool caseSensitive = ((entry = section.find("CaseSensitiveKeys")) != section.end()) ? (*entry).second == "true": false;
 		bool strongsPadding = ((entry = section.find("StrongsPadding")) != section.end()) ? (*entry).second == "true": true;
 		newmod = new RawLD4(datapath.c_str(), name, description.c_str(), 0, enc, direction, markup, lang.c_str(), caseSensitive, strongsPadding);
-                pos = 1;
-        }
+		pos = 1;
+	}
 
 	if (!stricmp(driver, "zLD")) {
 		SWCompress *compress = 0;
@@ -1071,7 +1108,7 @@ SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap
 
 	if (pos == 1) {
 		SWBuf &dp = section["AbsoluteDataPath"];
-		for (int i = dp.length() - 1; i; i--) {
+		for (int i = (int)dp.length() - 1; i; i--) {
 			if (dp[i] == '/') {
 				dp.setSize(i);
 				break;
@@ -1100,7 +1137,10 @@ SWModule *SWMgr::createModule(const char *name, const char *driver, ConfigEntMap
 }
 
 
-void SWMgr::AddGlobalOptions(SWModule *module, ConfigEntMap &section, ConfigEntMap::iterator start, ConfigEntMap::iterator end) {
+void SWMgr::addGlobalOptionFilters(SWModule *module, ConfigEntMap &section) {
+
+	ConfigEntMap::iterator start = section.lower_bound("GlobalOptionFilter");
+	ConfigEntMap::iterator end   = section.upper_bound("GlobalOptionFilter");
 
 	for (;start != end; ++start) {
 		OptionFilterMap::iterator it;
@@ -1142,16 +1182,15 @@ void SWMgr::AddGlobalOptions(SWModule *module, ConfigEntMap &section, ConfigEntM
 		}
 	}
 	if (filterMgr)
-		filterMgr->AddGlobalOptions(module, section, start, end);
+		filterMgr->addGlobalOptions(module, section, start, end);
 #ifdef _ICU_
-	   module->addOptionFilter(transliterator);
+	module->addOptionFilter(transliterator);
 #endif
 }
 
 
-char SWMgr::filterText(const char *filterName, SWBuf &text, const SWKey *key, const SWModule *module)
-{
-	char retVal = -1;
+char SWMgr::filterText(const char *filterName, SWBuf &text, const SWKey *key, const SWModule *module) {
+	signed char retVal = -1;
 	// why didn't we use find here?
 	for (OptionFilterMap::iterator it = optionFilters.begin(); it != optionFilters.end(); it++) {
 		if ((*it).second->getOptionName()) {
@@ -1173,8 +1212,11 @@ char SWMgr::filterText(const char *filterName, SWBuf &text, const SWKey *key, co
 }
 
 
-void SWMgr::AddLocalOptions(SWModule *module, ConfigEntMap &section, ConfigEntMap::iterator start, ConfigEntMap::iterator end)
-{
+void SWMgr::addLocalOptionFilters(SWModule *module, ConfigEntMap &section) {
+
+	ConfigEntMap::iterator start = section.lower_bound("LocalOptionFilter");
+	ConfigEntMap::iterator end   = section.upper_bound("LocalOptionFilter");
+
 	for (;start != end; start++) {
 		OptionFilterMap::iterator it;
 		it = optionFilters.find((*start).second);
@@ -1184,13 +1226,16 @@ void SWMgr::AddLocalOptions(SWModule *module, ConfigEntMap &section, ConfigEntMa
 	}
 
 	if (filterMgr)
-		filterMgr->AddLocalOptions(module, section, start, end);
+		filterMgr->addLocalOptions(module, section, start, end);
 }
 
 
 // manually specified StripFilters for special cases, like Papyri marks and such
-void SWMgr::AddStripFilters(SWModule *module, ConfigEntMap &section, ConfigEntMap::iterator start, ConfigEntMap::iterator end)
-{
+void SWMgr::addLocalStripFilters(SWModule *module, ConfigEntMap &section) {
+
+	ConfigEntMap::iterator start = section.lower_bound("LocalStripFilter");
+	ConfigEntMap::iterator end   = section.upper_bound("LocalStripFilter");
+
 	for (;start != end; start++) {
 		OptionFilterMap::iterator it;
 		it = optionFilters.find((*start).second);
@@ -1201,7 +1246,7 @@ void SWMgr::AddStripFilters(SWModule *module, ConfigEntMap &section, ConfigEntMa
 }
 
 
-void SWMgr::AddRawFilters(SWModule *module, ConfigEntMap &section) {
+void SWMgr::addRawFilters(SWModule *module, ConfigEntMap &section) {
 	SWBuf sourceformat, cipherKey;
 	ConfigEntMap::iterator entry;
 
@@ -1214,17 +1259,17 @@ void SWMgr::AddRawFilters(SWModule *module, ConfigEntMap &section) {
 	}
 
 	if (filterMgr)
-		filterMgr->AddRawFilters(module, section);
+		filterMgr->addRawFilters(module, section);
 }
 
 
-void SWMgr::AddEncodingFilters(SWModule *module, ConfigEntMap &section) {
+void SWMgr::addEncodingFilters(SWModule *module, ConfigEntMap &section) {
 	if (filterMgr)
-		filterMgr->AddEncodingFilters(module, section);
+		filterMgr->addEncodingFilters(module, section);
 }
 
 
-void SWMgr::AddRenderFilters(SWModule *module, ConfigEntMap &section) {
+void SWMgr::addRenderFilters(SWModule *module, ConfigEntMap &section) {
 	SWBuf sourceformat;
 	ConfigEntMap::iterator entry;
 
@@ -1245,12 +1290,12 @@ void SWMgr::AddRenderFilters(SWModule *module, ConfigEntMap &section) {
 //	}
 
 	if (filterMgr)
-		filterMgr->AddRenderFilters(module, section);
+		filterMgr->addRenderFilters(module, section);
 
 }
 
 
-void SWMgr::AddStripFilters(SWModule *module, ConfigEntMap &section)
+void SWMgr::addStripFilters(SWModule *module, ConfigEntMap &section)
 {
 	SWBuf sourceformat;
 	ConfigEntMap::iterator entry;
@@ -1278,145 +1323,60 @@ void SWMgr::AddStripFilters(SWModule *module, ConfigEntMap &section)
 	}
 
 	if (filterMgr)
-		filterMgr->AddStripFilters(module, section);
+		filterMgr->addStripFilters(module, section);
 
-}
-
-
-void SWMgr::CreateMods(bool multiMod) {
-	SectionMap::iterator it;
-	ConfigEntMap::iterator start;
-	ConfigEntMap::iterator end;
-	ConfigEntMap::iterator entry;
-	SWModule *newmod;
-	SWBuf driver, misc1;
-	for (it = config->Sections.begin(); it != config->Sections.end(); it++) {
-		ConfigEntMap &section = (*it).second;
-		newmod = 0;
-		
-		driver = ((entry = section.find("ModDrv")) != section.end()) ? (*entry).second : (SWBuf)"";
-		if (driver.length()) {
-			newmod = createModule((*it).first, driver, section);
-			if (newmod) {
-				// Filters to add for this module and globally announce as an option to the user
-				// e.g. translit, strongs, redletterwords, etc, so users can turn these on and off globally
-				start = section.lower_bound("GlobalOptionFilter");
-				end   = section.upper_bound("GlobalOptionFilter");
-				AddGlobalOptions(newmod, section, start, end);
-
-				// Only add the option to the module, don't announce it's availability
-				// These are useful for like: filters that parse special entryAttribs in a text
-				// or whatever you might want to happen on entry lookup
-				start = section.lower_bound("LocalOptionFilter");
-				end   = section.upper_bound("LocalOptionFilter");
-				AddLocalOptions(newmod, section, start, end);
-
-				//STRIP FILTERS
-
-				// add all basic ones for for the modtype
-				AddStripFilters(newmod, section);
-
-				// Any special processing for this module when searching:
-				// e.g. for papyri, removed all [](). notation
-				start = section.lower_bound("LocalStripFilter");
-				end   = section.upper_bound("LocalStripFilter");
-				AddStripFilters(newmod, section, start, end);
-
-				AddRawFilters(newmod, section);
-				AddRenderFilters(newmod, section);
-				AddEncodingFilters(newmod, section);
-				
-				SWModule *oldmod = Modules[newmod->getName()];
-				if (oldmod) {
-					delete oldmod;
-				}
-				
-				Modules[newmod->getName()] = newmod;
-			}
-		}
-	}
-}
-
-
-void SWMgr::DeleteMods() {
-
-	ModMap::iterator it;
-
-	for (it = Modules.begin(); it != Modules.end(); it++)
-		delete (*it).second;
-
-	Modules.clear();
-}
-
-
-void SWMgr::deleteModule(const char *modName) {
-	ModMap::iterator it = Modules.find(modName);
-	if (it != Modules.end()) {
-		delete (*it).second;
-		Modules.erase(it);
-	}
 }
 
 
 void SWMgr::InstallScan(const char *dirname)
 {
-   DIR *dir;
-   struct dirent *ent;
-   FileDesc *conffd = 0;
-   SWBuf newmodfile;
-   SWBuf targetName;
- 
-	if (FileMgr::existsDir(dirname)) {
-		if ((dir = opendir(dirname))) {
-			rewinddir(dir);
-			while ((ent = readdir(dir))) {
-				if ((strcmp(ent->d_name, ".")) && (strcmp(ent->d_name, ".."))) {
-					newmodfile = dirname;
-					if ((dirname[strlen(dirname)-1] != '\\') && (dirname[strlen(dirname)-1] != '/'))
-						newmodfile += "/";
-					newmodfile += ent->d_name;
+	FileDesc *conffd = 0;
+	SWBuf newModFile;
+	SWBuf targetName;
+	SWBuf basePath = dirname;
+	if (!basePath.endsWith("/") && !basePath.endsWith("\\")) basePath += "/";
 
-					// mods.d
-					if (configType) {
-						if (conffd)
-							FileMgr::getSystemFileMgr()->close(conffd);
-						targetName = configPath;
-						if ((configPath[strlen(configPath)-1] != '\\') && (configPath[strlen(configPath)-1] != '/'))
-							targetName += "/";
-						targetName += ent->d_name;
-						conffd = FileMgr::getSystemFileMgr()->open(targetName.c_str(), FileMgr::WRONLY|FileMgr::CREAT, FileMgr::IREAD|FileMgr::IWRITE);
-					}
+	std::vector<DirEntry> dirList = FileMgr::getDirList(dirname);
+	for (unsigned int i = 0; i < dirList.size(); ++i) {
+		newModFile = basePath + dirList[i].name;
 
-					// mods.conf
-					else {
-						if (!conffd) {
-							conffd = FileMgr::getSystemFileMgr()->open(config->filename.c_str(), FileMgr::WRONLY|FileMgr::APPEND);
-							if (conffd > 0)
-								conffd->seek(0L, SEEK_END);
-							else {
-								FileMgr::getSystemFileMgr()->close(conffd);
-								conffd = 0;
-							}
-						}
-					}
-					AddModToConfig(conffd, newmodfile.c_str());
-					FileMgr::removeFile(newmodfile.c_str());
-				}
-			}
+		// mods.d
+		if (configType) {
 			if (conffd)
 				FileMgr::getSystemFileMgr()->close(conffd);
-			closedir(dir);
+			targetName = configPath;
+			if ((configPath[strlen(configPath)-1] != '\\') && (configPath[strlen(configPath)-1] != '/'))
+				targetName += "/";
+			targetName += dirList[i].name;
+			conffd = FileMgr::getSystemFileMgr()->open(targetName.c_str(), FileMgr::WRONLY|FileMgr::CREAT, FileMgr::IREAD|FileMgr::IWRITE);
 		}
+
+		// mods.conf
+		else {
+			if (!conffd) {
+				conffd = FileMgr::getSystemFileMgr()->open(config->getFileName().c_str(), FileMgr::WRONLY|FileMgr::APPEND);
+				if (conffd && conffd->getFd() >= 0)
+					conffd->seek(0L, SEEK_END);
+				else {
+					FileMgr::getSystemFileMgr()->close(conffd);
+					conffd = 0;
+				}
+			}
+		}
+		addModToConfig(conffd, newModFile.c_str());
+		FileMgr::removeFile(newModFile.c_str());
 	}
+	if (conffd)
+		FileMgr::getSystemFileMgr()->close(conffd);
 }
 
 
-char SWMgr::AddModToConfig(FileDesc *conffd, const char *fname)
+char SWMgr::addModToConfig(FileDesc *conffd, const char *fname)
 {
 	FileDesc *modfd;
 	char ch;
 
-	SWLog::getSystemLog()->logTimedInformation("Found new module [%s]. Installing...", fname);
+	SWLOGTI("Found new module [%s]. Installing...", fname);
 	modfd = FileMgr::getSystemFileMgr()->open(fname, FileMgr::RDONLY);
 	ch = '\n';
 	conffd->write(&ch, 1);
@@ -1484,10 +1444,111 @@ StringList SWMgr::getGlobalOptionValues(const char *option)
 	return options;
 }
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
+// TODO: use deprecated public 'Modules' property for now until we remove deprecation
+// and store in private property
+// also old deprecated virtuals so client overrides still are called
+
+void SWMgr::createAllModules(bool multiMod) {
+SWLOGD("libsword: SWMgr::createAllModules");
+	SectionMap::iterator it;
+	ConfigEntMap::iterator entry;
+	SWModule *newmod;
+	SWBuf driver, misc1;
+	for (it = config->getSections().begin(); it != config->getSections().end(); it++) {
+		ConfigEntMap &section = (*it).second;
+		newmod = 0;
+		
+		driver = ((entry = section.find("ModDrv")) != section.end()) ? (*entry).second : (SWBuf)"";
+		if (driver.length()) {
+			newmod = createModule((*it).first, driver, section);
+			if (newmod) {
+				// Filters to add for this module and globally announce as an option to the user
+				// e.g. translit, strongs, redletterwords, etc, so users can turn these on and off globally
+				// TODO: addGlobalOptionFilters(newmod, section);
+				AddGlobalOptions(newmod, section, section.lower_bound("GlobalOptionFilter"), section.upper_bound("GlobalOptionFilter"));
+
+				// Only add the option to the module, don't announce it's availability
+				// These are useful for like: filters that parse special entryAttribs in a text
+				// or whatever you might want to happen on entry lookup
+				// TODO: addLocalOptionFilters(newmod, section);
+				AddLocalOptions(newmod, section, section.lower_bound("LocalOptionFilter"), section.upper_bound("LocalOptionFilter"));
+
+				//STRIP FILTERS
+
+				// add all basic strip filters for for the modtype
+				// TODO: addStripFilters(newmod, section);
+				addStripFilters(newmod, section);
+
+				// Any module-specific processing specified in module config
+				// as entries LocalStripFilter=
+				// e.g. for papyri, removed all [](). notation
+				// TODO: addLocalStripFilters(newmod, section);
+				AddStripFilters(newmod, section, section.lower_bound("LocalStripFilter"), section.upper_bound("LocalStripFilter"));
+
+				// TODO: addRawFilters(newmod, section);
+				addRawFilters(newmod, section);
+				// TODO: addRenderFilters(newmod, section);
+				addRenderFilters(newmod, section);
+				// TODO: addEncodingFilters(newmod, section);
+				addEncodingFilters(newmod, section);
+				
+				// place our module in module container, removing first if one
+				// already exists by our same name
+				SWModule *oldmod = getModule(newmod->getName());
+				if (oldmod) {
+					delete oldmod;
+				}
+				
+				// if it's not a utility module save it to Modules
+				if (	SWBuf("Utility") != newmod->getType() &&
+					SWBuf("Utility") != newmod->getConfigEntry("Category")) {
+					Modules[newmod->getName()] = newmod;
+				}
+				else	utilModules[newmod->getName()] = newmod;
+			}
+		}
+	}
+}
+
+
+void SWMgr::deleteAllModules() {
+
+	ModMap::iterator it;
+
+	for (it = getModules().begin(); it != getModules().end(); ++it) {
+		delete (*it).second;
+	}
+	for (it = getUtilModules().begin(); it != getUtilModules().end(); ++it) {
+		delete (*it).second;
+	}
+
+	Modules.clear();
+	utilModules.clear();
+}
+
+
+void SWMgr::deleteModule(const char *modName) {
+	ModMap::iterator it = Modules.find(modName);
+	if (it != Modules.end()) {
+		delete (*it).second;
+		Modules.erase(it);
+	}
+	else {
+		it = utilModules.find(modName);
+		if (it != utilModules.end()) {
+			delete (*it).second;
+			utilModules.erase(it);
+		}
+	}
+}
 
 signed char SWMgr::setCipherKey(const char *modName, const char *key) {
 	FilterMap::iterator it;
-	ModMap::iterator it2;
 
 	// check for filter that already exists
 	it = cipherFilters.find(modName);
@@ -1497,18 +1558,27 @@ signed char SWMgr::setCipherKey(const char *modName, const char *key) {
 	}
 	// check if module exists
 	else {
-		it2 = Modules.find(modName);
-		if (it2 != Modules.end()) {
+		SWModule *mod = getModule(modName);
+		if (mod) {
 			SWFilter *cipherFilter = new CipherFilter(key);
 			cipherFilters.insert(FilterMap::value_type(modName, cipherFilter));
 			cleanupFilters.push_back(cipherFilter);
-			(*it2).second->addRawFilter(cipherFilter);
+			mod->addRawFilter(cipherFilter);
 			return 0;
 		}
 	}
 	return -1;
 }
 
+
+ModMap &SWMgr::getModules() { return Modules; }
+ModMap &SWMgr::getUtilModules() { return utilModules; }
+
+SWBuf SWMgr::getHomeDir() { return FileMgr::getSystemFileMgr()->getHomeDir(); }
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 SWORD_NAMESPACE_END
 

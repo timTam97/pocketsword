@@ -2,7 +2,7 @@
  *
  *  roman.cpp -	
  *
- * $Id: roman.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: roman.cpp 3754 2020-07-10 17:45:48Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,7 +28,7 @@
 SWORD_NAMESPACE_START
 
 
-char isroman (const char *str, int maxchars) {
+char isRoman(const char *str, int maxchars) {
 	char *ch = (char*)str;
 	for (; *ch && (!maxchars || (ch-str) <= maxchars); ch++)
 		if (!strchr("IVXLCDMivxlcdm ", *ch))
@@ -36,8 +36,8 @@ char isroman (const char *str, int maxchars) {
 	return 1;
 }
 
-int from_rom(const char* str) {
-	int i, n = strlen(str);
+int fromRoman(const char* str) {
+	int i, n = (int)strlen(str);
 	short * num= (short *) calloc(n, sizeof(short));
 	for (i = 0; str[i]; i++) {
 		switch(str[i]) {
@@ -83,7 +83,9 @@ int from_rom(const char* str) {
 	for (i = 0; str[i]; i++) {
 		n += num[i];
 	}
-     free(num);
+
+	free(num);
+
 	return n;
 }
 

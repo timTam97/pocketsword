@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  swinputmeth.h -	Implementation of SWInputMethod
+ * swinputmeth.h -	class SWInputMethod: the base for all InputMethods in
+ * 			SWORD
  *
- * $Id: swinputmeth.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swinputmeth.h 3786 2020-08-30 11:35:14Z scribe $
  * 
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -29,18 +30,18 @@ SWORD_NAMESPACE_START
 class SWDLLEXPORT SWInputMethod {
 
 private:
-    int state;
+	int state;
 
 protected:
-    virtual void setState(int state);
+	virtual void setState(int state);
 
 public:
-    SWInputMethod();
-    virtual ~SWInputMethod() {}
+	SWInputMethod();
+	virtual ~SWInputMethod() {}
 
-    virtual int *translate(char in) = 0;
-    virtual int getState();
-    virtual void clearState();
+	virtual int *translate(char in) = 0;
+	virtual int getState();
+	virtual void clearState();
 };
 
 SWORD_NAMESPACE_END

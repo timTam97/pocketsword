@@ -3,7 +3,7 @@
  *  osisstrongs.cpp -	SWFilter descendant to hide or show Strong's number
  *			in a OSIS module
  *
- * $Id: osisstrongs.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osisstrongs.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -57,7 +57,7 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 	SWBuf token;
 	bool intoken = false;
 	int wordNum = 1;
-	char wordstr[5];
+	char wordstr[11];
 	const char *wordStart = 0;
 	SWBuf page = "";		// some modules include <seg> page info, so we add these to the words
 
@@ -88,12 +88,21 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 
 			if (token.startsWith("w ")) {	// Word
 				XMLTag wtag(token);
+
+				// always save off lemma if we haven't yet
+				if (!wtag.getAttribute("savlm")) {
+					const char *l = wtag.getAttribute("lemma");
+					if (l) {
+						wtag.setAttribute("savlm", l);
+					}
+				}
+
 				if (module->isProcessEntryAttributes()) {
 					wordStart = from+1;
 					char gh = 0;
-					VerseKey *vkey = 0;
+					const VerseKey *vkey = 0;
 					if (key) {
-						vkey = SWDYNAMIC_CAST(VerseKey, key);
+						vkey = SWDYNAMIC_CAST(const VerseKey, key);
 					}
 					SWBuf lemma      = "";
 					SWBuf morph      = "";
@@ -117,7 +126,7 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 
 							const char *m = strchr(attrib, ':');
 							if (m) {
-								int len = m-attrib;
+								int len = (int)(m-attrib);
 								mClass.append(attrib, len);
 								attrib += (len+1);
 							}
@@ -128,29 +137,28 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 							mp += attrib;
 							morphClass += mClass;
 							morph += mp;
-							if (count > 1) {
-								SWBuf tmp;
-								tmp.setFormatted("Morph.%d", i+1);
-								module->getEntryAttributes()["Word"][wordstr][tmp] = mp;
-								tmp.setFormatted("MorphClass.%d", i+1);
-								module->getEntryAttributes()["Word"][wordstr][tmp] = mClass;
-							}
+							mp.replaceBytes("+", ' ');
+							SWBuf tmp;
+							tmp.setFormatted("Morph.%d", i+1);
+							module->getEntryAttributes()["Word"][wordstr][tmp] = mp;
+							tmp.setFormatted("MorphClass.%d", i+1);
+							module->getEntryAttributes()["Word"][wordstr][tmp] = mClass;
 						} while (++i < count);
 					}
 
-					if ((attrib = wtag.getAttribute("lemma"))) {
-						int count = wtag.getAttributePartCount("lemma", ' ');
+					if ((attrib = wtag.getAttribute("savlm"))) {
+						int count = wtag.getAttributePartCount("savlm", ' ');
 						int i = (count > 1) ? 0 : -1;		// -1 for whole value cuz it's faster, but does the same thing as 0
 						do {
 							gh = 0;
 							SWBuf lClass = "";
 							SWBuf l = "";
-							attrib = wtag.getAttribute("lemma", i, ' ');
+							attrib = wtag.getAttribute("savlm", i, ' ');
 							if (i < 0) i = 0;	// to handle our -1 condition
 
 							const char *m = strchr(attrib, ':');
 							if (m) {
-								int len = m-attrib;
+								int len = (int)(m-attrib);
 								lClass.append(attrib, len);
 								attrib += (len+1);
 							}
@@ -170,14 +178,13 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 							l += attrib;
 							if (i) { lemmaClass += " "; lemma += " "; }
 							lemma += l;
+							l.replaceBytes("+", ' ');
 							lemmaClass += lClass;
-							if (count > 1) {
-								SWBuf tmp;
-								tmp.setFormatted("Lemma.%d", i+1);
-								module->getEntryAttributes()["Word"][wordstr][tmp] = l;
-								tmp.setFormatted("LemmaClass.%d", i+1);
-								module->getEntryAttributes()["Word"][wordstr][tmp] = lClass;
-							}
+							SWBuf tmp;
+							tmp.setFormatted("Lemma.%d", i+1);
+							module->getEntryAttributes()["Word"][wordstr][tmp] = l;
+							tmp.setFormatted("LemmaClass.%d", i+1);
+							module->getEntryAttributes()["Word"][wordstr][tmp] = lClass;
 						} while (++i < count);
 						module->getEntryAttributes()["Word"][wordstr]["PartCount"].setFormatted("%d", count);
 					}
@@ -193,11 +200,10 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 							if (i) src += " ";
 							mp += attrib;
 							src += mp;
-							if (count > 1) {
-								SWBuf tmp;
-								tmp.setFormatted("Src.%d", i+1);
-								module->getEntryAttributes()["Word"][wordstr][tmp] = mp;
-							}
+							mp.replaceBytes("+", ' ');
+							SWBuf tmp;
+							tmp.setFormatted("Src.%d", i+1);
+							module->getEntryAttributes()["Word"][wordstr][tmp] = mp;
 						} while (++i < count);
 					}
 
@@ -217,7 +223,7 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 
 					if (wtag.isEmpty()) {
 						int j;
-						for (j = token.length()-1; ((j>0) && (strchr(" /", token[j]))); j--);
+						for (j = (int)token.length()-1; ((j>0) && (strchr(" /", token[j]))); j--);
 						token.size(j+1);
 					}
 					
@@ -232,35 +238,27 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 					wordNum++;
 				}
 
+				// if we won't want strongs, then lets get them out of lemma
 				if (!option) {
-/*
- * Code which handles multiple lemma types.  Kindof works but breaks at least WEBIF filters for strongs.
- *
 					int count = wtag.getAttributePartCount("lemma", ' ');
-					for (int i = 0; i < count; i++) {
+					for (int i = 0; i < count; ++i) {
 						SWBuf a = wtag.getAttribute("lemma", i, ' ');
 						const char *prefix = a.stripPrefix(':');
 						if ((prefix) && (!strcmp(prefix, "x-Strongs") || !strcmp(prefix, "strong") || !strcmp(prefix, "Strong"))) {
 							// remove attribute part
 							wtag.setAttribute("lemma", 0, i, ' ');
-							i--;
-							count--;
+							--i;
+							--count;
 						}
 					}
-* Instead the codee below just removes the lemma attribute
-*****/
-					const char *l = wtag.getAttribute("lemma");
-					if (l) {
-						SWBuf savlm = l;
-						wtag.setAttribute("lemma", 0);
-						wtag.setAttribute("savlm", savlm);
-						token = wtag;
-						token.trim();
-						// drop <>
-						token << 1;
-						token--;
-					}
+
+
 				}
+				token = wtag;
+				token.trim();
+				// drop <>
+				token << 1;
+				token--;
 			}
 			if (token.startsWith("/w")) {	// Word End
 				if (module->isProcessEntryAttributes()) {

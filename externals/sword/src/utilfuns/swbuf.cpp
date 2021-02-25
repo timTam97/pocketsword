@@ -2,7 +2,7 @@
  *
  *  swbuf.cpp -	used as a transport and utility for data buffers
  *
- * $Id: swbuf.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swbuf.cpp 3714 2020-04-10 23:43:12Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -26,44 +26,13 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include <stringmgr.h>
 
 SWORD_NAMESPACE_START
 
 
 char *SWBuf::nullStr = (char *)"";
 
-/******************************************************************************
-* SWBuf Constructor - Creates an empty SWBuf object or an SWBuf initialized
-* 		to a value from a const char *
-*
-*/
-SWBuf::SWBuf(const char *initVal, unsigned long initSize) {
-	init(initSize);
-	if (initVal)
-		set(initVal);
-}
-
-/******************************************************************************
-* SWBuf Constructor - Creates an SWBuf initialized
-* 		to a value from another SWBuf
-*
-*/
-SWBuf::SWBuf(const SWBuf &other, unsigned long initSize) {
-	init(initSize);
-	set(other);
-}
-
-/******************************************************************************
-* SWBuf Constructor - Creates an SWBuf initialized
-* 		to a value from a char
-*
-*/
-SWBuf::SWBuf(char initVal, unsigned long initSize) {
-	init(initSize+1);
-	*buf = initVal;
-	end = buf+1;
-	*end = 0;
-}
 
 /*
 SWBuf::SWBuf(unsigned long initSize) {
@@ -82,45 +51,26 @@ SWBuf &SWBuf::setFormatted(const char *format, ...) {
 	va_list argptr;
 
 	va_start(argptr, format);
+
+	setFormattedVA(format, argptr);
+
+	va_end(argptr);
+	return *this;
+}
+
+SWBuf &SWBuf::setFormattedVA(const char *format, va_list argptr) {
+	va_list argptr2;
+	va_copy(argptr2, argptr);
 #ifdef NO_VSNPRINTF
 	static char junkBuf[JUNKBUFSIZE];
 	int len = vsprintf(junkBuf, format, argptr)+1;
 #else
 	int len = vsnprintf(0, 0, format, argptr)+1;
 #endif
-	va_end(argptr);
 	assureSize(len);
-	va_start(argptr, format);
-	end = vsprintf(buf, format, argptr) + buf;
-	va_end(argptr);
+	end = vsprintf(buf, format, argptr2) + buf;
+	va_end(argptr2);
 	return *this;
-}
-
-/******************************************************************************
-* SWBuf::append - appends a value to the current value of this SWBuf
-* 
-*/
-SWBuf &SWBuf::append(const char *str, long max) {
-//	if (!str) //A null string was passed
-//		return;
-	if (max < 0)
-		max = strlen(str);
-	assureMore(max+1);
-	for (;((max)&&(*str));max--)
-		*end++ = *str++;
-	*end = 0;
-	return *this;
-}
-
-/******************************************************************************
-* SWBuf::setSize - Size this buffer to a specific length
-*/
-void SWBuf::setSize(unsigned long len) {
-	assureSize(len+1);
-	if ((unsigned)(end - buf) < len)
-		memset(end, fillByte, len - (end-buf));
-	end = buf + len;
-	*end = 0;
 }
 
 /******************************************************************************
@@ -151,7 +101,7 @@ void SWBuf::insert(unsigned long pos, const char* str, unsigned long start, sign
 // 		return;
 
 	str += start;
-	int len = (max > -1) ? max : strlen(str);
+	int len = (int)((max > -1) ? max : strlen(str));
 
 	if (!len || (pos > length())) //nothing to do, return
 		return;
@@ -169,6 +119,33 @@ void SWBuf::insert(unsigned long pos, const char* str, unsigned long start, sign
 	
 	end += len;
 	*end = 0;
+}
+
+
+/**
+ * Converts an SWBuf filled with UTF-8 to upper case
+ *
+ * @param b SWBuf to change to upper case
+ * 
+ * @return b for convenience
+ */
+SWBuf &SWBuf::toUpper() { 
+	char *utf8 = 0;
+	stdstr(&utf8, c_str(), 3);
+	sword::toupperstr(utf8, (unsigned int)size()*3-1);
+	*this = utf8;
+	delete [] utf8;
+
+	return *this;
+}
+SWBuf &SWBuf::toLower() {
+	char *utf8 = 0;
+	stdstr(&utf8, c_str(), 3);
+	sword::tolowerstr(utf8, (unsigned int)size()*3-1);
+	*this = utf8;
+	delete [] utf8;
+
+	return *this;
 }
 
 SWORD_NAMESPACE_END

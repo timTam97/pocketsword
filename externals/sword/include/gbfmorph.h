@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  gbfmorph.h -	Implementation of GBFMorph
+ * gbfmorph.h -	class GBFMorph: an OptionFilter to handle morphology in
+ * 		modules marked up in GBF
  *
- * $Id: gbfmorph.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfmorph.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,8 +28,8 @@
 
 SWORD_NAMESPACE_START
 
-  /** This Filter shows/hides morph tags in a GBF text
-  */
+/** This Filter shows/hides morph tags in a GBF text
+ */
 class SWDLLEXPORT GBFMorph : public SWOptionFilter {
 public:
 	GBFMorph();

@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmllatex.h -	Implementation of ThMLLaTeX
+ * thmllatex.h -	class ThMLLaTeX: a RenderFilter to render LaTeX from
+ * 			modules marked up in ThML
  *
- * $Id: thmllatex.h 3074 2014-03-05 00:30:21Z chrislit $
+ * $Id: thmllatex.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,22 +32,28 @@ SWORD_NAMESPACE_START
 /** this filter converts ThML text to LaTeX
  */
 class SWDLLEXPORT ThMLLaTeX : public SWBasicFilter {
+
+private:
 	SWBuf imgPrefix;
 	bool renderNoteNumbers;
+
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
 		MyUserData(const SWModule *module, const SWKey *key);//: BasicFilterUserData(module, key) {}
 		bool inscriptRef;
-		bool SecHead;
-		bool BiblicalText;
+		bool inSecHead;
+		bool isBiblicalText;
 		SWBuf version;
 		XMLTag startTag;
 	};
+
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
+
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
+
 public:
 	ThMLLaTeX();
 	virtual const char *getImagePrefix() { return imgPrefix.c_str(); }

@@ -3,7 +3,7 @@
  *  rawtext.cpp -	code for class 'RawText'- a module that reads raw text
  *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: rawtext.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawtext.cpp 3821 2020-11-02 18:33:02Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -88,7 +88,7 @@ bool RawText::isWritable() const {
 SWBuf &RawText::getRawEntryBuf() const {
 	long  start = 0;
 	unsigned short size = 0;
-	VerseKey &key = getVerseKey();
+	const VerseKey &key = getVerseKey();
 
 	findOffset(key.getTestament(), key.getTestamentIndex(), &start, &size);
 	entrySize = size;        // support getEntrySize call
@@ -114,7 +114,7 @@ void RawText::setEntry(const char *inbuf, long len) {
 
 void RawText::linkEntry(const SWKey *inkey) {
 	VerseKey &destkey = getVerseKey();
-	const VerseKey *srckey = &getVerseKey(inkey);
+	const VerseKey *srckey = &getVerseKeyConst(inkey);
 	doLinkEntry(destkey.getTestament(), destkey.getTestamentIndex(), srckey->getTestamentIndex());
 }
 
@@ -179,8 +179,8 @@ void RawText::increment(int steps) {
 bool RawText::isLinked(const SWKey *k1, const SWKey *k2) const {
 	long start1, start2;
 	unsigned short size1, size2;
-	VerseKey *vk1 = &getVerseKey(k1);
-	VerseKey *vk2 = &getVerseKey(k2);
+	const VerseKey *vk1 = &getVerseKey(k1);
+	const VerseKey *vk2 = &getVerseKey(k2);
 	if (vk1->getTestament() != vk2->getTestament()) return false;
 
 	findOffset(vk1->getTestament(), vk1->getTestamentIndex(), &start1, &size1);
@@ -192,7 +192,7 @@ bool RawText::isLinked(const SWKey *k1, const SWKey *k2) const {
 bool RawText::hasEntry(const SWKey *k) const {
 	long start;
 	unsigned short size;
-	VerseKey *vk = &getVerseKey(k);
+	const VerseKey *vk = &getVerseKey(k);
 
 	findOffset(vk->getTestament(), vk->getTestamentIndex(), &start, &size);
 	return size;

@@ -2,7 +2,7 @@
  *
  *  thmlhtml.cpp -	ThML to HTML filter
  *
- * $Id: thmlhtml.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: thmlhtml.cpp 3547 2017-12-10 05:06:48Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -185,17 +185,17 @@ bool ThMLHTML::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			}
 		}
 		else if (!strcmp(tag.getName(), "div")) {
-			if (tag.isEndTag() && (u->SecHead)) {
+			if (tag.isEndTag() && (u->inSecHead)) {
 				buf += "</i></b><br />";
-				u->SecHead = false;
+				u->inSecHead = false;
 			}
 			else if (tag.getAttribute("class")) {
 				if (!strcmp(tag.getAttribute("class"), "sechead")) {
-					u->SecHead = true;
+					u->inSecHead = true;
 					buf += "<br /><b><i>";
 				}
 				else if (!strcmp(tag.getAttribute("class"), "title")) {
-					u->SecHead = true;
+					u->inSecHead = true;
 					buf += "<br /><b><i>";
 				}
 			}

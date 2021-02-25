@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisosis.h -	Implementation of OSISOSIS
+ * osisosis.h -	class OSISOSIS: a RenderFilter to render OSIS from modules
+ * 		marked up in OSIS with SWORD markup extensions
  *
- * $Id: osisosis.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisosis.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

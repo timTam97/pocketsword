@@ -3,7 +3,7 @@
  *  versetreekey.cpp -	code for class 'VerseTreeKey'- versekey using treekey
  *			for data retrieval
  * 
- * $Id: versetreekey.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: versetreekey.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -24,11 +24,12 @@
 
 #include <versetreekey.h>
 #include <ctype.h>
+#include <swlog.h>
 
 SWORD_NAMESPACE_START
 
 static const char *classes[] = {"VerseTreeKey", "VerseKey", "SWKey", "SWObject", 0};
-SWClass VerseTreeKey::classdef(classes);
+static const SWClass classdef(classes);
 
 
 /******************************************************************************
@@ -75,7 +76,7 @@ VerseTreeKey::VerseTreeKey(TreeKey *treeKey, const char *min, const char *max) :
 
 void VerseTreeKey::init(TreeKey *treeKey)
 {
-	myclass = &classdef;
+	myClass = &classdef;
 	this->treeKey = (TreeKey *)treeKey->clone();
 	this->treeKey->setPositionChangeListener(this);
 	internalPosChange = false;
@@ -92,6 +93,7 @@ int VerseTreeKey::getBookFromAbbrev(const char *iabbr) const
 {
 	int bookno = VerseKey::getBookFromAbbrev(iabbr);
 	if (bookno < 0) {
+		SWLog::getSystemLog();  // TODO fix for odd android bug
 /*
 		vector<struct sbook>::iterator it = find(books, iabbr);
 		if (it == books.end()) {
@@ -230,7 +232,7 @@ void VerseTreeKey::positionChanged() {
 }
 
 
-void VerseTreeKey::syncVerseToTree() {
+void VerseTreeKey::syncVerseToTree() const {
 	internalPosChange = true;
 	SWBuf path;
 	if (!getTestament()) path = "/"; // "[ Module Heading ]";
@@ -249,6 +251,11 @@ void VerseTreeKey::syncVerseToTree() {
 }
 
 
+const TreeKey *VerseTreeKey::getTreeKey() const {
+	syncVerseToTree();
+	return treeKey;
+}
+
 TreeKey *VerseTreeKey::getTreeKey() {
 	syncVerseToTree();
 	return treeKey;
@@ -259,7 +266,7 @@ void VerseTreeKey::Normalize(char autocheck) {
 	error = 0;
 }
 
-long VerseTreeKey::NewIndex() const {
+long VerseTreeKey::newIndex() const {
 	return treeKey->getOffset();
 }
 

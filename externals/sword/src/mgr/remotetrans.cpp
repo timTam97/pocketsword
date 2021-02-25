@@ -2,7 +2,7 @@
  *
  *  remotetrans.cpp -	
  *
- * $Id: remotetrans.cpp 3147 2014-03-26 07:54:35Z scribe $
+ * $Id: remotetrans.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -65,6 +65,8 @@ RemoteTransport::RemoteTransport(const char *host, StatusReporter *statusReporte
 	u = "ftp";
 	p = "installmgr@user.com";
 	term = false;
+	passive = true;
+	unverifiedPeerAllowed = true;
 }
 
 
@@ -74,14 +76,22 @@ RemoteTransport::~RemoteTransport() {
 
 // override this method in your real transport class
 char RemoteTransport::getURL(const char *destPath, const char *sourceURL, SWBuf *destBuf) {
-	char retVal = 0;
+	SWLog::getSystemLog()->logWarning("RemoteTransport::getURL called but unsupported");
+	char retVal = -1;
+	return retVal;
+}
+
+// override this method in your real transport class
+char RemoteTransport::putURL(const char *destURL, const char *sourcePath, SWBuf *sourceBuf) {
+	SWLog::getSystemLog()->logWarning("RemoteTransport::putURL called but unsupported");
+	char retVal = -1;
 	return retVal;
 }
 
 
 vector<struct DirEntry> RemoteTransport::getDirList(const char *dirURL) {
 
-SWLog::getSystemLog()->logDebug("RemoteTransport::getDirList(%s)", dirURL);
+SWLOGD("RemoteTransport::getDirList(%s)", dirURL);
 	vector<struct DirEntry> dirList;
 	
 	SWBuf dirBuf;
@@ -101,12 +111,12 @@ SWLog::getSystemLog()->logDebug("RemoteTransport::getDirList(%s)", dirURL);
 				else if ((*end != 10) && (*end != 13))
 					break;
 			}
-			SWLog::getSystemLog()->logDebug("getDirList: parsing item %s(%d)\n", start, end-start);
-			int status = ftpparse(&item, start, end - start);
+SWLOGD("getDirList: parsing item %s(%d)\n", start, end-start);
+			int status = ftpparse(&item, start, (int)(end - start));
 			// in ftpparse.h, there is a warning that name is not necessarily null terminated
 			SWBuf name;
 			name.append(item.name, item.namelen);
-			SWLog::getSystemLog()->logDebug("getDirList: got item %s\n", name.c_str());
+SWLOGD("getDirList: got item %s\n", name.c_str());
 			if (status && name != "." && name != "..") {
 				struct DirEntry i;
 				i.name = name;
@@ -124,26 +134,49 @@ SWLog::getSystemLog()->logDebug("RemoteTransport::getDirList(%s)", dirURL);
 }
 
 
+/** network copy recursively a remote directly
+ * @return error status 0: OK; -1: operation error, -2: connection error; -3: user requested termination
+ */
 int RemoteTransport::copyDirectory(const char *urlPrefix, const char *dir, const char *dest, const char *suffix) {
-SWLog::getSystemLog()->logDebug("RemoteTransport::copyDirectory");
-	unsigned int i;
+SWLOGD("RemoteTransport::copyDirectory");
 	int retVal = 0;
-	
+
 	SWBuf url = SWBuf(urlPrefix) + SWBuf(dir);
 	removeTrailingSlash(url);
 	url += '/';
 	
-	SWLog::getSystemLog()->logDebug("NetTransport: getting dir %s\n", url.c_str());
+SWLOGD("NetTransport: getting dir %s\n", url.c_str());
 	vector<struct DirEntry> dirList = getDirList(url.c_str());
 
 	if (!dirList.size()) {
 		SWLog::getSystemLog()->logWarning("NetTransport: failed to read dir %s\n", url.c_str());
 		return -1;
 	}
-				
+
+	// append files in sub directories and calculate total download size
+	unsigned int i = 0;
 	long totalBytes = 0;
-	for (i = 0; i < dirList.size(); i++)
-		totalBytes += dirList[i].size;
+	for (;;) {
+		if (i == dirList.size())
+			break;
+
+		struct DirEntry &e = dirList.at(i);
+
+		if (e.isDirectory) {
+			SWBuf name(e.name); // &e will be invalidated after first insertion
+			vector<struct DirEntry> sd = getDirList((url + name + '/').c_str());
+			for (unsigned int ii = 0; ii < sd.size(); ii++) {
+				sd[ii].name = name + '/' + sd[ii].name;
+				dirList.push_back(sd[ii]);
+			}
+			dirList.erase(dirList.begin() + i);
+		}
+		else {
+			totalBytes += e.size;
+			i++;
+		}
+	}
+
 	long completedBytes = 0;
 	for (i = 0; i < dirList.size(); i++) {
 		struct DirEntry &dirEntry = dirList[i];
@@ -165,23 +198,13 @@ SWLog::getSystemLog()->logDebug("RemoteTransport::copyDirectory");
 				SWBuf url = (SWBuf)urlPrefix + (SWBuf)dir;
 				removeTrailingSlash(url);
 				url += "/";
-				url += dirEntry.name; //dont forget the final slash
-				if (!dirEntry.isDirectory) {
-					if (getURL(buffer.c_str(), url.c_str())) {
-						SWLog::getSystemLog()->logWarning("copyDirectory: failed to get file %s\n", url.c_str());
-						return -2;
-					}
-					completedBytes += dirEntry.size;
+				url += dirEntry.name;
+				retVal = getURL(buffer.c_str(), url.c_str());
+				if (retVal) {
+					SWLog::getSystemLog()->logWarning("copyDirectory: failed to get file %s\n", url.c_str());
+					return retVal;
 				}
-				else {
-					SWBuf subdir = (SWBuf)dir;
-					removeTrailingSlash(subdir);
-					subdir += (SWBuf)"/" + dirEntry.name;
-					if (copyDirectory(urlPrefix, subdir, buffer.c_str(), suffix)) {
-						SWLog::getSystemLog()->logWarning("copyDirectory: failed to get file %s\n", subdir.c_str());
-						return -2;
-					}
-				}
+				completedBytes += dirEntry.size;
 			}
 			SWCATCH (...) {}
 			if (term) {

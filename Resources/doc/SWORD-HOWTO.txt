@@ -29,6 +29,12 @@ src/utilfuns/win32
 DIFFS:
 - curlhttpt.cpp:: logging info on the httpd server side
 - localemgr.cpp:: we don't wanna try to "find" the config, cause it just slows app-launch down & it won't find it!
+[2020]
+- installmgr.cpp:: switch around some install sources, ftp->http, rename, remove attic
+- stringmgr.cpp:: ICU stuff
+- delete src/utilfuns/regex.c (use the real one instead!)
+
+
 
 
 Index: /Users/nicc/local/src/PocketSword/externals/sword/src/mgr/curlhttpt.cpp

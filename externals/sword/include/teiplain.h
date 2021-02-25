@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  teiplain.h -	Implementation of TEIPlain
+ * teiplain.h -	class TEIPlain: a StripFilter for modules marked up in TEI
  *
- * $Id: teiplain.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: teiplain.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,7 +31,7 @@ SWORD_NAMESPACE_START
 /** this filter converts TEI text to plain text
  */
 class SWDLLEXPORT TEIPlain : public SWBasicFilter {
-public:
+
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:

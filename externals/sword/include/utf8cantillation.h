@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf8cantillation.h -	Implementation of UTF8Cantillation
+ * utf8cantillation.h -	class UTF8Cantillation: an OptionFilter to handle
+ * 			cantillation marks in UTF8 text
  *
- * $Id: utf8cantillation.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8cantillation.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,8 +28,8 @@
 
 SWORD_NAMESPACE_START
 
-  /** This Filter shows/hides Hebrew cantillation marks in UTF8 text
-  */
+/** This Filter shows/hides Hebrew cantillation marks in UTF8 text
+ */
 class SWDLLEXPORT UTF8Cantillation : public SWOptionFilter {
 public:
 	UTF8Cantillation();

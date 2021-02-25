@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  utilxml.h -	definition of class that deal with xml constructs 
+ * utilxml.h -	class XMLTag: utility class which helps work with XML tags
  *
- * $Id: utilxml.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utilxml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,6 +36,7 @@ typedef std::list<SWBuf> StringList;
 /** Simple XML helper class.
 */
 class SWDLLEXPORT XMLTag {
+
 private:
 	mutable char *buf;
 	char *name;
@@ -75,6 +76,13 @@ public:
 	 * otherwise, we return if we're a simple XML end </tag>.
 	 */
 	bool isEndTag(const char *eID = 0) const;
+	inline void setEndTag(bool value) {
+		if (!parsed)
+			parse();
+		endTag = value;
+		if (value)
+			empty = false;
+	}
 
 	const StringList getAttributeNames() const;
 	int getAttributePartCount(const char *attribName, char partSplit = '|') const;

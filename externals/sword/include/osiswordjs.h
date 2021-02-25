@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  osiswordjs.h -	Implementation of OSISWordJS
+ * osiswordjs.h -	class OSISWordJS: an OptionFilter to inject
+ * 			JavaScript (mostly for onclick events) for modules
+ * 			marked up in OSIS
  *
- * $Id: osiswordjs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osiswordjs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,14 +30,15 @@
 SWORD_NAMESPACE_START
 
 class SWMgr;
-  /** This Filter shows/hides strong's numbers in a OSIS text
-  */
+
+/** This Filter inject JavaScript proving onclick events for modules marked up in OSIS
+ */
 class SWDLLEXPORT OSISWordJS : public SWOptionFilter {
-     SWModule *defaultGreekLex;
-     SWModule *defaultHebLex;
-     SWModule *defaultGreekParse;
-     SWModule *defaultHebParse;
-     SWMgr *mgr;
+	SWModule *defaultGreekLex;
+	SWModule *defaultHebLex;
+	SWModule *defaultGreekParse;
+	SWModule *defaultHebParse;
+	SWMgr *mgr;
 
 public:
 	OSISWordJS();

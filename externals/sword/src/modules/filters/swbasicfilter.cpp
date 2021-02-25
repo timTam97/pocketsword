@@ -5,7 +5,7 @@
  *  			many filters will need and can use as a starting
  *  			point. 
  *
- * $Id: swbasicfilter.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swbasicfilter.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -29,6 +29,7 @@
 #include <stdarg.h>
 #include <utilstr.h>
 #include <stringmgr.h>
+#include <versekey.h>
 #include <map>
 #include <set>
 
@@ -52,6 +53,19 @@ const char SWBasicFilter::INITIALIZE = 1;
 const char SWBasicFilter::PRECHAR    = 2;
 const char SWBasicFilter::POSTCHAR   = 4;
 const char SWBasicFilter::FINALIZE   = 8;
+
+
+BasicFilterUserData::BasicFilterUserData(const SWModule *module, const SWKey *key) {
+	this->module = module;
+	this->key = key;
+	suspendTextPassThru = false;
+	supressAdjacentWhitespace = false;
+	vkey = 0;
+	SWTRY {
+		vkey = SWDYNAMIC_CAST(const VerseKey, key);
+	}
+	SWCATCH ( ... ) { }
+}
 
 
 SWBasicFilter::SWBasicFilter() {
@@ -383,6 +397,9 @@ char SWBasicFilter::processText(SWBuf &text, const SWKey *key, const SWModule *m
 					}
 					escEndPos = escStartPos = tokenEndPos = tokenStartPos = 0;
 					lastTextNode = "";
+					if (!userData->suspendTextPassThru) {
+						userData->lastSuspendSegment.size(0);
+					}
 					continue;
 				}
 			}
@@ -398,7 +415,6 @@ char SWBasicFilter::processText(SWBuf &text, const SWKey *key, const SWModule *m
  			if ((!userData->supressAdjacentWhitespace) || (*from != ' ')) {
 				if (!userData->suspendTextPassThru) {
 					text.append(*from);
-					userData->lastSuspendSegment.size(0);
 				}
 				else	userData->lastSuspendSegment.append(*from);
 				lastTextNode.append(*from);

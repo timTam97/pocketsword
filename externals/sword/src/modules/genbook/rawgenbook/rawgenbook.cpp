@@ -3,7 +3,7 @@
  *  rawgenbook.cpp -	code for class 'RawGenBook'- a module that reads raw
  *			text files: ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: rawgenbook.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawgenbook.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -98,8 +98,8 @@ bool RawGenBook::isWritable() const {
 
 SWBuf &RawGenBook::getRawEntryBuf() const {
 
-	__u32 offset = 0;
-	__u32 size = 0;
+	SW_u32 offset = 0;
+	SW_u32 size = 0;
 
 	const TreeKey &key = getTreeKey();
 
@@ -133,8 +133,8 @@ SWBuf &RawGenBook::getRawEntryBuf() const {
 
 void RawGenBook::setEntry(const char *inbuf, long len) {
 
-	__u32 offset = archtosword32(bdtfd->seek(0, SEEK_END));
-	__u32 size = 0;
+	SW_u32 offset = (SW_u32)archtosword32(bdtfd->seek(0, SEEK_END));
+	SW_u32 size = 0;
 	TreeKeyIdx *key = ((TreeKeyIdx *)&(getTreeKey()));
 
 	char userData[8];
@@ -144,7 +144,7 @@ void RawGenBook::setEntry(const char *inbuf, long len) {
 
 	bdtfd->write(inbuf, len);
 
-	size = archtosword32(len);
+	size = (SW_u32)archtosword32(len);
 	memcpy(userData, &offset, 4);
 	memcpy(userData+4, &size, 4);
 	key->setUserData(userData, 8);
@@ -153,24 +153,26 @@ void RawGenBook::setEntry(const char *inbuf, long len) {
 
 
 void RawGenBook::linkEntry(const SWKey *inkey) {
-	TreeKeyIdx *srckey = 0;
+	const TreeKeyIdx *srcKey = 0;
+	TreeKeyIdx *tmpKey = 0;
 	TreeKeyIdx *key = ((TreeKeyIdx *)&(getTreeKey()));
 	// see if we have a VerseKey * or decendant
 	SWTRY {
-		srckey = SWDYNAMIC_CAST(TreeKeyIdx, inkey);
+		srcKey = SWDYNAMIC_CAST(const TreeKeyIdx, inkey);
 	}
 	SWCATCH ( ... ) {}
 	// if we don't have a VerseKey * decendant, create our own
-	if (!srckey) {
-		srckey = (TreeKeyIdx *)createKey();
-		(*srckey) = *inkey;
+	if (!srcKey) {
+		tmpKey = (TreeKeyIdx *)createKey();
+		(*tmpKey) = *inkey;
+		srcKey = tmpKey;
 	}
 
-	key->setUserData(srckey->getUserData(), 8);
+	key->setUserData(srcKey->getUserData(), 8);
 	key->save();
 
-	if (inkey != srckey) // free our key if we created a VerseKey
-		delete srckey;
+	if (tmpKey) // free our key if we created a VerseKey
+		delete tmpKey;
 }
 
 
@@ -216,11 +218,11 @@ SWKey *RawGenBook::createKey() const {
 }
 
 bool RawGenBook::hasEntry(const SWKey *k) const {
-	TreeKey &key = getTreeKey(k);
+	const TreeKey &key = getTreeKey(k);
 
 	int dsize;
 	key.getUserData(&dsize);
-	return (dsize > 7) && key.popError() == '\x00';
+	return (dsize > 7) && key.getError() == '\x00';
 }
 
 SWORD_NAMESPACE_END

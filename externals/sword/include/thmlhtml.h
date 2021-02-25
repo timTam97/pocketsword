@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlhtml.h -	Implementation of ThMLHTML
+ * thmlhtml.h -	class ThMLHTML: a RenderFilter to render HTML from modules
+ * 		marked up in ThML
  *
- * $Id: thmlhtml.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlhtml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,16 +31,20 @@ SWORD_NAMESPACE_START
 /** this filter converts ThML text to HTML text
  */
 class SWDLLEXPORT ThMLHTML : public SWBasicFilter {
+
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
-		MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {}
-		bool SecHead;
+		MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key), inSecHead(false) {}
+		bool inSecHead;
 	};
+
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
+
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
+
 public:
 	ThMLHTML();
 };

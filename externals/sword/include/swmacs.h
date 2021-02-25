@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  swmacs.h -	generic macros
+ * swmacs.h -	generic macros
  *
- * $Id: swmacs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swmacs.h 3765 2020-07-26 10:31:09Z scribe $
  *
  * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

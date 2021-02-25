@@ -2,7 +2,7 @@
  *
  *  installmgr.cpp -	InstallMgr functions
  *
- * $Id: installmgr.cpp 3147 2014-03-26 07:54:35Z scribe $
+ * $Id: installmgr.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -21,16 +21,12 @@
  */
 
 #ifndef EXCLUDEZLIB
-extern "C" {
-#include <untgz.h>
-}
+#include <zipcomprs.h>
 #endif
 
 #include <installmgr.h>
 #include <filemgr.h>
 #include <utilstr.h>
-
-#include <fcntl.h>
 
 #include <swmgr.h>
 #include <swmodule.h>
@@ -59,7 +55,7 @@ SWORD_NAMESPACE_START
 namespace {
 
 	static void removeTrailingSlash(SWBuf &buf) {
-		int len = buf.size();
+		int len = (int)buf.size();
 		if ((buf[len-1] == '/')
 		 || (buf[len-1] == '\\'))
 			buf.size(len-1);
@@ -70,12 +66,13 @@ namespace {
 }
 
 
-const int InstallMgr::MODSTAT_OLDER            = 0x001;
-const int InstallMgr::MODSTAT_SAMEVERSION      = 0x002;
-const int InstallMgr::MODSTAT_UPDATED          = 0x004;
-const int InstallMgr::MODSTAT_NEW              = 0x008;
-const int InstallMgr::MODSTAT_CIPHERED         = 0x010;
-const int InstallMgr::MODSTAT_CIPHERKEYPRESENT = 0x020;
+const unsigned int InstallMgr::MODSTAT_OLDER            = 0x001;
+const unsigned int InstallMgr::MODSTAT_SAMEVERSION      = 0x002;
+const unsigned int InstallMgr::MODSTAT_UPDATED          = 0x004;
+const unsigned int InstallMgr::MODSTAT_NEW              = 0x008;
+const unsigned int InstallMgr::MODSTAT_CIPHERED         = 0x010;
+const unsigned int InstallMgr::MODSTAT_CIPHERKEYPRESENT = 0x020;
+bool      InstallMgr::userDisclaimerConfirmed  = false;
 
 
 // override this method and provide your own custom RemoteTransport subclass
@@ -100,7 +97,9 @@ RemoteTransport *InstallMgr::createHTTPTransport(const char *host, StatusReporte
 
 
 InstallMgr::InstallMgr(const char *privatePath, StatusReporter *sr, SWBuf u, SWBuf p) {
-	userDisclaimerConfirmed = false;
+	passive = true;
+	timeoutMillis = 10000;
+	unverifiedPeerAllowed = true;
 	statusReporter = sr;
 	this->u = u;
 	this->p = p;
@@ -109,7 +108,7 @@ InstallMgr::InstallMgr(const char *privatePath, StatusReporter *sr, SWBuf u, SWB
 	installConf = 0;
 	stdstr(&(this->privatePath), privatePath);
 	if (this->privatePath) {
-		int len = strlen(this->privatePath);
+		int len = (int)strlen(this->privatePath);
 		if ((this->privatePath[len-1] == '/')
 		 || (this->privatePath[len-1] == '\\'))
 			this->privatePath[len-1] = 0;
@@ -145,12 +144,15 @@ void InstallMgr::readInstallConf() {
 	clearSources();
 	
 	setFTPPassive(stricmp((*installConf)["General"]["PassiveFTP"].c_str(), "false") != 0);
+	long t = atol((*installConf)["General"]["TimeoutMillis"].c_str());
+	if (t > 0) setTimeoutMillis(t);
+	setUnverifiedPeerAllowed(stricmp((*installConf)["General"]["UnverifiedPeerAllowed"].c_str(), "false") != 0);
 
-	SectionMap::iterator confSection = installConf->Sections.find("Sources");
+	SectionMap::iterator confSection = installConf->getSections().find("Sources");
 	ConfigEntMap::iterator sourceBegin;
 	ConfigEntMap::iterator sourceEnd;
 
-	if (confSection != installConf->Sections.end()) {
+	if (confSection != installConf->getSections().end()) {
 
 		sourceBegin = confSection->second.lower_bound("FTPSource");
 		sourceEnd = confSection->second.upper_bound("FTPSource");
@@ -204,8 +206,8 @@ void InstallMgr::readInstallConf() {
 	}
 
 	defaultMods.clear();
-	confSection = installConf->Sections.find("General");
-	if (confSection != installConf->Sections.end()) {
+	confSection = installConf->getSections().find("General");
+	if (confSection != installConf->getSections().end()) {
 		sourceBegin = confSection->second.lower_bound("DefaultMod");
 		sourceEnd = confSection->second.upper_bound("DefaultMod");
 
@@ -219,16 +221,17 @@ void InstallMgr::readInstallConf() {
 
 void InstallMgr::saveInstallConf() {
 
-	installConf->Sections["Sources"].clear();
+	installConf->getSection("Sources").clear();
 
 	for (InstallSourceMap::iterator it = sources.begin(); it != sources.end(); ++it) {
 		if (it->second) {
-			installConf->Sections["Sources"].insert(ConfigEntMap::value_type(it->second->type + "Source", it->second->getConfEnt().c_str()));
+			installConf->getSection("Sources").insert(ConfigEntMap::value_type(it->second->type + "Source", it->second->getConfEnt().c_str()));
 		}
 	}
 	(*installConf)["General"]["PassiveFTP"] = (isFTPPassive()) ? "true" : "false";
+	(*installConf)["General"]["UnverifiedPeerAllowed"] = (isUnverifiedPeerAllowed()) ? "true" : "false";
 
-	installConf->Save();
+	installConf->save();
 }
 
 
@@ -243,9 +246,9 @@ int InstallMgr::removeModule(SWMgr *manager, const char *moduleName) {
 	// save our own copy, cuz when we remove the module from the SWMgr
 	// it's likely we'll free the memory passed to us in moduleName
 	SWBuf modName = moduleName;
-	module = manager->config->Sections.find(modName);
+	module = manager->config->getSections().find(modName);
 
-	if (module != manager->config->Sections.end()) {
+	if (module != manager->config->getSections().end()) {
 		// to be sure all files are closed
 		// this does not remove the .conf information from SWMgr
 		manager->deleteModule(modName);
@@ -269,30 +272,22 @@ int InstallMgr::removeModule(SWMgr *manager, const char *moduleName) {
 			}
 		}
 		else {	//remove all files in DataPath directory
-
-			DIR *dir;
-			struct dirent *ent;
 			ConfigEntMap::iterator entry;
-
 			FileMgr::removeDir(modDir.c_str());
-
-			if ((dir = opendir(manager->configPath))) {	// find and remove .conf file
-				rewinddir(dir);
-				while ((ent = readdir(dir))) {
-					if ((strcmp(ent->d_name, ".")) && (strcmp(ent->d_name, ".."))) {
-						modFile = manager->configPath;
-						removeTrailingSlash(modFile);
-						modFile += "/";
-						modFile += ent->d_name;
-						SWConfig *config = new SWConfig(modFile.c_str());
-						if (config->Sections.find(modName) != config->Sections.end()) {
-							delete config;
-							FileMgr::removeFile(modFile.c_str());
-						}
-						else	delete config;
+			std::vector<DirEntry> dirList = FileMgr::getDirList(manager->configPath);
+			for (unsigned int i = 0; i < dirList.size(); ++i) {
+				if (dirList[i].name.endsWith(".conf")) {
+					modFile = manager->configPath;
+					removeTrailingSlash(modFile);
+					modFile += "/";
+					modFile += dirList[i].name;
+					SWConfig *config = new SWConfig(modFile.c_str());
+					if (config->getSections().find(modName) != config->getSections().end()) {
+						delete config;
+						FileMgr::removeFile(modFile.c_str());
 					}
+					else	delete config;
 				}
-				closedir(dir);
 			}
 		}
 		return 0;
@@ -303,7 +298,7 @@ int InstallMgr::removeModule(SWMgr *manager, const char *moduleName) {
 
 // TODO: rename to netCopy
 int InstallMgr::remoteCopy(InstallSource *is, const char *src, const char *dest, bool dirTransfer, const char *suffix) {
-SWLog::getSystemLog()->logDebug("remoteCopy: %s, %s, %s, %c, %s", (is?is->source.c_str():"null"), src, (dest?dest:"null"), (dirTransfer?'t':'f'), (suffix?suffix:"null"));
+SWLOGD("remoteCopy: %s, %s, %s, %c, %s", (is?is->source.c_str():"null"), src, (dest?dest:"null"), (dirTransfer?'t':'f'), (suffix?suffix:"null"));
 
 	// assert user disclaimer has been confirmed
 	if (!isUserDisclaimerConfirmed()) return -1;
@@ -318,6 +313,7 @@ SWLog::getSystemLog()->logDebug("remoteCopy: %s, %s, %s, %c, %s", (is?is->source
 
 		trans = createFTPTransport(is->source, statusReporter);
 		trans->setPassive(passive);
+		trans->setTimeoutMillis(timeoutMillis);
 	}
 	else if (is->type == "HTTP" || is->type == "HTTPS") {
 		trans = createHTTPTransport(is->source, statusReporter);
@@ -331,6 +327,8 @@ SWLog::getSystemLog()->logDebug("remoteCopy: %s, %s, %s, %c, %s", (is?is->source
 		trans->setUser(u);
 		trans->setPasswd(p);
 	}
+
+	trans->setUnverifiedPeerAllowed(unverifiedPeerAllowed);
 
 	SWBuf urlPrefix;
 	if (is->type == "HTTP") {
@@ -352,7 +350,7 @@ SWLog::getSystemLog()->logDebug("remoteCopy: %s, %s, %s, %c, %s", (is?is->source
 	// let's be sure we can connect.  This seems to be necessary but sucks
 //	SWBuf url = urlPrefix + is->directory.c_str() + "/"; //dont forget the final slash
 //	if (trans->getURL("swdirlist.tmp", url.c_str())) {
-//		 SWLog::getSystemLog()->logDebug("FTPCopy: failed to get dir %s\n", url.c_str());
+// SWLOGD("FTPCopy: failed to get dir %s\n", url.c_str());
 //		 return -1;
 //	}
 
@@ -361,7 +359,7 @@ SWLog::getSystemLog()->logDebug("remoteCopy: %s, %s, %s, %c, %s", (is?is->source
 		SWBuf dir = (SWBuf)is->directory.c_str();
 		removeTrailingSlash(dir);
 		dir += (SWBuf)"/" + src; //dont forget the final slash
-SWLog::getSystemLog()->logDebug("remoteCopy: dirTransfer: %s", dir.c_str());
+SWLOGD("remoteCopy: dirTransfer: %s", dir.c_str());
 
 		retVal = trans->copyDirectory(urlPrefix, dir, dest, suffix);
 
@@ -372,9 +370,9 @@ SWLog::getSystemLog()->logDebug("remoteCopy: dirTransfer: %s", dir.c_str());
 			SWBuf url = urlPrefix + is->directory.c_str();
 			removeTrailingSlash(url);
 			url += (SWBuf)"/" + src; //dont forget the final slash
-			if (trans->getURL(dest, url.c_str())) {
-				SWLog::getSystemLog()->logDebug("netCopy: failed to get file %s", url.c_str());
-				retVal = -1;
+			retVal = trans->getURL(dest, url.c_str());
+			if (retVal) {
+SWLOGD("netCopy: failed to get file %s", url.c_str());
 			}
 		}
 		SWCATCH (...) {
@@ -403,14 +401,13 @@ int InstallMgr::installModule(SWMgr *destMgr, const char *fromLocation, const ch
 	SWBuf buffer;
 	bool aborted = false;
 	bool cipher = false;
-	DIR *dir;
-	struct dirent *ent;
 	SWBuf modFile;
 
-	SWLog::getSystemLog()->logDebug("***** InstallMgr::installModule\n");
-	if (fromLocation)
-		SWLog::getSystemLog()->logDebug("***** fromLocation: %s \n", fromLocation);
-	SWLog::getSystemLog()->logDebug("***** modName: %s \n", modName);
+SWLOGD("***** InstallMgr::installModule\n");
+	if (fromLocation) {
+SWLOGD("***** fromLocation: %s \n", fromLocation);
+	}
+SWLOGD("***** modName: %s \n", modName);
 
 	if (is)
 		sourceDir = (SWBuf)privatePath + "/" + is->uid;
@@ -421,9 +418,9 @@ int InstallMgr::installModule(SWMgr *destMgr, const char *fromLocation, const ch
 
 	SWMgr mgr(sourceDir.c_str());
 	
-	module = mgr.config->Sections.find(modName);
+	module = mgr.config->getSections().find(modName);
 
-	if (module != mgr.config->Sections.end()) {
+	if (module != mgr.config->getSections().end()) {
 	
 		entry = module->second.find("CipherKey");
 		if (entry != module->second.end())
@@ -494,10 +491,10 @@ int InstallMgr::installModule(SWMgr *destMgr, const char *fromLocation, const ch
 				else {
 					relativePath << strlen(mgr.prefixPath);
 				}
-				SWLog::getSystemLog()->logDebug("***** mgr.prefixPath: %s \n", mgr.prefixPath);
-				SWLog::getSystemLog()->logDebug("***** destMgr->prefixPath: %s \n", destMgr->prefixPath);
-				SWLog::getSystemLog()->logDebug("***** absolutePath: %s \n", absolutePath.c_str());
-				SWLog::getSystemLog()->logDebug("***** relativePath: %s \n", relativePath.c_str());
+SWLOGD("***** mgr.prefixPath: %s \n", mgr.prefixPath);
+SWLOGD("***** destMgr->prefixPath: %s \n", destMgr->prefixPath);
+SWLOGD("***** absolutePath: %s \n", absolutePath.c_str());
+SWLOGD("***** relativePath: %s \n", relativePath.c_str());
 
 				if (is) {
 					if (remoteCopy(is, relativePath.c_str(), absolutePath.c_str(), true)) {
@@ -516,35 +513,32 @@ int InstallMgr::installModule(SWMgr *destMgr, const char *fromLocation, const ch
 		}
 		if (!aborted) {
 			SWBuf confDir = sourceDir + "mods.d/";
-			if ((dir = opendir(confDir.c_str()))) {	// find and copy .conf file
-				rewinddir(dir);
-				while ((ent = readdir(dir)) && !retVal) {
-					if ((strcmp(ent->d_name, ".")) && (strcmp(ent->d_name, ".."))) {
-						modFile = confDir;
-						modFile += ent->d_name;
-						SWConfig *config = new SWConfig(modFile.c_str());
-						if (config->Sections.find(modName) != config->Sections.end()) {
-							SWBuf targetFile = destMgr->configPath; //"./mods.d/";
-							removeTrailingSlash(targetFile);
-							targetFile += "/";
-							targetFile += ent->d_name;
-							retVal = FileMgr::copyFile(modFile.c_str(), targetFile.c_str());
-							if (cipher) {
-								if (getCipherCode(modName, config)) {
-									SWMgr newDest(destMgr->prefixPath);
-									removeModule(&newDest, modName);
-									aborted = true;
-								}
-								else {
-									config->Save();
-									retVal = FileMgr::copyFile(modFile.c_str(), targetFile.c_str());
-								}
+			std::vector<DirEntry> dirList = FileMgr::getDirList(confDir);
+			for (unsigned int i = 0; i < dirList.size() && !retVal; ++i) {
+				if (dirList[i].name.endsWith(".conf")) {
+					modFile = confDir;
+					modFile += dirList[i].name;
+					SWConfig *config = new SWConfig(modFile);
+					if (config->getSections().find(modName) != config->getSections().end()) {
+						SWBuf targetFile = destMgr->configPath; //"./mods.d/";
+						removeTrailingSlash(targetFile);
+						targetFile += "/";
+						targetFile += dirList[i].name;
+						retVal = FileMgr::copyFile(modFile.c_str(), targetFile.c_str());
+						if (cipher) {
+							if (getCipherCode(modName, config)) {
+								SWMgr newDest(destMgr->prefixPath);
+								removeModule(&newDest, modName);
+								aborted = true;
+							}
+							else {
+								config->save();
+								retVal = FileMgr::copyFile(modFile.c_str(), targetFile.c_str());
 							}
 						}
-						delete config;
 					}
+					delete config;
 				}
-				closedir(dir);
 			}
 		}
 		return (aborted) ? -9 : retVal;
@@ -573,11 +567,11 @@ int InstallMgr::refreshRemoteSource(InstallSource *is) {
 
 	errorCode = remoteCopy(is, "mods.d.tar.gz", archive.c_str(), false);
 	if (!errorCode) { //sucessfully downloaded the tar,gz of module configs
-		FileDesc *fd = FileMgr::getSystemFileMgr()->open(archive.c_str(), FileMgr::RDONLY);
-		untargz(fd->getFd(), root.c_str());
-		FileMgr::getSystemFileMgr()->close(fd);
+		int fd = FileMgr::openFileReadOnly(archive.c_str());
+		ZipCompress::unTarGZ(fd, root.c_str());
+		FileMgr::closeFile(fd);
 	}
-	else
+	else if (errorCode > -2)	// don't try the next attempt on connection error or user requested termination
 #endif
 	errorCode = remoteCopy(is, "mods.d", target.c_str(), true, ".conf"); //copy the whole directory
 
@@ -595,7 +589,7 @@ bool InstallMgr::isDefaultModule(const char *modName) {
  * getModuleStatus - compare the modules of two SWMgrs and return a 
  * 	vector describing the status of each.  See MODSTAT_*
  */
-map<SWModule *, int> InstallMgr::getModuleStatus(const SWMgr &base, const SWMgr &other) {
+map<SWModule *, int> InstallMgr::getModuleStatus(const SWMgr &base, const SWMgr &other, bool utilModules) {
 	map<SWModule *, int> retVal;
 	SWBuf targetVersion;
 	SWBuf sourceVersion;
@@ -604,7 +598,7 @@ map<SWModule *, int> InstallMgr::getModuleStatus(const SWMgr &base, const SWMgr 
 	bool keyPresent;
 	int modStat;
 	
-	for (ModMap::const_iterator mod = other.Modules.begin(); mod != other.Modules.end(); mod++) {
+	for (ModMap::const_iterator mod = (!utilModules ? other.getModules().begin() : other.getUtilModules().begin()); mod != (!utilModules ? other.getModules().end() : other.getUtilModules().end()); ++mod) {
 	
 		modStat = 0;
 
@@ -662,8 +656,8 @@ int InstallMgr::refreshRemoteSourceConfiguration() {
 	int errorCode = remoteCopy(&is, masterRepoList, masterRepoListPath.c_str(), false);
 	if (!errorCode) { //sucessfully downloaded the repo list
 		SWConfig masterList(masterRepoListPath);
-		SectionMap::iterator sections = masterList.Sections.find("Repos");
-		if (sections != masterList.Sections.end()) {
+		SectionMap::iterator sections = masterList.getSections().find("Repos");
+		if (sections != masterList.getSections().end()) {
 			for (ConfigEntMap::iterator actions = sections->second.begin(); actions != sections->second.end(); actions++) {
 				// Search through our current sources and see if we have a matching UID
 				InstallSourceMap::iterator it;
@@ -812,6 +806,56 @@ SWMgr *InstallSource::getMgr() {
 		// ..., false = don't augment ~home directory.
 		mgr = new SWMgr(localShadow.c_str(), true, 0, false, false);
 	return mgr;
+}
+
+
+/** Override this and provide an input mechanism to allow your users
+ *  to confirm that they understand this important disclaimer.
+ *  This method will be called immediately before attempting to perform
+ *  any network function.
+ *  If you would like your confirmation to always show at a predefined
+ *  time before attempting network operations, then you can call this
+ *  method yourself at the desired time.
+ *
+ *  Return true if your user confirms.
+ *
+ *  User disclaimer should ask user for confirmation of 2 critical items:
+ *  and the default answer should be NO
+ *  (due to possibly the wrong language for the disclaimer)
+ *
+ *  1) detection OK (Not in persecuted country)
+ *  2) repos other than CrossWire may have questionable content
+ *
+ *  A sample default impl is provided below:
+ *
+ */
+bool InstallMgr::isUserDisclaimerConfirmed() const {
+
+	if (!userDisclaimerConfirmed) {
+		std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+		std::cout << "                -=+* WARNING *+=- -=+* WARNING *+=-\n\n\n";
+		std::cout << "Although Install Manager provides a convenient way for installing\n";
+		std::cout << "and upgrading SWORD components, it also uses a systematic method\n";
+		std::cout << "for accessing sites which gives packet sniffers a target to lock\n";
+		std::cout << "into for singling out users. \n\n\n";
+		std::cout << "IF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION,\n";
+		std::cout << "YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES.\n\n\n";
+		std::cout << "Also, Remote Sources other than CrossWire may contain less than\n";
+		std::cout << "quality modules, modules with unorthodox content, or even modules\n";
+		std::cout << "which are not legitimately distributable.  Many repositories\n";
+		std::cout << "contain wonderfully useful content.  These repositories simply\n";
+		std::cout << "are not reviewed or maintained by CrossWire and CrossWire\n";
+		std::cout << "cannot be held responsible for their content. CAVEAT EMPTOR.\n\n\n";
+		std::cout << "If you understand this and are willing to enable remote source features\n";
+		std::cout << "then type yes at the prompt\n\n";
+		std::cout << "enable? [no] ";
+
+		char prompt[10];
+		fgets(prompt, 9, stdin);
+		userDisclaimerConfirmed = (!strcmp(prompt, "yes\n"));
+		std::cout << "\n";
+	}
+	return userDisclaimerConfirmed;
 }
 
 

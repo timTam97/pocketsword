@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisglosses.h -	Implementation of OSISGlosses
+ * osisglosses.h -	class OSISGlosses: an OptionFilter which handles
+ * 			glosses in modules marked up in OSIS
  *
- * $Id: osisglosses.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisglosses.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides headings in a OSIS text
+/** This Filter shows/hides glosses in a OSIS text
  */
 class SWDLLEXPORT OSISGlosses : public SWOptionFilter {
 public:

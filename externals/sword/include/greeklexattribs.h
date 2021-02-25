@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  greeklexattribs.h -	Implementation of GreekLexAttribs
+ * greeklexattribs.h -	class GreekLexAttribs: an OptionFilter to handle
+ * 			Greek Lexicon attributes for modules marked up
+ * 			in TEI
  *
- * $Id: greeklexattribs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: greeklexattribs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +29,7 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts ThML text to plain text
+/** an OptionFilter to handle Greek Lexicon attributes for modules marked up in TEI
  */
 class SWDLLEXPORT GreekLexAttribs : public SWOptionFilter {
 public:

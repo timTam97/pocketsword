@@ -2,7 +2,7 @@
  *
  *  osisplain.cpp -	An SWFilter that provides stripping of OSIS tags
  *
- * $Id: osisplain.cpp 3018 2014-01-23 09:27:45Z chrislit $
+ * $Id: osisplain.cpp 3623 2019-05-19 02:47:41Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -25,6 +25,8 @@
 #include <ctype.h>
 #include <versekey.h>
 #include <stringmgr.h>
+#include <utilxml.h>
+#include <swmodule.h>
 
 SWORD_NAMESPACE_START
 
@@ -35,7 +37,6 @@ namespace {
 	public:
 		SWBuf w;
 		XMLTag tag;
-		VerseKey *vk;
 		char testament;
 		SWBuf hiType;
 		MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {}
@@ -58,19 +59,32 @@ OSISPlain::OSISPlain() {
 	addEscapeStringSubstitute("gt", ">");
 	addEscapeStringSubstitute("quot", "\"");
 
-	   setTokenCaseSensitive(true);
-	   addTokenSubstitute("title", "\n");
-	   addTokenSubstitute("/title", "\n");
-	   addTokenSubstitute("/l", "\n");
-	   addTokenSubstitute("lg", "\n");
-	   addTokenSubstitute("/lg", "\n");
+	setTokenCaseSensitive(true);
+	addTokenSubstitute("title", "\n");
+	addTokenSubstitute("/title", "\n");
+	addTokenSubstitute("/l", "\n");
+	addTokenSubstitute("lg", "\n");
+	addTokenSubstitute("/lg", "\n");
+
+	setStageProcessing(PRECHAR);
 }
+
 
 BasicFilterUserData *OSISPlain::createUserData(const SWModule *module, const SWKey *key) {
 	MyUserData *u = new MyUserData(module, key);
-	u->vk = SWDYNAMIC_CAST(VerseKey, u->key);
-	u->testament = (u->vk) ? u->vk->getTestament() : 2;	// default to NT
+	u->testament = (u->vkey) ? u->vkey->getTestament() : 2;	// default to NT
 	return u;
+}
+
+
+bool OSISPlain::processStage(char stage, SWBuf &text, char *&from, BasicFilterUserData *userData) {
+	// this is a strip filter so we want to do this as optimized as possible.  Avoid calling
+	// getUniCharFromUTF8 for slight speed improvement
+		
+	if (stage == PRECHAR) {
+		if ((unsigned)from[0] == 0xC2 && (unsigned)from[1] == 0xAD) return true;	// skip soft hyphens
+	}
+	return false;
 }
 
 
@@ -105,10 +119,8 @@ bool OSISPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				buf.append('>');
 			}
 			if ((attrib = u->tag.getAttribute("gloss"))) {
-				val = strchr(attrib, ':');
-				val = (val) ? (val + 1) : attrib;
 				buf.append(" <");
-				buf.append(val);
+				buf.append(attrib);
 				buf.append('>');
 			}
 			if ((attrib = u->tag.getAttribute("lemma"))) {
@@ -168,6 +180,12 @@ bool OSISPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					buf.append(" [");
 				}
 				else	u->suspendTextPassThru = true;
+				if (u->module) {
+					XMLTag tag = token;
+					SWBuf swordFootnote = tag.getAttribute("swordFootnote");
+					SWBuf footnoteBody = u->module->getEntryAttributes()["Footnote"][swordFootnote]["body"];
+					buf.append(u->module->renderText(footnoteBody));
+				}
 			}
 		else if (!strncmp(token, "/note", 5)) {
 			if (!u->suspendTextPassThru)
@@ -234,12 +252,17 @@ bool OSISPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				}
 			}
 			else {
-				buf.append("*");
-				buf.append(u->lastTextNode);
-				buf.append("*");
+				buf.append("* ");
+				buf.append(u->lastSuspendSegment);
+				buf.append(" *");
 			}
 			u->suspendTextPassThru = false;
 		}
+		
+		else if ((!strncmp(token, "q", 1) && (u->tag.getAttribute("marker")))) {
+			buf.append(u->tag.getAttribute("marker"));
+			}
+		
 
                 // <milestone type="line"/>
                 else if (!strncmp(token, "milestone", 9)) {
@@ -247,6 +270,9 @@ bool OSISPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			if (type && strncmp(type+6, "line", 4)) { //we check for type != line
 				userData->supressAdjacentWhitespace = true;
         			buf.append('\n');
+			}
+			if (u->tag.getAttribute("marker")) {
+				buf.append(u->tag.getAttribute("marker"));
 			}
                 }
 

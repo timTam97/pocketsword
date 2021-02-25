@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  gbfhtml.h -	Implementation of GBFHTML
+ * gbfhtml.h -	class GBFHTML: a RenderFilter to render HTML from modules
+ * 		marked up in GBF
  *
- * $Id: gbfthml.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfthml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

@@ -3,7 +3,7 @@
  *  gbfheadings.cpp -	SWFilter descendant to hide or show headings
  *			in a GBF module
  *
- * $Id: gbfheadings.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: gbfheadings.cpp 3427 2016-07-03 14:30:33Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -93,11 +93,13 @@ char GBFHeadings::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 				continue;
 			}
 			if (intoken) {
-				if (tokpos < 2045)
+				if (tokpos < 2045) {
 					token[tokpos++] = *from;
+					// TODO: why is this + 2 ?
 					token[tokpos+2] = 0;
+				}
 			}
-			else	{
+			else {
 				if (!hide) {
 					text += *from;
 				}

@@ -1,10 +1,9 @@
 /******************************************************************************
  *
- *  rawfiles.h -	code for class 'RawFiles'- a module that produces HTML
- *			HREFs pointing to actual text desired.  Uses standard
- *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
+ * rawfiles.h -		class RawFiles: a module driver that reads and writes
+ *			entries each to separate files on the filesystem
  *
- * $Id: rawfiles.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawfiles.h 3805 2020-09-19 12:19:28Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -34,11 +33,10 @@ SWORD_NAMESPACE_START
 
 class SWDLLEXPORT RawFiles : public RawVerse, public SWCom {
 
+private:
 	const char *getNextFilename();
 
 public:
-
-
 	RawFiles(const char *ipath, const char *iname = 0, const char *idesc = 0,
 			SWDisplay *idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN,
 			SWTextDirection dir = DIRECTION_LTR, SWTextMarkup markup = FMT_UNKNOWN,
@@ -56,17 +54,18 @@ public:
 	* @param path The first parameter is path of the new module
 	* @return error
 	*/
-	static char createModule(const char *);
+	static char createModule(const char *path);
 
 	/** Modify the current module entry text
 	* - only if module @ref isWritable
-	* @return *this
+	* @param inbuf the text of the entry to set
+	* @param len optional len to set the modules entry.  If not passed, strlen will be performed on @ref inbuf
 	*/
 	virtual void setEntry(const char *inbuf, long len = -1);	// Modify current module entry
 
 	/** Link the current module entry to another module entry
 	* - only if module @ref isWritable
-	* @return *this
+	* @param linkKey the entry key to which this current entry should be linked.
 	*/
 	virtual void linkEntry(const SWKey *linkKey);	// Link current module entry to other module entry
 

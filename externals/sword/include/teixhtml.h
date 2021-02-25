@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  teixhtml.h -	Implementation of TEIXHTML
+ * teixhtml.h -	class TEIXHTML: a RenderFilter to render XHTML from modules
+ * 		marked up in TEI
  *
- * $Id: teixhtml.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: teixhtml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2012-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,18 +31,20 @@ SWORD_NAMESPACE_START
 /** this filter converts TEI text to XHTML text
  */
 class SWDLLEXPORT TEIXHTML : public SWBasicFilter {
+
 private:
 	bool renderNoteNumbers;
 
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
-		bool BiblicalText;
+		bool isBiblicalText;
 		SWBuf lastHi;
 		
 		SWBuf version;
 		MyUserData(const SWModule *module, const SWKey *key);
 	};
+
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
@@ -49,6 +52,7 @@ protected:
 public:
 	TEIXHTML();
 	void setRenderNoteNumbers(bool val = true) { renderNoteNumbers = val; }
+	virtual const char *getHeader() const;
 };
 
 SWORD_NAMESPACE_END

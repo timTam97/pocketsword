@@ -1,11 +1,10 @@
 /******************************************************************************
  *
- *  zverse.h -		code for class 'zVerse'- a module that reads raw text
- *			files:  ot and nt using indexs ??.bks ??.cps ??.vss
- *			and provides lookup and parsing functions based on
- *			class VerseKey
+ * zverse.h -		class 'zVerse'- a support class for module drivers
+ *			which support a 2 byte entry size and use Versekey
+ *			for their entry keys
  *
- * $Id: zverse.h 3136 2014-03-17 09:38:48Z chrislit $
+ * $Id: zverse.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

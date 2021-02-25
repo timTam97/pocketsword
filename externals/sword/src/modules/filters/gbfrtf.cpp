@@ -2,7 +2,7 @@
  *
  *  gbfrtf.cpp -	SWFilter descendant to convert all GBF tags to RTF tags
  *
- * $Id: gbfrtf.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfrtf.cpp 3427 2016-07-03 14:30:33Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -307,9 +307,11 @@ char GBFRTF::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 			continue;
 		}
 		if (intoken) {
-			if (tokpos < 2045)
+			if (tokpos < 2045) {
 				token[tokpos++] = *from;
+				// TODO: why is this + 2 ?
 				token[tokpos+2] = 0;
+			}
 		}
 		else {
 			if (!hideText) {

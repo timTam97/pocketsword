@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  echomod.h -	code for class 'EchoMod' - a test module that just echo back
+ * echomod.h -	class 'EchoMod' - a test module driver that will just echo back
  *		text of key.
  *
- * $Id: echomod.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: echomod.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,8 +30,7 @@
 
 SWORD_NAMESPACE_START
 
-class SWDLLEXPORT EchoMod : public SWText
-{
+class SWDLLEXPORT EchoMod : public SWText {
 public:
 	EchoMod();
 	virtual ~EchoMod();

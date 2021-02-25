@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osislemma.h -	Implementation of OSISLemma
+ * osislemma.h -	class OSISLemma: an OptionFilter to handle lemma
+ * 			entries on words in modules marked up in OSIS
  *
- * $Id: osislemma.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osislemma.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides headings in a OSIS text
+/** This Filter shows/hides lemmata in an OSIS text
  */
 class SWDLLEXPORT OSISLemma : public SWOptionFilter {
 public:

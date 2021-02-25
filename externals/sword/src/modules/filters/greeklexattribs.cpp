@@ -3,7 +3,7 @@
  *  greeklexattribs.cpp -	SWFilter descendant to set entry attributes
  *				for greek lexicons
  *
- * $Id: greeklexattribs.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: greeklexattribs.cpp 3511 2017-11-01 11:18:50Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -44,7 +44,7 @@ char GreekLexAttribs::processText(SWBuf &text, const SWKey *key, const SWModule 
 		string phrase;
 		string freq;
 		char val[128], *valto;
-		char wordstr[7];
+		char wordstr[11];
 		const char *currentPhrase = 0;
 		const char *currentPhraseEnd = 0;
 		int number = 0;

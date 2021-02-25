@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  xzcomprs.h -	XzCompress, a driver class that provides xz (LZMA2)
- *			compression
+ * xzcomprs.h -		class XzCompress: an SWCompress class which provides
+ * 			xz (LZMA2) compression
  *
- * $Id: xzcomprs.h 3249 2014-08-24 01:55:08Z scribe $
+ * $Id: xzcomprs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,16 +33,16 @@ SWORD_NAMESPACE_START
 
 class SWDLLEXPORT XzCompress : public SWCompress {
 
-protected:
+private:
+	SW_u64 memlimit; // memory usage limit during decompression
+
 public:
 	XzCompress();
 	virtual ~XzCompress();
 
-	virtual void Encode(void);
-	virtual void Decode(void);
+	virtual void encode(void);
+	virtual void decode(void);
 	virtual void setLevel(int l);
-private:
-	__u64 memlimit; // memory usage limit during decompression
 };
 
 SWORD_NAMESPACE_END

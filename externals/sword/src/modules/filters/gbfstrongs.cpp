@@ -3,7 +3,7 @@
  *  gbfstrongs.cpp -	SWFilter descendant to hide or show Strong's number
  *			in a GBF module
  *
- * $Id: gbfstrongs.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: gbfstrongs.cpp 3511 2017-11-01 11:18:50Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -58,7 +58,7 @@ char GBFStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 	bool lastspace = false;
 	int word = 1;
 	char val[128];
-	char wordstr[5];
+	char wordstr[11];
 	char *valto;
 	unsigned int textStart = 0, textEnd = 0;
 	bool newText = false;
@@ -75,7 +75,7 @@ char GBFStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 			token[0] = 0;
 			token[1] = 0;
 			token[2] = 0;
-			textEnd = text.size();
+			textEnd = (unsigned int)text.size();
 			continue;
 		}
 		if (*from == '>') {	// process tokens
@@ -110,7 +110,7 @@ char GBFStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 						if (lastspace)
 							text--;
 					}
-					if (newText) {textStart = text.size(); newText = false; }
+					if (newText) {textStart = (unsigned int)text.size(); newText = false; }
 					continue;
 				}
 			}
@@ -130,15 +130,17 @@ char GBFStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 			text += '<';
 			text += token;
 			text += '>';
-			if (newText) {textStart = text.size(); newText = false; }
+			if (newText) {textStart = (unsigned int)text.size(); newText = false; }
 			continue;
 		}
 		if (intoken) {
-			if (tokpos < 2045)
+			if (tokpos < 2045) {
 				token[tokpos++] = *from;
+				// TODO: why is this + 2 ?
 				token[tokpos+2] = 0;
+			}
 		}
-		else	{
+		else {
 			text += *from;
 			lastspace = (*from == ' ');
 		}

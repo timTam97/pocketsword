@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  lzsscomprs.h -	definition of Class SWCompress used for data
- *			compression
+ * lzsscomprs.h -	class LZSSCompress: SWCompress implementation
+ * 			using LZSS
  *
- * $Id: lzsscomprs.h 2935 2013-08-02 11:06:30Z scribe $
+ * $Id: lzsscomprs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -37,8 +37,8 @@ class Private;
 public:
 	LZSSCompress ();
 	virtual ~LZSSCompress();
-	virtual void Encode(void);
-	virtual void Decode(void);
+	virtual void encode(void);
+	virtual void decode(void);
 };
 
 SWORD_NAMESPACE_END

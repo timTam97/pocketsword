@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  papyriplain.h -	Implementation of PapyriPlain
+ * papyriplain.h -	class PapyriPlain: a StripFilter to remove Leiden
+ * 			markup from modules
  *
- * $Id: papyriplain.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: papyriplain.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,8 +28,8 @@
 
 SWORD_NAMESPACE_START
 
-  /** This filter converts Papyri text to plain text
-  */
+/** This filter converts Papyri text to plain text. stripFilter to remove Leiden markup from manuscript transcriptions
+ */
 class SWDLLEXPORT PapyriPlain : public SWOptionFilter {
 public:
 	PapyriPlain();

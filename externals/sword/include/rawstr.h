@@ -1,11 +1,9 @@
 /*****************************************************************************
  *
- *  rawstr.h -	code for class 'RawStr'- a module that reads raw text
- *		files:  ot and nt using indexs ??.bks ??.cps ??.vss
- *		and provides lookup and parsing functions based on
- *		class StrKey
+ * rawstr.h -	class RawStr: a helper class for modules with string
+ *		keys, uncompressed, with entry sizes specified by to 2 bytes
  *
- * $Id: rawstr.h 3134 2014-03-17 09:30:15Z chrislit $
+ * $Id: rawstr.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -35,6 +33,8 @@ class SWBuf;
 class FileDesc;
 
 class SWDLLEXPORT RawStr {
+
+private:
 	static int instance;		// number of instantiated RawStr objects or derivitives
 	char *path;
 	bool caseSensitive;
@@ -54,8 +54,8 @@ public:
 	virtual ~RawStr();
 	void getIDXBuf(long ioffset, char **buf) const;
 	void getIDXBufDat(long ioffset, char **buf) const;
-	signed char findOffset(const char *key, __u32 *start, __u16 *size, long away = 0, __u32 *idxoff = 0) const;
-	void readText(__u32 start, __u16 *size, char **idxbuf, SWBuf &buf) const;
+	signed char findOffset(const char *key, SW_u32 *start, SW_u16 *size, long away = 0, SW_u32 *idxoff = 0) const;
+	void readText(SW_u32 start, SW_u16 *size, char **idxbuf, SWBuf &buf) const;
 	static signed char createModule(const char *path);
 };
 

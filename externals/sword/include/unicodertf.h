@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  unicodertf.h -	Implementation of UnicodeRTF
+ * unicodertf.h -	class UnicodeRTF: an encoding filter which converts
+ * 			UTF8 into RTF Unicode tags
  *
- * $Id: unicodertf.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: unicodertf.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

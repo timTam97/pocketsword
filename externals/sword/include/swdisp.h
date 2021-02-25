@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  swdisp.h -	code for base class 'swdisp'.  swdisp is the basis for all
+ * swdisp.h -	class SWDisplay: the basis for all
  *		types of displays (e.g. raw textout, curses, xwindow, etc.)
  *
- * $Id: swdisp.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swdisp.h 3820 2020-10-24 20:27:30Z scribe $
  *
  * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,24 +31,27 @@ SWORD_NAMESPACE_START
 
 class SWModule;
 
-/** swdisp is the basis for all types of displays
-* (e.g. raw textout, curses, xwindow, etc.)
-*/
+/** SWDisplay is the basis for all types of displays
+ * (e.g. raw textout, curses, xwindow, etc.)
+ */
 class SWDLLEXPORT SWDisplay : public SWObject {
-  static SWClass classdef;
+
 public:
-  SWDisplay() { myclass = &classdef; };
-  virtual ~SWDisplay() {};
-  
-  /** casts a module to a character pointer and displays it to
-  * raw output (overriden for different display types and
-  * module types if necessary)
-  *
-  * @param imodule module to display
-  * @return error status
-  */
-  virtual char display(SWModule &imodule) = 0;
-  SWDEPRECATED char Display(SWModule &imodule) { return display(imodule); }
+	SWDisplay();
+	virtual ~SWDisplay() { };
+
+	/** casts a module to a character pointer and displays it to
+	 * raw output (overriden for different display types and
+	 * module types if necessary)
+	 *
+	 * @param imodule module to display
+	 * @return error status
+	 */
+	virtual char display(SWModule &imodule) = 0;
+	/**
+	 * @deprecated Use display
+	 */
+	SWDEPRECATED char Display(SWModule &imodule) { return display(imodule); }
 };
 
 SWORD_NAMESPACE_END

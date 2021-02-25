@@ -4,7 +4,7 @@
  *			HREFs pointing to actual text desired.  Uses standard
  *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: hrefcom.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: hrefcom.cpp 3821 2020-11-02 18:33:02Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -72,7 +72,7 @@ HREFCom::~HREFCom()
 SWBuf &HREFCom::getRawEntryBuf() const {
 	long  start;
 	unsigned short size;
-	VerseKey *key = 0;
+	const VerseKey *key = 0;
 
         key = &getVerseKey();
 
@@ -86,7 +86,7 @@ SWBuf &HREFCom::getRawEntryBuf() const {
 	entryBuf += tmpbuf.c_str();
 	prepText(entryBuf);
 
-	if (key != this->key)
+	if (key != (const VerseKey *)this->key)
 		delete key;
 
 	return entryBuf;

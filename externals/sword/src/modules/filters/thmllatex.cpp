@@ -2,7 +2,7 @@
  *
  *  thmllatex.cpp -	ThML to classed LaTeX
  *
- * $Id: thmllatex.cpp 3074 2014-03-05 00:30:21Z chrislit $
+ * $Id: thmllatex.cpp 3547 2017-12-10 05:06:48Z scribe $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -38,10 +38,11 @@ const char *ThMLLaTeX::getHeader() const {
 
 
 ThMLLaTeX::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
+	isBiblicalText = false;
+	inSecHead = false;
 	if (module) {
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
-		SecHead = false;
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}	
 }
 
@@ -163,8 +164,8 @@ ThMLLaTeX::ThMLLaTeX() {
 	addAllowedEscapeString("oslash"); // "ø"
 
 	setTokenCaseSensitive(true);
-//	addTokenSubstitute("scripture", "<i> ");
-	addTokenSubstitute("/scripture", "</i> ");
+	addTokenSubstitute("scripture", " \\swordquote{ ");
+	addTokenSubstitute("/scripture", "}");
 
 	renderNoteNumbers = false;
 }
@@ -181,29 +182,33 @@ bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		if (tag.getName() && !strcmp(tag.getName(), "sync")) {
 			SWBuf value = tag.getAttribute("value");
 			if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "morph")) { //&gt;
-				if(value.length())
-					buf.appendFormatted("<small><em class=\"morph\">(<a href=\"passagestudy.jsp?action=showMorph&type=Greek&value=%s\" class=\"morph\">%s</a>)</em></small>", 
-						URL::encode(value.c_str()).c_str(),
+				if (value.length())
+					buf.appendFormatted("\\swordmorph[Greek]{%s}", 
 						value.c_str());
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "lemma")) { //&gt;
-				if(value.length())
+				if (value.length())
 					// empty "type=" is deliberate.
-					buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=&value=%s\" class=\"strongs\">%s</a>&gt;</em></small>", 
-						URL::encode(value.c_str()).c_str(),
+					buf.appendFormatted("\\swordmorph[lemma]{%s}", 
 						value.c_str());
 			}
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Strongs")) {
-				char ch = *value;
-				value<<1;
-				buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=%s&value=%s\" class=\"strongs\">",
+				if (!tag.isEndTag()) {
+				        char ch = *value;
+				        value<<1;
+				        buf.appendFormatted("\\swordstrong[%s]{%s}{",
 						    ((ch == 'H') ? "Hebrew" : "Greek"),
-						    URL::encode(value.c_str()).c_str());
-				buf += (value.length()) ? value.c_str() : "";
-				buf += "</a>&gt;</em></small>";
-			}
+						    value.c_str());
+                                        }
+                                else { 	buf += "}"; }
+                        }
+				
 			else if (tag.getAttribute("type") && !strcmp(tag.getAttribute("type"), "Dict")) {
-				buf += (tag.isEndTag() ? "</b>" : "<b>");
+				if (!tag.isEndTag()) {
+				        buf.appendFormatted("\\sworddict{%s}{",
+						    value.c_str());
+                                }
+                                else { buf += "}"; }
 			}
 				
 		}
@@ -214,44 +219,42 @@ bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					SWBuf type = tag.getAttribute("type");
 					SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
 					SWBuf noteName = tag.getAttribute("n");
-					VerseKey *vkey = NULL;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {	}
-					if (vkey) {
+					SWBuf footnoteBody = "";
+					if (u->module){
+					        footnoteBody += u->module->getEntryAttributes()["Footnote"][footnoteNumber]["body"];
+                                        }
+					if (u->vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c%s</sup></small></a>", 
+						buf.appendFormatted("\\swordfootnote[%c]{%s}{%s}{%s}{%s}{", 
 							ch, 
-							URL::encode(footnoteNumber.c_str()).c_str(), 
-							URL::encode(u->version.c_str()).c_str(), 
-							URL::encode(vkey->getText()).c_str(), 
-							ch,
-							ch, 
-							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
+							footnoteNumber.c_str(), 
+							u->version.c_str(), 
+							u->vkey->getText(),  
+							noteName.c_str());  
 					}
 					else {
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c%s</sup></small></a>", 
+						buf.appendFormatted("\\swordfootnote[%c]{%s}{%s}{%s}{%s}{", 
 							ch, 
-							URL::encode(footnoteNumber.c_str()).c_str(), 
-							URL::encode(u->version.c_str()).c_str(), 
-							URL::encode(u->key->getText()).c_str(),  
-							ch,
-							ch, 
-							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
+							footnoteNumber.c_str(), 
+							u->version.c_str(), 
+							u->key->getText(),   
+							noteName.c_str());                                                                                             
 					}
 					u->suspendTextPassThru = true;
+					if (u->module) {
+                                                buf += u->module->renderText(footnoteBody).c_str();
+                                        }
 				}
 			}
 			if (tag.isEndTag()) {
+			        buf += "}";
 				u->suspendTextPassThru = false;
 			}
 		}
 		else if (!strcmp(tag.getName(), "scripture")) {
-			buf += (tag.isEndTag() ? "</i>" : "<i>");
+			buf += (tag.isEndTag() ? "\\swordquote" : "}");
 		}
 		// <scripRef> tag
 		else if (!strcmp(tag.getName(), "scripRef")) {
@@ -260,64 +263,76 @@ bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					u->suspendTextPassThru = true;
 				}
 			}
-			if (tag.isEndTag()) {	//	</scripRef>
-				if (!u->BiblicalText) {
+			if (!tag.isEndTag()) {	//	</scripRef>
+				if (!u->isBiblicalText) {
 					SWBuf refList = u->startTag.getAttribute("passage");
 					if (!refList.length())
 						refList = u->lastTextNode;
 					SWBuf version = tag.getAttribute("version");
 					
-					buf.appendFormatted("<a href=\"passagestudy.jsp?action=showRef&type=scripRef&value=%s&module=%s\">",
-						(refList.length()) ? URL::encode(refList.c_str()).c_str() : "", 
-						(version.length()) ? URL::encode(version.c_str()).c_str() : "");
+					buf.appendFormatted("\\swordxref{%s}{%s}{",
+						(refList.length()) ? refList.c_str() : "", 
+						(version.length()) ? version.c_str() : "");
 					buf += u->lastTextNode.c_str();
-					buf += "</a>";
+					buf += "}";
 				}
 				else {
 					SWBuf footnoteNumber = u->startTag.getAttribute("swordFootnote");
 					SWBuf noteName = tag.getAttribute("n");
-					VerseKey *vkey = NULL;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {}
-					if (vkey) {
+					SWBuf footnoteBody = "";
+					if (u->module){
+					        footnoteBody += u->module->getEntryAttributes()["Footnote"][footnoteNumber]["body"];
+                                        }
+					if (u->vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
-						//buf.appendFormatted("<a href=\"noteID=%s.x.%s\"><small><sup>*x</sup></small></a> ", vkey->getText(), footnoteNumber.c_str());
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=x&value=%s&module=%s&passage=%s\"><small><sup class=\"x\">*x%s</sup></small></a>",
-							URL::encode(footnoteNumber.c_str()).c_str(), 
-							URL::encode(u->version.c_str()).c_str(),
-							URL::encode(vkey->getText()).c_str(), 
-							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
+						//buf.appendFormatted("<a href=\"noteID=%s.x.%s\"><small><sup>*x</sup></small></a> ", u->vkey->getText(), footnoteNumber.c_str());
+						// char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
+						char ch = 'x';
+						buf.appendFormatted("\\swordfootnote[%c]{%s}{%s}{%s}{%s}{",
+							ch,
+							footnoteNumber.c_str(), 
+							u->version.c_str(),
+							u->vkey->getText(), 
+							(renderNoteNumbers ? noteName.c_str() : ""));
+						if (u->module) {
+                                                        buf += u->module->renderText(footnoteBody).c_str();
+                                                }		
 					}
 				}
 
-				// let's let text resume to output again
+				
+                        }
+			else if (tag.isEndTag()){
+			        buf +="}";
+			        // let's let text resume to output again
 				u->suspendTextPassThru = false;
 			}
 		}
 		else if (tag.getName() && !strcmp(tag.getName(), "div")) {
-			if (tag.isEndTag() && u->SecHead) {
-				buf += "</i></b><br />";
-				u->SecHead = false;
+		                                        
+		        //if (!tag.isEndTag() && u->vkey && !u->vkey->getChapter())
+		        //        buf += "\\swordsection{book}{";
+		        //}        
+		        
+		        
+			if (!tag.isEndTag() && u->inSecHead) {
+				buf += "\\swordsection{sechead}{";
+				u->inSecHead = false;
 			}
-			else if (tag.getAttribute("class")) {
-				if (!stricmp(tag.getAttribute("class"), "sechead")) {
-					u->SecHead = true;
-					buf += "<br /><b><i>";
-				}
-				else if (!stricmp(tag.getAttribute("class"), "title")) {
-					u->SecHead = true;
-					buf += "<br /><b><i>";
-				}
-				else {
-					buf += tag;
-				}
+			
+			else if (!tag.isEndTag() && tag.getAttribute("class")) {
+			        buf += "\\swordsection{";
+                                buf += tag.getAttribute("class");
+                                buf += "}{"; 
+				
 			}
-			else {
-				buf += tag;
+			else if (!tag.isEndTag()) {
+				buf += "\\swordsection{}{";
 			}
+			
+			else if (tag.isEndTag())  {
+			        buf += "}";
+                        }
 		}
 		else if (tag.getName() && (!strcmp(tag.getName(), "img") || !strcmp(tag.getName(), "image"))) {
 			const char *src = strstr(token, "src");
@@ -329,17 +344,10 @@ bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			    ((d = strchr( ++c , '"')) == NULL))	// identify endpoints.
 				return false;			// abandon hope.
 
-			SWBuf imagename = "file:";
-			if (*c == '/')				// as below, inside for loop.
-				imagename += userData->module->getConfigEntry("AbsoluteDataPath");
-			while (c != d)				// move bits into the name.
-			    imagename += *(c++);
 
 			// images become clickable, if the UI supports showImage.
-			buf.appendFormatted("<a href=\"passagestudy.jsp?action=showImage&value=%s&module=%s\"><",
-					    URL::encode(imagename.c_str()).c_str(),
-					    URL::encode(u->version.c_str()).c_str());
-
+			buf +="\\figure{";
+			
 			for (c = token; *c; c++) {
 				if ((*c == '/') && (*(c+1) == '\0'))
 					continue;
@@ -351,7 +359,7 @@ bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 
 					buf += '"';
 					if (*(c+1) == '/') {
-						buf += "file:";
+						buf += "\\includegraphics{";
 						buf += userData->module->getConfigEntry("AbsoluteDataPath");
 						if (buf[buf.length()-2] == '/')
 							c++;		// skip '/'
@@ -360,9 +368,19 @@ bool ThMLLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				}
 				buf += *c;
 			}
-               buf += " border=0 /></a>";
+                buf += "}}";
 		}
-		else {
+		else if (tag.getName() && (!strcmp(tag.getName(), "i"))){
+		        if (!tag.isEndTag()) {
+                                buf += "\\emph{";
+                        }
+                        else { buf += "}"; }
+                }
+		else if (tag.getName() && (!strcmp(tag.getName(), "br"))){
+                        buf += "\\\\";
+                        
+                }
+                else {
 			buf += '<';
 			/*for (const char *tok = token; *tok; tok++)
 				buf += *tok;*/

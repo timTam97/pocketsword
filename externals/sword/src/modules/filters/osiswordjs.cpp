@@ -2,7 +2,7 @@
  *
  *  osiswordjs.cpp -	SWFilter descendant for ???
  *
- * $Id: osiswordjs.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osiswordjs.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -66,14 +66,14 @@ char OSISWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 		int tokpos = 0;
 		bool intoken = false;
 		int wordNum = 1;
-		char wordstr[5];
+		char wordstr[11];
 		SWBuf modName = (module)?module->getName():"";
 		// add TR to w src in KJV then remove this next line
 		SWBuf wordSrcPrefix = (modName == "KJV")?SWBuf("TR"):modName;
 
-		VerseKey *vkey = 0;
+		const VerseKey *vkey = 0;
 		if (key) {
-			vkey = SWDYNAMIC_CAST(VerseKey, key);
+			vkey = SWDYNAMIC_CAST(const VerseKey, key);
 		}
 		
 		const SWBuf orig = text;
@@ -171,6 +171,10 @@ char OSISWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 					// 'p' = 'fillpop' to save bandwidth
 					text.appendFormatted("<span class=\"clk\" onclick=\"p('%s','%s','%s','%s','%s','%s');\" >", lexName.c_str(), lemma.c_str(), wordID.c_str(), morph.c_str(), page.c_str(), modName.c_str());
 					wordNum++;
+
+					if (wtag.isEmpty()) {
+						text += "</w></span>";
+					}
 				}
 				if ((*token == '/') && (token[1] == 'w') && option) {	// Word
 					text += "</w></span>";
@@ -185,9 +189,10 @@ char OSISWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 				continue;
 			}
 			if (intoken) {
-				if (tokpos < 2045)
+				if (tokpos < 2045) {
 					token[tokpos++] = *from;
 					token[tokpos+2] = 0;
+				}
 			}
 			else	{
 				text.append(*from);

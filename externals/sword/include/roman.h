@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  roman.h -	roman numeral functions
+ * roman.h -	roman numeral functions
  *
- * $Id: roman.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: roman.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -26,14 +26,13 @@
 SWORD_NAMESPACE_START
 
 /** Checks if a string is a roman numeral.
-*/
-char isroman(const char *, int maxchars = 0);
-/* char* to_rom(int num, char *p); */
+ */
+char isRoman(const char *s, int maxchars = 0);
 
-/** Converts a roman numeral to a string.
-* @param s Roman numeral to convert.
-*/
-int from_rom(const char *s);
+/** Converts a roman numeral to a value.
+ * @param s Roman numeral to convert.
+ */
+int fromRoman(const char *s);
 
 SWORD_NAMESPACE_END
 #endif

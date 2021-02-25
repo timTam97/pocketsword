@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlxhtml.h -	Implementation of ThMLXHTML
+ * thmlxhtml.h -	class ThMLXHTML: a RenderFilter to render XHTML from
+ * 			modules marked up in ThML
  *
- * $Id: thmlxhtml.h 3192 2014-04-19 17:26:34Z scribe $
+ * $Id: thmlxhtml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,22 +32,28 @@ SWORD_NAMESPACE_START
 /** this filter converts ThML text to classed XHTML
  */
 class SWDLLEXPORT ThMLXHTML : public SWBasicFilter {
+
+private:
 	SWBuf imgPrefix;
 	bool renderNoteNumbers;
+
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
 		MyUserData(const SWModule *module, const SWKey *key);//: BasicFilterUserData(module, key) {}
 		bool inscriptRef;
-		char SecHead;
-		bool BiblicalText;
+		char secHeadLevel;
+		bool isBiblicalText;
 		SWBuf version;
 		XMLTag startTag;
 	};
+
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
+
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
+
 public:
 	ThMLXHTML();
 	virtual const char *getImagePrefix() { return imgPrefix.c_str(); }

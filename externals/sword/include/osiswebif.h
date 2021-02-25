@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osiswebif.h -	Implementation of OSISWEBIF
+ * osiswebif.h -	class OSISWEBIF: a RenderFilter to render WEBIF markup
+ * 			from modules marked up in OSIS
  *
- * $Id: osiswebif.h 3257 2014-09-23 01:08:24Z scribe $
+ * $Id: osiswebif.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts OSIS  text to HTML text with hrefs
+/** this filter converts OSIS text to HTML text with hrefs
  */
 class SWDLLEXPORT OSISWEBIF : public OSISXHTML {
 	const SWBuf baseURL;

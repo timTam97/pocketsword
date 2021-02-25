@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf8greekaccents.h -	Implementation of UTF8GreekAccents
+ * utf8greekaccents.h -	class UTF8GreekAccents: an OptionFilter to handle
+ * 			Greek accents in UTF8 text
  *
- * $Id: utf8greekaccents.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8greekaccents.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,8 +28,8 @@
 
 SWORD_NAMESPACE_START
 
-  /** This Filter shows/hides Greek Accents marks in UTF8 text
-  */
+/** This Filter shows/hides Greek accents marks in UTF8 text
+ */
 class SWDLLEXPORT UTF8GreekAccents : public SWOptionFilter {
 public:
 	UTF8GreekAccents();

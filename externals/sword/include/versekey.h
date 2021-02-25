@@ -1,9 +1,11 @@
 /******************************************************************************
  *
- *  versekey.h -	code for class 'VerseKey'- a standard Biblical verse
- *			key
+ * versekey.h -		class 'VerseKey': an SWKey for biblical verses with a
+ * 			book ch:vs structure.  Includes a freehand text
+ * 			parser for the many ways one might specify a biblical
+ * 			verse reference or reference range / list.
  *
- * $Id: versekey.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: versekey.h 3820 2020-10-24 20:27:30Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -50,8 +52,7 @@ SWORD_NAMESPACE_START
  */
 class SWDLLEXPORT VerseKey : public SWKey {
 
-	static SWClass classdef;
-
+private:
 	/** number of instantiated VerseKey objects or derivitives
 	*/
 	static int instance;
@@ -116,12 +117,6 @@ protected:
 	*/
 	virtual char parse(bool checkNormalize = true);
 public:
-#if 0
-	static long otbks[];
-	static long otcps[];
-	static long ntbks[];
-	static long ntcps[];
-#endif
 	int BMAX[2];
 
 	/**
@@ -172,30 +167,44 @@ public:
 	* @param lb the new lower boundary for this VerseKey
 	*/
 	void setLowerBound(const VerseKey &lb);
+	/**
+	 * @deprecated Use setLowerBound / getLowerBound
+	 */
 	SWDEPRECATED VerseKey &LowerBound(const VerseKey &lb) { setLowerBound(lb); return getLowerBound(); }
 
 	/** sets the upper boundary for this VerseKey
 	* @param ub the new upper boundary for this VerseKey
-	* @return the upper boundary the key was set to
 	*/
 	void setUpperBound(const VerseKey &ub);
+	/**
+	 * @deprecated Use setUpperBound / getUpperBound
+	 */
 	SWDEPRECATED VerseKey &UpperBound(const VerseKey &ub) { setUpperBound(ub); return getUpperBound(); }
 
 	/** gets the lower boundary of this VerseKey
 	* @return the lower boundary of this VerseKey
 	*/
 	VerseKey &getLowerBound() const;
+	/**
+	 * @deprecated Use getLowerBound
+	 */
 	SWDEPRECATED VerseKey &LowerBound() const { return getLowerBound(); }
 
 	/** gets the upper boundary of this VerseKey
 	* @return the upper boundary of this VerseKey
 	*/
 	VerseKey &getUpperBound() const;
+	/**
+	 * @deprecated Use getUpperBound
+	 */
 	SWDEPRECATED VerseKey &UpperBound() const { return getUpperBound(); }
 
 	/** clears the boundaries of this VerseKey
 	*/
-	void clearBounds();
+	void clearBounds() const;
+	/**
+	 * @deprecated Use clearBounds
+	 */
 	SWDEPRECATED void ClearBounds() { clearBounds(); }
 
 	/** Creates a new SWKey based on the current VerseKey
@@ -223,21 +232,18 @@ public:
 	/** Positions this key
 	*
 	* @param newpos Position to set to.
-	* @return *this
 	*/
 	virtual void setPosition(SW_POSITION newpos);
 
 	/** Decrements key a number of verses
 	*
 	* @param steps Number of verses to jump backward
-	* @return *this
 	*/
 	virtual void decrement(int steps = 1);
 
 	/** Increments key a number of verses
 	*
 	* @param steps Number of verses to jump forward
-	* @return *this
 	*/
 	virtual void increment(int steps = 1);
 	virtual bool isTraversable() const { return true; }
@@ -348,18 +354,17 @@ public:
 	* Matthew 29:47 = Mark 2:2).	If last verse is
 	* exceeded, key is set to last Book CH:VS
 	*
-	* @return *this
 	*/
 	virtual void normalize(bool autocheck = false);
+	/**
+	 * @deprecated Use normalize
+	 */
 	SWDEPRECATED void Normalize(char autocheck = 0) { normalize(autocheck!=0); }
 
 	/** Sets flag that tells VerseKey to
 	* automatically normalize itself when modified
 	*
 	* @param iautonorm value which to set autonorm
-	* [MAXPOS(char)] - only get
-	* @return if unchanged -> value of autonorm,
-	* if changed -> previous value of autonorm
 	*/
 	virtual void setAutoNormalize(bool iautonorm);
 	virtual bool isAutoNormalize() const;
@@ -402,7 +407,6 @@ public:
 	/** Sets index based upon current verse
 	*
 	* @param iindex value to set index to
-	* @return offset
 	*/
 	virtual void setIndex(long iindex);
 
@@ -423,7 +427,7 @@ public:
 
 	/** Tries to parse a string and convert it into an OSIS reference
 	 * @param inRef reference string to try to parse
-	 * @param defaultKey @see ParseVerseList(..., defaultKey, ...)
+	 * @param defaultKey for details @see ParseVerseList(..., defaultKey, ...)
 	 */
 	static const char *convertToOSIS(const char *inRef, const SWKey *defaultKey);
 
@@ -443,8 +447,12 @@ public:
 	 * COMMENT: This code works but wreaks.  Rewrite to make more maintainable.
 	 */
 	virtual ListKey parseVerseList(const char *buf, const char *defaultKey = 0, bool expandRange = false, bool useChapterAsVerse = false);
+	/**
+	 * @deprecated Use parseVerseList
+	 */
 	SWDEPRECATED ListKey ParseVerseList(const char *buf, const char *defaultKey = 0, bool expandRange = false, bool useChapterAsVerse = false) { return parseVerseList(buf, defaultKey, expandRange, useChapterAsVerse); }
 	virtual const char *getRangeText() const;
+	virtual const char *getShortRangeText() const;
 	virtual const char *getOSISRefRangeText() const;
 	/** Compares another	SWKey object
 	*

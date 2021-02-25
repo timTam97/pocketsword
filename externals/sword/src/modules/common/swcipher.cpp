@@ -3,7 +3,7 @@
  *  swcipher.cpp -	code for class 'SWCipher'- a driver class that
  *			provides cipher utilities
  *
- * $Id: swcipher.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swcipher.cpp 3755 2020-07-19 18:43:07Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -25,6 +25,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <swcipher.h>
+#include <map>
+
+namespace {
+	char lats[] = {
+		'b', 'c', 'e', 'a', 'f', 'g', 'i', 'j', 'k', 'l',
+		'h', 'm', 'p', 'q', 'B', 'r', 'H', 'o', 's', 't',
+		'T', 'u', 'w', 'x', 'y', 'A', 'd', 'C', 'D', 'z',
+		'E', 'F', 'I', 'J', 'K', 'G', 'L', 'N', 'O', '7',
+		'P', 'Q', 'M', 'R', 'S', 'U', 'V', 'W', 'X', 'Y',
+		'9', '0', '1', '2', 'Z', '3', '6', '4', 'n', '8',
+		'v', '5'
+	};
+}
 
 SWORD_NAMESPACE_START
 
@@ -34,7 +47,8 @@ SWORD_NAMESPACE_START
  */
 
 SWCipher::SWCipher(unsigned char *key) {
-	master.initialize(key, strlen((char *)key));
+	SWBuf cipherKey = personalize((const char *)key, false);
+	master.initialize((unsigned char *)(const char *)cipherKey, cipherKey.size());
 	buf = 0;
 }
 
@@ -50,8 +64,7 @@ SWCipher::~SWCipher()
 }
 
 
-char *SWCipher::Buf(const char *ibuf, unsigned long ilen)
-{
+void SWCipher::setUncipheredBuf(const char *ibuf, unsigned long ilen) {
 	if (ibuf) {
 	
 		if (buf)
@@ -68,14 +81,18 @@ char *SWCipher::Buf(const char *ibuf, unsigned long ilen)
 		cipher = false;
 	}
 
-	Decode();
+	decode();
+}
+
+char *SWCipher::getUncipheredBuf() {
+
+	decode();
 
 	return buf;
 }
 
 
-char *SWCipher::cipherBuf(unsigned long *ilen, const char *ibuf)
-{
+void SWCipher::setCipheredBuf(unsigned long *ilen, const char *ibuf) {
 	if (ibuf) {
 	
 		if (buf)
@@ -87,22 +104,30 @@ char *SWCipher::cipherBuf(unsigned long *ilen, const char *ibuf)
 		cipher = true;
 	}
 
-	Encode();
+	encode();
 
 	*ilen = len;
+}
+
+char *SWCipher::getCipheredBuf(unsigned long *ilen) {
+
+	encode();
+
+	if (ilen) *ilen = len;
+
 	return buf;
 }
 
 
 /******************************************************************************
- * SWCipher::Encode	- This function "encodes" the input stream into the
+ * SWCipher::encode	- This function "encodes" the input stream into the
  *						output stream.
  *						The GetChars() and SendChars() functions are
  *						used to separate this method from the actual
  *						i/o.
  */
 
-void SWCipher::Encode(void)
+void SWCipher::encode(void)
 {
 	if (!cipher) {
 		work = master;
@@ -114,14 +139,14 @@ void SWCipher::Encode(void)
 
 
 /******************************************************************************
- * SWCipher::Decode	- This function "decodes" the input stream into the
+ * SWCipher::decode	- This function "decodes" the input stream into the
  *						output stream.
  *						The GetChars() and SendChars() functions are
  *						used to separate this method from the actual
  *						i/o.
  */
 
-void SWCipher::Decode(void)
+void SWCipher::decode(void)
 {
 	if (cipher) {
 		work = master;
@@ -140,8 +165,56 @@ void SWCipher::Decode(void)
  */
 
 void SWCipher::setCipherKey(const char *ikey) {
-	unsigned char *key = (unsigned char *)ikey;
-	master.initialize(key, strlen((char *)key));
+	SWBuf cipherKey = personalize(ikey, false);
+	master.initialize((unsigned char *)(const char *)cipherKey, cipherKey.size());
+}
+
+
+/******************************************************************************
+ * SWCipher::personalize	- a simple personalization encoding
+ *
+ * encode - whether to encode or decode
+ *
+ */
+SWBuf SWCipher::personalize(const SWBuf &buf, bool encode) {
+
+	std::map<char, int> charHash;
+	for (int i = 0; i < 62; ++i) charHash[lats[i]] = i;
+
+	SWBuf segs[5];
+	int segn = 0;
+	for (unsigned int i = 0; i < buf.size() && segn < 5; ++i) {
+		if (buf[i] == '-') ++segn;
+		else segs[segn].append(buf[i]);
+	}
+	SWBuf result;
+	SWBuf chkSum = segs[4];
+	if (segs[4].size() < 5) segs[4].size(4);
+	for (int i = 0; i < 4; ++i) {
+		int csum = 0;
+		for (unsigned int j = 0; j < segs[i].size() && j < segs[0].size(); ++j) {
+			char hash = charHash[segs[i][j]];
+			char obfusHash = charHash[segs[0][j%segs[0].size()]];
+			if (encode) {
+				obfusHash = hash - (i ? obfusHash : 0);
+				if (obfusHash < 0) obfusHash = (62 + obfusHash);
+			}
+			else {
+				obfusHash = hash + (i ? obfusHash : 0);
+				obfusHash %= 62;
+			}
+			if (i) segs[i][j] = lats[(long)obfusHash];
+			csum += (encode ? obfusHash : hash);
+		}
+		segs[4][i] = lats[csum%62];
+		if (result.size()) result += "-";
+		result += (!encode && !i ? "" : segs[i].c_str());
+	}
+	if (encode) {
+		result += "-";
+		result += segs[4];
+	}
+	return (!encode && chkSum != segs[4]) ? buf : result;
 }
 
 SWORD_NAMESPACE_END

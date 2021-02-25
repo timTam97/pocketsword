@@ -3,7 +3,7 @@
  *  xzcomprs.cpp -	XzCompress, a driver class that provides xz (LZMA2)
  *			compression
  *				
- * $Id: xzcomprs.cpp 3255 2014-09-15 20:02:09Z scribe $
+ * $Id: xzcomprs.cpp 3775 2020-08-15 10:28:11Z scribe $
  *
  * Copyright 2000-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -76,8 +76,8 @@ XzCompress::~XzCompress() {
  * 			compressed buffer.
  */
 
-void XzCompress::Encode(void)
-{
+void XzCompress::encode(void) {
+
 	direct = 0;	// set direction needed by parent [Get|Send]Chars()
 
 	// get buffer
@@ -86,7 +86,7 @@ void XzCompress::Encode(void)
 	char *chunkbuf = buf;
 	unsigned long chunklen;
 	unsigned long len = 0;
-	while((chunklen = GetChars(chunk, 1023))) {
+	while((chunklen = getChars(chunk, 1023))) {
 		memcpy(chunkbuf, chunk, chunklen);
 		len += chunklen;
 		if (chunklen < 1023)
@@ -99,22 +99,20 @@ void XzCompress::Encode(void)
 	char *zbuf = new char[zlen+1];
 	size_t zpos = 0;
 
-	if (len)
-	{
+	if (len) {
 		//printf("Doing compress\n");
 		switch (lzma_easy_buffer_encode(level | LZMA_PRESET_EXTREME, LZMA_CHECK_CRC64, NULL, (const uint8_t*)buf, (size_t)len, (uint8_t*)zbuf, &zpos, (size_t)zlen)) {
-		        case LZMA_OK: SendChars(zbuf, zpos);  break;
+		        case LZMA_OK: sendChars(zbuf, zpos);  break;
 			case LZMA_BUF_ERROR: fprintf(stderr, "ERROR: not enough room in the out buffer during compression.\n"); break;
 			case LZMA_UNSUPPORTED_CHECK: fprintf(stderr, "ERROR: unsupported_check error encountered during decompression.\n"); break;
 			case LZMA_OPTIONS_ERROR: fprintf(stderr, "ERROR: options error encountered during decompression.\n"); break;
 			case LZMA_MEM_ERROR: fprintf(stderr, "ERROR: not enough memory during compression.\n"); break;
 			case LZMA_DATA_ERROR: fprintf(stderr, "ERROR: corrupt data during compression.\n"); break;
 			case LZMA_PROG_ERROR: fprintf(stderr, "ERROR: program error encountered during decompression.\n"); break;
-			default: fprintf(stderr, "ERROR: an unknown error occured during compression.\n"); break;
+			default: fprintf(stderr, "ERROR: an unknown error occurred during compression.\n"); break;
 		}
 	}
-	else
-	{
+	else {
 		fprintf(stderr, "ERROR: no buffer to compress\n");
 	}
 	delete [] zbuf;
@@ -130,8 +128,7 @@ void XzCompress::Encode(void)
  *			i/o.
  */
 
-void XzCompress::Decode(void)
-{
+void XzCompress::decode(void) {
 	direct = 1;	// set direction needed by parent [Get|Send]Chars()
 
 	// get buffer
@@ -140,7 +137,7 @@ void XzCompress::Decode(void)
 	char *chunkbuf = zbuf;
 	int chunklen;
 	unsigned long zlen = 0;
-	while((chunklen = GetChars(chunk, 1023))) {
+	while((chunklen = getChars(chunk, 1023))) {
 		memcpy(chunkbuf, chunk, chunklen);
 		zlen += chunklen;
 		if (chunklen < 1023)
@@ -159,7 +156,7 @@ void XzCompress::Decode(void)
 		size_t bpos = 0;
 
 		switch (lzma_stream_buffer_decode((uint64_t *)&memlimit, 0, NULL, (const uint8_t*)zbuf, &zpos, (size_t)zlen, (uint8_t*)buf, &bpos, (size_t)&blen)){
-			case LZMA_OK: SendChars(buf, bpos); slen = bpos; break;
+			case LZMA_OK: sendChars(buf, bpos); slen = bpos; break;
 			case LZMA_FORMAT_ERROR: fprintf(stderr, "ERROR: format error encountered during decompression.\n"); break;
 			case LZMA_OPTIONS_ERROR: fprintf(stderr, "ERROR: options error encountered during decompression.\n"); break;
 			case LZMA_DATA_ERROR: fprintf(stderr, "ERROR: corrupt data during decompression.\n"); break;
@@ -169,7 +166,7 @@ void XzCompress::Decode(void)
 			case LZMA_MEM_ERROR: fprintf(stderr, "ERROR: not enough memory during decompression.\n"); break;
 			case LZMA_BUF_ERROR: fprintf(stderr, "ERROR: not enough room in the out buffer during decompression.\n"); break;
 			case LZMA_PROG_ERROR: fprintf(stderr, "ERROR: program error encountered during decompression.\n"); break;
-			default: fprintf(stderr, "ERROR: an unknown error occured during decompression.\n"); break;
+			default: fprintf(stderr, "ERROR: an unknown error occurred during decompression.\n"); break;
 		}
 		delete [] buf;
 	}

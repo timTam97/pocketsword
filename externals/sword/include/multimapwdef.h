@@ -1,8 +1,11 @@
 /******************************************************************************
  *
- *  multimapwdef.h -	Implementation of multimapwithdefault
+ * multimapwdef.h -	template multimapwithdefault: a template which extends
+ * 			multipmap with easy access operators to
+ * 			obtain entries which are not repeated, plus a few
+ * 			nice convenience methods
  *
- * $Id: multimapwdef.h 2935 2013-08-02 11:06:30Z scribe $
+ * $Id: multimapwdef.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  rtfhtml.h -	Implementation of RTFHTML
+ * rtfhtml.h -	class RTFHTML: a RenderFilter to render HTML from
+ *		a very limited subset of RTF
+ * 		
  *
- * $Id: rtfhtml.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rtfhtml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

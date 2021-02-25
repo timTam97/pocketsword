@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  latin1utf8.h -	Implementation of Latin1UTF8
+ * latin1utf8.h -	class Latin1UTF8: an EncodingFilter to convert
+ * 			Latin1 text to UTF8
  *
- * $Id: latin1utf8.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: latin1utf8.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

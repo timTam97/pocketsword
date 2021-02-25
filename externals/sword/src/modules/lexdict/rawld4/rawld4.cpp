@@ -3,7 +3,7 @@
  *  rawld4.cpp -	code for class 'RawLD'- a module that reads raw
  *			lexicon and dictionary files: *.dat *.idx
  *
- * $Id: rawld4.cpp 3223 2014-05-01 05:56:07Z scribe $
+ * $Id: rawld4.cpp 3749 2020-07-06 23:51:56Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -73,15 +73,15 @@ bool RawLD4::isWritable() const {
 
 char RawLD4::getEntry(long away) const
 {
-	__u32 start  = 0;
-	__u32 size   = 0;
+	SW_u32 start  = 0;
+	SW_u32 size   = 0;
 	char *idxbuf = 0;
 	char retval  = 0;
 
 	char *buf = new char [ strlen(*key) + 6 ];
 	strcpy(buf, *key);
 
-	strongsPad(buf);
+	if (strongsPadding) strongsPad(buf);
 
 	entryBuf = "";
 	if (!(retval = findOffset(buf, &start, &size, away))) {
@@ -187,19 +187,19 @@ void RawLD4::deleteEntry() {
 
 
 long RawLD4::getEntryCount() const {
-	if (idxfd < 0) return 0;
+	if (!idxfd || idxfd->getFd() < 0) return 0;
 	return idxfd->seek(0, SEEK_END) / IDXENTRYSIZE;
 }
 
 
 long RawLD4::getEntryForKey(const char *key) const {
-	__u32 start, offset;
-	__u32 size;
+	SW_u32 start, offset;
+	SW_u32 size;
 
 	char *buf = new char [ strlen(key) + 6 ];
 	strcpy(buf, key);
 
-	strongsPad(buf);
+	if (strongsPadding) strongsPad(buf);
 	
 	findOffset(buf, &start, &size, 0, &offset);
 

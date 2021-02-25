@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  swld.h -	code for base class 'SWLD'.  SWLD is the basis for all
+ * swld.h -	class SWLD: the basis for all
  *		types of Lexicon and Dictionary modules (hence the 'LD').
  *
- * $Id: swld.h 3215 2014-05-01 05:13:22Z scribe $
+ * $Id: swld.h 3805 2020-09-19 12:19:28Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,9 +30,9 @@
 
 SWORD_NAMESPACE_START
 
-  /** the basis for all types of Lexicon and
-  * Dictionary modules (hence the 'LD').
-  */
+/** the basis for all types of Lexicon and
+ * Dictionary modules (hence the 'LD').
+ */
 class SWDLLEXPORT SWLD : public SWModule {
 protected:
 	mutable char *entkeytxt;
@@ -49,10 +49,8 @@ public:
 	virtual ~SWLD();
 	virtual SWKey *createKey() const;
 
-	/** Sets/gets module KeyText, getting from saved text if key is persistent
+	/** gets module KeyText, getting from saved key if key is persistent
 	*
-	* @param ikeytext value which to set keytext;
-	*  [0] - only get
 	* @return pointer to keytext
 	*/
 	virtual const char *getKeyText() const;

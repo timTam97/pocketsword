@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf8nfc.h -	Implementation of UTF8NFC
+ * utf8nfc.h -	class UTF8NFC: a Filter to normalize a UTF8 text stream into
+ * 		Normal Form Composed Unicode (NFC)
  *
- * $Id: utf8nfc.h 3081 2014-03-05 19:52:08Z chrislit $
+ * $Id: utf8nfc.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,15 +33,17 @@
 
 SWORD_NAMESPACE_START
 
-/** This filter normalizes UTF-8 encoded text
+/** This filter normalizes UTF-8 encoded text to NFC (Normal Form Composed)
  */
 class SWDLLEXPORT UTF8NFC : public SWFilter {
+
 private:
 	UConverter* conv;
 	UErrorCode err;
+
 public:
 	UTF8NFC();
-	~UTF8NFC();  
+	~UTF8NFC();
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
 };
 

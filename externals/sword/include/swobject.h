@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  swobject.h -	definition for SWObject used as lowest base class for
+ * swobject.h -		class SWObject: used as lowest base class for
  *			many SWORD objects
  *
- * $Id: swobject.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swobject.h 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,12 +27,12 @@
 #include <defs.h>
 
 SWORD_NAMESPACE_START
-#define SWDYNAMIC_CAST(className, object) (className *)((object)?((object->getClass()->isAssignableFrom(#className))?object:0):0)
 
 /**
-* Class used for SWDYNAMIC_CAST to save the inheritance order.
-*/
+ * Class used for SWDYNAMIC_CAST to save the inheritance order.
+ */
 class SWDLLEXPORT SWClass {
+
 private:
 	const char **descends;
 
@@ -45,20 +45,23 @@ public:
 };
 
 /** Base class for major Sword classes.
-* SWObject is the base class for major Sword classes like SWKey.
-* It is used because dynamic_cast is not available on all plattforms supported
-* by Sword. Use SWDYNAMIC_CAST(classname, object) instead of dynamic_cast<classname>(object).
-*/
+ * SWObject is the base class for major Sword classes like SWKey.
+ * It is used because dynamic_cast is not available on all plattforms supported
+ * by Sword. Use SWDYNAMIC_CAST(classname, object) instead of dynamic_cast<classname>(object).
+ */
 class SWDLLEXPORT SWObject {
+
 protected:
-	SWClass * myclass;
-     
+	const SWClass *myClass;
+
 public:
+//	SWObject();
+	SWObject(const SWClass &classdef);
 	/** Use this to get the class definition and inheritance order.
-	* @return The class definition of this object
-	*/
-	const SWClass *getClass () const {
-		return myclass;
+	 * @return The class definition of this object
+	 */
+	const SWClass *getClass() const {
+		return myClass;
 	}
 };
 

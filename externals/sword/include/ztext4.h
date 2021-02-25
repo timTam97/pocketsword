@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  ztext4.h -	code for class 'zText4'- a module that reads compressed text
- *		files: ot and nt using indexs ??.vss
+ * ztext4.h -	class zText4: a module driver which supports compressed
+ *		Bibles supporting large 4 byte entry sizes
  *
- * $Id: ztext4.h 3141 2014-03-19 01:24:04Z chrislit $
+ * $Id: ztext4.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -29,13 +29,6 @@
 
 #include <defs.h>
 
-namespace lucene { namespace index {
-class IndexReader;
-}}
-
-namespace lucene { namespace search {
-class IndexSearcher;
-}}
 
 SWORD_NAMESPACE_START
 
@@ -43,8 +36,9 @@ SWORD_NAMESPACE_START
 * This class handles compressed modules.
 * It should not be used in frontends, unless you are doing very special things.
 */
-class SWDLLEXPORT zText4:public zVerse4, public SWText {
+class SWDLLEXPORT zText4 : public zVerse4, public SWText {
 
+private:
 	VerseKey *lastWriteKey;
 	bool sameBlock(VerseKey * lastWriteKey, VerseKey * key);
 	int blockType;
@@ -73,7 +67,7 @@ public:
 	virtual void linkEntry(const SWKey *linkKey);	// Link current module entry to other module entry
 	virtual void deleteEntry();	// Delete current module entry
 	// end write interface ------------------------
-  
+
 	virtual void rawZFilter(SWBuf &buf, char direction = 0) const { rawFilter(buf, (SWKey *)(long)direction); }// hack, use key as direction for enciphering
 
 	// swcacher interface ----------------------

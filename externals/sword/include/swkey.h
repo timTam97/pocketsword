@@ -1,10 +1,9 @@
 /******************************************************************************
  *
- *  swkey.h -	code for base class 'swkey'.  swkey is the basis for all
- *		types of keys for indexing into modules (e.g. verse, word,
- *		place, etc.)
+ * swkey.h -	class SWKey:  SWKey is the basis for all indexing into modules
+ * 		(e.g. verses, table of contents tree, strings, etc.)
  *
- * $Id: swkey.h 2926 2013-07-31 02:06:33Z scribe $
+ * $Id: swkey.h 3828 2020-11-24 23:15:44Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,22 +35,22 @@ SWORD_NAMESPACE_START
 #define KEYERR_OUTOFBOUNDS 1
 
 #define SWKEY_OPERATORS \
-  SWKey &operator =(const char *ikey) { setText(ikey); return *this; } \
-  SWKey &operator =(const SWKey &ikey) { positionFrom(ikey); return *this; } \
-  SWKey &operator =(SW_POSITION pos) { setPosition(pos); return *this; } \
-  operator const char *() const { return getText(); } \
-  bool operator ==(const SWKey &ikey) { return equals(ikey); } \
-  bool operator !=(const SWKey &ikey) { return !equals(ikey); } \
-  virtual bool operator >(const SWKey &ikey) { return (compare(ikey) > 0); } \
-  virtual bool operator <(const SWKey &ikey) { return (compare(ikey) < 0); } \
-  virtual bool operator >=(const SWKey &ikey) { return (compare(ikey) > -1); }  \
-  virtual bool operator <=(const SWKey &ikey) { return (compare(ikey) < 1); } \
-  SWKey &operator -=(int steps) { decrement(steps); return *this; } \
-  SWKey &operator +=(int steps) { increment(steps); return *this; } \
-  SWKey &operator ++()    { increment(1); return *this; } \
-  SWKey  operator ++(int) { SWKey temp = *this; increment(1); return temp; } \
-  SWKey &operator --()    { decrement(1); return *this; } \
-  SWKey  operator --(int) { SWKey temp = *this; decrement(1); return temp; }
+	SWKey &operator =(const char *ikey) { setText(ikey); return *this; } \
+	SWKey &operator =(const SWKey &ikey) { positionFrom(ikey); return *this; } \
+	SWKey &operator =(SW_POSITION pos) { setPosition(pos); return *this; } \
+	operator const char *() const { return getText(); } \
+	bool operator ==(const SWKey &ikey) { return equals(ikey); } \
+	bool operator !=(const SWKey &ikey) { return !equals(ikey); } \
+	virtual bool operator >(const SWKey &ikey) { return (compare(ikey) > 0); } \
+	virtual bool operator <(const SWKey &ikey) { return (compare(ikey) < 0); } \
+	virtual bool operator >=(const SWKey &ikey) { return (compare(ikey) > -1); } \
+	virtual bool operator <=(const SWKey &ikey) { return (compare(ikey) < 1); } \
+	SWKey &operator -=(int steps) { decrement(steps); return *this; } \
+	SWKey &operator +=(int steps) { increment(steps); return *this; } \
+	SWKey &operator ++()    { increment(1); return *this; } \
+	SWKey  operator ++(int) { SWKey temp = *this; increment(1); return temp; } \
+	SWKey &operator --()    { decrement(1); return *this; } \
+	SWKey  operator --(int) { SWKey temp = *this; decrement(1); return temp; }
 
 
 /** For use with = operator to position key.
@@ -96,7 +95,6 @@ class SWDLLEXPORT SWKey : public SWObject {
 
 
 	long index;
-	static SWClass classdef;
 	void init();
 
 
@@ -114,7 +112,7 @@ protected:
 public:
 
 	// misc storage for whatever
-	__u64 userData;
+	SW_u64 userData;
 
 	/** initializes instance of SWKey from a string
 	 * All keys can be reduced to a string representation which should be able
@@ -144,22 +142,31 @@ public:
 	 * @return 1 - persists in module; 0 - a copy is attempted
 	 */
 	bool isPersist() const;
+	/**
+	 * @deprecated Use isPersist
+	 */
 	SWDEPRECATED char Persist() const { return isPersist(); }
 
 	/** Sets whether this key should persist in any module to which it is set
 	 * otherwise just a copy will be used in the module.
 	 * @param ipersist value which to set persist;
-	 * @return 1 - persists in module; 0 - a copy is attempted
+	 */
+	void setPersist(bool ipersist);
+	/**
+	 * @deprecated Use setPersist and isPersist instead.
 	 */
 	SWDEPRECATED char Persist(signed char ipersist) { setPersist(ipersist!=0); return isPersist(); }
-	void setPersist(bool ipersist);
 
 	/** Gets and clears error status
 	 * @return error status
 	 */
-	SWDEPRECATED char Error() { return popError(); }
 	virtual char popError();
+	virtual char getError() const { return error; }
 	virtual void setError(char err) { error = err; }
+	/**
+	 * @deprecated Use popError and getError instead
+	 */
+	SWDEPRECATED char Error() { return popError(); }
 
 	/** Sets this SWKey with a character string
 	 * @param ikey string used to set this key
@@ -177,9 +184,10 @@ public:
 	virtual const char *getText() const;
 	virtual const char *getShortText() const { return getText(); }
 	virtual const char *getRangeText() const;
+	virtual const char *getShortRangeText() const { return getRangeText(); }
 	virtual const char *getOSISRefRangeText() const;
 	virtual bool isBoundSet() const { return boundSet; }
-	virtual void clearBound() const { boundSet = false; }
+	virtual void clearBounds() const { boundSet = false; }
 
 	/** Compares this key object to another SWKey object
 	 * @param ikey key to compare with this one

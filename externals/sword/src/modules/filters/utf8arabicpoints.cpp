@@ -3,7 +3,7 @@
  *  utf8arabicpoints.cpp -	SWFilter descendant to remove UTF-8
  *				Arabic vowel points
  *
- * $Id: utf8arabicpoints.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: utf8arabicpoints.cpp 3439 2016-10-23 08:32:02Z scribe $
  *
  * Copyright 2009-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -163,7 +163,7 @@ char UTF8ArabicPoints::processText(SWBuf &text, const SWKey *, const SWModule *)
 		// "start_of_input" is either mark_pos or any text between the
         	// end of any previous mark and the current mark_pos.
 		// This text is now ready to be moved into the output.
-		int ready_size = mark_pos - start_of_input;
+		int ready_size = (int)(mark_pos - start_of_input);
 		if (ready_size > 0) {
 			// Append the input text before the current mark to the
 			// output.

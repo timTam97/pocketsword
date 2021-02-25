@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  canon.h -	Canonical text information to be included by VerseKey.cpp
+ * canon.h -	Canonical text information to be included by VerseKey.cpp
  *
- * $Id: canon.h 2915 2013-07-23 16:55:54Z chrislit $
+ * $Id: canon.h 3765 2020-07-26 10:31:09Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

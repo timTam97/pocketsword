@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- *  utf8latin1.h -	 Implementation of UTF8Latin1
+ * utf8latin1.h -	class UTF8Latin1: an EncodingFilter to convert UTF8
+ * 			text into Latin1 where possible; otherwise show
+ * 			a replacement character
  *
- * $Id: utf8latin1.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8latin1.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,7 +32,10 @@ SWORD_NAMESPACE_START
 /** This filter converts UTF-8 encoded text to Latin-1
  */
 class SWDLLEXPORT UTF8Latin1 : public SWFilter {
+
+private:
 	char replacementChar;
+
 public:
 	UTF8Latin1(char rchar = '?');
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);

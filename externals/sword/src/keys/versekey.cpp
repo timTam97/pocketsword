@@ -3,7 +3,7 @@
  *  versekey.cpp -	code for class 'VerseKey'- a standard Biblical
  *			verse key
  *
- * $Id: versekey.cpp 3243 2014-07-12 17:35:56Z scribe $
+ * $Id: versekey.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -40,7 +40,7 @@
 SWORD_NAMESPACE_START
 
 static const char *classes[] = {"VerseKey", "SWKey", "SWObject", 0};
-SWClass VerseKey::classdef(classes);
+static const SWClass classdef(classes);
 
 /******************************************************************************
  *  Initialize static members of VerseKey
@@ -54,7 +54,7 @@ int           VerseKey::instance       = 0;
  */
 
 void VerseKey::init(const char *v11n) {
-	myclass = &classdef;
+	myClass = &classdef;
 
 	instance++;
 	autonorm = 1;		// default auto normalization to true
@@ -137,7 +137,7 @@ void VerseKey::setFromOther(const VerseKey &ikey) {
 		int map_range = map_verse;
 
 		ikey.refSys->translateVerse(refSys, &map_book, &map_chapter, &map_verse, &map_range);
-		//printf("verse: %s.%i.%i-%i\n",map_book,map_chapter,map_verse,map_range);
+//dbg_mapping SWLOGD("verse: %s.%i.%i-%i\n", map_book, map_chapter, map_verse, map_range);
 		
 		book = refSys->getBookNumberByOSISName(map_book);
 
@@ -183,12 +183,12 @@ void VerseKey::setFromOther(const VerseKey &ikey) {
 void VerseKey::positionFrom(const SWKey &ikey) {
  	error = 0;
         const SWKey *fromKey = &ikey;
-	ListKey *tryList = SWDYNAMIC_CAST(ListKey, fromKey);
+	const ListKey *tryList = SWDYNAMIC_CAST(const ListKey, fromKey);
 	if (tryList) {
-		SWKey *k = tryList->getElement();
+		const SWKey *k = tryList->getElement();
 		if (k) fromKey = k;
 	}
-	VerseKey *tryVerse = SWDYNAMIC_CAST(VerseKey, fromKey);
+	const VerseKey *tryVerse = SWDYNAMIC_CAST(const VerseKey, fromKey);
 	if (tryVerse) {
 		setFromOther(*tryVerse);
 	}
@@ -240,12 +240,12 @@ void VerseKey::copyFrom(const SWKey &ikey) {
 	// check to see if we can do a more specific copy
 	// plus some optimizations
 	const SWKey *fromKey = &ikey;
-	ListKey *tryList = SWDYNAMIC_CAST(ListKey, fromKey);
+	const ListKey *tryList = SWDYNAMIC_CAST(const ListKey, fromKey);
 	if (tryList) {
-		SWKey *k = tryList->getElement();
+		const SWKey *k = tryList->getElement();
 		if (k) fromKey = k;
 	}
-	VerseKey *tryVerse = SWDYNAMIC_CAST(VerseKey, fromKey);
+	const VerseKey *tryVerse = SWDYNAMIC_CAST(const VerseKey, fromKey);
 	if (tryVerse) {
 		copyFrom(*tryVerse);
 	}
@@ -418,14 +418,14 @@ int VerseKey::getBookFromAbbrev(const char *iabbr) const
 
 		if (!i) {
 			if (hasUTF8Support) { //we have support for UTF-8 handling; we expect UTF-8 encoded locales
-				stringMgr->upperUTF8(abbr, strlen(abbr)*2);
+				stringMgr->upperUTF8(abbr, (unsigned int)(strlen(abbr)*2));
 			}
 			else {
 				stringMgr->upperLatin1(abbr);
 			}
 		}
 
-		abLen = strlen(abbr);
+		abLen = (int)strlen(abbr);
 
 		if (abLen) {
 			min = 0;
@@ -478,17 +478,17 @@ void VerseKey::validateCurrentLocale() const {
 				char *abbr = 0;
 				stdstr(&abbr, getPrivateLocale()->translate(refSys->getBook(i)->getLongName()), 2);
 				strstrip(abbr);
-				SWLog::getSystemLog()->logDebug("VerseKey::Book: %s does not have a matching toupper abbrevs entry! book number returned was: %d, should be %d. Required entry to add to locale:", abbr, bn, i);
+				SWLog::getSystemLog()->logWarning("VerseKey::Book: %s does not have a matching toupper abbrevs entry! book number returned was: %d, should be %d. Required entry to add to locale:", abbr, bn, i);
 
 				StringMgr* stringMgr = StringMgr::getSystemStringMgr();
 				const bool hasUTF8Support = StringMgr::hasUTF8Support();
 				if (hasUTF8Support) { //we have support for UTF-8 handling; we expect UTF-8 encoded locales
-					stringMgr->upperUTF8(abbr, strlen(abbr)*2);
+					stringMgr->upperUTF8(abbr, (unsigned int)(strlen(abbr)*2));
 				}
 				else {
 					stringMgr->upperLatin1(abbr);
 				}
-				SWLog::getSystemLog()->logDebug("%s=%s\n", abbr, refSys->getBook(i)->getOSISName());
+				SWLOGD("%s=%s\n", abbr, refSys->getBook(i)->getOSISName());
 				delete [] abbr;
 			}
 		}
@@ -597,6 +597,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 				comma = 0;
 				break;
 			}
+			goto terminate_range;
 			// otherwise drop down to next case
 		case ' ':
 			inTerm = true;
@@ -630,6 +631,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 			}
 		case ',': // on number new verse
 		case ';': // on number new chapter
+terminate_range:
 			number[tonumber] = 0;
 			tonumber = 0;
 			if (*number) {
@@ -642,7 +644,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 			tobook = 0;
 			bookno = -1;
 			if (*book) {
-				loop = strlen(book) - 1;
+				loop = (int)strlen(book) - 1;
 
 				for (; loop+1; loop--) { if (book[loop] == ' ') book[loop] = 0; else break; }
 
@@ -665,13 +667,13 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 					break;
 				}
 
-				for (loop = strlen(book) - 1; loop+1; loop--) {
+				for (loop = (int)strlen(book) - 1; loop+1; loop--) {
 					if (book[loop] == ' ') {
 						// "PS C" is ok, but "II C" is not ok
-						if (isroman(&book[loop+1]) && !isroman(book,loop)) {
+						if (isRoman(&book[loop+1]) && !isRoman(book,loop)) {
 							if (verse == -1) {
 								verse = chap;
-								chap = from_rom(&book[loop+1]);
+								chap = fromRoman(&book[loop+1]);
 								book[loop] = 0;
 							}
 						}
@@ -680,14 +682,14 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 				}
 
 				// check for special inscriptio and subscriptio which are saved as book intro and chap 1 intro (for INTF)
-				for (loop = strlen(book) - 1; loop+1; loop--) {
+				for (loop = (int)strlen(book) - 1; loop+1; loop--) {
 					if (book[loop] == ' ') {
-						if (!strnicmp(&book[loop+1], "inscriptio", strlen(&book[loop+1]))) {
+						if (!strnicmp(&book[loop+1], "inscriptio", (int)strlen(&book[loop+1]))) {
 							book[loop] = 0;
 							verse = 0;
 							chap = 0;
 						}
-						else if (!strnicmp(&book[loop+1], "subscriptio", strlen(&book[loop+1]))) {
+						else if (!strnicmp(&book[loop+1], "subscriptio", (int)strlen(&book[loop+1]))) {
 							book[loop] = 0;
 							verse = 0;
 							chap = 1;
@@ -774,7 +776,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 					lastKey->setPosition(TOP);
 					tmpListKey << *lastKey;
 					((VerseKey *)tmpListKey.getElement())->setAutoNormalize(isAutoNormalize());
-					tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 				}
 				else {
 					if (!dash) { 	// if last separator was not a dash just add
@@ -788,7 +790,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 							*lastKey = TOP;
 							tmpListKey << *lastKey;
 							((VerseKey *)tmpListKey.getElement())->setAutoNormalize(isAutoNormalize());
-							tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+							tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 						}
 						else {
 							bool f = false;
@@ -803,7 +805,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 							*lastKey = TOP;
 							tmpListKey << *lastKey;
 							((VerseKey *)tmpListKey.getElement())->setAutoNormalize(isAutoNormalize());
-							tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+							tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 						}
 					}
 					else	if (expandRange) {
@@ -816,7 +818,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 							newElement->setUpperBound(*curKey);
 							*lastKey = *curKey;
 							*newElement = TOP;
-							tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+							tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 						}
 					}
 				}
@@ -913,7 +915,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 	book[tobook] = 0;
 	tobook = 0;
 	if (*book) {
-		loop = strlen(book) - 1;
+		loop = (int)strlen(book) - 1;
 
 		// strip trailing spaces
 		for (; loop+1; loop--) { if (book[loop] == ' ') book[loop] = 0; else break; }
@@ -942,13 +944,13 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 		}
 
 		// check for roman numeral chapter
-		for (loop = strlen(book) - 1; loop+1; loop--) {
+		for (loop = (int)strlen(book) - 1; loop+1; loop--) {
 			if (book[loop] == ' ') {
 				// "PS C" is ok, but "II C" is not ok
-				if (isroman(&book[loop+1]) && !isroman(book,loop)) {
+				if (isRoman(&book[loop+1]) && !isRoman(book,loop)) {
 					if (verse == -1) {
 						verse = chap;
-						chap = from_rom(&book[loop+1]);
+						chap = fromRoman(&book[loop+1]);
 						book[loop] = 0;
 					}
 				}
@@ -956,19 +958,19 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 			}
 		}
 		// check for special inscriptio and subscriptio which are saved as book intro and chap 1 intro (for INTF)
-		for (loop = strlen(book) - 1; loop+1; loop--) {
+		for (loop = (int)strlen(book) - 1; loop+1; loop--) {
 			if (book[loop] == ' ') {
-				if (!strnicmp(&book[loop+1], "inscriptio", strlen(&book[loop+1]))) {
+				if (!strnicmp(&book[loop+1], "inscriptio", (int)strlen(&book[loop+1]))) {
 					book[loop] = 0;
 					verse = 0;
 					chap = 0;
 					suffix = 0;
 				}
-				else if (!strnicmp(&book[loop+1], "subscriptio", strlen(&book[loop+1]))) {
+				else if (!strnicmp(&book[loop+1], "subscriptio", (int)strlen(&book[loop+1]))) {
 					book[loop] = 0;
 					verse = 0;
 					chap = 1;
-						suffix = 0;
+					suffix = 0;
 				}
 				break;
 			}
@@ -1047,7 +1049,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 			lastKey->setLowerBound(*curKey);
 			*lastKey = TOP;
 			tmpListKey << *lastKey;
-			tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+			tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 		}
 		else {
 			if (!dash) { 	// if last separator was not a dash just add
@@ -1060,7 +1062,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 					lastKey->setUpperBound(*curKey);
 					*lastKey = TOP;
 					tmpListKey << *lastKey;
-					tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 				}
 				else {
 					bool f = false;
@@ -1074,7 +1076,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 					lastKey->setUpperBound(*curKey);
 					*lastKey = TOP;
 					tmpListKey << *lastKey;
-					tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 				}
 			}
 			else if (expandRange) {
@@ -1086,7 +1088,7 @@ ListKey VerseKey::parseVerseList(const char *buf, const char *defaultKey, bool e
 						*curKey = MAXVERSE;
 					newElement->setUpperBound(*curKey);
 					*newElement = TOP;
-					tmpListKey.getElement()->userData = (__u64)(bufStart+(buf-iBuf.c_str()));
+					tmpListKey.getElement()->userData = (SW_u64)(bufStart + (buf - iBuf.c_str()));
 				}
 			}
 		}
@@ -1197,16 +1199,14 @@ VerseKey &VerseKey::getUpperBound() const
  * VerseKey::clearBounds	- clears bounds for this VerseKey
  */
 
-void VerseKey::clearBounds()
-{
+void VerseKey::clearBounds() const {
 	delete tmpClone;
 	tmpClone = 0;
 	boundSet = false;
 }
 
 
-void VerseKey::initBounds() const
-{
+void VerseKey::initBounds() const {
 	if (!tmpClone) {
 		tmpClone = (VerseKey *)this->clone();
 		tmpClone->setAutoNormalize(false);
@@ -1273,7 +1273,7 @@ const char *VerseKey::getOSISBookName() const {
 
 
 const char *VerseKey::getBookAbbrev() const {
-	return refSys->getBook(((testament>1)?BMAX[0]:0)+book-1)->getPreferredAbbreviation();
+	return getPrivateLocale()->translate((SWBuf("prefAbbr_")+refSys->getBook(((testament>1)?BMAX[0]:0)+book-1)->getPreferredAbbreviation()).c_str());
 }
 
 
@@ -1428,6 +1428,11 @@ void VerseKey::normalize(bool autocheck)
 			}
 			if (chapter < (intros?0:1)) {
 				--book;
+				if (book < (intros?0:1)) {
+					if (--testament > 0) {
+						book += (BMAX[testament-1] + (intros?1:0));
+					}
+				}
 				chapter += (getChapterMax() + (intros?1:0));
 				continue;
 			}
@@ -1441,6 +1446,11 @@ void VerseKey::normalize(bool autocheck)
 			if (verse < (intros?0:1)) {
 				if (--chapter < (intros?0:1)) {
 					--book;
+					if (book < (intros?0:1)) {
+						if (--testament > 0) {
+							book += (BMAX[testament-1] + (intros?1:0));
+						}
+					}
 					chapter += (getChapterMax() + (intros?1:0));
 				}
 				verse += (getVerseMax() + (intros?1:0));
@@ -1758,7 +1768,7 @@ void VerseKey::checkBounds() {
 int VerseKey::compare(const SWKey &ikey)
 {
 	const SWKey *testKey = &ikey;
-	const VerseKey *vkey = (const VerseKey *)SWDYNAMIC_CAST(VerseKey, testKey);
+	const VerseKey *vkey = (const VerseKey *)SWDYNAMIC_CAST(const VerseKey, testKey);
 	if (vkey) {
 		return _compare(*vkey);
 	}
@@ -1793,7 +1803,7 @@ int VerseKey::_compare(const VerseKey &ivkey)
 	keyval1 += (int)getSuffix();
 	keyval2 += (int)ivkey.getSuffix();
 	keyval1 = (keyval1 != keyval2) ? ((keyval1 > keyval2) ? 1 : -1) : 0; // -1 | 0 | 1
-	return keyval1;
+	return (int)keyval1;
 }
 
 
@@ -1827,6 +1837,31 @@ const char *VerseKey::getRangeText() const {
 		stdstr(&rangeText, buf.c_str());
 	}
 	else stdstr(&rangeText, getText());
+	return rangeText;
+}
+
+
+/******************************************************************************
+ * VerseKey::getShortRangeText - returns short parsable range text for this key
+ */
+
+const char *VerseKey::getShortRangeText() const {
+	if (isBoundSet() && (lowerBound != upperBound)) {
+		SWBuf buf = getLowerBound().getShortText();
+		buf += "-";
+		if ( getUpperBound().getTestament() == getLowerBound().getTestament()
+		  && getUpperBound().getBook() == getLowerBound().getBook()
+		  && getUpperBound().getChapter() == getLowerBound().getChapter()) {
+			buf.appendFormatted("%d", getUpperBound().getVerse());
+		}
+		else if ( getUpperBound().getTestament() == getLowerBound().getTestament()
+		       && getUpperBound().getBook() == getLowerBound().getBook()) {
+			buf.appendFormatted("%d:%d", getUpperBound().getChapter(), getUpperBound().getVerse());
+		}
+		else buf += getUpperBound().getShortText();
+		stdstr(&rangeText, buf.c_str());
+	}
+	else stdstr(&rangeText, getShortText());
 	return rangeText;
 }
 
@@ -1868,14 +1903,14 @@ const char *VerseKey::convertToOSIS(const char *inRef, const SWKey *lastKnownKey
 		memset(frag, 0, 800);
 		memset(preJunk, 0, 800);
 		memset(postJunk, 0, 800);
-		while ((*startFrag) && (strchr(" {};,()[].", *startFrag))) {
+		while ((*startFrag) && (strchr(" {}:;,()[].", *startFrag))) {
 			outRef += *startFrag;
 			startFrag++;
 		}
-		memmove(frag, startFrag, ((const char *)element->userData - startFrag) + 1);
+		memmove(frag, startFrag, (size_t)((const char *)element->userData - startFrag) + 1);
 		frag[((const char *)element->userData - startFrag) + 1] = 0;
 		int j;
-		for (j = strlen(frag)-1; j && (strchr(" {};,()[].", frag[j])); j--);
+		for (j = strlen(frag)-1; j && (strchr(" {}:;,()[].", frag[j])); j--);
 		if (frag[j+1])
 			strcpy(postJunk, frag+j+1);
 		frag[j+1]=0;

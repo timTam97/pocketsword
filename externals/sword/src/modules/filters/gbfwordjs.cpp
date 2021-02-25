@@ -2,7 +2,7 @@
  *
  *  gbfwordjs.cpp -	SWFilter descendant for ???
  *
- * $Id: gbfwordjs.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: gbfwordjs.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -76,9 +76,9 @@ char GBFWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 		
 		const SWBuf orig = text;
 		const char * from = orig.c_str();
-		VerseKey *vkey = 0;
+		const VerseKey *vkey = 0;
 		if (key) {
-			vkey = SWDYNAMIC_CAST(VerseKey, key);
+			vkey = SWDYNAMIC_CAST(const VerseKey, key);
 		}
 
 		for (text = ""; *from; from++) {
@@ -88,7 +88,7 @@ char GBFWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 				token[0] = 0;
 				token[1] = 0;
 				token[2] = 0;
-				textEnd = text.length();
+				textEnd = (unsigned int)text.length();
 				continue;
 			}
 			if (*from == '>') {	// process tokens
@@ -137,7 +137,7 @@ char GBFWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 				text += token;
 				text += '>';
 				if (needWordOut) {
-					char wstr[10];
+					char wstr[11];
 					sprintf(wstr, "%03d", word-2);
 					AttributeValue *wAttrs = &(module->getEntryAttributes()["Word"][wstr]);
 					needWordOut = false;
@@ -212,27 +212,29 @@ char GBFWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 							else m = morph.c_str();
 							spanStart.appendFormatted("<span class=\"clk\" onclick=\"p('%s','%s','%s','%s','','%s');\" >", lexName.c_str(), strong.c_str(), wordID.c_str(), m, modName.c_str());
 							text.insert(textStr, spanStart);
-							lastAppendLen = spanStart.length();
+							lastAppendLen = (unsigned int)spanStart.length();
 						}
 					}
 
 				}
 				if (newText) {
-					textStart = text.length(); newText = false;
+					textStart = (unsigned int)text.length(); newText = false;
 				}
 				continue;
 			}
 			if (intoken) {
-				if (tokpos < 2045)
+				if (tokpos < 2045) {
 					token[tokpos++] = *from;
+					// TODO: why is this + 2 ?
 					token[tokpos+2] = 0;
+				}
 			}
-			else	{
+			else {
 				text += *from;
 			}
 		}
 
-		char wstr[10];
+		char wstr[11];
 		sprintf(wstr, "%03d", word-1);
 		AttributeValue *wAttrs = &(module->getEntryAttributes()["Word"][wstr]);
 		needWordOut = false;

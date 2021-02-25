@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  utf8arabicpoints.h -	SWFilter descendant to remove UTF-8 Arabic
- *				vowel points
+ * utf8arabicpoints.h -		class UTF8ArabicPoints: an SWFilter descendant
+ *				to remove UTF-8 Arabic vowel points
  *
- * $Id: utf8arabicpoints.h 2865 2013-07-08 13:44:37Z scribe $
+ * $Id: utf8arabicpoints.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2009-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

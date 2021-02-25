@@ -1,11 +1,9 @@
 /*****************************************************************************
  *
- *  rawstr4.h -	code for class 'RawStr4'- a module that reads raw text
- *		files:  ot and nt using indexs ??.bks ??.cps ??.vss
- *		and provides lookup and parsing functions based on
- *		class StrKey
+ * rawstr4.h -	class RawStr4: a helper class for module drivers with string
+ * 		keys uncompressed requiring 4 bytes for their entry size
  *
- * $Id: rawstr4.h 3134 2014-03-17 09:30:15Z chrislit $
+ * $Id: rawstr4.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -35,6 +33,8 @@ class FileDesc;
 class SWBuf;
 
 class SWDLLEXPORT RawStr4 {
+
+private:
 	static int instance;		// number of instantiated RawStr4 objects or derivitives
 	char *path;
 	bool caseSensitive;
@@ -47,14 +47,15 @@ protected:
 	FileDesc *datfd;
 	void doSetText(const char *key, const char *buf, long len = -1);
 	void doLinkEntry(const char *destkey, const char *srckey);
+
 public:
 	static const char nl;
 	RawStr4(const char *ipath, int fileMode = -1, bool caseSensitive = false);
 	virtual ~RawStr4();
 	void getIDXBuf(long ioffset, char **buf) const;
 	void getIDXBufDat(long ioffset, char **buf) const;
-	signed char findOffset(const char *key, __u32 *start, __u32 *size, long away = 0, __u32 *idxoff = 0) const;
-	void readText(__u32 start, __u32 *size, char **idxbuf, SWBuf &buf) const;
+	signed char findOffset(const char *key, SW_u32 *start, SW_u32 *size, long away = 0, SW_u32 *idxoff = 0) const;
+	void readText(SW_u32 start, SW_u32 *size, char **idxbuf, SWBuf &buf) const;
 	static signed char createModule(const char *path);
 };
 

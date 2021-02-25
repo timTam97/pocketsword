@@ -2,7 +2,7 @@
  *
  *  teiplain.cpp -	TEI to Plaintext filter
  *
- * $Id: teiplain.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: teiplain.cpp 3696 2020-02-03 19:38:46Z refdoc $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -109,8 +109,28 @@ bool TEIPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			else if (tag.isEndTag()) {
 			        buf += "]";
 			}
-		}
+ 		}
 
+		// <list> <item>  This implementation does not distinguish between forms of lists
+		// it would be nice if a numbered list could be added
+		
+		else if (!strcmp(tag.getName(), "list")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+
+				buf += "\n";
+			}
+			else if (tag.isEndTag()) {
+				buf += "\n";
+			}
+		}
+		else if (!strcmp(tag.getName(), "item")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\t* ";
+			}
+			else if (tag.isEndTag()) {
+				buf += "\n";
+			}
+		}
 		else {
 			return false;  // we still didn't handle token
 		}

@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  gbfosis.h -	Implementation of GBFOSIS
+ * gbfosis.h -	class GBFOSIS: a RenderFilter to render OSIS from modules
+ * 		marked up in GBF
  *
- * $Id: gbfosis.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfosis.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

@@ -3,7 +3,7 @@
  *  swfiltermgr.cpp -	Implementation of SWFilterMgr, used as an interface
  *			to manage filters on a module
  *
- * $Id: swfiltermgr.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swfiltermgr.cpp 3753 2020-07-10 09:32:46Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -45,11 +45,11 @@ SWMgr *SWFilterMgr::getParentMgr() {
 }
 
 
-void SWFilterMgr::AddGlobalOptions(SWModule * module, ConfigEntMap & section, ConfigEntMap::iterator start, ConfigEntMap::iterator end) {
+void SWFilterMgr::addGlobalOptions(SWModule * module, ConfigEntMap & section, ConfigEntMap::iterator start, ConfigEntMap::iterator end) {
 }
 
 
-void SWFilterMgr::AddLocalOptions(SWModule * module, ConfigEntMap & section, ConfigEntMap::iterator start, ConfigEntMap::iterator end) {
+void SWFilterMgr::addLocalOptions(SWModule * module, ConfigEntMap & section, ConfigEntMap::iterator start, ConfigEntMap::iterator end) {
 }
 
 
@@ -59,7 +59,7 @@ void SWFilterMgr::AddLocalOptions(SWModule * module, ConfigEntMap & section, Con
 * @param section We use this section to get a list of filters we should apply to the module
 */
 
-void SWFilterMgr::AddEncodingFilters(SWModule * module, ConfigEntMap & section) {
+void SWFilterMgr::addEncodingFilters(SWModule * module, ConfigEntMap & section) {
 }
 
 
@@ -69,7 +69,7 @@ void SWFilterMgr::AddEncodingFilters(SWModule * module, ConfigEntMap & section) 
 * @param section We use this section to get a list of filters we should apply to the module
 */
 
-void SWFilterMgr::AddRenderFilters(SWModule * module, ConfigEntMap & section) {
+void SWFilterMgr::addRenderFilters(SWModule * module, ConfigEntMap & section) {
 }
 
 
@@ -79,7 +79,7 @@ void SWFilterMgr::AddRenderFilters(SWModule * module, ConfigEntMap & section) {
 * @param section We use this section to get a list of filters we should apply to the module
 */
 
-void SWFilterMgr::AddStripFilters(SWModule * module, ConfigEntMap & section) {
+void SWFilterMgr::addStripFilters(SWModule * module, ConfigEntMap & section) {
 }
 
 
@@ -89,7 +89,7 @@ void SWFilterMgr::AddStripFilters(SWModule * module, ConfigEntMap & section) {
 * @param section We use this section to get a list of filters we should apply to the module
 */
 
-void SWFilterMgr::AddRawFilters(SWModule * module, ConfigEntMap & section) {
+void SWFilterMgr::addRawFilters(SWModule * module, ConfigEntMap & section) {
 }
 
 

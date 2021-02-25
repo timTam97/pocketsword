@@ -1,10 +1,10 @@
 /******************************************************************************
  *
- *  rawtext4.h -	code for class 'RawText4'- a module that reads raw
- *			text files:
- *			ot and nt using indexs ??.bks ??.cps ??.vss
+ * rawtext4.h -		class RawText4: a module driver for Bible modules
+ * 			stored uncompressed and having entry sizes specified
+ * 			with 4 bytes
  *
- * $Id: rawtext4.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawtext4.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2007-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -38,8 +38,7 @@ class RawStr;
 class SWDLLEXPORT RawText4 : public SWText, public RawVerse4 {
 
 public:
-  
-	RawText4(const char *ipath, const char *iname = 0, const char *idesc = 0, SWDisplay * idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN, SWTextDirection dir = DIRECTION_LTR, SWTextMarkup markup = FMT_UNKNOWN, const char* ilang = 0, const char *versification = "KJV");
+	RawText4(const char *ipath, const char *iname = 0, const char *idesc = 0, SWDisplay *idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN, SWTextDirection dir = DIRECTION_LTR, SWTextMarkup markup = FMT_UNKNOWN, const char *ilang = 0, const char *versification = "KJV");
 	virtual ~RawText4();
 	virtual SWBuf &getRawEntryBuf() const;
 	virtual void increment(int steps = 1);

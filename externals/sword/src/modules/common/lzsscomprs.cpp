@@ -3,7 +3,7 @@
  *  lzssomprs.cpp -	LZSSCompress: a driver class that provides LZSS
  *			compression
  *		
- * $Id: lzsscomprs.cpp 2935 2013-08-02 11:06:30Z scribe $
+ * $Id: lzsscomprs.cpp 3785 2020-08-30 11:12:34Z scribe $
  *
  * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -355,16 +355,16 @@ void LZSSCompress::Private::DeleteNode(short int Node)
 
 
 /******************************************************************************
- * LZSSCompress::Encode	- This function "encodes" the input stream into the
+ * LZSSCompress::encode	- This function "encodes" the input stream into the
  *						output stream.
- *						The GetChars() and SendChars() functions are
+ *						The getChars() and sendChars() functions are
  *						used to separate this method from the actual
  *						i/o.
  * 		NOTE:			must set zlen for parent class to know length of
  * 						compressed buffer.
  */
 
-void LZSSCompress::Encode(void)
+void LZSSCompress::encode(void)
 {
 	short int i;						// an iterator
 	short int r;						// node number in the binary tree
@@ -421,7 +421,7 @@ void LZSSCompress::Encode(void)
 	// This function loads the buffer with X characters and returns
 	// the actual amount loaded.
 
-	len = GetChars((char *) &(p->m_ring_buffer[r]), F);
+	len = getChars((char *) &(p->m_ring_buffer[r]), F);
 
 	// Make sure there is something to be compressed.
 
@@ -491,7 +491,7 @@ void LZSSCompress::Encode(void)
 			// code_buf is the buffer of characters to be output.
 			// code_buf_pos is the number of characters it contains.
 
-			SendChars((char *) code_buf, code_buf_pos);
+			sendChars((char *) code_buf, code_buf_pos);
 
 			// Reset for next buffer...
 
@@ -507,7 +507,7 @@ void LZSSCompress::Encode(void)
 		for (i = 0; i < last_match_length; i++) {
 			// Get next character...
 
-			if (GetChars((char *) &c, 1) != 1)
+			if (getChars((char *) &c, 1) != 1)
 				break;
 
 			// Delete "old strings"
@@ -591,7 +591,7 @@ void LZSSCompress::Encode(void)
 		// code_buf is the encoded string to send.
 		// code_buf_ptr is the number of characters.
 
-		SendChars((char *) code_buf, code_buf_pos);
+		sendChars((char *) code_buf, code_buf_pos);
 	}
 
 
@@ -601,14 +601,14 @@ void LZSSCompress::Encode(void)
 
 
 /******************************************************************************
- * LZSSCompress::Decode	- This function "decodes" the input stream into the
+ * LZSSCompress::decode	- This function "decodes" the input stream into the
  *						output stream.
- *						The GetChars() and SendChars() functions are
+ *						The getChars() and sendChars() functions are
  *						used to separate this method from the actual
  *						i/o.
  */
 
-void LZSSCompress::Decode(void)
+void LZSSCompress::decode(void)
 {
 	int k;
 	int r;							  // node number
@@ -647,7 +647,7 @@ void LZSSCompress::Decode(void)
 		else {
 			// Next byte must be a flag.
 
-			if (GetChars((char *) &flags, 1) != 1)
+			if (getChars((char *) &flags, 1) != 1)
 				break;
 
 			// Set the flag counter.  While at first it might appear
@@ -662,10 +662,10 @@ void LZSSCompress::Decode(void)
 		// that the next byte is a single, unencoded character.
 
 		if (flags & 1) {
-			if (GetChars((char *) c, 1) != 1)
+			if (getChars((char *) c, 1) != 1)
 				break;
 
-			if (SendChars((char *) c, 1) != 1) {
+			if (sendChars((char *) c, 1) != 1) {
 				break;
 			}
 			totalLen++;
@@ -693,7 +693,7 @@ void LZSSCompress::Decode(void)
 			// have changed the variable names to something more
 			// obvious.
 
-			if (GetChars((char *) c, 2) != 2)
+			if (getChars((char *) c, 2) != 2)
 				break;
 
 			// Convert these two characters into the position and
@@ -720,7 +720,7 @@ void LZSSCompress::Decode(void)
 
 			// Add the "len" :characters to the output stream.
 
-			if (SendChars((char *) c, len) != (unsigned int)len) {
+			if (sendChars((char *) c, len) != (unsigned int)len) {
 				break;
 			}
 			totalLen += len;

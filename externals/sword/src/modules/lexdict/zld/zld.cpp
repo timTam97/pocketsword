@@ -3,7 +3,7 @@
  *  zld.cpp -	code for class 'zLD'- a module that reads zlib compressed
  *		lexicon and dictionary files
  *
- * $Id: zld.cpp 3223 2014-05-01 05:56:07Z scribe $
+ * $Id: zld.cpp 3503 2017-11-01 10:36:13Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -90,7 +90,7 @@ char zLD::getEntry(long away) const {
 
 		rawFilter(entryBuf, key);
 
-		entrySize = size;        // support getEntrySize call
+		entrySize = (int)size;        // support getEntrySize call
 		if (!key->isPersist())			// If we have our own key
 			*key = idxbuf;				// reset it to entry index buffer
 
@@ -187,7 +187,7 @@ void zLD::deleteEntry() {
 
 long zLD::getEntryCount() const
 {
-	if (idxfd < 0) return 0;
+	if (!idxfd || idxfd->getFd() < 0) return 0;
 	return idxfd->seek(0, SEEK_END) / IDXENTRYSIZE;
 }
 

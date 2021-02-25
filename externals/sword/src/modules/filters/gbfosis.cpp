@@ -2,7 +2,7 @@
  *
  *  gbfosis.cpp -	GBF to OSIS filter
  *
- * $Id: gbfosis.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: gbfosis.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -346,7 +346,7 @@ char GBFOSIS::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 		}
 	}
 
-	VerseKey *vkey = SWDYNAMIC_CAST(VerseKey, key);
+	const VerseKey *vkey = SWDYNAMIC_CAST(const VerseKey, key);
 	if (vkey) {
 		SWBuf ref = "";
 		if (vkey->getVerse()) {

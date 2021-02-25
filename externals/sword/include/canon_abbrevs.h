@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  canon_abbrevs.h -	Canonical text information to be included by
+ * canon_abbrevs.h -	Canonical text information to be included by
  *			 VerseKey.cpp
  *
- * $Id: canon_abbrevs.h 2970 2013-08-22 07:03:11Z chrislit $
+ * $Id: canon_abbrevs.h 3765 2020-07-26 10:31:09Z scribe $
  *
  * Copyright 2009-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

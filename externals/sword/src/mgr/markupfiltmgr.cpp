@@ -4,7 +4,7 @@
  *			used to transcode all module text to a requested
  *			markup
  *
- * $Id: markupfiltmgr.cpp 3075 2014-03-05 02:27:33Z chrislit $
+ * $Id: markupfiltmgr.cpp 3780 2020-08-21 19:49:12Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -75,7 +75,7 @@ MarkupFilterMgr::MarkupFilterMgr(char mark, char enc)
 
 	markup = mark;
 
-	CreateFilters(markup);
+	createFilters(markup);
 }
 
 
@@ -99,7 +99,7 @@ MarkupFilterMgr::~MarkupFilterMgr() {
  *
  * RET: markup
  */
-char MarkupFilterMgr::Markup(char mark) {
+void MarkupFilterMgr::setMarkup(char mark) {
 	if (mark && mark != markup) {
 		markup = mark;
 		ModMap::const_iterator module;
@@ -110,7 +110,7 @@ char MarkupFilterMgr::Markup(char mark) {
 		SWFilter *oldosis  = fromosis;
 		SWFilter *oldtei   = fromtei;
 
-		CreateFilters(markup);
+		createFilters(markup);
 
 		for (module = getParentMgr()->Modules.begin(); module != getParentMgr()->Modules.end(); ++module) {
 			switch (module->second->getMarkup()) {
@@ -202,11 +202,10 @@ char MarkupFilterMgr::Markup(char mark) {
 		delete oldosis;
 		delete oldtei;
 	}
-	return markup;
 }
 
 
-void MarkupFilterMgr::AddRenderFilters(SWModule *module, ConfigEntMap &section) {
+void MarkupFilterMgr::addRenderFilters(SWModule *module, ConfigEntMap &section) {
 	switch (module->getMarkup()) {
 	case FMT_THML:
 		if (fromthml)
@@ -232,7 +231,7 @@ void MarkupFilterMgr::AddRenderFilters(SWModule *module, ConfigEntMap &section) 
 }
 
 
-void MarkupFilterMgr::CreateFilters(char markup) {
+void MarkupFilterMgr::createFilters(char markup) {
 
 	switch (markup) {
 	case FMT_PLAIN:
@@ -304,7 +303,7 @@ void MarkupFilterMgr::CreateFilters(char markup) {
 		fromthml  = new ThMLWEBIF();
 		fromgbf   = new GBFWEBIF();
 		fromosis  = new OSISWEBIF();
-		fromtei   = NULL;
+		fromtei   = new TEIXHTML();
 		break;
 
 	case FMT_TEI:

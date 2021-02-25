@@ -2,7 +2,7 @@
  *
  *  rtfhtml.cpp -	filter to convert RTF to HTML
  *
- * $Id: rtfhtml.cpp 2981 2013-09-15 00:05:26Z scribe $
+ * $Id: rtfhtml.cpp 3749 2020-07-06 23:51:56Z scribe $
  *
  * Copyright 1999 The team of Bibletime (info@bibletime.de)
  * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
@@ -53,9 +53,9 @@ char RTFHTML::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 				while (isdigit(*++end));
 				SWBuf num;
 				num.append(from, end-from);
-				__s16 n = atoi(num.c_str());
-				__u32 u = (__u16)n;
-				text.append(getUTF8FromUniChar(u));
+				SW_s16 n = atoi(num.c_str());
+				SW_u32 u = (SW_u16)n;
+				getUTF8FromUniChar(u, &text);
 				from += (end-from);
 				continue;
 			}

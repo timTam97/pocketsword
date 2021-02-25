@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  url.h -	code for an URL parser utility class
+ * url.h -	class URL: a URL parser utility class
  *
- * $Id: url.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: url.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

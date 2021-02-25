@@ -3,7 +3,7 @@
  *  rawtext4.cpp -	code for class 'RawText4'- a module that reads raw text
  *			files: ot and nt using indexs ??.bks ??.cps ??.vss
  *
- * $Id: rawtext4.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: rawtext4.cpp 3821 2020-11-02 18:33:02Z scribe $
  *
  * Copyright 2007-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -72,10 +72,10 @@ bool RawText4::isWritable() const {
 SWBuf &RawText4::getRawEntryBuf() const {
 	long  start = 0;
 	unsigned long size = 0;
-	VerseKey &key = getVerseKey();
+	const VerseKey &key = getVerseKey();
 
 	findOffset(key.getTestament(), key.getTestamentIndex(), &start, &size);
-	entrySize = size;        // support getEntrySize call
+	entrySize = (int)size;        // support getEntrySize call
 
 	entryBuf = "";
 	readText(key.getTestament(), start, size, entryBuf);
@@ -98,7 +98,7 @@ void RawText4::setEntry(const char *inbuf, long len) {
 
 void RawText4::linkEntry(const SWKey *inkey) {
 	VerseKey &destkey = getVerseKey();
-	const VerseKey *srckey = &getVerseKey(inkey);
+	const VerseKey *srckey = &getVerseKeyConst(inkey);
 	doLinkEntry(destkey.getTestament(), destkey.getTestamentIndex(), srckey->getTestamentIndex());
 }
 
@@ -158,19 +158,20 @@ void RawText4::increment(int steps) {
 bool RawText4::isLinked(const SWKey *k1, const SWKey *k2) const {
 	long start1, start2;
 	unsigned long size1, size2;
-	VerseKey *vk1 = &getVerseKey(k1);
-	VerseKey *vk2 = &getVerseKey(k2);
+	const VerseKey *vk1 = &getVerseKey(k1);
+	const VerseKey *vk2 = &getVerseKey(k2);
 	if (vk1->getTestament() != vk2->getTestament()) return false;
 
 	findOffset(vk1->getTestament(), vk1->getTestamentIndex(), &start1, &size1);
 	findOffset(vk2->getTestament(), vk2->getTestamentIndex(), &start2, &size2);
+	if (!size1 || !size2) return false;
 	return start1 == start2;
 }
 
 bool RawText4::hasEntry(const SWKey *k) const {
 	long start;
 	unsigned long size;
-	VerseKey *vk = &getVerseKey(k);
+	const VerseKey *vk = &getVerseKey(k);
 
 	findOffset(vk->getTestament(), vk->getTestamentIndex(), &start, &size);
 	return size;

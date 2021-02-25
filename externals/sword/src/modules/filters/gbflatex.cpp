@@ -2,7 +2,7 @@
  *
  *  gbflatex.cpp -	GBF to LaTeX
  *
- * $Id: gbflatex.cpp 3074 2014-03-05 00:30:21Z chrislit $
+ * $Id: gbflatex.cpp 3547 2017-12-10 05:06:48Z scribe $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -54,7 +54,7 @@ GBFLaTeX::GBFLaTeX() {
 	addTokenSubstitute("Fi", "}");
 	addTokenSubstitute("FB", "\\bold{"); // bold begin
 	addTokenSubstitute("Fb", "}");
-	addTokenSubstitute("FR", "{\\color{red}"); // words of Jesus begin
+	addTokenSubstitute("FR", "{\\swordwoj{"); // words of Jesus begin
 	addTokenSubstitute("Fr", "}");
 	addTokenSubstitute("FU", "\\underline{"); // underline begin
 	addTokenSubstitute("Fu", "}");
@@ -66,8 +66,8 @@ GBFLaTeX::GBFLaTeX() {
 	addTokenSubstitute("Fv", "}");
 	addTokenSubstitute("TT", "\\section*{"); // Book title begin
 	addTokenSubstitute("Tt", "}");
-	addTokenSubstitute("PP", "\\begin{quote}"); //  poetry  begin
-	addTokenSubstitute("Pp", "\\end{quote}");
+	addTokenSubstitute("PP", "\\begin{swordpoetry}"); //  poetry  begin
+	addTokenSubstitute("Pp", "\\end{swordpoetry}");
 	addTokenSubstitute("Fn", ""); //  font  end
 	addTokenSubstitute("CL", "\\\\"); //  new line
 	addTokenSubstitute("CM", "\\\\"); //  paragraph <!P> is a non showing comment that can be changed in the front end to <P> if desired
@@ -90,69 +90,65 @@ bool GBFLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 		
 		if (!strncmp(token, "WG", 2)) { // strong's numbers
 			//buf += " <small><em>&lt;<a href=\"type=Strongs value=";
-			buf += " <small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=Greek&value=";
+			buf += " \\swordstrong[Greek]{";
 			for (tok = token+2; *tok; tok++)
 				//if(token[i] != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">";
+			buf += ", ";
 			for (tok = token + 2; *tok; tok++)
 				//if(token[i] != '\"')
 					buf += *tok;
-			buf += "</a>&gt;</em></small>";
+			buf += "}";
 		}
 		else if (!strncmp(token, "WH", 2)) { // strong's numbers
-			//buf += " <small><em>&lt;<a href=\"type=Strongs value=";
-			buf += " <small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=Hebrew&value=";
+			buf += " \\swordstrong[Hebrew]{";
 			for (tok = token+2; *tok; tok++)
 				//if(token[i] != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">";
+			buf += ", ";
 			for (tok = token + 2; *tok; tok++)
 				//if(token[i] != '\"')
 					buf += *tok;
-			buf += "</a>&gt;</em></small>";
+			buf += "}";
 		}
 		else if (!strncmp(token, "WTG", 3)) { // strong's numbers tense
-			//buf += " <small><em>(<a href=\"type=Strongs value=";
-			buf += " <small><em class=\"strongs\">(<a href=\"passagestudy.jsp?action=showStrongs&type=Greek&value=";
+			buf += " \\swordstrong[Greektense]{";
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">";
+			buf += ", ";
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "</a>)</em></small>";
+			buf += "}";
 		}
 		else if (!strncmp(token, "WTH", 3)) { // strong's numbers tense
-			//buf += " <small><em>(<a href=\"type=Strongs value=";
-			buf += " <small><em class=\"strongs\">(<a href=\"passagestudy.jsp?action=showStrongs&type=Hebrew&value=";
+			buf += " \\swordstrong[Hebrewtense]{";
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "\" class=\"strongs\">";
+			buf += ",";
 			for (tok = token + 3; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "</a>)</em></small>";
+			buf += "}";
 		}
 
 		else if (!strncmp(token, "WT", 2) && strncmp(token, "WTH", 3) && strncmp(token, "WTG", 3)) { // morph tags
-			//buf += " <small><em>(<a href=\"type=morph class=none value=";
-			buf += " <small><em class=\"morph\">(<a href=\"passagestudy.jsp?action=showMorph&type=Greek&value=";
+			buf += " \\swordmorph{";
 			
 			for (tok = token + 2; *tok; tok++)
 				if(*tok != '\"')
 					buf += *tok;
-			buf += "\" class=\"morph\">";
+			buf += ", >";
 			for (tok = token + 2; *tok; tok++)				
 				if(*tok != '\"') 			
 					buf += *tok;		
-			buf += "</a>)</em></small>";
+			buf += "}";
 		}
 
 		else if (!strcmp(tag.getName(), "RX")) {
-			buf += "<a href=\"";
+			buf += "\\swordxref{";
 			for (tok = token + 3; *tok; tok++) {
 			  if(*tok != '<' && *tok+1 != 'R' && *tok+2 != 'x') {
 			    buf += *tok;
@@ -161,61 +157,31 @@ bool GBFLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *u
 			    break;
 			  }
 			}
-			buf += "\">";
+			buf += "}";
 		}
 		else if (!strcmp(tag.getName(), "RF")) {
 			SWBuf type = tag.getAttribute("type");
 			SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
 			SWBuf noteName = tag.getAttribute("n");
-			VerseKey *vkey = NULL;
-			// see if we have a VerseKey * or descendant
-			SWTRY {
-				vkey = SWDYNAMIC_CAST(VerseKey, u->key);
+			if (u->vkey) {
+				
+				buf.appendFormatted("\\swordfootnote{%s}{%s}{%s}{", 
+					footnoteNumber.c_str(),
+					u->version.c_str(), 
+					u->vkey->getText()).c_str(); 
 			}
-			SWCATCH ( ... ) {	}
-			if (vkey) {
-				// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
-				//char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
-				buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=n&value=%s&module=%s&passage=%s\"><small><sup class=\"n\">*n%s</sup></small></a> ", 
-					URL::encode(footnoteNumber.c_str()).c_str(),
-					URL::encode(u->version.c_str()).c_str(), 
-					URL::encode(vkey->getText()).c_str(), 
-					(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str(): ""));
-			}
-			u->suspendTextPassThru = true;
+			u->suspendTextPassThru = false;
 		}
 		else if (!strcmp(tag.getName(), "Rf")) {
 			u->suspendTextPassThru = false;
+			buf += "}";
 		}
-/*
-		else if (!strncmp(token, "RB", 2)) {
-			buf += "<i> ";
-			u->hasFootnotePreTag = true;
-		}
-
-		else if (!strncmp(token, "Rf", 2)) {
-			buf += "&nbsp<a href=\"note=";
-			buf += u->lastTextNode.c_str();
-			buf += "\">";
-			buf += "<small><sup>*n</sup></small></a>&nbsp";
-			// let's let text resume to output again
-			u->suspendTextPassThru = false;
-		}
-		
-		else if (!strncmp(token, "RF", 2)) {
-			if (u->hasFootnotePreTag) {
-				u->hasFootnotePreTag = false;
-				buf += "</i> ";
-			}
-			u->suspendTextPassThru = true;
-		}
-*/
 		else if (!strncmp(token, "FN", 2)) {
-			buf += "<font face=\"";
+			buf += "\\swordfont{";
 			for (tok = token + 2; *tok; tok++)				
 				if(*tok != '\"') 			
 					buf += *tok;
-			buf += "\">";
+			buf += "}";
 		}
 
 		else if (!strncmp(token, "CA", 2)) {	// ASCII value

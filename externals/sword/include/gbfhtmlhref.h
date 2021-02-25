@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  gbfhtmlhref.h -	Implementation of GBFHTMLHREF
+ * gbfhtmlhref.h -	class GBFHTMLHREF: a RenderFilter for rendering
+ * 			HTMLHREF from modules marked up in GBF
  *
- * $Id: gbfhtmlhref.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfhtmlhref.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts GBF  text to HTML text with hrefs
+/** this filter converts GBF text to HTML text with hrefs
  */
 class SWDLLEXPORT GBFHTMLHREF : public SWBasicFilter {
 	bool renderNoteNumbers;

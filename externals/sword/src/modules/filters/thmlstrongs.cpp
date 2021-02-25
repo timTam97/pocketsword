@@ -3,7 +3,7 @@
  *  thmlstrongs.cpp -	SWFilter descendant to hide or show Strong's number
  *			in a ThML module
  *
- * $Id: thmlstrongs.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: thmlstrongs.cpp 3790 2020-09-11 15:26:02Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -60,7 +60,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 	bool lastspace = false;
 	int word = 1;
 	char val[128];
-	char wordstr[5];
+	char wordstr[11];
 	char *valto;
 	char *ch;
 	unsigned int textStart = 0, textEnd = 0;
@@ -77,7 +77,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 			token[0] = 0;
 			token[1] = 0;
 			token[2] = 0;
-			textEnd = text.length();
+			textEnd = (unsigned int)text.length();
 			continue;
 		}
 		if (*from == '>') {	// process tokens
@@ -94,6 +94,8 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 						module->getEntryAttributes()["Word"][wordstr]["PartCount"] = "1";
 						module->getEntryAttributes()["Word"][wordstr]["Lemma"] = val;
 						module->getEntryAttributes()["Word"][wordstr]["LemmaClass"] = "strong";
+						module->getEntryAttributes()["Word"][wordstr]["Lemma.1"] = val;
+						module->getEntryAttributes()["Word"][wordstr]["LemmaClass.1"] = "strong";
 						tmp = "";
 						tmp.append(text.c_str()+textStart, (int)(textEnd - textStart));
 						module->getEntryAttributes()["Word"][wordstr]["Text"] = tmp;
@@ -105,6 +107,8 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 						sprintf(wordstr, "%03d", word);
 						module->getEntryAttributes()["Word"][wordstr]["Morph"] = val;
 						module->getEntryAttributes()["Word"][wordstr]["MorphClass"] = "OLBMorph";
+						module->getEntryAttributes()["Word"][wordstr]["Morph.1"] = val;
+						module->getEntryAttributes()["Word"][wordstr]["MorphClass.1"] = "OLBMorph";
 */
 						word--;	// for now, completely ignore this word attribute.
 					}
@@ -116,7 +120,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 						if (lastspace)
 							text--;
 					}
-					if (newText) {textStart = text.length(); newText = false; }
+					if (newText) {textStart = (unsigned int)text.length(); newText = false; }
 					continue;
 				}
 			}
@@ -133,6 +137,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 								strcpy(val, "robinson");
 							}
 							module->getEntryAttributes()["Word"][wordstr]["MorphClass"] = val;
+							module->getEntryAttributes()["Word"][wordstr]["MorphClass.1"] = val;
 						}
 						if (!strncmp(ch, "value=\"", 7)) {
 							valto = val;
@@ -141,6 +146,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 							*valto = 0;
 							sprintf(wordstr, "%03d", word-1);
 							module->getEntryAttributes()["Word"][wordstr]["Morph"] = val;
+							module->getEntryAttributes()["Word"][wordstr]["Morph.1"] = val;
 						}
 					}
 					newText = true;
@@ -150,15 +156,17 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 			text += '<';
 			text += token;
 			text += '>';
-			if (newText) {textStart = text.length(); newText = false; }
+			if (newText) {textStart = (unsigned int)text.length(); newText = false; }
 			continue;
 		}
 		if (intoken) {
-			if (tokpos < 2045)
+			if (tokpos < 2045) {
 				token[tokpos++] = *from;
+				// TODO: why is this + 2 ?
 				token[tokpos+2] = 0;
+			}
 		}
-		else	{
+		else {
 			text += *from;
 			lastspace = (*from == ' ');
 		}

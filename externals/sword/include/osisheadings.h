@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisheadings.h -	Implementation of OSISHeadings
+ * osisheadings.h -	class OSISHeadings: an OptionFilter which handles
+ * 			headings in modules marked up in OSIS
  *
- * $Id: osisheadings.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisheadings.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

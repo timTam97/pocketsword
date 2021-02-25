@@ -1,8 +1,10 @@
 /******************************************************************************
  *
- *  osismorphsegmentation.h -	Implementation of OSISMorphSegmentation
+ * osismorphsegmentation.h -	class OSISMorphSegmentation: and OptionFilter
+ * 				to hand word morpheme segmentation in modules
+ * 				marked up in OSIS
  *
- * $Id: osismorphsegmentation.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osismorphsegmentation.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  * CrossWire Bible Society
@@ -27,10 +29,9 @@
 
 SWORD_NAMESPACE_START
 
-/*  This filters toggles splitting of morphemes
- *  (for morpheme segmented Hebrew in the WLC)
+/* This filters toggles splitting of morphemes
+ * (for morpheme segmented Hebrew in the WLC)
  */
-
 class SWDLLEXPORT OSISMorphSegmentation : public SWOptionFilter {
 
 public:

@@ -1,10 +1,9 @@
 /******************************************************************************
  *
- *  rawfiles.cpp -	code for class 'RawFiles'- a module that produces HTML
- *			HREFs pointing to actual text desired.  Uses standard
- *			files:	ot and nt using indexs ??.bks ??.cps ??.vss
+ *  rawfiles.cpp -	code for class 'RawFiles'- a module that reads and writes
+ *			entries each to separate files on the filesystem
  *
- * $Id: rawfiles.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawfiles.cpp 3821 2020-11-02 18:33:02Z scribe $
  *
  * Copyright 1998-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -75,7 +74,7 @@ SWBuf &RawFiles::getRawEntryBuf() const {
 	FileDesc *datafile;
 	long  start = 0;
 	unsigned short size = 0;
-	VerseKey *key = &getVerseKey();
+	const VerseKey *key = &getVerseKey();
 
 	findOffset(key->getTestament(), key->getTestamentIndex(), &start, &size);
 
@@ -160,7 +159,7 @@ void RawFiles::linkEntry(const SWKey *inkey) {
 		SWBuf tmpbuf;
 		readText(key->getTestament(), start, size + 2, tmpbuf);
 
-		key = &getVerseKey(inkey);
+		key = &getVerseKeyConst(inkey);
 		doSetText(key->getTestament(), key->getTestamentIndex(), tmpbuf.c_str());
 	}
 }
@@ -187,7 +186,7 @@ void RawFiles::deleteEntry() {
 
 const char *RawFiles::getNextFilename() {
 	static SWBuf incfile;
-	__u32 number = 0;
+	SW_u32 number = 0;
 	FileDesc *datafile;
 
 	incfile.setFormatted("%s/incfile", path);
@@ -213,7 +212,7 @@ const char *RawFiles::getNextFilename() {
 char RawFiles::createModule(const char *path) {
 	char *incfile = new char [ strlen (path) + 16 ];
 
-	__u32 zero = 0;
+	SW_u32 zero = 0;
 	zero = archtosword32(zero);
 
 	FileDesc *datafile;

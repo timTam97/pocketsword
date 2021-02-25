@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  teihtmlhref.h -	Implementation of TEIHTMLHREF
+ * teihtmlhref.h -	class TEIHTMLHREF: a RenderFilter to render HTMLHREF
+ * 			markup from modules marked up in TEI
  *
- * $Id: teihtmlhref.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: teihtmlhref.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2008-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,13 +31,14 @@ SWORD_NAMESPACE_START
 /** this filter converts TEI text to HTMLHREF text
  */
 class SWDLLEXPORT TEIHTMLHREF : public SWBasicFilter {
+
 private:
 	bool renderNoteNumbers;
 
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
-		bool BiblicalText;
+		bool isBiblicalText;
 		SWBuf lastHi;
 		
 		SWBuf version;

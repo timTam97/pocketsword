@@ -1,10 +1,12 @@
 /******************************************************************************
  *
- *  listkey.h -	code for base class 'listkey'.  listkey is the basis for all
- *		types of keys for indexing into modules
- *		(e.g. verse, word, place, etc.)
+ * listkey.h -	class ListKey: a container Key which facilitates a list of
+ * 		SWKey objects.  This is useful for search results or returning
+ * 		the result of parsing freetext verse ranges.  The usefulness
+ * 		of having this container of keys itself be an SWKey is that it
+ * 		can be used natively by an SWModule to iterate the results.
  *
- * $Id: listkey.h 2893 2013-07-16 03:07:02Z scribe $
+ * $Id: listkey.h 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,13 +33,10 @@
 
 SWORD_NAMESPACE_START
 
-  /** ListKey is the basis for all
-  * types of keys that have lists of specified indexes
-  * (e.g. a list of verses, place, etc.)
-  */
+/** ListKey is a container SWKey which faciliates a list of SWKey objects
+ */
 class SWDLLEXPORT ListKey : public SWKey {
 
-	static SWClass classdef;
 	void init();
 
 protected:
@@ -64,7 +63,10 @@ public:
 	/** Clears out elements of list
 	 */
 	virtual void clear();
-	// deprecated, use clear(), instead
+
+	/** 
+	* @deprecated, use clear(), instead
+ 	*/
 	SWDEPRECATED virtual void ClearList() { clear(); }
 
 
@@ -72,13 +74,17 @@ public:
 	 * @return number of key elements in list
 	 */
 	virtual int getCount() const;
-	//deprecated, use getCount
+	/**
+	 * @deprecated Use getCount
+	 */
 	SWDEPRECATED virtual int Count() { return getCount(); }
 	
 	/** Removes current element from list
 	 */
 	virtual void remove();
-	// deprecated use remove
+	/**
+	 * @deprecated Use remove
+	 */
 	SWDEPRECATED virtual void Remove() { remove(); }
 
 	
@@ -89,8 +95,10 @@ public:
 	 * @return error status
 	 * deprecated use setToElement
 	 */
-	virtual char setToElement(int ielement, SW_POSITION = TOP);
-	// deprecated use setToElement
+	virtual char setToElement(int ielement, SW_POSITION pos = TOP);
+	/**
+	 * @deprecated Use setToElement
+	 */
 	SWDEPRECATED virtual char SetToElement(int ielement, SW_POSITION pos = TOP) { return setToElement(ielement, pos); }
 
 
@@ -103,7 +111,9 @@ public:
 	virtual SWKey *getElement(int pos = -1);
 	virtual const SWKey *getElement(int pos = -1) const;
 	
-	// deprecated, use above function
+	/**
+	 * @deprecated Use getElement
+	 */
 	SWDEPRECATED virtual SWKey *GetElement(int pos = -1) { return getElement(pos); }
 
 	/** Adds an element to the list
@@ -122,7 +132,6 @@ public:
 	/** Positions this key
 	 *
 	 * @param pos position
-	 * @return *this
 	 */
 	virtual void setPosition(SW_POSITION pos);
 	
@@ -134,10 +143,13 @@ public:
 	 */
 	virtual void increment(int step = 1);
 
+	virtual void nextElement() { setToElement(arraypos + 1); }
+
 	virtual bool isTraversable() const { return true; }
 	virtual long getIndex() const { return arraypos; }
 	virtual const char *getRangeText() const;
 	virtual const char *getOSISRefRangeText() const;
+	virtual const char *getShortRangeText() const;
 	virtual const char *getShortText() const;
 
 	/**

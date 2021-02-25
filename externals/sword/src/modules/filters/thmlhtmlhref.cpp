@@ -2,7 +2,7 @@
  *
  *  thmlhtmlhref.cpp -	ThML to HTML filter with hrefs  
  *
- * $Id: thmlhtmlhref.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: thmlhtmlhref.cpp 3547 2017-12-10 05:06:48Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,10 +33,11 @@ SWORD_NAMESPACE_START
  
 
 ThMLHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
+	isBiblicalText = false;
+	inSecHead = false;
 	if (module) {
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
-		SecHead = false;
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}	
 }
 
@@ -209,20 +210,14 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					SWBuf type = tag.getAttribute("type");
 					SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
 					SWBuf noteName = tag.getAttribute("n");
-					VerseKey *vkey = NULL;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {	}
-					if (vkey) {
+					if (u->vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
 						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\"><small><sup class=\"%c\">*%c%s</sup></small></a>", 
 							ch, 
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(), 
-							URL::encode(vkey->getText()).c_str(), 
+							URL::encode(u->vkey->getText()).c_str(), 
 							ch,
 							ch, 
 							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
@@ -256,7 +251,7 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				}
 			}
 			if (tag.isEndTag()) {	//	</scripRef>
-				if (!u->BiblicalText) {
+				if (!u->isBiblicalText) {
 					SWBuf refList = u->startTag.getAttribute("passage");
 					if (!refList.length())
 						refList = u->lastTextNode;
@@ -271,19 +266,13 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				else {
 					SWBuf footnoteNumber = u->startTag.getAttribute("swordFootnote");
 					SWBuf noteName = tag.getAttribute("n");
-					VerseKey *vkey = NULL;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {}
-					if (vkey) {
+					if (u->vkey) {
 						// leave this special osis type in for crossReference notes types?  Might thml use this some day? Doesn't hurt.
-						//buf.appendFormatted("<a href=\"noteID=%s.x.%s\"><small><sup>*x</sup></small></a> ", vkey->getText(), footnoteNumber.c_str());
+						//buf.appendFormatted("<a href=\"noteID=%s.x.%s\"><small><sup>*x</sup></small></a> ", u->vkey->getText(), footnoteNumber.c_str());
 						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=x&amp;value=%s&amp;module=%s&amp;passage=%s\"><small><sup class=\"x\">*x%s</sup></small></a>",
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(),
-							URL::encode(vkey->getText()).c_str(), 
+							URL::encode(u->vkey->getText()).c_str(), 
 							(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
 					}
 				}
@@ -293,17 +282,17 @@ bool ThMLHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			}
 		}
 		else if (tag.getName() && !strcmp(tag.getName(), "div")) {
-			if (tag.isEndTag() && u->SecHead) {
+			if (tag.isEndTag() && u->inSecHead) {
 				buf += "</i></b><br />";
-				u->SecHead = false;
+				u->inSecHead = false;
 			}
 			else if (tag.getAttribute("class")) {
 				if (!stricmp(tag.getAttribute("class"), "sechead")) {
-					u->SecHead = true;
+					u->inSecHead = true;
 					buf += "<br /><b><i>";
 				}
 				else if (!stricmp(tag.getAttribute("class"), "title")) {
-					u->SecHead = true;
+					u->inSecHead = true;
 					buf += "<br /><b><i>";
 				}
 				else {

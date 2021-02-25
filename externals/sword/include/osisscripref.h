@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisscripref.h -	Implementation of OSISScripRef
+ * osisscripref.h -	class OSISScripRef: an OptionFilter to handle
+ * 			cross-references in modules marked up in OSIS
  *
- * $Id: osisscripref.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisscripref.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides headings in a OSIS text
+/** This Filter shows/hides cross-references in a OSIS text
  */
 class SWDLLEXPORT OSISScripref : public SWOptionFilter {
 public:

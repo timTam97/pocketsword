@@ -3,7 +3,7 @@
  *  ztext4.cpp -	code for class 'zText4'- a module that reads compressed
  *			text files
  *
- * $Id: ztext4.cpp 3141 2014-03-19 01:24:04Z chrislit $
+ * $Id: ztext4.cpp 3821 2020-11-02 18:33:02Z scribe $
  *
  * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -77,10 +77,10 @@ SWBuf &zText4::getRawEntryBuf() const {
 	long  start = 0;
 	unsigned long size = 0;
 	unsigned long buffnum = 0;
-	VerseKey &key = getVerseKey();
+	const VerseKey &key = getVerseKey();
 
 	findOffset(key.getTestament(), key.getTestamentIndex(), &start, &size, &buffnum);
-	entrySize = size;        // support getEntrySize call
+	entrySize = (int)size;        // support getEntrySize call
 			  
 	entryBuf = "";
 	
@@ -132,7 +132,7 @@ void zText4::setEntry(const char *inbuf, long len) {
 
 void zText4::linkEntry(const SWKey *inkey) {
 	VerseKey &destkey = getVerseKey();
-	const VerseKey *srckey = &getVerseKey(inkey);
+	const VerseKey *srckey = &getVerseKeyConst(inkey);
 	doLinkEntry(destkey.getTestament(), destkey.getTestamentIndex(), srckey->getTestamentIndex());
 }
 
@@ -200,8 +200,8 @@ bool zText4::isLinked(const SWKey *k1, const SWKey *k2) const {
 	long start1, start2;
 	unsigned long size1, size2;
 	unsigned long buffnum1, buffnum2;
-	VerseKey *vk1 = &getVerseKey(k1);
-	VerseKey *vk2 = &getVerseKey(k2);
+	const VerseKey *vk1 = &getVerseKey(k1);
+	const VerseKey *vk2 = &getVerseKey(k2);
 	if (vk1->getTestament() != vk2->getTestament()) return false;
 
 	findOffset(vk1->getTestament(), vk1->getTestamentIndex(), &start1, &size1, &buffnum1);
@@ -213,7 +213,7 @@ bool zText4::hasEntry(const SWKey *k) const {
 	long start;
 	unsigned long size;
 	unsigned long buffnum;
-	VerseKey *vk = &getVerseKey(k);
+	const VerseKey *vk = &getVerseKey(k);
 
 	findOffset(vk->getTestament(), vk->getTestamentIndex(), &start, &size, &buffnum);
 	return size;

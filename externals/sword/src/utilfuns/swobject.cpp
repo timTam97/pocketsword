@@ -3,7 +3,7 @@
  *  swobject.cpp -	code for SWClass used as lowest base class for many
  *			SWORD objects
  *
- * $Id: swobject.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swobject.cpp 3810 2020-10-10 07:39:02Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -35,7 +35,10 @@ SWORD_NAMESPACE_START
 
 
 bool SWClass::isAssignableFrom(const char *className) const {
-	for (int i = 0; descends[i]; i++) {
+	// skip class qualifier, like 'const VerseKey'
+	const char *space = strchr(className, ' ');
+	if (space) className = space + 1;
+	for (int i = 0; descends[i]; ++i) {
 #ifndef __CYGWIN__
 		if (!sword::stricmp(descends[i], className))
 #else
@@ -44,6 +47,19 @@ bool SWClass::isAssignableFrom(const char *className) const {
 			return true;
 	}
 	return false;
+}
+
+/*
+static const char *classes[] = {"SWObject", 0};
+static const SWClass classdef(classes);
+
+SWObject::SWObject() {
+	myClass = &classdef;
+}
+*/
+
+SWObject::SWObject(const SWClass &assignClassDef) {
+	myClass = &assignClassDef;
 }
 
 

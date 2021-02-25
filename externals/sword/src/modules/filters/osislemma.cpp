@@ -3,7 +3,7 @@
  *  osislemma.cpp -	SWFilter descendant to hide or show lemmata
  *	       		in a OSIS module
  *
- * $Id: osislemma.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osislemma.cpp 3482 2017-06-25 14:36:23Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -67,6 +67,15 @@ char OSISLemma::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 				intoken = false;
 				if (token.startsWith("w ")) {	// Word
 					XMLTag wtag(token);
+
+					// always save off lemma if we haven't yet
+					if (!wtag.getAttribute("savlm")) {
+						const char *l = wtag.getAttribute("lemma");
+						if (l) {
+							wtag.setAttribute("savlm", l);
+						}
+					}
+
 					int count = wtag.getAttributePartCount("lemma", ' ');
 					for (int i = 0; i < count; i++) {
 						SWBuf a = wtag.getAttribute("lemma", i, ' ');
@@ -78,6 +87,7 @@ char OSISLemma::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 							count--;
 						}
 					}
+
 					token = wtag;
 					token.trim();
 					// drop <>

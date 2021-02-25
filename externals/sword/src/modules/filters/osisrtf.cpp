@@ -2,7 +2,7 @@
  *
  *  osisrtf.cpp -	OSIS to RTF filter
  *
- * $Id: osisrtf.cpp 3018 2014-01-23 09:27:45Z chrislit $ *
+ * $Id: osisrtf.cpp 3547 2017-12-10 05:06:48Z scribe $ *
  *
  * Copyright 2003-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,7 +36,7 @@ namespace {
 	class MyUserData : public BasicFilterUserData {
 	public:
 		bool osisQToTick;
-		bool BiblicalText;
+		bool isBiblicalText;
 		bool inXRefNote;
 		int suspendLevel;
 		std::stack<char *> quoteStack;
@@ -49,13 +49,14 @@ namespace {
 
 	MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 		inXRefNote    = false;
-		BiblicalText  = false;
+		isBiblicalText  = false;
 		suspendLevel  = 0;
+		osisQToTick = true;  // default
 		if (module) {
 			version = module->getName();
-			BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
+			isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
+			osisQToTick = ((!module->getConfigEntry("OSISqToTick")) || (strcmp(module->getConfigEntry("OSISqToTick"), "false")));
 		}	
-		osisQToTick = ((!module->getConfigEntry("OSISqToTick")) || (strcmp(module->getConfigEntry("OSISqToTick"), "false")));
 	}
 
 
@@ -244,15 +245,9 @@ bool OSISRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *us
 							&& (type != "strongsMarkup")	// deprecated
 							) {
 						SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
-						VerseKey *vkey = NULL;
-						// see if we have a VerseKey * or descendant
-						SWTRY {
-							vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-						}
-						SWCATCH ( ... ) {	}
-						if (vkey) {
+						if (u->vkey) {
 							char ch = ((!strcmp(type.c_str(), "crossReference")) || (!strcmp(type.c_str(), "x-cross-ref"))) ? 'x':'n';
-							scratch.setFormatted("{\\super <a href=\"\">*%c%i.%s</a>} ", ch, vkey->getVerse(), footnoteNumber.c_str());
+							scratch.setFormatted("{\\super <a href=\"\">*%c%i.%s</a>} ", ch, u->vkey->getVerse(), footnoteNumber.c_str());
 							outText(scratch.c_str(), buf, u);
 							u->inXRefNote = (ch == 'x');
 						}

@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlstrongs.h -	Implementation of ThMLStrongs
+ * thmlstrongs.h -	class ThMLStrongs: an OptionFilter to handle Strongs
+ * 			information on words in modules marked up in ThML
  *
- * $Id: thmlstrongs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlstrongs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

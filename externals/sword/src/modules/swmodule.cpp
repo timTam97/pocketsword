@@ -4,7 +4,7 @@
  *			for all types of modules (e.g. texts, commentaries,
  *			maps, lexicons, etc.)
  *
- * $Id: swmodule.cpp 3249 2014-08-24 01:55:08Z scribe $
+ * $Id: swmodule.cpp 3846 2021-02-24 21:04:04Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -39,16 +39,23 @@
 #include <iostream>
 #endif
 
-#ifdef USECXX11REGEX
+#if defined(USECXX11REGEX)
 #include <regex>
 #ifndef REG_ICASE
 #define REG_ICASE std::regex::icase
+#endif
+#elif defined(USEICUREGEX)
+#include <unicode/regex.h>
+#ifndef REG_ICASE
+#define REG_ICASE UREGEX_CASE_INSENSITIVE
 #endif
 #else
 #include <regex.h>	// GNU
 #endif
 
-#ifdef USELUCENE
+#if defined USEXAPIAN
+#include <xapian.h>
+#elif defined USELUCENE
 #include <CLucene.h>
 
 //Lucence includes
@@ -71,6 +78,15 @@ using std::vector;
 SWORD_NAMESPACE_START
 
 SWModule::StdOutDisplay SWModule::rawdisp;
+
+const signed int SWModule::SEARCHFLAG_MATCHWHOLEENTRY  = 4096;
+const signed int SWModule::SEARCHFLAG_STRICTBOUNDARIES = 8192;
+
+const signed int SWModule::SEARCHTYPE_REGEX     =  0;
+const signed int SWModule::SEARCHTYPE_PHRASE    = -1;
+const signed int SWModule::SEARCHTYPE_MULTIWORD = -2;
+const signed int SWModule::SEARCHTYPE_ENTRYATTR = -3;
+const signed int SWModule::SEARCHTYPE_EXTERNAL  = -4;
 
 typedef std::list<SWBuf> StringList;
 
@@ -296,7 +312,7 @@ char SWModule::setKey(const SWKey *ikey) {
 	if (oldKey)
 		delete oldKey;
 
-	return error = key->popError();
+	return error = key->getError();
 }
 
 
@@ -356,22 +372,26 @@ void SWModule::decrement(int steps) {
 }
 
 
-/******************************************************************************
- * SWModule::Search 	- Searches a module for a string
+/** Searches a module
  *
- * ENT:	istr		- string for which to search
- * 	searchType	- type of search to perform
- *				>=0 - regex
- *				-1  - phrase
- *				-2  - multiword
- *				-3  - entryAttrib (eg. Word//Lemma./G1234/)	 (Lemma with dot means check components (Lemma.[1-9]) also)
- *				-4  - clucene
- *				-5  - multilemma window; flags = window size
- * 	flags		- options flags for search
- *	justCheckIfSupported	- if set, don't search, only tell if this
- *							function supports requested search.
+ * @param istr string for which to search
+ * @param searchType type of search to perform
+ *			SEARCHTYPE_REGEX     - regex; (for backward compat, if > 0 then used as additional REGEX FLAGS)
+ *			SEARCHTYPE_PHRASE    - phrase
+ *			SEARCHTYPE_MULTIWORD - multiword
+ *			SEARCHTYPE_ENTRYATTR - entryAttrib (eg. Word//Lemma./G1234/)	 (Lemma with dot means check components (Lemma.[1-9]) also)
+ *			SEARCHTYPE_EXTERNAL  - Use External Search Framework (CLucene, Xapian, etc.)
+ *			-5  - multilemma window; set 'flags' param to window size (NOT DONE)
+ * @param flags bitwise options flags for search.  Each search type supports different options.
+ * 			REG_ICASE	- perform case insensitive search.  Supported by most all search types
+ * 			SEARCHFLAG_*	- SWORD-specific search flags for various search types.  See SWModule::SEARCHFLAG_ consts
  *
- * RET: ListKey set to verses that contain istr
+ * @param scope Key containing the scope. VerseKey or ListKey are useful here.
+ * @param justCheckIfSupported If set, don't search but instead set this variable to true/false if the requested search is supported,
+ * @param percent Callback function to get the current search status in %.
+ * @param percentUserData Anything that you might want to send to the precent callback function.
+ *
+ * @return ListKey set to entry keys that match
  */
 
 ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *scope, bool *justCheckIfSupported, void (*percent)(char, void *), void *percentUserData) {
@@ -380,17 +400,35 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	SWBuf term = istr;
 	bool includeComponents = false;	// for entryAttrib e.g., /Lemma.1/ 
 
-#ifdef USELUCENE
+	// this only works for 1 or 2 verses right now, and for some search types (regex and multi word).
+	// future plans are to extend functionality
+	// By default SWORD defaults to allowing searches to cross the artificial boundaries of verse markers
+	// Searching are done in a sliding window of 2 verses right now.
+	// To turn this off, include SEARCHFLAG_STRICTBOUNDARIES in search flags
+	int windowSize = 2;
+	if ((flags & SEARCHFLAG_STRICTBOUNDARIES) && (searchType == SEARCHTYPE_MULTIWORD || searchType > 0)) {
+		// remove custom SWORD flag to prevent possible overlap with unknown regex option
+		flags ^= SEARCHFLAG_STRICTBOUNDARIES;
+		windowSize = 1;
+	}
+
 	SWBuf target = getConfigEntry("AbsoluteDataPath");
 	if (!target.endsWith("/") && !target.endsWith("\\")) {
 		target.append('/');
 	}
+#if defined USEXAPIAN
+	target.append("xapian");
+#elif defined USELUCENE
 	target.append("lucene");
 #endif
 	if (justCheckIfSupported) {
-		*justCheckIfSupported = (searchType >= -3);
-#ifdef USELUCENE
-		if ((searchType == -4) && (IndexReader::indexExists(target.c_str()))) {
+		*justCheckIfSupported = (searchType >= SEARCHTYPE_ENTRYATTR);
+#if defined USEXAPIAN
+		if ((searchType == SEARCHTYPE_EXTERNAL) && (FileMgr::existsDir(target))) {
+			*justCheckIfSupported = true;
+		}
+#elif defined USELUCENE
+		if ((searchType == SEARCHTYPE_EXTERNAL) && (IndexReader::indexExists(target.c_str()))) {
 			*justCheckIfSupported = true;
 		}
 #endif
@@ -401,6 +439,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	SWKey *searchKey = 0;
 	SWKey *resultKey = createKey();
 	SWKey *lastKey   = createKey();
+	VerseKey *vkCheck = SWDYNAMIC_CAST(VerseKey, resultKey);
 	SWBuf lastBuf = "";
 
 #ifdef USECXX11REGEX
@@ -408,6 +447,8 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	std::locale::global(std::locale("en_US.UTF-8"));
 
 	std::regex preg;
+#elif defined(USEICUREGEX)
+	icu::RegexMatcher *matcher = 0;
 #else
 	regex_t preg;
 #endif
@@ -426,7 +467,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 			|| (getConfig().has("GlobalOptionFilter", "UTF8ArabicPoints"))
 			|| (strchr(istr, '<')));
 
-	setProcessEntryAttributes(searchType == -3);
+	setProcessEntryAttributes(searchType == SEARCHTYPE_ENTRYATTR);
 	
 
 	if (!key->isPersist()) {
@@ -450,18 +491,48 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	*this = TOP;
 	if (searchType >= 0) {
 #ifdef USECXX11REGEX
-		preg = std::regex((SWBuf(".*")+istr+".*").c_str(), std::regex_constants::extended & flags);
+		preg = std::regex((SWBuf(".*")+istr+".*").c_str(), std::regex_constants::extended | searchType | flags);
+#elif defined(USEICUREGEX)
+		UErrorCode        status    = U_ZERO_ERROR;
+		matcher = new icu::RegexMatcher(istr, searchType | flags, status);
+		if (U_FAILURE(status)) {
+			SWLog::getSystemLog()->logError("Error compiling Regex: %d", status);
+			return listKey;
+		}
+
 #else
 		flags |=searchType|REG_NOSUB|REG_EXTENDED;
-		regcomp(&preg, istr, flags);
+		int err = regcomp(&preg, istr, flags);
+		if (err) {
+			SWLog::getSystemLog()->logError("Error compiling Regex: %d", err);
+			return listKey;
+		}
 #endif
 	}
 
 	(*percent)(++perc, percentUserData);
 
 
-#ifdef USELUCENE
-	if (searchType == -4) {	// lucene
+#if defined USEXAPIAN || defined USELUCENE
+	(*percent)(10, percentUserData);
+	if (searchType == SEARCHTYPE_EXTERNAL) {	// indexed search
+#if defined USEXAPIAN
+		SWTRY {
+			Xapian::Database database(target.c_str());
+			Xapian::QueryParser queryParser;
+			queryParser.set_default_op(Xapian::Query::OP_AND);
+			SWTRY {
+				queryParser.set_stemmer(Xapian::Stem(getLanguage()));
+			} SWCATCH(...) {}
+			queryParser.set_stemming_strategy(queryParser.STEM_SOME);
+			queryParser.add_prefix("content", "C");
+			queryParser.add_prefix("lemma", "L");
+			queryParser.add_prefix("morph", "M");
+			queryParser.add_prefix("prox", "P");
+			queryParser.add_prefix("proxlem", "PL");
+			queryParser.add_prefix("proxmorph", "PM");
+
+#elif defined USELUCENE
 		
 		lucene::index::IndexReader    *ir = 0;
 		lucene::search::IndexSearcher *is = 0;
@@ -470,22 +541,44 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 		SWTRY {
 			ir = IndexReader::open(target);
 			is = new IndexSearcher(ir);
-			(*percent)(10, percentUserData);
-
 			const TCHAR *stopWords[] = { 0 };
 			standard::StandardAnalyzer analyzer(stopWords);
+#endif
+
+			// parse the query
+#if defined USEXAPIAN
+			Xapian::Query q = queryParser.parse_query(istr);
+			Xapian::Enquire enquire = Xapian::Enquire(database);
+#elif defined USELUCENE
 			q = QueryParser::parse((wchar_t *)utf8ToWChar(istr).getRawData(), _T("content"), &analyzer);
+#endif
 			(*percent)(20, percentUserData);
+
+			// perform the search
+#if defined USEXAPIAN
+			enquire.set_query(q);
+			Xapian::MSet h = enquire.get_mset(0, 99999);
+#elif defined USELUCENE
 			h = is->search(q);
+#endif
 			(*percent)(80, percentUserData);
 
 			// iterate thru each good module position that meets the search
 			bool checkBounds = getKey()->isBoundSet();
+#if defined USEXAPIAN
+			Xapian::MSetIterator i;
+			for (i = h.begin(); i != h.end(); ++i) {
+//				cout << "Document ID " << *i << "\t";
+				SW_u64 score = i.get_percent();
+				Xapian::Document doc = i.get_document();
+				*resultKey = doc.get_data().c_str();
+#elif defined USELUCENE
 			for (unsigned long i = 0; i < (unsigned long)h->length(); i++) {
 				Document &doc = h->doc(i);
-
 				// set a temporary verse key to this module position
 				*resultKey = wcharToUTF8(doc.get(_T("key"))); //TODO Does a key always accept utf8?
+				SW_u64 score = (SW_u64)((SW_u32)(h->score(i) * 100));
+#endif
 
 				// check to see if it sets ok (within our bounds) and if not, skip
 				if (checkBounds) {
@@ -495,14 +588,19 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 					}
 				}
 				listKey << *resultKey;
-				listKey.getElement()->userData = (__u64)((__u32)(h->score(i)*100));
+				listKey.getElement()->userData = score;
 			}
 			(*percent)(98, percentUserData);
 		}
 		SWCATCH (...) {
+#if defined USEXAPIAN
+#elif defined USELUCENE
 			q = 0;
+#endif
 			// invalid clucene query
 		}
+#if defined USEXAPIAN
+#elif defined USELUCENE
 		delete h;
 		delete q;
 
@@ -510,20 +608,19 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 		if (ir) {
 			ir->close();
 		}
+#endif
 	}
 #endif
 
 	// some pre-loop processing
 	switch (searchType) {
 
-	// phrase
-	case -1:
+	case SEARCHTYPE_PHRASE:
 		// let's see if we're told to ignore case.  If so, then we'll touppstr our term
-		if ((flags & REG_ICASE) == REG_ICASE) toupperstr(term);
+		if ((flags & REG_ICASE) == REG_ICASE) term.toUpper();
 		break;
 
-	// multi-word
-	case -2:
+	case SEARCHTYPE_MULTIWORD:
 	case -5:
 		// let's break the term down into our words vector
 		while (1) {
@@ -536,13 +633,13 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 		}
 		if ((flags & REG_ICASE) == REG_ICASE) {
 			for (unsigned int i = 0; i < words.size(); i++) {
-				toupperstr(words[i]);
+				words[i].toUpper();
 			}
 		}
 		break;
 
 	// entry attributes
-	case -3:
+	case SEARCHTYPE_ENTRYATTR:
 		// let's break the attribute segs down.  We'll reuse our words vector for each segment
 		while (1) {
 			const char *word = term.stripPrefix('/');
@@ -565,7 +662,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	(*percent)(perc, percentUserData);
 
 	
-	while ((searchType != -4) && !popError() && !terminateSearch) {
+	while ((searchType != SEARCHTYPE_EXTERNAL) && !popError() && !terminateSearch) {
 		long mindex = key->getIndex();
 		float per = (float)mindex / highIndex;
 		per *= 93;
@@ -576,87 +673,149 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 			(*percent)(perc, percentUserData);
 		}
 		else if (newperc < perc) {
-#ifndef _MSC_VER
-			std::cerr << "Serious error: new percentage complete is less than previous value\n";
-			std::cerr << "index: " << (key->getIndex()) << "\n";
-			std::cerr << "highIndex: " << highIndex << "\n";
-			std::cerr << "newperc ==" << (int)newperc << "%" << "is smaller than\n";
-			std::cerr << "perc == "  << (int )perc << "% \n";
-#endif
+			SWLog::getSystemLog()->logError(
+				"Serious error: new percentage complete is less than previous value\nindex: %d\nhighIndex: %d\nnewperc == %d%% is smaller than\nperc == %d%%",
+				key->getIndex(), highIndex, (int)newperc, (int )perc);
 		}
+
+		// regex
 		if (searchType >= 0) {
 			SWBuf textBuf = stripText();
 #ifdef USECXX11REGEX
 			if (std::regex_match(std::string(textBuf.c_str()), preg)) {
+#elif defined(USEICUREGEX)
+			icu::UnicodeString stringToTest = textBuf.c_str();
+			matcher->reset(stringToTest);
+
+			if (matcher->find()) {
 #else
 			if (!regexec(&preg, textBuf, 0, 0, 0)) {
 #endif
 				*resultKey = *getKey();
-				resultKey->clearBound();
+				resultKey->clearBounds();
 				listKey << *resultKey;
 				lastBuf = "";
 			}
 #ifdef USECXX11REGEX
 			else if (std::regex_match(std::string((lastBuf + ' ' + textBuf).c_str()), preg)) {
+#elif defined(USEICUREGEX)
+			else {
+				stringToTest = (lastBuf + ' ' + textBuf).c_str();
+				matcher->reset(stringToTest);
+
+				if (matcher->find()) {
 #else
 			else if (!regexec(&preg, lastBuf + ' ' + textBuf, 0, 0, 0)) {
 #endif
-				lastKey->clearBound();
-				listKey << *lastKey;
-				lastBuf = textBuf;
+				lastKey->clearBounds();
+				if (vkCheck) {
+					resultKey->clearBounds();
+					*resultKey = *getKey();
+					vkCheck->setUpperBound(resultKey);
+					vkCheck->setLowerBound(lastKey);
+				}
+				else {
+					*resultKey = *lastKey;
+					resultKey->clearBounds();
+				}
+				listKey << *resultKey;
+				lastBuf = (windowSize > 1) ? textBuf.c_str() : "";
 			}
 			else {
-				lastBuf = textBuf;
+				lastBuf = (windowSize > 1) ? textBuf.c_str() : "";
 			}
+#if defined(USEICUREGEX)
+			}
+#endif
 		}
 
-		// phrase
 		else {
 			SWBuf textBuf;
 			switch (searchType) {
 
-			// phrase
-			case -1:
+			case SEARCHTYPE_PHRASE: {
 				textBuf = stripText();
-				if ((flags & REG_ICASE) == REG_ICASE) toupperstr(textBuf);
+				if ((flags & REG_ICASE) == REG_ICASE) textBuf.toUpper();
 				sres = strstr(textBuf.c_str(), term.c_str());
 				if (sres) { //it's also in the stripText(), so we have a valid search result item now
 					*resultKey = *getKey();
-					resultKey->clearBound();
+					resultKey->clearBounds();
 					listKey << *resultKey;
 				}
 				break;
+			}
 
-			// multiword
-			case -2: { // enclose our allocations
-				int loopCount = 0;
+			case SEARCHTYPE_MULTIWORD: { // enclose our allocations
+				int stripped = 0;
+				int multiVerse = 0;
 				unsigned int foundWords = 0;
-				do {
-					textBuf = ((loopCount == 0)&&(!specialStrips)) ? getRawEntry() : stripText();
-					foundWords = 0;
-					
-					for (unsigned int i = 0; i < words.size(); i++) {
-						if ((flags & REG_ICASE) == REG_ICASE) toupperstr(textBuf);
-						sres = strstr(textBuf.c_str(), words[i].c_str());
-						if (!sres) {
-							break; //for loop
-						}
-						foundWords++;
-					}
-					
-					loopCount++;
-				} while ( (loopCount < 2) && (foundWords == words.size()));
-				
-				if ((loopCount == 2) && (foundWords == words.size())) { //we found the right words in both raw and stripped text, which means it's a valid result item
-					*resultKey = *getKey();
-					resultKey->clearBound();
-					listKey << *resultKey;
-				}
-				}
-				break;
+				textBuf = getRawEntry();
+				SWBuf testBuf;
 
-			// entry attributes
-			case -3: {
+				// Here we loop twice, once for the current verse, to see if we have a simple match within our verse.
+				// This always takes precedence over a windowed search.  If we match a window, but also one verse within
+				// our window matches by itself, prefer the single verse as the hit address-- the larger window is not needed.
+				//
+				// The second loop includes our current verse within the context of the sliding window
+				// Currrently that window size is set to 2 verses, but future plans include allowing this to be configurable
+				// 
+				do {
+					// Herein lies optimization.
+					//
+					// First we check getRawEntry because it's the fastest;
+					// it might return false positives because all the markup is include, but is the quickest
+					// way to eliminate a verse. If it passes, then we do the real work to strip the markup and 
+					// really test the verse for our keywords.
+					//
+					stripped = 0;
+					do {
+						if (stripped||specialStrips||multiVerse) {
+							testBuf = multiVerse ? lastBuf + ' ' + textBuf : textBuf;
+							if (stripped) testBuf = stripText(testBuf);
+						}
+						else testBuf.setSize(0);
+						foundWords = 0;
+
+						if ((flags & REG_ICASE) == REG_ICASE) testBuf.size() ? testBuf.toUpper() : textBuf.toUpper();
+						for (unsigned int i = 0; i < words.size(); i++) {
+							sres = strstr(testBuf.size() ? testBuf.c_str() : textBuf.c_str(), words[i].c_str());
+							if (!sres) {
+								break; //for loop
+							}
+							foundWords++;
+						}
+
+						++stripped;
+					} while ( (stripped < 2) && (foundWords == words.size()));
+					++multiVerse;
+				} while ((windowSize > 1) && (multiVerse < 2) && (stripped != 2 || foundWords != words.size()));
+
+				if ((stripped == 2) && (foundWords == words.size())) { //we found the right words in both raw and stripped text, which means it's a valid result item
+					lastKey->clearBounds();
+					resultKey->clearBounds();
+					*resultKey = (multiVerse > 1 && !vkCheck) ? *lastKey : *getKey();
+					if (multiVerse > 1 && vkCheck) {
+						vkCheck->setUpperBound(resultKey);
+						vkCheck->setLowerBound(lastKey);
+					}
+					else {
+						resultKey->clearBounds();
+					}
+					listKey << *resultKey;
+					lastBuf = "";
+					// if we're searching windowSize > 1 and we had a hit which required the current verse
+					// let's start the next window with our current verse in case we have another hit adjacent
+					if (multiVerse == 2) {
+						lastBuf = textBuf;
+					}
+				}
+				else {
+					lastBuf = (windowSize > 1) ? textBuf.c_str() : "";
+				}
+			}
+			break;
+
+			case SEARCHTYPE_ENTRYATTR: {
 				renderText();	// force parse
 				AttributeTypeList &entryAttribs = getEntryAttributes();
 				AttributeTypeList::iterator i1Start, i1End;
@@ -718,7 +877,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 								}
 								if (sres) {
 									*resultKey = *getKey();
-									resultKey->clearBound();
+									resultKey->clearBounds();
 									listKey << *resultKey;
 									break;
 								}
@@ -732,6 +891,7 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 				}
 				break;
 			}
+			// NOT DONE
 			case -5:
 				AttributeList &words = getEntryAttributes()["Word"];
 				SWBuf kjvWord = "";
@@ -790,6 +950,8 @@ ListKey &SWModule::search(const char *istr, int searchType, int flags, SWKey *sc
 	if (searchType >= 0) {
 #ifdef USECXX11REGEX
 		std::locale::global(oldLocale);
+#elif defined(USEICUREGEX)
+		delete matcher;
 #else
 		regfree(&preg);
 #endif
@@ -847,14 +1009,33 @@ const char *SWModule::getRenderHeader() const {
 
 
 /******************************************************************************
- * SWModule::renderText 	- calls all renderfilters on current text
- *
- * ENT:	buf	- buffer to Render instead of current module position
+ * SWModule::renderText 	- calls all renderfilters on current module
+ *				position
  *
  * RET: this module's text at current key location massaged by renderText filters
  */
+SWBuf SWModule::renderText() {
+	return renderText((const char *)0);
+}
 
- SWBuf SWModule::renderText(const char *buf, int len, bool render) {
+/******************************************************************************
+ * SWModule::renderText 	- calls all renderfilters on provided text
+ *				or current module position provided text null
+ *
+ * ENT:	buf	- buffer to render
+ *
+ * RET: this module's text at current key location massaged by renderText filters
+ *
+ * NOTES: This method is only truly const if called with a provided text; using
+ * module's current position may produce a new entry attributes map which
+ * logically violates the const semantic, which is why the above method
+ * which takes no params is not const, i.e., don't call this method with
+ * null as text param, but instead use non-const method above.  The public
+ * interface for this method expects a value for the text param.  We use it
+ * internally sometimes calling with null to save duplication of code.
+ */
+
+SWBuf SWModule::renderText(const char *buf, int len, bool render) const {
 	bool savePEA = isProcessEntryAttributes();
 	if (!buf) {
 		entryAttributes.clear();
@@ -874,7 +1055,7 @@ const char *SWModule::getRenderHeader() const {
 	if (tmpbuf) {
 		unsigned long size = (len < 0) ? ((getEntrySize()<0) ? strlen(tmpbuf) : getEntrySize()) : len;
 		if (size > 0) {
-			key = (SWKey *)*this;
+			key = this->getKey();
 
 			optionFilter(tmpbuf, key);
 	
@@ -1011,12 +1192,17 @@ void SWModule::deleteSearchFramework() {
 
 signed char SWModule::createSearchFramework(void (*percent)(char, void *), void *percentUserData) {
 
-#ifdef USELUCENE
+#if defined USELUCENE || defined USEXAPIAN
 	SWBuf target = getConfigEntry("AbsoluteDataPath");
 	if (!target.endsWith("/") && !target.endsWith("\\")) {
 		target.append('/');
 	}
+#if defined USEXAPIAN
+	target.append("xapian");
+#elif defined USELUCENE
+	const int MAX_CONV_SIZE = 1024 * 1024;
 	target.append("lucene");
+#endif
 	int status = FileMgr::createParent(target+"/dummy");
 	if (status) return -1;
 
@@ -1025,7 +1211,6 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 	SWKey textkey;
 	SWBuf c;
 
-	const int MAX_CONV_SIZE = 1024 * 1024;
 
 	// turn all filters to default values
 	StringList filterSettings;
@@ -1059,6 +1244,17 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 		setKey(*searchKey);
 	}
 
+	bool includeKeyInSearch = getConfig().has("SearchOption", "IncludeKeyInSearch");
+
+	// lets create or open our search index
+#if defined USEXAPIAN
+	Xapian::WritableDatabase database(target.c_str(), Xapian::DB_CREATE_OR_OPEN);
+	Xapian::TermGenerator termGenerator;
+	SWTRY {
+		termGenerator.set_stemmer(Xapian::Stem(getLanguage()));
+	} SWCATCH(...) {}
+
+#elif defined USELUCENE
 	RAMDirectory *ramDir = 0;
 	IndexWriter *coreWriter = 0;
 	IndexWriter *fsWriter = 0;
@@ -1066,11 +1262,11 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 
 	const TCHAR *stopWords[] = { 0 };
 	standard::StandardAnalyzer *an = new standard::StandardAnalyzer(stopWords);
-	bool includeKeyInSearch = getConfig().has("SearchOption", "IncludeKeyInSearch");
 
 	ramDir = new RAMDirectory();
 	coreWriter = new IndexWriter(ramDir, an, true);
 	coreWriter->setMaxFieldLength(MAX_CONV_SIZE);
+#endif
 
 
 
@@ -1127,7 +1323,12 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 		bool good = false;
 
 		// start out entry
+#if defined USEXAPIAN
+		Xapian::Document doc;
+		termGenerator.set_document(doc);
+#elif defined USELUCENE
 		Document *doc = new Document();
+#endif
 		// get "key" field
 		SWBuf keyText = (vkcheck) ? vkcheck->getOSISRef() : getKeyText();
 		if (content && *content) {
@@ -1173,7 +1374,11 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 				}
 			}
 
+#if defined USEXAPIAN
+			doc.set_data(keyText.c_str());
+#elif defined USELUCENE
 			doc->add(*_CLNEW Field(_T("key"), (wchar_t *)utf8ToWChar(keyText).getRawData(), Field::STORE_YES | Field::INDEX_UNTOKENIZED));
+#endif
 
 			if (includeKeyInSearch) {
 				c = keyText;
@@ -1182,11 +1387,21 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 				content = c.c_str();
 			}
 
+#if defined USEXAPIAN
+			termGenerator.index_text(content);
+			termGenerator.index_text(content, 1, "C");
+#elif defined USELUCENE
 			doc->add(*_CLNEW Field(_T("content"), (wchar_t *)utf8ToWChar(content).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED));
+#endif
 
 			if (strong.length() > 0) {
+#if defined USEXAPIAN
+				termGenerator.index_text(strong.c_str(), 1, "L");
+				termGenerator.index_text(morph.c_str(), 1, "M");
+#elif defined USELUCENE
 				doc->add(*_CLNEW Field(_T("lemma"), (wchar_t *)utf8ToWChar(strong).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED));
 				doc->add(*_CLNEW Field(_T("morph"), (wchar_t *)utf8ToWChar(morph).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED));
+#endif
 //printf("setting fields (%s).\ncontent: %s\nlemma: %s\n", (const char *)*key, content, strong.c_str());
 			}
 
@@ -1331,20 +1546,39 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 
 		if (proxBuf.length() > 0) {
 
+#if defined USEXAPIAN
+			termGenerator.index_text(proxBuf.c_str(), 1, "P");
+#elif defined USELUCENE
 			doc->add(*_CLNEW Field(_T("prox"), (wchar_t *)utf8ToWChar(proxBuf).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED));
+#endif
 			good = true;
 		}
 		if (proxLem.length() > 0) {
+#if defined USEXAPIAN
+			termGenerator.index_text(proxLem.c_str(), 1, "PL");
+			termGenerator.index_text(proxMorph.c_str(), 1, "PM");
+#elif defined USELUCENE
 			doc->add(*_CLNEW Field(_T("proxlem"), (wchar_t *)utf8ToWChar(proxLem).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED) );
 			doc->add(*_CLNEW Field(_T("proxmorph"), (wchar_t *)utf8ToWChar(proxMorph).getRawData(), Field::STORE_NO | Field::INDEX_TOKENIZED) );
+#endif
 			good = true;
 		}
 		if (good) {
 //printf("writing (%s).\n", (const char *)*key);
 //fflush(stdout);
+#if defined USEXAPIAN
+			SWBuf idTerm;
+			idTerm.setFormatted("Q%ld", key->getIndex());
+			doc.add_boolean_term(idTerm.c_str());
+			database.replace_document(idTerm.c_str(), doc);
+#elif defined USELUCENE
 			coreWriter->addDocument(doc);
+#endif
 		}
+#if defined USEXAPIAN
+#elif defined USELUCENE
 		delete doc;
+#endif
 
 		(*this)++;
 		err = popError();
@@ -1352,6 +1586,8 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 
 	// Optimizing automatically happens with the call to addIndexes
 	//coreWriter->optimize();
+#if defined USEXAPIAN
+#elif defined USELUCENE
 	coreWriter->close();
 
 #ifdef CLUCENE2
@@ -1386,6 +1622,7 @@ signed char SWModule::createSearchFramework(void (*percent)(char, void *), void 
 	delete coreWriter;
 	delete fsWriter;
 	delete an;
+#endif
 
 	// reposition module back to where it was before we were called
 	setKey(*saveKey);

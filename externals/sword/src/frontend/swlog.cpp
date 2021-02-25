@@ -2,7 +2,7 @@
  *
  *  swlog.cpp -	
  *
- * $Id: swlog.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swlog.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -29,6 +29,14 @@
 #include <unicode/ustream.h>
 #endif
 #include "swlog.h"
+#include "swbuf.h"
+
+#ifdef USECXX11TIME
+#include <chrono>
+using namespace std::chrono;
+
+static high_resolution_clock::time_point baseTime = high_resolution_clock::now();
+#endif
 
 
 SWORD_NAMESPACE_START
@@ -36,11 +44,11 @@ SWORD_NAMESPACE_START
 
 SWLog *SWLog::systemLog = 0;
 
-const int SWLog::LOG_ERROR     = 1;
-const int SWLog::LOG_WARN      = 2;
-const int SWLog::LOG_INFO      = 3;
-const int SWLog::LOG_TIMEDINFO = 4;
-const int SWLog::LOG_DEBUG     = 5;
+const char SWLog::LOG_ERROR     = 1;
+const char SWLog::LOG_WARN      = 2;
+const char SWLog::LOG_INFO      = 3;
+const char SWLog::LOG_TIMEDINFO = 4;
+const char SWLog::LOG_DEBUG     = 5;
 
 SWLog *SWLog::getSystemLog() {
 	static class __staticSystemLog {
@@ -64,12 +72,12 @@ void SWLog::setSystemLog(SWLog *newLog) {
 
 
 void SWLog::logWarning(const char *fmt, ...) const {
-	char msg[2048];
 	va_list argptr;
 
 	if (logLevel >= LOG_WARN) {
+		SWBuf msg;
 		va_start(argptr, fmt);
-		vsprintf(msg, fmt, argptr);
+		msg.setFormattedVA(fmt, argptr);
 		va_end(argptr);
 		logMessage(msg, LOG_WARN);
 	}
@@ -77,12 +85,12 @@ void SWLog::logWarning(const char *fmt, ...) const {
 
 
 void SWLog::logError(const char *fmt, ...) const {
-	char msg[2048];
 	va_list argptr;
 
 	if (logLevel) {
+		SWBuf msg;
 		va_start(argptr, fmt);
-		vsprintf(msg, fmt, argptr);
+		msg.setFormattedVA(fmt, argptr);
 		va_end(argptr);
 		logMessage(msg, LOG_ERROR);
 	}
@@ -90,12 +98,12 @@ void SWLog::logError(const char *fmt, ...) const {
 
 
 void SWLog::logInformation(const char *fmt, ...) const {
-	char msg[2048];
 	va_list argptr;
 
 	if (logLevel >= LOG_INFO) {
+		SWBuf msg;
 		va_start(argptr, fmt);
-		vsprintf(msg, fmt, argptr);
+		msg.setFormattedVA(fmt, argptr);
 		va_end(argptr);
 		logMessage(msg, LOG_INFO);
 	}
@@ -103,12 +111,18 @@ void SWLog::logInformation(const char *fmt, ...) const {
 
 
 void SWLog::logTimedInformation(const char *fmt, ...) const {
-	char msg[2048];
 	va_list argptr;
 
 	if (logLevel >= LOG_TIMEDINFO) {
+		const char *fmtStr = fmt;
+		SWBuf msg;
+#ifdef USECXX11TIME
+		SWBuf msgTS;
+		msgTS.setFormatted("[%.5f] %s", duration_cast<duration<double>>(high_resolution_clock::now() - baseTime).count(), fmt);
+		fmtStr = msgTS.c_str();
+#endif
 		va_start(argptr, fmt);
-		vsprintf(msg, fmt, argptr);
+		msg.setFormattedVA(fmtStr, argptr);
 		va_end(argptr);
 		logMessage(msg, LOG_TIMEDINFO);
 	}
@@ -116,12 +130,12 @@ void SWLog::logTimedInformation(const char *fmt, ...) const {
 
 
 void SWLog::logDebug(const char *fmt, ...) const {
-	char msg[2048];
 	va_list argptr;
 
 	if (logLevel >= LOG_DEBUG) {
+		SWBuf msg;
 		va_start(argptr, fmt);
-		vsprintf(msg, fmt, argptr);
+		msg.setFormattedVA(fmt, argptr);
 		va_end(argptr);
 		logMessage(msg, LOG_DEBUG);
 	}

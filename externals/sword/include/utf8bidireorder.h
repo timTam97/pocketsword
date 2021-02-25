@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf8bidireorder.h -	Implementation of UTF8BiDiReorder
+ * utf8bidireorder.h -	class UTF8BiDiReorder: an encoding filter which
+ * 			reorders UTF-8 according to Unicode BiDi rules
  *
- * $Id: utf8bidireorder.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf8bidireorder.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -35,12 +36,14 @@ SWORD_NAMESPACE_START
 /** This Filter reorders UTF-8 text according to Unicode BiDi
  */
 class SWDLLEXPORT UTF8BiDiReorder : public SWFilter {
+
 private:
 	UConverter* conv;
 	UErrorCode err;
+
 public:
 	UTF8BiDiReorder();
-	~UTF8BiDiReorder();  
+	~UTF8BiDiReorder();
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
 };
 

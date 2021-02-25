@@ -1,9 +1,8 @@
 /******************************************************************************
  *
- *  ftplibftpt.h -	code for ftplib impl of FTP Transport
- *			(FTPLibFTPTransport)
+ * ftplibftpt.h -	Implementation of FTP RemoteTransport using FTPLib
  *
- * $Id: ftplibftpt.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: ftplibftpt.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

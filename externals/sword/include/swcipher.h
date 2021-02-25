@@ -1,9 +1,8 @@
 /******************************************************************************
  *
- *  swcipher.h -	definition of Class SWCipher used for data
- *			cipher/decipher
+ * swcipher.h -		class SWCipher: used for data cipher/decipher
  *
- * $Id: swcipher.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swcipher.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,27 +26,33 @@
 #include <sapphire.h>
 
 #include <defs.h>
+#include <swbuf.h>
 
 SWORD_NAMESPACE_START
 
-class SWDLLEXPORT SWCipher
-{
+class SWDLLEXPORT SWCipher {
 
-  sapphire master;
-  sapphire work;
+private:
+	Sapphire master;
+	Sapphire work;
 
-  char *buf;
-  bool cipher;
-  unsigned long len;
+	char *buf;
+	bool cipher;
+	unsigned long len;
+
 protected:
+
 public:
-    SWCipher (unsigned char *key);
-  virtual void setCipherKey (const char *key);
-    virtual ~ SWCipher ();
-  virtual char *Buf (const char *buf = 0, unsigned long len = 0);
-  virtual char *cipherBuf (unsigned long *len, const char *buf = 0);
-  virtual void Encode (void);
-  virtual void Decode (void);
+	SWCipher(unsigned char *key);
+	virtual void setCipherKey(const char *key);
+	virtual ~SWCipher();
+	virtual void setUncipheredBuf(const char *buf = 0, unsigned long len = 0);
+	virtual char *getUncipheredBuf();
+	virtual void setCipheredBuf(unsigned long *len, const char *buf = 0);
+	virtual char *getCipheredBuf(unsigned long *len = 0);
+	virtual void encode(void);
+	virtual void decode(void);
+	static SWBuf personalize(const SWBuf &buf, bool encode);
 };
 
 SWORD_NAMESPACE_END

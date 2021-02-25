@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  rawcom4.h -	code for class 'RawCom4'- a module that reads raw commentary
- *		files:	ot and nt using indexs ??.bks ??.cps ??.vss
+ * rawcom4.h -	class RawCom4: a module driver that supports commentary
+ *		modules uncompressed with entries requiring up to 4 bytes size
  *
- * $Id: rawcom4.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: rawcom4.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2007-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -33,9 +33,7 @@ SWORD_NAMESPACE_START
 
 class SWDLLEXPORT RawCom4 : public RawVerse4, public SWCom {
 
-
 public:
-    
 	RawCom4(const char *ipath, const char *iname = 0, const char *idesc = 0,
 			SWDisplay *idisp = 0, SWTextEncoding encoding = ENC_UNKNOWN,
 			SWTextDirection dir = DIRECTION_LTR, SWTextMarkup markup = FMT_UNKNOWN,

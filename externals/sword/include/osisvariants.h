@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisvariants.h -	Implementation of OSISVariants
+ * osisvariants.h -	class OSISVariants: an OptionFilter to handle variants
+ * 			in modules marked up in OSIS
  *
- * $Id: osisvariants.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osisvariants.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

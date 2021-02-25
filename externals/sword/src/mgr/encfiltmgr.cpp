@@ -4,7 +4,7 @@
  *			SWFilterMgr, used to transcode all module text to a
  *			requested encoding
  *
- * $Id: encfiltmgr.cpp 3083 2014-03-06 08:13:10Z chrislit $
+ * $Id: encfiltmgr.cpp 3781 2020-08-23 10:25:31Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,11 +27,17 @@
 
 #include <scsuutf8.h>
 #include <latin1utf8.h>
+#include <utf16utf8.h>
 
 #include <unicodertf.h>
 #include <utf8latin1.h>
 #include <utf8utf16.h>
 #include <utf8html.h>
+
+#ifdef _ICU_
+#include <utf8scsu.h>
+#endif 
+
 #include <swmodule.h>
 
 #include <swmgr.h>
@@ -51,6 +57,7 @@ EncodingFilterMgr::EncodingFilterMgr(char enc)
 
 	scsuutf8   = new SCSUUTF8();
 	latin1utf8 = new Latin1UTF8();
+	utf16utf8  = new UTF16UTF8();
 
 	encoding = enc;
 
@@ -59,6 +66,9 @@ EncodingFilterMgr::EncodingFilterMgr(char enc)
 		case ENC_UTF16:  targetenc = new UTF8UTF16();  break;
 		case ENC_RTF:    targetenc = new UnicodeRTF(); break;
 		case ENC_HTML:   targetenc = new UTF8HTML();   break;
+#ifdef _ICU_
+		case ENC_SCSU:   targetenc = new UTF8SCSU();   break;
+#endif
 		default: // i.e. case ENC_UTF8
 			targetenc = NULL;
 	}
@@ -71,11 +81,12 @@ EncodingFilterMgr::EncodingFilterMgr(char enc)
 EncodingFilterMgr::~EncodingFilterMgr() {
 	delete scsuutf8;
 	delete latin1utf8;
+	delete utf16utf8;
 	delete targetenc;
 }
 
 
-void EncodingFilterMgr::AddRawFilters(SWModule *module, ConfigEntMap &section) {
+void EncodingFilterMgr::addRawFilters(SWModule *module, ConfigEntMap &section) {
 
 	ConfigEntMap::iterator entry;
 
@@ -86,10 +97,13 @@ void EncodingFilterMgr::AddRawFilters(SWModule *module, ConfigEntMap &section) {
 	else if (!stricmp(encoding.c_str(), "SCSU")) {
 		module->addRawFilter(scsuutf8);
 	}
+	else if (!stricmp(encoding.c_str(), "UTF-16")) {
+		module->addRawFilter(utf16utf8);
+	}
 }
 
 
-void EncodingFilterMgr::AddEncodingFilters(SWModule *module, ConfigEntMap &section) {
+void EncodingFilterMgr::addEncodingFilters(SWModule *module, ConfigEntMap &section) {
 	if (targetenc)
 		module->addEncodingFilter(targetenc);
 }
@@ -102,7 +116,7 @@ void EncodingFilterMgr::AddEncodingFilters(SWModule *module, ConfigEntMap &secti
  *
  * RET: encoding
  */
-char EncodingFilterMgr::Encoding(char enc) {
+void EncodingFilterMgr::setEncoding(char enc) {
 	if (enc && enc != encoding) {
 		encoding = enc;
 		SWFilter *oldfilter = targetenc;
@@ -112,6 +126,9 @@ char EncodingFilterMgr::Encoding(char enc) {
 			case ENC_UTF16:  targetenc = new UTF8UTF16();  break;
 			case ENC_RTF:    targetenc = new UnicodeRTF(); break;
 			case ENC_HTML:   targetenc = new UTF8HTML();   break;
+#ifdef _ICU_
+			case ENC_SCSU:   targetenc = new UTF8SCSU();   break;
+#endif
 			default: // i.e. case ENC_UTF8
 				targetenc = NULL;
 		}
@@ -136,7 +153,6 @@ char EncodingFilterMgr::Encoding(char enc) {
 			}
 		}
 	}
-	return encoding;
 }
 
 

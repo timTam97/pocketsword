@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  utf16utf8.h -	Implementation of UTF16UTF8
+ * utf16utf8.h -	class UTF16UTF8: an EncodingFilter to convert
+ * 			UTF16 to UTF8
  *
- * $Id: utf16utf8.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: utf16utf8.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

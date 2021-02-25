@@ -1,9 +1,12 @@
 /******************************************************************************
  *
- *  swfilter.h -	definition of class SWFilter used to filter text between
- *		       	different formats
+ * swfilter.h -		class SWFilter: the base for all Filters in SWORD
+ * 			a Filter manipulates the text stream in some way,
+ * 			usually converting text between different markups,
+ * 			encoding, to show or hide text features
+ * 			for the user, or to strip markup for searching
  *
- * $Id: swfilter.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swfilter.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -39,7 +42,7 @@ class SWModule;
 * Filters are used to filter/convert text between different formats
 * like GBF, HTML, RTF ...
 */
-class SWDLLEXPORT  SWFilter {
+class SWDLLEXPORT SWFilter {
 public:
 	virtual ~SWFilter() {}
 

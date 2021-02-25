@@ -1,11 +1,12 @@
 /******************************************************************************
  *
- *  swbasicfilter.h -	definition of class SWBasicFilter.  An SWFilter
- *  		       	impl that provides some basic methods that
- *  	       		many filter will need and can use as a starting
- *     			point
+ * swbasicfilter.h -	class SWBasicFilter: a starting point SWFilter which
+ * 			provides a SAX-like processing features for more
+ * 			easily writing other filters.
+ * 			provides some basic methods that make filter writing
+ * 			easier
  *
- * $Id: swbasicfilter.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swbasicfilter.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,14 +32,16 @@
 
 SWORD_NAMESPACE_START
 
+class VerseKey;
 
 // not a protected inner class because MSVC++ sucks and can't handle it
 class SWDLLEXPORT BasicFilterUserData {
 public:
-	BasicFilterUserData(const SWModule *module, const SWKey *key) { this->module = module; this->key = key; suspendTextPassThru = false; supressAdjacentWhitespace = false; }
+	BasicFilterUserData(const SWModule *module, const SWKey *key);
 	virtual ~BasicFilterUserData() {}
 	const SWModule *module;
 	const SWKey *key;
+	const VerseKey *vkey;
 	SWBuf lastTextNode;
 	SWBuf lastSuspendSegment;
 	bool suspendTextPassThru;
@@ -195,7 +198,7 @@ protected:
 	 * @param buf the output buffer 
 	 * @param escString the escape sequence (e.g. <code>"#235"</code> for &amp;235;)
 	 * @return subclasses should return true if they handled the esc seq, or false if they did not.
-         */
+	 */
 	virtual bool handleNumericEscapeString(SWBuf &buf, const char *escString);
 
 

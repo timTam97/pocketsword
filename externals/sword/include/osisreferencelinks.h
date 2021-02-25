@@ -1,14 +1,16 @@
 /******************************************************************************
  *
- *  osisreferencelinks.h -	SWFilter descendant to toggle OSIS reference
- *				links with specified type/subType
+ * osisreferencelinks.h -	class OSISReferenceLinks: an OptionFilter to
+ * 				handle reference links having
+ * 				specified type/subType in modules marked up
+ * 				in OSIS
  *
- * $Id: osisreferencelinks.h 2989 2013-10-09 08:22:21Z chrislit $
+ * $Id: osisreferencelinks.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2013 CrossWire Bible Society (http://www.crosswire.org)
- *      CrossWire Bible Society
- *      P. O. Box 2528
- *      Tempe, AZ  85280-2528
+ *	CrossWire Bible Society
+ *	P. O. Box 2528
+ *	Tempe, AZ  85280-2528
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the

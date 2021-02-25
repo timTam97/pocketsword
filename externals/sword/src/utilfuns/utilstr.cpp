@@ -2,7 +2,7 @@
  *
  *  utilstr.cpp -	String utility functions
  *
- * $Id: utilstr.cpp 2982 2013-09-15 13:33:03Z scribe $
+ * $Id: utilstr.cpp 3844 2021-02-14 18:26:54Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -66,28 +66,45 @@ const unsigned char SW_toupper_array[256] = {
 	0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xff
 };
 
+// WARNING, this is simply a copy of toupper right now
+// It needs to be inverted, but actually should never
+// be used.  A StringMgr which supports UTF-8 should
+// be used intstead
+const unsigned char SW_tolower_array[256] = {
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
+	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+	0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
+	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
+	0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
+	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
+	0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
+	0x40, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
+	0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f,
+	0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77,
+	0x78, 0x79, 0x7a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f,
+	0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
+	0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f,
+	0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77,
+	0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7d, 0x7e, 0x7f,
+	0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
+	0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f,
+	0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
+	0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9d, 0x9e, 0x9f,
+	0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7,
+	0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf,
+	0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7,
+	0xb8, 0xb9, 0xba, 0xbb, 0xbc, 0xbd, 0xbe, 0xbf,
+	0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7,
+	0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
+	0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xd7,
+	0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xdf,
+	0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7,
+	0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
+	0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
+	0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff
+};
 
-/******************************************************************************
- * stdstr - clones a string
- *
- * ENT:	ipstr	- pointer to a string pointer to set if necessary
- *	istr	- string to set to *ipstr
- *			0 - only get
- *
- * RET:	*ipstr
- */
-
-char *stdstr(char **ipstr, const char *istr, unsigned int memPadFactor) {
-	if (*ipstr)
-		delete [] *ipstr;
-	if (istr) {
-		int len = strlen(istr) + 1;
-		*ipstr = new char [ len * memPadFactor ];
-		memcpy(*ipstr, istr, len);
-	}
-	else *ipstr = 0;
-	return *ipstr;
-}
 
 
 /******************************************************************************
@@ -102,7 +119,7 @@ char *strstrip(char *istr) {
 	char *tmp = istr;
 	char *rtmp;
 
-	int len = strlen(istr);
+	int len = (int)strlen(istr);
 	if (len < 1)
 		return istr;
 	rtmp = istr + (len - 1);
@@ -126,8 +143,8 @@ char *strstrip(char *istr) {
  */
 
 const char *stristr(const char *s1, const char *s2) {
-	int tLen = strlen(s2);
-	int cLen = strlen(s1);
+	int tLen = (int)strlen(s2);
+	int cLen = (int)strlen(s1);
 	char *target = new char [ tLen + 1 ];
 	int i, j;
 	const char *retVal = 0;
@@ -161,8 +178,8 @@ const char *stristr(const char *s1, const char *s2) {
  */
 
 int strnicmp(const char *s1, const char *s2, int len) {
-	int tLen = strlen(s2);
-	int cLen = strlen(s1);
+	int tLen = (int)strlen(s2);
+	int cLen = (int)strlen(s1);
 	char diff;
 	int i;
 	for (i = 0; ((i < len) && (i < tLen) && (i < cLen)); i++) {
@@ -184,163 +201,6 @@ int stricmp(const char *s1, const char *s2) {
 	return ::stricmp(s1, s2);
  #endif
 #endif
-}
-
-
-/******************************************************************************
- * getUniCharFromUTF8 - retrieves the next Unicode codepoint from a UTF8 string
- * 					and increments buf to start of next codepoint
- *
- * ENT:	buf - address of a utf8 buffer
- *
- * RET:	buf - incremented past last byte used in computing the current codepoint
- * 		unicode codepoint value (0 with buf incremented is invalid UTF8 byte
- */
-
-__u32 getUniCharFromUTF8(const unsigned char **buf) {
-	__u32 ch = 0;
-	unsigned char multibuf[7];
-
-	//case: We're at the end
-	if (!(**buf)) {
-		return ch;
-	}
-
-	//case: ANSI
-	if (!(**buf & 128)) {
-		ch = **buf;
-		(*buf)++;
-		return ch;
-	}
-
-	//case: Invalid UTF-8 (illegal continuing byte in initial position)
-	if ((**buf & 128) && (!(**buf & 64))) {
-		(*buf)++;
-		return ch;
-	}
-
-	//case: 2+ byte codepoint
-	multibuf[0] = **buf;
-	multibuf[0] <<= 1;
-	int subsequent;
-	for (subsequent = 1; (multibuf[0] & 128) && (subsequent < 7); subsequent++) {
-		multibuf[0] <<= 1;
-		multibuf[subsequent] = (*buf)[subsequent];
-		multibuf[subsequent] &= 63;
-		// subsequent byte did not begin with 10XXXXXX
-		// move our buffer to here and error out
-		if (((*buf)[subsequent] - multibuf[subsequent]) != 128) {
-			*buf += subsequent;
-			return 0;
-		}
-		ch <<= 6;
-		ch |= multibuf[subsequent];
-	}
-	subsequent--;
-	multibuf[0] <<= 1;
-	char significantFirstBits = 8 - (2+subsequent);
-	
-	ch |= (((__s16)multibuf[0]) << (((6*subsequent)+significantFirstBits)-8));
-	*buf += (subsequent+1);
-	return ch;
-}
-
-
-SWBuf getUTF8FromUniChar(__u32 uchar) {
-	SWBuf retVal("", 7);
-	unsigned int i;
-
-	if (uchar < 0x80) {
-		retVal.append((unsigned char)uchar);
-		retVal.setSize(1);
-	}
-	else if (uchar < 0x800) {
-		retVal.setSize(2);
-		i = uchar & 0x3f;
-		retVal[1] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x1f;
-		retVal[0] = (unsigned char)(0xc0 | i);
-	}
-	else if (uchar < 0x10000) {
-		retVal.setSize(3);
-		i = uchar & 0x3f;
-		retVal[2] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[1] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x0f;
-		retVal[0] = (unsigned char)(0xe0 | i);
-	}
-	else if (uchar < 0x200000) {
-		retVal.setSize(4);
-		i = uchar & 0x3f;
-		retVal[3] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[2] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[1] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x07;
-		retVal[0] = (unsigned char)(0xf0 | i);
-	}
-	else if (uchar < 0x4000000) {
-		retVal.setSize(5);
-		i = uchar & 0x3f;
-		retVal[4] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[3] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[2] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[1] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x03;
-		retVal[0] = (unsigned char)(0xf8 | i);
-	}
-	else if (uchar < 0x80000000) {
-		retVal.setSize(6);
-		i = uchar & 0x3f;
-		retVal[5] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[4] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[3] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[2] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x3f;
-		retVal[1] = (unsigned char)(0x80 | i);
-		uchar >>= 6;
-
-		i = uchar & 0x01;
-		retVal[0] = (unsigned char)(0xfc | i);
-	}
-
-	return retVal;
 }
 
 
@@ -403,8 +263,10 @@ SWBuf utf8ToWChar(const char *buf) {
 SWBuf wcharToUTF8(const wchar_t *buf) {
 
 	SWBuf utf8Buf;
-	while (*buf) {
-		utf8Buf.append(getUTF8FromUniChar(*buf++));
+	if (buf) {
+		while (*buf) {
+			getUTF8FromUniChar(*buf++, &utf8Buf);
+		}
 	}
 	return utf8Buf;
 }

@@ -3,7 +3,7 @@
  *  osismorph.cpp -	SWFilter descendant to hide or show morph tags
  *			in a OSIS module
  *
- * $Id: osismorph.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: osismorph.cpp 3427 2016-07-03 14:30:33Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -90,11 +90,12 @@ char OSISMorph::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 				continue;
 			}
 			if (intoken) {
-				if (tokpos < 2045)
+				if (tokpos < 2045) {
 					token[tokpos++] = *from;
 					token[tokpos] = 0;
+				}
 			}
-			else	{
+			else {
 				text.append(*from);
 			}
 		}

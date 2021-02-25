@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlfootnotes.h -	Implementation of ThMLFootnotes
+ * thmlfootnotes.h -	class ThMLFootnotes: an OptionFilter to handle
+ * 			footnotes in modules marked up in ThML
  *
- * $Id: thmlfootnotes.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlfootnotes.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

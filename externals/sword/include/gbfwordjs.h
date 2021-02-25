@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  gbfwordjs.h -	Implementation of GBFWordJS
+ * gbfwordjs.h -	class GBFWordJS: an OptionFilter to inject
+ * 			JavaScript (mostly onclick events) for modules
+ * 			marked up in GBF
  *
- * $Id: gbfwordjs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfwordjs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2005-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -28,14 +30,14 @@
 SWORD_NAMESPACE_START
 
 class SWMgr;
-  /** This Filter shows/hides strong's numbers in a GBF text
-  */
+/** This Filter shows/hides strong's numbers in a GBF text
+ */
 class SWDLLEXPORT GBFWordJS : public SWOptionFilter {
-     SWModule *defaultGreekLex;
-     SWModule *defaultHebLex;
-     SWModule *defaultGreekParse;
-     SWModule *defaultHebParse;
-     SWMgr *mgr;
+	SWModule *defaultGreekLex;
+	SWModule *defaultHebLex;
+	SWModule *defaultGreekParse;
+	SWModule *defaultHebParse;
+	SWMgr *mgr;
 
 public:
 	GBFWordJS();

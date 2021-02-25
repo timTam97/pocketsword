@@ -2,7 +2,7 @@
  *
  *  osishtmlhref.cpp -	OSIS to HTML with hrefs filter
  * 
- * $Id: osishtmlhref.cpp 3119 2014-03-13 08:40:20Z chrislit $
+ * $Id: osishtmlhref.cpp 3714 2020-04-10 23:43:12Z scribe $
  *
  * Copyright 2003-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -117,14 +117,12 @@ OSISHTMLHREF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) :
 	tagStacks = new TagStacks();
 	wordsOfChristStart = "<span class=\"WordOfChrist\"> ";
 	wordsOfChristEnd   = "</span> ";
+	osisQToTick = true;	// default
+	isBiblicalText = false;
 	if (module) {
 		osisQToTick = ((!module->getConfigEntry("OSISqToTick")) || (strcmp(module->getConfigEntry("OSISqToTick"), "false")));
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
-	}
-	else {
-		osisQToTick = true;	// default
-		version = "";
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}
 }
 
@@ -201,9 +199,9 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					
 					outText("<ruby><rb>", buf, u);
 					outText(lastText, buf, u);
+					outText("</rb><rp>(</rp><rt>", buf, u);
 					val = strchr(attrib, ':');
 					val = (val) ? (val + 1) : attrib;
-					outText("</rb><rp>(</rp><rt>", buf, u);
 					outText(val, buf, u);
 					outText("</rt><rp>)</rp></ruby>", buf, u);
 				}
@@ -241,22 +239,15 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 					if (!strongsMarkup) {	// leave strong's markup notes out, in the future we'll probably have different option filters to turn different note types on or off
 						SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
 						SWBuf noteName = tag.getAttribute("n");
-						VerseKey *vkey = NULL;
 						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
 
 						u->inXRefNote = true; // Why this change? Ben Morgan: Any note can have references in, so we need to set this to true for all notes
 //						u->inXRefNote = (ch == 'x');
-
-						// see if we have a VerseKey * or descendant
-						SWTRY {
-							vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-						}
-						SWCATCH ( ... ) {	}
 						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&amp;type=%c&amp;value=%s&amp;module=%s&amp;passage=%s\" class=\"%c\">*%c%s</a>",
 						        ch, 
 							URL::encode(footnoteNumber.c_str()).c_str(), 
 							URL::encode(u->version.c_str()).c_str(), 
-							URL::encode(vkey ? vkey->getText() : u->key->getText()).c_str(), 
+							URL::encode(u->vkey ? u->vkey->getText() : u->key->getText()).c_str(), 
 							ch,
 							ch, 
 							(renderNoteNumbers ? noteName.c_str() : ""));
@@ -267,15 +258,14 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			if (tag.isEndTag()) {
 				u->suspendTextPassThru = (--u->suspendLevel);
 				u->inXRefNote = false;
-				u->lastSuspendSegment = ""; // fix/work-around for nasb devineName in note bug
+				u->lastSuspendSegment = ""; // fix/work-around for nasb divineName in note bug
 			}
 		}
 
-		// <p> paragraph tags
-		else if (!strcmp(tag.getName(), "p")) {
+		// <p> paragraph and <lg> linegroup tags
+		else if (!strcmp(tag.getName(), "p") || !strcmp(tag.getName(), "lg")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {	// non-empty start tag
 				outText("<!P><br />", buf, u);
-				userData->supressAdjacentWhitespace = true;
 			}
 			else if (tag.isEndTag()) {	// end tag
 				outText("<!/P><br />", buf, u);
@@ -294,7 +284,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			// <div type="paragraph"  sID... />
 			if (tag.getAttribute("sID")) {	// non-empty start tag
 				outText("<!P><br />", buf, u);
-				userData->supressAdjacentWhitespace = true;
 			}
 			// <div type="paragraph"  eID... />
 			else if (tag.getAttribute("eID")) {
@@ -324,7 +313,7 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 						// Compensate for starting :
 						ref = the_ref + 1;
 
-						int size = target.size() - ref.size() - 1;
+						int size = (int)(target.size() - ref.size() - 1);
 						work.setSize(size);
 						strncpy(work.getRawData(), target, size);
 
@@ -382,7 +371,6 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 			// Note: this is improper osis. This should be <lb/>
 			else if (tag.isEmpty() && !tag.getAttribute("sID")) {
 				outText("<br />", buf, u);
-				userData->supressAdjacentWhitespace = true;
 			}
 			// end of the line
 			else if (tag.isEndTag()) {
@@ -495,12 +483,12 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				SWBuf lastText = u->lastSuspendSegment.c_str();
 				u->suspendTextPassThru = (--u->suspendLevel);
 				if (lastText.size()) {
-					toupperstr(lastText);
+					lastText.toUpper();
 					scratch.setFormatted("%c<font size=\"-1\">%s</font>", lastText[0], lastText.c_str()+1);
 
 					const unsigned char *tmpBuf = (const unsigned char *)lastText.c_str();
 					getUniCharFromUTF8(&tmpBuf);
-					int char_length = (tmpBuf - (const unsigned char *)lastText.c_str());
+					int char_length = (int)(tmpBuf - (const unsigned char *)lastText.c_str());
 					scratch.setFormatted("%.*s<font size=\"-1\">%s</font>", 
 						char_length, 
 						lastText.c_str(),
@@ -634,10 +622,11 @@ bool OSISHTMLHREF::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 				SWBuf type = tag.getAttribute("type");
 				u->lastTransChange = type;
 
+				// just do all transChange tags this way for now
 				if ((type == "added") || (type == "supplied"))
 					outText("<i class=\"transChangeAdded\">", buf, u);
 				else if (type == "tenseChange")
-					buf += "*";
+					outText( "*", buf, u);
 			}
 			else if (tag.isEndTag()) {
 				SWBuf type = u->lastTransChange;

@@ -3,7 +3,7 @@
  *  swld.cpp -	code for base class 'SWLD'.  SWLD is the basis for all
  *		types of Lexicon and Dictionary modules (hence the 'LD').
  *
- * $Id: swld.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swld.cpp 3439 2016-10-23 08:32:02Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -108,7 +108,7 @@ bool SWLD::hasEntry(const SWKey *key) const {
 	if (strongsPadding) strongsPad(buf);
 	
 	bool retVal = !strcmp(buf, getKeyForEntry(getEntryForKey(buf)));
-	delete[] buf;
+	delete [] buf;
 
 	return retVal;
 }
@@ -125,7 +125,7 @@ void SWLD::strongsPad(char *buf)
 {
 	char *check;
 	int size = 0;
-	int len = strlen(buf);
+	int len = (int)strlen(buf);
 	char subLet = 0;
 	bool bang = false, prefix=false;
 	if ((len < 9) && (len > 0)) {

@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  gbflatex.h -	Implementation of GBFLaTeX
+ * gbflatex.h -	class GBFLaTeX: a RenderFilter to render LaTeX from modules
+ * 		marked up in GBF
  *
- * $Id: gbflatex.h 3074 2014-03-05 00:30:21Z chrislit $
+ * $Id: gbflatex.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

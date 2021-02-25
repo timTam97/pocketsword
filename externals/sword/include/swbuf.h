@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  swbuf.h -	code for SWBuf used as a transport and utility for data buffers
+ * swbuf.h -	class SWBuf: a rich buffer / string class providing optimized
+ * 		implementations of many basic string operations
  *
- * $Id: swbuf.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swbuf.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -26,6 +27,7 @@
 #include <defs.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #ifdef __BORLANDC__
 #include <mem.h>
 #endif
@@ -43,6 +45,8 @@ SWORD_NAMESPACE_START
 *	it will crash your program. You need to perform the checks yourself!
 */
 class SWDLLEXPORT SWBuf {
+
+private:
 	char *buf;
 	char *end;
 	char *endAlloc;
@@ -90,27 +94,40 @@ public:
 		init(0);
 	}
 
-	/**
-	* SWBuf Constructor - Creates an SWBuf initialized
+	/******************************************************************************
+	* SWBuf Constructor - Creates an empty SWBuf object or an SWBuf initialized
 	* 		to a value from a const char *
- 	*
- 	*/
-	SWBuf(const char *initVal, unsigned long initSize = 0);
-//	SWBuf(unsigned long initSize);
-
-	/**
-	* SWBuf Constructor - Creates an SWBuf initialized
-	* 		to a value from a char
 	*
 	*/
-	SWBuf(char initVal, unsigned long initSize = 0);
+	inline SWBuf(const char *initVal, unsigned long initSize = 0) {
+		init(initSize);
+		if (initVal)
+			set(initVal, initSize);
+	}
 
-	/**
+	/******************************************************************************
 	* SWBuf Constructor - Creates an SWBuf initialized
 	* 		to a value from another SWBuf
 	*
 	*/
-	SWBuf(const SWBuf &other, unsigned long initSize = 0);
+	inline SWBuf(const SWBuf &other, unsigned long initSize = 0) {
+		init(initSize);
+		set(other);
+	}
+
+	/******************************************************************************
+	* SWBuf Constructor - Creates an SWBuf initialized
+	* 		to a value from a char
+	*
+	*/
+	inline SWBuf(char initVal, unsigned long initSize = 0) {
+		init(initSize+1);
+		*buf = initVal;
+		end = buf+1;
+		*end = 0;
+	}
+//	SWBuf(unsigned long initSize);
+
 
 	/******************************************************************************
 	* SWBuf Destructor - Cleans up instance of SWBuf
@@ -124,7 +141,7 @@ public:
 	* SWBuf::setFillByte - Set the fillByte character
 	*
 	* @param ch This character is used when the SWBuf is (re)sized.
-	*   The memory will be filled with this character. \see setSize() \see resize()
+	*	The memory will be filled with this character. \see setSize() \see resize()
 	*/
 	inline void setFillByte(char ch) { fillByte = ch; }
 
@@ -144,7 +161,22 @@ public:
 	*	@param pos The position of the requested character.
 	* @return The character at the specified position
 	*/
-	inline char &charAt(unsigned long pos) { return ((pos <= (unsigned long)(end - buf)) ? buf[pos] : (*nullStr)); }
+	// fastest guarded impl.  If we reference out of bounds, we return our 
+	inline char &charAtGuarded(unsigned long pos) { return ((pos <= (unsigned long)(endAlloc - buf)) ? buf[pos] : (*endAlloc)); }
+	// unguarded impl. This is obviously much faster and is likely why std::string specifies references out of bounds have undefined
+	// behavior.  This is the default impl for operator []
+	inline char &charAt(unsigned long pos) { return *(buf + pos); }
+	inline const char &charAt(unsigned long pos) const { return *(buf + pos); }
+
+// these have all proven to be slower implementations
+//	inline char &charAt(unsigned long pos) { return buf[pos]; }
+//	inline char &charAtGuarded(unsigned long pos) { return pos <= (unsigned long)end - (unsigned long)buf ? buf[pos] : *nullStr; }
+//	inline char &charAtGuarded(unsigned long pos) { return pos <= length() ? buf[pos] : *nullStr; }
+//	inline char &charAtGuarded(unsigned long pos) { assureSize(pos); return buf[pos]; }
+//	inline char &charAtGuarded(unsigned long pos) { return pos < allocSize ? buf[pos] : *nullStr; }
+//	inline char &charAtGuarded(unsigned long pos) { return buf + pos <= end ? buf[pos] : *nullStr; }
+//	inline char &charAtGuarded(unsigned long pos) { return buf[pos < allocSize ? pos : allocSize - 1]; }
+
 
 	/** 
 	* @return size() and length() return only the number of characters of the string.
@@ -170,12 +202,10 @@ public:
 	* @param newVal the value to set this buffer to. 
 	*/
 	inline void set(const SWBuf &newVal) {
-		unsigned long len = newVal.length() + 1;
+		unsigned long len = newVal.allocSize;
 		assureSize(len);
-//		const char *n = newVal.c_str();
-//		for (end = buf;len;len--) *end++ = *n++;
 		memcpy(buf, newVal.c_str(), len);
-		end = buf + (len - 1);
+		end = buf + (newVal.length());
 	}
 
 	/**
@@ -183,9 +213,10 @@ public:
 	* If the allocated memory is bigger than the new string, it will NOT be resized.
 	* @param newVal the value to set this buffer to. 
 	*/
-	inline void set(const char *newVal) {
+	inline void set(const char *newVal, unsigned long maxSize = 0) {
 		if (newVal) {
 			unsigned long len = strlen(newVal) + 1;
+			if (maxSize && maxSize < (len-1)) len = maxSize + 1;
 			assureSize(len);
 			memcpy(buf, newVal, len);
 			end = buf + (len - 1);
@@ -193,8 +224,8 @@ public:
 		else {
 			assureSize(1);
 			end = buf;
-			*end = 0;
 		}
+		*end = 0;
 	}
 
 	/**
@@ -204,23 +235,30 @@ public:
 	* @warning This function can only write at most JUNKBUFSIZE to the string per call.
 	*
 	* @warning This function is not very fast. For loops with many iterations you might
-	*  consider replacing it by other calls. 
-	*  Example: 
-	*    \code SWBuf buf.setFormatted("<%s>", stringVal); \endcode 
-	*  should be replaced by: 
-	*    \code buf.set("<"); buf.append(stringVal); buf.append(">"); \endcode
-	*  This will produce much faster results.
+	*	consider replacing it by other calls. 
+	*	Example: 
+	*		\code SWBuf buf.setFormatted("<%s>", stringVal); \endcode 
+	*		should be replaced by: 
+	*		\code buf.set("<"); buf.append(stringVal); buf.append(">"); \endcode
+	*	This will produce much faster results.
 	*
 	* @param format The format string. Same syntax as printf, for example.
 	* @param ... Add all arguments here.
 	*/
 	SWBuf &setFormatted(const char *format, ...);
+	SWBuf &setFormattedVA(const char *format, va_list argptr);
 
 	/**
 	* SWBuf::setSize - Size this buffer to a specific length.
 	* @param len The new size of the buffer. One byte for the null will be added.
 	*/
-	void setSize(unsigned long len);
+	inline void setSize(unsigned long len) {
+		assureSize(len+1);
+		if ((unsigned)(end - buf) < len)
+			memset(end, fillByte, (size_t)len - (end-buf));
+		end = buf + len;
+		*end = 0;
+	}
 	/**
 	* SWBuf::resize - Resize this buffer to a specific length.
 	* @param len The new size of the buffer. One byte for the null will be added.
@@ -233,7 +271,17 @@ public:
 	* @param str Append this.
 	* @param max Append only max chars.
 	*/
-	SWBuf &append(const char *str, long max = -1);
+	inline SWBuf &append(const char *str, long max = -1) {
+	//	if (!str) //A null string was passed
+	//		return;
+		if (max < 0)
+			max = strlen(str);
+		assureMore(max+1);
+		for (;((max)&&(*str));max--)
+			*end++ = *str++;
+		*end = 0;
+		return *this;
+	}
 
 	/**
 	* SWBuf::append - appends a value to the current value of this SWBuf
@@ -262,11 +310,11 @@ public:
 	}
 
 	/**
-	* SWBuf::append - appends a wide charachter value to the current value of this SWBuf
+	* SWBuf::append - appends a wide character value to the current value of this SWBuf
 	* If the allocated memory is not enough, it will be resized accordingly.
 	* NOTE: This is dangerous, as wchar_t is currently different sizes on different
 	* platforms (stupid windoze; stupid c++ spec for not mandating 4byte).
-	* @param ch Append this.
+	* @param wch Append this.
 	*/
 	inline SWBuf &append(wchar_t wch) {
 		assureMore(sizeof(wchar_t)*2);
@@ -281,12 +329,12 @@ public:
 	* @warning This function can only write at most JUNKBUFSIZE to the string per call.
 	*
 	* @warning This function is not very fast. For loops with many iterations you might
-	*  consider replacing it by other calls. 
-	*  Example: 
-	*    \code SWBuf buf.appendFormatted("<%s>", stringVal); \endcode 
-	*  should be replaced by: 
-	*    \code buf.append("<"); buf.append(stringVal); buf.append(">"); \endcode
-	*  This will produce much faster results.
+	*	consider replacing it by other calls. 
+	*	Example: 
+	*		\code SWBuf buf.appendFormatted("<%s>", stringVal); \endcode 
+	*		should be replaced by: 
+	*		\code buf.append("<"); buf.append(stringVal); buf.append(">"); \endcode
+	*	This will produce much faster results.
 	*
 	* @param format The format string. Same syntax as printf, for example.
 	* @param ... Add all arguments here.
@@ -335,10 +383,14 @@ public:
 	inline char &operator[](long pos) { return charAt((unsigned long)pos); }
 	inline char &operator[](unsigned int pos) { return charAt((unsigned long)pos); }
 	inline char &operator[](int pos) { return charAt((unsigned long)pos); }
+	inline const char &operator[](unsigned long pos) const { return charAt(pos); }
+	inline const char &operator[](long pos) const { return charAt((unsigned long)pos); }
+	inline const char &operator[](unsigned int pos) const { return charAt((unsigned long)pos); }
+	inline const char &operator[](int pos) const { return charAt((unsigned long)pos); }
 	inline SWBuf &operator =(const char *newVal) { set(newVal); return *this; }
 	inline SWBuf &operator =(const SWBuf &other) { set(other); return *this; }
-	inline SWBuf &operator +=(const char *str) { append(str); return *this; }
-	inline SWBuf &operator +=(char ch) { append(ch); return *this; }
+	inline SWBuf &operator +=(const char *str) { return append(str); }
+	inline SWBuf &operator +=(char ch) { return append(ch); }
 
 	/**
 	 * Decrease the buffer size, discarding the last characters
@@ -396,28 +448,52 @@ public:
 	 * Returns the prefix and modifies this buffer, shifting left to remove prefix
 	 * @param separator to use (e.g. ':')
 	 * @param endOfStringAsSeparator - also count end of string as separator.
-	 *                                 this is useful for tokenizing entire string like:
-	 *                                 x|y|z
-	 *                                 if true it will also include 'z'.
+	 *							this is useful for tokenizing entire string like:
+	 *								x|y|z
+	 *							if true it will also include 'z'.
 	 *
 	 * @return prefix if separator character found; otherwise, null and leaves buffer unmodified
 	 */
-	inline const char *stripPrefix(char separator, bool endOfStringAsSeparator = false) { const char *m = strchr(buf, separator); if (!m && endOfStringAsSeparator) { if (*buf) { operator >>(1); *buf=0; end = buf; return buf + 1;} else return buf; } if (m) { long len = m-buf; char *hold = new char[len]; memcpy(hold, buf, len); *this << (len+1); memcpy(end+1, hold, len); delete [] hold; end[len+1] = 0; } return (m) ? end+1 : 0; }  // safe.  we know we don't actually realloc and shrink buffer when shifting, so we can place our return val at end.
+	inline const char *stripPrefix(char separator, bool endOfStringAsSeparator = false) { const char *m = strchr(buf, separator); if (!m && endOfStringAsSeparator) { if (*buf) { operator >>(1); *buf=0; end = buf; return buf + 1;} else return buf; } if (m) { int len = (int)(m-buf); char *hold = new char[len]; memcpy(hold, buf, len); *this << (len+1); memcpy(end+1, hold, len); delete [] hold; end[len+1] = 0; } return (m) ? end+1 : 0; }	// safe.  we know we don't actually realloc and shrink buffer when shifting, so we can place our return val at end.
 
 	// this could be nicer, like replacing a contiguous series of target bytes with single replacement; offering replacement const char *
 	/**
 	 * Replace with a new byte value all occurances in this buffer of any byte value specified in a set
 	 * @param targets a set of bytes, any of which will be replaced
-	 * @param newByte value to use as replacement.
+	 * @param newByte value to use as replacement or 0 to remove matching byte.
 	 *
-	 * Example: replaceBytes("abc", 'z');  // replaces all occurances of 'a', 'b', and 'c' with 'z'
+	 * Example: replaceBytes("abc", 'z');	// replaces all occurances of 'a', 'b', and 'c' with 'z'
 	 */
-	inline SWBuf &replaceBytes(const char *targets, char newByte) { for (unsigned int i = 0; (i < size()); i++) { if (strchr(targets, buf[i])) buf[i] = newByte; } return *this; }
+	inline SWBuf &replaceBytes(const char *targets, char newByte) {
+		for (unsigned int i = 0; (i < size()); i++) {
+			if (strchr(targets, buf[i])) {
+				if (newByte) buf[i] = newByte;
+				// delete byte
+				else {
+					if (i < (size()-1)) {
+						memmove(buf+i, buf+i+1, length()-i-1);
+					}
+					(*this)-=1;
+				}
+			}
+		}
+		return *this;
+	}
 
 	/**
 	 * @return returns true if this buffer starts with the specified prefix
 	 */
 	inline bool startsWith(const SWBuf &prefix) const { return !strncmp(c_str(), prefix.c_str(), prefix.size()); }
+	/**
+	 * Converts this SWBuf to uppercase
+	 * &return this
+	 */
+	SWBuf &toUpper();
+	/**
+	 * Converts this SWBuf to lowercase
+	 * &return this
+	 */
+	SWBuf &toLower();
 
 	/**
 	 * @return returns true if this buffer ends with the specified postfix

@@ -3,7 +3,7 @@
  *  swlocale.cpp -	implementation of Class SWLocale used for retrieval
  *			of locale lookups
  *
- * $Id: swlocale.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: swlocale.cpp 3640 2019-05-30 21:54:06Z scribe $
  *
  * Copyright 2000-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -69,16 +69,16 @@ SWLocale::SWLocale(const char *ifilename) {
 		for (abbrevsCnt = 0; builtin_abbrevs[abbrevsCnt].osis[0]; abbrevsCnt++);
 	}
 
-	confEntry = localeSource->Sections["Meta"].find("Name");
-	if (confEntry != localeSource->Sections["Meta"].end())
+	confEntry = localeSource->getSection("Meta").find("Name");
+	if (confEntry != localeSource->getSection("Meta").end())
 		stdstr(&name, (*confEntry).second.c_str());
 	
-	confEntry = localeSource->Sections["Meta"].find("Description");
-	if (confEntry != localeSource->Sections["Meta"].end())
+	confEntry = localeSource->getSection("Meta").find("Description");
+	if (confEntry != localeSource->getSection("Meta").end())
 		stdstr(&description, (*confEntry).second.c_str());
 
-	confEntry = localeSource->Sections["Meta"].find("Encoding"); //Either empty (==Latin1) or UTF-8
-	if (confEntry != localeSource->Sections["Meta"].end())
+	confEntry = localeSource->getSection("Meta").find("Encoding"); //Either empty (==Latin1) or UTF-8
+	if (confEntry != localeSource->getSection("Meta").end())
 		stdstr(&encoding, (*confEntry).second.c_str());
 }
 
@@ -109,10 +109,23 @@ const char *SWLocale::translate(const char *text) {
 	entry = p->lookupTable.find(text);
 
 	if (entry == p->lookupTable.end()) {
-		ConfigEntMap::iterator confEntry;
-		confEntry = localeSource->Sections["Text"].find(text);
-		if (confEntry == localeSource->Sections["Text"].end())
-			p->lookupTable.insert(LookupMap::value_type(text, text));
+		ConfigEntMap::const_iterator confEntry;
+		bool found = false;
+
+		SWBuf textBuf = text;
+		if (textBuf.startsWith("prefAbbr_")) {
+			textBuf.stripPrefix('_');
+			confEntry = localeSource->getSection("Pref Abbrevs").find(textBuf);
+			found = (confEntry != localeSource->getSection("Pref Abbrevs").end());
+		}
+		if (!found) {
+			confEntry = localeSource->getSection("Text").find(textBuf);
+			found =  (confEntry != localeSource->getSection("Text").end());
+		}
+
+		if (!found) {
+			p->lookupTable.insert(LookupMap::value_type(text, textBuf.c_str()));
+		}
 		else {//valid value found
 			/*
 			- If Encoding==Latin1 and we have a StringHelper, convert to UTF-8
@@ -169,12 +182,12 @@ const struct abbrev *SWLocale::getBookAbbrevs(int *retSize) {
 		for (int j = 0; builtin_abbrevs[j].osis[0]; j++) {
 			p->mergedAbbrevs[builtin_abbrevs[j].ab] = builtin_abbrevs[j].osis;
 		}
-		ConfigEntMap::iterator it = localeSource->Sections["Book Abbrevs"].begin();
-		ConfigEntMap::iterator end = localeSource->Sections["Book Abbrevs"].end();
+		ConfigEntMap::iterator it = localeSource->getSection("Book Abbrevs").begin();
+		ConfigEntMap::iterator end = localeSource->getSection("Book Abbrevs").end();
 		for (; it != end; it++) {
 			p->mergedAbbrevs[it->first.c_str()] = it->second.c_str();
 		}
-		int size = p->mergedAbbrevs.size();
+		int size = (int)p->mergedAbbrevs.size();
 		bookAbbrevs = new struct abbrev[size + 1];
 		int i = 0;
 		for (LookupMap::iterator it = p->mergedAbbrevs.begin(); it != p->mergedAbbrevs.end(); it++, i++) {

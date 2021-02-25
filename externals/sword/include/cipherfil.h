@@ -1,8 +1,10 @@
 /***************************************************************************
  *
- *  cipherfil.h -	
+ * cipherfil.h -	class CipherFilter: an EncodingFilter which can
+ * 			encipher and decipher a text stream based on
+ * 			a CipherKey
  *
- * $Id: cipherfil.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: cipherfil.h 3787 2020-08-30 12:00:38Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -29,7 +31,7 @@ SWORD_NAMESPACE_START
 
 class SWCipher;
 
-class SWDLLEXPORT CipherFilter:public SWFilter {
+class SWDLLEXPORT CipherFilter : public SWFilter {
 	SWCipher *cipher;
 public:
 	CipherFilter(const char *key);

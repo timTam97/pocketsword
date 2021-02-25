@@ -2,7 +2,7 @@
  *
  *  curlhttpt.cpp -	CURLHTTPTransport
  *
- * $Id: curlhttpt.cpp 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: curlhttpt.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -19,8 +19,6 @@
  * General Public License for more details.
  *
  */
-
-#include <fcntl.h>
 
 #include <vector>
 #include <cctype>
@@ -41,26 +39,26 @@ namespace {
 
 	struct FtpFile {
 		const char *filename;
-		FILE *stream;
+		int fd;
 		SWBuf *destBuf;
 	};
 
 
 	static int my_httpfwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-		struct FtpFile *out=(struct FtpFile *)stream;
-		if (out && !out->stream && !out->destBuf) {
+		struct FtpFile *out = (struct FtpFile *)stream;
+		if (out && !out->fd && !out->destBuf) {
 			/* open file for writing */
-			out->stream=fopen(out->filename, "wb");
-			if (!out->stream)
+			out->fd = FileMgr::createPathAndFile(out->filename);
+			if (out->fd < 0)
 				return -1; /* failure, can't open file to write */
 		}
 		if (out->destBuf) {
-			int s = out->destBuf->size();
+			int s = (int)out->destBuf->size();
 			out->destBuf->size(s+(size*nmemb));
 			memcpy(out->destBuf->getRawData()+s, buffer, size*nmemb);
-			return nmemb;
+			return (int)nmemb;
 		}
-		return fwrite(buffer, size, nmemb, out->stream);
+		return (int)FileMgr::write(out->fd, buffer, size * nmemb);
 	}
 
 
@@ -98,7 +96,7 @@ namespace {
 		SWBuf text;
 		text.size(size);
 		memcpy(text.getRawData(), data, size);
-		SWLog::getSystemLog()->logDebug("CURLHTTPTransport: %s: %s", header.c_str(), text.c_str());
+SWLOGD("CURLHTTPTransport: %s: %s", header.c_str(), text.c_str());
 		return 0;
 	}
 }
@@ -138,11 +136,18 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 
 		/* Switch on full protocol/debug output */
 		curl_easy_setopt(session, CURLOPT_VERBOSE, true);
-		curl_easy_setopt(session, CURLOPT_CONNECTTIMEOUT, 45);
-		curl_easy_setopt(session, CURLOPT_USERAGENT, p.c_str());
-		
+#ifndef OLDCURL
+		curl_easy_setopt(session, CURLOPT_CONNECTTIMEOUT_MS, timeoutMillis);
+		curl_easy_setopt(session, CURLOPT_TIMEOUT_MS, timeoutMillis);
+#else
+		curl_easy_setopt(session, CURLOPT_CONNECTTIMEOUT, timeoutMillis/1000);
+		curl_easy_setopt(session, CURLOPT_TIMEOUT, timeoutMillis/1000);
+#endif
+
 		/* Disable checking host certificate */
-		curl_easy_setopt(session, CURLOPT_SSL_VERIFYPEER, false);
+		if (isUnverifiedPeerAllowed()) {
+			curl_easy_setopt(session, CURLOPT_SSL_VERIFYPEER, false);
+		}
 
 		/* FTP connection settings */
 
@@ -154,23 +159,32 @@ char CURLHTTPTransport::getURL(const char *destPath, const char *sourceURL, SWBu
 
 #ifdef EPRT_AVAILABLE
 		curl_easy_setopt(session, CURLOPT_FTP_USE_EPRT, 0);
-		SWLog::getSystemLog()->logDebug("***** using CURLOPT_FTP_USE_EPRT\n");
+SWLOGD("***** using CURLOPT_FTP_USE_EPRT\n");
 #endif
 
 
-		SWLog::getSystemLog()->logDebug("***** About to perform curl easy action. \n");
-		SWLog::getSystemLog()->logDebug("***** destPath: %s \n", destPath);
-		SWLog::getSystemLog()->logDebug("***** sourceURL: %s \n", sourceURL);
+SWLOGD("***** About to perform curl easy action. \n");
+SWLOGD("***** destPath: %s \n", destPath);
+SWLOGD("***** sourceURL: %s \n", sourceURL);
 		res = curl_easy_perform(session);
-		SWLog::getSystemLog()->logDebug("***** Finished performing curl easy action. \n");
+SWLOGD("***** Finished performing curl easy action. \n");
 
 		if(CURLE_OK != res) {
-			retVal = -1;
+			if (CURLE_OPERATION_TIMEDOUT == res
+#ifdef CURLE_FTP_ACCEPT_TIMEOUT
+				|| CURLE_FTP_ACCEPT_TIMEOUT == res
+#endif
+               ) {
+				retVal = -2;
+			}
+			else {
+				retVal = -1;
+			}
 		}
 	}
 
-	if (ftpfile.stream)
-		fclose(ftpfile.stream); /* close the local file */
+	if (ftpfile.fd > 0)
+		FileMgr::closeFile(ftpfile.fd); /* close the local file */
 
 	return retVal;
 }
@@ -216,10 +230,10 @@ vector<struct DirEntry> CURLHTTPTransport::getDirList(const char *dirURL) {
 			pBufRes = (char *)strchr(pBuf, '\"');//Find the end of the possible file name
 			if (!pBufRes)
 				break;
-			possibleNameLength = pBufRes - pBuf;
+			possibleNameLength = (int)(pBufRes - pBuf);
 			possibleName.setFormatted("%.*s", possibleNameLength, pBuf);
 			if (isalnum(possibleName[0])) {
-				SWLog::getSystemLog()->logDebug("getDirListHTTP: Found a file: %s", possibleName.c_str());
+SWLOGD("getDirListHTTP: Found a file: %s", possibleName.c_str());
 				pBuf = pBufRes;
 				pBufRes = (char *)findSizeStart(pBuf);
 				fSize = 0;

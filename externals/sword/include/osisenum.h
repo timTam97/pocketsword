@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisenum.h -	Implementation of OSISEnum
+ * osisenum.h -	class OSISEnum: an OptionFilter to handle n attibutes on words
+ * 		in an module marked up in OSIS
  *
- * $Id: osisenum.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osisenum.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides headings in a OSIS text
+/** This Filter shows/hides word n attributes in an OSIS text
  */
 class SWDLLEXPORT OSISEnum : public SWOptionFilter {
 public:

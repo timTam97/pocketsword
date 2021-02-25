@@ -3,7 +3,7 @@
  *  utf8nfc.cpp -	SWFilter descendant to perform NFC (canonical
  *			composition normalization) on UTF-8 text
  *
- * $Id: utf8nfc.cpp 3081 2014-03-05 19:52:08Z chrislit $
+ * $Id: utf8nfc.cpp 3618 2019-04-14 22:30:32Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -46,11 +46,11 @@ char UTF8NFC::processText(SWBuf &text, const SWKey *key, const SWModule *module)
 		return -1;
         
 	err = U_ZERO_ERROR;
-	UnicodeString source(text.getRawData(), text.length(), conv, err);
-	UnicodeString target;
+	icu::UnicodeString source(text.getRawData(), text.length(), conv, err);
+	icu::UnicodeString target;
 
 	err = U_ZERO_ERROR;
-	Normalizer::normalize(source, UNORM_NFC, 0, target, err);
+	icu::Normalizer::normalize(source, UNORM_NFC, 0, target, err);
 
 	err = U_ZERO_ERROR;
 	text.setSize(text.size()*2); // potentially, it can grow to 2x the original size

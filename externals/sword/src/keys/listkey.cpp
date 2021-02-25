@@ -4,7 +4,7 @@
  *			for all types of keys that have lists of specified
  *			indexes (e.g. a list of verses, place, etc.)
  *
- * $Id: listkey.cpp 2905 2013-07-17 12:18:15Z scribe $
+ * $Id: listkey.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,7 +32,7 @@
 SWORD_NAMESPACE_START
 
 static const char *classes[] = {"ListKey", "SWKey", "SWObject", 0};
-SWClass ListKey::classdef(classes);
+static const SWClass classdef(classes);
 
 /******************************************************************************
  * ListKey Constructor - initializes instance of ListKey
@@ -59,7 +59,7 @@ ListKey::ListKey(ListKey const &k) : SWKey(k.keytext) {
 
 
 void ListKey::init() {
-	myclass = &classdef;
+	myClass = &classdef;
 	// this is a listkey, bound is always set
 	boundSet = true;
 }
@@ -322,6 +322,22 @@ const char *ListKey::getOSISRefRangeText() const {
 	}
 	stdstr(&rangeText, buf);
 	delete [] buf;
+	return rangeText;
+}
+
+
+/******************************************************************************
+ * ListKey::getShortRangeText - returns short parsable range text for this key
+ */
+
+const char *ListKey::getShortRangeText() const {
+	SWBuf buf;
+	for (int i = 0; i < arraycnt; i++) {
+		buf += array[i]->getShortRangeText();
+		if (i < arraycnt-1)
+			buf += "; ";
+	}
+	stdstr(&rangeText, buf.c_str());
 	return rangeText;
 }
 

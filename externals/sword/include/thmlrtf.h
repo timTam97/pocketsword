@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  thmlrtf.h -	Implementation of ThMLRTF
+ * thmlrtf.h -	class ThMLRTF: a RenderFilter to render RTF from modules
+ * 		marked up in ThML
  *
- * $Id: thmlrtf.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlrtf.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,20 +32,24 @@ SWORD_NAMESPACE_START
 /** this filter converts ThML text to RTF text
  */
 class SWDLLEXPORT ThMLRTF : public SWBasicFilter {
+
 protected:
 	class MyUserData : public BasicFilterUserData {
 	public:
 		MyUserData(const SWModule *module, const SWKey *key);
-		bool SecHead;
+		bool inSecHead;
 		SWBuf version;
-		bool BiblicalText;
+		bool isBiblicalText;
 		XMLTag startTag;
 	};
+
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key) {
 		return new MyUserData(module, key);
 	}
+
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
 	virtual char processText(SWBuf &text, const SWKey *key = 0, const SWModule *module = 0);
+
 public:
 	ThMLRTF();
 };

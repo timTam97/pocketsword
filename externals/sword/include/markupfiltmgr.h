@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  markupfiltmgr.h -	definition of class SWMarkupMgr, subclass of
- *			used to transcode all module text to a requested
- *			markup
+ * markupfiltmgr.h -	class SWMarkupMgr: a FilterManager which applied
+ * 			the appropriate Markup and Encoding filters to obtain
+ * 			a requested Render markup and encoding
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,45 +32,61 @@ SWORD_NAMESPACE_START
 * you want to use.
 */
 class SWDLLEXPORT MarkupFilterMgr : public EncodingFilterMgr {
+
 protected:
-        SWFilter* fromthml;
-        SWFilter* fromgbf;
-        SWFilter* fromplain;
-        SWFilter* fromosis;
-        SWFilter* fromtei;
+	SWFilter* fromthml;
+	SWFilter* fromgbf;
+	SWFilter* fromplain;
+	SWFilter* fromosis;
+	SWFilter* fromtei;
 
-				/**
-	 			* current markup value
-	 			*/
-        char markup;
+	/**
+	 * current markup value
+	 */
+	char markup;
 
-        void CreateFilters(char markup);
+	void createFilters(char markup);
 public:
+
 	/** Constructor of SWMarkupMgr.
 	 *
 	 * @param encoding The desired encoding.
 	 * @param markup The desired markup format.
 	 */
-        MarkupFilterMgr(char markup = FMT_THML, char encoding = ENC_UTF8);
+	MarkupFilterMgr(char markup = FMT_THML, char encoding = ENC_UTF8);
 
 	/**
 	 * The destructor of SWMarkupMgr.
 	 */
-        ~MarkupFilterMgr();
+	~MarkupFilterMgr();
 
 	/** Markup sets/gets the markup after initialization
 	 * 
-	 * @param m The new markup or FMT_UNKNOWN if you just want to get the current markup.
+	 * @deprecated Use setMarkup / getMarkup
+	 *
+	 * @param m The new markup
 	 * @return The current (possibly changed) markup format.
 	 */
-        char Markup(char m = FMT_UNKNOWN);
+	SWDEPRECATED char Markup(char m = FMT_UNKNOWN) { if (m != FMT_UNKNOWN) setMarkup(m); return getMarkup(); }
+
+	/** getMarkup gets the markup after initialization
+	 * 
+	 * @return The current markup format.
+	 */
+	char getMarkup() const { return markup; }
+
+	/** setMarkup sets the markup after initialization
+	 * 
+	 * @param m The new markup
+	 */
+	void setMarkup(char m);
 
 	/**
 	 * Adds the render filters which are defined in "section" to the SWModule object "module".
 	 * @param module To this module the render filter(s) are added
 	 * @param section We use this section to get a list of filters we should apply to the module
 	 */	
-        virtual void AddRenderFilters(SWModule *module, ConfigEntMap &section);
+	virtual void addRenderFilters(SWModule *module, ConfigEntMap &section);
 };
 
 SWORD_NAMESPACE_END

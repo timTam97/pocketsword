@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  osismorph.h -	Implementation of OSISMorph
+ * osismorph.h -	class OSISMorph: an OptionFilter to handle morph
+ * 			information on words in modules marked up in OSIS
  *
- * $Id: osismorph.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osismorph.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** This Filter shows/hides morph tags in a OSIS text
+/** This Filter shows/hides morph tags in an OSIS text
  */
 class SWDLLEXPORT OSISMorph : public SWOptionFilter {
 public:

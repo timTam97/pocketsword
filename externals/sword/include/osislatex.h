@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osislatex.h -	Render filter for LaTeX of an OSIS module
+ * osislatex.h -	class OSISLaTeX: a RenderFilter which renders LaTeX
+ * 			from a module marked up in OSIS
  *
- * $Id: osislatex.h 3074 2014-03-05 00:30:21Z chrislit $
+ * $Id: osislatex.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -27,7 +28,7 @@
 
 SWORD_NAMESPACE_START
 
-/** this filter converts OSIS text to classed XHTML
+/** this filter converts OSIS text to LaTeX
  */
 class SWDLLEXPORT OSISLaTeX : public SWBasicFilter {
 private:
@@ -45,10 +46,13 @@ protected:
 	public:
 		bool osisQToTick;
 		bool inXRefNote;
-		bool BiblicalText;
+		bool isBiblicalText;
 		int suspendLevel;
+		bool firstCell;	// for tables, indicates whether a cell is the first one in a row
 		SWBuf wordsOfChristStart;
 		SWBuf wordsOfChristEnd;
+		SWBuf divLevel;	// divLevel "module", "testament, "bookgroup", "book", "majorsection", "section", "paragraph" , ignore others.
+		
 		TagStack *quoteStack;
 		TagStack *hiStack;
 		TagStack *titleStack;

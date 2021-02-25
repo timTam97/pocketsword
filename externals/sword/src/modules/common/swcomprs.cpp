@@ -2,7 +2,7 @@
  *
  *  swcomprs.cpp - 	a driver class that provides compression utilities
  *
- * $Id: swcomprs.cpp 3121 2014-03-13 09:44:43Z chrislit $
+ * $Id: swcomprs.cpp 3818 2020-10-19 13:41:05Z scribe $
  *
  * Copyright 1996-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -36,7 +36,7 @@ SWCompress::SWCompress()
 {
 	buf = zbuf = 0;
 	level = 6;
-	Init();
+	init();
 }
 
 
@@ -54,7 +54,7 @@ SWCompress::~SWCompress()
 }
 
 
-void SWCompress::Init()
+void SWCompress::init()
 {
 		if (buf)
 			free(buf);
@@ -72,51 +72,53 @@ void SWCompress::Init()
 }
 
 
-char *SWCompress::Buf(const char *ibuf, unsigned long *len) {
-	// setting an uncompressed buffer
+void SWCompress::setUncompressedBuf(const char *ibuf, unsigned long *len) {
 	if (ibuf) {
-		Init();
+		init();
 		slen = (len) ? *len : strlen(ibuf);
 		buf = (char *) calloc(slen + 1, 1);
 		memcpy(buf, ibuf, slen);
 	}
-
-	// getting an uncompressed buffer
 	if (!buf) {
 		buf = (char *)calloc(1,1); // be sure we at least allocate an empty buf for return;
 		direct = 1;
-		Decode();
-//		slen = strlen(buf);
-		if (len)
-			*len = slen;
+		decode();
+		if (len) *len = slen;
 	}
+}
+
+char *SWCompress::getUncompressedBuf(unsigned long *len) {
+	if (!buf) {
+		buf = (char *)calloc(1,1); // be sure we at least allocate an empty buf for return;
+		direct = 1;
+		decode();
+	}
+	if (len) *len = slen;
 	return buf;
 }
 
 
-char *SWCompress::zBuf(unsigned long *len, char *ibuf)
-{
-	// setting a compressed buffer
+void SWCompress::setCompressedBuf(unsigned long *len, char *ibuf) {
 	if (ibuf) {
-		Init();
+		init();
 		zbuf = (char *) malloc(*len);
 		memcpy(zbuf, ibuf, *len);
 		zlen = *len;
 	}
+	*len = zlen;
+}
 
-	// getting a compressed buffer
+char *SWCompress::getCompressedBuf(unsigned long *len) {
 	if (!zbuf) {
 		direct = 0;
-		Encode();
+		encode();
 	}
-
-	*len = zlen;
+	if (len) *len = zlen;
 	return zbuf;
 }
 
 
-unsigned long SWCompress::GetChars(char *ibuf, unsigned long len)
-{
+unsigned long SWCompress::getChars(char *ibuf, unsigned long len) {
 	if (direct) {
 		len = (((zlen - zpos) > (unsigned)len) ? len : zlen - zpos);
 		if (len > 0) {
@@ -136,8 +138,7 @@ unsigned long SWCompress::GetChars(char *ibuf, unsigned long len)
 }
 	
 
-unsigned long SWCompress::SendChars(char *ibuf, unsigned long len)
-{
+unsigned long SWCompress::sendChars(char *ibuf, unsigned long len) {
 	if (direct) {
 		if (buf) {
 //			slen = strlen(buf);
@@ -169,29 +170,27 @@ unsigned long SWCompress::SendChars(char *ibuf, unsigned long len)
 
 
 /******************************************************************************
- * SWCompress::Encode	- This function "encodes" the input stream into the
+ * SWCompress::encode	- This function "encodes" the input stream into the
  *						output stream.
- *						The GetChars() and SendChars() functions are
+ *						The getChars() and sendChars() functions are
  *						used to separate this method from the actual
  *						i/o.
  */
 
-void SWCompress::Encode(void)
-{
+void SWCompress::encode(void) {
 	cycleStream();
 }
 
 
 /******************************************************************************
- * SWCompress::Decode	- This function "decodes" the input stream into the
+ * SWCompress::decode	- This function "decodes" the input stream into the
  *						output stream.
- *						The GetChars() and SendChars() functions are
+ *						The getChars() and sendChars() functions are
  *						used to separate this method from the actual
  *						i/o.
  */
 
-void SWCompress::Decode(void)
-{
+void SWCompress::decode(void) {
 	cycleStream();
 }
 
@@ -201,9 +200,9 @@ void SWCompress::cycleStream() {
 	unsigned long len, totlen = 0;
 
 	do {
-		len = GetChars(buf, 1024);
+		len = getChars(buf, 1024);
 		if (len)
-			totlen += SendChars(buf, len);
+			totlen += sendChars(buf, len);
 	} while (len == 1024);
 
 	zlen = slen = totlen;

@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- *  zcom.h - 	code for class 'zCom'- a module that reads compressed text
- *     	       	files: ot and nt using indexs ??.vss
+ * zcom.h - 	class zCom: a module driver for uncompressed commentaries
+ * 		with entries sizes stored at 2 bytes
  *
- * $Id: zcom.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: zcom.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1996-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -32,6 +32,7 @@ SWORD_NAMESPACE_START
 
 class SWDLLEXPORT zCom : public zVerse, public SWCom {
 
+private:
 	VerseKey *lastWriteKey;
 	bool sameBlock(VerseKey * lastWriteKey, VerseKey * key);
 	int blockType;

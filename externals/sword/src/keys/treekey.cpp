@@ -3,7 +3,7 @@
  *  treekey.cpp -	code for class 'versekey'- a standard Biblical
  *			verse key
  *
- * $Id: treekey.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: treekey.cpp 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2002-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -29,10 +29,10 @@
 SWORD_NAMESPACE_START
 
 static const char *classes[] = {"TreeKey", "SWKey", "SWObject", 0};
-SWClass TreeKey::classdef(classes);
+static const SWClass classdef(classes);
 
 void TreeKey::init() {
-	myclass = &classdef;
+	myClass = &classdef;
 	unsnappedKeyText = "";
 	posChangeListener = 0;
 }

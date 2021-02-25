@@ -3,7 +3,7 @@
  *  osisheadings.cpp -	SWFilter descendant to hide or show headings
  *			in an OSIS module
  *
- * $Id: osisheadings.cpp 3190 2014-04-19 16:21:24Z scribe $
+ * $Id: osisheadings.cpp 3646 2019-06-10 03:46:13Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -51,6 +51,7 @@ namespace {
 		SWBuf heading;
 		int depth;
 		int headerNum;
+		bool canonical;
 
 		MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
 			clear();
@@ -62,6 +63,7 @@ namespace {
 			heading = "";
 			depth = 0;
 			headerNum = 0;
+			canonical=false;
 		}
 	};
 }
@@ -88,17 +90,17 @@ bool OSISHeadings::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 	// are we currently in a heading?
 	if (u->currentHeadingName.size()) {
 		u->heading.append(u->lastTextNode);
+		if (SWBuf("true") == tag.getAttribute("canonical")) u->canonical = true;
 		if (name == u->currentHeadingName) {
 			if (tag.isEndTag(u->sID)) {
 				if (!u->depth-- || u->sID) {
 					// see comment below about preverse div changed and needing to preserve the <title> container tag for old school pre-verse titles
 					// we've just finished a heading.  It's all stored up in u->heading
-					bool canonical = (SWBuf("true") == u->currentHeadingTag.getAttribute("canonical"));
 					bool preverse = (SWBuf("x-preverse") == u->currentHeadingTag.getAttribute("subType") || SWBuf("x-preverse") == u->currentHeadingTag.getAttribute("subtype"));
 
 					// do we want to put anything in EntryAttributes?
-					if (u->module->isProcessEntryAttributes() && (option || canonical || !preverse)) {
-						SWBuf buf; buf.appendFormatted("%i", u->headerNum++);
+					if (u->module->isProcessEntryAttributes() && (option || u->canonical || !preverse)) {
+						SWBuf hn; hn.appendFormatted("%i", u->headerNum++);
 						// leave the actual <title...> wrapper in if we're part of an old school preverse title
 						// because now frontend have to deal with preverse as a div which may or may not include <title> elements
 						// and they can't simply wrap all preverse material in <h1>, like they probably did previously
@@ -112,16 +114,21 @@ bool OSISHeadings::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 							heading += tag;
 						}
 						else heading = u->heading;
-						u->module->getEntryAttributes()["Heading"][(preverse)?"Preverse":"Interverse"][buf] = heading;
+						u->module->getEntryAttributes()["Heading"][(preverse)?"Preverse":"Interverse"][hn] = heading;
 
 						StringList attributes = u->currentHeadingTag.getAttributeNames();
 						for (StringList::const_iterator it = attributes.begin(); it != attributes.end(); it++) {
-							u->module->getEntryAttributes()["Heading"][buf][it->c_str()] = u->currentHeadingTag.getAttribute(it->c_str());
+							u->module->getEntryAttributes()["Heading"][hn][it->c_str()] = u->currentHeadingTag.getAttribute(it->c_str());
 						}
+						// if any title in the heading was canonical, then set canonical=true.
+						// TODO: split composite headings with both canonical and non-canonical headings
+						// into two heading attributes with proper canonical value on each
+						if (u->canonical) u->module->getEntryAttributes()["Heading"][hn]["canonical"] = "true";
 					}
 
 					// do we want the heading in the body?
-					if (!preverse && (option || canonical)) {
+					// if we're not processing entryAttributes, then it's not going anyplace else
+					if ((!preverse || !u->module->isProcessEntryAttributes())  && (option || u->canonical)) {
 						buf.append(u->currentHeadingTag);
 						buf.append(u->heading);
 						buf.append(tag);
@@ -148,6 +155,7 @@ bool OSISHeadings::handleToken(SWBuf &buf, const char *token, BasicFilterUserDat
 		u->sID = u->currentHeadingTag.getAttribute("sID");
 		u->depth = 0;
 		u->suspendTextPassThru = true;
+		u->canonical = (SWBuf("true") == tag.getAttribute("canonical"));
 
 		return true;
 	}

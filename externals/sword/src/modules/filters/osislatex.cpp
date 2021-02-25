@@ -2,7 +2,7 @@
  *
  *  osislatex.cpp -	Render filter for LaTeX of an OSIS module
  *
- * $Id: osislatex.cpp 3119 2014-03-13 08:40:20Z chrislit $
+ * $Id: osislatex.cpp 3547 2017-12-10 05:06:48Z scribe $
  *
  * Copyright 2011-2014 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -34,17 +34,45 @@
 SWORD_NAMESPACE_START
 
 const char *OSISLaTeX::getHeader() const {
+// can be used to return static start-up info, like packages to load. Not sure yet if I want to retain it.
+
 	const static char *header = "\
-		.divineName { font-variant: small-caps; }\n\
-		.wordsOfJesus { color: red; }\n\
-		.transChangeSupplied { font-style: italic; }\n\
-		.small, .sub, .sup { font-size: .83em }\n\
-		.sub             { vertical-align: sub }\n\
-		.sup             { vertical-align: super }\n\
-		.indent1         { margin-left: 10px }\n\
-		.indent2         { margin-left: 20px }\n\
-		.indent3         { margin-left: 30px }\n\
-		.indent4         { margin-left: 40px }\n\
+		\\LoadClass[11pt,a4paper,twoside,headinclude=true,footinclude=true,BCOR=0mm,DIV=calc]{scrbook}\n\
+		\\LoadClass[11pt,a4paper,twoside,headinclude=true,footinclude=true,BCOR=0mm,DIV=calc]{scrbook}\n\
+		\\NeedsTeXFormat{LaTeX2e}\n\
+		\\ProvidesClass{sword}[2015/03/29 CrossWire LaTeX class for Biblical texts]\n\
+		%\\sworddiclink{%s}{%s}{\n\
+		%\\sworddictref{%s}{%s}{\n\
+		%\\sworddict{%s}{\n\
+		%\\sworddivinename}{%s}{\n\
+		%\\swordfont{\n\
+		%\\swordfootnote[%c]{%s}{%s}{%s}{%s}{\n\
+		%\\swordfootnote{%s}{%s}{%s}{\n\
+		%\\swordfootnote{%s}{%s}{%s}{%s}{\n\
+		%\\swordmorph{\n\
+		%\\swordmorph[Greek]{%s}\n\
+		%\\swordmorph[lemma]{%s}\n\
+		%\\swordmorph{%s}\n\
+		%\\swordpoetryline{\n\
+		%\\swordquote{\n\
+		%\\swordref{%s}{%s}{\n\
+		%\\swordsection{\n\
+		%\\swordsection{}{\n\
+		%\\swordsection{book}{\n\
+		%\\swordsection{sechead}{\n\
+		%\\swordstrong[Greek]{\n\
+		%\\swordstrong[Greektense]{\n\
+		%\\swordstrong[Hebrew]{\n\
+		%\\swordstrong[Hebrewtense]{\n\
+		%\\swordstrong[%s]{%s}{\n\
+		%\\swordstrong{%s}{%s}\n\
+		%\\swordtitle{\n\
+		%\\swordtranschange{supplied}{\n\
+		%\\swordtranschange{tense}{\n\
+		%\\swordwoj{\n\
+		%\\swordxref{\n\
+		%\\swordxref{%s}{\n\
+		%\\swordxref{%s}{%s}{\n\
 	";
 	return header;
 }
@@ -80,9 +108,8 @@ void processLemma(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 			//	show = false;
 			//else {
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<small><em class=\"strongs\">&lt;<a href=\"passagestudy.jsp?action=showStrongs&type=%s&value=%s\" class=\"strongs\">%s</a>&gt;</em></small>",
+					buf.appendFormatted("\\swordstrong{%s}{%s}",
 							(gh.length()) ? gh.c_str() : "", 
-							URL::encode(val2).c_str(),
 							val2);
 				}
 			//}
@@ -112,10 +139,9 @@ void processMorph(bool suspendTextPassThru, XMLTag &tag, SWBuf &buf) {
 				if ((*val == 'T') && (strchr("GH", val[1])) && (isdigit(val[2])))
 					val2+=2;
 				if (!suspendTextPassThru) {
-					buf.appendFormatted("<small><em class=\"morph\">(<a href=\"passagestudy.jsp?action=showMorph&type=%s&value=%s\" class=\"morph\">%s</a>)</em></small>",
-							URL::encode(tag.getAttribute("morph")).c_str(),
-							URL::encode(val).c_str(), 
-							val2);
+					buf.appendFormatted("\\swordmorph{%s}",
+							tag.getAttribute("morph")
+							);
 				}
 			} while (++i < count);
 		//}
@@ -161,18 +187,11 @@ class OSISLaTeX::TagStack : public std::stack<SWBuf> {
 OSISLaTeX::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key), quoteStack(new TagStack()), hiStack(new TagStack()), titleStack(new TagStack()), lineStack(new TagStack()) {
 	inXRefNote    = false;
 	suspendLevel = 0;
-	wordsOfChristStart = "<span class=\"wordsOfJesus\"> ";
-	wordsOfChristEnd   = "</span> ";
-	if (module) {
-		osisQToTick = ((!module->getConfigEntry("OSISqToTick")) || (strcmp(module->getConfigEntry("OSISqToTick"), "false")));
-		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
-	}
-	else {
-		osisQToTick = true;	// default
-		version = "";
-	}
+	divLevel = "module";
+	wordsOfChristStart = "\\swordwoj{";
+	wordsOfChristEnd   = "}";
 	consecutiveNewlines = 0;
+	firstCell = false;
 }
 
 OSISLaTeX::MyUserData::~MyUserData() {
@@ -184,13 +203,14 @@ OSISLaTeX::MyUserData::~MyUserData() {
 
 void OSISLaTeX::MyUserData::outputNewline(SWBuf &buf) {
 	if (++consecutiveNewlines <= 2) {
-		outText("<br />\n", buf, this);
+		outText("//\n", buf, this);
 		supressAdjacentWhitespace = true;
 	}
 }
 bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData) {
 	MyUserData *u = (MyUserData *)userData;
 	SWBuf scratch;
+	
 	bool sub = (u->suspendTextPassThru) ? substituteToken(scratch, token) : substituteToken(buf, token);
 	if (!sub) {
   // manually process if it wasn't a simple substitution
@@ -229,13 +249,11 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					// for rendering ruby chars properly ^_^
 					buf -= lastText.length();
 					
-					outText("<ruby><rb>", buf, u);
+					outText("\\ruby{", buf, u);
 					outText(lastText, buf, u);
-					val = strchr(attrib, ':');
-					val = (val) ? (val + 1) : attrib;
-					outText("</rb><rp>(</rp><rt>", buf, u);
-					outText(val, buf, u);
-					outText("</rt><rp>)</rp></ruby>", buf, u);
+					outText("}{", buf, u);
+					outText(attrib, buf, u);
+					outText("}", buf, u);
 				}
 				if (!morphFirst) {
 					processLemma(u->suspendTextPassThru, tag, buf);
@@ -252,12 +270,12 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 					outText(val, buf, u);
 				}
 
-				/*if (endTag)
-					buf += "}";*/
+				
 			}
 		}
 
 		// <note> tag
+		
 		else if (!strcmp(tag.getName(), "note")) {
 			if (!tag.isEndTag()) {
 				SWBuf type = tag.getAttribute("type");
@@ -270,38 +288,38 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 
 					if (!strongsMarkup) {	// leave strong's markup notes out, in the future we'll probably have different option filters to turn different note types on or off
 						SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
+						SWBuf footnoteBody = "";
+						if (u->module){
+							footnoteBody += u->module->getEntryAttributes()["Footnote"][footnoteNumber]["body"];
+						}
 						SWBuf noteName = tag.getAttribute("n");
-						VerseKey *vkey = NULL;
-						char ch = ((tag.getAttribute("type") && ((!strcmp(tag.getAttribute("type"), "crossReference")) || (!strcmp(tag.getAttribute("type"), "x-cross-ref")))) ? 'x':'n');
 
 						u->inXRefNote = true; // Why this change? Ben Morgan: Any note can have references in, so we need to set this to true for all notes
 //						u->inXRefNote = (ch == 'x');
 
-						// see if we have a VerseKey * or descendant
-						SWTRY {
-							vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-						}
-						SWCATCH ( ... ) {	}
-						if (vkey) {
-							//printf("URL = %s\n",URL::encode(vkey->getText()).c_str());
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c%s</sup></small></a>",
-								ch, 
-								URL::encode(footnoteNumber.c_str()).c_str(), 
-								URL::encode(u->version.c_str()).c_str(), 
-								URL::encode(vkey->getText()).c_str(), 
-								ch,
-								ch, 
-								(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
+						if (u->vkey) {
+							//printf("URL = %s\n",URL::encode(u->vkey->getText()).c_str());
+							buf.appendFormatted("\\swordfootnote{%s}{%s}{%s}{%s}{%s}{",
+								 
+								footnoteNumber.c_str(), 
+								u->version.c_str(), 
+								u->vkey->getText(), 
+								tag.getAttribute("type"),
+								(renderNoteNumbers ? noteName.c_str() : ""));
+							if (u->module) {
+								outText( u->module->renderText(footnoteBody).c_str(), buf, u);
+							}
 						}
 						else {
-							buf.appendFormatted("<a href=\"passagestudy.jsp?action=showNote&type=%c&value=%s&module=%s&passage=%s\"><small><sup class=\"%c\">*%c%s</sup></small></a>",
-								ch, 
-								URL::encode(footnoteNumber.c_str()).c_str(), 
-								URL::encode(u->version.c_str()).c_str(), 
-								URL::encode(u->key->getText()).c_str(),  
-								ch,
-								ch, 
-								(renderNoteNumbers ? URL::encode(noteName.c_str()).c_str() : ""));
+							buf.appendFormatted("\\swordfootnote{%s}{%s}{%s}{%s}{%s}{",
+								footnoteNumber.c_str(), 
+								u->version.c_str(), 
+								u->key->getText(),
+								tag.getAttribute("type"),  
+								(renderNoteNumbers ? noteName.c_str() : ""));
+							if (u->module) {
+								outText( u->module->renderText(footnoteBody).c_str(), buf, u);
+							}
 						}
 					}
 				}
@@ -310,7 +328,8 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			if (tag.isEndTag()) {
 				u->suspendTextPassThru = (--u->suspendLevel);
 				u->inXRefNote = false;
-				u->lastSuspendSegment = ""; // fix/work-around for nasb devineName in note bug
+				u->lastSuspendSegment = ""; // fix/work-around for nasb divineName in note bug
+				outText("}", buf, u);
 			}
 		}
 
@@ -362,7 +381,7 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 						// Compensate for starting :
 						ref = the_ref + 1;
 
-						int size = target.size() - ref.size() - 1;
+						int size = (int)(target.size() - ref.size() - 1);
 						work.setSize(size);
 						strncpy(work.getRawData(), target, size);
 
@@ -373,22 +392,22 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 
 					if(is_scripRef)
 					{
-						buf.appendFormatted("<a href=\"passagestudy.jsp?action=showRef&type=scripRef&value=%s&module=\">",
-							URL::encode(ref.c_str()).c_str()
+						buf.appendFormatted("\\swordxref{%s}{",
+							ref.c_str()
 //							(work.size()) ? URL::encode(work.c_str()).c_str() : "")
 							);
 					}
 					else
 					{
 						// Dictionary link, or something
-						buf.appendFormatted("<a href=\"sword://%s/%s\">",
-							URL::encode(work.c_str()).c_str(),
-							URL::encode(ref.c_str()).c_str()
+						buf.appendFormatted("\\sworddiclink{%s}{%s}{", // work, entry
+							work.c_str(),
+							ref.c_str()
 							);
 					}
 				}
 				else {
-					outText("</a>", buf, u);
+					outText("}", buf, u);
 				}
 			}
 		}
@@ -398,12 +417,12 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			// start line marker
 			if (tag.getAttribute("sID") || (!tag.isEndTag() && !tag.isEmpty())) {
 				// nested lines plus if the line itself has an x-indent type attribute value
-				outText(SWBuf("<span class=\"line indent").appendFormatted("%d\">", u->lineStack->size() + (SWBuf("x-indent") == tag.getAttribute("type")?1:0)).c_str(), buf, u);
+				outText("\\swordpoetryline{", buf, u);
 				u->lineStack->push(tag.toString());
 			}
 			// end line marker
 			else if (tag.getAttribute("eID") || tag.isEndTag()) {
-				outText("</span>", buf, u);
+				outText("}", buf, u);
 				u->outputNewline(buf);
 				if (u->lineStack->size()) u->lineStack->pop();
 			}
@@ -450,61 +469,36 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		}
 
 		// <title>
+		
 		else if (!strcmp(tag.getName(), "title")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				VerseKey *vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-				if (vkey && !vkey->getVerse()) {
-					if (!vkey->getChapter()) {
-						if (!vkey->getBook()) {
-							if (!vkey->getTestament()) {
-								buf += "<h1 class=\"moduleHeader\">";
-								tag.setAttribute("pushed", "h1");
-							}
-							else {
-								buf += "<h1 class=\"testamentHeader\">";
-								tag.setAttribute("pushed", "h1");
-							}
-						}
-						else {
-							buf += "<h1 class=\"bookHeader\">";
-							tag.setAttribute("pushed", "h1");
-						}
-					}
-					else {
-						buf += "<h2 class=\"chapterHeader\">";
-						tag.setAttribute("pushed", "h2");
-					}
-				}
-				else {
-					buf += "<h3>";
-					tag.setAttribute("pushed", "h3");
-				}
-				u->titleStack->push(tag.toString());
+				const char *tmp = tag.getAttribute("type");
+				bool hasType    = tmp;
+				SWBuf type      = tmp;
+				
+				outText("\n\\swordtitle{", buf, u);
+				outText(u->divLevel, buf, u);
+				outText("}{", buf, u);
+				
+				if (hasType) outText(type, buf, u);
+				else outText("", buf, u);
+				
+				outText("}{", buf, u);
 			}
 			else if (tag.isEndTag()) {
-				if (!u->titleStack->empty()) {
-					XMLTag tag(u->titleStack->top());
-					if (u->titleStack->size()) u->titleStack->pop();
-					SWBuf pushed = tag.getAttribute("pushed");
-					if (pushed.size()) {
-						buf += (SWBuf)"</" + pushed + ">\n\n";
-					}
-					else {
-						buf += "</h3>\n\n";
-					}
-					++u->consecutiveNewlines;
-					u->supressAdjacentWhitespace = true;
-				}
+				outText( "}", buf, u);
+				++u->consecutiveNewlines;
+				u->supressAdjacentWhitespace = true;	
 			}
 		}
 		
 		// <list>
 		else if (!strcmp(tag.getName(), "list")) {
 			if((!tag.isEndTag()) && (!tag.isEmpty())) {
-				outText("<ul>\n", buf, u);
+				outText("\n\\begin{itemize}", buf, u);
 			}
 			else if (tag.isEndTag()) {
-				outText("</ul>\n", buf, u);
+				outText("\n\\end{itemize}", buf, u);
 				++u->consecutiveNewlines;
 				u->supressAdjacentWhitespace = true;
 			}
@@ -513,10 +507,9 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		// <item>
 		else if (!strcmp(tag.getName(), "item")) {
 			if((!tag.isEndTag()) && (!tag.isEmpty())) {
-				outText("\t<li>", buf, u);
+				outText("\n\\item ", buf, u);
 			}
 			else if (tag.isEndTag()) {
-				outText("</li>\n", buf, u);
 				++u->consecutiveNewlines;
 				u->supressAdjacentWhitespace = true;
 			}
@@ -524,23 +517,24 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		// <catchWord> & <rdg> tags (italicize)
 		else if (!strcmp(tag.getName(), "rdg") || !strcmp(tag.getName(), "catchWord")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				outText("<i>", buf, u);
+				outText("\\emph{", buf, u);
 			}
 			else if (tag.isEndTag()) {
-				outText("</i>", buf, u);
+				outText("}", buf, u);
 			}
 		}
 
 		// divineName  
 		else if (!strcmp(tag.getName(), "divineName")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				outText( "\\sworddivinename{", buf, u);
 				u->suspendTextPassThru = (++u->suspendLevel);
 			}
 			else if (tag.isEndTag()) {
 				SWBuf lastText = u->lastSuspendSegment.c_str();
 				u->suspendTextPassThru = (--u->suspendLevel);
 				if (lastText.size()) {
-					scratch.setFormatted("<span class=\"divineName\">%s</span>", lastText.c_str());
+					scratch.setFormatted("%s}", lastText.c_str());
 					outText(scratch.c_str(), buf, u);
 				}               
 			} 
@@ -555,7 +549,7 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
 				if (type == "bold" || type == "b" || type == "x-b") {
-					outText("<b>", buf, u);
+					outText("\\textbold{", buf, u);
 				}
 
 				// there is no officially supported OSIS overline attribute,
@@ -564,37 +558,22 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				// OSIS overline attribute is made available, these should all
 				// eventually be deprecated and never documented that they are supported.
 				else if (type == "ol" || type == "overline" || type == "x-overline") {
-					outText("<span style=\"text-decoration:overline\">", buf, u);
+					outText("\\textoverline{", buf, u);
 				}
 
 				else if (type == "super") {
-					outText("<span class=\"sup\">", buf, u);
+					outText("\\textsuperscript{", buf, u);
 				}
 				else if (type == "sub") {
-					outText("<span class=\"sub\">", buf, u);
+					outText("\\textsubscript{", buf, u);
 				}
 				else {	// all other types
-					outText("<i>", buf, u);
+					outText("\\emph {", buf, u);
 				}
 				u->hiStack->push(tag.toString());
 			}
 			else if (tag.isEndTag()) {
-				SWBuf type = "";
-				if (!u->hiStack->empty()) {
-					XMLTag tag(u->hiStack->top());
-					if (u->hiStack->size()) u->hiStack->pop();
-					type = tag.getAttribute("type");
-					if (!type.length()) type = tag.getAttribute("rend");
-				}
-				if (type == "bold" || type == "b" || type == "x-b") {
-					outText("</b>", buf, u);
-				}
-				else if (  	   type == "ol"
-						|| type == "super"
-						|| type == "sub") {
-					outText("</span>", buf, u);
-				}
-				else outText("</i>", buf, u);
+				outText("}", buf, u);
 			}
 		}
 
@@ -670,14 +649,12 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 
 				// just do all transChange tags this way for now
 				if ((type == "added") || (type == "supplied"))
-					outText("<span class=\"transChangeSupplied\">", buf, u);
+					outText("\\swordtranschange{supplied}{", buf, u);
 				else if (type == "tenseChange")
-					buf += "*";
+					outText( "\\swordtranschange{tense}{", buf, u);
 			}
 			else if (tag.isEndTag()) {
-				SWBuf type = u->lastTransChange;
-				if ((type == "added") || (type == "supplied"))
-					outText("</span>", buf, u);
+				outText("}", buf, u);
 			}
 			else {	// empty transChange marker?
 			}
@@ -695,48 +672,58 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 				}
 				filepath += src;
 
-				// images become clickable, if the UI supports showImage.
-				outText("<a href=\"passagestudy.jsp?action=showImage&value=", buf, u);
-				outText(URL::encode(filepath.c_str()).c_str(), buf, u);
-				outText("&module=", buf, u);
-				outText(URL::encode(u->version.c_str()).c_str(), buf, u);
-				outText("\">", buf, u);
-
-				outText("<img src=\"file:", buf, u);
-				outText(filepath, buf, u);
-				outText("\" border=\"0\" />", buf, u);
-
-				outText("</a>", buf, u);
+				outText("\\figure{", buf, u);
+				outText("\\includegraphics{", buf, u);
+				outText(filepath.c_str(), buf, u);
+				outText("}}", buf, u);
+				
 			}
 		}
 
 		// ok to leave these in
 		else if (!strcmp(tag.getName(), "div")) {
 			SWBuf type = tag.getAttribute("type");
-			if (type == "bookGroup") {
+			if (type == "module") {
+				u->divLevel = type;
+				outText("\n", buf, u);
+			}			
+			else if (type == "testament") {
+				u->divLevel = type;
+				outText("\n", buf, u);
+			}
+			else if (type == "bookGroup") {
+				u->divLevel = type;
+				outText("\n", buf, u);
 			}
 			else if (type == "book") {
-			}
-			else if (type == "section") {
+				u->divLevel = type;
+				outText("\n", buf, u);
 			}
 			else if (type == "majorSection") {
+				u->divLevel = type;
+				outText("\n", buf, u);
 			}
-			else {
-				buf += tag;
+			else if (type == "section") {
+				u->divLevel = type;
+				outText("\n", buf, u);
+			}
+			else if (type == "paragraph") {
+				u->divLevel = type;
+				outText("\n", buf, u);
 			}
 		}
 		else if (!strcmp(tag.getName(), "span")) {
-			buf += tag;
+			outText( "", buf, u);
 		}
 		else if (!strcmp(tag.getName(), "br")) {
-			buf += tag;
+			outText( "\\", buf, u);
 		}
 		else if (!strcmp(tag.getName(), "table")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<table><tbody>\n";
+				outText( "\n\\begin{tabular}", buf, u);
 			}
 			else if (tag.isEndTag()) {
-				buf += "</tbody></table>\n";
+				outText( "\n\\end{tabular}", buf, u);
 				++u->consecutiveNewlines;
 				u->supressAdjacentWhitespace = true;
 			}
@@ -744,19 +731,26 @@ bool OSISLaTeX::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 		}
 		else if (!strcmp(tag.getName(), "row")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "\t<tr>";
+				outText( "\n", buf, u);
+				u->firstCell = true;
 			}
 			else if (tag.isEndTag()) {
-				buf += "</tr>\n";
+				outText( "//", buf, u);
+				u->firstCell = false;
 			}
 			
 		}
 		else if (!strcmp(tag.getName(), "cell")) {
 			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
-				buf += "<td>";
+				if (u->firstCell == false) {
+					outText( " & ", buf, u);
+				}
+				else {
+					u->firstCell = false;
+				}
 			}
 			else if (tag.isEndTag()) {
-				buf += "</td>";
+				outText( "", buf, u);
 			}
 		}
 		else {

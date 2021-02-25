@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- *  gbfstrongs.h -	Implementation of GBFStrongs
+ * gbfstrongs.h -	class GBFStrongs: an OptionFilter to handle Strongs
+ * 			numbers on each word for modules marked up in GBF
  *
- * $Id: gbfstrongs.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: gbfstrongs.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

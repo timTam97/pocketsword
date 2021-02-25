@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  curlftpt.h  -	code for CURL impl of FTP Transport
+ * curlftpt.h -	CURL FTP implementation of RemoteTransport
  *
- * $Id: curlftpt.h 2980 2013-09-14 21:51:47Z scribe $
+ * $Id: curlftpt.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2004-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society

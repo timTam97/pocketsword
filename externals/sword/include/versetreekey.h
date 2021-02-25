@@ -1,9 +1,10 @@
 /******************************************************************************
  *
- *  versetreekey.h -	code for class 'VerseTreeKey'- a standard Biblical
- *			verse key
+ * versetreekey.h -	class VerseTreeKey: a specialized VerseKey which
+ * 			obtains its versification system from a module with
+ * 			a tree structure
  *
- * $Id: versetreekey.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: versetreekey.h 3808 2020-10-02 13:23:34Z scribe $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -40,12 +41,12 @@ SWORD_NAMESPACE_START
  */
 class SWDLLEXPORT VerseTreeKey : public VerseKey, public TreeKey::PositionChangeListener {
 
-	static SWClass classdef;
+private:
 	TreeKey *treeKey;
 //	vector<struct sbook> books;
 
 	void init(TreeKey *treeKey);
-	void syncVerseToTree();
+	void syncVerseToTree() const;
 	long lastGoodOffset;
 
 protected:
@@ -101,10 +102,11 @@ public:
 	virtual bool isTraversable() const { return true; }
 
 	virtual TreeKey *getTreeKey();
+	virtual const TreeKey *getTreeKey() const;
 
 	// TreeKey::PositionChangeListener interface
 	virtual void positionChanged();
-	bool internalPosChange;
+	mutable bool internalPosChange;
 
 	virtual void decrement(int steps = 1);
 	virtual void increment(int steps = 1);
@@ -112,7 +114,7 @@ public:
 	virtual void Normalize(char autocheck = 0);
 
 	virtual void setPosition(SW_POSITION newpos);
-	virtual long NewIndex() const;
+	virtual long newIndex() const;
 	// OPERATORS --------------------------------------------------------------------
 
 

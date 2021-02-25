@@ -3,7 +3,7 @@
  *  utf8transliterator.cpp -	SWFilter descendant to transliterate between
  *				ICU-supported scripts
  *
- * $Id: utf8transliterator.cpp 2908 2013-07-17 22:44:29Z chrislit $
+ * $Id: utf8transliterator.cpp 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 2001-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -161,8 +161,8 @@ void UTF8Transliterator::Load(UErrorCode &status)
 	UResourceBundle *bundle = 0, *transIDs = 0, *colBund = 0;
 	bundle = ures_openDirect(SW_RESDATA, translit_swordindex, &status);
 	if (U_FAILURE(status)) {
-//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
-//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
+		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
 		return;
 	}
 
@@ -179,7 +179,7 @@ void UTF8Transliterator::Load(UErrorCode &status)
 				UnicodeString id = ures_getUnicodeStringByIndex(colBund, 0, &status);
                         	UChar type = ures_getUnicodeStringByIndex(colBund, 1, &status).charAt(0);
 				UnicodeString resString = ures_getUnicodeStringByIndex(colBund, 2, &status);
-                        	SWLog::getSystemLog()->logDebug("ok so far");
+SWLOGD("ok so far");
 
 				 if (U_SUCCESS(status)) {
 					switch (type) {
@@ -194,9 +194,9 @@ void UTF8Transliterator::Load(UErrorCode &status)
 								0x0046 /*F*/) ?
 								UTRANS_FORWARD : UTRANS_REVERSE;
 		                                        //registry->put(id, resString, dir, visible);
-							SWLog::getSystemLog()->logDebug("instantiating %s ...", resString.getBuffer());
+SWLOGD("instantiating %s ...", resString.getBuffer());
 					    		registerTrans(id, resString, dir, status);
-							SWLog::getSystemLog()->logDebug("done.");
+SWLOGD("done.");
 	                                	}
 						break;
 					case 0x61: // 'a'
@@ -205,20 +205,15 @@ void UTF8Transliterator::Load(UErrorCode &status)
                                 		break;
 					}
         	                 }
-				 else {
-					 //SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get resString");
-				 }
+                	         else SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get resString");
 	                }
-			else {
-				//SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get row");
-			}
+			else SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get row");
 			ures_close(colBund);
 		}
 	}
-	else
-	{
-//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
-//		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+	else {
+		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: no resource index to load");
+		SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
 	}
 
 	ures_close(transIDs);
@@ -231,7 +226,7 @@ void  UTF8Transliterator::registerTrans(const UnicodeString& ID, const UnicodeSt
 		UTransDirection dir, UErrorCode &status )
 {
 #ifndef _ICUSWORD_
-		SWLog::getSystemLog()->logDebug("registering ID locally %s", ID.getBuffer());
+SWLOGD("registering ID locally %s", ID.getBuffer());
 		SWTransData swstuff;
 		swstuff.resource = resource;
 		swstuff.dir = dir;
@@ -246,25 +241,23 @@ bool UTF8Transliterator::checkTrans(const UnicodeString& ID, UErrorCode &status 
 {
 #ifndef _ICUSWORD_
 		Transliterator *trans = Transliterator::createInstance(ID, UTRANS_FORWARD, status);
-		if (!U_FAILURE(status))
-		{
+		if (!U_FAILURE(status)) {
 			// already have it, clean up and return true
-			SWLog::getSystemLog()->logDebug("already have it %s", ID.getBuffer());
+SWLOGD("already have it %s", ID.getBuffer());
 			delete trans;
 			return true;
 		}
 		status = U_ZERO_ERROR;
 	
 	SWTransMap::iterator swelement;
-	if ((swelement = transMap.find(ID)) != transMap.end())
-	{
-		SWLog::getSystemLog()->logDebug("found element in map");
+	if ((swelement = transMap.find(ID)) != transMap.end()) {
+SWLOGD("found element in map");
 		SWTransData swstuff = (*swelement).second;
 		UParseError parseError;
 		//UErrorCode status;
 		//std::cout << "unregistering " << ID << std::endl;
 		//Transliterator::unregister(ID);
-		SWLog::getSystemLog()->logDebug("resource is %s", swstuff.resource.getBuffer());
+SWLOGD("resource is %s", swstuff.resource.getBuffer());
 
 		// Get the rules
 		//std::cout << "importing: " << ID << ", " << resource << std::endl;
@@ -275,8 +268,8 @@ bool UTF8Transliterator::checkTrans(const UnicodeString& ID, UErrorCode &status 
 		//parser.parse(rules, isReverse ? UTRANS_REVERSE : UTRANS_FORWARD,
 		//        parseError, status);
 		if (U_FAILURE(status)) {
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get rules");
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to get rules");
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
 			return false;
 		}
 
@@ -284,13 +277,13 @@ bool UTF8Transliterator::checkTrans(const UnicodeString& ID, UErrorCode &status 
 		Transliterator *trans = Transliterator::createFromRules(ID, rules, swstuff.dir,
 			parseError,status);
 		if (U_FAILURE(status)) {
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to create transliterator");
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: line %s", parseError.line);
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: offset %d", parseError.offset);
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: preContext %s", *parseError.preContext);
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: postContext %s", *parseError.postContext);
-//			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: rules were");
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Failed to create transliterator");
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: status %s", u_errorName(status));
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: line %s", parseError.line);
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: offset %d", parseError.offset);
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: preContext %s", *parseError.preContext);
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: Parse error: postContext %s", *parseError.postContext);
+			SWLog::getSystemLog()->logError("UTF8Transliterator: ICU: rules were");
 //			SWLog::getSystemLog()->logError((const char *)rules);
 			return false;
 		}
@@ -301,8 +294,7 @@ bool UTF8Transliterator::checkTrans(const UnicodeString& ID, UErrorCode &status 
 		//Transliterator *trans = instantiateTrans(ID, swstuff.resource, swstuff.dir, parseError, status);
 		//return trans;
 	}
-	else
-	{
+	else {
 		return false;
 	}
 #else
@@ -332,9 +324,9 @@ bool UTF8Transliterator::addTrans(const char* newTrans, SWBuf* transList) {
 }
 
 
-Transliterator * UTF8Transliterator::createTrans(const UnicodeString& ID, UTransDirection dir, UErrorCode &status )
+icu::Transliterator * UTF8Transliterator::createTrans(const icu::UnicodeString& ID, UTransDirection dir, UErrorCode &status )
 {
-	Transliterator *trans = Transliterator::createInstance(ID,UTRANS_FORWARD,status);
+	icu::Transliterator *trans = icu::Transliterator::createInstance(ID,UTRANS_FORWARD,status);
 	if (U_FAILURE(status)) {
 		delete trans;
 		return NULL;
@@ -910,9 +902,9 @@ char UTF8Transliterator::processText(SWBuf &text, const SWKey *key, const SWModu
                 addTrans("NFC", &ID);
 
                 err = U_ZERO_ERROR;
-                Transliterator * trans = createTrans(UnicodeString(ID), UTRANS_FORWARD, err);
+                icu::Transliterator * trans = createTrans(icu::UnicodeString(ID), UTRANS_FORWARD, err);
                 if (trans && !U_FAILURE(err)) {
-                        UnicodeString target = UnicodeString(source);
+                        icu::UnicodeString target = icu::UnicodeString(source);
 			trans->transliterate(target);
 			text.setSize(text.size()*2);
 			len = ucnv_fromUChars(conv, text.getRawData(), text.size(), target.getBuffer(), target.length(), &err);

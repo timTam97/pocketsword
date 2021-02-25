@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osishtmlhref.h -	Implementation of OSISHTMLHREF
+ * osishtmlhref.h -	class OSISHTMLHREF: a RenderFilter to render HTMLHREF
+ * 			from modules marked up in OSIS
  *
- * $Id: osishtmlhref.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: osishtmlhref.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2003-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -41,12 +42,12 @@ protected:
 		bool osisQToTick;
 		bool inBold;	// TODO: obsolete. left for binary compat for 1.6.x
 		bool inXRefNote;
-		bool BiblicalText;
+		bool isBiblicalText;
 		int suspendLevel;
 		SWBuf wordsOfChristStart;
 		SWBuf wordsOfChristEnd;
-                TagStacks *tagStacks;	// TODO: modified to wrap all TagStacks necessary for this filter until 1.7.x
-//                TagStack *hiStack;	// TODO: commented out for binary compat for 1.6.x	 wrapped in tagStacks until 1.7.x
+		TagStacks *tagStacks;	// TODO: modified to wrap all TagStacks necessary for this filter until 1.7.x
+//		TagStack *hiStack;	// TODO: commented out for binary compat for 1.6.x	 wrapped in tagStacks until 1.7.x
 		SWBuf lastTransChange;
 		SWBuf w;
 		SWBuf fn;

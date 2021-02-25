@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- *  swlog.h -	definition of class SWLog used for logging messages
+ * swlog.h -	class SWLog: used for logging messages
  *
- * $Id: swlog.h 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: swlog.h 3822 2020-11-03 18:54:47Z scribe $
  *
  * Copyright 1997-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -26,21 +26,24 @@
 //---------------------------------------------------------------------------
 
 #include <defs.h>
+#include <time.h>
 
 SWORD_NAMESPACE_START
 
+
 class SWDLLEXPORT SWLog {
+
 protected:
 	char logLevel;
 	static SWLog *systemLog;
 
 public:
 
-	static const int LOG_ERROR;
-	static const int LOG_WARN;
-	static const int LOG_INFO;
-	static const int LOG_TIMEDINFO;
-	static const int LOG_DEBUG;
+	static const char LOG_ERROR;
+	static const char LOG_WARN;
+	static const char LOG_INFO;
+	static const char LOG_TIMEDINFO;
+	static const char LOG_DEBUG;
 
 	static SWLog *getSystemLog();
 	static void setSystemLog(SWLog *newLogger);
@@ -53,11 +56,13 @@ public:
 	void logWarning(const char *fmt, ...) const;
 	void logError(const char *fmt, ...) const;
 	void logInformation(const char *fmt, ...) const;
-	virtual void logTimedInformation(const char *fmt, ...) const;
 	void logDebug(const char *fmt, ...) const;
 
 	// Override this method if you want to have a custom logger
 	virtual void logMessage(const char *message, int level) const;
+
+	// Override if you need to use a special OS clock for timing
+	virtual void logTimedInformation(const char *fmt, ...) const;
 };
 
 SWORD_NAMESPACE_END

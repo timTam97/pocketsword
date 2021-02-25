@@ -1,8 +1,9 @@
 /******************************************************************************
  *
- *  osisxhtml.h -	Render filter for classed XHTML of an OSIS module
+ * osisxhtml.h -	class OSISXHTML: a RenderFilter to render classed XHTML
+ * 			markup for modules marked up in OSIS
  *
- * $Id: osisxhtml.h 3257 2014-09-23 01:08:24Z scribe $
+ * $Id: osisxhtml.h 3786 2020-08-30 11:35:14Z scribe $
  *
  * Copyright 2011-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -30,11 +31,12 @@ SWORD_NAMESPACE_START
 /** this filter converts OSIS text to classed XHTML
  */
 class SWDLLEXPORT OSISXHTML : public SWBasicFilter {
+
 private:
 	bool morphFirst;
 	bool renderNoteNumbers;
-protected:
 
+protected:
 	class TagStack;
 	virtual BasicFilterUserData *createUserData(const SWModule *module, const SWKey *key);
 	virtual bool handleToken(SWBuf &buf, const char *token, BasicFilterUserData *userData);
@@ -45,7 +47,7 @@ protected:
 	public:
 		bool osisQToTick;
 		bool inXRefNote;
-		bool BiblicalText;
+		bool isBiblicalText;
 		int suspendLevel;
 		SWBuf wordsOfChristStart;
 		SWBuf wordsOfChristEnd;

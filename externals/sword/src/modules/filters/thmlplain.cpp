@@ -3,7 +3,7 @@
  *  thmlplain.cpp -	SWFilter descendant to strip out all ThML tags or
  *			convert to ASCII rendered symbols
  *
- * $Id: thmlplain.cpp 2833 2013-06-29 06:40:28Z chrislit $
+ * $Id: thmlplain.cpp 3427 2016-07-03 14:30:33Z scribe $
  *
  * Copyright 1999-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -206,9 +206,15 @@ char ThMLPlain::processText(SWBuf &text, const SWKey *key, const SWModule *modul
 			continue;
 		}
 		if (intoken) {
-			if (tokpos < 2045)
+			if (tokpos < 2045) {
 				token[tokpos++] = *from;
+				//TODO: why is this + 2?  Are we trying to keep 2 or 3 nulls after the last valid char?
+				// tokpos has been incremented past the last valid token. it should be pointing to null
+				// +1 should give us 2 nulls, but we're +2 here, which actually keeps 3 nulls after the
+				// last valid char.  Why are we doing any of this?  These were written before SWBuf and should
+				// probably be switched to SWBuf, but perf tests before and after the switch should be run
 				token[tokpos+2] = 0;
+			}
 		}
 		else	text += *from;
 	}

@@ -2,7 +2,7 @@
  *
  *  teirtf.cpp -	TEI to RTF filter
  *
- * $Id: teirtf.cpp 3091 2014-03-10 06:52:42Z chrislit $
+ * $Id: teirtf.cpp 3695 2020-02-03 06:23:14Z refdoc $
  *
  * Copyright 2006-2013 CrossWire Bible Society (http://www.crosswire.org)
  *	CrossWire Bible Society
@@ -31,11 +31,11 @@ SWORD_NAMESPACE_START
 
 
 TEIRTF::MyUserData::MyUserData(const SWModule *module, const SWKey *key) : BasicFilterUserData(module, key) {
-	BiblicalText = false;
+	isBiblicalText = false;
 	inOsisRef = false;
 	if (module) {
 		version = module->getName();
-		BiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
+		isBiblicalText = (!strcmp(module->getType(), "Biblical Texts"));
 	}
 }
 
@@ -170,13 +170,7 @@ bool TEIRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *use
 					SWBuf type = tag.getAttribute("type");
 
 					SWBuf footnoteNumber = tag.getAttribute("swordFootnote");
-					VerseKey *vkey = 0;
-					// see if we have a VerseKey * or descendant
-					SWTRY {
-						vkey = SWDYNAMIC_CAST(VerseKey, u->key);
-					}
-					SWCATCH ( ... ) {	}
-					if (vkey) {
+					if (u->vkey) {
 						buf.appendFormatted("{\\super <a href=\"\">*%s</a>} ", footnoteNumber.c_str());
 					}
 					u->suspendTextPassThru = true;
@@ -205,6 +199,41 @@ bool TEIRTF::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *use
 			}
 		}
 
+		else if (!strcmp(tag.getName(), "graphic")) {
+			const char *src = tag.getAttribute("url");
+			if (!src)		// assert we have a src attribute
+				return false;
+
+			char* filepath = new char[strlen(u->module->getConfigEntry("AbsoluteDataPath")) + strlen(token)];
+			*filepath = 0;
+			strcpy(filepath, userData->module->getConfigEntry("AbsoluteDataPath"));
+			strcat(filepath, src);
+
+// we do this because BibleCS looks for this EXACT format for an image tag
+			buf += "<img src=\"";
+			buf += filepath;
+			buf += "\" />";
+			delete [] filepath;
+		}
+
+		// <list> <item>  - primitive implementation lacking numbered lists
+		else if (!strcmp(tag.getName(), "list")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\\par";
+			}
+			else if (tag.isEndTag()) {
+				buf += "\\par";
+				u->supressAdjacentWhitespace = true;
+			}
+		}
+		else if (!strcmp(tag.getName(), "item")) {
+			if ((!tag.isEndTag()) && (!tag.isEmpty())) {
+				buf += "\\tab* ";
+			}
+			else if (tag.isEndTag()) {
+				buf += "\\par";
+			}
+		}
 
 		else {
 			return false;  // we still didn't handle token
