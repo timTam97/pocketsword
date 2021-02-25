@@ -228,7 +228,7 @@ StringMgr* StringMgr::getSystemStringMgr() {
  */	
 char *StringMgr::upperUTF8(char *t, unsigned int maxlen) const {
 
-#ifndef _ICU_ || !defined (_APPLE_IOS_)
+#if !defined (_ICU_) || !defined (_APPLE_IOS_)
 
 	SWBuf orig = t;
 	const unsigned char* from = (unsigned char*)orig.c_str();
@@ -350,7 +350,7 @@ bool StringMgr::supportsUnicode() const {
 }
 
 
-#if defined (_ICU_) || (_APPLE_IOS_)
+#if defined (_ICU_) || defined (_APPLE_IOS_)
 
 char *ICUStringMgr::upperUTF8(char *buf, unsigned int maxlen) const {
 	char *ret = buf;
