@@ -27,7 +27,7 @@
 - (void)removeViewForHUD {
 	if(viewForHUD) {
 		removingHUDViewInProgress = YES;
-		[MBProgressHUD hideAllHUDsForView:viewForHUD animated:YES];
+		[MBProgressHUD hideHUDForView:viewForHUD animated:YES];
 	}
 	viewForHUD = nil;
 }
@@ -120,7 +120,7 @@
 		[viewForHUD addSubview:installHUD];
 		installHUD.delegate = self;
 		installHUD.removeFromSuperViewOnHide = YES;
-		installHUD.dimBackground = YES;
+		//installHUD.dimBackground = YES;
 		installHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
 		[installHUD showAnimated:YES];
 	}
@@ -244,7 +244,7 @@
 		installHUD.removeFromSuperViewOnHide = YES;
 		installHUD.label.text = NSLocalizedString(@"SearchDownloaderTitle", @"");
 		installHUD.detailsLabel.text = moduleToInstall;
-		installHUD.dimBackground = YES;
+		//installHUD.dimBackground = YES;
 	} else {
 		installHUD = nil;
 	}

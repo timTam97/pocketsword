@@ -492,18 +492,18 @@
 
 - (void)showHUDWithTitle:(NSString*)titleText withTick:(BOOL)tick {
 	UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:viewToUse];
-	HUD.delegate = self;
-	HUD.labelText = titleText;
+	MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:viewToUse];
+	hud.delegate = self;
+    hud.label.text = titleText;
 	if(tick) {
-		HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
+		hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 	} else {
-		HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
+		hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 	}
-	HUD.mode = MBProgressHUDModeCustomView;
-	[viewToUse addSubview:HUD];
-	[HUD show:YES];
-	[HUD hide:YES afterDelay:0.85];
+	hud.mode = MBProgressHUDModeCustomView;
+	[viewToUse addSubview:hud];
+	[hud showAnimated:YES];
+	[hud hideAnimated:YES afterDelay:0.85];
 }
 
 - (void)strongsButtonPressed:(id)sender {

@@ -556,10 +556,10 @@
 + (void)displayTitle:(NSString*)title {
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
 	hud.mode = MBProgressHUDModeText;
-	hud.labelText = [PSModuleController createRefString:title];
+    hud.label.text = [PSModuleController createRefString:title];
 	hud.removeFromSuperViewOnHide = YES;
 	
-	[hud hide:YES afterDelay:0.75];
+	[hud hideAnimated:YES afterDelay:0.75];
 }
 
 - (void)redisplayChapterWithDefaults {

@@ -237,10 +237,10 @@
 	if(indexData) {
 		indexDownloadHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 		indexDownloadHUD.mode = MBProgressHUDModeCustomView;
-		[indexDownloadHUD hide:YES afterDelay:2];
+		[indexDownloadHUD hideAnimated:YES afterDelay:2];
 		[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];
 	} else {
-		[indexDownloadHUD hide:YES];
+		[indexDownloadHUD hideAnimated:YES];
 		//perhaps dodgy, display a warning.
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
 		[alertView show];

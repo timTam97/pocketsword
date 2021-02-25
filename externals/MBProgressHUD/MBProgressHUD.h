@@ -1,12 +1,12 @@
 //
 //  MBProgressHUD.h
-//  Version 0.9.2
+//  Version 1.2.0
 //  Created by Matej Bukovinski on 2.4.09.
 //
 
 // This code is distributed under the terms and conditions of the MIT license.
 
-// Copyright (c) 2009-2015 Matej Bukovinski
+// Copyright © 2009-2020 Matej Bukovinski
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,6 +69,8 @@ typedef NS_ENUM(NSInteger, MBProgressHUDBackgroundStyle) {
     MBProgressHUDBackgroundStyleBlur
 };
 
+typedef void (^MBProgressHUDCompletionBlock)(void);
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -103,9 +105,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name Showing and hiding
 
 /**
- * Finds the top-most HUD subview and hides it. The counterpart to this method is showHUDAddedTo:animated:.
+ * Finds the top-most HUD subview that hasn't finished and hides it. The counterpart to this method is showHUDAddedTo:animated:.
  *
- * @note This method sets `removeFromSuperViewOnHide`. The HUD will automatically be removed from the view hierarchy when hidden.
+ * @note This method sets removeFromSuperViewOnHide. The HUD will automatically be removed from the view hierarchy when hidden.
  *
  * @param view The view that is going to be searched for a HUD subview.
  * @param animated If set to YES the HUD will disappear using the current animationType. If set to NO the HUD will not use
@@ -118,16 +120,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)hideHUDForView:(UIView *)view animated:(BOOL)animated;
 
 /**
- * Finds the top-most HUD subview and returns it.
+ * Finds the top-most HUD subview that hasn't finished and returns it.
  *
  * @param view The view that is going to be searched.
  * @return A reference to the last HUD subview discovered.
  */
-+ (nullable MBProgressHUD *)HUDForView:(UIView *)view;
++ (nullable MBProgressHUD *)HUDForView:(UIView *)view NS_SWIFT_NAME(forView(_:));
 
 /**
  * A convenience constructor that initializes the HUD with the view's bounds. Calls the designated constructor with
- * view.bounds as the parameter
+ * view.bounds as the parameter.
  *
  * @param view The view instance that will provide the bounds for the HUD. Should be the same instance as
  * the HUD's superview (i.e., the view that the HUD will be added to).
@@ -137,9 +139,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Displays the HUD.
  *
- * @note You need to make sure that the main thread completes its run loop soon after this method call so
- * the user interface can be updated. Call this method when your task is already set-up to be executed in a new thread
- * (e.g., when using something like NSOperation or calling an asynchronous call like NSURLRequest).
+ * @note You need to make sure that the main thread completes its run loop soon after this method call so that
+ * the user interface can be updated. Call this method when your task is already set up to be executed in a new thread
+ * (e.g., when using something like NSOperation or making an asynchronous call like NSURLRequest).
  *
  * @param animated If set to YES the HUD will appear using the current animationType. If set to NO the HUD will not use
  * animations while appearing.
@@ -176,12 +178,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (weak, nonatomic) id<MBProgressHUDDelegate> delegate;
 
-/*
+/**
+ * Called after the HUD is hidden.
+ */
+@property (copy, nullable) MBProgressHUDCompletionBlock completionBlock;
+
+/**
  * Grace period is the time (in seconds) that the invoked method may be run without
  * showing the HUD. If the task finishes before the grace time runs out, the HUD will
  * not be shown at all.
  * This may be used to prevent HUD display for very short tasks.
  * Defaults to 0 (no grace time).
+ * @note The graceTime needs to be set before the hud is shown. You thus can't use `showHUDAddedTo:animated:`,
+ * but instead need to alloc / init the HUD, configure the grace time and than show it manually.
  */
 @property (assign, nonatomic) NSTimeInterval graceTime;
 
@@ -243,7 +252,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * When enabled, the bezel center gets slightly affected by the device accelerometer data.
- * Has no effect on iOS < 7.0. Defaults to YES.
+ * Defaults to NO.
+ *
+ * @note This can cause main thread checker assertions on certain devices. https://github.com/jdg/MBProgressHUD/issues/552
  */
 @property (assign, nonatomic, getter=areDefaultMotionEffectsEnabled) BOOL defaultMotionEffectsEnabled UI_APPEARANCE_SELECTOR;
 
@@ -254,6 +265,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic) float progress;
 
+/// @name ProgressObject
+
+/**
+ * The NSProgress object feeding the progress information to the progress indicator.
+ */
+@property (strong, nonatomic, nullable) NSProgress *progressObject;
+
 /// @name Views
 
 /**
@@ -262,13 +280,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic, readonly) MBBackgroundView *bezelView;
 
 /**
- * View coving the entire HUD area, placed behind bezelView.
+ * View covering the entire HUD area, placed behind bezelView.
  */
 @property (strong, nonatomic, readonly) MBBackgroundView *backgroundView;
 
 /**
  * The UIView (e.g., a UIImageView) to be shown when the HUD is in MBProgressHUDModeCustomView.
- * The view should implement intrinsicContentSize for proper sizing. For best results use approximately 37 by 37 pixel.
+ * The view should implement intrinsicContentSize for proper sizing. For best results use approximately 37 by 37 pixels.
  */
 @property (strong, nonatomic, nullable) UIView *customView;
 
@@ -284,7 +302,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic, readonly) UILabel *detailsLabel;
 
 /**
- * A button that is placed below the labels. Visible only if a target / action is added.
+ * A button that is placed below the labels. Visible only if a target / action is added and a title is assigned..
  */
 @property (strong, nonatomic, readonly) UIButton *button;
 
@@ -315,19 +333,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Indicator progress color.
- * Defaults to white [UIColor whiteColor]
+ * Defaults to white [UIColor whiteColor].
  */
 @property (nonatomic, strong) UIColor *progressTintColor;
 
 /**
  * Indicator background (non-progress) color.
- * Only applicable on iOS version older than iOS 7.
- * Defaults to translucent white (alpha 0.1)
+ * Only applicable on iOS versions older than iOS 7.
+ * Defaults to translucent white (alpha 0.1).
  */
 @property (nonatomic, strong) UIColor *backgroundTintColor;
 
 /*
- * Display mode - NO = round or YES = annular. De+faults to round.
+ * Display mode - NO = round or YES = annular. Defaults to round.
  */
 @property (nonatomic, assign, getter = isAnnular) BOOL annular;
 
@@ -369,55 +387,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * The background style.
- * Defaults to MBProgressHUDBackgroundStyleBlur on iOS 7 or later and MBProgressHUDBackgroundStyleSolidColor otherwise.
- * @note Due to iOS 7 not supporting UIVisualEffectView the blur effect differs slightly between iOS 7 and later versions.
+ * Defaults to MBProgressHUDBackgroundStyleBlur.
  */
 @property (nonatomic) MBProgressHUDBackgroundStyle style;
 
 /**
- * The background color or the blur tint color.
- * @note Due to iOS 7 not supporting UIVisualEffectView the blur effect differs slightly between iOS 7 and later versions.
+ * The blur effect style, when using MBProgressHUDBackgroundStyleBlur.
+ * Defaults to UIBlurEffectStyleLight.
  */
-@property (nonatomic, strong) UIColor *color;
+@property (nonatomic) UIBlurEffectStyle blurEffectStyle;
 
-@end
-
-@interface MBProgressHUD (Deprecated)
-
-+ (NSArray *)allHUDsForView:(UIView *)view __attribute__((deprecated("Store references when using more than one HUD per view.")));
-+ (NSUInteger)hideAllHUDsForView:(UIView *)view animated:(BOOL)animated __attribute__((deprecated("Store references when using more than one HUD per view.")));
-
-- (id)initWithWindow:(UIWindow *)window __attribute__((deprecated("Use initWithView: instead.")));
-
-- (void)show:(BOOL)animated __attribute__((deprecated("Use showAnimated: instead.")));
-- (void)hide:(BOOL)animated __attribute__((deprecated("Use hideAnimated: instead.")));
-- (void)hide:(BOOL)animated afterDelay:(NSTimeInterval)delay __attribute__((deprecated("Use hideAnimated:afterDelay: instead.")));
-
-typedef void (^MBProgressHUDCompletionBlock)();
-
-- (void)showWhileExecuting:(SEL)method onTarget:(id)target withObject:(id)object animated:(BOOL)animated __attribute__((deprecated("Use GCD directly.")));
-- (void)showAnimated:(BOOL)animated whileExecutingBlock:(dispatch_block_t)block __attribute__((deprecated("Use GCD directly.")));
-- (void)showAnimated:(BOOL)animated whileExecutingBlock:(dispatch_block_t)block completionBlock:(nullable MBProgressHUDCompletionBlock)completion __attribute__((deprecated("Use GCD directly.")));
-- (void)showAnimated:(BOOL)animated whileExecutingBlock:(dispatch_block_t)block onQueue:(dispatch_queue_t)queue __attribute__((deprecated("Use GCD directly.")));
-- (void)showAnimated:(BOOL)animated whileExecutingBlock:(dispatch_block_t)block onQueue:(dispatch_queue_t)queue
-     completionBlock:(nullable MBProgressHUDCompletionBlock)completion __attribute__((deprecated("Use GCD directly.")));
-@property (copy, nullable) MBProgressHUDCompletionBlock completionBlock __attribute__((deprecated("Use GCD directly.")));
-@property (assign) BOOL taskInProgress __attribute__((deprecated("No longer needed.")));
-
-@property (nonatomic, copy) NSString *labelText __attribute__((deprecated("Use label.text instead.")));
-@property (nonatomic, strong) UIFont *labelFont __attribute__((deprecated("Use label.font instead.")));
-@property (nonatomic, strong) UIColor *labelColor __attribute__((deprecated("Use label.textColor instead.")));
-@property (nonatomic, copy) NSString *detailsLabelText __attribute__((deprecated("Use detailsLabel.text instead.")));
-@property (nonatomic, strong) UIFont *detailsLabelFont __attribute__((deprecated("Use detailsLabel.font instead.")));
-@property (nonatomic, strong) UIColor *detailsLabelColor __attribute__((deprecated("Use detailsLabel.textColor instead.")));
-@property (assign, nonatomic) CGFloat opacity __attribute__((deprecated("Customize bezelView properties instead.")));
-@property (strong, nonatomic) UIColor *color __attribute__((deprecated("Customize the bezelView color instead.")));
-@property (assign, nonatomic) CGFloat xOffset __attribute__((deprecated("Set offset.x instead.")));
-@property (assign, nonatomic) CGFloat yOffset __attribute__((deprecated("Set offset.y instead.")));
-@property (assign, nonatomic) CGFloat cornerRadius __attribute__((deprecated("Set bezelView.layer.cornerRadius instead.")));
-@property (assign, nonatomic) BOOL dimBackground __attribute__((deprecated("Customize HUD background properties instead.")));
-@property (strong, nonatomic) UIColor *activityIndicatorColor __attribute__((deprecated("Use UIAppearance to customize UIActivityIndicatorView.")));
-@property (atomic, assign, readonly) CGSize size __attribute__((deprecated("Get the bezelView.frame.size instead.")));
+/**
+ * The background color or the blur tint color.
+ *
+ * Defaults to nil on iOS 13 and later and
+ * `[UIColor colorWithWhite:0.8f alpha:0.6f]`
+ * on older systems.
+ */
+@property (nonatomic, strong, nullable) UIColor *color;
 
 @end
 

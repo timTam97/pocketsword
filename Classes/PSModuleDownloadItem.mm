@@ -46,7 +46,7 @@
 		if(indexController) {
 			[indexController removeViewForHUD];
 		} else {
-			[MBProgressHUD hideAllHUDsForView:viewForHUD animated:YES];
+			[MBProgressHUD hideHUDForView:viewForHUD animated:YES];
 		}
 	}
 	viewForHUD = nil;
@@ -87,12 +87,12 @@
 	if(viewForHUD) {
 		installModuleHUD = [[MBProgressHUD alloc] initWithView:viewForHUD];
 		installModuleHUD.delegate = self;
-		installModuleHUD.labelText = NSLocalizedString(@"Installing", @"");
-		installModuleHUD.detailsLabelText = module.name;
+		installModuleHUD.label.text = NSLocalizedString(@"Installing", @"");
+		installModuleHUD.detailsLabel.text = module.name;
 		installModuleHUD.mode = MBProgressHUDModeDeterminate;
-		installModuleHUD.dimBackground = YES;
+		//installModuleHUD.dimBackground = YES;
 		[viewForHUD addSubview:installModuleHUD];
-		[installModuleHUD show:YES];
+		[installModuleHUD showAnimated:YES];
 	} else {
 		installModuleHUD = nil;
 	}
@@ -139,38 +139,38 @@
 			// show success msg
 			if(viewForHUD) {
 				installModuleHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
-				installModuleHUD.labelText = NSLocalizedString(@"InstalledButtonTitle", @"");
+				installModuleHUD.label.text = NSLocalizedString(@"InstalledButtonTitle", @"");
 				installModuleHUD.mode = MBProgressHUDModeCustomView;
-				[installModuleHUD hide:YES afterDelay:1];
+				[installModuleHUD hideAnimated:YES afterDelay:1];
 			} else {
 				UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 				installModuleHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 				installModuleHUD.delegate = self;
-				installModuleHUD.labelText = NSLocalizedString(@"InstalledButtonTitle", @"");
-				installModuleHUD.detailsLabelText = module.name;
+				installModuleHUD.label.text = NSLocalizedString(@"InstalledButtonTitle", @"");
+				installModuleHUD.detailsLabel.text = module.name;
 				installModuleHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
 				installModuleHUD.mode = MBProgressHUDModeCustomView;
 				[viewToUse addSubview:installModuleHUD];
-				[installModuleHUD show:YES];
-				[installModuleHUD hide:YES afterDelay:1];
+				[installModuleHUD showAnimated:YES];
+				[installModuleHUD hideAnimated:YES afterDelay:1];
 			}
 		} else if (failed) {
 			//show fail msg
 			if(viewForHUD) {
 				installModuleHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 				installModuleHUD.mode = MBProgressHUDModeCustomView;
-				[installModuleHUD hide:YES afterDelay:1];
+				[installModuleHUD hideAnimated:YES afterDelay:1];
 			} else {
 				UIView *viewToUse = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 				installModuleHUD = [[MBProgressHUD alloc] initWithView:viewToUse];
 				installModuleHUD.delegate = self;
-				installModuleHUD.labelText = NSLocalizedString(@"Error", @"");
-				installModuleHUD.detailsLabelText = [NSString stringWithFormat:@"%@:\n%@", NSLocalizedString(@"InstallProblem", @""), module.name];
+				installModuleHUD.label.text = NSLocalizedString(@"Error", @"");
+				installModuleHUD.detailsLabel.text = [NSString stringWithFormat:@"%@:\n%@", NSLocalizedString(@"InstallProblem", @""), module.name];
 				installModuleHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Cross.png"]];
 				installModuleHUD.mode = MBProgressHUDModeCustomView;
 				[viewToUse addSubview:installModuleHUD];
-				[installModuleHUD show:YES];
-				[installModuleHUD hide:YES afterDelay:1];
+				[installModuleHUD showAnimated:YES];
+				[installModuleHUD hideAnimated:YES afterDelay:1];
 			}
 		}
 	

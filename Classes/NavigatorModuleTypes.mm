@@ -157,7 +157,7 @@
 //	
 //	// Regiser for HUD callbacks so we can remove it from the window at the right time
 //	HUD.delegate = self;
-//	HUD.labelText = NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source");
+//	HUD.label.text = NSLocalizedString(@"RefreshingModuleSource", @"Refreshing Module Source");
 //	HUD.detailsLabelText = self.title;
 //	HUD.dimBackground = YES;
 //
