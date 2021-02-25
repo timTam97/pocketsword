@@ -21,10 +21,6 @@
 // ALog always displays output regardless of the DEBUG setting
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 
-// Required #defines for SWORD
-//#define _ICU_ 1
-#define _APPLE_IOS_ 1
-
 // Required #defines for SSZipArchive
 #define HAVE_INTTYPES_H 1
 #define HAVE_PKCRYPT 1
