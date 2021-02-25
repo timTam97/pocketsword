@@ -225,7 +225,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	indexData = nil;
 	
-	[indexDownloadHUD hide:YES];
+	[indexDownloadHUD hideAnimated:YES];
 	
 	//perhaps dodgy, display a warning.
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];

@@ -44,7 +44,7 @@
 
 #endif
 
-#ifdef (_APPLE_IOS_)
+#ifdef _APPLE_IOS_
 
 #include <unicode/ustring.h>
 

@@ -354,12 +354,12 @@
 		return;
 	}
 
-    DLog(@"Unzipping index archive...");
-	ZipArchive *arch = [[ZipArchive alloc] init];
-	[arch UnzipOpenFile:zippedIndex];
-    DLog(@"Unzipping to folder: %@", cluceneDir);
-	[arch UnzipFileTo:cluceneDir overWrite:YES];
-	[arch UnzipCloseFile];
+    DLog(@"Unzipping index archive to folder: %@", cluceneDir);
+    [SSZipArchive unzipFileAtPath:zippedIndex toDestination:cluceneDir];
+	//ZipArchive *arch = [[ZipArchive alloc] init];
+	//[arch UnzipOpenFile:zippedIndex];
+	//[arch UnzipFileTo:cluceneDir overWrite:YES];
+	//[arch UnzipCloseFile];
     DLog(@"Unzipping index archive...done");
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];

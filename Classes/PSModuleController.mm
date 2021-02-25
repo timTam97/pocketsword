@@ -159,10 +159,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[fileManager removeItemAtPath:outfile error:NULL];
 
 	//unzip the archive
-	ZipArchive *arch = [[ZipArchive alloc] init];
-	[arch UnzipOpenFile:zippedModule];
-	[arch UnzipFileTo:outfile overWrite:YES];
-	[arch UnzipCloseFile];
+    [SSZipArchive unzipFileAtPath:zippedModule toDestination:outfile];
+	//ZipArchive *arch = [[ZipArchive alloc] init];
+	//[arch UnzipOpenFile:zippedModule];
+	//[arch UnzipFileTo:outfile overWrite:YES];
+	//[arch UnzipCloseFile];
 	
 	//install the module/s contained in the archive:
 //	if(!internalModule) {

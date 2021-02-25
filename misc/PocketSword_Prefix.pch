@@ -20,3 +20,11 @@
 
 // ALog always displays output regardless of the DEBUG setting
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+// Required #defines for SSZipArchive
+#define HAVE_INTTYPES_H 1
+#define HAVE_PKCRYPT 1
+#define HAVE_STDINT_H 1
+#define HAVE_WZAES 1
+#define HAVE_ZLIB 1
+

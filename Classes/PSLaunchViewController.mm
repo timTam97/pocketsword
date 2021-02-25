@@ -266,10 +266,11 @@
 			[[NSFileManager defaultManager] removeItemAtPath: localePath error: NULL];//delete the currently installed ones, too.
 			
 			//unzip the archive
-			ZipArchive *arch = [[ZipArchive alloc] init];
-			[arch UnzipOpenFile:localesZIP];
-			[arch UnzipFileTo:swLocales overWrite:YES];
-			[arch UnzipCloseFile];
+            [SSZipArchive unzipFileAtPath:localesZIP toDestination:swLocales];
+			//ZipArchive *arch = [[ZipArchive alloc] init];
+			//[arch UnzipOpenFile:localesZIP];
+			//[arch UnzipFileTo:swLocales overWrite:YES];
+			//[arch UnzipCloseFile];
 			
 			[defaults setBool: YES forKey:LOCALES_VERSION];
 			[defaults synchronize];
