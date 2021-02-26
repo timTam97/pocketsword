@@ -413,6 +413,8 @@
 		D2BFE5D125E7788100E04366 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5B525E7788100E04366 /* GCDWebServerDataRequest.m */; };
 		D2BFE5D225E7788100E04366 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5B625E7788100E04366 /* GCDWebServerFileRequest.m */; };
 		D2BFE5D325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */; };
+		D2BFE5E325E89A8400E04366 /* UIScrollView+BottomRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5E125E89A8400E04366 /* UIScrollView+BottomRefreshControl.m */; };
+		D2BFE5E425E89A8400E04366 /* UIScrollView+BottomRefreshControl.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5E225E89A8400E04366 /* UIScrollView+BottomRefreshControl.h */; };
 		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
@@ -1149,6 +1151,8 @@
 		D2BFE5B525E7788100E04366 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
 		D2BFE5B625E7788100E04366 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
 		D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		D2BFE5E125E89A8400E04366 /* UIScrollView+BottomRefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+BottomRefreshControl.m"; sourceTree = "<group>"; };
+		D2BFE5E225E89A8400E04366 /* UIScrollView+BottomRefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+BottomRefreshControl.h"; sourceTree = "<group>"; };
 		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
@@ -1987,6 +1991,7 @@
 		0542F6C110BE75570088A721 /* externals */ = {
 			isa = PBXGroup;
 			children = (
+				D2BFE5E025E89A8400E04366 /* CCBottomRefreshControl */,
 				D2BFE59825E7788100E04366 /* GCDWebServer */,
 				D2BFDF7225E73AAA00E04366 /* ZipArchive */,
 				055C8A52173C9F49009FF47D /* MBProgressHUD */,
@@ -2486,6 +2491,16 @@
 			path = Requests;
 			sourceTree = "<group>";
 		};
+		D2BFE5E025E89A8400E04366 /* CCBottomRefreshControl */ = {
+			isa = PBXGroup;
+			children = (
+				D2BFE5E125E89A8400E04366 /* UIScrollView+BottomRefreshControl.m */,
+				D2BFE5E225E89A8400E04366 /* UIScrollView+BottomRefreshControl.h */,
+			);
+			name = CCBottomRefreshControl;
+			path = externals/CCBottomRefreshControl;
+			sourceTree = "<group>";
+		};
 		E94012860EFDD2D000DA9B7F /* clucene */ = {
 			isa = PBXGroup;
 			children = (
@@ -2526,6 +2541,7 @@
 				D2BFE5C525E7788100E04366 /* GCDWebServerStreamedResponse.h in Headers */,
 				D2BFE5C425E7788100E04366 /* GCDWebServerFileResponse.h in Headers */,
 				D2BFE5D325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
+				D2BFE5E425E89A8400E04366 /* UIScrollView+BottomRefreshControl.h in Headers */,
 				D2BFE5BB25E7788100E04366 /* GCDWebServerConnection.h in Headers */,
 				D2BFE55225E7701700E04366 /* SSZipArchive.h in Headers */,
 				D2BFE55325E7701700E04366 /* SSZipCommon.h in Headers */,
@@ -2980,6 +2996,7 @@
 				051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.mm in Sources */,
 				059419B012DAC76400A87B02 /* PSBookmarkAddViewController.mm in Sources */,
 				056BBE8012DD78D50029F3A2 /* PSBookmarks.mm in Sources */,
+				D2BFE5E325E89A8400E04366 /* UIScrollView+BottomRefreshControl.m in Sources */,
 				056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
 				056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
 				D2BFDF9F25E73AAB00E04366 /* mz_strm_wzaes.c in Sources */,
