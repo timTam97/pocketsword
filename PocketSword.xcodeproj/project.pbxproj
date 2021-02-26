@@ -294,8 +294,6 @@
 		05D6ABBF1097EAF300A5026E /* iPhoneHTTPServerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ABBA1097EAF300A5026E /* iPhoneHTTPServerDelegate.mm */; };
 		05D6ABC01097EAF300A5026E /* localhostAddresses.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ABBC1097EAF300A5026E /* localhostAddresses.m */; };
 		05D6ABC11097EAF300A5026E /* MyHTTPConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6ABBE1097EAF300A5026E /* MyHTTPConnection.mm */; };
-		05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */; };
-		05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */; };
 		05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DA77A013CD754D000A4B97 /* PSWebView.mm */; };
 		05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A313CD8E51000A4B97 /* blueArrow.png */; };
 		05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */; };
@@ -979,10 +977,6 @@
 		05D6ABBC1097EAF300A5026E /* localhostAddresses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = localhostAddresses.m; sourceTree = "<group>"; };
 		05D6ABBD1097EAF300A5026E /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHTTPConnection.h; sourceTree = "<group>"; };
 		05D6ABBE1097EAF300A5026E /* MyHTTPConnection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyHTTPConnection.mm; sourceTree = "<group>"; };
-		05DA778013CD7160000A4B97 /* EGORefreshTableFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableFooterView.h; sourceTree = "<group>"; };
-		05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableFooterView.m; sourceTree = "<group>"; };
-		05DA778213CD7160000A4B97 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
-		05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		05DA779F13CD754D000A4B97 /* PSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSWebView.h; path = Classes/PSWebView.h; sourceTree = "<group>"; };
 		05DA77A013CD754D000A4B97 /* PSWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSWebView.mm; path = Classes/PSWebView.mm; sourceTree = "<group>"; };
 		05DA77A313CD8E51000A4B97 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
@@ -2158,7 +2152,6 @@
 				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
 				05DA779F13CD754D000A4B97 /* PSWebView.h */,
 				05DA77A013CD754D000A4B97 /* PSWebView.mm */,
-				05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */,
 			);
 			name = "b & c";
 			sourceTree = "<group>";
@@ -2253,18 +2246,6 @@
 			);
 			name = "PS-downloads";
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		05DA777F13CD7160000A4B97 /* RefreshTableHeaderView */ = {
-			isa = PBXGroup;
-			children = (
-				05DA778013CD7160000A4B97 /* EGORefreshTableFooterView.h */,
-				05DA778113CD7160000A4B97 /* EGORefreshTableFooterView.m */,
-				05DA778213CD7160000A4B97 /* EGORefreshTableHeaderView.h */,
-				05DA778313CD7160000A4B97 /* EGORefreshTableHeaderView.m */,
-			);
-			name = RefreshTableHeaderView;
-			path = Classes/RefreshTableHeaderView;
 			sourceTree = "<group>";
 		};
 		05F84ED4191F4A82003350DE /* zcom4 */ = {
@@ -3004,8 +2985,6 @@
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */,
 				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
 				056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */,
-				05DA778413CD7160000A4B97 /* EGORefreshTableFooterView.m in Sources */,
-				05DA778613CD7160000A4B97 /* EGORefreshTableHeaderView.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */,
 				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
 				D2BFDFA225E73AAB00E04366 /* mz_os_posix.c in Sources */,

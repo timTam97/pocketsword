@@ -6,8 +6,6 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
-@class EGORefreshTableHeaderView;
-@class EGORefreshTableFooterView;
 @class PSWebView;
 
 @protocol PSWebViewDelegate
@@ -21,12 +19,7 @@
 @interface PSWebView : UIWebView {
 	id<PSWebViewDelegate> __weak psDelegate;
 
-	EGORefreshTableHeaderView *refreshHeaderView;
-    EGORefreshTableFooterView *refreshFooterView;
-	
-	//BOOL _reloadingHeader;
-    //BOOL _reloadingFooter;
-	BOOL _reloading;
+    BOOL _reloading;
     float cachedHeight;
 	
 	CGFloat topLength;
@@ -40,7 +33,6 @@
 @property CGFloat topLength;
 @property CGFloat bottomLength;
 @property BOOL autoFullscreenMode;
-//@property(assign,getter=isReloading) BOOL reloading;
 
 - (void)dataSourceDidFinishLoadingNewData;
 - (void)setupRefreshViews:(CGFloat)top bottom:(CGFloat)bottom;
