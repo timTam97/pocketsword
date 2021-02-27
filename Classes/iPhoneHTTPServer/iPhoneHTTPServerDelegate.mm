@@ -19,7 +19,7 @@
 	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
 	BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden ];
 	
-	CGRect frame = [[UIScreen mainScreen] applicationFrame];
+	CGRect frame = [[UIScreen mainScreen] bounds];
 	
 	//check if you should rotate the view, e.g. change width and height of the frame
 	BOOL rotate = NO;

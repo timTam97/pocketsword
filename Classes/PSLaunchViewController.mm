@@ -24,63 +24,32 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
-	UIImage *defaultImg;
 	CGRect aiFrame;
-	int displayMultiplier = 1;
-	if ([UIScreen mainScreen].scale > 1.1) {
-		// Retina display
-		displayMultiplier = 2;
-		if([UIScreen mainScreen].scale > 2.1) {
-			displayMultiplier = 3;
-		}
-	} else {
-		// non-Retina display
-	}
-	
-	if([PSResizing iPad]) {
+
+    if([PSResizing iPad]) {
 		
 		UIInterfaceOrientation uiOrientation = [[UIApplication sharedApplication] statusBarOrientation];
 		if(uiOrientation == UIInterfaceOrientationLandscapeLeft || uiOrientation == UIInterfaceOrientationLandscapeRight) {
-			defaultImg = [UIImage imageNamed:@"Default-Landscape~ipad.png"];
 			aiFrame = CGRectMake(494, 370, 37, 37);
 		} else {
-			defaultImg = [UIImage imageNamed:@"Default-Portrait~ipad.png"];
 			aiFrame = CGRectMake(366, 499, 37, 37);
 		}
 				
 	} else {
 		
 		CGRect screenRect = [[UIScreen mainScreen] bounds];
-		if(screenRect.size.height > 700) {
-			// 5.5 inch display.
-			defaultImg = [UIImage imageNamed:@"Default-736h.png"];
-		} else if(screenRect.size.height > 600) {
-			// 4.7 inch display.
-			defaultImg = [UIImage imageNamed:@"Default-667h.png"];
-		} else if(screenRect.size.height > 500) {
-			// 4 inch display.
-			defaultImg = [UIImage imageNamed:@"Default-568h.png"];
-		} else {
-			// 3.5 inch display.
-			defaultImg = [UIImage imageNamed:@"Default.png"];
-		}
-		int x=0, y=0, w=[defaultImg size].width, h=[defaultImg size].height;
-		CGImageRef imageRef = CGImageCreateWithImageInRect([defaultImg CGImage], CGRectMake(x, y*displayMultiplier, w*displayMultiplier, h*displayMultiplier));
-		defaultImg = [UIImage imageWithCGImage:imageRef];
-		CGImageRelease(imageRef);
-		x = (int)(screenRect.size.width / 2.0f - (37.0f / 2.0f));
-		y = (int)(screenRect.size.height / 2.0f - (37.0f / 2.0f));
-		aiFrame = CGRectMake(x, y, 37, 37);
+		aiFrame = CGRectMake((screenRect.size.width / 2.0f - (37.0f / 2.0f)), (screenRect.size.height / 2.0f - (37.0f / 2.0f)), 37, 37);
 		
 	}
-	
-	UIImageView *launchImgView = [[UIImageView alloc] initWithImage:defaultImg];
+    
+    UIView *base = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    base.backgroundColor = [UIColor colorWithHue:202.0f/360.0f saturation:0.11f brightness:0.4f alpha:1.0f];// the same grey as the launch image bg
 	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	activityInd.hidesWhenStopped = NO;
-	[launchImgView addSubview:activityInd];
+	[base addSubview:activityInd];
 	activityInd.frame = aiFrame;
 	[activityInd startAnimating];
-	self.view = launchImgView;
+	self.view = base;
 }
 
 + (void)resetPreferences {
