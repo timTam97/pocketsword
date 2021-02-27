@@ -56,11 +56,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableViewFromNotification) name:NotificationHistoryChanged object:nil];
 }
 
-- (void)viewDidUnload {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NotificationHistoryChanged object:nil];
-	[super viewDidUnload];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
 	
 	[super viewWillAppear:animated];

@@ -122,14 +122,6 @@ line-height: 130%%;\n\
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-
-
 - (void)closeUnlockView:(id)sender {
 	[self dismissModalViewControllerAnimated:YES];
 }
