@@ -238,7 +238,7 @@
 		
 		NSUInteger l = [separatorData length];
 
-		for (int i = 0; i < [postDataChunk length] - l; i++)
+		for (NSUInteger i = 0; i < [postDataChunk length] - l; i++)
 		{
 			NSRange searchRange = {i, l};
 

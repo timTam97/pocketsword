@@ -29,7 +29,7 @@
 #include <localemgr.h>
 #endif
 
-@class PSWebView;//remove after the commentary tab is pulled from the XIB.
+//@class PSWebView;//remove after the commentary tab is pulled from the XIB.
 
 @class PSModuleSelectorController;
 @class Swordmodule;

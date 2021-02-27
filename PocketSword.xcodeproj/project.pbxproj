@@ -413,6 +413,9 @@
 		D2BFE5D325E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */; };
 		D2BFE5E325E89A8400E04366 /* UIScrollView+BottomRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFE5E125E89A8400E04366 /* UIScrollView+BottomRefreshControl.m */; };
 		D2BFE5E425E89A8400E04366 /* UIScrollView+BottomRefreshControl.h in Headers */ = {isa = PBXBuildFile; fileRef = D2BFE5E225E89A8400E04366 /* UIScrollView+BottomRefreshControl.h */; };
+		D2BFE5EB25E9BF0500E04366 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5EA25E9BF0500E04366 /* WebKit.framework */; };
+		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
+		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
 		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
@@ -1080,8 +1083,6 @@
 		D2BFDF4D25E7091B00E04366 /* canon_darbyfr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = canon_darbyfr.h; sourceTree = "<group>"; };
 		D2BFDF4E25E709D500E04366 /* rtranspgdrive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rtranspgdrive.cpp; sourceTree = "<group>"; };
 		D2BFDF5125E70A0500E04366 /* utf8scsu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utf8scsu.cpp; sourceTree = "<group>"; };
-		D2BFDF6C25E737C500E04366 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		D2BFDF6D25E737E400E04366 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		D2BFDF7325E73AAA00E04366 /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		D2BFDF7525E73AAA00E04366 /* mz_strm_os_posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_os_posix.c; sourceTree = "<group>"; };
 		D2BFDF7625E73AAA00E04366 /* mz_strm_pkcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_pkcrypt.c; sourceTree = "<group>"; };
@@ -1147,6 +1148,10 @@
 		D2BFE5B725E7788100E04366 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
 		D2BFE5E125E89A8400E04366 /* UIScrollView+BottomRefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+BottomRefreshControl.m"; sourceTree = "<group>"; };
 		D2BFE5E225E89A8400E04366 /* UIScrollView+BottomRefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+BottomRefreshControl.h"; sourceTree = "<group>"; };
+		D2BFE5EA25E9BF0500E04366 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		D2BFE5F825E9C43D00E04366 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		D2BFE5FE25E9C52100E04366 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
@@ -1167,6 +1172,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */,
+				D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */,
+				D2BFE5EB25E9BF0500E04366 /* WebKit.framework in Frameworks */,
 				A951C8561C4EB191000A3B5B /* libcurl.a in Frameworks */,
 				A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */,
 				054509C619A5DAA900E0A702 /* libbz2.1.0.tbd in Frameworks */,
@@ -2337,8 +2345,10 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D2BFDF6D25E737E400E04366 /* libiconv.tbd */,
-				D2BFDF6C25E737C500E04366 /* libz.tbd */,
+				D2BFE5FE25E9C52100E04366 /* CoreServices.framework */,
+				D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */,
+				D2BFE5F825E9C43D00E04366 /* libiconv.tbd */,
+				D2BFE5EA25E9BF0500E04366 /* WebKit.framework */,
 				A98A70521C64CEB70083ECB8 /* libcurl.a */,
 				A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */,
 				A9C107D11C4D7404006C755A /* libcurl.a */,
@@ -3046,7 +3056,6 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 					"$(SDKROOT)/usr/lib",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -3062,13 +3071,7 @@
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/externals/libcurl/ios-dev/lib",
 				);
-				OTHER_CFLAGS = (
-					"-DCURLAVAILABLE",
-					"-Dunix",
-					"-D__unix__",
-					"-DDEBUG",
-					"-DEXCLUDEXZ",
-				);
+				OTHER_CFLAGS = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = org.Crosswire.PocketSword;
 			};
 			name = Debug;
@@ -3083,7 +3086,6 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 					"$(SDKROOT)/usr/lib",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -3097,12 +3099,6 @@
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/externals/libcurl/ios-dev/lib",
-				);
-				OTHER_CFLAGS = (
-					"-DCURLAVAILABLE",
-					"-Dunix",
-					"-D__unix__",
-					"-DEXCLUDEXZ",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.Crosswire.PocketSword;
 			};
@@ -3263,7 +3259,6 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 					"$(SDKROOT)/usr/lib",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -3277,12 +3272,6 @@
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/externals/libcurl/ios-appstore/lib",
-				);
-				OTHER_CFLAGS = (
-					"-DCURLAVAILABLE",
-					"-Dunix",
-					"-D__unix__",
-					"-DEXCLUDEXZ",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.Crosswire.PocketSword;
 			};

@@ -20,7 +20,7 @@
 		lastAccessedLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 		lastAccessedLabel.textColor = [UIColor lightGrayColor];
 		lastAccessedLabel.font = [UIFont systemFontOfSize:12.0];
-		lastAccessedLabel.textAlignment = UITextAlignmentRight;
+		lastAccessedLabel.textAlignment = NSTextAlignmentRight;
 		lastAccessedLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:lastAccessedLabel];
 	}

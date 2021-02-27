@@ -25,6 +25,10 @@
 //#define _ICU_ 1
 //#define _APPLE_IOS_ 1
 //#define USELUCENE 1
+#define CURLAVAILABLE 1
+#define unix 1
+#define __unix__ 1
+#define EXCLUDEXZ 1
 
 // Required #defines for SSZipArchive
 #define HAVE_INTTYPES_H 1

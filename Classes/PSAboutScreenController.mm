@@ -378,11 +378,11 @@
 	return YES;
 }
 
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    if(navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-        [[UIApplication sharedApplication] openURL:[navigationAction.request URL] options:[NSDictionary dictionaryWithObject:UIApplicationOpenURLOptionUniversalLinksOnly forKey:@"blah"] completionHandler:nil];
-    }
-}
+//- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+//    if(navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+//        [[UIApplication sharedApplication] openURL:[navigationAction.request URL] options:[NSDictionary dictionaryWithObject:UIApplicationOpenURLOptionUniversalLinksOnly forKey:@"blah"] completionHandler:nil];
+//    }
+//}
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.

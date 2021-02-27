@@ -34,7 +34,7 @@
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
 #import "PSRefSelectorController.h"
-#import "PSWebView.h"
+//#import "PSWebView.h"
 #import "PSDevotionalViewController.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
