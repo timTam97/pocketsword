@@ -60,12 +60,12 @@
 		05275AE210884F72004FB0E0 /* swkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1810884F71004FB0E0 /* swkey.cpp */; };
 		05275AE310884F72004FB0E0 /* treekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1910884F71004FB0E0 /* treekey.cpp */; };
 		05275AE410884F72004FB0E0 /* treekeyidx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1A10884F71004FB0E0 /* treekeyidx.cpp */; };
-		05275AE510884F72004FB0E0 /* versekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1B10884F71004FB0E0 /* versekey.cpp */; };
+		05275AE510884F72004FB0E0 /* versekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1B10884F71004FB0E0 /* versekey.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05275AE610884F72004FB0E0 /* versetreekey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1C10884F71004FB0E0 /* versetreekey.cpp */; };
 		05275AE710884F72004FB0E0 /* curlftpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1E10884F71004FB0E0 /* curlftpt.cpp */; };
 		05275AE810884F72004FB0E0 /* curlhttpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1F10884F71004FB0E0 /* curlhttpt.cpp */; };
 		05275AE910884F72004FB0E0 /* encfiltmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2010884F71004FB0E0 /* encfiltmgr.cpp */; };
-		05275AEA10884F72004FB0E0 /* filemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2110884F71004FB0E0 /* filemgr.cpp */; };
+		05275AEA10884F72004FB0E0 /* filemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2110884F71004FB0E0 /* filemgr.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05275AEB10884F72004FB0E0 /* ftplibftpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2210884F71004FB0E0 /* ftplibftpt.cpp */; };
 		05275AED10884F72004FB0E0 /* installmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2410884F71004FB0E0 /* installmgr.cpp */; };
 		05275AEE10884F72004FB0E0 /* localemgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A2510884F71004FB0E0 /* localemgr.cpp */; };
@@ -86,14 +86,14 @@
 		05275AFF10884F72004FB0E0 /* entriesblk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3E10884F71004FB0E0 /* entriesblk.cpp */; };
 		05275B0010884F72004FB0E0 /* lzsscomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A3F10884F71004FB0E0 /* lzsscomprs.cpp */; };
 		05275B0110884F72004FB0E0 /* rawstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4010884F71004FB0E0 /* rawstr.cpp */; };
-		05275B0210884F72004FB0E0 /* rawstr4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4110884F71004FB0E0 /* rawstr4.cpp */; };
+		05275B0210884F72004FB0E0 /* rawstr4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4110884F71004FB0E0 /* rawstr4.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05275B0310884F72004FB0E0 /* rawverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4210884F71004FB0E0 /* rawverse.cpp */; };
 		05275B0410884F72004FB0E0 /* rawverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4310884F71004FB0E0 /* rawverse4.cpp */; };
 		05275B0510884F72004FB0E0 /* sapphire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4410884F71004FB0E0 /* sapphire.cpp */; };
 		05275B0610884F72004FB0E0 /* swcipher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4510884F71004FB0E0 /* swcipher.cpp */; };
 		05275B0710884F72004FB0E0 /* swcomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4610884F71004FB0E0 /* swcomprs.cpp */; };
 		05275B0910884F72004FB0E0 /* zipcomprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4810884F71004FB0E0 /* zipcomprs.cpp */; };
-		05275B0A10884F72004FB0E0 /* zstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4910884F71004FB0E0 /* zstr.cpp */; };
+		05275B0A10884F72004FB0E0 /* zstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4910884F71004FB0E0 /* zstr.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05275B0B10884F72004FB0E0 /* zverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4A10884F71004FB0E0 /* zverse.cpp */; };
 		05275B0C10884F72004FB0E0 /* cipherfil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4C10884F71004FB0E0 /* cipherfil.cpp */; };
 		05275B0D10884F72004FB0E0 /* gbffootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A4D10884F71004FB0E0 /* gbffootnotes.cpp */; };
@@ -135,15 +135,15 @@
 		05275B3410884F72004FB0E0 /* teiplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7410884F71004FB0E0 /* teiplain.cpp */; };
 		05275B3510884F72004FB0E0 /* teirtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7510884F71004FB0E0 /* teirtf.cpp */; };
 		05275B3610884F72004FB0E0 /* thmlfootnotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7610884F71004FB0E0 /* thmlfootnotes.cpp */; };
-		05275B3710884F72004FB0E0 /* thmlgbf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7710884F71004FB0E0 /* thmlgbf.cpp */; };
+		05275B3710884F72004FB0E0 /* thmlgbf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7710884F71004FB0E0 /* thmlgbf.cpp */; settings = {COMPILER_FLAGS = "-Wno-invalid-source-encoding"; }; };
 		05275B3810884F72004FB0E0 /* thmlheadings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7810884F71004FB0E0 /* thmlheadings.cpp */; };
 		05275B3910884F72004FB0E0 /* thmlhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7910884F71004FB0E0 /* thmlhtml.cpp */; };
 		05275B3A10884F72004FB0E0 /* thmlhtmlhref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7A10884F71004FB0E0 /* thmlhtmlhref.cpp */; };
 		05275B3B10884F72004FB0E0 /* thmllemma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7B10884F71004FB0E0 /* thmllemma.cpp */; };
 		05275B3C10884F72004FB0E0 /* thmlmorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7C10884F71004FB0E0 /* thmlmorph.cpp */; };
-		05275B3D10884F72004FB0E0 /* thmlosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7D10884F71004FB0E0 /* thmlosis.cpp */; };
+		05275B3D10884F72004FB0E0 /* thmlosis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7D10884F71004FB0E0 /* thmlosis.cpp */; settings = {COMPILER_FLAGS = "-Wno-invalid-source-encoding"; }; };
 		05275B3E10884F72004FB0E0 /* thmlplain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7E10884F71004FB0E0 /* thmlplain.cpp */; };
-		05275B3F10884F72004FB0E0 /* thmlrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7F10884F71004FB0E0 /* thmlrtf.cpp */; };
+		05275B3F10884F72004FB0E0 /* thmlrtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A7F10884F71004FB0E0 /* thmlrtf.cpp */; settings = {COMPILER_FLAGS = "-Wno-invalid-source-encoding"; }; };
 		05275B4010884F72004FB0E0 /* thmlscripref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8010884F71004FB0E0 /* thmlscripref.cpp */; };
 		05275B4110884F72004FB0E0 /* thmlstrongs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8110884F71004FB0E0 /* thmlstrongs.cpp */; };
 		05275B4210884F72004FB0E0 /* thmlvariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A8210884F71004FB0E0 /* thmlvariants.cpp */; };
@@ -198,7 +198,7 @@
 		053CAD871809428D00BCDBE6 /* bz2comprs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD841809428D00BCDBE6 /* bz2comprs.cpp */; };
 		053CAD881809428D00BCDBE6 /* lzsscomprs.txt in Resources */ = {isa = PBXBuildFile; fileRef = 053CAD851809428D00BCDBE6 /* lzsscomprs.txt */; };
 		053CAD8C180942B200BCDBE6 /* osisreferencelinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */; };
-		053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */; };
+		053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
 		054509C619A5DAA900E0A702 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
@@ -242,7 +242,7 @@
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
 		05781F2B12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
-		057CBD4817697CFC005BC6BB /* remotetrans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4717697CFC005BC6BB /* remotetrans.cpp */; };
+		057CBD4817697CFC005BC6BB /* remotetrans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4717697CFC005BC6BB /* remotetrans.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		057CBD4C17697D1C005BC6BB /* osisenum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4917697D1C005BC6BB /* osisenum.cpp */; };
 		057CBD4D17697D1C005BC6BB /* osisglosses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4A17697D1C005BC6BB /* osisglosses.cpp */; };
 		057CBD4E17697D1C005BC6BB /* osisxlit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4B17697D1C005BC6BB /* osisxlit.cpp */; };
@@ -262,7 +262,7 @@
 		05B52BDC107EEB5B00826AFE /* NavigatorModuleTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDB107EEB5B00826AFE /* NavigatorModuleTypes.mm */; };
 		05B52BDF107EEB7500826AFE /* NavigatorModules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B52BDE107EEB7500826AFE /* NavigatorModules.mm */; };
 		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
-		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; };
+		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
 		05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB3FD1147711B00984097 /* popup-top-bar.png */; };
 		05BCB42011477A9A00984097 /* popup-down-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 05BCB41F11477A9A00984097 /* popup-down-button.png */; };
@@ -277,7 +277,7 @@
 		05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
 		05CFBE1F12C823C3002DA812 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CFBE1D12C823C3002DA812 /* Default@2x.png */; };
-		05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */; };
+		05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05D46215108FFF22006BFBB1 /* NavigatorModuleLanguages.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D46214108FFF22006BFBB1 /* NavigatorModuleLanguages.mm */; };
 		05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D4629F10907130006BFBB1 /* PSLanguageCode.m */; };
 		05D6AB7C1097E76400A5026E /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6AB671097E76400A5026E /* AsyncSocket.m */; };
@@ -327,17 +327,17 @@
 		05EB26FB175C3233004A8EB7 /* disabled-VPL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F7175C3233004A8EB7 /* disabled-VPL@2x.png */; };
 		05EB26FC175C3233004A8EB7 /* enabled-VPL.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F8175C3233004A8EB7 /* enabled-VPL.png */; };
 		05EB26FD175C3233004A8EB7 /* enabled-VPL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F9175C3233004A8EB7 /* enabled-VPL@2x.png */; };
-		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; };
+		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
 		05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F4D0331255D2940088C902 /* PSResizing.m */; };
 		05F4D226160189940072620A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F4D225160189940072620A /* Default-568h@2x.png */; };
-		05F84ED6191F4A82003350DE /* zcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED5191F4A82003350DE /* zcom4.cpp */; };
+		05F84ED6191F4A82003350DE /* zcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED5191F4A82003350DE /* zcom4.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05F84ED8191F4A98003350DE /* zverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED7191F4A98003350DE /* zverse4.cpp */; };
 		05F84EDE191F4AB3003350DE /* gbflatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED9191F4AB3003350DE /* gbflatex.cpp */; };
 		05F84EDF191F4AB3003350DE /* osislatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDA191F4AB3003350DE /* osislatex.cpp */; };
-		05F84EE0191F4AB3003350DE /* teilatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDB191F4AB3003350DE /* teilatex.cpp */; };
+		05F84EE0191F4AB3003350DE /* teilatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDB191F4AB3003350DE /* teilatex.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDC191F4AB3003350DE /* thmllatex.cpp */; };
 		05F84EE5191F4AC7003350DE /* ztext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EE4191F4AC7003350DE /* ztext4.cpp */; };
 		05F84EE7191F4EF0003350DE /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F84EE6191F4EF0003350DE /* libicucore.A.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -348,7 +348,7 @@
 		28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */; };
 		A951C8561C4EB191000A3B5B /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E01C4D6E69006C755A /* libcurl.a */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
-		D2BFDF4F25E709D500E04366 /* rtranspgdrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF4E25E709D500E04366 /* rtranspgdrive.cpp */; };
+		D2BFDF4F25E709D500E04366 /* rtranspgdrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF4E25E709D500E04366 /* rtranspgdrive.cpp */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
 		D2BFDF5225E70A0500E04366 /* utf8scsu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF5125E70A0500E04366 /* utf8scsu.cpp */; };
 		D2BFDF9625E73AAB00E04366 /* mz_strm_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF7525E73AAA00E04366 /* mz_strm_os_posix.c */; };
 		D2BFDF9725E73AAB00E04366 /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF7625E73AAA00E04366 /* mz_strm_pkcrypt.c */; };
@@ -1533,8 +1533,6 @@
 				05275A0810884F71004FB0E0 /* im */,
 				05275A0C10884F71004FB0E0 /* swdisp.cpp */,
 				05275A0D10884F71004FB0E0 /* swlog.cpp */,
-				05275A0E10884F71004FB0E0 /* windoze */,
-				05275A0F10884F71004FB0E0 /* X11 */,
 			);
 			path = frontend;
 			sourceTree = "<group>";
@@ -1555,20 +1553,6 @@
 				05275A0B10884F71004FB0E0 /* swinputmeth.cpp */,
 			);
 			path = im;
-			sourceTree = "<group>";
-		};
-		05275A0E10884F71004FB0E0 /* windoze */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = windoze;
-			sourceTree = "<group>";
-		};
-		05275A0F10884F71004FB0E0 /* X11 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = X11;
 			sourceTree = "<group>";
 		};
 		05275A1010884F71004FB0E0 /* keys */ = {

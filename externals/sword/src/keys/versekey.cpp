@@ -157,10 +157,12 @@ void VerseKey::setFromOther(const VerseKey &ikey) {
 		}
 
 		// set values
-		if (book > BMAX[0])
-			book -= BMAX[0], testament = 2;
-		else
+        if (book > BMAX[0]) {
+            book -= BMAX[0];
+            testament = 2;
+        } else {
 			testament = 1;
+        }
 
 		//if (map_verse == 0) Headings(1);
 
