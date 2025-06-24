@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
   PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2009 Ian Wagner
@@ -27,12 +27,12 @@ import sys
 import os
 
 if len(sys.argv) < 2:
-  print 'Usage: gen_xib_strings.py [-p] path'
-  print '  path  The directory from which the xib files may be reached'
-  print '  -p    Prompt to overwrite existing files (default to skip existing strings files)' 
+  print('Usage: gen_xib_strings.py [-p] path')
+  print('  path  The directory from which the xib files may be reached')
+  print('  -p    Prompt to overwrite existing files (default to skip existing strings files)')
   sys.exit(1)
 elif not os.path.exists(sys.argv[-1]):
-  print 'path "%s" does not exist!' % sys.argv[-1]
+  print('path "%s" does not exist!' % sys.argv[-1])
   sys.exit(1)
 
 for root, dirs, files in os.walk(sys.argv[-1]):
@@ -43,10 +43,10 @@ for root, dirs, files in os.walk(sys.argv[-1]):
         if '-p' not in sys.argv:
           continue
           
-        choice = raw_input('File: %s.strings exists. Overwrite (Y/N)? ' % basename)
+        choice = input('File: %s.strings exists. Overwrite (Y/N)? ' % basename)
         if choice.upper() != 'Y':
-          print 'Not writing strings for %s.xib' % basename
+          print('Not writing strings for %s.xib' % basename)
           continue
       cmd = 'ibtool --generate-strings-file "%s.strings" "%s.xib"' % (basename, basename)
       if os.system(cmd) != 0:
-        print 'failed to execute command: %s' % cmd
+        print('failed to execute command: %s' % cmd)

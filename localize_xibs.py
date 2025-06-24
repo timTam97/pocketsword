@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
   PocketSword - A frontend for viewing SWORD project modules on the iPhone and iPod Touch
 	Copyright (C) 2008-2009 Ian Wagner
@@ -27,11 +27,11 @@ import sys
 import os
 
 if len(sys.argv) < 2:
-  print 'Usage: localize_xibs.py path'
-  print '  path  The directory from which the xib files may be reached'
+  print('Usage: localize_xibs.py path')
+  print('  path  The directory from which the xib files may be reached')
   sys.exit(1)
 elif not os.path.exists(sys.argv[-1]):
-  print 'path "%s" does not exist!' % sys.argv[-1]
+  print('path "%s" does not exist!' % sys.argv[-1])
   sys.exit(1)
 
 for root, dirs, files in os.walk(sys.argv[-1]):
@@ -40,9 +40,9 @@ for root, dirs, files in os.walk(sys.argv[-1]):
     if len(file) > 4 and file[-4:] == '.xib' and 'English.lproj' not in root:
       basename = os.path.join(root, file)[:-4]
       if not os.path.exists(basename + '.strings'):
-        print 'Not writing strings for %s.xib' % basename
+        print('Not writing strings for %s.xib' % basename)
         continue
       #cmd = 'ibtool --strings-file "%s.strings" --write "%s.xib" "%s/English.lproj/%s"' % (basename, basename, sys.argv[-1], file)
       cmd = 'cp "%s/English.lproj/%s" "%s.xib"' % (sys.argv[-1], file, basename)
       if os.system(cmd) != 0:
-        print 'failed to execute command: %s' % cmd
+        print('failed to execute command: %s' % cmd)
