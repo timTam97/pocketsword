@@ -112,7 +112,7 @@
 	if(!valid) {
 		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message:NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-			[descriptionTextField becomeFirstResponder];
+			[self->descriptionTextField becomeFirstResponder];
 		}]];
 		[self presentViewController:alert animated:YES completion:nil];
 		return;

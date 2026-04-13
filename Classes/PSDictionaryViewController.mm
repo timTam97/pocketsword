@@ -98,8 +98,8 @@
 
 				UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat: @"%@ %@", [[[PSModuleController defaultModuleController] primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message:NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") preferredStyle:UIAlertControllerStyleAlert];
 				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-					[dictionarySearchBar setUserInteractionEnabled: NO];
-					dictionaryEnabled = NO;
+					[self->dictionarySearchBar setUserInteractionEnabled: NO];
+					self->dictionaryEnabled = NO;
 					[self.tableView reloadData];
 				}]];
 				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -112,8 +112,8 @@
 							[HUD hideAnimated:YES];
 						});
 					});
-					dictionaryEnabled = YES;
-					[dictionarySearchBar setUserInteractionEnabled: YES];
+					self->dictionaryEnabled = YES;
+					[self->dictionarySearchBar setUserInteractionEnabled: YES];
 				}]];
 				[self presentViewController:alert animated:YES completion:nil];
 				return;

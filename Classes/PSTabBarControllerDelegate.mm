@@ -73,8 +73,7 @@
 		// 07: About
 		
 		if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {// iOS 7 only
-			UIColor *tintColor = [UIColor whiteColor];
-//			UIColor *tintColor = [UIColor blackColor];
+			UIColor *tintColor = [UIColor blackColor];
 //			UIColor *barTintColor = [UIColor yellowColor];
 			UIColor *barTintColor = [UIColor blackColor];
 //			UIColor *barTintColor = [UIColor redColor];
@@ -86,7 +85,7 @@
 			[[UIToolbar appearance] setTintColor:tintColor];
 			//[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 			[[UIToolbar appearance] setBarTintColor:barTintColor];
-			[[UITabBar appearance] setTintColor:tintColor];
+			[[UITabBar appearance] setTintColor:[UIColor whiteColor]];
 			//[[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background TabBar.png"]];
 			[[UITabBar appearance] setBarTintColor:barTintColor];
 			//NSLog(@"%f", self.tabBarController.tabBar.frame.size.height);
@@ -98,7 +97,6 @@
 		[cvc view];//load the view before we continue!
 		[cvc setDelegate:self];
 		UINavigationController *cTab = [[UINavigationController alloc] initWithRootViewController:cvc];
-		cTab.navigationBar.barStyle = UIBarStyleBlack;
 		[tabs insertObject:cTab atIndex:0];
 		self.commentaryTabController = cvc;
 		
@@ -110,7 +108,6 @@
 		[bvc setDelegate:self];
 		bvc.commentaryView = commentaryTabController;
 		UINavigationController *bTab = [[UINavigationController alloc] initWithRootViewController:bvc];
-		bTab.navigationBar.barStyle = UIBarStyleBlack;
 		[tabs insertObject:bTab atIndex:0];
 		self.bibleTabController = bvc;
 		
@@ -832,12 +829,10 @@
 		[closeImgButton setImage:[UIImage imageNamed:@"popup-down-button.png"] forState:UIControlStateNormal];
 		closeImgButton.frame = CGRectMake(10, 0, 20, 20);
 		[closeImgButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
-		closeImgButton.showsTouchWhenHighlighted = YES;
 		[infoView addSubview:closeImgButton];
 		UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		clearButton.frame = CGRectMake(0, 0, 40, 25);
 		[clearButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
-		clearButton.showsTouchWhenHighlighted = YES;
 		[infoView addSubview:clearButton];
 		infoWebView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, screen.width, (INFO_PORTRAIT_HEIGHT - 20)) configuration:[[WKWebViewConfiguration alloc] init]];
 		infoWebView.navigationDelegate = self;
@@ -862,8 +857,8 @@
 		BOOL deviceIsPad = [PSResizing iPad];
 		CGFloat info_portrait_height = ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT);
 		[UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, (screen.height - info_portrait_height), screen.width, info_portrait_height);
+			self->infoView.transform = CGAffineTransformIdentity;
+			self->infoView.frame = CGRectMake(0, (screen.height - info_portrait_height), screen.width, info_portrait_height);
 		} completion:nil];
 	}
 }

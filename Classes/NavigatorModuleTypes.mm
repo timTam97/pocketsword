@@ -113,7 +113,7 @@
 - (void)cancelRefreshDownloadSource {
 	//incomplete
 	// need to do more than this!!!
-	[self performSelectorInBackground: @selector(hideOperationStatus) withObject: nil];
+	[self performSelectorInBackground: NSSelectorFromString(@"hideOperationStatus") withObject: nil];
 }
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {

@@ -195,7 +195,7 @@
 						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 							[self installSearchIndexForModule];
 						}]];
-						[viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
+						[self->viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
 					});
 					self.files = nil;
 					return;
@@ -218,7 +218,7 @@
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
 			[self.delegate indexInstalled:self];
 		}]];
-		[viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
+		[self->viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
 	});
 
 }

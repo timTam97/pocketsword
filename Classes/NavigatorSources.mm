@@ -52,7 +52,7 @@
 	UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ManageSources", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
 	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"RefreshSourceList", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-		mmmMenuDisplayed = NO;
+		self->mmmMenuDisplayed = NO;
 		if(![PSModuleController checkNetworkConnection]) {
 			UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") preferredStyle:UIAlertControllerStyleAlert];
 			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"") style:UIAlertActionStyleCancel handler:nil]];
@@ -76,19 +76,19 @@
 
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference]) {
 		[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"AddFTPSource", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			mmmMenuDisplayed = NO;
+			self->mmmMenuDisplayed = NO;
 			PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
 			addSourceViewController.serverType = INSTALLSOURCE_TYPE_FTP;
 			[self presentViewController:addSourceViewController animated:YES completion:nil];
 		}]];
 		[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			mmmMenuDisplayed = NO;
+			self->mmmMenuDisplayed = NO;
 			[self manualAddModule];
 		}]];
 	}
 
 	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-		mmmMenuDisplayed = NO;
+		self->mmmMenuDisplayed = NO;
 	}]];
 
 	if([PSResizing iPad]) {

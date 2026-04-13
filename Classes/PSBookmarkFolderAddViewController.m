@@ -80,7 +80,7 @@
 	if(!valid) {
 		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message:NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-			[nameTextField becomeFirstResponder];
+			[self->nameTextField becomeFirstResponder];
 		}]];
 		[self presentViewController:alert animated:YES completion:nil];
 		return;
@@ -90,7 +90,7 @@
 	if(position.location != NSNotFound) {
 		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message:NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-			[nameTextField becomeFirstResponder];
+			[self->nameTextField becomeFirstResponder];
 		}]];
 		[self presentViewController:alert animated:YES completion:nil];
 		return;

@@ -150,7 +150,10 @@
 		mod = [[moduleList objectAtIndex: (indexPath.row - 1)] name];
 	}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [preferencesController performSelector:moduleChanged withObject: mod];
+#pragma clang diagnostic pop
     [self.navigationController popViewControllerAnimated:YES];
 }
 

@@ -9,8 +9,12 @@
 #import "PSBasePreferencesController.h"
 
 @interface PSPreferencesController : PSBasePreferencesController {
-	
+
 	UILabel *fontSizeLabel;
 }
+
+- (void)strongsGreekModuleChanged:(NSString *)newModule;
+- (void)strongsHebrewModuleChanged:(NSString *)newModule;
+- (void)morphGreekModuleChanged:(NSString *)newModule;
 
 @end

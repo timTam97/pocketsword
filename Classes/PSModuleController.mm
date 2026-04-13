@@ -286,15 +286,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)displayNetworkIndicator {
-	if(++showNetworkIndicatorCount == 1) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-	}
+	++showNetworkIndicatorCount;
 }
 
 - (void)hideNetworkIndicator {
-	if(--showNetworkIndicatorCount == 0) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-	}
+	--showNetworkIndicatorCount;
 }
 
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/ {

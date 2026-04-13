@@ -162,7 +162,7 @@
 		}]];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 			SwordModule *mod;
-			if(listType == CommentaryTab) {
+			if(self->listType == CommentaryTab) {
 				mod = [[PSModuleController defaultModuleController] primaryCommentary];
 			} else {
 				mod = [[PSModuleController defaultModuleController] primaryBible];
@@ -785,8 +785,8 @@
 		
 		self.searchTerm = nil;
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[searchResultsTable reloadData];
-			[searchQueryView removeFromSuperview];
+			[self->searchResultsTable reloadData];
+			[self->searchQueryView removeFromSuperview];
 			[self setSearchTitle];
 		});
 

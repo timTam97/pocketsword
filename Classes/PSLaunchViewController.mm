@@ -44,7 +44,7 @@
     
     UIView *base = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     base.backgroundColor = [UIColor colorWithHue:202.0f/360.0f saturation:0.11f brightness:0.4f alpha:1.0f];// the same grey as the launch image bg
-	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
 	activityInd.hidesWhenStopped = NO;
 	[base addSubview:activityInd];
 	activityInd.frame = aiFrame;

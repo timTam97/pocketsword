@@ -161,7 +161,7 @@ line-height: 130%%;\n\
 	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
     r.origin.y -=  t.size.height;
 	[UIView animateWithDuration:0.3 animations:^{
-		unlockToolbar.frame = r;
+		self->unlockToolbar.frame = r;
 	}];
 	[unlockEditButton setEnabled:NO];
 	[unlockSaveButton setEnabled:NO];
@@ -172,7 +172,7 @@ line-height: 130%%;\n\
 	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
     r.origin.y +=  t.size.height;
 	[UIView animateWithDuration:0.3 animations:^{
-		unlockToolbar.frame = r;
+		self->unlockToolbar.frame = r;
 	}];
 	[unlockEditButton setEnabled:YES];
 	[unlockSaveButton setEnabled:YES];

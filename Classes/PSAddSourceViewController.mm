@@ -141,7 +141,7 @@
 
     r.size.height = baseHeight - t.size.height;
 	[UIView animateWithDuration:0.3 animations:^{
-		addSourceTableView.frame = r;
+		self->addSourceTableView.frame = r;
 	}];
 }
 
@@ -184,7 +184,7 @@
 	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [PSResizing statusBarHeight]; //remove top bar & status bar.
 	r.size.height = baseHeight;
 	[UIView animateWithDuration:0.3 animations:^{
-		addSourceTableView.frame = r;
+		self->addSourceTableView.frame = r;
 	}];
 }
 
@@ -206,7 +206,7 @@
 	UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Warning", @"") message:NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") preferredStyle:UIAlertControllerStyleAlert];
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-		[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];
+		[self addInstallSource:self->captionTextField.text withPath:self->pathTextField.text andServer:self->serverTextField.text];
 	}]];
 	[self presentViewController:alert animated:YES completion:nil];
 }
@@ -224,7 +224,7 @@
 		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Warning", @"") message:NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];
+			[self addInstallSource:self->captionTextField.text withPath:self->pathTextField.text andServer:self->serverTextField.text];
 		}]];
 		[self presentViewController:alert animated:YES completion:nil];
 	}

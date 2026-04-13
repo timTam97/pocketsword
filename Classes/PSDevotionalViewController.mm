@@ -168,8 +168,8 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 		if(self.presentedViewController != nil) {
 			// Popover repositions automatically with UIPopoverPresentationController
-		} else if(redisplayDatePicker) {
-			redisplayDatePicker = NO;
+		} else if(self->redisplayDatePicker) {
+			self->redisplayDatePicker = NO;
 			[self toggleDatePicker];
 		}
 	}];
@@ -255,7 +255,6 @@
 		UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		titleButton.backgroundColor = [UIColor clearColor];
 		titleButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
-		titleButton.showsTouchWhenHighlighted = YES;
 		[titleButton setTitle:@"" forState:UIControlStateNormal];
 		[titleButton setImage:[UIImage imageNamed:@"devo-open.png"] forState:UIControlStateNormal];
 		[titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

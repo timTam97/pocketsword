@@ -61,7 +61,7 @@
 	NSString *about = [PSModuleController createHTMLString:[module fullAboutText:currentInstalledVersion] usingPreferences:YES withJS:@"" usingModuleForPreferences:nil fixedWidth:YES];
     
     dispatch_async(dispatch_get_main_queue(), ^ {
-        [detailsWebView loadHTMLString:about baseURL:nil];
+        [self->detailsWebView loadHTMLString:about baseURL:nil];
     });
 }
 
@@ -108,8 +108,8 @@
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		// Upgrade the module: remove it first and then install the new version.
-		[[PSModuleController defaultModuleController] removeModule:module.name];
-		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsWebView];
+		[[PSModuleController defaultModuleController] removeModule:self->module.name];
+		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:self->module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:self->detailsWebView];
 		[PSModuleController queueModuleDownloadItem:dItem];
 		[self refreshInstallButton];
 	}]];
@@ -141,7 +141,7 @@
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		// Install the module
-		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsWebView];
+		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:self->module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:self->detailsWebView];
 		[PSModuleController queueModuleDownloadItem:dItem];
 		[self refreshInstallButton];
 	}]];
