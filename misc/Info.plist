@@ -62,6 +62,8 @@
 		<string>GentiumPlus-R.ttf</string>
 		<string>SILEOT.ttf</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarHidden~ipad</key>

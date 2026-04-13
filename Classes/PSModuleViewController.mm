@@ -350,6 +350,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+	UINavigationBarAppearance *transparentAppearance = [[UINavigationBarAppearance alloc] init];
+	[transparentAppearance configureWithTransparentBackground];
+	self.navigationController.navigationBar.standardAppearance = transparentAppearance;
+	self.navigationController.navigationBar.scrollEdgeAppearance = transparentAppearance;
+
 	//finishedLoading = NO;
 	if(refToShow) {
 		NSString *webText;
