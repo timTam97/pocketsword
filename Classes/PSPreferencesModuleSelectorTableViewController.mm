@@ -85,11 +85,6 @@
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-	[super viewDidUnload];
-}
 
 
 #pragma mark Table view methods
@@ -155,14 +150,17 @@
 		mod = [[moduleList objectAtIndex: (indexPath.row - 1)] name];
 	}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [preferencesController performSelector:moduleChanged withObject: mod];
+#pragma clang diagnostic pop
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 

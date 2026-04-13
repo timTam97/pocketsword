@@ -28,7 +28,7 @@
 
     if([PSResizing iPad]) {
 		
-		UIInterfaceOrientation uiOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+		UIInterfaceOrientation uiOrientation = [PSResizing currentInterfaceOrientation];
 		if(uiOrientation == UIInterfaceOrientationLandscapeLeft || uiOrientation == UIInterfaceOrientationLandscapeRight) {
 			aiFrame = CGRectMake(494, 370, 37, 37);
 		} else {
@@ -44,7 +44,7 @@
     
     UIView *base = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     base.backgroundColor = [UIColor colorWithHue:202.0f/360.0f saturation:0.11f brightness:0.4f alpha:1.0f];// the same grey as the launch image bg
-	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
 	activityInd.hidesWhenStopped = NO;
 	[base addSubview:activityInd];
 	activityInd.frame = aiFrame;
@@ -338,22 +338,16 @@
 	}
 }
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return YES;
-	//return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 	if(![PSResizing iPad]) {
 		return UIInterfaceOrientationMaskPortrait;
 	}
 	return [PSResizing supportedInterfaceOrientations];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	DLog(@"\nwe are about to rotate the launch view controller...");
-	//[self loadView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -363,11 +357,6 @@
     // Release any cached data, images, etc. that aren't in use.
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
 
 
 

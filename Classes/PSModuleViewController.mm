@@ -15,6 +15,7 @@
 #import "PSBookmarks.h"
 #import "PSBookmark.h"
 #import "PSCommentaryViewController.h"
+#import "PSBibleViewController.h"
 #import "SwordManager.h"
 #import "PSHistoryController.h"
 
@@ -93,7 +94,6 @@
 	forwardImg.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
 	NSArray *segments = [NSArray arrayWithObjects:backImg, @"Gen 23:23", forwardImg, nil];
 	UISegmentedControl *segControl = [[UISegmentedControl alloc] initWithItems:segments];
-	segControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segControl.momentary = YES;
 	
 	static CGFloat arrowWidth = 50.0;
@@ -117,9 +117,9 @@
 		newYOffset = [(NSNumber*)[versePositionArray objectAtIndex:(verseNumber-1)] floatValue];
 		CGFloat topLength = 0;
 		CGFloat bottomLength = 0;
-		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-			topLength = [[self topLayoutGuide] length];
-			bottomLength = [[self bottomLayoutGuide] length];
+		if(!self.isFullScreen) {
+			topLength = self.view.safeAreaInsets.top;
+			bottomLength = self.view.safeAreaInsets.bottom;
 		}
 		newYOffset -= topLength;
 		if((newYOffset + webView.frame.size.height) > webView.scrollView.contentSize.height) {
@@ -337,9 +337,9 @@
 - (void)setupWebViewRefreshViews {
 	CGFloat topLength = 0;
 	CGFloat bottomLength = 0;
-	if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-		topLength = [[self topLayoutGuide] length];
-		bottomLength = [[self bottomLayoutGuide] length];
+	if(!self.isFullScreen) {
+		topLength = self.view.safeAreaInsets.top;
+		bottomLength = self.view.safeAreaInsets.bottom;
 	}
 	[webView setupRefreshViews:topLength bottom:bottomLength];
 }
@@ -350,6 +350,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+	UINavigationBarAppearance *transparentAppearance = [[UINavigationBarAppearance alloc] init];
+	[transparentAppearance configureWithTransparentBackground];
+	self.navigationController.navigationBar.standardAppearance = transparentAppearance;
+	self.navigationController.navigationBar.scrollEdgeAppearance = transparentAppearance;
+
 	//finishedLoading = NO;
 	if(refToShow) {
 		NSString *webText;
@@ -379,8 +385,8 @@
 	}
 	if(finishedLoading) {
 		CGFloat topLength = 0.0f;
-		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-			topLength = [[self topLayoutGuide] length];
+		if(!self.isFullScreen) {
+			topLength = self.view.safeAreaInsets.top;
 		}
 		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
@@ -391,28 +397,28 @@
 	}
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 	NSString *verseKey = (tabType == BibleTab) ? DefaultsBibleVersePosition : DefaultsCommentaryVersePosition;
 	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);", [[NSUserDefaults standardUserDefaults] objectForKey:verseKey]];
-	if(isFullScreen)
-		return;
-	[webView removeRefreshViews];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-	NSString *js = nil;
-	if(self.jsToShow) {
-		js = [NSString stringWithFormat:@"resetArrays();%@startDetLocPoll();", self.jsToShow];
-		self.jsToShow = nil;
-	} else {
-		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
+	if(!isFullScreen) {
+		[webView removeRefreshViews];
 	}
-	[webView stringByEvaluatingJavaScriptFromString:js];
-	if(finishedLoading) {
-		[self setupWebViewRefreshViews];
-	}
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+		NSString *js = nil;
+		if(self.jsToShow) {
+			js = [NSString stringWithFormat:@"resetArrays();%@startDetLocPoll();", self.jsToShow];
+			self.jsToShow = nil;
+		} else {
+			js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
+		}
+		[webView stringByEvaluatingJavaScriptFromString:js];
+		if(finishedLoading) {
+			[self setupWebViewRefreshViews];
+		}
+	}];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -430,49 +436,39 @@
 		[self toggleFullscreen];
 }
 
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    //[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-	[self setupWebViewRefreshViews];
-	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+- (BOOL)prefersStatusBarHidden {
+	return isFullScreen;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
+	return UIStatusBarAnimationSlide;
 }
 
 - (void)toggleFullscreen {
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	[webView removeRefreshViews];
-	
-	//if(!isFullScreen) {
-		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-	//}
-	
-    [UIView beginAnimations:@"fullscreen" context:nil];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.5];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-	
-	
-    self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
-	
+
+	[self setNeedsStatusBarAppearanceUpdate];
+
     //resize webview to be full screen / normal
     [webView removeFromSuperview];
     if(isFullScreen) {
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:webView];
-		
-		CGFloat width  = [[UIScreen mainScreen] bounds].size.width;
-		CGFloat height = [[UIScreen mainScreen] bounds].size.height;
-		UIInterfaceOrientation uiio = (self.view.frame.size.width == (width * (width < height)) + (height * (width > height)))
-			  ? UIInterfaceOrientationPortrait : UIInterfaceOrientationLandscapeLeft;
-        webView.frame = [PSResizing getOrientationRect:uiio];
+        webView.frame = [PSResizing getOrientationRect:UIInterfaceOrientationPortrait];
     } else {
         [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
     }
-	
-    [UIView commitAnimations];
-	
+
+	[UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+		self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
+	} completion:^(BOOL finished) {
+		[self setupWebViewRefreshViews];
+		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	}];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -513,8 +509,8 @@
 	[self highlightBookmarks];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)wView {
-	
+- (void)webView:(WKWebView *)wv didFinishNavigation:(WKNavigation *)navigation {
+
 	//highlight bookmarked verses
 	//[self highlightBookmarks];
 	[self setupWebViewRefreshViews];
@@ -524,29 +520,28 @@
 		verseToShow = 0;
 	} else {
 		CGFloat topLength = 0.0f;
-		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-			topLength = [[self topLayoutGuide] length];
+		if(!self.isFullScreen) {
+			topLength = self.view.safeAreaInsets.top;
 		}
 		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
-	
+
 	//highlight search results
 	// TODO: implement highlighting of search results
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)wView {
+- (void)webView:(WKWebView *)wv didStartProvisionalNavigation:(WKNavigation *)navigation {
 	finishedLoading = NO;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 	@autoreleasepool {
-		BOOL load = YES;
-		
+		NSURLRequest *request = navigationAction.request;
 		NSString *requestString = [[request URL] absoluteString];
 		NSArray *components = [requestString componentsSeparatedByString:@":"];
 //	NSString *moduleViewType = (tabType == BibleTab) ? @"BIBLE" : @"COMMENTARY";
 //	DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
-		
+
 		if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 			if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
 				//our method of updating the title bar & remembering our position.
@@ -568,23 +563,52 @@
 				//DLog(@"    %@", tappedVerse);
 				NSInteger tappedVerseInt = [tappedVerse integerValue];
 				NSString *sheetTitle = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerseInt];
-				UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
-				[sheet showFromTabBar:self.tabBarController.tabBar];
-				// TODO: for iPad, use showFromRect:inView:animated: instead, after determining the rect of the verse number.
+				UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:sheetTitle message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+					//add a bookmark!
+					NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
+					PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
+					UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
+					[self presentViewController:containingNavigationController animated:YES completion:nil];
+					self.tappedVerse = nil;
+				}]];
+				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuCommentary", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+					//switch to the equivalent commentary entry.
+					PSCommentaryViewController *commView = ((PSBibleViewController *)self).commentaryView;
+					[commView setVerseToShow:[tappedVerse integerValue]];
+					BOOL fs = [self isFullScreen];
+					if(fs) {
+						[self toggleFullscreen];
+						[commView viewWillAppear:YES];
+					}
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
+					if(fs) {
+						[commView toggleFullscreen];
+					}
+					self.tappedVerse = nil;
+				}]];
+				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:nil]];
+				// TODO: for iPad, use popoverPresentationController.sourceView/sourceRect instead.
+				[self presentViewController:actionSheet animated:YES completion:nil];
 			}
-			load = NO;
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
 		} else if([(NSString *)[components objectAtIndex:0] isEqualToString:@"arraydump"]) {
 			//DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
 			[self saveVersePositionArray:components];
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
 		} else if([[[request URL] scheme] isEqualToString:@"sword"]) {
 			//our internal reference to say this is a Bible verse to display in the Bible tab
 			// This should only happen in the commentary tab & we allow it to "load" normally.
 			DLog(@"\nCOMMENTARY: requestString: %@", requestString);
+			decisionHandler(WKNavigationActionPolicyAllow);
+			return;
 		} else {
 			//NSLog(@"\nBIBLE: requestString: %@", requestString);
 			NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 			NSString *entry = nil;
-			
+
 			if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showStrongs"]) {
 				//
 				// Strong's Numbers
@@ -596,7 +620,7 @@
 					mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule];
 					hebrew = YES;
 				}
-				
+
 				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
 				if(swordDictionary) {
 					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
@@ -615,7 +639,7 @@
 					entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@%@\">%@</a></div>", entry, strongsPrefix, [rData objectForKey:ATTRTYPE_VALUE], NSLocalizedString(@"StrongsSearchFindAll", @"")];
 					//NSLog(@"%@", entry);
 				}
-				
+
 				NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
 				if(!hebrew) {
 					[[NSUserDefaults standardUserDefaults] setObject:PSGreekStrongsFontName forKey:DefaultsFontNamePreference];
@@ -626,7 +650,7 @@
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
 				[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
 				[[NSUserDefaults standardUserDefaults] synchronize];
-							
+
 			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
 				//
 				// Morphological Tags
@@ -635,7 +659,7 @@
 				//		type hasPrefix: "strongMorph"	for Hebrew	???
 				//
 				// for the time being I'm going to test for "strongMorph" & show an error dialogue or otherwise use Greek.
-				
+
 				NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
 				if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
 					entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
@@ -650,7 +674,7 @@
 					}
 				}
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
-				
+
 			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 				if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
 					if(tabType == BibleTab) {
@@ -702,16 +726,16 @@
 				}
 			}
 
-			
+
 			if(entry) {
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-				load = NO;
+				decisionHandler(WKNavigationActionPolicyCancel);
+				return;
 			}
 		}
-		
-		return load;
-	} // Return YES to make sure regular navigation works as expected.
-	
+
+		decisionHandler(WKNavigationActionPolicyAllow);
+	}
 }
 
 + (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews {

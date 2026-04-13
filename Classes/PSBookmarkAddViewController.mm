@@ -94,7 +94,7 @@
 
 - (void)cancelButtonPressed {
 	// this button only exists if we're adding a bookmark, so it's ok to only do this.
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)saveButtonPressed {
@@ -110,8 +110,11 @@
 		}
 	}
 	if(!valid) {
-		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-		[av show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksDuplicateBookmarkTitle", @"") message:NSLocalizedString(@"BookmarksDuplicateBookmarkMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			[self->descriptionTextField becomeFirstResponder];
+		}]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}	
 	
@@ -141,7 +144,7 @@
 		if([[PSModuleController createRefString:[PSModuleController getCurrentBibleRef]] isEqualToString:bookAndChapterRef]) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBookmarksChanged object:nil];
 		}
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:nil];
 	}
 }
 
@@ -150,9 +153,6 @@
 	return YES;
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	[descriptionTextField becomeFirstResponder];
-}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -330,8 +330,8 @@
 */
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 #pragma mark -
@@ -377,13 +377,6 @@
     // Relinquish ownership any cached data, images, etc. that aren't in use.
 }
 
-- (void)viewDidUnload {
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
-	[[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:NotificationAddBookmarkInFolder];
-	descriptionTextField = nil;
-	[super viewDidUnload];
-}
 
 
 

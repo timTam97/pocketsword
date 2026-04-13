@@ -29,8 +29,8 @@
 	[super viewWillAppear:animated];
 	if(hackTableView) {
 		CGFloat topLength = 0;
-		if([self respondsToSelector:@selector(topLayoutGuide)]) {
-			topLength = [[self topLayoutGuide] length];
+		{
+			topLength = self.view.safeAreaInsets.top;
 			if(topLength == 0.0f || topLength == 20.0f) {
 				topLength += self.navigationController.navigationBar.frame.size.height;
 			}
@@ -129,12 +129,15 @@
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[self.tableView reloadData];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[self.tableView reloadData];
+	}];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -245,7 +248,7 @@
 	
 	CGFloat xx = 0.0;
 	BOOL deviceIsPad = [PSResizing iPad];
-	UIInterfaceOrientation interfaceOrientation = self.navigationController.interfaceOrientation;
+	UIInterfaceOrientation interfaceOrientation = [PSResizing currentInterfaceOrientation];
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		xx = 160.0;
 		if(deviceIsPad) {

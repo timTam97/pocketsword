@@ -26,7 +26,7 @@
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 
-	UIWebView *infoWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	WKWebView *infoWV = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) configuration:[[WKWebViewConfiguration alloc] init]];
 	infoWV.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	infoWV.backgroundColor = [UIColor whiteColor];
 	self.infoWebView = infoWV;
@@ -42,7 +42,6 @@
 
 	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
-	trashModule = NO;
 	askToUnlock = YES;
 	if(self.swordModule) {
 		[self displayInfoForModule:swordModule];
@@ -59,11 +58,19 @@
 			DLog(@"\nlocked module!\n");
 			NSString *question = NSLocalizedString(@"ModuleLockedQuestion", @"");
 			NSString *messageTitle = NSLocalizedString(@"ModuleLockedTitle", @"Module Locked");
-			
-			//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: question
-									   delegate: self cancelButtonTitle: NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), NSLocalizedString(@"No", @"No"), nil];
-			[alertView show];
+
+			UIAlertController *alert = [UIAlertController alertControllerWithTitle:messageTitle message:question preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel") style:UIAlertActionStyleCancel handler:nil]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				// user tapped @"Yes" to unlocking this module question.
+				PSModuleUnlockViewController *unlockViewController = [[PSModuleUnlockViewController alloc] initWithNibName:nil bundle:nil];
+				unlockViewController.moduleName = self.tabBarController.navigationItem.title;
+				UINavigationController *unlockVCN = [[UINavigationController alloc] initWithRootViewController:unlockViewController];
+				unlockVCN.navigationBar.barStyle = UIBarStyleBlack;
+				[self presentViewController:unlockVCN animated:YES completion:nil];
+			}]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleDefault handler:nil]];
+			[self presentViewController:alert animated:YES completion:nil];
 			askToUnlock = NO;
 		}
 	}
@@ -92,39 +99,21 @@
 - (void)trashModule:(id)sender {
 	NSString *question = NSLocalizedString(@"ConfirmDeleteQuestion", @"Are you sure you wish to remove this module?");
 	NSString *messageTitle = NSLocalizedString(@"ConfirmDeleteTitle", @"Remove?");
-	trashModule = YES;
-	//	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n[%@]", [module name], [module descr], [sIS caption]];
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: question
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-	[alertView show];
-}
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	@autoreleasepool {
-	
-	//DLog(@"Clicked button %d", buttonIndex);
-		if (buttonIndex == 1 && trashModule) {
-			// user tapped @"Yes" to the trash this module question.
-			DLog(@"\nremoving module: %@", self.tabBarController.navigationItem.title);
-			trashModule = NO;
-			[[PSModuleController defaultModuleController] removeModule: self.tabBarController.navigationItem.title];
-			[self closeLeaf: nil];
-		} else if(buttonIndex == 1) {
-			// user tapped @"Yes" to unlocking this module question.
-			PSModuleUnlockViewController *unlockViewController = [[PSModuleUnlockViewController alloc] initWithNibName:nil bundle:nil];
-			unlockViewController.moduleName = self.tabBarController.navigationItem.title;
-			UINavigationController *unlockVCN = [[UINavigationController alloc] initWithRootViewController:unlockViewController];
-			unlockVCN.navigationBar.barStyle = UIBarStyleBlack;
-			[self presentModalViewController:unlockVCN animated:YES];
-		}
-	
-	}
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:messageTitle message:question preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		// user tapped @"Yes" to the trash this module question.
+		DLog(@"\nremoving module: %@", self.tabBarController.navigationItem.title);
+		[[PSModuleController defaultModuleController] removeModule: self.tabBarController.navigationItem.title];
+		[self closeLeaf: nil];
+	}]];
+	[self presentViewController:alert animated:YES completion:nil];
 }
 
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 - (void)didReceiveMemoryWarning {

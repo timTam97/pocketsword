@@ -78,8 +78,8 @@
     [super viewDidDisappear:animated];
 }
 */
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 #pragma mark -

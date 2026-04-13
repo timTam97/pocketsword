@@ -35,6 +35,7 @@
 	BOOL removingHUDViewInProgress;
 	
     NSUInteger bti;
+	NSURLSessionDataTask *downloadTask;
 }
 
 @property (strong, readwrite) NSMutableArray *files;

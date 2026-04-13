@@ -10,24 +10,28 @@
 #import "SearchWebView.h"
 
 
-@implementation UIWebView (SearchWebView)
+@implementation WKWebView (SearchWebView)
 
-- (NSInteger)highlightAllOccurencesOfString:(NSString*)str
+- (void)highlightAllOccurencesOfString:(NSString*)str completion:(void(^)(NSInteger count))completion
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"SearchWebView" ofType:@"js"];
     NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    [self stringByEvaluatingJavaScriptFromString:jsCode];
-	
-    NSString *startSearch = [NSString stringWithFormat:@"PS_HighlightAllOccurencesOfString('%@')",str];
-    [self stringByEvaluatingJavaScriptFromString:startSearch];
-	
-    NSString *result = [self stringByEvaluatingJavaScriptFromString:@"PS_SearchResultCount"];
-    return [result integerValue];
+    [self evaluateJavaScript:jsCode completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSString *startSearch = [NSString stringWithFormat:@"PS_HighlightAllOccurencesOfString('%@')", str];
+        [self evaluateJavaScript:startSearch completionHandler:^(id _Nullable result2, NSError * _Nullable error2) {
+            [self evaluateJavaScript:@"PS_SearchResultCount" completionHandler:^(id _Nullable countResult, NSError * _Nullable error3) {
+                if(completion) {
+                    NSInteger count = [countResult integerValue];
+                    completion(count);
+                }
+            }];
+        }];
+    }];
 }
 
 - (void)removeAllHighlights
 {
-    [self stringByEvaluatingJavaScriptFromString:@"PS_RemoveAllHighlights()"];
+    [self evaluateJavaScript:@"PS_RemoveAllHighlights()" completionHandler:nil];
 }
 
 @end

@@ -11,7 +11,7 @@
 @class NavigatorModuleTypes;
 @class iPhoneHTTPServerDelegate;
 
-@interface NavigatorSources : UITableViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface NavigatorSources : UITableViewController  <UINavigationControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, MBProgressHUDDelegate> {
 	
 	BOOL mmmMenuDisplayed;
 }

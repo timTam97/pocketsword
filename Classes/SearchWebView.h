@@ -7,9 +7,11 @@
 //  Copyright 2010 The CrossWire Bible Society. All rights reserved.
 //
 
-@interface UIWebView (SearchWebView)
+#import <WebKit/WebKit.h>
 
-- (NSInteger)highlightAllOccurencesOfString:(NSString*)str;
+@interface WKWebView (SearchWebView)
+
+- (void)highlightAllOccurencesOfString:(NSString*)str completion:(void(^)(NSInteger count))completion;
 - (void)removeAllHighlights;
 
 @end

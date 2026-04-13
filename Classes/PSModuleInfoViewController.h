@@ -7,18 +7,20 @@
 //
 
 
+#import <WebKit/WebKit.h>
+
 @class PSModuleSelectorController;
 @class SwordModule;
 
 @interface PSModuleInfoViewController : UIViewController {
-	UIWebView *infoWebView;
-	
+	WKWebView *infoWebView;
+
 	SwordModule *swordModule;
-	
-	BOOL trashModule, askToUnlock;
+
+	BOOL askToUnlock;
 }
 
-@property (strong) UIWebView *infoWebView;
+@property (strong) WKWebView *infoWebView;
 @property (strong) SwordModule *swordModule;
 
 //perhaps a tab with the version history in it?

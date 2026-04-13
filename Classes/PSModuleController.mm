@@ -286,15 +286,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 }
 
 - (void)displayNetworkIndicator {
-	if(++showNetworkIndicatorCount == 1) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-	}
+	++showNetworkIndicatorCount;
 }
 
 - (void)hideNetworkIndicator {
-	if(--showNetworkIndicatorCount == 0) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-	}
+	--showNetworkIndicatorCount;
 }
 
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/ {
@@ -1181,7 +1177,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			[ret setObject:[aURL host] forKey:ATTRTYPE_MODULE];
 		else
 			[ret setObject:[NSNull null] forKey:ATTRTYPE_MODULE];
-        [ret setObject:[[[[aURL path] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "]
+        [ret setObject:[[[[aURL path] stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "]
                 forKey:ATTRTYPE_VALUE];
         [ret setObject:@"scriptRef" forKey:ATTRTYPE_TYPE];
         [ret setObject:@"showRef" forKey:ATTRTYPE_ACTION];

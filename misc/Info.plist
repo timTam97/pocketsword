@@ -62,8 +62,8 @@
 		<string>GentiumPlus-R.ttf</string>
 		<string>SILEOT.ttf</string>
 	</array>
-	<key>UIPrerenderedIcon</key>
-	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarHidden~ipad</key>
@@ -84,6 +84,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

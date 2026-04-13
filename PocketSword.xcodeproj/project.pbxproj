@@ -36,6 +36,7 @@
 		0505FECD12C9A9D900A3C65B /* enabled-Strongs.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEB912C9A9D900A3C65B /* enabled-Strongs.png */; };
 		0505FECE12C9A9D900A3C65B /* enabled-Xrefs.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEBA12C9A9D900A3C65B /* enabled-Xrefs.png */; };
 		050CB77D19D16A1200415A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77C19D16A1200415A27 /* Images.xcassets */; };
+		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
 		050CB78019D1789A00415A27 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77E19D1789A00415A27 /* Default-736h@3x.png */; };
 		050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77F19D1789A00415A27 /* Default-667h@2x.png */; };
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
@@ -457,6 +458,7 @@
 		0505FEB912C9A9D900A3C65B /* enabled-Strongs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Strongs.png"; path = "Resources/enabled-Strongs.png"; sourceTree = "<group>"; };
 		0505FEBA12C9A9D900A3C65B /* enabled-Xrefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Xrefs.png"; path = "Resources/enabled-Xrefs.png"; sourceTree = "<group>"; };
 		050CB77C19D16A1200415A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketSword/Images.xcassets; sourceTree = "<group>"; };
+		D2CF000026D100000000A001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PocketSword/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		050CB77E19D1789A00415A27 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-736h@3x.png"; path = "Resources/Default-736h@3x.png"; sourceTree = "<group>"; };
 		050CB77F19D1789A00415A27 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-667h@2x.png"; path = "Resources/Default-667h@2x.png"; sourceTree = "<group>"; };
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
@@ -2317,6 +2319,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D2CF000026D100000000A001 /* LaunchScreen.storyboard */,
 				050CB77C19D16A1200415A27 /* Images.xcassets */,
 				051F22AA1737544C00DDFF13 /* fonts */,
 				052851BB1226614600A99ECD /* misc */,
@@ -2626,6 +2629,7 @@
 				05BCB3FE1147711B00984097 /* popup-top-bar.png in Resources */,
 				05E6A75E17FAE06D0063B18C /* Icon-120.png in Resources */,
 				050CB77D19D16A1200415A27 /* Images.xcassets in Resources */,
+				D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */,
 				05BCB42011477A9A00984097 /* popup-down-button.png in Resources */,
 				05124A9C11B5F02000575BA9 /* devo-open.png in Resources */,
 				059A6CC311B79ABD00B33E54 /* bible.png in Resources */,
@@ -3010,7 +3014,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
@@ -3026,7 +3030,7 @@
 					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -3041,7 +3045,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
@@ -3056,7 +3060,7 @@
 					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -3108,7 +3112,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
@@ -3157,7 +3161,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
@@ -3208,7 +3212,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
@@ -3220,7 +3224,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
 				ENABLE_BITCODE = NO;
@@ -3234,7 +3238,7 @@
 					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",

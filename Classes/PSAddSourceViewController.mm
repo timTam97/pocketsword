@@ -29,34 +29,28 @@
 
 - (void)loadView {
 	
-	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
-	BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden ];
-	
+	//Calculate Screensize.
 	CGRect frame = [[UIScreen mainScreen] bounds];
-	
+
 	//check if you should rotate the view, e.g. change width and height of the frame
+	UIInterfaceOrientation currentOrientation = [PSResizing currentInterfaceOrientation];
 	BOOL rotate = NO;
-	if ( UIInterfaceOrientationIsLandscape( [UIApplication sharedApplication].statusBarOrientation ) ) {
+	if ( UIInterfaceOrientationIsLandscape( currentOrientation ) ) {
 		if (frame.size.width < frame.size.height) {
 			rotate = YES;
 		}
 	}
-	
-	if ( UIInterfaceOrientationIsPortrait( [UIApplication sharedApplication].statusBarOrientation ) ) {
+
+	if ( UIInterfaceOrientationIsPortrait( currentOrientation ) ) {
 		if (frame.size.width > frame.size.height) {
 			rotate = YES;
 		}
 	}
-	
+
 	if (rotate) {
 		CGFloat tmp = frame.size.height;
 		frame.size.height = frame.size.width;
 		frame.size.width = tmp;
-	}
-	
-	
-	if (statusBarHidden) {
-		frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
 	}
 	
 	UIView *v = [[UIView alloc] initWithFrame: frame];
@@ -143,13 +137,12 @@
 	//UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
 	//t = [mainWindow convertRect:t fromWindow:nil];
     ////r.size.height -=  t.size.height;
-	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
+	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [PSResizing statusBarHeight]; //remove top bar & status bar.
 
     r.size.height = baseHeight - t.size.height;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    addSourceTableView.frame = r;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:0.3 animations:^{
+		self->addSourceTableView.frame = r;
+	}];
 }
 
 - (void)keyboardDidShow:(NSNotification *)note {
@@ -188,51 +181,37 @@
 	//CGRect t;
     //[[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &t];
     //r.size.height +=  t.size.height;
-	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height; //remove top bar & status bar.
+	NSInteger baseHeight = [[UIScreen mainScreen] bounds].size.height - topBarHeight - [PSResizing statusBarHeight]; //remove top bar & status bar.
 	r.size.height = baseHeight;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    addSourceTableView.frame = r;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:0.3 animations:^{
+		self->addSourceTableView.frame = r;
+	}];
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if (buttonIndex != [alertView cancelButtonIndex]) {
-		[self addInstallSource:captionTextField.text withPath:pathTextField.text andServer:serverTextField.text];
-	}
-}
 
 - (void)cancelButtonPressed {
 	[captionTextField resignFirstResponder];
 	[serverTextField resignFirstResponder];
 	[pathTextField resignFirstResponder];
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    indexData = [[NSMutableData alloc] init];
-	expectedDataLength = [response expectedContentLength];
-	currentDataLength = 0.0;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [indexData appendData:data];
-	currentDataLength = [indexData length];
-	indexDownloadHUD.progress = (float)currentDataLength / (float) expectedDataLength;
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)handleDownloadFailure {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	indexData = nil;
-	
+
 	[indexDownloadHUD hideAnimated:YES];
-	
+
 	//perhaps dodgy, display a warning.
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-	[alertView show];
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Warning", @"") message:NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		[self addInstallSource:self->captionTextField.text withPath:self->pathTextField.text andServer:self->serverTextField.text];
+	}]];
+	[self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)handleDownloadSuccess {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	if(indexData) {
 		indexDownloadHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Tick.png"]];
@@ -242,8 +221,12 @@
 	} else {
 		[indexDownloadHUD hideAnimated:YES];
 		//perhaps dodgy, display a warning.
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Warning", @"") message: NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Warning", @"") message:NSLocalizedString(@"CannotVerifyInstallSourceWarning", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self addInstallSource:self->captionTextField.text withPath:self->pathTextField.text andServer:self->serverTextField.text];
+		}]];
+		[self presentViewController:alert animated:YES completion:nil];
 	}
 	indexData = nil;
 }
@@ -254,23 +237,40 @@
 	NSString *path = pathTextField.text;
 	if(!caption || [caption isEqualToString:@""] || !server || [server isEqualToString:@""] || !path || [path isEqualToString:@""]) {
 		//you must fill in all fields to add a new source
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"FillInAllFieldsMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"FillInAllFieldsMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:nil]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
 	
 	if(![PSModuleController checkNetworkConnection]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"") style:UIAlertActionStyleCancel handler:nil]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/mods.d.tar.gz", [serverType lowercaseString], server, path]];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
-	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-	[connection start];
-	
+
+	indexData = [[NSMutableData alloc] init];
+	expectedDataLength = 0.0;
+	currentDataLength = 0.0;
+
+	NSURLSession *session = [NSURLSession sharedSession];
+	downloadTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (error) {
+				[self handleDownloadFailure];
+			} else {
+				self->indexData = [NSMutableData dataWithData:data];
+				[self handleDownloadSuccess];
+			}
+		});
+	}];
+	[downloadTask resume];
+
 	indexDownloadHUD = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
 	indexDownloadHUD.delegate = self;
 }
@@ -284,7 +284,7 @@
 	[indexDownloadHUD removeFromSuperview];
 	indexDownloadHUD = nil;
 	if(dismissModal) {
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:nil];
 		captionTextField.text = @"";
 		serverTextField.text = @"";
 		pathTextField.text = @"";
@@ -305,7 +305,7 @@
 	if(indexDownloadHUD && indexDownloadHUD.mode == MBProgressHUDModeCustomView) {
 		// we will dismiss ourselves when the HUD is done...
 	} else {
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:nil];
 		captionTextField.text = @"";
 		serverTextField.text = @"";
 		pathTextField.text = @"";
@@ -377,17 +377,14 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)viewDidUnload {
-	[super viewDidUnload];
-}
 
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if([PSResizing iPad]) {
-        return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+        return [PSResizing supportedInterfaceOrientations];
     } else {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return UIInterfaceOrientationMaskPortrait;
     }
 }
 

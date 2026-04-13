@@ -43,8 +43,11 @@
 		ALog(@"Must set the module to install before starting the Index Installer!");
 	}
 	if(![PSModuleController checkNetworkConnection]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			[self.delegate indexInstalled:self];
+		}]];
+		[viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		return;
 	}
     //DLog(@"Retrieving remote index list...");
@@ -52,19 +55,6 @@
     DLog(@"Retrieving remote index list...done");
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {	
-	// check alertView.message for which dialogue we are dealing with.
-	if([alertView.title isEqualToString:NSLocalizedString(@"NoSearchIndexTitle", @"")] || [alertView.title isEqualToString:NSLocalizedString(@"Error", @"")]) {
-		[self.delegate indexInstalled:self];
-		return;
-	}
-	
-	if (buttonIndex == 1) {
-		[self installSearchIndexForModule];
-	} else {
-		[self.delegate indexInstalled:self];
-	}
-}
 
 - (NSMutableArray *)_retrieveRemoteIndexList {
     if([PSModuleController checkNetworkConnection]) {
@@ -76,7 +66,18 @@
         DLog(@"Making network request to %@", remoteDir);
         NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: remoteDir]
                                                  cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 10.0];
-        NSData *data = [NSURLConnection sendSynchronousRequest: request returningResponse: NULL error: NULL];
+
+        __block NSData *data = nil;
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *responseData, NSURLResponse *response, NSError *error) {
+            if (!error) {
+                data = responseData;
+            }
+            dispatch_semaphore_signal(semaphore);
+        }];
+        [task resume];
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
         [[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
         if (!data) {
             
@@ -187,8 +188,14 @@
 				DLog(@"\ndownloadable index for: %@", [modToInstall name]);
 				if(promptForDownload) {
 					dispatch_async(dispatch_get_main_queue(), ^{
-						UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [modToInstall name] message: NSLocalizedString(@"IndexControllerConfirmQuestion", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-						[alertView show];
+						UIAlertController *alert = [UIAlertController alertControllerWithTitle:[modToInstall name] message:NSLocalizedString(@"IndexControllerConfirmQuestion", @"") preferredStyle:UIAlertControllerStyleAlert];
+						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+							[self.delegate indexInstalled:self];
+						}]];
+						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+							[self installSearchIndexForModule];
+						}]];
+						[self->viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
 					});
 					self.files = nil;
 					return;
@@ -206,8 +213,13 @@
 	self.files = nil;
 
 	NSString *msg = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"IndexControllerNoneRemote", @"No available search index for:"), moduleToInstall];
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"") message: msg delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-	[alertView show];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"NoSearchIndexTitle", @"") message:msg preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			[self.delegate indexInstalled:self];
+		}]];
+		[self->viewForHUD.window.rootViewController presentViewController:alert animated:YES completion:nil];
+	});
 
 }
 
@@ -251,34 +263,34 @@
 	// Download the data file
     DLog(@"Start downloading index file...");
 	NSURLRequest *request = [NSURLRequest requestWithURL: [NSURL URLWithString: filename] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 15.0];
-	NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];//released when the connection either fails or finishes, below...
-	if(!conn) {
-		ALog(@"Cannot download index: %@", filename);
-	}
-}
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    responseData = [[NSMutableData alloc] init];
-	responseDataExpectedLength = [response expectedContentLength];
+	responseData = [[NSMutableData alloc] init];
+	responseDataExpectedLength = 0;
 	responseDataCurrentLength = 0;
 	installationProgress = 0.01;
 	if(viewForHUD) {
 		installHUD.mode = MBProgressHUDModeDeterminate;
 	}
-}
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [responseData appendData:data];
-	responseDataCurrentLength = [responseData length];
-	installationProgress = (float) responseDataCurrentLength / (float) responseDataExpectedLength;
-	if(viewForHUD) {
-		installHUD.progress = installationProgress;
+	NSURLSession *session = [NSURLSession sharedSession];
+	downloadTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (error) {
+				[self handleIndexDownloadFailure];
+			} else {
+				self->responseData = [NSMutableData dataWithData:data];
+				[self handleIndexDownloadSuccess];
+			}
+		});
+	}];
+	[downloadTask resume];
+
+	if(!downloadTask) {
+		ALog(@"Cannot download index: %@", filename);
 	}
-	if(installationProgress >= 1.0)
-		installationProgress = 0.9999;//1.0 is a reserved special value that shouldn't be set here.
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)handleIndexDownloadFailure {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
@@ -289,7 +301,7 @@
     if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
         backgroundSupported = device.multitaskingSupported;
     }
-    
+
     DLog(@"Background task supported: %i", backgroundSupported);
     if(backgroundSupported) {
         [[UIApplication sharedApplication] endBackgroundTask:bti];
@@ -315,19 +327,19 @@
 	}
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)handleIndexDownloadSuccess {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
 
     DLog(@"Index file finished downloading.");
-    
+
     // Use responseData
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:moduleToInstall];
 	NSString *outfileDir = [mod configEntryForKey:@"AbsoluteDataPath"];
 
     NSString *indexName = [self generateIndexName];
     DLog(@"Index name: %@", indexName);
-	
+
 	NSString *zippedIndex = [outfileDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.zip", indexName]];
 	NSString *cluceneDir = [outfileDir stringByAppendingPathComponent: @"lucene"];
     DLog(@"CLucene dir: %@", cluceneDir);
@@ -356,24 +368,20 @@
 
     DLog(@"Unzipping index archive to folder: %@", cluceneDir);
     [SSZipArchive unzipFileAtPath:zippedIndex toDestination:cluceneDir];
-	//ZipArchive *arch = [[ZipArchive alloc] init];
-	//[arch UnzipOpenFile:zippedIndex];
-	//[arch UnzipFileTo:cluceneDir overWrite:YES];
-	//[arch UnzipCloseFile];
     DLog(@"Unzipping index archive...done");
-	
+
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	[fileManager removeItemAtPath:zippedIndex error:NULL];
-	
+
 	DLog(@"Index (%@) installed successfully", moduleToInstall);
-	
+
 	installationProgress = 1.0;
     UIDevice* device = [UIDevice currentDevice];
     BOOL backgroundSupported = NO;
     if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
         backgroundSupported = device.multitaskingSupported;
     }
-    
+
     DLog(@"Background task supported: %i", backgroundSupported);
     if(backgroundSupported) {
         [[UIApplication sharedApplication] endBackgroundTask:bti];
@@ -396,7 +404,7 @@
 		[finishedHUD showAnimated:YES];
 		[finishedHUD hideAnimated:YES afterDelay:1];
 	}
-	
+
 }
 
 

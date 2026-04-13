@@ -161,35 +161,23 @@
 }
 
 - (void)trashButtonPressed {
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"HistoryClearConfirmationTitle", @"Clear All History?") message: NSLocalizedString(@"HistoryClearConfirmationMessage", @"Are you sure?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-	[alertView show];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == 1) {
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"HistoryClearConfirmationTitle", @"Clear All History?") message:NSLocalizedString(@"HistoryClearConfirmationMessage", @"Are you sure?") preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey: PSHistoryName];
-		
+
 		// synchronize with iCloud as well, if available:
 		Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 		if(cls) {
 			id kvStore = [cls defaultStore];
-            [kvStore removeObjectForKey:PSHistoryName];
+			[kvStore removeObjectForKey:PSHistoryName];
 			NSMutableArray *history = [[NSMutableArray alloc] init];
 			[kvStore setArray:history forKey:PSHistoryName];
 		}
-		
-//		switch (listType) {
-//			case BibleTab:
-//				[[NSUserDefaults standardUserDefaults] removeObjectForKey: PS_HISTORY_NAME];
-//				break;
-//			case CommentaryTab:
-//				[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"commentaryHistory"];
-//				break;
-//			default:
-//				break;
-//		}
+
 		[self.tableView reloadData];
-	}
+	}]];
+	[self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)removeHistoryItem:(NSInteger)historyIndex forTab:(ShownTab)tabForHistory {

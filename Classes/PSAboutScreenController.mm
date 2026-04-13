@@ -369,20 +369,14 @@
     [self.tabBarController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	if(navigationType == UIWebViewNavigationTypeLinkClicked) {
-		//[[UIApplication sharedApplication] openURL:[request URL]];
-        [[UIApplication sharedApplication] openURL:[request URL] options:[NSDictionary dictionaryWithObject:UIApplicationOpenURLOptionUniversalLinksOnly forKey:@"blah"] completionHandler:nil];
-		return NO;
+- (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+	if(navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+		[[UIApplication sharedApplication] openURL:[navigationAction.request URL] options:@{} completionHandler:nil];
+		decisionHandler(WKNavigationActionPolicyCancel);
+		return;
 	}
-	return YES;
+	decisionHandler(WKNavigationActionPolicyAllow);
 }
-
-//- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-//    if(navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-//        [[UIApplication sharedApplication] openURL:[navigationAction.request URL] options:[NSDictionary dictionaryWithObject:UIApplicationOpenURLOptionUniversalLinksOnly forKey:@"blah"] completionHandler:nil];
-//    }
-//}
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.

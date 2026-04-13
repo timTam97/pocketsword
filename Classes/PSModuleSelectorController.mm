@@ -137,13 +137,11 @@
 	}
 	[self addButtonsToToolbar:NO];
 	
-	if([self respondsToSelector:@selector(contentSizeForViewInPopover)]) {
-		CGFloat height = 0.0;
-		height += modulesToolbar.frame.size.height;
-		height += self.navigationController.navigationBar.frame.size.height;
-		height += moduleCount * 44.0;
-		self.contentSizeForViewInPopover = CGSizeMake(540.0, height);
-	}
+	CGFloat height = 0.0;
+	height += modulesToolbar.frame.size.height;
+	height += self.navigationController.navigationBar.frame.size.height;
+	height += moduleCount * 44.0;
+	self.preferredContentSize = CGSizeMake(540.0, height);
 }
 
 - (void)addModuleButtonPressed {
@@ -362,9 +360,9 @@
 	[preferencesViewController displayPrefsForModule:mod];
 	NSArray *tabs = [NSArray arrayWithObjects:detailsViewController, preferencesViewController, nil];
 	[moduleTabBarController setViewControllers:tabs];
-	CGSize contentSize = self.contentSizeForViewInPopover;
+	CGSize contentSize = self.preferredContentSize;
 	contentSize.height = 2200;
-	moduleTabBarController.contentSizeForViewInPopover = contentSize;
+	moduleTabBarController.preferredContentSize = contentSize;
 	if(listType == PreferencesTab) {
 		// jump straight to the preferences tab...
 		[moduleTabBarController setSelectedViewController:preferencesViewController];
@@ -375,9 +373,8 @@
 //	[self.navigationController pushViewController:leafTabBarController animated:YES];
 }
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 - (void)addButtonsToToolbar:(BOOL)animated {

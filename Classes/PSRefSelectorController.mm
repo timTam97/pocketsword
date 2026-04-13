@@ -25,9 +25,7 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetBooks:) name:NotificationRefSelectorResetBooks object:nil];
-	if([self respondsToSelector:@selector(contentSizeForViewInPopover)]) {
-		self.contentSizeForViewInPopover = CGSizeMake(540.0, 1100.0);
-	}
+	self.preferredContentSize = CGSizeMake(540.0, 1100.0);
 }
 
 - (void)resetBooks:(NSNotification *)notification {

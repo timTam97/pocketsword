@@ -78,15 +78,21 @@
 		}
 	}
 	if(!valid) {
-		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message: NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-		[av show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksDuplicateFolderTitle", @"") message:NSLocalizedString(@"BookmarksDuplicateFolderMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			[self->nameTextField becomeFirstResponder];
+		}]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
 	// check for an invalid folder name (ie: contains PSFolderSeparatorString):
 	NSRange position = [nameTextField.text rangeOfString:PSFolderSeparatorString];
 	if(position.location != NSNotFound) {
-		UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message: NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-		[av show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksInvalidFolderTitle", @"") message:NSLocalizedString(@"BookmarksInvalidFolderMessage", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			[self->nameTextField becomeFirstResponder];
+		}]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
 	
@@ -108,9 +114,6 @@
 	return YES;
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	[nameTextField becomeFirstResponder];
-}
 
 /*
 - (void)viewWillAppear:(BOOL)animated {
@@ -133,8 +136,8 @@
 }
 */
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 #pragma mark -
@@ -248,13 +251,6 @@
     [super didReceiveMemoryWarning];
     
     // Relinquish ownership any cached data, images, etc. that aren't in use.
-}
-
-- (void)viewDidUnload {
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
-	nameTextField = nil;
-	[super viewDidUnload];
 }
 
 

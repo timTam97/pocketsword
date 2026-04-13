@@ -7,3 +7,8 @@
 project.xcworkspace/
 xcuserdata/
 *~.nib
+.cache/
+.clangd
+buildServer.json
+compile_commands.json
+Build PocketSword_*.txt

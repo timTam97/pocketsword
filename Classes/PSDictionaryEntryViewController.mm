@@ -28,8 +28,8 @@
 	baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.navigationItem.title = (self.entryTitle) ? entryTitle : @"";	
 	
-	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height)];
-	webView.delegate = self;
+	WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height) configuration:[[WKWebViewConfiguration alloc] init]];
+	webView.navigationDelegate = self;
 	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	if(self.entryHTML) {
 		[webView loadHTMLString: entryHTML baseURL: nil];
@@ -56,12 +56,9 @@
 }
 
 - (void)setScalesPageToFit:(BOOL)scalesPageToFit {
-	dictionaryDescriptionWebView.scalesPageToFit = scalesPageToFit;
+	// scalesPageToFit not available on WKWebView; handled via viewport meta tag in HTML
 }
 
-- (void)viewDidUnload {
-	[super viewDidUnload];
-}
 
 
 //- (void)viewWillAppear:(BOOL)animated {
@@ -73,44 +70,40 @@
 //	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:dictionaryDescriptionWebView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
 //}
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+	}];
 }
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 	@autoreleasepool {
-		BOOL load = YES;
-		
-		//NSLog(@"\nDictionaryDescription: requestString: %@", [[request URL] absoluteString]);
+		NSURLRequest *request = navigationAction.request;
 		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 		NSString *entry = nil;
-		
+
 		if(rData && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@"Bible"] && ![[rData objectForKey:ATTRTYPE_MODULE] isEqualToString:@""] && ![[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showImage"]) {
-			//
-			// it's a dictionary entry to show. (&& it's not a link on an image.)
-			//
 			NSString *mod = [rData objectForKey:ATTRTYPE_MODULE];
-			
+
 			SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
 			if(swordDictionary) {
 				entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-				//DLog(@"\n%@ = %@\n", mod, entry);
 			} else {
 				entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
 			}
-			NSString *t = [[rData objectForKey:ATTRTYPE_VALUE] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString *t = [[rData objectForKey:ATTRTYPE_VALUE] stringByRemovingPercentEncoding];
 			NSString *descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, entry] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
 			[self setDictionaryEntryTitle: t];
 			[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];
-			
-			entry = nil;
-			load = NO;
-			
+
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
+
 		} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 			NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
 			NSMutableString *tmpEntry = [@"" mutableCopy];
@@ -119,20 +112,19 @@
 				[tmpEntry appendFormat:@"<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef];
 				[tmpEntry appendFormat:@"%@<br />", [dict objectForKey:SW_OUTPUT_TEXT_KEY]];
 			}
-			if(![tmpEntry isEqualToString:@""]) {//"[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
+			if(![tmpEntry isEqualToString:@""]) {
 				entry = [[tmpEntry stringByReplacingOccurrencesOfString:@"[" withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""];
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryBible] name]];
 			}
 		}
-		
+
 		if(entry) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-			
-			load = NO;
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
 		}
-		
-		
-		return load;
+
+		decisionHandler(WKNavigationActionPolicyAllow);
 	}
 }
 

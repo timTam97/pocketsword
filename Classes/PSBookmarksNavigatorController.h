@@ -13,7 +13,6 @@
 	BOOL isAddingBookmark;
 	NSString *parentFolders;
 	BOOL displayAddFolderRow;
-	NSIndexPath *rowToDelete;
 	BOOL bookmarksEditing;
 }
 
