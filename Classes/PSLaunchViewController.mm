@@ -338,13 +338,7 @@
 	}
 }
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return YES;
-	//return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 	if(![PSResizing iPad]) {
 		return UIInterfaceOrientationMaskPortrait;
 	}
@@ -363,11 +357,6 @@
     // Release any cached data, images, etc. that aren't in use.
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
 
 
 

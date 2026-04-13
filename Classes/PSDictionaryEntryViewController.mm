@@ -59,9 +59,6 @@
 	dictionaryDescriptionWebView.scalesPageToFit = scalesPageToFit;
 }
 
-- (void)viewDidUnload {
-	[super viewDidUnload];
-}
 
 
 //- (void)viewWillAppear:(BOOL)animated {
@@ -77,9 +74,8 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
 }
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -103,7 +99,7 @@
 			} else {
 				entry = [NSString stringWithFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ %@</p>", mod, NSLocalizedString(@"ModuleNotInstalled", @"is not installed.")];
 			}
-			NSString *t = [[rData objectForKey:ATTRTYPE_VALUE] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString *t = [[rData objectForKey:ATTRTYPE_VALUE] stringByRemovingPercentEncoding];
 			NSString *descr = [PSModuleController createInfoHTMLString: [NSString stringWithFormat: @"<div style=\"-webkit-text-size-adjust: none;\"><b>%@</b><br /><p>%@</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>", t, entry] usingModuleForPreferences:[[[PSModuleController defaultModuleController] primaryDictionary] name]];
 			[self setDictionaryEntryTitle: t];
 			[dictionaryDescriptionWebView loadHTMLString: descr baseURL: nil];

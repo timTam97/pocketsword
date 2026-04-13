@@ -10,10 +10,6 @@
 #import "PSResizing.h"
 #import "globals.h"
 
-#ifndef kCFCoreFoundationVersionNumber_iOS_8_0
-#define kCFCoreFoundationVersionNumber_iOS_8_0 1129.15
-#endif
-
 #define TOP_BAR_LANDSCAPE_HEIGHT 32.0
 #define TOP_BAR_PORTRAIT_HEIGHT 44.0
 #define BOTTOM_BAR_LANDSCAPE_HEIGHT 32.0
@@ -119,37 +115,19 @@
 }
 
 + (CGRect)getOrientationRect:(UIInterfaceOrientation)interfaceOrientation {
-	CGFloat x,y,width,height;
 	CGSize screen = [[UIScreen mainScreen] bounds].size;
-	BOOL isPreiOS8 = NSFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_8_0;
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-		x = 0.0;
-		y = 0.0;
-		width = isPreiOS8 ? screen.height : screen.width;
-		height = isPreiOS8 ? screen.width : screen.height;
-	} else {
-		x = 0.0;
-		y = 0.0;
-		width = screen.width;
-		height = screen.height;
+	return CGRectMake(0.0, 0.0, screen.width, screen.height);
+}
+
++ (UIInterfaceOrientation)currentInterfaceOrientation {
+	UIWindowScene *windowScene = (UIWindowScene *)[[[UIApplication sharedApplication] connectedScenes] anyObject];
+	if (windowScene) {
+		return windowScene.interfaceOrientation;
 	}
-	return CGRectMake(x, y, width, height);
+	return UIInterfaceOrientationPortrait;
 }
 
-+ (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	NSInteger rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
-	//NSLog(@"rotationLockPosition == %i", rotationLockPosition);
-
-	if (rotationLockPosition == RotationEnabled) { return YES; }
-	
-	if (rotationLockPosition == RotationLockedInLandscape && (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight)) { return YES; }
-	
-	if (rotationLockPosition == RotationLockedInPortrait && (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) { return YES; }
-	
-	return NO;
-}
-
-+ (NSUInteger)supportedInterfaceOrientations {
++ (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 	NSInteger rotationLockPosition = [[NSUserDefaults standardUserDefaults] integerForKey:ROTATION_LOCK_POSITION];
 	switch (rotationLockPosition) {
 		case RotationEnabled:
@@ -181,12 +159,7 @@
 }
 
 + (BOOL)iPad {
-	if([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)) {
-		return YES;
-	} else {
-		return NO;
-	}
-
+	return ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPhone);
 }
 
 + (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *)path {

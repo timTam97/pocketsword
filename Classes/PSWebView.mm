@@ -60,9 +60,7 @@
 		PULL_THRESHOLD = PULL_THRESHOLD_IPAD - topLength;
 	}
 	
-	if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-		[super scrollViewDidScroll:scrollView];
-	}
+	[super scrollViewDidScroll:scrollView];
 //	if(self.autoFullscreenMode) {
 //		// trigger switching to fullscreen.
 //		//[psDelegate switchToFullscreen];
@@ -98,13 +96,10 @@
 	_reloading = NO;
 	
 	if([currentScrollView respondsToSelector:@selector(setContentInset:)]) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.3];
-//		[currentScrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-		[currentScrollView setContentInset:UIEdgeInsetsMake(topLength, 0.0f, bottomLength, 0.0f)];
-		[currentScrollView setScrollIndicatorInsets:UIEdgeInsetsMake(topLength, 0.0f, bottomLength, 0.0f)];
-		//currentScrollView.scrollIndicatorInsets = UIEdgeInsetsZero;
-		[UIView commitAnimations];
+		[UIView animateWithDuration:0.3 animations:^{
+			[currentScrollView setContentInset:UIEdgeInsetsMake(topLength, 0.0f, bottomLength, 0.0f)];
+			[currentScrollView setScrollIndicatorInsets:UIEdgeInsetsMake(topLength, 0.0f, bottomLength, 0.0f)];
+		}];
 	}
 	
 }

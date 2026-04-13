@@ -49,11 +49,6 @@
 	//[self setDictionaryTitleViaNotification];
 }
 
-- (void)viewDidUnload {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	searchResults = nil;
-	[super viewDidUnload];
-}
 
 
 - (void)primaryDictionaryChanged {
@@ -100,9 +95,27 @@
 		if(![[[PSModuleController defaultModuleController] primaryDictionary] keysLoaded]) {
 			if(![[[PSModuleController defaultModuleController] primaryDictionary] keysCached]) {
 				//ask whether to cache the keys now or another time
-				
-				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: [NSString stringWithFormat: @"%@ %@", [[[PSModuleController defaultModuleController] primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message: NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-				[alertView show];
+
+				UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat: @"%@ %@", [[[PSModuleController defaultModuleController] primaryDictionary] name], NSLocalizedString(@"CacheDictionaryKeysTitle", @"Cache?")] message:NSLocalizedString(@"CacheDictionaryKeysMsg", @"Cache the keys?") preferredStyle:UIAlertControllerStyleAlert];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+					[dictionarySearchBar setUserInteractionEnabled: NO];
+					dictionaryEnabled = NO;
+					[self.tableView reloadData];
+				}]];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+					MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+					[self.view addSubview:HUD];
+					HUD.delegate = self;
+					dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+						[[[PSModuleController defaultModuleController] primaryDictionary] performSelector:@selector(allKeys) withObject:nil];
+						dispatch_async(dispatch_get_main_queue(), ^{
+							[HUD hideAnimated:YES];
+						});
+					});
+					dictionaryEnabled = YES;
+					[dictionarySearchBar setUserInteractionEnabled: YES];
+				}]];
+				[self presentViewController:alert animated:YES completion:nil];
 				return;
 			} else {
 				
@@ -151,61 +164,6 @@
 //	}
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	@autoreleasepool {
-	
-		if (buttonIndex == 1) {
-            
-            
-            
-            
-            MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            
-            [self.view addSubview:HUD];
-            
-            // Regiser for HUD callbacks so we can remove it from the window at the right time
-            
-            HUD.delegate = self;
-            
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-                
-                [[[PSModuleController defaultModuleController] primaryDictionary] performSelector:@selector(allKeys) withObject:nil];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [HUD hideAnimated:YES];
-                });
-            });
-            
-            
-            
-            ////////////////////////////////////////////////////////////////////////////////
-            // Code updated to newer MBProgressHUD code
-            ////////////////////////////////////////////////////////////////////////////////
-//
-//			MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-//			[self.view addSubview:HUD];
-//			
-//			// Regiser for HUD callbacks so we can remove it from the window at the right time
-//			HUD.delegate = self;
-//			
-//			// Show the HUD while the provided method executes in a new thread
-//			[HUD showWhileExecuting:@selector(allKeys) onTarget:[[PSModuleController defaultModuleController] primaryDictionary] withObject:nil animated:YES];
-//            
-            ////////////////////////////////////////////////////////////////////////////////
-            
-			dictionaryEnabled = YES;
-			[dictionarySearchBar setUserInteractionEnabled: YES];
-		} else {
-			[dictionarySearchBar setUserInteractionEnabled: NO];
-			dictionaryEnabled = NO;
-			[self.tableView reloadData];
-		}
-	
-//	if(searching)
-//		[self searchDictionaryEntries];
-//	[self.tableView reloadData];
-	}
-}
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
@@ -303,7 +261,7 @@
 	if(self.navigationController) {
 		[self.navigationController pushViewController:entryVC animated:YES];
 	} else {
-		[self presentModalViewController:entryVC animated:YES];
+		[self presentViewController:entryVC animated:YES completion:nil];
 	}
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -418,7 +376,7 @@
 
 - (void)hideDescription:(id)sender {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideInfoPane object:nil];
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

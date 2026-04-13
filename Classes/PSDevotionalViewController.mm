@@ -70,16 +70,6 @@
 	}
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-	popoverController = nil;
-	self.devDatePicker = nil;
-	self.devPickerView = nil;
-	self.currentDevotionalDate = nil;
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 
 
 - (void)refreshDevotionalTitle {
@@ -251,24 +241,6 @@
 			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
 			[self displayPopover];
 		} else {
-			if([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0f) {
-				UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-				if([UIApplication sharedApplication].statusBarHidden) {
-					interfaceOrientation = [[self tabBarController] interfaceOrientation];
-				}
-				if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-					self.devPickerView.transform = CGAffineTransformIdentity;
-					self.devPickerView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-				} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-					self.devPickerView.transform = CGAffineTransformIdentity;
-					self.devPickerView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-				} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-					self.devPickerView.transform = CGAffineTransformIdentity;
-				} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-					self.devPickerView.transform = CGAffineTransformIdentity;
-					self.devPickerView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-				}
-			}
 			self.devDatePicker.frame = CGRectMake(0, 44, 320, 216);
 			[PSTabBarControllerDelegate showModal:self.devPickerView withTiming:0.3];
 		}
@@ -363,7 +335,7 @@
 					verse = @"1";
 					chapter = ref;
 				}
-				chapter = [[[chapter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+				chapter = [[[chapter stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 
 				[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];

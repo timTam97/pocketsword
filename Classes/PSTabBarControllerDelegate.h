@@ -100,9 +100,7 @@ typedef enum {
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
 + (void) hideModal:(UIView*) modalView withTiming:(float)time;
-+ (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 + (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
-+ (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 
 + (void)displayTitle:(NSString*)title;
 
@@ -147,8 +145,6 @@ typedef enum {
 - (void)hideInfo;
 - (void) showInfoModal:(UIView*)modalView withTiming:(float)time;
 - (void) hideInfoModal:(UIView*) modalView withTiming:(float)time;
-- (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
-
 - (void)displayCommentaryTabViaNotification;
 - (void)displayBibleTabViaNotification;
 

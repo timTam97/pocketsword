@@ -156,8 +156,33 @@
 			break;
 	}
 	if(showIndexController) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message: NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message:NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			[self refreshView];
+		}]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			SwordModule *mod;
+			if(listType == CommentaryTab) {
+				mod = [[PSModuleController defaultModuleController] primaryCommentary];
+			} else {
+				mod = [[PSModuleController defaultModuleController] primaryBible];
+			}
+			if(mod) {
+				[self refreshView];
+				PSIndexController *indexController = [[PSIndexController alloc] init];
+				indexController.delegate = self;
+				indexController.moduleToInstall = [mod name];
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
+					[indexController start:YES];
+				});
+				return;
+			} else {
+				ALog(@"no module to install the index for :P");
+			}
+			[self refreshView];
+		}]];
+		[self presentViewController:alert animated:YES completion:nil];
 	} else  if(!self.results) {
 		searchQueryView.bounds = searchResultsTable.bounds;
 		searchQueryView.center = searchResultsTable.center;
@@ -247,34 +272,6 @@
 	[self refreshView];
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == 1) {
-		SwordModule *mod;
-		if(listType == CommentaryTab) {
-			mod = [[PSModuleController defaultModuleController] primaryCommentary];
-		} else {
-			mod = [[PSModuleController defaultModuleController] primaryBible];
-		}
-		if(mod) {
-			[self refreshView];
-			PSIndexController *indexController = [[PSIndexController alloc] init];
-			indexController.delegate = self;
-			indexController.moduleToInstall = [mod name];
-			dispatch_async(dispatch_get_main_queue(), ^{
-				
-				[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
-				//[indexController addViewForHUD:];
-				[indexController start:YES];
-			});
-			return;
-		} else {
-			ALog(@"no module to install the index for :P");
-		}
-	} else {
-		
-	}
-	[self refreshView];
-}
 
 - (void)refreshView {
 	searchingEnabled = NO;

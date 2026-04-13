@@ -342,7 +342,7 @@
 		if([[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastMultiListTab] == SearchTab) {
 			[multiListController setSelectedViewController:searchNavigationController];
 		}
-		[tabBarController presentModalViewController:multiListController animated:YES];
+		[tabBarController presentViewController:multiListController animated:YES completion:nil];
 	}
 	
 }
@@ -376,7 +376,7 @@
 		//if(iPad) {
             [popoverController dismissPopoverAnimated:YES];
 		//} else {
-			[tabBarController dismissModalViewControllerAnimated:animated];
+			[tabBarController dismissViewControllerAnimated:animated completion:nil];
 		//}
 		moduleSelectorViewController = nil;
 	} else {
@@ -407,9 +407,9 @@
 		}
 
 		if(!iPad) {
-			[tabBarController presentModalViewController:modSelectorNavController animated:animated];
+			[tabBarController presentViewController:modSelectorNavController animated:animated completion:nil];
 		} else {
-			[popoverController setPopoverContentSize:moduleSelectorViewController.contentSizeForViewInPopover animated:NO];
+			[popoverController setPopoverContentSize:moduleSelectorViewController.preferredContentSize animated:NO];
 		}
 	}
 }
@@ -434,7 +434,7 @@
     BOOL iPad = [PSResizing iPad];
 	if(refNavigationController || [popoverController isPopoverVisible]) {
         if(!iPad) {
-            [tabBarController dismissModalViewControllerAnimated:YES];
+            [tabBarController dismissViewControllerAnimated:YES completion:nil];
         } else {
             [popoverController dismissPopoverAnimated:YES];
         }
@@ -453,7 +453,7 @@
 			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
-                [tabBarController presentModalViewController:refNavigationController animated:YES];
+                [tabBarController presentViewController:refNavigationController animated:YES completion:nil];
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
@@ -476,7 +476,7 @@
 			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
-                [tabBarController presentModalViewController:refNavigationController animated:YES];
+                [tabBarController presentViewController:refNavigationController animated:YES completion:nil];
             } else {
 				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
 				[popoverController setDelegate:self];
@@ -723,93 +723,36 @@
 	//CGPoint middleCenter = modalView.center;
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGFloat width, height;
-	CGPoint offScreenCenter, middleCenter;
-	if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0f) {
-		width = offSize.width;
-		height = offSize.height;
-		offScreenCenter = CGPointMake(width / 2.0f, height * 1.5f);
-		middleCenter = CGPointMake(width / 2.0f, height - (modalSize.height / 2.0f));
-	} else {
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-		if([UIApplication sharedApplication].statusBarHidden) {
-			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
-		}
-		if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-			offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
-			middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-			offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
-			middleCenter = CGPointMake(offSize.width - (modalSize.height / 2.0), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-			offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
-			middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
-		} else /*if(interfaceOrientation == UIInterfaceOrientationPortrait)*/ {
-			// assume normal portrait otherwise. :P
-			width = offSize.width;
-			height = offSize.height;
-			offScreenCenter = CGPointMake(width / 2.0f, height * 1.5f);
-			middleCenter = CGPointMake(width / 2.0f, height - (modalSize.height / 2.0f));
-		}
-	}
+	width = offSize.width;
+	height = offSize.height;
+	CGPoint offScreenCenter = CGPointMake(width / 2.0f, height * 1.5f);
+	CGPoint middleCenter = CGPointMake(width / 2.0f, height - (modalSize.height / 2.0f));
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];
-	
+
 	// Show it with a transition effect
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:time]; // animation duration in seconds
-	modalView.center = middleCenter;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:time animations:^{
+		modalView.center = middleCenter;
+	}];
 }
 
 - (void) showInfoModal:(UIView*)modalView withTiming:(float)time
 {
 	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	
+
 	CGSize modalSize = modalView.bounds.size;
-	//CGPoint middleCenter = modalView.center;
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGFloat width, height;
-	CGPoint offScreenCenter, middleCenter;
-	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-	if([UIApplication sharedApplication].statusBarHidden) {
-		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
-		if(bibleTabController.isFullScreen) {
-			interfaceOrientation = bibleTabController.interfaceOrientation;
-		} else if(commentaryTabController.isFullScreen) {
-			interfaceOrientation = commentaryTabController.interfaceOrientation;
-		}
-	}
-	if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0f) {
-		width = offSize.width;
-		height = offSize.height;
-		offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
-		middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
-	} else {
-		if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-			offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
-			middleCenter = CGPointMake((modalSize.height / 2.0), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-			offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
-			middleCenter = CGPointMake(offSize.width - (modalSize.height / 2.0), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-			offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
-			middleCenter = CGPointMake(modalSize.width / 2.0, (modalSize.height / 2.0));
-		} else /*if(interfaceOrientation == UIInterfaceOrientationPortrait)*/ {
-			width = offSize.width;
-			height = offSize.height;
-			offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
-			middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
-		}
-	}
+	CGFloat width = offSize.width;
+	CGFloat height = offSize.height;
+	CGPoint offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
+	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
 	modalView.center = offScreenCenter; // we start off-screen
 	[mainWindow addSubview:modalView];
-	
+
 	// Show it with a transition effect
-	[UIView beginAnimations:nil context:nil];
-	//[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationDuration:time]; // animation duration in seconds
-	modalView.center = middleCenter;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:time animations:^{
+		modalView.center = middleCenter;
+	}];
 }
 
 // Use this to slide the semi-modal view back down.
@@ -817,74 +760,22 @@
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0f) {
-		//should work under iOS 8 & later!
-	} else {
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-		if([UIApplication sharedApplication].statusBarHidden) {
-			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-		}
-		//UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
-		if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-			offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-			offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-			offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
-		}
-	}
-	[UIView beginAnimations:nil context:(void*)modalView];
-	[UIView setAnimationDuration:time];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationDidStopSelector:@selector(hideModalEnded:finished:context:)];
-	modalView.center = offScreenCenter;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+		modalView.center = offScreenCenter;
+	} completion:^(BOOL finished) {
+		[modalView removeFromSuperview];
+	}];
 }
 
 - (void) hideInfoModal:(UIView*) modalView withTiming:(float)time
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-	if([UIApplication sharedApplication].statusBarHidden) {
-		interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];;
-		if(bibleTabController.isFullScreen) {
-			interfaceOrientation = bibleTabController.interfaceOrientation;
-		} else if(commentaryTabController.isFullScreen) {
-			interfaceOrientation = commentaryTabController.interfaceOrientation;
-		}
-	}
-	if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0f) {
-		//should work under iOS 8 & later!
-	} else {
-		if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-			offScreenCenter = CGPointMake(offSize.height - (offSize.height * 1.5), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-			offScreenCenter = CGPointMake((offSize.height * 1.5), offSize.height / 2.0);
-		} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-			offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height - (offSize.height * 1.5));
-		}
-	}
-	[UIView beginAnimations:nil context:(void*)modalView];
-	[UIView setAnimationDuration:time];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationDidStopSelector:@selector(hideInfoModalEnded:finished:context:)];
-	modalView.center = offScreenCenter;
-	[UIView commitAnimations];
-}
-
-+ (void) hideModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
-{
-	UIView* modalView = (__bridge UIView *)context;
-	[modalView removeFromSuperview];
-}
-
-- (void) hideInfoModalEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
-{
-	UIView* modalView = (__bridge UIView *)context;
-	[modalView removeFromSuperview];
+	[UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+		modalView.center = offScreenCenter;
+	} completion:^(BOOL finished) {
+		[modalView removeFromSuperview];
+	}];
 }
 
 // Use this to slide the semi-modal view back down.
@@ -892,19 +783,11 @@
 {
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	[UIView beginAnimations:nil context:(void*)modalView];
-	[UIView setAnimationDuration:time];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationDidStopSelector:@selector(hideModalAndReleaseEnded:finished:context:)];
-	modalView.center = offScreenCenter;
-	[UIView commitAnimations];
-}
-
-+ (void) hideModalAndReleaseEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
-{
-	UIView* modalView = (__bridge UIView *)context;
-	[modalView removeFromSuperview];
+	[UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+		modalView.center = offScreenCenter;
+	} completion:^(BOOL finished) {
+		[modalView removeFromSuperview];
+	}];
 }
 
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
@@ -946,7 +829,7 @@
 		infoTopBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		infoTopBar.frame = CGRectMake(0, 0, screen.width, 20);
 		[infoView addSubview:infoTopBar];
-		UIButton *closeImgButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		UIButton *closeImgButton = [UIButton buttonWithType:UIButtonTypeSystem];
 		closeImgButton.tintColor = [UIColor whiteColor];
 		[closeImgButton setImage:[UIImage imageNamed:@"popup-down-button.png"] forState:UIControlStateNormal];
 		closeImgButton.frame = CGRectMake(10, 0, 20, 20);
@@ -965,38 +848,9 @@
 		[infoView addSubview:infoWebView];
 		
 		
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabBarController.interfaceOrientation;
-		if([UIApplication sharedApplication].statusBarHidden) {
-			//we are in fullscreen mode in the Bible or Commentary tab.
-			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
-			if(bibleTabController.isFullScreen) {
-				interfaceOrientation = bibleTabController.interfaceOrientation;
-			} else if(commentaryTabController.isFullScreen) {
-				interfaceOrientation = commentaryTabController.interfaceOrientation;
-			}
-		}
 		BOOL deviceIsPad = [PSResizing iPad];
-		if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0f) {
-			infoView.transform = CGAffineTransformIdentity;
-			infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
-		} else {
-			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-				infoView.transform = CGAffineTransformIdentity;
-				infoView.frame = CGRectMake(0, 0, screen.height, ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT));
-				infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-				infoView.transform = CGAffineTransformIdentity;
-				infoView.frame = CGRectMake(0, 0, screen.height, ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT));
-				infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-				infoView.transform = CGAffineTransformIdentity;
-				infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
-			} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-				infoView.transform = CGAffineTransformIdentity;
-				infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-				infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
-			}
-		}
+		infoView.transform = CGAffineTransformIdentity;
+		infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
 		[self showInfoModal: infoView withTiming: 0.3];
 	}
 	
@@ -1006,47 +860,13 @@
 
 - (void)rotateInfo:(NSNotification *)notification {
 	if([infoView superview]) {//only rotate if it's displayed!
-		[UIView beginAnimations:@"rotateInfo" context:nil];
-		[UIView setAnimationBeginsFromCurrentState:YES];
-		[UIView setAnimationDuration:0.3];
-		
 		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;//tabBarController.interfaceOrientation;
-		if([UIApplication sharedApplication].statusBarHidden) {
-			//interfaceOrientation = tabBarController.interfaceOrientation;
-			interfaceOrientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
-		}
 		BOOL deviceIsPad = [PSResizing iPad];
 		CGFloat info_portrait_height = ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT);
-		if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0f) {
+		[UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
 			infoView.transform = CGAffineTransformIdentity;
 			infoView.frame = CGRectMake(0, (screen.height - info_portrait_height), screen.width, info_portrait_height);
-		} else {
-			CGFloat x,y;
-			CGFloat info_landscape_height = ((deviceIsPad) ? INFO_IPAD_LANDSCAPE_HEIGHT : INFO_LANDSCAPE_HEIGHT);// 200 || 100
-			if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-				infoView.transform = CGAffineTransformIdentity;
-				x = screen.width - (0.5f * screen.height) - (0.5f * info_landscape_height);
-				y = (0.5 * screen.height) - (0.5 * info_landscape_height);
-				infoView.frame = CGRectMake(x, y, screen.height, info_landscape_height);
-				infoView.transform = CGAffineTransformMakeRotation(3.0 * M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-				infoView.transform = CGAffineTransformIdentity;
-				x = 0.5 * info_landscape_height - 0.5 * screen.height;
-				y = (0.5 * screen.height) - (0.5 * info_landscape_height);
-				infoView.frame = CGRectMake(x, y, screen.height, info_landscape_height);
-				infoView.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
-			} else if(interfaceOrientation == UIInterfaceOrientationPortrait) {
-				infoView.transform = CGAffineTransformIdentity;
-				infoView.frame = CGRectMake(0, (screen.height - info_portrait_height), screen.width, info_portrait_height);
-			} else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-				infoView.transform = CGAffineTransformIdentity;
-				infoView.frame = CGRectMake(0, 0, screen.width, info_portrait_height);
-				infoView.transform = CGAffineTransformMakeRotation(2.0 * M_PI / 2.0);
-			}
-		}
-		
-		[UIView commitAnimations];
+		} completion:nil];
 	}
 }
 
@@ -1298,10 +1118,8 @@
 }
 
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	// Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return UIInterfaceOrientationMaskPortrait;
 }
 
 + (UIColor *)getBarColorDefault {
@@ -1339,9 +1157,8 @@
 
 @implementation PSLoadingViewController
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 

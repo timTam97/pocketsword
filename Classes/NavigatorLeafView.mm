@@ -85,74 +85,69 @@
 
 - (void)confirmUpgrade {
 	if(![PSModuleController checkNetworkConnection]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];		
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"") style:UIAlertActionStyleCancel handler:nil]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
-	
+
 	if([[module name] isEqualToString: @"Personal"]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"NotSupported", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:nil]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
-	
+
 	SwordInstallSource *sIS = [[PSModuleController defaultModuleController] currentInstallSource];
-	
+
 	NSString *question = NSLocalizedString(@"ConfirmUpgrade", @"Would you like to upgrade this module?");
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
-	
+
 	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: message
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-	[alertView show];
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:messageTitle message:message preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		// Upgrade the module: remove it first and then install the new version.
+		[[PSModuleController defaultModuleController] removeModule:module.name];
+		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsWebView];
+		[PSModuleController queueModuleDownloadItem:dItem];
+		[self refreshInstallButton];
+	}]];
+	[self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)confirmInstall {
 	if(![PSModuleController checkNetworkConnection]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"") style:UIAlertActionStyleCancel handler:nil]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
-	
+
 	if([[module name] isEqualToString: @"Personal"]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"Error") message: NSLocalizedString(@"NotSupported", @"")
-								   delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"Ok") otherButtonTitles: nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"NotSupported", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok") style:UIAlertActionStyleCancel handler:nil]];
+		[self presentViewController:alert animated:YES completion:nil];
 		return;
 	}
 
 	SwordInstallSource *sIS = [[PSModuleController defaultModuleController] currentInstallSource];
-	
+
 	NSString *question = NSLocalizedString(@"ConfirmInstall", @"Would you like to install this module?");
 	NSString *messageTitle = NSLocalizedString(@"InstallTitle", @"");
-	
-	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: messageTitle message: message
-							   delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-	[alertView show];
-}
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	SwordModule *installedModule = [[SwordManager defaultManager] moduleWithName:module.name];
-	BOOL performInstall = NO;
-	
-	if (buttonIndex == 1 && !installedModule) {
-		//install the module
-		performInstall = YES;
-	} else if(buttonIndex == 1) {
-		//upgrade the module, so remove it first and then install the new version.
-		[[PSModuleController defaultModuleController] removeModule:module.name];
-		
-		performInstall = YES;
-	}
-	
-	if(performInstall) {
+	NSString *message = [question stringByAppendingFormat: @"\n%@\n%@\n%@\n[%@]", [module name], [module descr], [module installSize], [sIS caption]];
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:messageTitle message:message preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		// Install the module
 		PSModuleDownloadItem *dItem = [[PSModuleDownloadItem alloc] initWithModule:module swordInstallSource:[[PSModuleController defaultModuleController] currentInstallSource] viewForHUD:detailsWebView];
 		[PSModuleController queueModuleDownloadItem:dItem];
 		[self refreshInstallButton];
-	}
+	}]];
+	[self presentViewController:alert animated:YES completion:nil];
 }
+
 
 - (void)moduleDownloaded:(PSModuleDownloadItem *)sender {
 	[self refreshDetailsView];

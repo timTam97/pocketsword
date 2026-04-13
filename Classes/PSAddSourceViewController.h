@@ -25,6 +25,7 @@
 	float expectedDataLength;
 	float currentDataLength;
 	MBProgressHUD *indexDownloadHUD;
+	NSURLSessionDataTask *downloadTask;
 }
 
 @property (nonatomic, strong) NSString *serverType;

@@ -49,88 +49,54 @@
 		return;
 	}
 	mmmMenuDisplayed = YES;
-	UIActionSheet *actionSheet;
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference]) {
-		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), NSLocalizedString(@"AddFTPSource", @""), /*NSLocalizedString(@"AddHTTPSource", @""),*/ NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @""), nil];
-	} else {
-		actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"ManageSources", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"RefreshSourceList", @""), nil];
-	}
-	if([PSResizing iPad]) {
-		[actionSheet showFromBarButtonItem:sender animated:YES];
-	} else {
-		[actionSheet showFromTabBar:self.tabBarController.tabBar];
-	}
-}
+	UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ManageSources", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	mmmMenuDisplayed = NO;
-	if(buttonIndex == actionSheet.cancelButtonIndex)
-		return;
-	
-	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddFTPSource", @"")]) {
-		PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
-		addSourceViewController.serverType = INSTALLSOURCE_TYPE_FTP;
-		[self presentModalViewController:addSourceViewController animated:YES];
-	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"AddHTTPSource", @"")]) {
-		PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
-		addSourceViewController.serverType = INSTALLSOURCE_TYPE_HTTP;
-		[self presentModalViewController:addSourceViewController animated:YES];
-	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"DeleteSource", @"")]) {
-		//not currently implemented...
-	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"RefreshSourceList", @"")]) {
+	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"RefreshSourceList", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		mmmMenuDisplayed = NO;
 		if(![PSModuleController checkNetworkConnection]) {
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", @"") message: NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") delegate: self cancelButtonTitle: NSLocalizedString(@"Ok", @"") otherButtonTitles: nil];
-			[alertView show];
+			UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"NoNetworkConnection", @"No network connection available.") preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"") style:UIAlertActionStyleCancel handler:nil]];
+			[self presentViewController:alert animated:YES completion:nil];
 			return;
 		}
 		if([[PSModuleController defaultModuleController] tryDownloading]) {
 			return;//cannot refresh while downloading a module!
 		}
-		
-        
-        
-        
-        
-//      MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-//		[self.view addSubview:HUD];
-		
-        MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.delegate = self;
 
-        // Show the HUD while the provided method executes in a new thread
-//		[HUD showWhileExecuting:@selector(refreshMasterRemoteInstallSourceList) onTarget:[[PSModuleController defaultModuleController] swordInstallManager] withObject:nil animated:YES];
-        
-//          [self   showAnimated:animated whileExecutingBlock:^{
-//          [HUD    showAnimated:YES whileExecutingBlock:^{
+		MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		HUD.delegate = self;
 
-        
-//    #pragma clang diagnostic push
-//  #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            // Start executing the requested task
-         
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-            
-            [[[PSModuleController defaultModuleController] swordInstallManager] performSelector:@selector(refreshMasterRemoteInstallSourceList) withObject:nil];
+		dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+			[[[PSModuleController defaultModuleController] swordInstallManager] performSelector:@selector(refreshMasterRemoteInstallSourceList) withObject:nil];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[HUD hideAnimated:YES];
+			});
+		});
+	}]];
 
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [HUD hideAnimated:YES];
-             });
-            
-//      [target performSelector:method withObject:object];
-//      #pragma clang diagnostic pop
-        });
-
-        
-        
-        
-        
-        
-	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"")]) {
-		[self manualAddModule];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsModuleMaintainerModePreference]) {
+		[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"AddFTPSource", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			mmmMenuDisplayed = NO;
+			PSAddSourceViewController *addSourceViewController = [[PSAddSourceViewController alloc] initWithNibName:nil bundle:nil];
+			addSourceViewController.serverType = INSTALLSOURCE_TYPE_FTP;
+			[self presentViewController:addSourceViewController animated:YES completion:nil];
+		}]];
+		[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"PreferencesModuleMaintainerModeTitle", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			mmmMenuDisplayed = NO;
+			[self manualAddModule];
+		}]];
 	}
+
+	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+		mmmMenuDisplayed = NO;
+	}]];
+
+	if([PSResizing iPad]) {
+		actionSheet.popoverPresentationController.barButtonItem = sender;
+	}
+	[self presentViewController:actionSheet animated:YES completion:nil];
 }
+
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
 	// Remove HUD from screen when the HUD was hidded
@@ -149,8 +115,16 @@
 	[super viewWillAppear:animated];
 	
 	if(![[[PSModuleController defaultModuleController] swordInstallManager] userDisclaimerConfirmed]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Disclaimer", @"") message: NSLocalizedString(@"DisclaimerMsg", @"") delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-		[alertView show];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Disclaimer", @"") message:NSLocalizedString(@"DisclaimerMsg", @"") preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[[[PSModuleController defaultModuleController] swordInstallManager] setUserDisclainerConfirmed: YES];
+			[self addManualInstallButton];
+			[self.tableView reloadData];
+			[[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"userDisclaimerAccepted"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+		}]];
+		[self presentViewController:alert animated:YES completion:nil];
 	}
 	if([NSThread isMainThread]) {
 		[self resetInstallSourcesListing];
@@ -162,7 +136,7 @@
 - (void)manualAddModule {
 	iPhoneHTTPServerDelegate *manualInstallViewController = [[iPhoneHTTPServerDelegate alloc] initWithNibName:nil bundle:nil];
 	manualInstallViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-	[self presentModalViewController:manualInstallViewController animated:YES];
+	[self presentViewController:manualInstallViewController animated:YES completion:nil];
 
 	[manualInstallViewController startServer];
 }
@@ -246,23 +220,9 @@
 	}
 }
 
-//
-// UIAlertView delegate method
-//
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	
-	if (buttonIndex == 1) {
-		[[[PSModuleController defaultModuleController] swordInstallManager] setUserDisclainerConfirmed: YES];
-		[self addManualInstallButton];
-		[self.tableView reloadData];
-		[[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"userDisclaimerAccepted"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-	}
-	
-}
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 
@@ -274,9 +234,8 @@
 
 @implementation PSStatusController
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 - (void)viewDidLoad {

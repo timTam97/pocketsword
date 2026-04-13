@@ -123,7 +123,7 @@ line-height: 130%%;\n\
 }
 
 - (void)closeUnlockView:(id)sender {
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)unlockSaveButtonPressed:(id)sender {
@@ -168,10 +168,9 @@ line-height: 130%%;\n\
     CGRect r  = unlockToolbar.frame, t;
 	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
     r.origin.y -=  t.size.height;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    unlockToolbar.frame = r;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:0.3 animations:^{
+		unlockToolbar.frame = r;
+	}];
 	[unlockEditButton setEnabled:NO];
 	[unlockSaveButton setEnabled:NO];
 }
@@ -180,20 +179,18 @@ line-height: 130%%;\n\
     CGRect r  = unlockToolbar.frame, t;
 	[[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &t];
     r.origin.y +=  t.size.height;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    unlockToolbar.frame = r;
-	[UIView commitAnimations];
+	[UIView animateWithDuration:0.3 animations:^{
+		unlockToolbar.frame = r;
+	}];
 	[unlockEditButton setEnabled:YES];
 	[unlockSaveButton setEnabled:YES];
 }
 
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if([PSResizing iPad]) {
-        return [PSResizing shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+        return [PSResizing supportedInterfaceOrientations];
     } else {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return UIInterfaceOrientationMaskPortrait;
     }
 }
 

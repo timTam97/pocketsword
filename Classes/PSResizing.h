@@ -16,9 +16,9 @@
 
 + (CGRect)getOrientationRect:(UIInterfaceOrientation)interfaceOrientation;
 
-+ (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
++ (UIInterfaceOrientationMask)supportedInterfaceOrientations;
 
-+ (NSUInteger)supportedInterfaceOrientations;
++ (UIInterfaceOrientation)currentInterfaceOrientation;
 
 + (BOOL)iPad;
 

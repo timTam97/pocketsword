@@ -98,8 +98,8 @@
 }
 */
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-	return [PSResizing shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return [PSResizing supportedInterfaceOrientations];
 }
 
 - (void)editButtonPressed {
@@ -258,10 +258,13 @@
         // Delete the row from the data source.
 		PSBookmarkObject *rowObject = (isAddingBookmark) ? [[bookmarkFolder folders] objectAtIndex:indexPath.row] : [bookmarkFolder.children objectAtIndex:indexPath.row];
 		if(rowObject.folder) {
-			// TODO: display confirmation
-			rowToDelete = indexPath;
-			UIAlertView *av = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"BookmarksConfirmDeleteFolderTitle", @"") message: [NSString stringWithFormat:NSLocalizedString(@"BookmarksConfirmDeleteFolderMessage", @""), rowObject.name] delegate: self cancelButtonTitle: NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
-			[av show];
+			// Confirm deletion
+			UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BookmarksConfirmDeleteFolderTitle", @"") message:[NSString stringWithFormat:NSLocalizedString(@"BookmarksConfirmDeleteFolderMessage", @""), rowObject.name] preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:nil]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				[self deleteChildAtIndexPath:indexPath];
+			}]];
+			[self presentViewController:alert animated:YES completion:nil];
 		} else {
 			[self deleteChildAtIndexPath:indexPath];
 		}
@@ -271,13 +274,6 @@
     }   
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if(buttonIndex == 1) {
-		//yup, delete the folder!
-		[self deleteChildAtIndexPath:rowToDelete];
-	}
-	rowToDelete = nil;
-}
 
 - (void)deleteChildAtIndexPath:(NSIndexPath *)indexPath {
 	NSMutableArray *array = [bookmarkFolder.children mutableCopy];

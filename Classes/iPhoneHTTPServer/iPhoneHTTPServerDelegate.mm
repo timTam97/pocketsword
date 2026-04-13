@@ -149,7 +149,7 @@
 	httpServer = nil;
 	
 	//now remove ourselves from the current view...
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)displayInfoUpdate:(NSNotification *) notification
@@ -200,13 +200,6 @@
 		wwwInfo.text = NSLocalizedString(@"WebNoIP", @"");
 	}
 
-}
-
-- (void)viewDidUnload {
-	bonjourInfo = nil;
-	ipInfo = nil;
-	wwwInfo = nil;
-	[super viewDidUnload];
 }
 
 

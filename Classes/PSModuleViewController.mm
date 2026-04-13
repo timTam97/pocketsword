@@ -15,6 +15,7 @@
 #import "PSBookmarks.h"
 #import "PSBookmark.h"
 #import "PSCommentaryViewController.h"
+#import "PSBibleViewController.h"
 #import "SwordManager.h"
 #import "PSHistoryController.h"
 
@@ -93,7 +94,6 @@
 	forwardImg.accessibilityLabel = NSLocalizedString(@"VoiceOverNextChapterButton", @"");
 	NSArray *segments = [NSArray arrayWithObjects:backImg, @"Gen 23:23", forwardImg, nil];
 	UISegmentedControl *segControl = [[UISegmentedControl alloc] initWithItems:segments];
-	segControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segControl.momentary = YES;
 	
 	static CGFloat arrowWidth = 50.0;
@@ -117,9 +117,9 @@
 		newYOffset = [(NSNumber*)[versePositionArray objectAtIndex:(verseNumber-1)] floatValue];
 		CGFloat topLength = 0;
 		CGFloat bottomLength = 0;
-		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-			topLength = [[self topLayoutGuide] length];
-			bottomLength = [[self bottomLayoutGuide] length];
+		if(!self.isFullScreen) {
+			topLength = self.view.safeAreaInsets.top;
+			bottomLength = self.view.safeAreaInsets.bottom;
 		}
 		newYOffset -= topLength;
 		if((newYOffset + webView.frame.size.height) > webView.scrollView.contentSize.height) {
@@ -337,9 +337,9 @@
 - (void)setupWebViewRefreshViews {
 	CGFloat topLength = 0;
 	CGFloat bottomLength = 0;
-	if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-		topLength = [[self topLayoutGuide] length];
-		bottomLength = [[self bottomLayoutGuide] length];
+	if(!self.isFullScreen) {
+		topLength = self.view.safeAreaInsets.top;
+		bottomLength = self.view.safeAreaInsets.bottom;
 	}
 	[webView setupRefreshViews:topLength bottom:bottomLength];
 }
@@ -379,8 +379,8 @@
 	}
 	if(finishedLoading) {
 		CGFloat topLength = 0.0f;
-		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-			topLength = [[self topLayoutGuide] length];
+		if(!self.isFullScreen) {
+			topLength = self.view.safeAreaInsets.top;
 		}
 		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
@@ -430,49 +430,39 @@
 		[self toggleFullscreen];
 }
 
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    //[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-	[self setupWebViewRefreshViews];
-	[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+- (BOOL)prefersStatusBarHidden {
+	return isFullScreen;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
+	return UIStatusBarAnimationSlide;
 }
 
 - (void)toggleFullscreen {
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
     isFullScreen = !isFullScreen;
 	[webView removeRefreshViews];
-	
-	//if(!isFullScreen) {
-		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreen withAnimation:UIStatusBarAnimationSlide];
-	//}
-	
-    [UIView beginAnimations:@"fullscreen" context:nil];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.5];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-	
-	
-    self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
-	
+
+	[self setNeedsStatusBarAppearanceUpdate];
+
     //resize webview to be full screen / normal
     [webView removeFromSuperview];
     if(isFullScreen) {
 		//previousTabBarView is an ivar to hang on to the original view...
         previousTabBarView = self.tabBarController.view;
         [self.tabBarController.view addSubview:webView];
-		
-		CGFloat width  = [[UIScreen mainScreen] bounds].size.width;
-		CGFloat height = [[UIScreen mainScreen] bounds].size.height;
-		UIInterfaceOrientation uiio = (self.view.frame.size.width == (width * (width < height)) + (height * (width > height)))
-			  ? UIInterfaceOrientationPortrait : UIInterfaceOrientationLandscapeLeft;
-        webView.frame = [PSResizing getOrientationRect:uiio];
+        webView.frame = [PSResizing getOrientationRect:UIInterfaceOrientationPortrait];
     } else {
         [self.view addSubview:webView];
         self.tabBarController.view = previousTabBarView;
     }
-	
-    [UIView commitAnimations];
-	
+
+	[UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+		self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
+	} completion:^(BOOL finished) {
+		[self setupWebViewRefreshViews];
+		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+	}];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -524,8 +514,8 @@
 		verseToShow = 0;
 	} else {
 		CGFloat topLength = 0.0f;
-		if([self respondsToSelector:@selector(topLayoutGuide)] && !self.isFullScreen) {
-			topLength = [[self topLayoutGuide] length];
+		if(!self.isFullScreen) {
+			topLength = self.view.safeAreaInsets.top;
 		}
 		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
@@ -568,9 +558,33 @@
 				//DLog(@"    %@", tappedVerse);
 				NSInteger tappedVerseInt = [tappedVerse integerValue];
 				NSString *sheetTitle = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @""), tappedVerseInt];
-				UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:sheetTitle delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"VerseContextualMenuAddBookmark", @""), NSLocalizedString(@"VerseContextualMenuCommentary", @""), nil];
-				[sheet showFromTabBar:self.tabBarController.tabBar];
-				// TODO: for iPad, use showFromRect:inView:animated: instead, after determining the rect of the verse number.
+				UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:sheetTitle message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+					//add a bookmark!
+					NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
+					PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
+					UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
+					[self presentViewController:containingNavigationController animated:YES completion:nil];
+					self.tappedVerse = nil;
+				}]];
+				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuCommentary", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+					//switch to the equivalent commentary entry.
+					PSBibleViewController *bibleVC = (PSBibleViewController *)self;
+					[bibleVC setVerseToShow:[tappedVerse integerValue]];
+					BOOL fs = [self isFullScreen];
+					if(fs) {
+						[self toggleFullscreen];
+						[bibleVC.commentaryView viewWillAppear:YES];
+					}
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
+					if(fs) {
+						[bibleVC.commentaryView toggleFullscreen];
+					}
+					self.tappedVerse = nil;
+				}]];
+				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:nil]];
+				// TODO: for iPad, use popoverPresentationController.sourceView/sourceRect instead.
+				[self presentViewController:actionSheet animated:YES completion:nil];
 			}
 			load = NO;
 		} else if([(NSString *)[components objectAtIndex:0] isEqualToString:@"arraydump"]) {
