@@ -180,12 +180,11 @@
 	[self reloadDictionaryData:NO];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-//	[PSResizing resizeViewsOnRotateWithTabBarController:self.tabBarController topBar:self.navigationController.navigationBar mainView:self.tableView fromOrientation:self.interfaceOrientation toOrientation:toInterfaceOrientation];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+	}];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

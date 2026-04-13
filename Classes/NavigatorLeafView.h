@@ -6,17 +6,18 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import <WebKit/WebKit.h>
 #import "PSModuleDownloadItem.h"
 
 @class SwordModule;
 
 @interface NavigatorLeafView : UIViewController <UINavigationBarDelegate, PSModuleDownloadDelegate> {
-	UIWebView *detailsWebView;
+	WKWebView *detailsWebView;
 
 	SwordModule *module;
 }
 
 @property (strong, readwrite) SwordModule *module;
-@property (strong) UIWebView *detailsWebView;
+@property (strong) WKWebView *detailsWebView;
 
 @end

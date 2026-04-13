@@ -6,6 +6,8 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
+#import <WebKit/WebKit.h>
+
 @class PSWebView;
 
 @protocol PSWebViewDelegate
@@ -16,23 +18,19 @@
 @optional
 @end
 
-@interface PSWebView : UIWebView {
-	id<PSWebViewDelegate> __weak psDelegate;
+@interface PSWebView : UIView <UIScrollViewDelegate>
 
-    BOOL _reloading;
-    float cachedHeight;
-	
-	CGFloat topLength;
-	CGFloat bottomLength;
-	CGFloat currentOffsetY;
-	
-	BOOL autoFullscreenMode;
-}
-
+@property (nonatomic, strong, readonly) WKWebView *wkWebView;
 @property (nonatomic, weak) id<PSWebViewDelegate> psDelegate;
 @property CGFloat topLength;
 @property CGFloat bottomLength;
 @property BOOL autoFullscreenMode;
+
+// Forwarding methods to match UIWebView API used by callers
+- (void)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
+- (UIScrollView *)scrollView;
+- (void)setDelegate:(id)delegate;  // WKNavigationDelegate
+- (void)stringByEvaluatingJavaScriptFromString:(NSString *)script; // fire-and-forget wrapper
 
 - (void)dataSourceDidFinishLoadingNewData;
 - (void)setupRefreshViews:(CGFloat)top bottom:(CGFloat)bottom;

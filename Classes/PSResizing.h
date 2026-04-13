@@ -20,6 +20,10 @@
 
 + (UIInterfaceOrientation)currentInterfaceOrientation;
 
++ (UIWindowScene *)currentWindowScene;
+
++ (CGFloat)statusBarHeight;
+
 + (BOOL)iPad;
 
 + (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *)path;

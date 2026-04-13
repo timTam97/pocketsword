@@ -29,16 +29,8 @@ line-height: 130%%;\n\
 </style>\n\
 </head>"
 
-- (void)disableScrolling:(UIWebView*)webview {
-	UIScrollView* currentScrollView = nil;
-    for (UIView* subView in webview.subviews) {
-        if ([subView respondsToSelector:@selector(scrollsToTop)]) {
-            currentScrollView = (UIScrollView*)subView;
-        }
-    }
-	if([currentScrollView respondsToSelector:@selector(isScrollEnabled)]) {
-		[currentScrollView setScrollEnabled:NO];
-	}
+- (void)disableScrolling:(WKWebView*)webview {
+	webview.scrollView.scrollEnabled = NO;
 }
 
 - (void)loadView {
@@ -52,7 +44,7 @@ line-height: 130%%;\n\
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeUnlockView:)];
 	self.navigationItem.leftBarButtonItem = cancelButton;
 	
-	UIWebView *helpWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, HelpWebViewHeight)];
+	WKWebView *helpWV = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, HelpWebViewHeight) configuration:[[WKWebViewConfiguration alloc] init]];
 	[self disableScrolling:helpWV];
 	[baseView addSubview:helpWV];
 	self.unlockHelpWebView = helpWV;
@@ -74,7 +66,7 @@ line-height: 130%%;\n\
 	[baseView addSubview:textField];
 	self.unlockTextField = textField;
 	
-	UIWebView *testWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 183, viewWidth, 193)];
+	WKWebView *testWebView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 183, viewWidth, 193) configuration:[[WKWebViewConfiguration alloc] init]];
 	[self disableScrolling:testWebView];
 	[baseView addSubview:testWebView];
 	self.unlockWebView = testWebView;

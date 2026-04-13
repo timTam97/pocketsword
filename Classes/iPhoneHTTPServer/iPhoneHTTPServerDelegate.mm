@@ -11,39 +11,34 @@
 
 #import "PSModuleController.h"
 #import "PSTabBarControllerDelegate.h"
+#import "PSResizing.h"
 
 @implementation iPhoneHTTPServerDelegate
 
 - (void)loadView {
 	
-	//Calculate Screensize. based on http://stackoverflow.com/a/13068718
-	BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden ];
-	
+	//Calculate Screensize.
 	CGRect frame = [[UIScreen mainScreen] bounds];
-	
+
 	//check if you should rotate the view, e.g. change width and height of the frame
+	UIInterfaceOrientation currentOrientation = [PSResizing currentInterfaceOrientation];
 	BOOL rotate = NO;
-	if ( UIInterfaceOrientationIsLandscape( [UIApplication sharedApplication].statusBarOrientation ) ) {
+	if ( UIInterfaceOrientationIsLandscape( currentOrientation ) ) {
 		if (frame.size.width < frame.size.height) {
 			rotate = YES;
 		}
 	}
-	
-	if ( UIInterfaceOrientationIsPortrait( [UIApplication sharedApplication].statusBarOrientation ) ) {
+
+	if ( UIInterfaceOrientationIsPortrait( currentOrientation ) ) {
 		if (frame.size.width > frame.size.height) {
 			rotate = YES;
 		}
 	}
-	
+
 	if (rotate) {
 		CGFloat tmp = frame.size.height;
 		frame.size.height = frame.size.width;
 		frame.size.width = tmp;
-	}
-	
-	
-	if (statusBarHidden) {
-		frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
 	}
 	
 	UIView *v = [[UIView alloc] initWithFrame: frame];

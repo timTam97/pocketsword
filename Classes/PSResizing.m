@@ -29,26 +29,17 @@
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
 	BOOL redrawInNewFrames = NO;
 	
-	UIInterfaceOrientation interfaceOrientation = [tabBarController interfaceOrientation];
-	if(!tabBarController) {
-		interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-		if([UIApplication sharedApplication].statusBarHidden) {
-			UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-			if(UIDeviceOrientationIsLandscape(deviceOrientation))
-				interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
-			else if(UIDeviceOrientationIsPortrait(deviceOrientation))
-				interfaceOrientation = UIInterfaceOrientationPortrait;
-		}
-	}
+	UIInterfaceOrientation interfaceOrientation = [PSResizing currentInterfaceOrientation];
+	CGFloat statusBarSize = [PSResizing statusBarHeight];
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		//DLog(@"landscape");
 		redrawInNewFrames = YES;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
 		width = screen.height;
 		topBarHeight = ([PSResizing iPad]) ? TOP_BAR_PORTRAIT_HEIGHT : TOP_BAR_LANDSCAPE_HEIGHT;
-		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight;// - [UIApplication sharedApplication].statusBarFrame.size.width;
+		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight;
 		if(useStatusBar) {
-			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.width;
+			viewHeight -= statusBarSize;
 		}
 	} else if(interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 		//DLog(@"portrait");
@@ -56,9 +47,9 @@
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_PORTRAIT_HEIGHT : 0.0;
 		width = screen.width;
 		topBarHeight = TOP_BAR_PORTRAIT_HEIGHT;
-		viewHeight = screen.height - topBarHeight - tabBarHeight - bottomBarHeight;// - [UIApplication sharedApplication].statusBarFrame.size.height;
+		viewHeight = screen.height - topBarHeight - tabBarHeight - bottomBarHeight;
 		if(useStatusBar) {
-			viewHeight -= [UIApplication sharedApplication].statusBarFrame.size.height;
+			viewHeight -= statusBarSize;
 		}
 	}
 	if(redrawInNewFrames) {
@@ -87,19 +78,20 @@
 	CGFloat topBarHeight, bottomBarHeight, viewHeight, width, bottomBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
 	BOOL redrawInNewFrames = NO;
+	CGFloat statusBarSize = [PSResizing statusBarHeight];
 	if((toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) && !(fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)) {
 		width = screen.width;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_LANDSCAPE_HEIGHT : 0.0;
-		bottomBarY = screen.height - [UIApplication sharedApplication].statusBarFrame.size.height - (bottomBarHeight / 2.0);
+		bottomBarY = screen.height - statusBarSize - (bottomBarHeight / 2.0);
 		topBarHeight = TOP_BAR_LANDSCAPE_HEIGHT;
-		viewHeight = screen.height - topBarHeight - tabBarHeight - bottomBarHeight - [UIApplication sharedApplication].statusBarFrame.size.height;
+		viewHeight = screen.height - topBarHeight - tabBarHeight - bottomBarHeight - statusBarSize;
 		redrawInNewFrames = YES;
 	} else if((toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) && !(fromInterfaceOrientation == UIInterfaceOrientationPortrait || fromInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)) {
 		width = screen.height;
 		bottomBarHeight = (bottomBar) ? BOTTOM_BAR_PORTRAIT_HEIGHT : 0.0;
-		bottomBarY = screen.width - [UIApplication sharedApplication].statusBarFrame.size.width - (bottomBarHeight / 2.0);
+		bottomBarY = screen.width - statusBarSize - (bottomBarHeight / 2.0);
 		topBarHeight = TOP_BAR_PORTRAIT_HEIGHT;
-		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight - [UIApplication sharedApplication].statusBarFrame.size.width;
+		viewHeight = screen.width - topBarHeight - tabBarHeight - bottomBarHeight - statusBarSize;
 		redrawInNewFrames = YES;
 	}
 	if(redrawInNewFrames) {
@@ -119,12 +111,30 @@
 	return CGRectMake(0.0, 0.0, screen.width, screen.height);
 }
 
++ (UIWindowScene *)currentWindowScene {
+	for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+		if ([scene isKindOfClass:[UIWindowScene class]]) {
+			return (UIWindowScene *)scene;
+		}
+	}
+	return nil;
+}
+
 + (UIInterfaceOrientation)currentInterfaceOrientation {
-	UIWindowScene *windowScene = (UIWindowScene *)[[[UIApplication sharedApplication] connectedScenes] anyObject];
+	UIWindowScene *windowScene = [PSResizing currentWindowScene];
 	if (windowScene) {
 		return windowScene.interfaceOrientation;
 	}
 	return UIInterfaceOrientationPortrait;
+}
+
++ (CGFloat)statusBarHeight {
+	UIWindowScene *windowScene = [PSResizing currentWindowScene];
+	if (windowScene && windowScene.statusBarManager) {
+		CGRect statusBarFrame = windowScene.statusBarManager.statusBarFrame;
+		return statusBarFrame.size.height;
+	}
+	return 0.0;
 }
 
 + (UIInterfaceOrientationMask)supportedInterfaceOrientations {

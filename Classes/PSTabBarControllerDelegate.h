@@ -17,6 +17,7 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+#import <WebKit/WebKit.h>
 #import "globals.h"
 #import "PSModuleSearchController.h"
 #import "PSDictionaryViewController.h"
@@ -50,26 +51,24 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSModuleSearchControllerDelegate, UIPopoverControllerDelegate, UIWebViewDelegate, PSDictionaryViewControllerDelegate> {
+@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSModuleSearchControllerDelegate, UIPopoverPresentationControllerDelegate, WKNavigationDelegate, PSDictionaryViewControllerDelegate> {
 	// Tab bar
 	UITabBarController IBOutlet         *tabBarController;
-	
+
 	// Bible tab
 	PSBibleViewController				*bibleTabController;
-	
+
 	// Commentary tab
 	PSCommentaryViewController			*commentaryTabController;
-	
+
 	// Bible & Commentary tab
 	PSRefSelectorController				*refSelectorController;
 	UINavigationController				*refNavigationController;
 	UIView								*refTitleSplashView;
 	NSTimer								*refTitleSplashTimer;
-    UIPopoverController					*popoverController;
-	
 	// infoView
 	UIView								*infoView;
-	UIWebView							*infoWebView;
+	WKWebView							*infoWebView;
 	
 
 	// MultiList

@@ -391,28 +391,28 @@
 	}
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	[webView stringByEvaluatingJavaScriptFromString:@"stopDetLocPoll();"];
 	NSString *verseKey = (tabType == BibleTab) ? DefaultsBibleVersePosition : DefaultsCommentaryVersePosition;
 	self.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);", [[NSUserDefaults standardUserDefaults] objectForKey:verseKey]];
-	if(isFullScreen)
-		return;
-	[webView removeRefreshViews];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-	NSString *js = nil;
-	if(self.jsToShow) {
-		js = [NSString stringWithFormat:@"resetArrays();%@startDetLocPoll();", self.jsToShow];
-		self.jsToShow = nil;
-	} else {
-		js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
+	if(!isFullScreen) {
+		[webView removeRefreshViews];
 	}
-	[webView stringByEvaluatingJavaScriptFromString:js];
-	if(finishedLoading) {
-		[self setupWebViewRefreshViews];
-	}
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+		NSString *js = nil;
+		if(self.jsToShow) {
+			js = [NSString stringWithFormat:@"resetArrays();%@startDetLocPoll();", self.jsToShow];
+			self.jsToShow = nil;
+		} else {
+			js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
+		}
+		[webView stringByEvaluatingJavaScriptFromString:js];
+		if(finishedLoading) {
+			[self setupWebViewRefreshViews];
+		}
+	}];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -503,8 +503,8 @@
 	[self highlightBookmarks];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)wView {
-	
+- (void)webView:(WKWebView *)wv didFinishNavigation:(WKNavigation *)navigation {
+
 	//highlight bookmarked verses
 	//[self highlightBookmarks];
 	[self setupWebViewRefreshViews];
@@ -519,24 +519,23 @@
 		}
 		[self scrollHappened:webView newOffsetY:(self.webView.scrollView.contentOffset.y + topLength)];
 	}
-	
+
 	//highlight search results
 	// TODO: implement highlighting of search results
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)wView {
+- (void)webView:(WKWebView *)wv didStartProvisionalNavigation:(WKNavigation *)navigation {
 	finishedLoading = NO;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 	@autoreleasepool {
-		BOOL load = YES;
-		
+		NSURLRequest *request = navigationAction.request;
 		NSString *requestString = [[request URL] absoluteString];
 		NSArray *components = [requestString componentsSeparatedByString:@":"];
 //	NSString *moduleViewType = (tabType == BibleTab) ? @"BIBLE" : @"COMMENTARY";
 //	DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
-		
+
 		if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"pocketsword"]) {
 			if([(NSString *)[components objectAtIndex:1] isEqualToString:@"currentverse"]) {
 				//our method of updating the title bar & remembering our position.
@@ -569,16 +568,16 @@
 				}]];
 				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuCommentary", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 					//switch to the equivalent commentary entry.
-					PSBibleViewController *bibleVC = (PSBibleViewController *)self;
-					[bibleVC setVerseToShow:[tappedVerse integerValue]];
+					PSCommentaryViewController *commView = ((PSBibleViewController *)self).commentaryView;
+					[commView setVerseToShow:[tappedVerse integerValue]];
 					BOOL fs = [self isFullScreen];
 					if(fs) {
 						[self toggleFullscreen];
-						[bibleVC.commentaryView viewWillAppear:YES];
+						[commView viewWillAppear:YES];
 					}
 					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
 					if(fs) {
-						[bibleVC.commentaryView toggleFullscreen];
+						[commView toggleFullscreen];
 					}
 					self.tappedVerse = nil;
 				}]];
@@ -586,19 +585,24 @@
 				// TODO: for iPad, use popoverPresentationController.sourceView/sourceRect instead.
 				[self presentViewController:actionSheet animated:YES completion:nil];
 			}
-			load = NO;
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
 		} else if([(NSString *)[components objectAtIndex:0] isEqualToString:@"arraydump"]) {
 			//DLog(@"\n%@: requestString: %@", moduleViewType, requestString);
 			[self saveVersePositionArray:components];
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
 		} else if([[[request URL] scheme] isEqualToString:@"sword"]) {
 			//our internal reference to say this is a Bible verse to display in the Bible tab
 			// This should only happen in the commentary tab & we allow it to "load" normally.
 			DLog(@"\nCOMMENTARY: requestString: %@", requestString);
+			decisionHandler(WKNavigationActionPolicyAllow);
+			return;
 		} else {
 			//NSLog(@"\nBIBLE: requestString: %@", requestString);
 			NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 			NSString *entry = nil;
-			
+
 			if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showStrongs"]) {
 				//
 				// Strong's Numbers
@@ -610,7 +614,7 @@
 					mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsStrongsHebrewModule];
 					hebrew = YES;
 				}
-				
+
 				SwordDictionary *swordDictionary = (SwordDictionary*)[[SwordManager defaultManager] moduleWithName: mod];
 				if(swordDictionary) {
 					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
@@ -629,7 +633,7 @@
 					entry = [NSString stringWithFormat:@"%@<div style=\"text-align: right\"><a href=\"search://%@%@\">%@</a></div>", entry, strongsPrefix, [rData objectForKey:ATTRTYPE_VALUE], NSLocalizedString(@"StrongsSearchFindAll", @"")];
 					//NSLog(@"%@", entry);
 				}
-				
+
 				NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
 				if(!hebrew) {
 					[[NSUserDefaults standardUserDefaults] setObject:PSGreekStrongsFontName forKey:DefaultsFontNamePreference];
@@ -640,7 +644,7 @@
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
 				[[NSUserDefaults standardUserDefaults] setObject:fontName forKey:DefaultsFontNamePreference];
 				[[NSUserDefaults standardUserDefaults] synchronize];
-							
+
 			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showMorph"]) {
 				//
 				// Morphological Tags
@@ -649,7 +653,7 @@
 				//		type hasPrefix: "strongMorph"	for Hebrew	???
 				//
 				// for the time being I'm going to test for "strongMorph" & show an error dialogue or otherwise use Greek.
-				
+
 				NSString *mod = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsMorphGreekModule];
 				if([[rData objectForKey:ATTRTYPE_TYPE] hasPrefix:@"strongMorph"]) {
 					entry = NSLocalizedString(@"MorphHebrewNotSupported", @"");
@@ -664,7 +668,7 @@
 					}
 				}
 				entry = [PSModuleController createInfoHTMLString: entry usingModuleForPreferences:mod];
-				
+
 			} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 				if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
 					if(tabType == BibleTab) {
@@ -716,16 +720,16 @@
 				}
 			}
 
-			
+
 			if(entry) {
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-				load = NO;
+				decisionHandler(WKNavigationActionPolicyCancel);
+				return;
 			}
 		}
-		
-		return load;
-	} // Return YES to make sure regular navigation works as expected.
-	
+
+		decisionHandler(WKNavigationActionPolicyAllow);
+	}
 }
 
 + (void)setVoiceOverForRefSegmentedControlSubviews:(NSArray *)subviews {

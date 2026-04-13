@@ -6,19 +6,19 @@
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
 //
 
+#import <WebKit/WebKit.h>
+
 @class PSTabBarControllerDelegate;
 
-@interface PSDevotionalViewController : UIViewController <UIWebViewDelegate, UIPopoverControllerDelegate> {
-	
-	UIWebView			*devotionalWebView;
+@interface PSDevotionalViewController : UIViewController <WKNavigationDelegate, UIPopoverPresentationControllerDelegate> {
+
+	WKWebView			*devotionalWebView;
 
 	UIView *devPickerView;
 	UIDatePicker *devDatePicker;
 
 	NSDate						*currentDevotionalDate;
-	
-	UIPopoverController			*popoverController;
-	
+
 	BOOL loaded;
 	BOOL redisplayDatePicker;
 }
@@ -27,7 +27,7 @@
 @property (strong) NSDate *currentDevotionalDate;
 @property (strong) UIView *devPickerView;
 @property (strong) UIDatePicker *devDatePicker;
-@property (strong) UIWebView *devotionalWebView;
+@property (strong) WKWebView *devotionalWebView;
 
 - (void)setDelegate:(PSTabBarControllerDelegate*)delegate;
 

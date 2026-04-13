@@ -30,37 +30,6 @@
 }
 
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	
-	NSString *buttonPressedTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-	if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"")]) {
-		
-		//add a bookmark!
-		NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
-		PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
-		UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
-		[self presentViewController:containingNavigationController animated:YES completion:nil];
-		self.tappedVerse = nil;
-		
-	} else if([buttonPressedTitle isEqualToString:NSLocalizedString(@"VerseContextualMenuCommentary", @"")]) {
-		
-		//switch to the equivalent commentary entry.
-		//commentaryView.jsToShow = [NSString stringWithFormat:@"scrollToVerse(%@);\n", tappedVerse];
-		[commentaryView setVerseToShow:[tappedVerse integerValue]];
-		BOOL fs = [self isFullScreen];
-		if(fs) {
-			[self toggleFullscreen];
-			[commentaryView viewWillAppear:YES];
-		}
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowCommentaryTab object:nil];
-		if(fs) {
-			[commentaryView toggleFullscreen];
-		}
-		self.tappedVerse = nil;
-		
-	}
-
-}
 
 
 @end

@@ -6,12 +6,13 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
+#import <WebKit/WebKit.h>
 #import "PSWebView.h"
 #import "globals.h"
 
 @class PSTabBarControllerDelegate;
 
-@interface PSModuleViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, PSWebViewDelegate> {
+@interface PSModuleViewController : UIViewController <WKNavigationDelegate, PSWebViewDelegate> {
 
 	UISegmentedControl			*titleSegmentedControl;
 	PSWebView					*webView;

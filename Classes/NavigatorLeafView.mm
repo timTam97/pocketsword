@@ -21,7 +21,7 @@
 - (void)loadView {
 	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
-	UIWebView *leafWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	WKWebView *leafWebView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) configuration:[[WKWebViewConfiguration alloc] init]];
 	self.view = leafWebView;
 	self.detailsWebView = leafWebView;
 }

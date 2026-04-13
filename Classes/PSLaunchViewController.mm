@@ -28,7 +28,7 @@
 
     if([PSResizing iPad]) {
 		
-		UIInterfaceOrientation uiOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+		UIInterfaceOrientation uiOrientation = [PSResizing currentInterfaceOrientation];
 		if(uiOrientation == UIInterfaceOrientationLandscapeLeft || uiOrientation == UIInterfaceOrientationLandscapeRight) {
 			aiFrame = CGRectMake(494, 370, 37, 37);
 		} else {
@@ -345,9 +345,9 @@
 	return [PSResizing supportedInterfaceOrientations];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	DLog(@"\nwe are about to rotate the launch view controller...");
-	//[self loadView];
 }
 
 - (void)didReceiveMemoryWarning {

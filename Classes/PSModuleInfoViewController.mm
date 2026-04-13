@@ -26,7 +26,7 @@
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 
-	UIWebView *infoWV = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
+	WKWebView *infoWV = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) configuration:[[WKWebViewConfiguration alloc] init]];
 	infoWV.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	infoWV.backgroundColor = [UIColor whiteColor];
 	self.infoWebView = infoWV;
@@ -42,7 +42,6 @@
 
 	self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 	[infoWebView loadHTMLString:@"<html><body bgcolor=\'black\'>&nbsp;</body></html>" baseURL: nil];
-	trashModule = NO;
 	askToUnlock = YES;
 	if(self.swordModule) {
 		[self displayInfoForModule:swordModule];

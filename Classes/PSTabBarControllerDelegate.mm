@@ -359,7 +359,7 @@
 	[self toggleModulesListAnimated:YES withModule:nil fromButton:(id)sender];
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)poController {
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController {
 	if(moduleSelectorViewController) {
 		moduleSelectorViewController = nil;
 	}
@@ -367,27 +367,18 @@
 		refSelectorController = nil;
 		refNavigationController = nil;
 	}
-	popoverController = nil;
 }
 
 - (void)toggleModulesListAnimated:(BOOL)animated withModule:(SwordModule *)swordModule fromButton:(id)sender {
     BOOL iPad = [PSResizing iPad];
-	if(moduleSelectorViewController || [popoverController isPopoverVisible]) {
-		//if(iPad) {
-            [popoverController dismissPopoverAnimated:YES];
-		//} else {
-			[tabBarController dismissViewControllerAnimated:animated completion:nil];
-		//}
+	if(moduleSelectorViewController || (tabBarController.presentedViewController != nil)) {
+		[tabBarController dismissViewControllerAnimated:animated completion:nil];
 		moduleSelectorViewController = nil;
 	} else {
 		moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil];
 		UINavigationController *modSelectorNavController = [[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController];
 		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;
 
-		if(iPad) {
-			popoverController = [[UIPopoverController alloc] initWithContentViewController:modSelectorNavController];
-			[popoverController setDelegate:self];
-		}
 		//set the module selector to use the correct module type.
 		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:BibleTab];
@@ -398,18 +389,23 @@
 		} else {
 			[moduleSelectorViewController setListType:DictionaryTab];
 		}
-		if(sender) {
-			[popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		} else {
-			DLog(@"We should only be calling toggleModulesList with a sender now!");
-			CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
-			[popoverController presentPopoverFromRect:theSpot inView:tabBarController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		}
 
-		if(!iPad) {
+		if(iPad) {
+			modSelectorNavController.modalPresentationStyle = UIModalPresentationPopover;
+			modSelectorNavController.preferredContentSize = moduleSelectorViewController.preferredContentSize;
+			if(sender) {
+				modSelectorNavController.popoverPresentationController.barButtonItem = sender;
+			} else {
+				DLog(@"We should only be calling toggleModulesList with a sender now!");
+				CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
+				modSelectorNavController.popoverPresentationController.sourceView = tabBarController.view;
+				modSelectorNavController.popoverPresentationController.sourceRect = theSpot;
+			}
+			modSelectorNavController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+			modSelectorNavController.popoverPresentationController.delegate = self;
 			[tabBarController presentViewController:modSelectorNavController animated:animated completion:nil];
 		} else {
-			[popoverController setPopoverContentSize:moduleSelectorViewController.preferredContentSize animated:NO];
+			[tabBarController presentViewController:modSelectorNavController animated:animated completion:nil];
 		}
 	}
 }
@@ -432,12 +428,8 @@
 
 - (void)toggleNavigation {
     BOOL iPad = [PSResizing iPad];
-	if(refNavigationController || [popoverController isPopoverVisible]) {
-        if(!iPad) {
-            [tabBarController dismissViewControllerAnimated:YES completion:nil];
-        } else {
-            [popoverController dismissPopoverAnimated:YES];
-        }
+	if(refNavigationController || (tabBarController.presentedViewController != nil)) {
+        [tabBarController dismissViewControllerAnimated:YES completion:nil];
 		refSelectorController = nil;
 		refNavigationController = nil;
 	} else {
@@ -455,14 +447,17 @@
                 [refSelectorController willShowNavigation];
                 [tabBarController presentViewController:refNavigationController animated:YES completion:nil];
             } else {
-				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
-				[popoverController setDelegate:self];
+				refNavigationController.modalPresentationStyle = UIModalPresentationPopover;
 				UIView *viewToPresentPopoverFrom = [bibleTabController titleSegmentedControl];
 				CGRect rect = viewToPresentPopoverFrom.frame;
 				rect.origin.x = 0;
 				rect.origin.y = 0;
-				[popoverController presentPopoverFromRect:rect inView:viewToPresentPopoverFrom permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+				refNavigationController.popoverPresentationController.sourceView = viewToPresentPopoverFrom;
+				refNavigationController.popoverPresentationController.sourceRect = rect;
+				refNavigationController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+				refNavigationController.popoverPresentationController.delegate = self;
                 [refSelectorController willShowNavigation];
+				[tabBarController presentViewController:refNavigationController animated:YES completion:nil];
             }
 		} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			// commentary tab
@@ -478,14 +473,17 @@
                 [refSelectorController willShowNavigation];
                 [tabBarController presentViewController:refNavigationController animated:YES completion:nil];
             } else {
-				popoverController = [[UIPopoverController alloc] initWithContentViewController:refNavigationController];
-				[popoverController setDelegate:self];
+				refNavigationController.modalPresentationStyle = UIModalPresentationPopover;
 				UIView *viewToPresentPopoverFrom = [commentaryTabController titleSegmentedControl];
 				CGRect rect = viewToPresentPopoverFrom.frame;
 				rect.origin.x = 0;
 				rect.origin.y = 0;
-				[popoverController presentPopoverFromRect:rect inView:viewToPresentPopoverFrom permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+				refNavigationController.popoverPresentationController.sourceView = viewToPresentPopoverFrom;
+				refNavigationController.popoverPresentationController.sourceRect = rect;
+				refNavigationController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+				refNavigationController.popoverPresentationController.delegate = self;
                 [refSelectorController willShowNavigation];
+				[tabBarController presentViewController:refNavigationController animated:YES completion:nil];
             }
         }
 	}
@@ -793,10 +791,10 @@
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
 	switch(tab) {
 		case BibleTab:
-			[[bibleTabController webView] highlightAllOccurencesOfString: term];
+			[[[bibleTabController webView] wkWebView] highlightAllOccurencesOfString:term completion:nil];
 			break;
 		case CommentaryTab:
-			[[commentaryTabController webView] highlightAllOccurencesOfString: term];
+			[[[commentaryTabController webView] wkWebView] highlightAllOccurencesOfString:term completion:nil];
 			break;
         case DictionaryTab:
         case DevotionalTab:
@@ -841,8 +839,8 @@
 		[clearButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
 		clearButton.showsTouchWhenHighlighted = YES;
 		[infoView addSubview:clearButton];
-		infoWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 20, screen.width, (INFO_PORTRAIT_HEIGHT - 20))];
-		infoWebView.delegate = self;
+		infoWebView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, screen.width, (INFO_PORTRAIT_HEIGHT - 20)) configuration:[[WKWebViewConfiguration alloc] init]];
+		infoWebView.navigationDelegate = self;
 		infoWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		infoWebView.backgroundColor = ([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference] ? [UIColor blackColor] : [UIColor whiteColor]);
 		[infoView addSubview:infoWebView];
@@ -875,13 +873,13 @@
 	infoView = nil;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	BOOL load = YES;
-	
+- (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+	NSURLRequest *request = navigationAction.request;
+
 	//NSLog(@"  Info Pane: requestString: %@", [[request URL] absoluteString]);
 	NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 	NSString *entry = nil;
-	
+
 	if([[[request URL] scheme] isEqualToString:@"bible"]) {
 		//our internal reference to say this is a Bible verse to display in the Bible tab
 		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
@@ -901,7 +899,8 @@
 			}
 			[PSHistoryController addHistoryItem:BibleTab];
 
-			return NO;
+			decisionHandler(WKNavigationActionPolicyCancel);
+			return;
 		}
 	} else if([[[request URL] scheme] isEqualToString:@"search"]) {
 		NSString *strongsSearchTerm = [[request URL] host];
@@ -933,9 +932,10 @@
 		[self hideInfo];
 		[self toggleMultiList];
 
-		return NO;
+		decisionHandler(WKNavigationActionPolicyCancel);
+		return;
 	}
-	
+
 	if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
 		//
 		// it's a Bible ref or dictionary entry to show.
@@ -953,7 +953,7 @@
 				BOOL greekStrongs = YES;
 				if(swordDictionary) {
 					entry = [swordDictionary entryForKey:[rData objectForKey:ATTRTYPE_VALUE]];
-					
+
 					NSString *strongsSearchTerm = @"";
 					if([swordDictionary hasFeature: SWMOD_CONF_FEATURE_GREEKDEF] && [swordDictionary hasFeature: SWMOD_CONF_FEATURE_HEBREWDEF]) {
 						// should already have a prefix
@@ -1002,7 +1002,7 @@
 			// Bible ref:
 			isABibleRef = YES;
 		}
-		
+
 		if(isABibleRef) {
 			// handle ref:
 			SwordModule *modToUse;
@@ -1033,7 +1033,7 @@
 				}
 			}
 		}
-		
+
 	} else if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showNote"]) {
 		if([[rData objectForKey:ATTRTYPE_TYPE] isEqualToString:@"n"]) {//footnote
 			entry = (NSString*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData];
@@ -1052,22 +1052,20 @@
 			}
 		}
 	}
-	
+
 	if(entry) {
 		entry = [entry stringByReplacingOccurrencesOfString:@"*x" withString:@"x"];
 		entry = [entry stringByReplacingOccurrencesOfString:@"*n" withString:@"n"];
 		[self showInfo: entry];
-		load = NO;
+		decisionHandler(WKNavigationActionPolicyCancel);
 	} else {
 		if(rData) {
 			//DLog(@"\nempty entry && action = %@", [rData objectForKey:ATTRTYPE_ACTION]);
 		} else {
 			//DLog(@"rData is nil && entry is nil");
 		}
+		decisionHandler(WKNavigationActionPolicyAllow);
 	}
-	
-	return load; // Return YES to make sure regular navigation works as expected.
-	
 }
 
 - (void)setShownTabTo:(ShownTab)tab {

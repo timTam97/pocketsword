@@ -25,8 +25,8 @@
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	
-	UIWebView *wv = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	wv.delegate = self;
+	WKWebView *wv = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) configuration:[[WKWebViewConfiguration alloc] init]];
+	wv.navigationDelegate = self;
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	wv.backgroundColor = [UIColor whiteColor];
 	NSString *html = @"<html><body bgcolor=\"white\">@nbsp;</body></html>";
@@ -140,35 +140,39 @@
 	loaded = YES;
 }
 
-- (void)popoverControllerDidDismissPopover:(id)poverController {
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController {
 	self.currentDevotionalDate = [self.devDatePicker date];
 	[self loadNewDevotionalEntry];
-	popoverController = nil;
 	self.devDatePicker = nil;
 	self.devPickerView = nil;
 }
 
-- (void)displayPopover {
+- (void)displayPopover:(UIViewController *)vcToPresent {
 	UIView *fromView = (UIView*)self.navigationItem.titleView;
 	CGRect fromRect = CGRectMake((fromView.frame.size.width/2.0f), fromView.frame.size.height, 1, 1);
-	[popoverController presentPopoverFromRect:fromRect inView:fromView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	vcToPresent.modalPresentationStyle = UIModalPresentationPopover;
+	vcToPresent.popoverPresentationController.sourceView = fromView;
+	vcToPresent.popoverPresentationController.sourceRect = fromRect;
+	vcToPresent.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+	vcToPresent.popoverPresentationController.delegate = self;
+	[self presentViewController:vcToPresent animated:YES completion:nil];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	if(self.devPickerView && ![popoverController isPopoverVisible]) {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	if(self.devPickerView && self.presentedViewController == nil) {
 		[self toggleDatePicker];
 		redisplayDatePicker = YES;
 	}
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
-	if([popoverController isPopoverVisible]) {
-		[self displayPopover];
-	} else if(redisplayDatePicker) {
-		redisplayDatePicker = NO;
-		[self toggleDatePicker];
-	}
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRotateInfoPane object:nil];
+		if(self.presentedViewController != nil) {
+			// Popover repositions automatically with UIPopoverPresentationController
+		} else if(redisplayDatePicker) {
+			redisplayDatePicker = NO;
+			[self toggleDatePicker];
+		}
+	}];
 }
 
 - (void)createPicker {
@@ -220,13 +224,12 @@
     BOOL iPad = [PSResizing iPad];
 	if(!loaded)
 		return;
-	if(self.devPickerView || [popoverController isPopoverVisible]) {
+	if(self.devPickerView || (self.presentedViewController != nil)) {
 		self.currentDevotionalDate = [self.devDatePicker date];
         if(!iPad) {
 			[PSTabBarControllerDelegate hideModal:self.devPickerView withTiming:0.3];
         } else {
-            [popoverController dismissPopoverAnimated:YES];
-			popoverController = nil;
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
 		self.devDatePicker = nil;
 		self.devPickerView = nil;
@@ -236,10 +239,8 @@
 		if(iPad) {
 			UIViewController *dpVC = [[UIViewController alloc] init];
 			dpVC.view = self.devPickerView;
-			popoverController = [[UIPopoverController alloc] initWithContentViewController:dpVC];
-			[popoverController setDelegate:self];
-			[popoverController setPopoverContentSize:CGSizeMake(320.0f, 260.0f)];
-			[self displayPopover];
+			dpVC.preferredContentSize = CGSizeMake(320.0f, 260.0f);
+			[self displayPopover:dpVC];
 		} else {
 			self.devDatePicker.frame = CGRectMake(0, 44, 320, 216);
 			[PSTabBarControllerDelegate showModal:self.devPickerView withTiming:0.3];
@@ -308,25 +309,25 @@
 	return planner;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 	@autoreleasepool {
-		BOOL load = YES;
+		NSURLRequest *request = navigationAction.request;
 		NSString *lastModule = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastDevotional];
 
 		//NSLog(@"\nDictionaryDescription: requestString: %@\nDD: %@", [[request URL] absoluteString], lastModule);
-		
+
 		NSDictionary *rData = [PSModuleController dataForLink: [request URL]];
 		NSString *entry = nil;
-		
+
 		if(rData && [[rData objectForKey:ATTRTYPE_ACTION] isEqualToString:@"showRef"]) {
-			
+
 			if([self isDailyReadingPlanner:lastModule]) {
 				// if we are going to jump straight to the verse in the Bible tab:
 				NSString *chapter, *verse;
-				
+
 				NSString *ref = [rData objectForKey:ATTRTYPE_VALUE];
 				NSArray *comps = [ref componentsSeparatedByString:@":"];
-				
+
 				if([comps count] > 1) {
 					//we have a verse
 					verse = [comps objectAtIndex:1];
@@ -340,16 +341,16 @@
 				[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:chapter] forKey: DefaultsLastRef];
 				[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
 				[[NSUserDefaults standardUserDefaults] synchronize];
-				
+
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
 				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowBibleTab object:nil];
 				[PSHistoryController addHistoryItem:BibleTab];
-				entry = nil;
-				load = NO;
-				
+				decisionHandler(WKNavigationActionPolicyCancel);
+				return;
+
 			} else {
 				// otherwise we show the info pane.
-					
+
 				NSArray *array = (NSArray*)[[[PSModuleController defaultModuleController] primaryBible] attributeValueForEntryData:rData cleanFeed:YES];
 				NSMutableString *tmpEntry = [@"" mutableCopy];
 				for(NSDictionary *dict in array) {
@@ -363,15 +364,13 @@
 				}
 			}
 		}
-		
-		
+
 		if(entry) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowInfoPane object:entry];
-			load = NO;
+			decisionHandler(WKNavigationActionPolicyCancel);
+		} else {
+			decisionHandler(WKNavigationActionPolicyAllow);
 		}
-		
-		
-		return load;
 	}
 }
 

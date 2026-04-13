@@ -6,25 +6,26 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
+#import <WebKit/WebKit.h>
 #import "globals.h"
 
 
 @interface PSModuleUnlockViewController : UIViewController <UITextFieldDelegate> {
-	
+
 	UIBarButtonItem		*unlockEditButton;
 	UIBarButtonItem		*unlockSaveButton;
-	UIWebView			*unlockWebView;
-	UIWebView			*unlockHelpWebView;
+	WKWebView			*unlockWebView;
+	WKWebView			*unlockHelpWebView;
 	UITextField			*unlockTextField;
 	UIToolbar			*unlockToolbar;
-	
+
 	NSString			*moduleName;
 }
 
 @property (copy)   NSString			*moduleName;
-@property (strong) UIWebView		*unlockHelpWebView;
+@property (strong) WKWebView		*unlockHelpWebView;
 @property (strong) UITextField		*unlockTextField;
-@property (strong) UIWebView		*unlockWebView;
+@property (strong) WKWebView		*unlockWebView;
 @property (strong) UIToolbar		*unlockToolbar;
 @property (strong) UIBarButtonItem	*unlockEditButton;
 @property (strong) UIBarButtonItem	*unlockSaveButton;

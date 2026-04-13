@@ -133,8 +133,11 @@
 	return [PSResizing supportedInterfaceOrientations];
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[self.tableView reloadData];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[self.tableView reloadData];
+	}];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -245,7 +248,7 @@
 	
 	CGFloat xx = 0.0;
 	BOOL deviceIsPad = [PSResizing iPad];
-	UIInterfaceOrientation interfaceOrientation = self.navigationController.interfaceOrientation;
+	UIInterfaceOrientation interfaceOrientation = [PSResizing currentInterfaceOrientation];
 	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		xx = 160.0;
 		if(deviceIsPad) {

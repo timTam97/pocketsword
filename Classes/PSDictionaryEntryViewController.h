@@ -6,15 +6,17 @@
 //  Copyright (c) 2013 CrossWire Bible Society. All rights reserved.
 //
 
-@interface PSDictionaryEntryViewController : UIViewController <UIWebViewDelegate> {
-	UIWebView *dictionaryDescriptionWebView;
+#import <WebKit/WebKit.h>
+
+@interface PSDictionaryEntryViewController : UIViewController <WKNavigationDelegate> {
+	WKWebView *dictionaryDescriptionWebView;
 	NSString *entryHTML;
 	NSString *entryTitle;
 }
 
 @property (strong) NSString *entryHTML;
 @property (strong) NSString *entryTitle;
-@property (strong) UIWebView *dictionaryDescriptionWebView;
+@property (strong) WKWebView *dictionaryDescriptionWebView;
 
 - (void)setDictionaryEntryTitle:(NSString*)title;
 - (void)setDictionaryEntryText:(NSString*)entry;
