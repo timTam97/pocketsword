@@ -37,4 +37,10 @@
 
 - (NSArray *)searchHistoryItemArray;
 
+/// Returns searchTermToDisplay with legacy CLucene-era operators stripped
+/// (lemma: prefix, && / || boolean operators). Entries saved by older
+/// versions occasionally leaked those tokens into the user-visible field;
+/// this lets the search bar show a clean term on replay.
+- (NSString *)cleanedDisplayTerm;
+
 @end

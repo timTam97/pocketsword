@@ -898,32 +898,15 @@
 			return;
 		}
 	} else if([[[request URL] scheme] isEqualToString:@"search"]) {
+		// Tapping a Strong's link routes here (e.g. search://H0430).
+		// The FTS5 engine handles H0xxx/Hxxx equivalence internally, so
+		// we no longer need to build `lemma:` expressions with || operators.
 		NSString *strongsSearchTerm = [[request URL] host];
-		if([strongsSearchTerm rangeOfString:@"H"].location != NSNotFound) {
-			NSMutableString *hebrew = [NSMutableString stringWithFormat:@"lemma:%@", strongsSearchTerm];
-			if([strongsSearchTerm characterAtIndex:1] == '0') {
-				// need to also search without the '0' present
-				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
-				[extraSearchTerm deleteCharactersInRange:NSMakeRange(1, 1)];
-				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
-			} else {
-				// need to also search with the '0' present
-				NSMutableString *extraSearchTerm = [strongsSearchTerm mutableCopy];
-				[extraSearchTerm insertString:@"0" atIndex:1];
-				[hebrew appendFormat:@" || lemma:%@", extraSearchTerm];
-			}
-			self.savedSearchHistoryItem = nil;
-			PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
-			shi.searchTerm = hebrew;
-			self.savedSearchHistoryItem = shi;
-		} else {
-			self.savedSearchHistoryItem = nil;
-			PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
-			shi.searchTerm = [NSString stringWithFormat:@"lemma:%@", strongsSearchTerm];
-			self.savedSearchHistoryItem = shi;
-		}
-		savedSearchHistoryItem.searchTermToDisplay = strongsSearchTerm;
-		savedSearchHistoryItem.strongsSearch = YES;
+		self.savedSearchHistoryItem = nil;
+		PSSearchHistoryItem *shi = [[PSSearchHistoryItem alloc] init];
+		shi.searchTermToDisplay = strongsSearchTerm;
+		shi.strongsSearch = YES;
+		self.savedSearchHistoryItem = shi;
 		[self hideInfo];
 		[self toggleMultiList];
 

@@ -36,7 +36,6 @@
 		0505FECD12C9A9D900A3C65B /* enabled-Strongs.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEB912C9A9D900A3C65B /* enabled-Strongs.png */; };
 		0505FECE12C9A9D900A3C65B /* enabled-Xrefs.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FEBA12C9A9D900A3C65B /* enabled-Xrefs.png */; };
 		050CB77D19D16A1200415A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77C19D16A1200415A27 /* Images.xcassets */; };
-		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
 		050CB78019D1789A00415A27 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77E19D1789A00415A27 /* Default-736h@3x.png */; };
 		050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77F19D1789A00415A27 /* Default-667h@2x.png */; };
 		050E37C1106D1806001FCC17 /* PSStatusReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050E37C0106D1806001FCC17 /* PSStatusReporter.cpp */; };
@@ -202,7 +201,6 @@
 		053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
 		054509C619A5DAA900E0A702 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545549710CA4D8000EE11EC /* PSIndexController.mm */; };
 		0545E23C10638D8400DD7F06 /* SwordInstallSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23910638D8400DD7F06 /* SwordInstallSource.mm */; };
 		0545E23D10638D8400DD7F06 /* SwordInstallManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E23B10638D8400DD7F06 /* SwordInstallManager.mm */; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
@@ -238,7 +236,6 @@
 		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */; };
 		056CD38616BB6D6200AA0674 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.1.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
-		056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */; };
 		05717C9513F27B8000753423 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		05781DA512D29B0F005F4890 /* PSModuleUnlockViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */; };
@@ -347,6 +344,11 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */; };
+		A100000000000000000001F2 /* PSSearchEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F2 /* PSSearchEngine.mm */; };
+		A100000000000000000001F4 /* PSSearchQuery.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F4 /* PSSearchQuery.mm */; };
+		A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F6 /* PSSearchIndexBuilder.mm */; };
+		A100000000000000000001F8 /* PSSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F8 /* PSSearchResult.m */; };
+		A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F9 /* libsqlite3.tbd */; };
 		A951C8561C4EB191000A3B5B /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E01C4D6E69006C755A /* libcurl.a */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
 		D2BFDF4F25E709D500E04366 /* rtranspgdrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF4E25E709D500E04366 /* rtranspgdrive.cpp */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
@@ -417,6 +419,7 @@
 		D2BFE5EB25E9BF0500E04366 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5EA25E9BF0500E04366 /* WebKit.framework */; };
 		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
 		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
+		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
 		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E96C139C0FFFC6390019B69E /* Daily-Devotional.png in Resources */ = {isa = PBXBuildFile; fileRef = E96C139B0FFFC6390019B69E /* Daily-Devotional.png */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
@@ -458,7 +461,6 @@
 		0505FEB912C9A9D900A3C65B /* enabled-Strongs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Strongs.png"; path = "Resources/enabled-Strongs.png"; sourceTree = "<group>"; };
 		0505FEBA12C9A9D900A3C65B /* enabled-Xrefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-Xrefs.png"; path = "Resources/enabled-Xrefs.png"; sourceTree = "<group>"; };
 		050CB77C19D16A1200415A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketSword/Images.xcassets; sourceTree = "<group>"; };
-		D2CF000026D100000000A001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PocketSword/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		050CB77E19D1789A00415A27 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-736h@3x.png"; path = "Resources/Default-736h@3x.png"; sourceTree = "<group>"; };
 		050CB77F19D1789A00415A27 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-667h@2x.png"; path = "Resources/Default-667h@2x.png"; sourceTree = "<group>"; };
 		050E37BF106D1806001FCC17 /* PSStatusReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSStatusReporter.h; sourceTree = "<group>"; };
@@ -808,8 +810,6 @@
 		0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesModuleSelectorTableViewController.mm; sourceTree = "<group>"; };
 		054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = ../iPhoneOS.sdk/usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 		054509C719A5DAFA00E0A702 /* liblzma.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.5.tbd; path = ../iPhoneOS.sdk/usr/lib/liblzma.5.tbd; sourceTree = SDKROOT; };
-		0545549610CA4D8000EE11EC /* PSIndexController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSIndexController.h; path = Classes/PSIndexController.h; sourceTree = "<group>"; };
-		0545549710CA4D8000EE11EC /* PSIndexController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSIndexController.mm; path = Classes/PSIndexController.mm; sourceTree = "<group>"; };
 		0545E23810638D8400DD7F06 /* SwordInstallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallSource.h; sourceTree = "<group>"; };
 		0545E23910638D8400DD7F06 /* SwordInstallSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordInstallSource.mm; sourceTree = "<group>"; };
 		0545E23A10638D8400DD7F06 /* SwordInstallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordInstallManager.h; sourceTree = "<group>"; };
@@ -876,8 +876,6 @@
 		056CD38516BB6D6200AA0674 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = ../iPhoneOS.sdk/usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
 		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
 		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
-		056CEB3012F8ED1700A7DA37 /* PSSearchOptionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchOptionTableViewController.h; path = Classes/PSSearchOptionTableViewController.h; sourceTree = "<group>"; };
-		056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchOptionTableViewController.m; path = Classes/PSSearchOptionTableViewController.m; sourceTree = "<group>"; };
 		056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "UserComments-Requests.txt"; path = "Resources/doc/UserComments-Requests.txt"; sourceTree = "<group>"; };
 		05781DA312D29B0F005F4890 /* PSModuleUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleUnlockViewController.h; path = Classes/PSModuleUnlockViewController.h; sourceTree = "<group>"; };
 		05781DA412D29B0F005F4890 /* PSModuleUnlockViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleUnlockViewController.mm; path = Classes/PSModuleUnlockViewController.mm; sourceTree = "<group>"; };
@@ -1062,6 +1060,15 @@
 		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSword_Prefix.pch; path = misc/PocketSword_Prefix.pch; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
+		A100000000000000000000F1 /* PSSearchEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchEngine.h; path = Classes/PSSearchEngine.h; sourceTree = "<group>"; };
+		A100000000000000000000F2 /* PSSearchEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchEngine.mm; path = Classes/PSSearchEngine.mm; sourceTree = "<group>"; };
+		A100000000000000000000F3 /* PSSearchQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchQuery.h; path = Classes/PSSearchQuery.h; sourceTree = "<group>"; };
+		A100000000000000000000F4 /* PSSearchQuery.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchQuery.mm; path = Classes/PSSearchQuery.mm; sourceTree = "<group>"; };
+		A100000000000000000000F5 /* PSSearchIndexBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchIndexBuilder.h; path = Classes/PSSearchIndexBuilder.h; sourceTree = "<group>"; };
+		A100000000000000000000F6 /* PSSearchIndexBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchIndexBuilder.mm; path = Classes/PSSearchIndexBuilder.mm; sourceTree = "<group>"; };
+		A100000000000000000000F7 /* PSSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchResult.h; path = Classes/PSSearchResult.h; sourceTree = "<group>"; };
+		A100000000000000000000F8 /* PSSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchResult.m; path = Classes/PSSearchResult.m; sourceTree = "<group>"; };
+		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		A98A70521C64CEB70083ECB8 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "dependencies/curl-ios-build-scripts/curl/osx/lib/libcurl.a"; sourceTree = "<group>"; };
 		A9C105D51C4D6C0B006C755A /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "externals/libcurl/ios-appstore/lib/libcurl.a"; sourceTree = "<group>"; };
@@ -1154,6 +1161,7 @@
 		D2BFE5F825E9C43D00E04366 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		D2BFE5FE25E9C52100E04366 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		D2CF000026D100000000A001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PocketSword/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
@@ -1176,6 +1184,7 @@
 			files = (
 				D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */,
 				D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */,
+				A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */,
 				D2BFE5EB25E9BF0500E04366 /* WebKit.framework in Frameworks */,
 				A951C8561C4EB191000A3B5B /* libcurl.a in Frameworks */,
 				A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */,
@@ -2125,12 +2134,16 @@
 				051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.mm */,
 				05E3FCC710CF535E00DFEB77 /* PSModuleSearchController.h */,
 				05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */,
-				0545549610CA4D8000EE11EC /* PSIndexController.h */,
-				0545549710CA4D8000EE11EC /* PSIndexController.mm */,
 				056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */,
 				056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */,
-				056CEB3012F8ED1700A7DA37 /* PSSearchOptionTableViewController.h */,
-				056CEB3112F8ED1700A7DA37 /* PSSearchOptionTableViewController.m */,
+				A100000000000000000000F1 /* PSSearchEngine.h */,
+				A100000000000000000000F2 /* PSSearchEngine.mm */,
+				A100000000000000000000F3 /* PSSearchQuery.h */,
+				A100000000000000000000F4 /* PSSearchQuery.mm */,
+				A100000000000000000000F5 /* PSSearchIndexBuilder.h */,
+				A100000000000000000000F6 /* PSSearchIndexBuilder.mm */,
+				A100000000000000000000F7 /* PSSearchResult.h */,
+				A100000000000000000000F8 /* PSSearchResult.m */,
 			);
 			name = multi;
 			sourceTree = "<group>";
@@ -2335,6 +2348,7 @@
 				D2BFE5FE25E9C52100E04366 /* CoreServices.framework */,
 				D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */,
 				D2BFE5F825E9C43D00E04366 /* libiconv.tbd */,
+				A100000000000000000000F9 /* libsqlite3.tbd */,
 				D2BFE5EA25E9BF0500E04366 /* WebKit.framework */,
 				A98A70521C64CEB70083ECB8 /* libcurl.a */,
 				A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */,
@@ -2919,8 +2933,11 @@
 				D2BFE5C825E7788100E04366 /* GCDWebServerFileResponse.m in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
-				0545549810CA4D8000EE11EC /* PSIndexController.mm in Sources */,
 				05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */,
+				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
+				A100000000000000000001F4 /* PSSearchQuery.mm in Sources */,
+				A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */,
+				A100000000000000000001F8 /* PSSearchResult.m in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
 				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
@@ -2958,7 +2975,6 @@
 				056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */,
 				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
-				056CEB3312F8ED1700A7DA37 /* PSSearchOptionTableViewController.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */,
 				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
 				D2BFDFA225E73AAB00E04366 /* mz_os_posix.c in Sources */,
@@ -3014,7 +3030,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
@@ -3030,14 +3045,15 @@
 					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/externals/libcurl/ios-dev/lib",
 				);
 				OTHER_CFLAGS = "-DDEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = org.timsam.PocketSword;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSword;
 			};
 			name = Debug;
 		};
@@ -3045,7 +3061,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = PocketSword.entitlements;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
@@ -3060,7 +3075,8 @@
 					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -3224,7 +3240,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
 				ENABLE_BITCODE = NO;
@@ -3238,7 +3253,8 @@
 					"externals/libcurl/ios-dev/include",
 				);
 				INFOPLIST_FILE = misc/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",

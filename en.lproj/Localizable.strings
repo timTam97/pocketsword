@@ -288,7 +288,15 @@
 "SearchRangeOTRowShort" = "OT";
 "SearchRangeNTRow" = "New Testament";
 "SearchRangeNTRowShort" = "NT";
-"SearchStrongsRow" = "Search for a Strong's Number";
+"SearchRangeBookRow" = "Current Book";
+"SearchRangeBookRowShort" = "Book";
+"SearchScopeAll" = "All";
+"SearchScopeBook" = "Book";
+"SearchFuzzyRow" = "Fuzzy";
+"SearchStrongsRow" = "Strong's Numbers";
+"SearchBuildingIndexTitle" = "Building search index…";
+"SearchBuildingCancellingLabel" = "Cancelling…";
+"NoSearchIndexMsg" = "No search index is built for this module. Build one now?";
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";

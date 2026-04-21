@@ -55,6 +55,7 @@ typedef enum {
 #define DefaultsLastSearchFuzzy						@"DefaultsLastSearchFuzzy"
 #define DefaultsLastSearchType						@"DefaultsLastSearchType"
 #define DefaultsLastSearchRange						@"DefaultsLastSearchRange"
+#define DefaultsLuceneSwept							@"DefaultsLuceneSwept"
 
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"

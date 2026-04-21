@@ -2,29 +2,44 @@
 //  PSModuleSearchController.mm
 //  PocketSword
 //
-//  Created by Nic Carter on 9/12/09.
-//  Copyright 2009 The CrossWire Bible Society. All rights reserved.
-//
 
 #import "PSModuleSearchController.h"
 #import "SwordModuleTextEntry.h"
 #import "PSModuleController.h"
-#import "SwordListKey.h"
 #import "PSHistoryController.h"
 #import "SwordVerseKey.h"
 #import "PSSearchHistoryItem.h"
 #import "PocketSwordAppDelegate.h"
 #import "SwordManager.h"
+#import "SwordModule.h"
+#import "PSSearchEngine.h"
+#import "PSSearchQuery.h"
+#import "PSSearchIndexBuilder.h"
+#import "PSSearchResult.h"
+
+static const NSTimeInterval kDebounceInterval = 0.25;
+static NSString * const kResultCellIdentifier = @"resultsCell";
+
+@interface PSModuleSearchController () {
+	ShownTab listType;
+	BOOL switchingTabs;
+	BOOL searchingEnabled;
+}
+
+@property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, strong) UITableView *resultsTable;
+@property (nonatomic, strong) UISegmentedControl *scopeControl;
+@property (nonatomic, strong) UIBarButtonItem *optionsBarButton;
+@property (nonatomic, strong) NSTimer *debounceTimer;
+@property (nonatomic, assign) BOOL strongsAvailable;
+
+@end
 
 @implementation PSModuleSearchController
 
-@synthesize results, savedTablePosition;
-@synthesize searchTerm, searchTermToDisplay, bookName;
-@synthesize delegate;
-@synthesize searchRange, searchType, strongsSearch, fuzzySearch;
-@synthesize searchBar, searchResultsTable, searchQueryView, searchQueryTable;
+#pragma mark - Init
 
-- (id)initWithSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
+- (instancetype)initWithSearchHistoryItem:(PSSearchHistoryItem *)searchHistoryItem {
 	self = [self init];
 	if(self) {
 		[self setSearchHistoryItem:searchHistoryItem];
@@ -32,7 +47,7 @@
 	return self;
 }
 
-- (id)init {
+- (instancetype)init {
 	self = [super initWithNibName:nil bundle:nil];
 	if(self) {
 		UITabBarItem *tBI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:0];
@@ -46,86 +61,175 @@
 		self.savedTablePosition = nil;
 		self.navigationItem.title = NSLocalizedString(@"SearchTitle", @"");
 		[self setSearchTitle];
-		
+
 		self.fuzzySearch = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsLastSearchFuzzy];
-		self.searchType = (PSSearchType)[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastSearchType];
+		self.searchType  = (PSSearchType) [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastSearchType];
 		self.searchRange = (PSSearchRange)[[NSUserDefaults standardUserDefaults] integerForKey:DefaultsLastSearchRange];
 	}
 	return self;
 }
 
+#pragma mark - View lifecycle
+
 - (void)loadView {
-	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
-	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
-	
-	UIView *searchQueryBaseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	searchQueryBaseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	
-	UISearchBar *searchQuerySearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, viewWidth, 44)];
-	searchQuerySearchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	searchQuerySearchBar.delegate = self;
-	searchQuerySearchBar.barStyle = UIBarStyleBlack;
-	
-	UITableView *searchQueryOptionsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, searchQuerySearchBar.frame.size.height, viewWidth, (viewHeight - searchQuerySearchBar.frame.size.height)) style:UITableViewStyleGrouped];
-	searchQueryOptionsTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	searchQueryOptionsTable.delegate = self;
-	searchQueryOptionsTable.dataSource = self;
-	
-	[searchQueryBaseView addSubview:searchQuerySearchBar];
-	[searchQueryBaseView addSubview:searchQueryOptionsTable];
-	self.searchQueryTable = searchQueryOptionsTable;
-	self.searchBar = searchQuerySearchBar;
-	self.searchQueryView = searchQueryBaseView;
-	
-	UITableView *searchResultsResultsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) style:UITableViewStylePlain];
-	searchResultsResultsTable.delegate = self;
-	searchResultsResultsTable.dataSource = self;
-	searchResultsResultsTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
-	UIView *searchMainParentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	searchMainParentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
-	[searchMainParentView addSubview:searchResultsResultsTable];
-	self.view = searchMainParentView;
-	self.searchResultsTable = searchResultsResultsTable;
-	
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"CloseButtonTitle", @"Close") style: UIBarButtonItemStylePlain target: self action: @selector(closeButtonPressed)];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)];
-	
+	UIView *root = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+	root.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	root.backgroundColor = [UIColor systemBackgroundColor];
+
+	UITableView *table = [[UITableView alloc] initWithFrame:root.bounds style:UITableViewStylePlain];
+	table.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	table.delegate = self;
+	table.dataSource = self;
+	table.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+	[root addSubview:table];
+	self.resultsTable = table;
+
+	// Scope bar as a persistent table header — iOS 26 hides the UISearchBar's
+	// built-in scope chips when the search field activates even with manual
+	// scopeBarActivation, so we own the UI ourselves.
+	UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[
+		NSLocalizedString(@"SearchScopeAll",        @"All"),
+		NSLocalizedString(@"SearchRangeOTRowShort", @"OT"),
+		NSLocalizedString(@"SearchRangeNTRowShort", @"NT"),
+		NSLocalizedString(@"SearchScopeBook",       @"Book"),
+	]];
+	[seg addTarget:self action:@selector(scopeControlChanged:) forControlEvents:UIControlEventValueChanged];
+	UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, table.bounds.size.width, 44)];
+	header.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	seg.translatesAutoresizingMaskIntoConstraints = NO;
+	[header addSubview:seg];
+	[NSLayoutConstraint activateConstraints:@[
+		[seg.leadingAnchor  constraintEqualToAnchor:header.layoutMarginsGuide.leadingAnchor],
+		[seg.trailingAnchor constraintEqualToAnchor:header.layoutMarginsGuide.trailingAnchor],
+		[seg.centerYAnchor  constraintEqualToAnchor:header.centerYAnchor],
+	]];
+	table.tableHeaderView = header;
+	self.scopeControl = seg;
+
+	self.view = root;
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-}
+	self.definesPresentationContext = YES;
 
+	self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+	self.searchController.searchResultsUpdater = self;
+	self.searchController.searchBar.delegate = self;
+	self.searchController.searchBar.placeholder = NSLocalizedString(@"SearchTitle", @"");
+	self.searchController.obscuresBackgroundDuringPresentation = NO;
+	// Keep the nav bar (and its options button) visible while the search
+	// bar is active. Without this iOS hides the whole nav bar as soon as
+	// the user taps the field, taking the options menu with it.
+	self.searchController.hidesNavigationBarDuringPresentation = NO;
 
-- (void)setSearchTitle {
-	NSString *newTitle = NSLocalizedString(@"SearchTitle", @"");
-	if(self.results && ![searchQueryView superview] && self.searchTermToDisplay) {
-		newTitle = self.searchTermToDisplay;
-	} else if(strongsSearch) {
-		newTitle = NSLocalizedString(@"SearchStrongsTitle", @"");
+	self.scopeControl.selectedSegmentIndex = [self scopeIndexForRange:self.searchRange];
+
+	self.navigationItem.searchController = self.searchController;
+	self.navigationItem.hidesSearchBarWhenScrolling = NO;
+	// iOS 16+: keep the search bar stacked under the nav bar title so the
+	// options button stays reachable. Without this, iOS 26 defaults to a
+	// floating/bottom search dock that hides the nav bar chrome when active.
+	if (@available(iOS 16.0, *)) {
+		self.navigationItem.preferredSearchBarPlacement = UINavigationItemSearchBarPlacementStacked;
 	}
-	self.navigationItem.title = newTitle;
-	
+
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+		initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"Close")
+				style:UIBarButtonItemStylePlain
+			   target:self
+			   action:@selector(closeButtonPressed)];
+
+	self.optionsBarButton = [[UIBarButtonItem alloc]
+		initWithImage:[UIImage systemImageNamed:@"slider.horizontal.3"]
+				style:UIBarButtonItemStylePlain
+			   target:nil
+			   action:nil];
+	self.navigationItem.rightBarButtonItem = self.optionsBarButton;
+	[self rebuildOptionsMenu];
 }
 
-- (void)setSearchHistoryItem:(PSSearchHistoryItem*)searchHistoryItem {
-	if(searchHistoryItem) {
-		self.searchTerm = searchHistoryItem.searchTerm;
-		self.searchTermToDisplay = searchHistoryItem.searchTermToDisplay;
-		self.searchType = searchHistoryItem.searchType;
-		self.searchRange = searchHistoryItem.searchRange;
-		self.fuzzySearch = searchHistoryItem.fuzzySearch;
-		self.results = searchHistoryItem.results;
-		self.bookName = searchHistoryItem.bookName;
-		self.savedTablePosition = searchHistoryItem.savedTablePosition;
-		// only set strongs search if that's allowable.
-		SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
-		if(searchHistoryItem.strongsSearch && ([primaryBible hasFeature: SWMOD_FEATURE_STRONGS] || [primaryBible hasFeature: SWMOD_CONF_FEATURE_STRONGS])) {
-			self.strongsSearch = searchHistoryItem.strongsSearch;
-		}
-		[self setSearchTitle];
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+
+	SwordModule *mod = [self activeModule];
+	BOOL hasIndex = mod ? [mod hasSearchIndex] : NO;
+	if(mod && !hasIndex) {
+		[self offerToBuildIndexForModule:mod];
+	} else {
+		searchingEnabled = YES;
+		[self refreshView];
 	}
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	if(self.searchTermToDisplay) {
+		self.searchController.searchBar.text = self.searchTermToDisplay;
+	}
+	[self refreshView];
+
+	if(self.searchTerm) {
+		// Coming back from history: the term is already FTS5-ready.
+		[self runSearchWithExpression:self.searchTerm];
+		self.searchTerm = nil;
+	}
+	[self setSearchTitle];
+}
+
+#pragma mark - Active module helper
+
+- (SwordModule *)activeModule {
+	switch(listType) {
+		case BibleTab:
+			return [[PSModuleController defaultModuleController] primaryBible];
+		case CommentaryTab:
+			return [[PSModuleController defaultModuleController] primaryCommentary];
+		default:
+			return nil;
+	}
+}
+
+- (BOOL)strongsFeatureAvailable {
+	SwordModule *mod = [self activeModule];
+	if(!mod) return NO;
+	return [mod hasFeature:SWMOD_FEATURE_STRONGS] || [mod hasFeature:SWMOD_CONF_FEATURE_STRONGS];
+}
+
+#pragma mark - History item
+
+- (void)setSearchHistoryItem:(PSSearchHistoryItem *)searchHistoryItem {
+	if(!searchHistoryItem) return;
+
+	// Strip any legacy CLucene-era operators (lemma:, &&, ||) from the
+	// display term — old history entries stored those raw.
+	NSString *displayTerm = [searchHistoryItem cleanedDisplayTerm];
+	self.searchTermToDisplay = displayTerm;
+	self.searchType  = searchHistoryItem.searchType;
+	self.searchRange = searchHistoryItem.searchRange;
+	self.fuzzySearch = searchHistoryItem.fuzzySearch;
+	self.results     = searchHistoryItem.results;
+	self.bookName    = searchHistoryItem.bookName;
+	self.savedTablePosition = searchHistoryItem.savedTablePosition;
+
+	// Only restore Strong's mode if the current Bible still supports it.
+	if(searchHistoryItem.strongsSearch && [self strongsFeatureAvailable]) {
+		self.strongsSearch = YES;
+	} else {
+		self.strongsSearch = NO;
+	}
+
+	// Build a fresh FTS5 expression from the cleaned display term so the
+	// history replay goes through the new engine.
+	self.searchTerm = [PSSearchQuery fts5ExpressionFromUserInput:displayTerm
+													   matchType:self.searchType
+														   fuzzy:self.fuzzySearch
+														 strongs:self.strongsSearch];
+	self.scopeControl.selectedSegmentIndex = [self scopeIndexForRange:self.searchRange];
+	[self setSearchTitle];
+}
+
+#pragma mark - Tab type
 
 - (void)setListType:(ShownTab)listT {
 	listType = listT;
@@ -135,61 +239,24 @@
 	return listType;
 }
 
+#pragma mark - Titles
+
+- (void)setSearchTitle {
+	NSString *newTitle = NSLocalizedString(@"SearchTitle", @"");
+	if(self.results && self.searchTermToDisplay) {
+		newTitle = self.searchTermToDisplay;
+	} else if(self.strongsSearch) {
+		newTitle = NSLocalizedString(@"SearchStrongsTitle", @"");
+	}
+	self.navigationItem.title = newTitle;
+}
+
 - (void)closeButtonPressed {
 	[self notifyDelegateOfNewHistoryItem];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-	BOOL showIndexController = NO;
-	switch(listType) {
-		case BibleTab:
-			if(![[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
-				showIndexController = YES;
-			break;
-		case CommentaryTab:
-			if(![[[PSModuleController defaultModuleController] primaryCommentary] hasSearchIndex])
-				showIndexController = YES;
-			break;
-		default:
-			break;
-	}
-	if(showIndexController) {
-		UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index") message:NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, install one?") preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"No") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-			[self refreshView];
-		}]];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"Yes") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			SwordModule *mod;
-			if(self->listType == CommentaryTab) {
-				mod = [[PSModuleController defaultModuleController] primaryCommentary];
-			} else {
-				mod = [[PSModuleController defaultModuleController] primaryBible];
-			}
-			if(mod) {
-				[self refreshView];
-				PSIndexController *indexController = [[PSIndexController alloc] init];
-				indexController.delegate = self;
-				indexController.moduleToInstall = [mod name];
-				dispatch_async(dispatch_get_main_queue(), ^{
-					[indexController addViewForHUD:(((PocketSwordAppDelegate*)[UIApplication sharedApplication].delegate).window)];
-					[indexController start:YES];
-				});
-				return;
-			} else {
-				ALog(@"no module to install the index for :P");
-			}
-			[self refreshView];
-		}]];
-		[self presentViewController:alert animated:YES completion:nil];
-	} else  if(!self.results) {
-		searchQueryView.bounds = searchResultsTable.bounds;
-		searchQueryView.center = searchResultsTable.center;
-		[self.view addSubview:searchQueryView];
-		//[self searchButtonPressed:nil];
-	}
-}
+#pragma mark - Tab bar delegate
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
 	if([[tabBarController selectedViewController].title isEqualToString:NSLocalizedString(@"SearchTitle", @"")]) {
@@ -205,716 +272,471 @@
 		if(!switchingTabs) {
 			[self searchButtonPressed:nil];
 		}
-		// set search tab as the saved tab.
-		[[NSUserDefaults standardUserDefaults] setInteger: SearchTab forKey:DefaultsLastMultiListTab];
+		[[NSUserDefaults standardUserDefaults] setInteger:SearchTab forKey:DefaultsLastMultiListTab];
 	} else {
-		[[NSUserDefaults standardUserDefaults] setInteger: HistoryTab forKey:DefaultsLastMultiListTab];
+		[[NSUserDefaults standardUserDefaults] setInteger:HistoryTab forKey:DefaultsLastMultiListTab];
 	}
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	searchBar.placeholder = NSLocalizedString(@"SearchTitle", @"");
-	if(self.searchTermToDisplay) {
-		searchBar.text = searchTermToDisplay;
-	} else {
-		searchBar.text = @"";
+#pragma mark - Index-missing prompt
+
+- (void)offerToBuildIndexForModule:(SwordModule *)mod {
+	searchingEnabled = NO;
+	[self refreshView];
+
+	UIAlertController *alert = [UIAlertController
+		alertControllerWithTitle:NSLocalizedString(@"NoSearchIndexTitle", @"No Search Index")
+						 message:NSLocalizedString(@"NoSearchIndexMsg", @"No search index is installed for this module, build one?")
+				  preferredStyle:UIAlertControllerStyleAlert];
+
+	[alert addAction:[UIAlertAction
+		actionWithTitle:NSLocalizedString(@"No", @"No")
+				  style:UIAlertActionStyleCancel
+				handler:^(UIAlertAction *a) { [self refreshView]; }]];
+
+	[alert addAction:[UIAlertAction
+		actionWithTitle:NSLocalizedString(@"Yes", @"Yes")
+				  style:UIAlertActionStyleDefault
+				handler:^(UIAlertAction *a) {
+					PSSearchIndexBuilder *b = [[PSSearchIndexBuilder alloc] initWithModule:mod];
+					b.delegate = self;
+					[b presentFromViewController:self];
+				}]];
+	[self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)indexBuilder:(PSSearchIndexBuilder *)builder didFinishWithSuccess:(BOOL)success cancelled:(BOOL)cancelled {
+	searchingEnabled = success;
+	[self refreshView];
+	if(success && self.searchController.searchBar.text.length > 0) {
+		[self scheduleDebouncedSearch];
 	}
-//	if(self.searchTerm) {
-//		// we need to perform a search...  searchTerm should already be well formatted.
-//		[self performSelectorInBackground:@selector(search) withObject:nil];
-//	} else if(!self.results) {
-//		searchQueryView.bounds = searchResultsTable.bounds;
-//		searchQueryView.center = searchResultsTable.center;
-//		[self.view addSubview:searchQueryView];
-//		CGFloat topLength = 0;
-//		if([self respondsToSelector:@selector(topLayoutGuide)]) {
-//			topLength = [[self topLayoutGuide] length];
-//			DLog(@"topLength = %f", topLength);
-//		}
-//	}
-	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		searchResultsTable.backgroundColor = [UIColor blackColor];
-	} else {
-		searchResultsTable.backgroundColor = [UIColor whiteColor];
+}
+
+#pragma mark - Options menu
+
+- (void)rebuildOptionsMenu {
+	self.strongsAvailable = [self strongsFeatureAvailable];
+
+	UIAction *matchAll = [UIAction
+		actionWithTitle:NSLocalizedString(@"SearchTypeAllRow", @"All")
+				  image:nil
+			 identifier:@"match.all"
+				handler:^(UIAction *a) { self.searchType = AndSearch;
+										 [self persistOptionsAndResearch]; }];
+	UIAction *matchAny = [UIAction
+		actionWithTitle:NSLocalizedString(@"SearchTypeAnyRow", @"Any")
+				  image:nil
+			 identifier:@"match.any"
+				handler:^(UIAction *a) { self.searchType = OrSearch;
+										 [self persistOptionsAndResearch]; }];
+	UIAction *matchExact = [UIAction
+		actionWithTitle:NSLocalizedString(@"SearchTypeExactRow", @"Exact")
+				  image:nil
+			 identifier:@"match.exact"
+				handler:^(UIAction *a) { self.searchType = ExactSearch;
+										 [self persistOptionsAndResearch]; }];
+	switch(self.searchType) {
+		case AndSearch:   matchAll.state   = UIMenuElementStateOn; break;
+		case OrSearch:    matchAny.state   = UIMenuElementStateOn; break;
+		case ExactSearch: matchExact.state = UIMenuElementStateOn; break;
+	}
+	UIMenu *matchMenu = [UIMenu menuWithTitle:NSLocalizedString(@"SearchTypeSectionHeader", @"Match")
+										image:nil
+								   identifier:@"match"
+									  options:(UIMenuOptionsDisplayInline | UIMenuOptionsSingleSelection)
+									 children:@[matchAll, matchAny, matchExact]];
+
+	UIAction *fuzzyToggle = [UIAction
+		actionWithTitle:NSLocalizedString(@"SearchFuzzyRow", @"Fuzzy")
+				  image:nil
+			 identifier:@"fuzzy"
+				handler:^(UIAction *a) {
+					self.fuzzySearch = !self.fuzzySearch;
+					[self persistOptionsAndResearch];
+				}];
+	fuzzyToggle.state = self.fuzzySearch ? UIMenuElementStateOn : UIMenuElementStateOff;
+	UIMenu *fuzzyMenu = [UIMenu menuWithTitle:@""
+										image:nil
+								   identifier:@"fuzzyGroup"
+									  options:UIMenuOptionsDisplayInline
+									 children:@[fuzzyToggle]];
+
+	NSMutableArray<UIMenuElement *> *topLevel = [NSMutableArray arrayWithObjects:matchMenu, fuzzyMenu, nil];
+
+	if(self.strongsAvailable) {
+		UIAction *strongsToggle = [UIAction
+			actionWithTitle:NSLocalizedString(@"SearchStrongsRow", @"Strong's")
+					  image:nil
+				 identifier:@"strongs"
+					handler:^(UIAction *a) {
+						self.strongsSearch = !self.strongsSearch;
+						[self persistOptionsAndResearch];
+					}];
+		strongsToggle.state = self.strongsSearch ? UIMenuElementStateOn : UIMenuElementStateOff;
+		UIMenu *strongsMenu = [UIMenu menuWithTitle:@""
+											  image:nil
+										 identifier:@"strongsGroup"
+											options:UIMenuOptionsDisplayInline
+										   children:@[strongsToggle]];
+		[topLevel addObject:strongsMenu];
 	}
 
-	[self refreshView];
-	
-	if(self.results) {
-		if(self.savedTablePosition && [savedTablePosition count] > 0) {
-			if([savedTablePosition count] > 1) {
-				NSIndexPath *iPath = (NSIndexPath*)[savedTablePosition objectAtIndex:1];
-				if(iPath.section < [searchResultsTable numberOfSections] && iPath.row < [searchResultsTable numberOfRowsInSection:iPath.section]) {
-					[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-				}
-			} else {
-				NSIndexPath *iPath = (NSIndexPath*)[savedTablePosition objectAtIndex:0];
-				if(iPath.section < [searchResultsTable numberOfSections] && iPath.row < [searchResultsTable numberOfRowsInSection:iPath.section]) {
-					[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-				}
+	self.optionsBarButton.menu = [UIMenu menuWithTitle:@"" children:topLevel];
+}
+
+- (void)persistOptionsAndResearch {
+	[[NSUserDefaults standardUserDefaults] setBool:self.fuzzySearch forKey:DefaultsLastSearchFuzzy];
+	[[NSUserDefaults standardUserDefaults] setInteger:self.searchType forKey:DefaultsLastSearchType];
+	[[NSUserDefaults standardUserDefaults] setInteger:self.searchRange forKey:DefaultsLastSearchRange];
+	[self rebuildOptionsMenu];
+	[self scheduleDebouncedSearch];
+}
+
+#pragma mark - Scope bar
+
+- (int)scopeIndexForRange:(PSSearchRange)range {
+	switch(range) {
+		case AllRange:  return 0;
+		case OTRange:   return 1;
+		case NTRange:   return 2;
+		case BookRange: return 3;
+	}
+}
+
+- (PSSearchRange)rangeForScopeIndex:(NSInteger)idx {
+	switch(idx) {
+		case 1: return OTRange;
+		case 2: return NTRange;
+		case 3: return BookRange;
+		default: return AllRange;
+	}
+}
+
+- (void)scopeControlChanged:(UISegmentedControl *)seg {
+	self.searchRange = [self rangeForScopeIndex:seg.selectedSegmentIndex];
+	if(self.searchRange == BookRange) {
+		NSString *currentBook = [PSModuleController getCurrentBibleRef];
+		NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
+		if(lastSpace.location != NSNotFound) {
+			currentBook = [currentBook substringToIndex:lastSpace.location];
+		}
+		self.bookName = currentBook;
+	} else {
+		self.bookName = nil;
+	}
+	[[NSUserDefaults standardUserDefaults] setInteger:self.searchRange forKey:DefaultsLastSearchRange];
+	[self scheduleDebouncedSearch];
+}
+
+#pragma mark - Debounced search
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+	self.searchTermToDisplay = searchController.searchBar.text;
+	[self scheduleDebouncedSearch];
+}
+
+- (void)scheduleDebouncedSearch {
+	[self.debounceTimer invalidate];
+	if(!searchingEnabled) return;
+
+	NSString *text = self.searchController.searchBar.text;
+	if(text.length == 0) {
+		self.results = nil;
+		self.searchTerm = nil;
+		[self.resultsTable reloadData];
+		[self setSearchTitle];
+		return;
+	}
+
+	self.debounceTimer = [NSTimer scheduledTimerWithTimeInterval:kDebounceInterval
+														  target:self
+														selector:@selector(debounceFired:)
+														userInfo:nil
+														 repeats:NO];
+}
+
+- (void)debounceFired:(NSTimer *)t {
+	[self runSearchForCurrentText];
+}
+
+- (void)runSearchForCurrentText {
+	NSString *raw = self.searchController.searchBar.text;
+	self.searchTermToDisplay = raw;
+	NSString *expr = [PSSearchQuery fts5ExpressionFromUserInput:raw
+													  matchType:self.searchType
+														  fuzzy:self.fuzzySearch
+														strongs:self.strongsSearch];
+	if(expr.length == 0) {
+		self.results = nil;
+		[self.resultsTable reloadData];
+		return;
+	}
+	[self runSearchWithExpression:expr];
+}
+
+- (void)runSearchWithExpression:(NSString *)expression {
+	SwordModule *mod = [self activeModule];
+	if(!mod || ![mod hasSearchIndex]) {
+		self.results = nil;
+		[self.resultsTable reloadData];
+		return;
+	}
+
+	dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+		PSSearchEngine *engine = [PSSearchEngine engineForModule:mod];
+		NSArray<PSSearchResult *> *raw = [engine runQuery:expression
+													scope:self.searchRange
+												 bookName:self.bookName
+													limit:1000
+											   cancelFlag:NULL];
+		NSMutableArray *entries = [NSMutableArray arrayWithCapacity:raw.count];
+		for(PSSearchResult *r in raw) {
+			SwordModuleTextEntry *e = [[SwordModuleTextEntry alloc] initWithKey:r.reference
+																		andText:r.fullText];
+			[entries addObject:e];
+		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.results = entries;
+			[self notifyDelegateOfNewHistoryItem];
+			[self.resultsTable reloadData];
+			[self setSearchTitle];
+		});
+	});
+}
+
+#pragma mark - Search bar delegate (immediate "return" key)
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
+	[self.debounceTimer invalidate];
+	[sBar resignFirstResponder];
+	[self runSearchForCurrentText];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
+	self.results = nil;
+	self.searchTermToDisplay = nil;
+	[self.resultsTable reloadData];
+	[self setSearchTitle];
+}
+
+#pragma mark - Full-verse rendering with UI-side highlighting
+
+// Returns the list of bareword tokens from the user's current query that
+// should be visually highlighted in each result verse. Skips short (<2 char)
+// tokens to avoid highlighting "a", "of" etc. For Strong's searches returns
+// an empty array — the matched lemmas are invisible metadata, not visible
+// text to highlight.
+- (NSArray<NSString *> *)highlightTokens {
+	if(self.strongsSearch) return @[];
+	NSString *raw = self.searchTermToDisplay;
+	if(raw.length == 0) return @[];
+
+	// Tokenise: respect "quoted phrases" (highlight whole phrase), otherwise
+	// whitespace split.
+	NSMutableArray<NSString *> *out = [NSMutableArray array];
+	NSUInteger i = 0, n = raw.length;
+	while(i < n) {
+		unichar c = [raw characterAtIndex:i];
+		if(c == ' ' || c == '\t' || c == '\n') { ++i; continue; }
+		if(c == '"') {
+			++i;
+			NSUInteger start = i;
+			while(i < n && [raw characterAtIndex:i] != '"') ++i;
+			NSString *phrase = [raw substringWithRange:NSMakeRange(start, i - start)];
+			if(i < n) ++i;
+			if(phrase.length >= 2) [out addObject:phrase];
+		} else {
+			NSUInteger start = i;
+			while(i < n) {
+				unichar ch = [raw characterAtIndex:i];
+				if(ch == ' ' || ch == '\t' || ch == '\n' || ch == '"') break;
+				++i;
 			}
+			NSString *word = [raw substringWithRange:NSMakeRange(start, i - start)];
+			if(word.length >= 2) [out addObject:word];
 		}
 	}
-	[self setSearchTitle];
+	return out;
+}
 
-	if(self.searchTerm) {
-		// we need to perform a search...  searchTerm should already be well formatted.
-		[self search];
+// Produce an NSAttributedString of `verseText` with every occurrence of any
+// `tokens` entry highlighted. Matching is diacritic-insensitive and case-
+// insensitive (NSDiacriticInsensitiveSearch | NSCaseInsensitiveSearch). For
+// Fuzzy mode the tokens are treated as prefixes and we highlight the full
+// matching word (the token plus any trailing letter/digit characters).
+- (NSAttributedString *)attributedVerseText:(NSString *)verseText
+									 tokens:(NSArray<NSString *> *)tokens
+									  fuzzy:(BOOL)fuzzy {
+	if(verseText.length == 0) return [[NSAttributedString alloc] init];
+	NSMutableAttributedString *out = [[NSMutableAttributedString alloc]
+		initWithString:verseText
+			attributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:UIFont.systemFontSize] }];
+	if(tokens.count == 0) return out;
+
+	NSDictionary *hlAttrs = @{
+		NSBackgroundColorAttributeName: [UIColor systemYellowColor],
+		NSForegroundColorAttributeName: [UIColor blackColor],
+		NSFontAttributeName: [UIFont boldSystemFontOfSize:UIFont.systemFontSize],
+	};
+	NSStringCompareOptions opts = NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch;
+	NSCharacterSet *wordChars = [NSCharacterSet alphanumericCharacterSet];
+
+	for(NSString *token in tokens) {
+		NSRange search = NSMakeRange(0, verseText.length);
+		while(search.location < verseText.length) {
+			NSRange hit = [verseText rangeOfString:token options:opts range:search];
+			if(hit.location == NSNotFound) break;
+
+			NSRange highlight = hit;
+			if(fuzzy) {
+				// Extend the highlight forward to the end of the current word
+				// so "lov" shows "loved"/"loving" fully highlighted.
+				NSUInteger end = NSMaxRange(hit);
+				while(end < verseText.length &&
+					  [wordChars characterIsMember:[verseText characterAtIndex:end]]) {
+					++end;
+				}
+				highlight.length = end - highlight.location;
+			}
+			[out addAttributes:hlAttrs range:highlight];
+			search.location = NSMaxRange(highlight);
+			search.length = verseText.length - search.location;
+		}
 	}
+	return out;
 }
 
-- (void)indexInstalled:(PSIndexController*)sender {
-	searchQueryView.bounds = searchResultsTable.bounds;
-	searchQueryView.center = searchResultsTable.center;
-	[self.view addSubview:searchQueryView];
-	[self refreshView];
-}
-
+#pragma mark - Table view
 
 - (void)refreshView {
-	searchingEnabled = NO;
-	switch(listType) {
-		case BibleTab:
-			if([[[PSModuleController defaultModuleController] primaryBible] hasSearchIndex])
-				searchingEnabled = YES;
-			break;
-		case CommentaryTab:
-			if([[[PSModuleController defaultModuleController] primaryCommentary] hasSearchIndex])
-				searchingEnabled = YES;
-			break;
-		default:
-			break;
-	}
-	if(searchingEnabled) {
-		//enable search
-		[searchBar setUserInteractionEnabled: YES];
-	} else {
-		//disable search
-		[searchBar setUserInteractionEnabled: NO];
-	}
-	[searchResultsTable reloadData];
-	[searchQueryTable reloadData];
+	[self rebuildOptionsMenu];
+	self.searchController.searchBar.userInteractionEnabled = searchingEnabled;
+	[self.resultsTable reloadData];
 }
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-	// Release any cached data, images, etc that aren't in use.
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([tableView isEqual:searchQueryTable]) {
-		return 40;
-	}
-	return 70;
-}
-
-#define SearchTypeSection		0
-#define SearchRangeSection		1
-#define SearchFuzzySection		2
-#define SearchStrongsSection	3
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if(!searchingEnabled)
-		return 1;
-
-	if([tableView isEqual:searchQueryTable]) {
-		return 2;
-	} else {
-		return 1;
-	}
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(!searchingEnabled)
-		return 0;
-	
-	if([tableView isEqual:searchQueryTable]) {
-		if(section == 0) {
-			switch(listType) {
-				case BibleTab:
-				{
-					SwordModule *primaryBible = [[PSModuleController defaultModuleController] primaryBible];
-					if([primaryBible hasFeature: SWMOD_FEATURE_STRONGS] || [primaryBible hasFeature: SWMOD_CONF_FEATURE_STRONGS]) {
-						return 4;
-					}
-					return 3;
-				}
-					break;
-				case CommentaryTab:
-				default:
-					return 3;
-			}
-		} else if(section == 1) {
-			return 1;
-		}
-	}
-	
-	if(results)
-		return [results count];
-	return 0;
+	if(!searchingEnabled) return 0;
+	return self.results.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(!searchingEnabled) {
 		return NSLocalizedString(@"NoSearchIndexInstalled", @"No Search Index Installed");
 	}
-	if([tableView isEqual:searchQueryTable] && section == 0) {
-		return [NSString stringWithFormat:@"%@:", NSLocalizedString(@"SearchOptionsTitle", @"")];
-//		switch(section) {
-//			case SearchTypeSection:
-//				return NSLocalizedString(@"SearchTypeSectionHeader", @"");
-//			case SearchRangeSection:
-//				return NSLocalizedString(@"SearchRangeSectionHeader", @"");
-//			case SearchStrongsSection:
-//				return NSLocalizedString(@"SearchStrongsSectionHeader", @"");
-//		}
-	} else if(section == 1) {
-		return @"";
-	} else if(results) {
-		return [NSString stringWithFormat: @"%lu %@", (unsigned long)[results count], NSLocalizedString(@"SearchResults", @"results")];
+	if(self.results) {
+		return [NSString stringWithFormat:@"%lu %@", (unsigned long)self.results.count,
+												   NSLocalizedString(@"SearchResults", @"results")];
 	}
 	return @"";
 }
 
-- (UITableViewCell *)searchQueryTableCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [searchQueryTable dequeueReusableCellWithIdentifier:@"queryCell"];
-	
-	if (!cell) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"queryCell"];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return UITableViewAutomaticDimension;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 72.0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kResultCellIdentifier];
+	if(!cell) {
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+									  reuseIdentifier:kResultCellIdentifier];
+		cell.detailTextLabel.numberOfLines = 0;
+		cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+		cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
 	}
-	
-	if(indexPath.section == 0) {
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.backgroundColor = [UIColor whiteColor];
-		cell.textLabel.textColor = [UIColor blackColor];
-		switch(indexPath.row) {
-			case SearchTypeSection:
-			{
-				cell.textLabel.text = NSLocalizedString(@"SearchTypeSectionHeader", @"");
-				switch(searchType) {
-					case AndSearch:
-						cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeAllRowShort", @"");
-						break;
-					case OrSearch:
-						cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeAnyRowShort", @"");
-						break;
-					case ExactSearch:
-						cell.detailTextLabel.text = NSLocalizedString(@"SearchTypeExactRowShort", @"");
-						break;
-				}
-			}
-				break;
-			case SearchRangeSection:
-			{
-				cell.textLabel.text = NSLocalizedString(@"SearchRangeSectionHeader", @"");
-				switch(searchRange) {
-					case AllRange:
-						cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeAllRowShort", @"");
-						break;
-					case OTRange:
-						cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeOTRowShort", @"");
-						break;
-					case NTRange:
-						cell.detailTextLabel.text = NSLocalizedString(@"SearchRangeNTRowShort", @"");
-						break;
-					case BookRange:
-						NSString *currentBook = bookName;
-						if(!self.bookName) {
-							currentBook = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
-							NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
-							if(lastSpace.location != NSNotFound) {
-								currentBook = [currentBook substringToIndex:lastSpace.location];
-							}
-						}
-						cell.detailTextLabel.text = currentBook;
-						break;
-				}
-			}
-				break;
-			case SearchFuzzySection:
-			{
-				cell.textLabel.text = NSLocalizedString(@"SearchFuzzySectionHeader", @"");
-				if(fuzzySearch) {
-					cell.detailTextLabel.text = NSLocalizedString(@"On", @"");
-				} else {
-					cell.detailTextLabel.text = NSLocalizedString(@"Off", @"");
-				}
-			}
-				break;
-			case SearchStrongsSection:
-			{
-				cell.textLabel.text = NSLocalizedString(@"SearchStrongsSectionHeader", @"");
-				if(strongsSearch) {
-					cell.detailTextLabel.text = NSLocalizedString(@"On", @"");
-				} else {
-					cell.detailTextLabel.text = NSLocalizedString(@"Off", @"");
-				}
-			}
-				break;
+
+	if(indexPath.row >= self.results.count) return cell;
+	SwordModuleTextEntry *entry = self.results[indexPath.row];
+	cell.textLabel.text = entry.key;
+
+	// If the entry is missing its full text (e.g. old cached history
+	// entries), pull it from the module on demand.
+	if(!entry.text) {
+		SwordModule *mod = [self activeModule];
+		NSString *ref = [PSModuleController createRefString:entry.key];
+		SwordModuleTextEntry *pulled = [mod textEntryForKey:ref textType:TextTypeStripped];
+		if(pulled.text) {
+			entry.text = [pulled.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
 		}
-	} else if(indexPath.section == 1) {
-		// TODO: make this a proper UIButton?
-		cell.accessoryType = UITableViewCellAccessoryNone;
-		cell.textLabel.text = NSLocalizedString(@"SearchStartSearchButton", @"Start Search");
-		cell.detailTextLabel.text = @"";
-		cell.textLabel.textColor = [UIColor whiteColor];
 	}
-	
+	NSString *txt = entry.text ?: @"";
+	txt = [txt stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+
+	cell.detailTextLabel.attributedText =
+		[self attributedVerseText:txt tokens:[self highlightTokens] fuzzy:self.fuzzySearch];
+
 	return cell;
 }
 
-- (UITableViewCell *)resultsTableCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-	UITableViewCell *cell = [searchResultsTable dequeueReusableCellWithIdentifier:@"resultsCell"];
-    UILabel *mainLabel, *secondLabel;
-	
-	if (!cell)
-	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"resultsCell"];
-		mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 320.0, 22.0)];
-        mainLabel.tag = 477;
-        mainLabel.font = [UIFont boldSystemFontOfSize:14.0];
-        mainLabel.textColor = [UIColor blackColor];
-        mainLabel.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin & UIViewAutoresizingFlexibleTopMargin);
-        [cell.contentView addSubview:mainLabel];
-		
-        secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 22.0, 310.0, 45.0)];
-        secondLabel.tag = 577;
-        secondLabel.font = [UIFont systemFontOfSize:12.0];
-		secondLabel.numberOfLines = 3;
-		secondLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        secondLabel.textColor = [UIColor darkGrayColor];
-        secondLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [cell.contentView addSubview:secondLabel];
-		
-	} else {
-        mainLabel = (UILabel *)[cell.contentView viewWithTag:477];
-        secondLabel = (UILabel *)[cell.contentView viewWithTag:577];
-	}
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		mainLabel.textColor = [UIColor whiteColor];
-		secondLabel.textColor = [UIColor lightGrayColor];
-		mainLabel.backgroundColor = [UIColor blackColor];
-		secondLabel.backgroundColor = [UIColor blackColor];
-	} else {
-		mainLabel.textColor = [UIColor blackColor];
-		secondLabel.textColor = [UIColor darkGrayColor];
-		mainLabel.backgroundColor = [UIColor whiteColor];
-		secondLabel.backgroundColor = [UIColor whiteColor];
-	}
-	if(!((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text || [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text isEqualToString: @""]) {
-		SwordModuleTextEntry *entry = nil;;
-		switch(listType) {
-			case BibleTab:
-				entry = [[[PSModuleController defaultModuleController] primaryBible] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
-				break;
-			case CommentaryTab:
-				entry = [[[PSModuleController defaultModuleController] primaryCommentary] textEntryForKey:[PSModuleController createRefString:((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key] textType:TextTypeStripped];
-				break;
-			default:
-				break;
-		}
-		if(entry != nil) {
-			//if showNotes or showMorph or showStrongs are on, there will be " [] " littered throughout the results, so remove them!
-			entry.text = [entry.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
-			[results replaceObjectAtIndex:indexPath.row withObject:entry];
-		}
-	}
-	mainLabel.text = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
-	NSMutableString *txt = [((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).text mutableCopy];
-	[txt replaceOccurrencesOfString:@"\n" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [txt length])];
-	//DLog(@"\n%@", txt);
-	secondLabel.text = txt;
-	
-	return cell;
-}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+	if(!self.results || indexPath.row >= self.results.count) return;
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if([tableView isEqual:searchQueryTable]) {
-		return [self searchQueryTableCellForRowAtIndexPath:indexPath];
-	} else {
-		return [self resultsTableCellForRowAtIndexPath:indexPath];
-	}
-}
+	[self notifyDelegateOfNewHistoryItem];
+	NSString *ref = [(SwordModuleTextEntry *)self.results[indexPath.row] key];
+	NSArray *parts = [ref componentsSeparatedByString:@":"];
+	NSString *verse = parts.count > 1 ? parts[1] : @"1";
+	NSString *bookChapter = parts.firstObject ?: ref;
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(![tableView isEqual:searchQueryTable] && [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else if([tableView isEqual:searchQueryTable] && indexPath.section == 1) {
-		// our search row:
-		cell.backgroundColor = [UIColor blueColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
-}
+	[[NSUserDefaults standardUserDefaults] setObject:verse forKey:DefaultsCommentaryVersePosition];
+	[[NSUserDefaults standardUserDefaults] setObject:verse forKey:DefaultsBibleVersePosition];
+	[[NSUserDefaults standardUserDefaults] setObject:[PSModuleController createRefString:bookChapter]
+											  forKey:DefaultsLastRef];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if(searchingEnabled && results && [tableView isEqual:searchResultsTable]) {
-		[self notifyDelegateOfNewHistoryItem];
-		NSString *ref = ((SwordModuleTextEntry *)[results objectAtIndex: indexPath.row]).key;
-		NSString *verse = [[ref componentsSeparatedByString:@":"] objectAtIndex: 1];
-		ref = [[ref componentsSeparatedByString:@":"] objectAtIndex: 0];
-		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsCommentaryVersePosition];
-		[[NSUserDefaults standardUserDefaults] setObject: verse forKey: DefaultsBibleVersePosition];
-		[[NSUserDefaults standardUserDefaults] setObject: [PSModuleController createRefString:ref] forKey: DefaultsLastRef];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-
-		switch(listType) {
-			case BibleTab:
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
-				[PSHistoryController addHistoryItem:BibleTab];
-				break;
-			case CommentaryTab:
-				[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
-				[PSHistoryController addHistoryItem:CommentaryTab];
-				break;
-			default:
-				break;
-		}
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
-	} else if([tableView isEqual:searchQueryTable]) {
-		[searchBar resignFirstResponder];
-		//searchBar.text = searchTermToDisplay;
-		self.searchTermToDisplay = searchBar.text;
-		if(indexPath.section == 0) {
-			PSSearchOptionTableViewController *optionTVC = nil;
-			switch(indexPath.row) {
-				case SearchTypeSection:
-				{
-					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableTypeSelector];
-					optionTVC.searchType = self.searchType;
-				}
-					break;
-				case SearchRangeSection:
-				{
-					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableRangeSelector];
-					optionTVC.searchRange = self.searchRange;
-					NSString *currentBook = bookName;
-					if(!self.bookName) {
-						currentBook = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
-						NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
-						if(lastSpace.location != NSNotFound) {
-							currentBook = [currentBook substringToIndex:lastSpace.location];
-						}
-					}
-					optionTVC.bookName = currentBook;
-				}
-					break;
-				case SearchFuzzySection:
-				{
-					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableFuzzySelector];
-					optionTVC.fuzzySearch = self.fuzzySearch;
-				}
-					break;
-				case SearchStrongsSection:
-				{
-					optionTVC = [[PSSearchOptionTableViewController alloc] initWithTableType:PSSearchOptionTableStrongsSelector];
-					optionTVC.strongsSearch = self.strongsSearch;
-				}
-					break;
-			}
-			optionTVC.delegate = self;
-			[self.navigationController pushViewController:optionTVC animated:YES];
-		} else if(indexPath.section == 1) {
-			[tableView deselectRowAtIndexPath:indexPath animated:YES];
-			[self searchBarSearchButtonClicked:nil];
-		}
-	}
-}
-
-- (void)createSearchTerm {
-	NSMutableArray *components = [NSMutableArray arrayWithCapacity:1];
-	NSInteger i =0;
-	BOOL insideQuotes = NO;
-	NSMutableString *current = [@"" mutableCopy];
-	for(;i<[searchTermToDisplay length];i++) {
-		if([searchTermToDisplay characterAtIndex:i] == '"') {
-			if(insideQuotes) {
-				insideQuotes = NO;
-				[current appendString:@"\""];
-				[components addObject:current];
-				current = [@"" mutableCopy];
-			} else {
-				insideQuotes = YES;
-				[current appendString:@"\""];
-			}
-		} else if(insideQuotes) {
-			[current appendFormat:@"%C", [searchTermToDisplay characterAtIndex:i]];
-		} else if([searchTermToDisplay characterAtIndex:i] == ' ') {
-			[components addObject:current];
-			current = [@"" mutableCopy];
-		} else {
-			[current appendFormat:@"%C", [searchTermToDisplay characterAtIndex:i]];
-		}
-	}
-	
-	if([current length] > 0)
-		[components addObject:current];
-	current = nil;
-	
-	NSMutableString *fullSearchTerm = [@"" mutableCopy];
-	NSString *joiningString = @" && ";
-	/*if(searchType == AndSearch) {
-		joiningString = @" && ";
-	} else*/ if(searchType == OrSearch) {
-		joiningString = @" || ";
-	} else if(searchType == ExactSearch && !strongsSearch) {//strong's search trumps exact!
-		joiningString = @" ";
-		[fullSearchTerm appendString:@"\""];
-	}
-	NSString *prefix = @"";
-	if(strongsSearch) {
-		prefix = @"lemma:";
-	}
-	i = 0;
-	for(NSString *component in components) {
-		if(i == ([components count] - 1)) {
-			joiningString = @"";
-		}
-		//nb: a strongsSearch should also search for the actual term, as a kind of backup.  :P
-		if(strongsSearch && [component characterAtIndex:0] == 'H') {
-			NSMutableString *hebrew = [component mutableCopy];
-			if([component length] > 1 && [component characterAtIndex:1] == '0') {
-				// also search for this number without the '0' prefix
-				[hebrew deleteCharactersInRange:NSMakeRange(1, 1)];
-			} else if([component length] > 1) {
-				// also search for this number with the '0' prefix
-				[hebrew insertString:@"0" atIndex:1];
-			}
-			[fullSearchTerm appendFormat:@"(%@%@ || %@%@ || %@)%@", prefix, hebrew, prefix, component, component, joiningString];
-			hebrew = nil;
-		} else if(strongsSearch) {
-			[fullSearchTerm appendFormat:@"(%@%@ || %@)%@", prefix, component, component, joiningString];
-		} else if((searchType != ExactSearch) && fuzzySearch && ([component length] > 0) && [component characterAtIndex:0] != '"') {
-			// fuzzy search appends a '*' to each component, unless it's a quote && unless it's an exact search.
-			[fullSearchTerm appendFormat:@"%@%@*%@", prefix, component, joiningString];
-		} else {
-			[fullSearchTerm appendFormat:@"%@%@%@", prefix, component, joiningString];
-		}
-		i++;
-	}
-	if(searchType == ExactSearch && !strongsSearch) {//strong's search trumps exact!
-		[fullSearchTerm appendString:@"\""];
-	}
-	self.searchTerm = fullSearchTerm;
-}
-
-- (SwordVerseKey *)createSearchScope {
-	NSString *v11n;
-	if(listType == BibleTab)
-		v11n = [[[PSModuleController defaultModuleController] primaryBible] versification];
-	else
-		v11n = [[[PSModuleController defaultModuleController] primaryCommentary] versification];
-	
-	SwordVerseKey *scope;
-
-	switch(searchRange) {
-		case OTRange:
-			scope = [SwordVerseKey verseKeyForOTForVersification:v11n];
+	switch(listType) {
+		case BibleTab:
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+			[PSHistoryController addHistoryItem:BibleTab];
 			break;
-		case NTRange:
-			scope = [SwordVerseKey verseKeyForNTForVersification:v11n];
+		case CommentaryTab:
+			[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryCommentary object:nil];
+			[PSHistoryController addHistoryItem:CommentaryTab];
 			break;
-		case BookRange:
-		{
-			NSString *currentBook = bookName;
-			if(!self.bookName) {
-				currentBook = [PSModuleController getCurrentBibleRef];
-				NSRange lastSpace = [currentBook rangeOfString:@" " options:NSBackwardsSearch];
-				if(lastSpace.location != NSNotFound) {
-					currentBook = [currentBook substringToIndex:lastSpace.location];
-				}
-			}
-			self.bookName = currentBook;
-			scope = [SwordVerseKey verseKeyForWholeBook:currentBook v11n:v11n];
-		}
-			break;
-		case AllRange:default:
-			scope = [SwordVerseKey verseKeyForWholeBibleForVersification:v11n];
+		default:
 			break;
 	}
-	
-	return scope;
+	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleMultiList object:nil];
 }
 
-- (void)_search {
-	@autoreleasepool {
-		self.results = nil;
-		self.savedTablePosition = nil;
-		if(self.searchTerm) {
-			// the search is already formatted
-		} else {
-			// need to create the formatted search term
-			self.searchTermToDisplay = searchBar.text;
-			[self createSearchTerm];
-		}
-		DLog(@"\nsearchTerm = %@\nsearchTerm length = %lu", self.searchTerm, (unsigned long)[self.searchTerm length]);
-		if(!self.searchTerm || self.searchTerm.length <= 0 || [self.searchTerm isEqualToString:@"\"\""]) {
-			self.results = [NSMutableArray arrayWithCapacity:0];
-		} else {
-			switch(listType) {
-				case BibleTab:
-					self.results = [[[PSModuleController defaultModuleController] primaryBible] search: self.searchTerm withScope:[self createSearchScope]];
-					break;
-				case CommentaryTab:
-					self.results = [[[PSModuleController defaultModuleController] primaryCommentary] search: self.searchTerm withScope:[self createSearchScope]];
-					break;
-				default:
-					self.results = nil;
-					break;
-			}
-		}
-		
-		//remove duplicate entries manually.  why do these appear? *sad face*
-		if(results && [results count] > 0) {
-			for(int i = 0; i < ([results count] -1); i++) {
-				if([((SwordModuleTextEntry *)[results objectAtIndex: i]).key isEqualToString:((SwordModuleTextEntry *)[results objectAtIndex: i+1]).key]) {
-					[results removeObjectAtIndex:i+1];//remove the duplicate.
-					--i;
-				}
-			}
-		}
-		
-		// call our delegate to say we have a new searchTerm & results.
-		[self notifyDelegateOfNewHistoryItem];
-		
-		self.searchTerm = nil;
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self->searchResultsTable reloadData];
-			[self->searchQueryView removeFromSuperview];
-			[self setSearchTitle];
-		});
-
-	}
-}
-
-
-- (void)search {
-	
-    MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo: (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
-    [(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
-    
-   	// Regiser for HUD callbacks so we can remove it from the window at the right time
-    HUD.delegate = self;
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-        
-        
-        
-        
-        [self performSelector:@selector(_search) withObject:nil];
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [HUD hideAnimated:YES];
-        });
-    });
-    
-    
-    
-    
-    
-    
-    
-//	MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window)];
-//	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) addSubview:HUD];
-//	
-//	// Regiser for HUD callbacks so we can remove it from the window at the right time
-//	HUD.delegate = self;
-//	
-//	// Show the HUD while the provided method executes in a new thread
-//	[HUD showWhileExecuting:@selector(_search) onTarget:self withObject:nil animated:YES];
-}
-
-- (void)hudWasHidden:(MBProgressHUD *)hud {
-	// Remove HUD from screen when the HUD was hidded
-	[hud removeFromSuperview];
-	hud = nil;
-}
+#pragma mark - History hand-off
 
 - (void)notifyDelegateOfNewHistoryItem {
-	if([searchTermToDisplay isEqualToString:@""]) {
-		[delegate searchDidFinish:nil];
-	} else {
-		NSString *bName = nil;
-		if(searchRange == BookRange) {
-			bName = self.bookName;
-		}
-		PSSearchHistoryItem *searchHistoryItem = [[PSSearchHistoryItem alloc] initWithSearchTermToDisplay:searchTermToDisplay strongs:strongsSearch fuzzy:fuzzySearch type:searchType range:searchRange book:bName];
-		searchHistoryItem.results = self.results;
-		[self saveTablePositionFromCurrentPosition];
-		searchHistoryItem.savedTablePosition = self.savedTablePosition;
-		[delegate searchDidFinish:searchHistoryItem];
+	if(!self.searchTermToDisplay || [self.searchTermToDisplay isEqualToString:@""]) {
+		[self.delegate searchDidFinish:nil];
+		return;
 	}
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)sBar {
-	[sBar resignFirstResponder];
-	[self search];
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
-	[sBar resignFirstResponder];
-	if(self.results) {
-		if(self.savedTablePosition && [savedTablePosition count] > 0) {
-			if([savedTablePosition count] > 1) {
-				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:1] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-			} else {
-				[searchResultsTable scrollToRowAtIndexPath:[savedTablePosition objectAtIndex:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-			}
-		}
-		[searchQueryView removeFromSuperview];
-	}
-	[self setSearchTitle];
-}
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)sBar {
-	[sBar setShowsCancelButton:YES animated:YES];
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)sBar {
-	[sBar setShowsCancelButton:NO animated:YES];
+	NSString *bName = (self.searchRange == BookRange) ? self.bookName : nil;
+	PSSearchHistoryItem *item = [[PSSearchHistoryItem alloc] initWithSearchTermToDisplay:self.searchTermToDisplay
+																				strongs:self.strongsSearch
+																				  fuzzy:self.fuzzySearch
+																				   type:self.searchType
+																				  range:self.searchRange
+																				   book:bName];
+	item.results = self.results;
+	[self saveTablePositionFromCurrentPosition];
+	item.savedTablePosition = self.savedTablePosition;
+	[self.delegate searchDidFinish:item];
 }
 
 - (void)saveTablePositionFromCurrentPosition {
-	if(self.results && [results count] > 0) {
-		self.savedTablePosition = [searchResultsTable indexPathsForVisibleRows];
-		if(savedTablePosition && [savedTablePosition count] > 0) {
-			NSIndexPath *indexPath = [savedTablePosition objectAtIndex:0];
-			if(indexPath.section == 0 && indexPath.row == 0) {
-				self.savedTablePosition = nil;
-			}
-		}
+	if(self.results.count > 0) {
+		self.savedTablePosition = [self.resultsTable indexPathsForVisibleRows];
 	}
 }
+
+#pragma mark - Legacy plumbing
 
 - (void)searchButtonPressed:(id)sender {
-	if(!searchingEnabled) {
-		return;
-	}
-	if(![searchQueryView superview]) {
-		if(self.results && [results count] > 0) {
-			[self saveTablePositionFromCurrentPosition];
-			[searchResultsTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-		}
-		searchQueryView.bounds = searchResultsTable.bounds;
-		searchQueryView.center = searchResultsTable.center;
-		[self.view addSubview:searchQueryView];
-	}
-	if([searchBar isFirstResponder]) {
-		[searchBar resignFirstResponder];
-	} else {
-		[searchBar becomeFirstResponder];
-	}
-	[self setSearchTitle];
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-	[searchBar resignFirstResponder];
+	[self.searchController.searchBar becomeFirstResponder];
 }
 
 @end

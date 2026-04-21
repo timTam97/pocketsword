@@ -12,6 +12,7 @@
 #import "ZipArchive.h"
 #import "PSResizing.h"
 #import "SwordManager.h"
+#import "SwordModule.h"
 #import "SwordDictionary.h"
 
 #define LOCALES_VERSION					@"loadedSWORDLocales-130708"
@@ -219,6 +220,26 @@
 				[mod resetPreferences];
 			}
 			[defaults setBool: YES forKey:@"removedModulePreferences"];
+			[defaults synchronize];
+		}
+
+		// One-time sweep of the legacy CLucene index directories that were
+		// written by pre-FTS5 versions. New indices live at
+		// <AbsoluteDataPath>/search/fts.db, so the old lucene/ dirs are
+		// orphaned and just waste disk. Guarded so we don't re-scan on
+		// every launch.
+		if(![defaults boolForKey:DefaultsLuceneSwept]) {
+			NSArray *modsForSweep = [[[PSModuleController defaultModuleController] swordManager] listModules];
+			NSFileManager *fm = [NSFileManager defaultManager];
+			for(SwordModule *mod in modsForSweep) {
+				NSString *dataPath = [mod configEntryForKey:@"AbsoluteDataPath"];
+				if(dataPath.length == 0) continue;
+				NSString *legacy = [dataPath stringByAppendingPathComponent:@"lucene"];
+				if([fm fileExistsAtPath:legacy]) {
+					[fm removeItemAtPath:legacy error:NULL];
+				}
+			}
+			[defaults setBool:YES forKey:DefaultsLuceneSwept];
 			[defaults synchronize];
 		}
 		

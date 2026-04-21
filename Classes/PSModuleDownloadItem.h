@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSIndexController.h"
+#import "MBProgressHUD.h"
 
 @class SwordModule;
 @class SwordInstallSource;
@@ -14,12 +14,11 @@
 
 @protocol PSModuleDownloadDelegate <NSObject>
 @required
-// the delegate is responsible for dismissing the PSIndexController :P
 - (void)moduleDownloaded:(PSModuleDownloadItem*)sender;
 @end
 
-@interface PSModuleDownloadItem : NSObject <PSIndexControllerDelegate, MBProgressHUDDelegate> {
-	
+@interface PSModuleDownloadItem : NSObject <MBProgressHUDDelegate> {
+
 	id <PSModuleDownloadDelegate> __weak delegate;
 
 	SwordModule *module;
@@ -28,9 +27,8 @@
 	BOOL downloadStarted;
 	BOOL installingIndex;
 	BOOL removingHUDViewInProgress;
-	
+
     NSUInteger bti;
-	PSIndexController *indexController;
 	MBProgressHUD *installModuleHUD;
 	NSTimer *installModuleTimer;
 }

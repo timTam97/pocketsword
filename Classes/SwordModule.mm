@@ -19,6 +19,9 @@
 #import "PSModuleController.h"
 #import "PSLanguageCode.h"
 #import "PSBookmarks.h"
+#import "PSSearchEngine.h"
+#import "PSSearchResult.h"
+#import "PSSearchQuery.h"
 
 @interface SwordModule (/* Private, class continuation */)
 /** private property */
@@ -910,40 +913,33 @@
 }
 
 - (BOOL)hasSearchIndex {
-
-	NSString *test = [self configEntryForKey:@"AbsoluteDataPath"];
-	test = [test stringByAppendingPathComponent: @"lucene"];
-	test = [test stringByAppendingPathComponent: @"segments"];
-
-	if ([[NSFileManager defaultManager] fileExistsAtPath: test]) {
-		return YES;
-	} else {
-		return NO;
-	}
-	
+	PSSearchEngine *engine = [PSSearchEngine engineForModule:self];
+	return [engine indexIsFresh];
 }
 
 
 - (NSMutableArray *)search:(NSString *)istr withScope:(SwordVerseKey*)scope {
-	int searchType = 0;
-	if([self hasSearchIndex]) {
-		searchType = -4;
-	}
-	
-	sword::ListKey results;
+	// The new search path takes a pre-built FTS5 expression as `istr` and
+	// a scope enum (encoded by the caller into the expression's testament
+	// filter — see PSSearchEngine). `scope` (a SwordVerseKey) is unused by
+	// the FTS5 path; it's retained on the signature for source compatibility
+	// with the legacy CLucene call site, but the search screen now drives
+	// PSSearchEngine directly.
+	(void)scope;
 	NSMutableArray *retArray = [NSMutableArray array];
-	if(scope) {
-		results = swModule->search([istr UTF8String], searchType, 0, [scope swVerseKey]);
-	} else {
-		results = swModule->search([istr UTF8String], searchType);
-	}
-	results.sort();
-	if(results.getCount() > 0) {
-		while(!results.popError()) {
-			SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey: [NSString stringWithUTF8String: results.getText()] andText: nil];
-			[retArray addObject: entry];
-			results++;
-		}
+	if(!istr || istr.length == 0) return retArray;
+	if(![self hasSearchIndex]) return retArray;
+
+	PSSearchEngine *engine = [PSSearchEngine engineForModule:self];
+	NSArray<PSSearchResult *> *results = [engine runQuery:istr
+													scope:AllRange
+												 bookName:nil
+													limit:0
+											   cancelFlag:NULL];
+	for(PSSearchResult *r in results) {
+		SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey:r.reference
+																		andText:r.fullText];
+		[retArray addObject:entry];
 	}
 	return retArray;
 }
@@ -1441,13 +1437,19 @@
 //    swModule->setKey([aVerseKey swVerseKey]);
 //}
 
-// This takes insanely long on an iPhone!
 - (void)createSearchIndex {
-	swModule->createSearchFramework();
+	// Legacy entry point. The real index-build path goes through
+	// PSSearchIndexBuilder, which owns the progress UI and background-task
+	// lifecycle. Leaving this as a no-op avoids triggering CLucene's
+	// createSearchFramework (which takes minutes on a phone and writes to
+	// the now-unused lucene/ directory).
+	ALog(@"SwordModule createSearchIndex is a no-op; use PSSearchIndexBuilder.");
 }
 
 - (void)deleteSearchIndex {
-	swModule->deleteSearchFramework();
+	PSSearchEngine *engine = [PSSearchEngine engineForModule:self];
+	[engine dropIndex];
+	[PSSearchEngine invalidateEngineForModule:self];
 }
 
 

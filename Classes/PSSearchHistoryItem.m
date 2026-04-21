@@ -80,4 +80,21 @@
 	return [NSArray arrayWithObjects:searchTermToDisplay, strongs, fuzzy, sType, sRange, bookName, nil];
 }
 
+- (NSString *)cleanedDisplayTerm {
+	if(searchTermToDisplay.length == 0) return @"";
+	NSString *s = searchTermToDisplay;
+	// Drop "lemma:" prefixes wherever they appear.
+	s = [s stringByReplacingOccurrencesOfString:@"lemma:" withString:@""];
+	// Tokenise on whitespace, drop standalone boolean operator tokens.
+	NSArray<NSString *> *tokens = [s componentsSeparatedByCharactersInSet:
+								   [NSCharacterSet whitespaceCharacterSet]];
+	NSMutableArray<NSString *> *kept = [NSMutableArray array];
+	for(NSString *tok in tokens) {
+		if(tok.length == 0) continue;
+		if([tok isEqualToString:@"&&"] || [tok isEqualToString:@"||"]) continue;
+		[kept addObject:tok];
+	}
+	return [kept componentsJoinedByString:@" "];
+}
+
 @end

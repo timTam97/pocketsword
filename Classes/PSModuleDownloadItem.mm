@@ -43,18 +43,9 @@
 - (void)removeViewForHUD {
 	if(viewForHUD && downloadStarted) {
 		removingHUDViewInProgress = YES;
-		if(indexController) {
-			[indexController removeViewForHUD];
-		} else {
-			[MBProgressHUD hideHUDForView:viewForHUD animated:YES];
-		}
+		[MBProgressHUD hideHUDForView:viewForHUD animated:YES];
 	}
 	viewForHUD = nil;
-}
-
-- (void)indexInstalled:(PSIndexController*)sender {
-	indexController = nil;
-	[delegate moduleDownloaded:self];
 }
 
 - (void)_install {
@@ -187,21 +178,15 @@
 		return;
 	}
 	SwordModule *installedModule = [[[PSModuleController defaultModuleController] swordManager] moduleWithName:[module name]];
-	
-	if(!installedModule) {
-		[delegate moduleDownloaded:self];
-	} else if(![installedModule hasSearchIndex] && installedModule.type == bible) {
-        DLog(@"Creating index controller...");
-		indexController = [[PSIndexController alloc] init];
-		indexController.delegate = self;
-		indexController.moduleToInstall = installedModule.name;
-		[indexController addViewForHUD:viewForHUD];
-        DLog(@"Starting index controller...");
-		[indexController start:NO];
-	} else {
-        DLog(@"Module download OK!");
-		[delegate moduleDownloaded:self];
+
+	// A module upgrade may leave the existing FTS5 index stale (its
+	// module_version meta won't match). Drop it eagerly so the next Search
+	// tap re-offers the build sheet. Fresh installs with no prior index
+	// short-circuit this harmlessly.
+	if(installedModule && installedModule.type == bible) {
+		[installedModule deleteSearchIndex];
 	}
+	[delegate moduleDownloaded:self];
 }
 
 @end

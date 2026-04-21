@@ -9,7 +9,6 @@
 #import "NavigatorLeafView.h"
 #import "PSModuleController.h"
 #import "SwordModule.h"
-#import "PSIndexController.h"
 #import "SwordManager.h"
 #import "SwordInstallSource.h"
 #import "PSTabBarControllerDelegate.h"
