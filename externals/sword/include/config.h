@@ -40,9 +40,18 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #define HAVE_VSNPRINTF 1
 
-#define CURLAVAILABLE 1
+// PocketSword: libcurl removed alongside the in-app module download feature.
+// InstallMgr's transport-creation methods are now stubbed; the local
+// installModule(destMgr, fromLocation, modName) path used for bundled-zip
+// unpack does not require any transport.
+// #define CURLAVAILABLE 1
 
-#define USELUCENE 1
+// PocketSword: CLucene disabled. The iOS app drives search via PSSearchEngine
+// (FTS5) directly against SwordModule text; SWModule::search() and friends are
+// no longer called. Leaving this undefined neutralises the CLucene include,
+// using-namespace directives, and search/createSearchFramework/deleteSearch
+// Framework bodies in swmodule.cpp (all gated behind `USELUCENE`).
+// #define USELUCENE 1
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */

@@ -22,11 +22,8 @@
 
 "Edit" = "編集";
 "Done" = "完了";
-"Module Download" = "拡張データのダウンロード";
-"Installing" = "インストール中:";
 "Yes" = "はい";
 "No" = "いいえ";
-"ConfirmInstall" = "この拡張データをインストールしますか？";
 "Next" = "次へ";
 "Previous" = "前へ";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "Library of Congress Subject Heading: ";
 
 
-"Disclaimer" = "免責条項";
-"DisclaimerMsg" = "      -=+* 警告 *+=-\nインストールマネジャーは、拡張データをインストール又更新するのに便利な手段を提供すると同時に、このようなシスマチックな手段でサイトにアクセスする事は、ウェブサイトに対し個人を特定的に禁止するためのパケットスニファーの利用を可能にします。\nもしあなたが迫害を受けている国からアクセスをしており、特定されるリスクを負いたくないのであれば、インストールマネジャーを使うべきではありません。\n又、CrossWire以外のリモートソースは比較的品質の低い拡張データを含む可能性があり、信仰的に非正統的な物や配布に辺り法を犯している可能性もあります。もちろん、多くのリモートソースに素晴らしいコンテンツもたくさんあります。これらのリモートソースは、CrossWireによって維持されているわけではないため、内容に対して責任を持ちません。 \n自己責任\nを理解した上で、リモートソース機能をオンにしますか？";
 
-"WebNoIP" = "Web: 外部IPを検出できません\n";
-"WiFiNoConnection" = "Wifi: 接続がありません\n";
-"NoNetworkConnection" = "有効なネットワーク接続がありません。";
 
-"manualInstallHelp" = "手動で拡張データをインストールするには、ブラウザーに以下の場所のいずれかを指示する必要があります。それから、ここの説明に従ってください。(または、Bonjour機能を使って検索してください) しかし、ビルドインの拡張データダウンローダーを利用する事をお勧めします。この手動インストーラーは、自分で拡張データを作成できる人のための物です。";
-"InstallManagerDisabled" = "オフになりました";
-"InstallTitle" = "インストールしますか？";
-"files" = "ファイル";
-"InstallProblem" = "インストール中にエラーが発生しました";
-"InstalledButtonTitle" = "インストール済み";
-"InstallButtonTitle" = "インストール";
-"RefreshProblem" = "リフレッシュ中にエラーが発生しました";
-"RefreshingModuleSource" = "拡張データのソースをリフレッシュしています";
-"NoModulesRefresh" = "拡張データが見つかりません リフレッシュしてください";
 "NoModulesInstalled" = "拡張データがインストールされていません";
 
-"InstallSourcesTitle" = "ソース";
 "PreferencesTitle" = "個人設定";
 "PreferencesDisplayPreferencesTitle" = "表示設定";
 "PreferencesDevicePreferencesTitle" = "端末設定";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "イエスの発言赤文字";
 "PreferencesRedLetterNote" = "赤文字モードは、一部の拡張データでのみ動作します";
 "PreferencesDisableAutoLockTitle" = "オートスリープをオフ";
-"PreferencesModuleMaintainerModeTitle" = "拡張データメンテモード";
-"PreferencesModuleMaintainerModeNote" = "拡張データメンテモードは、自ら拡張データを作成し、手動で拡張データをインストールする必要がある人のためのモードです。その他のユーザーは、ビルドインの拡張データダウンローダーを用い、CrossWireに公式的に公開されている拡張データにアクセスしてください。";
 
 "AboutTitle" = "バージョン情報";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "ブックマーク";
 
 "ActivityLabelLoading" = "ロード中です・・・";
-"MMMBonjourLoading" = "Bonjourをロード中です・・・";
-"MMMIPLoading" = "IPをロード中です・・・";
 
 "Biblical Texts" = "聖書";
 "Commentaries" = "注解書";
 "Lexicons / Dictionaries" = "用語集・辞書";
 "Generic Books" = "一般書";
-"Daily Devotional" = "静思の時";
 "Glossaries" = "用語集";
 "Cults / Unorthodox / Questionable Material" = "カルト・異端関係資料";
 "Essays" = "エッセイ";
@@ -113,22 +89,14 @@
 "CloseButtonTitle" = "閉じる";
 "CacheDictionaryKeysTitle" = "キャッシュしますか？";
 "CacheDictionaryKeysMsg" = "辞書が初期化されていません。辞書をキャッシュしますか？";
-"IndexDownloadTitle" = "索引のダウンロード";
-"NoSearchIndexTitle" = "索引未設定";
 "NoSearchIndexMsg" = "この拡張データの索引がインストールされていません。索引がダウンロード可能か確認しますか？";
-"SearchDownloaderTitle" = "索引ダウンローダー";
 "FontPreferenceTitle" = "フォント";
 "EmailUsButton" = "開発者にメール";
 "NoSearchIndexInstalled" = "索引がインストールされていません";
 "SearchResults" = "検索結果";
 
-"IndexControllerInstalled" = "すでに次の索引がインストール済みです:";
-"IndexControllerDownloadable" = "ダウンロード可能な索引を次の一覧から、該当する拡張データの検索を可能にするために選択してください:";
-"IndexControllerNone" = "ネットワーク接続を確認してください:";
-"IndexControllerNoneRemote" = "次の拡張データには、ダウンロードが可能な索引がありません:";
 
 "SearchHelpTitle" = "ヘルプ検索";
-"IndexControllerConfirmQuestion" = "この拡張データの索引をダウンロードしますか？\n注解書の場合時間がかかる場合があります";
 
 "PreferencesStrongsPreferencesTitle" = "ストロングナンバー";
 "PreferencesDisplayTitle" = "表示";
@@ -145,10 +113,7 @@
 "PreferencesCrossReferencesTitle" = "相互参照";
 "PreferencesFootnotesTitle" = "脚注";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "ヘブル語ストロングの用語集がインストールされていません。一つ(例えば、'strongshebrew')その他->ダウンロードからインストールしてください。";
-"NoGreekStrongsNumbersModuleInstalled" = "ギリシャ語ストロングの用語集がインストールされていません。一つ(例えば、'strongsgreek')その他->ダウンロードからインストールしてください。";
 
-"NoMorphGreekModuleInstalled" = "ギリシャ語形態コード分析用語集がインストールされていません。一つ(例えば、'Robinson')その他->ダウンロードからインストールしてください。";
 
 "MorphHebrewNotSupported" = "残念な事に、形態コード分析は、ギリシャ語に対してのみ可能となっております。もし、言語能力があり、PocketSwordにこの機能を組み込みたいと願う方がいましたら、<br /> openscriptures.org<br />のディスカッショングループにに参加ください。";
 
@@ -169,7 +134,6 @@
 "AboutModuleContainsHebrewDef" = "ヘブル語ストロングナンバーの定義";
 "AboutModuleContainsGreekParse" = "ギリシャ語形態コード分析定義";
 "AboutModuleContainsHebrewParse" = "ヘブル語形態コード分析定義";
-"AboutModuleContainsDailyDevotion" = "静思の時付き";
 "AboutModuleContainsImages" = "イメージ付き";
 
 "NotSupported" = "この拡張データは現在まだサポートされていません";
@@ -180,11 +144,6 @@
 "AboutModuleCurrentVersion" = "インストール済みバージョン: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "拡張データロック";
-"ModuleLockedQuestion" = "この拡張データはロックされています。ロック解除するには、キーを購入する必要があります。残念ながら、現状PocketSwordを通じて、購入する事はできません。拡張データの説明をご覧になり、購入方法をお調べください。\n もしすでにキーを購入済みであれば、キーを入力してロック解除をしてください。今、キーを入力しますか？";
-"ModuleEnterKeyTitle" = "キーを入力してください:";
-"ModuleUnlockScreenTitle" = "拡張データ解除";
-"ModuleUnlockHelpText" = "この拡張データを解除するには、購入時に送られたキーを入力してください。完了を押して、キーをテストし、正しいようであれば、保存を押してください。";
 "RefSelectorBookTitle" = "書選択";
 "RefSelectorChapterTitle" = "%d 章"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "%d 節"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -193,26 +152,8 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "見出し";
 "DictionarySearchPlaceholderText" = "辞書検索";
-"TabBarTitleDevotional" = "静思の時";
-"TodayButtonTitle" = "今日";
-"ManageSources" = "データ取得元管理";
-"AddFTPSource" = "FTP取得先の追加";
-"AddHTTPSource" = "HTTP取得先の追加";
-"DeleteSource" = "データ取得元の削除";
-"RefreshSourceList" = "取得元一覧を再表示";
-"AddSourceCaptionTitle" = "取得元名";
-"AddSourceServerTitle" = "サーバ";
-"AddSourcePathTitle" = "パス";
-"AddFTPSourceTitle" = "新しいFTP元";
-"AddHTTPSourceTitle" = "新しいHTTP元";
-"FillInAllFieldsMessage" = "すべての項目を入力ください";
-"Warning" = "警告";
-"CannotVerifyInstallSourceWarning" = "PocketSwordは、選択された取得元を認識できませんでした。取得元情報を保存しますか？";
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** 当拡張データはロックされており、発行者のウェブサイトより解除キーをご購入頂く必要があります。以下をご参照下さい。 **";
-"UpgradeButtonTitle" = "上書き";
-"ConfirmUpgrade" = "当拡張データを最新の物で上書きします。よろしいですか？";
 
 "VerseContextualMenuAddBookmark" = "ブックマークに追加";
 "VerseContextualMenuCommentary" = "注解書を参照";
@@ -221,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "前章";
 "VoiceOverNextChapterButton" = "次章";
 "VoiceOverHistoryAndSearchButton" = "履歴・検索";
-"InstallManagerDownloadsHint" = "以下のウェブサイトから更に拡張データをダウンロードする事ができます:";
-"ModuleTypesHeaderText" = "拡張データのタイプを選択:";
-"ModuleLanguagesHeaderText" = "言語を選択:";
 "PreferencesModulePreferencesTitle" = "拡張データ設定";
 "PreferencesFullscreenModeTitle" = "自動フルスクリーン";
 "PreferencesFullscreenNote" = "自動フルスクリーンがオフの状態でも、2本の指でタップをする事で聖書・注解書タブで常にフルスクリーン化する事ができます。";
@@ -305,7 +243,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

@@ -22,11 +22,8 @@
 
 "Edit" = "Éditer";
 "Done" = "Terminé";
-"Module Download" = "Téléchargement de module";
-"Installing" = "Installer :";
 "Yes" = "Oui";
 "No" = "Non";
-"ConfirmInstall" = "Voulez-vous installer ce module?";
 "Next" = "Suivant";
 "Previous" = "Précédent";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "Library of Congress Subject Heading: ";
 
 
-"Disclaimer" = "Avis de non-responsabilité";
-"DisclaimerMsg" = "      -=+* ATTENTION *+=-\nBien que le gestionnaire d'installation soit un système pratique pour installer et mettre à jour des composants Sword, il utilise aussi systématiquement un moyen d'acces à internet, ce qui donne aux sniffeurs de paquets des pistes pour détecter les utilisateurs. \nSI VOUS VIVEZ DANS UN PAYS OÙ LA PERSÉCUTION EST MANIFESTE ET NE SOUHAITEZ PAS RISQUER UNE TÉLÉDÉTECTION, VOUS *NE DEVEZ PAS* UTILISER LES FONCTIONNALITÉS À DISTANCE DU GESTIONNAIRE D'INSTALLATION. \nDe même, les sources à distance autres que CrossWire peuvent contenir des modules de moins bonne qualité, des modules au contenu peu orthodoxe, voire même des modules qui ne sont pas légitimement distribuables. Mais de nombreux dépots contiennent un contenu parfaitement utile. Ces dépots ne sont tout simplement pas passés en revue ou mis à jour par CrossWire et CrossWire ne peut être tenu pour responsable de leur contenu. CAVEAT EMPTOR.\nComprenez-vous cela et êtes-vous prêt à activer les fonctionnalités à distance?";
 
-"WebNoIP" = "Web : Impossible de déterminer l'IP externe\n";
-"WiFiNoConnection" = "Wifi : Pas de connection\n";
-"NoNetworkConnection" = "Pas de connexion réseau disponible.";
 
-"manualInstallHelp" = "Pour installer manuellement un module vous devez pointer votre navigateur Web sur l'un des emplacements ci-dessous et suivre les indications données (ou lancer une recherche simplement avec votre iPhone en utilisant Bonjour!). Toutefois, il vous est suggéré d'utiliser le programme d'installation de modules - Cette méthode d'installation manuelle est prévue uniquement pour les utilisateurs qui créent leurs propres modules.";
-"InstallManagerDisabled" = "désactivé...";
-"InstallTitle" = "Installer?";
-"files" = "fichiers";
-"InstallProblem" = "Un problème est survenu lors de l'installation.";
-"InstalledButtonTitle" = "Installé";
-"InstallButtonTitle" = "Installer";
-"RefreshProblem" = "Un problème est survenu lors de l'actualisation.";
-"RefreshingModuleSource" = "Actualiser la source de modules";
-"NoModulesRefresh" = "Pas de modules. Essayez d'actualiser.";
 "NoModulesInstalled" = "Pas de modules installés.";
 
-"InstallSourcesTitle" = "Sources";
 "PreferencesTitle" = "Préférences";
 "PreferencesDisplayPreferencesTitle" = "Préférences d'affichage";
 "PreferencesDevicePreferencesTitle" = "Préférences des périphériques";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "Lettres en rouge";
 "PreferencesRedLetterNote" = "Notez que le mode Lettres en rouge n'est disponible que pour certain modules";
 "PreferencesDisableAutoLockTitle" = "Désactiver la mise en veille";
-"PreferencesModuleMaintainerModeTitle" = "Mode responsable de module";
-"PreferencesModuleMaintainerModeNote" = "Notez que le Mode responsable de module est destiné aux utilisateurs qui créent leurs propres modules & nécessite une méthode pour installer manuellement les modules. Pour tous les autres utilisateurs, il est suggéré d'utiliser le gestionnaire de modules intégré pour accéder aux modules officiels fournis par CrossWire.";
 
 "AboutTitle" = "À propos de";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "Signets";
 
 "ActivityLabelLoading" = "Chargement...";
-"MMMBonjourLoading" = "Chargement Bonjour...";
-"MMMIPLoading" = "Chargement IP...";
 
 "Biblical Texts" = "Textes bibliques";
 "Commentaries" = "Commentaires";
 "Lexicons / Dictionaries" = "Lexiques / Dictionnaires";
 "Generic Books" = "Livres génériques";
-"Daily Devotional" = "Calendriers bibliques";
 "Glossaries" = "Glossaires";
 "Cults / Unorthodox / Questionable Material" = "Cultes / Non orthodoxe / Matériel questionable";
 "Essays" = "Essais";
@@ -113,22 +89,15 @@
 "CloseButtonTitle" = "Fermer";
 "CacheDictionaryKeysTitle" = "Cacher?";
 "CacheDictionaryKeysMsg" = "Ce dictionnaire a pas encore été initialisé, souhaitez-vous mettre en cache ce dictionnaire maintenant?";
-"IndexDownloadTitle" = "Téléchargement d'index";
-"NoSearchIndexTitle" = "Pas d'index de recherche";
 "NoSearchIndexMsg" = "Aucun index de recherche installé pour ce module. Désirez-vous vérifier s'il y a des indices de recherche disponibles?";
-"SearchDownloaderTitle" = "Gestionnaire de requêtes";
 "FontPreferenceTitle" = "Police";
 "EmailUsButton" = "Nous envoyer un courriel";
 "NoSearchIndexInstalled" = "Pas d'index de recherche installé";
 "SearchResults" = "Résultats";
 
-"IndexControllerInstalled" = "Vous avez déjà installé un index de recherche pour :";
-"IndexControllerDownloadable" = "Sélectionnez un index de recherche téléchargeable à partir de la liste suivante pour activer la recherche pour ce module :";
-"IndexControllerNone" = "Vérifiez votre connexion réseau pour permettre la recherche de :";
-"IndexControllerNoneRemote" = "Il n'existe actuellement aucun index de recherche à télécharger pour :";
 
 "SearchHelpTitle" = "Aide à la recherche";
-"IndexControllerConfirmQuestion" = "Désirez-vous télécharger l'index de recherche pour ce module?\nCeci peut prendre un certain temps pour les modules Commentaire!"; 
+ 
 
 "PreferencesStrongsPreferencesTitle" = "Nombres de Strong";
 "PreferencesDisplayTitle" = "Affichage";
@@ -145,10 +114,7 @@
 "PreferencesCrossReferencesTitle" = "Références croisées";
 "PreferencesFootnotesTitle" = "Notes en bas de page";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Aucun lexique de nombres de Strong en hébreu n'est installé. Veuillez en installer un (tel que 'strongshebrew') via l'onglet Plus-> Téléchargements.";
-"NoGreekStrongsNumbersModuleInstalled" = "Aucun lexique de nombres de Strong en grec n'est installé. Veuillez en installer un (tel que 'strongsgreek') via l'onglet Plus-> Téléchargements.";
 
-"NoMorphGreekModuleInstalled" = "Aucun lexique d'analyse de codes morphologiques en grec n'est installé. Veuillez en installer un (tel que 'Robinson') via l'onglet Plus-> Téléchargements";
 "MorphHebrewNotSupported" = "Malheureusement aucune analyse de codes morphologiques n'est disponible en hébreu. Si vous avez les connaissances linguistiques et désirez aider à ajouter cette fonction à PocketSword, jetez un oeil à <br /> openscriptures.org<br /> et rejoignez le groupe de discussion (en anglais).";
 
 "AboutModuleFeaturesTitle" = "Caractéristiques du module";
@@ -168,7 +134,6 @@
 "AboutModuleContainsHebrewDef" = "Indique des nombres de Strong hébreux";
 "AboutModuleContainsGreekParse" = "Indique des codes d'analyse morphologique grecs";
 "AboutModuleContainsHebrewParse" = "Indique des codes d'analyse morphologique hébreux";
-"AboutModuleContainsDailyDevotion" = "Contient un calendrier biblique";
 "AboutModuleContainsImages" = "Contient des images";
 
 "NotSupported" = "Ce module n'est pas actuellement pris en charge";
@@ -179,11 +144,6 @@
 "AboutModuleCurrentVersion" = "Version installée: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Module verrouillé";
-"ModuleLockedQuestion" = "Ce module est actuellement verrouillé. Vous devez acheter une clé pour déverrouiller ce module. Malheureusement, vous ne pouvez pas le faire par le biais de PocketSword pour le moment. Prière de lire la description de ce module pour savoir comment acheter ce module.\n Si vous avez déjà acheté une clé, vous pouvez entrer votre clé pour déverrouiller ce module. Voulez-vous entrer votre clé maintenant?";
-"ModuleEnterKeyTitle" = "Entrer la clé :";
-"ModuleUnlockScreenTitle" = "Déverrouiller le module";
-"ModuleUnlockHelpText" = "Pour déverrouiller ce module, prière d'entrer la clé fournie lors de l'achat du module. Sélectionner Terminer pour tester la clé et puis Enregistrer si elle est correcte.";
 "RefSelectorBookTitle" = "Selectionner un livre";
 "RefSelectorChapterTitle" = "Chapitre %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Verset %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,27 +152,9 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "En-têtes";
 "DictionarySearchPlaceholderText" = "Recherche dictionnaire";
-"TabBarTitleDevotional" = "Calendrier biblique";
-"TodayButtonTitle" = "Aujourd'hui";
-"ManageSources" = "Gérer les dépôts";
-"AddFTPSource" = "Ajouter un dépôt FTP";
-"AddHTTPSource" = "Ajouter un dépot HTTP";
-"DeleteSource" = "Supprimer le dépôt";
-"RefreshSourceList" = "Rafraîchir la liste des dépôts";
-"AddSourceCaptionTitle" = "Inititulé";
-"AddSourceServerTitle" = "Serveur";
-"AddSourcePathTitle" = "Chemin";
-"AddFTPSourceTitle" = "Nouveau dépôt FTP";
-"AddHTTPSourceTitle" = "Nouveau dépôt HTTP";
-"FillInAllFieldsMessage" = "Tous les champs ne sont pas remplis!";
-"Warning" = "Attention";
-"CannotVerifyInstallSourceWarning" = "PocketSword ne peut pas vérifier la validité de ce dépôt. Enregistrer néanmoins?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Veuillez noter que ce module est actuellement verrouillé et que vous devrez acheter une clé de déverrouillage depuis le site de l'éditeur du module. Voir ci-dessous pour plus de détails. **";
-"UpgradeButtonTitle" = "Remplacer";
-"ConfirmUpgrade" = "Remplacer ce module avec la version actuellement disponible?";
 "VerseContextualMenuAddBookmark" = "Ajouter un signet";
 "VerseContextualMenuCommentary" = "Voir dans le commentaire";
 
@@ -220,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "Chapitre précédent";
 "VoiceOverNextChapterButton" = "Chapitre suivant";
 "VoiceOverHistoryAndSearchButton" = "Historique et Recherches";
-"InstallManagerDownloadsHint" = "Vous pouvez télécharger des modules supplémentaires depuis n'importe quel dépôt ci-dessous :";
-"ModuleTypesHeaderText" = "Selection du type de module :";
-"ModuleLanguagesHeaderText" = "Selection de langue :";
 "PreferencesModulePreferencesTitle" = "Préférences Module";
 "PreferencesFullscreenModeTitle" = "Plein écran Auto";
 "PreferencesFullscreenNote" = "Avec Plein écran Auto désactivé, il est toujours possible de basculer en mode plein écran par action à 2 doigts dans un onglet Bible ou Commentaire.";
@@ -305,7 +244,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

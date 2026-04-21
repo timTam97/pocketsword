@@ -22,7 +22,6 @@
 #import "PSTabBarControllerDelegate.h"
 #import "SearchWebView.h"
 #import "PSHistoryController.h"
-#import "NavigatorSources.h"
 #import "PSModuleSelectorController.h"
 #import "PSPreferencesController.h"
 #import "PSBookmarksNavigatorController.h"
@@ -35,7 +34,6 @@
 #import "PSCommentaryViewController.h"
 #import "PSRefSelectorController.h"
 //#import "PSWebView.h"
-#import "PSDevotionalViewController.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSAboutScreenController.h"
@@ -47,7 +45,7 @@
 
 @implementation PSTabBarControllerDelegate
 
-@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController, devotionalTabController, tabBarController;
+@synthesize savedSearchHistoryItem, savedSearchResultsTab, bibleTabController, commentaryTabController, tabBarController;
 
 - (id)init {
 	self = [super init];
@@ -67,10 +65,8 @@
 		// 01: Commentary
 		// 02: Dictionary
 		// 03: Bookmarks
-		// 04: Daily Devotionals
-		// 05: Downloads
-		// 06: Preferences
-		// 07: About
+		// 04: Preferences
+		// 05: About
 		
 		if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {// iOS 7 only
 			UIColor *tintColor = [UIColor blackColor];
@@ -129,36 +125,6 @@
 		bookmarksTab.tabBarItem = tbI;
 		[tabs insertObject:bookmarksTab atIndex:3];
 		
-		//add the Daily Devotionals tab.
-		PSDevotionalViewController *devoViewController = [[PSDevotionalViewController alloc] init];
-		[devoViewController setDelegate:self];
-		self.devotionalTabController = devoViewController;
-		UITabBarItem *devotionalTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDevotional", @"Devotional") image:[UIImage imageNamed:@"Daily-Devotional.png"] tag:0];
-		if([PSResizing iPad]) {
-			UINavigationController *devoIPadTab = [[UINavigationController alloc] initWithRootViewController:devoViewController];
-			devoIPadTab.navigationBar.barStyle = UIBarStyleBlack;
-			devoIPadTab.tabBarItem = devotionalTBI;
-			[tabs insertObject:devoIPadTab atIndex:4];
-			devoIPadTab = nil;
-		} else {
-			devoViewController.tabBarItem = devotionalTBI;
-			[tabs insertObject:devoViewController atIndex:4];
-		}
-		
-		//add the Downloads tab.
-		NavigatorSources *downloadsViewController = [[NavigatorSources alloc] initWithStyle:UITableViewStyleGrouped];
-		UITabBarItem *downloadsTabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemDownloads tag:5];
-		if([PSResizing iPad]) {
-			UINavigationController *downloadsIPadTab = [[UINavigationController alloc] initWithRootViewController:downloadsViewController];
-			downloadsIPadTab.navigationBar.barStyle = UIBarStyleBlack;
-			downloadsIPadTab.tabBarItem = downloadsTabBarItem;
-			[tabs insertObject:downloadsIPadTab atIndex:5];
-			downloadsIPadTab = nil;
-		} else {
-			downloadsViewController.tabBarItem = downloadsTabBarItem;
-			[tabs insertObject:downloadsViewController atIndex:5];
-		}
-		
 		//add the Preferences tab.
 		PSPreferencesController *preferencesViewController = [[PSPreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
 		UITabBarItem *preferencesTabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitlePreferences", @"Preferences") image:[UIImage imageNamed:@"gear-24.png"] tag:9];
@@ -166,12 +132,12 @@
 			UINavigationController *preferencesIPadTab = [[UINavigationController alloc] initWithRootViewController:preferencesViewController];
 			preferencesIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			preferencesIPadTab.tabBarItem = preferencesTabBarItem;
-			[tabs insertObject:preferencesIPadTab atIndex:6];
+			[tabs insertObject:preferencesIPadTab atIndex:4];
 		} else {
 			preferencesViewController.tabBarItem = preferencesTabBarItem;
-			[tabs insertObject:preferencesViewController atIndex:6];
+			[tabs insertObject:preferencesViewController atIndex:4];
 		}
-		
+
 		//add the About tab.
 		PSAboutScreenController *aboutViewController = [[PSAboutScreenController alloc] init];
 		UITabBarItem *aboutTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleAbout", @"About") image:[UIImage imageNamed:@"About.png"] tag:0];
@@ -179,10 +145,10 @@
 			UINavigationController *aboutIPadTab = [[UINavigationController alloc] initWithRootViewController:aboutViewController];
 			aboutIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			aboutIPadTab.tabBarItem = aboutTBI;
-			[tabs insertObject:aboutIPadTab atIndex:7];
+			[tabs insertObject:aboutIPadTab atIndex:5];
 		} else {
 			aboutViewController.tabBarItem = aboutTBI;
-			[tabs insertObject:aboutViewController atIndex:7];
+			[tabs insertObject:aboutViewController atIndex:5];
 		}
 		
 		[tabBarController setViewControllers:tabs animated:NO];
@@ -217,7 +183,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showInfoWithNotification:) name:NotificationShowInfoPane object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotateInfo:) name:NotificationRotateInfoPane object:nil];
 				
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addModuleButtonPressed) name:NotificationShowDownloadsTab object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayCommentaryTabViaNotification) name:NotificationShowCommentaryTab object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayBibleTabViaNotification) name:NotificationShowBibleTab object:nil];
 
@@ -381,8 +346,6 @@
 			[moduleSelectorViewController setListType:BibleTab];
 		} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:CommentaryTab];
-		} else if([[devotionalTabController devotionalWebView] isDescendantOfView:tabBarController.selectedViewController.view]) {
-			[moduleSelectorViewController setListType:DevotionalTab];
 		} else {
 			[moduleSelectorViewController setListType:DictionaryTab];
 		}
@@ -410,10 +373,6 @@
 //- (UITabBarController *)tabBarController {
 //	return tabBarController;
 //}
-
-- (void)addModuleButtonPressed {
-	[self setShownTabTo:DownloadsTab];
-}
 
 - (void)displayCommentaryTabViaNotification {
 	[self setShownTabTo:CommentaryTab];
@@ -795,7 +754,6 @@
 			break;
         case DictionaryTab:
         case DevotionalTab:
-        case DownloadsTab:
         case PreferencesTab:
         default:
             break;
@@ -1062,16 +1020,6 @@
 			for(UIViewController* uivc in tabBarController.viewControllers) {
 				if([uivc.title isEqualToString:CommentaryTabTitleString]) {
 					tabBarController.selectedViewController = uivc;
-				}
-			}
-		}
-			break;
-		case DownloadsTab:
-		{
-			for(UIViewController *uivc in tabBarController.viewControllers) {
-				if([uivc isKindOfClass:[NavigatorSources class]]) {
-					tabBarController.selectedViewController = uivc;
-					break;
 				}
 			}
 		}

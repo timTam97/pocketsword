@@ -22,11 +22,8 @@
 
 "Edit" = "编辑";
 "Done" = "完成";
-"Module Download" = "模块下载";
-"Installing" = "安装:";
 "Yes" = "是";
 "No" = "否";
-"ConfirmInstall" = "你要安装此模块吗?";
 "Next" = "下一个";
 "Previous" = "前一个";
 
@@ -46,24 +43,8 @@
 "AboutModuleLCSH" = "美国国会图书馆主题标题: ";
 
 
-"Disclaimer" = "免责声明";
-"DisclaimerMsg" = "      -=+* 警告 *+=-\n,  \n虽然安装管理器提供了安装和升级sword部件的便捷方法，它也使用了访问网站的系统方法，这些网站可能成为数据包嗅探器为了锁定个别用户的目标。 \n如果你住在信仰受迫害的国家，不希望冒险被侦测到，您＊不＊应该使用安装源管理器的的远程资源功能。 \n另外，Crosswire以外的其他远程源可能含有质量不高的模块，那些模块含非正统的内容，有些模块可能甚至是不可以合法派发的。许多资源库有很好的有用内容。但Crosswire没有审查或维护过这些资源库，所以Crosswire不能对他们的内容负责。买者自负。\n你明白这一点并仍愿意启用远程源功能吗？";
-"WebNoIP" = "网: 不能确定外部IP\n";
-"WiFiNoConnection" = "Wifi: 无连接\n";
-"NoNetworkConnection" = "无可用的网路连接。";
-"manualInstallHelp" = "若手工安装模块，请将浏览器指向下列之一的地址，然后跟作提示。 (或用Bonjour搜寻你的iPhone!)。但我们建议你使用内置模块安装器，这个手工安装器只是提供给那些有自制模块的用户。";
-"InstallManagerDisabled" = "禁止...";
-"InstallTitle" = "安装?";
-"files" = "文件";
-"InstallProblem" = "安装中出了问题.";
-"InstalledButtonTitle" = "安装了";
-"InstallButtonTitle" = "安装";
-"RefreshProblem" = "刷新中出了问题。";
-"RefreshingModuleSource" = "刷新模块源。";
-"NoModulesRefresh" = "这儿没有模块。请试试刷新。";
 "NoModulesInstalled" = "没有模块已经安装。";
 
-"InstallSourcesTitle" = "源";
 "PreferencesTitle" = "偏好";
 "PreferencesDisplayPreferencesTitle" = "显示偏好";
 "PreferencesDevicePreferencesTitle" = "设备偏好";
@@ -74,8 +55,6 @@
 "PreferencesRedLetterTitle" = "红字体";
 "PreferencesRedLetterNote" = "注意只有某些模块支持红字模式";
 "PreferencesDisableAutoLockTitle" = "禁用自动歇息";
-"PreferencesModuleMaintainerModeTitle" = "模块维护模式";
-"PreferencesModuleMaintainerModeNote" = "注意，模块维护模式是为那些有自制模块而必须手工安装其自制模块的用户的。对所有别的用户，请用内置模块下载器下载CrossWire提供的模块。";
 
 "AboutTitle" = "关于";
 
@@ -90,8 +69,6 @@
 "BookmarksTitle" = "书签";
 
 "ActivityLabelLoading" = "装载...";
-"MMMBonjourLoading" = "Bonjour 装载...";
-"MMMIPLoading" = "IP 装载...";
 
 "Biblical Texts" = "经文";
 "Commentaries" = "注解";
@@ -111,22 +88,14 @@
 "CloseButtonTitle" = "关闭";
 "CacheDictionaryKeysTitle" = "缓存?";
 "CacheDictionaryKeysMsg" = "此字典尚未初始化，你现在想要缓存此字典吗？";
-"IndexDownloadTitle" = "索引下载";
-"NoSearchIndexTitle" = "没有搜索索引";
 "NoSearchIndexMsg" = "你尚未安装此模块的搜索索引。 你想要检查已有的搜索索引吗？";
-"SearchDownloaderTitle" = "搜索下载器";
 "FontPreferenceTitle" = "字体";
 "EmailUsButton" = "发电邮给我们";
 "NoSearchIndexInstalled" = "没有安装搜索索引";
 "SearchResults" = "结果";
 
-"IndexControllerInstalled" = "你已经安装了搜索索引:";
-"IndexControllerDownloadable" = "请从下列可下载的模块中挑选你所需要的搜索索引以便你可以搜索该模块:";
-"IndexControllerNone" = "为了搜索，请检查你的网路连接:";
-"IndexControllerNoneRemote" = "目前没有可下载的搜索索引:";
 
 "SearchHelpTitle" = "搜寻帮助";
-"IndexControllerConfirmQuestion" = "你是否想下载这个模块的搜索索引？\n下载其注解模块可能需要一些时间!";
 
 "PreferencesStrongsPreferencesTitle" = "史特朗码";
 "PreferencesDisplayTitle" = "显示";
@@ -144,10 +113,7 @@
 "PreferencesFootnotesTitle" = "注脚";
 
 
-"NoHebrewStrongsNumbersModuleInstalled" = "没有安装希伯来文史特朗词典. 请通过更多－》下载和安装一个 (例如 'strongshebrew')。";
-"NoGreekStrongsNumbersModuleInstalled" = "没有安装希腊文史特朗词典. 请通过更多－》下载和安装一个 (例如 'strongsgreek')。";
 
-"NoMorphGreekModuleInstalled" = "没有安装希腊文形态分析码词典. 请通过更多－》下载和安装一个 (例如 'Robinson')。";
 "MorphHebrewNotSupported" = "可惜现在只有希腊文字的形态分析码。您如果有语言天分并愿意帮忙添加此功能在PocketSword上，请到<br /> openscriptures.org<br />并加入讨论小组。";
 
 "AboutModuleFeaturesTitle" = "模块特征";
@@ -167,7 +133,6 @@
 "AboutModuleContainsHebrewDef" = "定义希伯来文史特朗码";
 "AboutModuleContainsGreekParse" = "定义希腊文形态分析码";
 "AboutModuleContainsHebrewParse" = "定义希伯来文形态分析码";
-"AboutModuleContainsDailyDevotion" = "含每日灵修";
 "AboutModuleContainsImages" = "含图片";
 
 "NotSupported" = "目前不支持此模块";
@@ -178,11 +143,6 @@
 "AboutModuleCurrentVersion" = "已安装的版本： ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "模块被锁";
-"ModuleLockedQuestion" = "此模块现在被锁。你必须买钥匙（key)打开它。可是你目前不能通过PocketSword买。请阅读此模块的介绍来找到如何买模块\n  你如果已经买了钥匙，请输入你的钥匙来打开模块。你要输入你的钥匙吗？";
-"ModuleEnterKeyTitle" = "输入钥匙（key):";
-"ModuleUnlockScreenTitle" = "解锁模块";
-"ModuleUnlockHelpText" = "请输入你买模块时收到的钥匙来打开它。按完成以测试模块，如果正确就按存档（Save）.";
 "RefSelectorBookTitle" = "选择书名";
 "RefSelectorChapterTitle" = "%d 章"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "%d 节"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -191,27 +151,9 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "头抬";
 "DictionarySearchPlaceholderText" = "查询字典";
-"TabBarTitleDevotional" = "每日灵修";
-"TodayButtonTitle" = "今天";
-"ManageSources" = "管理资源";
-"AddFTPSource" = "加FTP资源";
-"AddHTTPSource" = "加HTTP资源";
-"DeleteSource" = "删除资源";
-"RefreshSourceList" = "更新资源表";
-"AddSourceCaptionTitle" = "题目";
-"AddSourceServerTitle" = "服务器";
-"AddSourcePathTitle" = "路径";
-"AddFTPSourceTitle" = "新的FTP资源";
-"AddHTTPSourceTitle" = "新的HTTP资源";
-"FillInAllFieldsMessage" = "你必须填入所有的空白！";
-"Warning" = "警告";
-"CannotVerifyInstallSourceWarning" = "PocketSword不能确认这是一个恰当的模块资源。你仍然要存它吗？";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** 注意此模块目前被锁，你需要到模块出版社网站买解锁码。详情见下。**";
-"UpgradeButtonTitle" = "替代";
-"ConfirmUpgrade" = "你想用现有版本替代此模块吗？";
 
 "VerseContextualMenuAddBookmark" = "加书签";
 "VerseContextualMenuCommentary" = "在注解中浏览";
@@ -220,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "前一章";
 "VoiceOverNextChapterButton" = "下一章";
 "VoiceOverHistoryAndSearchButton" = "历史和搜寻";
-"InstallManagerDownloadsHint" = "你可以从下列模块源下载任何额外的模块:";
-"ModuleTypesHeaderText" = "选择模块类型:";
-"ModuleLanguagesHeaderText" = "选择语言:";
 "PreferencesModulePreferencesTitle" = "模块优选";
 "PreferencesFullscreenModeTitle" = "自动全屏";
 "PreferencesFullscreenNote" = "若你未使用自动全屏，可以用两个手指击打圣经或注解菜单转到或转离全屏。";
@@ -304,7 +243,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

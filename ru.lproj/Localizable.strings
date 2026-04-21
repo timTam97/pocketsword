@@ -22,11 +22,8 @@
 
 "Edit" = "Изменить";
 "Done" = "Готово";
-"Module Download" = "Загрузка Модуля";
-"Installing" = "Установка:";
 "Yes" = "Да";
 "No" = "Нет";
-"ConfirmInstall" = "Установить модуль?";
 "Next" = "Далее";
 "Previous" = "Назад";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "Заголовок в Библиотеке Конгрессу США: ";
 
 
-"Disclaimer" = "Оговорка";
-"DisclaimerMsg" = "      -=+* ВНИМАНИЕ! *+=-\nХотя Инсталлятор(Install Manager) обеспечивает удобный способ для установки и обновления компонентов программы SWORD, он также использует систематический метод для доступа в сайты, что дает сниферам пакетов целевую для идентификации/выделения отдельных пользователей. \nЕСЛИ ВЫ ЖИВЕТЕ В СТРАНЕ ГДЕ ГОНЕНИЯ, И НЕ ХОТИТЕ БЫТЬ ВЫЯВЛЕННЫМИ, *НЕ* ПОЛЬЗУЙТЕСЬ ВОЗМОЖНОСТЬЮ УДАЛЕННОГО ИСТОЧНИКА(Remote Source) В ИНСТАЛЯТОРЕ. \nТакже, Удаленные Источники кроме CrossWire могут содержать менее качественные модули, модули с неортодоксальным содержанием или даже модули которые не законно распространены. Многие репозиторий содержат полезный контент. Эти репозитории CrossWire не проверяет и не обслуживает, а также CrossWire не отвечает за их содержание. ПУСТЬ ПОКУПАТЕЛЬ БУДЕТ БДИТЕЛЕТ.\nВы понимаете это и готовы включить свойство Удаленного Источника?";
 
-"WebNoIP" = "Веб: Не удалось определить внешний IP адрес\n";
-"WiFiNoConnection" = "Wi-Fi: Нет соединения\n";
-"NoNetworkConnection" = "Нет сетевых подключений.";
 
-"manualInstallHelp" = "Чтобы вручную установить модуль, необходимо нaправить веб-браузер на одну из ниже указанных ссылок, а затем следовать инструкциям на экране(или с помощью Bonjour! найти свой iPhone).  Однако, предлагается использовать встроенный установщик модулей - установка вручную предоставляется для пользователей которые создают собственные модули.";
-"InstallManagerDisabled" = "отключен...";
-"InstallTitle" = "Установить?";
-"files" = "файлы";
-"InstallProblem" = "Во время установки произошла ошибка.";
-"InstalledButtonTitle" = "Установлено";
-"InstallButtonTitle" = "Установить";
-"RefreshProblem" = "Во время обновления произошла ошибка.";
-"RefreshingModuleSource" = "Обновление Источника Модуля";
-"NoModulesRefresh" = "Модулей нет. Попробуйте обновить.";
 "NoModulesInstalled" = "Модули не установлены.";
 
-"InstallSourcesTitle" = "Источники";
 "PreferencesTitle" = "Параметры";
 "PreferencesDisplayPreferencesTitle" = "Параметры Отображения";
 "PreferencesDevicePreferencesTitle" = "Параметры Устройства";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "Красная Буква";
 "PreferencesRedLetterNote" = "Режим выделения слов Христа, красными буквами, доступен только в некоторых модулях.";
 "PreferencesDisableAutoLockTitle" = "Вымк. автоблокировку";
-"PreferencesModuleMaintainerModeTitle" = "Режим Обслуживания Модуля";
-"PreferencesModuleMaintainerModeNote" = "Режим обслуживания модуля предоставляется для пользователей которые создают собственные модули и где необходимо вручную их установить.  Для всех остальных, предлагается использовать встроенный загрузчик для доступа к официальным модулям CrossWire.";
 
 "AboutTitle" = "Об";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "Закладки";
 
 "ActivityLabelLoading" = "Загрузка...";
-"MMMBonjourLoading" = "Bonjour загружается...";
-"MMMIPLoading" = "IP загружается...";
 
 "Biblical Texts" = "Библейские Тексты";
 "Commentaries" = "Комментарии";
 "Lexicons / Dictionaries" = "Лексиконы / Словари";
 "Generic Books" = "Общие Книги";
-"Daily Devotional" = "Ежедневная Молитва";
 "Glossaries" = "Глоссарии";
 "Cults / Unorthodox / Questionable Material" = "Культы / Неортодоксальные / Спорный материал";
 "Essays" = "Очерки";
@@ -113,22 +89,14 @@
 "CloseButtonTitle" = "Закрыть";
 "CacheDictionaryKeysTitle" = "Загрузить в кэш?";
 "CacheDictionaryKeysMsg" = "Словарь еще не инициализирован, загрузить словарь в кэш?";
-"IndexDownloadTitle" = "Загрузка Индекса";
-"NoSearchIndexTitle" = "Нет Индекса Поиска";
 "NoSearchIndexMsg" = "Индекс поиска не установлен для данного модуля.  Проверить наличие доступных индексов поиска?";
-"SearchDownloaderTitle" = "Поиск Загрузчика";
 "FontPreferenceTitle" = "Шрифт";
 "EmailUsButton" = "Пишите Нам";
 "NoSearchIndexInstalled" = "Индекс поиска не установлен";
 "SearchResults" = "Результаты";
 
-"IndexControllerInstalled" = "Індекс поиска уже установлен для:";
-"IndexControllerDownloadable" = "Выберите загружаемый индекс поиска из списка, чтоб включить поиск в данном модуле:";
-"IndexControllerNone" = "Проверьте сетевое подключение чтоб включить поиск для:";
-"IndexControllerNoneRemote" = "В данный момент не существует индекс поиска чтоб загрузить для:";
 
 "SearchHelpTitle" = "Поиск справки";
-"IndexControllerConfirmQuestion" = "Загрузить индекс поиска для модуля?\nЭто может занять некоторое время для комментарных модулей!";
 
 "PreferencesStrongsPreferencesTitle" = "Нумерация Стронга";
 "PreferencesDisplayTitle" = "Отображение";
@@ -145,10 +113,7 @@
 "PreferencesCrossReferencesTitle" = "Ссылки";
 "PreferencesFootnotesTitle" = "Сноски";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Ни один еврейский лексикон с нумерацией Стронга не установлен. Установите (например 'strongshebrew') используя вкладку Еще->Загрузка.";
-"NoGreekStrongsNumbersModuleInstalled" = "Ни один греческий лексикон с нумерацией Стронга не установлен. Установите (например 'strongsgreek') используя вкладку Еще->Загрузка.";
 
-"NoMorphGreekModuleInstalled" = "Ни один греческий лексикон с кодами морфологического анализа не установлен. Установите (например 'Robinson') используя вкладку Еще->Загрузка";
 "MorphHebrewNotSupported" = "К сожалению, в настоящее время коды морфологического анализа доступны только для греческих слов.  Если у вас есть языковые способности и вы готовы помочь реализовать эту возможность в программе PocketSword, пожалуйста посетите веб-сайт <br /> openscriptures.org<br />и присоединитесь к группе обсуждений.";
 
 "AboutModuleFeaturesTitle" = "Возможности Модуля";
@@ -168,7 +133,6 @@
 "AboutModuleContainsHebrewDef" = "Определяет Еврейскую Нумерацию Стронга";
 "AboutModuleContainsGreekParse" = "Определяет Греческие Морфологические Анализа Коды";
 "AboutModuleContainsHebrewParse" = "Определяет Еврейские Морфологические Анализа Коды";
-"AboutModuleContainsDailyDevotion" = "Содержит Ежедневные Молитвы";
 "AboutModuleContainsImages" = "Содержит Изображения/Рисунки";
 
 "NotSupported" = "Модуль в настоящее время не поддерживается";
@@ -179,11 +143,6 @@
 "AboutModuleCurrentVersion" = "Установлена Версия: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Модуль Заблокирован";
-"ModuleLockedQuestion" = "Модуль в настоящее время заблокирован.  Нужно приобрести ключ чтоб разблокировать модуль.  К сожалению, в настоящее время это невозможно сделать используя PocketSword.  Прочтите описание модуля чтоб узнать как купить этот модуль.\n  Если ключ уже куплен, его можно ввести чтоб разблокировать модуль.  Ввести ключ?";
-"ModuleEnterKeyTitle" = "Ввести Ключ:";
-"ModuleUnlockScreenTitle" = "Разблокировать Модуль";
-"ModuleUnlockHelpText" = "Чтоб открыть модуль, введите ключ полученный во время покупки модуля.  Нажмите кнопку Готово чтоб проверить ключ, затем нажмите кнопку Сохранить если ключ правильный.";
 "RefSelectorBookTitle" = "Выбор Книги";
 "RefSelectorChapterTitle" = "Глава %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Стих %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,27 +151,9 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "Заголовки";
 "DictionarySearchPlaceholderText" = "Поиск в Словаре";
-"TabBarTitleDevotional" = "Ежедневные Молитвы";
-"TodayButtonTitle" = "Сегодня";
-"ManageSources" = "Управление Источниками";
-"AddFTPSource" = "Добавить Источник FTP";
-"AddHTTPSource" = "Добавить Источник HTTP";
-"DeleteSource" = "Удалить Источник";
-"RefreshSourceList" = "Обновить Список Источников";
-"AddSourceCaptionTitle" = "Название";
-"AddSourceServerTitle" = "Сервер";
-"AddSourcePathTitle" = "Путь";
-"AddFTPSourceTitle" = "Новый Источник FTP";
-"AddHTTPSourceTitle" = "Новый Источник HTTP";
-"FillInAllFieldsMessage" = "Все поля должны быть заполнены!";
-"Warning" = "Внимание";
-"CannotVerifyInstallSourceWarning" = "PocketSword не может подтвердить действительность этого источника модулей.  Сохранить источник в любом случае?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Модуль в настоящее время заблокирован и нужно приобрести ключ на веб-сайте издателя модуля. Смотрите ниже для более подробной информации. **";
-"UpgradeButtonTitle" = "Замена";
-"ConfirmUpgrade" = "Заменить этот модуль на версию которая доступна в настоящее время?";
 
 "VerseContextualMenuAddBookmark" = "Добавить закладку";
 "VerseContextualMenuCommentary" = "Открыть в комментарии";
@@ -221,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "Предыдущая глава";
 "VoiceOverNextChapterButton" = "Следующая глава";
 "VoiceOverHistoryAndSearchButton" = "Журнал и Поиск";
-"InstallManagerDownloadsHint" = "Вы можете скачать дополнительные модули с любых ниже данных источников:";
-"ModuleTypesHeaderText" = "Выберите тип модуля:";
-"ModuleLanguagesHeaderText" = "Выберите язык:";
 "PreferencesModulePreferencesTitle" = "Параметры модуля";
 "PreferencesFullscreenModeTitle" = "Авто полноэкранный режим";
 "PreferencesFullscreenNote" = "Если авто полноэкранный режим выключен, вы можете перейти к(из) полноэкранному режиму двухпальцевым касанием на вкладках Библии и Комментария.";
@@ -305,7 +243,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

@@ -25,7 +25,11 @@
 //#define _ICU_ 1
 //#define _APPLE_IOS_ 1
 //#define USELUCENE 1
-#define CURLAVAILABLE 1
+// PocketSword: libcurl removed along with the in-app module download feature.
+// InstallMgr's CURL transport methods are gated on this define and now
+// compile to null-returning stubs. The local installModule path used for
+// bundled-zip unpack does not need a transport.
+//#define CURLAVAILABLE 1
 #define unix 1
 #define __unix__ 1
 #define EXCLUDEXZ 1

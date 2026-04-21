@@ -8,11 +8,9 @@
 
 #import "PSModuleSelectorController.h"
 #import "PSModuleController.h"
-#import "NavigatorSources.h"
 #import "PSHistoryController.h"
 #import "PSResizing.h"
 #import "PocketSwordAppDelegate.h"
-#import "PSModuleInfoViewController.h"
 #import "SwordModule.h"
 #import "PSModulePreferencesController.h"
 #import "SwordManager.h"
@@ -63,8 +61,6 @@
 	} else if(![PSResizing iPad]) {
 		UIBarButtonItem	*modulesCloseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CloseButtonTitle", @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismissModuleSelector)];
 		self.navigationItem.leftBarButtonItem = modulesCloseButton;
-		UIBarButtonItem *modulesAddButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addModuleButtonPressed)];
-		self.navigationItem.rightBarButtonItem = modulesAddButton;
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
@@ -101,19 +97,6 @@
 		if (pos < [array count]) {
 			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
 		}
-	} else if([self listType] == DevotionalTab) {
-		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_DAILYDEVS, @"");
-		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS];
-		moduleCount = [array count];
-		int pos = 0;
-		for(; pos < [array count]; pos++) {
-			if([[[array objectAtIndex: pos] name] isEqualToString:[[moduleController primaryDevotional] name]]) {
-				break;
-			}
-		}
-		if (pos < [array count]) {
-			ip = [NSIndexPath indexPathForRow: pos inSection: 0];
-		}
 	} else if([self listType] == DictionaryTab){
 		self.navigationItem.title = NSLocalizedString(SWMOD_CATEGORY_DICTIONARIES, @"");
 		NSArray *array = [[moduleController swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES];
@@ -144,12 +127,6 @@
 	self.preferredContentSize = CGSizeMake(540.0, height);
 }
 
-- (void)addModuleButtonPressed {
-	//close the selector first, then show the downloads tab.
-	[self dismissModuleSelector];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationShowDownloadsTab object:nil];
-}
-
 - (void)dismissModuleSelector {
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationToggleModuleList object:nil];
 }
@@ -173,15 +150,17 @@
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
 		case DictionaryTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DICTIONARIES] count];
-		case DevotionalTab:
-			return [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] count];
 		case PreferencesTab:
 			return [[[[PSModuleController defaultModuleController] swordManager] moduleNames] count];
+		case DevotionalTab:
 		case DownloadsTab:
 			break;
 	}
 	return 0;
 }
+// DevotionalTab and DownloadsTab above are dead placeholders kept only so
+// that the ShownTab enum values in globals.h do not shift (which would break
+// any persisted raw-int tab prefs). Both features have been removed.
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
@@ -221,14 +200,6 @@
 			locked = [currentModule isLocked];
 		}
 			break;
-		case DevotionalTab:
-		{
-			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:indexPath.row];
-			cell.textLabel.text = [currentModule name];
-			cell.detailTextLabel.text = [currentModule descr];
-			locked = [currentModule isLocked];
-		}
-			break;
 		case PreferencesTab:
 		{
 			SwordModule *currentModule = [[[[PSModuleController defaultModuleController] swordManager] listModules] objectAtIndex:indexPath.row];
@@ -237,6 +208,7 @@
 			locked = [currentModule isLocked];
 		}
 			break;
+		case DevotionalTab:
 		case DownloadsTab:
 			break;
 	}
@@ -313,12 +285,9 @@
 				locked = YES;
 			break;
 		case DevotionalTab:
-			[moduleController loadPrimaryDevotional:newModule];
-			if([[moduleController primaryDevotional] isLocked])
-				locked = YES;
-			break;
 		case DownloadsTab:
 		case PreferencesTab:
+			// Dead placeholders (devotional feature removed, downloads removed).
 			break;
 	}
 	if(locked) {
@@ -345,32 +314,15 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 	SwordModule *mod = [[[PSModuleController defaultModuleController] swordManager] moduleWithName: [tableView cellForRowAtIndexPath: indexPath].textLabel.text];
-	
-	UITabBarController *moduleTabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
-//	if([moduleTabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {
-//		[moduleTabBarController.tabBar setTranslucent:[PSTabBarControllerDelegate getBarTranslucentDefault]];
-//		[moduleTabBarController.tabBar setBarTintColor:[PSTabBarControllerDelegate getBarColorDefault]];
-//	}
-	
-	PSModuleInfoViewController *detailsViewController = [[PSModuleInfoViewController alloc] initWithNibName:nil bundle:nil];
-	[detailsViewController displayInfoForModule:mod];
+
 	PSModulePreferencesController *preferencesViewController = [[PSModulePreferencesController alloc] initWithStyle:UITableViewStyleGrouped];
 	preferencesViewController.listType = self.listType;
 	preferencesViewController.hackTableView = (listType == PreferencesTab) ? NO : YES;
 	[preferencesViewController displayPrefsForModule:mod];
-	NSArray *tabs = [NSArray arrayWithObjects:detailsViewController, preferencesViewController, nil];
-	[moduleTabBarController setViewControllers:tabs];
 	CGSize contentSize = self.preferredContentSize;
 	contentSize.height = 2200;
-	moduleTabBarController.preferredContentSize = contentSize;
-	if(listType == PreferencesTab) {
-		// jump straight to the preferences tab...
-		[moduleTabBarController setSelectedViewController:preferencesViewController];
-	}
-	[self.navigationController pushViewController:moduleTabBarController animated:YES];
-	
-//	leafTabBarController.contentSizeForViewInPopover = self.contentSizeForViewInPopover;
-//	[self.navigationController pushViewController:leafTabBarController animated:YES];
+	preferencesViewController.preferredContentSize = contentSize;
+	[self.navigationController pushViewController:preferencesViewController animated:YES];
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {

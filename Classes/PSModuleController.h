@@ -19,38 +19,25 @@
 
 
 #import "SwordModule.h"
-#import "PSModuleDownloadItem.h"
-#import "PSStatusReporter.h"
 
-@class SwordManager, SwordInstallManager, SwordInstallSource, SwordDictionary, PSModuleType, SwordKey, SwordModule;
+@class SwordManager, SwordDictionary, PSModuleType, SwordKey, SwordModule;
 
-@interface PSModuleController : NSObject <PSModuleDownloadDelegate> {
-	
+@interface PSModuleController : NSObject {
+
 	SwordModule *primaryBible;
 	SwordModule *primaryCommentary;
 	SwordDictionary *primaryDictionary;
-	SwordDictionary *primaryDevotional;
-	
+
 	SwordManager *swordManager;
-	SwordInstallManager *swordInstallManager;
-	SwordInstallSource *currentInstallSource;
 
 	NSTimer *busyTimer;
-	float installationProgress;
-	NSInteger showNetworkIndicatorCount;
-	NSInteger disableAutoSleepCount;
-	
-	NSMutableArray *downloadQueue;
 }
 
 @property (strong) SwordModule *primaryBible;
 @property (strong) SwordModule *primaryCommentary;
 @property (strong) SwordDictionary *primaryDictionary;
-@property (strong) SwordDictionary *primaryDevotional;
 @property (strong) SwordManager *swordManager;
-@property (strong) SwordInstallSource *currentInstallSource;
 @property (strong) NSTimer *busyTimer;
-@property (strong) NSMutableArray *downloadQueue;
 
 + (PSModuleController *)defaultModuleController;
 + (void)releaseDefaultModuleController;
@@ -59,7 +46,6 @@
 + (NSString *)createHTMLString:(NSString*)body usingPreferences:(BOOL)usePrefs withJS:(NSString*)javascript usingModuleForPreferences:(NSString*)moduleName fixedWidth:(BOOL)fixedWidth;
 + (NSString *)createRefString:(NSString*)ref;
 + (NSString*)createTitleRefString:(NSString *)newTitle;
-+ (BOOL)checkNetworkConnection;
 + (NSDictionary *)dataForLink:(NSURL *)aURL;
 + (NSString *)getCurrentBibleRef;
 + (void)setFirstRefAvailable:(NSString*)first;
@@ -73,36 +59,16 @@
 - (void)loadPrimaryBible:(NSString *)newText;
 - (void)loadPrimaryCommentary:(NSString *)newText;
 - (void)loadPrimaryDictionary:(NSString *)newText;
-- (void)loadPrimaryDevotional:(NSString *)newText;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (void)reload;
-#ifdef __cplusplus
-- (PSStatusReporter*)getInstallationProgress;
-#endif
-//- (BOOL)installModule:(NSString *)name;
-- (BOOL)installModuleWithModule:(SwordModule*)swordModule;
-- (BOOL)installModuleWithModule:(SwordModule*)swordModule fromSource:(SwordInstallSource*)swordInstallSource;
 - (BOOL)removeModule:(NSString *)name;
 - (void)reloadLastBible;
 - (void)reloadLastCommentary;
 - (NSString *)getBibleChapter:(NSString *)chapter withExtraJS:(NSString *)extraCode;
 - (NSString *)getCommentaryChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
-- (void)setPreferences/*:(NSMutableDictionary *)prefs*/;
-- (SwordInstallManager *)swordInstallManager;
+- (void)setPreferences;
 
 - (void)didReceiveMemoryWarning;//never called by the OS - must be called manually!
-//- (void)dealloc;
-
-+ (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem;
-+ (BOOL)isModuleDownloading:(NSString*)moduleName;
-+ (void)removeViewForHUDForModuleDownloadItem:(NSString*)moduleName;
-- (BOOL)tryDownloading;
-
-- (BOOL)refreshCurrentInstallSource;
-
-//- (void)displayBusyIndicator;
-//- (void)hideBusyIndicator;
-//- (void)doubleClose:(NSTimer *)theTimer;
 
 @end

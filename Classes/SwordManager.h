@@ -34,7 +34,6 @@ using sword::SWModule;
 #define SWMOD_CATEGORY_COMMENTARIES     @"Commentaries"
 #define SWMOD_CATEGORY_DICTIONARIES     @"Lexicons / Dictionaries"
 #define SWMOD_CATEGORY_GENBOOKS         @"Generic Books"
-#define SWMOD_CATEGORY_DAILYDEVS        @"Daily Devotional"
 #define SWMOD_CATEGORY_GLOSSARIES       @"Glossaries"
 #define SWMOD_CATEGORY_CULTS            @"Cults / Unorthodox / Questionable Material"
 #define SWMOD_CATEGORY_ESSAYS           @"Essays"

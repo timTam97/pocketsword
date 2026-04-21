@@ -21,6 +21,9 @@ typedef enum {
     BibleTab = 1,
     CommentaryTab,
 	DictionaryTab,
+	// DevotionalTab and DownloadsTab are dead placeholders kept so that the
+	// enum ordinals do not shift (they may be persisted in NSUserDefaults).
+	// The devotional and in-app download features have both been removed.
 	DevotionalTab,
 	DownloadsTab,
 	PreferencesTab
@@ -49,13 +52,13 @@ typedef enum {
 #define DefaultsLastBible							@"lastBible"
 #define DefaultsLastCommentary						@"lastCommentary"
 #define DefaultsLastDictionary						@"lastDictionary"
-#define DefaultsLastDevotional						@"lastDevotional"
 
 #define DefaultsLastMultiListTab					@"DefaultsLastMultiListTab"
 #define DefaultsLastSearchFuzzy						@"DefaultsLastSearchFuzzy"
 #define DefaultsLastSearchType						@"DefaultsLastSearchType"
 #define DefaultsLastSearchRange						@"DefaultsLastSearchRange"
 #define DefaultsLuceneSwept							@"DefaultsLuceneSwept"
+#define DefaultsSimplifiedCleanupDone				@"DefaultsSimplifiedCleanupDone"
 
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
@@ -133,7 +136,6 @@ typedef enum {
 
 #define BibleTabTitleString							@"BibleTabTitleString"
 #define CommentaryTabTitleString					@"CommentaryTabTitleString"
-#define DevotionalTabTitleString					@"DevotionalTabTitleString"
 
 // Colour preferences
 #define DefaultsBarColor							@"DefaultsBarColor"
@@ -150,7 +152,6 @@ typedef enum {
 #define NotificationNightModeChanged			@"NotificationNightModeChanged"
 #define NotificationModuleMaintainerModeChanged	@"ModuleMaintainerModeChanged"
 
-#define NotificationDevotionalChanged			@"NotificationDevotionalChanged"
 #define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"
 #define NotificationNewPrimaryBible				@"NotificationNewPrimaryBible"
 #define NotificationNewPrimaryCommentary		@"NotificationNewPrimaryCommentary"
@@ -172,12 +173,6 @@ typedef enum {
 #define NotificationShowInfoPane				@"NotificationShowInfoPane"
 #define NotificationRotateInfoPane				@"NotificationRotateInfoPane"
 
-#define NotificationDisplayNetworkIndicator		@"NotificationDisplayNetworkIndicator"
-#define NotificationHideNetworkIndicator		@"NotificationHideNetworkIndicator"
-#define NotificationDisableAutoSleep			@"NotificationDisableAutoSleep"
-#define NotificationEnableAutoSleep				@"NotificationEnableAutoSleep"
-
-#define NotificationShowDownloadsTab			@"NotificationShowDownloadsTab"
 #define NotificationShowCommentaryTab			@"NotificationShowCommentaryTab"
 #define NotificationShowBibleTab				@"NotificationShowBibleTab"
 

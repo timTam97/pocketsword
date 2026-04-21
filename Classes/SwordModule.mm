@@ -103,8 +103,6 @@
 		ret = essay;
 	} else if([catStr isEqualToString:SWMOD_CATEGORY_GLOSSARIES]) {
 		ret = glossary;
-	} else if([catStr isEqualToString:SWMOD_CATEGORY_DAILYDEVS]) {
-		ret = devotional;
 	}
 	
 	return ret;
@@ -116,8 +114,6 @@
 	
 	if(((cat & glossary) == glossary)) {
 		ret = SWMOD_CATEGORY_GLOSSARIES;
-	} else if((cat & devotional) == devotional) {
-		ret = SWMOD_CATEGORY_DAILYDEVS;
 	} else if((cat & essay) == essay) {
 		ret = SWMOD_CATEGORY_ESSAYS;
 	} else if((cat & cult) == cult) {

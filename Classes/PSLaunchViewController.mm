@@ -223,6 +223,47 @@
 			[defaults synchronize];
 		}
 
+		// One-time wipe of modules that the user previously downloaded from
+		// CrossWire (or sideloaded). The simplified build ships the five
+		// bundled modules and nothing else; any extras become orphaned.
+		if(![defaults boolForKey:DefaultsSimplifiedCleanupDone]) {
+			NSSet *bundled = [NSSet setWithArray:@[@"KJV", @"MHCC", @"Robinson",
+			                                       @"StrongsRealHebrew",
+			                                       @"StrongsRealGreek"]];
+			NSArray *installed = [[[PSModuleController defaultModuleController] swordManager] listModules];
+			// snapshot names up front because removeModule: reloads the manager
+			NSMutableArray *toRemove = [NSMutableArray array];
+			for(SwordModule *mod in installed) {
+				if(![bundled containsObject:[mod name]]) {
+					[toRemove addObject:[mod name]];
+				}
+			}
+			for(NSString *name in toRemove) {
+				DLog(@"Simplified-cleanup: removing non-bundled module %@", name);
+				[[PSModuleController defaultModuleController] removeModule:name];
+			}
+			// Drop any primary* prefs that pointed at a removed module.
+			NSString *lastBible = [defaults stringForKey:DefaultsLastBible];
+			if(lastBible && ![bundled containsObject:lastBible]) {
+				[defaults removeObjectForKey:DefaultsLastBible];
+			}
+			NSString *lastCom = [defaults stringForKey:DefaultsLastCommentary];
+			if(lastCom && ![bundled containsObject:lastCom]) {
+				[defaults removeObjectForKey:DefaultsLastCommentary];
+			}
+			NSString *lastDict = [defaults stringForKey:DefaultsLastDictionary];
+			if(lastDict && ![bundled containsObject:lastDict]) {
+				[defaults removeObjectForKey:DefaultsLastDictionary];
+			}
+			// Stale devotional key from the removed feature.
+			[defaults removeObjectForKey:@"lastDevotional"];
+			// Remove the old InstallMgr scratch dir if it still exists from
+			// pre-simplification builds.
+			[[NSFileManager defaultManager] removeItemAtPath:DEFAULT_INSTALLER_PATH error:NULL];
+			[defaults setBool:YES forKey:DefaultsSimplifiedCleanupDone];
+			[defaults synchronize];
+		}
+
 		// One-time sweep of the legacy CLucene index directories that were
 		// written by pre-FTS5 versions. New indices live at
 		// <AbsoluteDataPath>/search/fts.db, so the old lucene/ dirs are

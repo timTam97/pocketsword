@@ -9,7 +9,6 @@
 #import "globals.h"
 #import "MBProgressHUD.h"
 
-@class PSModuleInfoViewController;
 @class SwordModule;
 
 @interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
@@ -24,7 +23,6 @@
 @property (strong) UIToolbar *modulesToolbar;
 
 - (void)addButtonsToToolbar:(BOOL)animated;
-- (void)addModuleButtonPressed;
 - (void)dismissModuleSelector;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
 

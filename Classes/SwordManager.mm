@@ -85,9 +85,6 @@ using std::list;
 		
 		ModuleCategory cat = [sm cat];
 
-		if([type isEqualToString:SWMOD_CATEGORY_DICTIONARIES] && cat == devotional) {
-			type = SWMOD_CATEGORY_DAILYDEVS;
-		}
 		if(![types containsObject: type]) {
 			[types insertObject: type atIndex: [types count]];
 		}
@@ -249,11 +246,10 @@ using std::list;
 //Effectively, this is a list of the module types that are currently supported.
 + (NSArray *)moduleTypes {
     return [NSArray arrayWithObjects:
-            SWMOD_CATEGORY_BIBLES, 
+            SWMOD_CATEGORY_BIBLES,
             SWMOD_CATEGORY_COMMENTARIES,
             SWMOD_CATEGORY_DICTIONARIES,
-			SWMOD_CATEGORY_DAILYDEVS,
-            //SWMOD_CATEGORY_GENBOOKS, 
+            //SWMOD_CATEGORY_GENBOOKS,
 			nil];
 }
 
@@ -568,9 +564,6 @@ static SwordManager *instance;
 	
 	if([searchType isEqualToString:SWMOD_CATEGORY_DICTIONARIES]) {
 		catType = undefinedCategory;
-	} else if([searchType isEqualToString:SWMOD_CATEGORY_DAILYDEVS]) {
-		searchType = SWMOD_CATEGORY_DICTIONARIES;
-		catType = devotional;
 	}
 	
     for(SwordModule *mod in [modules allValues]) {

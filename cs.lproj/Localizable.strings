@@ -22,11 +22,8 @@
 
 "Edit" = "Edituj";
 "Done" = "Hotovo";
-"Module Download" = "Stahování modulu";
-"Installing" = "Instaluji:";
 "Yes" = "Ano";
 "No" = "Ne";
-"ConfirmInstall" = "Chcete nainstalovat tento modul?";
 "Next" = "Další";
 "Previous" = "Předchozí";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "Klasifikace dle knihovny Kongresu: ";
 
 
-"Disclaimer" = "Varování";
-"DisclaimerMsg" = "      -=+* VAROVÁNÍ *+=-\nPřestože Správce Modulů poskytuje pohodlný způsob instalace a aktualizace modulů ve formátu SWORD, činí tak způsobem, který je možno odposlouchávat a uživatele programu následně vyhledávat.\nNACHÁZÍTE-LI SE V ZEMI S PRONÁSLEDOVÁNÍM A NECHCETE-LI RISKOVAT ODHALENÍ, *NEPOUŽÍVEJTE* STAHOVÁNÍ VE SPRÁVCI MODULŮ.\nNavíc zdroje modulů jiné než CrossWire mohou obsahovat méně kvalitní moduly, moduly s nepravověrným obsahem nebo dokonce moduly, které není možno legálně distribuovat. Mnohé zdroje ovšem obsahují velmi užitečný obsah. Buď jak buď takové zdroje nejsou spravovány společností CrossWire a tedy CrossWire nemůže být za jejich obsah zodpovědný. Byl jsi varován!\nRozumíte tomu a chcete povolit funkci stahování ve správci modulů?";
 
-"WebNoIP" = "Web: Nelze zjistit vnější IP\n";
-"WiFiNoConnection" = "Wifi: Nemám spojení\n";
-"NoNetworkConnection" = "Nemáte připojení k Internetu.";
 
-"manualInstallHelp" = "Pro ruční instalaci modulů otevřete prohlížeč webových stránek, zadejte jeden z odkazů uvedených níže a postupujte podle pokynů (nebo vyhledejte iPhone pomocí Bonjour!). Nicméně doporučujeme používat Správce Modulů - ruční instalace je určena výhradně pro uživatele, kteří si vytvořili své vlastní moduly.";
-"InstallManagerDisabled" = "zakázáno...";
-"InstallTitle" = "Instalovat?";
-"files" = "soubory";
-"InstallProblem" = "Při instalaci nastal problém.";
-"InstalledButtonTitle" = "Instalováno";
-"InstallButtonTitle" = "Instaluj";
-"RefreshProblem" = "Při obnovení se vyskytl problém.";
-"RefreshingModuleSource" = "Obnovuji zdroj modulů";
-"NoModulesRefresh" = "Žádné moduly. Zkuste Obnovit.";
 "NoModulesInstalled" = "Nemáte instalovány moduly.";
 
-"InstallSourcesTitle" = "Zdroje";
 "PreferencesTitle" = "Nastavení";
 "PreferencesDisplayPreferencesTitle" = "Nastavení zobrazení";
 "PreferencesDevicePreferencesTitle" = "Nastavení zařízení";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "Červené písmo";
 "PreferencesRedLetterNote" = "Režim červeného písma funguje pouze v některých modulech.";
 "PreferencesDisableAutoLockTitle" = "Zabránit usínání displeje";
-"PreferencesModuleMaintainerModeTitle" = "Režim ruční údržby modulů";
-"PreferencesModuleMaintainerModeNote" = "Režim ruční údržby modulů je určen uživatelům, kteří si vytváří vlastní moduly a potřebují je do PocketSwordu instalovat. Pro ostatní uživatele doporučujeme použít Správce Modulů a stahování oficiálních modulů poskytovaných společnotí CrossWire.";
 
 "AboutTitle" = "O aplikaci";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "Záložky";
 
 "ActivityLabelLoading" = "Načítám...";
-"MMMBonjourLoading" = "Načítá se přes Bonjour...";
-"MMMIPLoading" = "Načítá se přes IP...";
 
 "Biblical Texts" = "Biblické texty";
 "Commentaries" = "Komentáře";
 "Lexicons / Dictionaries" = "Slovníky";
 "Generic Books" = "Obecné knihy";
-"Daily Devotional" = "Denní čtení";
 "Glossaries" = "Slovníky";
 "Cults / Unorthodox / Questionable Material" = "Sektářský / nepravověrný / pochybný materiál";
 "Essays" = "Povídky";
@@ -113,22 +89,14 @@
 "CloseButtonTitle" = "Zavřít";
 "CacheDictionaryKeysTitle" = "Načíst?";
 "CacheDictionaryKeysMsg" = "Tento zdroj ještě nebyl načten, chcete nyní načíst obsah?";
-"IndexDownloadTitle" = "Stahování indexu";
-"NoSearchIndexTitle" = "Index chybí";
 "NoSearchIndexMsg" = "Nemáte instalován prohledávací index pro tento modul. Chcete nyní ověřit dostupné indexy?";
-"SearchDownloaderTitle" = "Stahování indexů";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email autorovi";
 "NoSearchIndexInstalled" = "Prohledávací index nenainstalován";
 "SearchResults" = "výsledky";
 
-"IndexControllerInstalled" = "Již máte prohledávací index pro:";
-"IndexControllerDownloadable" = "Vyberte prohledávací index ke stažení z následujícího seznamu:";
-"IndexControllerNone" = "Zkontrolujte připojení k Internetu pro vyhledávání v modulu:";
-"IndexControllerNoneRemote" = "Neexistují vyhledávací indexy pro:";
 
 "SearchHelpTitle" = "Nápověda k hledání";
-"IndexControllerConfirmQuestion" = "Chcete stáhnout prohledávací index k tomuto modulu?\nPro komentáře to může trvat delší dobu!";
 
 "PreferencesStrongsPreferencesTitle" = "Strongova čísla";
 "PreferencesDisplayTitle" = "Zobrazit";
@@ -145,10 +113,7 @@
 "PreferencesCrossReferencesTitle" = "Křížové odkazy";
 "PreferencesFootnotesTitle" = "Poznámky pod čarou";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Nemáte instalovaný slovník se Strongovými čísly pro hebrejštinu. Prosím nastalujte si některý (např. 'strongshebrew') ve Více->Kopírování.";
-"NoGreekStrongsNumbersModuleInstalled" = "Nemáte instalovaný slovník se Strongovými čísly pro řečtinu. Prosím nastalujte si některý (např. 'strongsgreek') ve Více->Kopírování.";
 
-"NoMorphGreekModuleInstalled" = "Nemáte instalovaný modul se značkami morfologické analýzy pro řečtinu. Prosím nastalujte si některý (např. 'Robinson') ve Více->Kopírování.";
 "MorphHebrewNotSupported" = "Bohužel, značky morfologické analýzy jsou v současné verzi možné pouze pro řecké texty. Máte-li jazykové schopnosti a chcete-li pomoci naprogramovat tuto funkci do PocketSword, prosím podívejte se na <br /> openscriptures.org<br />a zapojte se tam do diskusní skupiny.";
 
 "AboutModuleFeaturesTitle" = "Modul obsahuje";
@@ -168,7 +133,6 @@
 "AboutModuleContainsHebrewDef" = "Obsahuje Strongova čísla k hebrejštině";
 "AboutModuleContainsGreekParse" = "Obsahuje značky morfologické analýzy k řečtině";
 "AboutModuleContainsHebrewParse" = "Obsahuje značky morfologické analýzy k hebrejštině";
-"AboutModuleContainsDailyDevotion" = "Obsahuje denní čtení";
 "AboutModuleContainsImages" = "Obsahuje obrázky";
 
 "NotSupported" = "Tento modul není v současné verzi podporován";
@@ -179,11 +143,6 @@
 "AboutModuleCurrentVersion" = "Instalovaná verze: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Modul je uzamčen";
-"ModuleLockedQuestion" = "Tento modul je momentálně zamčený. Musíte si zakoupit klíč pro odemknutí. Bohužel to zatím není možné přes PocketSword. Prosím přečtěte si popis modulu a zjistěte si, jak klíč pro tento modul zakoupit.\nPokud máte zakoupený klíč pro tento modul, můžete ho nyní zadat. Pokračovat nyní?";
-"ModuleEnterKeyTitle" = "Zadej klíč:";
-"ModuleUnlockScreenTitle" = "Odemknutí modulu";
-"ModuleUnlockHelpText" = "Pro odemčení tohoto modulu prosím zadejte klíč, který jste dostali při nákupu modulu. Zmáčkněte Hotovo pro otestování a potom Uložit, pokud je vše v pořádku.";
 "RefSelectorBookTitle" = "Výběr knihy";
 "RefSelectorChapterTitle" = "Kapitola %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Verš %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,26 +151,8 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "Nadpisy";
 "DictionarySearchPlaceholderText" = "Hledej ve slovníku";
-"TabBarTitleDevotional" = "Denní čtení";
-"TodayButtonTitle" = "Dnes";
-"ManageSources" = "Uprav zdroje";
-"AddFTPSource" = "Přidej zdroj FTP";
-"AddHTTPSource" = "Přidej zdroj HTTP";
-"DeleteSource" = "Smazat zdroj";
-"RefreshSourceList" = "Obnovit seznam zdrojů";
-"AddSourceCaptionTitle" = "Název zdroje";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Cesta";
-"AddFTPSourceTitle" = "Nový zdroj FTP";
-"AddHTTPSourceTitle" = "Nový zdroj HTTP";
-"FillInAllFieldsMessage" = "Musíte vyplnit všechna pole!";
-"Warning" = "Varování";
-"CannotVerifyInstallSourceWarning" = "PocketSword nemůže ověřit, zda jde o platný zdroj modulů. Přesto uložit?";
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Upozornění: tento modul je uzamčen. Potřebujete zakoupit klíč na webových stránkách autora. Viz níže. **";
-"UpgradeButtonTitle" = "Aktualizace";
-"ConfirmUpgrade" = "Chcete aktualizovat tento modul aktuálně dostupnou verzí?";
 
 "VerseContextualMenuAddBookmark" = "Přidej do záložek";
 "VerseContextualMenuCommentary" = "Přejdi na komentář";
@@ -220,9 +161,6 @@
 "VoiceOverPreviousChapterButton" = "Předchozí kapitola";
 "VoiceOverNextChapterButton" = "Následující kapitola";
 "VoiceOverHistoryAndSearchButton" = "Poslední navštívené a hledání";
-"InstallManagerDownloadsHint" = "Další moduly můžete stáhnout z níže uvedených zdrojů:";
-"ModuleTypesHeaderText" = "Vyber typ modulu:";
-"ModuleLanguagesHeaderText" = "Vyber jazyk:";
 "PreferencesModulePreferencesTitle" = "Nastavení modulu";
 "PreferencesFullscreenModeTitle" = "Automaticky na celý display";
 "PreferencesFullscreenNote" = "I když je automatické zobrazení na celý display vypnuté, můžete se do něj přepnout poklepáním dvěma prsty během čtení Bible nebo komentáře.";
@@ -304,7 +242,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

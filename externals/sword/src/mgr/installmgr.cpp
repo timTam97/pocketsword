@@ -37,12 +37,13 @@
 #include <stdio.h>
 #include <map>
 
+#include <remotetrans.h>
 #ifdef CURLAVAILABLE
 #include <curlftpt.h>
 #include <curlhttpt.h>
-#else
-#include <ftplibftpt.h>
 #endif
+// PocketSword: FTPLibFTPTransport fallback removed; createFTPTransport
+// returns 0 when no transport is compiled in.
 
 #include <iostream>
 
@@ -82,7 +83,7 @@ RemoteTransport *InstallMgr::createFTPTransport(const char *host, StatusReporter
 #ifdef CURLAVAILABLE
 	return new CURLFTPTransport(host, statusReporter);
 #else
-	return new FTPLibFTPTransport(host, statusReporter);
+	return 0;
 #endif
 }
 

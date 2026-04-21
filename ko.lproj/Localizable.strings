@@ -22,11 +22,8 @@
 
 "Edit" = "편집";
 "Done" = "완료";
-"Module Download" = "모듈 내려받기";
-"Installing" = "설치 중:";
 "Yes" = "네";
 "No" = "아니오";
-"ConfirmInstall" = "이 모듈을 설치하시겠습니까?";
 "Next" = "다음";
 "Previous" = "이전";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "국회도서관 건명 목록: ";
 
 
-"Disclaimer" = "권한 포기";
-"DisclaimerMsg" = "      -=+* 경고 *+=-\n 인스톨 매니저가 PocketSword 구성요소의 편리한 업그레이드와 설치를 제공하지만, 이 프로그램 역시 패킷스니퍼들에게 정보가 제공될 수 있는 사이트에 접속하는 방법을 사용합니다. \n만약 기독교를 박해하는 국가에 있거나 탐지되기를 원하지 않으신다면 설치 매니저의 원격 소스를 사용해서는 안됩니다. \n또한 원격 소스는 CrossWire가 제공하는 것보다 질이 떨어지는 모듈을 제공할수도 있습니다. 그 모듈은 이단적인 것일수도 있고 비합법적인 것일수도 있습니다. 많은 저장소에는 정말 유용한 내용이 많이 포함되어 있습니다. 하지만 이 저장소들은 CrossWire에 의해 조사되지 않았고 또한 이에 대해 책임지지 도 않습니다. 사용자의 위험부담.\n이것을 이해하고 원격 소스를 이용하길 원하십니가?";
 
-"WebNoIP" = "웹: 외부 IP를 확인할 수 없음\n";
-"WiFiNoConnection" = "무선랜: 연결 안 됨\n";
-"NoNetworkConnection" = "네트워크 연결 안 됨";
 
-"manualInstallHelp" = "수동으로 모듈을 설치하기 원하시면 웹 브라우저를 열어 아래 주소 페이지에 나오는 안내를 따르십시오. (아니면 Bonjour를 이용하여 아이폰으로 검색하십시오!).  하지만 앱에 포함된 설치관리자를 이용하시는 것을 권장합니다 - 이 수동 설치는 직접 새로운 모듈을 만들기 원하는 사용자들을 위해서 존재합니다.";
-"InstallManagerDisabled" = "사용불가...";
-"InstallTitle" = "설치?";
-"files" = "파일";
-"InstallProblem" = "설치중에 문제가 발생했습니다";
-"InstalledButtonTitle" = "설치됨";
-"InstallButtonTitle" = "설치";
-"RefreshProblem" = "새로고침하는 동안 문제가 발생했습니다";
-"RefreshingModuleSource" = "모듈 소스를 새로고침";
-"NoModulesRefresh" = "모듈이 없습니다. 새로고침 하십시오";
 "NoModulesInstalled" = "어떤 모듈도 설치되어 있지 않습니다";
 
-"InstallSourcesTitle" = "소스";
 "PreferencesTitle" = "설정";
 "PreferencesDisplayPreferencesTitle" = "화면 설정";
 "PreferencesDevicePreferencesTitle" = "장치 설정";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "빨간 글씨";
 "PreferencesRedLetterNote" = "빨간 글씨 모드는 특정한 모듈에서만 작동됩니다";
 "PreferencesDisableAutoLockTitle" = "자동잠금 해제";
-"PreferencesModuleMaintainerModeTitle" = "모듈 유지 모드";
-"PreferencesModuleMaintainerModeNote" = "메인테이너 모드는 모듈을 직접 제작하여 사용하시는 분을 위한 것입니다. 일반 사용자들께서는 CrossWire에서 기본적으로 제공하는 모듈을 다운로드하여 사용하시기 바랍니다.";
 
 "AboutTitle" = "소개";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "책갈피";
 
 "ActivityLabelLoading" = "불러오는중...";
-"MMMBonjourLoading" = "Bonjour 불러오는중...";
-"MMMIPLoading" = "IP 불러오는중...";
 
 "Biblical Texts" = "성경 텍스트";
 "Commentaries" = "주석";
 "Lexicons / Dictionaries" = "어휘 / 사전";
 "Generic Books" = "일반 책";
-"Daily Devotional" = "매일 묵상";
 "Glossaries" = "소사전";
 "Cults / Unorthodox / Questionable Material" = "컬트 / 비정통 / 의심되는 소스";
 "Essays" = "에세이";
@@ -113,22 +89,14 @@
 "CloseButtonTitle" = "닫기";
 "CacheDictionaryKeysTitle" = "저장?";
 "CacheDictionaryKeysMsg" = "이 사전은 아직 초기화 되지 않았습니다. 이 사전을 지금 저장 하시겠습니까?";
-"IndexDownloadTitle" = "색인 내려받기";
-"NoSearchIndexTitle" = "검색 색인 없음";
 "NoSearchIndexMsg" = "이 모듈의 검색 색인이 없습니다. 사용 가능한 색인을 확인하시겠습니까?";
-"SearchDownloaderTitle" = "다운로드 검색";
 "FontPreferenceTitle" = "글꼴";
 "EmailUsButton" = "이메일 발송";
 "NoSearchIndexInstalled" = "검색 색인이 설치되지 않음";
 "SearchResults" = "결과";
 
-"IndexControllerInstalled" = "이미 검색 색인을 설치하셨습니다:";
-"IndexControllerDownloadable" = "모듈에서 검색을 가능하게 하시려면 다음 목록에서 검색 색인을 선택하십시오:";
-"IndexControllerNone" = "검색을 가능하게 하시려면 네트워크 설정을 확인하십시오:";
-"IndexControllerNoneRemote" = "현재는 내려받을 검색 색인이 없습니다:";
 
 "SearchHelpTitle" = "도움말 검색";
-"IndexControllerConfirmQuestion" = "이 모듈 검색을 위한 색인을 다운로드 하시겠습니까?\n 주석 모듈은 시간이 걸릴 수 있습니다!";
 
 "PreferencesStrongsPreferencesTitle" = "스트롱 코드";
 "PreferencesDisplayTitle" = "화면";
@@ -145,10 +113,7 @@
 "PreferencesCrossReferencesTitle" = "상호 참조";
 "PreferencesFootnotesTitle" = "rkrwn";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "히브리어 스트롱 코드 사전이 설치되지 않았습니다. 더보기->다운로드 탭에서 ('strongshebrew'와 같은 소스) 설치해주십시오.";
-"NoGreekStrongsNumbersModuleInstalled" = "그리스어 스트롱 코드 사전이 설치되지 않았습니다. 더보기->다운로드 탭에서 ('strongsgreek'와 같은 소스) 설치해주십시오.";
 
-"NoMorphGreekModuleInstalled" = "그리스어 형태소 분석 코드 사전이 설치되지 않았습니다. 더보기->다운로드 탭에서('Robinson'과 같은 소스) 설치해주십시오.";
 "MorphHebrewNotSupported" = "불행하게도 형태소 분석 코드는 현재 그리스어 단어에서만 이용 가능합니다. 만약 언어 능력이 있고 이것을 PocketSword에 적용하시길 원하시면, <br /> openscriptures.org<br /> 이곳을 한번 살펴봐주십시오. 그리고 토론 그룹에 참여해보시기 바랍니다.";
 
 "AboutModuleFeaturesTitle" = "모듈 특징";
@@ -168,7 +133,6 @@
 "AboutModuleContainsHebrewDef" = "히브리어 스트롱 코드 정의";
 "AboutModuleContainsGreekParse" = "헬라어 형태 구조 코드 정의";
 "AboutModuleContainsHebrewParse" = "히브리어 형태 구조 코드 정의";
-"AboutModuleContainsDailyDevotion" = "매일 묵상 포함";
 "AboutModuleContainsImages" = "이미지 포함";
 
 "NotSupported" = "이 모듈은 현재 지원되지 않습니다";
@@ -179,11 +143,6 @@
 "AboutModuleCurrentVersion" = "설치된 버전: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "모듈 잠김";
-"ModuleLockedQuestion" = "이 모듈은 잠겨있습니다. 해제하기 위해서는 키를 구입하셔야 합니다. 안타깝게도 지금 PocketSword 를 통해서는 하실 수 없습니다. 어떻게 구입할 수 있는지 이 모듈의 설명서를 읽어보십시오.\n  이미 키를 가지고 계시면 해제하기 위해 키를 입력하실 수 있습니다. 지금 키를 입력하시겠습니까?";
-"ModuleEnterKeyTitle" = "키 입력:";
-"ModuleUnlockScreenTitle" = "모듈 해제";
-"ModuleUnlockHelpText" = "이 모듈을 해제하기 위해서 이 모듈을 구입한 곳에서 보내준 키를 입력하십시오. 키가 맞는지 확인하신후 저장 버튼을 누르십시오.";
 "RefSelectorBookTitle" = "책 선택";
 "RefSelectorChapterTitle" = "%d 장"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "%d 절"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,27 +151,9 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "표제";
 "DictionarySearchPlaceholderText" = "사전 선택";
-"TabBarTitleDevotional" = "매일 묵상";
-"TodayButtonTitle" = "오늘";
-"ManageSources" = "소스 관리";
-"AddFTPSource" = "FTP 소스 추가";
-"AddHTTPSource" = "HTTP 소스 추가";
-"DeleteSource" = "소스 삭제";
-"RefreshSourceList" = "소스 목록 갱신";
-"AddSourceCaptionTitle" = "설명";
-"AddSourceServerTitle" = "서버";
-"AddSourcePathTitle" = "경로";
-"AddFTPSourceTitle" = "새로운 FTP 소스";
-"AddHTTPSourceTitle" = "새로운 HTTP 소스";
-"FillInAllFieldsMessage" = "모든 항목을 다 기록하셔야 합니다!";
-"Warning" = "경고";
-"CannotVerifyInstallSourceWarning" = "PocketSword는 이것이 적절한 모듈 소스인지 확인할 수 없습니다. 그래도 저장하시겠습니까?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** 이 모듈은 잠겨있습니다. 모듈 제공 사이트에서 해제 키를 구입하시오. 더 상세한 사항은 아래를 보십시오. **";
-"UpgradeButtonTitle" = "대체";
-"ConfirmUpgrade" = "이 모듈을 현재 사용가능한 버전으로 대체하시겠습니까?";
 
 "VerseContextualMenuAddBookmark" = "북마크 추가";
 "VerseContextualMenuCommentary" = "주석에서 보기";
@@ -221,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "이전 장";
 "VoiceOverNextChapterButton" = "다음 장";
 "VoiceOverHistoryAndSearchButton" = "기록과 검색";
-"InstallManagerDownloadsHint" = "아래 모듈 소스로부터 다른 모듈을 내려받을 수 있습니다:";
-"ModuleTypesHeaderText" = "모듈 유형 선택:";
-"ModuleLanguagesHeaderText" = "언어 선택:";
 "PreferencesModulePreferencesTitle" = "모듈 설정";
 "PreferencesFullscreenModeTitle" = "자동 전체화면";
 "PreferencesFullscreenNote" = "자동 전체화면이 해제되어 있을경우, 성경과 주석 탭에서 두 개의 손가락을 탭하여 화면을 전환할 수 있습니다.";
@@ -305,7 +243,6 @@
 "HistoryTitle" = "기록";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "현재 로딩된 사전이 없습니다. 사전을 처음 사용하신다면 다운로드 섹션에서 사전을 먼저 다운로드 후에 사용하십시오.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "광택";

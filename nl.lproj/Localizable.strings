@@ -22,11 +22,8 @@
 
 "Edit" = "Bewerken";
 "Done" = "Klaar";
-"Module Download" = "Module downloaden...";
-"Installing" = "Installeert:";
 "Yes" = "Ja";
 "No" = "Nee";
-"ConfirmInstall" = "Wilt u deze module installeren?";
 "Next" = "Volgende";
 "Previous" = "Vorige";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "Library of Congress Subject Heading: ";
 
 
-"Disclaimer" = "Disclaimer";
-"DisclaimerMsg" = "      -=+* WAARSCHUWING *+=-\nHoewel de het via de Installatie Manager gemakkelijk is om SWORD-componenten te installeren en updaten, gebruikt deze een systematische methode om websites te benaderen wat zogenaamde packet sniffers de mogelijkheid kan geven om gebruikers te detecteren. \nALS U IN EEN LAND WOONT WAAR CHRISTENEN VERVOLGD WORDEN DOET U ER ZEER VERSTANDIG AAN OM DE INSTALLATIE MANAGER *NIET* TE GEBRUIKEN. \nAndere bronnen dan CrossWire kunnen modules van een mindere kwaliteit bevatten, modules met onorthodoxe inhoud, of modules die niet vrij gedistribueerd mogen worden.Veel repositories bevatten een geweldig nuttige inhoud. Deze repositories worden simpelweg niet nagekeken of onderhouden door CrossWire en CrossWire kan niet verantwoordelijk gehouden worden voor deze inhoud. CAVEAT EMPTOR.\nBegrijpt u dit en wilt u de externe bron-functies inschakelen?";
 
-"WebNoIP" = "Web: Niet in staat om externe IP-adres te bepalen\n";
-"WiFiNoConnection" = "Wifi: Geen verbinding\n";
-"NoNetworkConnection" = "Geen netwerkverbinding beschikbaar.";
 
-"manualInstallHelp" = "Om handmatig een module te installeren dient u één van de onderstaande locaties te openen in een webbrowser en de instructies te volgen (of zoek gewoon naar uw iPhone door gebruik te maken van Bonjour!). Het is echter wel aan te raden om gebruik te maken van de geïntegreerde module installer - deze optie tot handmatige installatie is enkel toegevoegd voor gerbuikers die zelf modules ontwikkelen.";
-"InstallManagerDisabled" = "uitgeschakeld...";
-"InstallTitle" = "Installeren?";
-"files" = "bestanden";
-"InstallProblem" = "Er is een fout opgetreden tijdens de installatie.";
-"InstalledButtonTitle" = "Geïnstalleerd";
-"InstallButtonTitle" = "Installeer";
-"RefreshProblem" = "Er is een probleem opgetreden bij het vernieuwen.";
-"RefreshingModuleSource" = "Vernieuwen module bron";
-"NoModulesRefresh" = "Geen modules. Probeer te vernieuwen.";
 "NoModulesInstalled" = "Geen modules geïnstalleerd.";
 
-"InstallSourcesTitle" = "Bronnen";
 "PreferencesTitle" = "Instellingen";
 "PreferencesDisplayPreferencesTitle" = "Weergave";
 "PreferencesDevicePreferencesTitle" = "Apparaat";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "Rode letters";
 "PreferencesRedLetterNote" = "Let op: De Rode Letters modus is alleen beschikbaar voor bepaalde modules.";
 "PreferencesDisableAutoLockTitle" = "Schakel auto-slaapstand uit";
-"PreferencesModuleMaintainerModeTitle" = "Module beheerder modus";
-"PreferencesModuleMaintainerModeNote" = "Let op: De Module Beheerder Modus is voor de gebruikers die hun eigen modules maken en een manier nodig hebben om hun eigen modules te installeren. Alle andere gebruikers kunnen gebruik maken van de geïntegreerde module downloader om toegang te krijgen tot de modules die aangeboden worden door CrossWire.";
 
 "AboutTitle" = "Over PocketSword";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "Bladwijzers";
 
 "ActivityLabelLoading" = "Bezig met laden...";
-"MMMBonjourLoading" = "Bonjour laden...";
-"MMMIPLoading" = "IP laden...";
 
 "Biblical Texts" = "Bijbelse teksten";
 "Commentaries" = "Commentaar";
 "Lexicons / Dictionaries" = "Lexicons / woordenboeken";
 "Generic Books" = "Algemene boeken";
-"Daily Devotional" = "Dagelijkse bijbelstudies";
 "Glossaries" = "Woordenlijsten";
 "Cults / Unorthodox / Questionable Material" = "Sekten / onorthodox / twijfelachtig materiaal";
 "Essays" = "Essays";
@@ -113,22 +89,14 @@
 "CloseButtonTitle" = "Sluit";
 "CacheDictionaryKeysTitle" = "Cache?";
 "CacheDictionaryKeysMsg" = "Dit woordenboek moet nog geinitialiseerd worden, wilt u dit nu doen?";
-"IndexDownloadTitle" = "Index downloaden...";
-"NoSearchIndexTitle" = "Geen zoek-index";
 "NoSearchIndexMsg" = "U hebt geen zoek-index geïnstalleerd voor deze module. Wilt u nu controleren op beschikbare indexen?";
-"SearchDownloaderTitle" = "Zoek-index downloaden";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email ons";
 "NoSearchIndexInstalled" = "Geen zoek-index geïnstalleerd";
 "SearchResults" = "Resultaten";
 
-"IndexControllerInstalled" = "U heeft al een zoek-index geïnstalleerd voor:";
-"IndexControllerDownloadable" = "Kies een zoek-index uit de volgende lijst om het zoeken binnen de module mogelijk te maken:";
-"IndexControllerNone" = "Controleer de internetverbinding om zoeken mogelijk te maken voor:";
-"IndexControllerNoneRemote" = "Er is momenteel geen zoek-index beschikbaar voor:";
 
 "SearchHelpTitle" = "Hulp bij zoeken";
-"IndexControllerConfirmQuestion" = "Wilt u de zoek-index downloaden voor deze module? \nDit kan even duren voor Commentaar-modules!";
 
 "PreferencesStrongsPreferencesTitle" = "Verzen";
 "PreferencesDisplayTitle" = "Weergave";
@@ -145,10 +113,7 @@
 "PreferencesCrossReferencesTitle" = "Kruisverwijzingen";
 "PreferencesFootnotesTitle" = "Voetnoten";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Geen Hebreeuwse strong's nummers lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'strongshebrew') via de Meer -> Downloads tab.";
-"NoGreekStrongsNumbersModuleInstalled" = "Geen Griekse strong's nummers lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'strongsgreek') via de Meer -> Downloads tab.";
 
-"NoMorphGreekModuleInstalled" = "Geen Griekse morfologie analyse codes lexicon geïnstalleerd. Installeer er alstublieft één (zoals 'Robinson') via de Meer -> Downloads tab";
 "MorphHebrewNotSupported" = "Helaas, morfologie analyse codes zijn momenteel alleen beschikbaar voor Griekse woorden. Als u de taal machtig bent en wilt helpen bij het toevoegen van deze functie aan PocketSword kunt u een kijkje nemen op <br /> openscriptures.org<br />en uzelf aansluiten bij de discussiegroep daar.";
 
 "AboutModuleFeaturesTitle" = "Module kenmerken";
@@ -168,7 +133,6 @@
 "AboutModuleContainsHebrewDef" = "Definieert Hebreeuwse strong's nummers";
 "AboutModuleContainsGreekParse" = "Definieert Griekse morfologie analyse codes";
 "AboutModuleContainsHebrewParse" = "Definieert Hebreeuwse morfologie analyse codes";
-"AboutModuleContainsDailyDevotion" = "Bevat een dagelijkse bijbelstudie";
 "AboutModuleContainsImages" = "Bevat afbeeldingen";
 
 "NotSupported" = "Deze module wordt momenteel niet ondersteund";
@@ -179,11 +143,6 @@
 "AboutModuleCurrentVersion" = "Geïnstalleerde versie: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Module geblokkeerd";
-"ModuleLockedQuestion" = "Deze module is momenteel geblokkeerd. U dient een productsleutel te kopen om deze module te deblokkeren. Helaas is dit momenteel nog niet mogelijk via PockenSword. Leest u alstublieft de beschrijving van deze module om te zien hoe u deze module kunt aanschaffen.\n  Wanneer u reeds een productsleutel gekocht heeft kunt u deze invoeren om de module te deblokkeren. Wilt u de productsleutel nu invoeren?";
-"ModuleEnterKeyTitle" = "Voer sleutel in:";
-"ModuleUnlockScreenTitle" = "Deblokkeer module";
-"ModuleUnlockHelpText" = "Vult u alstublieft de productsleutel in die u toegezonden is nadat u deze module gekocht heeft. Druk op Klaar om de sleutel te testen en druk op Opslaan als de sleutel juist is.";
 "RefSelectorBookTitle" = "Selecteer een boek";
 "RefSelectorChapterTitle" = "Hoofdstuk %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Vers %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,27 +151,9 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "Titels";
 "DictionarySearchPlaceholderText" = "Zoek woordenboek";
-"TabBarTitleDevotional" = "Dagelijkse bijbelstudies";
-"TodayButtonTitle" = "Vandaag";
-"ManageSources" = "Beheer bronnen";
-"AddFTPSource" = "FTP-bron toevoegen";
-"AddHTTPSource" = "HTTP-bron toevoegen";
-"DeleteSource" = "Bron verwijderen";
-"RefreshSourceList" = "Bronlijst vernieuwen";
-"AddSourceCaptionTitle" = "Hoofdletters";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Pad";
-"AddFTPSourceTitle" = "Nieuwe FTP-bron";
-"AddHTTPSourceTitle" = "Nieuwe HTTP-bron";
-"FillInAllFieldsMessage" = "U dient alle velden in te vullen!";
-"Warning" = "Waarschuwing";
-"CannotVerifyInstallSourceWarning" = "PocketSword kan niet controleren of dit een geldige bron voor modules is. Wilt u deze desondanks toch opslaan?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Deze module is op dit moment geblokkeerd en u dient een deblokkeer-code aan te schaffen voor deze module op de website van de uitgever. Meer informatie vindt u hier onder. **";
-"UpgradeButtonTitle" = "Vervangen";
-"ConfirmUpgrade" = "Weet u zeker dat u deze modele wilt vervangen door de huidig beschikbare versie?";
 
 "VerseContextualMenuAddBookmark" = "Bladwijzer toevoegen";
 "VerseContextualMenuCommentary" = "Bekijk in Commentaar";
@@ -221,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "Vorige hoofdstuk";
 "VoiceOverNextChapterButton" = "Volgende hoofdstuk";
 "VoiceOverHistoryAndSearchButton" = "Geschiedenis en zoeken";
-"InstallManagerDownloadsHint" = "U kunt aanvullende modules downloaden van één van de onderstaande module-bronnen:";
-"ModuleTypesHeaderText" = "Selecteer type module:";
-"ModuleLanguagesHeaderText" = "Selecteer taal:";
 "PreferencesModulePreferencesTitle" = "Module voorkeuren";
 "PreferencesFullscreenModeTitle" = "Auto Fullscreen";
 "PreferencesFullscreenNote" = "Met Auto Fullscreen uitgeschakeld kunt u nog steeds van en naar fullscreen schakelen door met 2 vingers op het scherm te tikken in de Bijbel en commentaar tabbladen.";
@@ -305,7 +243,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

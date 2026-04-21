@@ -67,8 +67,6 @@
 					  \n\
 					  <p>PocketSword benefits from the following Open Source projects:<br />\n\
 					  &bull; <i><a href=\"http://www.crosswire.org/sword/index.jsp\">The SWORD Project</a></i><br />\n\
-					  &bull; <i><a href=\"https://github.com/robbiehanson/CocoaHTTPServer\">CocoaHTTPServer</a></i><br />\n\
-					  &bull; <i><a href=\"https://github.com/zbyhoo/EGOTableViewPullRefresh\">zbyhoo's fork of EGOTableViewPullRefresh</a></i><br />\n\
 					  &bull; <i><a href=\"https://github.com/ZipArchive/ZipArchive\">ZipArchive</a></i><br />\n\
 					  </p>\
 					  <br />\n\

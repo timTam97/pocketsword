@@ -37,7 +37,6 @@
 @class PSBibleViewController;
 @class PSCommentaryViewController;
 @class PSRefSelectorController;
-@class PSDevotionalViewController;
 
 typedef enum {
     RestoreScrollPosition = 1,
@@ -75,10 +74,7 @@ typedef enum {
 	UITabBarController					*multiListController;
 
 	PSModuleSelectorController			*moduleSelectorViewController;
-	
-	// Devotional tab
-	PSDevotionalViewController			*devotionalTabController;
-	
+
 	// Bookmarks tab
 	
 	// Preferences tab
@@ -94,7 +90,6 @@ typedef enum {
 @property (assign, readwrite) ShownTab				savedSearchResultsTab;
 @property (strong) PSBibleViewController			*bibleTabController;
 @property (strong) PSCommentaryViewController		*commentaryTabController;
-@property (strong) PSDevotionalViewController		*devotionalTabController;
 @property (strong) UITabBarController				*tabBarController;
 
 + (void) showModal:(UIView*)modalView withTiming:(float)time;
@@ -119,7 +114,6 @@ typedef enum {
 - (void)toggleModulesListFromButton:(id)sender;
 - (void)toggleMultiList:(id)sender;
 - (void)toggleMultiList;
-- (void)addModuleButtonPressed;
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab;
 - (void)displayChapter:(NSString *)ref withPollingType:(PollingType)polling restoreType:(RestorePositionType)position;

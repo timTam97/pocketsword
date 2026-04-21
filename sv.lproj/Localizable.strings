@@ -22,11 +22,8 @@
 
 "Edit" = "Redigera";
 "Done" = "Klar";
-"Module Download" = "Modulnerladdning";
-"Installing" = "Installerar:";
 "Yes" = "Ja";
 "No" = "Nej";
-"ConfirmInstall" = "Vill du installera den här modulen?";
 "Next" = "Nästa";
 "Previous" = "Föregående";
 
@@ -46,26 +43,10 @@
 "AboutModuleLCSH" = "Library of Congress Subject Heading: ";
 
 
-"Disclaimer" = "Disclaimer";
-"DisclaimerMsg" = "      -=+* WARNING *+=-\nAlthough Install Manager provides a convenient way for installing and upgrading SWORD components, it also uses a systematic method for accessing sites which gives packet sniffers a target to lock into for singling out users. \nIF YOU LIVE IN A PERSECUTED COUNTRY AND DO NOT WISH TO RISK DETECTION, YOU SHOULD *NOT* USE INSTALL MANAGER'S REMOTE SOURCE FEATURES. \nAlso, Remote Sources other than CrossWire may contain less than quality modules, modules with unorthodox content, or even modules which are not legitimately distributable.  Many repositories contain wonderfully useful content.  These repositories simply are not reviewed or maintained by CrossWire and CrossWire cannot be held responsible for their content. CAVEAT EMPTOR.\nDo you understand this and are you willing to enable remote source features?";
 
-"WebNoIP" = "Web: Kunde inte fastställa extern IP\n";
-"WiFiNoConnection" = "Wifi: Ingen anslutning\n";
-"NoNetworkConnection" = "Ingen nätverksanslutning tillgänglig.";
 
-"manualInstallHelp" = "För att manuellt installera en modul behöver du rikta din webbrowser till en av följande platser och sedan följa uppmaningarna där (eller så kan du söka efter din iPhone med hjälp av Bonjour!). Märk väl! Det är  rekommenderat att du använder dig av den inbyggda modulinstalleraren - denna manuella installerare är endast till för de användare som skapar sina egna moduler.";
-"InstallManagerDisabled" = "avstängd...";
-"InstallTitle" = "Installera?";
-"files" = "filer";
-"InstallProblem" = "Ett problem uppstod under installationen.";
-"InstalledButtonTitle" = "Installerad";
-"InstallButtonTitle" = "Installera";
-"RefreshProblem" = "Ett problem uppstod under uppdaterandet.";
-"RefreshingModuleSource" = "Uppdaterar modulkällor";
-"NoModulesRefresh" = "Inga tillgängliga moduler. Försök att uppdatera modulkällorna.";
 "NoModulesInstalled" = "Inga moduler installerade.";
 
-"InstallSourcesTitle" = "Källor";
 "PreferencesTitle" = "Inställningar";
 "PreferencesDisplayPreferencesTitle" = "Utseende";
 "PreferencesDevicePreferencesTitle" = "Beteende";
@@ -76,8 +57,6 @@
 "PreferencesRedLetterTitle" = "Röda bokstäver";
 "PreferencesRedLetterNote" = "Observera att röda bokstäver endast är tillgängligt för vissa moduler";
 "PreferencesDisableAutoLockTitle" = "Förhindra automatisk viloläge";
-"PreferencesModuleMaintainerModeTitle" = "Modulunderhållningsläge";
-"PreferencesModuleMaintainerModeNote" = "Observera att Modulunderhållningsläget är till för dom användare som skapat sina egna moduler och behöver ett sätt att installera sina moduler manuellt. För alla andra användare är det rekommenderat att istället använda den inbyggda modulinstalleraren för att ta del av officiella moduler från CrossWire";
 
 "AboutTitle" = "Om";
 
@@ -92,14 +71,11 @@
 "BookmarksTitle" = "Bokmärken";
 
 "ActivityLabelLoading" = "Laddar...";
-"MMMBonjourLoading" = "Bonjour Laddar...";
-"MMMIPLoading" = "IP Laddar...";
 
 "Biblical Texts" = "Bibeltexter";
 "Commentaries" = "Kommentarer";
 "Lexicons / Dictionaries" = "Lexikon / Ordböcker";
 "Generic Books" = "Allmänna böcker";
-"Daily Devotional" = "Dagliga andakter";
 "Glossaries" = "Ordlistor";
 "Cults / Unorthodox / Questionable Material" = "Kulter / Oortodoxa / Ifrågasatt material";
 "Essays" = "Uppsatser";
@@ -113,22 +89,14 @@
 "CloseButtonTitle" = "Stäng";
 "CacheDictionaryKeysTitle" = "Cache?";
 "CacheDictionaryKeysMsg" = "Denna ordbok har ännu inte initialiserats. Vill du spara ordboken i buffertminnet nu?";
-"IndexDownloadTitle" = "Indexnerladdning";
-"NoSearchIndexTitle" = "Inga Sökindex";
 "NoSearchIndexMsg" = " Inget sökindex är installerat för denna modul. Önskar du söka efter tillgängliga sökindex nu?";
-"SearchDownloaderTitle" = "Nerladdning av sökindex";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "E-posta oss";
 "NoSearchIndexInstalled" = "Inget sökindex installerat";
 "SearchResults" = "Resultat";
 
-"IndexControllerInstalled" = "Du har redan installerat sökindex för:";
-"IndexControllerDownloadable" = "Välj ett nerladdningsbart sökindex från följande lista för att aktivera sökning för den modulen:";
-"IndexControllerNone" = "Kontrollera din nätverksanslutning för att aktivera sökning för:";
-"IndexControllerNoneRemote" = "Det finns för tillfället inga nerladdningsbara sökindex för:";
 
 "SearchHelpTitle" = "Sökhjälp";
-"IndexControllerConfirmQuestion" = "Önskar du ladda ner sökindexet för denna modul?\n Detta kan ta en stund för kommentarmoduler!";
 
 "PreferencesStrongsPreferencesTitle" = "Strongs nummer";
 "PreferencesDisplayTitle" = "Visa";
@@ -145,10 +113,7 @@
 "PreferencesCrossReferencesTitle" = "Parallellställen";
 "PreferencesFootnotesTitle" = "Fotnoter";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "Ingen hebreisk Strongs nummerkonkordans är installerad. Vänligen installera en (t.ex. 'strongshebrew') via menyn Mer->Nerladdningar";
-"NoGreekStrongsNumbersModuleInstalled" = "Ingen grekisk Strongs nummerkonkordans är installerad. Vänligen installera en (t.ex. 'strongsgreek') via menyn Mer->Nerladdningar";
 
-"NoMorphGreekModuleInstalled" = "Inget grekiskt morfologilexikon är installerat. Vänligen installera en (t.ex. 'Robinsons') via menyn Mera->Nerladdningar";
 "MorphHebrewNotSupported" = "Tyvärr är morfologiska analyskoder endast tillgängliga för grekiska ord. Om du har kunskapen och är villig att hjälpa till för att möjliggöra denna funktionalitet för PocketSword, vänligen besök <br />openscripture.org<br />och gå med i deras diskussionforum där.";
 
 "AboutModuleFeaturesTitle" = "Modulegenskaper";
@@ -168,7 +133,6 @@
 "AboutModuleContainsHebrewDef" = "Definierar hebreiska Strongs nummer";
 "AboutModuleContainsGreekParse" = "Definierar grekiska morfologikoder";
 "AboutModuleContainsHebrewParse" = "Definierar hebreiska morfologikoder";
-"AboutModuleContainsDailyDevotion" = "Innehåller dagliga andaktstexter";
 "AboutModuleContainsImages" = "Innehåller bilder";
 
 "NotSupported" = "Denna modul stöds tyvärr inte";
@@ -179,11 +143,6 @@
 "AboutModuleCurrentVersion" = "Installerad version: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "Låst modul";
-"ModuleLockedQuestion" = "Denna modul är för tillfället låst.  Du måste köpa en nyckel för att låsa upp den.  Tyvärr så är det inte möjligt att göra det via PocketSword för tillfället.  Vänligen läs beskrivningen för denna modul för att få reda på hur du kan köpa modulen.\n  Om du redan har köpt en nyckel kan du skriva in den för att låsa upp modulen.  Önskar du skriva in nyckeln nu?";
-"ModuleEnterKeyTitle" = "Ge nyckel:";
-"ModuleUnlockScreenTitle" = "Lås upp modul";
-"ModuleUnlockHelpText" = "För att låsa upp denna modul, vänligen skriv in nyckeln som skickades till dig då du köpte modulen. Tryck på Klar för att testa nyckeln och tryck sedan på Spara om det ser korrekt ut.";
 "RefSelectorBookTitle" = "Välj bok";
 "RefSelectorChapterTitle" = "Kapitel %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Vers %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,27 +151,9 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "Rubriker";
 "DictionarySearchPlaceholderText" = "Sök i Ordbok";
-"TabBarTitleDevotional" = "Dagliga andakter";
-"TodayButtonTitle" = "Idag";
-"ManageSources" = "Administrera källor";
-"AddFTPSource" = "Infoga FTP källa";
-"AddHTTPSource" = "Infoga HTTP källa";
-"DeleteSource" = "Radera källa";
-"RefreshSourceList" = "Refresh Source List";
-"AddSourceCaptionTitle" = "Beskrivning";
-"AddSourceServerTitle" = "Server";
-"AddSourcePathTitle" = "Sökväg";
-"AddFTPSourceTitle" = "Ny FTP källa";
-"AddHTTPSourceTitle" = "Ny HTTP källa";
-"FillInAllFieldsMessage" = "Alla fält bör vara ifyllda!";
-"Warning" = "Varning";
-"CannotVerifyInstallSourceWarning" = "PocketSword kan inte fastställa att detta är en giltig modulkälla. Vill du spara den i alla fall?";
 
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** Vänligen notera att denna modul nu är låst vilket inebär att du kommer att behöva köpa en nyckel för att låsa upp den från modulpublicerarens hemsida. Se nedanstående information för mer detaljer. **";
-"UpgradeButtonTitle" = "Ersätt";
-"ConfirmUpgrade" = "Vill du ersätta denna modul med den version som nu är tillgänglig?";
 
 "VerseContextualMenuAddBookmark" = "Skapa bokbärke";
 "VerseContextualMenuCommentary" = "Se i kommentarer";
@@ -221,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "Föregående kapitel";
 "VoiceOverNextChapterButton" = "Nästa kapitel";
 "VoiceOverHistoryAndSearchButton" = "Historik och sökning";
-"InstallManagerDownloadsHint" = "Du kan ladda ner ytterligare moduler från någon av dom nedanvarande modulkällorna:";
-"ModuleTypesHeaderText" = "Välj modultyp:";
-"ModuleLanguagesHeaderText" = "Välj språk:";
 "PreferencesModulePreferencesTitle" = "Modulinställningar";
 "PreferencesFullscreenModeTitle" = "Automatisk helskärmsläge";
 "PreferencesFullscreenNote" = "Med automatisk helskärmsläge aktiverat kan du fortfarande byta från och till helskärmsläge med en tvåfingrars beröring i bibel- eller kommentarflikarna.";
@@ -305,7 +243,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";

@@ -16,8 +16,6 @@
  * General Public License for more details.
  */
 
-#import <SystemConfiguration/SystemConfiguration.h>
-
 #import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "PSTabBarControllerDelegate.h"
@@ -25,9 +23,7 @@
 #import "PSResizing.h"
 
 #import "SwordManager.h"
-#import "SwordInstallManager.h"
 #import "globals.h"
-#import "SwordInstallSource.h"
 #import "PSModuleType.h"
 #import "SwordKey.h"
 #import "PSRefSelectorController.h"
@@ -37,6 +33,7 @@
 #include <swmgr.h>
 #include <swmodule.h>
 #include <markupfiltmgr.h>
+#include <installmgr.h>
 
 //careful of the '%' in the string below!  needs to be '%%' if moved to be used in an appendByFormat: but is fine how it is right now (3/3/10 niccarter)
 #define RUBY_CSS @"ruby\n\
@@ -89,11 +86,8 @@ rp { display: none; }\n"
 @synthesize primaryBible;
 @synthesize primaryCommentary;
 @synthesize primaryDictionary;
-@synthesize primaryDevotional;
 @synthesize swordManager;
-@synthesize currentInstallSource;
 @synthesize busyTimer;
-@synthesize downloadQueue;
 
 
 static PSModuleController *instance;
@@ -191,24 +185,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 }
 
-- (SwordInstallManager *)swordInstallManager {
-	if(!swordInstallManager) {
-		swordInstallManager = [[SwordInstallManager alloc] initWithPath: DEFAULT_INSTALLER_PATH createPath: YES];
-		
-		BOOL userDisclaimer = [[NSUserDefaults standardUserDefaults] boolForKey: @"userDisclaimerAccepted"];
-		if (userDisclaimer) {
-			[swordInstallManager setUserDisclainerConfirmed: YES];
-		}
-	}
-	return swordInstallManager;
-}
-
 - (id)init {
 	self = [super init];
 	if(self) {
-		//DLog(@"[PSModuleController init]");
-		installationProgress = 0.0;
-		
 		//migration of modules, for v1.3.0: will allow backup of modules with iTunes sync...
 		if([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH_OLD stringByAppendingString: @"mods.d"]]) {
 			//need to migrate from the old to the new...
@@ -230,7 +209,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		}
 
 		swordManager = [SwordManager defaultManager];
-		swordInstallManager = nil;
 		// set localized book names
 		sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
 		NSString *book = [NSString stringWithCString:lManager->translate("Genesis") encoding:NSUTF8StringEncoding];
@@ -245,14 +223,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		book = [PSModuleController createRefString:[NSString stringWithFormat: @"%@ 22", book]];
 		[PSModuleController setLastRefAvailable: book];
 		
-		showNetworkIndicatorCount = 0;
-		disableAutoSleepCount = 0;
-		self.downloadQueue = [NSMutableArray arrayWithCapacity:2];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayNetworkIndicator) name:NotificationDisplayNetworkIndicator object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideNetworkIndicator) name:NotificationHideNetworkIndicator object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableAutoSleep) name:NotificationEnableAutoSleep object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disableAutoSleep) name:NotificationDisableAutoSleep object:nil];
-
 		/*
 		// debug code to print out all available fonts...
 		NSArray *names = [UIFont familyNames];
@@ -270,27 +240,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[self reloadLastCommentary];
 	}
 	return self;
-}
-
-- (void)disableAutoSleep {
-	if(++disableAutoSleepCount == 1) {
-		[UIApplication sharedApplication].idleTimerDisabled = YES;
-	}
-}
-
-- (void)enableAutoSleep {
-	if(--disableAutoSleepCount == 0) {
-		BOOL insomniaMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsInsomniaPreference];
-		[UIApplication sharedApplication].idleTimerDisabled = insomniaMode;//set it to obey the user pref.
-	}
-}
-
-- (void)displayNetworkIndicator {
-	++showNetworkIndicatorCount;
-}
-
-- (void)hideNetworkIndicator {
-	--showNetworkIndicatorCount;
 }
 
 - (void)setPreferences/*:(NSMutableDictionary *)prefs*/ {
@@ -329,9 +278,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		return YES;
 	else if (primaryDictionary && [[primaryDictionary name] isEqualToString:module])
 		return YES;
-	else if (primaryDevotional && [[primaryDevotional name] isEqualToString:module])
-		return YES;
-	
+
 	return NO;
 }
 
@@ -394,18 +341,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	
 }
 
-- (void)loadPrimaryDevotional:(NSString *)newText {
-	if(newText) {
-		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName:newText];
-		[[NSUserDefaults standardUserDefaults] setObject: newText forKey: DefaultsLastDevotional];
-	} else {
-		primaryDevotional = nil;
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey: DefaultsLastDevotional];
-	}
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDevotionalChanged object:newText];
-}
-
 - (NSString *)setToNextChapter {
 	NSString *ret = nil;
 	NSString *cur = [PSModuleController getCurrentBibleRef];
@@ -460,15 +395,13 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	BOOL restoreBible = NO;
 	BOOL restoreCommentary = NO;
 	BOOL restoreDictionary = NO;
-	BOOL restoreDevotional = NO;
 	//sword::SWKey loc;
 	NSString *ch;
 	sword::SWKey dictLoc;
 	NSString *bibleName;
 	NSString *commentaryName;
 	NSString *dictionaryName;
-	NSString *devotionalName;
-	
+
 	if (primaryBible) {
 		restoreBible = YES;
 		ch = [[[NSString stringWithCString: ([primaryBible swModule])->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
@@ -488,16 +421,10 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		dictLoc = ([primaryDictionary swModule])->getKeyText();
 		dictionaryName = [primaryDictionary name];
 	}
-	
-	if (primaryDevotional) {
-		restoreDevotional = YES;
-		devotionalName = [primaryDevotional name];
-	}
-	
+
 	[swordManager reInit];
 	[self setPreferences];
-	installationProgress = 0;
-	
+
 	if (restoreBible) {
 		primaryBible = [swordManager moduleWithName: bibleName];
 		if (primaryBible) {
@@ -522,11 +449,7 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		if (primaryDictionary)
 			([primaryDictionary swModule])->setKey(dictLoc);
 	}
-	
-	if(restoreDevotional) {
-		primaryDevotional = (SwordDictionary *)[swordManager moduleWithName: devotionalName];
-	}
-	
+
 //	if([[swordManager moduleNames] count] == 0) {
 //		[bookmarkAddButton setEnabled:NO];
 //	}
@@ -534,142 +457,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRefSelectorResetBooks object:nil];
 	//refSelectorController.refSelectorBooks = nil;
 }
-
-- (PSStatusReporter*)getInstallationProgress {
-	PSStatusReporter *reporter = [[self swordInstallManager] getInstallationProgress];
-	if(installationProgress == -1 || installationProgress == 1) {
-		reporter->overallProgress = installationProgress;
-	}
-	return reporter;
-}
-
-- (BOOL)installModuleWithModule:(SwordModule *)swordModule {
-	return [self installModuleWithModule:swordModule fromSource:self.currentInstallSource];
-	
-}
-
-- (BOOL)installModuleWithModule:(SwordModule*)swordModule fromSource:(SwordInstallSource*)swordInstallSource {
-	[swordInstallManager resetInstallationProgress];
-
-	installationProgress = 0.01;
-	BOOL ret = NO;
-
-	// unfortunately, the sword::InstallMgr won't create these directories & will silently fail if they don't exist!
-	[[NSFileManager defaultManager] createDirectoryAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]
-							  withIntermediateDirectories: YES attributes: NULL error: NULL];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: [DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]] != YES) {
-		ALog(@"Couldn't create mods.d");
-		installationProgress = -1.0;
-		return NO;
-	}
-	NSString *dataPath = [swordModule configEntryForKey: @"DataPath"];
-	if ([dataPath hasPrefix: @"./"]) {
-		dataPath = [dataPath substringFromIndex: 2];
-	}
-	dataPath = [DEFAULT_MODULE_PATH stringByAppendingString: dataPath];
-	[[NSFileManager defaultManager] createDirectoryAtPath: dataPath 
-							  withIntermediateDirectories: YES attributes: NULL error: NULL];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: dataPath] != YES) {
-		ALog(@"Couldn't create DataPath (%@)", dataPath);
-		installationProgress = -1.0;
-		return NO;
-	}
-	// TEMPORARY HACK FOR v1.4.2 until we do things properly!
-	[PSResizing addSkipBackupAttributeToItemAtPath:[DEFAULT_MODULE_PATH stringByAppendingString: @"mods.d"]];
-	[PSResizing addSkipBackupAttributeToItemAtPath:[DEFAULT_MODULE_PATH stringByAppendingString: @"modules"]];
-
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisableAutoSleep object:nil];
-	
-	int status = [[self swordInstallManager] installModule: swordModule fromSource: swordInstallSource withManager: swordManager];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationEnableAutoSleep object:nil];
-	
-	[self reload];
-	
-	if (status != 0) {
-		ALog(@"Couldn't install module (%@)!\n", [swordModule name]);
-		ret = NO;
-	} else {
-		DLog(@"Module %@ installed successfully!\n%lu modules installed.", [swordModule name], (unsigned long)[[swordManager moduleNames] count]);
-		ret = YES;
-	}
-	if((!primaryBible && ([swordModule type] == bible)) || (!primaryCommentary && [swordModule type] == commentary)) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-		//[bookmarkAddButton setEnabled:YES];
-	} else if(!primaryDictionary && ([swordModule type] == dictionary) && ([swordModule cat] == undefinedCategory)) {
-		//set it to the primaryDictionary.
-		[self loadPrimaryDictionary:[swordModule name]];
-	} else if(!primaryDevotional && ([swordModule type] == dictionary) && ([swordModule cat] == devotional)) {
-		[self loadPrimaryDevotional:[swordModule name]];
-	}
-	
-	// if we haven't defined the Strongs or Morph module of this type, make this the default module.
-	if([swordModule hasFeature: @"GreekDef"]) {
-		NSString *curSGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsGreekModule];
-		if(!curSGM || [curSGM isEqualToString: NSLocalizedString(@"None", @"None")]) {
-			[[NSUserDefaults standardUserDefaults] setObject: [swordModule name] forKey:DefaultsStrongsGreekModule];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-		}
-	}
-	if([swordModule hasFeature: @"HebrewDef"]) {
-		NSString *curSHM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsStrongsHebrewModule];
-		if(!curSHM || [curSHM isEqualToString: NSLocalizedString(@"None", @"None")]) {
-			[[NSUserDefaults standardUserDefaults] setObject: [swordModule name] forKey:DefaultsStrongsHebrewModule];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-		}
-	}
-	if([swordModule hasFeature: @"GreekParse"]) {
-		NSString *curMGM = [[NSUserDefaults standardUserDefaults] stringForKey:DefaultsMorphGreekModule];
-		if(!curMGM || [curMGM isEqualToString: NSLocalizedString(@"None", @"None")]) {
-			[[NSUserDefaults standardUserDefaults] setObject: [swordModule name] forKey:DefaultsMorphGreekModule];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-		}
-	}
-	
-	installationProgress = 1.0;
-	return ret;
-}
-
-- (BOOL)refreshCurrentInstallSource {
-	BOOL success = [[self swordInstallManager] refreshInstallSource:self.currentInstallSource];
-	[self.currentInstallSource resetSwordManagerLoaded];
-	return success;
-}
-
-//- (BOOL)installModule:(NSString *)name {
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-//	DLog(@"[PSModuleController -installModule: %@ fromSource: %@]", name, [self.currentInstallSource caption]);
-//
-//	installationProgress = 0.01;
-//	SwordInstallSource *sIS = self.currentInstallSource;
-//	SwordModule *swordModule = nil;
-//	if(!sIS) {
-//		for (int i = 0; i < [[[self swordInstallManager] installSourceList] count]; i++) {
-//			sIS = [[swordInstallManager installSourceList] objectAtIndex: i];
-//			SwordManager *sM = [sIS swordManager];
-//			swordModule = [sM moduleWithName: name];
-//			if (swordModule) {
-//				break;
-//			}
-//		}
-//	} else {
-//		SwordManager *sM = [sIS swordManager];
-//		swordModule = [sM moduleWithName: name];
-//	}
-//	if (!swordModule) {
-//		ALog(@"Couldn't find module (%@) to install!\n", name);
-//		installationProgress = -1.0;
-//		[pool release];
-//		return NO;
-//	}
-//	
-//	[pool release];
-//	return [self installModuleWithModule:swordModule];
-//
-//}
 
 - (BOOL)removeModule:(NSString *)name {
 	DLog(@"Removing module: %@", name);
@@ -704,7 +491,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	NSString *primaryBibleName = nil;
 	NSString *primaryCommentaryName = nil;
 	NSString *primaryDictionaryName = nil;
-	NSString *primaryDevotionalName = nil;
 	if (primaryBible) {
 		primaryBibleName = [primaryBible name];
 		//loc = ([primaryBible swModule])->getKeyText();
@@ -716,9 +502,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	if (primaryDictionary) {
 		primaryDictionaryName = [primaryDictionary name];
 	}
-	if(primaryDevotional) {
-		primaryDevotionalName = [primaryDevotional name];
-	}
 	NSUInteger numberOfBibles = [[swordManager modulesForType:SWMOD_CATEGORY_BIBLES] count];
 	NSUInteger numberOfCommentaries = [[swordManager modulesForType:SWMOD_CATEGORY_COMMENTARIES] count];
 	
@@ -729,19 +512,9 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			//need to remove the dictionary cache, if it exists
 			[((SwordDictionary*)moduleToRemove) removeCache];
 		}
-//		BOOL wasBuiltIn = NO;
-//		if(possibleBuiltIn) {
-//			SwordManager *swordBuiltInManager = [[SwordManager alloc] initWithPath:DEFAULT_BUILTIN_MODULE_PATH];
-//			if([swordBuiltInManager isModuleInstalled:name]) {
-//				stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordBuiltInManager];
-//				wasBuiltIn = YES;
-//			}
-//			[swordBuiltInManager release];
-//			swordBuiltInManager = nil;
-//		}
-//		if(!wasBuiltIn) {
-			stat = [[self swordInstallManager] uninstallModule: moduleToRemove fromManager: swordManager];
-//		}
+		sword::InstallMgr *swInstallMgr = new sword::InstallMgr();
+		stat = swInstallMgr->removeModule([swordManager swManager], [name UTF8String]);
+		delete swInstallMgr;
 	}
 	
 	BOOL success = (stat == 0) ? YES : NO;
@@ -767,8 +540,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsLastDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		//[dictionaryTitle setTitle: NSLocalizedString(@"None", @"None")];
-	} else if([name isEqualToString:primaryDevotionalName]) {
-		[self loadPrimaryDevotional:nil];
 	}
 	
 	[self reload];
@@ -791,13 +562,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			//
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:NotificationReloadDictionaryData object:nil];
-	} else if([name isEqualToString: primaryDevotionalName]) {
-		if([[swordManager modulesForType:SWMOD_CATEGORY_DAILYDEVS] count] > 0) {
-			//set the primaryDevotional to the next available devo.
-			[self loadPrimaryDevotional:[[[swordManager modulesForType:SWMOD_CATEGORY_DAILYDEVS] objectAtIndex:0] name]];
-		} else {
-			[self loadPrimaryDevotional:nil];
-		}
 	}
 	
 	// if it's the module selected for one of our lookups, need to set that to @"None"
@@ -1086,61 +850,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
 	return returnString;
 }
 
-+ (BOOL)checkNetworkConnection {
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationDisplayNetworkIndicator object:nil];
-
-	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, [@"www.crosswire.org" UTF8String]);
-	SCNetworkReachabilityFlags flags;
-	BOOL retVal = NO;
-	if (SCNetworkReachabilityGetFlags(reachability, &flags))
-	{
-		if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
-		{
-			// if target host is not reachable
-			retVal = NO;
-			DLog(@"target host is not reachable");
-		}
-		else if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
-		{
-			// if target host is reachable and no connection is required
-			//  then we'll assume (for now) that your on Wi-Fi
-			retVal = YES;
-			//DLog(@"Wi-Fi");
-		}
-		
-		
-		if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
-			 (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
-		{
-			// ... and the connection is on-demand (or on-traffic) if the
-			//     calling application is using the CFSocketStream or higher APIs
-			
-			if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
-			{
-				// ... and no [user] intervention is needed
-				retVal = YES;
-				//DLog(@"Wi-Fi 2");
-			}
-		}
-		
-		if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
-		{
-			// ... but WWAN connections are OK if the calling application
-			//     is using the CFNetwork (CFSocketStream?) APIs.
-			retVal = YES;
-			//DLog(@"WWAN");
-		}
-		
-	}
-	if(!retVal) {
-		DLog(@"NO NETWORK AVAILABLE");
-	}
-	CFRelease(reachability);
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationHideNetworkIndicator object:nil];
-	return retVal;
-}
-
 //- (void)displayBusyIndicator
 //{
 //	[viewController performSelectorInBackground: @selector(displayBusyIndicator) withObject: nil];
@@ -1223,51 +932,6 @@ static NSString *firstRefAvailable = @"Genesis 1";
     
 	//[pool release];
     return ret;
-}
-
-+ (BOOL)isModuleDownloading:(NSString*)moduleName {
-	PSModuleController *mController = [PSModuleController defaultModuleController];
-	for(PSModuleDownloadItem *dItem in mController.downloadQueue) {
-		if([dItem.moduleName isEqualToString:moduleName]) {
-			return YES;
-		}
-	}
-	
-	return NO;
-}
-
-+ (void)removeViewForHUDForModuleDownloadItem:(NSString*)moduleName {
-	PSModuleController *mController = [PSModuleController defaultModuleController];
-	for(PSModuleDownloadItem *dItem in mController.downloadQueue) {
-		if([dItem.moduleName isEqualToString:moduleName]) {
-			[dItem removeViewForHUD];
-		}
-	}
-}
-
-+ (void)queueModuleDownloadItem:(PSModuleDownloadItem*)downloadItem {
-	DLog(@"queueing a new download item: %@", [downloadItem moduleName]);
-	PSModuleController *mController = [PSModuleController defaultModuleController];
-	downloadItem.delegate = mController;
-	[mController.downloadQueue addObject:downloadItem];
-	[mController tryDownloading];
-}
-
-// returns NO if there are no tasks left.
-- (BOOL)tryDownloading {
-	DLog(@"tryDownloading called: count is %lu", (unsigned long)[self.downloadQueue count]);
-	if([self.downloadQueue count] > 0) {
-		[(PSModuleDownloadItem*)[self.downloadQueue objectAtIndex:0] startInstall];
-		return YES;
-	}
-	return NO;
-}
-
-- (void)moduleDownloaded:(PSModuleDownloadItem*)sender {
-	DLog(@"dItem finished with: %@", [sender moduleName]);
-	[self.downloadQueue removeObject:sender];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:nil];
-	[self tryDownloading];
 }
 
 @end

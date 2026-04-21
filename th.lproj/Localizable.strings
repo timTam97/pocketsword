@@ -22,11 +22,8 @@
 
 "Edit" = "แก้ไข";
 "Done" = "เสร็จ";
-"Module Download" = "ดาวน์โหลดโมดูล";
-"Installing" = "กำลังติดตั้ง:";
 "Yes" = "ใช่";
 "No" = "ไม่";
-"ConfirmInstall" = "คุณต้องการติดตั้งโมดูลนี้หรือไม่?";
 "Next" = "ถัดไป";
 "Previous" = "ก่อนหน้า";
 
@@ -46,26 +43,11 @@
 "AboutModuleLCSH" = "ข้อมูลห้องสมุด: ";
 
 
-"Disclaimer" = "ไม่ยอมรับ";
-"DisclaimerMsg" = "      -=+* คำเตือน *+=-\nถึงแม้การจัดการการติดตั้งเป็นวิธีการที่สะดวก รวมไปถึงการอัพเกรดส่วนต่างๆ ของ SWORD ด้วย แต่ระบบจะทำให้ผู้เข้าถึงเว็บไซต์ถูกล็อค \nถ้าคุณอาศัยอยู่ในประเทศที่ต่อต้าน และไม่ต้องการให้มีการตรวจสอบ คุณ *ไม่ควรจะ* ใช้การจัดการติดตั้งจากแหล่งข้อมูลระยะไกล \nนอกจากนี้แหล่งที่มาจากระยะไกลอื่นๆ นอกเหนือจาก CrossWire แล้ว อาจจะเป็นโมดูลที่มีคุณภาพด้อย มีเนื้อหาที่ไม่ได้รับการยอมรับ รวมไปถึงโมดูลที่ไม่ได้เผยแพร่อย่างถูกต้องตามกฎหมาย ทั้งมีข้อมูลจำนวนมากอย่างน่าแปลกประหลาด เหล่านี้ไม่ได้มาจาก CrossWire และ CrossWire จะไม่รับผิดชอบต่อเนื้อหาเหล่านี้ \nหากคุณเข้าใจในเรื่องนี้แล้ว คุณต้องการจะเปิดใช้งานคุณลักษณะแหล่งข้อมูลระยะไกลหรือไม่?";
 
-"WebNoIP" = "เว็บไซต์-Web: ไม่สามารถตรวจสอบ IP ภายนอกได้\n";
-"WiFiNoConnection" = "เครือข่ายไร้สาย-Wifi: ไม่มีการเชื่อมต่อ\n";
-"NoNetworkConnection" = "ไม่การเชื่อมต่อกับระบบเครือข่าย";
 
-"manualInstallHelp" = "การติดตั้งโมดูลดวยตัวเอง โดยไปที่เว็บเบราเซอร์ตามที่อยู่ด้านล่าง ทำตามที่ให้ไว้ (หรือเพียงแค่การค้นหาสำหรับ iPhone โดยใช้ Bonjour!)  แต่แนะนำให้คุณใช้ในตัวติดตั้งโมดูล - การติดตั้งนี้มีให้เฉพาะสำหรับผู้สร้างโมดูล";
-"InstallManagerDisabled" = "ยกเลิก...";
-"InstallTitle" = "ติดตั้งหรือไม่?";
-"files" = "ไฟล์";
-"InstallProblem" = "มีปัญหาระหว่างการติดตั้ง";
-"InstalledButtonTitle" = "ติดตั้งแล้ว";
-"InstallButtonTitle" = "ติดตั้ง";
-"RefreshProblem" = "มีปัญหาเกิดขึ้นในระหว่างการรีเฟรช";
-"RefreshingModuleSource" = "รีเฟรชแหล่งข้อมูลโมดูล";
-"NoModulesRefresh" = "ไม่มีโมดูลที่นี่ ลองรีเฟรช";
 "NoModulesInstalled" = "ไม่ได้ติดตั้งโมดูลไว้";
 
-"InstallSourcesTitle" = "ดาวน์โหลด";//changed for v1.3.3ish
+//changed for v1.3.3ish
 "PreferencesTitle" = "การตั้งค่า";
 "PreferencesDisplayPreferencesTitle" = "ตั้งค่าการแสดงผล";
 "PreferencesDevicePreferencesTitle" = "ตั้งค่าอุปกรณ์";
@@ -76,8 +58,6 @@
 "PreferencesRedLetterTitle" = "อักษรสีแดง";
 "PreferencesRedLetterNote" = "โหมดตัวอักษรสีแดงสามารถใช้ได้เฉพาะบางโมดูลเท่านั้น";
 "PreferencesDisableAutoLockTitle" = "ยกเลิกโหมดการเตรียมตัวอัตโนมัติ";
-"PreferencesModuleMaintainerModeTitle" = "โหมดผู้ดูแลระบบ";
-"PreferencesModuleMaintainerModeNote" = "โหมดผู้ดูแลระบบ สำหรับผู้พัฒนาโมดูลและติดตั้งด้วยตนเอง สำหรับผู้ใช้ทั่วไปจะแนะนำให้ใช้การดาวน์โหลดโมดูล เพื่อเข้าถึงโมดูลอย่างเป็นทางการโดย CrossWire";
 
 "AboutTitle" = "เกี่ยวกับ";
 
@@ -92,14 +72,11 @@
 "BookmarksTitle" = "ตัวคั่น";
 
 "ActivityLabelLoading" = "กำลังนำเข้า...";
-"MMMBonjourLoading" = "เข้าสู่การนำเข้า...";
-"MMMIPLoading" = "กำลังนำเข้า IP...";
 
 "Biblical Texts" = "เนื้อความพระคัมภีร์";
 "Commentaries" = "คู่มือศึกษาพระคัมภีร์";
 "Lexicons / Dictionaries" = "พจนานุกรม / ประมวลศัพท์";
 "Generic Books" = "หนังสือทั่วไป";
-"Daily Devotional" = "เฝ้าเดี่ยว";
 "Glossaries" = "พจนานุกรม";
 "Cults / Unorthodox / Questionable Material" = "ลัทธิอื่น / ไม่รับการยอมรับ / น่าสงสัย";
 "Essays" = "บทความ";
@@ -113,22 +90,14 @@
 "CloseButtonTitle" = "ปิด";
 "CacheDictionaryKeysTitle" = "เฝ้าเดี่ยวไหม?";
 "CacheDictionaryKeysMsg" = "ประมวลศัพท์นี้ยังไม่ได้รับการติดตั้ง คุณต้องการที่พื้นที่ติดตั้งหรือไม่?";
-"IndexDownloadTitle" = "ดัชนีการดาวน์โหลด";
-"NoSearchIndexTitle" = "ไม่มีดัชนีการค้นหา";
 "NoSearchIndexMsg" = "ไม่มีดัชนีการค้นหาที่ติดตั้งสำหรับโมดูลนี้ ต้องการที่จะตรวจสอบดัชนีการค้นหาที่มีอยู่ตอนนี้หรือไม่?";
-"SearchDownloaderTitle" = "ค้นหาตัวดาวน์โหลด";
 "FontPreferenceTitle" = "แบบอักษร";
 "EmailUsButton" = "ส่งอีเมล์";
 "NoSearchIndexInstalled" = "ไม่มีการติดตั้งดัชนีการค้นหา";
 "SearchResults" = "ผลลัพท์";
 
-"IndexControllerInstalled" = "ติดตั้งดัชนีการค้นหาแล้วสำหรับ:";
-"IndexControllerDownloadable" = "เลือกดัชนีการค้นหาที่สามารถดาวน์โหลดได้จากรายการต่อไปนี้เพื่อเปิดใช้การค้นหาสำหรับโมดูล:";
-"IndexControllerNone" = "ตรวจสอบระบบเครือข่ายเพื่อเปิดใช้การค้นหาสำหรับโมดูล:";
-"IndexControllerNoneRemote" = "ตอนนี้ไม่สามารถดาวน์โหลดดัชนีการค้นหาสำหรับ:";
 
 "SearchHelpTitle" = "ค้นหาการช่วยเหลือ";
-"IndexControllerConfirmQuestion" = "คุณต้องการดาวน์โหลดดัชนีการค้นหาสำหรับโมดูลนี้หรือไม่ \n อาจต้องการเวลาระยะหนึ่งสำหรับโมดูลคู่มืออธิบายพระคัมภีร์!";
 
 "PreferencesStrongsPreferencesTitle" = "ตัวเลขสตรอง";
 "PreferencesDisplayTitle" = "แสดง";
@@ -145,10 +114,7 @@
 "PreferencesCrossReferencesTitle" = "ข้ออ้างโยง";
 "PreferencesFootnotesTitle" = "เชิงอรรถ";
 
-"NoHebrewStrongsNumbersModuleInstalled" = "ไม่ได้ติดตั้งพจนานุกรมตัวเลขสตรองฮีบรู กรุณาติดตั้งก่อน (เช่น 'strongshebrew' ) ผ่านทางเมนู เพิ่มเติม -> แถบ ดาวน์โหลด";
-"NoGreekStrongsNumbersModuleInstalled" = "ไม่ได้ติดตั้งพจนานุกรมตัวเลขสตรองกรีก กรุณาติดตั้งก่อน (เช่น 'strongsgreek' ) ผ่านทางเมนู เพิ่มเติม -> แถบ ดาวน์โหลด";
 
-"NoMorphGreekModuleInstalled" = "ไม่ได้ติดตั้งพจนานุกรมรหัสไวยากรณ์กรีก กรุณาติดตั้งก่อน (เช่น 'Robinson' ) ผ่านทางเมนู เพิ่มเติม -> แถบ ดาวน์โหลด";
 "MorphHebrewNotSupported" = "น่าเสียดาย รหัสไวยากรณ์มีให้เฉพาะคำกรีกเท่านั้น ถ้าคุณมีความสามารถทางด้านภาษาและต้องการมีส่วนในการพัฒนา PocketSword กรุณาไปยัง<br /> openscriptures.org<br />และร่วมสนทนากับกลุ่มนั้น";
 
 "AboutModuleFeaturesTitle" = "ลักษณะโมดูล";
@@ -168,7 +134,6 @@
 "AboutModuleContainsHebrewDef" = "กำหนดตัวเลขสตรองฮีบรู";
 "AboutModuleContainsGreekParse" = "กำหนดรหัสไวยากรณ์กรีก";
 "AboutModuleContainsHebrewParse" = "กำหนดรหัสไวยากรณ์ฮีบรู";
-"AboutModuleContainsDailyDevotion" = "มีเฝ้าเดี่ยว";
 "AboutModuleContainsImages" = "มีรูปภาพ";
 
 "NotSupported" = "ยังไม่สนับสนุนการใช้งานโมดูลนี้";
@@ -179,11 +144,6 @@
 "AboutModuleCurrentVersion" = "รุ่นที่ติดตั้ง: ";
 
 // new v1.2.2 strings:
-"ModuleLockedTitle" = "โมดูลถูกล็อค";
-"ModuleLockedQuestion" = "ได้ล็อคโมดูลไว้ ต้องลงทะเบียนเพื่อปลดล็อค น่าเสียเดียที่ไม่สามารถทำบน PocketSword ได้ในเวลานี้ โปรดอ่านคำอธิบายของโมดูลเพื่อลงทะเบียน\n  ถ้าคุณลงทะเบียนแล้วให้ใส่รหัสปลดล็อค ต้องการใส่รหัสปลดล็อคเวลานี้หรือไม่?";
-"ModuleEnterKeyTitle" = "ใส่รหัส:";
-"ModuleUnlockScreenTitle" = "ปลดล็อคโมดูล";
-"ModuleUnlockHelpText" = "ปลดล็อคโมดูล กรุณาใส่รหัสที่ได้รับจากการซื้อโมดูลนี้ กดปุ่ม เสร็จ เพื่อตรวจสอบรหัสและกด บันทึก ถ้าถูกต้อง";
 "RefSelectorBookTitle" = "เลือกพระธรรม";
 "RefSelectorChapterTitle" = "บท %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "ข้อพระคัมภีร์ %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
@@ -192,26 +152,8 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "หัวข้อ";
 "DictionarySearchPlaceholderText" = "ค้นหาประมวลศัพท์";
-"TabBarTitleDevotional" = "เฝ้าเดี่ยว";
-"TodayButtonTitle" = "วันนี้";
-"ManageSources" = "จัดการแหล่งข้อมูล";
-"AddFTPSource" = "เพิ่มแหล่งข้อมูล FTP";
-"AddHTTPSource" = "เพิ่มแหล่งข้อมูล HTTP";
-"DeleteSource" = "ลบแหล่งข้อมูล";
-"RefreshSourceList" = "รีเฟรชรายการแหล่งข้อมูล";
-"AddSourceCaptionTitle" = "ชื่อแหล่งข้อมูล";
-"AddSourceServerTitle" = "ผู้ให้บริการ";
-"AddSourcePathTitle" = "ที่ตั้ง";
-"AddFTPSourceTitle" = "แหล่งข้อมูล FTP ใหม่";
-"AddHTTPSourceTitle" = "แหล่งข้อมูล HTTP ใหม่";
-"FillInAllFieldsMessage" = "ต้องใส่ข้อมูลทุกช่อง!";
-"Warning" = "คำเตือน";
-"CannotVerifyInstallSourceWarning" = "PocketSword ไม่สามารถตรวจสอบความถูกต้องของแหล่งข้อมูลนี้ได้ คุณยังต้องการที่จะบันทึกหรือไม่?";
 
 // new v1.3.2 strings:
-"AboutModuleLocked" = "** โมดูลนี้ถูกล็อคและคุณต้องลงทะเบียนเพื่อรับรหัสปลดล็อคจากเวบไซต์เจ้าของโมดูล ดูรายละเอียดด้านล่างนี้**";
-"UpgradeButtonTitle" = "แทนที่";
-"ConfirmUpgrade" = "ต้องการแทนที่ด้วยโมดูลรุ่นใหม่หรือไม่?";
 
 "VerseContextualMenuAddBookmark" = "เพิ่มตัวคั่น";
 "VerseContextualMenuCommentary" = "เปิดคู่มืออธิบายพระคัมภีร์";
@@ -220,9 +162,6 @@
 "VoiceOverPreviousChapterButton" = "บทก่อนหน้า";
 "VoiceOverNextChapterButton" = "บทถัดไป";
 "VoiceOverHistoryAndSearchButton" = "ประวัติและการค้นหา";
-"InstallManagerDownloadsHint" = "ต้องดาวน์โหลดโมดูลที่เพิ่มมา จากแหล่งโมดูลด้านล่าง:";
-"ModuleTypesHeaderText" = "เลือกประเภทของโมดูล:";
-"ModuleLanguagesHeaderText" = "เลือกภาษา:";
 "PreferencesModulePreferencesTitle" = "การตั้งค่าโมดูล";
 "PreferencesFullscreenModeTitle" = "โหมดเต็มจออัตโนมัติ";
 "PreferencesFullscreenNote" = "โหมดเต็มจออัตโนมัติ หากยกเลิกแล้วคุณก็ยังสามารถใช้เต็มจอโดยการสัมผัส 2 นิ้ว (2-finger tap) ในแถบพระคัมภีร์และคู่มืออธิบายพระคัมภีร์";
@@ -303,7 +242,6 @@
 "HistoryTitle" = "History";
 
 // new v1.4.4 strings:
-"DictionaryNoneLoaded" = "There is no dictionary currently loaded. If this is your first time using the dictionary, you may need to download a dictionary from the Downloads section before using this feature.";
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";
