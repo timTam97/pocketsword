@@ -19,6 +19,7 @@
 
 #import "PocketSwordAppDelegate.h"
 #import "PSLanguageCode.h"
+#import "PSResizing.h"
 #import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "SwordManager.h"
@@ -110,7 +111,7 @@
 	PSLaunchViewController *lVC = [[PSLaunchViewController alloc] init];
 	[lVC setDelegate:self];
 		
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window = [[UIWindow alloc] initWithFrame:[PSResizing mainScreenBounds]];
 	self.window.backgroundColor = [UIColor systemBackgroundColor];
 
 	if([self.window respondsToSelector:@selector(rootViewController)]) {

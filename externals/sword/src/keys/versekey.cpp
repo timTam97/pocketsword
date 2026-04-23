@@ -364,8 +364,8 @@ void VerseKey::freshtext() const
 
 	if (book < 1) {
 		if (testament < 1)
-			sprintf(buf, "[ Module Heading ]");
-		else sprintf(buf, "[ Testament %d Heading ]", (int)testament);
+			snprintf(buf, sizeof(buf), "[ Module Heading ]");
+		else snprintf(buf, sizeof(buf), "[ Testament %d Heading ]", (int)testament);
 	}
 	else {
 		if (realbook > BMAX[realTest-1]) {
@@ -375,7 +375,7 @@ void VerseKey::freshtext() const
 			if (realbook > BMAX[realTest-1])
 				realbook = BMAX[realTest-1];
 		}
-		sprintf(buf, "%s %d:%d", getBookName(), chapter, verse);
+		snprintf(buf, sizeof(buf), "%s %d:%d", getBookName(), chapter, verse);
 		if (suffix) {
 			buf[strlen(buf)+1] = 0;
 			buf[strlen(buf)] = suffix;
@@ -1253,11 +1253,11 @@ const char *VerseKey::getShortText() const {
 	freshtext();
 	if (book < 1) {
 		if (testament < 1)
-			sprintf(buf, "[ Module Heading ]");
-		else sprintf(buf, "[ Testament %d Heading ]", (int)testament);
+			snprintf(buf, sizeof(buf), "[ Module Heading ]");
+		else snprintf(buf, sizeof(buf), "[ Testament %d Heading ]", (int)testament);
 	}
 	else {
-		sprintf(buf, "%s %d:%d", getBookAbbrev(), chapter, verse);
+		snprintf(buf, sizeof(buf), "%s %d:%d", getBookAbbrev(), chapter, verse);
 	}
 	stdstr(&stext, buf);
 	return stext;
@@ -1817,11 +1817,11 @@ const char *VerseKey::getOSISRef() const {
 		loop = 0;
 
 	if (getVerse())
-		sprintf(buf[loop], "%s.%d.%d", getOSISBookName(), getChapter(), getVerse());
+		snprintf(buf[loop], sizeof(buf[loop]), "%s.%d.%d", getOSISBookName(), getChapter(), getVerse());
 	else if (getChapter())
-		sprintf(buf[loop], "%s.%d", getOSISBookName(), getChapter());
+		snprintf(buf[loop], sizeof(buf[loop]), "%s.%d", getOSISBookName(), getChapter());
 	else if (getBook())
-		sprintf(buf[loop], "%s", getOSISBookName());
+		snprintf(buf[loop], sizeof(buf[loop]), "%s", getOSISBookName());
 	else	buf[loop][0] = 0;
 	return buf[loop++];
 }

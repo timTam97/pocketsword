@@ -96,11 +96,11 @@ char ThMLHeadings::processText(SWBuf &text, const SWKey *key, const SWModule *mo
 						heading += header;
 						heading += tag;
 						if (preverse) {
-							sprintf(buf, "%i", pvHeaderNum++);
+							snprintf(buf, sizeof(buf), "%i", pvHeaderNum++);
 							module->getEntryAttributes()["Heading"]["Preverse"][buf] = heading;
 						}
 						else {
-							sprintf(buf, "%i", headerNum++);
+							snprintf(buf, sizeof(buf), "%i", headerNum++);
 							module->getEntryAttributes()["Heading"]["Interverse"][buf] = heading;
 							if (option) {	// we want the tag in the text
 								text.append(header);

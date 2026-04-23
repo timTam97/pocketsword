@@ -20,6 +20,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "PSTabBarControllerDelegate.h"
+#import "PSResizing.h"
 #import "SearchWebView.h"
 #import "PSHistoryController.h"
 #import "PSModuleSelectorController.h"
@@ -312,7 +313,7 @@
 				modSelectorNavController.popoverPresentationController.barButtonItem = sender;
 			} else {
 				DLog(@"We should only be calling toggleModulesList with a sender now!");
-				CGRect theSpot = CGRectMake(50, ([[UIScreen mainScreen] bounds].size.width-50), 10, 10);
+				CGRect theSpot = CGRectMake(50, ([PSResizing mainScreenBounds].size.width-50), 10, 10);
 				modSelectorNavController.popoverPresentationController.sourceView = tabBarController.view;
 				modSelectorNavController.popoverPresentationController.sourceRect = theSpot;
 			}

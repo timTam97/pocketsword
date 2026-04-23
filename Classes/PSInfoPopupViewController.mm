@@ -4,6 +4,7 @@
 //
 
 #import "PSInfoPopupViewController.h"
+#import "PSResizing.h"
 #import "globals.h"
 
 @interface PSInfoPopupViewController ()
@@ -14,7 +15,7 @@
 @implementation PSInfoPopupViewController
 
 - (void)loadView {
-	UIView *root = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+	UIView *root = [[UIView alloc] initWithFrame:[PSResizing mainScreenBounds]];
 	root.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	root.backgroundColor = [UIColor systemBackgroundColor];
 

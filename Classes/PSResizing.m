@@ -24,7 +24,7 @@
 }
 
 +(void)resizeViewsOnAppearWithTabBarController:(UITabBarController*)tabBarController topBar:(UIView*)topBar mainView:(UIView*)mainView bottomBar:(UIView*)bottomBar useStatusBar:(BOOL)useStatusBar {
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	CGSize screen = [PSResizing mainScreenBounds].size;
 	CGFloat topBarHeight, bottomBarHeight, viewHeight, width;//, tabBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
 	BOOL redrawInNewFrames = NO;
@@ -74,7 +74,7 @@
 	if([PSResizing iPad]) {
 		return;
 	}
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	CGSize screen = [PSResizing mainScreenBounds].size;
 	CGFloat topBarHeight, bottomBarHeight, viewHeight, width, bottomBarY;
 	CGFloat tabBarHeight = (tabBarController) ? tabBarController.tabBar.frame.size.height : 0.0;
 	BOOL redrawInNewFrames = NO;
@@ -107,7 +107,7 @@
 }
 
 + (CGRect)getOrientationRect:(UIInterfaceOrientation)interfaceOrientation {
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	CGSize screen = [PSResizing mainScreenBounds].size;
 	return CGRectMake(0.0, 0.0, screen.width, screen.height);
 }
 
@@ -120,10 +120,32 @@
 	return nil;
 }
 
++ (CGRect)mainScreenBounds {
+	UIWindowScene *windowScene = [PSResizing currentWindowScene];
+	if (windowScene) {
+		return windowScene.screen.bounds;
+	}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+	return [UIScreen mainScreen].bounds;
+#pragma clang diagnostic pop
+}
+
++ (CGFloat)mainScreenScale {
+	UIWindowScene *windowScene = [PSResizing currentWindowScene];
+	if (windowScene) {
+		return windowScene.screen.scale;
+	}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+	return [UIScreen mainScreen].scale;
+#pragma clang diagnostic pop
+}
+
 + (UIInterfaceOrientation)currentInterfaceOrientation {
 	UIWindowScene *windowScene = [PSResizing currentWindowScene];
 	if (windowScene) {
-		return windowScene.interfaceOrientation;
+		return windowScene.effectiveGeometry.interfaceOrientation;
 	}
 	return UIInterfaceOrientationPortrait;
 }

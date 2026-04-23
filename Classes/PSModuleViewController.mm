@@ -32,8 +32,9 @@
 }
 
 - (void)loadView {
-	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
-	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	CGRect screenBounds = [PSResizing mainScreenBounds];
+	CGFloat viewWidth = screenBounds.size.width;
+	CGFloat viewHeight = screenBounds.size.height;
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	
@@ -471,8 +472,8 @@
 		} else {
 			js = [NSString stringWithFormat:@"resetArrays();startDetLocPoll();"];
 		}
-		[webView stringByEvaluatingJavaScriptFromString:js];
-		if(finishedLoading) {
+		[self->webView stringByEvaluatingJavaScriptFromString:js];
+		if(self->finishedLoading) {
 			[self setupWebViewRefreshViews];
 		}
 	}];
@@ -521,10 +522,10 @@
     }
 
 	[UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-		self.tabBarController.tabBar.alpha = (isFullScreen) ? 0 : 1;
+		self.tabBarController.tabBar.alpha = (self->isFullScreen) ? 0 : 1;
 	} completion:^(BOOL finished) {
 		[self setupWebViewRefreshViews];
-		[webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
+		[self->webView stringByEvaluatingJavaScriptFromString:@"startDetLocPoll();"];
 	}];
 }
 
@@ -621,7 +622,7 @@
 				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuAddBookmark", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 					//add a bookmark!
 					NSString *refToBookmark = [PSModuleController createRefString:[PSModuleController getCurrentBibleRef]];
-					PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:tappedVerse];
+					PSBookmarksAddTableViewController *tableViewController = [[PSBookmarksAddTableViewController alloc] initWithBookAndChapterRef:refToBookmark andVerse:self->tappedVerse];
 					UINavigationController *containingNavigationController = [[UINavigationController alloc] initWithRootViewController:tableViewController];
 					[self presentViewController:containingNavigationController animated:YES completion:nil];
 					self.tappedVerse = nil;
@@ -629,7 +630,7 @@
 				[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"VerseContextualMenuCommentary", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 					//switch to the equivalent commentary entry.
 					PSCommentaryViewController *commView = ((PSBibleViewController *)self).commentaryView;
-					[commView setVerseToShow:[tappedVerse integerValue]];
+					[commView setVerseToShow:[self->tappedVerse integerValue]];
 					BOOL fs = [self isFullScreen];
 					if(fs) {
 						[self toggleFullscreen];

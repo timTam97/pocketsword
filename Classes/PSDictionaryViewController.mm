@@ -31,7 +31,7 @@
 	UIBarButtonItem *dictButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"None", @"None") style:UIBarButtonItemStylePlain target:self action:@selector(dictionaryModuleSelectorButtonPressed:)];
 	self.navigationItem.rightBarButtonItem = dictButton;
 	
-	UISearchBar *dSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
+	UISearchBar *dSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [PSResizing mainScreenBounds].size.width, 44)];
 	dSB.delegate = self;
 	dSB.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
 	self.dictionarySearchBar = dSB;

@@ -22,6 +22,10 @@
 
 + (UIWindowScene *)currentWindowScene;
 
++ (CGRect)mainScreenBounds;
+
++ (CGFloat)mainScreenScale;
+
 + (CGFloat)statusBarHeight;
 
 + (BOOL)iPad;

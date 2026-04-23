@@ -92,7 +92,7 @@ char OSISWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 				intoken = false;
 				if ((*token == 'w') && (token[1] == ' ')) {	// Word
 					XMLTag wtag(token);
-					sprintf(wordstr, "%03d", wordNum);
+					snprintf(wordstr, sizeof(wordstr), "%03d", wordNum);
 					SWBuf lemmaClass;
 					SWBuf lemma;
 					SWBuf morph;

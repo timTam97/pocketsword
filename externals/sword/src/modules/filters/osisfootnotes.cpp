@@ -120,7 +120,7 @@ char OSISFootnotes::processText(SWBuf &text, const SWKey *key, const SWModule *m
 				}
 				if (hide && tag.isEndTag()) {
 					if (module->isProcessEntryAttributes() && !strongsMarkup) { //don`t parse strongsMarkup to EntryAttributes as Footnote
-						sprintf(buf, "%i", footnoteNum++);
+						snprintf(buf, sizeof(buf), "%i", footnoteNum++);
 						StringList attributes = startTag.getAttributeNames();
 						for (StringList::const_iterator it = attributes.begin(); it != attributes.end(); it++) {
 							module->getEntryAttributes()["Footnote"][buf][it->c_str()] = startTag.getAttribute(it->c_str());

@@ -210,14 +210,15 @@ const char *RawFiles::getNextFilename() {
 
 
 char RawFiles::createModule(const char *path) {
-	char *incfile = new char [ strlen (path) + 16 ];
+	size_t incfileSize = strlen(path) + 16;
+	char *incfile = new char [ incfileSize ];
 
 	SW_u32 zero = 0;
 	zero = archtosword32(zero);
 
 	FileDesc *datafile;
 
-	sprintf(incfile, "%s/incfile", path);
+	snprintf(incfile, incfileSize, "%s/incfile", path);
 	datafile = FileMgr::getSystemFileMgr()->open(incfile, FileMgr::CREAT|FileMgr::WRONLY|FileMgr::TRUNC);
 	delete [] incfile;
 	datafile->write(&zero, 4);

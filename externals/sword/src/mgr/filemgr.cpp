@@ -265,10 +265,11 @@ signed char FileMgr::trunc(FileDesc *file) {
 
 	if (writable) {
 		// get tmpfilename
-		char *buf = new char [ strlen(file->path) + 10 ];
+		size_t bufSize = strlen(file->path) + 10;
+		char *buf = new char [ bufSize ];
 		int i;
 		for (i = 0; i < 9999; i++) {
-			sprintf(buf, "%stmp%.4d", file->path, i);
+			snprintf(buf, bufSize, "%stmp%.4d", file->path, i);
 			if (!existsFile(buf))
 				break;
 		}
@@ -345,8 +346,9 @@ signed char FileMgr::existsFile(const char *ipath, const char *ifileName)
 		path[strlen(path)-1] = 0;
 
 	if (ifileName) {
-		ch = path + strlen(path);
-		sprintf(ch, "/%s", ifileName);
+		size_t used = strlen(path);
+		ch = path + used;
+		snprintf(ch, len - used, "/%s", ifileName);
 	}
 	signed char retVal = hasAccess(path, 04) ? 1 : 0;
 	delete [] path;
@@ -367,8 +369,9 @@ signed char FileMgr::existsDir(const char *ipath, const char *idirName)
 		path[strlen(path)-1] = 0;
 
 	if (idirName) {
-		ch = path + strlen(path);
-		sprintf(ch, "/%s", idirName);
+		size_t used = strlen(path);
+		ch = path + used;
+		snprintf(ch, len - used, "/%s", idirName);
 	}
 	signed char retVal = hasAccess(path, 04) ? 1 : 0;
 	delete [] path;

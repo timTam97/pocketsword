@@ -34,7 +34,7 @@
 			if(topLength == 0.0f || topLength == 20.0f) {
 				topLength += self.navigationController.navigationBar.frame.size.height;
 			}
-			self.tableView.contentSize = [[UIScreen mainScreen] bounds].size;
+			self.tableView.contentSize = [PSResizing mainScreenBounds].size;
 			[self.tableView setContentInset:UIEdgeInsetsMake(topLength, 0.0f, 0.0f, 0.0f)];
 		}
 	}

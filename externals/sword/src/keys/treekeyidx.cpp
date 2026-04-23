@@ -289,7 +289,8 @@ void TreeKeyIdx::remove() {
 
 signed char TreeKeyIdx::create(const char *ipath) {
 	char *path = 0;
-	char *buf = new char [ strlen (ipath) + 20 ];
+	size_t bufSize = strlen(ipath) + 20;
+	char *buf = new char [ bufSize ];
 	FileDesc *fd, *fd2;
 
 	stdstr(&path, ipath);
@@ -297,13 +298,13 @@ signed char TreeKeyIdx::create(const char *ipath) {
 	if ((path[strlen(path)-1] == '/') || (path[strlen(path)-1] == '\\'))
 		path[strlen(path)-1] = 0;
 
-	sprintf(buf, "%s.dat", path);
+	snprintf(buf, bufSize, "%s.dat", path);
 	FileMgr::removeFile(buf);
 	fd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd->getFd();
 	FileMgr::getSystemFileMgr()->close(fd);
 
-	sprintf(buf, "%s.idx", path);
+	snprintf(buf, bufSize, "%s.idx", path);
 	FileMgr::removeFile(buf);
 	fd2 = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd2->getFd();

@@ -75,7 +75,7 @@ char UnicodeRTF::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 				utf16 = (signed short)ch;
 				text += '\\';
 				text += 'u';
-				sprintf(digit, "%d", utf16);
+				snprintf(digit, sizeof(digit), "%d", utf16);
 				text += digit;
 				text += '?';
 			 }
@@ -83,13 +83,13 @@ char UnicodeRTF::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 				utf16 = (signed short)((ch - 0x10000) / 0x400 + 0xD800);
 				text += '\\';
 				text += 'u';
-				sprintf(digit, "%d", utf16);
+				snprintf(digit, sizeof(digit), "%d", utf16);
 				text += digit;
 				text += '?';
 				utf16 = (signed short)((ch - 0x10000) % 0x400 + 0xDC00);
 				text += '\\';
 				text += 'u';
-				sprintf(digit, "%d", utf16);
+				snprintf(digit, sizeof(digit), "%d", utf16);
 				text += digit;
 				text += '?';
 			}

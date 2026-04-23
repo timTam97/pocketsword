@@ -68,7 +68,7 @@ char GreekLexAttribs::processText(SWBuf &text, const SWKey *key, const SWModule 
 									for (unsigned int i = 0; from[i] != '\"' && i < 127; i++)
 										*valto++ = from[i];
 									*valto = 0;
-									sprintf(wordstr, "%03d", number+1);
+									snprintf(wordstr, sizeof(wordstr), "%03d", number+1);
 									module->getEntryAttributes()["AVPhrase"][wordstr]["CompoundedWith"] = val;
 									from += strlen(val);
 								}
@@ -83,7 +83,7 @@ char GreekLexAttribs::processText(SWBuf &text, const SWKey *key, const SWModule 
 						freq = "";
 						freq.append(currentPhrase, (int)(from - currentPhrase));
 						if ((freq.length() > 0) && (phrase.length() > 0)) {
-							sprintf(wordstr, "%03d", ++number);
+							snprintf(wordstr, sizeof(wordstr), "%03d", ++number);
 							if ((strchr(phrase.c_str(), '(') > phrase.c_str()) && (strchr(phrase.c_str(), ')') > phrase.c_str() + 1)) {
 								string tmp = phrase.substr(0, phrase.find_first_of("("));
 								phrase.erase(phrase.find_first_of("("), 1);

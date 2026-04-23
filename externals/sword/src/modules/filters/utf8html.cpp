@@ -73,7 +73,7 @@ char UTF8HTML::processText(SWBuf &text, const SWKey *key, const SWModule *module
           from += subsequent;
           text += '&';
           text += '#';
-	  sprintf(digit, "%ld", ch);
+	  snprintf(digit, sizeof(digit), "%ld", ch);
 		for (char *dig = digit; *dig; dig++)
 			text += *dig;
 		text += ';';

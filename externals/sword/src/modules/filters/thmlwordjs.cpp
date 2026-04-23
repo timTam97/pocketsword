@@ -103,7 +103,7 @@ char ThMLWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 					*valto = 0;
 					if (atoi((!isdigit(*val))?val+1:val) < 5627) {
 						// normal strongs number
-						sprintf(wordstr, "%03d", word++);
+						snprintf(wordstr, sizeof(wordstr), "%03d", word++);
 						needWordOut = (word > 2);
 						wordAttrs = &(module->getEntryAttributes()["Word"][wordstr]);
 						(*wordAttrs)["Strongs"] = val;
@@ -152,7 +152,7 @@ char ThMLWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 				text += '>';
 				if (needWordOut) {
 					char wstr[11];
-					sprintf(wstr, "%03d", word-2);
+					snprintf(wstr, sizeof(wstr), "%03d", word-2);
 					AttributeValue *wAttrs = &(module->getEntryAttributes()["Word"][wstr]);
 					needWordOut = false;
 					SWBuf strong = (*wAttrs)["Strongs"];
@@ -249,7 +249,7 @@ char ThMLWordJS::processText(SWBuf &text, const SWKey *key, const SWModule *modu
 		}
 
 		char wstr[11];
-		sprintf(wstr, "%03d", word-1);
+		snprintf(wstr, sizeof(wstr), "%03d", word-1);
 		AttributeValue *wAttrs = &(module->getEntryAttributes()["Word"][wstr]);
 		needWordOut = false;
 		SWBuf strong = (*wAttrs)["Strongs"];

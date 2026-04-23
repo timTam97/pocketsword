@@ -22,8 +22,9 @@
 @synthesize listType, modulesListTable;
 
 - (void)loadView {
-	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
-	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	CGRect screenBounds = [PSResizing mainScreenBounds];
+	CGFloat viewWidth = screenBounds.size.width;
+	CGFloat viewHeight = screenBounds.size.height;
 
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	baseView.backgroundColor = [UIColor systemBackgroundColor];

@@ -111,7 +111,7 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 					SWBuf lemmaClass = "";
 
 					const char *attrib;
-					sprintf(wordstr, "%03d", wordNum);
+					snprintf(wordstr, sizeof(wordstr), "%03d", wordNum);
 
 					// why is morph entry attribute processing done in here?  Well, it's faster.  It makes more local sense to place this code in osismorph.
 					// easier to keep lemma and morph in same wordstr number too maybe.
@@ -265,7 +265,7 @@ char OSISStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 					if (wordStart) {
 						SWBuf tmp;
 						tmp.append(wordStart, (from-wordStart)-3);
-						sprintf(wordstr, "%03d", wordNum-1);
+						snprintf(wordstr, sizeof(wordstr), "%03d", wordNum-1);
 						module->getEntryAttributes()["Word"][wordstr]["Text"] = tmp;
 					}
 				}

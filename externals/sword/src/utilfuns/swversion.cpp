@@ -92,13 +92,13 @@ const char *SWVersion::getText() const {
 	if (minor > -1) {
 		if (minor2 > -1) {
 			if (minor3 > -1) {
-				sprintf(buf, "%d.%d.%d.%d", major, minor, minor2, minor3);
+				snprintf(buf, sizeof(buf), "%d.%d.%d.%d", major, minor, minor2, minor3);
 			}
-			else	sprintf(buf, "%d.%d.%d", major, minor, minor2);
+			else	snprintf(buf, sizeof(buf), "%d.%d.%d", major, minor, minor2);
 		}
-		else	sprintf(buf, "%d.%d", major, minor);
+		else	snprintf(buf, sizeof(buf), "%d.%d", major, minor);
 	}
-	else	sprintf(buf, "%d", major);
+	else	snprintf(buf, sizeof(buf), "%d", major);
 
 	return buf;
 }

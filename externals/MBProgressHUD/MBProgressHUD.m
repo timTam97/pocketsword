@@ -372,16 +372,8 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
             // Update to indeterminate indicator
             UIActivityIndicatorView *activityIndicator;
             [indicator removeFromSuperview];
-#if !TARGET_OS_MACCATALYST
-            if (@available(iOS 13.0, tvOS 13.0, *)) {
-#endif
-                activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
-                activityIndicator.color = [UIColor whiteColor];
-#if !TARGET_OS_MACCATALYST
-            } else {
-               activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-            }
-#endif
+            activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+            activityIndicator.color = [UIColor whiteColor];
             [activityIndicator startAnimating];
             indicator = activityIndicator;
             [self.bezelView addSubview:indicator];
@@ -739,19 +731,12 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 #pragma mark - Notifications
 
 - (void)registerForNotifications {
-#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-
-    [nc addObserver:self selector:@selector(statusBarOrientationDidChange:)
-               name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-#endif
+    // Rotation handling is driven by the hosting view controller's
+    // viewWillTransitionToSize:withTransitionCoordinator: and autoresizing
+    // from the superview — no status-bar orientation observer needed.
 }
 
 - (void)unregisterFromNotifications {
-#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc removeObserver:self name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-#endif
 }
 
 #if !TARGET_OS_TV && !TARGET_OS_MACCATALYST

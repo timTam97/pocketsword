@@ -90,7 +90,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 					*valto = 0;
 					if (atoi((!isdigit(*val))?val+1:val) < 5627) {
 						// normal strongs number
-						sprintf(wordstr, "%03d", word);
+						snprintf(wordstr, sizeof(wordstr), "%03d", word);
 						module->getEntryAttributes()["Word"][wordstr]["PartCount"] = "1";
 						module->getEntryAttributes()["Word"][wordstr]["Lemma"] = val;
 						module->getEntryAttributes()["Word"][wordstr]["LemmaClass"] = "strong";
@@ -104,7 +104,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 					else {
 /*
 						// verb morph
-						sprintf(wordstr, "%03d", word);
+						snprintf(wordstr, sizeof(wordstr), "%03d", word);
 						module->getEntryAttributes()["Word"][wordstr]["Morph"] = val;
 						module->getEntryAttributes()["Word"][wordstr]["MorphClass"] = "OLBMorph";
 						module->getEntryAttributes()["Word"][wordstr]["Morph.1"] = val;
@@ -132,7 +132,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 							for (unsigned int i = 7; ch[i] != '\"' && i < 127; i++)
 								*valto++ = ch[i];
 							*valto = 0;
-							sprintf(wordstr, "%03d", word-1);
+							snprintf(wordstr, sizeof(wordstr), "%03d", word-1);
 							if ((!stricmp(val, "Robinsons")) || (!stricmp(val, "Robinson"))) {
 								strcpy(val, "robinson");
 							}
@@ -144,7 +144,7 @@ char ThMLStrongs::processText(SWBuf &text, const SWKey *key, const SWModule *mod
 							for (unsigned int i = 7; ch[i] != '\"' && i < 127; i++)
 								*valto++ = ch[i];
 							*valto = 0;
-							sprintf(wordstr, "%03d", word-1);
+							snprintf(wordstr, sizeof(wordstr), "%03d", word-1);
 							module->getEntryAttributes()["Word"][wordstr]["Morph"] = val;
 							module->getEntryAttributes()["Word"][wordstr]["Morph.1"] = val;
 						}

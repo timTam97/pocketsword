@@ -7,6 +7,7 @@
 //
 
 #import "PSDictionaryOverlayViewController.h"
+#import "PSResizing.h"
 #import "globals.h"
 
 
@@ -16,7 +17,7 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
-	grayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
+	grayView = [[UIView alloc] initWithFrame:[PSResizing mainScreenBounds]];
 	grayView.backgroundColor = [UIColor systemBackgroundColor];
 	grayView.alpha = 0.5;
 	self.view = grayView;

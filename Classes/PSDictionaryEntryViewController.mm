@@ -22,7 +22,7 @@
 @synthesize entryHTML, entryTitle, dictionaryDescriptionWebView;
 
 - (void)loadView {
-	CGSize screen = [[UIScreen mainScreen] bounds].size;
+	CGSize screen = [PSResizing mainScreenBounds].size;
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screen.width, screen.height)];
 	baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

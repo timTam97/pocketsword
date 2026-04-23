@@ -47,7 +47,8 @@ SWORD_NAMESPACE_START
 RawGenBook::RawGenBook(const char *ipath, const char *iname, const char *idesc, SWDisplay *idisp, SWTextEncoding enc, SWTextDirection dir, SWTextMarkup mark, const char* ilang, const char *keyType)
 		: SWGenBook(iname, idesc, idisp, enc, dir, mark, ilang) {
 
-	char *buf = new char [ strlen (ipath) + 20 ];
+	size_t bufSize = strlen(ipath) + 20;
+	char *buf = new char [ bufSize ];
 
 	path = 0;
 	stdstr(&path, ipath);
@@ -62,7 +63,7 @@ RawGenBook::RawGenBook(const char *ipath, const char *iname, const char *idesc, 
 	key = createKey();
 
 
-	sprintf(buf, "%s.bdt", path);
+	snprintf(buf, bufSize, "%s.bdt", path);
 	bdtfd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::RDWR, true);
 
 	delete [] buf;
@@ -190,7 +191,8 @@ void RawGenBook::deleteEntry() {
 
 char RawGenBook::createModule(const char *ipath) {
 	char *path = 0;
-	char *buf = new char [ strlen (ipath) + 20 ];
+	size_t bufSize = strlen(ipath) + 20;
+	char *buf = new char [ bufSize ];
 	FileDesc *fd;
 	signed char retval;
 
@@ -199,7 +201,7 @@ char RawGenBook::createModule(const char *ipath) {
 	if ((path[strlen(path)-1] == '/') || (path[strlen(path)-1] == '\\'))
 		path[strlen(path)-1] = 0;
 
-	sprintf(buf, "%s.bdt", path);
+	snprintf(buf, bufSize, "%s.bdt", path);
 	FileMgr::removeFile(buf);
 	fd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd->getFd();

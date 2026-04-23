@@ -4,6 +4,7 @@
 //
 
 #import "PSModuleSearchController.h"
+#import "PSResizing.h"
 #import "SwordModuleTextEntry.h"
 #import "PSModuleController.h"
 #import "PSHistoryController.h"
@@ -76,7 +77,7 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 #pragma mark - View lifecycle
 
 - (void)loadView {
-	UIView *root = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+	UIView *root = [[UIView alloc] initWithFrame:[PSResizing mainScreenBounds]];
 	root.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	root.backgroundColor = [UIColor systemBackgroundColor];
 

@@ -509,8 +509,9 @@ void zStr::setText(const char *ikey, const char *buf, long len) {
 		idxfd->read(idxBytes, shiftSize);
 	}
 
-	outbuf = new char [ len + strlen(key) + 5 ];
-	sprintf(outbuf, "%s%c%c", key, 13, 10);
+	size_t outbufSize = len + strlen(key) + 5;
+	outbuf = new char [ outbufSize ];
+	snprintf(outbuf, outbufSize, "%s%c%c", key, 13, 10);
 	size = (SW_u32)strlen(outbuf);
 	if (len > 0) {	// NOT a link
 		if (!cacheBlock) {
@@ -580,8 +581,9 @@ void zStr::setText(const char *ikey, const char *buf, long len) {
  */
 
 void zStr::linkEntry(const char *destkey, const char *srckey) {
-	char *text = new char [ strlen(destkey) + 7 ];
-	sprintf(text, "@LINK %s", destkey);
+	size_t textSize = strlen(destkey) + 7;
+	char *text = new char [ textSize ];
+	snprintf(text, textSize, "@LINK %s", destkey);
 	setText(srckey, text);
 	delete [] text;
 }
@@ -662,7 +664,8 @@ void zStr::flushCache() const {
 
 signed char zStr::createModule(const char *ipath) {
 	char *path = 0;
-	char *buf = new char [ strlen (ipath) + 20 ];
+	size_t bufSize = strlen(ipath) + 20;
+	char *buf = new char [ bufSize ];
 	FileDesc *fd, *fd2;
 
 	stdstr(&path, ipath);
@@ -670,25 +673,25 @@ signed char zStr::createModule(const char *ipath) {
 	if ((path[strlen(path)-1] == '/') || (path[strlen(path)-1] == '\\'))
 		path[strlen(path)-1] = 0;
 
-	sprintf(buf, "%s.dat", path);
+	snprintf(buf, bufSize, "%s.dat", path);
 	FileMgr::removeFile(buf);
 	fd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd->getFd();
 	FileMgr::getSystemFileMgr()->close(fd);
 
-	sprintf(buf, "%s.idx", path);
+	snprintf(buf, bufSize, "%s.idx", path);
 	FileMgr::removeFile(buf);
 	fd2 = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd2->getFd();
 	FileMgr::getSystemFileMgr()->close(fd2);
 
-	sprintf(buf, "%s.zdt", path);
+	snprintf(buf, bufSize, "%s.zdt", path);
 	FileMgr::removeFile(buf);
 	fd2 = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd2->getFd();
 	FileMgr::getSystemFileMgr()->close(fd2);
 
-	sprintf(buf, "%s.zdx", path);
+	snprintf(buf, bufSize, "%s.zdx", path);
 	FileMgr::removeFile(buf);
 	fd2 = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd2->getFd();

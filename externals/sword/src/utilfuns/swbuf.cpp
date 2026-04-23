@@ -68,7 +68,7 @@ SWBuf &SWBuf::setFormattedVA(const char *format, va_list argptr) {
 	int len = vsnprintf(0, 0, format, argptr)+1;
 #endif
 	assureSize(len);
-	end = vsprintf(buf, format, argptr2) + buf;
+	end = vsnprintf(buf, len, format, argptr2) + buf;
 	va_end(argptr2);
 	return *this;
 }
@@ -91,7 +91,7 @@ SWBuf &SWBuf::appendFormatted(const char *format, ...) {
 	va_end(argptr);
 	assureMore(len);
 	va_start(argptr, format);
-	end += vsprintf(end, format, argptr);
+	end += vsnprintf(end, len, format, argptr);
 	va_end(argptr);
 	return *this;
 }

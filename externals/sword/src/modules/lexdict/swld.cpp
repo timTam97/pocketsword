@@ -151,7 +151,9 @@ void SWLD::strongsPad(char *buf)
 				subLet = toupper(*check);
 				*(check-(bang?1:0)) = 0;
 			}
-			sprintf(buf, prefix?"%.4d":"%.5d", atoi(buf));
+			char padded[16];
+			snprintf(padded, sizeof(padded), prefix?"%.4d":"%.5d", atoi(buf));
+			strcpy(buf, padded);
 			if (subLet) {
 				check = buf+(strlen(buf));
 				if (bang) {

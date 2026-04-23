@@ -38,12 +38,12 @@
 				
 	} else {
 		
-		CGRect screenRect = [[UIScreen mainScreen] bounds];
+		CGRect screenRect = [PSResizing mainScreenBounds];
 		aiFrame = CGRectMake((screenRect.size.width / 2.0f - (37.0f / 2.0f)), (screenRect.size.height / 2.0f - (37.0f / 2.0f)), 37, 37);
-		
+
 	}
-    
-    UIView *base = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+    UIView *base = [[UIView alloc] initWithFrame:[PSResizing mainScreenBounds]];
     base.backgroundColor = [UIColor colorWithHue:202.0f/360.0f saturation:0.11f brightness:0.4f alpha:1.0f];// the same grey as the launch image bg
 	UIActivityIndicatorView *activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
 	activityInd.hidesWhenStopped = NO;

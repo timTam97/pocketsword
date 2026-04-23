@@ -249,7 +249,8 @@ void RawVerse4::doLinkEntry(char testmt, long destidxoff, long srcidxoff) {
 char RawVerse4::createModule(const char *ipath, const char *v11n)
 {
 	char *path = 0;
-	char *buf = new char [ strlen (ipath) + 20 ];
+	size_t bufSize = strlen(ipath) + 20;
+	char *buf = new char [ bufSize ];
 	FileDesc *fd, *fd2;
 
 	stdstr(&path, ipath);
@@ -257,24 +258,24 @@ char RawVerse4::createModule(const char *ipath, const char *v11n)
 	if ((path[strlen(path)-1] == '/') || (path[strlen(path)-1] == '\\'))
 		path[strlen(path)-1] = 0;
 
-	sprintf(buf, "%s/ot", path);
+	snprintf(buf, bufSize, "%s/ot", path);
 	FileMgr::removeFile(buf);
 	fd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd->getFd();
 	FileMgr::getSystemFileMgr()->close(fd);
 
-	sprintf(buf, "%s/nt", path);
+	snprintf(buf, bufSize, "%s/nt", path);
 	FileMgr::removeFile(buf);
 	fd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd->getFd();
 	FileMgr::getSystemFileMgr()->close(fd);
 
-	sprintf(buf, "%s/ot.vss", path);
+	snprintf(buf, bufSize, "%s/ot.vss", path);
 	FileMgr::removeFile(buf);
 	fd = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd->getFd();
 
-	sprintf(buf, "%s/nt.vss", path);
+	snprintf(buf, bufSize, "%s/nt.vss", path);
 	FileMgr::removeFile(buf);
 	fd2 = FileMgr::getSystemFileMgr()->open(buf, FileMgr::CREAT|FileMgr::WRONLY, FileMgr::IREAD|FileMgr::IWRITE);
 	fd2->getFd();

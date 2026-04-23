@@ -11,6 +11,7 @@
 
 #import "PSAboutScreenController.h"
 #import "PSModuleController.h"
+#import "PSResizing.h"
 #import "globals.h"
 
 @implementation PSAboutScreenController
@@ -152,8 +153,9 @@
 }
 
 - (void)loadView {
-	CGFloat viewWidth = [[UIScreen mainScreen] bounds].size.width;
-	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
+	CGRect screenBounds = [PSResizing mainScreenBounds];
+	CGFloat viewWidth = screenBounds.size.width;
+	CGFloat viewHeight = screenBounds.size.height;
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	
@@ -334,7 +336,7 @@
     // Simulator thanks Jordan Breeding
     if ([platform hasSuffix:@"86"] || [platform isEqual:@"x86_64"])
     {
-        BOOL smallerScreen = [[UIScreen mainScreen] bounds].size.width < 768;
+        BOOL smallerScreen = [PSResizing mainScreenBounds].size.width < 768;
         return smallerScreen ? SIMULATOR_IPHONE_NAMESTRING : SIMULATOR_IPAD_NAMESTRING;
     }
 	
