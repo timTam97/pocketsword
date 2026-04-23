@@ -37,11 +37,7 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSAboutScreenController.h"
-
-#define INFO_LANDSCAPE_HEIGHT 100.0
-#define INFO_PORTRAIT_HEIGHT 160.0
-#define INFO_IPAD_LANDSCAPE_HEIGHT 200.0
-#define INFO_IPAD_PORTRAIT_HEIGHT 260.0
+#import "PSInfoPopupViewController.h"
 
 @implementation PSTabBarControllerDelegate
 
@@ -286,7 +282,10 @@
 				//restore the previous search term:
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
 				//[multiListController setSelectedViewController:searchNavigationController];
-			} else if(savedSearchHistoryItem && savedSearchHistoryItem.searchTerm) {
+			} else if(savedSearchHistoryItem && (savedSearchHistoryItem.searchTerm || savedSearchHistoryItem.searchTermToDisplay.length > 0)) {
+				// Strong's-popup-triggered searches arrive with only
+				// searchTermToDisplay + strongsSearch set — the FTS5
+				// expression is built later in setSearchHistoryItem:.
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
 				self.savedSearchHistoryItem = nil;
 				[multiListController setSelectedViewController:searchNavigationController];
@@ -298,6 +297,10 @@
 				//restore the previous search term:
 				[searchController setSearchHistoryItem:savedSearchHistoryItem];
 				//[multiListController setSelectedViewController:searchNavigationController];
+			} else if(savedSearchHistoryItem && (savedSearchHistoryItem.searchTerm || savedSearchHistoryItem.searchTermToDisplay.length > 0)) {
+				[searchController setSearchHistoryItem:savedSearchHistoryItem];
+				self.savedSearchHistoryItem = nil;
+				[multiListController setSelectedViewController:searchNavigationController];
 			}
 		}
 		
@@ -328,6 +331,10 @@
 	if(refNavigationController) {
 		refSelectorController = nil;
 		refNavigationController = nil;
+	}
+	if(infoPopupController &&
+	   presentationController.presentedViewController == infoPopupController) {
+		infoPopupController = nil;
 	}
 }
 
@@ -667,83 +674,6 @@
 	}
 }
 
-// Use this to show the modal view (pops-up from the bottom)
-// try a time of 0.7 to start with...
-+ (void) showModal:(UIView*)modalView withTiming:(float)time
-{
-	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-	
-	CGSize modalSize = modalView.bounds.size;
-	//CGPoint middleCenter = modalView.center;
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGFloat width, height;
-	width = offSize.width;
-	height = offSize.height;
-	CGPoint offScreenCenter = CGPointMake(width / 2.0f, height * 1.5f);
-	CGPoint middleCenter = CGPointMake(width / 2.0f, height - (modalSize.height / 2.0f));
-	modalView.center = offScreenCenter; // we start off-screen
-	[mainWindow addSubview:modalView];
-
-	// Show it with a transition effect
-	[UIView animateWithDuration:time animations:^{
-		modalView.center = middleCenter;
-	}];
-}
-
-- (void) showInfoModal:(UIView*)modalView withTiming:(float)time
-{
-	UIWindow* mainWindow = (((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window);
-
-	CGSize modalSize = modalView.bounds.size;
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGFloat width = offSize.width;
-	CGFloat height = offSize.height;
-	CGPoint offScreenCenter = CGPointMake(width / 2.0, height * 1.5);
-	CGPoint middleCenter = CGPointMake(modalSize.width / 2.0, height - (modalSize.height / 2.0));
-	modalView.center = offScreenCenter; // we start off-screen
-	[mainWindow addSubview:modalView];
-
-	// Show it with a transition effect
-	[UIView animateWithDuration:time animations:^{
-		modalView.center = middleCenter;
-	}];
-}
-
-// Use this to slide the semi-modal view back down.
-+ (void) hideModal:(UIView*) modalView withTiming:(float)time
-{
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	[UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-		modalView.center = offScreenCenter;
-	} completion:^(BOOL finished) {
-		[modalView removeFromSuperview];
-	}];
-}
-
-- (void) hideInfoModal:(UIView*) modalView withTiming:(float)time
-{
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	[UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-		modalView.center = offScreenCenter;
-	} completion:^(BOOL finished) {
-		[modalView removeFromSuperview];
-	}];
-}
-
-// Use this to slide the semi-modal view back down.
-+ (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time
-{
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
-	CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.5);
-	[UIView animateWithDuration:time delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-		modalView.center = offScreenCenter;
-	} completion:^(BOOL finished) {
-		[modalView removeFromSuperview];
-	}];
-}
-
 - (void)highlightSearchTerm:(NSString*)term forTab:(ShownTab)tab {
 	switch(tab) {
 		case BibleTab:
@@ -767,63 +697,49 @@
 }
 
 - (void)showInfo:(NSString *)infoString {
-	if(![infoView superview]) {
-		//need to show the info pane
-		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		
-		infoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screen.width, INFO_PORTRAIT_HEIGHT)];
-		infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		UIImageView *infoTopBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"popup-top-bar.png"]];
-		infoTopBar.backgroundColor = [UIColor darkGrayColor];
-		if([infoTopBar respondsToSelector:@selector(tintColor)]) {
-			infoTopBar.image = nil;
-			infoTopBar.alpha = 0.99f;
-		}
-		infoTopBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		infoTopBar.frame = CGRectMake(0, 0, screen.width, 20);
-		[infoView addSubview:infoTopBar];
-		UIButton *closeImgButton = [UIButton buttonWithType:UIButtonTypeSystem];
-		closeImgButton.tintColor = [UIColor whiteColor];
-		[closeImgButton setImage:[UIImage imageNamed:@"popup-down-button.png"] forState:UIControlStateNormal];
-		closeImgButton.frame = CGRectMake(10, 0, 20, 20);
-		[closeImgButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
-		[infoView addSubview:closeImgButton];
-		UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		clearButton.frame = CGRectMake(0, 0, 40, 25);
-		[clearButton addTarget:self action:@selector(hideInfo) forControlEvents:UIControlEventTouchUpInside];
-		[infoView addSubview:clearButton];
-		infoWebView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, screen.width, (INFO_PORTRAIT_HEIGHT - 20)) configuration:[[WKWebViewConfiguration alloc] init]];
-		infoWebView.navigationDelegate = self;
-		infoWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		infoWebView.backgroundColor = ([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference] ? [UIColor blackColor] : [UIColor whiteColor]);
-		[infoView addSubview:infoWebView];
-		
-		
-		BOOL deviceIsPad = [PSResizing iPad];
-		infoView.transform = CGAffineTransformIdentity;
-		infoView.frame = CGRectMake(0, 0, screen.width, ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT));
-		[self showInfoModal: infoView withTiming: 0.3];
+	if(infoPopupController && infoPopupController.presentingViewController) {
+		// Already on screen — just swap the HTML, don't re-present.
+		[infoPopupController loadHTML:infoString];
+		return;
 	}
-	
-	[infoWebView loadHTMLString: infoString baseURL: nil];
-	
+
+	PSInfoPopupViewController *popup = [[PSInfoPopupViewController alloc] init];
+	// Force the view hierarchy to build so we can wire up the nav delegate
+	// before presentation — WKWebView needs to exist before we assign it.
+	[popup view];
+	popup.webView.navigationDelegate = self;
+
+	popup.modalPresentationStyle = UIModalPresentationPageSheet;
+	popup.presentationController.delegate = self;
+
+	UISheetPresentationController *sheet = popup.sheetPresentationController;
+	if(sheet) {
+		sheet.detents = @[
+			[UISheetPresentationControllerDetent mediumDetent],
+			[UISheetPresentationControllerDetent largeDetent],
+		];
+		sheet.prefersGrabberVisible = YES;
+		// Dim the background at every detent — night-mode black-on-black
+		// left the popup indistinguishable from the chapter.
+		sheet.prefersScrollingExpandsWhenScrolledToEdge = NO;
+	}
+
+	self->infoPopupController = popup;
+	[popup loadHTML:infoString];
+	[tabBarController presentViewController:popup animated:YES completion:nil];
 }
 
 - (void)rotateInfo:(NSNotification *)notification {
-	if([infoView superview]) {//only rotate if it's displayed!
-		CGSize screen = [[UIScreen mainScreen] bounds].size;
-		BOOL deviceIsPad = [PSResizing iPad];
-		CGFloat info_portrait_height = ((deviceIsPad) ? INFO_IPAD_PORTRAIT_HEIGHT : INFO_PORTRAIT_HEIGHT);
-		[UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-			self->infoView.transform = CGAffineTransformIdentity;
-			self->infoView.frame = CGRectMake(0, (screen.height - info_portrait_height), screen.width, info_portrait_height);
-		} completion:nil];
-	}
+	// The sheet presentation controller handles rotation natively; nothing
+	// to do here. Kept as a no-op so existing NotificationRotateInfoPane
+	// posts remain valid.
 }
 
 - (void)hideInfo {
-	[self hideInfoModal: infoView withTiming: 0.3];
-	infoView = nil;
+	if(!infoPopupController) return;
+	PSInfoPopupViewController *popup = infoPopupController;
+	infoPopupController = nil;
+	[popup dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {

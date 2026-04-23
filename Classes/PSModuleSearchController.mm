@@ -156,9 +156,6 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 	BOOL hasIndex = mod ? [mod hasSearchIndex] : NO;
 	if(mod && !hasIndex) {
 		[self offerToBuildIndexForModule:mod];
-	} else {
-		searchingEnabled = YES;
-		[self refreshView];
 	}
 }
 
@@ -167,6 +164,12 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 	if(self.searchTermToDisplay) {
 		self.searchController.searchBar.text = self.searchTermToDisplay;
 	}
+
+	// Decide searchingEnabled before the first draw so the table header
+	// doesn't flash "No search index" for a module that already has one.
+	SwordModule *mod = [self activeModule];
+	searchingEnabled = (mod && [mod hasSearchIndex]);
+
 	[self refreshView];
 
 	if(self.searchTerm) {
@@ -463,6 +466,17 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 - (void)runSearchForCurrentText {
 	NSString *raw = self.searchController.searchBar.text;
 	self.searchTermToDisplay = raw;
+
+	// Strong's mode is sticky — it gets restored from the saved history
+	// item after a "Find all occurrences" popup even if the user then
+	// types a plain word. Auto-disable when the current text contains no
+	// Strong's-shaped tokens; otherwise plain queries hit the lemmas
+	// column and return zero results.
+	if(self.strongsSearch && ![[self class] inputLooksLikeStrongs:raw]) {
+		self.strongsSearch = NO;
+		[self rebuildOptionsMenu];
+	}
+
 	NSString *expr = [PSSearchQuery fts5ExpressionFromUserInput:raw
 													  matchType:self.searchType
 														  fuzzy:self.fuzzySearch
@@ -473,6 +487,24 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 		return;
 	}
 	[self runSearchWithExpression:expr];
+}
+
++ (BOOL)inputLooksLikeStrongs:(NSString *)raw {
+	NSString *trimmed = [raw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if(trimmed.length == 0) return NO;
+	NSArray<NSString *> *parts = [trimmed componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+	for(NSString *tok in parts) {
+		if(tok.length < 2) continue;
+		unichar p = [tok characterAtIndex:0];
+		if(p != 'H' && p != 'G' && p != 'h' && p != 'g') continue;
+		BOOL allDigits = YES;
+		for(NSUInteger i = 1; i < tok.length; ++i) {
+			unichar c = [tok characterAtIndex:i];
+			if(c < '0' || c > '9') { allDigits = NO; break; }
+		}
+		if(allDigits) return YES;
+	}
+	return NO;
 }
 
 - (void)runSearchWithExpression:(NSString *)expression {

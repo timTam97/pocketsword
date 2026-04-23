@@ -22,6 +22,8 @@
 #import "PSModuleSearchController.h"
 #import "PSDictionaryViewController.h"
 
+@class PSInfoPopupViewController;
+
 #ifdef __cplusplus
 #include <swmgr.h>
 #include <swmodule.h>
@@ -50,7 +52,7 @@ typedef enum {
 	NoViewPoll = 3
 } PollingType;
 
-@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSModuleSearchControllerDelegate, UIPopoverPresentationControllerDelegate, WKNavigationDelegate, PSDictionaryViewControllerDelegate> {
+@interface PSTabBarControllerDelegate : NSObject <UITabBarControllerDelegate, PSModuleSearchControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate, WKNavigationDelegate, PSDictionaryViewControllerDelegate> {
 	// Tab bar
 	UITabBarController IBOutlet         *tabBarController;
 
@@ -65,10 +67,9 @@ typedef enum {
 	UINavigationController				*refNavigationController;
 	UIView								*refTitleSplashView;
 	NSTimer								*refTitleSplashTimer;
-	// infoView
-	UIView								*infoView;
-	WKWebView							*infoWebView;
-	
+	// Info popup (Strong's, morph, footnotes, xrefs, dict entries).
+	PSInfoPopupViewController			*infoPopupController;
+
 
 	// MultiList
 	UITabBarController					*multiListController;
@@ -91,10 +92,6 @@ typedef enum {
 @property (strong) PSBibleViewController			*bibleTabController;
 @property (strong) PSCommentaryViewController		*commentaryTabController;
 @property (strong) UITabBarController				*tabBarController;
-
-+ (void) showModal:(UIView*)modalView withTiming:(float)time;
-+ (void) hideModal:(UIView*) modalView withTiming:(float)time;
-+ (void) hideModalAndRelease:(UIView*) modalView withTiming:(float)time;
 
 + (void)displayTitle:(NSString*)title;
 
@@ -136,8 +133,6 @@ typedef enum {
 - (void)showInfo:(NSString *)infoString;
 - (void)rotateInfo:(NSNotification *)notification;
 - (void)hideInfo;
-- (void) showInfoModal:(UIView*)modalView withTiming:(float)time;
-- (void) hideInfoModal:(UIView*) modalView withTiming:(float)time;
 - (void)displayCommentaryTabViaNotification;
 - (void)displayBibleTabViaNotification;
 
