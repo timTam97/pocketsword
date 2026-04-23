@@ -7,22 +7,18 @@
 //
 
 #import "globals.h"
-#import "MBProgressHUD.h"
 
 @class SwordModule;
 
-@interface PSModuleSelectorController : UIViewController <MBProgressHUDDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface PSModuleSelectorController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
 	ShownTab				listType;
 
 	UITableView				*modulesListTable;
-	UIToolbar				*modulesToolbar;
 }
 
 @property (assign) ShownTab listType;
 @property (strong) UITableView *modulesListTable;
-@property (strong) UIToolbar *modulesToolbar;
 
-- (void)addButtonsToToolbar:(BOOL)animated;
 - (void)dismissModuleSelector;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
 

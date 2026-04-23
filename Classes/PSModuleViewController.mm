@@ -278,8 +278,11 @@
 
 - (void)setModuleNameViaNotification {
 	@autoreleasepool {
-		SwordModule *module;
-		module = (tabType == BibleTab) ? [[PSModuleController defaultModuleController] primaryBible] : [[PSModuleController defaultModuleController] primaryCommentary];
+		if(tabType == BibleTab) {
+			[self rebuildBibleSettingsMenu];
+			return;
+		}
+		SwordModule *module = [[PSModuleController defaultModuleController] primaryCommentary];
 		if(module) {
 			NSUInteger i = ([[module name] length] > 5) ? 5 : [[module name] length];
 			NSString *newTitle = ([[module name] length] > i) ? [NSString stringWithFormat:@"%@..", [[module name] substringToIndex:i]] : [[module name] substringToIndex:i];
@@ -293,6 +296,62 @@
 	}
 }
 
+- (void)rebuildBibleSettingsMenu {
+	SwordModule *bible = [[PSModuleController defaultModuleController] primaryBible];
+	NSString *modName = [bible name];
+	if(!modName) {
+		self.moduleButton.menu = nil;
+		return;
+	}
+
+	__weak PSModuleViewController *weakSelf = self;
+	NSMutableArray<UIMenuElement *> *topLevel = [NSMutableArray array];
+
+	BOOL hasStrongs = [bible hasFeature:SWMOD_FEATURE_STRONGS] || [bible hasFeature:SWMOD_CONF_FEATURE_STRONGS];
+	if(hasStrongs) {
+		UIAction *strongsToggle = [UIAction
+			actionWithTitle:NSLocalizedString(@"PreferencesStrongsPreferencesTitle", @"Strong's Numbers")
+					  image:nil
+				 identifier:@"bible.strongs"
+					handler:^(UIAction *a) {
+						NSString *mName = [[[PSModuleController defaultModuleController] primaryBible] name];
+						BOOL current = GetBoolPrefForMod(DefaultsStrongsPreference, mName);
+						SetBoolPrefForMod(!current, DefaultsStrongsPreference, mName);
+						[[NSUserDefaults standardUserDefaults] synchronize];
+						[[PSModuleController defaultModuleController] setPreferences];
+						[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+						[weakSelf rebuildBibleSettingsMenu];
+					}];
+		strongsToggle.state = GetBoolPrefForMod(DefaultsStrongsPreference, modName) ? UIMenuElementStateOn : UIMenuElementStateOff;
+		[topLevel addObject:[UIMenu menuWithTitle:@""
+											image:nil
+									   identifier:@"bible.strongsGroup"
+										  options:UIMenuOptionsDisplayInline
+										 children:@[strongsToggle]]];
+	}
+
+	UIAction *vplToggle = [UIAction
+		actionWithTitle:NSLocalizedString(@"PreferencesVPLTitle", @"Verse Per Line")
+				  image:nil
+			 identifier:@"bible.vpl"
+				handler:^(UIAction *a) {
+					NSString *mName = [[[PSModuleController defaultModuleController] primaryBible] name];
+					BOOL current = GetBoolPrefForMod(DefaultsVPLPreference, mName);
+					SetBoolPrefForMod(!current, DefaultsVPLPreference, mName);
+					[[NSUserDefaults standardUserDefaults] synchronize];
+					[[NSNotificationCenter defaultCenter] postNotificationName:NotificationRedisplayPrimaryBible object:nil];
+					[weakSelf rebuildBibleSettingsMenu];
+				}];
+	vplToggle.state = GetBoolPrefForMod(DefaultsVPLPreference, modName) ? UIMenuElementStateOn : UIMenuElementStateOff;
+	[topLevel addObject:[UIMenu menuWithTitle:@""
+										image:nil
+								   identifier:@"bible.vplGroup"
+									  options:UIMenuOptionsDisplayInline
+									 children:@[vplToggle]]];
+
+	self.moduleButton.menu = [UIMenu menuWithTitle:@"" children:topLevel];
+}
+
 - (PSTabBarControllerDelegate*)delegate {
 	return delegate;
 }
@@ -302,11 +361,24 @@
 	UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"history.png"] style:UIBarButtonItemStylePlain target:vc action:@selector(toggleMultiList:)];
 	searchButton.accessibilityLabel = NSLocalizedString(@"VoiceOverHistoryAndSearchButton", @"");
 	self.navigationItem.leftBarButtonItem = searchButton;
-	
-	UIBarButtonItem *switchModuleButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"None" style:UIBarButtonItemStylePlain target:vc action:@selector(toggleModulesListFromButton:)];
-	self.navigationItem.rightBarButtonItem = switchModuleButtonItem;
-	self.moduleButton = switchModuleButtonItem;
-	[self setModuleNameViaNotification];
+
+	UIBarButtonItem *rightButton;
+	if(tabType == BibleTab) {
+		rightButton = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"textformat"]
+													   style:UIBarButtonItemStylePlain
+													  target:nil
+													  action:nil];
+		self.moduleButton = rightButton;
+		[self rebuildBibleSettingsMenu];
+	} else {
+		rightButton = [[UIBarButtonItem alloc] initWithTitle:@"None"
+													   style:UIBarButtonItemStylePlain
+													  target:vc
+													  action:@selector(toggleModulesListFromButton:)];
+		self.moduleButton = rightButton;
+		[self setModuleNameViaNotification];
+	}
+	self.navigationItem.rightBarButtonItem = rightButton;
 	delegate = vc;
 }
 

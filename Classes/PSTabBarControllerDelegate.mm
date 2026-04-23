@@ -299,9 +299,7 @@
 		UINavigationController *modSelectorNavController = [[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController];
 
 		//set the module selector to use the correct module type.
-		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
-			[moduleSelectorViewController setListType:BibleTab];
-		} else if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
+		if([[commentaryTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
 			[moduleSelectorViewController setListType:CommentaryTab];
 		} else {
 			[moduleSelectorViewController setListType:DictionaryTab];
