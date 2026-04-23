@@ -206,6 +206,25 @@ static NSString *PSAlternateHebrewForm(NSString *s) {
 	return [atoms componentsJoinedByString:joiner];
 }
 
++ (NSArray<NSString *> *)strongsTokensFromUserInput:(NSString *)raw {
+	if(raw.length == 0) return @[];
+	NSString *trimmed = [raw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if(trimmed.length == 0) return @[];
+	NSArray<NSString *> *parts = [trimmed componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+	NSMutableArray<NSString *> *out = [NSMutableArray array];
+	NSMutableSet<NSString *> *seen = [NSMutableSet set];
+	for(NSString *tok in parts) {
+		if(tok.length == 0) continue;
+		char prefix = 0;
+		if(!PSIsStrongsNumber(tok, &prefix)) continue;
+		NSString *upper = [NSString stringWithFormat:@"%c%@", prefix, [tok substringFromIndex:1]];
+		if(![seen containsObject:upper]) { [seen addObject:upper]; [out addObject:upper]; }
+		NSString *alt = PSAlternateHebrewForm(upper);
+		if(alt && ![seen containsObject:alt]) { [seen addObject:alt]; [out addObject:alt]; }
+	}
+	return out;
+}
+
 // Produce a bareword suitable for FTS5 prefix syntax (`word*`). Strips
 // any character that isn't a unicode letter or digit; if the result is
 // empty we fall back to a quoted phrase.

@@ -16,7 +16,7 @@ NSString * const PSSearchEngineErrorDomain = @"PSSearchEngineErrorDomain";
 NSString * const PSSearchHighlightOpen     = @"[[HL]]";
 NSString * const PSSearchHighlightClose    = @"[[/HL]]";
 
-const int PSSearchSchemaVersion = 1;
+const int PSSearchSchemaVersion = 3;
 
 @interface PSSearchEngine () {
 	sqlite3 *_db;
@@ -168,6 +168,9 @@ const int PSSearchSchemaVersion = 1;
 	// is indexed so snippet() can highlight against readable text;
 	// `text_norm` holds diacritic-folded text for recall; `lemmas` holds
 	// Strong's numbers in both H0xxx and Hxxx forms, space-separated.
+	// `word_map` is UNINDEXED per-verse metadata: one line per scripture
+	// word, surface form TAB lemma1 lemma2 ..., used at query time to
+	// recover which English word(s) a Strong's match lit up.
 	NSString *createFts =
 		@"CREATE VIRTUAL TABLE IF NOT EXISTS verses USING fts5("
 		@"  reference UNINDEXED,"
@@ -176,6 +179,7 @@ const int PSSearchSchemaVersion = 1;
 		@"  text_plain,"
 		@"  text_norm,"
 		@"  lemmas,"
+		@"  word_map UNINDEXED,"
 		@"  tokenize='unicode61 remove_diacritics 2'"
 		@");";
 	return [self execSQL:createFts error:err];
@@ -251,6 +255,36 @@ static NSString *PSFoldForIndex(NSString *s) {
 	return [[out precomposedStringWithCanonicalMapping] lowercaseString];
 }
 
+// When SWORD's global Strong's-display option is ON, stripText() returns verse
+// text with Strong's and morph markers interleaved inline — e.g. "And God
+// <H0430> divided <H0996> <H0914> the light". These markers are unreadable in
+// search results, so strip any `<[A-Z]+\d+[A-Z0-9-]*>` token (Strong's: H0430,
+// G3056; morph: TH8799, TG5707). Also drop SWORD's `" [] "` empty-tag marker
+// and collapse any whitespace left behind.
+static NSString *PSCleanDisplayText(NSString *plain) {
+	if(plain.length == 0) return @"";
+	static NSRegularExpression *markerRe;
+	static NSRegularExpression *wsRe;
+	static dispatch_once_t once;
+	dispatch_once(&once, ^{
+		markerRe = [NSRegularExpression regularExpressionWithPattern:@"<[A-Z][A-Z0-9]*\\d[A-Z0-9-]*>"
+															 options:0 error:NULL];
+		wsRe = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:NULL];
+	});
+	NSMutableString *out = [plain mutableCopy];
+	if(markerRe) {
+		[markerRe replaceMatchesInString:out options:0
+								   range:NSMakeRange(0, out.length) withTemplate:@" "];
+	}
+	[out replaceOccurrencesOfString:@" [] " withString:@" "
+							options:0 range:NSMakeRange(0, out.length)];
+	if(wsRe) {
+		[wsRe replaceMatchesInString:out options:0
+							   range:NSMakeRange(0, out.length) withTemplate:@" "];
+	}
+	return [out stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
 // Extract the space-separated lemma string for the current verse position on
 // swModule. Each `H`-prefixed Strong's number is emitted in BOTH forms (e.g.
 // "H430 H0430") so either input spelling hits. Greek lemmas ("G25", etc.) are
@@ -287,6 +321,57 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 				}
 			}
 		}
+	}
+	return out;
+}
+
+// Emit per-verse word→lemmas map, one line per Word entry:
+//   <surface text>\t<lemma1> <lemma2> ...
+// Lemmas include BOTH H-forms (H0430 and H430) to match PSLemmasForCurrentVerse
+// and the query builder, so either spelling the user types resolves correctly.
+// Entries with no surface text (SWORD occasionally emits empty Word slots) are
+// skipped. Tabs/newlines in surface text are replaced with spaces to protect
+// the line/column delimiters we control.
+static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
+	NSMutableString *out = [NSMutableString string];
+	sword::AttributeList &words = swModule->getEntryAttributes()["Word"];
+	for(sword::AttributeList::iterator it = words.begin(); it != words.end(); ++it) {
+		const char *textCStr = it->second["Text"].c_str();
+		if(!textCStr || !*textCStr) continue;
+		NSString *surface = [NSString stringWithUTF8String:textCStr];
+		if(!surface) continue;
+		surface = [surface stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		if(surface.length == 0) continue;
+		surface = [surface stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
+		surface = [surface stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+
+		NSMutableArray<NSString *> *lemmas = [NSMutableArray array];
+		int parts = atoi(it->second["PartCount"].c_str());
+		if(parts < 1) parts = 1;
+		for(int i = 1; i <= parts; ++i) {
+			sword::SWBuf key = (parts == 1) ? "Lemma" : sword::SWBuf().setFormatted("Lemma.%d", i);
+			sword::AttributeValue::iterator li = it->second.find(key);
+			if(li == it->second.end()) continue;
+			const char *lemmaCStr = li->second.c_str();
+			if(!lemmaCStr || !*lemmaCStr) continue;
+			const char *colon = strrchr(lemmaCStr, ':');
+			const char *token = colon ? (colon + 1) : lemmaCStr;
+			if(!*token) continue;
+			NSString *t = [NSString stringWithUTF8String:token];
+			if(t.length == 0) continue;
+			[lemmas addObject:t];
+			if(t.length >= 2 && [t characterAtIndex:0] == 'H') {
+				if([t characterAtIndex:1] == '0') {
+					[lemmas addObject:[@"H" stringByAppendingString:[t substringFromIndex:2]]];
+				} else {
+					[lemmas addObject:[@"H0" stringByAppendingString:[t substringFromIndex:1]]];
+				}
+			}
+		}
+		if(lemmas.count == 0) continue;
+
+		if(out.length > 0) [out appendString:@"\n"];
+		[out appendFormat:@"%@\t%@", surface, [lemmas componentsJoinedByString:@" "]];
 	}
 	return out;
 }
@@ -345,8 +430,8 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 
 	sqlite3_stmt *stmt = NULL;
 	const char *insertSQL =
-		"INSERT INTO verses (reference, book_osis, testament, text_plain, text_norm, lemmas) "
-		"VALUES (?, ?, ?, ?, ?, ?);";
+		"INSERT INTO verses (reference, book_osis, testament, text_plain, text_norm, lemmas, word_map) "
+		"VALUES (?, ?, ?, ?, ?, ?, ?);";
 	if(sqlite3_prepare_v2(_db, insertSQL, -1, &stmt, NULL) != SQLITE_OK) {
 		NSString *msg = [NSString stringWithUTF8String:sqlite3_errmsg(_db)];
 		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:sqlite3_errcode(_db)
@@ -367,8 +452,12 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 		// (the lemmas live there). Must be called before PSLemmasForCurrentVerse.
 		const char *plainC = swModule->stripText();
 		if(!plainC) plainC = "";
-		NSString *plain = [NSString stringWithUTF8String:plainC];
-		if(!plain) plain = [NSString stringWithCString:plainC encoding:NSISOLatin1StringEncoding] ?: @"";
+		NSString *rawPlain = [NSString stringWithUTF8String:plainC];
+		if(!rawPlain) rawPlain = [NSString stringWithCString:plainC encoding:NSISOLatin1StringEncoding] ?: @"";
+		// Strip Strong's / morph markers that SWORD interleaves inline when
+		// the global Strong's-display option is ON. Must run before norm/
+		// lemma extraction so search results render cleanly.
+		NSString *plain = PSCleanDisplayText(rawPlain);
 
 		if(plain.length > 0) {
 			const char *refC       = modKey->getText();
@@ -378,6 +467,7 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 			NSString *bookOsis     = bookOsisC ? [NSString stringWithUTF8String:bookOsisC] : @"";
 			NSString *norm         = PSFoldForIndex(plain);
 			NSString *lemmas       = PSLemmasForCurrentVerse(swModule);
+			NSString *wordMap      = PSWordMapForCurrentVerse(swModule);
 
 			sqlite3_bind_text(stmt, 1, [reference UTF8String], -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt, 2, [bookOsis  UTF8String], -1, SQLITE_TRANSIENT);
@@ -385,6 +475,7 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 			sqlite3_bind_text(stmt, 4, [plain     UTF8String], -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt, 5, [norm      UTF8String], -1, SQLITE_TRANSIENT);
 			sqlite3_bind_text(stmt, 6, [lemmas    UTF8String], -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt, 7, [wordMap   UTF8String], -1, SQLITE_TRANSIENT);
 
 			if(sqlite3_step(stmt) != SQLITE_DONE) {
 				NSString *msg = [NSString stringWithUTF8String:sqlite3_errmsg(_db)];
@@ -483,6 +574,7 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 								  scope:(PSSearchRange)scope
 							   bookName:(NSString *)bookName
 								  limit:(int)limit
+						  strongsTokens:(NSArray<NSString *> *)strongsTokens
 							 cancelFlag:(volatile BOOL *)cancel {
 	if(fts5Expression.length == 0) return @[];
 	if(![self indexIsFresh]) return @[];
@@ -493,12 +585,19 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 		return @[];
 	}
 
+	BOOL wantWordMap = strongsTokens.count > 0;
+	NSSet<NSString *> *tokenSet = wantWordMap ? [NSSet setWithArray:strongsTokens] : nil;
+
 	// We return the FULL stored verse text (text_plain) and let the UI do
 	// its own highlighting. FTS5's snippet() truncates to ~64 tokens and
 	// drops highlight markers for matches that hit non-visible columns
 	// (e.g. Strong's lemmas), so snippet() is the wrong tool for this app.
+	// For Strong's searches we also pull word_map so the caller can learn
+	// which English surface word(s) to highlight.
 	NSMutableString *sql = [NSMutableString stringWithString:
-		@"SELECT reference, text_plain FROM verses WHERE verses MATCH ?"];
+		wantWordMap
+			? @"SELECT reference, text_plain, word_map FROM verses WHERE verses MATCH ?"
+			: @"SELECT reference, text_plain FROM verses WHERE verses MATCH ?"];
 
 	BOOL hasTestament = NO, hasBook = NO;
 	int testamentValue = 0;
@@ -537,7 +636,34 @@ static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
 			const unsigned char *textC = sqlite3_column_text(stmt, 1);
 			NSString *ref  = refC  ? [NSString stringWithUTF8String:(const char *)refC]  : @"";
 			NSString *text = textC ? [NSString stringWithUTF8String:(const char *)textC] : nil;
-			[results addObject:[PSSearchResult resultWithReference:ref fullText:text]];
+			PSSearchResult *result = [PSSearchResult resultWithReference:ref fullText:text];
+
+			if(wantWordMap) {
+				const unsigned char *mapC = sqlite3_column_text(stmt, 2);
+				if(mapC && *mapC) {
+					NSString *map = [NSString stringWithUTF8String:(const char *)mapC];
+					NSMutableArray<NSString *> *words = [NSMutableArray array];
+					NSMutableSet<NSString *> *seen = [NSMutableSet set];
+					for(NSString *line in [map componentsSeparatedByString:@"\n"]) {
+						NSRange tab = [line rangeOfString:@"\t"];
+						if(tab.location == NSNotFound) continue;
+						NSString *surface = [line substringToIndex:tab.location];
+						NSString *lemmaStr = [line substringFromIndex:NSMaxRange(tab)];
+						if(surface.length == 0 || lemmaStr.length == 0) continue;
+						BOOL hit = NO;
+						for(NSString *lemma in [lemmaStr componentsSeparatedByString:@" "]) {
+							if(lemma.length > 0 && [tokenSet containsObject:lemma]) { hit = YES; break; }
+						}
+						if(!hit) continue;
+						if([seen containsObject:surface]) continue;
+						[seen addObject:surface];
+						[words addObject:surface];
+					}
+					if(words.count > 0) result.strongsHighlightWords = words;
+				}
+			}
+
+			[results addObject:result];
 		} else if(rc == SQLITE_DONE) {
 			break;
 		} else {

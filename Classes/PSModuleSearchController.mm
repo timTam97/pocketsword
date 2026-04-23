@@ -32,6 +32,10 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 @property (nonatomic, strong) UIBarButtonItem *optionsBarButton;
 @property (nonatomic, strong) NSTimer *debounceTimer;
 @property (nonatomic, assign) BOOL strongsAvailable;
+/// Index-aligned with `self.results`: each entry is the list of English words
+/// to highlight in that row for a Strong's search. Empty array for rows with
+/// no mapped words; nil for non-Strong's searches.
+@property (nonatomic, copy, nullable) NSArray<NSArray<NSString *> *> *strongsHighlightPerResult;
 
 @end
 
@@ -446,6 +450,7 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 	NSString *text = self.searchController.searchBar.text;
 	if(text.length == 0) {
 		self.results = nil;
+		self.strongsHighlightPerResult = nil;
 		self.searchTerm = nil;
 		[self.resultsTable reloadData];
 		[self setSearchTitle];
@@ -483,6 +488,7 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 														strongs:self.strongsSearch];
 	if(expr.length == 0) {
 		self.results = nil;
+		self.strongsHighlightPerResult = nil;
 		[self.resultsTable reloadData];
 		return;
 	}
@@ -511,9 +517,14 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 	SwordModule *mod = [self activeModule];
 	if(!mod || ![mod hasSearchIndex]) {
 		self.results = nil;
+		self.strongsHighlightPerResult = nil;
 		[self.resultsTable reloadData];
 		return;
 	}
+
+	NSArray<NSString *> *strongsTokens = self.strongsSearch
+		? [PSSearchQuery strongsTokensFromUserInput:self.searchTermToDisplay]
+		: nil;
 
 	dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
 		PSSearchEngine *engine = [PSSearchEngine engineForModule:mod];
@@ -521,15 +532,21 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 													scope:self.searchRange
 												 bookName:self.bookName
 													limit:1000
+											strongsTokens:strongsTokens
 											   cancelFlag:NULL];
 		NSMutableArray *entries = [NSMutableArray arrayWithCapacity:raw.count];
+		NSMutableArray<NSArray<NSString *> *> *highlights = strongsTokens.count > 0
+			? [NSMutableArray arrayWithCapacity:raw.count]
+			: nil;
 		for(PSSearchResult *r in raw) {
 			SwordModuleTextEntry *e = [[SwordModuleTextEntry alloc] initWithKey:r.reference
 																		andText:r.fullText];
 			[entries addObject:e];
+			if(highlights) [highlights addObject:(r.strongsHighlightWords ?: @[])];
 		}
 		dispatch_async(dispatch_get_main_queue(), ^{
 			self.results = entries;
+			self.strongsHighlightPerResult = highlights;
 			[self notifyDelegateOfNewHistoryItem];
 			[self.resultsTable reloadData];
 			[self setSearchTitle];
@@ -547,6 +564,7 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)sBar {
 	self.results = nil;
+	self.strongsHighlightPerResult = nil;
 	self.searchTermToDisplay = nil;
 	[self.resultsTable reloadData];
 	[self setSearchTitle];
@@ -557,8 +575,8 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 // Returns the list of bareword tokens from the user's current query that
 // should be visually highlighted in each result verse. Skips short (<2 char)
 // tokens to avoid highlighting "a", "of" etc. For Strong's searches returns
-// an empty array — the matched lemmas are invisible metadata, not visible
-// text to highlight.
+// an empty array — the mapped surface words are instead supplied per-result
+// via strongsHighlightPerResult, since they vary by verse.
 - (NSArray<NSString *> *)highlightTokens {
 	if(self.strongsSearch) return @[];
 	NSString *raw = self.searchTermToDisplay;
@@ -707,8 +725,18 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 	NSString *txt = entry.text ?: @"";
 	txt = [txt stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
 
-	cell.detailTextLabel.attributedText =
-		[self attributedVerseText:txt tokens:[self highlightTokens] fuzzy:self.fuzzySearch];
+	NSArray<NSString *> *tokens;
+	BOOL fuzzy;
+	if(self.strongsSearch) {
+		tokens = (indexPath.row < self.strongsHighlightPerResult.count)
+			? self.strongsHighlightPerResult[indexPath.row]
+			: @[];
+		fuzzy = NO;
+	} else {
+		tokens = [self highlightTokens];
+		fuzzy = self.fuzzySearch;
+	}
+	cell.detailTextLabel.attributedText = [self attributedVerseText:txt tokens:tokens fuzzy:fuzzy];
 
 	return cell;
 }

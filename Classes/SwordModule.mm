@@ -931,6 +931,7 @@
 													scope:AllRange
 												 bookName:nil
 													limit:0
+											strongsTokens:nil
 											   cancelFlag:NULL];
 	for(PSSearchResult *r in results) {
 		SwordModuleTextEntry *entry = [[SwordModuleTextEntry alloc] initWithKey:r.reference

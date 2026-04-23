@@ -60,11 +60,14 @@ typedef void (^PSSearchProgressBlock)(float fraction, BOOL *cancel);
 
 /// Runs a query against an already-built index. Returns an empty array if
 /// the index isn't fresh. The FTS5 expression should be produced by
-/// PSSearchQuery.
+/// PSSearchQuery. If `strongsTokens` is non-empty, each returned result has
+/// its `strongsHighlightWords` populated with the English surface form(s) in
+/// that verse that map to any of the given Strong's tokens.
 - (NSArray<PSSearchResult *> *)runQuery:(NSString *)fts5Expression
 								  scope:(PSSearchRange)scope
 							   bookName:(nullable NSString *)bookName
 								  limit:(int)limit
+						  strongsTokens:(nullable NSArray<NSString *> *)strongsTokens
 							 cancelFlag:(nullable volatile BOOL *)cancel;
 
 @end

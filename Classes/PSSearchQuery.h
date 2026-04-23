@@ -28,6 +28,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// stored `text_norm` column and the parser use the same rules.
 + (NSString *)foldForIndex:(NSString *)s;
 
+/// Extract the canonicalised Strong's numbers from raw user input. Each valid
+/// H/G token is upper-cased and included; H-numbers also include their alternate
+/// form (H0430 ↔ H430). Non-Strong's tokens are ignored. Returns an empty array
+/// if the input contains no Strong's numbers. The returned set matches the
+/// tokens `fts5ExpressionFromUserInput:…strongs:YES` injects into the query,
+/// so they can be used to filter the stored word_map.
++ (NSArray<NSString *> *)strongsTokensFromUserInput:(NSString *)raw;
+
 @end
 
 NS_ASSUME_NONNULL_END

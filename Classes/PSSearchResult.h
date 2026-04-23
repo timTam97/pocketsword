@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *reference;
 /// Full plain-text of the verse, exactly as stored in FTS5's text_plain column.
 @property (nonatomic, copy, nullable) NSString *fullText;
+/// For Strong's searches, the English surface word(s) in this verse that mapped
+/// to the searched Strong's number(s). nil for text searches. Order-preserving
+/// and de-duped.
+@property (nonatomic, copy, nullable) NSArray<NSString *> *strongsHighlightWords;
 
 + (instancetype)resultWithReference:(NSString *)reference fullText:(nullable NSString *)fullText;
 
