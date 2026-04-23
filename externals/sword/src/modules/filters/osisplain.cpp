@@ -219,10 +219,14 @@ bool OSISPlain::handleToken(SWBuf &buf, const char *token, BasicFilterUserData *
 			buf.append('\n');
 		}
 		else if (!strncmp(token, "/divineName", 11)) {
-			// Get the end portion of the string, and upper case it
+			// Get the end portion of the string, and upper case it.
+			// Pass an explicit max so upperUTF8 actually writes back the result;
+			// without it maxlen=0 causes upperUTF8 to write a NUL at offset 0,
+			// truncating the buffer before the divine name.
 			char* end = buf.getRawData();
-			end += buf.size() - u->lastTextNode.size();
-			toupperstr(end);
+			unsigned int nodeLen = (unsigned int)u->lastTextNode.size();
+			end += buf.size() - nodeLen;
+			toupperstr(end, nodeLen * 3);
 		}
 		else if (!strncmp(token, "hi", 2)) {
 
