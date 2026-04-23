@@ -564,6 +564,11 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 	NSString *raw = self.searchTermToDisplay;
 	if(raw.length == 0) return @[];
 
+	// For exact phrase search, highlight only the full phrase as one unit.
+	if(self.searchType == ExactSearch) {
+		return raw.length >= 2 ? @[raw] : @[];
+	}
+
 	// Tokenise: respect "quoted phrases" (highlight whole phrase), otherwise
 	// whitespace split.
 	NSMutableArray<NSString *> *out = [NSMutableArray array];
