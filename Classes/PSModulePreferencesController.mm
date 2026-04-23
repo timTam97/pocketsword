@@ -20,7 +20,7 @@
 	[super viewDidLoad];
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	fontSizeLabel.textColor = [UIColor darkTextColor];
+	fontSizeLabel.textColor = [UIColor labelColor];
 	fontSizeLabel.text = @"12";
 	fontSizeLabel.backgroundColor = [UIColor clearColor];
 }
@@ -244,7 +244,7 @@
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
-	cell.textLabel.textColor = [UIColor darkTextColor];
+	cell.textLabel.textColor = [UIColor labelColor];
 	
 	CGFloat xx = 0.0;
 	BOOL deviceIsPad = [PSResizing iPad];

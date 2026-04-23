@@ -26,12 +26,8 @@
 	CGFloat viewHeight = [[UIScreen mainScreen] bounds].size.height;
 	
 	UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		baseView.backgroundColor = [UIColor blackColor];
-	} else {
-		baseView.backgroundColor = [UIColor whiteColor];
-	}
-	
+	baseView.backgroundColor = [UIColor systemBackgroundColor];
+
 	UITableView *listTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, (viewHeight - 44.0)) style:UITableViewStylePlain];
 	listTable.delegate = self;
 	listTable.dataSource = self;
@@ -43,7 +39,6 @@
 	//y -= [[UIApplication sharedApplication] statusBarFrame].size.height;
 
 	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, viewHeight - 44, viewWidth, 44)];
-	toolbar.barStyle = UIBarStyleBlack;
 	toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
 	[baseView addSubview:toolbar];
 	self.modulesToolbar = toolbar;
@@ -63,12 +58,8 @@
 		self.navigationItem.leftBarButtonItem = modulesCloseButton;
 	}
 	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		modulesListTable.backgroundColor = [UIColor blackColor];
-	} else {
-		modulesListTable.backgroundColor = [UIColor whiteColor];
-	}
-	
+	modulesListTable.backgroundColor = [UIColor systemBackgroundColor];
+
 	NSIndexPath *ip = nil;//default value
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];
 	if([self listType] == BibleTab) {
@@ -213,19 +204,14 @@
 			break;
 	}
 	if ((listType != PreferencesTab) && [[PSModuleController defaultModuleController] isLoaded:cell.textLabel.text]) {
-		cell.textLabel.textColor = [UIColor blueColor];
-		cell.detailTextLabel.textColor = [UIColor blueColor];
+		cell.textLabel.textColor = [UIColor systemBlueColor];
+		cell.detailTextLabel.textColor = [UIColor systemBlueColor];
 	} else if(locked) {
-		cell.textLabel.textColor = [UIColor brownColor];
-		cell.detailTextLabel.textColor = [UIColor brownColor];
+		cell.textLabel.textColor = [UIColor systemBrownColor];
+		cell.detailTextLabel.textColor = [UIColor systemBrownColor];
 	} else {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-			cell.textLabel.textColor = [UIColor whiteColor];
-			cell.detailTextLabel.textColor = [UIColor whiteColor];
-		} else {
-			cell.textLabel.textColor = [UIColor blackColor];
-			cell.detailTextLabel.textColor = [UIColor blackColor];
-		}
+		cell.textLabel.textColor = [UIColor labelColor];
+		cell.detailTextLabel.textColor = [UIColor labelColor];
 	}
 	if(listType == PreferencesTab) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -236,11 +222,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
+	cell.backgroundColor = [UIColor systemBackgroundColor];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

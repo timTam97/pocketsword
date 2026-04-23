@@ -33,7 +33,6 @@
 	
 	UISearchBar *dSB = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
 	dSB.delegate = self;
-	dSB.barStyle = UIBarStyleBlack;
 	dSB.placeholder = NSLocalizedString(@"DictionarySearchPlaceholderText", @"Search Dictionary");
 	self.dictionarySearchBar = dSB;
 	
@@ -44,7 +43,6 @@
 	searchResults = [[NSMutableArray alloc] init];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(primaryDictionaryChanged) name:NotificationPrimaryDictionaryChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryData) name:NotificationReloadDictionaryData object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDictionaryEntriesTable) name:NotificationNightModeChanged object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDictionaryTitleViaNotification) name:NotificationNewPrimaryDictionary object:nil];
 	//[self setDictionaryTitleViaNotification];
 }
@@ -197,10 +195,6 @@
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)reloadDictionaryEntriesTable {
-	[self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

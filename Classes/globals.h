@@ -91,7 +91,6 @@ typedef enum {
 #define DefaultsMorphHebrewModule                   @"DefaultsMorphHebrewModule"
 #define DefaultsMorphGreekModule                    @"DefaultsMorphGreekModule"
 #define DefaultsFullscreenModePreference			@"fullscreenModePreference"
-#define DefaultsNightModePreference					@"nightModePreference"
 #define DefaultsInsomniaPreference					@"insomniaPreference"
 #define DefaultsModuleMaintainerModePreference		@"moduleMaintainerModePreference"
 
@@ -137,11 +136,6 @@ typedef enum {
 #define BibleTabTitleString							@"BibleTabTitleString"
 #define CommentaryTabTitleString					@"CommentaryTabTitleString"
 
-// Colour preferences
-#define DefaultsBarColor							@"DefaultsBarColor"
-#define DefaultsBarTranslucent						@"DefaultsBarTranslucent"
-
-
 // Notification identifiers
 #define NotificationModulesChanged				@"NotificationModulesChanged"
 #define SendNotifyModulesChanged(X) [[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:X];
@@ -149,7 +143,6 @@ typedef enum {
 #define NotificationBibleSwipeLeft				@"NotificationBibleSwipeLeft"
 #define NotificationCommentarySwipeRight		@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft			@"NotificationCommentarySwipeLeft"
-#define NotificationNightModeChanged			@"NotificationNightModeChanged"
 #define NotificationModuleMaintainerModeChanged	@"ModuleMaintainerModeChanged"
 
 #define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"
@@ -179,8 +172,6 @@ typedef enum {
 #define NotificationAddBookmarkInFolder			@"NotificationAddBookmarkInFolder"
 
 #define NotificationUpdateSelectedReference		@"NotificationUpdateSelectedReference"
-
-#define NotificationBarColorChanged				@"NotificationBarColorChanged"
 
 #define ROTATION_LOCK_POSITION					@"rotationLockedPosition"
 

@@ -27,9 +27,8 @@
 //rows in DISPLAY section
 #define FONT_SIZE_ROW		0
 #define FONT_NAME_ROW		1
-#define NIGHT_MODE_ROW		2
-#define MOD_BLURB_ROW		3
-#define DISPLAY__ROWS		4//total rows in section
+#define MOD_BLURB_ROW		2
+#define DISPLAY__ROWS		3//total rows in section
 
 //rows in the MODULE section
 #define VPL_ROW				10
@@ -72,13 +71,11 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	//self.view.backgroundColor = [UIColor blackColor];
+
 	self.navigationItem.title = NSLocalizedString(@"PreferencesTitle", @"Preferences");
-	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(140.0, 2.0, 20.0, 42.0)];
 	fontSizeLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	fontSizeLabel.textColor = [UIColor darkTextColor];
+	fontSizeLabel.textColor = [UIColor labelColor];
 	fontSizeLabel.backgroundColor = [UIColor clearColor];
 	fontSizeLabel.text = @"12";
 }
@@ -256,14 +253,6 @@
 					}
 				}
 					break;
-				case NIGHT_MODE_ROW :
-				{
-					cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifierPlain];
-					if(!cell) {
-						cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifierPlain];
-					}
-				}
-					break;
 				case MOD_BLURB_ROW:
 				{
 					cell = [tableView dequeueReusableCellWithIdentifier: CellIdenfifierSub];
@@ -348,7 +337,7 @@
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];//[UIFont systemFontOfSize:[UIFont systemFontSize]];
-	cell.textLabel.textColor = [UIColor darkTextColor];
+	cell.textLabel.textColor = [UIColor labelColor];
 	
 	if(resetCell) {
 		cell.accessoryView = nil;
@@ -373,23 +362,12 @@
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				}
 					break;
-				case NIGHT_MODE_ROW :
-				{
-					UISwitch *nightModeSwitch = [ [ UISwitch alloc ] initWithFrame: CGRectMake(xx+200, 10, 0, 0) ];
-					BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
-					nightModeSwitch.on = nightMode;
-					[nightModeSwitch addTarget:self action:@selector(nightModeChanged:) forControlEvents:UIControlEventValueChanged];
-					cell.accessoryView = nightModeSwitch;
-					//[ cell addSubview: nightModeSwitch ];
-					cell.textLabel.text = NSLocalizedString(@"PreferencesNightModeTitle", @"Night Mode");
-				}
-					break;
 				case MOD_BLURB_ROW:
 				{
 					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
 					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 7;//2;
-					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.textColor = [UIColor secondaryLabelColor];
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 					cell.detailTextLabel.text = @"";
 				}
@@ -476,7 +454,7 @@
 //					cell.textLabel.text = NSLocalizedString(@"PreferencesModuleSectionNote", @"");
 //					cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 //					cell.textLabel.numberOfLines = 7;//2;
-//					cell.textLabel.textColor = [UIColor darkGrayColor];
+//					cell.textLabel.textColor = [UIColor secondaryLabelColor];
 //					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 //				}
 //					break;
@@ -633,7 +611,7 @@
 					cell.textLabel.text = NSLocalizedString(@"PreferencesFullscreenNote", @"With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.");
 					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 4;
-					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.textColor = [UIColor secondaryLabelColor];
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
 				}
 					break;
@@ -659,7 +637,7 @@
 					cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 					cell.textLabel.numberOfLines = 7;
 					cell.textLabel.font = [UIFont systemFontOfSize:12.0];
-					cell.textLabel.textColor = [UIColor darkGrayColor];
+					cell.textLabel.textColor = [UIColor secondaryLabelColor];
 				}
 					break;
 			}
@@ -899,14 +877,6 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	fontSizeLabel.text = [NSString stringWithFormat:@"%ld", (long)f];
 	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-}
-
-- (void)nightModeChanged:(UISwitch *)sender {
-	BOOL n = [sender isOn];
-	[[NSUserDefaults standardUserDefaults] setBool:n forKey:DefaultsNightModePreference];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationResetBibleAndCommentaryView object:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationNightModeChanged object:nil];
 }
 
 - (void)redLetterChanged:(UISwitch *)sender {

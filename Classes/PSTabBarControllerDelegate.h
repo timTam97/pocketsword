@@ -95,13 +95,6 @@ typedef enum {
 
 + (void)displayTitle:(NSString*)title;
 
-+ (UIColor *)getBarColorDefault;
-+ (void)setBarColorDefault:(UIColor*)color;
-+ (BOOL)getBarTranslucentDefault;
-+ (void)setBarTranslucentDefault:(BOOL)translucent;
-
-- (void)nightModeChanged;
-
 - (void)toggleNavigation;
 - (void)updateViewWithSelectedBookChapterVerse:(NSNotification *)notification;
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse;

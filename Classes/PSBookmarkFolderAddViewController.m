@@ -177,7 +177,7 @@
 	if(indexPath.section == 1 && self.rgbHexString) {
 		cell.backgroundColor = [PSBookmarkFolder colorFromHexString:rgbHexString];
 	} else {
-		cell.backgroundColor = [UIColor whiteColor];
+		cell.backgroundColor = [UIColor systemBackgroundColor];
 	}
 }
 

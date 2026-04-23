@@ -140,10 +140,10 @@
 		if(rowObject.folder && ((PSBookmarkFolder*)rowObject).rgbHexString) {
 			cell.backgroundColor = [PSBookmarkFolder colorFromHexString:((PSBookmarkFolder*)rowObject).rgbHexString];
 		} else {
-			cell.backgroundColor = [UIColor whiteColor];
+			cell.backgroundColor = [UIColor systemBackgroundColor];
 		}
 	} else if(indexPath.section == 1) {
-		cell.backgroundColor = [UIColor whiteColor];
+		cell.backgroundColor = [UIColor systemBackgroundColor];
 	}
 }
 

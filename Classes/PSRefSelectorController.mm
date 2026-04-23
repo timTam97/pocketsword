@@ -43,11 +43,7 @@
 	self.navigationItem.title = NSLocalizedString(@"RefSelectorBookTitle", @"Book");
 	[self.navigationController popToRootViewControllerAnimated:NO];
 	self.navigationItem.leftBarButtonItem = nil;
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		self.tableView.backgroundColor = [UIColor blackColor];
-	} else {
-		self.tableView.backgroundColor = [UIColor whiteColor];
-	}
+	self.tableView.backgroundColor = [UIColor systemBackgroundColor];
     if([PSResizing iPad]) {
         //the iPad doesn't want the cancel button
         return;
@@ -133,13 +129,9 @@
 	
 	cell.textLabel.text = [self bookName:indexPath.section];
 	if([currentlyViewedBookName isEqualToString:cell.textLabel.text]) {
-		cell.textLabel.textColor = [UIColor blueColor];
+		cell.textLabel.textColor = [UIColor systemBlueColor];
 	} else {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-			cell.textLabel.textColor = [UIColor whiteColor];
-		} else {
-			cell.textLabel.textColor = [UIColor blackColor];
-		}
+		cell.textLabel.textColor = [UIColor labelColor];
 	}
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	
@@ -156,11 +148,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
+	cell.backgroundColor = [UIColor systemBackgroundColor];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

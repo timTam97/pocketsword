@@ -98,14 +98,16 @@
 			xsi:schemaLocation=\"http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd\"\n\
 			xml:lang=\"en\" >\n\
 			<meta name='viewport' content='width=device-width' />\n\
+			<meta name=\"color-scheme\" content=\"light dark\" />\n\
 			<head>\n\
 			<style type=\"text/css\">\n\
+			:root { color-scheme: light dark; }\n\
 			html {\n\
 				-webkit-text-size-adjust: none; /* Never autoresize text */\n\
 			}\n\
 			body {\n\
-				color: black;\n\
-				background-color: white;\n\
+				color: CanvasText;\n\
+				background-color: Canvas;\n\
 				font-size: 11pt;\n\
 				font-family: %@;\n\
 				line-height: 130%%;\n\
@@ -115,6 +117,7 @@
 				border-bottom: solid 1px gray;\n\
 				padding: 5px;\n\
 				background-color: #D5EEF9;\n\
+				color: black;\n\
 			}\n\
 			#main {\n\
 				padding: 10px;\n\
@@ -160,13 +163,8 @@
 	WKWebView *wv = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight) configuration:conf];
 	wv.navigationDelegate = self;
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	wv.backgroundColor = [UIColor whiteColor];
-	NSString *html = @"<html><body bgcolor=\"white\">@nbsp;</body></html>";
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		html = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-		wv.backgroundColor = [UIColor blackColor];
-	}
-	[wv loadHTMLString: html baseURL: nil];
+	wv.backgroundColor = [UIColor systemBackgroundColor];
+	[wv loadHTMLString:@"<html><body>&nbsp;</body></html>" baseURL:nil];
 	[baseView addSubview:wv];
 	self.aboutWebView = wv;
 	
@@ -175,8 +173,7 @@
 
 - (void)viewDidLoad {
 	self.navigationItem.title = NSLocalizedString(@"AboutTitle", @"About");
-	self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-	
+
 	UIBarButtonItem *emailUsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"EmailUsButton", @"Email Us") style:UIBarButtonItemStylePlain target:self action:@selector(emailFeedback:)];
 	self.navigationItem.rightBarButtonItem = emailUsBarButtonItem;
 
@@ -356,7 +353,6 @@
 		[mailComposeViewController setSubject:subject];
 		[mailComposeViewController setToRecipients:[NSArray arrayWithObject:recipients]];
 		mailComposeViewController.mailComposeDelegate = self;
-		mailComposeViewController.navigationBar.barStyle = UIBarStyleBlack;
 		//[self.tabBarController presentModalViewController:mailComposeViewController animated:YES];
         [self.tabBarController presentViewController:mailComposeViewController animated:YES completion:nil];
 	}

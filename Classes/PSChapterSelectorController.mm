@@ -34,11 +34,7 @@
 
 
 - (void)viewWillAppear:(BOOL)animated {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		self.tableView.backgroundColor = [UIColor blackColor];
-	} else {
-		self.tableView.backgroundColor = [UIColor whiteColor];
-	}
+	self.tableView.backgroundColor = [UIColor systemBackgroundColor];
 	self.navigationItem.title = [book name];//[NSString stringWithFormat:@"%@ %@", [book name], NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter")];
 	NSString *currentBook = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsLastRef];
 	currentBook = [[currentBook componentsSeparatedByString:@":"] objectAtIndex:0];
@@ -97,13 +93,9 @@
     
 	cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorChapterTitle", @"Chapter"), (indexPath.section+1)];
 	if((indexPath.section+1) == currentChapter) {
-		cell.textLabel.textColor = [UIColor blueColor];
+		cell.textLabel.textColor = [UIColor systemBlueColor];
 	} else {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-			cell.textLabel.textColor = [UIColor whiteColor];
-		} else {
-			cell.textLabel.textColor = [UIColor blackColor];
-		}
+		cell.textLabel.textColor = [UIColor labelColor];
 	}
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
@@ -123,11 +115,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
+	cell.backgroundColor = [UIColor systemBackgroundColor];
 }
 
 

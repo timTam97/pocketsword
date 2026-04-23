@@ -111,10 +111,7 @@
 	[lVC setDelegate:self];
 		
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	self.window.backgroundColor = [UIColor whiteColor];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		self.window.backgroundColor = [UIColor blackColor];
-	}
+	self.window.backgroundColor = [UIColor systemBackgroundColor];
 
 	if([self.window respondsToSelector:@selector(rootViewController)]) {
 		self.window.rootViewController = lVC;

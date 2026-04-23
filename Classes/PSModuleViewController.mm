@@ -40,28 +40,14 @@
 	PSWebView *wv = [[PSWebView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewHeight)];
 	wv.delegate = self;
 	wv.psDelegate = self;
-	wv.backgroundColor = [UIColor whiteColor];
+	wv.backgroundColor = [UIColor systemBackgroundColor];
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	NSString *html = @"<html><body bgcolor=\"white\">@nbsp;</body></html>";
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		html = @"<html><body bgcolor=\"black\">@nbsp;</body></html>";
-		wv.backgroundColor = [UIColor blackColor];
-	}
-	[wv loadHTMLString: html baseURL: nil];
+	[wv loadHTMLString:@"<html><body>&nbsp;</body></html>" baseURL:nil];
 	[baseView addSubview:wv];
 	self.webView = wv;
-	
+
 	self.view = baseView;
 	currentShownVerse = 1;
-}
-
-- (void)nightModeChanged {
-	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
-	if(nightMode) {
-		self.webView.backgroundColor = [UIColor blackColor];
-	} else {
-		self.webView.backgroundColor = [UIColor whiteColor];
-	}
 }
 
 - (void)viewDidLoad {
@@ -107,7 +93,6 @@
 	
 	isFullScreen = NO;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redoBookmarkHighlights) name:NotificationBookmarksChanged object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
 	finishedLoading = NO;
 }
 
@@ -497,10 +482,7 @@
 
 - (void)removeBookmarkHighlights {
 	NSInteger verses = [[PSModuleController defaultModuleController].primaryBible getVerseMax];
-	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
-	NSString *fontColor = (nightMode) ? @"white" : @"black";
-    
-	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d','%@')", (int)verses, fontColor];
+	NSString *jsFunction = [NSString stringWithFormat:@"PS_RemoveHighlights('%d')", (int)verses];
 	[webView stringByEvaluatingJavaScriptFromString:jsFunction];
 }
 

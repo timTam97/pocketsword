@@ -706,14 +706,12 @@ static NSString *firstRefAvailable = @"Genesis 1";
 {
 	NSString *fontName = PSDefaultFontName;
 	NSString *fontSize = @"14";
-	NSString *fontColor = @"black";
-	NSString *backgroundColor = @"white";
 	NSString *linkColor = @"fuchsia";
-	
+
 	NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
 	if(usePrefs) {
 		fontName = [[NSUserDefaults standardUserDefaults] objectForKey:DefaultsFontNamePreference];
-		
+
 		// if we're provided with a moduleName, try to use that module's prefs
 		if(moduleName) {
 			NSString *fn = GetStringPrefForMod(DefaultsFontNamePreference, moduleName);
@@ -721,14 +719,11 @@ static NSString *firstRefAvailable = @"Genesis 1";
 			NSInteger fsMod = GetIntegerPrefForMod(DefaultsFontSizePreference, moduleName);
 			fs = (fsMod == 0) ? fs : fsMod;
 		}
-		
+
 		if(!fontName)
 			fontName = PSDefaultFontName;
-		BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
 		fs = (fs == 0) ? 14 : fs;
 		fontSize = [NSString stringWithFormat:@"%ld", (long)fs];
-		fontColor = (nightMode) ? @"white" : @"black";
-		backgroundColor = (nightMode) ? @"black" : @"white";
 	} else {
 		fs = 14;
 	}
@@ -784,23 +779,25 @@ static NSString *firstRefAvailable = @"Genesis 1";
 									 xml:lang=\"en\" >\n\
 									 <head>\n\
 									 %@\
+									 <meta name=\"color-scheme\" content=\"light dark\" />\n\
 									 <style type=\"text/css\">\n\
+									 :root { color-scheme: light dark; }\n\
 									 html { -webkit-text-size-adjust: none; /* Never autoresize text */ }\n\
-									 body { color: %@; background-color: %@; font-size: %@pt; font-family: %@; line-height: %@; %@ }\n\"",
+									 body { color: CanvasText; background-color: Canvas; font-size: %@pt; font-family: %@; line-height: %@; %@ }\n\
+									 @media (prefers-color-scheme: dark) { span.WordOfChrist { color: #FF7070; } }\n\"",
 											((fixedWidth) ? viewportString: @""),
-											fontColor, backgroundColor,		 fontSize,		  fontName,		   lineHeight,	iPadPadding];
-	
+											fontSize,		  fontName,		   lineHeight,	iPadPadding];
+
 	[returnString appendFormat:@"i.transChangeAdded { color: gray; }\n\
 	 a { color: %@; /* linkColour */ text-decoration: none; }\n\
-	 a.verse { font-size: 70%%; vertical-align: super; line-height: 130%%; color: %@; /* fontColour */ }\n\
+	 a.verse { font-size: 70%%; vertical-align: super; line-height: 130%%; color: CanvasText; }\n\
 	 a.x { color: gray; font-size: 70%%; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
 	 a.n { color: gray; font-size: 70%%; vertical-align: super; line-height: 0%%; font-variant: small-caps; }\n\
 	 a.strongs { color: gray; text-decoration: none; vertical-align: super; font-size: 70%%; font-style: italic; }\n\
 	 a.morph { color: gray; text-decoration: none; vertical-align: super; font-size: 70%%; font-style: italic; }\n\
 	 span.WordOfChrist { color: #D03030; }\n\
 	 span.underline { border-bottom: 1px solid; }",
-	 linkColor,
-	 fontColor
+	 linkColor
 	 ];
 		
 	[returnString appendFormat:

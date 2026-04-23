@@ -16,11 +16,7 @@
 @synthesize chapter;
 
 - (void)viewWillAppear:(BOOL)animated {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		self.tableView.backgroundColor = [UIColor blackColor];
-	} else {
-		self.tableView.backgroundColor = [UIColor whiteColor];
-	}
+	self.tableView.backgroundColor = [UIColor systemBackgroundColor];
 	self.navigationItem.title = [NSString stringWithFormat:@"%@ %d", [book name], (int)chapter];
     [super viewWillAppear:animated];
 }
@@ -63,21 +59,13 @@
     }
     
 	cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"RefSelectorVerseTitle", @"Verse"), (indexPath.section+1)];
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.textLabel.textColor = [UIColor whiteColor];
-	} else {
-		cell.textLabel.textColor = [UIColor blackColor];
-	}
-	
+	cell.textLabel.textColor = [UIColor labelColor];
+
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference]) {
-		cell.backgroundColor = [UIColor blackColor];
-	} else {
-		cell.backgroundColor = [UIColor whiteColor];
-	}
+	cell.backgroundColor = [UIColor systemBackgroundColor];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

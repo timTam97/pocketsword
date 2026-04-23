@@ -63,7 +63,6 @@
 	[defaults removeObjectForKey: DefaultsLastCommentary];
 	[defaults removeObjectForKey: DefaultsLastDictionary];
 	[defaults removeObjectForKey: DefaultsFontNamePreference];
-	[defaults removeObjectForKey: DefaultsNightModePreference];
 	[defaults removeObjectForKey: DefaultsFontSizePreference];
 	[defaults removeObjectForKey: DefaultsVPLPreference];
 	[defaults removeObjectForKey: DefaultsRedLetterPreference];

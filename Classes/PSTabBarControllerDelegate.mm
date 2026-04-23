@@ -50,11 +50,9 @@
 		UITabBarController *tbc = [[UITabBarController alloc] init];
 		tbc.delegate = self;
 		self.tabBarController = tbc;
-//		[self tabColorChanged];
-		
-		[self nightModeChanged];
+
 		[PSModuleController defaultModuleController];//init
-		
+
 		NSMutableArray *tabs = [NSMutableArray arrayWithCapacity:8];
 		// Order of the tabs:
 		// 00: Bible
@@ -63,25 +61,6 @@
 		// 03: Bookmarks
 		// 04: Preferences
 		// 05: About
-		
-		if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {// iOS 7 only
-			UIColor *tintColor = [UIColor blackColor];
-//			UIColor *barTintColor = [UIColor yellowColor];
-			UIColor *barTintColor = [UIColor blackColor];
-//			UIColor *barTintColor = [UIColor redColor];
-			
-			[[UINavigationBar appearance] setTintColor:tintColor];
-			//[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background.png"] forBarMetrics:UIBarMetricsDefault];
-			[[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
-			[[UINavigationBar appearance] setBarTintColor:barTintColor];
-			[[UIToolbar appearance] setTintColor:tintColor];
-			//[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-			[[UIToolbar appearance] setBarTintColor:barTintColor];
-			[[UITabBar appearance] setTintColor:[UIColor whiteColor]];
-			//[[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"Pocket Blue Background TabBar.png"]];
-			[[UITabBar appearance] setBarTintColor:barTintColor];
-			//NSLog(@"%f", self.tabBarController.tabBar.frame.size.height);
-		}
 		
 		//add the Commentary Tab.
 		PSCommentaryViewController *cvc = [[PSCommentaryViewController alloc] init];
@@ -107,7 +86,6 @@
 		PSDictionaryViewController *dictionaryViewController = [[PSDictionaryViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		dictionaryViewController.delegate = self;
 		UINavigationController *dictionaryTab = [[UINavigationController alloc] initWithRootViewController:dictionaryViewController];
-		dictionaryTab.navigationBar.barStyle = UIBarStyleBlack;
 		UITabBarItem *dTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleDictionary", @"Dictionary") image:[UIImage imageNamed:@"dictionary.png"] tag:99];
 		dictionaryTab.tabBarItem = dTBI;
 		[tabs insertObject:dictionaryTab atIndex:2];
@@ -116,7 +94,6 @@
 		[PSBookmarks importBookmarksFromV2];
 		PSBookmarksNavigatorController *bookmarksViewController = [[PSBookmarksNavigatorController alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController *bookmarksTab = [[UINavigationController alloc] initWithRootViewController:bookmarksViewController];
-		bookmarksTab.navigationBar.barStyle = UIBarStyleBlack;
 		UITabBarItem *tbI = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
 		bookmarksTab.tabBarItem = tbI;
 		[tabs insertObject:bookmarksTab atIndex:3];
@@ -126,7 +103,6 @@
 		UITabBarItem *preferencesTabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitlePreferences", @"Preferences") image:[UIImage imageNamed:@"gear-24.png"] tag:9];
 		if([PSResizing iPad]) {
 			UINavigationController *preferencesIPadTab = [[UINavigationController alloc] initWithRootViewController:preferencesViewController];
-			preferencesIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			preferencesIPadTab.tabBarItem = preferencesTabBarItem;
 			[tabs insertObject:preferencesIPadTab atIndex:4];
 		} else {
@@ -139,7 +115,6 @@
 		UITabBarItem *aboutTBI = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"TabBarTitleAbout", @"About") image:[UIImage imageNamed:@"About.png"] tag:0];
 		if([PSResizing iPad]) {
 			UINavigationController *aboutIPadTab = [[UINavigationController alloc] initWithRootViewController:aboutViewController];
-			aboutIPadTab.navigationBar.barStyle = UIBarStyleBlack;
 			aboutIPadTab.tabBarItem = aboutTBI;
 			[tabs insertObject:aboutIPadTab atIndex:5];
 		} else {
@@ -152,7 +127,6 @@
 
 		tabBarController.customizableViewControllers = nil;
 		tabBarController.selectedIndex = 0;
-		tabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		tabBarController.moreNavigationController.topViewController.navigationItem.rightBarButtonItem = nil;
 		tabBarController.delegate = self;
 		
@@ -184,27 +158,10 @@
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewWithSelectedBookChapterVerse:) name:NotificationUpdateSelectedReference object:nil];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nightModeChanged) name:NotificationNightModeChanged object:nil];
-
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redisplayBibleChapterAfterBookmarksChange) name:NotificationBookmarksChanged object:nil];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabColorChanged) name:NotificationBarColorChanged object:nil];
-		
+
 	}
 	return self;
-}
-
-//- (void)tabColorChanged {
-//	if([tabBarController.tabBar respondsToSelector:@selector(isTranslucent)]) {
-//		tabBarController.tabBar.translucent = [PSTabBarControllerDelegate getBarTranslucentDefault];
-//		tabBarController.tabBar.barTintColor = [PSTabBarControllerDelegate getBarColorDefault];
-//		tabBarController.tabBar.tintColor = [UIColor whiteColor];
-//	}
-//}
-
-- (void)nightModeChanged {
-	BOOL nightMode = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
-	UIColor *backgroundColor = (nightMode) ? [UIColor blackColor] : [UIColor whiteColor];
-	[(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) setBackgroundColor:backgroundColor];
 }
 
 - (void)setTabTitle:(NSString *)newTitle ofTab:(ShownTab)tab
@@ -259,17 +216,11 @@
 	} else {
 		
 		multiListController = [[UITabBarController alloc] init];
-//		if([multiListController.tabBar respondsToSelector:@selector(isTranslucent)]) {
-//			[multiListController.tabBar setTranslucent:[PSTabBarControllerDelegate getBarTranslucentDefault]];
-//			[multiListController.tabBar setBarTintColor:[PSTabBarControllerDelegate getBarColorDefault]];
-//		}
 		PSHistoryController *historyController = [[PSHistoryController alloc] init];
 		PSModuleSearchController *searchController = [[PSModuleSearchController alloc] init];
 		UINavigationController *searchNavigationController = [[UINavigationController alloc] initWithRootViewController:searchController];
-		searchNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		searchNavigationController.title = NSLocalizedString(@"SearchTitle", @"");
 		UINavigationController *historyNavigationController = [[UINavigationController alloc] initWithRootViewController:historyController];
-		historyNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 		multiListController.delegate = searchController;
 		searchController.delegate = self;
 		NSArray* controllers = [NSArray arrayWithObjects:historyNavigationController, searchNavigationController, nil];
@@ -346,7 +297,6 @@
 	} else {
 		moduleSelectorViewController = [[PSModuleSelectorController alloc] initWithNibName:nil bundle:nil];
 		UINavigationController *modSelectorNavController = [[UINavigationController alloc] initWithRootViewController:moduleSelectorViewController];
-		modSelectorNavController.navigationBar.barStyle = UIBarStyleBlack;
 
 		//set the module selector to use the correct module type.
 		if([[bibleTabController webView] isDescendantOfView:tabBarController.selectedViewController.view]) {
@@ -405,7 +355,6 @@
 			refSelectorController = [[PSRefSelectorController alloc] initWithStyle:UITableViewStylePlain];
             [refSelectorController setupNavigation];
 			refNavigationController = [[UINavigationController alloc] initWithRootViewController:refSelectorController];
-			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
                 [tabBarController presentViewController:refNavigationController animated:YES completion:nil];
@@ -431,7 +380,6 @@
 			refSelectorController = [[PSRefSelectorController alloc] initWithStyle:UITableViewStylePlain];
             [refSelectorController setupNavigation];
 			refNavigationController = [[UINavigationController alloc] initWithRootViewController:refSelectorController];
-			refNavigationController.navigationBar.barStyle = UIBarStyleBlack;
             if(!iPad) {
                 [refSelectorController willShowNavigation];
                 [tabBarController presentViewController:refNavigationController animated:YES completion:nil];
@@ -960,37 +908,6 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 	return UIInterfaceOrientationMaskPortrait;
-}
-
-+ (UIColor *)getBarColorDefault {
-	
-	NSString *colorHexString = [[NSUserDefaults standardUserDefaults] stringForKey: DefaultsBarColor];
-	if (!colorHexString) {
-		colorHexString = [PSBookmarkFolder hexStringFromColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]];
-		[[NSUserDefaults standardUserDefaults] setObject: colorHexString forKey: DefaultsBarColor];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-	}
-	return [PSBookmarkFolder colorFromHexString:colorHexString];
-	
-}
-
-+ (void)setBarColorDefault:(UIColor*)color {
-	if(!color) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:DefaultsBarColor];
-	} else {
-		[[NSUserDefaults standardUserDefaults] setObject:[PSBookmarkFolder hexStringFromColor:color] forKey:DefaultsBarColor];
-	}
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBarColorChanged object:nil];
-}
-
-+ (BOOL)getBarTranslucentDefault {
-	return [[NSUserDefaults standardUserDefaults] boolForKey: DefaultsBarTranslucent];
-}
-
-+ (void)setBarTranslucentDefault:(BOOL)translucent {
-	[[NSUserDefaults standardUserDefaults] setBool:translucent forKey:DefaultsBarTranslucent];
-	[[NSNotificationCenter defaultCenter] postNotificationName:NotificationBarColorChanged object:nil];
 }
 
 @end

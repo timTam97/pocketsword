@@ -16,12 +16,12 @@
 - (void)loadView {
 	UIView *root = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
 	root.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	root.backgroundColor = [self currentBackgroundColor];
+	root.backgroundColor = [UIColor systemBackgroundColor];
 
 	WKWebViewConfiguration *cfg = [[WKWebViewConfiguration alloc] init];
 	WKWebView *wv = [[WKWebView alloc] initWithFrame:root.bounds configuration:cfg];
 	wv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	wv.backgroundColor = root.backgroundColor;
+	wv.backgroundColor = [UIColor systemBackgroundColor];
 	wv.opaque = NO;
 	// Push content below the sheet grabber so the first line of the
 	// dictionary entry isn't crammed against the top edge.
@@ -36,18 +36,10 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(nightModeChanged)
-												 name:NotificationNightModeChanged
-											   object:nil];
 	if(self.pendingHTML) {
 		[self.webView loadHTMLString:self.pendingHTML baseURL:nil];
 		self.pendingHTML = nil;
 	}
-}
-
-- (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)loadHTML:(NSString *)html {
@@ -57,17 +49,6 @@
 	} else {
 		self.pendingHTML = html;
 	}
-}
-
-- (void)nightModeChanged {
-	UIColor *bg = [self currentBackgroundColor];
-	self.view.backgroundColor = bg;
-	self.webView.backgroundColor = bg;
-}
-
-- (UIColor *)currentBackgroundColor {
-	BOOL night = [[NSUserDefaults standardUserDefaults] boolForKey:DefaultsNightModePreference];
-	return night ? [UIColor blackColor] : [UIColor whiteColor];
 }
 
 @end
