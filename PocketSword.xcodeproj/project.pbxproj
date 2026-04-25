@@ -308,6 +308,7 @@
 		05F84EE5191F4AC7003350DE /* ztext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EE4191F4AC7003350DE /* ztext4.cpp */; };
 		05F84EE7191F4EF0003350DE /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F84EE6191F4EF0003350DE /* libicucore.A.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */; };
+		1D3623280D0F684500981E52 /* PocketSwordSceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -928,6 +929,8 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordAppDelegate.h; path = Classes/PocketSwordAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PocketSwordAppDelegate.mm; path = Classes/PocketSwordAppDelegate.mm; sourceTree = "<group>"; };
+		1D3623290D0F684500981E52 /* PocketSwordSceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordSceneDelegate.h; path = Classes/PocketSwordSceneDelegate.h; sourceTree = "<group>"; };
+		1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PocketSwordSceneDelegate.mm; path = Classes/PocketSwordSceneDelegate.mm; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		28216C950DB411BC00E5133A /* PSTabBarControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSTabBarControllerDelegate.h; path = Classes/PSTabBarControllerDelegate.h; sourceTree = "<group>"; };
@@ -1854,6 +1857,8 @@
 			children = (
 				1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */,
 				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
+				1D3623290D0F684500981E52 /* PocketSwordSceneDelegate.h */,
+				1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */,
 				28216C950DB411BC00E5133A /* PSTabBarControllerDelegate.h */,
 				28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */,
 				E996E5220ED70C6E0034DAF6 /* PSModuleController.h */,
@@ -2398,6 +2403,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				D2BFDF9925E73AAB00E04366 /* mz_zip.c in Sources */,
 				1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */,
+				1D3623280D0F684500981E52 /* PocketSwordSceneDelegate.mm in Sources */,
 				D2BFDF9E25E73AAB00E04366 /* mz_crypt.c in Sources */,
 				28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */,
 				E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */,

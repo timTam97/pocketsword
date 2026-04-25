@@ -126,6 +126,7 @@ typedef enum {
 - (void)showInfo:(NSString *)infoString;
 - (void)rotateInfo:(NSNotification *)notification;
 - (void)hideInfo;
+- (void)hideInfoWithCompletion:(void (^)(void))completion;
 - (void)displayCommentaryTabViaNotification;
 - (void)displayBibleTabViaNotification;
 

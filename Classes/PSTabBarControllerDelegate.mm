@@ -210,12 +210,13 @@
 - (void)toggleMultiList {
 //	[self highlightSearchTerm: @"and" forTab: BibleTab];
 	
-	//if([multiListController.view superview]) {
-	if(multiListController) {
+	// Check the live view hierarchy, not just the ivar — swipe-to-dismiss
+	// leaves the ivar set, which otherwise makes every alternate tap hit
+	// the dismiss branch with nothing actually on screen.
+	if(multiListController && multiListController.presentingViewController) {
 		[tabBarController dismissViewControllerAnimated:YES completion:nil];
 		multiListController = nil;
 	} else {
-		
 		multiListController = [[UITabBarController alloc] init];
 		PSHistoryController *historyController = [[PSHistoryController alloc] init];
 		PSModuleSearchController *searchController = [[PSModuleSearchController alloc] init];
@@ -462,7 +463,7 @@
 
 
 + (void)displayTitle:(NSString*)title {
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:(((PocketSwordAppDelegate*) [UIApplication sharedApplication].delegate).window) animated:YES];
+	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[PSResizing keyWindow] animated:YES];
 	hud.mode = MBProgressHUDModeText;
     hud.label.text = [PSModuleController createRefString:title];
 	hud.removeFromSuperViewOnHide = YES;
@@ -683,10 +684,17 @@
 }
 
 - (void)hideInfo {
-	if(!infoPopupController) return;
+	[self hideInfoWithCompletion:nil];
+}
+
+- (void)hideInfoWithCompletion:(void (^)(void))completion {
+	if(!infoPopupController) {
+		if(completion) completion();
+		return;
+	}
 	PSInfoPopupViewController *popup = infoPopupController;
 	infoPopupController = nil;
-	[popup dismissViewControllerAnimated:YES completion:nil];
+	[popup dismissViewControllerAnimated:YES completion:completion];
 }
 
 - (void)webView:(WKWebView *)wv decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
@@ -728,8 +736,13 @@
 		shi.searchTermToDisplay = strongsSearchTerm;
 		shi.strongsSearch = YES;
 		self.savedSearchHistoryItem = shi;
-		[self hideInfo];
-		[self toggleMultiList];
+		// Chain the present on dismiss completion — presenting while the
+		// popup is still mid-dismiss silently drops the second presentation,
+		// leaving the search sheet unopened.
+		__weak PSTabBarControllerDelegate *weakSelf = self;
+		[self hideInfoWithCompletion:^{
+			[weakSelf toggleMultiList];
+		}];
 
 		decisionHandler(WKNavigationActionPolicyCancel);
 		return;

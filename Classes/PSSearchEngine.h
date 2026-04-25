@@ -28,6 +28,12 @@ extern NSString * const PSSearchHighlightClose;  // @"[[/HL]]"
 /// built with a different version is treated as stale and rebuilt.
 extern const int PSSearchSchemaVersion;
 
+/// Strip SWORD's inline Strong's / morph markers (e.g. `<H0430>`, `<TH8799>`)
+/// and the `" [] "` empty-tag marker from a `stripText()` result, collapsing
+/// any whitespace the removal left behind — including a space stranded just
+/// before punctuation.
+extern NSString *PSSearchCleanDisplayText(NSString *plain);
+
 typedef void (^PSSearchProgressBlock)(float fraction, BOOL *cancel);
 
 @interface PSSearchEngine : NSObject

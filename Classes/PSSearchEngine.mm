@@ -16,7 +16,7 @@ NSString * const PSSearchEngineErrorDomain = @"PSSearchEngineErrorDomain";
 NSString * const PSSearchHighlightOpen     = @"[[HL]]";
 NSString * const PSSearchHighlightClose    = @"[[/HL]]";
 
-const int PSSearchSchemaVersion = 3;
+const int PSSearchSchemaVersion = 4;
 
 @interface PSSearchEngine () {
 	sqlite3 *_db;
@@ -260,16 +260,20 @@ static NSString *PSFoldForIndex(NSString *s) {
 // <H0430> divided <H0996> <H0914> the light". These markers are unreadable in
 // search results, so strip any `<[A-Z]+\d+[A-Z0-9-]*>` token (Strong's: H0430,
 // G3056; morph: TH8799, TG5707). Also drop SWORD's `" [] "` empty-tag marker
-// and collapse any whitespace left behind.
-static NSString *PSCleanDisplayText(NSString *plain) {
+// and collapse any whitespace left behind — including the space a stripped
+// marker leaves stranded immediately before punctuation (e.g. "field ,").
+NSString *PSSearchCleanDisplayText(NSString *plain) {
 	if(plain.length == 0) return @"";
 	static NSRegularExpression *markerRe;
 	static NSRegularExpression *wsRe;
+	static NSRegularExpression *wsBeforePunctRe;
 	static dispatch_once_t once;
 	dispatch_once(&once, ^{
 		markerRe = [NSRegularExpression regularExpressionWithPattern:@"<[A-Z][A-Z0-9]*\\d[A-Z0-9-]*>"
 															 options:0 error:NULL];
 		wsRe = [NSRegularExpression regularExpressionWithPattern:@"\\s+" options:0 error:NULL];
+		wsBeforePunctRe = [NSRegularExpression regularExpressionWithPattern:@"\\s+([,.;:!?\\)\\]])"
+																	options:0 error:NULL];
 	});
 	NSMutableString *out = [plain mutableCopy];
 	if(markerRe) {
@@ -281,6 +285,10 @@ static NSString *PSCleanDisplayText(NSString *plain) {
 	if(wsRe) {
 		[wsRe replaceMatchesInString:out options:0
 							   range:NSMakeRange(0, out.length) withTemplate:@" "];
+	}
+	if(wsBeforePunctRe) {
+		[wsBeforePunctRe replaceMatchesInString:out options:0
+										  range:NSMakeRange(0, out.length) withTemplate:@"$1"];
 	}
 	return [out stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
@@ -457,7 +465,7 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 		// Strip Strong's / morph markers that SWORD interleaves inline when
 		// the global Strong's-display option is ON. Must run before norm/
 		// lemma extraction so search results render cleanly.
-		NSString *plain = PSCleanDisplayText(rawPlain);
+		NSString *plain = PSSearchCleanDisplayText(rawPlain);
 
 		if(plain.length > 0) {
 			const char *refC       = modKey->getText();

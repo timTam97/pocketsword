@@ -17,26 +17,10 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "PSResizing.h"
+#import "PSLaunchViewController.h"
 
-@class PSTabBarControllerDelegate;
+@interface PocketSwordSceneDelegate : UIResponder <UIWindowSceneDelegate, PSLaunchDelegate>
 
-@interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate> {
-	NSURL *urlToOpen;
-	PSTabBarControllerDelegate *tabBarControllerDelegate;
-}
+@property (nonatomic, strong) UIWindow *window;
 
-@property (nonatomic, strong) NSURL *urlToOpen;
-@property (strong) PSTabBarControllerDelegate *tabBarControllerDelegate;
-
-+ (PocketSwordAppDelegate *)sharedAppDelegate;
-- (void)storeDidChange:(NSNotification *)notification;
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options;
-
-@end
-
-@interface UITabBarController (PocketSword)
-@end
-
-@interface UINavigationController (PocketSword)
 @end

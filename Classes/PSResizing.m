@@ -120,6 +120,19 @@
 	return nil;
 }
 
++ (UIWindow *)keyWindow {
+	UIWindowScene *windowScene = [PSResizing currentWindowScene];
+	if (windowScene) {
+		for (UIWindow *window in windowScene.windows) {
+			if (window.isKeyWindow) {
+				return window;
+			}
+		}
+		return windowScene.windows.firstObject;
+	}
+	return nil;
+}
+
 + (CGRect)mainScreenBounds {
 	UIWindowScene *windowScene = [PSResizing currentWindowScene];
 	if (windowScene) {

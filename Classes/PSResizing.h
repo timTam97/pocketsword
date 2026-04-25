@@ -22,6 +22,8 @@
 
 + (UIWindowScene *)currentWindowScene;
 
++ (UIWindow *)keyWindow;
+
 + (CGRect)mainScreenBounds;
 
 + (CGFloat)mainScreenScale;

@@ -720,7 +720,7 @@ static NSString * const kResultCellIdentifier = @"resultsCell";
 		NSString *ref = [PSModuleController createRefString:entry.key];
 		SwordModuleTextEntry *pulled = [mod textEntryForKey:ref textType:TextTypeStripped];
 		if(pulled.text) {
-			entry.text = [pulled.text stringByReplacingOccurrencesOfString:@" [] " withString:@""];
+			entry.text = PSSearchCleanDisplayText(pulled.text);
 		}
 	}
 	NSString *txt = entry.text ?: @"";

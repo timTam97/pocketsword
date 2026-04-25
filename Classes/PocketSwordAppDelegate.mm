@@ -18,6 +18,7 @@
 */
 
 #import "PocketSwordAppDelegate.h"
+#import "PocketSwordSceneDelegate.h"
 #import "PSLanguageCode.h"
 #import "PSResizing.h"
 #import "PSModuleController.h"
@@ -32,16 +33,10 @@
 
 @implementation PocketSwordAppDelegate
 
-@synthesize window, urlToOpen, launchedWithOptions, tabBarControllerDelegate;
+@synthesize urlToOpen, tabBarControllerDelegate;
 
 + (PocketSwordAppDelegate *)sharedAppDelegate {
     return (PocketSwordAppDelegate *) [UIApplication sharedApplication].delegate;
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"reset_PocketSword"]) {
-		[PSLaunchViewController resetPreferences];
-	}
 }
 
 - (void)storeDidChange:(NSNotification *)notification {
@@ -84,9 +79,6 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	
-//	DLog(@"\nlaunched app, now to start our stuff...");
-	
 	Class cls = NSClassFromString(@"NSUbiquitousKeyValueStore");
 	if(cls && NSUbiquitousKeyValueStoreDidChangeExternallyNotification) {
 		// register to observe notifications from the store
@@ -94,69 +86,15 @@
 												 selector: @selector(storeDidChange:)
 													 name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
 												   object: [cls defaultStore]];
-		
-		// get changes that might have happened while this
-		// instance of your app wasn't running
-		//[[NSUbiquitousKeyValueStore defaultStore] setString:@"testValue" forKey:@"testKey"];//dummy to get the pipes flowing!
-		//[[NSUbiquitousKeyValueStore defaultStore] synchronize];
-		
-		
-		// Also, only use TestFlight under iOS 5 or later (aka, when we have NSUbiquitousKeyValueStore)
-		//[TestFlight takeOff:@"fb65937c44f57253d22bd32bdc2c4402_NDA2NTIwMTEtMTItMjUgMjM6MDU6MDcuMTc0MDQ2"];//1.1
-		//[TestFlight takeOff:@"6139398f-b442-43b1-baa8-200a071c0426"];//1.2
 	}
 
-	self.launchedWithOptions = launchOptions;
-	    
-	PSLaunchViewController *lVC = [[PSLaunchViewController alloc] init];
-	[lVC setDelegate:self];
-		
-	self.window = [[UIWindow alloc] initWithFrame:[PSResizing mainScreenBounds]];
-	self.window.backgroundColor = [UIColor systemBackgroundColor];
-
-	if([self.window respondsToSelector:@selector(rootViewController)]) {
-		self.window.rootViewController = lVC;
-	} else {
-		[lVC loadView];
-		[self.window addSubview:lVC.view];
-	}
-	
-	[lVC performSelectorInBackground:@selector(startInitializingPocketSword) withObject:nil];
-	
-	[self.window makeKeyAndVisible];
-	
 	return YES;
 }
 
-- (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
-	PSTabBarControllerDelegate *tbcd = [[PSTabBarControllerDelegate alloc] init];
-	self.tabBarControllerDelegate = tbcd;
-	
-//	DLog(@"finishedInitializing, now to display the tab bar controller");
-	if([self.window respondsToSelector:@selector(rootViewController)]) {
-		self.window.rootViewController = tabBarControllerDelegate.tabBarController;
-	} else {
-		[lVC.view removeFromSuperview];
-		[self.window addSubview:tabBarControllerDelegate.tabBarController.view];
-	}
-	
-	if(self.launchedWithOptions) {
-		NSURL *url = [launchedWithOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-		// uncomment these lines for testing the open url functionality
-		//	url = [NSURL URLWithString:@"sword:///John+3:16"]; // verse with no module
-		//	url = [NSURL URLWithString:@"sword://KJV/John+3:16"]; // verse with module (bible)
-		//	url = [NSURL URLWithString:@"sword://MHCC/John+3:16"]; // verse with module (commentary)
-		//	url = [NSURL URLWithString:@"sword://ABCDEF/John+3:16"]; // verse with non-existent module
-		//	url = [NSURL URLWithString:@"sword://ABCDEF/John+3:16?type=commentary"]; // verse with non-existent module and type
-		//	url = [NSURL URLWithString:@"sword:///John+3:16?type=bible&module=list"]; // bible list
-		//	url = [NSURL URLWithString:@"sword:///John+3:16?type=commentary&module=list"]; // commentary list
-		//	url = [NSURL URLWithString:@"sword:///John+3:16-18"]; // verse with range (should ignore range)	
-		if (url != nil) {
-			[self application:[UIApplication sharedApplication] handleOpenURL:url options:nil];
-		}
-		self.launchedWithOptions = nil;
-	}
-	lVC = nil;
+- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
+	UISceneConfiguration *configuration = [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+	configuration.delegateClass = [PocketSwordSceneDelegate class];
+	return configuration;
 }
 
 /*
@@ -300,10 +238,6 @@
 	}
 
 	return YES;
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
