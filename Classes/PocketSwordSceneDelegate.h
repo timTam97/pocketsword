@@ -17,9 +17,16 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "PSLaunchViewController.h"
-
-@interface PocketSwordSceneDelegate : UIResponder <UIWindowSceneDelegate, PSLaunchDelegate>
+// PSLaunchViewController + the PSLaunchDelegate protocol were migrated to Swift
+// in Wave 4 (PSLaunchViewController.swift) — the former PSLaunchViewController.h is
+// deleted. The @objc(PSLaunchDelegate) protocol lives in the generated
+// PocketSword-Swift.h, which may NOT be imported from a public Obj-C header (§2A
+// Rule 2). A forward @protocol decl cannot satisfy `<PSLaunchDelegate>` in this
+// @interface line either, so the conformance is declared in a class extension in
+// the .mm (which CAN import PocketSword-Swift.h). PocketSwordSceneDelegate itself
+// is the NEXT file migrated; until then it stays Obj-C and binds the Swift
+// protocol via the .mm.
+@interface PocketSwordSceneDelegate : UIResponder <UIWindowSceneDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 

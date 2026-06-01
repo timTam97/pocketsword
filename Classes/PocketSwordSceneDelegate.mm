@@ -20,6 +20,14 @@
 #import "PocketSwordSceneDelegate.h"
 #import "PocketSwordAppDelegate.h"
 #import "PSTabBarControllerDelegate.h"
+// PSLaunchViewController + the @objc(PSLaunchDelegate) protocol are now Swift —
+// reach them via the generated reverse header (a .mm may import it; a .h may not).
+#import "PocketSword-Swift.h"
+
+// Declare PSLaunchDelegate conformance here (not in the public header) per §2A
+// Rule 2: the Swift protocol is only visible through PocketSword-Swift.h.
+@interface PocketSwordSceneDelegate () <PSLaunchDelegate>
+@end
 
 @implementation PocketSwordSceneDelegate {
 	NSURL *_pendingLaunchURL;
@@ -62,7 +70,7 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)finishedInitializingPocketSword:(PSLaunchViewController *)lVC {
+- (void)finishedInitializingPocketSword:(id)lVC {
 	PocketSwordAppDelegate *appDelegate = [PocketSwordAppDelegate sharedAppDelegate];
 	PSTabBarControllerDelegate *tbcd = [[PSTabBarControllerDelegate alloc] init];
 	appDelegate.tabBarControllerDelegate = tbcd;
