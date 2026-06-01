@@ -196,7 +196,7 @@
 		053CAD881809428D00BCDBE6 /* lzsscomprs.txt in Resources */ = {isa = PBXBuildFile; fileRef = 053CAD851809428D00BCDBE6 /* lzsscomprs.txt */; };
 		053CAD8C180942B200BCDBE6 /* osisreferencelinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */; };
 		053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
-		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
+		5A1F70B00000000000ZF002 /* PSPreferencesModuleSelectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZF001 /* PSPreferencesModuleSelectorTableViewController.swift */; };
 		054509C619A5DAA900E0A702 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
@@ -732,8 +732,7 @@
 		053CAD861809428D00BCDBE6 /* xzcomprs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xzcomprs.cpp; sourceTree = "<group>"; };
 		053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osisreferencelinks.cpp; sourceTree = "<group>"; };
 		053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scsuutf8.cpp; sourceTree = "<group>"; };
-		0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesModuleSelectorTableViewController.h; sourceTree = "<group>"; };
-		0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesModuleSelectorTableViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZF001 /* PSPreferencesModuleSelectorTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesModuleSelectorTableViewController.swift; sourceTree = "<group>"; };
 		054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = ../iPhoneOS.sdk/usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 		054509C719A5DAFA00E0A702 /* liblzma.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.5.tbd; path = ../iPhoneOS.sdk/usr/lib/liblzma.5.tbd; sourceTree = SDKROOT; };
 		0545E2421063908C00DD7F06 /* SwordModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModule.h; sourceTree = "<group>"; };
@@ -1113,8 +1112,7 @@
 		0513ACBB10BFADC400E414D9 /* PS-preferences */ = {
 			isa = PBXGroup;
 			children = (
-				0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */,
-				0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */,
+				5A1F70B00000000000ZF001 /* PSPreferencesModuleSelectorTableViewController.swift */,
 				5A1F70B00000000000ZD001 /* PSPreferencesController.swift */,
 				05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */,
 				05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */,
@@ -2602,7 +2600,7 @@
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
 				5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */,
-				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
+				5A1F70B00000000000ZF002 /* PSPreferencesModuleSelectorTableViewController.swift in Sources */,
 				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
 				5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */,
 				5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */,

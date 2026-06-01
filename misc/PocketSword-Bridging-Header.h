@@ -71,20 +71,20 @@
 // user taps a search result, so the type must be Swift-visible here.
 // PSHistoryController itself stays Obj-C++ during Wave 3.
 #import "PSHistoryController.h"
-// Prefs cluster — table view controllers the now-Swift preferences controllers
-// (PSPreferencesController / PSModulePreferencesController, migrated in the Wave-3
-// prefs-cluster step) instantiate and push. Both are C++-free UITableViewControllers
-// whose headers contain ONLY a `@class`/bare-enum forward decl (no #import of any
-// Sword*.h or other project header), so they are leak-guard clean. They STAY Obj-C++
-// for now (a later Wave-3 step migrates them); Swift sees them as Obj-C classes via
-// these imports. Their .mm bodies reach the now-Swift prefs controllers (held as weak
-// `PSBasePreferencesController *` / `PSPreferencesController *` back-pointers) through
-// the generated PocketSword-Swift.h — no header cycle, since the bare forward decl is
-// satisfied by the generated header at .mm compile.
+// Prefs cluster — the font picker table view controller the now-Swift preferences
+// controllers (PSPreferencesController / PSModulePreferencesController, migrated in
+// the Wave-3 prefs-cluster step) instantiate and push. It is a C++-free
+// UITableViewController whose header contains ONLY a `@class` forward decl (no
+// #import of any Sword*.h or other project header), so it is leak-guard clean. It
+// STAYS Obj-C++ for now (a later Wave-3 step migrates it); Swift sees it as an
+// Obj-C class via this import. Its .mm body reaches the now-Swift prefs controllers
+// (held as weak `PSBasePreferencesController *` / `PSPreferencesController *`
+// back-pointers) through the generated PocketSword-Swift.h — no header cycle, since
+// the bare forward decl is satisfied by the generated header at .mm compile.
 //   PSPreferencesFontTableViewController.h declares the public ModuleName/
 //   preferencesController surface the prefs controllers set after alloc.
-//   PSPreferencesModuleSelectorTableViewController.h additionally exports the
-//   `ModuleFeatureRequired` bare enum (StrongsGreek/StrongsHebrew/MorphGreek/
-//   MorphHebrew) and -setTableType:, both used by PSPreferencesController.swift.
+// (PSPreferencesModuleSelectorTableViewController was migrated to Swift in Wave 3;
+// its `ModuleFeatureRequired` enum and -setTableType: now live in
+// PSPreferencesModuleSelectorTableViewController.swift, visible to Swift callers in
+// the same module and to any Obj-C TU via the generated PocketSword-Swift.h.)
 #import "PSPreferencesFontTableViewController.h"
-#import "PSPreferencesModuleSelectorTableViewController.h"

@@ -528,13 +528,13 @@ class PSPreferencesController: PSBasePreferencesController {
                 // strongs greek
                 let moduleSelectorTableViewController = PSPreferencesModuleSelectorTableViewController(style: .grouped)
                 moduleSelectorTableViewController.preferencesController = self
-                moduleSelectorTableViewController.setTableType(StrongsGreek)
+                moduleSelectorTableViewController.setTableType(.StrongsGreek)
                 self.navigationController?.pushViewController(moduleSelectorTableViewController, animated: true)
             case STRONGS_H_ROW:
                 // strongs hebrew
                 let moduleSelectorTableViewController = PSPreferencesModuleSelectorTableViewController(style: .grouped)
                 moduleSelectorTableViewController.preferencesController = self
-                moduleSelectorTableViewController.setTableType(StrongsHebrew)
+                moduleSelectorTableViewController.setTableType(.StrongsHebrew)
                 self.navigationController?.pushViewController(moduleSelectorTableViewController, animated: true)
             default:
                 break
@@ -545,7 +545,7 @@ class PSPreferencesController: PSBasePreferencesController {
                 // greek morphology
                 let moduleSelectorTableViewController = PSPreferencesModuleSelectorTableViewController(style: .grouped)
                 moduleSelectorTableViewController.preferencesController = self
-                moduleSelectorTableViewController.setTableType(MorphGreek)
+                moduleSelectorTableViewController.setTableType(.MorphGreek)
                 self.navigationController?.pushViewController(moduleSelectorTableViewController, animated: true)
             default:
                 break
