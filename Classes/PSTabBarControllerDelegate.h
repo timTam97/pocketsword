@@ -38,6 +38,7 @@
 @class PSBibleViewController;
 @class PSCommentaryViewController;
 @class PSRefSelectorController;
+@class PSSearchHistoryItem;	// Swift value leaf (migration PR 1.2); pointer ivar/property only
 
 typedef enum {
     RestoreScrollPosition = 1,

@@ -26,7 +26,6 @@
 #import "PSModuleSelectorController.h"
 #import "PSPreferencesController.h"
 #import "PSBookmarksNavigatorController.h"
-#import "PSSearchHistoryItem.h"
 #import "SwordModule.h"
 #import "PSModuleController.h"
 #import "PocketSwordAppDelegate.h"

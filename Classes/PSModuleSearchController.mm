@@ -9,7 +9,6 @@
 #import "PSModuleController.h"
 #import "PSHistoryController.h"
 #import "SwordVerseKey.h"
-#import "PSSearchHistoryItem.h"
 #import "PocketSwordAppDelegate.h"
 #import "SwordManager.h"
 #import "SwordModule.h"

@@ -22,7 +22,8 @@
 
 #import "globals.h"               // PSSearchType / PSSearchRange NS_ENUMs + keys
 #import "PSHistoryItem.h"
-#import "PSSearchHistoryItem.h"
+// PSSearchHistoryItem is Swift as of migration step 1.2 — its type is visible to
+// the test bundle via `@testable import PocketSword`, so it is NOT imported here.
 // The bookmark chain (PSBookmarkObject / PSBookmark / PSBookmarkFolder /
 // PSBookmarks) is Swift as of migration step 1.1 — its types are visible to the
 // test bundle via `@testable import PocketSword`, so they are NOT imported here.

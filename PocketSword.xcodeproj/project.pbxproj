@@ -228,7 +228,6 @@
 		5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000K001 /* PSBookmarkTableViewCell.swift */; };
 		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */; };
 		056CD38616BB6D6200AA0674 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.1.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		05717C9513F27B8000753423 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
 		057CBD4817697CFC005BC6BB /* remotetrans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4717697CFC005BC6BB /* remotetrans.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
@@ -320,6 +319,7 @@
 		A100000000000000000001F4 /* PSSearchQuery.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F4 /* PSSearchQuery.mm */; };
 		A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F6 /* PSSearchIndexBuilder.mm */; };
 		5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000L001 /* PSSearchResult.swift */; };
+		5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */; };
 		A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F9 /* libsqlite3.tbd */; };
 		A100000000000000000002A2 /* PSInfoPopupViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000002A1 /* PSInfoPopupViewController.mm */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
@@ -795,8 +795,6 @@
 		056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLaunchViewController.h; sourceTree = "<group>"; };
 		056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSLaunchViewController.mm; sourceTree = "<group>"; };
 		056CD38516BB6D6200AA0674 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = ../iPhoneOS.sdk/usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
-		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
-		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
 		056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "UserComments-Requests.txt"; path = "Resources/doc/UserComments-Requests.txt"; sourceTree = "<group>"; };
 		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		057CBD3417697CAE005BC6BB /* osisenum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osisenum.h; sourceTree = "<group>"; };
@@ -955,6 +953,7 @@
 		A100000000000000000000F5 /* PSSearchIndexBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchIndexBuilder.h; path = Classes/PSSearchIndexBuilder.h; sourceTree = "<group>"; };
 		A100000000000000000000F6 /* PSSearchIndexBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchIndexBuilder.mm; path = Classes/PSSearchIndexBuilder.mm; sourceTree = "<group>"; };
 		5A1F70B0000000000000L001 /* PSSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchResult.swift; path = Classes/PSSearchResult.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchHistoryItem.swift; path = Classes/PSSearchHistoryItem.swift; sourceTree = "<group>"; };
 		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A100000000000000000002A0 /* PSInfoPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSInfoPopupViewController.h; path = Classes/PSInfoPopupViewController.h; sourceTree = "<group>"; };
 		A100000000000000000002A1 /* PSInfoPopupViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSInfoPopupViewController.mm; path = Classes/PSInfoPopupViewController.mm; sourceTree = "<group>"; };
@@ -1954,8 +1953,7 @@
 				051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.mm */,
 				05E3FCC710CF535E00DFEB77 /* PSModuleSearchController.h */,
 				05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */,
-				056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */,
-				056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */,
+				5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */,
 				A100000000000000000000F1 /* PSSearchEngine.h */,
 				A100000000000000000000F2 /* PSSearchEngine.mm */,
 				A100000000000000000000F3 /* PSSearchQuery.h */,
@@ -2625,6 +2623,7 @@
 				A100000000000000000001F4 /* PSSearchQuery.mm in Sources */,
 				A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */,
 				5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */,
+				5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */,
 				A100000000000000000002A2 /* PSInfoPopupViewController.mm in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
@@ -2654,7 +2653,6 @@
 				D2BFDF9F25E73AAB00E04366 /* mz_strm_wzaes.c in Sources */,
 				5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */,
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */,
-				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
 				05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */,
 				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
 				D2BFDFA225E73AAB00E04366 /* mz_os_posix.c in Sources */,
