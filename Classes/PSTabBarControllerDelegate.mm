@@ -22,7 +22,13 @@
 #import "PSTabBarControllerDelegate.h"
 #import "PocketSword-Swift.h"
 #import "SwordModule.h"
-#import "PocketSwordAppDelegate.h"
+// PocketSwordAppDelegate (+ main.m) became Swift in Wave 4 (FINAL) —
+// PocketSwordAppDelegate.swift is now the @main entry point. Its former
+// PocketSwordAppDelegate.{h,mm} are deleted. This TU still resolves the singleton
+// via [PocketSwordAppDelegate sharedAppDelegate].urlToOpen (the @objc(sharedAppDelegate)
+// class method + @objc urlToOpen property), reached via the generated
+// PocketSword-Swift.h imported above — so the old #import "PocketSwordAppDelegate.h"
+// is simply removed.
 // PSBibleViewController / PSCommentaryViewController / PSWebView became Swift in
 // Wave 4 (render-path cluster); their former .h are deleted. The coordinator uses
 // these types (alloc/init the two VCs, read their webView/titleSegmentedControl,
