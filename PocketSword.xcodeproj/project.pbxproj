@@ -15,7 +15,7 @@
 		5A1F70B0000000000000H002 /* PSBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000H001 /* PSBookmark.swift */; };
 		5A1F70B0000000000000I002 /* PSBookmarkFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */; };
 		5A1F70B0000000000000J002 /* PSBookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000J001 /* PSBookmarks.swift */; };
-		050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */; };
+		5A1F70B00000000000ZN002 /* PSModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZN001 /* PSModuleViewController.swift */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
@@ -261,12 +261,12 @@
 		05CBE8D1128A840000730CB8 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8CF128A840000730CB8 /* Icon@2x.png */; };
 		05CBE8E9128A848200730CB8 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D540F20FA415BA00AD011C /* Icon.png */; };
 		05CBE8F9128A85DF00730CB8 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8F7128A85DF00730CB8 /* Icon-72.png */; };
-		05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
+		5A1F70B00000000000ZO002 /* PSBibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZO001 /* PSBibleViewController.swift */; };
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
 		05CFBE1F12C823C3002DA812 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CFBE1D12C823C3002DA812 /* Default@2x.png */; };
 		05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
-		05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DA77A013CD754D000A4B97 /* PSWebView.mm */; };
+		5A1F70B00000000000ZM002 /* PSWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZM001 /* PSWebView.swift */; };
 		05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A313CD8E51000A4B97 /* blueArrow.png */; };
 		05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */; };
 		05DD866C122E5EB400115EAD /* bible@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8668122E5EB400115EAD /* bible@2x.png */; };
@@ -302,7 +302,7 @@
 		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
-		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
+		5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */; };
 		05F4D226160189940072620A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F4D225160189940072620A /* Default-568h@2x.png */; };
 		05F84ED6191F4A82003350DE /* zcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED5191F4A82003350DE /* zcom4.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05F84ED8191F4A98003350DE /* zverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED7191F4A98003350DE /* zverse4.cpp */; };
@@ -380,8 +380,7 @@
 		5A1F70B0000000000000J001 /* PSBookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarks.swift; path = Classes/PSBookmarks.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PocketSwordTests-Bridging-Header.h"; path = "misc/PocketSwordTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000F010 /* PocketSwordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleViewController.mm; path = Classes/PSModuleViewController.mm; sourceTree = "<group>"; };
-		050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleViewController.h; path = Classes/PSModuleViewController.h; sourceTree = "<group>"; };
+		5A1F70B00000000000ZN001 /* PSModuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleViewController.swift; path = Classes/PSModuleViewController.swift; sourceTree = "<group>"; };
 		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
@@ -833,8 +832,7 @@
 		05CBE8CF128A840000730CB8 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Resources/Icon@2x.png"; sourceTree = "<group>"; };
 		05CBE8F7128A85DF00730CB8 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "Resources/Icon-72.png"; sourceTree = "<group>"; };
 		05CBE900128A86CA00730CB8 /* Icon-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-512.png"; path = "Resources/Icon-512.png"; sourceTree = "<group>"; };
-		05CD4552109FFA0A00853E48 /* PSBibleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBibleViewController.h; path = Classes/PSBibleViewController.h; sourceTree = "<group>"; };
-		05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBibleViewController.mm; path = Classes/PSBibleViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZO001 /* PSBibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBibleViewController.swift; path = Classes/PSBibleViewController.swift; sourceTree = "<group>"; };
 		05CD458210A013DD00853E48 /* gear-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear-24.png"; path = "Resources/gear-24.png"; sourceTree = "<group>"; };
 		05CFBE1D12C823C3002DA812 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/Default@2x.png"; sourceTree = "<group>"; };
 		05D3E48E16FA9F5700B9DEBF /* versificationmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versificationmgr.h; sourceTree = "<group>"; };
@@ -843,8 +841,7 @@
 		5A1F70B0000000000000Q001 /* PSLanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSLanguageCode.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000R001 /* PSModuleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSModuleType.swift; sourceTree = "<group>"; };
 		05D6ABA51097E8CC00A5026E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		05DA779F13CD754D000A4B97 /* PSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSWebView.h; path = Classes/PSWebView.h; sourceTree = "<group>"; };
-		05DA77A013CD754D000A4B97 /* PSWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSWebView.mm; path = Classes/PSWebView.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZM001 /* PSWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSWebView.swift; path = Classes/PSWebView.swift; sourceTree = "<group>"; };
 		05DA77A313CD8E51000A4B97 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
 		05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueArrow@2x.png"; path = "Resources/blueArrow@2x.png"; sourceTree = "<group>"; };
 		05DAE2E91816595300C91965 /* Pocket Blue Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Pocket Blue Background.png"; path = "Resources/Pocket Blue Background.png"; sourceTree = "<group>"; };
@@ -895,8 +892,7 @@
 		05EBBA431681825C005C4FF9 /* teixhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teixhtml.cpp; sourceTree = "<group>"; };
 		5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSRefSelectorController.swift; path = Classes/PSRefSelectorController.swift; sourceTree = "<group>"; };
 		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
-		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSCommentaryViewController.swift; path = Classes/PSCommentaryViewController.swift; sourceTree = "<group>"; };
 		05F4D00C1254A6670088C902 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		05F4D225160189940072620A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 		05F84ECC191F4A4F003350DE /* gbflatex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gbflatex.h; sourceTree = "<group>"; };
@@ -1920,14 +1916,10 @@
 		054C55BC11AD0ACA00633371 /* b & c */ = {
 			isa = PBXGroup;
 			children = (
-				050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */,
-				050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */,
-				05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */,
-				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
-				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
-				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
-				05DA779F13CD754D000A4B97 /* PSWebView.h */,
-				05DA77A013CD754D000A4B97 /* PSWebView.mm */,
+				5A1F70B00000000000ZN001 /* PSModuleViewController.swift */,
+				5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */,
+				5A1F70B00000000000ZO001 /* PSBibleViewController.swift */,
+				5A1F70B00000000000ZM001 /* PSWebView.swift */,
 			);
 			name = "b & c";
 			sourceTree = "<group>";
@@ -2563,8 +2555,8 @@
 				5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */,
 				5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */,
 				5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */,
-				05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */,
-				05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */,
+				5A1F70B00000000000ZO002 /* PSBibleViewController.swift in Sources */,
+				5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */,
 				5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */,
 				5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
@@ -2605,7 +2597,7 @@
 				D2BFDF9F25E73AAB00E04366 /* mz_strm_wzaes.c in Sources */,
 				5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */,
 				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */,
-				05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */,
+				5A1F70B00000000000ZM002 /* PSWebView.swift in Sources */,
 				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
 				D2BFDFA225E73AAB00E04366 /* mz_os_posix.c in Sources */,
 				05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */,
@@ -2618,7 +2610,7 @@
 				057CBD4C17697D1C005BC6BB /* osisenum.cpp in Sources */,
 				057CBD4D17697D1C005BC6BB /* osisglosses.cpp in Sources */,
 				057CBD4E17697D1C005BC6BB /* osisxlit.cpp in Sources */,
-				050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */,
+				5A1F70B00000000000ZN002 /* PSModuleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -24,8 +24,10 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSTabBarControllerDelegate.h"
-#import "PSBibleViewController.h"
-#import "PSCommentaryViewController.h"
+// PSBibleViewController / PSCommentaryViewController became Swift in Wave 4
+// (render-path cluster); their former .h are deleted. This TU references neither
+// symbol, so the imports are simply removed (the Swift types, if ever needed,
+// are reachable via PocketSword-Swift.h imported above).
 //#import "TestFlight.h"
 
 @implementation PocketSwordAppDelegate

@@ -14,7 +14,26 @@
 // MBProgressHUDDelegate, so both the class and its delegate protocol must be
 // Swift-visible here. MBProgressHUD itself stays Obj-C.
 #import "MBProgressHUD.h"
-#import "PSWebView.h"
+// PSWebView was migrated to Swift in Wave 4 (render-path cluster) — its former
+// PSWebView.{h,mm} are deleted. The Swift @objc(PSWebView) class and the @objc
+// PSWebViewDelegate protocol live in the same module, so Swift callers (the render
+// VC base PSModuleViewController.swift) reference them directly; the Obj-C++
+// coordinator (PSTabBarControllerDelegate.mm) reaches them via the generated
+// PocketSword-Swift.h. Do NOT re-import PSWebView.h here.
+// PSTabBarControllerDelegate.h is the central coordinator's PUBLIC header. It was
+// de-tainted in Wave 0e (all <swmgr.h>/<swmodule.h>/<localemgr.h>/etc. removed —
+// the one sword::LocaleMgr use moved behind +[SwordManager translate...]) so it is
+// now Foundation+WebKit-only and Swift-importable. The Swift render-path VC base
+// (PSModuleViewController.swift, Wave 4) holds a `PSTabBarControllerDelegate`
+// back-reference, calls its -displayChapter:.../-toggleNavigation and the class
+// method +displayTitle:, and uses the PollingType / RestorePositionType enums
+// declared here — so the coordinator type + those enums must be Swift-visible.
+// The coordinator itself stays Obj-C++ (it is the LAST file migrated). Its header
+// only forward-@class/@protocol-references the already-Swift types it touches
+// (PSBibleViewController / PSCommentaryViewController / PSModuleSearchControllerDelegate /
+// PSDictionaryViewControllerDelegate), which forward decls satisfy during the
+// bridging-header parse.
+#import "PSTabBarControllerDelegate.h"
 #import "SwordModuleTextEntry.h"
 #import "VerseEnumerator.h"
 // Sword*.h clean facades, sanitized in 0e (all C++ moved to per-class +Cpp.h

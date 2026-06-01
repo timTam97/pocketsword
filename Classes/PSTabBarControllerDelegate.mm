@@ -23,10 +23,12 @@
 #import "PocketSword-Swift.h"
 #import "SwordModule.h"
 #import "PocketSwordAppDelegate.h"
-#import "PSBibleViewController.h"
-#import "PSCommentaryViewController.h"
+// PSBibleViewController / PSCommentaryViewController / PSWebView became Swift in
+// Wave 4 (render-path cluster); their former .h are deleted. The coordinator uses
+// these types (alloc/init the two VCs, read their webView/titleSegmentedControl,
+// set refToShow/jsToShow) but reaches them via the generated PocketSword-Swift.h
+// imported above (§2A Rule 1).
 // PSRefSelectorController is now a Swift class (Wave 3); reached via PocketSword-Swift.h above.
-//#import "PSWebView.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 
