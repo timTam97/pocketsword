@@ -19,15 +19,18 @@
 
 #import <WebKit/WebKit.h>
 #import "globals.h"
-#import "PSDictionaryViewController.h"
 
-// PSModuleSearchController went Swift in Wave 3. Per §2A Rule 2 a public Obj-C
-// header may not #import "PocketSword-Swift.h"; a forward @class names the type
-// (it appears only in the .mm) and a forward @protocol is sufficient to list
-// PSModuleSearchControllerDelegate in this class's conformance list below. The
-// real Swift types are resolved via PocketSword-Swift.h imported from the .mm.
+// PSModuleSearchController and PSDictionaryViewController went Swift in Wave 3.
+// Per §2A Rule 2 a public Obj-C header may not #import "PocketSword-Swift.h"; a
+// forward @class names the type (it appears only in the .mm) and a forward
+// @protocol is sufficient to list the @objc PSModuleSearchControllerDelegate /
+// PSDictionaryViewControllerDelegate protocols in this class's conformance list
+// below. The real Swift types are resolved via PocketSword-Swift.h imported from
+// the .mm.
 @class PSModuleSearchController;
 @protocol PSModuleSearchControllerDelegate;
+@class PSDictionaryViewController;
+@protocol PSDictionaryViewControllerDelegate;
 
 @class PSInfoPopupViewController;
 

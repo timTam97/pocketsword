@@ -8,6 +8,12 @@
 // honour the generated header's `@import MessageUI;` (clang module-import is off
 // for c++0x). This mirrors how WebKit reaches the generated header via PSWebView.h.
 #import "globals.h"
+// MBProgressHUD.h is a vendored Foundation/UIKit/CoreGraphics-only Obj-C class
+// (externals/MBProgressHUD) — no C++. The Swift PSDictionaryViewController (Wave
+// 3) shows an MBProgressHUD while caching dictionary keys and conforms to
+// MBProgressHUDDelegate, so both the class and its delegate protocol must be
+// Swift-visible here. MBProgressHUD itself stays Obj-C.
+#import "MBProgressHUD.h"
 #import "PSWebView.h"
 #import "SwordModuleTextEntry.h"
 #import "VerseEnumerator.h"
@@ -40,13 +46,12 @@
 // (migration step 1.2) calls +[PSModuleController getFirstRefAvailable] on its
 // legacy empty-array seed path, so its declaration must be visible here.
 #import "PSModuleController.h"
-// PSDictionaryViewController.h is C++-clean (its only #import is the UIKit-only
-// MBProgressHUD.h). The Swift PSDictionaryOverlayViewController (Wave 2) holds a
-// `PSDictionaryViewController *dictionaryViewController` property faithful to the
-// original Obj-C surface, so the type must be a visible Swift type here. (The
-// header's `@class PSDictionaryOverlayViewController;` forward decl is satisfied
-// by the generated PocketSword-Swift.h at compile of the .mm importers.)
-#import "PSDictionaryViewController.h"
+// (PSDictionaryViewController was migrated to Swift in Wave 3 — its former
+// PSDictionaryViewController.h is deleted. The Swift class and the @objc
+// PSDictionaryViewControllerDelegate protocol live in the same module, so the
+// Swift PSDictionaryOverlayViewController references them directly; any Obj-C++
+// TU (PSTabBarControllerDelegate.mm) reaches them via the generated
+// PocketSword-Swift.h.)
 // PSBookmarksNavigatorController.h is Foundation/UIKit-only (no #import lines, no
 // C++; just a `@class PSBookmarkFolder;` forward decl). The Swift
 // PSBookmarksAddTableViewController (Wave 2) pushes a PSBookmarksNavigatorController

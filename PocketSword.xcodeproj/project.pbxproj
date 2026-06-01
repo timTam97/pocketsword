@@ -210,7 +210,7 @@
 		5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */; };
 		5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZD001 /* PSPreferencesController.swift */; };
 		5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */; };
-		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
+		5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */; };
 		5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */; };
 		5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
@@ -759,8 +759,7 @@
 		5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBasePreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZD001 /* PSPreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModulePreferencesController.swift; path = Classes/PSModulePreferencesController.swift; sourceTree = "<group>"; };
-		0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryViewController.h; path = Classes/PSDictionaryViewController.h; sourceTree = "<group>"; };
-		0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSDictionaryViewController.mm; path = Classes/PSDictionaryViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryViewController.swift; path = Classes/PSDictionaryViewController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesFontTableViewController.swift; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
 		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/fonts/CharisSILR.ttf; sourceTree = "<group>"; };
@@ -1880,8 +1879,7 @@
 		054C55B811AD0A2700633371 /* Dictionary */ = {
 			isa = PBXGroup;
 			children = (
-				0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */,
-				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
+				5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */,
 				5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */,
 				5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */,
 			);
@@ -2592,7 +2590,7 @@
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
 				5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */,
-				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
+				5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */,
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
