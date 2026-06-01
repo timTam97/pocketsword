@@ -8,6 +8,7 @@
 
 #import "VerseEnumerator.h"
 #import "SwordListKey.h"
+#import "SwordListKey+Cpp.h"
 
 @interface VerseEnumerator ()
 @property (strong, readwrite) SwordListKey *listKey;

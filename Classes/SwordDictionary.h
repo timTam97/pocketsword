@@ -23,9 +23,8 @@
 }
 
 - (id)initWithName:(NSString *)aName swordManager:(SwordManager *)aManager;
-#ifdef __cplusplus
-- (id)initWithSWModule:(sword::SWModule *)aModule swordManager:(SwordManager *)aManager;
-#endif
+// C++ init (-initWithSWModule:swordManager:) lives in SwordDictionary+Cpp.h,
+// imported only by .mm files.
 
 - (NSArray *)allKeys;
 - (NSString *)entryForKey:(NSString *)aKey;

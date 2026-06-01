@@ -879,6 +879,13 @@
 		05DD867C122E60AC00115EAD /* dictionary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dictionary@2x.png"; path = "Resources/dictionary@2x.png"; sourceTree = "<group>"; };
 		05DF558D10AA9123007CB847 /* SwordBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordBook.h; sourceTree = "<group>"; };
 		05DF558E10AA9123007CB847 /* SwordBook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordBook.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000E001 /* SwordKey+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordKey+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E002 /* SwordVerseKey+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordVerseKey+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E003 /* SwordListKey+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordListKey+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E004 /* SwordModule+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordModule+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E005 /* SwordManager+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordManager+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E006 /* SwordDictionary+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordDictionary+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E007 /* SwordBook+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordBook+Cpp.h"; sourceTree = "<group>"; };
 		05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSAboutScreenController.h; sourceTree = "<group>"; };
 		05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSAboutScreenController.mm; sourceTree = "<group>"; };
 		05DF57C610ABC753007CB847 /* About.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = About.png; path = Resources/About.png; sourceTree = "<group>"; };
@@ -1087,22 +1094,29 @@
 			isa = PBXGroup;
 			children = (
 				054C570711AE0EC300633371 /* SwordVerseKey.h */,
+				5A1F70B0000000000000E002 /* SwordVerseKey+Cpp.h */,
 				054C570011AE0E6B00633371 /* SwordVerseKey.mm */,
 				054C570111AE0E6B00633371 /* VerseEnumerator.h */,
 				054C570211AE0E6B00633371 /* VerseEnumerator.mm */,
 				055E308810E74308004EBC79 /* SwordKey.h */,
+				5A1F70B0000000000000E001 /* SwordKey+Cpp.h */,
 				055E308910E74308004EBC79 /* SwordKey.mm */,
 				055E308310E74288004EBC79 /* SwordListKey.h */,
+				5A1F70B0000000000000E003 /* SwordListKey+Cpp.h */,
 				055E308410E74288004EBC79 /* SwordListKey.mm */,
 				0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */,
 				0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */,
 				05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */,
+				5A1F70B0000000000000E006 /* SwordDictionary+Cpp.h */,
 				05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */,
 				0545E2421063908C00DD7F06 /* SwordModule.h */,
+				5A1F70B0000000000000E004 /* SwordModule+Cpp.h */,
 				0545E2431063908C00DD7F06 /* SwordModule.mm */,
 				0545E26410639A4A00DD7F06 /* SwordManager.h */,
+				5A1F70B0000000000000E005 /* SwordManager+Cpp.h */,
 				0545E26510639A4A00DD7F06 /* SwordManager.mm */,
 				05DF558D10AA9123007CB847 /* SwordBook.h */,
+				5A1F70B0000000000000E007 /* SwordBook+Cpp.h */,
 				05DF558E10AA9123007CB847 /* SwordBook.mm */,
 			);
 			name = Sword;

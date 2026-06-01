@@ -6,6 +6,7 @@
 #import "PSSearchEngine.h"
 #import "PSSearchResult.h"
 #import "SwordModule.h"
+#import "SwordModule+Cpp.h"
 #import <sqlite3.h>
 #import <swmodule.h>
 #import <versekey.h>

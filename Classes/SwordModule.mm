@@ -12,9 +12,11 @@
 */
 
 #import "SwordModule.h"
+#import "SwordModule+Cpp.h"
 #import "rtfhtml.h"
 #import "utils.h"
 #import "SwordManager.h"
+#import "SwordManager+Cpp.h"
 #import "globals.h"
 #import "PSModuleController.h"
 #import "PSLanguageCode.h"

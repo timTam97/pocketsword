@@ -12,10 +12,12 @@
 */
 
 #import "SwordDictionary.h"
+#import "SwordDictionary+Cpp.h"
 #import "SwordModuleTextEntry.h"
 #import "utils.h"
 #import "globals.h"
 #import "SwordManager.h"
+#import "SwordManager+Cpp.h"
 
 @interface SwordDictionary (/* Private, class continuation */)
 /** private property */

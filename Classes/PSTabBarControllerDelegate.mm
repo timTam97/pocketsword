@@ -414,8 +414,7 @@
 }
 
 - (void)updateViewWithSelectedBookName:(NSString*)bookNameString chapter:(NSInteger)chapter verse:(NSInteger)verse {
-	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
-	NSString *bookName = [NSString stringWithCString:lmgr->translate([bookNameString cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
+	NSString *bookName = [SwordManager translateBookName:bookNameString];
 	NSString *verseString = [NSString stringWithFormat:@"%ld", (long)verse];
 	NSString *ref = [bookName stringByAppendingFormat: @" %ld", (long)chapter];
 	PSModuleController *moduleController = [PSModuleController defaultModuleController];

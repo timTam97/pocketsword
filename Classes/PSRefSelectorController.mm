@@ -10,6 +10,7 @@
 
 #import "PSRefSelectorController.h"
 #import "SwordBook.h"
+#import "SwordBook+Cpp.h"
 #import "PSModuleController.h"
 #import "PSChapterSelectorController.h"
 #import "PocketSword-Swift.h"

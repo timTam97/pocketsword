@@ -24,18 +24,17 @@
 
 @class PSInfoPopupViewController;
 
-#ifdef __cplusplus
-#include <swmgr.h>
-#include <swmodule.h>
-#include <markupfiltmgr.h>
-#include <filemgr.h>
-#include <localemgr.h>
-#endif
+// NOTE: The C++ sword API includes (<swmgr.h>/<swmodule.h>/<markupfiltmgr.h>/
+// <filemgr.h>/<localemgr.h>) were removed in the 0e de-taint pass. The only
+// direct C++ use (sword::LocaleMgr in updateViewWithSelectedBookName:) now goes
+// through the Foundation-only +[SwordManager translateBookName:] helper, so
+// this hub header is safe to reach (transitively) from the Swift bridging
+// header. Do not re-add C++ includes here.
 
 //@class PSWebView;//remove after the commentary tab is pulled from the XIB.
 
 @class PSModuleSelectorController;
-@class Swordmodule;
+@class SwordModule;
 @class PSBibleViewController;
 @class PSCommentaryViewController;
 @class PSRefSelectorController;

@@ -7,6 +7,8 @@
 //
 
 #import "SwordListKey.h"
+#import "SwordListKey+Cpp.h"
+#import "SwordKey+Cpp.h"
 //#import "SwordBible.h"
 #import "SwordVerseKey.h"
 

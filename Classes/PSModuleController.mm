@@ -20,9 +20,12 @@
 #import "ZipArchive.h"
 #import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
+#import "SwordDictionary+Cpp.h"
+#import "SwordModule+Cpp.h"
 #import "PocketSword-Swift.h"
 
 #import "SwordManager.h"
+#import "SwordManager+Cpp.h"
 #import "globals.h"
 #import "PSModuleType.h"
 #import "SwordKey.h"

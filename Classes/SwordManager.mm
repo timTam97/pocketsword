@@ -12,6 +12,8 @@
 */
 //#import <UIKit/UIKit.h>
 #import "SwordManager.h"
+#import "SwordManager+Cpp.h"
+#import "SwordModule+Cpp.h"
 #import "PSModuleType.h"
 
 #include <string>
@@ -27,6 +29,7 @@
 //#import "SwordBible.h"
 //#import "SwordCommentary.h"
 #import "SwordDictionary.h"
+#import "SwordDictionary+Cpp.h"
 //#import "SwordListKey.h"
 //#import "SwordVerseKey.h"
 #include <installmgr.h>
@@ -239,8 +242,17 @@ using std::list;
     if(haveLocale) {
         // set the locale
         lManager->setDefaultLocaleName([lang UTF8String]);
-    }    
+    }
 	//sword::LocaleMgr::setSystemLocaleMgr(lManager);
+}
+
+// Foundation-only wrapper over sword::LocaleMgr::translate so callers (e.g.
+// PSTabBarControllerDelegate) need not touch the C++ LocaleMgr API directly.
+// Keeps the public header C++-clean for the Swift bridging header.
++ (NSString *)translateBookName:(NSString *)bookName {
+	if(!bookName) return nil;
+	sword::LocaleMgr *lmgr = sword::LocaleMgr::getSystemLocaleMgr();
+	return [NSString stringWithCString:lmgr->translate([bookName cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
 }
 
 //Effectively, this is a list of the module types that are currently supported.
