@@ -12,7 +12,8 @@
 #import "SwordBook.h"
 #import "SwordBook+Cpp.h"
 #import "PSModuleController.h"
-#import "PSChapterSelectorController.h"
+// PSChapterSelectorController is now a Swift class (Wave 2); reached via the
+// generated PocketSword-Swift.h below instead of its old Obj-C header.
 #import "PocketSword-Swift.h"
 
 @implementation PSRefSelectorController

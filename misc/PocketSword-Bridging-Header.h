@@ -9,6 +9,14 @@
 // SwordDictionary.h chain — all now Foundation-only and Swift-importable.
 #import "SwordManager.h"
 #import "SwordModule.h"
+// SwordBook.h is a clean Foundation-only @objc facade (subclass of SwordModule)
+// after Wave 0e — its C++ (the versificationmgr include, the
+// const sword::VersificationMgr::Book * ivar, -initWithBook:) lives in
+// SwordBook+Cpp.h, imported only by .mm files. The Swift chapter/verse
+// reference selectors (PSChapterSelectorController / PSVerseSelectorController,
+// Wave 2) hold a `SwordBook *book` property, so SwordBook must be a visible
+// Swift type here.
+#import "SwordBook.h"
 // PSModuleController.h is C++-clean (its only #import is the SwordModule.h facade
 // above; every method signature is Foundation-typed). The Swift PSHistoryItem
 // (migration step 1.2) calls +[PSModuleController getFirstRefAvailable] on its
