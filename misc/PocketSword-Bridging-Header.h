@@ -10,3 +10,8 @@
 // SwordDictionary.h chain — all now Foundation-only and Swift-importable.
 #import "SwordManager.h"
 #import "SwordModule.h"
+// PSModuleController.h is C++-clean (its only #import is the SwordModule.h facade
+// above; every method signature is Foundation-typed). The Swift PSHistoryItem
+// (migration step 1.2) calls +[PSModuleController getFirstRefAvailable] on its
+// legacy empty-array seed path, so its declaration must be visible here.
+#import "PSModuleController.h"

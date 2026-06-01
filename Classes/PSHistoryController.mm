@@ -20,7 +20,6 @@
 #import "PSHistoryController.h"
 #import "PSModuleController.h"
 #import "PocketSword-Swift.h"
-#import "PSHistoryItem.h"
 #import "SwordManager.h"
 
 
@@ -451,13 +450,13 @@
 	}
 	
 	switch([firstArrayNewest ageComparisonToHistoryItem:secondArrayNewest]) {
-		case PSHistoryItemOlder:
+		case PSHistoryItemAgeOlder:
 			//firstArrayNewist is OLDER than secondArrayNewest
 			[returnArray addObject:secondArrayNewest];
 			[secondArray removeObjectAtIndex:0];
 			[returnArray addObjectsFromArray:[PSHistoryController synchronizeHistoryArray:firstArray withArray:secondArray]];
 			break;
-		case PSHistoryItemNewer:
+		case PSHistoryItemAgeNewer:
 			[returnArray addObject:firstArrayNewest];
 			[firstArray removeObjectAtIndex:0];
 			[returnArray addObjectsFromArray:[PSHistoryController synchronizeHistoryArray:firstArray withArray:secondArray]];
