@@ -10,7 +10,6 @@
 #import "PSModuleController.h"
 #import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
-#import "PSBookmarkAddViewController.h"
 #import "PocketSword-Swift.h"
 #import "PSCommentaryViewController.h"
 #import "SwordManager.h"

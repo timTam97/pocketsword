@@ -28,3 +28,11 @@
 // header's `@class PSDictionaryOverlayViewController;` forward decl is satisfied
 // by the generated PocketSword-Swift.h at compile of the .mm importers.)
 #import "PSDictionaryViewController.h"
+// PSBookmarksNavigatorController.h is Foundation/UIKit-only (no #import lines, no
+// C++; just a `@class PSBookmarkFolder;` forward decl). The Swift
+// PSBookmarksAddTableViewController (Wave 2) pushes a PSBookmarksNavigatorController
+// when the user taps the folder row, so the type must be a visible Swift type
+// here. PSBookmarksNavigatorController itself stays Obj-C++ and consumes the Swift
+// add-bookmark VC via the generated PocketSword-Swift.h in its .mm (no cycle: the
+// .h imports nothing).
+#import "PSBookmarksNavigatorController.h"

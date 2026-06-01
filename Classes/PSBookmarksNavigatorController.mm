@@ -9,7 +9,6 @@
 #import "PSBookmarksNavigatorController.h"
 #import "PSModuleController.h"
 #import "PSHistoryController.h"
-#import "PSBookmarkAddViewController.h"
 #import "PocketSword-Swift.h"
 #import "SwordManager.h"
 
