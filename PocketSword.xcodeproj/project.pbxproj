@@ -219,7 +219,7 @@
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		0562FD7C16BB8BCF003A8C70 /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0562FD7B16BB8BCF003A8C70 /* libSystem.B.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */; };
+		5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */; };
 		5A1F70B0000000000000V002 /* PSBookmarkFolderColourSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */; };
 		056BC3A012ECFC950029F3A2 /* HighlightBookmarks.js in Resources */ = {isa = PBXBuildFile; fileRef = 056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */; };
 		056BC70E12F0E3F00029F3A2 /* bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC70A12F0E3F00029F3A2 /* bookmark.png */; };
@@ -779,8 +779,7 @@
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		0562FD7B16BB8BCF003A8C70 /* libSystem.B.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B.tbd; path = ../iPhoneOS.sdk/usr/lib/libSystem.B.tbd; sourceTree = SDKROOT; };
 		0567C1AC13FB4CEC00B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		056BBF8F12DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolderAddViewController.h; path = Classes/PSBookmarkFolderAddViewController.h; sourceTree = "<group>"; };
-		056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolderAddViewController.m; path = Classes/PSBookmarkFolderAddViewController.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderAddViewController.swift; path = Classes/PSBookmarkFolderAddViewController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderColourSelectorViewController.swift; path = Classes/PSBookmarkFolderColourSelectorViewController.swift; sourceTree = "<group>"; };
 		056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = HighlightBookmarks.js; path = Resources/HighlightBookmarks.js; sourceTree = "<group>"; };
 		056BC70A12F0E3F00029F3A2 /* bookmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmark.png; path = Resources/bookmark.png; sourceTree = "<group>"; };
@@ -1925,8 +1924,7 @@
 				051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */,
 				059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */,
 				059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.mm */,
-				056BBF8F12DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.h */,
-				056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */,
+				5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */,
 				5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */,
 			);
 			name = bookmarks;
@@ -2633,7 +2631,7 @@
 				5A1F70B0000000000000J002 /* PSBookmarks.swift in Sources */,
 				051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.mm in Sources */,
 				059419B012DAC76400A87B02 /* PSBookmarkAddViewController.mm in Sources */,
-				056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
+				5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */,
 				5A1F70B0000000000000V002 /* PSBookmarkFolderColourSelectorViewController.swift in Sources */,
 				D2BFDF9F25E73AAB00E04366 /* mz_strm_wzaes.c in Sources */,
 				5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */,
