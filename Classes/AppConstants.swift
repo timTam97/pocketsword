@@ -1,0 +1,251 @@
+//
+//  AppConstants.swift
+//  PocketSword
+//
+//  Swift mirror of Classes/globals.h (migration step 0b).
+//
+//  IMPORTANT: globals.h remains the Obj-C source of truth during the mixed
+//  migration phase. This file mirrors every wire string / format BYTE-FOR-BYTE
+//  for Swift ergonomics and interop. The persisted key string frequently
+//  differs from the Obj-C macro name (e.g. DefaultsLastRef -> "lastRef"), so do
+//  NOT "fix" these to match the Swift symbol names — they are load-bearing
+//  persisted keys and changing them corrupts user data.
+//
+//  This is intentional dual-maintenance: when an Obj-C @"literal" or macro value
+//  here changes in globals.h, mirror it here too (and vice versa) until Obj-C
+//  is fully gone.
+//
+
+import Foundation
+
+// MARK: - Defaults keys (mirror of the Defaults*/* @"literal" #defines)
+//
+// Caseless namespace of static-let String constants. RIGHT-hand value is the
+// PERSISTED wire string (== the @"..." literal in globals.h), which is often
+// NOT the same as the macro name on the LEFT.
+
+enum Defaults {
+    static let moduleCipherKeysKey         = "DefaultsModuleCipherKeysKey"
+    static let lastRef                     = "lastRef"                 // macro DefaultsLastRef
+    static let lastBible                   = "lastBible"               // macro DefaultsLastBible
+    static let lastCommentary              = "lastCommentary"          // macro DefaultsLastCommentary
+    static let lastDictionary              = "lastDictionary"          // macro DefaultsLastDictionary
+
+    static let lastMultiListTab            = "DefaultsLastMultiListTab"
+    static let lastSearchFuzzy             = "DefaultsLastSearchFuzzy"
+    static let lastSearchType              = "DefaultsLastSearchType"
+    static let lastSearchRange             = "DefaultsLastSearchRange"
+    static let luceneSwept                 = "DefaultsLuceneSwept"
+    static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
+
+    static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
+    static let commentaryVersePosition     = "commentaryVersePosition" // macro DefaultsCommentaryVersePosition
+
+    // Default modules
+    static let kjvRemoved                  = "DefaultsKJVRemoved"
+    static let mhccRemoved                 = "DefaultsMHCCRemoved"
+    static let strongsRealHebrewRemoved    = "DefaultsStrongsRealHebrewRemoved"
+    static let robinsonRemoved             = "DefaultsRobinsonRemoved"
+    static let strongsRealGreekRemoved     = "DefaultsStrongsRealGreekRemoved"
+
+    // Preferences - general
+    static let strongsHebrewModule         = "DefaultsStrongsHebrewModule"
+    static let strongsGreekModule          = "DefaultsStrongsGreekModule"
+    static let morphHebrewModule           = "DefaultsMorphHebrewModule"
+    static let morphGreekModule            = "DefaultsMorphGreekModule"
+    static let fullscreenModePreference    = "fullscreenModePreference"      // macro DefaultsFullscreenModePreference
+    static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
+    static let moduleMaintainerModePreference = "moduleMaintainerModePreference" // macro DefaultsModuleMaintainerModePreference
+
+    // from createHTMLString:
+    static let fontNamePreference          = "fontNamePreference"
+    static let fontSizePreference          = "fontSizePreference"
+    static let fontDefaultsPreference      = "fontDefaultsPreference"
+
+    // from attributeValueForEntryData: && getChapter:
+    static let strongsPreference           = "strongsPreference"
+    static let morphPreference             = "morphPreference"
+    static let scriptRefsPreference        = "scriptRefsPreference"
+    static let footnotesPreference         = "footnotesPreference"
+    static let headingsPreference          = "headingsPreference"
+    static let redLetterPreference         = "redLetterPreference"
+    static let vplPreference               = "vplPreference"
+    static let greekAccentsPreference      = "greekAccentsPreference"
+    static let hvpPreference               = "hvpPreference"
+    static let hebrewCantillationPreference = "hebrewCantillationPreference"
+    static let glossesPreference           = "glossesPreference"
+
+    static let rotationLockPosition        = "rotationLockedPosition"        // macro ROTATION_LOCK_POSITION
+}
+
+// MARK: - Font names + misc string / int constants
+
+enum AppConstants {
+    static let strongsFontName        = "Times New Roman"   // macro StrongsFontName
+    static let greekStrongsFontName   = "Gentium Plus"      // macro PSGreekStrongsFontName
+    static let hebrewStrongsFontName  = "Ezra SIL"          // macro PSHebrewStrongsFontName
+    static let defaultFontName        = "Helvetica Neue"    // macro PSDefaultFontName
+    static let folderSeparatorString  = ":::"               // macro PSFolderSeparatorString
+    static let historyMaxEntries      = 100                 // macro PSHistoryMaxEntries (Int)
+    static let historyName            = "bibleHistory"      // macro PSHistoryName
+
+    static let bookNameString         = "BookNameString"
+    static let chapterString          = "ChapterString"
+    static let verseString            = "VerseString"
+
+    static let bibleTabTitleString    = "BibleTabTitleString"
+    static let commentaryTabTitleString = "CommentaryTabTitleString"
+}
+
+// MARK: - Notification names
+//
+// rawValue MUST equal the existing @"..." literal in globals.h so that Obj-C and
+// Swift observers/posters interoperate during the mixed phase. NOTE the ONE
+// wire-string mismatch: moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged"
+// (drops the "Notification" prefix). All other 24 match their macro name.
+
+extension Notification.Name {
+    static let modulesChanged               = Notification.Name("NotificationModulesChanged")
+    static let bibleSwipeRight              = Notification.Name("NotificationBibleSwipeRight")
+    static let bibleSwipeLeft               = Notification.Name("NotificationBibleSwipeLeft")
+    static let commentarySwipeRight         = Notification.Name("NotificationCommentarySwipeRight")
+    static let commentarySwipeLeft          = Notification.Name("NotificationCommentarySwipeLeft")
+    static let moduleMaintainerModeChanged  = Notification.Name("ModuleMaintainerModeChanged") // MISMATCH (no "Notification" prefix)
+
+    static let refSelectorResetBooks        = Notification.Name("NotificationRefSelectorResetBooks")
+    static let newPrimaryBible              = Notification.Name("NotificationNewPrimaryBible")
+    static let newPrimaryCommentary         = Notification.Name("NotificationNewPrimaryCommentary")
+    static let newPrimaryDictionary         = Notification.Name("NotificationNewPrimaryDictionary")
+    static let reloadDictionaryData         = Notification.Name("NotificationReloadDictionaryData")
+    static let resetBibleAndCommentaryView  = Notification.Name("NotificationResetBibleAndCommentaryView")
+
+    static let redisplayPrimaryBible        = Notification.Name("NotificationRedisplayPrimaryBible")
+    static let redisplayPrimaryCommentary   = Notification.Name("NotificationRedisplayPrimaryCommentary")
+    static let primaryDictionaryChanged     = Notification.Name("NotificationPrimaryDictionaryChanged")
+    static let bookmarksChanged             = Notification.Name("NotificationBookmarksChanged")
+    static let historyChanged               = Notification.Name("NotificationHistoryChanged")
+
+    static let toggleMultiList              = Notification.Name("NotificationToggleMultiList")
+    static let toggleModuleList             = Notification.Name("NotificationToggleModuleList")
+    static let toggleNavigation             = Notification.Name("NotificationToggleNavigation")
+
+    static let hideInfoPane                 = Notification.Name("NotificationHideInfoPane")
+    static let showInfoPane                 = Notification.Name("NotificationShowInfoPane")
+    static let rotateInfoPane               = Notification.Name("NotificationRotateInfoPane")
+
+    static let showCommentaryTab            = Notification.Name("NotificationShowCommentaryTab")
+    static let showBibleTab                 = Notification.Name("NotificationShowBibleTab")
+
+    static let addBookmarkInFolder          = Notification.Name("NotificationAddBookmarkInFolder")
+
+    static let updateSelectedReference      = Notification.Name("NotificationUpdateSelectedReference")
+}
+
+/// Swift analogue of the `SendNotifyModulesChanged(X)` statement macro
+/// (globals.h:141 — posts NotificationModulesChanged with the given object).
+func sendNotifyModulesChanged(_ object: Any? = nil) {
+    NotificationCenter.default.post(name: .modulesChanged, object: object)
+}
+
+// MARK: - Per-module preference accessors
+//
+// ONE canonical implementation of the composite-key format used by the 7 Obj-C
+// function-like macros (GetBool/GetString/GetInteger/SetBool/SetObject/
+// SetInteger/RemovePrefForMod). The key is built via
+//   [NSString stringWithFormat:@"%@_%@", Pref, Mod]
+// i.e. pref first, mod second, joined by a single underscore. This MUST stay
+// byte-identical to the Obj-C macros or per-module prefs silently break / leak.
+
+extension UserDefaults {
+    /// Composite key "<pref>_<mod>" — exact reproduction of "%@_%@" (pref, mod).
+    func psModuleKey(_ pref: String, _ mod: String) -> String { "\(pref)_\(mod)" }
+
+    func psBool(_ pref: String, forModule mod: String) -> Bool {
+        bool(forKey: psModuleKey(pref, mod))
+    }
+
+    func psString(_ pref: String, forModule mod: String) -> String? {
+        string(forKey: psModuleKey(pref, mod))
+    }
+
+    func psInteger(_ pref: String, forModule mod: String) -> Int {
+        integer(forKey: psModuleKey(pref, mod))
+    }
+
+    func psSet(_ value: Bool, forPref pref: String, module mod: String) {
+        set(value, forKey: psModuleKey(pref, mod))
+    }
+
+    func psSet(_ value: Any?, forPref pref: String, module mod: String) {
+        set(value, forKey: psModuleKey(pref, mod))
+    }
+
+    func psSet(_ value: Int, forPref pref: String, module mod: String) {
+        set(value, forKey: psModuleKey(pref, mod))
+    }
+
+    func psRemove(_ pref: String, forModule mod: String) {
+        removeObject(forKey: psModuleKey(pref, mod))
+    }
+}
+
+// MARK: - Application paths
+//
+// Mirror of the DEFAULT_*_PATH expression macros. These re-run
+// NSSearchPathForDirectoriesInDomains on EVERY expansion, so they are exposed
+// as COMPUTED static vars (never captured `let`s).
+//
+// The domain split is load-bearing — Documents (module/builtin/bookmarks) vs
+// Caches (old/appsupport/installer) vs Temporary (MMM) drives the one-time
+// module migration and the iCloud-backup-skip attribute. The first six macros
+// concatenate a literal "/" (stringByAppendingString:); MMM uses path-component
+// append (stringByAppendingPathComponent:) with NO trailing slash.
+
+enum AppPaths {
+    private static func documentsDirectory() -> String {
+        NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    }
+
+    private static func cachesDirectory() -> String {
+        NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+    }
+
+    /// DEFAULT_MODULE_PATH — Documents + "/"
+    static var modulePath: String { documentsDirectory() + "/" }
+
+    /// DEFAULT_MODULE_PATH_OLD — Caches + "/"
+    static var modulePathOld: String { cachesDirectory() + "/" }
+
+    /// DEFAULT_BUILTIN_MODULE_PATH — Documents + "/Built-in/"
+    static var builtinModulePath: String { documentsDirectory() + "/Built-in/" }
+
+    /// DEFAULT_APPSUPPORT_PATH — Caches + "/"
+    static var appSupportPath: String { cachesDirectory() + "/" }
+
+    /// DEFAULT_BOOKMARKS_PATH — Documents + "/"
+    static var bookmarksPath: String { documentsDirectory() + "/" }
+
+    /// DEFAULT_INSTALLER_PATH — Caches + "/InstallMgr/"
+    static var installerPath: String { cachesDirectory() + "/InstallMgr/" }
+
+    /// DEFAULT_MMM_PATH — Temporary dir, path-component "MMM" (NO trailing slash)
+    static var mmmPath: String { (NSTemporaryDirectory() as NSString).appendingPathComponent("MMM") }
+}
+
+// MARK: - Logging shims
+//
+// DLog/ALog live in misc/PocketSword_Prefix.pch and are invisible to Swift
+// (Swift ignores GCC_PREFIX_HEADER). DLog is a DEBUG-only NSLog wrapper; ALog
+// always fires. These Swift shims mirror that behaviour.
+
+/// DEBUG-only logging shim mirroring the Obj-C `DLog` macro.
+func dlog(_ message: String, file: String = #file, line: Int = #line) {
+    #if DEBUG
+    NSLog("%@ [Line %d] %@", (file as NSString).lastPathComponent, line, message)
+    #endif
+}
+
+/// Always-on logging shim mirroring the Obj-C `ALog` macro.
+func alog(_ message: String, file: String = #file, line: Int = #line) {
+    NSLog("%@ [Line %d] %@", (file as NSString).lastPathComponent, line, message)
+}

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A1F70B0000000000000B002 /* SwiftBuildProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */; };
+		5A1F70B0000000000000C002 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000C001 /* AppConstants.swift */; };
 		050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */; };
 		0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
 		0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
@@ -368,6 +369,7 @@
 
 /* Begin PBXFileReference section */
 		5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBuildProbe.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000C001 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleViewController.mm; path = Classes/PSModuleViewController.mm; sourceTree = "<group>"; };
 		050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleViewController.h; path = Classes/PSModuleViewController.h; sourceTree = "<group>"; };
 		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2030,6 +2032,7 @@
 				05F4D0321255D2940088C902 /* PSResizing.h */,
 				05F4D0331255D2940088C902 /* PSResizing.m */,
 				5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */,
+				5A1F70B0000000000000C001 /* AppConstants.swift */,
 			);
 			name = "PS-other";
 			path = Classes;
@@ -2384,6 +2387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1F70B0000000000000B002 /* SwiftBuildProbe.swift in Sources */,
+				5A1F70B0000000000000C002 /* AppConstants.swift in Sources */,
 				D2BFDFA125E73AAB00E04366 /* mz_os.c in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				D2BFDF9925E73AAB00E04366 /* mz_zip.c in Sources */,
