@@ -30,4 +30,12 @@
 + (BOOL)saveBookmarksToFile;
 + (void)importBookmarksFromV2;
 
+// Positional-array (de)serialization for the on-disk PSBookmarks.plist schema.
+// Exposed for the Wave-0c persisted-format guard tests; behaviour is unchanged.
+//   WRITE +parseBookmarkObject:  folder   -> [name, dateAdded, dateLastAccessed, @"YES", rgb-or-@"", children] (6)
+//                                bookmark -> [name, dateAdded, dateLastAccessed, @"NO", ref] (5)
+//   READ  -parseArray:           idx3 -boolValue selects folder/bookmark; folder rgb@4 (""->nil) + children@5; bookmark ref@4.
++ (NSArray *)parseBookmarkObject:(PSBookmarkObject*)bookmarkObject;
+- (PSBookmarkObject *)parseArray:(NSArray *)array;
+
 @end
