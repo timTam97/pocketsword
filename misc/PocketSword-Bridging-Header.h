@@ -1,6 +1,5 @@
 #import "globals.h"
 #import "PSWebView.h"
-#import "PSInfoPopupViewController.h"
 #import "SwordModuleTextEntry.h"
 #import "VerseEnumerator.h"
 // Sword*.h clean facades, sanitized in 0e (all C++ moved to per-class +Cpp.h

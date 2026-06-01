@@ -35,7 +35,6 @@
 #import "SwordManager.h"
 #import "SwordDictionary.h"
 #import "PSAboutScreenController.h"
-#import "PSInfoPopupViewController.h"
 
 @implementation PSTabBarControllerDelegate
 
