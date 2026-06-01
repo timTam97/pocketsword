@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A1F70B0000000000000B002 /* SwiftBuildProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */; };
 		050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */; };
 		0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
 		0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
@@ -366,6 +367,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBuildProbe.swift; sourceTree = "<group>"; };
 		050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleViewController.mm; path = Classes/PSModuleViewController.mm; sourceTree = "<group>"; };
 		050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleViewController.h; path = Classes/PSModuleViewController.h; sourceTree = "<group>"; };
 		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -929,14 +931,15 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordAppDelegate.h; path = Classes/PocketSwordAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PocketSwordAppDelegate.mm; path = Classes/PocketSwordAppDelegate.mm; sourceTree = "<group>"; };
-		1D3623290D0F684500981E52 /* PocketSwordSceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordSceneDelegate.h; path = Classes/PocketSwordSceneDelegate.h; sourceTree = "<group>"; };
 		1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PocketSwordSceneDelegate.mm; path = Classes/PocketSwordSceneDelegate.mm; sourceTree = "<group>"; };
+		1D3623290D0F684500981E52 /* PocketSwordSceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordSceneDelegate.h; path = Classes/PocketSwordSceneDelegate.h; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		28216C950DB411BC00E5133A /* PSTabBarControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSTabBarControllerDelegate.h; path = Classes/PSTabBarControllerDelegate.h; sourceTree = "<group>"; };
 		28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSTabBarControllerDelegate.mm; path = Classes/PSTabBarControllerDelegate.mm; sourceTree = "<group>"; };
 		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSword_Prefix.pch; path = misc/PocketSword_Prefix.pch; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
+		33354D062FCD55D800252A83 /* PocketSword-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "PocketSword-Bridging-Header.h"; path = "misc/PocketSword-Bridging-Header.h"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
 		A100000000000000000000F1 /* PSSearchEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchEngine.h; path = Classes/PSSearchEngine.h; sourceTree = "<group>"; };
 		A100000000000000000000F2 /* PSSearchEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchEngine.mm; path = Classes/PSSearchEngine.mm; sourceTree = "<group>"; };
@@ -2026,6 +2029,7 @@
 				05034D2410FD625900884C98 /* SearchWebView.m */,
 				05F4D0321255D2940088C902 /* PSResizing.h */,
 				05F4D0331255D2940088C902 /* PSResizing.m */,
+				5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */,
 			);
 			name = "PS-other";
 			path = Classes;
@@ -2065,6 +2069,7 @@
 				E9617A320FF566F300690108 /* gen_xib_strings.py */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */,
+				33354D062FCD55D800252A83 /* PocketSword-Bridging-Header.h */,
 			);
 			name = misc;
 			sourceTree = "<group>";
@@ -2156,27 +2161,6 @@
 				D2BFDF9225E73AAB00E04366 /* mz_strm_os.h */,
 			);
 			path = minizip;
-			sourceTree = "<group>";
-		};
-		D2BFE59925E7788100E04366 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		D2BFE5A625E7788100E04366 /* Responses */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Responses;
-			sourceTree = "<group>";
-		};
-		D2BFE5AF25E7788100E04366 /* Requests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Requests;
 			sourceTree = "<group>";
 		};
 		E94012860EFDD2D000DA9B7F /* clucene */ = {
@@ -2399,6 +2383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1F70B0000000000000B002 /* SwiftBuildProbe.swift in Sources */,
 				D2BFDFA125E73AAB00E04366 /* mz_os.c in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				D2BFDF9925E73AAB00E04366 /* mz_zip.c in Sources */,
@@ -2710,9 +2695,11 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2754,6 +2741,12 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "PocketSword-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2761,9 +2754,11 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2802,6 +2797,12 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "PocketSword-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2810,9 +2811,11 @@
 		E982FA650ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2853,6 +2856,12 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "PocketSword-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
