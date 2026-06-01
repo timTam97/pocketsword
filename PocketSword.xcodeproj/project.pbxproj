@@ -50,7 +50,6 @@
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
 		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
-		051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		051F22B61737549600DDFF13 /* GentiumPlus-R.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */; };
 		051F22B71737549600DDFF13 /* SILEOT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B51737549600DDFF13 /* SILEOT.ttf */; };
@@ -211,6 +210,7 @@
 		5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZD001 /* PSPreferencesController.swift */; };
 		5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */; };
 		5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */; };
+		5A1F70B00000000000ZJ002 /* PSBookmarksNavigatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */; };
 		5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */; };
 		5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
@@ -415,8 +415,6 @@
 		0513AE1910C0C43600E414D9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
 		0513AE8310C0DC3900E414D9 /* forward-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "forward-white.png"; path = "Resources/forward-white.png"; sourceTree = "<group>"; };
-		051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksNavigatorController.h; path = Classes/PSBookmarksNavigatorController.h; sourceTree = "<group>"; };
-		051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarksNavigatorController.mm; path = Classes/PSBookmarksNavigatorController.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		051F22A3173733AE00DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "GentiumPlus-R.ttf"; path = "Resources/fonts/GentiumPlus-R.ttf"; sourceTree = "<group>"; };
@@ -760,6 +758,7 @@
 		5A1F70B00000000000ZD001 /* PSPreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModulePreferencesController.swift; path = Classes/PSModulePreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryViewController.swift; path = Classes/PSDictionaryViewController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarksNavigatorController.swift; path = Classes/PSBookmarksNavigatorController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesFontTableViewController.swift; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
 		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/fonts/CharisSILR.ttf; sourceTree = "<group>"; };
@@ -1899,8 +1898,7 @@
 			isa = PBXGroup;
 			children = (
 				059419AD12DAC72500A87B02 /* containers */,
-				051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */,
-				051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */,
+				5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */,
 				5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */,
 				5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */,
 				5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */,
@@ -2606,7 +2604,7 @@
 				5A1F70B0000000000000H002 /* PSBookmark.swift in Sources */,
 				5A1F70B0000000000000I002 /* PSBookmarkFolder.swift in Sources */,
 				5A1F70B0000000000000J002 /* PSBookmarks.swift in Sources */,
-				051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.mm in Sources */,
+				5A1F70B00000000000ZJ002 /* PSBookmarksNavigatorController.swift in Sources */,
 				5A1F70B0000000000000X002 /* PSBookmarkAddViewController.swift in Sources */,
 				5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */,
 				5A1F70B0000000000000V002 /* PSBookmarkFolderColourSelectorViewController.swift in Sources */,

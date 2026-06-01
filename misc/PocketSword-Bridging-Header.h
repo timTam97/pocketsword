@@ -52,14 +52,11 @@
 // Swift PSDictionaryOverlayViewController references them directly; any Obj-C++
 // TU (PSTabBarControllerDelegate.mm) reaches them via the generated
 // PocketSword-Swift.h.)
-// PSBookmarksNavigatorController.h is Foundation/UIKit-only (no #import lines, no
-// C++; just a `@class PSBookmarkFolder;` forward decl). The Swift
-// PSBookmarksAddTableViewController (Wave 2) pushes a PSBookmarksNavigatorController
-// when the user taps the folder row, so the type must be a visible Swift type
-// here. PSBookmarksNavigatorController itself stays Obj-C++ and consumes the Swift
-// add-bookmark VC via the generated PocketSword-Swift.h in its .mm (no cycle: the
-// .h imports nothing).
-#import "PSBookmarksNavigatorController.h"
+// (PSBookmarksNavigatorController was migrated to Swift in Wave 3 — its former
+// PSBookmarksNavigatorController.{h,mm} are deleted. The Swift @objc class lives
+// in the same module, so the Swift PSBookmarkAddViewController references it
+// directly; the Obj-C++ PSTabBarControllerDelegate.mm reaches it via the
+// generated PocketSword-Swift.h.)
 // PSSearchEngine.h is C++-clean (Foundation + globals.h + `@class SwordModule;`
 // `@class PSSearchResult;` — all the sword:: / sqlite3 / FTS5 index-build code
 // lives in PSSearchEngine.mm, which STAYS Obj-C++ permanently per the plan).

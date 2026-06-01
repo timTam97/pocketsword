@@ -12,10 +12,10 @@
 //  Behaviour preserved byte-for-byte from PSBookmarkFolderAddViewController.{h,m}.
 //  Consumes the Swift PSBookmarkFolderColourSelectorViewController (Wave 2) and
 //  conforms to its (@objc) PSBookmarkFolderColourSelectorDelegate, plus the Swift
-//  PSBookmarkFolder / PSBookmarks model (Wave 1). The remaining Obj-C caller
-//  (PSBookmarksNavigatorController.mm) creates this VC via
-//  -initWithParentFolder:bookmarkFolderToEdit: through PocketSword-Swift.h, so the
-//  public initializer keeps its original selector.
+//  PSBookmarkFolder / PSBookmarks model (Wave 1). The caller
+//  (the Swift PSBookmarksNavigatorController, Wave 3) creates this VC via
+//  init(parentFolder:bookmarkFolderToEdit:) directly in-module; the public
+//  initializer keeps its original selector for any Obj-C reach.
 //
 //  Originally created by Nic Carter on 14/01/11.
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.

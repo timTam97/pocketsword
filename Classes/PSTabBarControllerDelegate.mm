@@ -22,7 +22,6 @@
 #import "PSTabBarControllerDelegate.h"
 #import "PocketSword-Swift.h"
 #import "PSHistoryController.h"
-#import "PSBookmarksNavigatorController.h"
 #import "SwordModule.h"
 #import "PSModuleController.h"
 #import "PocketSwordAppDelegate.h"

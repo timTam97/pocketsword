@@ -9,10 +9,10 @@
 //  shown on the left.
 //
 //  Behaviour preserved from PSBookmarkAddViewController.{h,mm}. Consumes the Wave 1
-//  Swift PSBookmark / PSBookmarkFolder / PSBookmarks model and the still-Obj-C
+//  Swift PSBookmark / PSBookmarkFolder / PSBookmarks model and the Swift
 //  PSBookmarksNavigatorController (created when the user taps the folder row).
-//  The Obj-C callers (PSBookmarksNavigatorController.mm, PSModuleViewController.mm)
-//  create this VC via -initWithBookmarkToEdit:parentFolders: and
+//  The remaining Obj-C++ caller (PSModuleViewController.mm) creates this VC via
+//  -initWithBookmarkToEdit:parentFolders: and
 //  -initWithBookAndChapterRef:andVerse: through PocketSword-Swift.h, so the public
 //  initializers keep their original selectors and the class keeps its Obj-C name
 //  PSBookmarksAddTableViewController.
@@ -275,12 +275,12 @@ final class PSBookmarksAddTableViewController: UITableViewController, UITextFiel
             descriptionTextField.becomeFirstResponder()
         } else if indexPath.section == 2 {
             if folder == nil {
-                let bnc = PSBookmarksNavigatorController(bookmarkFolder: PSBookmarks.default(), parentFolders: nil, isAddingBookmark: true)!
+                let bnc = PSBookmarksNavigatorController(bookmarkFolder: PSBookmarks.default(), parentFolders: nil, isAddingBookmark: true)
                 navigationController?.pushViewController(bnc, animated: true)
             } else {
                 let components = (folder ?? "").components(separatedBy: AppConstants.folderSeparatorString)
                 // push the root of our bookmarks:
-                var bnc = PSBookmarksNavigatorController(bookmarkFolder: PSBookmarks.default(), parentFolders: nil, isAddingBookmark: true)!
+                var bnc = PSBookmarksNavigatorController(bookmarkFolder: PSBookmarks.default(), parentFolders: nil, isAddingBookmark: true)
                 navigationController?.pushViewController(bnc, animated: false)
                 let currentFolder = NSMutableString(string: components[0])
                 var i = 0
@@ -289,7 +289,7 @@ final class PSBookmarksAddTableViewController: UITableViewController, UITextFiel
                     if i == (components.count - 1) {
                         animate = true
                     }
-                    bnc = PSBookmarksNavigatorController(bookmarkFolder: PSBookmarks.getBookmarkFolder(forFolderString: currentFolder as String), parentFolders: currentFolder as String, isAddingBookmark: true)!
+                    bnc = PSBookmarksNavigatorController(bookmarkFolder: PSBookmarks.getBookmarkFolder(forFolderString: currentFolder as String), parentFolders: currentFolder as String, isAddingBookmark: true)
                     navigationController?.pushViewController(bnc, animated: animate)
                     i += 1
                     if i < components.count {
