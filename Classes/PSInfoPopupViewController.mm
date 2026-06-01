@@ -4,7 +4,7 @@
 //
 
 #import "PSInfoPopupViewController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "globals.h"
 
 @interface PSInfoPopupViewController ()

@@ -8,7 +8,7 @@
 
 #import "PSPreferencesController.h"
 #import "PSPreferencesModuleSelectorTableViewController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "SwordManager.h"
 #import "PSTabBarControllerDelegate.h"
 #import "PSModuleController.h"

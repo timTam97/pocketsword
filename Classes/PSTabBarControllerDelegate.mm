@@ -20,7 +20,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "PSTabBarControllerDelegate.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "SearchWebView.h"
 #import "PSHistoryController.h"
 #import "PSModuleSelectorController.h"

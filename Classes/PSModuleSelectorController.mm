@@ -9,7 +9,7 @@
 #import "PSModuleSelectorController.h"
 #import "PSModuleController.h"
 #import "PSHistoryController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "PocketSwordAppDelegate.h"
 #import "SwordModule.h"
 #import "PSModulePreferencesController.h"

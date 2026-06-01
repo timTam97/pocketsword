@@ -11,7 +11,7 @@
 
 #import "PSAboutScreenController.h"
 #import "PSModuleController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "globals.h"
 
 @implementation PSAboutScreenController

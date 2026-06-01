@@ -20,7 +20,7 @@
 #import "ZipArchive.h"
 #import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 
 #import "SwordManager.h"
 #import "globals.h"

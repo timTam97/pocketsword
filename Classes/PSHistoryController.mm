@@ -19,7 +19,7 @@
 
 #import "PSHistoryController.h"
 #import "PSModuleController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "PSBookmarkTableViewCell.h"
 #import "PSHistoryItem.h"
 #import "SwordManager.h"

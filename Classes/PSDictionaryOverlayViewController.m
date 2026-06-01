@@ -7,7 +7,7 @@
 //
 
 #import "PSDictionaryOverlayViewController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "globals.h"
 
 

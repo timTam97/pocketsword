@@ -12,7 +12,7 @@
 #import "SwordBook.h"
 #import "PSModuleController.h"
 #import "PSChapterSelectorController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 
 @implementation PSRefSelectorController
 

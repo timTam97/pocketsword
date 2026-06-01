@@ -17,8 +17,7 @@
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#import "PSResizing.h"
-
+@class PSResizing;
 @class PSTabBarControllerDelegate;
 
 @interface PocketSwordAppDelegate : NSObject <UIApplicationDelegate> {

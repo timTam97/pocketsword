@@ -10,7 +10,7 @@
 #import "globals.h"
 #import "PSModuleController.h"
 #import "ZipArchive.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "SwordManager.h"
 #import "SwordModule.h"
 #import "SwordDictionary.h"

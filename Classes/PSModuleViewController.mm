@@ -11,7 +11,7 @@
 #import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
 #import "PSBookmarkAddViewController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "PSBookmarks.h"
 #import "PSBookmark.h"
 #import "PSCommentaryViewController.h"

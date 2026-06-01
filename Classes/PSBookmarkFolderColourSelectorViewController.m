@@ -20,7 +20,7 @@
 
 #import "PSBookmarkFolderColourSelectorViewController.h"
 #import "PSBookmarkFolder.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 
 @implementation PSBookmarkFolderColourSelectorViewController
 

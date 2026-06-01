@@ -9,7 +9,7 @@
 #import "PSWebView.h"
 #import "globals.h"
 #import "PSModuleController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import <cmath>
 
 @interface PSWebView (Private)

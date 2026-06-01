@@ -4,7 +4,7 @@
 //
 
 #import "PSModuleSearchController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "SwordModuleTextEntry.h"
 #import "PSModuleController.h"
 #import "PSHistoryController.h"

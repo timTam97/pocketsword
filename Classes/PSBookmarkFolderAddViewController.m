@@ -10,7 +10,7 @@
 #import "PSBookmarkFolder.h"
 #import "PSBookmarks.h"
 #import "globals.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 
 @implementation PSBookmarkFolderAddViewController
 

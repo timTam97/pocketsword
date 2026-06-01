@@ -1,5 +1,4 @@
 #import "globals.h"
-#import "PSResizing.h"
 #import "PSWebView.h"
 #import "PSInfoPopupViewController.h"
 #import "SearchWebView.h"

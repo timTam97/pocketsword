@@ -14,7 +14,7 @@
 #import "PSBookmarks.h"
 #import "PSBookmarkTableViewCell.h"
 #import "PSBookmarkAddViewController.h"
-#import "PSResizing.h"
+#import "PocketSword-Swift.h"
 #import "SwordManager.h"
 
 @implementation PSBookmarksNavigatorController
