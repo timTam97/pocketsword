@@ -7,7 +7,6 @@
 //
 
 #import "PSPreferencesFontTableViewController.h"
-#import "PSPreferencesController.h"
 #import "PocketSword-Swift.h"
 #import "globals.h"
 

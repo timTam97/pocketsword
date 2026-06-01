@@ -71,12 +71,20 @@
 // user taps a search result, so the type must be Swift-visible here.
 // PSHistoryController itself stays Obj-C++ during Wave 3.
 #import "PSHistoryController.h"
-// PSModulePreferencesController.h is C++-clean: its header chain is globals.h +
-// PSBasePreferencesController.h -> PSPreferencesFontTableViewController.h, none of
-// which #import a Sword*.h or any C++ — every method signature is Foundation/UIKit
-// typed (the lone -displayPrefsForModule: takes a SwordModule*, already Swift-
-// visible via SwordModule.h above). The Wave-3 Swift PSModuleSelectorController
-// pushes a PSModulePreferencesController from its accessory-button handler, so the
-// type must be Swift-visible here. PSModulePreferencesController itself stays
-// Obj-C++ during Wave 3.
-#import "PSModulePreferencesController.h"
+// Prefs cluster — table view controllers the now-Swift preferences controllers
+// (PSPreferencesController / PSModulePreferencesController, migrated in the Wave-3
+// prefs-cluster step) instantiate and push. Both are C++-free UITableViewControllers
+// whose headers contain ONLY a `@class`/bare-enum forward decl (no #import of any
+// Sword*.h or other project header), so they are leak-guard clean. They STAY Obj-C++
+// for now (a later Wave-3 step migrates them); Swift sees them as Obj-C classes via
+// these imports. Their .mm bodies reach the now-Swift prefs controllers (held as weak
+// `PSBasePreferencesController *` / `PSPreferencesController *` back-pointers) through
+// the generated PocketSword-Swift.h — no header cycle, since the bare forward decl is
+// satisfied by the generated header at .mm compile.
+//   PSPreferencesFontTableViewController.h declares the public ModuleName/
+//   preferencesController surface the prefs controllers set after alloc.
+//   PSPreferencesModuleSelectorTableViewController.h additionally exports the
+//   `ModuleFeatureRequired` bare enum (StrongsGreek/StrongsHebrew/MorphGreek/
+//   MorphHebrew) and -setTableType:, both used by PSPreferencesController.swift.
+#import "PSPreferencesFontTableViewController.h"
+#import "PSPreferencesModuleSelectorTableViewController.h"
