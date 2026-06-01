@@ -6,7 +6,6 @@
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSDictionaryOverlayViewController.h"
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
 #import "PocketSword-Swift.h"

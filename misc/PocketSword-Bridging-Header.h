@@ -21,3 +21,10 @@
 // (migration step 1.2) calls +[PSModuleController getFirstRefAvailable] on its
 // legacy empty-array seed path, so its declaration must be visible here.
 #import "PSModuleController.h"
+// PSDictionaryViewController.h is C++-clean (its only #import is the UIKit-only
+// MBProgressHUD.h). The Swift PSDictionaryOverlayViewController (Wave 2) holds a
+// `PSDictionaryViewController *dictionaryViewController` property faithful to the
+// original Obj-C surface, so the type must be a visible Swift type here. (The
+// header's `@class PSDictionaryOverlayViewController;` forward decl is satisfied
+// by the generated PocketSword-Swift.h at compile of the .mm importers.)
+#import "PSDictionaryViewController.h"

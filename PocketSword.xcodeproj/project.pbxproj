@@ -49,7 +49,6 @@
 		050CB77D19D16A1200415A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77C19D16A1200415A27 /* Images.xcassets */; };
 		050CB78019D1789A00415A27 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77E19D1789A00415A27 /* Default-736h@3x.png */; };
 		050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77F19D1789A00415A27 /* Default-667h@2x.png */; };
-		05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */; };
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
 		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
@@ -248,6 +247,7 @@
 		5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */; };
 		5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */; };
 		5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */; };
+		5A1F70B0000000000000U002 /* PSDictionaryOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */; };
 		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
 		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
@@ -415,8 +415,6 @@
 		050CB77C19D16A1200415A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketSword/Images.xcassets; sourceTree = "<group>"; };
 		050CB77E19D1789A00415A27 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-736h@3x.png"; path = "Resources/Default-736h@3x.png"; sourceTree = "<group>"; };
 		050CB77F19D1789A00415A27 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-667h@2x.png"; path = "Resources/Default-667h@2x.png"; sourceTree = "<group>"; };
-		05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryOverlayViewController.h; path = Classes/PSDictionaryOverlayViewController.h; sourceTree = "<group>"; };
-		05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSDictionaryOverlayViewController.m; path = Classes/PSDictionaryOverlayViewController.m; sourceTree = "<group>"; };
 		0513ADDB115CA55500F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0513AE1910C0C43600E414D9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
@@ -826,6 +824,7 @@
 		5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSChapterSelectorController.swift; path = Classes/PSChapterSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVerseSelectorController.swift; path = Classes/PSVerseSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSInfoPopupViewController.swift; path = Classes/PSInfoPopupViewController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryOverlayViewController.swift; path = Classes/PSDictionaryOverlayViewController.swift; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
 		05B67C8D1461046E00B3E605 /* canon_catholic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic.h; sourceTree = "<group>"; };
 		05B67C8E1461046E00B3E605 /* canon_catholic2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic2.h; sourceTree = "<group>"; };
@@ -1901,8 +1900,7 @@
 			children = (
 				0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */,
 				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
-				05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */,
-				05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */,
+				5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */,
 				059653A717F53B1400018288 /* PSDictionaryEntryViewController.h */,
 				059653A817F53B1400018288 /* PSDictionaryEntryViewController.mm */,
 			);
@@ -2626,7 +2624,7 @@
 				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
 				5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */,
 				5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */,
-				05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */,
+				5A1F70B0000000000000U002 /* PSDictionaryOverlayViewController.swift in Sources */,
 				054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
 				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
