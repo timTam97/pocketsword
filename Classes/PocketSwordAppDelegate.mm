@@ -24,7 +24,6 @@
 #import "ZipArchive.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
-#import "PSHistoryController.h"
 #import "PSTabBarControllerDelegate.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"

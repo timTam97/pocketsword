@@ -14,7 +14,6 @@
 #import "PSCommentaryViewController.h"
 #import "PSBibleViewController.h"
 #import "SwordManager.h"
-#import "PSHistoryController.h"
 
 @implementation PSModuleViewController
 

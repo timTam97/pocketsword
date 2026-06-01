@@ -279,6 +279,7 @@
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
 		5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */; };
+		5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZL01 /* PSHistoryController.swift */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05E6A75717FADF790063B18C /* splash-iPad-landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75517FADF790063B18C /* splash-iPad-landscape.png */; };
 		05E6A75817FADF790063B18C /* splash-iPad-portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75617FADF790063B18C /* splash-iPad-portrait.png */; };
@@ -363,7 +364,6 @@
 		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
 		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
 		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
-		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
 		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
@@ -421,7 +421,6 @@
 		051F22B51737549600DDFF13 /* SILEOT.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SILEOT.ttf; path = Resources/fonts/SILEOT.ttf; sourceTree = "<group>"; };
 		051F22B8173758AD00DDFF13 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = OFL.txt; path = Resources/fonts/OFL.txt; sourceTree = "<group>"; };
 		051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PocketSword.entitlements; sourceTree = "<group>"; };
-		051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryController.h; path = Classes/PSHistoryController.h; sourceTree = "<group>"; };
 		0527595F10884F64004FB0E0 /* canon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon.h; sourceTree = "<group>"; };
 		0527596010884F64004FB0E0 /* canon_abbrevs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_abbrevs.h; sourceTree = "<group>"; };
 		0527596110884F64004FB0E0 /* canon_kjva.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_kjva.h; sourceTree = "<group>"; };
@@ -871,6 +870,7 @@
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
 		5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSearchController.swift; path = Classes/PSModuleSearchController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000ZL01 /* PSHistoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryController.swift; path = Classes/PSHistoryController.swift; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05E6A75517FADF790063B18C /* splash-iPad-landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "splash-iPad-landscape.png"; path = "Resources/splash-iPad-landscape.png"; sourceTree = "<group>"; };
@@ -984,7 +984,6 @@
 		D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		D2BFE5FE25E9C52100E04366 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		D2CF000026D100000000A001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PocketSword/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
 		E9617A850FF56E2100690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1907,8 +1906,7 @@
 		054C55BB11AD0AA900633371 /* multi */ = {
 			isa = PBXGroup;
 			children = (
-				051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */,
-				E92217540F0687340089A794 /* PSHistoryController.mm */,
+				5A1F70B0000000000000ZL01 /* PSHistoryController.swift */,
 				5A1F70B0000000000000N001 /* PSHistoryItem.swift */,
 				5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */,
 				5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */,
@@ -2422,7 +2420,6 @@
 				D2BFDF9725E73AAB00E04366 /* mz_strm_pkcrypt.c in Sources */,
 				D2BFDF9625E73AAB00E04366 /* mz_strm_os_posix.c in Sources */,
 				053CAD8C180942B200BCDBE6 /* osisreferencelinks.cpp in Sources */,
-				E92217550F0687340089A794 /* PSHistoryController.mm in Sources */,
 				05F84EE5191F4AC7003350DE /* ztext4.cpp in Sources */,
 				D2BFDFA525E73AAB00E04366 /* mz_strm.c in Sources */,
 				0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */,
@@ -2576,6 +2573,7 @@
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */,
 				5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */,
+				5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */,
 				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
 				5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */,
 				5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */,

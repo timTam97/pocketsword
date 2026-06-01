@@ -289,4 +289,123 @@ final class PersistedFormatTests: XCTestCase {
         XCTAssertEqual(swift, objc)
         XCTAssertEqual(swift, "a_b_c_d")
     }
+
+    // MARK: - PSHistoryController iCloud merge / cap / dedup
+    //         (Classes/PSHistoryController.swift, ported from PSHistoryController.mm)
+    //
+    // R1 lock: the cloud<->local recursive merge, the 100-entry cap
+    // (PSHistoryMaxEntries == 100, applied with a `while count >= 100` trim), and
+    // the dedup-on-equal-ref+mod walk must stay byte-identical to the Obj-C++.
+    // PSHistoryName is the wire key "bibleHistory" in BOTH NSUserDefaults and
+    // NSUbiquitousKeyValueStore. These tests build PSHistoryItem lists, exercise
+    // the controller merge helpers, and assert the resulting [ref,scroll,mod,date]
+    // array-of-arrays schema survives the round-trip.
+
+    private func makeHistoryItem(_ ref: String, _ mod: String, secondsSinceEpoch: TimeInterval) -> PSHistoryItem {
+        return PSHistoryItem(reference: ref,
+                             scrollAmount: "0",
+                             moduleName: mod,
+                             dateAdded: Date(timeIntervalSince1970: secondsSinceEpoch))!
+    }
+
+    // The recursive synchronizeHistoryArray:with: interleaves two date-descending
+    // lists newest-first via a removeObjectAtIndex:0 walk that RETURNS NIL the
+    // moment either list empties. That nil-on-empty guard means the trailing
+    // element of the not-yet-empty list is DROPPED (a long-standing quirk of the
+    // Obj-C++ original). Both the newest-first interleave AND that lossy drop are
+    // locked here — a Swift port must reproduce them byte-for-byte, NOT "fix" them.
+    func testHistoryMerge_recursiveInterleavesNewestFirstAndDropsTrailingElement() throws {
+        // first (cloud) newest @300, then @100 ; second (local) @200, then @50.
+        let cloud = NSMutableArray(array: [
+            makeHistoryItem("Gen 1:1", "KJV", secondsSinceEpoch: 300),
+            makeHistoryItem("Exo 2:2", "KJV", secondsSinceEpoch: 100),
+        ])
+        let local = NSMutableArray(array: [
+            makeHistoryItem("Lev 3:3", "KJV", secondsSinceEpoch: 200),
+            makeHistoryItem("Num 4:4", "KJV", secondsSinceEpoch: 50),
+        ])
+
+        let merged = try XCTUnwrap(PSHistoryController.synchronizeHistoryArray(cloud, with: local))
+        let refs = merged.compactMap { ($0 as? PSHistoryItem)?.bibleReference }
+        XCTAssertEqual(refs, ["Gen 1:1", "Lev 3:3", "Exo 2:2"],
+                       "interleave is newest-first; the oldest tail (Num 4:4 @50) is DROPPED "
+                       + "by the nil-on-empty recursion guard (preserved quirk)")
+    }
+
+    // Equal newest items short-circuit: the merge returns the SHORTER of the two
+    // input lists unchanged (per the isEqualToHistoryItem: early return).
+    func testHistoryMerge_equalNewestReturnsShorterListUnchanged() throws {
+        let shared = makeHistoryItem("Ps 23:1", "KJV", secondsSinceEpoch: 900)
+        let cloud = NSMutableArray(array: [shared])
+        let local = NSMutableArray(array: [
+            shared,
+            makeHistoryItem("Ps 24:1", "KJV", secondsSinceEpoch: 800),
+        ])
+        let merged = try XCTUnwrap(PSHistoryController.synchronizeHistoryArray(cloud, with: local))
+        let refs = merged.compactMap { ($0 as? PSHistoryItem)?.bibleReference }
+        XCTAssertEqual(refs, ["Ps 23:1"],
+                       "equal newest -> return the shorter list (cloud) unchanged")
+    }
+
+    // initialSynchronize writes the combined, deduped, capped history to
+    // NSUserDefaults under "bibleHistory" as an array-of-[ref,scroll,mod,date]
+    // arrays. Lock the schema + dedup-on-equal-ref+mod.
+    func testHistoryInitialSynchronize_writesArraySchemaAndDedups() throws {
+        let defaults = UserDefaults.standard
+        let key = AppConstants.historyName
+        XCTAssertEqual(key, "bibleHistory", "PSHistoryName wire string is load-bearing")
+        let saved = defaults.array(forKey: key)
+        defer {
+            if let saved = saved { defaults.set(saved, forKey: key) }
+            else { defaults.removeObject(forKey: key) }
+        }
+
+        // cloud has John 3:16/KJV ; local has the SAME ref+mod (a dup) plus Acts 1:1/KJV.
+        let dupDate = Date(timeIntervalSince1970: 500)
+        let cloud: [Any] = [ makeHistoryItem("John 3:16", "KJV", secondsSinceEpoch: 500) ]
+        let local: [Any] = [
+            makeHistoryItem("Acts 1:1", "KJV", secondsSinceEpoch: 400),
+            makeHistoryItem("John 3:16", "KJV", secondsSinceEpoch: 500),
+        ]
+
+        PSHistoryController.initialSynchronize(withCloud: cloud, withLocalHistory: local)
+
+        let written = try XCTUnwrap(defaults.array(forKey: key))
+        // dedup removes the duplicate John 3:16/KJV -> 2 unique entries.
+        XCTAssertEqual(written.count, 2, "equal ref+mod entries are deduped on merge")
+
+        // each entry is the [ref, "0", mod, date] array (schema byte-lock).
+        let first = try XCTUnwrap(written[0] as? [Any])
+        XCTAssertEqual(first.count, 4, "history entry = exactly [ref, scroll, mod, date]")
+        XCTAssertEqual(first[0] as? String, "John 3:16", "idx0 = ref (newest first)")
+        XCTAssertEqual(first[1] as? String, "0",          "idx1 = scroll hardcoded \"0\"")
+        XCTAssertEqual(first[2] as? String, "KJV",        "idx2 = mod")
+        XCTAssertEqual(first[3] as? Date, dupDate,        "idx3 = NSDate")
+        XCTAssertEqual((written[1] as? [Any])?[0] as? String, "Acts 1:1", "older entry follows")
+    }
+
+    // The 100-entry cap is applied as `while count >= PSHistoryMaxEntries { removeLast }`,
+    // so a merge producing >= 100 unique entries is trimmed to 99.
+    func testHistoryInitialSynchronize_capsAtNinetyNineWithGreaterOrEqualTrim() throws {
+        let defaults = UserDefaults.standard
+        let key = AppConstants.historyName
+        let saved = defaults.array(forKey: key)
+        defer {
+            if let saved = saved { defaults.set(saved, forKey: key) }
+            else { defaults.removeObject(forKey: key) }
+        }
+
+        XCTAssertEqual(AppConstants.historyMaxEntries, 100, "PSHistoryMaxEntries is 100")
+
+        // 120 unique entries (distinct refs), all in local, cloud empty.
+        var local: [Any] = []
+        for i in 0..<120 {
+            local.append(makeHistoryItem("Ref \(i):1", "KJV", secondsSinceEpoch: TimeInterval(10_000 - i)))
+        }
+        PSHistoryController.initialSynchronize(withCloud: [], withLocalHistory: local)
+
+        let written = try XCTUnwrap(defaults.array(forKey: key))
+        XCTAssertEqual(written.count, 99,
+                       "`while count >= 100 { removeLast }` trims to 99, not 100")
+    }
 }
