@@ -9,7 +9,6 @@
 #import "PSDictionaryViewController.h"
 #import "PSModuleController.h"
 #import "PocketSword-Swift.h"
-#import "PSDictionaryEntryViewController.h"
 #import "globals.h"
 #import "SwordModule.h"
 #import "SwordDictionary.h"
