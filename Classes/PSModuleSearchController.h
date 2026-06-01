@@ -9,9 +9,14 @@
 //
 
 #import "globals.h"
-#import "PSSearchIndexBuilder.h"
 
 @class PSSearchHistoryItem;
+// PSSearchIndexBuilder went Swift in Wave 3. Per §2A Rule 2 a public Obj-C
+// header may not #import "PocketSword-Swift.h"; a forward @protocol declaration
+// is sufficient to name PSSearchIndexBuilderDelegate in this class's
+// conformance list below. The real Swift protocol is resolved via the generated
+// PocketSword-Swift.h imported from PSModuleSearchController.mm.
+@protocol PSSearchIndexBuilderDelegate;
 
 @protocol PSModuleSearchControllerDelegate <NSObject>
 @required

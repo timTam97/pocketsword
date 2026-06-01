@@ -13,7 +13,6 @@
 #import "SwordManager.h"
 #import "SwordModule.h"
 #import "PSSearchEngine.h"
-#import "PSSearchIndexBuilder.h"
 
 static const NSTimeInterval kDebounceInterval = 0.25;
 static NSString * const kResultCellIdentifier = @"resultsCell";
