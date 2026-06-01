@@ -1,3 +1,12 @@
+#import <MessageUI/MessageUI.h>  // system framework umbrella (NOT a project
+// header). The Swift PSAboutScreenController (Wave 2) conforms to
+// MFMailComposeViewControllerDelegate for the feedback-email flow, so the
+// generated PocketSword-Swift.h declares that protocol in PSAboutScreenController's
+// @interface conformance list. The bridging header is #imported into the generated
+// header, so importing the MessageUI umbrella here makes MFMailComposeViewControllerDelegate
+// resolvable in every .mm that consumes PocketSword-Swift.h — Obj-C++ TUs do not
+// honour the generated header's `@import MessageUI;` (clang module-import is off
+// for c++0x). This mirrors how WebKit reaches the generated header via PSWebView.h.
 #import "globals.h"
 #import "PSWebView.h"
 #import "SwordModuleTextEntry.h"

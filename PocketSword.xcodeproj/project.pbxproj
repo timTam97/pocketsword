@@ -274,7 +274,7 @@
 		05DD867B122E605700115EAD /* history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8679122E605700115EAD /* history@2x.png */; };
 		05DD867E122E60AC00115EAD /* dictionary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD867C122E60AC00115EAD /* dictionary@2x.png */; };
 		05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF558E10AA9123007CB847 /* SwordBook.mm */; };
-		05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */; };
+		5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */; };
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
@@ -875,8 +875,7 @@
 		5A1F70B0000000000000E005 /* SwordManager+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordManager+Cpp.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000E006 /* SwordDictionary+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordDictionary+Cpp.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000E007 /* SwordBook+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordBook+Cpp.h"; sourceTree = "<group>"; };
-		05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSAboutScreenController.h; sourceTree = "<group>"; };
-		05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSAboutScreenController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSAboutScreenController.swift; sourceTree = "<group>"; };
 		05DF57C610ABC753007CB847 /* About.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = About.png; path = Resources/About.png; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
@@ -1136,8 +1135,7 @@
 		0513ACBC10BFADD600E414D9 /* PS-about */ = {
 			isa = PBXGroup;
 			children = (
-				05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */,
-				05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */,
+				5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */,
 			);
 			name = "PS-about";
 			path = Classes;
@@ -2597,7 +2595,7 @@
 				05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */,
 				05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
-				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
+				5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */,
 				05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */,
 				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
 				5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */,

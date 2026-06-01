@@ -34,7 +34,6 @@
 //#import "PSWebView.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"
-#import "PSAboutScreenController.h"
 
 @implementation PSTabBarControllerDelegate
 
