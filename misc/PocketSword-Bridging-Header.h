@@ -17,6 +17,16 @@
 // SwordDictionary.h chain — all now Foundation-only and Swift-importable.
 #import "SwordManager.h"
 #import "SwordModule.h"
+// SwordDictionary.h is a clean Foundation-only @objc facade (subclass of
+// SwordModule) after Wave 0e — its only leak (-initWithSWModule:swordManager:)
+// moved to SwordDictionary+Cpp.h, imported only by .mm files; the header now just
+// #imports the clean SwordModule.h facade. PSModuleController.h only @class-
+// forward-declares SwordDictionary (never #imports it), so without this the
+// generated Swift interface DROPS PSModuleController.primaryDictionary (its type
+// is an incomplete Obj-C class to Swift). The Wave-3 Swift PSModuleSelectorController
+// reads/compares primaryDictionary, so SwordDictionary must be a visible Swift type
+// here. SwordDictionary itself stays Obj-C++.
+#import "SwordDictionary.h"
 // SwordBook.h is a clean Foundation-only @objc facade (subclass of SwordModule)
 // after Wave 0e — its C++ (the versificationmgr include, the
 // const sword::VersificationMgr::Book * ivar, -initWithBook:) lives in
@@ -61,3 +71,12 @@
 // user taps a search result, so the type must be Swift-visible here.
 // PSHistoryController itself stays Obj-C++ during Wave 3.
 #import "PSHistoryController.h"
+// PSModulePreferencesController.h is C++-clean: its header chain is globals.h +
+// PSBasePreferencesController.h -> PSPreferencesFontTableViewController.h, none of
+// which #import a Sword*.h or any C++ — every method signature is Foundation/UIKit
+// typed (the lone -displayPrefsForModule: takes a SwordModule*, already Swift-
+// visible via SwordModule.h above). The Wave-3 Swift PSModuleSelectorController
+// pushes a PSModulePreferencesController from its accessory-button handler, so the
+// type must be Swift-visible here. PSModulePreferencesController itself stays
+// Obj-C++ during Wave 3.
+#import "PSModulePreferencesController.h"

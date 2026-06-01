@@ -12,7 +12,6 @@
 #import "SwordManager.h"
 #import "PSTabBarControllerDelegate.h"
 #import "PSModuleController.h"
-#import "PSModuleSelectorController.h"
 
 //sections
 #define DISPLAY_SECTION		0

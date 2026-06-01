@@ -208,7 +208,7 @@
 		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
 		054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
 		054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570211AE0E6B00633371 /* VerseEnumerator.mm */; };
-		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
+		5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */; };
 		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
 		05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
@@ -760,8 +760,7 @@
 		054C570211AE0E6B00633371 /* VerseEnumerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VerseEnumerator.mm; sourceTree = "<group>"; };
 		054C570711AE0EC300633371 /* SwordVerseKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordVerseKey.h; sourceTree = "<group>"; };
 		054F3C8E117EB11000BF1361 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleSelectorController.h; path = Classes/PSModuleSelectorController.h; sourceTree = "<group>"; };
-		055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleSelectorController.mm; path = Classes/PSModuleSelectorController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSelectorController.swift; path = Classes/PSModuleSelectorController.swift; sourceTree = "<group>"; };
 		0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryViewController.h; path = Classes/PSDictionaryViewController.h; sourceTree = "<group>"; };
 		0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSDictionaryViewController.mm; path = Classes/PSDictionaryViewController.mm; sourceTree = "<group>"; };
 		05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesFontTableViewController.h; sourceTree = "<group>"; };
@@ -1903,8 +1902,7 @@
 		054C55B911AD0A4F00633371 /* module selector */ = {
 			isa = PBXGroup;
 			children = (
-				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
-				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
+				5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */,
 				0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */,
 				0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */,
 			);
@@ -2602,7 +2600,7 @@
 				5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
-				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
+				5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */,
 				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
