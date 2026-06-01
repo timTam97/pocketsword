@@ -27,7 +27,7 @@
 #import "PocketSwordAppDelegate.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"
-#import "PSRefSelectorController.h"
+// PSRefSelectorController is now a Swift class (Wave 3); reached via PocketSword-Swift.h above.
 //#import "PSWebView.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"

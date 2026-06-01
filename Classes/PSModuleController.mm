@@ -28,7 +28,8 @@
 #import "SwordManager+Cpp.h"
 #import "globals.h"
 #import "SwordKey.h"
-#import "PSRefSelectorController.h"
+// PSRefSelectorController is now a Swift class (Wave 3); only used here via
+// NotificationRefSelectorResetBooks posts, so no import is needed.
 
 
 #include <localemgr.h>

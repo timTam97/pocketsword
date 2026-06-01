@@ -298,7 +298,7 @@
 		05EB26FC175C3233004A8EB7 /* enabled-VPL.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F8175C3233004A8EB7 /* enabled-VPL.png */; };
 		05EB26FD175C3233004A8EB7 /* enabled-VPL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F9175C3233004A8EB7 /* enabled-VPL@2x.png */; };
 		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
-		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
+		5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
 		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
 		05F4D226160189940072620A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F4D225160189940072620A /* Default-568h@2x.png */; };
@@ -892,8 +892,7 @@
 		05EB26F9175C3233004A8EB7 /* enabled-VPL@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-VPL@2x.png"; path = "Resources/enabled-VPL@2x.png"; sourceTree = "<group>"; };
 		05EBBA421681823E005C4FF9 /* teixhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teixhtml.h; sourceTree = "<group>"; };
 		05EBBA431681825C005C4FF9 /* teixhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teixhtml.cpp; sourceTree = "<group>"; };
-		05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSRefSelectorController.h; path = Classes/PSRefSelectorController.h; sourceTree = "<group>"; };
-		05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSRefSelectorController.mm; path = Classes/PSRefSelectorController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSRefSelectorController.swift; path = Classes/PSRefSelectorController.swift; sourceTree = "<group>"; };
 		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
 		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
@@ -1867,8 +1866,7 @@
 		054C55B711AD09F600633371 /* ref selector */ = {
 			isa = PBXGroup;
 			children = (
-				05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */,
-				05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */,
+				5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */,
 				5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */,
 				5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */,
 			);
@@ -2594,7 +2592,7 @@
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
 				5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */,
 				5A1F70B00000000000ZF002 /* PSPreferencesModuleSelectorTableViewController.swift in Sources */,
-				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
+				5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */,
 				5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */,
 				5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */,
 				5A1F70B0000000000000U002 /* PSDictionaryOverlayViewController.swift in Sources */,
