@@ -18,7 +18,11 @@
 */
 
 #import "PocketSwordAppDelegate.h"
-#import "PocketSwordSceneDelegate.h"
+// PocketSwordSceneDelegate became Swift in Wave 4 (PocketSwordSceneDelegate.swift);
+// its former .{h,mm} are deleted. This TU only needs the class object for the
+// scene-configuration delegateClass ([PocketSwordSceneDelegate class] below) — the
+// @objc(PocketSwordSceneDelegate) class is reachable via the generated reverse
+// header, so import that instead.
 #import "PocketSword-Swift.h"
 #import "ZipArchive.h"
 #import "SwordManager.h"

@@ -8,6 +8,14 @@
 // honour the generated header's `@import MessageUI;` (clang module-import is off
 // for c++0x). This mirrors how WebKit reaches the generated header via PSWebView.h.
 #import "globals.h"
+// PocketSwordAppDelegate.h is a Foundation+UIKit-only @objc facade (no C++ leak —
+// it forward-@class-references PSResizing / PSTabBarControllerDelegate only). The
+// Swift PocketSwordSceneDelegate (Wave 4) reaches the app delegate via
+// +sharedAppDelegate, sets .tabBarControllerDelegate, and replays the launch URL
+// through -application:handleOpenURL:options:, so the app-delegate class must be a
+// visible Swift type here. PocketSwordAppDelegate itself stays Obj-C++ (it is part
+// of the launch path and migrates after the scene delegate).
+#import "PocketSwordAppDelegate.h"
 // MBProgressHUD.h is a vendored Foundation/UIKit/CoreGraphics-only Obj-C class
 // (externals/MBProgressHUD) — no C++. The Swift PSDictionaryViewController (Wave
 // 3) shows an MBProgressHUD while caching dictionary keys and conforms to
