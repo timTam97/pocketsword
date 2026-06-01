@@ -16,7 +16,6 @@
 #import "PSSearchEngine.h"
 #import "PSSearchQuery.h"
 #import "PSSearchIndexBuilder.h"
-#import "PSSearchResult.h"
 
 static const NSTimeInterval kDebounceInterval = 0.25;
 static NSString * const kResultCellIdentifier = @"resultsCell";

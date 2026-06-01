@@ -319,7 +319,7 @@
 		A100000000000000000001F2 /* PSSearchEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F2 /* PSSearchEngine.mm */; };
 		A100000000000000000001F4 /* PSSearchQuery.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F4 /* PSSearchQuery.mm */; };
 		A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F6 /* PSSearchIndexBuilder.mm */; };
-		A100000000000000000001F8 /* PSSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F8 /* PSSearchResult.m */; };
+		5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000L001 /* PSSearchResult.swift */; };
 		A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F9 /* libsqlite3.tbd */; };
 		A100000000000000000002A2 /* PSInfoPopupViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000002A1 /* PSInfoPopupViewController.mm */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
@@ -954,8 +954,7 @@
 		A100000000000000000000F4 /* PSSearchQuery.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchQuery.mm; path = Classes/PSSearchQuery.mm; sourceTree = "<group>"; };
 		A100000000000000000000F5 /* PSSearchIndexBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchIndexBuilder.h; path = Classes/PSSearchIndexBuilder.h; sourceTree = "<group>"; };
 		A100000000000000000000F6 /* PSSearchIndexBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchIndexBuilder.mm; path = Classes/PSSearchIndexBuilder.mm; sourceTree = "<group>"; };
-		A100000000000000000000F7 /* PSSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchResult.h; path = Classes/PSSearchResult.h; sourceTree = "<group>"; };
-		A100000000000000000000F8 /* PSSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchResult.m; path = Classes/PSSearchResult.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000L001 /* PSSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchResult.swift; path = Classes/PSSearchResult.swift; sourceTree = "<group>"; };
 		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A100000000000000000002A0 /* PSInfoPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSInfoPopupViewController.h; path = Classes/PSInfoPopupViewController.h; sourceTree = "<group>"; };
 		A100000000000000000002A1 /* PSInfoPopupViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSInfoPopupViewController.mm; path = Classes/PSInfoPopupViewController.mm; sourceTree = "<group>"; };
@@ -1963,8 +1962,7 @@
 				A100000000000000000000F4 /* PSSearchQuery.mm */,
 				A100000000000000000000F5 /* PSSearchIndexBuilder.h */,
 				A100000000000000000000F6 /* PSSearchIndexBuilder.mm */,
-				A100000000000000000000F7 /* PSSearchResult.h */,
-				A100000000000000000000F8 /* PSSearchResult.m */,
+				5A1F70B0000000000000L001 /* PSSearchResult.swift */,
 			);
 			name = multi;
 			sourceTree = "<group>";
@@ -2626,7 +2624,7 @@
 				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
 				A100000000000000000001F4 /* PSSearchQuery.mm in Sources */,
 				A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */,
-				A100000000000000000001F8 /* PSSearchResult.m in Sources */,
+				5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */,
 				A100000000000000000002A2 /* PSInfoPopupViewController.mm in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
