@@ -45,3 +45,13 @@
 // add-bookmark VC via the generated PocketSword-Swift.h in its .mm (no cycle: the
 // .h imports nothing).
 #import "PSBookmarksNavigatorController.h"
+// PSSearchEngine.h is C++-clean (Foundation + globals.h + `@class SwordModule;`
+// `@class PSSearchResult;` — all the sword:: / sqlite3 / FTS5 index-build code
+// lives in PSSearchEngine.mm, which STAYS Obj-C++ permanently per the plan).
+// Its public query-side surface (+engineForModule:/-runQuery:.../-buildWithProgress:/
+// -indexIsFresh/-dropIndex) is all Foundation-typed, and every referenced type is
+// already Swift-visible: SwordModule (via SwordModule.h above), PSSearchResult (a
+// Swift @objc final class), and PSSearchType/PSSearchRange (NS_ENUM in globals.h).
+// Exposing it here lets the Wave-3 Swift query-side caller PSModuleSearchController
+// drive the engine directly; the engine itself is never rewritten in Swift.
+#import "PSSearchEngine.h"
