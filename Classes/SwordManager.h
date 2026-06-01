@@ -133,6 +133,14 @@
 /** Foundation-only wrapper over the SWORD LocaleMgr translate API (English -> system locale). */
 + (NSString *)translateBookName:(NSString *)bookName;
 /**
+ Foundation-only wrapper over the SWORD LocaleMgr translate API. Unlike
+ @c translateBookName: (which forces the "en" target), this translates the given
+ English text into the *current system* locale (no target argument), with a
+ UTF-8 -> ISO-Latin-1 fallback decode. Keeps the C++ LocaleMgr API out of Swift
+ callers (e.g. the Swift PSModuleController). Returns nil for a nil input.
+ */
++ (NSString *)translateToSystemLocale:(NSString *)englishText;
+/**
  Foundation-only wrapper over the SWORD VersificationMgr. Resolves the named
  versification system (falling back to "KJV" when @c systemName is nil/empty or
  unknown) and returns its books as an ordered array of @c SwordBook objects.
@@ -174,6 +182,13 @@
 - (NSArray *)modulesForType:(NSString *)type;
 
 - (void)installModulesFromPath:(NSString *)path;
+
+/**
+ Foundation-only wrapper over the SWORD InstallMgr removeModule API. Removes the
+ named module from this manager. Returns YES on success. Keeps the C++ InstallMgr
+ API out of Swift callers (e.g. the Swift PSModuleController).
+ */
+- (BOOL)removeModuleNamed:(NSString *)name;
 
 // C++ accessors (initWithSWMgr:, getSWModuleWithName:, swManager) live in
 // SwordManager+Cpp.h, imported only by .mm files.

@@ -280,6 +280,7 @@
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
 		5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */; };
 		5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZL01 /* PSHistoryController.swift */; };
+		5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZK001 /* PSModuleController.swift */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05E6A75717FADF790063B18C /* splash-iPad-landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75517FADF790063B18C /* splash-iPad-landscape.png */; };
 		05E6A75817FADF790063B18C /* splash-iPad-portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75617FADF790063B18C /* splash-iPad-portrait.png */; };
@@ -364,7 +365,6 @@
 		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
 		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
 		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
-		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
 /* End PBXBuildFile section */
@@ -871,6 +871,7 @@
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
 		5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSearchController.swift; path = Classes/PSModuleSearchController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000ZL01 /* PSHistoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryController.swift; path = Classes/PSHistoryController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZK001 /* PSModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleController.swift; path = Classes/PSModuleController.swift; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05E6A75517FADF790063B18C /* splash-iPad-landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "splash-iPad-landscape.png"; path = "Resources/splash-iPad-landscape.png"; sourceTree = "<group>"; };
@@ -987,8 +988,6 @@
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
 		E9617A850FF56E2100690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E996E5220ED70C6E0034DAF6 /* PSModuleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleController.h; path = Classes/PSModuleController.h; sourceTree = "<group>"; };
-		E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleController.mm; path = Classes/PSModuleController.mm; sourceTree = "<group>"; };
 		E9A6CF9E0FF5508C00399E78 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B800340FF5B98D006081E5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B8FF8A0FF57560006081E5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1855,8 +1854,6 @@
 				1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */,
 				28216C950DB411BC00E5133A /* PSTabBarControllerDelegate.h */,
 				28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */,
-				E996E5220ED70C6E0034DAF6 /* PSModuleController.h */,
-				E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */,
 				5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */,
 			);
 			name = base;
@@ -1907,6 +1904,7 @@
 			isa = PBXGroup;
 			children = (
 				5A1F70B0000000000000ZL01 /* PSHistoryController.swift */,
+				5A1F70B00000000000ZK001 /* PSModuleController.swift */,
 				5A1F70B0000000000000N001 /* PSHistoryItem.swift */,
 				5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */,
 				5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */,
@@ -2410,7 +2408,6 @@
 				1D3623280D0F684500981E52 /* PocketSwordSceneDelegate.mm in Sources */,
 				D2BFDF9E25E73AAB00E04366 /* mz_crypt.c in Sources */,
 				28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */,
-				E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */,
 				05F84EDE191F4AB3003350DE /* gbflatex.cpp in Sources */,
 				D2BFDFA025E73AAB00E04366 /* mz_compat.c in Sources */,
 				05F84ED8191F4A98003350DE /* zverse4.cpp in Sources */,
@@ -2574,6 +2571,7 @@
 				5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */,
 				5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */,
 				5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */,
+				5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */,
 				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
 				5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */,
 				5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */,

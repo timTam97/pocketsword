@@ -8,7 +8,6 @@
 
 #import "PSLaunchViewController.h"
 #import "globals.h"
-#import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "PocketSword-Swift.h"
 #import "SwordManager.h"

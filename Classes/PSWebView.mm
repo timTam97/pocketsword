@@ -8,7 +8,6 @@
 
 #import "PSWebView.h"
 #import "globals.h"
-#import "PSModuleController.h"
 #import "PocketSword-Swift.h"
 #import <cmath>
 

@@ -258,6 +258,22 @@ using std::list;
 	return [NSString stringWithCString:lmgr->translate([bookName cStringUsingEncoding:NSUTF8StringEncoding], "en") encoding:NSUTF8StringEncoding];
 }
 
+// Foundation-only wrapper over sword::LocaleMgr::translate (no target locale ->
+// the *current system* locale, unlike +translateBookName: which forces "en").
+// Mirrors the LocaleMgr use that previously lived in -[PSModuleController init],
+// including the UTF-8 -> ISO-Latin-1 fallback decode, so the Swift port need not
+// touch the C++ LocaleMgr API. Keeps the public header C++-clean.
++ (NSString *)translateToSystemLocale:(NSString *)englishText {
+	if(!englishText) return nil;
+	sword::LocaleMgr *lManager = sword::LocaleMgr::getSystemLocaleMgr();
+	const char *translated = lManager->translate([englishText cStringUsingEncoding:NSUTF8StringEncoding]);
+	NSString *result = [NSString stringWithCString:translated encoding:NSUTF8StringEncoding];
+	if(!result) {
+		result = [NSString stringWithCString:translated encoding:NSISOLatin1StringEncoding];
+	}
+	return result;
+}
+
 // Foundation-only wrapper over the C++ VersificationMgr so callers (e.g. the
 // Swift PSRefSelectorController) need not touch the sword:: API. Resolves the
 // named ref system, falling back to "KJV" when the name is nil/empty/unknown,
@@ -666,6 +682,18 @@ static SwordManager *instance;
 	
 	delete swInstallMgr;
 	delete tmpManager;
+}
+
+// Foundation-only wrapper over sword::InstallMgr::removeModule so callers (e.g.
+// PSModuleController) need not touch the C++ InstallMgr API directly. Mirrors the
+// new/removeModule/delete sequence that previously lived in
+// -[PSModuleController removeModule:]. Returns YES on success (stat == 0).
+- (BOOL)removeModuleNamed:(NSString *)name {
+	if(!name) return NO;
+	sword::InstallMgr *swInstallMgr = new sword::InstallMgr();
+	int stat = swInstallMgr->removeModule(swManager, [name UTF8String]);
+	delete swInstallMgr;
+	return (stat == 0) ? YES : NO;
 }
 
 #pragma mark - lowlevel methods

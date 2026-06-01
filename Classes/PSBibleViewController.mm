@@ -7,7 +7,6 @@
 //
 
 #import "PSBibleViewController.h"
-#import "PSModuleController.h"
 #import "PSTabBarControllerDelegate.h"
 #import "SwordDictionary.h"
 #import "PocketSword-Swift.h"

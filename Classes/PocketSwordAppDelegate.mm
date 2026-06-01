@@ -20,7 +20,6 @@
 #import "PocketSwordAppDelegate.h"
 #import "PocketSwordSceneDelegate.h"
 #import "PocketSword-Swift.h"
-#import "PSModuleController.h"
 #import "ZipArchive.h"
 #import "SwordManager.h"
 #import "SwordDictionary.h"

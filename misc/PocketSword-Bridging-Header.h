@@ -41,11 +41,19 @@
 // Wave 2) hold a `SwordBook *book` property, so SwordBook must be a visible
 // Swift type here.
 #import "SwordBook.h"
-// PSModuleController.h is C++-clean (its only #import is the SwordModule.h facade
-// above; every method signature is Foundation-typed). The Swift PSHistoryItem
-// (migration step 1.2) calls +[PSModuleController getFirstRefAvailable] on its
-// legacy empty-array seed path, so its declaration must be visible here.
-#import "PSModuleController.h"
+// SSZipArchive.h is the clean Foundation-only @objc facade of the vendored
+// ZipArchive (externals/ZipArchive) — no C++ leaks. The Swift PSModuleController
+// (Wave 4) calls +[SSZipArchive unzipFileAtPath:toDestination:] in
+// -installModulesFromZip:..., so the class must be Swift-visible here. ZipArchive
+// itself stays Obj-C.
+#import "SSZipArchive.h"
+// (PSModuleController was migrated to Swift in Wave 4 — its former
+// PSModuleController.{h,mm} are deleted. The Swift @objc(PSModuleController) class
+// lives in the same module, so Swift callers reference it directly; every Obj-C++
+// caller (PSTabBarControllerDelegate.mm, the render cluster, PSLaunchViewController.mm,
+// PocketSwordAppDelegate.mm, SwordModule.mm) reaches it via the generated
+// PocketSword-Swift.h. The 9 sword:: seams it used were extracted to Foundation
+// @objc methods on SwordManager / SwordModule, so no C++ crosses into Swift.)
 // (PSDictionaryViewController was migrated to Swift in Wave 3 — its former
 // PSDictionaryViewController.h is deleted. The Swift class and the @objc
 // PSDictionaryViewControllerDelegate protocol live in the same module, so the

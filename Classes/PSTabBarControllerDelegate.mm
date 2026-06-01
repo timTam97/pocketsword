@@ -22,7 +22,6 @@
 #import "PSTabBarControllerDelegate.h"
 #import "PocketSword-Swift.h"
 #import "SwordModule.h"
-#import "PSModuleController.h"
 #import "PocketSwordAppDelegate.h"
 #import "PSBibleViewController.h"
 #import "PSCommentaryViewController.h"

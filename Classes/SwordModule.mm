@@ -18,7 +18,6 @@
 #import "SwordManager.h"
 #import "SwordManager+Cpp.h"
 #import "globals.h"
-#import "PSModuleController.h"
 #import "PocketSword-Swift.h"
 #import "PSSearchEngine.h"
 
@@ -973,6 +972,31 @@
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	swModule->stripText();
+}
+
+// Foundation-only wrapper over swModule->getKeyText(). Returns the module's
+// current key text as an NSString (UTF-8, with an ISO-Latin-1 fallback decode),
+// keeping the C++ key API out of Swift callers (e.g. the Swift PSModuleController
+// -reload path, which saves/restores the current location across a reInit).
+- (NSString *)keyText {
+	const char *kt = swModule->getKeyText();
+	if(!kt) return nil;
+	NSString *result = [NSString stringWithCString:kt encoding:NSUTF8StringEncoding];
+	if(!result) {
+		result = [NSString stringWithCString:kt encoding:NSISOLatin1StringEncoding];
+	}
+	return result;
+}
+
+// Foundation-only wrapper that sets the underlying verse key's text WITHOUT
+// re-stripping (unlike -setChapter:). Mirrors the
+// `(sword::VerseKey*)swModule->getKey())->setText(...)` restore that previously
+// lived in -[PSModuleController reload] for the primary bible/commentary, keeping
+// the C++ VerseKey API out of the Swift port.
+- (void)setVerseKeyText:(NSString *)text {
+	if(!text) return;
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	curKey->setText([text cStringUsingEncoding: NSUTF8StringEncoding]);
 }
 
 - (NSString *)setToNextChapter {

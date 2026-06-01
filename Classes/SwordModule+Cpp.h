@@ -3,8 +3,8 @@
 //  PocketSword
 //
 //  Internal Obj-C++ interface for SwordModule. Imported ONLY by .mm files
-//  (SwordModule.mm, SwordDictionary.mm, SwordManager.mm, PSModuleController.mm,
-//  PSSearchEngine.mm). Holds the C++ `swModule` ivar (shared with the
+//  (SwordModule.mm, SwordDictionary.mm, SwordManager.mm, PSSearchEngine.mm).
+//  Holds the C++ `swModule` ivar (shared with the
 //  SwordDictionary subclass), the sword::SWModule-typed init/accessor methods,
 //  and the My_SWDYNAMIC_CAST helper. The public SwordModule.h is Foundation-only
 //  and safe for the Swift bridging header.

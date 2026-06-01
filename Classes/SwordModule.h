@@ -188,6 +188,11 @@ typedef enum {
 - (void)setChapter:(NSString *)chapter;
 - (void)setIntroductions:(BOOL)intros;
 
+/** Current key text (UTF-8, ISO-Latin-1 fallback). Foundation-only key getter. */
+- (NSString *)keyText;
+/** Sets the underlying verse key's text without re-stripping. Foundation-only. */
+- (void)setVerseKeyText:(NSString *)text;
+
 // ------- SwordModuleAccess ---------
 - (NSArray *)strippedTextEntriesForRef:(NSString *)reference;
 - (NSArray *)renderedTextEntriesForRef:(NSString *)reference;
