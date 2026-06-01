@@ -7,11 +7,9 @@
 //
 
 #import "PSBookmarksNavigatorController.h"
-#import "PSBookmark.h"
 #import "PSModuleController.h"
 #import "PSHistoryController.h"
 #import "PSBookmarkFolderAddViewController.h"
-#import "PSBookmarks.h"
 #import "PSBookmarkTableViewCell.h"
 #import "PSBookmarkAddViewController.h"
 #import "PocketSword-Swift.h"

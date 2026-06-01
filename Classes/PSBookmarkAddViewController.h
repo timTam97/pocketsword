@@ -6,7 +6,7 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSBookmark.h"
+@class PSBookmark;
 
 @interface PSBookmarksAddTableViewController : UITableViewController <UITextFieldDelegate>{
 	NSString *bookAndChapterRef;

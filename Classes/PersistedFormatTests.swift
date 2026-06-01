@@ -99,14 +99,14 @@ final class PersistedFormatTests: XCTestCase {
     //   folder reads rgb@4 ("" normalized to nil) + children@5;
     //   bookmark reads ref@4.
 
-    func testBookmark_writeProducesFiveElementBookmarkSchema() {
+    func testBookmark_writeProducesFiveElementBookmarkSchema() throws {
         let da = Date(timeIntervalSince1970: 100)
         let dla = Date(timeIntervalSince1970: 200)
         let bm = PSBookmark(name: "Verse",
                             dateAdded: da,
                             dateLastAccessed: dla,
                             bibleReference: "Rom 8:28")
-        let arr = PSBookmarks.parseBookmarkObject(bm) as NSArray
+        let arr = try XCTUnwrap(PSBookmarks.parseBookmarkObject(bm))
 
         XCTAssertEqual(arr.count, 5, "bookmark schema = exactly 5 elements")
         XCTAssertEqual(arr[0] as? String, "Verse",   "idx0 = name")
@@ -117,7 +117,7 @@ final class PersistedFormatTests: XCTestCase {
         XCTAssertEqual(arr[4] as? String, "Rom 8:28", "idx4 = ref for a bookmark")
     }
 
-    func testBookmarkFolder_writeProducesSixElementFolderSchemaWithRGB() {
+    func testBookmarkFolder_writeProducesSixElementFolderSchemaWithRGB() throws {
         let da = Date(timeIntervalSince1970: 300)
         let dla = Date(timeIntervalSince1970: 400)
         let folder = PSBookmarkFolder(name: "Fav",
@@ -125,7 +125,7 @@ final class PersistedFormatTests: XCTestCase {
                                       dateLastAccessed: dla,
                                       rgbHexString: "ff0000",
                                       children: [])
-        let arr = PSBookmarks.parseBookmarkObject(folder) as NSArray
+        let arr = try XCTUnwrap(PSBookmarks.parseBookmarkObject(folder))
 
         XCTAssertEqual(arr.count, 6, "folder schema = exactly 6 elements")
         XCTAssertEqual(arr[0] as? String, "Fav",  "idx0 = name")
@@ -139,13 +139,13 @@ final class PersistedFormatTests: XCTestCase {
     }
 
     // A folder with no rgb writes "" at idx4 (never nil — nil would break the plist).
-    func testBookmarkFolder_writeNilRGBProducesEmptyStringAtIndexFour() {
+    func testBookmarkFolder_writeNilRGBProducesEmptyStringAtIndexFour() throws {
         let folder = PSBookmarkFolder(name: "NoColour",
                                       dateAdded: Date(timeIntervalSince1970: 1),
                                       dateLastAccessed: Date(timeIntervalSince1970: 2),
                                       rgbHexString: nil,
                                       children: [])
-        let arr = PSBookmarks.parseBookmarkObject(folder) as NSArray
+        let arr = try XCTUnwrap(PSBookmarks.parseBookmarkObject(folder))
         XCTAssertEqual(arr.count, 6)
         XCTAssertEqual(arr[4] as? String, "",
                        "nil rgb is written as the EMPTY STRING, not nil")
@@ -159,10 +159,10 @@ final class PersistedFormatTests: XCTestCase {
                             dateAdded: da,
                             dateLastAccessed: dla,
                             bibleReference: "Ps 23:1")
-        let arr = PSBookmarks.parseBookmarkObject(bm)
+        let arr = try XCTUnwrap(PSBookmarks.parseBookmarkObject(bm))
 
         let store = try XCTUnwrap(PSBookmarks.default())
-        let parsedBM = try XCTUnwrap(store.parseArray(arr) as? PSBookmark)
+        let parsedBM = try XCTUnwrap(store.parseArray(arr as? [Any]) as? PSBookmark)
 
         XCTAssertFalse(parsedBM.folder)
         XCTAssertEqual(parsedBM.name, "X")
@@ -176,11 +176,11 @@ final class PersistedFormatTests: XCTestCase {
         let da = Date(timeIntervalSince1970: 700)
         let dla = Date(timeIntervalSince1970: 800)
         // Hand-build the exact 6-element folder array with "" rgb and one child.
-        let childArr = PSBookmarks.parseBookmarkObject(
+        let childArr = try XCTUnwrap(PSBookmarks.parseBookmarkObject(
             PSBookmark(name: "kid",
                        dateAdded: da,
                        dateLastAccessed: dla,
-                       bibleReference: "Acts 2:1"))
+                       bibleReference: "Acts 2:1")))
         let folderArr: [Any] = ["Top", da, dla, "YES", "", [childArr]]
 
         let store = try XCTUnwrap(PSBookmarks.default())
@@ -190,8 +190,9 @@ final class PersistedFormatTests: XCTestCase {
         XCTAssertEqual(parsedFolder.name, "Top")
         XCTAssertNil(parsedFolder.rgbHexString,
                      "empty-string rgb at idx4 must be normalized to nil on read")
-        XCTAssertEqual(parsedFolder.children.count, 1, "children read from idx5")
-        XCTAssertEqual((parsedFolder.children.first as? PSBookmark)?.ref, "Acts 2:1")
+        let children = try XCTUnwrap(parsedFolder.children)
+        XCTAssertEqual(children.count, 1, "children read from idx5")
+        XCTAssertEqual((children.first as? PSBookmark)?.ref, "Acts 2:1")
     }
 
     // MARK: - PSSearchHistoryItem (Classes/PSSearchHistoryItem.m)

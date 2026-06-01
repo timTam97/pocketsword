@@ -7,8 +7,6 @@
 //
 
 #import "PSBookmarkFolderAddViewController.h"
-#import "PSBookmarkFolder.h"
-#import "PSBookmarks.h"
 #import "globals.h"
 #import "PocketSword-Swift.h"
 

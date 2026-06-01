@@ -20,7 +20,7 @@
 #import "globals.h"
 #import "PSModuleController.h"
 #import "PSLanguageCode.h"
-#import "PSBookmarks.h"
+#import "PocketSword-Swift.h"
 #import "PSSearchEngine.h"
 #import "PSSearchResult.h"
 #import "PSSearchQuery.h"

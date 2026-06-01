@@ -249,3 +249,40 @@ func dlog(_ message: String, file: String = #file, line: Int = #line) {
 func alog(_ message: String, file: String = #file, line: Int = #line) {
     NSLog("%@ [Line %d] %@", (file as NSString).lastPathComponent, line, message)
 }
+
+// MARK: - Reference-string helpers
+//
+// Migration step 1.1 extracts the two thin Foundation-only SWORD seams that the
+// bookmark store (PSBookmarks.swift) depends on out of PSModuleController, per
+// the plan's "eliminate thin SWORD seams" guidance (§3 PR 1.1). Both are pure
+// string / NSUserDefaults logic — no sword:: / C++ — so they live in the Swift
+// helper layer rather than reaching back into the (SwordModule.h-importing)
+// PSModuleController header. Behaviour is byte-for-byte identical to the Obj-C
+// originals in PSModuleController.mm (+createRefString: / +getCurrentBibleRef);
+// those Obj-C methods remain for the many other Obj-C callers during the mixed
+// phase.
+
+enum PSRefHelper {
+
+    /// Mirror of +[PSModuleController createRefString:] — normalises the leading
+    /// roman-numeral book prefixes to arabic and strips " of John ".
+    static func createRefString(_ ref: String) -> String {
+        return ref
+            .replacingOccurrences(of: "III ", with: "3 ")
+            .replacingOccurrences(of: "II ", with: "2 ")
+            .replacingOccurrences(of: "I ", with: "1 ")
+            .replacingOccurrences(of: " of John ", with: " ")
+    }
+
+    /// Mirror of +[PSModuleController getCurrentBibleRef] — reads DefaultsLastRef,
+    /// seeding "Genesis 1" the first time.
+    static func getCurrentBibleRef() -> String {
+        let defaults = UserDefaults.standard
+        if let lastRef = defaults.string(forKey: Defaults.lastRef) {
+            return lastRef
+        }
+        defaults.set("Genesis 1", forKey: Defaults.lastRef)
+        defaults.synchronize()
+        return "Genesis 1"
+    }
+}

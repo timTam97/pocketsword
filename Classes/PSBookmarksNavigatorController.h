@@ -6,7 +6,7 @@
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
 
-#import "PSBookmarkFolder.h"
+@class PSBookmarkFolder;
 
 @interface PSBookmarksNavigatorController : UITableViewController {
 	PSBookmarkFolder *bookmarkFolder;

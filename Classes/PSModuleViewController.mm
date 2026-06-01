@@ -12,8 +12,6 @@
 #import "SwordDictionary.h"
 #import "PSBookmarkAddViewController.h"
 #import "PocketSword-Swift.h"
-#import "PSBookmarks.h"
-#import "PSBookmark.h"
 #import "PSCommentaryViewController.h"
 #import "PSBibleViewController.h"
 #import "SwordManager.h"
