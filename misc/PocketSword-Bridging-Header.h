@@ -55,3 +55,9 @@
 // Exposing it here lets the Wave-3 Swift query-side caller PSModuleSearchController
 // drive the engine directly; the engine itself is never rewritten in Swift.
 #import "PSSearchEngine.h"
+// PSHistoryController.h is C++-clean (its only #import is globals.h; it is a
+// UITableViewController with Foundation-typed methods). The Wave-3 Swift
+// PSModuleSearchController calls +[PSHistoryController addHistoryItem:] when the
+// user taps a search result, so the type must be Swift-visible here.
+// PSHistoryController itself stays Obj-C++ during Wave 3.
+#import "PSHistoryController.h"

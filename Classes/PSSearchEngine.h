@@ -32,7 +32,19 @@ extern const int PSSearchSchemaVersion;
 /// and the `" [] "` empty-tag marker from a `stripText()` result, collapsing
 /// any whitespace the removal left behind — including a space stranded just
 /// before punctuation.
+///
+/// C linkage: this free function is defined in the Obj-C++ PSSearchEngine.mm
+/// (which #imports this header before the definition, so the definition inherits
+/// this linkage). The `extern "C"` guard suppresses C++ name mangling so the
+/// Swift caller (PSModuleSearchController) resolves the unmangled symbol
+/// `_PSSearchCleanDisplayText`. Plain C / Obj-C TUs ignore the guard.
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern NSString *PSSearchCleanDisplayText(NSString *plain);
+#ifdef __cplusplus
+}
+#endif
 
 typedef void (^PSSearchProgressBlock)(float fraction, BOOL *cancel);
 
