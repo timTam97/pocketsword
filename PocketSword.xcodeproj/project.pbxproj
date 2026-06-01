@@ -315,7 +315,7 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */; };
 		A100000000000000000001F2 /* PSSearchEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F2 /* PSSearchEngine.mm */; };
-		A100000000000000000001F4 /* PSSearchQuery.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F4 /* PSSearchQuery.mm */; };
+		5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000O001 /* PSSearchQuery.swift */; };
 		A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F6 /* PSSearchIndexBuilder.mm */; };
 		5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000L001 /* PSSearchResult.swift */; };
 		5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */; };
@@ -946,8 +946,7 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
 		A100000000000000000000F1 /* PSSearchEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchEngine.h; path = Classes/PSSearchEngine.h; sourceTree = "<group>"; };
 		A100000000000000000000F2 /* PSSearchEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchEngine.mm; path = Classes/PSSearchEngine.mm; sourceTree = "<group>"; };
-		A100000000000000000000F3 /* PSSearchQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchQuery.h; path = Classes/PSSearchQuery.h; sourceTree = "<group>"; };
-		A100000000000000000000F4 /* PSSearchQuery.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchQuery.mm; path = Classes/PSSearchQuery.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000O001 /* PSSearchQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchQuery.swift; path = Classes/PSSearchQuery.swift; sourceTree = "<group>"; };
 		A100000000000000000000F5 /* PSSearchIndexBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchIndexBuilder.h; path = Classes/PSSearchIndexBuilder.h; sourceTree = "<group>"; };
 		A100000000000000000000F6 /* PSSearchIndexBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchIndexBuilder.mm; path = Classes/PSSearchIndexBuilder.mm; sourceTree = "<group>"; };
 		5A1F70B0000000000000L001 /* PSSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchResult.swift; path = Classes/PSSearchResult.swift; sourceTree = "<group>"; };
@@ -1954,8 +1953,7 @@
 				5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */,
 				A100000000000000000000F1 /* PSSearchEngine.h */,
 				A100000000000000000000F2 /* PSSearchEngine.mm */,
-				A100000000000000000000F3 /* PSSearchQuery.h */,
-				A100000000000000000000F4 /* PSSearchQuery.mm */,
+				5A1F70B0000000000000O001 /* PSSearchQuery.swift */,
 				A100000000000000000000F5 /* PSSearchIndexBuilder.h */,
 				A100000000000000000000F6 /* PSSearchIndexBuilder.mm */,
 				5A1F70B0000000000000L001 /* PSSearchResult.swift */,
@@ -2618,7 +2616,7 @@
 				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
 				05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */,
 				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
-				A100000000000000000001F4 /* PSSearchQuery.mm in Sources */,
+				5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */,
 				A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */,
 				5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */,
 				5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */,

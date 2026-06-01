@@ -22,7 +22,6 @@
 #import "PSLanguageCode.h"
 #import "PocketSword-Swift.h"
 #import "PSSearchEngine.h"
-#import "PSSearchQuery.h"
 
 @interface SwordModule (/* Private, class continuation */)
 /** private property */
