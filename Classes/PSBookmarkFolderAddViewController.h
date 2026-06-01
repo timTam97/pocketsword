@@ -11,9 +11,8 @@
 //
 //	right nav item button = save button.
 
-#import "PSBookmarkFolderColourSelectorViewController.h"
-
 @class PSBookmarkFolder;
+@protocol PSBookmarkFolderColourSelectorDelegate;
 
 @interface PSBookmarkFolderAddViewController : UITableViewController <PSBookmarkFolderColourSelectorDelegate, UITextFieldDelegate> {
 	NSString *parentFolder;
