@@ -20,7 +20,7 @@
 		0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
-		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
+		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0505FE8D12C9A55800A3C65B /* disabled-Footnotes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */; };
@@ -389,8 +389,7 @@
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
-		05034D2310FD625900884C98 /* SearchWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchWebView.h; sourceTree = "<group>"; };
-		05034D2410FD625900884C98 /* SearchWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchWebView.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000P001 /* SearchWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchWebView.swift; sourceTree = "<group>"; };
 		0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Footnotes@2x.png"; path = "Resources/disabled-Footnotes@2x.png"; sourceTree = "<group>"; };
 		0505FE7A12C9A55800A3C65B /* disabled-Headings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Headings@2x.png"; path = "Resources/disabled-Headings@2x.png"; sourceTree = "<group>"; };
 		0505FE7B12C9A55800A3C65B /* disabled-Morph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Morph@2x.png"; path = "Resources/disabled-Morph@2x.png"; sourceTree = "<group>"; };
@@ -2033,8 +2032,7 @@
 				0545E29A1063A09500DD7F06 /* globals.h */,
 				056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */,
 				056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */,
-				05034D2310FD625900884C98 /* SearchWebView.h */,
-				05034D2410FD625900884C98 /* SearchWebView.m */,
+				5A1F70B0000000000000P001 /* SearchWebView.swift */,
 				5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */,
 				5A1F70B0000000000000C001 /* AppConstants.swift */,
 				5A1F70B0000000000000D001 /* PSResizing.swift */,
@@ -2629,7 +2627,7 @@
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
-				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
+				5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */,
 				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
 				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
 				05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */,
