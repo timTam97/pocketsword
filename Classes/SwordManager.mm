@@ -14,7 +14,7 @@
 #import "SwordManager.h"
 #import "SwordManager+Cpp.h"
 #import "SwordModule+Cpp.h"
-#import "PSModuleType.h"
+#import "PocketSword-Swift.h"
 
 #include <string>
 #include <list>

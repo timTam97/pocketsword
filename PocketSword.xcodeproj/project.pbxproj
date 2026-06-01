@@ -23,6 +23,7 @@
 		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
 		5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q001 /* PSLanguageCode.swift */; };
 		5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q003 /* LanguageCodes.json */; };
+		5A1F70B0000000000000R002 /* PSModuleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000R001 /* PSModuleType.swift */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0505FE8D12C9A55800A3C65B /* disabled-Footnotes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */; };
@@ -246,7 +247,6 @@
 		05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
 		05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
 		05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */; };
-		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
 		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
 		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
@@ -828,8 +828,6 @@
 		05AB9510116D9C190043DB57 /* PSVerseSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSVerseSelectorController.h; path = Classes/PSVerseSelectorController.h; sourceTree = "<group>"; };
 		05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSVerseSelectorController.mm; path = Classes/PSVerseSelectorController.mm; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
-		05B5295B107C529000826AFE /* PSModuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleType.h; sourceTree = "<group>"; };
-		05B5295C107C529000826AFE /* PSModuleType.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSModuleType.mm; sourceTree = "<group>"; };
 		05B67C8D1461046E00B3E605 /* canon_catholic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic.h; sourceTree = "<group>"; };
 		05B67C8E1461046E00B3E605 /* canon_catholic2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic2.h; sourceTree = "<group>"; };
 		05B67C901461046E00B3E605 /* gbfxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gbfxhtml.h; sourceTree = "<group>"; };
@@ -858,6 +856,7 @@
 		05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = versificationmgr.cpp; sourceTree = "<group>"; };
 		05D461E8108EEB00006BFBB1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
 		5A1F70B0000000000000Q001 /* PSLanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSLanguageCode.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000R001 /* PSModuleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSModuleType.swift; sourceTree = "<group>"; };
 		05D6ABA51097E8CC00A5026E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		05DA779F13CD754D000A4B97 /* PSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSWebView.h; path = Classes/PSWebView.h; sourceTree = "<group>"; };
 		05DA77A013CD754D000A4B97 /* PSWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSWebView.mm; path = Classes/PSWebView.mm; sourceTree = "<group>"; };
@@ -2027,8 +2026,7 @@
 			isa = PBXGroup;
 			children = (
 				5A1F70B0000000000000Q001 /* PSLanguageCode.swift */,
-				05B5295B107C529000826AFE /* PSModuleType.h */,
-				05B5295C107C529000826AFE /* PSModuleType.mm */,
+				5A1F70B0000000000000R001 /* PSModuleType.swift */,
 				0545E28510639DC400DD7F06 /* utils.h */,
 				0545E29A1063A09500DD7F06 /* globals.h */,
 				056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */,
@@ -2469,7 +2467,6 @@
 				D2BFDFA525E73AAB00E04366 /* mz_strm.c in Sources */,
 				0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */,
 				0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */,
-				05B5295D107C529000826AFE /* PSModuleType.mm in Sources */,
 				05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */,
 				05275ADA10884F72004FB0E0 /* swlog.cpp in Sources */,
 				05275ADC10884F72004FB0E0 /* listkey.cpp in Sources */,
@@ -2607,6 +2604,7 @@
 				05275B6A10884F72004FB0E0 /* utilstr.cpp in Sources */,
 				05275B6B10884F72004FB0E0 /* utilxml.cpp in Sources */,
 				5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */,
+				5A1F70B0000000000000R002 /* PSModuleType.swift in Sources */,
 				05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */,
 				05CD44C2109E92C900853E48 /* PSPreferencesController.mm in Sources */,
 				05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */,

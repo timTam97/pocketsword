@@ -27,7 +27,6 @@
 #import "SwordManager.h"
 #import "SwordManager+Cpp.h"
 #import "globals.h"
-#import "PSModuleType.h"
 #import "SwordKey.h"
 #import "PSRefSelectorController.h"
 
