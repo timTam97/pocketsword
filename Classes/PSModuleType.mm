@@ -7,7 +7,7 @@
 //
 
 #import "PSModuleType.h"
-#import "PSLanguageCode.h"
+#import "PocketSword-Swift.h"
 
 
 @implementation PSModuleType

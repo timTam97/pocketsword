@@ -19,7 +19,6 @@
 
 #import "PocketSwordSceneDelegate.h"
 #import "PocketSwordAppDelegate.h"
-#import "PSLanguageCode.h"
 #import "PSTabBarControllerDelegate.h"
 
 @implementation PocketSwordSceneDelegate {

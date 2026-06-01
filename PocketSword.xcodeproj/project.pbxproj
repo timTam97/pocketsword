@@ -21,6 +21,8 @@
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
+		5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q001 /* PSLanguageCode.swift */; };
+		5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q003 /* LanguageCodes.json */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0505FE8D12C9A55800A3C65B /* disabled-Footnotes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */; };
@@ -262,7 +264,6 @@
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
 		05CFBE1F12C823C3002DA812 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CFBE1D12C823C3002DA812 /* Default@2x.png */; };
 		05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
-		05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D4629F10907130006BFBB1 /* PSLanguageCode.m */; };
 		05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
 		05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DA77A013CD754D000A4B97 /* PSWebView.mm */; };
 		05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A313CD8E51000A4B97 /* blueArrow.png */; };
@@ -389,6 +390,7 @@
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
+		5A1F70B0000000000000Q003 /* LanguageCodes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = LanguageCodes.json; path = Resources/LanguageCodes.json; sourceTree = "<group>"; };
 		5A1F70B0000000000000P001 /* SearchWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchWebView.swift; sourceTree = "<group>"; };
 		0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Footnotes@2x.png"; path = "Resources/disabled-Footnotes@2x.png"; sourceTree = "<group>"; };
 		0505FE7A12C9A55800A3C65B /* disabled-Headings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Headings@2x.png"; path = "Resources/disabled-Headings@2x.png"; sourceTree = "<group>"; };
@@ -855,8 +857,7 @@
 		05D3E48E16FA9F5700B9DEBF /* versificationmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versificationmgr.h; sourceTree = "<group>"; };
 		05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = versificationmgr.cpp; sourceTree = "<group>"; };
 		05D461E8108EEB00006BFBB1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
-		05D4629E10907130006BFBB1 /* PSLanguageCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLanguageCode.h; sourceTree = "<group>"; };
-		05D4629F10907130006BFBB1 /* PSLanguageCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSLanguageCode.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000Q001 /* PSLanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSLanguageCode.swift; sourceTree = "<group>"; };
 		05D6ABA51097E8CC00A5026E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		05DA779F13CD754D000A4B97 /* PSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSWebView.h; path = Classes/PSWebView.h; sourceTree = "<group>"; };
 		05DA77A013CD754D000A4B97 /* PSWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSWebView.mm; path = Classes/PSWebView.mm; sourceTree = "<group>"; };
@@ -1820,6 +1821,7 @@
 			children = (
 				0528684E13E00D300044A388 /* Padauk.ttf */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
+				5A1F70B0000000000000Q003 /* LanguageCodes.json */,
 				056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */,
 			);
 			name = misc;
@@ -2024,8 +2026,7 @@
 		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
-				05D4629E10907130006BFBB1 /* PSLanguageCode.h */,
-				05D4629F10907130006BFBB1 /* PSLanguageCode.m */,
+				5A1F70B0000000000000Q001 /* PSLanguageCode.swift */,
 				05B5295B107C529000826AFE /* PSModuleType.h */,
 				05B5295C107C529000826AFE /* PSModuleType.mm */,
 				0545E28510639DC400DD7F06 /* utils.h */,
@@ -2328,6 +2329,7 @@
 				0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */,
 				052B52F21101D76000FFDF01 /* locales.d.zip in Resources */,
 				05034D2810FD63E300884C98 /* SearchWebView.js in Resources */,
+				5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */,
 				05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */,
 				05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
@@ -2604,7 +2606,7 @@
 				05275B6910884F72004FB0E0 /* url.cpp in Sources */,
 				05275B6A10884F72004FB0E0 /* utilstr.cpp in Sources */,
 				05275B6B10884F72004FB0E0 /* utilxml.cpp in Sources */,
-				05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */,
+				5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */,
 				05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */,
 				05CD44C2109E92C900853E48 /* PSPreferencesController.mm in Sources */,
 				05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */,

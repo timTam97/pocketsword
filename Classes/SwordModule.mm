@@ -19,7 +19,6 @@
 #import "SwordManager+Cpp.h"
 #import "globals.h"
 #import "PSModuleController.h"
-#import "PSLanguageCode.h"
 #import "PocketSword-Swift.h"
 #import "PSSearchEngine.h"
 
