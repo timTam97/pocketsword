@@ -1361,7 +1361,7 @@
 						clearInterval(det_loc_poll);\n\
 					}\n\
 					function scrollToVerse(verse) {\n\
-						//setTimeout(\"_scrollToVerse(\"+verse+\")\", 250);\n\
+						setTimeout(function() { _scrollToVerse(verse); }, 250);\n\
 					}\n\
 					function scrollToYOffset(iTargetY) {\n\
 						iTargetY = iTargetY < 0 ? 0 : iTargetY;\n\
@@ -1390,17 +1390,21 @@
 						//setTimeout(\"scrollToYOffset(\"+position+\")\", 250);\n\
 					}\n\
 					function _scrollToVerse(verse) {\n\
-						if(verse == '1' || verse == '0') {\n\
+						verse = parseInt(verse, 10);\n\
+						if(isNaN(verse) || verse <= 1) {\n\
 							window.scrollTo(0,0);\n\
 							//scrollToYOffset(0);\n\
-						} else if(versepos[verse] != 0) {\n\
+						} else if(!versepos) {\n\
+							return;\n\
+						} else if(typeof versepos[verse] != \"undefined\" && versepos[verse] != 0) {\n\
 							window.scrollTo(0, versepos[verse]);\n\
 							//scrollToYOffset(versepos[verse]);\n\
 						} else {\n\
 							for(var ii = verse; ii > 0; ii--) {\n\
-								if(versepos[ii] != 0) {\n\
+								if(typeof versepos[ii] != \"undefined\" && versepos[ii] != 0) {\n\
 									window.scrollTo(0, versepos[ii]);\n\
 									//scrollToYOffset(versepos[ii]);\n\
+									break;\n\
 								}\n\
 							}\n\
 						}\n\

@@ -161,22 +161,36 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
     @objc(scrollToVerse:)
     func scrollToVerse(_ verseNumber: NSInteger) {
+        _ = scrollToVerseIfPossible(verseNumber)
+    }
+
+    @discardableResult
+    private func scrollToVerseIfPossible(_ verseNumber: NSInteger) -> Bool {
+        guard verseNumber > 0 else { return false }
+        guard let scrollView = webView?.scrollView() else { return false }
+
         var newYOffset: CGFloat = 0.0
-        guard let versePositionArray = versePositionArray else { return }
-        if verseNumber > 1 && versePositionArray.count > verseNumber {
-            newYOffset = CGFloat((versePositionArray.object(at: verseNumber - 1) as? NSNumber)?.floatValue ?? 0)
-            var topLength: CGFloat = 0
-            var bottomLength: CGFloat = 0
-            if !isFullScreen {
-                topLength = view.safeAreaInsets.top
-                bottomLength = view.safeAreaInsets.bottom
-            }
-            newYOffset -= topLength
-            if (newYOffset + webView.frame.size.height) > webView.scrollView().contentSize.height {
-                newYOffset = webView.scrollView().contentSize.height - webView.frame.size.height + bottomLength
-            }
-            webView.scrollView().setContentOffset(CGPoint(x: 0, y: newYOffset), animated: false)
+        if verseNumber > 1 {
+            guard let versePositionArray = versePositionArray else { return false }
+            let verseIndex = verseNumber - 1
+            guard verseIndex >= 0 && verseIndex < versePositionArray.count else { return false }
+            newYOffset = CGFloat((versePositionArray.object(at: verseIndex) as? NSNumber)?.floatValue ?? 0)
         }
+
+        var topLength: CGFloat = 0
+        var bottomLength: CGFloat = 0
+        if !isFullScreen {
+            topLength = view.safeAreaInsets.top
+            bottomLength = view.safeAreaInsets.bottom
+        }
+        newYOffset = max(0, newYOffset - topLength)
+
+        let maxYOffset = max(0, scrollView.contentSize.height - webView.frame.size.height + bottomLength)
+        if newYOffset > maxYOffset {
+            newYOffset = maxYOffset
+        }
+        scrollView.setContentOffset(CGPoint(x: 0, y: newYOffset), animated: false)
+        return true
     }
 
     func scrollHappened(_ psWebView: PSWebView, newOffsetY: CGFloat) {
@@ -221,6 +235,9 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
             mutVerseArray.add(NSNumber(value: (verseArray[i] as? NSString)?.floatValue ?? 0))
         }
         self.versePositionArray = mutVerseArray
+        if verseToShow > 0 && scrollToVerseIfPossible(verseToShow) {
+            verseToShow = 0
+        }
     }
 
     @objc(segmentedControlAction:)
@@ -453,7 +470,9 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
             self.jsToShow = nil
         } else if verseToShow > 0 {
             // go there.
-            scrollToVerse(verseToShow)
+            if scrollToVerseIfPossible(verseToShow) {
+                verseToShow = 0
+            }
         } else {
             webView.stringByEvaluatingJavaScriptFromString("startDetLocPoll();")
         }
@@ -600,8 +619,9 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         setupWebViewRefreshViews()
         finishedLoading = true
         if verseToShow > 0 {
-            scrollToVerse(verseToShow)
-            verseToShow = 0
+            if scrollToVerseIfPossible(verseToShow) {
+                verseToShow = 0
+            }
         } else {
             var topLength: CGFloat = 0.0
             if !isFullScreen {
