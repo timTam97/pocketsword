@@ -8,9 +8,10 @@
 
 #import "SwordKey.h"
 
-#ifdef __cplusplus
-#include <versekey.h>
-#endif
+// NOTE: The <versekey.h> include and the sword::VerseKey-typed
+// factory/init/accessor methods have been moved to the internal
+// SwordVerseKey+Cpp.h, imported only by .mm files. This public header is
+// Foundation-only so it is safe to expose to the Swift bridging header.
 
 @interface SwordVerseKey : SwordKey {
 }
@@ -24,13 +25,8 @@
 + (id)verseKeyForWholeBibleForVersification:(NSString *)scheme;
 + (id)verseKeyForWholeBook:(NSString *)aRef v11n:(NSString *)scheme;
 
-#ifdef __cplusplus
-+ (id)verseKeyWithSWVerseKey:(sword::VerseKey *)aVk;
-+ (id)verseKeyWithSWVerseKey:(sword::VerseKey *)aVk makeCopy:(BOOL)copy;
-- (id)initWithSWVerseKey:(sword::VerseKey *)aVk;
-- (id)initWithSWVerseKey:(sword::VerseKey *)aVk makeCopy:(BOOL)copy;
-- (sword::VerseKey *)swVerseKey;
-#endif
+// C++ factory/init/accessors (verseKeyWithSWVerseKey:, initWithSWVerseKey:,
+// swVerseKey) live in SwordVerseKey+Cpp.h, imported only by .mm files.
 
 - (id)initWithVersification:(NSString *)scheme;
 - (id)initWithRef:(NSString *)aRef;

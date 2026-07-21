@@ -14,15 +14,11 @@
 #import "SwordModuleTextEntry.h"
 #import "SwordVerseKey.h"
 
-#ifdef __cplusplus
-#include <swtext.h>
-#include <versekey.h>
-#include <regex.h>
-//class sword::SWModule;
-using sword::SWModule;
-#endif
-
-#define My_SWDYNAMIC_CAST(className, object) (sword::className *)((object)?((object->getClass()->isAssignableFrom(#className))?object:0):0)
+// NOTE: All C++ (sword::SWModule ivar, sword API includes, the
+// My_SWDYNAMIC_CAST macro, and sword-typed methods) has been moved to the
+// internal SwordModule+Cpp.h, imported only by .mm files. This public header
+// is Foundation-only so it is safe to expose to the Swift bridging header.
+// Do not re-add #include <sword...> / using sword:: / My_SWDYNAMIC_CAST here.
 
 #define SW_OUTPUT_TEXT_KEY  @"OutputTextKey"
 #define SW_OUTPUT_REF_KEY   @"OutputRefKey"
@@ -107,9 +103,7 @@ typedef enum {
     /** yes, we have a delegate to report any action to */
     id delegate;
 
-	#ifdef __cplusplus
-	sword::SWModule	*swModule;
-	#endif
+	// The sword::SWModule *swModule ivar lives in SwordModule+Cpp.h (internal).
 }
 
 // ------------- properties ---------------
@@ -136,11 +130,8 @@ typedef enum {
 // ------------- instance methods ---------------
 
 - (id)initWithName:(NSString *)aName swordManager:(SwordManager *)aManager;
-#ifdef __cplusplus
-- (id)initWithSWModule:(sword::SWModule *)aModule;
-- (id)initWithSWModule:(sword::SWModule *)aModule swordManager:(SwordManager *)aManager;
-- (sword::SWModule *)swModule;
-#endif
+// C++ accessors (initWithSWModule:, initWithSWModule:swordManager:, swModule)
+// live in SwordModule+Cpp.h, imported only by .mm files.
 - (void)setPreferences;
 - (void)resetPreferences;
 
@@ -196,6 +187,11 @@ typedef enum {
 - (NSInteger)getVerseMax;
 - (void)setChapter:(NSString *)chapter;
 - (void)setIntroductions:(BOOL)intros;
+
+/** Current key text (UTF-8, ISO-Latin-1 fallback). Foundation-only key getter. */
+- (NSString *)keyText;
+/** Sets the underlying verse key's text without re-stripping. Foundation-only. */
+- (void)setVerseKeyText:(NSString *)text;
 
 // ------- SwordModuleAccess ---------
 - (NSArray *)strippedTextEntriesForRef:(NSString *)reference;

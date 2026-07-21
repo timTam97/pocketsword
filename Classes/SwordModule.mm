@@ -12,16 +12,14 @@
 */
 
 #import "SwordModule.h"
+#import "SwordModule+Cpp.h"
 #import "rtfhtml.h"
 #import "utils.h"
 #import "SwordManager.h"
+#import "SwordManager+Cpp.h"
 #import "globals.h"
-#import "PSModuleController.h"
-#import "PSLanguageCode.h"
-#import "PSBookmarks.h"
+#import "PocketSword-Swift.h"
 #import "PSSearchEngine.h"
-#import "PSSearchResult.h"
-#import "PSSearchQuery.h"
 
 @interface SwordModule (/* Private, class continuation */)
 /** private property */
@@ -976,6 +974,31 @@
 	swModule->stripText();
 }
 
+// Foundation-only wrapper over swModule->getKeyText(). Returns the module's
+// current key text as an NSString (UTF-8, with an ISO-Latin-1 fallback decode),
+// keeping the C++ key API out of Swift callers (e.g. the Swift PSModuleController
+// -reload path, which saves/restores the current location across a reInit).
+- (NSString *)keyText {
+	const char *kt = swModule->getKeyText();
+	if(!kt) return nil;
+	NSString *result = [NSString stringWithCString:kt encoding:NSUTF8StringEncoding];
+	if(!result) {
+		result = [NSString stringWithCString:kt encoding:NSISOLatin1StringEncoding];
+	}
+	return result;
+}
+
+// Foundation-only wrapper that sets the underlying verse key's text WITHOUT
+// re-stripping (unlike -setChapter:). Mirrors the
+// `(sword::VerseKey*)swModule->getKey())->setText(...)` restore that previously
+// lived in -[PSModuleController reload] for the primary bible/commentary, keeping
+// the C++ VerseKey API out of the Swift port.
+- (void)setVerseKeyText:(NSString *)text {
+	if(!text) return;
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	curKey->setText([text cStringUsingEncoding: NSUTF8StringEncoding]);
+}
+
 - (NSString *)setToNextChapter {
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	int c = curKey->getChapter();
@@ -1338,7 +1361,7 @@
 						clearInterval(det_loc_poll);\n\
 					}\n\
 					function scrollToVerse(verse) {\n\
-						//setTimeout(\"_scrollToVerse(\"+verse+\")\", 250);\n\
+						setTimeout(function() { _scrollToVerse(verse); }, 250);\n\
 					}\n\
 					function scrollToYOffset(iTargetY) {\n\
 						iTargetY = iTargetY < 0 ? 0 : iTargetY;\n\
@@ -1367,17 +1390,21 @@
 						//setTimeout(\"scrollToYOffset(\"+position+\")\", 250);\n\
 					}\n\
 					function _scrollToVerse(verse) {\n\
-						if(verse == '1' || verse == '0') {\n\
+						verse = parseInt(verse, 10);\n\
+						if(isNaN(verse) || verse <= 1) {\n\
 							window.scrollTo(0,0);\n\
 							//scrollToYOffset(0);\n\
-						} else if(versepos[verse] != 0) {\n\
+						} else if(!versepos) {\n\
+							return;\n\
+						} else if(typeof versepos[verse] != \"undefined\" && versepos[verse] != 0) {\n\
 							window.scrollTo(0, versepos[verse]);\n\
 							//scrollToYOffset(versepos[verse]);\n\
 						} else {\n\
 							for(var ii = verse; ii > 0; ii--) {\n\
-								if(versepos[ii] != 0) {\n\
+								if(typeof versepos[ii] != \"undefined\" && versepos[ii] != 0) {\n\
 									window.scrollTo(0, versepos[ii]);\n\
 									//scrollToYOffset(versepos[ii]);\n\
+									break;\n\
 								}\n\
 							}\n\
 						}\n\

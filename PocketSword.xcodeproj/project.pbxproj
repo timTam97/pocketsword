@@ -7,12 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */; };
-		0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */; };
-		0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */; };
+		5A1F70B0000000000000C002 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000C001 /* AppConstants.swift */; };
+		5A1F70B0000000000000D002 /* PSResizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000D001 /* PSResizing.swift */; };
+		5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000F001 /* PersistedFormatTests.swift */; };
+		5A1F70B0000000000000G002 /* PSBookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000G001 /* PSBookmarkObject.swift */; };
+		5A1F70B0000000000000H002 /* PSBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000H001 /* PSBookmark.swift */; };
+		5A1F70B0000000000000I002 /* PSBookmarkFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */; };
+		5A1F70B0000000000000J002 /* PSBookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000J001 /* PSBookmarks.swift */; };
+		5A1F70B00000000000ZN002 /* PSModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZN001 /* PSModuleViewController.swift */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
-		05034D2510FD625900884C98 /* SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05034D2410FD625900884C98 /* SearchWebView.m */; };
+		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
+		5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q001 /* PSLanguageCode.swift */; };
+		5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q003 /* LanguageCodes.json */; };
+		5A1F70B0000000000000R002 /* PSModuleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000R001 /* PSModuleType.swift */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0505FE8D12C9A55800A3C65B /* disabled-Footnotes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */; };
@@ -38,18 +46,13 @@
 		050CB77D19D16A1200415A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77C19D16A1200415A27 /* Images.xcassets */; };
 		050CB78019D1789A00415A27 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77E19D1789A00415A27 /* Default-736h@3x.png */; };
 		050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77F19D1789A00415A27 /* Default-667h@2x.png */; };
-		05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */; };
 		0513AE1B10C0C43600E414D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE1910C0C43600E414D9 /* Default.png */; };
 		0513AE8410C0DC3900E414D9 /* back-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8210C0DC3900E414D9 /* back-white.png */; };
 		0513AE8510C0DC3900E414D9 /* forward-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 0513AE8310C0DC3900E414D9 /* forward-white.png */; };
-		051B4BE812D5A2E5004982A7 /* PSBookmarkObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */; };
-		051B4BF712D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */; };
-		051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */; };
 		051CF5AE1086EEDC00154E44 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */; };
 		051F22B61737549600DDFF13 /* GentiumPlus-R.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */; };
 		051F22B71737549600DDFF13 /* SILEOT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B51737549600DDFF13 /* SILEOT.ttf */; };
 		051F22B9173758AD00DDFF13 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B8173758AD00DDFF13 /* OFL.txt */; };
-		051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.mm */; };
 		05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0C10884F71004FB0E0 /* swdisp.cpp */; };
 		05275ADA10884F72004FB0E0 /* swlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A0D10884F71004FB0E0 /* swlog.cpp */; };
 		05275ADC10884F72004FB0E0 /* listkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05275A1210884F71004FB0E0 /* listkey.cpp */; };
@@ -191,7 +194,7 @@
 		053CAD881809428D00BCDBE6 /* lzsscomprs.txt in Resources */ = {isa = PBXBuildFile; fileRef = 053CAD851809428D00BCDBE6 /* lzsscomprs.txt */; };
 		053CAD8C180942B200BCDBE6 /* osisreferencelinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */; };
 		053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
-		0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */; };
+		5A1F70B00000000000ZF002 /* PSPreferencesModuleSelectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZF001 /* PSPreferencesModuleSelectorTableViewController.swift */; };
 		054509C619A5DAA900E0A702 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E2431063908C00DD7F06 /* SwordModule.mm */; };
 		0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0545E26510639A4A00DD7F06 /* SwordManager.mm */; };
@@ -201,9 +204,14 @@
 		0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */; };
 		054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570011AE0E6B00633371 /* SwordVerseKey.mm */; };
 		054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054C570211AE0E6B00633371 /* VerseEnumerator.mm */; };
-		055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */; };
-		0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */; };
-		05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */; };
+		5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */; };
+		5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */; };
+		5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZD001 /* PSPreferencesController.swift */; };
+		5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */; };
+		5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */; };
+		5A1F70B00000000000ZJ002 /* PSBookmarksNavigatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */; };
+		5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */; };
+		5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */; };
 		05509FC910A7B6B200363295 /* commentary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05509FC810A7B6B200363295 /* commentary.png */; };
 		0552D1301295230300A4994B /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12D1295230300A4994B /* Icon-Small-50.png */; };
 		0552D1311295230300A4994B /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12E1295230300A4994B /* Icon-Small.png */; };
@@ -212,21 +220,19 @@
 		055E308510E74288004EBC79 /* SwordListKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308410E74288004EBC79 /* SwordListKey.mm */; };
 		055E308A10E74308004EBC79 /* SwordKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055E308910E74308004EBC79 /* SwordKey.mm */; };
 		0562FD7C16BB8BCF003A8C70 /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0562FD7B16BB8BCF003A8C70 /* libSystem.B.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		056BBE8012DD78D50029F3A2 /* PSBookmarks.mm in Sources */ = {isa = PBXBuildFile; fileRef = 056BBE7E12DD78D50029F3A2 /* PSBookmarks.mm */; };
-		056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */; };
-		056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */; };
+		5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */; };
+		5A1F70B0000000000000V002 /* PSBookmarkFolderColourSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */; };
 		056BC3A012ECFC950029F3A2 /* HighlightBookmarks.js in Resources */ = {isa = PBXBuildFile; fileRef = 056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */; };
 		056BC70E12F0E3F00029F3A2 /* bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC70A12F0E3F00029F3A2 /* bookmark.png */; };
 		056BC70F12F0E3F00029F3A2 /* bookmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC70B12F0E3F00029F3A2 /* bookmark@2x.png */; };
 		056BC73C12F0E8E00029F3A2 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73812F0E8E00029F3A2 /* folder.png */; };
 		056BC73D12F0E8E00029F3A2 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73912F0E8E00029F3A2 /* folder@2x.png */; };
-		056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */; };
-		056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */; };
+		5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000K001 /* PSBookmarkTableViewCell.swift */; };
+		5A1F70B00000000000ZQ002 /* PSLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */; };
+		5A1F70B00000000000ZR002 /* PocketSwordSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */; };
 		056CD38616BB6D6200AA0674 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.1.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */; };
 		05717C9513F27B8000753423 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
 		0577DA3010F572970035DCC4 /* ftplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 05275AAD10884F71004FB0E0 /* ftplib.c */; };
-		05781F2B12D42819005F4890 /* PSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 05781F2A12D42819005F4890 /* PSBookmark.m */; };
 		057CBD4817697CFC005BC6BB /* remotetrans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4717697CFC005BC6BB /* remotetrans.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		057CBD4C17697D1C005BC6BB /* osisenum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4917697D1C005BC6BB /* osisenum.cpp */; };
 		057CBD4D17697D1C005BC6BB /* osisglosses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057CBD4A17697D1C005BC6BB /* osisglosses.cpp */; };
@@ -235,14 +241,14 @@
 		057CBD561769839D005BC6BB /* disabled-Glosses@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD521769839D005BC6BB /* disabled-Glosses@2x.png */; };
 		057CBD571769839D005BC6BB /* enabled-Glosses.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD531769839D005BC6BB /* enabled-Glosses.png */; };
 		057CBD581769839D005BC6BB /* enabled-Glosses@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD541769839D005BC6BB /* enabled-Glosses@2x.png */; };
-		059419B012DAC76400A87B02 /* PSBookmarkAddViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.mm */; };
-		059653A917F53B1400018288 /* PSDictionaryEntryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059653A817F53B1400018288 /* PSDictionaryEntryViewController.mm */; };
+		5A1F70B0000000000000X002 /* PSBookmarkAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */; };
 		059A6CC311B79ABD00B33E54 /* bible.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CBF11B79ABD00B33E54 /* bible.png */; };
 		059A6CC411B79ABD00B33E54 /* notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 059A6CC011B79ABD00B33E54 /* notes.png */; };
 		05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05A8A1C911717AB4005B6411 /* CoreGraphics.framework */; };
-		05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */; };
-		05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */; };
-		05B5295D107C529000826AFE /* PSModuleType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B5295C107C529000826AFE /* PSModuleType.mm */; };
+		5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */; };
+		5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */; };
+		5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */; };
+		5A1F70B0000000000000U002 /* PSDictionaryOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */; };
 		05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C93146104B400B3E605 /* gbfxhtml.cpp */; };
 		05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C94146104B400B3E605 /* osisxhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B67C95146104B400B3E605 /* thmlxhtml.cpp */; };
@@ -255,14 +261,12 @@
 		05CBE8D1128A840000730CB8 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8CF128A840000730CB8 /* Icon@2x.png */; };
 		05CBE8E9128A848200730CB8 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D540F20FA415BA00AD011C /* Icon.png */; };
 		05CBE8F9128A85DF00730CB8 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CBE8F7128A85DF00730CB8 /* Icon-72.png */; };
-		05CD44C2109E92C900853E48 /* PSPreferencesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD44C1109E92C900853E48 /* PSPreferencesController.mm */; };
-		05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */; };
+		5A1F70B00000000000ZO002 /* PSBibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZO001 /* PSBibleViewController.swift */; };
 		05CD458310A013DD00853E48 /* gear-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CD458210A013DD00853E48 /* gear-24.png */; };
 		05CFBE1F12C823C3002DA812 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CFBE1D12C823C3002DA812 /* Default@2x.png */; };
 		05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
-		05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D4629F10907130006BFBB1 /* PSLanguageCode.m */; };
 		05D6ABA61097E8CC00A5026E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6ABA51097E8CC00A5026E /* CFNetwork.framework */; };
-		05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DA77A013CD754D000A4B97 /* PSWebView.mm */; };
+		5A1F70B00000000000ZM002 /* PSWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZM001 /* PSWebView.swift */; };
 		05DA77A513CD8E51000A4B97 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A313CD8E51000A4B97 /* blueArrow.png */; };
 		05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */; };
 		05DD866C122E5EB400115EAD /* bible@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8668122E5EB400115EAD /* bible@2x.png */; };
@@ -270,11 +274,13 @@
 		05DD867B122E605700115EAD /* history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8679122E605700115EAD /* history@2x.png */; };
 		05DD867E122E60AC00115EAD /* dictionary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD867C122E60AC00115EAD /* dictionary@2x.png */; };
 		05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF558E10AA9123007CB847 /* SwordBook.mm */; };
-		05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */; };
+		5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */; };
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
-		05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */; };
+		5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */; };
+		5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZL01 /* PSHistoryController.swift */; };
+		5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZK001 /* PSModuleController.swift */; };
 		05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */; };
 		05E6A75717FADF790063B18C /* splash-iPad-landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75517FADF790063B18C /* splash-iPad-landscape.png */; };
 		05E6A75817FADF790063B18C /* splash-iPad-portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75617FADF790063B18C /* splash-iPad-portrait.png */; };
@@ -294,10 +300,9 @@
 		05EB26FC175C3233004A8EB7 /* enabled-VPL.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F8175C3233004A8EB7 /* enabled-VPL.png */; };
 		05EB26FD175C3233004A8EB7 /* enabled-VPL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EB26F9175C3233004A8EB7 /* enabled-VPL@2x.png */; };
 		05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EBBA431681825C005C4FF9 /* teixhtml.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
-		05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */; };
+		5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */; };
 		05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F0DB8911671E4800C2E87D /* QuartzCore.framework */; };
-		05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */; };
-		05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F4D0331255D2940088C902 /* PSResizing.m */; };
+		5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */; };
 		05F4D226160189940072620A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F4D225160189940072620A /* Default-568h@2x.png */; };
 		05F84ED6191F4A82003350DE /* zcom4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED5191F4A82003350DE /* zcom4.cpp */; settings = {COMPILER_FLAGS = "-Wno-shorten-64-to-32"; }; };
 		05F84ED8191F4A98003350DE /* zverse4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84ED7191F4A98003350DE /* zverse4.cpp */; };
@@ -307,18 +312,17 @@
 		05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EDC191F4AB3003350DE /* thmllatex.cpp */; };
 		05F84EE5191F4AC7003350DE /* ztext4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F84EE4191F4AC7003350DE /* ztext4.cpp */; };
 		05F84EE7191F4EF0003350DE /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F84EE6191F4EF0003350DE /* libicucore.A.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */; };
-		1D3623280D0F684500981E52 /* PocketSwordSceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */; };
-		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		5A1F70B00000000000ZS002 /* PocketSwordAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */; };
+		5A1F70B00000000000ZT002 /* PSTabBarControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZT001 /* PSTabBarControllerDelegate.swift */; };
 		A100000000000000000001F2 /* PSSearchEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F2 /* PSSearchEngine.mm */; };
-		A100000000000000000001F4 /* PSSearchQuery.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F4 /* PSSearchQuery.mm */; };
-		A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F6 /* PSSearchIndexBuilder.mm */; };
-		A100000000000000000001F8 /* PSSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F8 /* PSSearchResult.m */; };
+		5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000O001 /* PSSearchQuery.swift */; };
+		5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */; };
+		5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000L001 /* PSSearchResult.swift */; };
+		5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */; };
+		5A1F70B0000000000000N002 /* PSHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000N001 /* PSHistoryItem.swift */; };
 		A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F9 /* libsqlite3.tbd */; };
-		A100000000000000000002A2 /* PSInfoPopupViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000002A1 /* PSInfoPopupViewController.mm */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
 		D2BFDF4F25E709D500E04366 /* rtranspgdrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF4E25E709D500E04366 /* rtranspgdrive.cpp */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
 		D2BFDF5225E70A0500E04366 /* utf8scsu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF5125E70A0500E04366 /* utf8scsu.cpp */; };
@@ -359,25 +363,27 @@
 		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
 		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
 		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
-		E92217550F0687340089A794 /* PSHistoryController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E92217540F0687340089A794 /* PSHistoryController.mm */; };
-		E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */; };
 		E9A6CF9D0FF5508400399E78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9A6CF9C0FF5508400399E78 /* Localizable.strings */; };
 		E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9BD1D530ED34003006A60E9 /* LICENSE.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleViewController.mm; path = Classes/PSModuleViewController.mm; sourceTree = "<group>"; };
-		050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleViewController.h; path = Classes/PSModuleViewController.h; sourceTree = "<group>"; };
+		5A1F70B0000000000000C001 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000D001 /* PSResizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSResizing.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000F001 /* PersistedFormatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistedFormatTests.swift; path = Classes/PersistedFormatTests.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000G001 /* PSBookmarkObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkObject.swift; path = Classes/PSBookmarkObject.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000H001 /* PSBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmark.swift; path = Classes/PSBookmark.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolder.swift; path = Classes/PSBookmarkFolder.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000J001 /* PSBookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarks.swift; path = Classes/PSBookmarks.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PocketSwordTests-Bridging-Header.h"; path = "misc/PocketSwordTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000F010 /* PocketSwordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A1F70B00000000000ZN001 /* PSModuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleViewController.swift; path = Classes/PSModuleViewController.swift; sourceTree = "<group>"; };
 		0501E810121A38EC000D9CA3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
-		0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModulePreferencesController.h; path = Classes/PSModulePreferencesController.h; sourceTree = "<group>"; };
-		0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModulePreferencesController.mm; path = Classes/PSModulePreferencesController.mm; sourceTree = "<group>"; };
-		0502EEEA12BB2AFC003E93AB /* PSBasePreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSBasePreferencesController.h; sourceTree = "<group>"; };
-		0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSBasePreferencesController.m; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
-		05034D2310FD625900884C98 /* SearchWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchWebView.h; sourceTree = "<group>"; };
-		05034D2410FD625900884C98 /* SearchWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchWebView.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000Q003 /* LanguageCodes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = LanguageCodes.json; path = Resources/LanguageCodes.json; sourceTree = "<group>"; };
+		5A1F70B0000000000000P001 /* SearchWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchWebView.swift; sourceTree = "<group>"; };
 		0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Footnotes@2x.png"; path = "Resources/disabled-Footnotes@2x.png"; sourceTree = "<group>"; };
 		0505FE7A12C9A55800A3C65B /* disabled-Headings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Headings@2x.png"; path = "Resources/disabled-Headings@2x.png"; sourceTree = "<group>"; };
 		0505FE7B12C9A55800A3C65B /* disabled-Morph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Morph@2x.png"; path = "Resources/disabled-Morph@2x.png"; sourceTree = "<group>"; };
@@ -401,27 +407,16 @@
 		050CB77C19D16A1200415A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketSword/Images.xcassets; sourceTree = "<group>"; };
 		050CB77E19D1789A00415A27 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-736h@3x.png"; path = "Resources/Default-736h@3x.png"; sourceTree = "<group>"; };
 		050CB77F19D1789A00415A27 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-667h@2x.png"; path = "Resources/Default-667h@2x.png"; sourceTree = "<group>"; };
-		05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryOverlayViewController.h; path = Classes/PSDictionaryOverlayViewController.h; sourceTree = "<group>"; };
-		05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSDictionaryOverlayViewController.m; path = Classes/PSDictionaryOverlayViewController.m; sourceTree = "<group>"; };
 		0513ADDB115CA55500F752DA /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0513AE1910C0C43600E414D9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0513AE8210C0DC3900E414D9 /* back-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back-white.png"; path = "Resources/back-white.png"; sourceTree = "<group>"; };
 		0513AE8310C0DC3900E414D9 /* forward-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "forward-white.png"; path = "Resources/forward-white.png"; sourceTree = "<group>"; };
-		051B4BE612D5A2E5004982A7 /* PSBookmarkObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkObject.h; path = Classes/PSBookmarkObject.h; sourceTree = "<group>"; };
-		051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkObject.m; path = Classes/PSBookmarkObject.m; sourceTree = "<group>"; };
-		051B4BF512D5A6B6004982A7 /* PSBookmarkFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolder.h; path = Classes/PSBookmarkFolder.h; sourceTree = "<group>"; };
-		051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolder.m; path = Classes/PSBookmarkFolder.m; sourceTree = "<group>"; };
-		051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarksNavigatorController.h; path = Classes/PSBookmarksNavigatorController.h; sourceTree = "<group>"; };
-		051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarksNavigatorController.mm; path = Classes/PSBookmarksNavigatorController.mm; sourceTree = "<group>"; };
 		051CF5AD1086EEDC00154E44 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		051F22A3173733AE00DDFF13 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "GentiumPlus-R.ttf"; path = "Resources/fonts/GentiumPlus-R.ttf"; sourceTree = "<group>"; };
 		051F22B51737549600DDFF13 /* SILEOT.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SILEOT.ttf; path = Resources/fonts/SILEOT.ttf; sourceTree = "<group>"; };
 		051F22B8173758AD00DDFF13 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = OFL.txt; path = Resources/fonts/OFL.txt; sourceTree = "<group>"; };
 		051FD8B316A3F52C00E7EF2B /* PocketSword.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PocketSword.entitlements; sourceTree = "<group>"; };
-		051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryController.h; path = Classes/PSHistoryController.h; sourceTree = "<group>"; };
-		051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSHistoryItem.h; path = Classes/PSHistoryItem.h; sourceTree = "<group>"; };
-		051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryItem.mm; path = Classes/PSHistoryItem.mm; sourceTree = "<group>"; };
 		0527595F10884F64004FB0E0 /* canon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon.h; sourceTree = "<group>"; };
 		0527596010884F64004FB0E0 /* canon_abbrevs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_abbrevs.h; sourceTree = "<group>"; };
 		0527596110884F64004FB0E0 /* canon_kjva.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_kjva.h; sourceTree = "<group>"; };
@@ -730,8 +725,7 @@
 		053CAD861809428D00BCDBE6 /* xzcomprs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xzcomprs.cpp; sourceTree = "<group>"; };
 		053CAD8A180942B200BCDBE6 /* osisreferencelinks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osisreferencelinks.cpp; sourceTree = "<group>"; };
 		053CAD8B180942B200BCDBE6 /* scsuutf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scsuutf8.cpp; sourceTree = "<group>"; };
-		0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesModuleSelectorTableViewController.h; sourceTree = "<group>"; };
-		0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesModuleSelectorTableViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZF001 /* PSPreferencesModuleSelectorTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesModuleSelectorTableViewController.swift; sourceTree = "<group>"; };
 		054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = ../iPhoneOS.sdk/usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 		054509C719A5DAFA00E0A702 /* liblzma.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.5.tbd; path = ../iPhoneOS.sdk/usr/lib/liblzma.5.tbd; sourceTree = SDKROOT; };
 		0545E2421063908C00DD7F06 /* SwordModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordModule.h; sourceTree = "<group>"; };
@@ -754,12 +748,13 @@
 		054C570211AE0E6B00633371 /* VerseEnumerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VerseEnumerator.mm; sourceTree = "<group>"; };
 		054C570711AE0EC300633371 /* SwordVerseKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordVerseKey.h; sourceTree = "<group>"; };
 		054F3C8E117EB11000BF1361 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleSelectorController.h; path = Classes/PSModuleSelectorController.h; sourceTree = "<group>"; };
-		055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleSelectorController.mm; path = Classes/PSModuleSelectorController.mm; sourceTree = "<group>"; };
-		0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryViewController.h; path = Classes/PSDictionaryViewController.h; sourceTree = "<group>"; };
-		0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSDictionaryViewController.mm; path = Classes/PSDictionaryViewController.mm; sourceTree = "<group>"; };
-		05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesFontTableViewController.h; sourceTree = "<group>"; };
-		05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesFontTableViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSelectorController.swift; path = Classes/PSModuleSelectorController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBasePreferencesController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZD001 /* PSPreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModulePreferencesController.swift; path = Classes/PSModulePreferencesController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryViewController.swift; path = Classes/PSDictionaryViewController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarksNavigatorController.swift; path = Classes/PSBookmarksNavigatorController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesFontTableViewController.swift; sourceTree = "<group>"; };
 		05509FC810A7B6B200363295 /* commentary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = commentary.png; path = Resources/commentary.png; sourceTree = "<group>"; };
 		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/fonts/CharisSILR.ttf; sourceTree = "<group>"; };
 		0552D12D1295230300A4994B /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -773,27 +768,18 @@
 		055E308910E74308004EBC79 /* SwordKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordKey.mm; sourceTree = "<group>"; };
 		0562FD7B16BB8BCF003A8C70 /* libSystem.B.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B.tbd; path = ../iPhoneOS.sdk/usr/lib/libSystem.B.tbd; sourceTree = SDKROOT; };
 		0567C1AC13FB4CEC00B6619D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		056BBE7D12DD78D50029F3A2 /* PSBookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarks.h; path = Classes/PSBookmarks.h; sourceTree = "<group>"; };
-		056BBE7E12DD78D50029F3A2 /* PSBookmarks.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarks.mm; path = Classes/PSBookmarks.mm; sourceTree = "<group>"; };
-		056BBF8F12DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolderAddViewController.h; path = Classes/PSBookmarkFolderAddViewController.h; sourceTree = "<group>"; };
-		056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolderAddViewController.m; path = Classes/PSBookmarkFolderAddViewController.m; sourceTree = "<group>"; };
-		056BBFA112DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkFolderColourSelectorViewController.h; path = Classes/PSBookmarkFolderColourSelectorViewController.h; sourceTree = "<group>"; };
-		056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkFolderColourSelectorViewController.m; path = Classes/PSBookmarkFolderColourSelectorViewController.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderAddViewController.swift; path = Classes/PSBookmarkFolderAddViewController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderColourSelectorViewController.swift; path = Classes/PSBookmarkFolderColourSelectorViewController.swift; sourceTree = "<group>"; };
 		056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = HighlightBookmarks.js; path = Resources/HighlightBookmarks.js; sourceTree = "<group>"; };
 		056BC70A12F0E3F00029F3A2 /* bookmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmark.png; path = Resources/bookmark.png; sourceTree = "<group>"; };
 		056BC70B12F0E3F00029F3A2 /* bookmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmark@2x.png"; path = "Resources/bookmark@2x.png"; sourceTree = "<group>"; };
 		056BC73812F0E8E00029F3A2 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resources/folder.png; sourceTree = "<group>"; };
 		056BC73912F0E8E00029F3A2 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resources/folder@2x.png"; sourceTree = "<group>"; };
-		056BC84B12F101860029F3A2 /* PSBookmarkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkTableViewCell.h; path = Classes/PSBookmarkTableViewCell.h; sourceTree = "<group>"; };
-		056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmarkTableViewCell.m; path = Classes/PSBookmarkTableViewCell.m; sourceTree = "<group>"; };
-		056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLaunchViewController.h; sourceTree = "<group>"; };
-		056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSLaunchViewController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000K001 /* PSBookmarkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkTableViewCell.swift; path = Classes/PSBookmarkTableViewCell.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSLaunchViewController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketSwordSceneDelegate.swift; sourceTree = "<group>"; };
 		056CD38516BB6D6200AA0674 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = ../iPhoneOS.sdk/usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
-		056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchHistoryItem.h; path = Classes/PSSearchHistoryItem.h; sourceTree = "<group>"; };
-		056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchHistoryItem.m; path = Classes/PSSearchHistoryItem.m; sourceTree = "<group>"; };
 		056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "UserComments-Requests.txt"; path = "Resources/doc/UserComments-Requests.txt"; sourceTree = "<group>"; };
-		05781F2912D42819005F4890 /* PSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmark.h; path = Classes/PSBookmark.h; sourceTree = "<group>"; };
-		05781F2A12D42819005F4890 /* PSBookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSBookmark.m; path = Classes/PSBookmark.m; sourceTree = "<group>"; };
 		05787333117EBB14008535F3 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		057CBD3417697CAE005BC6BB /* osisenum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osisenum.h; sourceTree = "<group>"; };
 		057CBD3517697CAE005BC6BB /* osisglosses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osisglosses.h; sourceTree = "<group>"; };
@@ -813,22 +799,18 @@
 		058E2D2C10F56EFC006E4447 /* canon_luther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_luther.h; sourceTree = "<group>"; };
 		058E2D2D10F56EFC006E4447 /* canon_vulg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_vulg.h; sourceTree = "<group>"; };
 		05930F8F13E8EAC4001DEF4E /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
-		059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBookmarkAddViewController.h; path = Classes/PSBookmarkAddViewController.h; sourceTree = "<group>"; };
-		059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBookmarkAddViewController.mm; path = Classes/PSBookmarkAddViewController.mm; sourceTree = "<group>"; };
-		059653A717F53B1400018288 /* PSDictionaryEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSDictionaryEntryViewController.h; path = Classes/PSDictionaryEntryViewController.h; sourceTree = "<group>"; };
-		059653A817F53B1400018288 /* PSDictionaryEntryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSDictionaryEntryViewController.mm; path = Classes/PSDictionaryEntryViewController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkAddViewController.swift; path = Classes/PSBookmarkAddViewController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryEntryViewController.swift; path = Classes/PSDictionaryEntryViewController.swift; sourceTree = "<group>"; };
 		059A6CBF11B79ABD00B33E54 /* bible.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bible.png; path = Resources/bible.png; sourceTree = "<group>"; };
 		059A6CC011B79ABD00B33E54 /* notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notes.png; path = Resources/notes.png; sourceTree = "<group>"; };
 		05A0D09816B8B1E300C2E0FF /* echomod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = echomod.h; sourceTree = "<group>"; };
 		05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20100301_20100328.txt; path = Resources/doc/S_M_85032342_20100301_20100328.txt; sourceTree = "<group>"; };
 		05A8A1C911717AB4005B6411 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		05AB946A116D88B80043DB57 /* PSChapterSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSChapterSelectorController.h; path = Classes/PSChapterSelectorController.h; sourceTree = "<group>"; };
-		05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSChapterSelectorController.mm; path = Classes/PSChapterSelectorController.mm; sourceTree = "<group>"; };
-		05AB9510116D9C190043DB57 /* PSVerseSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSVerseSelectorController.h; path = Classes/PSVerseSelectorController.h; sourceTree = "<group>"; };
-		05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSVerseSelectorController.mm; path = Classes/PSVerseSelectorController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSChapterSelectorController.swift; path = Classes/PSChapterSelectorController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVerseSelectorController.swift; path = Classes/PSVerseSelectorController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSInfoPopupViewController.swift; path = Classes/PSInfoPopupViewController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryOverlayViewController.swift; path = Classes/PSDictionaryOverlayViewController.swift; sourceTree = "<group>"; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
-		05B5295B107C529000826AFE /* PSModuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSModuleType.h; sourceTree = "<group>"; };
-		05B5295C107C529000826AFE /* PSModuleType.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSModuleType.mm; sourceTree = "<group>"; };
 		05B67C8D1461046E00B3E605 /* canon_catholic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic.h; sourceTree = "<group>"; };
 		05B67C8E1461046E00B3E605 /* canon_catholic2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canon_catholic2.h; sourceTree = "<group>"; };
 		05B67C901461046E00B3E605 /* gbfxhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gbfxhtml.h; sourceTree = "<group>"; };
@@ -847,20 +829,16 @@
 		05CBE8CF128A840000730CB8 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Resources/Icon@2x.png"; sourceTree = "<group>"; };
 		05CBE8F7128A85DF00730CB8 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "Resources/Icon-72.png"; sourceTree = "<group>"; };
 		05CBE900128A86CA00730CB8 /* Icon-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-512.png"; path = "Resources/Icon-512.png"; sourceTree = "<group>"; };
-		05CD44C0109E92C900853E48 /* PSPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPreferencesController.h; sourceTree = "<group>"; };
-		05CD44C1109E92C900853E48 /* PSPreferencesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSPreferencesController.mm; sourceTree = "<group>"; };
-		05CD4552109FFA0A00853E48 /* PSBibleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSBibleViewController.h; path = Classes/PSBibleViewController.h; sourceTree = "<group>"; };
-		05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSBibleViewController.mm; path = Classes/PSBibleViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZO001 /* PSBibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBibleViewController.swift; path = Classes/PSBibleViewController.swift; sourceTree = "<group>"; };
 		05CD458210A013DD00853E48 /* gear-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear-24.png"; path = "Resources/gear-24.png"; sourceTree = "<group>"; };
 		05CFBE1D12C823C3002DA812 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/Default@2x.png"; sourceTree = "<group>"; };
 		05D3E48E16FA9F5700B9DEBF /* versificationmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = versificationmgr.h; sourceTree = "<group>"; };
 		05D3E48F16FA9F6D00B9DEBF /* versificationmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = versificationmgr.cpp; sourceTree = "<group>"; };
 		05D461E8108EEB00006BFBB1 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
-		05D4629E10907130006BFBB1 /* PSLanguageCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLanguageCode.h; sourceTree = "<group>"; };
-		05D4629F10907130006BFBB1 /* PSLanguageCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSLanguageCode.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000Q001 /* PSLanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSLanguageCode.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000R001 /* PSModuleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSModuleType.swift; sourceTree = "<group>"; };
 		05D6ABA51097E8CC00A5026E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		05DA779F13CD754D000A4B97 /* PSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSWebView.h; path = Classes/PSWebView.h; sourceTree = "<group>"; };
-		05DA77A013CD754D000A4B97 /* PSWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSWebView.mm; path = Classes/PSWebView.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZM001 /* PSWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSWebView.swift; path = Classes/PSWebView.swift; sourceTree = "<group>"; };
 		05DA77A313CD8E51000A4B97 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
 		05DA77A413CD8E51000A4B97 /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueArrow@2x.png"; path = "Resources/blueArrow@2x.png"; sourceTree = "<group>"; };
 		05DAE2E91816595300C91965 /* Pocket Blue Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Pocket Blue Background.png"; path = "Resources/Pocket Blue Background.png"; sourceTree = "<group>"; };
@@ -874,13 +852,20 @@
 		05DD867C122E60AC00115EAD /* dictionary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dictionary@2x.png"; path = "Resources/dictionary@2x.png"; sourceTree = "<group>"; };
 		05DF558D10AA9123007CB847 /* SwordBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordBook.h; sourceTree = "<group>"; };
 		05DF558E10AA9123007CB847 /* SwordBook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordBook.mm; sourceTree = "<group>"; };
-		05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSAboutScreenController.h; sourceTree = "<group>"; };
-		05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PSAboutScreenController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000E001 /* SwordKey+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordKey+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E002 /* SwordVerseKey+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordVerseKey+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E003 /* SwordListKey+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordListKey+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E004 /* SwordModule+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordModule+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E005 /* SwordManager+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordManager+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E006 /* SwordDictionary+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordDictionary+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000E007 /* SwordBook+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordBook+Cpp.h"; sourceTree = "<group>"; };
+		5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSAboutScreenController.swift; sourceTree = "<group>"; };
 		05DF57C610ABC753007CB847 /* About.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = About.png; path = Resources/About.png; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
-		05E3FCC710CF535E00DFEB77 /* PSModuleSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleSearchController.h; path = Classes/PSModuleSearchController.h; sourceTree = "<group>"; };
-		05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleSearchController.mm; path = Classes/PSModuleSearchController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSearchController.swift; path = Classes/PSModuleSearchController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000ZL01 /* PSHistoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryController.swift; path = Classes/PSHistoryController.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000ZK001 /* PSModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleController.swift; path = Classes/PSModuleController.swift; sourceTree = "<group>"; };
 		05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordDictionary.h; sourceTree = "<group>"; };
 		05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordDictionary.mm; sourceTree = "<group>"; };
 		05E6A75517FADF790063B18C /* splash-iPad-landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "splash-iPad-landscape.png"; path = "Resources/splash-iPad-landscape.png"; sourceTree = "<group>"; };
@@ -902,14 +887,10 @@
 		05EB26F9175C3233004A8EB7 /* enabled-VPL@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "enabled-VPL@2x.png"; path = "Resources/enabled-VPL@2x.png"; sourceTree = "<group>"; };
 		05EBBA421681823E005C4FF9 /* teixhtml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teixhtml.h; sourceTree = "<group>"; };
 		05EBBA431681825C005C4FF9 /* teixhtml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teixhtml.cpp; sourceTree = "<group>"; };
-		05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSRefSelectorController.h; path = Classes/PSRefSelectorController.h; sourceTree = "<group>"; };
-		05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSRefSelectorController.mm; path = Classes/PSRefSelectorController.mm; sourceTree = "<group>"; };
+		5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSRefSelectorController.swift; path = Classes/PSRefSelectorController.swift; sourceTree = "<group>"; };
 		05F0DB8911671E4800C2E87D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSCommentaryViewController.h; path = Classes/PSCommentaryViewController.h; sourceTree = "<group>"; };
-		05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSCommentaryViewController.mm; path = Classes/PSCommentaryViewController.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSCommentaryViewController.swift; path = Classes/PSCommentaryViewController.swift; sourceTree = "<group>"; };
 		05F4D00C1254A6670088C902 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		05F4D0321255D2940088C902 /* PSResizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSResizing.h; sourceTree = "<group>"; };
-		05F4D0331255D2940088C902 /* PSResizing.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = PSResizing.m; sourceTree = "<group>"; };
 		05F4D225160189940072620A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 		05F84ECC191F4A4F003350DE /* gbflatex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gbflatex.h; sourceTree = "<group>"; };
 		05F84ECD191F4A4F003350DE /* osislatex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osislatex.h; sourceTree = "<group>"; };
@@ -927,28 +908,21 @@
 		05F84EE4191F4AC7003350DE /* ztext4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ztext4.cpp; sourceTree = "<group>"; };
 		05F84EE6191F4EF0003350DE /* libicucore.A.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.A.tbd; path = ../iPhoneOS.sdk/usr/lib/libicucore.A.tbd; sourceTree = SDKROOT; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordAppDelegate.h; path = Classes/PocketSwordAppDelegate.h; sourceTree = "<group>"; };
-		1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PocketSwordAppDelegate.mm; path = Classes/PocketSwordAppDelegate.mm; sourceTree = "<group>"; };
-		1D3623290D0F684500981E52 /* PocketSwordSceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSwordSceneDelegate.h; path = Classes/PocketSwordSceneDelegate.h; sourceTree = "<group>"; };
-		1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PocketSwordSceneDelegate.mm; path = Classes/PocketSwordSceneDelegate.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordAppDelegate.swift; path = Classes/PocketSwordAppDelegate.swift; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* PocketSword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketSword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		28216C950DB411BC00E5133A /* PSTabBarControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSTabBarControllerDelegate.h; path = Classes/PSTabBarControllerDelegate.h; sourceTree = "<group>"; };
-		28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSTabBarControllerDelegate.mm; path = Classes/PSTabBarControllerDelegate.mm; sourceTree = "<group>"; };
+		5A1F70B00000000000ZT001 /* PSTabBarControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSTabBarControllerDelegate.swift; path = Classes/PSTabBarControllerDelegate.swift; sourceTree = "<group>"; };
 		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSword_Prefix.pch; path = misc/PocketSword_Prefix.pch; sourceTree = "<group>"; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
+		33354D062FCD55D800252A83 /* PocketSword-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "PocketSword-Bridging-Header.h"; path = "misc/PocketSword-Bridging-Header.h"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
 		A100000000000000000000F1 /* PSSearchEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchEngine.h; path = Classes/PSSearchEngine.h; sourceTree = "<group>"; };
 		A100000000000000000000F2 /* PSSearchEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchEngine.mm; path = Classes/PSSearchEngine.mm; sourceTree = "<group>"; };
-		A100000000000000000000F3 /* PSSearchQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchQuery.h; path = Classes/PSSearchQuery.h; sourceTree = "<group>"; };
-		A100000000000000000000F4 /* PSSearchQuery.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchQuery.mm; path = Classes/PSSearchQuery.mm; sourceTree = "<group>"; };
-		A100000000000000000000F5 /* PSSearchIndexBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchIndexBuilder.h; path = Classes/PSSearchIndexBuilder.h; sourceTree = "<group>"; };
-		A100000000000000000000F6 /* PSSearchIndexBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchIndexBuilder.mm; path = Classes/PSSearchIndexBuilder.mm; sourceTree = "<group>"; };
-		A100000000000000000000F7 /* PSSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchResult.h; path = Classes/PSSearchResult.h; sourceTree = "<group>"; };
-		A100000000000000000000F8 /* PSSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSSearchResult.m; path = Classes/PSSearchResult.m; sourceTree = "<group>"; };
+		5A1F70B0000000000000O001 /* PSSearchQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchQuery.swift; path = Classes/PSSearchQuery.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchIndexBuilder.swift; path = Classes/PSSearchIndexBuilder.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000L001 /* PSSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchResult.swift; path = Classes/PSSearchResult.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchHistoryItem.swift; path = Classes/PSSearchHistoryItem.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000N001 /* PSHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryItem.swift; path = Classes/PSHistoryItem.swift; sourceTree = "<group>"; };
 		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		A100000000000000000002A0 /* PSInfoPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSInfoPopupViewController.h; path = Classes/PSInfoPopupViewController.h; sourceTree = "<group>"; };
-		A100000000000000000002A1 /* PSInfoPopupViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSInfoPopupViewController.mm; path = Classes/PSInfoPopupViewController.mm; sourceTree = "<group>"; };
 		A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		A9C105E21C4D6E9C006C755A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D2BFDF4425E47C8C00E04366 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -999,12 +973,9 @@
 		D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		D2BFE5FE25E9C52100E04366 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		D2CF000026D100000000A001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PocketSword/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		E92217540F0687340089A794 /* PSHistoryController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSHistoryController.mm; path = Classes/PSHistoryController.mm; sourceTree = "<group>"; };
 		E9617A320FF566F300690108 /* gen_xib_strings.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = gen_xib_strings.py; sourceTree = "<group>"; };
 		E9617A340FF566FF00690108 /* localize_xibs.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = localize_xibs.py; sourceTree = "<group>"; };
 		E9617A850FF56E2100690108 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E996E5220ED70C6E0034DAF6 /* PSModuleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSModuleController.h; path = Classes/PSModuleController.h; sourceTree = "<group>"; };
-		E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSModuleController.mm; path = Classes/PSModuleController.mm; sourceTree = "<group>"; };
 		E9A6CF9E0FF5508C00399E78 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B800340FF5B98D006081E5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B8FF8A0FF57560006081E5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1034,6 +1005,13 @@
 				05F0DB8A11671E4800C2E87D /* QuartzCore.framework in Frameworks */,
 				05A8A1CA11717AB4005B6411 /* CoreGraphics.framework in Frameworks */,
 				050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A1F70B0000000000000F031 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1083,22 +1061,29 @@
 			isa = PBXGroup;
 			children = (
 				054C570711AE0EC300633371 /* SwordVerseKey.h */,
+				5A1F70B0000000000000E002 /* SwordVerseKey+Cpp.h */,
 				054C570011AE0E6B00633371 /* SwordVerseKey.mm */,
 				054C570111AE0E6B00633371 /* VerseEnumerator.h */,
 				054C570211AE0E6B00633371 /* VerseEnumerator.mm */,
 				055E308810E74308004EBC79 /* SwordKey.h */,
+				5A1F70B0000000000000E001 /* SwordKey+Cpp.h */,
 				055E308910E74308004EBC79 /* SwordKey.mm */,
 				055E308310E74288004EBC79 /* SwordListKey.h */,
+				5A1F70B0000000000000E003 /* SwordListKey+Cpp.h */,
 				055E308410E74288004EBC79 /* SwordListKey.mm */,
 				0546D59510CF6C9F00799DCB /* SwordModuleTextEntry.h */,
 				0546D59610CF6C9F00799DCB /* SwordModuleTextEntry.m */,
 				05E3FE4910CF6BF500DFEB77 /* SwordDictionary.h */,
+				5A1F70B0000000000000E006 /* SwordDictionary+Cpp.h */,
 				05E3FE4A10CF6BF500DFEB77 /* SwordDictionary.mm */,
 				0545E2421063908C00DD7F06 /* SwordModule.h */,
+				5A1F70B0000000000000E004 /* SwordModule+Cpp.h */,
 				0545E2431063908C00DD7F06 /* SwordModule.mm */,
 				0545E26410639A4A00DD7F06 /* SwordManager.h */,
+				5A1F70B0000000000000E005 /* SwordManager+Cpp.h */,
 				0545E26510639A4A00DD7F06 /* SwordManager.mm */,
 				05DF558D10AA9123007CB847 /* SwordBook.h */,
+				5A1F70B0000000000000E007 /* SwordBook+Cpp.h */,
 				05DF558E10AA9123007CB847 /* SwordBook.mm */,
 			);
 			name = Sword;
@@ -1108,14 +1093,10 @@
 		0513ACBB10BFADC400E414D9 /* PS-preferences */ = {
 			isa = PBXGroup;
 			children = (
-				0543338D112D407800187956 /* PSPreferencesModuleSelectorTableViewController.h */,
-				0543338E112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm */,
-				05CD44C0109E92C900853E48 /* PSPreferencesController.h */,
-				05CD44C1109E92C900853E48 /* PSPreferencesController.mm */,
-				05509FAD10A7B2C000363295 /* PSPreferencesFontTableViewController.h */,
-				05509FAE10A7B2C000363295 /* PSPreferencesFontTableViewController.mm */,
-				0502EEEA12BB2AFC003E93AB /* PSBasePreferencesController.h */,
-				0502EEEB12BB2AFC003E93AB /* PSBasePreferencesController.m */,
+				5A1F70B00000000000ZF001 /* PSPreferencesModuleSelectorTableViewController.swift */,
+				5A1F70B00000000000ZD001 /* PSPreferencesController.swift */,
+				5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */,
+				5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */,
 			);
 			name = "PS-preferences";
 			path = Classes;
@@ -1124,8 +1105,7 @@
 		0513ACBC10BFADD600E414D9 /* PS-about */ = {
 			isa = PBXGroup;
 			children = (
-				05DF565D10AB99EA007CB847 /* PSAboutScreenController.h */,
-				05DF565E10AB99EA007CB847 /* PSAboutScreenController.mm */,
+				5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */,
 			);
 			name = "PS-about";
 			path = Classes;
@@ -1801,6 +1781,7 @@
 			children = (
 				0528684E13E00D300044A388 /* Padauk.ttf */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
+				5A1F70B0000000000000Q003 /* LanguageCodes.json */,
 				056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */,
 			);
 			name = misc;
@@ -1855,16 +1836,9 @@
 		054C55B611AD096F00633371 /* base */ = {
 			isa = PBXGroup;
 			children = (
-				1D3623240D0F684500981E51 /* PocketSwordAppDelegate.h */,
-				1D3623250D0F684500981E51 /* PocketSwordAppDelegate.mm */,
-				1D3623290D0F684500981E52 /* PocketSwordSceneDelegate.h */,
-				1D3623270D0F684500981E52 /* PocketSwordSceneDelegate.mm */,
-				28216C950DB411BC00E5133A /* PSTabBarControllerDelegate.h */,
-				28216C960DB411BC00E5133A /* PSTabBarControllerDelegate.mm */,
-				E996E5220ED70C6E0034DAF6 /* PSModuleController.h */,
-				E996E5230ED70C6E0034DAF6 /* PSModuleController.mm */,
-				A100000000000000000002A0 /* PSInfoPopupViewController.h */,
-				A100000000000000000002A1 /* PSInfoPopupViewController.mm */,
+				5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */,
+				5A1F70B00000000000ZT001 /* PSTabBarControllerDelegate.swift */,
+				5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */,
 			);
 			name = base;
 			sourceTree = "<group>";
@@ -1872,12 +1846,9 @@
 		054C55B711AD09F600633371 /* ref selector */ = {
 			isa = PBXGroup;
 			children = (
-				05F0DAA41166DE5A00C2E87D /* PSRefSelectorController.h */,
-				05F0DAA51166DE5A00C2E87D /* PSRefSelectorController.mm */,
-				05AB946A116D88B80043DB57 /* PSChapterSelectorController.h */,
-				05AB946B116D88B80043DB57 /* PSChapterSelectorController.mm */,
-				05AB9510116D9C190043DB57 /* PSVerseSelectorController.h */,
-				05AB9511116D9C190043DB57 /* PSVerseSelectorController.mm */,
+				5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */,
+				5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */,
+				5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */,
 			);
 			name = "ref selector";
 			sourceTree = "<group>";
@@ -1885,12 +1856,9 @@
 		054C55B811AD0A2700633371 /* Dictionary */ = {
 			isa = PBXGroup;
 			children = (
-				0550413810DF30CA00C7DECB /* PSDictionaryViewController.h */,
-				0550413910DF30CA00C7DECB /* PSDictionaryViewController.mm */,
-				05129EF11185577100B0261F /* PSDictionaryOverlayViewController.h */,
-				05129EF21185577100B0261F /* PSDictionaryOverlayViewController.m */,
-				059653A717F53B1400018288 /* PSDictionaryEntryViewController.h */,
-				059653A817F53B1400018288 /* PSDictionaryEntryViewController.mm */,
+				5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */,
+				5A1F70B0000000000000U001 /* PSDictionaryOverlayViewController.swift */,
+				5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */,
 			);
 			name = Dictionary;
 			sourceTree = "<group>";
@@ -1898,10 +1866,8 @@
 		054C55B911AD0A4F00633371 /* module selector */ = {
 			isa = PBXGroup;
 			children = (
-				055040CF10DF1F4900C7DECB /* PSModuleSelectorController.h */,
-				055040D010DF1F4900C7DECB /* PSModuleSelectorController.mm */,
-				0502EC7712B9D48A003E93AB /* PSModulePreferencesController.h */,
-				0502EC7812B9D48A003E93AB /* PSModulePreferencesController.mm */,
+				5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */,
+				5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */,
 			);
 			name = "module selector";
 			sourceTree = "<group>";
@@ -1910,14 +1876,10 @@
 			isa = PBXGroup;
 			children = (
 				059419AD12DAC72500A87B02 /* containers */,
-				051B4C0A12D5B001004982A7 /* PSBookmarksNavigatorController.h */,
-				051B4C0B12D5B001004982A7 /* PSBookmarksNavigatorController.mm */,
-				059419AE12DAC76400A87B02 /* PSBookmarkAddViewController.h */,
-				059419AF12DAC76400A87B02 /* PSBookmarkAddViewController.mm */,
-				056BBF8F12DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.h */,
-				056BBF9012DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m */,
-				056BBFA112DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.h */,
-				056BBFA212DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m */,
+				5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */,
+				5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */,
+				5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */,
+				5A1F70B0000000000000V001 /* PSBookmarkFolderColourSelectorViewController.swift */,
 			);
 			name = bookmarks;
 			sourceTree = "<group>";
@@ -1925,22 +1887,16 @@
 		054C55BB11AD0AA900633371 /* multi */ = {
 			isa = PBXGroup;
 			children = (
-				051FD8B816AE5C9E00E7EF2B /* PSHistoryController.h */,
-				E92217540F0687340089A794 /* PSHistoryController.mm */,
-				051FD8B916AE5F3700E7EF2B /* PSHistoryItem.h */,
-				051FD8BA16AE5F3700E7EF2B /* PSHistoryItem.mm */,
-				05E3FCC710CF535E00DFEB77 /* PSModuleSearchController.h */,
-				05E3FCC810CF535E00DFEB77 /* PSModuleSearchController.mm */,
-				056CE8A112F781D400A7DA37 /* PSSearchHistoryItem.h */,
-				056CE8A212F781D400A7DA37 /* PSSearchHistoryItem.m */,
+				5A1F70B0000000000000ZL01 /* PSHistoryController.swift */,
+				5A1F70B00000000000ZK001 /* PSModuleController.swift */,
+				5A1F70B0000000000000N001 /* PSHistoryItem.swift */,
+				5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */,
+				5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */,
 				A100000000000000000000F1 /* PSSearchEngine.h */,
 				A100000000000000000000F2 /* PSSearchEngine.mm */,
-				A100000000000000000000F3 /* PSSearchQuery.h */,
-				A100000000000000000000F4 /* PSSearchQuery.mm */,
-				A100000000000000000000F5 /* PSSearchIndexBuilder.h */,
-				A100000000000000000000F6 /* PSSearchIndexBuilder.mm */,
-				A100000000000000000000F7 /* PSSearchResult.h */,
-				A100000000000000000000F8 /* PSSearchResult.m */,
+				5A1F70B0000000000000O001 /* PSSearchQuery.swift */,
+				5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */,
+				5A1F70B0000000000000L001 /* PSSearchResult.swift */,
 			);
 			name = multi;
 			sourceTree = "<group>";
@@ -1948,14 +1904,10 @@
 		054C55BC11AD0ACA00633371 /* b & c */ = {
 			isa = PBXGroup;
 			children = (
-				050073BD17F9A97E007FDAB0 /* PSModuleViewController.h */,
-				050073BC17F9A97E007FDAB0 /* PSModuleViewController.mm */,
-				05F336D710A437BB000A3B37 /* PSCommentaryViewController.h */,
-				05F336D810A437BB000A3B37 /* PSCommentaryViewController.mm */,
-				05CD4552109FFA0A00853E48 /* PSBibleViewController.h */,
-				05CD4553109FFA0A00853E48 /* PSBibleViewController.mm */,
-				05DA779F13CD754D000A4B97 /* PSWebView.h */,
-				05DA77A013CD754D000A4B97 /* PSWebView.mm */,
+				5A1F70B00000000000ZN001 /* PSModuleViewController.swift */,
+				5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */,
+				5A1F70B00000000000ZO001 /* PSBibleViewController.swift */,
+				5A1F70B00000000000ZM001 /* PSWebView.swift */,
 			);
 			name = "b & c";
 			sourceTree = "<group>";
@@ -1973,16 +1925,11 @@
 		059419AD12DAC72500A87B02 /* containers */ = {
 			isa = PBXGroup;
 			children = (
-				051B4BE612D5A2E5004982A7 /* PSBookmarkObject.h */,
-				051B4BE712D5A2E5004982A7 /* PSBookmarkObject.m */,
-				051B4BF512D5A6B6004982A7 /* PSBookmarkFolder.h */,
-				051B4BF612D5A6B6004982A7 /* PSBookmarkFolder.m */,
-				05781F2912D42819005F4890 /* PSBookmark.h */,
-				05781F2A12D42819005F4890 /* PSBookmark.m */,
-				056BBE7D12DD78D50029F3A2 /* PSBookmarks.h */,
-				056BBE7E12DD78D50029F3A2 /* PSBookmarks.mm */,
-				056BC84B12F101860029F3A2 /* PSBookmarkTableViewCell.h */,
-				056BC84C12F101860029F3A2 /* PSBookmarkTableViewCell.m */,
+				5A1F70B0000000000000G001 /* PSBookmarkObject.swift */,
+				5A1F70B0000000000000H001 /* PSBookmark.swift */,
+				5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */,
+				5A1F70B0000000000000J001 /* PSBookmarks.swift */,
+				5A1F70B0000000000000K001 /* PSBookmarkTableViewCell.swift */,
 			);
 			name = containers;
 			sourceTree = "<group>";
@@ -2014,18 +1961,15 @@
 		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
-				05D4629E10907130006BFBB1 /* PSLanguageCode.h */,
-				05D4629F10907130006BFBB1 /* PSLanguageCode.m */,
-				05B5295B107C529000826AFE /* PSModuleType.h */,
-				05B5295C107C529000826AFE /* PSModuleType.mm */,
+				5A1F70B0000000000000Q001 /* PSLanguageCode.swift */,
+				5A1F70B0000000000000R001 /* PSModuleType.swift */,
 				0545E28510639DC400DD7F06 /* utils.h */,
 				0545E29A1063A09500DD7F06 /* globals.h */,
-				056BC97B12F1277E0029F3A2 /* PSLaunchViewController.h */,
-				056BC97C12F1277E0029F3A2 /* PSLaunchViewController.mm */,
-				05034D2310FD625900884C98 /* SearchWebView.h */,
-				05034D2410FD625900884C98 /* SearchWebView.m */,
-				05F4D0321255D2940088C902 /* PSResizing.h */,
-				05F4D0331255D2940088C902 /* PSResizing.m */,
+				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
+				5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */,
+				5A1F70B0000000000000P001 /* SearchWebView.swift */,
+				5A1F70B0000000000000C001 /* AppConstants.swift */,
+				5A1F70B0000000000000D001 /* PSResizing.swift */,
 			);
 			name = "PS-other";
 			path = Classes;
@@ -2035,6 +1979,7 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* PocketSword.app */,
+				5A1F70B0000000000000F010 /* PocketSwordTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2049,11 +1994,21 @@
 				0542F6C110BE75570088A721 /* externals */,
 				0542F70F10BE7C0B0088A721 /* doc */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				5A1F70B0000000000000F060 /* PocketSwordTests */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				052B52841101A32900FFDF01 /* Settings.bundle */,
 			);
 			name = PocketSword;
+			sourceTree = "<group>";
+		};
+		5A1F70B0000000000000F060 /* PocketSwordTests */ = {
+			isa = PBXGroup;
+			children = (
+				5A1F70B0000000000000F001 /* PersistedFormatTests.swift */,
+				5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */,
+			);
+			name = PocketSwordTests;
 			sourceTree = "<group>";
 		};
 		29B97315FDCFA39411CA2CEA /* misc */ = {
@@ -2063,8 +2018,8 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				E9617A340FF566FF00690108 /* localize_xibs.py */,
 				E9617A320FF566F300690108 /* gen_xib_strings.py */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
 				28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */,
+				33354D062FCD55D800252A83 /* PocketSword-Bridging-Header.h */,
 			);
 			name = misc;
 			sourceTree = "<group>";
@@ -2158,27 +2113,6 @@
 			path = minizip;
 			sourceTree = "<group>";
 		};
-		D2BFE59925E7788100E04366 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		D2BFE5A625E7788100E04366 /* Responses */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Responses;
-			sourceTree = "<group>";
-		};
-		D2BFE5AF25E7788100E04366 /* Requests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Requests;
-			sourceTree = "<group>";
-		};
 		E94012860EFDD2D000DA9B7F /* clucene */ = {
 			isa = PBXGroup;
 			children = (
@@ -2234,7 +2168,35 @@
 			productReference = 1D6058910D05DD3D006BFB54 /* PocketSword.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5A1F70B0000000000000F020 /* PocketSwordTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A1F70B0000000000000F050 /* Build configuration list for PBXNativeTarget "PocketSwordTests" */;
+			buildPhases = (
+				5A1F70B0000000000000F030 /* Sources */,
+				5A1F70B0000000000000F031 /* Frameworks */,
+				5A1F70B0000000000000F032 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5A1F70B0000000000000F041 /* PBXTargetDependency */,
+			);
+			name = PocketSwordTests;
+			productName = PocketSwordTests;
+			productReference = 5A1F70B0000000000000F010 /* PocketSwordTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		5A1F70B0000000000000F040 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = PocketSword;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
@@ -2243,6 +2205,12 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2640;
 				ORGANIZATIONNAME = "CrossWire Bible Society";
+				TargetAttributes = {
+					5A1F70B0000000000000F020 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 1D6058900D05DD3D006BFB54;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PocketSword" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2275,6 +2243,7 @@
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* PocketSword */,
+				5A1F70B0000000000000F020 /* PocketSwordTests */,
 			);
 		};
 /* End PBXProject section */
@@ -2292,6 +2261,7 @@
 				0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */,
 				052B52F21101D76000FFDF01 /* locales.d.zip in Resources */,
 				05034D2810FD63E300884C98 /* SearchWebView.js in Resources */,
+				5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */,
 				05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */,
 				05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
@@ -2392,6 +2362,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5A1F70B0000000000000F032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2399,14 +2376,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1F70B0000000000000C002 /* AppConstants.swift in Sources */,
+				5A1F70B0000000000000D002 /* PSResizing.swift in Sources */,
 				D2BFDFA125E73AAB00E04366 /* mz_os.c in Sources */,
-				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				5A1F70B00000000000ZS002 /* PocketSwordAppDelegate.swift in Sources */,
 				D2BFDF9925E73AAB00E04366 /* mz_zip.c in Sources */,
-				1D3623260D0F684500981E51 /* PocketSwordAppDelegate.mm in Sources */,
-				1D3623280D0F684500981E52 /* PocketSwordSceneDelegate.mm in Sources */,
 				D2BFDF9E25E73AAB00E04366 /* mz_crypt.c in Sources */,
-				28216C970DB411BC00E5133A /* PSTabBarControllerDelegate.mm in Sources */,
-				E996E5240ED70C6E0034DAF6 /* PSModuleController.mm in Sources */,
+				5A1F70B00000000000ZT002 /* PSTabBarControllerDelegate.swift in Sources */,
 				05F84EDE191F4AB3003350DE /* gbflatex.cpp in Sources */,
 				D2BFDFA025E73AAB00E04366 /* mz_compat.c in Sources */,
 				05F84ED8191F4A98003350DE /* zverse4.cpp in Sources */,
@@ -2416,12 +2392,10 @@
 				D2BFDF9725E73AAB00E04366 /* mz_strm_pkcrypt.c in Sources */,
 				D2BFDF9625E73AAB00E04366 /* mz_strm_os_posix.c in Sources */,
 				053CAD8C180942B200BCDBE6 /* osisreferencelinks.cpp in Sources */,
-				E92217550F0687340089A794 /* PSHistoryController.mm in Sources */,
 				05F84EE5191F4AC7003350DE /* ztext4.cpp in Sources */,
 				D2BFDFA525E73AAB00E04366 /* mz_strm.c in Sources */,
 				0545E2441063908C00DD7F06 /* SwordModule.mm in Sources */,
 				0545E26610639A4A00DD7F06 /* SwordManager.mm in Sources */,
-				05B5295D107C529000826AFE /* PSModuleType.mm in Sources */,
 				05275AD910884F72004FB0E0 /* swdisp.cpp in Sources */,
 				05275ADA10884F72004FB0E0 /* swlog.cpp in Sources */,
 				05275ADC10884F72004FB0E0 /* listkey.cpp in Sources */,
@@ -2558,57 +2532,61 @@
 				05275B6910884F72004FB0E0 /* url.cpp in Sources */,
 				05275B6A10884F72004FB0E0 /* utilstr.cpp in Sources */,
 				05275B6B10884F72004FB0E0 /* utilxml.cpp in Sources */,
-				05D462A010907130006BFBB1 /* PSLanguageCode.m in Sources */,
+				5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */,
+				5A1F70B0000000000000R002 /* PSModuleType.swift in Sources */,
 				05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */,
-				05CD44C2109E92C900853E48 /* PSPreferencesController.mm in Sources */,
-				05CD4554109FFA0A00853E48 /* PSBibleViewController.mm in Sources */,
-				05F336D910A437BB000A3B37 /* PSCommentaryViewController.mm in Sources */,
-				05509FB010A7B2C000363295 /* PSPreferencesFontTableViewController.mm in Sources */,
+				5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */,
+				5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */,
+				5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */,
+				5A1F70B00000000000ZO002 /* PSBibleViewController.swift in Sources */,
+				5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */,
+				5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */,
+				5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */,
 				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
-				05DF565F10AB99EA007CB847 /* PSAboutScreenController.mm in Sources */,
-				05E3FCC910CF535E00DFEB77 /* PSModuleSearchController.mm in Sources */,
+				5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */,
+				5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */,
+				5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */,
+				5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */,
 				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
-				A100000000000000000001F4 /* PSSearchQuery.mm in Sources */,
-				A100000000000000000001F6 /* PSSearchIndexBuilder.mm in Sources */,
-				A100000000000000000001F8 /* PSSearchResult.m in Sources */,
-				A100000000000000000002A2 /* PSInfoPopupViewController.mm in Sources */,
+				5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */,
+				5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */,
+				5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */,
+				5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */,
+				5A1F70B0000000000000N002 /* PSHistoryItem.swift in Sources */,
+				5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
-				055040D110DF1F4900C7DECB /* PSModuleSelectorController.mm in Sources */,
-				0550413A10DF30CA00C7DECB /* PSDictionaryViewController.mm in Sources */,
+				5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */,
+				5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */,
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,
 				0577DA3010F572970035DCC4 /* ftplib.c in Sources */,
-				05034D2510FD625900884C98 /* SearchWebView.m in Sources */,
-				0543338F112D407800187956 /* PSPreferencesModuleSelectorTableViewController.mm in Sources */,
-				05F0DAA61166DE5A00C2E87D /* PSRefSelectorController.mm in Sources */,
-				05AB946C116D88B80043DB57 /* PSChapterSelectorController.mm in Sources */,
-				05AB9512116D9C190043DB57 /* PSVerseSelectorController.mm in Sources */,
-				05129EF31185577100B0261F /* PSDictionaryOverlayViewController.m in Sources */,
+				5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */,
+				5A1F70B00000000000ZF002 /* PSPreferencesModuleSelectorTableViewController.swift in Sources */,
+				5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */,
+				5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */,
+				5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */,
+				5A1F70B0000000000000U002 /* PSDictionaryOverlayViewController.swift in Sources */,
 				054C570311AE0E6B00633371 /* SwordVerseKey.mm in Sources */,
 				054C570411AE0E6B00633371 /* VerseEnumerator.mm in Sources */,
-				05F4D07C1255D68C0088C902 /* PSResizing.m in Sources */,
-				0502EC7912B9D48A003E93AB /* PSModulePreferencesController.mm in Sources */,
-				0502EEED12BB2AFC003E93AB /* PSBasePreferencesController.m in Sources */,
-				05781F2B12D42819005F4890 /* PSBookmark.m in Sources */,
-				051B4BE812D5A2E5004982A7 /* PSBookmarkObject.m in Sources */,
-				051B4BF712D5A6B6004982A7 /* PSBookmarkFolder.m in Sources */,
-				051B4C0C12D5B001004982A7 /* PSBookmarksNavigatorController.mm in Sources */,
-				059419B012DAC76400A87B02 /* PSBookmarkAddViewController.mm in Sources */,
-				056BBE8012DD78D50029F3A2 /* PSBookmarks.mm in Sources */,
-				056BBF9212DFC9AB0029F3A2 /* PSBookmarkFolderAddViewController.m in Sources */,
-				056BBFA412DFED2F0029F3A2 /* PSBookmarkFolderColourSelectorViewController.m in Sources */,
+				5A1F70B0000000000000G002 /* PSBookmarkObject.swift in Sources */,
+				5A1F70B0000000000000H002 /* PSBookmark.swift in Sources */,
+				5A1F70B0000000000000I002 /* PSBookmarkFolder.swift in Sources */,
+				5A1F70B0000000000000J002 /* PSBookmarks.swift in Sources */,
+				5A1F70B00000000000ZJ002 /* PSBookmarksNavigatorController.swift in Sources */,
+				5A1F70B0000000000000X002 /* PSBookmarkAddViewController.swift in Sources */,
+				5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */,
+				5A1F70B0000000000000V002 /* PSBookmarkFolderColourSelectorViewController.swift in Sources */,
 				D2BFDF9F25E73AAB00E04366 /* mz_strm_wzaes.c in Sources */,
-				056BC84E12F101860029F3A2 /* PSBookmarkTableViewCell.m in Sources */,
-				056BC97E12F1277E0029F3A2 /* PSLaunchViewController.mm in Sources */,
-				056CE8A412F781D400A7DA37 /* PSSearchHistoryItem.m in Sources */,
-				05DA77A113CD754E000A4B97 /* PSWebView.mm in Sources */,
+				5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */,
+				5A1F70B00000000000ZQ002 /* PSLaunchViewController.swift in Sources */,
+				5A1F70B00000000000ZR002 /* PocketSwordSceneDelegate.swift in Sources */,
+				5A1F70B00000000000ZM002 /* PSWebView.swift in Sources */,
 				05B67C96146104B400B3E605 /* gbfxhtml.cpp in Sources */,
 				D2BFDFA225E73AAB00E04366 /* mz_os_posix.c in Sources */,
 				05B67C98146104B400B3E605 /* osisxhtml.cpp in Sources */,
 				05B67C9A146104B400B3E605 /* thmlxhtml.cpp in Sources */,
 				05EBBA441681825C005C4FF9 /* teixhtml.cpp in Sources */,
-				051FD8BB16AE5F3800E7EF2B /* PSHistoryItem.mm in Sources */,
 				05D3E49016FA9F6D00B9DEBF /* versificationmgr.cpp in Sources */,
 				055C8A55173C9F49009FF47D /* MBProgressHUD.m in Sources */,
 				053CAD8D180942B200BCDBE6 /* scsuutf8.cpp in Sources */,
@@ -2616,12 +2594,27 @@
 				057CBD4C17697D1C005BC6BB /* osisenum.cpp in Sources */,
 				057CBD4D17697D1C005BC6BB /* osisglosses.cpp in Sources */,
 				057CBD4E17697D1C005BC6BB /* osisxlit.cpp in Sources */,
-				059653A917F53B1400018288 /* PSDictionaryEntryViewController.mm in Sources */,
-				050073BE17F9A97F007FDAB0 /* PSModuleViewController.mm in Sources */,
+				5A1F70B00000000000ZN002 /* PSModuleViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A1F70B0000000000000F030 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5A1F70B0000000000000F041 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D6058900D05DD3D006BFB54 /* PocketSword */;
+			targetProxy = 5A1F70B0000000000000F040 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		E9A6CF9C0FF5508400399E78 /* Localizable.strings */ = {
@@ -2710,9 +2703,11 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2754,6 +2749,12 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "PocketSword-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2761,9 +2762,11 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2802,6 +2805,12 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "PocketSword-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2810,9 +2819,11 @@
 		E982FA650ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2853,6 +2864,12 @@
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "PocketSword-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
@@ -2883,6 +2900,75 @@
 			};
 			name = Distribution;
 		};
+		5A1F70B0000000000000F051 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSwordTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketSword.app/PocketSword";
+			};
+			name = Debug;
+		};
+		5A1F70B0000000000000F052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSwordTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketSword.app/PocketSword";
+			};
+			name = Release;
+		};
+		5A1F70B0000000000000F053 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSwordTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketSword.app/PocketSword";
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2902,6 +2988,16 @@
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
 				E982FA650ED9D6100028DFEC /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A1F70B0000000000000F050 /* Build configuration list for PBXNativeTarget "PocketSwordTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A1F70B0000000000000F051 /* Debug */,
+				5A1F70B0000000000000F052 /* Release */,
+				5A1F70B0000000000000F053 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

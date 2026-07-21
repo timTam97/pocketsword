@@ -15,20 +15,10 @@
 
 #import "SwordModule.h"
 
-#ifdef __cplusplus
-#include <swmgr.h>		// C++ Sword API
-#include <localemgr.h>
-#include <markupfiltmgr.h>
-// Filters
-#include <markupfiltmgr.h>
-#include <osishtmlhref.h>
-#include <thmlhtmlhref.h>
-#include <gbfhtmlhref.h>
-#include <versekey.h>
-//class sword::SWModule;
-using sword::SWModule;
-#endif
-
+// NOTE: All C++ (sword::SWMgr ivar, sword API includes, sword-typed methods)
+// has been moved to the internal SwordManager+Cpp.h, imported only by .mm
+// files. This public header is Foundation-only so it is safe to expose to the
+// Swift bridging header. Do not re-add #include <sword...> / using sword:: here.
 
 #define SWMOD_CATEGORY_BIBLES			@"Biblical Texts"
 #define SWMOD_CATEGORY_COMMENTARIES     @"Commentaries"
@@ -113,12 +103,8 @@ using sword::SWModule;
 #define SW_DIRECTION_RTL    @"RtoL"
 
 @interface SwordManager : NSObject {
-    
-	#ifdef __cplusplus
-	sword::SWMgr *swManager;
-	//sword::SWFilter *plainFilter, *thmlFilter, *gbfFilter, *osisFilter;
-	//sword::SWFilter *thmlStripFilter, *gbfStripFilter, *osisStripFilter;
-	#endif
+
+	// The sword::SWMgr *swManager ivar lives in SwordManager+Cpp.h (internal).
 
 	NSDictionary *modules;
 	NSArray *moduleListByType;
@@ -144,6 +130,23 @@ using sword::SWModule;
 
 //+ (void)initStringManager;
 + (void)initLocale;
+/** Foundation-only wrapper over the SWORD LocaleMgr translate API (English -> system locale). */
++ (NSString *)translateBookName:(NSString *)bookName;
+/**
+ Foundation-only wrapper over the SWORD LocaleMgr translate API. Unlike
+ @c translateBookName: (which forces the "en" target), this translates the given
+ English text into the *current system* locale (no target argument), with a
+ UTF-8 -> ISO-Latin-1 fallback decode. Keeps the C++ LocaleMgr API out of Swift
+ callers (e.g. the Swift PSModuleController). Returns nil for a nil input.
+ */
++ (NSString *)translateToSystemLocale:(NSString *)englishText;
+/**
+ Foundation-only wrapper over the SWORD VersificationMgr. Resolves the named
+ versification system (falling back to "KJV" when @c systemName is nil/empty or
+ unknown) and returns its books as an ordered array of @c SwordBook objects.
+ Keeps the C++ VersificationMgr API out of Swift callers (e.g. PSRefSelectorController).
+ */
++ (NSArray *)booksForVersificationSystem:(NSString *)systemName;
 + (NSArray *)moduleTypes;
 + (BOOL)moduleCategoryAllowed:(ModuleCategory)cat;
 
@@ -180,10 +183,14 @@ using sword::SWModule;
 
 - (void)installModulesFromPath:(NSString *)path;
 
-#ifdef __cplusplus
-- (id)initWithSWMgr:(sword::SWMgr *)smgr;
-- (sword::SWModule *)getSWModuleWithName:(NSString *)moduleName;
-- (sword::SWMgr *)swManager;
-#endif
+/**
+ Foundation-only wrapper over the SWORD InstallMgr removeModule API. Removes the
+ named module from this manager. Returns YES on success. Keeps the C++ InstallMgr
+ API out of Swift callers (e.g. the Swift PSModuleController).
+ */
+- (BOOL)removeModuleNamed:(NSString *)name;
+
+// C++ accessors (initWithSWMgr:, getSWModuleWithName:, swManager) live in
+// SwordManager+Cpp.h, imported only by .mm files.
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "SwordVerseKey.h"
+#import "SwordVerseKey+Cpp.h"
+#import "SwordKey+Cpp.h"
 
 
 @implementation SwordVerseKey

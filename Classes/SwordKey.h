@@ -7,27 +7,24 @@
 //
 
 
-#ifdef __cplusplus
-#include <swkey.h>
-#endif
+#import <Foundation/Foundation.h>
+
+// NOTE: The sword::SWKey *sk ivar, the <swkey.h> include, and the sword-typed
+// factory/init/accessor methods have been moved to the internal SwordKey+Cpp.h,
+// imported only by .mm files (and shared with the SwordVerseKey / SwordListKey
+// subclass .mm's so they can cast `sk`). This public header is Foundation-only
+// so it is safe to expose to the Swift bridging header.
 
 @interface SwordKey : NSObject {
-#ifdef __cplusplus
-    sword::SWKey *sk;
-#endif
+    // sword::SWKey *sk ivar lives in SwordKey+Cpp.h (@protected, shared with subclasses).
     BOOL created;
 }
 
 + (id)swordKey;
 + (id)swordKeyWithRef:(NSString *)aRef;
 
-#ifdef __cplusplus
-+ (id)swordKeyWithSWKey:(sword::SWKey *)aSk;
-+ (id)swordKeyWithSWKey:(sword::SWKey *)aSk makeCopy:(BOOL)copy;
-- (id)initWithSWKey:(sword::SWKey *)aSk;
-- (id)initWithSWKey:(sword::SWKey *)aSk makeCopy:(BOOL)copy;
-- (sword::SWKey *)swKey;
-#endif
+// C++ factory/init/accessors (swordKeyWithSWKey:, initWithSWKey:, swKey) live
+// in SwordKey+Cpp.h, imported only by .mm files.
 
 - (id)initWithRef:(NSString *)aRef;
 

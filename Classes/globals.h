@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 // we can add more to this enum as we're required to dynamically show those tabs
-typedef enum {
+typedef NS_ENUM(NSInteger, ShownTab) {
     BibleTab = 1,
     CommentaryTab,
 	DictionaryTab,
@@ -27,25 +27,25 @@ typedef enum {
 	DevotionalTab,
 	DownloadsTab,
 	PreferencesTab
-} ShownTab;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, ShownMultiListTab) {
 	HistoryTab = 0,
 	SearchTab
-} ShownMultiListTab;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, PSSearchType) {
 	AndSearch = 0,
 	OrSearch,
 	ExactSearch
-} PSSearchType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, PSSearchRange) {
 	AllRange = 0,
 	OTRange,
 	NTRange,
 	BookRange
-} PSSearchRange;
+};
 
 #define DefaultsModuleCipherKeysKey					@"DefaultsModuleCipherKeysKey"
 #define DefaultsLastRef								@"lastRef"
@@ -175,10 +175,10 @@ typedef enum {
 
 #define ROTATION_LOCK_POSITION					@"rotationLockedPosition"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, RotationPosition) {
 	RotationEnabled,
 	RotationLockedInPortrait,
 	RotationLockedInLandscape
-} RotationPosition;
+};
 
 

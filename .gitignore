@@ -9,6 +9,9 @@ xcuserdata/
 *~.nib
 .cache/
 .clangd
+.claude/*
+.codex/*
+.xcodebuildmcp/*
 buildServer.json
 compile_commands.json
 Build PocketSword_*.txt

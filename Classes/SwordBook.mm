@@ -7,6 +7,7 @@
 //
 
 #import "SwordBook.h"
+#import "SwordBook+Cpp.h"
 #include <localemgr.h>
 
 
