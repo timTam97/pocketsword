@@ -706,16 +706,23 @@ final class PSTabBarControllerDelegate: NSObject,
 
     @objc(showInfoWithNotification:)
     func showInfoWithNotification(_ notification: Notification?) {
-        if let infoString = notification?.object as? String {
+        if let content = notification?.object as? PSInfoPopupContent {
+            showInfo(content)
+        } else if let infoString = notification?.object as? String {
             showInfo(infoString)
         }
     }
 
     @objc(showInfo:)
     func showInfo(_ infoString: String?) {
+        guard let infoString = infoString else { return }
+        showInfo(PSInfoPopupContent(html: infoString))
+    }
+
+    private func showInfo(_ content: PSInfoPopupContent) {
         if let infoPopup = infoPopupController, infoPopup.presentingViewController != nil {
             // Already on screen — just swap the HTML, don't re-present.
-            infoPopup.loadHTML(infoString)
+            infoPopup.loadContent(content)
             return
         }
 
@@ -724,6 +731,9 @@ final class PSTabBarControllerDelegate: NSObject,
         // before presentation — WKWebView needs to exist before we assign it.
         _ = popup.view
         popup.webView?.navigationDelegate = self
+        popup.onSearch = { [weak self] term in
+            self?.startStrongsSearch(term)
+        }
 
         popup.modalPresentationStyle = .pageSheet
         popup.presentationController?.delegate = self
@@ -737,8 +747,21 @@ final class PSTabBarControllerDelegate: NSObject,
         }
 
         self.infoPopupController = popup
-        popup.loadHTML(infoString)
+        popup.loadContent(content)
         tabBarController.present(popup, animated: true, completion: nil)
+    }
+
+    private func startStrongsSearch(_ term: String) {
+        guard !term.isEmpty else { return }
+
+        self.savedSearchHistoryItem = nil
+        let searchItem = PSSearchHistoryItem()
+        searchItem.searchTermToDisplay = term
+        searchItem.strongsSearch = true
+        self.savedSearchHistoryItem = searchItem
+        hideInfoWithCompletion { [weak self] in
+            self?.toggleMultiList()
+        }
     }
 
     @objc(rotateInfo:)
@@ -773,6 +796,7 @@ final class PSTabBarControllerDelegate: NSObject,
         // genuine optional for the `if let rData` guards below.
         let rData: [AnyHashable: Any]? = PSModuleController.data(forLink: request.url)
         var entry: String? = nil
+        var popupContent: PSInfoPopupContent? = nil
 
         if request.url?.scheme == "bible" {
             // our internal reference to say this is a Bible verse to display in the Bible tab
@@ -800,17 +824,8 @@ final class PSTabBarControllerDelegate: NSObject,
             // Tapping a Strong's link routes here (e.g. search://H0430).
             // The FTS5 engine handles H0xxx/Hxxx equivalence internally, so
             // we no longer need to build `lemma:` expressions with || operators.
-            let strongsSearchTerm = request.url?.host
-            self.savedSearchHistoryItem = nil
-            let shi = PSSearchHistoryItem()
-            shi.searchTermToDisplay = strongsSearchTerm
-            shi.strongsSearch = true
-            self.savedSearchHistoryItem = shi
-            // Chain the present on dismiss completion — presenting while the
-            // popup is still mid-dismiss silently drops the second presentation,
-            // leaving the search sheet unopened.
-            hideInfoWithCompletion { [weak self] in
-                self?.toggleMultiList()
+            if let strongsSearchTerm = request.url?.host {
+                startStrongsSearch(strongsSearchTerm)
             }
 
             decisionHandler(.cancel)
@@ -831,7 +846,6 @@ final class PSTabBarControllerDelegate: NSObject,
                     // Should be a dictionary entry:
                     let swordDictionary = SwordManager.default()?.module(withName: mod) as? SwordDictionary
                     var strongs = false
-                    var greekStrongs = true
                     if let swordDictionary = swordDictionary {
                         entry = swordDictionary.entry(forKey: rData[ATTRTYPE_VALUE] as? String)
 
@@ -848,7 +862,6 @@ final class PSTabBarControllerDelegate: NSObject,
                             strongsSearchTerm = "G\(greek)"
                             strongs = true
                         } else if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
-                            greekStrongs = false
                             let hebrew = NSMutableString(string: (rData[ATTRTYPE_VALUE] as? String) ?? "")
                             while hebrew.length > 0 && hebrew.character(at: 0) == unichar(UInt8(ascii: "0")) {
                                 hebrew.deleteCharacters(in: NSRange(location: 0, length: 1))
@@ -857,24 +870,31 @@ final class PSTabBarControllerDelegate: NSObject,
                             strongs = true
                         }
                         if strongs {
-                            entry = "\(entry ?? "")<div style=\"text-align: right\"><a href=\"search://\(strongsSearchTerm)\">\(NSLocalizedString("StrongsSearchFindAll", comment: ""))</a></div>"
+                            // Preserve the raw rendered entry so the popup can
+                            // extract the Greek/Hebrew lemma for its header.
+                            let rawEntry = entry
+                            entry = PSModuleController.createStrongsInfoHTMLString(entry, usingModuleForPreferences: mod)
+                            if let entry = entry {
+                                popupContent = PSInfoPopupContent(
+                                    strongsHTML: entry,
+                                    rawEntry: rawEntry,
+                                    reference: strongsSearchTerm,
+                                    allowsSearch: true
+                                )
+                            }
                         }
                     } else {
                         entry = "<p style=\"color:grey;text-align:center;font-style:italic;\">\(mod) \(NSLocalizedString("ModuleNotInstalled", comment: "is not installed."))</p>"
                     }
 
-                    let fontName = UserDefaults.standard.object(forKey: DefaultsFontNamePreference)
-                    if strongs && greekStrongs {
-                        UserDefaults.standard.set(PSGreekStrongsFontName, forKey: DefaultsFontNamePreference)
-                    } else if strongs && !greekStrongs {
-                        UserDefaults.standard.set(PSHebrewStrongsFontName, forKey: DefaultsFontNamePreference)
-                    } else {
+                    if !strongs {
+                        let fontName = UserDefaults.standard.object(forKey: DefaultsFontNamePreference)
                         UserDefaults.standard.set(StrongsFontName, forKey: DefaultsFontNamePreference)
+                        UserDefaults.standard.synchronize()
+                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod)
+                        UserDefaults.standard.set(fontName, forKey: DefaultsFontNamePreference)
+                        UserDefaults.standard.synchronize()
                     }
-                    UserDefaults.standard.synchronize()
-                    entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod)
-                    UserDefaults.standard.set(fontName, forKey: DefaultsFontNamePreference)
-                    UserDefaults.standard.synchronize()
                 }
             } else {
                 // Bible ref:
@@ -932,7 +952,10 @@ final class PSTabBarControllerDelegate: NSObject,
             }
         }
 
-        if let resolvedEntry = entry {
+        if let popupContent = popupContent {
+            showInfo(popupContent)
+            decisionHandler(.cancel)
+        } else if let resolvedEntry = entry {
             let cleaned = resolvedEntry.replacingOccurrences(of: "*x", with: "x").replacingOccurrences(of: "*n", with: "n")
             showInfo(cleaned)
             decisionHandler(.cancel)

@@ -652,9 +652,90 @@ final class PSModuleController: NSObject {
 
     @objc(createInfoHTMLString:usingModuleForPreferences:)
     class func createInfoHTMLString(_ body: String!, usingModuleForPreferences moduleName: String!) -> String! {
-        return createHTMLString(body, usingPreferences: true,
-                                withJS: "<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>",
-                                usingModuleForPreferences: moduleName, fixedWidth: true)
+        let html = createHTMLString(body, usingPreferences: true,
+                                    withJS: "<script type=\"text/javascript\">\n<!--\n document.documentElement.style.webkitTouchCallout = \"none\";\n-->\n</script>",
+                                    usingModuleForPreferences: moduleName, fixedWidth: true)
+        guard let html = html else { return nil }
+
+        // Info popups are hosted in a frosted-glass sheet (see
+        // PSInfoPopupViewController): a transparent body lets the blurred
+        // chapter show through instead of a solid Canvas rectangle. Injected
+        // after the base <style> so source order wins.
+        let transparentCSS = "<style type=\"text/css\">html, body { background-color: transparent; }</style>"
+        return html.replacingOccurrences(of: "</head>", with: "\(transparentCSS)\n</head>")
+    }
+
+    class func createStrongsInfoHTMLString(_ body: String!, usingModuleForPreferences moduleName: String?) -> String! {
+        let wrappedBody = "<main class=\"strongs-definition\">\(body ?? "")</main>"
+        guard let baseHTML = createInfoHTMLString(wrappedBody, usingModuleForPreferences: moduleName) else {
+            return nil
+        }
+
+        let strongsCSS = """
+        <style type="text/css">
+        :root {
+            --study-accent: #0B6670;
+            --study-muted: #5D6365;
+            --study-rule: #D5DDDE;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --study-accent: #67C5CA;
+                --study-muted: #A9B0B2;
+                --study-rule: #394245;
+            }
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.55;
+        }
+        main.strongs-definition {
+            box-sizing: border-box;
+            padding: 18px 20px 28px;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+        main.strongs-definition > a[name]:first-child {
+            display: none;
+        }
+        main.strongs-definition > a[name]:first-child + br {
+            display: none;
+        }
+        main.strongs-definition b {
+            font-family: inherit;
+            font-weight: 600;
+        }
+        main.strongs-definition i {
+            font-family: inherit;
+        }
+        main.strongs-definition a {
+            color: var(--study-accent);
+            text-decoration-line: underline;
+            text-decoration-color: color-mix(in srgb, var(--study-accent) 55%, transparent);
+            text-decoration-thickness: 0.08em;
+            text-underline-offset: 0.14em;
+        }
+        main.strongs-definition a:focus-visible {
+            outline: 2px solid var(--study-accent);
+            outline-offset: 3px;
+        }
+        main.strongs-definition q {
+            color: var(--study-muted);
+        }
+        main.strongs-definition hr {
+            height: 1px;
+            border: 0;
+            background: var(--study-rule);
+        }
+        </style>
+        """
+
+        return baseHTML.replacingOccurrences(of: "</head>", with: "\(strongsCSS)\n</head>")
     }
 
     // careful of the '%' in the string below! Embedded literally here (no
