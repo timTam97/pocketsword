@@ -64,7 +64,8 @@ final class PSVoiceRefSession {
     private var audioEngine: AVAudioEngine?
     private var inputContinuation: AsyncStream<AnalyzerInput>.Continuation?
     private var installedInputTap = false
-    private var finalCandidates: [String] = []
+    private var finalSegments: [String] = []
+    private var alternativeTranscripts: [String] = []
     private var latestVolatileText = ""
     private var observingAudioInterruptions = false
 
@@ -365,9 +366,13 @@ final class PSVoiceRefSession {
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         if result.isFinal {
-            appendCandidate(text)
+            // The transcriber commits stable prefixes as separate final results
+            // (e.g. "hebrews" then "7 5"). Keep them ordered so the full utterance
+            // can be reassembled; a lone leading segment like "hebrews" would
+            // otherwise parse on its own to chapter 1.
+            appendSegment(text)
             for alternative in result.alternatives {
-                appendCandidate(
+                appendAlternative(
                     String(alternative.characters)
                         .trimmingCharacters(in: .whitespacesAndNewlines)
                 )
@@ -381,9 +386,30 @@ final class PSVoiceRefSession {
         }
     }
 
-    private func appendCandidate(_ candidate: String) {
-        guard !candidate.isEmpty, !finalCandidates.contains(candidate) else { return }
-        finalCandidates.append(candidate)
+    private func appendSegment(_ segment: String) {
+        guard !segment.isEmpty else { return }
+        finalSegments.append(segment)
+    }
+
+    private func appendAlternative(_ alternative: String) {
+        guard !alternative.isEmpty, !alternativeTranscripts.contains(alternative) else { return }
+        alternativeTranscripts.append(alternative)
+    }
+
+    // The joined utterance is parsed first so a full "hebrews 7 5" wins over its
+    // individual committed segments; per-segment and alternative transcripts are
+    // kept only as fallbacks.
+    private func makeCandidates() -> [String] {
+        var candidates: [String] = []
+        func add(_ candidate: String) {
+            guard !candidate.isEmpty, !candidates.contains(candidate) else { return }
+            candidates.append(candidate)
+        }
+
+        add(finalSegments.joined(separator: " "))
+        alternativeTranscripts.forEach(add)
+        finalSegments.forEach(add)
+        return candidates
     }
 
     private func restartSilenceTimer() {
@@ -413,7 +439,7 @@ final class PSVoiceRefSession {
             guard phase == .finalizing else { return }
 
             phase = .finished
-            let candidates = finalCandidates
+            let candidates = makeCandidates()
             clearSpeechObjects()
             deactivateAudioSession()
             emit(.finished(candidates: candidates))

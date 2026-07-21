@@ -84,6 +84,6 @@ The app registers the `sword://` URL scheme (`CFBundleURLTypes` in `misc/Info.pl
 
 ## Localization
 
-Localization is **`.strings`-based** (programmatic UIKit — there are no XIBs). UI strings go through `NSLocalizedString(...)` and resolve against one `Localizable.strings` per locale project: `ar cs de en es fr it ja ko nl pt ru sv th uk zh-Hans zh-Hant` (`*.lproj/Localizable.strings`), with `Settings.bundle/*.lproj/Root.strings` for the Settings pane. `en.lproj/Localizable.strings` is the source of truth for keys; add new keys there and mirror into the other locales.
+Localization is **`.strings`-based** (programmatic UIKit — there are no XIBs), but the app ships **English only**. UI strings go through `NSLocalizedString(...)` and resolve against the single `en.lproj/Localizable.strings`, with `Settings.bundle/en.lproj/Root.strings` for the Settings pane. `en.lproj/Localizable.strings` is the source of truth for keys; add new keys there. The former non-English locale projects (`ar cs de es fr it ja ko nl pt ru sv th uk zh-Hans zh-Hant`) have been removed, and `knownRegions` / the `Localizable.strings` variant group in the pbxproj list only `en` — do not re-add other locales without a deliberate decision.
 
 > The repo still contains `gen_xib_strings.py` / `localize_xibs.py`. These are **dead XIB-era tooling** — they operate on `.xib` files, of which there are none. Do not run them or treat them as the localization flow.
