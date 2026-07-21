@@ -10,6 +10,10 @@
 		5A1F70B0000000000000C002 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000C001 /* AppConstants.swift */; };
 		5A1F70B0000000000000D002 /* PSResizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000D001 /* PSResizing.swift */; };
 		5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000F001 /* PersistedFormatTests.swift */; };
+		5A1F70B0000000000000VA02 /* PSVoiceRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VA01 /* PSVoiceRefParser.swift */; };
+		5A1F70B0000000000000VB02 /* PSVoiceRefSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */; };
+		5A1F70B0000000000000VC02 /* PSVoiceRefViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */; };
+		5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */; };
 		5A1F70B0000000000000G002 /* PSBookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000G001 /* PSBookmarkObject.swift */; };
 		5A1F70B0000000000000H002 /* PSBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000H001 /* PSBookmark.swift */; };
 		5A1F70B0000000000000I002 /* PSBookmarkFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */; };
@@ -371,6 +375,10 @@
 		5A1F70B0000000000000C001 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000D001 /* PSResizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSResizing.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F001 /* PersistedFormatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistedFormatTests.swift; path = Classes/PersistedFormatTests.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000VA01 /* PSVoiceRefParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParser.swift; path = Classes/PSVoiceRefParser.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefSession.swift; path = Classes/PSVoiceRefSession.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefViewController.swift; path = Classes/PSVoiceRefViewController.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParserTests.swift; path = Classes/PSVoiceRefParserTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000G001 /* PSBookmarkObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkObject.swift; path = Classes/PSBookmarkObject.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000H001 /* PSBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmark.swift; path = Classes/PSBookmark.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolder.swift; path = Classes/PSBookmarkFolder.swift; sourceTree = "<group>"; };
@@ -1849,6 +1857,9 @@
 				5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */,
 				5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */,
 				5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */,
+				5A1F70B0000000000000VA01 /* PSVoiceRefParser.swift */,
+				5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */,
+				5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */,
 			);
 			name = "ref selector";
 			sourceTree = "<group>";
@@ -2006,6 +2017,7 @@
 			isa = PBXGroup;
 			children = (
 				5A1F70B0000000000000F001 /* PersistedFormatTests.swift */,
+				5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */,
 				5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */,
 			);
 			name = PocketSwordTests;
@@ -2378,6 +2390,9 @@
 			files = (
 				5A1F70B0000000000000C002 /* AppConstants.swift in Sources */,
 				5A1F70B0000000000000D002 /* PSResizing.swift in Sources */,
+				5A1F70B0000000000000VA02 /* PSVoiceRefParser.swift in Sources */,
+				5A1F70B0000000000000VB02 /* PSVoiceRefSession.swift in Sources */,
+				5A1F70B0000000000000VC02 /* PSVoiceRefViewController.swift in Sources */,
 				D2BFDFA125E73AAB00E04366 /* mz_os.c in Sources */,
 				5A1F70B00000000000ZS002 /* PocketSwordAppDelegate.swift in Sources */,
 				D2BFDF9925E73AAB00E04366 /* mz_zip.c in Sources */,
@@ -2603,6 +2618,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */,
+				5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

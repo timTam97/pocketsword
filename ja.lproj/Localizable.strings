@@ -246,3 +246,14 @@
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";
+
+// Voice reference
+"VoiceRefListening" = "Listening…";
+"VoiceRefPrompt" = "Say a reference, e.g. “John 3 16”";
+"VoiceRefDownloadingModel" = "Downloading speech model…";
+"VoiceRefNoMatch" = "Couldn’t find that reference";
+"VoiceRefTryAgain" = "Try Again";
+"VoiceRefMicDenied" = "Microphone access is off for PocketSword. Turn it on in Settings.";
+"VoiceRefOpenSettings" = "Open Settings";
+"VoiceRefUnavailable" = "Voice input isn’t available for this language.";
+"VoiceOverVoiceRefButton" = "Speak a Bible reference";
