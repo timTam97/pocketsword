@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5A1F70B0000000000000B002 /* SwiftBuildProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */; };
 		5A1F70B0000000000000C002 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000C001 /* AppConstants.swift */; };
 		5A1F70B0000000000000D002 /* PSResizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000D001 /* PSResizing.swift */; };
 		5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000F001 /* PersistedFormatTests.swift */; };
@@ -369,7 +368,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBuildProbe.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000C001 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000D001 /* PSResizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSResizing.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F001 /* PersistedFormatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistedFormatTests.swift; path = Classes/PersistedFormatTests.swift; sourceTree = "<group>"; };
@@ -1970,7 +1968,6 @@
 				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
 				5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */,
 				5A1F70B0000000000000P001 /* SearchWebView.swift */,
-				5A1F70B0000000000000B001 /* SwiftBuildProbe.swift */,
 				5A1F70B0000000000000C001 /* AppConstants.swift */,
 				5A1F70B0000000000000D001 /* PSResizing.swift */,
 			);
@@ -2379,7 +2376,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A1F70B0000000000000B002 /* SwiftBuildProbe.swift in Sources */,
 				5A1F70B0000000000000C002 /* AppConstants.swift in Sources */,
 				5A1F70B0000000000000D002 /* PSResizing.swift in Sources */,
 				D2BFDFA125E73AAB00E04366 /* mz_os.c in Sources */,

@@ -186,6 +186,9 @@ final class PSResizing: NSObject {
         if let windowScene = PSResizing.currentWindowScene() {
             return windowScene.screen.bounds
         }
+        // Fallback only when no window scene is connected yet (pre-scene launch).
+        // UIScreen.main is deprecated in iOS 26 but has no context-free replacement
+        // for bounds — a trait collection carries displayScale, not point bounds.
         return UIScreen.main.bounds
     }
 
@@ -194,7 +197,9 @@ final class PSResizing: NSObject {
         if let windowScene = PSResizing.currentWindowScene() {
             return windowScene.screen.scale
         }
-        return UIScreen.main.scale
+        // UIScreen.main.scale is deprecated in iOS 26; the recommended replacement
+        // is the current trait collection's displayScale.
+        return UITraitCollection.current.displayScale
     }
 
     @objc(currentInterfaceOrientation)
@@ -243,6 +248,7 @@ final class PSResizing: NSObject {
     }
 
     @objc(addSkipBackupAttributeToItemAtPath:)
+    @discardableResult
     class func addSkipBackupAttribute(toItemAtPath path: String) -> Bool {
         // make sure we're not backing up this folder!
         dlog("Don't Backup:\n---\n\(path)\n---\n")

@@ -426,6 +426,7 @@ final class PSModuleController: NSObject {
     // MARK: - Remove module
 
     @objc(removeModule:)
+    @discardableResult
     func removeModule(_ name: String!) -> Bool {
         dlog("Removing module: \(name ?? "")")
 
@@ -866,6 +867,13 @@ final class PSModuleController: NSObject {
         // there are two types of links
         // our generated sword:// links and study data beginning with file://
         var ret: [AnyHashable: Any]? = nil
+
+        // The old Obj-C sent -scheme to a possibly-nil NSURL, which returned nil
+        // (no crash) so the method fell through and returned nil. The Swift param
+        // is URL! and would trap on aURL.scheme, so guard to preserve that parity:
+        // a nil link yields a nil dictionary. (WKNavigationAction.request.url is
+        // optional, so this path is reachable.)
+        guard let aURL = aURL else { return nil }
 
         let scheme = aURL.scheme
         if scheme == "sword" || scheme == "bible" {

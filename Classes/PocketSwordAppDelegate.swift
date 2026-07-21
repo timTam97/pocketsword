@@ -166,7 +166,11 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
     @discardableResult
     func application(_ application: UIApplication,
                      handleOpen url: URL?,
-                     options: [UIApplication.OpenURLOptionsKey: Any]?) -> Bool {
+                     // `options` is vestigial: unused here and always passed nil by the
+                     // scene delegate. Typed as a neutral dictionary rather than the
+                     // iOS-26-deprecated UIApplication.OpenURLOptionsKey. The @objc
+                     // selector (application:handleOpenURL:options:) is unaffected.
+                     options: [AnyHashable: Any]?) -> Bool {
         guard let url = url, url.scheme == "sword" else {
             return false
         }

@@ -102,13 +102,28 @@ final class PSHistoryItem: NSObject {
         return arr
     }
 
+    // Mirror Obj-C -isEqualToString: / -isEqualToDate: nil semantics: a message
+    // to a nil receiver, or comparing against nil, returns NO. Swift's `==` on
+    // Optionals instead makes `nil == nil` TRUE, which would make two legacy
+    // history items with a nil moduleName compare EQUAL where the Obj-C++ merge
+    // treated them as unequal — silently dropping history on iCloud reconcile.
+    private static func objcEqual(_ a: String?, _ b: String?) -> Bool {
+        guard let a = a, let b = b else { return false }
+        return a == b
+    }
+
+    private static func objcEqual(_ a: Date?, _ b: Date?) -> Bool {
+        guard let a = a, let b = b else { return false }
+        return a == b
+    }
+
     @objc(isEqualToHistoryItem:)
     func isEqual(to otherHistoryItem: PSHistoryItem?) -> Bool {
         guard let otherHistoryItem = otherHistoryItem else { return false }
 
-        if bibleReference == otherHistoryItem.bibleReference
-            && moduleName == otherHistoryItem.moduleName
-            && dateAdded == otherHistoryItem.dateAdded {
+        if PSHistoryItem.objcEqual(bibleReference, otherHistoryItem.bibleReference)
+            && PSHistoryItem.objcEqual(moduleName, otherHistoryItem.moduleName)
+            && PSHistoryItem.objcEqual(dateAdded, otherHistoryItem.dateAdded) {
             return true
         }
         return false
@@ -175,8 +190,10 @@ final class PSHistoryItem: NSObject {
                   let secondHI = secondArray[i] as? PSHistoryItem else {
                 return false
             }
-            if firstHI.bibleReference != secondHI.bibleReference
-                || firstHI.moduleName != secondHI.moduleName {
+            // Obj-C returned NO on ![... isEqualToString:...]; reuse the same nil
+            // semantics so a nil ref/module doesn't spuriously read as "equal".
+            if !PSHistoryItem.objcEqual(firstHI.bibleReference, secondHI.bibleReference)
+                || !PSHistoryItem.objcEqual(firstHI.moduleName, secondHI.moduleName) {
                 return false
             }
         }
