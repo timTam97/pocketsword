@@ -711,6 +711,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                 }
                 let rData = PSModuleController.data(forLink: url)
                 var entry: String? = nil
+                var popupContent: PSInfoPopupContent? = nil
 
                 if let rData = rData, (rData[SWRender.attrAction] as? String) == "showStrongs" {
                     //
@@ -723,36 +724,33 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                         hebrew = true
                     }
 
+                    let rawNumber = (rData[SWRender.attrValue] as? String) ?? ""
+                    let strongsReference = "\(hebrew ? "H" : "G")\(rawNumber)"
                     if let swordDictionary = SwordManager.default().module(withName: mod) as? SwordDictionary {
-                        entry = swordDictionary.entry(forKey: rData[SWRender.attrValue] as? String)
+                        entry = swordDictionary.entry(forKey: rawNumber)
                     }
+                    let hasDefinition = entry != nil
+                    // Keep the raw rendered entry so the popup can pull the
+                    // Greek/Hebrew lemma out for its header (only when it's a
+                    // real definition, not the "no module" placeholder).
+                    let rawEntry = hasDefinition ? entry : nil
                     if entry == nil {
                         if hebrew {
                             entry = NSLocalizedString("NoHebrewStrongsNumbersModuleInstalled", comment: "")
                         } else {
                             entry = NSLocalizedString("NoGreekStrongsNumbersModuleInstalled", comment: "")
                         }
-                    } else if tabType == .BibleTab {
-                        // for the BibleTab only, allow a "search for all occurrences" link...
-                        var strongsPrefix = "G"
-                        if hebrew {
-                            strongsPrefix = "H"
-                        }
-                        entry = String(format: "%@<div style=\"text-align: right\"><a href=\"search://%@%@\">%@</a></div>",
-                                       entry ?? "", strongsPrefix, (rData[SWRender.attrValue] as? String) ?? "",
-                                       NSLocalizedString("StrongsSearchFindAll", comment: ""))
                     }
 
-                    let fontName = UserDefaults.standard.object(forKey: Defaults.fontNamePreference) as? String
-                    if !hebrew {
-                        UserDefaults.standard.set(AppConstants.greekStrongsFontName, forKey: Defaults.fontNamePreference)
-                    } else {
-                        UserDefaults.standard.set(AppConstants.hebrewStrongsFontName, forKey: Defaults.fontNamePreference)
+                    entry = PSModuleController.createStrongsInfoHTMLString(entry, usingModuleForPreferences: mod)
+                    if let entry = entry {
+                        popupContent = PSInfoPopupContent(
+                            strongsHTML: entry,
+                            rawEntry: rawEntry,
+                            reference: strongsReference,
+                            allowsSearch: hasDefinition && tabType == .BibleTab
+                        )
                     }
-                    UserDefaults.standard.synchronize()
-                    entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod)
-                    UserDefaults.standard.set(fontName, forKey: Defaults.fontNamePreference)
-                    UserDefaults.standard.synchronize()
 
                 } else if let rData = rData, (rData[SWRender.attrAction] as? String) == "showMorph" {
                     //
@@ -821,7 +819,11 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                     }
                 }
 
-                if let entry = entry {
+                if let popupContent = popupContent {
+                    NotificationCenter.default.post(name: .showInfoPane, object: popupContent)
+                    decisionHandler(.cancel)
+                    return
+                } else if let entry = entry {
                     NotificationCenter.default.post(name: .showInfoPane, object: entry)
                     decisionHandler(.cancel)
                     return
