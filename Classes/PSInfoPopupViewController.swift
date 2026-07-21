@@ -101,10 +101,17 @@ final class PSInfoPopupContent: NSObject {
         let candidate = String(body[body.startIndex..<openBracket])
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
+        // ~114 strongsrealhebrew entries (H726/H728/H971/H1208/H1269…) render an
+        // inline <sup> vowel that survives the tag strip as a spurious trailing
+        // ASCII letter, e.g. "אֲרוֹן o". The lemma is script only, so keep just
+        // the leading run up to the first ASCII letter.
+        let lemma = String(candidate.prefix(while: { !($0.isASCII && $0.isLetter) }))
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
         // Reject anything that isn't a short run of actual script — the real
         // lemma is a handful of non-ASCII letters, not a sentence.
-        let hasNonASCIILetter = candidate.unicodeScalars.contains { $0.value > 0x7F && CharacterSet.letters.contains($0) }
-        guard !candidate.isEmpty, candidate.count <= 40, hasNonASCIILetter else {
+        let hasNonASCIILetter = lemma.unicodeScalars.contains { $0.value > 0x7F && CharacterSet.letters.contains($0) }
+        guard !lemma.isEmpty, lemma.count <= 40, hasNonASCIILetter else {
             return (nil, nil)
         }
 
@@ -114,9 +121,9 @@ final class PSInfoPopupContent: NSObject {
         // is *inside* the brackets, and any `{…}` later on is a gloss in the
         // definition, not a transliteration. So: prefer a `{…}` right after the
         // closing `]`; otherwise fall back to the bracket content when it reads
-        // like a transliteration (has ASCII lowercase, i.e. not Greek beta-code).
+        // like a transliteration (has a lowercase letter, i.e. not Greek beta-code).
         var transliteration: String? = nil
-        if let closeBracket = body[openBracket...].firstIndex(of: "]") {
+        if let closeBracket = matchingCloseBracket(in: body, openBracket: openBracket) {
             let afterBracket = body[body.index(after: closeBracket)...]
                 .drop(while: { $0 == " " })
             if afterBracket.first == "{", let brace = afterBracket.firstIndex(of: "}") {
@@ -126,13 +133,39 @@ final class PSInfoPopupContent: NSObject {
             } else {
                 let bracketContent = String(body[body.index(after: openBracket)..<closeBracket])
                     .trimmingCharacters(in: .whitespacesAndNewlines)
-                if bracketContent.contains(where: { $0.isLowercase && $0.isASCII }) {
+                // A transliteration reads as lowercase Latin — possibly with
+                // diacritics (Hebrew renders `[chôshek]`, `['â‛]`). Greek
+                // beta-code is uppercase ASCII (`QEO/S`), so requiring a
+                // lowercase letter distinguishes the two without an ASCII
+                // restriction that would drop diacritic-only Hebrew translits.
+                if bracketContent.contains(where: { $0.isLowercase }) {
                     transliteration = bracketContent
                 }
             }
         }
 
-        return (candidate, transliteration)
+        return (lemma, transliteration)
+    }
+
+    /// The `]` that closes the `[` at `openBracket`, honouring nesting. Greek
+    /// beta-code occasionally nests brackets (`[…[1GE]…]`, e.g. G1490), so a
+    /// naive `firstIndex(of: "]")` lands on the inner close and truncates the
+    /// group before the trailing `{…}` transliteration. Returns nil if the
+    /// bracket is never closed.
+    private static func matchingCloseBracket(in body: String, openBracket: String.Index) -> String.Index? {
+        var depth = 0
+        var index = openBracket
+        while index < body.endIndex {
+            let character = body[index]
+            if character == "[" {
+                depth += 1
+            } else if character == "]" {
+                depth -= 1
+                if depth == 0 { return index }
+            }
+            index = body.index(after: index)
+        }
+        return nil
     }
 
     /// Decode the HTML entities the SWORD markup filter emits (named basics +
@@ -383,7 +416,7 @@ final class PSInfoPopupViewController: UIViewController {
             separator.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 20),
             separator.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -20),
             separator.bottomAnchor.constraint(equalTo: header.bottomAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale)
+            separator.heightAnchor.constraint(equalToConstant: 1.0 / PSResizing.mainScreenScale())
         ])
 
         return header
@@ -415,7 +448,7 @@ final class PSInfoPopupViewController: UIViewController {
             separator.topAnchor.constraint(equalTo: container.topAnchor),
             separator.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
             separator.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
-            separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale),
+            separator.heightAnchor.constraint(equalToConstant: 1.0 / PSResizing.mainScreenScale()),
 
             button.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 4),
             button.leadingAnchor.constraint(equalTo: container.leadingAnchor),
