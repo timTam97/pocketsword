@@ -432,6 +432,36 @@ final class PSTabBarControllerDelegate: NSObject,
         setShownTabTo(.BibleTab)
     }
 
+    @objc(toggleVoiceRef:)
+    func toggleVoiceRef(_ sender: Any?) {
+        guard PSFeatureFlags.voiceReferenceEnabled,
+              PSModuleController.default()?.primaryBible != nil,
+              tabBarController.presentedViewController == nil else {
+            return
+        }
+
+        let voiceController = PSVoiceRefViewController()
+        voiceController.onReferenceResolved = { reference in
+            let selectedReference = [
+                AppConstants.bookNameString: reference.displayBookName,
+                AppConstants.chapterString: "\(reference.chapter)",
+                AppConstants.verseString: "\(reference.verse)"
+            ]
+            NotificationCenter.default.post(name: .updateSelectedReference,
+                                            object: selectedReference)
+        }
+
+        if let sheet = voiceController.sheetPresentationController {
+            let identifier = UISheetPresentationController.Detent.Identifier("voiceReference")
+            sheet.detents = [
+                .custom(identifier: identifier) { _ in 280 }
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
+        tabBarController.present(voiceController, animated: true)
+    }
+
     @objc func toggleNavigation() {
         let iPad = PSResizing.iPad()
         if refNavigationController != nil || (tabBarController.presentedViewController != nil) {

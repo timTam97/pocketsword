@@ -94,6 +94,9 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define DefaultsInsomniaPreference					@"insomniaPreference"
 #define DefaultsModuleMaintainerModePreference		@"moduleMaintainerModePreference"
 
+// Feature flags (see PSFeatureFlags.swift) - absent means off
+#define DefaultsVoiceRefEnabledPreference			@"voiceRefEnabled"
+
 // Preferences - per module
 #define GetBoolPrefForMod(Pref,Mod)			[[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"%@_%@", Pref, Mod]]
 #define GetStringPrefForMod(Pref,Mod)		[[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@_%@", Pref, Mod]]
