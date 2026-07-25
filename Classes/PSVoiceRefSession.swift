@@ -55,6 +55,16 @@ final class PSVoiceRefSession {
 
     weak var delegate: PSVoiceRefSessionDelegate?
 
+    // Phrases to bias recognition toward (Bible book names). Fed to the analyzer
+    // as an AnalysisContext so distinctive words the general model tends to
+    // mis-hear ("Habakkuk", "Colossians", "Philemon") are far more likely to
+    // land. Empty is fine — recognition just runs unbiased.
+    private let contextualStrings: [String]
+
+    init(contextualStrings: [String] = []) {
+        self.contextualStrings = contextualStrings
+    }
+
     private var phase: Phase = .idle
     private var runTask: Task<Void, Never>?
     private var analysisTask: Task<Void, Never>?
@@ -258,6 +268,11 @@ final class PSVoiceRefSession {
 
         let analyzer = SpeechAnalyzer(modules: modules)
         self.analyzer = analyzer
+        if !contextualStrings.isEmpty {
+            let context = AnalysisContext()
+            context.contextualStrings = [.general: contextualStrings]
+            try await analyzer.setContext(context)
+        }
         try await analyzer.prepareToAnalyze(in: analyzerFormat)
         try Task.checkCancellation()
 

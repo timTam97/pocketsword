@@ -434,7 +434,8 @@ final class PSTabBarControllerDelegate: NSObject,
 
     @objc(toggleVoiceRef:)
     func toggleVoiceRef(_ sender: Any?) {
-        guard PSModuleController.default()?.primaryBible != nil,
+        guard PSFeatureFlags.voiceReferenceEnabled,
+              PSModuleController.default()?.primaryBible != nil,
               tabBarController.presentedViewController == nil else {
             return
         }

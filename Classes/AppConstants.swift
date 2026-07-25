@@ -57,6 +57,9 @@ enum Defaults {
     static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
     static let moduleMaintainerModePreference = "moduleMaintainerModePreference" // macro DefaultsModuleMaintainerModePreference
 
+    // Feature flags (see PSFeatureFlags) - absent means off
+    static let voiceRefEnabledPreference   = "voiceRefEnabled"          // macro DefaultsVoiceRefEnabledPreference
+
     // from createHTMLString:
     static let fontNamePreference          = "fontNamePreference"
     static let fontSizePreference          = "fontSizePreference"

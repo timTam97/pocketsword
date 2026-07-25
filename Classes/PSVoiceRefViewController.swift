@@ -10,6 +10,7 @@ final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegat
     var onReferenceResolved: ((PSParsedRef) -> Void)?
 
     private let parser: PSVoiceRefParser
+    private let contextualStrings: [String]
     private var session: PSVoiceRefSession?
     private var hasStarted = false
     private var pendingReference: PSParsedRef?
@@ -27,14 +28,18 @@ final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegat
     private let cancelButton = UIButton(type: .system)
 
     init() {
-        parser = PSVoiceRefParser(books: Self.makeGazetteer())
+        let books = Self.makeGazetteer()
+        parser = PSVoiceRefParser(books: books)
+        contextualStrings = Self.makeContextualStrings(from: books)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
         preferredContentSize = CGSize(width: 420, height: 280)
     }
 
     required init?(coder: NSCoder) {
-        parser = PSVoiceRefParser(books: Self.makeGazetteer())
+        let books = Self.makeGazetteer()
+        parser = PSVoiceRefParser(books: books)
+        contextualStrings = Self.makeContextualStrings(from: books)
         super.init(coder: coder)
     }
 
@@ -187,7 +192,7 @@ final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegat
     }
 
     private func beginSession() {
-        let session = PSVoiceRefSession()
+        let session = PSVoiceRefSession(contextualStrings: contextualStrings)
         session.delegate = self
         self.session = session
         session.start()
@@ -346,5 +351,21 @@ final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegat
                 versesInChapter: { chapter in book.verses(chapter) }
             )
         }
+    }
+
+    // Bias the recognizer toward the spoken book names. We deliberately use the
+    // full display names only — abbreviations ("SongSol", "1Jn") aren't spoken
+    // words, and number words are already in the system vocabulary, so neither
+    // helps as a contextual hint. Apple recommends keeping the list under 100
+    // phrases; the canon fits well within that.
+    private static func makeContextualStrings(from books: [PSVoiceRefBook]) -> [String] {
+        var seen: Set<String> = []
+        var result: [String] = []
+        for book in books {
+            let name = book.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !name.isEmpty, seen.insert(name.lowercased()).inserted else { continue }
+            result.append(name)
+        }
+        return Array(result.prefix(100))
     }
 }

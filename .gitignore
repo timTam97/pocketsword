@@ -11,6 +11,7 @@ xcuserdata/
 .clangd
 .claude/*
 .codex/*
+build_sim/*
 .xcodebuildmcp/*
 buildServer.json
 compile_commands.json

@@ -414,20 +414,24 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
             self.moduleButton = rightButton
             rebuildBibleSettingsMenu()
 
-            let voiceButton = UIBarButtonItem(
-                image: UIImage(systemName: "microphone"),
-                style: .plain,
-                target: vc,
-                action: NSSelectorFromString("toggleVoiceRef:")
-            )
-            voiceButton.accessibilityLabel = NSLocalizedString("VoiceOverVoiceRefButton", comment: "")
-            voiceButton.isHidden = true
-            navigationItem.rightBarButtonItems = [rightButton, voiceButton]
+            if PSFeatureFlags.voiceReferenceEnabled {
+                let voiceButton = UIBarButtonItem(
+                    image: UIImage(systemName: "microphone"),
+                    style: .plain,
+                    target: vc,
+                    action: NSSelectorFromString("toggleVoiceRef:")
+                )
+                voiceButton.accessibilityLabel = NSLocalizedString("VoiceOverVoiceRefButton", comment: "")
+                voiceButton.isHidden = true
+                navigationItem.rightBarButtonItems = [rightButton, voiceButton]
 
-            Task {
-                if case .available = await PSVoiceRefSession.availability() {
-                    voiceButton.isHidden = false
+                Task {
+                    if case .available = await PSVoiceRefSession.availability() {
+                        voiceButton.isHidden = false
+                    }
                 }
+            } else {
+                navigationItem.rightBarButtonItem = rightButton
             }
         } else {
             rightButton = UIBarButtonItem(title: "None", style: .plain, target: vc,
