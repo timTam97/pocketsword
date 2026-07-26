@@ -4,7 +4,7 @@
 >
 > This doc is intentionally lighter than `SWIFT_MIGRATION_PLAN.md`. It fixes the target architecture, the phase ordering, and the load-bearing risks. Each phase is meant to be picked up in its own session, planned in detail there, and implemented independently.
 >
-> **Adopted assumptions (override any):** the app ships **exactly one module per type** long-term (no module choice); there is **no user module-install path** (confirmed — no `UIFileSharingEnabled`, no `CFBundleDocumentTypes`, CURL/download UI already removed); the reading pane stays a **`WKWebView`**; SWORD is kept only as an **offline build-time tool**, never shipped; work happens on a dedicated branch off `main`, integrated separately; `PersistedFormatTests.swift` stays green throughout.
+> **Adopted assumptions (override any):** the app ships a **fixed module set** long-term (no module choice) — 1 Bible + 1 commentary + 3 fixed-role lexicons, per Phase 1; there is **no user module-install path** (confirmed — no `UIFileSharingEnabled`, no `CFBundleDocumentTypes`, CURL/download UI already removed); the reading pane stays a **`WKWebView`**; SWORD is kept only as an **offline build-time tool**, never shipped; work happens on a dedicated branch off `main`, integrated separately; `PersistedFormatTests.swift` stays green throughout.
 
 ---
 
@@ -51,14 +51,22 @@ Reference/versification (no SWORD): embed **one** KJV book/chapter/verse table (
 
 Each phase should ship independently and keep the app launchable + `PersistedFormatTests` green.
 
-### Phase 1 — Remove module choice (still on SWORD)
+### Phase 1 — Remove module choice (still on SWORD) — ✅ DONE
 
-Pure deletion; lowest risk; **most valuable first step** because it shrinks the contract everything later must satisfy. Still fully backed by SWORD — no engine work yet.
-
-- Collapse `SwordManager` usage to "the one bundled module per type." Removes/guts `modules(forType:)`, `modules(forFeature:)`, `listModules`, `moduleNames`, install/remove, `augmentModules`, the first-run multi-zip bootstrap in `PSLaunchViewController`.
-- Delete `PSModuleSelectorController`, `PSPreferencesModuleSelectorTableViewController`, and the module-picker entry points in `PSTabBarControllerDelegate` / preferences.
-- Decide the canonical set (assumed: KJV + one commentary + Strong's Greek/Hebrew + Robinson morph). Everything else stops shipping.
-- Keep `DefaultsKJVRemoved`-style keys only if still meaningful; otherwise retire them carefully (persisted-format territory — check the tests).
+> **Status: complete.** Landed as 7 build-green commits on `opus/sword-migration`. 28 tests green at every commit; fresh-install and upgrade scenarios hand-verified on the iPhone 17 simulator.
+>
+> **What shipped:**
+> - The module set is fixed at **1 + 1 + 3**, not "one per type": KJV, MHCC, and three *non-interchangeable* lexicons — `StrongsRealGreek` (`GreekDef`), `StrongsRealHebrew` (`HebrewDef`), `Robinson` (`GreekParse`). Single source of truth: the `BundledModules` enum in `AppConstants.swift`.
+> - Deleted `PSModuleSelectorController`, `PSPreferencesModuleSelectorTableViewController`, `PSModulePreferencesController`, `PSModuleType`, `PSLanguageCode` + `Resources/LanguageCodes.json`, `-[SwordModule langString]` / `-fullAboutText`, and the coordinator's `toggleModulesList` cluster — ~1,900 LOC + 158 KB.
+> - `SwordManager` pruned: `modulesForFeature:`, `+managerWithPath:`, `-addPath:`, `-initWithSWMgr:`, `+moduleTypes`, `moduleListByType` / `moduleTypes` / `temporaryManager`. Kept `modulesForType:` / `listModules` / `moduleNames` / `moduleWithName:` / `isModuleInstalled:` (bootstrap + primary-module fallbacks).
+>
+> **Findings that correct this doc and the Phase-1 plan:**
+> 1. `Documents/Built-in/` was already dead — all five zips seed into `Documents/`; `builtinModulePath` only deletes the legacy dir. `CLAUDE.md` claimed otherwise in two places (now fixed).
+> 2. `+moduleCategoryAllowed:` is **not** unreachable (the Phase-1 plan said it was): `-refreshModules` calls it to keep glossary/essay dictionaries out of the list. Kept as an internal helper.
+> 3. **The per-module preferences screen had been completely inert since Apr 2026.** It derived its pref key from `self.tabBarController?.navigationItem.title`, whose only writer (`PSModuleInfoViewController`) was deleted by `5654f92`, so it read/wrote `"<pref>_"` — keys the renderer never consults. Relocating those toggles into the per-tab `▾` menus (keyed on the module's own `name`) is therefore a **fix**, and a user-visible behaviour change: previously-dead switches now take effect.
+> 4. The retired keys were **not** migrated forward, deliberately: `Defaults*Removed` flags would permanently suppress a bundled module with no UI left to clear them, and the lexicon keys can hold the localized string `"None"`. A one-shot `DefaultsModuleChoiceRetired` migration clears all of them plus the orphaned `"<pref>_"` garbage. Nothing in `PersistedFormatTests` pins these, so the upgrade path was hand-verified (swipe-delete MHCC + Robinson on the old build → both restored on the new one).
+>
+> **Deferred to Phase 5 as planned:** repacking `KJV.zip` to drop its dead 6.7 MB Lucene index.
 
 ### Phase 2 — Offline converter (SWORD as a build tool)
 
@@ -113,7 +121,7 @@ Not on the SWORD critical path. `PSHistoryController` only reads `name`/`type` o
 
 ## 5. Assumptions adopted (defaults applied — override any)
 
-1. One module per type, no user install, ever. (If false → this plan doesn't apply.)
+1. A fixed module set, no user install, ever. (If false → this plan doesn't apply.) **Refined by Phase 1:** the set is 1 Bible + 1 commentary + **3** fixed-role lexicons, not one module per type — the Greek-def / Hebrew-def / Greek-parse lexicons are not interchangeable.
 2. Pre-render to HTML fragments + toggle via CSS, rather than storing structured data and rendering in Swift at runtime. (Simpler, matches the existing WebView; chosen for simplicity over flexibility.)
 3. SQLite as the content store (reuses the existing sqlite3 dependency already used by search).
 4. SWORD kept as an offline tool through Phase 4, deleted in Phase 5 — not removed early.

@@ -12,7 +12,7 @@ The app is a **mixed Swift / Objective-C++ target**. The app layer under `Classe
 
 - Open `PocketSword.xcodeproj` in Xcode and build the shared `PocketSword` scheme (there is a second scheme `PocketSword1`). There is no `.xcworkspace` and no package manager step.
 - CLI build: `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -configuration Debug -sdk iphonesimulator build` (swap to `-sdk iphoneos` and `-configuration Release`/`Distribution` as needed). You may need `CODE_SIGNING_ALLOWED=NO` for simulator builds without a dev team.
-- **Tests exist.** The `PocketSwordTests` XCTest bundle (app-hosted, `@testable import PocketSword`) has ~18 tests in `Classes/PersistedFormatTests.swift`. Run with `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test`. These tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
+- **Tests exist.** The `PocketSwordTests` XCTest bundle (app-hosted, `@testable import PocketSword`) has 28 tests: 18 in `Classes/PersistedFormatTests.swift` plus 10 in `Classes/PSVoiceRefParserTests.swift`. Run with `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test`. The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
 - Configurations: `Debug`, `Release`, `Distribution`. Each has a **different** `PRODUCT_BUNDLE_IDENTIFIER` (`org.timsams.PocketSword` / `org.timsam.PocketSword` / `org.Crosswire.PocketSword`) — do not assume they match.
 - Deployment target: `IPHONEOS_DEPLOYMENT_TARGET = 26.0`, universal (`TARGETED_DEVICE_FAMILY = "1,2"`).
 
@@ -46,13 +46,13 @@ The migration's single load-bearing rule: **a Swift bridging header is parsed in
 2. `PocketSwordSceneDelegate` (`UIWindowSceneDelegate`, `PSLaunchDelegate`): installs `PSLaunchViewController` as the root VC, kicks off `startInitializingPocketSword` on a background thread, and holds any launch URL (`sword://…`) until init finishes.
 3. When init completes, `finishedInitializingPocketSword:` builds a `PSTabBarControllerDelegate`, swaps the window's root VC to its `tabBarController`, and replays the pending URL through `PocketSwordAppDelegate`'s open-URL handler.
 
-`PSTabBarControllerDelegate` is the central coordinator for the running app: it owns the tab bar, the Bible/Commentary/Dictionary view controllers, the reference selector, the info popup (Strong's / morph / footnotes / xrefs / dict entries), the module selector, and the search/history multi-list. Cross-VC coordination is done via `NSNotificationCenter` — the notification names are the `Notification…` defines in `Classes/globals.h`, mirrored as `Notification.Name` extensions in `AppConstants.swift`.
+`PSTabBarControllerDelegate` is the central coordinator for the running app: it owns the tab bar, the Bible/Commentary/Dictionary view controllers, the reference selector, the info popup (Strong's / morph / footnotes / xrefs / dict entries), and the search/history multi-list. Cross-VC coordination is done via `NSNotificationCenter` — the notification names are the `Notification…` defines in `Classes/globals.h`, mirrored as `Notification.Name` extensions in `AppConstants.swift`.
 
 ### SWORD bridge (`Classes/Sword*.{h,mm}`, `PSSearchEngine.{h,mm}`, `VerseEnumerator.{h,mm}`) — permanent Obj-C++
 
 Objective-C++ wrappers over the C++ SWORD API. **These stay `.mm` forever** — direct Swift⇄C++ interop is not viable for SWORD's operator-overloaded value-semantic API.
 
-- `SwordManager` (singleton via `defSwordManager`) wraps `sword::SWMgr` — enumerates installed modules, manages cipher keys, global options, and the module install path (`DEFAULT_MODULE_PATH` under `Documents/`, plus `Documents/Built-in/` for shipped starters).
+- `SwordManager` (singleton via `+defaultManager`) wraps `sword::SWMgr` — enumerates installed modules, manages cipher keys, global options, and the module install path (`DEFAULT_MODULE_PATH` under `Documents/`). Its surface was pruned in the Phase-1 module-choice removal: `modulesForFeature:`, `+managerWithPath:`, `-addPath:`, `-initWithSWMgr:`, `+moduleTypes` and the `moduleListByType` / `moduleTypes` / `temporaryManager` properties are gone. `+moduleCategoryAllowed:` survives as an internal PrivateAPI helper — `-refreshModules` uses it to keep glossary/essay dictionaries out of the list.
 - `SwordModule` (+ subclasses `SwordBook`, `SwordDictionary`) wrap `sword::SWModule` and produce rendered HTML via the markup-filter chain.
 - `SwordKey` / `SwordVerseKey` / `SwordListKey` / `VerseEnumerator` wrap SWORD's key types for references and search.
 - `PSSearchEngine.mm` owns the SQLite/FTS5 search index build and query (C++-clean public header; the `sword::`/`sqlite3` code stays in the `.mm`).
@@ -61,11 +61,22 @@ Objective-C++ wrappers over the C++ SWORD API. **These stay `.mm` forever** — 
 
 - `PSModuleController` (singleton via `+defaultModuleController`) holds the **primary Bible / commentary / dictionary** the user is currently reading, builds the HTML shells (`+createHTMLString:…`, `+createInfoHTMLString:…`), unpacks bundled starter modules (`installModulesFromZip:…`), and exposes ref-string helpers.
 - `PSModuleViewController` is the shared base for `PSBibleViewController` and `PSCommentaryViewController`. Rendering happens in a `PSWebView` (a `WKWebView` subclass); tapped verses / Strong's lookups come back through the `PSWebViewDelegate` protocol (`@objc`), which the tab-bar delegate routes to `PSInfoPopupViewController`.
-- `PSLaunchViewController` performs first-run bootstrap (seeding `Documents/Built-in/` from the zips under `Resources/`, running one-off migrations like `DefaultsLuceneSwept` / `DefaultsSimplifiedCleanupDone`).
+- `PSLaunchViewController` performs first-run bootstrap (seeding `Documents/` from the zips under `Resources/`, running one-off migrations like `DefaultsLuceneSwept` / `DefaultsSimplifiedCleanupDone` / `DefaultsModuleChoiceRetired`).
 
 ### Tabs enum (stable ordinals)
 
 `ShownTab` in `globals.h` is `BibleTab, CommentaryTab, DictionaryTab, DevotionalTab, DownloadsTab, PreferencesTab`. **`DevotionalTab` and `DownloadsTab` are dead placeholders** — the devotional and in-app download features have been removed — but the enum values are kept so that ordinals persisted in `NSUserDefaults` do not shift. Do not renumber or delete them.
+
+### Display preferences (where they live, and why)
+
+Display prefs are split by scope, and the split is **load-bearing**:
+
+- **Per-module** prefs (Strong's, morph tags, headings, footnotes, cross-references, red-letter, verse-per-line, font) live in the **per-tab `▾` menu** on the Bible and Commentary tabs — `PSModuleViewController.rebuildSettingsMenu()`. Each row writes `"<pref>_<ModuleName>"` keyed on the module's own `name`, gated on `-[SwordModule hasFeature:]`. Note `hasFeature:` also matches `GlobalOptionFilter` entries (bare and `OSIS`/`GBF`/`ThML`/`UTF8`-prefixed), not just `Feature=` lines — which is why KJV gets Footnotes/Headings/RedLetter rows while MHCC, declaring neither, correctly gets a Font-only menu.
+- **Global** prefs (font size/name, device options) live in `PSPreferencesController` (2 sections: `DISPLAY = 0`, `DEVICE = 1`; `LANG_SECTION = 44` is deliberately out of range and unreachable).
+
+**Do not "simplify" the per-module toggles into global Preferences.** `-[SwordModule getChapter:]` calls `-setPreferences`, which reads the *per-module* keys off `self.name` and pushes them into SWORD as global options — overwriting whatever the unsuffixed global keys set. A toggle written to the global domain would be silently clobbered on every render.
+
+> Historical note: the deleted `PSModulePreferencesController` derived its key from `self.tabBarController?.navigationItem.title`, which nothing had set since commit `5654f92` (Apr 2026) removed its only writer. It therefore read and wrote `"<pref>_"` and had been completely inert. The `DefaultsModuleChoiceRetired` migration deletes those orphaned keys rather than honouring them.
 
 ### Persistence
 
@@ -76,7 +87,11 @@ Objective-C++ wrappers over the C++ SWORD API. **These stay `.mm` forever** — 
 
 ### Bundled content
 
-Starter modules ship as zips in `Resources/` (`KJV.zip`, `MHCC.zip`, `Robinson.zip`, `strongsrealgreek.zip`, `strongsrealhebrew.zip`, `locales.d.zip`) and are unpacked on first launch into `Documents/Built-in/`. When switching builds, the `DefaultsKJVRemoved` / `DefaultsMHCCRemoved` / etc. keys record that the user has removed a bundled module so it is not re-seeded on next launch.
+The app ships **exactly five modules and no UI to add, remove, or pick one**: one Bible (KJV), one commentary (MHCC), and three fixed-role lexicons — `StrongsRealGreek` (`Feature=GreekDef`), `StrongsRealHebrew` (`HebrewDef`), `Robinson` (`GreekParse`). The roles are **not** interchangeable; they are hardcoded in the `BundledModules` enum in `AppConstants.swift`, which is the single source of truth for the set.
+
+They ship as zips in `Resources/` (`KJV.zip`, `MHCC.zip`, `Robinson.zip`, `strongsrealgreek.zip`, `strongsrealhebrew.zip`, `locales.d.zip`) and are unpacked on first launch into **`Documents/`** (`AppPaths.modulePath`) — *not* `Documents/Built-in/`. `AppPaths.builtinModulePath` exists only to delete the legacy directory left behind by old builds; nothing installs there.
+
+Seeding is an unconditional idempotent loop: any bundled module that isn't installed gets re-seeded. The old `DefaultsKJVRemoved` / `DefaultsMHCCRemoved` / etc. opt-out flags and the `DefaultsStrongsGreekModule` / `DefaultsStrongsHebrewModule` / `DefaultsMorphGreekModule` lexicon-role keys are **retired** — still declared in `globals.h` / `AppConstants.swift` so the names are not reused, but never read or written. The one-shot `DefaultsModuleChoiceRetired` migration clears any that are already set (a stale `*Removed` flag would otherwise suppress a bundled module forever now that there is no removal UI, and a lexicon key can legitimately hold the localized string `"None"`).
 
 ### URL handling
 
