@@ -103,7 +103,6 @@ final class PSLaunchViewController: UIViewController {
         defaults.removeObject(forKey: Defaults.vplPreference)
         defaults.removeObject(forKey: Defaults.redLetterPreference)
         defaults.removeObject(forKey: Defaults.insomniaPreference)
-        defaults.removeObject(forKey: Defaults.moduleMaintainerModePreference)
         defaults.removeObject(forKey: "bibleHistory")
         defaults.removeObject(forKey: "commentaryHistory")
         defaults.removeObject(forKey: Defaults.moduleCipherKeysKey)
@@ -231,6 +230,24 @@ final class PSLaunchViewController: UIViewController {
                     defaults.removeObject(forKey: key)
                 }
                 defaults.set(true, forKey: Defaults.moduleChoiceRetired)
+                defaults.synchronize()
+            }
+
+            // One-shot cleanup for the global-font / Module-Maintainer-Mode
+            // retirement. The font is now a single GLOBAL setting configured in
+            // Preferences, so the per-module "<fontNamePreference>_<mod>" /
+            // "<fontSizePreference>_<mod>" / "<fontDefaultsPreference>_<mod>" keys no
+            // longer affect rendering — they would just sit in the plist looking
+            // authoritative. Drop them, along with the retired Module Maintainer Mode
+            // pref, for the five bundled modules.
+            if !defaults.bool(forKey: Defaults.globalFontOnly) {
+                for name in BundledModules.all {
+                    defaults.psRemove(Defaults.fontNamePreference, forModule: name)
+                    defaults.psRemove(Defaults.fontSizePreference, forModule: name)
+                    defaults.psRemove(Defaults.fontDefaultsPreference, forModule: name)
+                }
+                defaults.removeObject(forKey: "moduleMaintainerModePreference")
+                defaults.set(true, forKey: Defaults.globalFontOnly)
                 defaults.synchronize()
             }
 

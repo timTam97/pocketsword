@@ -259,11 +259,8 @@
 "PreferencesMorphTagsTitle" = "Morphological Tags";
 "VoiceOverDisplaySettingsButton" = "Display Settings";
 
-// Restored: 5654f92 deleted these three while their call sites survived, so the
-// UI rendered the raw keys. The Module Maintainer Mode note is reworded — the
-// original pointed at the in-app module downloader, which that commit removed.
-"PreferencesModuleMaintainerModeTitle" = "Module Maintainer Mode";
-"PreferencesModuleMaintainerModeNote" = "Module Maintainer Mode is for users who build their own SWORD modules and need a way to install them manually. If that isn't you, leave this off.";
+// Restored: 5654f92 deleted this while its call site survived, so the search
+// screen rendered the raw key.
 "NoSearchIndexTitle" = "No Search Index";
 
 // Voice reference

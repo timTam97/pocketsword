@@ -60,6 +60,7 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define DefaultsLuceneSwept							@"DefaultsLuceneSwept"
 #define DefaultsSimplifiedCleanupDone				@"DefaultsSimplifiedCleanupDone"
 #define DefaultsModuleChoiceRetired					@"DefaultsModuleChoiceRetired"
+#define DefaultsGlobalFontOnly						@"DefaultsGlobalFontOnly"
 
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
@@ -100,7 +101,6 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define DefaultsMorphGreekModule                    @"DefaultsMorphGreekModule"
 #define DefaultsFullscreenModePreference			@"fullscreenModePreference"
 #define DefaultsInsomniaPreference					@"insomniaPreference"
-#define DefaultsModuleMaintainerModePreference		@"moduleMaintainerModePreference"
 
 // Feature flags (see PSFeatureFlags.swift) - absent means off
 #define DefaultsVoiceRefEnabledPreference			@"voiceRefEnabled"
@@ -152,7 +152,6 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define NotificationBibleSwipeLeft				@"NotificationBibleSwipeLeft"
 #define NotificationCommentarySwipeRight		@"NotificationCommentarySwipeRight"
 #define NotificationCommentarySwipeLeft			@"NotificationCommentarySwipeLeft"
-#define NotificationModuleMaintainerModeChanged	@"ModuleMaintainerModeChanged"
 
 #define NotificationRefSelectorResetBooks		@"NotificationRefSelectorResetBooks"
 #define NotificationNewPrimaryBible				@"NotificationNewPrimaryBible"

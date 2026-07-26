@@ -38,6 +38,7 @@ enum Defaults {
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
     static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"
+    static let globalFontOnly              = "DefaultsGlobalFontOnly"
 
     static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
     static let commentaryVersePosition     = "commentaryVersePosition" // macro DefaultsCommentaryVersePosition
@@ -76,7 +77,6 @@ enum Defaults {
                                      morphHebrewModule, morphGreekModule]
     static let fullscreenModePreference    = "fullscreenModePreference"      // macro DefaultsFullscreenModePreference
     static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
-    static let moduleMaintainerModePreference = "moduleMaintainerModePreference" // macro DefaultsModuleMaintainerModePreference
 
     // Feature flags (see PSFeatureFlags) - absent means off
     static let voiceRefEnabledPreference   = "voiceRefEnabled"          // macro DefaultsVoiceRefEnabledPreference
@@ -150,16 +150,16 @@ enum AppConstants {
 // MARK: - Notification names
 //
 // rawValue MUST equal the existing @"..." literal in globals.h so that Obj-C and
-// Swift observers/posters interoperate during the mixed phase. NOTE the ONE
-// wire-string mismatch: moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged"
-// (drops the "Notification" prefix). All others match their macro name.
+// Swift observers/posters interoperate during the mixed phase. All of these match
+// their macro name. (The one former wire-string mismatch,
+// moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged", went away with
+// Module Maintainer Mode.)
 
 extension Notification.Name {
     static let bibleSwipeRight              = Notification.Name("NotificationBibleSwipeRight")
     static let bibleSwipeLeft               = Notification.Name("NotificationBibleSwipeLeft")
     static let commentarySwipeRight         = Notification.Name("NotificationCommentarySwipeRight")
     static let commentarySwipeLeft          = Notification.Name("NotificationCommentarySwipeLeft")
-    static let moduleMaintainerModeChanged  = Notification.Name("ModuleMaintainerModeChanged") // MISMATCH (no "Notification" prefix)
 
     static let refSelectorResetBooks        = Notification.Name("NotificationRefSelectorResetBooks")
     static let newPrimaryBible              = Notification.Name("NotificationNewPrimaryBible")

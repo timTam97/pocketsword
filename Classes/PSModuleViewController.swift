@@ -372,12 +372,15 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
     /// GlobalOptionFilter entries (OSIS/GBF/ThML/UTF8-prefixed and bare), not just
     /// `Feature=` lines — so KJV's OSISFootnotes / OSISHeadings / OSISRedLetterWords
     /// filters satisfy the Footnotes / Headings / RedLetterWords gates even though it
-    /// declares only `Feature=StrongsNumbers`. A module advertising nothing (e.g.
-    /// MHCC) correctly yields a Font-only menu.
+    /// declares only `Feature=StrongsNumbers`.
+    ///
+    /// A module that advertises nothing (e.g. MHCC, whose conf declares no `Feature=`
+    /// and no `GlobalOptionFilter`) yields NO rows at all now that the font moved to
+    /// Preferences — so the button hides itself rather than presenting an empty menu.
     @objc(rebuildSettingsMenu)
     func rebuildSettingsMenu() {
         guard let module = settingsMenuModule, let modName = module.name else {
-            self.moduleButton?.menu = nil
+            setSettingsMenu(nil)
             return
         }
 
@@ -435,33 +438,16 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                       pref: Defaults.vplPreference, id: "vpl", pushesToSword: false)
         }
 
-        let fontAction = UIAction(title: NSLocalizedString("PreferencesFontTitle", comment: "Font"),
-                                  image: nil,
-                                  identifier: UIAction.Identifier("\(prefix).font")) { [weak self] _ in
-            self?.showFontPicker()
-        }
-        topLevel.append(UIMenu(title: "", image: nil,
-                               identifier: UIMenu.Identifier("\(prefix).fontGroup"),
-                               options: .displayInline, children: [fontAction]))
-
-        self.moduleButton?.menu = UIMenu(title: "", children: topLevel)
+        // No Font row here: font name + size are a single GLOBAL setting configured
+        // in the Preferences pane, not per module.
+        setSettingsMenu(topLevel.isEmpty ? nil : UIMenu(title: "", children: topLevel))
     }
 
-    /// Pushes the shared font picker, scoped to the active module so it reads and
-    /// writes the per-module font key (PSPreferencesFontTableViewController prefers
-    /// "<fontNamePreference>_<mod>" when moduleName is set).
-    private func showFontPicker() {
-        guard let modName = settingsMenuModule?.name else { return }
-        let fontTableViewController = PSPreferencesFontTableViewController(style: .grouped)
-        fontTableViewController.moduleName = modName
-        fontTableViewController.onFontSelected = { [weak self] newFont in
-            UserDefaults.standard.psSet(newFont as Any?, forPref: Defaults.fontNamePreference, module: modName)
-            UserDefaults.standard.synchronize()
-            guard let self = self else { return }
-            NotificationCenter.default.post(name: self.redisplayNotification, object: nil)
-            self.rebuildSettingsMenu()
-        }
-        navigationController?.pushViewController(fontTableViewController, animated: true)
+    /// Installs the display-settings menu, hiding the button entirely when there is
+    /// nothing to show (an empty UIMenu renders as a button that does nothing).
+    private func setSettingsMenu(_ menu: UIMenu?) {
+        moduleButton?.menu = menu
+        moduleButton?.isHidden = (menu == nil)
     }
 
     @objc(setDelegate:)

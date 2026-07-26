@@ -32,13 +32,7 @@ final class PSPreferencesFontTableViewController: UITableViewController {
 
     private static let cellIdentifier = "fontPreferencesTable"
 
-    @objc var moduleName: String?
     @objc weak var preferencesController: PSBasePreferencesController?
-
-    /// Alternative to `preferencesController` for callers that are not a
-    /// PSBasePreferencesController (the per-tab `▾` settings menus). When set, the
-    /// picker reports the chosen font through this closure and pops itself.
-    var onFontSelected: ((String) -> Void)?
 
     private var fontStrings: [String]?
 
@@ -105,14 +99,11 @@ final class PSPreferencesFontTableViewController: UITableViewController {
         }
     }
 
-    // The selected font: global pref, overridden by the per-module pref when a
-    // moduleName is set, falling back to the default font (matches the old .mm).
+    // The selected font: the single global pref, falling back to the default font.
+    // (The former per-module override went away when the font picker moved out of
+    // the per-tab display-settings menus and into Preferences.)
     private func selectedFontName() -> String {
-        var font = UserDefaults.standard.string(forKey: Defaults.fontNamePreference)
-        if let moduleName = moduleName {
-            font = UserDefaults.standard.psString(Defaults.fontNamePreference, forModule: moduleName)
-        }
-        return font ?? AppConstants.defaultFontName
+        UserDefaults.standard.string(forKey: Defaults.fontNamePreference) ?? AppConstants.defaultFontName
     }
 
     override func viewDidLoad() {
@@ -176,11 +167,6 @@ final class PSPreferencesFontTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let fontName = fontStrings?[indexPath.row] {
-            if let onFontSelected = onFontSelected {
-                onFontSelected(fontName)
-                navigationController?.popViewController(animated: true)
-                return
-            }
             preferencesController?.fontNameChanged(fontName)
         }
         preferencesController?.hideFontTableView()

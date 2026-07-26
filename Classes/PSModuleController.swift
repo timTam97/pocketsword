@@ -755,18 +755,13 @@ final class PSModuleController: NSObject {
         var fontSize = "14"
         let linkColor = "fuchsia"
 
+        // Font name + size are GLOBAL only. The per-module "<pref>_<mod>" font keys
+        // used to override these, but the font picker now lives solely in the
+        // Preferences pane (one font for the whole app), so `moduleName` no longer
+        // affects typography — it is still used further down for the RTL check.
         var fs = UserDefaults.standard.integer(forKey: Defaults.fontSizePreference)
         if usePrefs {
             fontName = (UserDefaults.standard.object(forKey: Defaults.fontNamePreference) as? String) ?? fontName
-
-            // if we're provided with a moduleName, try to use that module's prefs
-            if let moduleName = moduleName {
-                if let fn = UserDefaults.standard.psString(Defaults.fontNamePreference, forModule: moduleName) {
-                    fontName = fn
-                }
-                let fsMod = UserDefaults.standard.psInteger(Defaults.fontSizePreference, forModule: moduleName)
-                fs = (fsMod == 0) ? fs : fsMod
-            }
 
             if fontName.isEmpty {
                 fontName = AppConstants.defaultFontName

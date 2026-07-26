@@ -50,9 +50,7 @@ class PSPreferencesController: PSBasePreferencesController {
     private let ROTATION_LOCK_ROW   = 1
     private let FULLSCREEN_MODE_ROW = 2
     private let FULLSCREEN_NOTE_ROW = 3
-    private let MMM_ROW             = 4
-    private let MMM_NOTE_ROW        = 5
-    private let DEVICE__ROWS        = 6 // total rows in section
+    private let DEVICE__ROWS        = 4 // total rows in section
 
     private var fontSizeLabel: UILabel!
 
@@ -136,8 +134,6 @@ class PSPreferencesController: PSBasePreferencesController {
             switch indexPath.row {
             case FULLSCREEN_NOTE_ROW:
                 return 75
-            case MMM_NOTE_ROW:
-                return 110
             default:
                 return 45
             }
@@ -305,22 +301,6 @@ class PSPreferencesController: PSBasePreferencesController {
                 cell.textLabel?.numberOfLines = 4
                 cell.textLabel?.textColor = UIColor.secondaryLabel
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 12.0)
-            case MMM_ROW:
-                let manualInstallSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let manualInstallEnabled = UserDefaults.standard.bool(forKey: Defaults.moduleMaintainerModePreference)
-                manualInstallSwitch.isOn = manualInstallEnabled
-                manualInstallSwitch.addTarget(self, action: #selector(moduleMaintainerModeChanged(_:)), for: .valueChanged)
-                cell.accessoryView = manualInstallSwitch
-                cell.textLabel?.text = NSLocalizedString("PreferencesModuleMaintainerModeTitle", comment: "Module Maintainer Mode")
-                cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.textLabel?.numberOfLines = 2
-                cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 10.0)
-            case MMM_NOTE_ROW:
-                cell.textLabel?.text = NSLocalizedString("PreferencesModuleMaintainerModeNote", comment: "")
-                cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.textLabel?.numberOfLines = 7
-                cell.textLabel?.font = UIFont.systemFont(ofSize: 12.0)
-                cell.textLabel?.textColor = UIColor.secondaryLabel
             default:
                 break
             }
@@ -360,7 +340,6 @@ class PSPreferencesController: PSBasePreferencesController {
             switch indexPath.row {
             case FONT_NAME_ROW:
                 let fontTableViewController = PSPreferencesFontTableViewController(style: .grouped)
-                fontTableViewController.moduleName = nil
                 fontTableViewController.preferencesController = self
                 self.navigationController?.pushViewController(fontTableViewController, animated: true)
             default:
@@ -496,10 +475,4 @@ class PSPreferencesController: PSBasePreferencesController {
         UIApplication.shared.isIdleTimerDisabled = n
     }
 
-    @objc func moduleMaintainerModeChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.moduleMaintainerModePreference)
-        UserDefaults.standard.synchronize()
-        NotificationCenter.default.post(name: .moduleMaintainerModeChanged, object: nil)
-    }
 }
