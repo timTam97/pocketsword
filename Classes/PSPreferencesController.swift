@@ -9,15 +9,18 @@
 //  PSPreferencesController.{h,mm} — the global (app-wide) preferences table.
 //
 //  Behaviour preserved byte-for-byte:
-//   * section ordinals (DISPLAY=0, STRONGS=1, MORPH=2, DEVICE=3, MODULE=4, LANG=44)
-//     and the 5-section total, exactly as the Obj-C #defines;
 //   * every NSUserDefaults wire key (mirrored in AppConstants Defaults) and the
 //     ROTATION_LOCK_POSITION RotationPosition enum values;
 //   * every NSLocalizedString key;
 //   * the NotificationResetBibleAndCommentaryView posts on each pref change;
-//   * pushes the still-Obj-C PSPreferencesFontTableViewController /
-//     PSPreferencesModuleSelectorTableViewController (visible to Swift via the
-//     bridging header) and the Swift PSModuleSelectorController.
+//   * pushes PSPreferencesFontTableViewController for the global font.
+//
+//  The former STRONGS / MORPH / MODULE sections are gone: the three lexicon roles
+//  are hardcoded (see BundledModules) and the per-module display prefs now live in
+//  the per-tab `▾` settings menus (PSModuleViewController.rebuildSettingsMenu).
+//  LANG_SECTION stays deliberately out of range (44 >= PREF__SECTIONS), as it has
+//  been since before the Swift port — the Greek/Hebrew script options are inert
+//  with an English-only reading text.
 //
 
 import UIKit
@@ -25,35 +28,16 @@ import UIKit
 @objc(PSPreferencesController)
 class PSPreferencesController: PSBasePreferencesController {
 
-    // sections (verbatim ordinals from the Obj-C #defines)
+    // sections
     private let DISPLAY_SECTION = 0
-    private let MODULE_SECTION  = 4
-    private let STRONGS_SECTION = 1
-    private let MORPH_SECTION   = 2
-    private let LANG_SECTION    = 44
-    private let DEVICE_SECTION  = 3
-    private let PREF__SECTIONS  = 5 // total sections in table
+    private let DEVICE_SECTION  = 1
+    private let LANG_SECTION    = 44 // deliberately out of range: unreachable
+    private let PREF__SECTIONS  = 2  // total sections in table
 
     // rows in DISPLAY section
     private let FONT_SIZE_ROW = 0
     private let FONT_NAME_ROW = 1
-    private let MOD_BLURB_ROW = 2
-    private let DISPLAY__ROWS = 3 // total rows in section
-
-    // rows in the MODULE section
-    private let RED_LETTER_NOTE_ROW = 0
-    private let MODULE__ROWS         = 1
-
-    // rows in STRONGS section
-    private let STRONGS_DISPLAY_ROW = -1
-    private let STRONGS_G_ROW       = 0
-    private let STRONGS_H_ROW       = 1
-    private let STRONGS__ROWS       = 2 // total rows in section
-
-    // rows in MORPH section
-    private let MORPH_DISPLAY_ROW = -1
-    private let MORPH_G_ROW       = 0
-    private let MORPH__ROWS       = 1 // total rows in section
+    private let DISPLAY__ROWS = 2 // total rows in section
 
     // rows in LANG section
     private let LANG_GREEKACC_ROW   = 0
@@ -124,12 +108,6 @@ class PSPreferencesController: PSBasePreferencesController {
         switch section {
         case DISPLAY_SECTION:
             return DISPLAY__ROWS
-        case MODULE_SECTION:
-            return MODULE__ROWS
-        case STRONGS_SECTION:
-            return STRONGS__ROWS
-        case MORPH_SECTION:
-            return MORPH__ROWS
         case LANG_SECTION:
             return LANG__ROWS
         case DEVICE_SECTION:
@@ -143,12 +121,6 @@ class PSPreferencesController: PSBasePreferencesController {
         switch section {
         case DISPLAY_SECTION:
             return NSLocalizedString("PreferencesDisplayPreferencesTitle", comment: "Display Preferences")
-        case MODULE_SECTION:
-            return NSLocalizedString("PreferencesModulePreferencesTitle", comment: "Module Preferences")
-        case STRONGS_SECTION:
-            return NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Preferences")
-        case MORPH_SECTION:
-            return NSLocalizedString("PreferencesMorphologyPreferencesTitle", comment: "Morphology Preferences")
         case LANG_SECTION:
             return NSLocalizedString("PreferencesOriginalLanguagePreferencesTitle", comment: "Original Language")
         case DEVICE_SECTION:
@@ -160,13 +132,6 @@ class PSPreferencesController: PSBasePreferencesController {
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case DISPLAY_SECTION:
-            switch indexPath.row {
-            case MOD_BLURB_ROW:
-                return 100
-            default:
-                return 45
-            }
         case DEVICE_SECTION:
             switch indexPath.row {
             case FULLSCREEN_NOTE_ROW:
@@ -186,7 +151,6 @@ class PSPreferencesController: PSBasePreferencesController {
         let CellIdentifierPlain  = "prefs-plain"
         let CellIdentifierStyled = "prefs-styled"
         let CellIdentifierFS     = "prefs-fs"
-        let CellIdenfifierSub    = "prefs-subtitle"
 
         var cell: UITableViewCell! = nil
         var resetCell = true
@@ -241,46 +205,6 @@ class PSPreferencesController: PSBasePreferencesController {
                 if cell == nil {
                     cell = UITableViewCell(style: .value1, reuseIdentifier: CellIdentifierStyled)
                 }
-            case MOD_BLURB_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdenfifierSub)
-                if cell == nil {
-                    cell = UITableViewCell(style: .subtitle, reuseIdentifier: CellIdenfifierSub)
-                }
-            default:
-                break
-            }
-        case MODULE_SECTION:
-            cell = tableView.dequeueReusableCell(withIdentifier: CellIdenfifierSub)
-            if cell == nil {
-                cell = UITableViewCell(style: .subtitle, reuseIdentifier: CellIdenfifierSub)
-            }
-        case STRONGS_SECTION:
-            switch indexPath.row {
-            case STRONGS_DISPLAY_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierPlain)
-                if cell == nil {
-                    cell = UITableViewCell(style: .default, reuseIdentifier: CellIdentifierPlain)
-                }
-            case STRONGS_G_ROW, STRONGS_H_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierStyled)
-                if cell == nil {
-                    cell = UITableViewCell(style: .value1, reuseIdentifier: CellIdentifierStyled)
-                }
-            default:
-                break
-            }
-        case MORPH_SECTION:
-            switch indexPath.row {
-            case MORPH_DISPLAY_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierPlain)
-                if cell == nil {
-                    cell = UITableViewCell(style: .default, reuseIdentifier: CellIdentifierPlain)
-                }
-            case MORPH_G_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierStyled)
-                if cell == nil {
-                    cell = UITableViewCell(style: .value1, reuseIdentifier: CellIdentifierStyled)
-                }
             default:
                 break
             }
@@ -314,55 +238,6 @@ class PSPreferencesController: PSBasePreferencesController {
                 break
             case FONT_NAME_ROW:
                 cell.textLabel?.text = NSLocalizedString("PreferencesFontTitle", comment: "Font")
-                cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .blue
-            case MOD_BLURB_ROW:
-                cell.textLabel?.text = NSLocalizedString("PreferencesModuleSectionNote", comment: "")
-                cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.textLabel?.numberOfLines = 7
-                cell.textLabel?.textColor = UIColor.secondaryLabel
-                cell.textLabel?.font = UIFont.systemFont(ofSize: 12.0)
-                cell.detailTextLabel?.text = ""
-            default:
-                break
-            }
-        case MODULE_SECTION:
-            cell.selectionStyle = .blue
-            cell.accessoryType = .disclosureIndicator
-            // all Bibles are available for setting prefs:
-            cell.textLabel?.text = NSLocalizedString("PreferencesModulePreferencesTitle", comment: "Module Preferences")
-            cell.detailTextLabel?.text = nil
-        case STRONGS_SECTION:
-            switch indexPath.row {
-            case STRONGS_DISPLAY_ROW:
-                let strongsSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let displayStrongs = UserDefaults.standard.bool(forKey: Defaults.strongsPreference)
-                strongsSwitch.isOn = displayStrongs
-                strongsSwitch.addTarget(self, action: #selector(displayStrongsChanged(_:)), for: .valueChanged)
-                cell.addSubview(strongsSwitch)
-                cell.textLabel?.text = NSLocalizedString("PreferencesDisplayTitle", comment: "Display")
-            case STRONGS_G_ROW:
-                cell.textLabel?.text = NSLocalizedString("PreferencesGreekModuleTitle", comment: "Greek module")
-                cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .blue
-            case STRONGS_H_ROW:
-                cell.textLabel?.text = NSLocalizedString("PreferencesHebrewModuleTitle", comment: "Hebrew module")
-                cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .blue
-            default:
-                break
-            }
-        case MORPH_SECTION:
-            switch indexPath.row {
-            case MORPH_DISPLAY_ROW:
-                let morphSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let displayMorph = UserDefaults.standard.bool(forKey: Defaults.morphPreference)
-                morphSwitch.isOn = displayMorph
-                morphSwitch.addTarget(self, action: #selector(displayMorphChanged(_:)), for: .valueChanged)
-                cell.addSubview(morphSwitch)
-                cell.textLabel?.text = NSLocalizedString("PreferencesDisplayTitle", comment: "Display")
-            case MORPH_G_ROW:
-                cell.textLabel?.text = NSLocalizedString("PreferencesGreekModuleTitle", comment: "Greek module")
                 cell.accessoryType = .disclosureIndicator
                 cell.selectionStyle = .blue
             default:
@@ -471,37 +346,6 @@ class PSPreferencesController: PSBasePreferencesController {
             default:
                 break
             }
-        case STRONGS_SECTION:
-            switch indexPath.row {
-            case STRONGS_G_ROW:
-                var module = UserDefaults.standard.string(forKey: Defaults.strongsGreekModule)
-                if module == nil {
-                    module = NSLocalizedString("None", comment: "None")
-                }
-                cell.detailTextLabel?.text = module
-                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12.0)
-            case STRONGS_H_ROW:
-                var module = UserDefaults.standard.string(forKey: Defaults.strongsHebrewModule)
-                if module == nil {
-                    module = NSLocalizedString("None", comment: "None")
-                }
-                cell.detailTextLabel?.text = module
-                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12.0)
-            default:
-                break
-            }
-        case MORPH_SECTION:
-            switch indexPath.row {
-            case MORPH_G_ROW:
-                var module = UserDefaults.standard.string(forKey: Defaults.morphGreekModule)
-                if module == nil {
-                    module = NSLocalizedString("None", comment: "None")
-                }
-                cell.detailTextLabel?.text = module
-                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12.0)
-            default:
-                break
-            }
         default:
             break
         }
@@ -522,38 +366,6 @@ class PSPreferencesController: PSBasePreferencesController {
             default:
                 break
             }
-        case STRONGS_SECTION:
-            switch indexPath.row {
-            case STRONGS_G_ROW:
-                // strongs greek
-                let moduleSelectorTableViewController = PSPreferencesModuleSelectorTableViewController(style: .grouped)
-                moduleSelectorTableViewController.preferencesController = self
-                moduleSelectorTableViewController.setTableType(.StrongsGreek)
-                self.navigationController?.pushViewController(moduleSelectorTableViewController, animated: true)
-            case STRONGS_H_ROW:
-                // strongs hebrew
-                let moduleSelectorTableViewController = PSPreferencesModuleSelectorTableViewController(style: .grouped)
-                moduleSelectorTableViewController.preferencesController = self
-                moduleSelectorTableViewController.setTableType(.StrongsHebrew)
-                self.navigationController?.pushViewController(moduleSelectorTableViewController, animated: true)
-            default:
-                break
-            }
-        case MORPH_SECTION:
-            switch indexPath.row {
-            case MORPH_G_ROW:
-                // greek morphology
-                let moduleSelectorTableViewController = PSPreferencesModuleSelectorTableViewController(style: .grouped)
-                moduleSelectorTableViewController.preferencesController = self
-                moduleSelectorTableViewController.setTableType(.MorphGreek)
-                self.navigationController?.pushViewController(moduleSelectorTableViewController, animated: true)
-            default:
-                break
-            }
-        case MODULE_SECTION:
-            let moduleSelectorViewController = PSModuleSelectorController(nibName: nil, bundle: nil)
-            moduleSelectorViewController.listType = .PreferencesTab
-            self.navigationController?.pushViewController(moduleSelectorViewController, animated: true)
         default:
             break
         }
@@ -621,24 +433,6 @@ class PSPreferencesController: PSBasePreferencesController {
         UserDefaults.standard.synchronize()
         moduleController.setPreferences()
         NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
-
-    @objc func morphGreekModuleChanged(_ newModule: String) {
-        UserDefaults.standard.set(newModule, forKey: Defaults.morphGreekModule)
-        UserDefaults.standard.synchronize()
-        self.tableView.reloadData()
-    }
-
-    @objc func strongsGreekModuleChanged(_ newModule: String) {
-        UserDefaults.standard.set(newModule, forKey: Defaults.strongsGreekModule)
-        UserDefaults.standard.synchronize()
-        self.tableView.reloadData()
-    }
-
-    @objc func strongsHebrewModuleChanged(_ newModule: String) {
-        UserDefaults.standard.set(newModule, forKey: Defaults.strongsHebrewModule)
-        UserDefaults.standard.synchronize()
-        self.tableView.reloadData()
     }
 
     @objc func xrefChanged(_ sender: UISwitch) {

@@ -799,10 +799,10 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                     //
                     // Strong's Numbers
                     //
-                    var mod = UserDefaults.standard.object(forKey: Defaults.strongsGreekModule) as? String
+                    var mod = BundledModules.strongsGreek
                     var hebrew = false
                     if (rData[SWRender.attrType] as? String) == "Hebrew" {
-                        mod = UserDefaults.standard.object(forKey: Defaults.strongsHebrewModule) as? String
+                        mod = BundledModules.strongsHebrew
                         hebrew = true
                     }
 
@@ -838,7 +838,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                     //
                     // Morphological Tags
                     //
-                    let mod = UserDefaults.standard.object(forKey: Defaults.morphGreekModule) as? String
+                    let mod = BundledModules.morphGreek
                     if (rData[SWRender.attrType] as? String)?.hasPrefix("strongMorph") == true {
                         entry = NSLocalizedString("MorphHebrewNotSupported", comment: "")
                     } else {
