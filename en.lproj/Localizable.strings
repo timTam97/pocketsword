@@ -254,6 +254,11 @@
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";
 
+// Per-tab display-settings menu (the "textformat" button on the Bible /
+// Commentary tabs). These rows replaced the buried per-module preferences screen.
+"PreferencesMorphTagsTitle" = "Morphological Tags";
+"VoiceOverDisplaySettingsButton" = "Display Settings";
+
 // Voice reference
 "VoiceRefListening" = "Listening…";
 "VoiceRefPrompt" = "Say a reference, e.g. “John 3 16”";

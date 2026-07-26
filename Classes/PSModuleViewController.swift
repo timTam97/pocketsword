@@ -36,6 +36,11 @@ private enum SWRender {
     // SWMOD_FEATURE_* / SWMOD_CONF_FEATURE_* (SwordManager.h)
     static let featureStrongs = "Strongs"
     static let confFeatureStrongs = "StrongsNumbers"
+    static let featureMorph = "Morph"
+    static let featureHeadings = "Headings"
+    static let featureFootnotes = "Footnotes"
+    static let featureScriptRef = "Scripref"          // not Scriptref
+    static let featureRedLetterWords = "RedLetterWords"
 
     // ATTRTYPE_* (SwordModule.h)
     static let attrType = "type"
@@ -334,17 +339,10 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
     @objc(setModuleNameViaNotification)
     func setModuleNameViaNotification() {
         autoreleasepool {
-            if tabType == .BibleTab {
-                rebuildBibleSettingsMenu()
-                return
-            }
-            if let module = PSModuleController.default().primaryCommentary, let name = module.name {
-                let i = (name.count > 5) ? 5 : name.count
-                let prefix = String(name.prefix(i))
-                let newTitle = (name.count > i) ? "\(prefix).." : prefix
-                moduleButton?.title = newTitle
-            } else {
-                moduleButton?.title = NSLocalizedString("None", comment: "None")
+            rebuildSettingsMenu()
+            if tabType != .BibleTab && PSModuleController.default().primaryCommentary == nil {
+                // The real empty-state path: no commentary installed, so there is
+                // nothing to page through.
                 titleSegmentedControl?.setTitle("PocketSword", forSegmentAt: 1)
                 setEnabledNextButton(false)
                 setEnabledPreviousButton(false)
@@ -352,51 +350,118 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         }
     }
 
-    @objc(rebuildBibleSettingsMenu)
-    func rebuildBibleSettingsMenu() {
-        let bible = PSModuleController.default().primaryBible
-        guard let modName = bible?.name else {
+    /// The active module for this tab's `▾` settings menu: the primary Bible on the
+    /// Bible tab, the primary commentary on the Commentary tab.
+    private var settingsMenuModule: SwordModule? {
+        (tabType == .BibleTab) ? PSModuleController.default().primaryBible
+                               : PSModuleController.default().primaryCommentary
+    }
+
+    /// The redisplay notification this tab's renderer listens for.
+    private var redisplayNotification: Notification.Name {
+        (tabType == .BibleTab) ? .redisplayPrimaryBible : .redisplayPrimaryCommentary
+    }
+
+    /// Builds the per-tab `▾` (textformat) settings menu from the active module's
+    /// advertised features. Every row writes the PER-MODULE pref key ("<pref>_<mod>")
+    /// keyed on the module's own name — the same domain `-[SwordModule setPreferences]`
+    /// reads on every render, which is what makes these toggles actually take effect.
+    ///
+    /// Feature gating uses -[SwordModule hasFeature:], matching what the old
+    /// per-module preferences screen did. Note hasFeature: also matches
+    /// GlobalOptionFilter entries (OSIS/GBF/ThML/UTF8-prefixed and bare), not just
+    /// `Feature=` lines — so KJV's OSISFootnotes / OSISHeadings / OSISRedLetterWords
+    /// filters satisfy the Footnotes / Headings / RedLetterWords gates even though it
+    /// declares only `Feature=StrongsNumbers`. A module advertising nothing (e.g.
+    /// MHCC) correctly yields a Font-only menu.
+    @objc(rebuildSettingsMenu)
+    func rebuildSettingsMenu() {
+        guard let module = settingsMenuModule, let modName = module.name else {
             self.moduleButton?.menu = nil
             return
         }
 
+        let prefix = (tabType == .BibleTab) ? "bible" : "commentary"
         var topLevel: [UIMenuElement] = []
 
-        let hasStrongs = (bible?.hasFeature(SWRender.featureStrongs) ?? false) || (bible?.hasFeature(SWRender.confFeatureStrongs) ?? false)
-        if hasStrongs {
-            let strongsToggle = UIAction(title: NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
-                                         image: nil,
-                                         identifier: UIAction.Identifier("bible.strongs")) { [weak self] _ in
-                let mName = PSModuleController.default().primaryBible?.name ?? ""
-                let current = UserDefaults.standard.psBool(Defaults.strongsPreference, forModule: mName)
-                UserDefaults.standard.psSet(!current, forPref: Defaults.strongsPreference, module: mName)
+        /// One inline-grouped boolean toggle over a per-module pref key.
+        func addToggle(_ title: String, pref: String, id: String, pushesToSword: Bool) {
+            let action = UIAction(title: title, image: nil,
+                                  identifier: UIAction.Identifier("\(prefix).\(id)")) { [weak self] _ in
+                guard let self = self, let mName = self.settingsMenuModule?.name else { return }
+                let current = UserDefaults.standard.psBool(pref, forModule: mName)
+                UserDefaults.standard.psSet(!current, forPref: pref, module: mName)
                 UserDefaults.standard.synchronize()
-                PSModuleController.default().setPreferences()
-                NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
-                self?.rebuildBibleSettingsMenu()
+                if pushesToSword {
+                    PSModuleController.default().setPreferences()
+                }
+                NotificationCenter.default.post(name: self.redisplayNotification, object: nil)
+                self.rebuildSettingsMenu()
             }
-            strongsToggle.state = UserDefaults.standard.psBool(Defaults.strongsPreference, forModule: modName) ? .on : .off
+            action.state = UserDefaults.standard.psBool(pref, forModule: modName) ? .on : .off
             topLevel.append(UIMenu(title: "", image: nil,
-                                   identifier: UIMenu.Identifier("bible.strongsGroup"),
-                                   options: .displayInline, children: [strongsToggle]))
+                                   identifier: UIMenu.Identifier("\(prefix).\(id)Group"),
+                                   options: .displayInline, children: [action]))
         }
 
-        let vplToggle = UIAction(title: NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),
-                                 image: nil,
-                                 identifier: UIAction.Identifier("bible.vpl")) { [weak self] _ in
-            let mName = PSModuleController.default().primaryBible?.name ?? ""
-            let current = UserDefaults.standard.psBool(Defaults.vplPreference, forModule: mName)
-            UserDefaults.standard.psSet(!current, forPref: Defaults.vplPreference, module: mName)
-            UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
-            self?.rebuildBibleSettingsMenu()
+        if module.hasFeature(SWRender.featureStrongs) || module.hasFeature(SWRender.confFeatureStrongs) {
+            addToggle(NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
+                      pref: Defaults.strongsPreference, id: "strongs", pushesToSword: true)
         }
-        vplToggle.state = UserDefaults.standard.psBool(Defaults.vplPreference, forModule: modName) ? .on : .off
+        if module.hasFeature(SWRender.featureMorph) {
+            addToggle(NSLocalizedString("PreferencesMorphTagsTitle", comment: "Morphological Tags"),
+                      pref: Defaults.morphPreference, id: "morph", pushesToSword: true)
+        }
+        if module.hasFeature(SWRender.featureHeadings) {
+            addToggle(NSLocalizedString("PreferencesHeadingsTitle", comment: "Headings"),
+                      pref: Defaults.headingsPreference, id: "headings", pushesToSword: true)
+        }
+        if module.hasFeature(SWRender.featureFootnotes) {
+            addToggle(NSLocalizedString("PreferencesFootnotesTitle", comment: "Footnotes"),
+                      pref: Defaults.footnotesPreference, id: "footnotes", pushesToSword: true)
+        }
+        if module.hasFeature(SWRender.featureScriptRef) {
+            addToggle(NSLocalizedString("PreferencesCrossReferencesTitle", comment: "Cross-references"),
+                      pref: Defaults.scriptRefsPreference, id: "xref", pushesToSword: true)
+        }
+        if module.hasFeature(SWRender.featureRedLetterWords) {
+            addToggle(NSLocalizedString("PreferencesRedLetterTitle", comment: "Red Letter"),
+                      pref: Defaults.redLetterPreference, id: "redLetter", pushesToSword: true)
+        }
+        if module.type == bible {
+            // VPL is a rendering-side option only — it never went through
+            // -setPreferences (see PSModulePreferencesController's old vplChanged:).
+            addToggle(NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),
+                      pref: Defaults.vplPreference, id: "vpl", pushesToSword: false)
+        }
+
+        let fontAction = UIAction(title: NSLocalizedString("PreferencesFontTitle", comment: "Font"),
+                                  image: nil,
+                                  identifier: UIAction.Identifier("\(prefix).font")) { [weak self] _ in
+            self?.showFontPicker()
+        }
         topLevel.append(UIMenu(title: "", image: nil,
-                               identifier: UIMenu.Identifier("bible.vplGroup"),
-                               options: .displayInline, children: [vplToggle]))
+                               identifier: UIMenu.Identifier("\(prefix).fontGroup"),
+                               options: .displayInline, children: [fontAction]))
 
         self.moduleButton?.menu = UIMenu(title: "", children: topLevel)
+    }
+
+    /// Pushes the shared font picker, scoped to the active module so it reads and
+    /// writes the per-module font key (PSPreferencesFontTableViewController prefers
+    /// "<fontNamePreference>_<mod>" when moduleName is set).
+    private func showFontPicker() {
+        guard let modName = settingsMenuModule?.name else { return }
+        let fontTableViewController = PSPreferencesFontTableViewController(style: .grouped)
+        fontTableViewController.moduleName = modName
+        fontTableViewController.onFontSelected = { [weak self] newFont in
+            UserDefaults.standard.psSet(newFont as Any?, forPref: Defaults.fontNamePreference, module: modName)
+            UserDefaults.standard.synchronize()
+            guard let self = self else { return }
+            NotificationCenter.default.post(name: self.redisplayNotification, object: nil)
+            self.rebuildSettingsMenu()
+        }
+        navigationController?.pushViewController(fontTableViewController, animated: true)
     }
 
     @objc(setDelegate:)
@@ -407,13 +472,13 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         searchButton.accessibilityLabel = NSLocalizedString("VoiceOverHistoryAndSearchButton", comment: "")
         self.navigationItem.leftBarButtonItem = searchButton
 
-        let rightButton: UIBarButtonItem
-        if tabType == .BibleTab {
-            rightButton = UIBarButtonItem(image: UIImage(systemName: "textformat"),
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "textformat"),
                                           style: .plain, target: nil, action: nil)
-            self.moduleButton = rightButton
-            rebuildBibleSettingsMenu()
+        rightButton.accessibilityLabel = NSLocalizedString("VoiceOverDisplaySettingsButton", comment: "")
+        self.moduleButton = rightButton
+        rebuildSettingsMenu()
 
+        if tabType == .BibleTab {
             if PSFeatureFlags.voiceReferenceEnabled {
                 let voiceButton = UIBarButtonItem(
                     image: UIImage(systemName: "microphone"),
@@ -434,9 +499,6 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                 navigationItem.rightBarButtonItem = rightButton
             }
         } else {
-            rightButton = UIBarButtonItem(title: "None", style: .plain, target: vc,
-                                          action: NSSelectorFromString("toggleModulesListFromButton:"))
-            self.moduleButton = rightButton
             setModuleNameViaNotification()
             navigationItem.rightBarButtonItem = rightButton
         }

@@ -35,6 +35,11 @@ final class PSPreferencesFontTableViewController: UITableViewController {
     @objc var moduleName: String?
     @objc weak var preferencesController: PSBasePreferencesController?
 
+    /// Alternative to `preferencesController` for callers that are not a
+    /// PSBasePreferencesController (the per-tab `▾` settings menus). When set, the
+    /// picker reports the chosen font through this closure and pops itself.
+    var onFontSelected: ((String) -> Void)?
+
     private var fontStrings: [String]?
 
     private func reloadFontStrings() {
@@ -171,6 +176,11 @@ final class PSPreferencesFontTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let fontName = fontStrings?[indexPath.row] {
+            if let onFontSelected = onFontSelected {
+                onFontSelected(fontName)
+                navigationController?.popViewController(animated: true)
+                return
+            }
             preferencesController?.fontNameChanged(fontName)
         }
         preferencesController?.hideFontTableView()
