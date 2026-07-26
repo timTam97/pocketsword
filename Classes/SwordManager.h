@@ -107,24 +107,17 @@
 	// The sword::SWMgr *swManager ivar lives in SwordManager+Cpp.h (internal).
 
 	NSDictionary *modules;
-	NSArray *moduleListByType;
     NSString *modulesPath;
 	NSRecursiveLock *managerLock;
-    BOOL temporaryManager;
-	NSArray *moduleTypes;//types that are present in this instance.
 }
 
 // ------------------- getter / setter -------------------
 @property (strong, readwrite) NSDictionary *modules;
-@property (strong, readwrite) NSArray *moduleListByType;
 @property (strong, readwrite) NSString *modulesPath;
 @property (strong, readwrite) NSRecursiveLock *managerLock;
-@property (readwrite) BOOL temporaryManager;
-@property (strong) NSArray *moduleTypes;
 
 // --------------------- methods -----------------------
 
-+ (SwordManager *)managerWithPath:(NSString*)path;
 + (SwordManager *)defaultManager;
 + (void)releaseDefaultManager;
 
@@ -147,8 +140,6 @@
  Keeps the C++ VersificationMgr API out of Swift callers (e.g. PSRefSelectorController).
  */
 + (NSArray *)booksForVersificationSystem:(NSString *)systemName;
-+ (NSArray *)moduleTypes;
-+ (BOOL)moduleCategoryAllowed:(ModuleCategory)cat;
 
 /** Constructor */
 - (id)initWithPath:(NSString *)path;
@@ -177,7 +168,6 @@
 - (SwordModule *)moduleWithName:(NSString *)name;
 - (BOOL)isModuleInstalled:(NSString *)name;
 
-- (NSArray *)modulesForFeature:(NSString *)feature;
 - (NSArray *)modulesForType:(NSString *)type;
 
 - (void)installModulesFromPath:(NSString *)path;

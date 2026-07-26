@@ -76,8 +76,6 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 
 // define for userdefaults
 #define userDefaults [NSUserDefaults standardUserDefaults]
-// define for default SwordManager
-#define defSwordManager [SwordManager defaultManager]
 
 // Default Modules
 // RETIRED: these "the user deleted this bundled module, don't re-seed it" flags are

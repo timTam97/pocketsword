@@ -43,10 +43,29 @@ using std::list;
 @interface SwordManager (PrivateAPI)
 
 - (void)refreshModules;
+/// Which dictionary sub-categories the app can actually render. Consumed only by
+/// -refreshModules (below) to keep glossaries / essays out of the module list, so it
+/// is internal rather than part of the public facade.
++ (BOOL)moduleCategoryAllowed:(ModuleCategory)cat;
 
 @end
 
 @implementation SwordManager (PrivateAPI)
+
++ (BOOL)moduleCategoryAllowed:(ModuleCategory)cat {
+	switch (cat) {
+		case undefinedCategory:
+			return YES;
+		case glossary:
+			return NO;
+		case essay:
+			return NO;
+		case devotional:
+			return YES;//beta
+		default:
+			return NO;
+	}
+}
 
 - (void)refreshModules {
     
@@ -54,7 +73,6 @@ using std::list;
     
     // loop over modules
     sword::SWModule *mod;
-	NSMutableArray *types = [[NSMutableArray alloc] initWithCapacity:4];
 	//NSMutableArray *langs = [NSMutableArray arrayWithObjects: nil];
 	for(sword::ModMap::iterator it = swManager->Modules.begin(); it != swManager->Modules.end(); it++) {
 		mod = it->second;
@@ -91,9 +109,6 @@ using std::list;
 		
 		ModuleCategory cat = [sm cat];
 
-		if(![types containsObject: type]) {
-			[types insertObject: type atIndex: [types count]];
-		}
 		   // at this point I want to manually exclude "cult" texts until there is a disclaimer about them in there!
 		if((cat & cult) == cult) {
 			//this is a questionable/cult module & we're currently not allowing these!
@@ -145,9 +160,6 @@ using std::list;
 				break;
 		}*/
 	}
-	//sort the types into alphabetical order
-	[types sortUsingSelector: @selector(compare:)];
-    [self setModuleTypes:types];
     // set modules
     [self setModules:dict];
 }
@@ -159,9 +171,6 @@ using std::list;
 @synthesize modules;
 @synthesize modulesPath;
 @synthesize managerLock;
-@synthesize temporaryManager;
-@synthesize moduleTypes;
-@synthesize moduleListByType;
 
 # pragma mark - class methods
 
@@ -287,40 +296,6 @@ using std::list;
 	return books;
 }
 
-//Effectively, this is a list of the module types that are currently supported.
-+ (NSArray *)moduleTypes {
-    return [NSArray arrayWithObjects:
-            SWMOD_CATEGORY_BIBLES,
-            SWMOD_CATEGORY_COMMENTARIES,
-            SWMOD_CATEGORY_DICTIONARIES,
-            //SWMOD_CATEGORY_GENBOOKS,
-			nil];
-}
-
-+ (BOOL)moduleCategoryAllowed:(ModuleCategory)cat {
-	switch (cat) {
-		case undefinedCategory:
-			return YES;
-		case glossary:
-			return NO;
-		case essay:
-			return NO;
-		case devotional:
-			return YES;//beta
-		default:
-			return NO;
-	}
-}
-
-
-/**
- return a manager for the specified path
- */
-+ (SwordManager *)managerWithPath:(NSString *)path {
-    SwordManager *manager = [[SwordManager alloc] initWithPath:path];
-    return manager;
-}
-
 static SwordManager *instance;
 /** the singleton instance */
 + (SwordManager *)defaultManager {
@@ -342,9 +317,6 @@ static SwordManager *instance;
 - (id)initWithPath:(NSString *)path {
 
 	if((self = [super init])) {
-        // this is our main swManager
-        temporaryManager = NO;
-        
         self.modulesPath = path;
 
 		self.modules = [NSDictionary dictionary];
@@ -366,32 +338,12 @@ static SwordManager *instance;
 	return self;
 }
 
-/** 
- initialize a new SwordManager with given SWMgr
- */
-- (id)initWithSWMgr:(sword::SWMgr *)aSWMgr {
-    
-    self = [super init];
-    if(self) {
-        swManager = aSWMgr;
-        // this is a temporary swManager
-        temporaryManager = YES;
-        
-		self.modules = [NSDictionary dictionary];
-		NSRecursiveLock *rl = [[NSRecursiveLock alloc] init];
-		self.managerLock = rl;
-        
-		[self refreshModules];
-    }
-    
-    return self;
-}
-
 - (void)dealloc {
-    if(!temporaryManager) {
-		if(swManager != nil)
-			delete swManager;
-	}
+	// -initWithPath: is now the only initialiser, so this manager always owns its
+	// swManager (the former -initWithSWMgr: "temporary manager" that borrowed one
+	// had no callers and is gone).
+	if(swManager != nil)
+		delete swManager;
 }
 
 
@@ -556,27 +508,7 @@ static SwordManager *instance;
     return [modules allKeys];
 }
 
-/** 
- Retrieve list of installed modules as an array, where the module has a specific feature
-*/
-- (NSArray *)modulesForFeature:(NSString *)feature {
-
-    NSMutableArray *ret = [NSMutableArray array];
-    for(SwordModule *mod in [modules allValues]) {
-        if([mod hasFeature:feature]) {
-            [ret addObject:mod];
-        }
-    }
-	
-    // sort
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor]; 
-    [ret sortUsingDescriptors:sortDescriptors];
-
-	return [NSArray arrayWithArray:ret];
-}
-
-/* 
+/*
  Retrieve list of installed modules as an array, where type is: @"Biblical Texts", @"Commentaries", ..., @"ALL"
 */
 - (NSArray *)modulesForType:(NSString *)type {

@@ -27,7 +27,6 @@ using sword::SWModule;
     sword::SWMgr *swManager;
 }
 
-- (id)initWithSWMgr:(sword::SWMgr *)smgr;
 - (sword::SWModule *)getSWModuleWithName:(NSString *)moduleName;
 - (sword::SWMgr *)swManager;
 
