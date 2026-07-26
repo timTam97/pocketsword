@@ -425,24 +425,22 @@ final class PSModuleController: NSObject {
 
     // MARK: - Remove module
 
+    /// Uninstalls a module. There is no user-facing removal any more (no module
+    /// list, no swipe-to-delete) — the only callers are bootstrap-internal:
+    /// PSLaunchViewController's StrongsRealGreek update and its one-time
+    /// non-bundled-module cleanup sweep.
+    ///
+    /// Deliberately does NOT set the `Defaults*Removed` "user removed this bundled
+    /// module, don't re-seed it" flags: with the removal UI gone a set flag can
+    /// never be cleared by the user, which would permanently suppress a bundled
+    /// module (see the DefaultsModuleChoiceRetired migration in
+    /// PSLaunchViewController). It also drops the module-count notifications, the
+    /// next-dictionary auto-promotion, and the lexicon-pref "None" reset — the
+    /// lexicon roles are hardcoded now.
     @objc(removeModule:)
     @discardableResult
     func removeModule(_ name: String!) -> Bool {
         dlog("Removing module: \(name ?? "")")
-
-        // if it's a built-in module, don't automatically re-install it at next launch!
-        let userDefaults = UserDefaults.standard
-        if name == "KJV" {
-            userDefaults.set(true, forKey: Defaults.kjvRemoved)
-        } else if name == "MHCC" {
-            userDefaults.set(true, forKey: Defaults.mhccRemoved)
-        } else if name == "StrongsRealHebrew" {
-            userDefaults.set(true, forKey: Defaults.strongsRealHebrewRemoved)
-        } else if name == "StrongsRealGreek" {
-            userDefaults.set(true, forKey: Defaults.strongsRealGreekRemoved)
-        } else if name == "Robinson" {
-            userDefaults.set(true, forKey: Defaults.robinsonRemoved)
-        }
 
         let moduleToRemove = swordManager?.module(withName: name)
         var success = false
@@ -450,9 +448,6 @@ final class PSModuleController: NSObject {
         let primaryBibleName: String? = primaryBible?.name
         let primaryCommentaryName: String? = primaryCommentary?.name
         let primaryDictionaryName: String? = primaryDictionary?.name
-
-        let numberOfBibles = (swordManager?.modules(forType: SW.categoryBibles) ?? []).count
-        let numberOfCommentaries = (swordManager?.modules(forType: SW.categoryCommentaries) ?? []).count
 
         if let moduleToRemove = moduleToRemove {
             if moduleToRemove.typeString() == SW.categoryDictionaries {
@@ -479,39 +474,6 @@ final class PSModuleController: NSObject {
         }
 
         reload()
-
-        if numberOfBibles == 1 && primaryBible == nil {
-            // well, we now have 0, ie, none!
-            NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
-        }
-
-        if numberOfCommentaries == 1 && primaryCommentary == nil {
-            // no commentaries left...
-            NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
-        }
-
-        if name == primaryDictionaryName {
-            if let dicts = swordManager?.modules(forType: SW.categoryDictionaries), dicts.count > 0 {
-                // set the primaryDictionary to the next available dictionary.
-                if let first = dicts.first as? SwordModule {
-                    loadPrimaryDictionary(first.name)
-                }
-            }
-            NotificationCenter.default.post(name: .reloadDictionaryData, object: nil)
-        }
-
-        // if it's the module selected for one of our lookups, need to set that to @"None"
-        let defaults = UserDefaults.standard
-        if name == (defaults.object(forKey: Defaults.morphGreekModule) as? String) {
-            defaults.set(NSLocalizedString("None", comment: "None"), forKey: Defaults.morphGreekModule)
-            defaults.synchronize()
-        } else if name == (defaults.object(forKey: Defaults.strongsGreekModule) as? String) {
-            defaults.set(NSLocalizedString("None", comment: "None"), forKey: Defaults.strongsGreekModule)
-            defaults.synchronize()
-        } else if name == (defaults.object(forKey: Defaults.strongsHebrewModule) as? String) {
-            defaults.set(NSLocalizedString("None", comment: "None"), forKey: Defaults.strongsHebrewModule)
-            defaults.synchronize()
-        }
 
         return success
     }

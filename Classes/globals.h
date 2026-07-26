@@ -59,6 +59,7 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define DefaultsLastSearchRange						@"DefaultsLastSearchRange"
 #define DefaultsLuceneSwept							@"DefaultsLuceneSwept"
 #define DefaultsSimplifiedCleanupDone				@"DefaultsSimplifiedCleanupDone"
+#define DefaultsModuleChoiceRetired					@"DefaultsModuleChoiceRetired"
 
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"
@@ -79,6 +80,11 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define defSwordManager [SwordManager defaultManager]
 
 // Default Modules
+// RETIRED: these "the user deleted this bundled module, don't re-seed it" flags are
+// no longer written — there is no removal UI, so a set flag could never be cleared
+// and would suppress a bundled module forever. The DefaultsModuleChoiceRetired
+// migration clears any that are already set. Declarations kept so the names are not
+// reused.
 #define DefaultsKJVRemoved							@"DefaultsKJVRemoved"
 #define DefaultsMHCCRemoved							@"DefaultsMHCCRemoved"
 #define DefaultsStrongsRealHebrewRemoved			@"DefaultsStrongsRealHebrewRemoved"
@@ -86,6 +92,10 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define DefaultsStrongsRealGreekRemoved				@"DefaultsStrongsRealGreekRemoved"
 
 // Preferences - general
+// RETIRED, NOT REUSABLE: the three lexicon-role keys are no longer read or written —
+// the roles are hardcoded (BundledModules in AppConstants.swift). A persisted value
+// can legitimately be the localized string "None", so honouring a stale one would
+// break Strong's / morph lookups.
 #define DefaultsStrongsHebrewModule                 @"DefaultsStrongsHebrewModule"
 #define DefaultsStrongsGreekModule                  @"DefaultsStrongsGreekModule"
 #define DefaultsMorphHebrewModule                   @"DefaultsMorphHebrewModule"

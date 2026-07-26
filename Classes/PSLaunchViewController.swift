@@ -10,13 +10,17 @@
 //  init finishes — at which point the scene delegate swaps the root VC to the
 //  tab bar.
 //
-//  The bootstrap seeds Documents/Built-in/ from the bundled Resources zips (KJV /
-//  MHCC / Robinson / StrongsRealGreek / StrongsRealHebrew + locales.d) and runs
-//  the one-off migrations (DefaultsLuceneSwept / DefaultsSimplifiedCleanupDone,
-//  plus the legacy built-in-module-path move and the locale install). The
-//  migration-flag KEYS and the seeding gates are preserved BYTE-FOR-BYTE from the
-//  original .mm — they decide whether bundled modules re-seed on launch, so any
-//  drift would re-install or orphan user content.
+//  The bootstrap seeds Documents/ from the bundled Resources zips (KJV / MHCC /
+//  Robinson / StrongsRealGreek / StrongsRealHebrew + locales.d) and runs the
+//  one-off migrations (DefaultsLuceneSwept / DefaultsSimplifiedCleanupDone /
+//  DefaultsModuleChoiceRetired, plus the legacy Documents/Built-in/ path cleanup
+//  and the locale install). The migration-flag KEYS are load-bearing — they decide
+//  whether bundled modules re-seed on launch, so any drift would re-install or
+//  orphan user content.
+//
+//  NOTE: Documents/Built-in/ is NOT a live install location. The zips all unpack
+//  into Documents/ (AppPaths.modulePath); AppPaths.builtinModulePath is referenced
+//  only to delete the legacy directory left by old builds.
 //
 //  ZERO sword:: — every SWORD touch goes through the Foundation @objc facades
 //  (PSModuleController / SwordManager / SwordModule / SwordDictionary), exactly as
@@ -38,11 +42,6 @@ import UIKit
 private let kLocalesVersion        = "loadedSWORDLocales-130708"
 private let kStrongsRealGreekVersion = "loadedBundledStrongsRealGreek-v1.5-150704"
 private let kKJVVersion            = "loadedKJV-v2.9"
-
-// SWMOD_CATEGORY_DICTIONARIES is an @"literal" #define in SwordManager.h that
-// Swift cannot see; mirror its value verbatim (matches PSModuleController.swift /
-// PSModuleSelectorController.swift).
-private let kCategoryDictionaries  = "Lexicons / Dictionaries"
 
 // PSLaunchDelegate — the bootstrap-finished handshake the scene delegate conforms
 // to. Kept @objc (the still-Obj-C PocketSwordSceneDelegate conforms to it) and
@@ -109,21 +108,14 @@ final class PSLaunchViewController: UIViewController {
         defaults.removeObject(forKey: "commentaryHistory")
         defaults.removeObject(forKey: Defaults.moduleCipherKeysKey)
         defaults.removeObject(forKey: kLocalesVersion)
-        defaults.removeObject(forKey: Defaults.kjvRemoved)
-        defaults.removeObject(forKey: Defaults.mhccRemoved)
-        defaults.removeObject(forKey: Defaults.strongsRealGreekRemoved)
-        defaults.removeObject(forKey: Defaults.strongsRealHebrewRemoved)
-        defaults.removeObject(forKey: Defaults.robinsonRemoved)
         defaults.synchronize()
-        if let dicts = moduleManager.swordManager?.modules(forType: kCategoryDictionaries) as? [SwordDictionary] {
-            for dict in dicts {
-                dict.removeCache()
-            }
-        }
-        if let moduleList = moduleManager.swordManager?.listModules() as? [SwordModule] {
-            for mod in moduleList {
-                mod.resetPreferences()
-            }
+        // Fixed module set, so iterate the known names instead of asking SWORD what
+        // is installed. Each of the five is a dictionary at most once, and
+        // -removeCache / -resetPreferences are both safe on any module type.
+        for name in BundledModules.all {
+            guard let mod = moduleManager.swordManager?.module(withName: name) else { continue }
+            (mod as? SwordDictionary)?.removeCache()
+            mod.resetPreferences()
         }
         moduleManager.primaryBible = nil
         moduleManager.primaryCommentary = nil
@@ -196,8 +188,6 @@ final class PSLaunchViewController: UIViewController {
                                                     ofType: dictionary, removeZip: false, internalModule: true)
                 moduleManager.installModulesFromZip(Bundle.main.path(forResource: "Robinson", ofType: "zip"),
                                                     ofType: dictionary, removeZip: false, internalModule: true)
-                defaults.set("Robinson", forKey: Defaults.morphGreekModule)
-                defaults.set("StrongsRealHebrew", forKey: Defaults.strongsHebrewModule)
                 defaults.set(true, forKey: "loadedBundledStrongsAndMorph")
                 defaults.synchronize()
             }
@@ -213,55 +203,52 @@ final class PSLaunchViewController: UIViewController {
                 moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealgreek", ofType: "zip"),
                                                     ofType: dictionary, removeZip: false, internalModule: true)
                 defaults.set(true, forKey: kStrongsRealGreekVersion)
-                let curSGM = defaults.string(forKey: Defaults.strongsGreekModule)
-                if curSGM == nil || curSGM == NSLocalizedString("None", comment: "None") {
-                    defaults.set("StrongsRealGreek", forKey: Defaults.strongsGreekModule)
-                    defaults.synchronize()
+                defaults.synchronize()
+            }
+
+            // One-shot un-stick migration for the retirement of module choice.
+            //
+            // LOAD-BEARING. A user who previously swiped a bundled module away in the
+            // (now deleted) module list has a sticky Defaults*Removed flag. With no
+            // removal UI they can never clear it, and the seeding below would suppress
+            // that module forever. So clear all five flags once, and drop the retired
+            // lexicon-role prefs so no stale "None" is left behind.
+            //
+            // Also deletes any "<pref>_" keys: PSModulePreferencesController derived
+            // its per-module key from a nav-item title nothing had set since Apr 2026,
+            // so every write it made landed in that bogus domain. Those values are
+            // settings the user never saw take effect, so applying them now would be
+            // wrong — they are simply removed.
+            if !defaults.bool(forKey: Defaults.moduleChoiceRetired) {
+                for flag in Defaults.bundledModuleRemovedFlags {
+                    defaults.removeObject(forKey: flag)
                 }
+                for key in Defaults.retiredLexiconKeys {
+                    defaults.removeObject(forKey: key)
+                }
+                for key in defaults.dictionaryRepresentation().keys where key.hasSuffix("_") {
+                    dlog("Module-choice retirement: dropping orphaned pref key \(key)")
+                    defaults.removeObject(forKey: key)
+                }
+                defaults.set(true, forKey: Defaults.moduleChoiceRetired)
+                defaults.synchronize()
             }
 
-            // Test if we need to reinstall the built-in modules?
-            let kjvModule = moduleManager.swordManager?.isModuleInstalled("KJV") ?? false
-            let kjvModuleRemoved = defaults.bool(forKey: Defaults.kjvRemoved)
-
-            let mhccModule = moduleManager.swordManager?.isModuleInstalled("MHCC") ?? false
-            let mhccModuleRemoved = defaults.bool(forKey: Defaults.mhccRemoved)
-
-            let robinsonModule = moduleManager.swordManager?.isModuleInstalled("Robinson") ?? false
-            let robinsonModuleRemoved = defaults.bool(forKey: Defaults.robinsonRemoved)
-
-            let strongsrealhebrewModule = moduleManager.swordManager?.isModuleInstalled("StrongsRealHebrew") ?? false
-            let strongsrealhebrewModuleRemoved = defaults.bool(forKey: Defaults.strongsRealHebrewRemoved)
-
-            let strongsrealgreekModule = moduleManager.swordManager?.isModuleInstalled("StrongsRealGreek") ?? false
-            let strongsrealgreekModuleRemoved = defaults.bool(forKey: Defaults.strongsRealGreekRemoved)
-
-            if !kjvModule && !kjvModuleRemoved {
-                // reinstall the kjv module!
-                dlog("reinstalling KJV")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "KJV", ofType: "zip"),
-                                                    ofType: bible, removeZip: false, internalModule: true)
-            }
-            if !mhccModule && !mhccModuleRemoved {
-                // reinstall the mhcc module!
-                dlog("reinstalling MHCC")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "MHCC", ofType: "zip"),
-                                                    ofType: commentary, removeZip: false, internalModule: true)
-            }
-            if !robinsonModule && !robinsonModuleRemoved {
-                dlog("reinstalling Robinson")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "Robinson", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-            }
-            if !strongsrealgreekModule && !strongsrealgreekModuleRemoved {
-                dlog("reinstalling StrongsRealGreek")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealgreek", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-            }
-            if !strongsrealhebrewModule && !strongsrealhebrewModuleRemoved {
-                dlog("reinstalling StrongsRealHebrew")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealhebrew", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
+            // Seed any bundled module that isn't installed. Unconditional and
+            // idempotent now that the Defaults*Removed opt-outs are gone.
+            let bundledSeeds: [(name: String, resource: String, type: ModuleType)] = [
+                (BundledModules.bible, "KJV", bible),
+                (BundledModules.commentary, "MHCC", commentary),
+                (BundledModules.morphGreek, "Robinson", dictionary),
+                (BundledModules.strongsGreek, "strongsrealgreek", dictionary),
+                (BundledModules.strongsHebrew, "strongsrealhebrew", dictionary),
+            ]
+            for seed in bundledSeeds {
+                if moduleManager.swordManager?.isModuleInstalled(seed.name) != true {
+                    dlog("reinstalling \(seed.name)")
+                    moduleManager.installModulesFromZip(Bundle.main.path(forResource: seed.resource, ofType: "zip"),
+                                                        ofType: seed.type, removeZip: false, internalModule: true)
+                }
             }
 
             if !removeModulePrefs {

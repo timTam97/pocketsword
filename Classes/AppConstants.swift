@@ -37,22 +37,43 @@ enum Defaults {
     static let lastSearchRange             = "DefaultsLastSearchRange"
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
+    static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"
 
     static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
     static let commentaryVersePosition     = "commentaryVersePosition" // macro DefaultsCommentaryVersePosition
 
     // Default modules
+    //
+    // RETIRED: these "the user deleted this bundled module, don't re-seed it" flags
+    // are no longer written — there is no removal UI, so a set flag could never be
+    // cleared and would suppress a bundled module forever. The `moduleChoiceRetired`
+    // migration clears any that are already set. Kept so the names are not reused.
     static let kjvRemoved                  = "DefaultsKJVRemoved"
     static let mhccRemoved                 = "DefaultsMHCCRemoved"
     static let strongsRealHebrewRemoved    = "DefaultsStrongsRealHebrewRemoved"
     static let robinsonRemoved             = "DefaultsRobinsonRemoved"
     static let strongsRealGreekRemoved     = "DefaultsStrongsRealGreekRemoved"
 
+    /// All five retired `Defaults*Removed` flags, for the one-shot migration.
+    static let bundledModuleRemovedFlags = [kjvRemoved, mhccRemoved,
+                                           strongsRealHebrewRemoved,
+                                           robinsonRemoved,
+                                           strongsRealGreekRemoved]
+
     // Preferences - general
+    //
+    // RETIRED, NOT REUSABLE: the three lexicon-role keys are no longer read or
+    // written — the roles are hardcoded (see `BundledModules`). A persisted value can
+    // legitimately be the localized string "None" (written by the old
+    // removeModule), so honouring a stale one would break Strong's / morph lookups.
     static let strongsHebrewModule         = "DefaultsStrongsHebrewModule"
     static let strongsGreekModule          = "DefaultsStrongsGreekModule"
     static let morphHebrewModule           = "DefaultsMorphHebrewModule"
     static let morphGreekModule            = "DefaultsMorphGreekModule"
+
+    /// The four retired lexicon-role keys, for the one-shot migration.
+    static let retiredLexiconKeys = [strongsHebrewModule, strongsGreekModule,
+                                     morphHebrewModule, morphGreekModule]
     static let fullscreenModePreference    = "fullscreenModePreference"      // macro DefaultsFullscreenModePreference
     static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
     static let moduleMaintainerModePreference = "moduleMaintainerModePreference" // macro DefaultsModuleMaintainerModePreference
