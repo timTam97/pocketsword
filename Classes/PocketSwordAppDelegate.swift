@@ -149,18 +149,18 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
      * path (required): a bible reference, for example: "John+3:16" or "John 3"
      *
      * query (optional): for example:
-     *   "?type=bible" or
-     *   "?type=commentary&module=list"
+     *   "?type=bible"
      *   - type is either "bible" or "commentary".  bible is the default if not present.
-     *   - module=list, then the current module will be selected, but the user
-     *       will be presented with a list of installed modules to choose from.
      *
      * Some complete example URLs are:
      * sword:///John+3:16                                (verse with no module specified)
      * sword://KJV/John+3:16                             (verse with module)
-     * sword://ESV/John+3:16?type=bible                  (verse with module and fall-back type if not installed)
-     * sword:///John+3:16?type=bible&module=list         (verse with list of bible modules)
-     * sword:///John+3:16?type=commentary&module=list    (verse with list of commentary modules)
+     * sword://ESV/John+3:16?type=bible                  (verse with a foreign module; the
+     *                                                    module is ignored and the reference
+     *                                                    is shown in the bundled module)
+     *
+     * The old "module=list" query component is gone along with the module selector;
+     * a URL naming a module that is not installed still navigates to the reference.
      */
     @objc(application:handleOpenURL:options:)
     @discardableResult
@@ -208,7 +208,6 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
         let params = parseQueryDictionary(from: url)
         let type = params["type"]
-        let LIST = "list"
 
         let isBible: Bool // determined first by "module" if present, then fall back to "type", then default to "bible"
         if let mod = module, !mod.isEmpty {
@@ -217,23 +216,20 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             if let requestedModule = requestedModule {
                 isBible = (requestedModule.type == bible)
             } else {
-                // requested module is not installed or does not exist, so display the list of installed modules
-                // TODO: prompting the user to install the module (if available) might be better
-                module = LIST
+                // The requested module is not installed. With a fixed bundled module
+                // set that is the common case for a foreign sword:// link, so ignore
+                // the module component and still navigate to the reference.
+                module = nil
                 isBible = (type == nil || type == "bible")
             }
         } else {
             // no module requested
             isBible = (type == nil || type == "bible")
-
-            if let moduleInQuery = params["module"], moduleInQuery == LIST {
-                module = LIST
-            }
         }
 
         let defaults = UserDefaults.standard
         if isBible {
-            if let mod = module, mod != LIST {
+            if let mod = module {
                 // they requested a specific module and it is available
                 PSModuleController.default()?.loadPrimaryBible(mod)
                 //defaults.set(mod, forKey: Defaults.lastBible)
@@ -248,7 +244,7 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
             PSHistoryController.addHistoryItem(.BibleTab)
         } else {
-            if let mod = module, mod != LIST {
+            if let mod = module {
                 // they requested a specific module and it is available
                 PSModuleController.default()?.loadPrimaryCommentary(mod)
             }
@@ -265,26 +261,17 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             PSHistoryController.addHistoryItem(.CommentaryTab)
         }
 
-        if let mod = module, mod == LIST {
-            tabBarControllerDelegate?.toggleModulesList(animated: false, with: nil, fromButton: nil)
-        }
-
         return true
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         UserDefaults.standard.synchronize()
-        PSLanguageCode.doneWithLookupTable()
         PSModuleController.releaseDefaultModuleController()
         SwordManager.releaseDefaultManager()
     }
 
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
         PSModuleController.default()?.didReceiveMemoryWarning()
-    }
-
-    deinit {
-        PSLanguageCode.doneWithLookupTable()
     }
 }
 

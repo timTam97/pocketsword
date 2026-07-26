@@ -140,8 +140,6 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define CommentaryTabTitleString					@"CommentaryTabTitleString"
 
 // Notification identifiers
-#define NotificationModulesChanged				@"NotificationModulesChanged"
-#define SendNotifyModulesChanged(X) [[NSNotificationCenter defaultCenter] postNotificationName:NotificationModulesChanged object:X];
 #define NotificationBibleSwipeRight				@"NotificationBibleSwipeRight"
 #define NotificationBibleSwipeLeft				@"NotificationBibleSwipeLeft"
 #define NotificationCommentarySwipeRight		@"NotificationCommentarySwipeRight"
@@ -157,12 +155,10 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 
 #define NotificationRedisplayPrimaryBible		@"NotificationRedisplayPrimaryBible"
 #define NotificationRedisplayPrimaryCommentary	@"NotificationRedisplayPrimaryCommentary"
-#define NotificationPrimaryDictionaryChanged	@"NotificationPrimaryDictionaryChanged"
 #define NotificationBookmarksChanged			@"NotificationBookmarksChanged"
 #define NotificationHistoryChanged				@"NotificationHistoryChanged"
 
 #define NotificationToggleMultiList				@"NotificationToggleMultiList"
-#define NotificationToggleModuleList			@"NotificationToggleModuleList"
 #define NotificationToggleNavigation            @"NotificationToggleNavigation"
 
 #define NotificationHideInfoPane				@"NotificationHideInfoPane"

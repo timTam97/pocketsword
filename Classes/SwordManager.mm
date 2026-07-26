@@ -150,20 +150,6 @@ using std::list;
     [self setModuleTypes:types];
     // set modules
     [self setModules:dict];
-	NSMutableArray *arrayList = [[NSMutableArray alloc] initWithCapacity: [moduleTypes count]];
-	for (int i = 0; i < [moduleTypes count]; i++) {
-		if([[SwordManager moduleTypes] containsObject: [moduleTypes objectAtIndex: i]]) {
-			PSModuleType *smt = [[PSModuleType alloc] initWithModules:[self modulesForType: [moduleTypes objectAtIndex: i]] withModuleType:[moduleTypes objectAtIndex: i]];
-			[arrayList addObject: smt];
-			//DLog(@"\nfound a moduleType: %@", [moduleTypes objectAtIndex: i]);
-		}
-	}
-	//alphabetically sort the arrayList by "name"
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"moduleType" ascending:YES];
-	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-	[arrayList sortUsingDescriptors:sortDescriptors];
-	
-	[self setModuleListByType:arrayList];
 }
 
 @end
@@ -462,8 +448,6 @@ static SwordManager *instance;
             
             // clear some data
             [self refreshModules];
-            
-            SendNotifyModulesChanged(nil);
         }
     }
 	
@@ -478,25 +462,6 @@ static SwordManager *instance;
 }
 
 /**
- adds modules in this path
- */
-- (void)addPath:(NSString *)path {
-    
-	[managerLock lock];
-	if(swManager == nil) {
-		//swManager = new sword::SWMgr([path UTF8String], true, new sword::EncodingFilterMgr(sword::ENC_UTF8));
-		swManager = new sword::SWMgr([path UTF8String], true, new sword::MarkupFilterMgr(sword::FMT_HTMLHREF, sword::ENC_HTML));
-    } else {
-		swManager->augmentModules([path UTF8String]);
-    }
-	
-	[self refreshModules];
-	[managerLock unlock];
-    
-    SendNotifyModulesChanged(nil);
-}
-
-/** 
  Unloads Sword Manager.
 */
 

@@ -60,9 +60,9 @@
 // #imports the clean SwordModule.h facade. PSModuleController.h only @class-
 // forward-declares SwordDictionary (never #imports it), so without this the
 // generated Swift interface DROPS PSModuleController.primaryDictionary (its type
-// is an incomplete Obj-C class to Swift). The Wave-3 Swift PSModuleSelectorController
-// reads/compares primaryDictionary, so SwordDictionary must be a visible Swift type
-// here. SwordDictionary itself stays Obj-C++.
+// is an incomplete Obj-C class to Swift). The Swift Dictionary tab
+// (PSDictionaryViewController) reads primaryDictionary, so SwordDictionary must be
+// a visible Swift type here. SwordDictionary itself stays Obj-C++.
 #import "SwordDictionary.h"
 // SwordBook.h is a clean Foundation-only @objc facade (subclass of SwordModule)
 // after Wave 0e — its C++ (the versificationmgr include, the
@@ -112,8 +112,7 @@
 // PSBookmarksNavigatorController) reference it directly; the Obj-C++ callers
 // (PocketSwordAppDelegate.mm, PSModuleViewController.mm, PSTabBarControllerDelegate.mm)
 // reach it via the generated PocketSword-Swift.h.)
-// (PSPreferencesFontTableViewController and PSPreferencesModuleSelectorTableViewController
-// were migrated to Swift in Wave 3; their members live in the respective .swift files,
-// visible to Swift callers in the same module and to any Obj-C TU via the generated
-// PocketSword-Swift.h. The Wave-3 prefs cluster — PSPreferencesController /
-// PSModulePreferencesController / PSBasePreferencesController — is also Swift.)
+// (PSPreferencesFontTableViewController was migrated to Swift in Wave 3; its members
+// live in that .swift file, visible to Swift callers in the same module and to any
+// Obj-C TU via the generated PocketSword-Swift.h. The prefs cluster —
+// PSPreferencesController / PSBasePreferencesController — is also Swift.)

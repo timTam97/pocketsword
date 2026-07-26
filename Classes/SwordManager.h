@@ -152,7 +152,6 @@
 
 /** Constructor */
 - (id)initWithPath:(NSString *)path;
-- (void)addPath:(NSString*)path;
 
 /** reinit the swManager */
 - (void)reInit;

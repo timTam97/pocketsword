@@ -103,8 +103,6 @@ final class PSTabBarControllerDelegate: NSObject,
     // MultiList (history + search)
     private var multiListController: UITabBarController?
 
-    private var moduleSelectorViewController: PSModuleSelectorController?
-
     // Search tab
     @objc var savedSearchHistoryItem: PSSearchHistoryItem?
     @objc var savedSearchResultsTab: ShownTab = .BibleTab
@@ -212,7 +210,6 @@ final class PSTabBarControllerDelegate: NSObject,
         nc.addObserver(self, selector: #selector(redisplayCommentaryChapter), name: .redisplayPrimaryCommentary, object: nil)
 
         nc.addObserver(self, selector: #selector(toggleMultiListNoArg), name: .toggleMultiList, object: nil)
-        nc.addObserver(self, selector: #selector(toggleModulesList(_:)), name: .toggleModuleList, object: nil)
         nc.addObserver(self, selector: #selector(toggleNavigation), name: .toggleNavigation, object: nil)
 
         nc.addObserver(self, selector: #selector(hideInfo), name: .hideInfoPane, object: nil)
@@ -352,20 +349,8 @@ final class PSTabBarControllerDelegate: NSObject,
         }
     }
 
-    @objc(toggleModulesList:)
-    func toggleModulesList(_ notification: Notification?) {
-        if let notification = notification {
-            toggleModulesList(animated: true, with: notification.object as? SwordModule, fromButton: nil)
-        } else {
-            toggleModulesList(animated: true, with: nil, fromButton: nil)
-        }
-    }
-
     @objc(presentationControllerDidDismiss:)
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        if moduleSelectorViewController != nil {
-            moduleSelectorViewController = nil
-        }
         if refNavigationController != nil {
             refSelectorController = nil
             refNavigationController = nil
@@ -373,46 +358,6 @@ final class PSTabBarControllerDelegate: NSObject,
         if let infoPopup = infoPopupController,
            presentationController.presentedViewController == infoPopup {
             infoPopupController = nil
-        }
-    }
-
-    @objc(toggleModulesListAnimated:withModule:fromButton:)
-    func toggleModulesList(animated: Bool, with swordModule: SwordModule?, fromButton sender: Any?) {
-        let iPad = PSResizing.iPad()
-        if moduleSelectorViewController != nil || (tabBarController.presentedViewController != nil) {
-            tabBarController.dismiss(animated: animated, completion: nil)
-            moduleSelectorViewController = nil
-        } else {
-            let modSelector = PSModuleSelectorController(nibName: nil, bundle: nil)
-            moduleSelectorViewController = modSelector
-            let modSelectorNavController = UINavigationController(rootViewController: modSelector)
-
-            // set the module selector to use the correct module type.
-            if let commWeb = commentaryTabController?.webView,
-               let selView = tabBarController.selectedViewController?.view,
-               commWeb.isDescendant(of: selView) {
-                modSelector.listType = .CommentaryTab
-            } else {
-                modSelector.listType = .DictionaryTab
-            }
-
-            if iPad {
-                modSelectorNavController.modalPresentationStyle = .popover
-                modSelectorNavController.preferredContentSize = modSelector.preferredContentSize
-                if let sender = sender as? UIBarButtonItem {
-                    modSelectorNavController.popoverPresentationController?.barButtonItem = sender
-                } else {
-                    dlog("We should only be calling toggleModulesList with a sender now!")
-                    let theSpot = CGRect(x: 50, y: (PSResizing.mainScreenBounds().size.width - 50), width: 10, height: 10)
-                    modSelectorNavController.popoverPresentationController?.sourceView = tabBarController.view
-                    modSelectorNavController.popoverPresentationController?.sourceRect = theSpot
-                }
-                modSelectorNavController.popoverPresentationController?.permittedArrowDirections = .any
-                modSelectorNavController.popoverPresentationController?.delegate = self
-                tabBarController.present(modSelectorNavController, animated: animated, completion: nil)
-            } else {
-                tabBarController.present(modSelectorNavController, animated: animated, completion: nil)
-            }
         }
     }
 

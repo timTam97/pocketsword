@@ -289,9 +289,6 @@
 		5A1F70B0000000000000N002 /* PSHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000N001 /* PSHistoryItem.swift */; };
 		5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000O001 /* PSSearchQuery.swift */; };
 		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
-		5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q001 /* PSLanguageCode.swift */; };
-		5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Q003 /* LanguageCodes.json */; };
-		5A1F70B0000000000000R002 /* PSModuleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000R001 /* PSModuleType.swift */; };
 		5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */; };
 		5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */; };
 		5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */; };
@@ -308,10 +305,8 @@
 		5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */; };
 		5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZL01 /* PSHistoryController.swift */; };
 		5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */; };
-		5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */; };
 		5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */; };
 		5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZD001 /* PSPreferencesController.swift */; };
-		5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */; };
 		5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */; };
 		5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */; };
 		5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */; };
@@ -889,9 +884,6 @@
 		5A1F70B0000000000000N001 /* PSHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryItem.swift; path = Classes/PSHistoryItem.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000O001 /* PSSearchQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchQuery.swift; path = Classes/PSSearchQuery.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000P001 /* SearchWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchWebView.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000Q001 /* PSLanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSLanguageCode.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000Q003 /* LanguageCodes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = LanguageCodes.json; path = Resources/LanguageCodes.json; sourceTree = "<group>"; };
-		5A1F70B0000000000000R001 /* PSModuleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSModuleType.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSChapterSelectorController.swift; path = Classes/PSChapterSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVerseSelectorController.swift; path = Classes/PSVerseSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSInfoPopupViewController.swift; path = Classes/PSInfoPopupViewController.swift; sourceTree = "<group>"; };
@@ -908,10 +900,8 @@
 		5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSRefSelectorController.swift; path = Classes/PSRefSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000ZL01 /* PSHistoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryController.swift; path = Classes/PSHistoryController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSearchController.swift; path = Classes/PSModuleSearchController.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSelectorController.swift; path = Classes/PSModuleSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBasePreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZD001 /* PSPreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesController.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModulePreferencesController.swift; path = Classes/PSModulePreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZG001 /* PSPreferencesFontTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesFontTableViewController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZH001 /* PSDictionaryEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryEntryViewController.swift; path = Classes/PSDictionaryEntryViewController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryViewController.swift; path = Classes/PSDictionaryViewController.swift; sourceTree = "<group>"; };
@@ -1782,7 +1772,6 @@
 			children = (
 				0528684E13E00D300044A388 /* Padauk.ttf */,
 				05034D2110FD61CE00884C98 /* SearchWebView.js */,
-				5A1F70B0000000000000Q003 /* LanguageCodes.json */,
 				056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */,
 			);
 			name = misc;
@@ -1870,8 +1859,6 @@
 		054C55B911AD0A4F00633371 /* module selector */ = {
 			isa = PBXGroup;
 			children = (
-				5A1F70B00000000000ZB001 /* PSModuleSelectorController.swift */,
-				5A1F70B00000000000ZE001 /* PSModulePreferencesController.swift */,
 			);
 			name = "module selector";
 			sourceTree = "<group>";
@@ -1965,8 +1952,6 @@
 		080E96DDFE201D6D7F000001 /* PS-other */ = {
 			isa = PBXGroup;
 			children = (
-				5A1F70B0000000000000Q001 /* PSLanguageCode.swift */,
-				5A1F70B0000000000000R001 /* PSModuleType.swift */,
 				0545E28510639DC400DD7F06 /* utils.h */,
 				0545E29A1063A09500DD7F06 /* globals.h */,
 				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
@@ -2238,7 +2223,6 @@
 				0546B59F113537E9009D5189 /* strongsrealhebrew.zip in Resources */,
 				052B52F21101D76000FFDF01 /* locales.d.zip in Resources */,
 				05034D2810FD63E300884C98 /* SearchWebView.js in Resources */,
-				5A1F70B0000000000000Q004 /* LanguageCodes.json in Resources */,
 				05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */,
 				05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
@@ -2513,12 +2497,9 @@
 				05275B6910884F72004FB0E0 /* url.cpp in Sources */,
 				05275B6A10884F72004FB0E0 /* utilstr.cpp in Sources */,
 				05275B6B10884F72004FB0E0 /* utilxml.cpp in Sources */,
-				5A1F70B0000000000000Q002 /* PSLanguageCode.swift in Sources */,
-				5A1F70B0000000000000R002 /* PSModuleType.swift in Sources */,
 				05F84EE1191F4AB3003350DE /* thmllatex.cpp in Sources */,
 				5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */,
 				5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */,
-				5A1F70B00000000000ZE002 /* PSModulePreferencesController.swift in Sources */,
 				5A1F70B00000000000ZO002 /* PSBibleViewController.swift in Sources */,
 				5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */,
 				5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */,
@@ -2537,7 +2518,6 @@
 				5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */,
 				05E3FE4B10CF6BF500DFEB77 /* SwordDictionary.mm in Sources */,
 				0546D59710CF6C9F00799DCB /* SwordModuleTextEntry.m in Sources */,
-				5A1F70B00000000000ZB002 /* PSModuleSelectorController.swift in Sources */,
 				5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */,
 				055E308510E74288004EBC79 /* SwordListKey.mm in Sources */,
 				055E308A10E74308004EBC79 /* SwordKey.mm in Sources */,

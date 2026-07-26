@@ -131,10 +131,9 @@ enum AppConstants {
 // rawValue MUST equal the existing @"..." literal in globals.h so that Obj-C and
 // Swift observers/posters interoperate during the mixed phase. NOTE the ONE
 // wire-string mismatch: moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged"
-// (drops the "Notification" prefix). All other 24 match their macro name.
+// (drops the "Notification" prefix). All others match their macro name.
 
 extension Notification.Name {
-    static let modulesChanged               = Notification.Name("NotificationModulesChanged")
     static let bibleSwipeRight              = Notification.Name("NotificationBibleSwipeRight")
     static let bibleSwipeLeft               = Notification.Name("NotificationBibleSwipeLeft")
     static let commentarySwipeRight         = Notification.Name("NotificationCommentarySwipeRight")
@@ -150,12 +149,10 @@ extension Notification.Name {
 
     static let redisplayPrimaryBible        = Notification.Name("NotificationRedisplayPrimaryBible")
     static let redisplayPrimaryCommentary   = Notification.Name("NotificationRedisplayPrimaryCommentary")
-    static let primaryDictionaryChanged     = Notification.Name("NotificationPrimaryDictionaryChanged")
     static let bookmarksChanged             = Notification.Name("NotificationBookmarksChanged")
     static let historyChanged               = Notification.Name("NotificationHistoryChanged")
 
     static let toggleMultiList              = Notification.Name("NotificationToggleMultiList")
-    static let toggleModuleList             = Notification.Name("NotificationToggleModuleList")
     static let toggleNavigation             = Notification.Name("NotificationToggleNavigation")
 
     static let hideInfoPane                 = Notification.Name("NotificationHideInfoPane")
@@ -168,12 +165,6 @@ extension Notification.Name {
     static let addBookmarkInFolder          = Notification.Name("NotificationAddBookmarkInFolder")
 
     static let updateSelectedReference      = Notification.Name("NotificationUpdateSelectedReference")
-}
-
-/// Swift analogue of the `SendNotifyModulesChanged(X)` statement macro
-/// (globals.h:141 — posts NotificationModulesChanged with the given object).
-func sendNotifyModulesChanged(_ object: Any? = nil) {
-    NotificationCenter.default.post(name: .modulesChanged, object: object)
 }
 
 // MARK: - Per-module preference accessors
