@@ -81,6 +81,32 @@ enum Defaults {
     static let rotationLockPosition        = "rotationLockedPosition"        // macro ROTATION_LOCK_POSITION
 }
 
+// MARK: - Bundled modules
+//
+// The app ships exactly these five modules (unpacked from the zips in Resources/
+// on first launch) and there is no UI to add, remove, or pick a different one.
+// The three lexicon ROLES are fixed by their .conf features and are NOT
+// interchangeable: StrongsRealGreek is `Feature=GreekDef`, StrongsRealHebrew is
+// `HebrewDef`, Robinson is `GreekParse`.
+//
+// These replace the former DefaultsStrongsGreekModule / DefaultsStrongsHebrew
+// Module / DefaultsMorphGreekModule persisted keys, which are retired (see the
+// note next to their declarations above).
+
+enum BundledModules {
+    static let bible = "KJV"
+    static let commentary = "MHCC"
+    static let strongsGreek = "StrongsRealGreek"
+    static let strongsHebrew = "StrongsRealHebrew"
+    static let morphGreek = "Robinson"
+
+    /// The three fixed-role lexicons, in Dictionary-tab menu order.
+    static let lexicons = [strongsGreek, strongsHebrew, morphGreek]
+
+    /// All five bundled modules.
+    static let all = [bible, commentary, strongsGreek, strongsHebrew, morphGreek]
+}
+
 // MARK: - Font names + misc string / int constants
 
 enum AppConstants {

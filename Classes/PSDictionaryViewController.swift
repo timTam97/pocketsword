@@ -6,33 +6,20 @@
 //  primary dictionary and offers an incremental, case-insensitive substring
 //  filter over those keys via a UISearchBar header. Tapping a key renders that
 //  entry's HTML and pushes a PSDictionaryEntryViewController. The right bar
-//  button forwards to the coordinator (PSTabBarControllerDelegate) to open the
-//  module-selector list.
+//  button is a fixed 3-way UIMenu over the bundled lexicons (Strong's Greek /
+//  Strong's Hebrew / Robinson) — there is no module list to open.
 //
 //  Swift port (Wave 3) of the former Classes/PSDictionaryViewController.{h,mm}.
 //  Zero C++ — it reaches the SWORD engine only through the Foundation-only
 //  facades (PSModuleController.primaryDictionary -> SwordDictionary) and the
-//  PSModuleController HTML helpers, all visible via the bridging header. The
-//  @objc PSDictionaryViewControllerDelegate protocol is preserved verbatim so
-//  the still-Obj-C++ coordinator can conform to it (forward-declared as
-//  @protocol in PSTabBarControllerDelegate.h, resolved via the generated
-//  PocketSword-Swift.h in its .mm). MBProgressHUD (Obj-C, UIKit-only) is reached
-//  through the bridging header.
+//  PSModuleController HTML helpers, all visible via the bridging header.
+//  MBProgressHUD (Obj-C, UIKit-only) is reached through the bridging header.
 //
 //  Created by Nic Carter on 21/12/09.
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
 //
 
 import UIKit
-
-@objc(PSDictionaryViewControllerDelegate)
-protocol PSDictionaryViewControllerDelegate: NSObjectProtocol {
-    // Selector pinned to the original Obj-C name -toggleModulesListFromButton:
-    // so the still-Obj-C++ coordinator (PSTabBarControllerDelegate.mm) keeps
-    // satisfying the conformance with its existing method implementation.
-    @objc(toggleModulesListFromButton:)
-    func toggleModulesList(fromButton sender: Any?)
-}
 
 @objc(PSDictionaryViewController)
 final class PSDictionaryViewController: UITableViewController, UISearchBarDelegate, MBProgressHUDDelegate {
@@ -42,7 +29,15 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     // here verbatim. It must stay byte-identical to SwordManager.h.
     private static let swModConfFeatureImages = "Images"
 
-    @objc weak var delegate: PSDictionaryViewControllerDelegate?
+    /// Display titles for the three fixed-role bundled lexicons, keyed by module
+    /// name. The roles come from each module's .conf (GreekDef / HebrewDef /
+    /// GreekParse) and are not interchangeable — see `BundledModules`.
+    private static let lexiconTitles: [String: String] = [
+        BundledModules.strongsGreek: "Strong's Greek",
+        BundledModules.strongsHebrew: "Strong's Hebrew",
+        BundledModules.morphGreek: "Robinson",
+    ]
+
     @objc var dictionarySearchBar: UISearchBar?
 
     private var searching = false
@@ -57,8 +52,24 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
 
     // MARK: - Lifecycle
 
-    @objc private func dictionaryModuleSelectorButtonPressed(_ sender: Any?) {
-        delegate?.toggleModulesList(fromButton: sender)
+    /// Rebuilds the fixed 3-way lexicon menu, checkmarking whichever lexicon is
+    /// currently loaded as the primary dictionary.
+    private func rebuildLexiconMenu() {
+        let currentName = primaryDictionary?.name
+        let actions: [UIMenuElement] = BundledModules.lexicons.map { modName in
+            let action = UIAction(title: Self.lexiconTitles[modName] ?? modName,
+                                  image: nil,
+                                  identifier: UIAction.Identifier("dictionary.\(modName)")) { [weak self] _ in
+                guard let self = self else { return }
+                PSModuleController.default()?.loadPrimaryDictionary(modName)
+                self.reloadDictionaryData(true)
+                self.rebuildLexiconMenu()
+                self.tableView.reloadData()
+            }
+            action.state = (modName == currentName) ? .on : .off
+            return action
+        }
+        navigationItem.rightBarButtonItem?.menu = UIMenu(title: "", children: actions)
     }
 
     override func viewDidLoad() {
@@ -66,10 +77,9 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         navigationItem.title = NSLocalizedString("TabBarTitleDictionary", comment: "Dictionary")
 
         let dictButton = UIBarButtonItem(title: NSLocalizedString("None", comment: "None"),
-                                         style: .plain,
-                                         target: self,
-                                         action: #selector(dictionaryModuleSelectorButtonPressed(_:)))
+                                         style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = dictButton
+        rebuildLexiconMenu()
 
         let dSB = UISearchBar(frame: CGRect(x: 0, y: 0, width: PSResizing.mainScreenBounds().size.width, height: 44))
         dSB.delegate = self
@@ -82,13 +92,8 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         dictionaryEnabled = false
         searchResults = []
 
-        NotificationCenter.default.addObserver(self, selector: #selector(primaryDictionaryChanged), name: .primaryDictionaryChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadDictionaryData as () -> Void), name: .reloadDictionaryData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(setDictionaryTitleViaNotification), name: .newPrimaryDictionary, object: nil)
-    }
-
-    @objc private func primaryDictionaryChanged() {
-        navigationItem.rightBarButtonItem?.title = NSLocalizedString("None", comment: "None")
     }
 
     @objc func reloadDictionaryData() {
@@ -107,6 +112,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             } else {
                 navigationItem.rightBarButtonItem?.title = NSLocalizedString("None", comment: "None")
             }
+            rebuildLexiconMenu()
         }
     }
 

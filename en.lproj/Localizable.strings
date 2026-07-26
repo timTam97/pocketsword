@@ -152,6 +152,7 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "Headings";
 "DictionarySearchPlaceholderText" = "Search Dictionary";
+"DictionaryNoneLoaded" = "No dictionary loaded";
 
 // new v1.3.2 strings:
 

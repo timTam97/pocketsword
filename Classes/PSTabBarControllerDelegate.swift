@@ -80,8 +80,7 @@ final class PSTabBarControllerDelegate: NSObject,
                                         PSModuleSearchControllerDelegate,
                                         UIPopoverPresentationControllerDelegate,
                                         UIAdaptivePresentationControllerDelegate,
-                                        WKNavigationDelegate,
-                                        PSDictionaryViewControllerDelegate {
+                                        WKNavigationDelegate {
 
     // Tab bar
     @objc var tabBarController: UITabBarController!
@@ -150,7 +149,6 @@ final class PSTabBarControllerDelegate: NSObject,
 
         // add the Dictionary Tab.
         let dictionaryViewController = PSDictionaryViewController(style: .grouped)
-        dictionaryViewController.delegate = self
         let dictionaryTab = UINavigationController(rootViewController: dictionaryViewController)
         let dTBI = UITabBarItem(title: NSLocalizedString("TabBarTitleDictionary", comment: "Dictionary"),
                                 image: UIImage(named: "dictionary.png"), tag: 99)
@@ -361,12 +359,6 @@ final class PSTabBarControllerDelegate: NSObject,
         } else {
             toggleModulesList(animated: true, with: nil, fromButton: nil)
         }
-    }
-
-    // PSDictionaryViewControllerDelegate (selector pinned to -toggleModulesListFromButton:).
-    @objc(toggleModulesListFromButton:)
-    func toggleModulesList(fromButton sender: Any?) {
-        toggleModulesList(animated: true, with: nil, fromButton: sender)
     }
 
     @objc(presentationControllerDidDismiss:)
