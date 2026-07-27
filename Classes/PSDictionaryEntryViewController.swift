@@ -113,8 +113,10 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
                 let mod = module
 
                 let swordDictionary = PSModuleController.default()?.swordManager?.module(withName: mod) as? SwordDictionary
-                if let swordDictionary = swordDictionary {
-                    entry = swordDictionary.entry(forKey: rData[Self.attrTypeValue] as? String ?? "")
+                if swordDictionary != nil {
+                    entry = PSContentReader.entry(module: mod,
+                                                  key: rData[Self.attrTypeValue] as? String ?? "",
+                                                  or: swordDictionary)
                 } else {
                     let notInstalled = NSLocalizedString("ModuleNotInstalled", comment: "is not installed.")
                     entry = "<p style=\"color:grey;text-align:center;font-style:italic;\">\(mod) \(notInstalled)</p>"

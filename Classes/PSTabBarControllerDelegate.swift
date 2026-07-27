@@ -814,7 +814,9 @@ final class PSTabBarControllerDelegate: NSObject,
                     let swordDictionary = SwordManager.default()?.module(withName: mod) as? SwordDictionary
                     var strongs = false
                     if let swordDictionary = swordDictionary {
-                        entry = swordDictionary.entry(forKey: rData[ATTRTYPE_VALUE] as? String)
+                        entry = PSContentReader.entry(module: swordDictionary.name ?? "",
+                                                      key: rData[ATTRTYPE_VALUE] as? String,
+                                                      or: swordDictionary)
 
                         var strongsSearchTerm = ""
                         if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_GREEKDEF) && swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
@@ -901,8 +903,9 @@ final class PSTabBarControllerDelegate: NSObject,
 
         } else if let rData = rData, (rData[ATTRTYPE_ACTION] as? String) == "showNote" {
             if (rData[ATTRTYPE_TYPE] as? String) == "n" { // footnote
-                entry = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData) as? String
-                entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
+                let bible = PSModuleController.default()?.primaryBible
+                entry = PSContentReader.footnoteBody(module: bible?.name, data: rData, or: bible)
+                entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: bible?.name)
             } else if (rData[ATTRTYPE_TYPE] as? String) == "x" { // x-reference
                 let array = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData) as? [[AnyHashable: Any]]
                 let tmpEntry = NSMutableString(string: "")

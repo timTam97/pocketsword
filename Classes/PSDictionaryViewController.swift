@@ -131,6 +131,24 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             }
         }
 
+        // SWORD_REMOVAL_PLAN.md Phase 3: the whole cache dance below exists because
+        // -[SwordDictionary allKeys] walks the module from TOP and is slow enough
+        // to need a HUD and an opt-in on-disk key cache. The content store keeps
+        // the keys in an UNCOMPRESSED index precisely so that is unnecessary, so
+        // with the reader active there is nothing to cache or wait for — skip
+        // straight to enabled.
+        //
+        // Not just an optimisation: leaving the prompt in place meant answering
+        // "No" left the tab showing "No dictionary loaded" for ever, even though
+        // the reader had the keys in hand. Found by driving the simulator, not by
+        // a test — the fixtures cannot see it.
+        if PSContentReader.isActive, primaryDictionary != nil {
+            dictionarySearchBar?.isUserInteractionEnabled = true
+            dictionaryEnabled = true
+            if reloadData { tableView.reloadData() }
+            return
+        }
+
         if let primaryDictionary = primaryDictionary {
             if !primaryDictionary.keysLoaded() {
                 if !primaryDictionary.keysCached() {
@@ -216,7 +234,8 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         if searching {
             return searchResults.count
         } else if dictionaryEnabled {
-            return Int(primaryDictionary?.entryCount() ?? 0)
+            return PSContentReader.entryCount(module: primaryDictionary?.name ?? "",
+                                              or: primaryDictionary)
         } else {
             return 0
         }
@@ -238,7 +257,9 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         if searching {
             cell.textLabel?.text = searchResults[indexPath.row]
         } else if dictionaryEnabled {
-            cell.textLabel?.text = (primaryDictionary?.allKeys() as? [String])?[indexPath.row]
+            let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "",
+                                               or: primaryDictionary)
+            cell.textLabel?.text = indexPath.row < keys.count ? keys[indexPath.row] : nil
         }
         return cell
     }
@@ -249,7 +270,8 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             tableView.deselectRow(at: indexPath, animated: true)
             return
         }
-        let rawDescr = primaryDictionary?.entry(forKey: t) ?? ""
+        let rawDescr = PSContentReader.entry(module: primaryDictionary?.name ?? "",
+                                            key: t, or: primaryDictionary) ?? ""
         let body = "<div style=\"-webkit-text-size-adjust: none;\"><b>\(t)</b><br /><p>\(rawDescr)</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>"
         let descr = PSModuleController.createInfoHTMLString(body, usingModuleForPreferences: primaryDictionary?.name)
 
@@ -358,7 +380,8 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     @objc func searchDictionaryEntries() {
         searchResults.removeAll()
         let searchText = dictionarySearchBar?.text ?? ""
-        let keys = (primaryDictionary?.allKeys() as? [String]) ?? []
+        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "",
+                                           or: primaryDictionary)
 
         for t in keys {
             if t.range(of: searchText, options: .caseInsensitive) != nil {

@@ -794,9 +794,8 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
                     let rawNumber = (rData[SWRender.attrValue] as? String) ?? ""
                     let strongsReference = "\(hebrew ? "H" : "G")\(rawNumber)"
-                    if let swordDictionary = SwordManager.default().module(withName: mod) as? SwordDictionary {
-                        entry = swordDictionary.entry(forKey: rawNumber)
-                    }
+                    entry = PSContentReader.entry(module: mod, key: rawNumber,
+                                                  or: SwordManager.default().module(withName: mod) as? SwordDictionary)
                     let hasDefinition = entry != nil
                     // Keep the raw rendered entry so the popup can pull the
                     // Greek/Hebrew lemma out for its header (only when it's a
@@ -828,9 +827,8 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                     if (rData[SWRender.attrType] as? String)?.hasPrefix("strongMorph") == true {
                         entry = NSLocalizedString("MorphHebrewNotSupported", comment: "")
                     } else {
-                        if let swordDictionary = SwordManager.default().module(withName: mod) as? SwordDictionary {
-                            entry = swordDictionary.entry(forKey: rData[SWRender.attrValue] as? String)
-                        }
+                        entry = PSContentReader.entry(module: mod, key: rData[SWRender.attrValue] as? String,
+                                                      or: SwordManager.default().module(withName: mod) as? SwordDictionary)
                         if entry == nil {
                             entry = NSLocalizedString("NoMorphGreekModuleInstalled", comment: "")
                         }
@@ -839,17 +837,13 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
                 } else if let rData = rData, (rData[SWRender.attrAction] as? String) == "showNote" {
                     if (rData[SWRender.attrType] as? String) == "n" { // footnote
-                        if tabType == .BibleTab {
-                            entry = PSModuleController.default().primaryBible?.attributeValue(forEntryData: rData) as? String
-                            entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                            entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryBible?.name)
-                        } else {
-                            entry = PSModuleController.default().primaryCommentary?.attributeValue(forEntryData: rData) as? String
-                            entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                            entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryCommentary?.name)
-                        }
+                        let mod = (tabType == .BibleTab)
+                            ? PSModuleController.default().primaryBible
+                            : PSModuleController.default().primaryCommentary
+                        entry = PSContentReader.footnoteBody(module: mod?.name, data: rData, or: mod)
+                        entry = entry?.replacingOccurrences(of: "*x", with: "x")
+                        entry = entry?.replacingOccurrences(of: "*n", with: "n")
+                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod?.name)
                     } else if (rData[SWRender.attrType] as? String) == "x" { // x-reference
                         let array: [Any]?
                         if tabType == .BibleTab {

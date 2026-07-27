@@ -63,6 +63,75 @@ final class PSContentReader: NSObject {
     /// gates *capability*, and both must hold.
     @objc var isAvailable: Bool { store != nil && resolver != nil }
 
+    /// Whether a caller should route through the reader: the flag AND capability.
+    /// Every call site still handles a nil result from the specific read, so this
+    /// is the cheap up-front check, not the only guard.
+    @objc static var isActive: Bool {
+        PSFeatureFlags.swiftContentReader && PSContentReader.shared.isAvailable
+    }
+
+    // MARK: - SwordDictionary shims
+    //
+    // The lexicon call sites (`PSDictionaryViewController`,
+    // `PSDictionaryEntryViewController`, `PSModuleViewController`,
+    // `PSTabBarControllerDelegate`) all hold a `SwordDictionary` and call
+    // -entryForKey: / -allKeys / -entryCount on it. These three take the module by
+    // name instead, so a call site becomes a one-line conditional rather than a
+    // restructure — which matters because two of those files hold near-duplicate
+    // copies of the same decode block.
+
+    /// `-[SwordDictionary entryForKey:]`, through the reader when it is active.
+    @objc(entryForModule:key:orDictionary:)
+    static func entry(module: String, key: String?, or dictionary: SwordDictionary?) -> String? {
+        guard let key else { return nil }
+        if isActive, let html = shared.dictionaryEntry(module: module, key: key) {
+            return html
+        }
+        // Either the reader is off, or this was a genuine miss. Fall through to
+        // SWORD: while the flag exists a miss must not look different from today.
+        return dictionary?.entry(forKey: key)
+    }
+
+    /// `-[SwordDictionary allKeys]`, through the reader when it is active.
+    @objc(allKeysForModule:orDictionary:)
+    static func allKeys(module: String, or dictionary: SwordDictionary?) -> [String] {
+        if isActive {
+            let keys = shared.dictionaryKeys(module: module)
+            if !keys.isEmpty { return keys }
+        }
+        return (dictionary?.allKeys() as? [String]) ?? []
+    }
+
+    /// `-[SwordDictionary entryCount]`, through the reader when it is active.
+    @objc(entryCountForModule:orDictionary:)
+    static func entryCount(module: String, or dictionary: SwordDictionary?) -> Int {
+        if isActive {
+            let count = shared.dictionaryEntryCount(module: module)
+            if count > 0 { return count }
+        }
+        return Int(dictionary?.entryCount() ?? 0)
+    }
+
+    /// The **`n` branch only** of `-[SwordModule attributeValueForEntryData:]`.
+    ///
+    /// The `x` (cross-reference) and `scriptRef` branches stay on SWORD this
+    /// phase: both resolve arbitrary reference lists — including ranges — through
+    /// `parseVerseList` (SwordModule.mm:597-621), and
+    /// `testCaptureScriptRefAttributes` pins "Ps 23:1-3" yielding three elements.
+    /// Range resolution is Phase 4. (The `x` branch is also unreachable for the
+    /// shipped content: all 6,959 KJV notes are type='study' with an empty
+    /// refList.)
+    @objc(footnoteBodyForModule:data:orModule:)
+    static func footnoteBody(module: String?, data: [AnyHashable: Any], or swordModule: SwordModule?) -> String? {
+        if isActive, let module,
+           let passage = data[ATTRTYPE_PASSAGE] as? String,
+           let marker = data[ATTRTYPE_VALUE] as? String,
+           let body = shared.noteBody(module: module, osisRef: passage, marker: marker) {
+            return body
+        }
+        return swordModule?.attributeValue(forEntryData: data) as? String
+    }
+
     // MARK: - Options
 
     /// Load the render options for a module from the **per-module** prefs.
@@ -279,7 +348,16 @@ final class PSContentReader: NSObject {
     /// "Ps 23:1-3" yielding three elements — and range resolution is Phase 4.
     @objc(noteBodyForModule:osisRef:marker:)
     func noteBody(module: String, osisRef: String, marker: String) -> String? {
-        guard let store, let note = store.note(module: module, osisRef: osisRef, marker: marker) else {
+        guard let store else { return nil }
+        // The passage arrives URL-encoded, straight off the anchor: the emitted
+        // href is `passage=Genesis+4%3A1` and `+[PSModuleController data(forLink:)]`
+        // splits the query on '&'/'=' WITHOUT decoding it (unlike its own sword://
+        // branch, which does both). The engine's `n` branch then hands that string
+        // to VerseKey::setText, which tolerates it; a SQL lookup does not, because
+        // notes_index holds "Genesis 4:1". Decode here, and accept an
+        // already-clean ref too so a caller that decoded first still works.
+        let decoded = Self.decodePassage(osisRef)
+        guard let note = store.note(module: module, osisRef: decoded, marker: marker) else {
             return nil
         }
         // Notes are captured through renderText(buf), which sets
@@ -288,5 +366,13 @@ final class PSContentReader: NSObject {
         // note text itself is not option-gated: the anchor that leads here is.
         guard let html = PSChapterExpander.expand(note.body, options: .allOn) else { return nil }
         return html
+    }
+
+    /// `Genesis+4%3A1` -> `Genesis 4:1`. `+` means space in a query string, so it
+    /// is replaced before percent-decoding (decoding first would leave a literal
+    /// `+` where a `%2B` had been, though no ref contains one).
+    static func decodePassage(_ passage: String) -> String {
+        let plussed = passage.replacingOccurrences(of: "+", with: " ")
+        return plussed.removingPercentEncoding ?? plussed
     }
 }

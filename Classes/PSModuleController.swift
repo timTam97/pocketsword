@@ -543,7 +543,18 @@ final class PSModuleController: NSObject {
             }
             NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
         }
-        let text = primaryBible?.getChapter(chapter, withExtraJS: extraJS)
+        // SWORD_REMOVAL_PLAN.md Phase 3: read through the pure-Swift reader when the
+        // flag is on, and fall back to the engine if it declines (see
+        // PSContentReader's failure policy). `createHTMLString` is untouched — the
+        // reader calls the same shell builder.
+        var text: String?
+        if PSFeatureFlags.swiftContentReader, let name = primaryBible?.name {
+            text = PSContentReader.shared.chapterPage(module: name, ref: chapter,
+                                                      kind: .bible, extraJS: extraJS)
+        }
+        if text == nil {
+            text = primaryBible?.getChapter(chapter, withExtraJS: extraJS)
+        }
 
         UserDefaults.standard.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
         UserDefaults.standard.synchronize()
@@ -564,7 +575,14 @@ final class PSModuleController: NSObject {
             }
             NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
         }
-        let text = primaryCommentary?.getChapter(chapter, withExtraJS: extraJS)
+        var text: String?
+        if PSFeatureFlags.swiftContentReader, let name = primaryCommentary?.name {
+            text = PSContentReader.shared.chapterPage(module: name, ref: chapter,
+                                                      kind: .commentary, extraJS: extraJS)
+        }
+        if text == nil {
+            text = primaryCommentary?.getChapter(chapter, withExtraJS: extraJS)
+        }
 
         UserDefaults.standard.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
         UserDefaults.standard.synchronize()

@@ -369,6 +369,184 @@ final class PSContentStoreTests: XCTestCase {
         }
     }
 
+    // MARK: - Footnote bodies (plan step 6, the `n` branch)
+
+    /// The reader's footnote lookup must match the captured
+    /// `attributeValueForEntryData:` output, AND must work on the passage string
+    /// the anchor actually carries — which is URL-encoded
+    /// (`passage=Genesis+4%3A1`). `data(forLink:)` splits the query without
+    /// decoding it, and the engine's `n` branch feeds that straight to
+    /// VerseKey::setText, which tolerates it; a SQL lookup does not.
+    func testFootnoteBodiesMatchFixturesInBothEncodings() throws {
+        let reader = PSContentReader.shared
+        try XCTSkipUnless(reader.isAvailable, "reader unavailable")
+
+        // Parsed out of the committed fixture rather than restated here, so the
+        // expected bodies stay tied to what the engine emitted.
+        let text = try fixture("KJV-footnote-attributes.txt")
+        var expected: [(passage: String, marker: String, body: String)] = []
+        for block in text.components(separatedBy: "### footnote ").dropFirst() {
+            let lines = block.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+            guard lines.count == 2 else { continue }
+            // "passage=Genesis 4:1 value=1"
+            let header = String(lines[0])
+            guard let passageRange = header.range(of: "passage="),
+                  let valueRange = header.range(of: " value=") else { continue }
+            let passage = String(header[passageRange.upperBound..<valueRange.lowerBound])
+            let marker = String(header[valueRange.upperBound...])
+            var body = String(lines[1])
+            while body.hasSuffix("\n") { body.removeLast() }
+            guard body.hasPrefix("string: ") else { continue }
+            expected.append((passage, marker, String(body.dropFirst("string: ".count))))
+        }
+        XCTAssertEqual(expected.count, 4, "the footnote fixture no longer holds 4 cases")
+
+        for c in expected {
+            XCTAssertEqual(reader.noteBody(module: "KJV", osisRef: c.passage, marker: c.marker),
+                           c.body, "clean passage \(c.passage) #\(c.marker)")
+
+            // And the same lookup through the encoded form the anchor emits.
+            let encoded = c.passage
+                .replacingOccurrences(of: " ", with: "+")
+                .replacingOccurrences(of: ":", with: "%3A")
+            XCTAssertEqual(reader.noteBody(module: "KJV", osisRef: encoded, marker: c.marker),
+                           c.body, "encoded passage \(encoded) #\(c.marker)")
+        }
+
+        // A passage with no note at that marker misses cleanly.
+        XCTAssertNil(reader.noteBody(module: "KJV", osisRef: "Genesis+1%3A1", marker: "1"))
+        XCTAssertNil(reader.noteBody(module: "KJV", osisRef: "Genesis+4%3A1", marker: "99"))
+    }
+
+    /// The encoded form really is what the app decodes to, so the shim above is
+    /// not solving an invented problem: the anchor the store emits carries
+    /// `passage=Genesis+4%3A1`, and `data(forLink:)` passes it through verbatim.
+    func testTheEmittedFootnoteAnchorCarriesAnEncodedPassage() throws {
+        let body = try renderBody(module: "KJV", ref: "Gen 4", options: .allOn).body
+        XCTAssertTrue(body.contains("passage=Genesis+4%3A1"),
+                      "the footnote anchor's passage is no longer URL-encoded")
+        XCTAssertEqual(PSContentReader.decodePassage("Genesis+4%3A1"), "Genesis 4:1")
+        XCTAssertEqual(PSContentReader.decodePassage("Genesis 4:1"), "Genesis 4:1",
+                       "an already-decoded passage must pass through unchanged")
+    }
+
+    // MARK: - Toggle independence (plan step 6)
+    //
+    // All-on and all-off endpoints do NOT prove the gates are wired to the right
+    // axes: Strong's and morph could be swapped and both endpoint fixtures would
+    // still pass, because each flips together with the other. So flip exactly one
+    // axis up from all-off and assert that axis's markup appears while the others
+    // stay absent.
+
+    /// The markup each axis is responsible for, and a chapter that carries it.
+    private static let axisMarkers: [(name: String,
+                                     ref: String,
+                                     set: (inout PSChapterExpander.Options) -> Void,
+                                     marker: String)] = [
+        ("strongs",   "Gen 1",  { $0.strongs = true },   "action=showStrongs"),
+        ("morphs",    "Gen 1",  { $0.morphs = true },    "action=showMorph"),
+        ("footnotes", "Gen 4",  { $0.footnotes = true },  "action=showNote"),
+        ("redLetter", "John 3", { $0.redLetter = true },  "class=\"WordOfChrist\""),
+        ("headings",  "Gen 1",  { $0.headings = true },   "<p><b>"),
+    ]
+
+    func testEachToggleControlsExactlyItsOwnMarkup() throws {
+        for axis in Self.axisMarkers {
+            var options = PSChapterExpander.Options.allOff
+            axis.set(&options)
+            let body = try renderBody(module: "KJV", ref: axis.ref, options: options).body
+
+            XCTAssertTrue(body.contains(axis.marker),
+                          "\(axis.name) on: expected \(axis.marker) in \(axis.ref)")
+            // Every OTHER axis's marker must be absent. This is the assertion the
+            // endpoint fixtures cannot make: it fails if two axes are swapped.
+            for other in Self.axisMarkers where other.name != axis.name {
+                // Two axes legitimately share a marker prefix, so compare on the
+                // full distinct string only when the chapters agree.
+                guard other.ref == axis.ref else { continue }
+                XCTAssertFalse(body.contains(other.marker),
+                               "\(axis.name) on: \(other.marker) (\(other.name)) leaked into \(axis.ref)")
+            }
+        }
+    }
+
+    /// Red-letter's case specifically, because it is the one axis where "off" is
+    /// not simply "omit the token": the span goes away but its PAYLOAD stays and
+    /// must be recursively expanded. All 2,038 spans carry nested Strong's/morph
+    /// tokens, so a naive delete-the-span-and-contents loses verse text.
+    func testRedLetterOffKeepsTheVerseTextAndItsNestedTokens() throws {
+        var withRed = PSChapterExpander.Options.allOff
+        withRed.redLetter = true
+        withRed.strongs = true
+        var withoutRed = withRed
+        withoutRed.redLetter = false
+
+        let on = try renderBody(module: "KJV", ref: "John 3", options: withRed).body
+        let off = try renderBody(module: "KJV", ref: "John 3", options: withoutRed).body
+
+        XCTAssertTrue(on.contains("class=\"WordOfChrist\""))
+        XCTAssertFalse(off.contains("class=\"WordOfChrist\""), "the span must be omitted, not hidden")
+
+        // The verse text survives, and so do the Strong's anchors that were nested
+        // inside the span.
+        XCTAssertTrue(off.contains("action=showStrongs"),
+                      "dropping the red-letter span lost its nested Strong's anchors")
+
+        // Compare the two renders on their text with tags and all whitespace
+        // removed. Both normalisations are needed and neither weakens the claim
+        // being made (that no *text* was lost):
+        //  * tags, because Strong's anchors interleave the words
+        //    ("loved<a …>&lt;25&gt;</a> the world"), so no long phrase is
+        //    contiguous in the raw HTML;
+        //  * whitespace, because both WoC delimiters carry a trailing space
+        //    (osishtmlhref.cpp:118-119). Removing the span therefore removes two
+        //    spaces with it, which is a real and correct difference in the bytes —
+        //    "6 &lt;3588&gt;" becomes "6&lt;3588&gt;". The byte-exact check lives in
+        //    testChapterBodiesMatchFixturesAllOptionsOff, against the fixture the
+        //    engine itself produced; this test is about content, not bytes.
+        let onText = Self.strippingWhitespace(Self.strippingTags(on))
+        let offText = Self.strippingWhitespace(Self.strippingTags(off))
+        XCTAssertEqual(onText, offText,
+                       "dropping the red-letter span changed the verse text")
+        // A phrase that survives the anchor interleaving, so the comparison above
+        // cannot pass by both sides being empty.
+        XCTAssertTrue(offText.contains("onlybegotten"),
+                      "the red-letter verse text is missing entirely")
+
+        // And the HTML is genuinely shorter — the span really went rather than
+        // being emitted with a different class.
+        XCTAssertLessThan(off.count, on.count)
+    }
+
+    /// Everything outside a tag, so two renders can be compared on their text
+    /// alone. Not a general HTML parser — the input is known to be well-formed
+    /// markup with no `<` or `>` in text position (they are `&lt;` / `&gt;`).
+    private static func strippingTags(_ html: String) -> String {
+        var out = ""
+        var depth = 0
+        for c in html {
+            if c == "<" { depth += 1 } else if c == ">" { depth -= 1 } else if depth == 0 { out.append(c) }
+        }
+        return out
+    }
+
+    /// Drop all whitespace. See the caller for why the red-letter comparison needs
+    /// it (the WoC delimiters carry the spaces that legitimately disappear with the
+    /// span).
+    private static func strippingWhitespace(_ text: String) -> String {
+        text.filter { !$0.isWhitespace }
+    }
+
+    /// The verse-per-line toggle is on the assembler, not the expander, so it
+    /// needs its own check: it changes the anchor shape rather than the markup set.
+    func testVersePerLineChangesTheAnchorShape() throws {
+        let plain = try renderBody(module: "KJV", ref: "Ps 23", options: .allOff).body
+        let vpl = try renderBody(module: "KJV", ref: "Ps 23", options: .allOff, versePerLine: true).body
+        XCTAssertFalse(plain.contains("id=\"vvv1\""))
+        XCTAssertTrue(vpl.contains("id=\"vvv1\""), "verse-per-line wraps the verse in <span id=\"vvv{i}\">")
+        XCTAssertTrue(vpl.contains("id=\"vv1\""), "the verse anchor itself is still emitted")
+    }
+
     // MARK: - Failure seam (plan step 5)
     //
     // Each of these injects one of the conditions PSContentReader's header lists
