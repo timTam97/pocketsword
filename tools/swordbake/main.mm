@@ -696,6 +696,16 @@ static std::string expandEntry(const std::string &in) {
      // per-verse text repeats — inlining it costs 28 MB against 2 MB deduped.
      // Phase 3's build loop becomes a JOIN rather than a scan; still no
      // derivation.
+     //
+     // *** SUPERSEDED — plain_texts is being REMOVED in Phase 3. ***
+     // The copy-loop property above cost two-thirds of the artifact (30.2 MB of
+     // 43 MB, measured with dbstat), and all three columns are mechanically
+     // derivable from the Strong's/morph tokens already in `chapters`. Phase 3
+     // drops this table and derives them at index-build time; the owner has
+     // accepted the on-device build cost. Keep `verses_plain` as the skeleton.
+     // Before dropping, dump these columns for a verse corpus as fixtures — a
+     // derivation bug does not crash, it silently loses search results.
+     // See SWORD_REMOVAL_PLAN.md, Phase 3 size-reduction plan.
      "CREATE TABLE plain_texts("
      "  module TEXT NOT NULL,"
      "  id INT NOT NULL,"
@@ -1028,8 +1038,10 @@ static std::string expandEntry(const std::string &in) {
     return c ? std::string(c) : std::string();
 }
 
-// Mirrors PSLemmasForCurrentVerse (PSSearchEngine.mm:300-334) exactly, so the
-// on-device index build becomes a copy loop.
+// Mirrors PSLemmasForCurrentVerse (PSSearchEngine.mm:300-334) exactly. Phase 3
+// reimplements this derivation in Swift over the stored chapter tokens (see the
+// plain_texts comment in -createSchema), so this stays useful as the reference
+// implementation and as the source of the comparison fixtures.
 - (std::string)lemmasFor:(sword::SWModule *)mod {
     std::string out;
     sword::AttributeList &words = mod->getEntryAttributes()["Word"];

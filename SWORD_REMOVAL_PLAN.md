@@ -74,7 +74,7 @@ Each phase should ship independently and keep the app launchable + `PersistedFor
 >
 > **What shipped:**
 > - `tools/swordbake/` — a standalone Makefile + Obj-C++ `main.mm`, **not** an Xcode target (the project has no shell-script build phases and a project-level `GCC_PREFIX_HEADER` that imports UIKit). `sword_sources.txt` holds the 148 SWORD translation units, extracted from the app's own Sources build phase, so the tool compiles exactly the engine the app compiles.
-> - `Resources/PSContent.sqlite` + `Resources/Versification-KJV.json`, both byte-identical across runs (`make verify`). **Checked in but deliberately not bundled** — Phase 2 ships no rendering change, so adding ~45 MB to the app now buys nothing. Phase 3 adds them to the Copy Resources phase when it cuts the reader over.
+> - `Resources/PSContent.sqlite` + `Resources/Versification-KJV.json`, both byte-identical across runs (`make verify`). **Checked in but deliberately not bundled** — Phase 2 ships no rendering change, so adding 43 MB to the app now buys nothing. Phase 3 adds them to the Copy Resources phase when it cuts the reader over.
 > - `Classes/SwordOracleCaptureTests.swift` + 19 fixtures under `Tests/Fixtures/`, captured from the live engine and asserted byte-for-byte on every subsequent run. Capture is opt-in via `PSORACLE_CAPTURE`.
 > - `tools/swordbake/crosscheck.py` — the exit criterion (below).
 >
@@ -86,7 +86,7 @@ Each phase should ship independently and keep the app launchable + `PersistedFor
 >
 > **Findings that correct this doc and the Phase-2 plan:**
 > 1. **There is a fifth `passagestudy.jsp` emission site.** `osishtmlhref.cpp:327` emits a `showRef`/`scripRef` anchor for every `<reference>` tag. It is **not** option-gated, uses raw `&` separators rather than `&amp;`, and emits only the opening tag (the `</a>` comes from the end-tag branch). KJV verse bodies contain none, but the canonical Psalm titles do — the self-check caught it on the first run.
-> 2. **`verses_plain` is 31,102 rows for KJV, not 32,359.** The smaller figure matches today's index build exactly, verified against a replica of `-buildWithProgress:`. The stored text also has `PSSearchCleanDisplayText` applied, as the app does before inserting, so Phase 3 stays a copy loop.
+> 2. **`verses_plain` is 31,102 rows for KJV, not 32,359.** The smaller figure matches today's index build exactly, verified against a replica of `-buildWithProgress:`. The stored text also has `PSSearchCleanDisplayText` applied, as the app does before inserting. (Phase 2 stored these columns so the index build would be a pure copy loop; Phase 3 now derives them instead — see the size-reduction plan. The 31,102 figure still matters as the row count the derived path must reproduce.)
 > 3. **`StrongsRealHebrew` has two duplicate keys on disk** (`02200`, `06401`); for `06401` the second occurrence is a 21-byte `</dictionary>` stub. `INSERT OR REPLACE` would have silently kept the stub, so first-occurrence wins and every collision is logged. 8,674 stored + 2 skipped = the 8,676 in the `.idx`.
 > 4. **Gen 1's loop counter is 32, for 31 verses** — it starts at 0 on the verse-0 intro slot and increments at the bottom of every iteration including the one that steps out of the chapter, so it lands on `verses + 1`.
 > 5. **The plan's suggested footnote passages carry no footnotes** (Gen 4:8, Gen 1:1, Ps 3:1). The fixture was silently empty until cross-checked against the store. Also confirmed: all 6,959 KJV notes are `type="study"` with an empty `refList`, so the `x` branch of `attributeValueForEntryData:` is unreachable for the shipped content.
@@ -96,14 +96,54 @@ Each phase should ship independently and keep the app launchable + `PersistedFor
 >
 > **Carried into Phase 3:** `SWLD::strongsPad` (`swld.cpp:134`) drops a leading `G`/`H` without re-prepending it, so `"H430"` pads to `"0430"` and `rawstr4.cpp:234-241` snaps to a *neighbouring* entry with **no error set** — `entry(forKey: "H430")` returns entry 8674. Captured as a fixture so the Phase-3 fix (return nil on a miss) is not mistaken for a regression. The app is unaffected today because it passes the bare number.
 >
-> **Size, for Phase 3/5 to weigh:** the 45 MB store is only 9.7 MB of rendering content; the other 21.6 MB is `plain_texts`, which stores `text_plain`/`lemmas`/`word_map` verbatim so the on-device index build needs no derivation logic. `lemmas` and `word_map` are both derivable from the Strong's/morph tokens already in `chapters`, so that is the first thing to trade if the artifact must shrink. Today's shipped zips total 10.7 MB, so this is a real download-size regression for Phase 5's repack — not something to leave implicit.
+> **Size.** The store is 43 MB on disk (14.2 MB gzipped, which is closer to what App Store download actually costs). Measured per-table with `dbstat`, not by summing column lengths:
+>
+> | section | on disk |
+> |---|---|
+> | `plain_texts` + `verses_plain` + `idx_vp` (the FTS build source) | 30.2 MB |
+> | `dict_entries` (uncompressed HTML) | 5.0 MB |
+> | `chapters` + `bodies` (already zlib per chapter/body) | 6.4 MB |
+> | `notes`, `headings`, misc | 1.4 MB |
+>
+> Two-thirds is the search-index source, stored **uncompressed** — a consequence of the "no derivation logic on device" choice, which also meant no compression was applied there. Today's shipped zips total 10.7 MB, so as it stands this is a real download-size regression. **Phase 3 fixes it structurally — see the size-reduction plan there.**
 
 ### Phase 3 — Swift content reader (replace the facades)
 
 Introduce the thin Swift reader (§2.2) behind the existing method names. Cut over `PSModuleController` / `PSModuleViewController` / dictionary VCs to it. SWORD is still in the tree as a fallback/oracle during this phase — do **not** delete it yet.
 
 - Verify by diffing reader output against live SWORD `getChapter` / `entry(forKey:)` / `attributeValue(forEntryData:)`, verse-by-verse and key-by-key.
-- Search: point `PSSearchEngine`'s index build at the SQLite plain-text source instead of `stripText()`; FTS5 query side is unchanged. The lone query-time `osisBookNameForLocalisedBookName:` call moves to the Phase-4 parser.
+- Search: point `PSSearchEngine`'s index build at the SQLite content store instead of `stripText()`; FTS5 query side is unchanged. The lone query-time `osisBookNameForLocalisedBookName:` call moves to the Phase-4 parser.
+- Add the two artifacts to the target's Copy Resources phase (Phase 2 deliberately left them out).
+- Replace `ORDER BY rowid` (`PSSearchEngine.mm:625`) with `ORDER BY ordinal` — the store carries an explicit ordinal so it can.
+
+#### Shrink the store: derive the FTS source instead of shipping it (**decided — owner is fine with on-device index builds**)
+
+Target: **43 MB → ~11 MB**, which lands level with the 10.7 MB of zips being replaced, so the download regression disappears rather than merely shrinking.
+
+The three `plain_texts` columns are not data — they are mechanical re-readings of the chapter tokens. Verified on Gen 1:1, where the chapter record is
+`In the beginning⟦H07225⟧ God⟦H0430⟧ created⟦H0853⟧⟦H01254⟧…`:
+
+| column | derivation |
+|---|---|
+| `lemmas` | each Strong's token, prefixed `H`/`G`, emitted in **both** zero-pad forms → `H07225 H7225 H0430 H430 …` |
+| `word_map` | the same record segmented at token boundaries → `In the beginning\tH07225 H7225` / `God\tH0430 H430` |
+| `text_plain` | the record with tags and tokens stripped, then `PSSearchCleanDisplayText` |
+
+Steps, in payoff order:
+
+1. **Drop `plain_texts`; derive all three at index-build time.** Keep `verses_plain` as the skeleton (`ordinal`, `osis_ref`, `book_osis`, `testament`) so scope filtering and ordering are unchanged. **43 → 15.7 MB (−63%).** The build loop becomes expand-chapter → segment → insert instead of a row copy.
+2. **Chunk-compress `dict_entries` and `notes`** (64 entries/chunk for the lexicons, 256 for notes, zstd). **→ ~11 MB.** Nearly free: lexicon entries are read one at a time and a 64-entry chunk decompresses in microseconds. `dict_entries` compresses 5× purely because nothing compressed it today.
+
+What the measurements ruled out:
+
+- **Per-row compression is not worth it.** Rows average ~200 bytes, so per-row zlib/zstd only takes the FTS source 30.2 → ~14.9 MB. A trained 128 KB shared dictionary gets it to 6.7 MB while keeping per-row access — a fallback if step 1 proves too slow, but strictly worse than deriving.
+- **Do not re-compress `chapters`/`bodies` with zstd.** Measured 3% better and 1% *worse* respectively; those blobs are already zlib'd per chapter. Not worth a new dependency.
+
+Risks to handle in Phase 3, not later:
+
+- **Derivation bugs fail silently.** A wrong `lemmas` or `word_map` does not crash — search results just quietly go missing. So the derivation needs the same fixture treatment the render path got: capture the current `text_plain` / `lemmas` / `word_map` for a verse corpus (the converter can dump them one last time before the column is dropped) and assert the Swift derivation reproduces them byte-for-byte. Keep those fixtures after the column is gone.
+- **Index-build time moves on device.** It is currently a copy loop; deriving is strictly more work on first launch. Measure it on the oldest supported device before committing, and keep `PSSearchIndexBuilder`'s existing progress UI and cancellation path — this is exactly the case they exist for.
+- `PSSearchCleanDisplayText` is what decides which rows exist (it runs *before* the emptiness test), so the derived path must apply it in the same order or the row set shifts.
 
 ### Phase 4 — KJV reference parser + versification (replace VerseKey)
 
@@ -120,8 +160,9 @@ Once Phases 3–4 are proven, delete the engine and the interop machinery.
 
 - Remove `externals/sword`, `Sword*.{h,mm,+Cpp.h}`, the SWORD parts of `PSSearchEngine.mm`, `VerseEnumerator.{h,mm}`.
 - Remove C++ from the build: prune `misc/PocketSword_Prefix.pch` C++ knobs, `-licucore`, `c++0x`, the bridging header's SWORD imports, `SWIFT_OBJC_INTERFACE_HEADER_NAME` usage if no Obj-C remains.
-- Likely remove `externals/ZipArchive` + `minizip` (confirm nothing else unzips at runtime).
-- Rebuild the bundled `KJV.zip` etc. as the SQLite store (drops the dead Lucene index).
+- Likely remove `externals/ZipArchive` + `minizip` (confirm nothing else unzips at runtime). **Note:** if Phase 3 adopts chunk-compressed `dict_entries`/`notes`, the app needs *a* decompressor at runtime — but zlib (`-lz`) or the system `Compression` framework covers that; it does not require keeping ZipArchive/minizip, which exist only for the module zips.
+- Delete the bundled module zips (`KJV.zip`, `MHCC.zip`, `Robinson.zip`, `strongsrealgreek.zip`, `strongsrealhebrew.zip`) and the `Documents/` seeding path — the SQLite store replaces them. This is where the dead 6.7 MB Lucene index inside `KJV.zip` finally goes. Keep `locales.d.zip` only if anything still reads it after Phase 4 retires `LocaleMgr`.
+- Re-check the store size here: with Phase 3's reductions the target is ~11 MB against the 10.7 MB of zips removed, so the app should come out roughly flat rather than ~32 MB heavier.
 - Target should now be **pure Swift** — update `CLAUDE.md` (the whole "SWORD bridge / interop mechanics" sections become historical).
 
 ### Orthogonal (unsequenced) — bookmarks / iCloud sync removal
@@ -147,3 +188,4 @@ Not on the SWORD critical path. `PSHistoryController` only reads `name`/`type` o
 3. SQLite as the content store (reuses the existing sqlite3 dependency already used by search).
 4. SWORD kept as an offline tool through Phase 4, deleted in Phase 5 — not removed early.
 5. Bookmarks/iCloud removal is decoupled and unscheduled here.
+6. **The FTS source is derived on device, not shipped** (decided after Phase 2 measured the cost; owner is fine with on-device index builds). This reverses Phase 2's "ship the FTS source so the index build needs zero derivation logic" stance: shipping it costs 30 of the store's 43 MB, and the columns are mechanically derivable from the chapter tokens. Trading index-build CPU on first launch for ~32 MB is the right way round. See the Phase 3 size-reduction plan.

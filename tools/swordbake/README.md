@@ -90,22 +90,32 @@ makes it fail with the byte offset and exit non-zero.
 
 `Resources/PSContent.sqlite` and `Resources/Versification-KJV.json` are checked
 in but **deliberately not added to the app's Copy Resources phase**. Phase 2
-ships no rendering change, so bundling them now would add ~45 MB to the app for
+ships no rendering change, so bundling them now would add 43 MB to the app for
 no benefit. Phase 3 adds them to the bundle when it cuts the reader over.
 
-Size, for Phase 3/5 to weigh:
+## Size, and the schema change Phase 3 will make
 
-| section | size |
+Measured with `dbstat` (per-table on-disk pages, not the sum of column lengths):
+
+| section | on disk |
 |---|---|
-| chapters + bodies + dict_entries + notes (the rendering content) | 9.7 MB |
-| plain_texts (the FTS build source) | 21.6 MB |
-| **total file** | **45 MB** |
+| `plain_texts` + `verses_plain` + `idx_vp` (the FTS build source) | 30.2 MB |
+| `dict_entries` (uncompressed HTML) | 5.0 MB |
+| `chapters` + `bodies` (already zlib per chapter/body) | 6.4 MB |
+| `notes`, `headings`, misc | 1.4 MB |
+| **total file** | **43 MB** (14.2 MB gzipped) |
 
-`plain_texts` is more than twice the content it supports because it stores
-`text_plain` / `lemmas` / `word_map` verbatim so the on-device index build stays
-a copy loop. `lemmas` and `word_map` are both derivable from the Strong's and
-morph tokens already in `chapters`; if the artifact needs to shrink, deriving
-them at index-build time is the first thing to trade away — at the cost of the
-"no derivation logic on device" property this schema was chosen for. Note the
-current shipped zips total 10.7 MB, so this is a real regression in download
-size that Phase 5's repack should address.
+> **Decided: `plain_texts` goes away in Phase 3.** It exists only so the
+> on-device index build could be a pure copy loop, and it costs two-thirds of the
+> artifact. All three of its columns are mechanically derivable from the chapter
+> tokens, so Phase 3 drops the table and derives them at index-build time
+> (43 → 15.7 MB), then chunk-compresses `dict_entries`/`notes` (→ ~11 MB, level
+> with the 10.7 MB of zips being replaced). The owner has accepted the on-device
+> index-build cost. Full plan, including the measurements that ruled out per-row
+> compression and re-compressing `chapters` with zstd, is in
+> `SWORD_REMOVAL_PLAN.md` under Phase 3.
+>
+> **If you are regenerating the store for Phase 3:** before dropping the columns,
+> dump `text_plain` / `lemmas` / `word_map` for a verse corpus as fixtures. The
+> Swift derivation must reproduce them byte-for-byte, and a derivation bug does
+> not crash — search results just quietly go missing.
