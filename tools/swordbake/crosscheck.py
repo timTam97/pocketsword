@@ -35,10 +35,17 @@ TOK_NOTE_OPEN, TOK_NOTE_CLOSE = "\x05", "\x06"
 TOK_XREF_OPEN, TOK_XREF_CLOSE = "\x07", "\x08"
 TOK_TITLE_OPEN, TOK_TITLE_CLOSE = "\x0b", "\x0c"
 TOK_SCRIPREF_OPEN, TOK_SCRIPREF_CLOSE = "\x0e", "\x0f"
+TOK_REDLETTER_OPEN, TOK_REDLETTER_CLOSE = "\x11", "\x12"
 
-TOKEN_RE = re.compile(
-    "[\x01\x03\x05\x07\x0b\x0e]"
-)
+WOC_OPEN_HTML = '<span class="WordOfChrist"> '
+WOC_CLOSE_HTML = "</span> "
+
+# Chunk framing (schema v2).
+CHUNK_ROW_SEP = "\x1e"
+CHUNK_FIELD_SEP = "\x1f"
+
+SCHEMA_VERSION = "2"
+TOKEN_GRAMMAR = "v2"
 
 
 def strongs_anchor(type_, value, shown):
@@ -69,11 +76,59 @@ CLOSERS = {
     TOK_XREF_OPEN: TOK_XREF_CLOSE,
     TOK_TITLE_OPEN: TOK_TITLE_CLOSE,
     TOK_SCRIPREF_OPEN: TOK_SCRIPREF_CLOSE,
+    TOK_REDLETTER_OPEN: TOK_REDLETTER_CLOSE,
 }
 
+# Which option gates each token. `None` means "always emitted". These are the
+# axes the reader has to gate on, and the reason the all-off fixture set is
+# checkable at all: with an option off SWORD does not emit the construct, so
+# expanding with that token skipped is the whole difference.
+#
+# TOK_TITLE is headings-gated, but only in a CHAPTER RECORD. Every title token
+# in a record is a non-canonical (Interverse) title, because osisheadings.cpp:132
+# keeps canonical preverse titles out of the body entirely while
+# processEntryAttributes is on — so `option || canonical` reduces to `option`
+# there. Inside a stored HEADING it is the opposite: the app renders that buffer
+# through renderText(buf), which turns processEntryAttributes off, so
+# `(!preverse || !processEntryAttributes) && (option || canonical)` emits the
+# title for a canonical heading whatever the option says. Hence
+# `heading_options()` below rather than one flat table.
+TOKEN_OPTION = {
+    TOK_STRONGS_OPEN: "strongs",
+    TOK_MORPH_OPEN: "morphs",
+    TOK_NOTE_OPEN: "footnotes",
+    TOK_XREF_OPEN: "footnotes",
+    TOK_TITLE_OPEN: "headings",
+    TOK_SCRIPREF_OPEN: None,
+    TOK_REDLETTER_OPEN: "redletter",
+}
 
-def expand(s):
-    """Inverse of main.mm's tokeniseEntry()."""
+ALL_ON = {"strongs": True, "morphs": True, "footnotes": True, "redletter": True,
+          "headings": True}
+ALL_OFF = {"strongs": False, "morphs": False, "footnotes": False, "redletter": False,
+           "headings": False}
+
+
+def heading_options(options):
+    """The option set to expand a stored heading's html under: same as the body's
+    except the title wrapper is always emitted (see TOKEN_OPTION)."""
+    out = dict(options)
+    out["headings"] = True
+    return out
+
+
+def expand(s, options=None):
+    """Inverse of main.mm's tokeniseEntry().
+
+    `options` maps an axis name to a bool. A token whose axis is off is SKIPPED:
+    for Strong's, morph and notes the anchor simply is not emitted (with the
+    option off the filter strips the source attribute before the HTML filter
+    sees it, so the surrounding text is untouched). Red-letter is different — the
+    span goes away but its PAYLOAD is still emitted, recursively expanded, or the
+    verse loses its text.
+    """
+    if options is None:
+        options = ALL_ON
     out = []
     i = 0
     n = len(s)
@@ -88,6 +143,15 @@ def expand(s):
         if end < 0:
             raise ValueError("unterminated token %r at %d" % (c, i))
         payload = s[i + 1:end]
+
+        axis = TOKEN_OPTION[c]
+        if axis is not None and not options.get(axis, True):
+            # Option off. Red-letter keeps its payload; the anchors do not have
+            # one that survives (their link text is the marker itself).
+            if c == TOK_REDLETTER_OPEN:
+                out.append(expand(payload, options))
+            i = end + 1
+            continue
 
         if c == TOK_STRONGS_OPEN:
             if payload.startswith("*"):
@@ -115,9 +179,11 @@ def expand(s):
             f = payload.split("|")
             out.append(note_anchor("x", f[0], f[1], f[2]))
         elif c == TOK_TITLE_OPEN:
-            out.append("<p><b>" + expand(payload) + "</b></p>")
+            out.append("<p><b>" + expand(payload, options) + "</b></p>")
         elif c == TOK_SCRIPREF_OPEN:
             out.append(scripref_anchor(payload))
+        elif c == TOK_REDLETTER_OPEN:
+            out.append(WOC_OPEN_HTML + expand(payload, options) + WOC_CLOSE_HTML)
         i = end + 1
     return "".join(out)
 
@@ -207,7 +273,7 @@ BOOK_OSIS = {
 }
 
 
-def load_chapter(conn, module, book_osis, chapter):
+def load_chapter(conn, module, book_osis, chapter, options=None):
     row = conn.execute(
         "SELECT entry_count, blob_kind, blob FROM chapters "
         "WHERE module=? AND book_osis=? AND chapter=?",
@@ -223,10 +289,10 @@ def load_chapter(conn, module, book_osis, chapter):
                 "SELECT id, blob FROM bodies WHERE module=?", (module,)):
             bodies[str(bid)] = zlib.decompress(bblob).decode("utf-8")
         records = [bodies[r] if r else "" for r in records]
-    return [expand(r) if r else "" for r in records]
+    return [expand(r, options) if r else "" for r in records]
 
 
-def load_headings(conn, module, book_full, chapter, nrecords):
+def load_headings(conn, module, book_full, chapter, nrecords, options=None):
     """Map entry index -> [(canonical, html)]. The store keys headings by the
     module's own key text (e.g. "Psalms 3:1"), and entry index == verse number
     because the converter walks verse 0..verseMax in order."""
@@ -242,8 +308,52 @@ def load_headings(conn, module, book_full, chapter, nrecords):
             continue
         verse = int(m.group(3))
         if verse < nrecords:
-            out.setdefault(verse, []).append((bool(canonical), expand(html)))
+            out.setdefault(verse, []).append(
+                (bool(canonical), expand(html, heading_options(options))))
     return out
+
+
+# ---------------------------------------------------------------------------
+# Chunk reads (schema v2)
+# ---------------------------------------------------------------------------
+
+def read_chunk(conn, table, module, chunk_id):
+    """Inflate one chunk and split it into rows of fields. Validates the framing
+    counters rather than trusting them, which is the reader-side half of the
+    converter's own post-compression check."""
+    row = conn.execute(
+        "SELECT row_count, raw_size, blob FROM %s WHERE module=? AND chunk_id=?" % table,
+        (module, chunk_id)).fetchone()
+    if row is None:
+        return None
+    row_count, raw_size, blob = row
+    raw = zlib.decompress(blob)
+    if len(raw) != raw_size:
+        raise ValueError("%s chunk %d: raw_size %d but inflated %d"
+                         % (table, chunk_id, raw_size, len(raw)))
+    rows = raw.decode("utf-8").split(CHUNK_ROW_SEP)
+    if len(rows) != row_count:
+        raise ValueError("%s chunk %d: row_count %d but blob holds %d"
+                         % (table, chunk_id, row_count, len(rows)))
+    return [r.split(CHUNK_FIELD_SEP) for r in rows]
+
+
+def dict_entry(conn, module, key):
+    """The lookup the app's Dictionary tab performs. NOCASE on the key column,
+    then the strongsPad retry for an all-digit key, then nil."""
+    row = conn.execute(
+        "SELECT chunk_id, slot FROM dict_keys WHERE module=? AND key=?",
+        (module, key)).fetchone()
+    if row is None and key.isdigit():
+        row = conn.execute(
+            "SELECT chunk_id, slot FROM dict_keys WHERE module=? AND key=?",
+            (module, key.zfill(5))).fetchone()
+    if row is None:
+        return None
+    rows = read_chunk(conn, "dict_chunks", module, row[0])
+    if rows is None or row[1] >= len(rows):
+        raise ValueError("%s key %s: index points at a missing chunk slot" % (module, key))
+    return rows[row[1]][0]
 
 
 def main():
@@ -274,45 +384,60 @@ def main():
               file=sys.stderr)
         return 2
 
+    # Schema/grammar gate. Reading a v1 store with v2 expectations would produce
+    # confusing per-chapter diffs rather than one clear failure.
+    meta = dict(conn.execute("SELECT key, value FROM content_meta"))
+    if meta.get("schemaVersion") != SCHEMA_VERSION or meta.get("tokenGrammar") != TOKEN_GRAMMAR:
+        print("crosscheck: store is schemaVersion=%s tokenGrammar=%s, expected %s/%s"
+              " (re-run `make -C tools/swordbake run`)"
+              % (meta.get("schemaVersion"), meta.get("tokenGrammar"),
+                 SCHEMA_VERSION, TOKEN_GRAMMAR), file=sys.stderr)
+        return 2
+
+    # Both option endpoints. The all-off pass is the one that proves the token
+    # gating is right; without it a reader could ignore the options entirely and
+    # still be byte-perfect on every fixture.
+    #
+    # `headings_on` tracks the config the fixture was captured under, because the
+    # accumulator's own preverse injection is gated on the NSUserDefaults pref
+    # rather than the SWORD option (SwordModule.mm:1071).
+    configs = [("", ALL_ON, True), ("-alloff", ALL_OFF, False)]
+
     checks = []
-    for line in open(summary_path, encoding="utf-8"):
-        line = line.rstrip("\n")
-        if not line:
-            continue
-        ref = line.split("\t")[0]
-        entries = int(line.split("\t")[1].split("=")[1])
-        checks.append(("KJV", ref, entries, False))
-    mhcc_summary = os.path.join(args.fixtures, "MHCC-chapter-summary.tsv")
-    if os.path.exists(mhcc_summary):
-        for line in open(mhcc_summary, encoding="utf-8"):
-            line = line.rstrip("\n")
-            if not line:
+    for suffix, options, headings_on in configs:
+        for module, is_com in (("KJV", False), ("MHCC", True)):
+            path = os.path.join(args.fixtures, "%s-chapter-summary%s.tsv" % (module, suffix))
+            if not os.path.exists(path):
                 continue
-            ref = line.split("\t")[0]
-            entries = int(line.split("\t")[1].split("=")[1])
-            checks.append(("MHCC", ref, entries, True))
+            for line in open(path, encoding="utf-8"):
+                line = line.rstrip("\n")
+                if not line:
+                    continue
+                ref = line.split("\t")[0]
+                entries = int(line.split("\t")[1].split("=")[1])
+                checks.append((module, ref, entries, is_com, suffix, options, headings_on))
 
     failures = 0
-    for module, ref, expected_entries, is_com in checks:
+    for module, ref, expected_entries, is_com, suffix, options, headings_on in checks:
         book_abbrev, chapter = ref.rsplit(" ", 1)
         chapter = int(chapter)
         book_full = BOOK_OSIS.get(book_abbrev, book_abbrev)
         # chapters are keyed by OSIS book name
         osis = {v: k for k, v in BOOK_OSIS.items()}.get(book_full, book_abbrev)
 
-        records = load_chapter(conn, module, osis, chapter)
+        records = load_chapter(conn, module, osis, chapter, options)
         if records is None:
-            print("FAIL %s %s: not in store" % (module, ref))
+            print("FAIL %s %s%s: not in store" % (module, ref, suffix))
             failures += 1
             continue
 
-        headings = load_headings(conn, module, book_full, chapter, len(records))
-        body, count = replay_chapter(records, headings, is_com)
+        headings = load_headings(conn, module, book_full, chapter, len(records), options)
+        body, count = replay_chapter(records, headings, is_com, headings_on=headings_on)
 
         fixture = os.path.join(
-            args.fixtures, "%s-%s.html" % (module, ref.replace(" ", "_")))
+            args.fixtures, "%s-%s%s.html" % (module, ref.replace(" ", "_"), suffix))
         if not os.path.exists(fixture):
-            print("SKIP %s %s: no fixture" % (module, ref))
+            print("SKIP %s %s%s: no fixture" % (module, ref, suffix))
             continue
         golden = open(fixture, encoding="utf-8").read()
 
@@ -321,20 +446,21 @@ def main():
         ok_body = (body == golden)
         ok_count = (count == expected_entries)
 
+        label = "%s%s" % (ref, suffix)
         if ok_body and ok_count:
-            print("ok   %s %-8s entries=%-4d bytes=%d" % (module, ref, count, len(body)))
+            print("ok   %-5s %-16s entries=%-4d bytes=%d" % (module, label, count, len(body)))
         else:
             failures += 1
             if not ok_count:
                 print("FAIL %s %s: entry count %d != fixture %d"
-                      % (module, ref, count, expected_entries))
+                      % (module, label, count, expected_entries))
             if not ok_body:
                 k = 0
                 while k < min(len(body), len(golden)) and body[k] == golden[k]:
                     k += 1
                 lo = max(0, k - 70)
                 print("FAIL %s %s: body differs at char %d (store %d chars, fixture %d)"
-                      % (module, ref, k, len(body), len(golden)))
+                      % (module, label, k, len(body), len(golden)))
                 print("  fixture: …%s…" % golden[lo:k + 70].replace("\n", "\\n"))
                 print("  store:   …%s…" % body[lo:k + 70].replace("\n", "\\n"))
 
@@ -349,25 +475,45 @@ def main():
             key, _, entry = block.partition("\n")
             key = key.strip()
             entry = entry.rstrip("\n")
-            row = conn.execute(
-                "SELECT html FROM dict_entries WHERE module=? AND key=?",
-                (module, key)).fetchone()
-            # The app passes the bare number and relies on SWLD::strongsPad to
-            # zero-fill; the store holds the canonical on-disk key. Retry padded.
-            if row is None and key.isdigit():
-                row = conn.execute(
-                    "SELECT html FROM dict_entries WHERE module=? AND key=?",
-                    (module, key.zfill(5))).fetchone()
-            if row is None:
+            html = dict_entry(conn, module, key)
+            if html is None:
                 print("FAIL %s key=%s: not in store" % (module, key))
                 failures += 1
                 continue
-            if row[0] != entry:
+            if html != entry:
                 failures += 1
                 print("FAIL %s key=%s: entry differs (store %d chars, fixture %d)"
-                      % (module, key, len(row[0]), len(entry)))
+                      % (module, key, len(html), len(entry)))
             else:
                 print("ok   %s key=%-10s bytes=%d" % (module, key, len(entry)))
+
+    # The dictionary-casing gate. The fixtures above feed keys in true casing,
+    # which is not what the UI produces: SwordDictionary.mm:67 stores
+    # [keyText capitalizedString] and PSDictionaryViewController.swift:252 feeds
+    # THAT string back into the lookup. For Robinson that alters 1,375 of 1,526
+    # keys (`V-PAI-3S` -> `V-Pai-3S`), so a case-sensitive index would miss ~90%
+    # of the module while every fixture above still passed. Enumerate every key
+    # the tab can display and assert each one resolves.
+    total_ui_keys = altered = 0
+    for module in ("StrongsRealGreek", "StrongsRealHebrew", "Robinson"):
+        keys = [k for (k,) in conn.execute(
+            "SELECT key FROM dict_keys WHERE module=? ORDER BY chunk_id, slot", (module,))]
+        missing = []
+        for k in keys:
+            ui_key = k.title()          # NSString -capitalizedString
+            if ui_key != k:
+                altered += 1
+            total_ui_keys += 1
+            if dict_entry(conn, module, ui_key) is None:
+                missing.append((k, ui_key))
+        if missing:
+            failures += 1
+            print("FAIL %s: %d of %d UI-cased keys do not resolve, e.g. %s"
+                  % (module, len(missing), len(keys), missing[:5]))
+        else:
+            print("ok   %s: all %d UI-cased keys resolve" % (module, len(keys)))
+    print("     (%d keys checked as the UI keys them; %d differ from the stored casing)"
+          % (total_ui_keys, altered))
 
     print()
     if failures:

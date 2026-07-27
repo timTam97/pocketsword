@@ -90,11 +90,42 @@ extern "C" uLong compressBound(uLong sourceLen);
 #define TOK_TITLE_CLOSE   "\x0C"
 #define TOK_SCRIPREF_OPEN  "\x0E"
 #define TOK_SCRIPREF_CLOSE "\x0F"
+// Red-letter (Words of Christ). Unlike the other tokens this one exists so the
+// reader can *drop* a construct: osisredletterwords.cpp strips the
+// who="Jesus" attribute when the option is off, so osishtmlhref.cpp:581/615
+// never emit the span — the quote marks and the enclosed text stay. A reader
+// that deleted the span *and its contents* would lose verse text, and a CSS
+// shortcut cannot reproduce the DOM. Payload is recursively tokenised, like
+// TOK_TITLE: measured, all 2,038 spans carry nested Strong's/morph tokens.
+#define TOK_REDLETTER_OPEN  "\x11"
+#define TOK_REDLETTER_CLOSE "\x12"
+
+// The exact strings osishtmlhref.cpp's MyUserData ctor installs (:118-119).
+// Both carry a trailing space, and it is part of the construct: with the option
+// off SWORD emits neither, so the reader has to remove the space too.
+#define WOC_OPEN_HTML  "<span class=\"WordOfChrist\"> "
+#define WOC_CLOSE_HTML "</span> "
 
 // Record separator inside a chapter blob.
 static const char kEntrySep = '\0';
 
-static const int kSchemaVersion = 1;
+// Framing inside a compressed chunk blob (schema v2). Rows are separated by
+// \x1E, fields within a row by \x1F. Verified across every column that goes into
+// a chunk (plain_texts, dict_entries, notes): zero occurrences of either byte in
+// the whole corpus, and the converter re-asserts it per row rather than trusting
+// the measurement.
+static const char kChunkRowSep = '\x1E';
+static const char kChunkFieldSep = '\x1F';
+
+// Rows per chunk, per table. Chosen for the access pattern, not uniformity:
+// plain_texts and notes are read in bulk (the index build walks all 31,102 KJV
+// rows), dict_entries is read one key at a time on a lexicon tap, so its chunks
+// are small to keep the per-lookup inflate cheap.
+static const int kChunkRowsPlain = 256;
+static const int kChunkRowsDict = 64;
+static const int kChunkRowsNotes = 256;
+
+static const int kSchemaVersion = 2;
 
 // ---------------------------------------------------------------------------
 // Small helpers
@@ -296,6 +327,12 @@ static std::string noteAnchor(char ch, const std::string &value, const std::stri
 //   xref    : \x07 value '|' module '|' passage \x08     (type 'x')
 //   title   : \x0B inner \x0C            (inner is itself tokenised)
 //   scripRef: \x0E value \x0F
+//   redletter: \x11 inner \x12           (inner is itself tokenised)
+//       No payload fields: both delimiters are fixed strings. Measured over the
+//       whole corpus: 2,038 opens, 2,038 closes, the only `<span…>` opener
+//       present is WordOfChrist, max nesting depth 1, and no WoC payload
+//       contains another span — so a flat non-counting token is sufficient and
+//       the tokeniser asserts each of those properties rather than assuming it.
 
 static bool splitPipes(const std::string &s, std::vector<std::string> &out, size_t expect) {
     out.clear();
@@ -321,10 +358,12 @@ static std::string tokeniseEntry(const std::string &in) {
     while (i < in.size()) {
         size_t a = in.find(kAnchorStart, i);
         size_t t = in.find("<p><b>", i);
+        size_t w = in.find(WOC_OPEN_HTML, i);
 
         // Whichever construct comes first.
-        size_t next = std::min(a == std::string::npos ? in.size() : a,
-                               t == std::string::npos ? in.size() : t);
+        size_t next = std::min(std::min(a == std::string::npos ? in.size() : a,
+                                        t == std::string::npos ? in.size() : t),
+                               w == std::string::npos ? in.size() : w);
         out.append(in, i, next - i);
         if (next >= in.size()) break;
 
@@ -444,6 +483,26 @@ static std::string tokeniseEntry(const std::string &in) {
                 die(@"unknown passagestudy action in: %s", whole.c_str());
             }
             i = end;
+        } else if (next == w) {
+            // Red-letter span. Only tokenise when the matching close is present
+            // and the payload holds no further span, so a shape we have not
+            // measured degrades to verbatim rather than corrupting. The
+            // round-trip check then still passes; only the option-off path would
+            // be unable to drop that one span, and the passagestudy/round-trip
+            // gates stay meaningful.
+            size_t close = in.find(WOC_CLOSE_HTML, w + strlen(WOC_OPEN_HTML));
+            std::string inner = (close == std::string::npos)
+                ? std::string()
+                : in.substr(w + strlen(WOC_OPEN_HTML), close - (w + strlen(WOC_OPEN_HTML)));
+            if (close == std::string::npos ||
+                inner.find("<span") != std::string::npos ||
+                inner.find("</span>") != std::string::npos) {
+                out.append(in, w, strlen(WOC_OPEN_HTML));
+                i = w + strlen(WOC_OPEN_HTML);
+                continue;
+            }
+            out += TOK_REDLETTER_OPEN + tokeniseEntry(inner) + TOK_REDLETTER_CLOSE;
+            i = close + strlen(WOC_CLOSE_HTML);
         } else {
             // Body-emitted <title> -> <p><b>…</b></p>. Only tokenise when the
             // matching close is present; a bare "<p><b>" elsewhere is left alone.
@@ -487,19 +546,16 @@ static std::string expandEntry(const std::string &in) {
             case 0x07: closeTok = TOK_XREF_CLOSE;    kind = 4; break;
             case 0x0B: closeTok = TOK_TITLE_CLOSE;   kind = 5; break;
             case 0x0E: closeTok = TOK_SCRIPREF_CLOSE; kind = 6; break;
+            case 0x11: closeTok = TOK_REDLETTER_CLOSE; kind = 7; break;
             default: break;
         }
         if (!kind) { out += in[i++]; continue; }
-        size_t end;
-        if (kind == 5) {
-            // A title token's payload may contain other tokens (anchors inside a
-            // heading), so scan for ITS close specifically rather than the first
-            // close byte of any kind. Titles never nest — tokeniseEntry refuses
-            // to build a nested one — so no depth counter is needed.
-            end = findFrom(in, TOK_TITLE_CLOSE, i + 1);
-        } else {
-            end = findFrom(in, closeTok, i + 1);
-        }
+        // Always scan for THIS token's own close, never the first close byte of
+        // any kind: the title and red-letter payloads legitimately contain other
+        // tokens (anchors inside a heading, Strong's inside a WoC span). Neither
+        // of those two nests inside itself — tokeniseEntry refuses to build a
+        // nested one — so no depth counter is needed.
+        size_t end = findFrom(in, closeTok, i + 1);
         if (end == std::string::npos) die(@"unterminated token 0x%02x", c);
         std::string payload = in.substr(i + 1, end - (i + 1));
         std::vector<std::string> f;
@@ -548,11 +604,151 @@ static std::string expandEntry(const std::string &in) {
                 if (payload.find('|') != std::string::npos) die(@"bad scripRef payload");
                 out += scripRefAnchor(payload);
                 break;
+            case 7:
+                out += WOC_OPEN_HTML + expandEntry(payload) + WOC_CLOSE_HTML;
+                break;
         }
         i = end + 1;
     }
     return out;
 }
+
+// ---------------------------------------------------------------------------
+// Chunk writer (schema v2)
+//
+// Buffers logical rows, and every `rowsPerChunk` rows emits one zlib blob of
+// them joined by \x1E with fields joined by \x1F. Also keeps the pre-compression
+// rows so -validate can inflate every chunk back and compare — a compression bug
+// that drops or reorders a chunk has to fail the bake, not the reader.
+//
+// Framing is asserted, not assumed: any row containing \x1E or \x1F is fatal.
+// ---------------------------------------------------------------------------
+
+class ChunkWriter {
+public:
+    ChunkWriter(DB *database, const char *tableName, const std::string &module,
+                int rowsPerChunk, bool withFirstId)
+        : db(database), table(tableName), mod(module), perChunk(rowsPerChunk),
+          hasFirstId(withFirstId), nextRow(0), chunkId(0) {
+        std::string sql = std::string("INSERT INTO ") + tableName + "(module,chunk_id," +
+                          (withFirstId ? "first_id," : "") + "row_count,raw_size,blob) VALUES(?,?,?,?,?" +
+                          (withFirstId ? ",?" : "") + ");";
+        stmt = [database prepare:sql.c_str()];
+    }
+    ~ChunkWriter() { if (stmt) sqlite3_finalize(stmt); }
+
+    // Append one row. `fields` are joined by \x1F in the order given.
+    // Returns the row's global index (its `slot` is index % perChunk, its chunk
+    // is index / perChunk).
+    long long add(const std::vector<std::string> &fields) {
+        std::string row;
+        for (size_t i = 0; i < fields.size(); ++i) {
+            if (i) row.push_back(kChunkFieldSep);
+            if (fields[i].find(kChunkRowSep) != std::string::npos ||
+                fields[i].find(kChunkFieldSep) != std::string::npos) {
+                die(@"%s: row %lld field %zu contains a chunk framing byte", table, nextRow, i);
+            }
+            row += fields[i];
+        }
+        pending.push_back(row);
+        long long index = nextRow++;
+        if ((long long)pending.size() == perChunk) flush();
+        return index;
+    }
+
+    void finish() { flush(); }
+
+    long long rowCount() const { return nextRow; }
+    long long chunkCount() const { return chunkId; }
+
+    // Inflate every chunk back out of the DB and compare against the rows that
+    // went in. Returns the number of rows verified.
+    long long validate(DB *database) {
+        std::string sql = std::string("SELECT chunk_id,row_count,raw_size,blob FROM ") + table +
+                          " WHERE module=? ORDER BY chunk_id;";
+        sqlite3_stmt *sel = [database prepare:sql.c_str()];
+        sqlite3_bind_text(sel, 1, mod.data(), (int)mod.size(), SQLITE_TRANSIENT);
+        long long seen = 0, chunksSeen = 0;
+        while (sqlite3_step(sel) == SQLITE_ROW) {
+            long long cid = sqlite3_column_int64(sel, 0);
+            int rc = sqlite3_column_int(sel, 1);
+            long long raw = sqlite3_column_int64(sel, 2);
+            const void *b = sqlite3_column_blob(sel, 3);
+            int bn = sqlite3_column_bytes(sel, 3);
+            if (cid != chunksSeen) die(@"%s: chunk ids not contiguous (saw %lld, expected %lld)", table, cid, chunksSeen);
+            std::string inflated = zlibInflate(std::string((const char *)b, (size_t)bn), (size_t)raw);
+            if ((long long)inflated.size() != raw) {
+                die(@"%s chunk %lld: raw_size %lld but inflated to %zu", table, cid, raw, inflated.size());
+            }
+            std::vector<std::string> rows;
+            size_t start = 0;
+            while (true) {
+                size_t p = inflated.find(kChunkRowSep, start);
+                if (p == std::string::npos) { rows.push_back(inflated.substr(start)); break; }
+                rows.push_back(inflated.substr(start, p - start));
+                start = p + 1;
+            }
+            // An empty chunk would produce one empty row from the split above;
+            // no chunk is ever written empty, so row_count is authoritative.
+            if ((int)rows.size() != rc) {
+                die(@"%s chunk %lld: row_count %d but blob holds %zu rows", table, cid, rc, rows.size());
+            }
+            for (int i = 0; i < rc; ++i) {
+                size_t g = (size_t)(cid * perChunk + i);
+                if (g >= allRows.size()) die(@"%s chunk %lld: row %d past the %zu rows written", table, cid, i, allRows.size());
+                if (rows[i] != allRows[g]) {
+                    die(@"%s chunk %lld slot %d: inflated row differs from the row written\n  in:  %.100s\n  out: %.100s",
+                        table, cid, i, allRows[g].c_str(), rows[i].c_str());
+                }
+                seen++;
+            }
+            chunksSeen++;
+        }
+        sqlite3_finalize(sel);
+        if (chunksSeen != chunkId) die(@"%s: wrote %lld chunks but read back %lld", table, chunkId, chunksSeen);
+        if (seen != nextRow) die(@"%s: wrote %lld rows but read back %lld", table, nextRow, seen);
+        return seen;
+    }
+
+private:
+    void flush() {
+        if (pending.empty()) return;
+        std::string joined;
+        for (size_t i = 0; i < pending.size(); ++i) {
+            if (i) joined.push_back(kChunkRowSep);
+            joined += pending[i];
+        }
+        std::string z = zlibDeflate(joined);
+        int col = 1;
+        sqlite3_bind_text(stmt, col++, mod.data(), (int)mod.size(), SQLITE_TRANSIENT);
+        sqlite3_bind_int64(stmt, col++, chunkId);
+        if (hasFirstId) sqlite3_bind_int64(stmt, col++, chunkId * perChunk);
+        sqlite3_bind_int(stmt, col++, (int)pending.size());
+        sqlite3_bind_int64(stmt, col++, (sqlite3_int64)joined.size());
+        sqlite3_bind_blob(stmt, col++, z.data(), (int)z.size(), SQLITE_TRANSIENT);
+        step1(stmt, db->db);
+        rawTotal += joined.size();
+        blobTotal += z.size();
+        allRows.insert(allRows.end(), pending.begin(), pending.end());
+        pending.clear();
+        chunkId++;
+    }
+
+public:
+    long long rawTotal = 0, blobTotal = 0;
+
+private:
+    DB *db;
+    const char *table;
+    std::string mod;
+    long long perChunk;
+    bool hasFirstId;
+    sqlite3_stmt *stmt;
+    std::vector<std::string> pending;
+    std::vector<std::string> allRows;
+    long long nextRow;
+    long long chunkId;
+};
 
 // ---------------------------------------------------------------------------
 // Converter
@@ -666,53 +862,96 @@ static std::string expandEntry(const std::string &in) {
      "  canonical INT NOT NULL,"
      "  html TEXT NOT NULL);"
 
-     // Note bodies, ALREADY RENDERED via renderText(buf) — the same call the
-     // app makes at SwordModule.mm:567, which sets processEntryAttributes=false
-     // and is a different code path from rendering at a key position.
-     "CREATE TABLE notes("
+     // ---- Note bodies (schema v2: chunk-compressed) -----------------------
+     //
+     // ALREADY RENDERED via renderText(buf) — the same call the app makes at
+     // SwordModule.mm:567, which sets processEntryAttributes=false and is a
+     // different code path from rendering at a key position.
+     //
+     // Same split as the lexicons: the (osis_ref, marker) lookup keys stay
+     // uncompressed in notes_index, the bodies go into 256-row chunks. A footnote
+     // tap resolves one key and inflates one chunk.
+     "CREATE TABLE notes_chunks("
+     "  module TEXT NOT NULL,"
+     "  chunk_id INT NOT NULL,"
+     "  row_count INT NOT NULL,"
+     "  raw_size INT NOT NULL,"
+     "  blob BLOB NOT NULL,"
+     "  PRIMARY KEY(module, chunk_id));"
+
+     "CREATE TABLE notes_index("
      "  module TEXT NOT NULL,"
      "  osis_ref TEXT NOT NULL,"
      "  marker TEXT NOT NULL,"
-     "  type TEXT,"
-     "  body TEXT,"
-     "  ref_list TEXT);"
+     "  chunk_id INT NOT NULL,"
+     "  slot INT NOT NULL,"
+     "  PRIMARY KEY(module, osis_ref, marker));"
 
-     // Lexicon entries keyed on the canonical on-disk key.
-     "CREATE TABLE dict_entries("
+     // ---- Lexicon entries (schema v2: chunk-compressed) -------------------
+     //
+     // The HTML bodies live in 64-row zlib chunks; the KEYS stay uncompressed in
+     // dict_keys. That split is load-bearing rather than tidy:
+     // PSDictionaryViewController drives its whole table off the key list
+     // (`:219`/`:241`/`:361`), so `allKeys()` and `entryCount()` must not require
+     // inflating anything, while a single tap only needs the one chunk holding
+     // that key's slot.
+     //
+     // `key COLLATE NOCASE` reproduces SWORD's own matching. Robinson.conf omits
+     // CaseSensitiveKeys, so SWMgr builds RawLD(..., caseSensitive=false)
+     // (swmgr.cpp:1056) and RawStr::findOffset uppercases both sides before
+     // comparing (rawstr.cpp:188). The UI feeds back `[keyText capitalizedString]`
+     // (SwordDictionary.mm:67 -> PSDictionaryViewController.swift:252), which
+     // alters 1,375 of Robinson's 1,526 keys (`V-PAI-3S` -> `V-Pai-3S`), so a
+     // binary `WHERE key=?` would miss ~90% of the module. NOCASE is safe and
+     // sufficient here — all 15,824 keys across the three lexicons are pure ASCII
+     // with zero case-fold collisions, and rowid order == binary order ==
+     // case-insensitive order for every module, so enumeration is unaffected.
+     // (SQLite's NOCASE is ASCII-only, which is exactly SWORD's toupper.)
+     "CREATE TABLE dict_chunks("
      "  module TEXT NOT NULL,"
-     "  key TEXT NOT NULL,"
-     "  html TEXT NOT NULL,"
-     "  PRIMARY KEY(module, key));"
+     "  chunk_id INT NOT NULL,"
+     "  row_count INT NOT NULL,"
+     "  raw_size INT NOT NULL,"
+     "  blob BLOB NOT NULL,"
+     "  PRIMARY KEY(module, chunk_id));"
 
-     // FTS build source, dumped from real stripText()/EntryAttributes (with
-     // PSSearchCleanDisplayText already applied, exactly as
-     // -buildWithProgress: does) so the on-device index build stays a copy loop
-     // with zero derivation logic. No FTS index is shipped: keeping the
-     // on-device build sidesteps macOS<->iOS FTS5 on-disk compatibility
-     // entirely.
-     //
-     // The text is held one level of indirection away in plain_texts. RawCom
-     // (MHCC) points a whole verse range at one shared comment body, so the
-     // per-verse text repeats — inlining it costs 28 MB against 2 MB deduped.
-     // Phase 3's build loop becomes a JOIN rather than a scan; still no
-     // derivation.
-     //
-     // *** SUPERSEDED — plain_texts is being REMOVED in Phase 3. ***
-     // The copy-loop property above cost two-thirds of the artifact (30.2 MB of
-     // 43 MB, measured with dbstat), and all three columns are mechanically
-     // derivable from the Strong's/morph tokens already in `chapters`. Phase 3
-     // drops this table and derives them at index-build time; the owner has
-     // accepted the on-device build cost. Keep `verses_plain` as the skeleton.
-     // Before dropping, dump these columns for a verse corpus as fixtures — a
-     // derivation bug does not crash, it silently loses search results.
-     // See SWORD_REMOVAL_PLAN.md, Phase 3 size-reduction plan.
-     "CREATE TABLE plain_texts("
+     "CREATE TABLE dict_keys("
      "  module TEXT NOT NULL,"
-     "  id INT NOT NULL,"
-     "  text_plain TEXT NOT NULL,"
-     "  lemmas TEXT,"
-     "  word_map TEXT,"
-     "  PRIMARY KEY(module, id));"
+     "  key TEXT NOT NULL COLLATE NOCASE,"
+     "  chunk_id INT NOT NULL,"
+     "  slot INT NOT NULL,"
+     "  PRIMARY KEY(module, key COLLATE NOCASE));"
+
+     // ---- FTS build source (schema v2: chunk-compressed) ------------------
+     //
+     // Dumped from real stripText()/EntryAttributes with PSSearchCleanDisplayText
+     // already applied, exactly as -buildWithProgress: does, so the on-device
+     // index build carries no derivation logic. No FTS index is shipped: building
+     // on device sidesteps macOS<->iOS FTS5 on-disk compatibility entirely.
+     //
+     // Phase 2 considered dropping this table and re-deriving all three columns
+     // from the chapter tokens on device. That is retracted: the derivation would
+     // be a second, untested implementation of stripText + the Word attribute
+     // walk, and a bug in it does not crash — search results just quietly go
+     // missing. Chunking gets 26.8 MB down to ~4 MB while keeping the column
+     // exactly what the live engine produced, which is the property the whole
+     // oracle strategy rests on.
+     //
+     // Rows stay dense and contiguous per module, so a reader locates row `id` at
+     // chunk `id / 256`, slot `id % 256`, with no index. `first_id` is stored
+     // anyway so that invariant is checkable rather than assumed.
+     //
+     // The text is one level of indirection away from verses_plain because RawCom
+     // (MHCC) points a whole verse range at one shared comment body: inlining
+     // costs 28 MB against 2 MB deduped.
+     "CREATE TABLE plain_texts_chunks("
+     "  module TEXT NOT NULL,"
+     "  chunk_id INT NOT NULL,"
+     "  first_id INT NOT NULL,"
+     "  row_count INT NOT NULL,"
+     "  raw_size INT NOT NULL,"
+     "  blob BLOB NOT NULL,"
+     "  PRIMARY KEY(module, chunk_id));"
 
      "CREATE TABLE verses_plain("
      "  module TEXT NOT NULL,"
@@ -722,7 +961,6 @@ static std::string expandEntry(const std::string &in) {
      "  testament INT NOT NULL,"
      "  text_id INT NOT NULL);"
 
-     "CREATE INDEX idx_notes ON notes(module, osis_ref);"
      "CREATE INDEX idx_headings ON headings(module, osis_ref);"
      "CREATE INDEX idx_vp ON verses_plain(module, ordinal);"
     ];
@@ -768,19 +1006,24 @@ static std::string expandEntry(const std::string &in) {
     sqlite3_stmt *insBody = [db prepare:"INSERT INTO bodies(module,id,blob) VALUES(?,?,?);"];
     sqlite3_stmt *insHeading = [db prepare:
         "INSERT INTO headings(module,osis_ref,bucket,seq,canonical,html) VALUES(?,?,?,?,?,?);"];
-    sqlite3_stmt *insNote = [db prepare:
-        "INSERT INTO notes(module,osis_ref,marker,type,body,ref_list) VALUES(?,?,?,?,?,?);"];
+    sqlite3_stmt *insNoteIdx = [db prepare:
+        "INSERT INTO notes_index(module,osis_ref,marker,chunk_id,slot) VALUES(?,?,?,?,?);"];
     sqlite3_stmt *insPlain = [db prepare:
         "INSERT INTO verses_plain(module,ordinal,osis_ref,book_osis,testament,text_id)"
         " VALUES(?,?,?,?,?,?);"];
-    sqlite3_stmt *insPlainText = [db prepare:
-        "INSERT INTO plain_texts(module,id,text_plain,lemmas,word_map) VALUES(?,?,?,?,?);"];
     // Dedup key is the full (text, lemmas, word_map) triple, so two verses only
     // share a row when all three agree.
     std::map<std::string, int> plainIds;
     int nextPlainId = 0;
 
     const std::string modNameStr = [modName UTF8String];
+
+    // Chunked writers for the two bulk tables. plain_texts rows are dense and
+    // contiguous per module, so `first_id` is carried and the reader can locate
+    // row `id` arithmetically; notes are addressed through notes_index instead,
+    // which records each row's (chunk_id, slot) explicitly.
+    ChunkWriter plainChunks(db, "plain_texts_chunks", modNameStr, kChunkRowsPlain, true);
+    ChunkWriter noteChunks(db, "notes_chunks", modNameStr, kChunkRowsNotes, false);
 
     // Body dedup for RawCom-style modules that share one body across a range.
     const BOOL dedup = isCom;
@@ -893,13 +1136,18 @@ static std::string expandEntry(const std::string &in) {
                         snprintf(nw, sizeof(nw), "note %s %s #%s", modNameStr.c_str(), osisRef.c_str(), marker.c_str());
                         std::string rbt = rbs.empty() ? std::string() : [self tokeniseChecked:rbs where:nw];
 
-                        bindText(insNote, 1, modNameStr);
-                        bindText(insNote, 2, osisRef);
-                        bindText(insNote, 3, marker);
-                        bindText(insNote, 4, type);
-                        bindText(insNote, 5, rbt);
-                        bindText(insNote, 6, refList);
-                        step1(insNote, db->db);
+                        std::vector<std::string> fields;
+                        fields.push_back(type);
+                        fields.push_back(rbt);
+                        fields.push_back(refList);
+                        long long row = noteChunks.add(fields);
+
+                        bindText(insNoteIdx, 1, modNameStr);
+                        bindText(insNoteIdx, 2, osisRef);
+                        bindText(insNoteIdx, 3, marker);
+                        sqlite3_bind_int64(insNoteIdx, 4, row / kChunkRowsNotes);
+                        sqlite3_bind_int(insNoteIdx, 5, (int)(row % kChunkRowsNotes));
+                        step1(insNoteIdx, db->db);
                         noteRows++;
                     }
                 }
@@ -922,12 +1170,15 @@ static std::string expandEntry(const std::string &in) {
                         if (pf == plainIds.end()) {
                             textId = nextPlainId++;
                             plainIds[dedupKey] = textId;
-                            bindText(insPlainText, 1, modNameStr);
-                            sqlite3_bind_int(insPlainText, 2, textId);
-                            bindText(insPlainText, 3, plain);
-                            bindText(insPlainText, 4, lemmas);
-                            bindText(insPlainText, 5, wordMap);
-                            step1(insPlainText, db->db);
+                            std::vector<std::string> fields;
+                            fields.push_back(plain);
+                            fields.push_back(lemmas);
+                            fields.push_back(wordMap);
+                            long long row = plainChunks.add(fields);
+                            // The whole arithmetic addressing scheme rests on the
+                            // ids being dense and issued in order; assert it here
+                            // rather than discovering it in the reader.
+                            if (row != textId) die(@"plain_texts id %d landed at chunk row %lld", textId, row);
                         } else {
                             textId = pf->second;
                         }
@@ -995,17 +1246,34 @@ static std::string expandEntry(const std::string &in) {
         }
     }
 
+    plainChunks.finish();
+    noteChunks.finish();
+
     sqlite3_finalize(insChapter);
     sqlite3_finalize(insBody);
     sqlite3_finalize(insHeading);
-    sqlite3_finalize(insNote);
+    sqlite3_finalize(insNoteIdx);
     sqlite3_finalize(insPlain);
-    sqlite3_finalize(insPlainText);
+
+    // Post-compression validation, before the numbers are reported: inflate every
+    // chunk this module wrote and compare it against the rows that went in. A
+    // compression bug that drops, truncates or reorders a chunk must fail the
+    // bake — the reader must never be the thing that discovers it.
+    long long plainVerified = plainChunks.validate(db);
+    long long noteVerified = noteChunks.validate(db);
+    if (plainVerified != nextPlainId) die(@"%@: verified %lld plain rows, expected %d", modName, plainVerified, nextPlainId);
+    if (noteVerified != noteRows) die(@"%@: verified %lld note rows, expected %lld", modName, noteVerified, noteRows);
 
     note(@"  %@: %lld chapters, %lld plain rows (%d distinct texts), %lld notes, %lld headings, %d distinct bodies",
          modName, chapters, plainRows, nextPlainId, noteRows, headingRows, nextBodyId);
-    note(@"  %@: raw %.2f MB -> zlib %.2f MB", modName,
+    note(@"  %@: chapters raw %.2f MB -> zlib %.2f MB", modName,
          rawTotal / 1048576.0, blobTotal / 1048576.0);
+    note(@"  %@: plain_texts %lld rows in %lld chunks, raw %.2f MB -> zlib %.2f MB (re-inflated + compared: %lld rows)",
+         modName, plainChunks.rowCount(), plainChunks.chunkCount(),
+         plainChunks.rawTotal / 1048576.0, plainChunks.blobTotal / 1048576.0, plainVerified);
+    note(@"  %@: notes %lld rows in %lld chunks, raw %.2f MB -> zlib %.2f MB (re-inflated + compared: %lld rows)",
+         modName, noteChunks.rowCount(), noteChunks.chunkCount(),
+         noteChunks.rawTotal / 1048576.0, noteChunks.blobTotal / 1048576.0, noteVerified);
 }
 
 // Mirrors PSSearchCleanDisplayText (PSSearchEngine.mm:266-295) exactly. The app
@@ -1125,9 +1393,17 @@ static std::string expandEntry(const std::string &in) {
     // occurrence is a 21-byte "</dictionary>" stub. REPLACE would silently keep
     // that stub and lose the real definition. First occurrence wins, and every
     // collision is reported.
-    sqlite3_stmt *ins = [db prepare:"INSERT INTO dict_entries(module,key,html) VALUES(?,?,?);"];
-    sqlite3_stmt *exists = [db prepare:"SELECT 1 FROM dict_entries WHERE module=? AND key=?;"];
+    //
+    // The duplicate check runs against dict_keys, whose key column is
+    // COLLATE NOCASE — so it now also catches a pair of keys that differ only in
+    // case. There are none today (measured: zero case-fold collisions across all
+    // 15,824 keys), and if a future module had one, silently dropping the second
+    // would be the wrong answer: it would be indistinguishable from the on-disk
+    // duplicate case, so this reports it either way.
+    sqlite3_stmt *ins = [db prepare:"INSERT INTO dict_keys(module,key,chunk_id,slot) VALUES(?,?,?,?);"];
+    sqlite3_stmt *exists = [db prepare:"SELECT 1 FROM dict_keys WHERE module=? AND key=?;"];
     const std::string modNameStr = [modName UTF8String];
+    ChunkWriter dictChunks(db, "dict_chunks", modNameStr, kChunkRowsDict, false);
 
     long long n = 0, numericKeys = 0, otherKeys = 0, dupes = 0;
     mod->setSkipConsecutiveLinks(false);
@@ -1158,18 +1434,34 @@ static std::string expandEntry(const std::string &in) {
 
             if (allDigits) numericKeys++; else otherKeys++;
 
+            // Only the HTML goes into the chunk; the key stays uncompressed in
+            // dict_keys so the Dictionary tab can enumerate and count without
+            // inflating anything.
+            std::vector<std::string> fields;
+            fields.push_back(html);
+            long long row = dictChunks.add(fields);
+
             bindText(ins, 1, modNameStr);
             bindText(ins, 2, key);
-            bindText(ins, 3, html);
+            sqlite3_bind_int64(ins, 3, row / kChunkRowsDict);
+            sqlite3_bind_int(ins, 4, (int)(row % kChunkRowsDict));
             step1(ins, db->db);
             n++;
         }
         (*mod)++;
     }
+    dictChunks.finish();
     sqlite3_finalize(ins);
     sqlite3_finalize(exists);
+
+    long long dictVerified = dictChunks.validate(db);
+    if (dictVerified != n) die(@"%@: verified %lld dict rows, expected %lld", modName, dictVerified, n);
+
     note(@"  %@: %lld entries (%lld numeric keys, %lld non-numeric, %lld duplicate keys skipped)",
          modName, n, numericKeys, otherKeys, dupes);
+    note(@"  %@: %lld chunks, raw %.2f MB -> zlib %.2f MB (re-inflated + compared: %lld rows)",
+         modName, dictChunks.chunkCount(),
+         dictChunks.rawTotal / 1048576.0, dictChunks.blobTotal / 1048576.0, dictVerified);
 
     // The Strong's lexicons must be entirely fixed-width numeric — that is what
     // makes a Swift strongsPad reimplementation (Phase 3) well-defined.
@@ -1273,6 +1565,59 @@ static std::string expandEntry(const std::string &in) {
 }
 
 // -----------------------------------------------------------------------
+// Whole-store validation
+//
+// The per-module ChunkWriter::validate already proves every chunk inflates back
+// to the rows that went in. This is the other half: that the LOGICAL row counts
+// are the ones Phase 2 measured against the live engine. A compression change
+// that silently lost a whole module's tail would satisfy the per-chunk check
+// (what was written is what reads back) and only this catches it.
+//
+// The numbers are hardcoded on purpose. They are the measurements the Phase 2
+// cross-check validated against real SWORD output, so they are an external
+// expectation, not a self-derived one. If a module is legitimately updated these
+// have to be re-measured and changed deliberately.
+// -----------------------------------------------------------------------
+- (void)validateTotals {
+    struct Expectation { const char *sql; long long want; const char *what; };
+    const Expectation checks[] = {
+        {"SELECT count(*) FROM verses_plain WHERE module='KJV'",   31102, "KJV verses_plain rows"},
+        {"SELECT count(*) FROM verses_plain WHERE module='MHCC'",  27715, "MHCC verses_plain rows"},
+        {"SELECT count(*) FROM notes_index WHERE module='KJV'",     6959, "KJV notes"},
+        {"SELECT count(*) FROM notes_index",                        6959, "notes across all modules"},
+        {"SELECT count(*) FROM dict_keys WHERE module='Robinson'",  1526, "Robinson keys"},
+        {"SELECT count(*) FROM dict_keys WHERE module='StrongsRealGreek'",  5624, "StrongsRealGreek keys"},
+        {"SELECT count(*) FROM dict_keys WHERE module='StrongsRealHebrew'", 8674, "StrongsRealHebrew keys"},
+        {"SELECT count(*) FROM chapters WHERE module='KJV'",        1189, "KJV chapters"},
+        {"SELECT count(*) FROM chapters WHERE module='MHCC'",       1189, "MHCC chapters"},
+    };
+    for (size_t i = 0; i < sizeof(checks) / sizeof(checks[0]); ++i) {
+        sqlite3_stmt *st = [db prepare:checks[i].sql];
+        if (sqlite3_step(st) != SQLITE_ROW) die(@"validation query failed: %s", checks[i].sql);
+        long long got = sqlite3_column_int64(st, 0);
+        sqlite3_finalize(st);
+        if (got != checks[i].want) {
+            die(@"VALIDATION FAILED: %s = %lld, expected %lld", checks[i].what, got, checks[i].want);
+        }
+        note(@"  ok  %-34s = %lld", checks[i].what, got);
+    }
+
+    // Every plain_texts row a verses_plain row points at must exist, and the
+    // arithmetic addressing must hold: text_id `n` lives at chunk n/256, slot
+    // n%256. Checking it in SQL is cheap and catches an off-by-one in the writer
+    // that the per-chunk comparison cannot see.
+    sqlite3_stmt *st = [db prepare:
+        "SELECT count(*) FROM verses_plain v LEFT JOIN plain_texts_chunks c"
+        "  ON c.module = v.module AND c.chunk_id = v.text_id / 256"
+        " WHERE c.chunk_id IS NULL OR v.text_id % 256 >= c.row_count;"];
+    if (sqlite3_step(st) != SQLITE_ROW) die(@"addressing validation failed");
+    long long orphans = sqlite3_column_int64(st, 0);
+    sqlite3_finalize(st);
+    if (orphans) die(@"VALIDATION FAILED: %lld verses_plain rows point outside their chunk", orphans);
+    note(@"  ok  %-34s = 0", "verses_plain rows off their chunk");
+}
+
+// -----------------------------------------------------------------------
 // Driver
 // -----------------------------------------------------------------------
 - (void)run {
@@ -1315,7 +1660,12 @@ static std::string expandEntry(const std::string &in) {
 
     [self setMeta:@"schemaVersion" to:[NSString stringWithFormat:@"%d", kSchemaVersion]];
     [self setMeta:@"swordVersion" to:[NSString stringWithUTF8String:sword::SWVersion::currentVersion.getText()]];
-    [self setMeta:@"tokenGrammar" to:@"v1"];
+    [self setMeta:@"tokenGrammar" to:@"v2"];
+    [self setMeta:@"chunkRows.plain_texts" to:[NSString stringWithFormat:@"%d", kChunkRowsPlain]];
+    [self setMeta:@"chunkRows.dict" to:[NSString stringWithFormat:@"%d", kChunkRowsDict]];
+    [self setMeta:@"chunkRows.notes" to:[NSString stringWithFormat:@"%d", kChunkRowsNotes]];
+
+    [self validateTotals];
 
     [db exec:"COMMIT;"];
     // VACUUM after the bulk load so the file has no free pages — otherwise the
