@@ -260,4 +260,128 @@ final class PSContentStoreTests: XCTestCase {
         assertEqualHTML(result.body, try fixture("KJV-Gen_1.html"), "Genesis 1 via the app's own ref form")
         XCTAssertEqual(result.entryCount, 32)
     }
+
+    // MARK: - Dictionary lookup parity (plan step 4b)
+
+    /// **The assertion the committed fixtures structurally cannot make.**
+    ///
+    /// `Robinson-entries.txt` is generated from a hardcoded key list in TRUE
+    /// casing (SwordOracleCaptureTests.swift:292), which is not what the UI
+    /// produces. `SwordDictionary.mm:67` stores `[keyText capitalizedString]`,
+    /// `PSDictionaryViewController.swift:241` renders that into the cell, and `:252`
+    /// feeds THAT SAME MANGLED STRING back into `entry(forKey:)`. For Robinson that
+    /// alters 1,375 of 1,526 keys (`V-PAI-3S` -> `V-Pai-3S`).
+    ///
+    /// It works today only because Robinson.conf omits CaseSensitiveKeys, so SWMgr
+    /// builds RawLD(caseSensitive=false) (swmgr.cpp:1056) and RawStr::findOffset
+    /// uppercases both sides (rawstr.cpp:188). A reader doing `WHERE key=?` would be
+    /// byte-perfect against every fixture and fail on ~90% of real Robinson taps.
+    ///
+    /// So: enumerate every key the Dictionary tab can display — capitalizedString
+    /// over all 15,824 stored keys — and assert each resolves.
+    func testEveryKeyTheDictionaryTabCanDisplayResolves() throws {
+        let store = try store()
+        var checked = 0, altered = 0
+        for module in ["StrongsRealGreek", "StrongsRealHebrew", "Robinson"] {
+            let keys = store.dictKeys(module: module)
+            XCTAssertFalse(keys.isEmpty, "\(module) has no keys")
+            var missing: [(String, String)] = []
+            for key in keys {
+                // Exactly what the cell holds: -[NSString capitalizedString].
+                let uiKey = (key as NSString).capitalized
+                if uiKey != key { altered += 1 }
+                checked += 1
+                if store.dictEntry(module: module, key: uiKey) == nil {
+                    missing.append((key, uiKey))
+                }
+            }
+            XCTAssertTrue(missing.isEmpty,
+                          "\(module): \(missing.count) of \(keys.count) UI-cased keys do not resolve, e.g. \(missing.prefix(5))")
+        }
+        XCTAssertEqual(checked, 15824, "the store no longer holds 15,824 lexicon keys")
+        // Not an incidental number: if this drops to 0 the test has stopped
+        // exercising the casing path at all and would pass on a case-sensitive
+        // index.
+        XCTAssertEqual(altered, 1375, "the number of case-altered keys changed")
+    }
+
+    /// The specific cases from the finding, spelled out so a regression names
+    /// itself rather than appearing as "1,375 keys failed".
+    func testDictionaryLookupCasingAndPaddingCases() throws {
+        let store = try store()
+
+        // Robinson: stored casing and UI casing must give the same entry.
+        let stored = store.dictEntry(module: "Robinson", key: "V-PAI-3S")
+        XCTAssertNotNil(stored, "V-PAI-3S (stored casing) should resolve")
+        XCTAssertEqual(store.dictEntry(module: "Robinson", key: "V-Pai-3S"), stored,
+                       "V-Pai-3S (the string the UI actually passes) must resolve to the same entry")
+
+        // Strong's: the app passes the bare number (osishtmlhref.cpp:66 strips the
+        // G/H prefix) and relies on strongsPad's zero-fill.
+        let bare = store.dictEntry(module: "StrongsRealHebrew", key: "430")
+        XCTAssertNotNil(bare, "bare Strong's number should resolve")
+        XCTAssertEqual(store.dictEntry(module: "StrongsRealHebrew", key: "0430"), bare,
+                       "'430' and '0430' must resolve to the same entry")
+
+        // A miss returns nil. This is the deliberate FIX to the engine's behaviour:
+        // SWLD::strongsPad drops a leading G/H without re-prepending it
+        // (swld.cpp:134), so "H430" pads to "0430" -- 4 digits, not a key -- and
+        // rawstr4.cpp:234-241 then snaps to a NEIGHBOURING entry with no error set,
+        // silently showing the wrong definition. Tests/Fixtures/
+        // strongsPad-prefixed-key-bug.txt records the engine's behaviour; the
+        // oracle test that produced it is deliberately left alone, since it
+        // documents the engine, not the reader.
+        XCTAssertNil(store.dictEntry(module: "StrongsRealHebrew", key: "H430"),
+                     "'H430' must miss rather than snap to a neighbour")
+        XCTAssertNil(store.dictEntry(module: "StrongsRealHebrew", key: "99999"),
+                     "a key that does not exist must return nil")
+        XCTAssertNil(store.dictEntry(module: "Robinson", key: "NOT-A-CODE"), "nonsense key")
+        XCTAssertNil(store.dictEntry(module: "StrongsRealGreek", key: ""), "empty key")
+
+        // Cross-module isolation: a Hebrew key must not resolve out of the Greek
+        // lexicon just because both key spaces are numeric.
+        XCTAssertNotNil(store.dictEntry(module: "StrongsRealGreek", key: "25"))
+        XCTAssertNotEqual(store.dictEntry(module: "StrongsRealGreek", key: "430"),
+                          store.dictEntry(module: "StrongsRealHebrew", key: "430"))
+    }
+
+    /// The entries the fixtures DO pin must still come back byte-identical — this is
+    /// the chunk-read path (inflate, split, slot) rather than the key path.
+    func testDictionaryEntriesMatchFixtures() throws {
+        let store = try store()
+        for module in ["StrongsRealGreek", "StrongsRealHebrew", "Robinson"] {
+            let text = try fixture("\(module)-entries.txt")
+            // Blocks are "### key=<k>\n<entry>", entry running to the next marker.
+            let blocks = text.components(separatedBy: "### key=").dropFirst()
+            XCTAssertFalse(blocks.isEmpty, "\(module) fixture holds no blocks")
+            for block in blocks {
+                guard let newline = block.firstIndex(of: "\n") else { continue }
+                let key = String(block[block.startIndex..<newline]).trimmingCharacters(in: .whitespaces)
+                var expected = String(block[block.index(after: newline)...])
+                while expected.hasSuffix("\n") { expected.removeLast() }
+                guard let actual = store.dictEntry(module: module, key: key) else {
+                    XCTFail("\(module) key=\(key) is not in the store")
+                    continue
+                }
+                assertEqualHTML(actual, expected, "\(module) key=\(key)")
+            }
+        }
+    }
+
+    /// `dictKeys` order is what the table shows, so it has to be the module's own
+    /// `.idx` order — the same order `-[SwordDictionary allKeys]` produces by
+    /// walking from TOP.
+    func testDictionaryKeyOrderIsStoredOrder() throws {
+        let store = try store()
+        let greek = store.dictKeys(module: "StrongsRealGreek")
+        XCTAssertEqual(greek.first, "00001")
+        XCTAssertEqual(greek.count, 5624)
+        // Numeric keys are fixed-width, so stored order is also ascending.
+        XCTAssertEqual(greek, greek.sorted(), "Strong's keys are not in ascending order")
+
+        let robinson = store.dictKeys(module: "Robinson")
+        XCTAssertEqual(robinson.count, 1526)
+        XCTAssertEqual(store.dictEntryCount(module: "Robinson"), robinson.count,
+                       "entryCount and dictKeys disagree — the table would over- or under-run")
+    }
 }
