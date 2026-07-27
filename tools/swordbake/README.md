@@ -66,3 +66,46 @@ Both are deterministic: the same inputs produce byte-identical files.
 - `externals/sword/include/zlib.h` is zlib **1.1.4** and shadows the SDK header,
   so `compressBound` is not declared through it. The app has the same skew but
   only calls `compress2`/`uncompress`, whose signatures never changed.
+
+## Cross-check (the Phase 2 exit criterion)
+
+```sh
+python3 tools/swordbake/crosscheck.py
+```
+
+Expands each stored chapter's tokens, replays `-[SwordModule chapterBodyHTML:…]`'s
+accumulator loop over the result, and diffs against the fixtures
+`SwordOracleCaptureTests` captured from the live engine on the simulator.
+
+The two sides share no code — one is C++ writing SQLite, the other Swift calling
+SWORD — so a pass means the store holds the right entries, in the right order,
+with the right bytes. That is what the converter's internal round-trip check
+*cannot* tell you: it is self-referential and would still pass if the wrong
+entries had been captured, or captured out of order.
+
+Verified to be a real gate: swapping two same-length records inside a chapter
+makes it fail with the byte offset and exit non-zero.
+
+## Artifacts and the app bundle
+
+`Resources/PSContent.sqlite` and `Resources/Versification-KJV.json` are checked
+in but **deliberately not added to the app's Copy Resources phase**. Phase 2
+ships no rendering change, so bundling them now would add ~45 MB to the app for
+no benefit. Phase 3 adds them to the bundle when it cuts the reader over.
+
+Size, for Phase 3/5 to weigh:
+
+| section | size |
+|---|---|
+| chapters + bodies + dict_entries + notes (the rendering content) | 9.7 MB |
+| plain_texts (the FTS build source) | 21.6 MB |
+| **total file** | **45 MB** |
+
+`plain_texts` is more than twice the content it supports because it stores
+`text_plain` / `lemmas` / `word_map` verbatim so the on-device index build stays
+a copy loop. `lemmas` and `word_map` are both derivable from the Strong's and
+morph tokens already in `chapters`; if the artifact needs to shrink, deriving
+them at index-build time is the first thing to trade away — at the cost of the
+"no derivation logic on device" property this schema was chosen for. Note the
+current shipped zips total 10.7 MB, so this is a real regression in download
+size that Phase 5's repack should address.
