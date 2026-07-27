@@ -27,17 +27,31 @@ enum PSFeatureFlags {
     /// `PSContentReader` over the baked `PSContent.sqlite` instead of the SWORD
     /// engine (SWORD_REMOVAL_PLAN.md Phase 3).
     ///
-    /// Off by default until the differential gate has been run exhaustively; the
-    /// flip to default-on is its own commit so it is revertible by itself, and the
-    /// flag is removed in Phase 5 when SWORD goes.
+    /// **Default ON** as of the Phase 3 flag flip, which was gated on the
+    /// exhaustive differential run: all 1,189 chapters of both shipped modules at
+    /// both option endpoints, plus all 31,102 search-source rows, byte-for-byte
+    /// identical to the live engine (see PSDifferentialTests and the flip commit).
     ///
     /// The flag gates *intent*; `PSContentReader.isAvailable` gates *capability*,
     /// and every call site also falls back to SWORD if a specific read returns nil.
+    /// So this being on is not a commitment that nothing can go wrong — it is the
+    /// preferred path, with the engine still underneath it until Phase 5.
     ///
-    ///     xcrun simctl spawn booted defaults write org.timsams.PocketSword swiftContentReader -bool YES
+    /// To turn it OFF (i.e. read through SWORD again) without a rebuild:
+    ///
+    ///     xcrun simctl spawn booted defaults write org.timsams.PocketSword swiftContentReader -bool NO
     ///
     /// (bundle id differs per configuration — see CLAUDE.md.)
+    ///
+    /// Note the default-on inversion: `UserDefaults.bool(forKey:)` answers NO for a
+    /// missing key, so this cannot read the raw value — an unset key must mean ON.
+    /// `object(forKey:)` distinguishes "absent" from "explicitly false", and there
+    /// is deliberately no `registerDefaults` anywhere in this app to lean on.
+    /// Removed in Phase 5 with the SWORD engine.
     static var swiftContentReader: Bool {
-        UserDefaults.standard.bool(forKey: Defaults.swiftContentReaderPreference)
+        guard let value = UserDefaults.standard.object(forKey: Defaults.swiftContentReaderPreference) else {
+            return true
+        }
+        return (value as? NSNumber)?.boolValue ?? true
     }
 }
