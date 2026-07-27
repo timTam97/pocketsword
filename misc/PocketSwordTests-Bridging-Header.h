@@ -21,6 +21,19 @@
 //
 
 #import "globals.h"               // PSSearchType / PSSearchRange NS_ENUMs + keys
+
+// The SWORD bridge facades, for SwordOracleCaptureTests: it captures golden
+// fixtures from the live engine (chapter bodies, lexicon entries, footnote and
+// scriptRef attribute lookups) while the engine is still in the tree, so the
+// Phase-3 Swift content reader has an acceptance criterion after SWORD is
+// deleted. All four headers are the C++-clean Foundation-only facades -- the
+// sword:: types live in their sibling +Cpp.h headers, which are imported only by
+// .mm files, so this stays Swift-importable.
+#import "SwordManager.h"          // +defaultManager, module lookup, SW_OPTION_* / SW_ON / SW_OFF
+#import "SwordModule.h"           // -chapterBodyHTML:…, -attributeValueForEntryData:
+#import "SwordBook.h"             // versification book shape (name/shortName/osisName)
+#import "SwordDictionary.h"       // -entryForKey: for the lexicons
+#import "PSSearchEngine.h"        // PSFoldForIndex / PSSearchCleanDisplayText
 // PSHistoryItem is Swift as of migration step 1.2 — its type is visible to the
 // test bundle via `@testable import PocketSword`, so it is NOT imported here.
 // PSSearchHistoryItem is Swift as of migration step 1.2 — its type is visible to

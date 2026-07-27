@@ -179,6 +179,24 @@ typedef enum {
 
 - (SwordModuleTextEntry *)textEntryForKey:(NSString *)aKey textType:(TextPullType)aType;
 - (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS;
+
+/**
+ The chapter's rendered body -- the `verses` accumulator that -getChapter: wraps
+ in an HTML shell. Extracted so it can be captured as a stable oracle for the
+ SWORD-removal work: -getChapter:'s full output is not stable, because it embeds
+ a 120-line JS block, createHTMLString's live font preferences, and a
+ PSBookmarks read.
+
+ `entryCount` receives the loop counter that -getChapter: feeds to its JS array
+ sizing. Note it is NOT a verse count: it advances even for entries the loop
+ skips as empty or duplicate.
+
+ Pass applyBookmarkHighlights:NO for a highlight-free body (the oracle case);
+ -getChapter: passes YES, preserving today's behaviour exactly.
+ */
+- (NSString *)chapterBodyHTML:(NSString *)chapter
+      applyBookmarkHighlights:(BOOL)applyHighlights
+                   entryCount:(NSInteger *)entryCount;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (NSInteger)getVerseMax;

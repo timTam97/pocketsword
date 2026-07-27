@@ -38,10 +38,21 @@ extern const int PSSearchSchemaVersion;
 /// this linkage). The `extern "C"` guard suppresses C++ name mangling so the
 /// Swift caller (PSModuleSearchController) resolves the unmangled symbol
 /// `_PSSearchCleanDisplayText`. Plain C / Obj-C TUs ignore the guard.
+/// Returns a diacritic-folded, NFC-normalised, lower-cased copy of `s`. Folding
+/// drops Hebrew points + cantillation (U+0591–U+05C7, which FTS5's
+/// remove_diacritics=2 leaves alone) plus the generic Unicode combining-mark
+/// ranges, catching Greek polytonic accents and anything else unicode61 keeps.
+///
+/// This is the index-side half of a byte-for-byte duplicated algorithm: the
+/// Swift `PSSearchQuery.foldForIndex` (PSSearchQuery.swift:31-67) must fold
+/// query text identically or a query silently stops matching the rows this
+/// produced. Both copies warn about the duplication in prose; exposing this one
+/// lets `SwordOracleCaptureTests` assert the two actually agree.
 #ifdef __cplusplus
 extern "C" {
 #endif
 extern NSString *PSSearchCleanDisplayText(NSString *plain);
+extern NSString *PSFoldForIndex(NSString *s);
 #ifdef __cplusplus
 }
 #endif

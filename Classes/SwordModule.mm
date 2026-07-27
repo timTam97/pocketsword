@@ -1039,13 +1039,18 @@
 	return currentVerse;
 }
 
-// Grabs the text for a given chapter (e.g. "Gen 1")
-- (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS 
+// The chapter's rendered body: the `verses` accumulator that -getChapter: wraps
+// in an HTML shell. Extracted verbatim from -getChapter:withExtraJS: so it can
+// be captured as a stable oracle for the SWORD-removal work -- see the header
+// comment for why -getChapter:'s own output is not usable as one.
+//
+// The only behavioural knob is applyBookmarkHighlights:; -getChapter: passes YES
+// and is therefore unchanged. Everything else, including the loop's counter
+// semantics and the caller's responsibility for the module lock, is as it was.
+- (NSString *)chapterBodyHTML:(NSString *)chapter
+      applyBookmarkHighlights:(BOOL)applyHighlights
+                   entryCount:(NSInteger *)entryCountOut
 {
-    [moduleLock lock];
-
-	[self setPreferences];
-
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
 	curKey->setIntros(YES);
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
@@ -1144,7 +1149,9 @@
 					}
 				}
 				
-				NSString *highlightColour = [PSBookmarks getHighlightRGBColourStringForBookAndChapterRef:[PSModuleController createRefString:chapter] withVerse:i];
+				NSString *highlightColour = applyHighlights
+					? [PSBookmarks getHighlightRGBColourStringForBookAndChapterRef:[PSModuleController createRefString:chapter] withVerse:i]
+					: nil;
 				if(highlightColour) {
 					entryToAppend = [self highlightVerse:entryToAppend withClass:highlightColour];
 				}
@@ -1171,6 +1178,26 @@
 	if([verses isEqualToString:@""]) {
 		[verses appendFormat: @"<p style=\"color:grey;text-align:center;font-style:italic;\">%@ (%@)</p>", NSLocalizedString(@"EmptyChapterWarning", @"This chapter is empty for this module."), ch];
 	}
+
+	if(entryCountOut) {
+		*entryCountOut = i;
+	}
+
+	return verses;
+}
+
+// Grabs the text for a given chapter (e.g. "Gen 1")
+- (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS
+{
+    [moduleLock lock];
+
+	[self setPreferences];
+
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	NSInteger i = 0;
+	NSMutableString *verses = [[self chapterBodyHTML:chapter
+							applyBookmarkHighlights:YES
+										 entryCount:&i] mutableCopy];
 
 	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
 //	if([modType isEqualToString: SWMOD_CATEGORY_BIBLES]) {

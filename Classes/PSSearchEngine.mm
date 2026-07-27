@@ -230,7 +230,7 @@ const int PSSearchSchemaVersion = 4;
 //     remove_diacritics=2 doesn't touch these.
 //   * Generic Unicode combining-mark ranges — catches Greek polytonic
 //     accents and anything else unicode61 leaves in place.
-static NSString *PSFoldForIndex(NSString *s) {
+NSString *PSFoldForIndex(NSString *s) {
 	if(s.length == 0) return @"";
 	NSString *decomposed = [s decomposedStringWithCanonicalMapping];
 	NSMutableString *out = [NSMutableString stringWithCapacity:decomposed.length];

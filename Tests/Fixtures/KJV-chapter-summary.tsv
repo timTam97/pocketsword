@@ -1,0 +1,8 @@
+Gen 1	entries=32	bytes=54828	book + chapter intro titles in the verse-0 slot
+Ps 3	entries=9	bytes=9863	canonical preverse title (Heading/Preverse bucket)
+Ps 119	entries=177	bytes=166803	acrostic titles throughout the chapter
+Matt 1	entries=26	bytes=105001	NT boundary + type="main" title
+John 3	entries=37	bytes=161035	red-letter (Words of Christ) spans
+Gen 4	entries=27	bytes=46921	footnote-dense chapter
+Ps 23	entries=7	bytes=8133	short chapter, canonical title
+Rev 22	entries=22	bytes=108213	last chapter of the versification

@@ -1,0 +1,10 @@
+### key=25
+<a name="00025">25</a> <b>&#7936;&#947;&#945;&#960;&#8049;&#969;</b> [A)GAPA/W] {agap&#225;&#333;} \<i>ag-ap-ah'-o</i>\<br/> perhaps from <b>&#7940;&#947;&#945;&#957;</b> [A)/GAN] {&#225;gan} (much) (or compare <a href="sword://StrongsRealHebrew/05689">5689</a>); to love (in a social or moral sense):--(be-)love(-ed). Compare <a href="sword://StrongsRealGreek/05368">5368</a>.
+### key=3056
+<a name="03056">3056</a> <b>&#955;&#8057;&#947;&#959;&#962;</b> [LO/GOS] {l&#243;gos} \<i>log'-os</i>\<br/> from <a href="sword://StrongsRealGreek/03004">3004</a>; something said (including the thought); by implication, a topic (subject of discourse), also reasoning (the mental faculty) or motive; by extension, a computation; specially, (with the article in John) the Divine Expression (i.e. Christ):--account, cause, communication, X concerning, doctrine, fame, X have to do, intent, matter, mouth, preaching, question, reason, + reckon, remove, say(-ing), shew, X speaker, speech, talk, thing, + none of these things move me, tidings, treatise, utterance, word, work.
+### key=2316
+<a name="02316">2316</a> <b>&#952;&#949;&#8057;&#962;</b> [QEO/S] {the&#243;s} \<i>theh'-os</i>\<br/> of uncertain affinity; a deity, especially (with <a href="sword://StrongsRealGreek/03588">3588</a>) the supreme Divinity; figuratively, a magistrate; by Hebraism, very:--X exceeding, God, god(-ly, -ward).
+### key=4018
+<a name="04018">4018</a> <b>&#960;&#949;&#961;&#953;&#946;&#8057;&#955;&#945;&#953;&#959;&#957;</b> [PERIBO/LAION] {perib&#243;laion} \<i>per-ib-ol'-ah-yon</i>\<br/> neuter of a presumed derivative of <a href="sword://StrongsRealGreek/04016">4016</a>; something thrown around one, i.e. a mantle, veil:--covering, vesture.
+### key=5547
+<a name="05547">5547</a> <b>&#935;&#961;&#953;&#963;&#964;&#8057;&#962;</b> [*XRISTO/S] {Christ&#243;s} \<i>khris-tos'</i>\<br/> from <a href="sword://StrongsRealGreek/05548">5548</a>; anointed, i.e. the Messiah, an epithet of Jesus:--Christ.

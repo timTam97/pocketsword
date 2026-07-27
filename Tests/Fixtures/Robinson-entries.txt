@@ -1,0 +1,8 @@
+### key=N-NSF
+<i>Part of Speech</i>: Noun<br /><i>Case</i>: Nominative<br /><i>Number</i>: Singular<br /><i>Gender</i>: Feminine
+### key=V-PAI-3S
+<i>Part of Speech</i>: Verb<br /><i>Tense</i>: Present<br /><i>Voice</i>: Active<br /><i>Mood</i>: Indicative<br /><i>Person</i>: third<br /><i>Number</i>: Singular
+### key=CONJ
+CONJunction or conjunctive particle
+### key=PREP
+PREPosition
