@@ -61,11 +61,11 @@ final class PSBookOSISResolver {
     }()
 
     /// Internal rather than private so tests can point it at a broken copy.
-    init?(url: URL) {
+    init?(url: URL, reportFailures: Bool = true) {
         guard let data = try? Data(contentsOf: url),
               let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let raw = root["books"] as? [[String: Any]] else {
-            PSContentStore.fail("Versification-KJV.json is unreadable at \(url.path)")
+            PSContentStore.fail("Versification-KJV.json is unreadable at \(url.path)", report: reportFailures)
             return nil
         }
 
@@ -75,7 +75,7 @@ final class PSBookOSISResolver {
             guard let osis = entry["osisName"] as? String,
                   let name = entry["name"] as? String,
                   let verseMax = entry["verseMax"] as? [Int], !verseMax.isEmpty else {
-                PSContentStore.fail("Versification-KJV.json has a malformed book entry")
+                PSContentStore.fail("Versification-KJV.json has a malformed book entry", report: reportFailures)
                 return nil
             }
             parsed.append(PSVersificationBook(
@@ -90,7 +90,7 @@ final class PSBookOSISResolver {
                 verseMax: verseMax))
         }
         guard parsed.count == 66 else {
-            PSContentStore.fail("Versification-KJV.json holds \(parsed.count) books, expected 66")
+            PSContentStore.fail("Versification-KJV.json holds \(parsed.count) books, expected 66", report: reportFailures)
             return nil
         }
         books = parsed

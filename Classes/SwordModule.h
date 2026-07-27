@@ -197,6 +197,22 @@ typedef enum {
 - (NSString *)chapterBodyHTML:(NSString *)chapter
       applyBookmarkHighlights:(BOOL)applyHighlights
                    entryCount:(NSInteger *)entryCount;
+
+/**
+ The chapter-navigation `<script>` block -getChapter: wraps the body in.
+
+ Factored out of -getChapter: (it was an inline 120-line format string) so the
+ Phase-3 Swift content reader can emit the identical block instead of carrying a
+ duplicate 4 KB copy of it — a duplicate that nothing would keep in sync, and
+ that is pure JS with no SWORD dependency at all. This is a plain class method:
+ it touches no module state.
+
+ `entryCount` is the loop counter -chapterBodyHTML: returned (NOT a verse count);
+ it sizes the `versepos` array and bounds its loops. `extraJS` is appended inside
+ `window.onload`.
+ */
++ (NSString *)chapterNavigationJSWithEntryCount:(NSInteger)entryCount
+                                        extraJS:(NSString *)extraJS;
 - (NSString *)setToNextChapter;
 - (NSString *)setToPreviousChapter;
 - (NSInteger)getVerseMax;

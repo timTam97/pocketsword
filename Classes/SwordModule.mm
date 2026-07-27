@@ -1186,38 +1186,14 @@
 	return verses;
 }
 
-// Grabs the text for a given chapter (e.g. "Gen 1")
-- (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS
-{
-    [moduleLock lock];
-
-	[self setPreferences];
-
-	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
-	NSInteger i = 0;
-	NSMutableString *verses = [[self chapterBodyHTML:chapter
-							applyBookmarkHighlights:YES
-										 entryCount:&i] mutableCopy];
-
-	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
-//	if([modType isEqualToString: SWMOD_CATEGORY_BIBLES]) {
-//		//only pad the bottom if it's a Bible, don't for commentaries
-//		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
-//		fs = (fs == 0) ? 14 : fs;
-//		if(fs <= 17) {
-//			for(int i=fs;i<18;i++) {
-//				if(i!=14)
-//					[verses appendString:@"<p>&nbsp;</p>"];
-//			}
-//		}
-//	}
-		
-	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);// Set the key back to what we had it at
-	
-	// add JS for navigating through the chapter.
-	// NOTE: for readability, the array isn't starting at the usual '0' position, but at '1'
-	//			so that versePosition[i] will be for verse 'i'
-	NSString *js = [NSString stringWithFormat: @"<script type=\"text/javascript\">\n<!--\n\
+// The chapter-navigation script block. Extracted verbatim from -getChapter: so
+// the Phase-3 Swift reader can emit the identical bytes rather than carrying a
+// duplicated 4 KB copy of pure JS that nothing would keep in sync. Not a
+// behaviour change: -getChapter: now calls this, and the format string, its four
+// %ld substitutions and the trailing extraJS are unchanged.
++ (NSString *)chapterNavigationJSWithEntryCount:(NSInteger)entryCount
+                                        extraJS:(NSString *)extraJS {
+	return [NSString stringWithFormat: @"<script type=\"text/javascript\">\n<!--\n\
 					var versepos;\n\
 					var det_loc_poll;\n\
 					var lastSentVerse;\n\
@@ -1339,7 +1315,41 @@
 						%@\n\
 						//detLoc();\n\
 					}\n-->\
-					</script>\n", (long)i, (long)i, (long)i, (long)i, extraJS];
+					</script>\n", (long)entryCount, (long)entryCount, (long)entryCount, (long)entryCount, extraJS];
+}
+
+// Grabs the text for a given chapter (e.g. "Gen 1")
+- (NSString *)getChapter:(NSString *)chapter withExtraJS:(NSString *)extraJS
+{
+    [moduleLock lock];
+
+	[self setPreferences];
+
+	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	NSInteger i = 0;
+	NSMutableString *verses = [[self chapterBodyHTML:chapter
+							applyBookmarkHighlights:YES
+										 entryCount:&i] mutableCopy];
+
+	[verses appendString:@"<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"];
+//	if([modType isEqualToString: SWMOD_CATEGORY_BIBLES]) {
+//		//only pad the bottom if it's a Bible, don't for commentaries
+//		NSInteger fs = [[NSUserDefaults standardUserDefaults] integerForKey:DefaultsFontSizePreference];
+//		fs = (fs == 0) ? 14 : fs;
+//		if(fs <= 17) {
+//			for(int i=fs;i<18;i++) {
+//				if(i!=14)
+//					[verses appendString:@"<p>&nbsp;</p>"];
+//			}
+//		}
+//	}
+		
+	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);// Set the key back to what we had it at
+	
+	// add JS for navigating through the chapter.
+	// NOTE: for readability, the array isn't starting at the usual '0' position, but at '1'
+	//			so that versePosition[i] will be for verse 'i'
+	NSString *js = [SwordModule chapterNavigationJSWithEntryCount:i extraJS:extraJS];
 	
 	
 	NSString *text = [PSModuleController createHTMLString: verses usingPreferences:YES withJS: js usingModuleForPreferences:self.name fixedWidth:YES];

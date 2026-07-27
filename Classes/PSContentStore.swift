@@ -114,14 +114,27 @@ final class PSContentStore: NSObject {
     private var chunkRowsDict = 64
     private var chunkRowsNotes = 256
 
+    /// See `fail(_:report:)`. Only the negative tests set this false.
+    private let reportFailures: Bool
+
     // MARK: - Failure reporting
 
     /// Loud in debug, logged in release, and always nil-returning at the call
     /// site. A blank chapter must never be the user-visible outcome of a reader
     /// bug: while the feature flag exists the caller falls back to SWORD.
-    static func fail(_ message: String, file: StaticString = #fileID, line: UInt = #line) {
+    ///
+    /// `report: false` logs but does not assert. That exists for exactly one
+    /// caller: the tests that deliberately feed the reader a broken store or a
+    /// malformed token stream to prove it refuses rather than crashes. The
+    /// assertion is the point in every other case, so the flag is threaded
+    /// explicitly through those paths rather than being a global that could be
+    /// left switched off.
+    static func fail(_ message: String, report: Bool = true,
+                     file: StaticString = #fileID, line: UInt = #line) {
         alog("PSContentStore: \(message)")
-        assertionFailure("PSContentStore: \(message)", file: file, line: line)
+        if report {
+            assertionFailure("PSContentStore: \(message)", file: file, line: line)
+        }
     }
 
     // MARK: - Connection
@@ -147,14 +160,15 @@ final class PSContentStore: NSObject {
     /// Designated init. Internal rather than private so tests can point it at a
     /// deliberately-broken copy (missing file, wrong schemaVersion, truncated
     /// chunk) and assert the failure seam.
-    init?(path: String) {
+    init?(path: String, reportFailures: Bool = true) {
+        self.reportFailures = reportFailures
         super.init()
         var handle: OpaquePointer?
         // SQLITE_OPEN_READONLY: the bundle is not writable anyway, and it also
         // stops SQLite trying to create a -wal/-journal sidecar next to it.
         let rc = sqlite3_open_v2(path, &handle, SQLITE_OPEN_READONLY, nil)
         guard rc == SQLITE_OK, let handle = handle else {
-            PSContentStore.fail("cannot open \(path): \(rc)")
+            PSContentStore.fail("cannot open \(path): \(rc)", report: reportFailures)
             if handle != nil { sqlite3_close(handle) }
             return nil
         }
@@ -182,7 +196,7 @@ final class PSContentStore: NSObject {
         var meta: [String: String] = [:]
         var st: OpaquePointer?
         guard sqlite3_prepare_v2(db, "SELECT key, value FROM content_meta;", -1, &st, nil) == SQLITE_OK else {
-            PSContentStore.fail("content_meta is unreadable: \(lastError())")
+            PSContentStore.fail("content_meta is unreadable: \(lastError())", report: reportFailures)
             return false
         }
         while sqlite3_step(st) == SQLITE_ROW {
@@ -193,11 +207,11 @@ final class PSContentStore: NSObject {
 
         let version = Int(meta["schemaVersion"] ?? "") ?? -1
         guard version == Self.expectedSchemaVersion else {
-            PSContentStore.fail("schemaVersion is \(meta["schemaVersion"] ?? "absent"), expected \(Self.expectedSchemaVersion)")
+            PSContentStore.fail("schemaVersion is \(meta["schemaVersion"] ?? "absent"), expected \(Self.expectedSchemaVersion)", report: reportFailures)
             return false
         }
         guard meta["tokenGrammar"] == Self.expectedTokenGrammar else {
-            PSContentStore.fail("tokenGrammar is \(meta["tokenGrammar"] ?? "absent"), expected \(Self.expectedTokenGrammar)")
+            PSContentStore.fail("tokenGrammar is \(meta["tokenGrammar"] ?? "absent"), expected \(Self.expectedTokenGrammar)", report: reportFailures)
             return false
         }
         // Absent chunk-size keys are a v2 store written before they were added;
@@ -207,7 +221,7 @@ final class PSContentStore: NSObject {
               let dict = Int(meta["chunkRows.dict"] ?? ""),
               let notes = Int(meta["chunkRows.notes"] ?? ""),
               plain > 0, dict > 0, notes > 0 else {
-            PSContentStore.fail("content_meta is missing the chunkRows.* sizes")
+            PSContentStore.fail("content_meta is missing the chunkRows.* sizes", report: reportFailures)
             return false
         }
         chunkRowsPlain = plain

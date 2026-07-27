@@ -22,4 +22,22 @@ enum PSFeatureFlags {
     static var voiceReferenceEnabled: Bool {
         UserDefaults.standard.bool(forKey: Defaults.voiceRefEnabledPreference)
     }
+
+    /// Route the chapter / lexicon / footnote read paths through the pure-Swift
+    /// `PSContentReader` over the baked `PSContent.sqlite` instead of the SWORD
+    /// engine (SWORD_REMOVAL_PLAN.md Phase 3).
+    ///
+    /// Off by default until the differential gate has been run exhaustively; the
+    /// flip to default-on is its own commit so it is revertible by itself, and the
+    /// flag is removed in Phase 5 when SWORD goes.
+    ///
+    /// The flag gates *intent*; `PSContentReader.isAvailable` gates *capability*,
+    /// and every call site also falls back to SWORD if a specific read returns nil.
+    ///
+    ///     xcrun simctl spawn booted defaults write org.timsams.PocketSword swiftContentReader -bool YES
+    ///
+    /// (bundle id differs per configuration — see CLAUDE.md.)
+    static var swiftContentReader: Bool {
+        UserDefaults.standard.bool(forKey: Defaults.swiftContentReaderPreference)
+    }
 }

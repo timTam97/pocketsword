@@ -134,7 +134,8 @@ enum PSChapterExpander {
     /// with the wrong field count, an unknown Strong's flag). That is a corrupt
     /// store, and the caller falls back to SWORD rather than rendering a partial
     /// verse.
-    static func expand(_ input: String, options: Options = .allOn) -> String? {
+    static func expand(_ input: String, options: Options = .allOn,
+                       reportFailures: Bool = true) -> String? {
         var out = ""
         out.reserveCapacity(input.count * 3)
         let chars = Array(input)
@@ -148,7 +149,7 @@ enum PSChapterExpander {
                 continue
             }
             guard let end = nextIndex(of: closer, in: chars, from: i + 1) else {
-                PSContentStore.fail("unterminated token U+\(String(format: "%04X", c.unicodeScalars.first!.value))")
+                PSContentStore.fail("unterminated token U+\(String(format: "%04X", c.unicodeScalars.first!.value))", report: reportFailures)
                 return nil
             }
             let payload = String(chars[(i + 1)..<end])
@@ -157,7 +158,7 @@ enum PSChapterExpander {
                 // Option off. Red-letter keeps its payload (recursively expanded);
                 // the anchors have no text of their own that survives.
                 if c == redLetterOpen {
-                    guard let inner = expand(payload, options: options) else { return nil }
+                    guard let inner = expand(payload, options: options, reportFailures: reportFailures) else { return nil }
                     out += inner
                 }
                 i = end + 1
@@ -166,33 +167,33 @@ enum PSChapterExpander {
 
             switch c {
             case strongsOpen:
-                guard let anchor = expandStrongs(payload) else { return nil }
+                guard let anchor = expandStrongs(payload, reportFailures) else { return nil }
                 out += anchor
             case morphOpen:
-                guard let anchor = expandMorph(payload) else { return nil }
+                guard let anchor = expandMorph(payload, reportFailures) else { return nil }
                 out += anchor
             case noteOpen, xrefOpen:
                 let fields = payload.components(separatedBy: "|")
                 guard fields.count == 3 else {
-                    PSContentStore.fail("bad note payload: \(payload.debugDescription)")
+                    PSContentStore.fail("bad note payload: \(payload.debugDescription)", report: reportFailures)
                     return nil
                 }
                 out += noteAnchor(c == xrefOpen ? "x" : "n",
                                   value: fields[0], module: fields[1], passage: fields[2])
             case titleOpen:
-                guard let inner = expand(payload, options: options) else { return nil }
+                guard let inner = expand(payload, options: options, reportFailures: reportFailures) else { return nil }
                 out += "<p><b>" + inner + "</b></p>"
             case scripRefOpen:
                 guard !payload.contains("|") else {
-                    PSContentStore.fail("bad scripRef payload: \(payload.debugDescription)")
+                    PSContentStore.fail("bad scripRef payload: \(payload.debugDescription)", report: reportFailures)
                     return nil
                 }
                 out += scripRefAnchor(payload)
             case redLetterOpen:
-                guard let inner = expand(payload, options: options) else { return nil }
+                guard let inner = expand(payload, options: options, reportFailures: reportFailures) else { return nil }
                 out += wocOpenHTML + inner + wocCloseHTML
             default:
-                PSContentStore.fail("unhandled token")
+                PSContentStore.fail("unhandled token", report: reportFailures)
                 return nil
             }
             i = end + 1
@@ -250,17 +251,17 @@ enum PSChapterExpander {
     /// Measured over all 373,619 KJV occurrences, `shown == value` always and
     /// `type` is exactly "Greek" or "Hebrew" — the compact form covers them all,
     /// and the explicit form exists so nothing can ever be lost.
-    private static func expandStrongs(_ payload: String) -> String? {
+    private static func expandStrongs(_ payload: String, _ report: Bool) -> String? {
         if payload.hasPrefix("*") {
             let fields = String(payload.dropFirst()).components(separatedBy: "|")
             guard fields.count == 3 else {
-                PSContentStore.fail("bad strongs payload: \(payload.debugDescription)")
+                PSContentStore.fail("bad strongs payload: \(payload.debugDescription)", report: report)
                 return nil
             }
             return strongsAnchor(type: fields[0], value: fields[1], shown: fields[2])
         }
         guard let flag = payload.first else {
-            PSContentStore.fail("empty strongs payload")
+            PSContentStore.fail("empty strongs payload", report: report)
             return nil
         }
         let value = String(payload.dropFirst())
@@ -270,7 +271,7 @@ enum PSChapterExpander {
         case "H": type = "Hebrew"
         case "-": type = ""
         default:
-            PSContentStore.fail("bad strongs flag '\(flag)'")
+            PSContentStore.fail("bad strongs flag '\(flag)'", report: report)
             return nil
         }
         return strongsAnchor(type: type, value: value, shown: value)
@@ -283,18 +284,18 @@ enum PSChapterExpander {
     ///    (71,016 of 216,395 cases);
     ///  * `shown` is `value` with a leading "TH"/"TG" dropped when a digit follows
     ///    (osishtmlhref.cpp:92-93).
-    private static func expandMorph(_ payload: String) -> String? {
+    private static func expandMorph(_ payload: String, _ report: Bool) -> String? {
         if payload.hasPrefix("*") {
             let fields = String(payload.dropFirst()).components(separatedBy: "|")
             guard fields.count == 3 else {
-                PSContentStore.fail("bad morph payload: \(payload.debugDescription)")
+                PSContentStore.fail("bad morph payload: \(payload.debugDescription)", report: report)
                 return nil
             }
             return morphAnchor(type: fields[0], value: fields[1], shown: fields[2])
         }
         let fields = payload.components(separatedBy: "|")
         guard fields.count == 2 else {
-            PSContentStore.fail("bad morph payload: \(payload.debugDescription)")
+            PSContentStore.fail("bad morph payload: \(payload.debugDescription)", report: report)
             return nil
         }
         let value = fields[1]

@@ -13,6 +13,7 @@
 //
 
 import XCTest
+import SQLite3
 @testable import PocketSword
 
 final class PSContentStoreTests: XCTestCase {
@@ -365,6 +366,181 @@ final class PSContentStoreTests: XCTestCase {
                 }
                 assertEqualHTML(actual, expected, "\(module) key=\(key)")
             }
+        }
+    }
+
+    // MARK: - Failure seam (plan step 5)
+    //
+    // Each of these injects one of the conditions PSContentReader's header lists
+    // and asserts the reader REFUSES rather than crashing or rendering something
+    // plausible. They deliberately construct a store directly (not the shared one)
+    // so nothing is left broken for later tests.
+    //
+    // PSContentStore.fail() calls assertionFailure, which traps in a Debug build —
+    // so these tests exercise the paths through the *initialiser*, which reports
+    // and returns nil, plus the pure-Swift expander, which can be handed a
+    // malformed token stream without touching the store at all. The mid-read
+    // failures (a truncated chunk, a bad body id) are covered by the converter's
+    // own re-inflate validation and by crosscheck.py, which run outside a debug
+    // assertion context.
+
+    /// A scratch copy of the bundled store that tests can corrupt.
+    private func makeStoreCopy(_ mutate: (URL) throws -> Void) throws -> URL {
+        let source = try XCTUnwrap(Bundle.main.url(forResource: "PSContent", withExtension: "sqlite"))
+        let dir = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("psstore-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let copy = dir.appendingPathComponent("PSContent.sqlite")
+        try FileManager.default.copyItem(at: source, to: copy)
+        try mutate(copy)
+        addTeardownBlock { try? FileManager.default.removeItem(at: dir) }
+        return copy
+    }
+
+    func testAbsentStoreFailsRatherThanCrashing() throws {
+        let missing = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("definitely-not-here-\(UUID().uuidString).sqlite")
+        // sqlite3_open_v2 with SQLITE_OPEN_READONLY does not create the file, so
+        // this exercises the open failure, not an empty-database one.
+        XCTAssertFalse(FileManager.default.fileExists(atPath: missing.path))
+        XCTAssertNil(PSContentStore(path: missing.path, reportFailures: false),
+                     "a missing store must return nil, not a half-open handle")
+    }
+
+    func testWrongSchemaVersionIsRefused() throws {
+        let copy = try makeStoreCopy { url in
+            try Self.exec("UPDATE content_meta SET value='99' WHERE key='schemaVersion';", on: url)
+        }
+        XCTAssertNil(PSContentStore(path: copy.path, reportFailures: false),
+                     "a store from a different schema version must be refused")
+    }
+
+    func testWrongTokenGrammarIsRefused() throws {
+        let copy = try makeStoreCopy { url in
+            try Self.exec("UPDATE content_meta SET value='v1' WHERE key='tokenGrammar';", on: url)
+        }
+        XCTAssertNil(PSContentStore(path: copy.path, reportFailures: false),
+                     "a store whose token grammar predates the reader must be refused")
+    }
+
+    /// The chunk sizes drive the reader's slot arithmetic, so a store that does not
+    /// declare them must be refused rather than silently defaulting — a skew would
+    /// return plausible-but-wrong text from a neighbouring slot.
+    func testMissingChunkSizesAreRefused() throws {
+        let copy = try makeStoreCopy { url in
+            try Self.exec("DELETE FROM content_meta WHERE key LIKE 'chunkRows.%';", on: url)
+        }
+        XCTAssertNil(PSContentStore(path: copy.path, reportFailures: false),
+                     "a store without the chunkRows.* sizes must be refused")
+    }
+
+    func testMalformedVersificationIsRefused() throws {
+        let dir = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("psvers-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: dir) }
+
+        let notJSON = dir.appendingPathComponent("bad.json")
+        try Data("this is not json".utf8).write(to: notJSON)
+        XCTAssertNil(PSBookOSISResolver(url: notJSON, reportFailures: false))
+
+        // Valid JSON, wrong shape: 2 books instead of 66.
+        let tooFew = dir.appendingPathComponent("short.json")
+        let payload = """
+            {"books":[{"osisName":"Gen","name":"Genesis","verseMax":[31]},
+                      {"osisName":"Exod","name":"Exodus","verseMax":[22]}]}
+            """
+        try Data(payload.utf8).write(to: tooFew)
+        XCTAssertNil(PSBookOSISResolver(url: tooFew, reportFailures: false),
+                     "a versification dump that is not 66 books must be refused")
+    }
+
+    /// A malformed token stream must return nil, not a truncated verse. This runs
+    /// against the expander directly, so it needs no store surgery.
+    func testMalformedTokenStreamsAreRefused() {
+        let cases: [(String, String)] = [
+            ("\u{0001}H0430", "unterminated strongs token"),
+            ("\u{0003}|TH8804", "unterminated morph token"),
+            ("\u{0005}1|KJV", "unterminated note token"),
+            ("\u{0001}X0430\u{0002}", "unknown strongs flag"),
+            ("\u{0005}1|KJV\u{0006}", "note payload with 2 fields, not 3"),
+            ("\u{0003}\u{0004}", "morph payload with 1 field, not 2"),
+            ("\u{000B}unclosed title", "unterminated title token"),
+            ("\u{0011}unclosed red letter", "unterminated red-letter token"),
+        ]
+        for (input, why) in cases {
+            XCTAssertNil(PSChapterExpander.expand(input, options: .allOn, reportFailures: false),
+                         "should have refused: \(why)")
+        }
+        // …while a well-formed stream still expands, so the guard is not just
+        // rejecting everything.
+        XCTAssertEqual(PSChapterExpander.expand("a\u{0001}H0430\u{0002}b", options: .allOn),
+                       "a<a href=\"passagestudy.jsp?action=showStrongs&amp;type=Hebrew&amp;value=0430\""
+                       + " class=\"strongs\">&lt;0430&gt;</a>b")
+    }
+
+    /// An unresolvable book must make the reader return nil so the caller falls
+    /// back, rather than rendering an empty page.
+    func testReaderRefusesAnUnresolvableRef() throws {
+        let reader = PSContentReader.shared
+        try XCTSkipUnless(reader.isAvailable, "reader unavailable")
+        XCTAssertNil(reader.chapterBody(module: "KJV", ref: "Nonexistent 1", kind: .bible,
+                                        applyBookmarkHighlights: false, reportFailures: false))
+        XCTAssertNil(reader.chapterBody(module: "KJV", ref: "Genesis 999", kind: .bible,
+                                        applyBookmarkHighlights: false, reportFailures: false))
+    }
+
+    /// A chapter absent from the store is NOT a failure: the converter omits
+    /// wholly-empty ones, and the reader must render the engine's own
+    /// empty-chapter message rather than returning nil.
+    ///
+    /// Both shipped modules turn out to cover all 1,189 chapters, so the branch is
+    /// unreachable through the bundled store — asserted here, because that is the
+    /// fact that makes it unreachable, and it would silently stop being true if a
+    /// module were ever updated. The fallback itself is then exercised directly
+    /// through the assembler, which is where it lives.
+    func testAbsentChapterRendersTheEmptyChapterMessage() throws {
+        let store = try store()
+        let resolver = try resolver()
+
+        // Every chapter of both modules is present. Spot-check the boundaries
+        // rather than all 2,378 (the converter already asserts the totals, and
+        // testStoreOpensAndMatchesTheExpectedSchema pins them).
+        for module in ["KJV", "MHCC"] {
+            for (osis, chapter) in [("Gen", 1), ("Gen", 50), ("Mal", 4), ("Matt", 1), ("Rev", 22)] {
+                XCTAssertNotNil(store.chapterRecords(module: module, bookOsis: osis, chapter: chapter),
+                                "\(module) \(osis) \(chapter) is missing from the store")
+            }
+        }
+        // A chapter number past the book's end does not resolve at all, which is
+        // the nil-and-fall-back path, not the empty-chapter one.
+        XCTAssertNil(resolver.resolve(ref: "Genesis 51"))
+
+        // The fallback itself: all-empty records must produce the message, a
+        // non-nil body, and a counter equal to the slot count.
+        let message = "<p style=\"color:grey;\">empty (Gen 1)</p>"
+        let result = PSChapterAssembler.assemble(
+            records: ["", "", ""],
+            headings: [:],
+            config: PSChapterAssembler.Config(),
+            headingHTML: { _ in "" },
+            highlightColour: { _ in nil },
+            emptyChapterMessage: message)
+        XCTAssertEqual(result?.body, message, "an all-empty chapter must render the fallback")
+        XCTAssertEqual(result?.entryCount, 3, "the counter still advances for skipped slots")
+    }
+
+    private static func exec(_ sql: String, on url: URL) throws {
+        var db: OpaquePointer?
+        guard sqlite3_open(url.path, &db) == SQLITE_OK else {
+            throw NSError(domain: "test", code: 1, userInfo: [NSLocalizedDescriptionKey: "cannot open \(url.path)"])
+        }
+        defer { sqlite3_close(db) }
+        var err: UnsafeMutablePointer<CChar>?
+        guard sqlite3_exec(db, sql, nil, nil, &err) == SQLITE_OK else {
+            let message = err.map { String(cString: $0) } ?? "?"
+            sqlite3_free(err)
+            throw NSError(domain: "test", code: 2, userInfo: [NSLocalizedDescriptionKey: message])
         }
     }
 
