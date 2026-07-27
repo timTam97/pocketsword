@@ -32,7 +32,7 @@ Delete-then-convert: strip module choice while still on SWORD (shrinks the contr
 
 Three runtime pieces replace the engine:
 
-1. **Bundled content store (SQLite).** Produced offline (Phase 2). Tables roughly:
+1. **Bundled content store (SQLite).** Produced offline (Phase 2). **Superseded by what Phase 2 actually built** — the per-verse `verses(module, osis_ref, ordinal, html)` shape below proved unaffordable (66.6 MB for KJV) and the real schema is tokenised and chapter-grain. See the Phase 2 status block and `tools/swordbake/README.md`. Kept here for the vocabulary it fixes:
    - `verses(module, osis_ref, ordinal, html)` — per-verse **rendered HTML fragment**, with Strong's / morph / heading / red-letter markup **always present** as classed anchors/spans (`a.verse`, `a.strongs`, `a.morph`, `a.x`, `a.n`, `span.WordOfChrist`, `blockquote.lg`, ruby). Ordinal = canonical order (drives search ranking too).
    - `verses_plain(module, osis_ref, text_plain, text_norm, lemmas, word_map)` — the FTS5 source; mirrors today's search columns so the search layer barely changes.
    - `dict_entries(module, key, html)` — pre-rendered Strong's / lexicon definitions.
@@ -68,14 +68,35 @@ Each phase should ship independently and keep the app launchable + `PersistedFor
 >
 > **Deferred to Phase 5 as planned:** repacking `KJV.zip` to drop its dead 6.7 MB Lucene index.
 
-### Phase 2 — Offline converter (SWORD as a build tool)
+### Phase 2 — Offline converter (SWORD as a build tool) — ✅ DONE
 
-A throwaway tool (macOS CLI or a dev-only build mode) that links SWORD once and emits the SQLite content store from §2.1.
-
-- Drive each module's own `VerseKey` (TOP→BOTTOM, `++`), call `renderText` for HTML and `stripText` for the FTS source, pull `getEntryAttributes()` for headings / footnotes / xrefs / per-word Strong's.
-- Emit deterministic, byte-stable output so it's diffable.
-- Also dump the **KJV versification table** (book list, chapter counts, verse counts, OSIS names) as a bundled JSON/plist for Phase 4.
-- This is where *all* remaining SWORD API use concentrates before it's discarded.
+> **Status: complete.** Landed as 3 build-green commits on `opus/sword-migration`. 38 tests green (28 pre-existing + 10 new); reading, Strong's popup, search UI and commentary hand-verified on the iPhone 17 Pro simulator.
+>
+> **What shipped:**
+> - `tools/swordbake/` — a standalone Makefile + Obj-C++ `main.mm`, **not** an Xcode target (the project has no shell-script build phases and a project-level `GCC_PREFIX_HEADER` that imports UIKit). `sword_sources.txt` holds the 148 SWORD translation units, extracted from the app's own Sources build phase, so the tool compiles exactly the engine the app compiles.
+> - `Resources/PSContent.sqlite` + `Resources/Versification-KJV.json`, both byte-identical across runs (`make verify`). **Checked in but deliberately not bundled** — Phase 2 ships no rendering change, so adding ~45 MB to the app now buys nothing. Phase 3 adds them to the Copy Resources phase when it cuts the reader over.
+> - `Classes/SwordOracleCaptureTests.swift` + 19 fixtures under `Tests/Fixtures/`, captured from the live engine and asserted byte-for-byte on every subsequent run. Capture is opt-in via `PSORACLE_CAPTURE`.
+> - `tools/swordbake/crosscheck.py` — the exit criterion (below).
+>
+> **Storage decision that overrides §2.1:** per-verse baked HTML is not affordable. KJV has 374k Strong's + 216k morph anchors at ~110 bytes each, so rendered per-verse KJV is 66.6 MB. Storage is instead **tokenised and chapter-grain** (12.3 MB raw / 3.2 MB zlib for KJV), and each chapter stores the **input sequence** of `getChapter`'s loop — empties preserved — rather than its output, because that loop's counter is not the verse number yet drives the `vv{i}` anchors, the `versemenu` links and the bookmark-highlight lookup. A verbatim Phase-3 port therefore reproduces the counter by construction.
+>
+> **Two converter self-checks fail the build:** expanding every stored entry's tokens back through the same templates must reproduce the original rendered HTML byte-for-byte (69,471 entries), and no `passagestudy.jsp` substring may survive tokenisation.
+>
+> **The exit criterion passed.** `crosscheck.py` expands each stored chapter, replays the accumulator loop, and diffs against the live-SWORD fixtures — two sides sharing no code (C++ writing SQLite vs Swift calling SWORD). All 11 chapter bodies reproduce byte-for-byte (including Ps 119's 177 entries, the canonical-heading path and MHCC's shared-body path) and all 14 sampled lexicon entries match. Confirmed to be a real gate by swapping two same-length records inside a chapter: it fails with the byte offset and exits non-zero.
+>
+> **Findings that correct this doc and the Phase-2 plan:**
+> 1. **There is a fifth `passagestudy.jsp` emission site.** `osishtmlhref.cpp:327` emits a `showRef`/`scripRef` anchor for every `<reference>` tag. It is **not** option-gated, uses raw `&` separators rather than `&amp;`, and emits only the opening tag (the `</a>` comes from the end-tag branch). KJV verse bodies contain none, but the canonical Psalm titles do — the self-check caught it on the first run.
+> 2. **`verses_plain` is 31,102 rows for KJV, not 32,359.** The smaller figure matches today's index build exactly, verified against a replica of `-buildWithProgress:`. The stored text also has `PSSearchCleanDisplayText` applied, as the app does before inserting, so Phase 3 stays a copy loop.
+> 3. **`StrongsRealHebrew` has two duplicate keys on disk** (`02200`, `06401`); for `06401` the second occurrence is a 21-byte `</dictionary>` stub. `INSERT OR REPLACE` would have silently kept the stub, so first-occurrence wins and every collision is logged. 8,674 stored + 2 skipped = the 8,676 in the `.idx`.
+> 4. **Gen 1's loop counter is 32, for 31 verses** — it starts at 0 on the verse-0 intro slot and increments at the bottom of every iteration including the one that steps out of the chapter, so it lands on `verses + 1`.
+> 5. **The plan's suggested footnote passages carry no footnotes** (Gen 4:8, Gen 1:1, Ps 3:1). The fixture was silently empty until cross-checked against the store. Also confirmed: all 6,959 KJV notes are `type="study"` with an empty `refList`, so the `x` branch of `attributeValueForEntryData:` is unreachable for the shipped content.
+> 6. `ftplib.c` / `ftpparse.c` must be compiled as **C**, not C++; and `externals/sword/include/zlib.h` is zlib **1.1.4**, which shadows the SDK header and lacks `compressBound`.
+>
+> **Confirmed as documented:** 148/148 engine sources compile clean for macOS; 1,189 KJV chapters; Gen.1 inflates to 32 records; 138 canonical Psalm titles and 1,250 non-canonical titles that need `Headings=On`; MHCC's 28,970 slots dedup to 4,435 distinct bodies; KJV emits zero `crossReference` notes; SWORD is 1.9.0.3837.
+>
+> **Carried into Phase 3:** `SWLD::strongsPad` (`swld.cpp:134`) drops a leading `G`/`H` without re-prepending it, so `"H430"` pads to `"0430"` and `rawstr4.cpp:234-241` snaps to a *neighbouring* entry with **no error set** — `entry(forKey: "H430")` returns entry 8674. Captured as a fixture so the Phase-3 fix (return nil on a miss) is not mistaken for a regression. The app is unaffected today because it passes the bare number.
+>
+> **Size, for Phase 3/5 to weigh:** the 45 MB store is only 9.7 MB of rendering content; the other 21.6 MB is `plain_texts`, which stores `text_plain`/`lemmas`/`word_map` verbatim so the on-device index build needs no derivation logic. `lemmas` and `word_map` are both derivable from the Strong's/morph tokens already in `chapters`, so that is the first thing to trade if the artifact must shrink. Today's shipped zips total 10.7 MB, so this is a real download-size regression for Phase 5's repack — not something to leave implicit.
 
 ### Phase 3 — Swift content reader (replace the facades)
 
