@@ -63,6 +63,65 @@ final class SwordOracleCaptureTests: XCTestCase {
         (SW_OPTION_HEBREWCANTILLATION, SW_OFF),
     ]
 
+    /// The **other** endpoint: every option `-[SwordModule setPreferences]`
+    /// pushes, off. This is the state a *fresh install* actually renders — there
+    /// is no `registerDefaults` anywhere in the app, and both the Obj-C
+    /// `GetBoolPrefForMod` macro and Swift's `UserDefaults.psBool` bottom out in
+    /// `-boolForKey:`, which answers NO for a missing key. Nothing pinned it
+    /// before, which meant the fixture set covered a configuration no user has on
+    /// first launch.
+    ///
+    /// `setPreferences` pushes **eleven** options, not the six a reader might
+    /// guess from the per-tab `▾` menu (SwordModule.mm:188-213): scriptRefs,
+    /// strongs, morphs, headings, footnotes, glosses, redLetter, variants,
+    /// greekAccents, hebrewPoints, hebrewCantillation. Ten are booleans; variants
+    /// is pinned to Primary Reading unconditionally and is therefore the same in
+    /// both configurations. Lemmas is **not** pushed by `setPreferences` at all —
+    /// it sits at `SWOptionFilter`'s constructor default, which is the first
+    /// entry of `oValues()`, i.e. "Off" (swoptfilter.cpp:43, osislemma.cpp:37).
+    /// It is set explicitly here so the capture does not depend on that.
+    private static let allOffRenderOptions: [(String, String)] = [
+        (SW_OPTION_STRONGS, SW_OFF),
+        (SW_OPTION_MORPHS, SW_OFF),
+        (SW_OPTION_FOOTNOTES, SW_OFF),
+        (SW_OPTION_SCRIPTREFS, SW_OFF),
+        (SW_OPTION_REDLETTERWORDS, SW_OFF),
+        (SW_OPTION_HEADINGS, SW_OFF),
+        (SW_OPTION_VARIANTS, SW_OPTION_VARIANTS_PRIMARY),
+        (SW_OPTION_LEMMAS, SW_OFF),
+        (SW_OPTION_GLOSSES, SW_OFF),
+        (SW_OPTION_GREEKACCENTS, SW_OFF),
+        (SW_OPTION_HEBREWPOINTS, SW_OFF),
+        (SW_OPTION_HEBREWCANTILLATION, SW_OFF),
+    ]
+
+    /// `-chapterBodyHTML:` reads two prefs of its own, straight out of
+    /// NSUserDefaults rather than from the SWORD option state: `vplPreference`
+    /// (verse-per-line) and `headingsPreference` (which gates the *preverse*
+    /// heading injection the accumulator loop does itself, separately from the
+    /// markup filter's own interverse emission). A capture that leaves them at
+    /// whatever the simulator happens to hold is not reproducible, so each
+    /// configuration pins both and restores them afterwards.
+    ///
+    /// Note the all-on set deliberately pins `headings` **on** even though the
+    /// original capture ran with it off: the two agree byte-for-byte because
+    /// every one of KJV's 138 Preverse headings is `canonical`, and the injection
+    /// is gated `headings || canonical`. Asserting the existing 19 fixtures still
+    /// match is what proves that.
+    private struct RenderConfig {
+        let name: String
+        let options: [(String, String)]
+        let vpl: Bool
+        let headings: Bool
+
+        static let allOn = RenderConfig(name: "all-on",
+                                        options: SwordOracleCaptureTests.renderOptions,
+                                        vpl: false, headings: true)
+        static let allOff = RenderConfig(name: "all-off",
+                                         options: SwordOracleCaptureTests.allOffRenderOptions,
+                                         vpl: false, headings: false)
+    }
+
     /// Chapters chosen to cover the edge cases the plan calls out, not for
     /// breadth. Each one exists to catch a specific way the reader can go wrong.
     private static let bibleChapters: [(ref: String, why: String)] = [
@@ -136,6 +195,47 @@ final class SwordOracleCaptureTests: XCTestCase {
         }
     }
 
+    // MARK: - Pref / bookmark state (restored in tearDown)
+
+    /// Per-module NSUserDefaults keys this test overwrote, mapped to their
+    /// original values (`nil` meaning "was absent"). `-chapterBodyHTML:` reads
+    /// `vplPreference_<mod>` and `headingsPreference_<mod>` directly, so a
+    /// reproducible capture has to pin them — and a test that leaves them pinned
+    /// would change what the *app* renders on the next launch of this simulator.
+    private var savedModulePrefs: [String: Any?] = [:]
+
+    /// `PSBookmarks.default()`'s children, saved while the highlight capture
+    /// installs a synthetic bookmark set. Nothing is ever written to disk:
+    /// `saveBookmarksToFile()` is deliberately not called, so the user's real
+    /// PSBookmarks.plist is untouched.
+    private var savedBookmarkChildren: [Any]??
+
+    override func tearDown() {
+        let defaults = UserDefaults.standard
+        for (key, value) in savedModulePrefs {
+            if let value = value {
+                defaults.set(value, forKey: key)
+            } else {
+                defaults.removeObject(forKey: key)
+            }
+        }
+        savedModulePrefs = [:]
+
+        if let saved = savedBookmarkChildren {
+            PSBookmarks.default().children = saved
+            savedBookmarkChildren = nil
+        }
+        super.tearDown()
+    }
+
+    private func pinModulePref(_ pref: String, module: String, to value: Bool) {
+        let key = UserDefaults.standard.psModuleKey(pref, module)
+        if savedModulePrefs[key] == nil {
+            savedModulePrefs[key] = UserDefaults.standard.object(forKey: key)
+        }
+        UserDefaults.standard.set(value, forKey: key)
+    }
+
     // MARK: - Engine readiness
 
     /// The bundled modules are seeded on a detached background thread from
@@ -155,7 +255,8 @@ final class SwordOracleCaptureTests: XCTestCase {
         throw XCTSkip("modules \(names) not installed within \(timeout)s — seeding did not complete")
     }
 
-    private func configuredModule(_ name: String) throws -> SwordModule {
+    private func configuredModule(_ name: String,
+                                  config: RenderConfig = .allOn) throws -> SwordModule {
         try waitForModules([name])
         guard let manager = SwordManager.default() else {
             throw XCTSkip("no SwordManager")
@@ -163,23 +264,44 @@ final class SwordOracleCaptureTests: XCTestCase {
         guard let mod = manager.module(withName: name) else {
             throw XCTSkip("module \(name) not available")
         }
-        for (option, value) in Self.renderOptions {
+        for (option, value) in config.options {
             manager.setGlobalOption(option, value: value)
         }
+        // -chapterBodyHTML: reads these two off NSUserDefaults itself rather than
+        // from the SWORD option state, so pinning the global options is not
+        // enough to make a capture reproducible.
+        pinModulePref(Defaults.vplPreference, module: name, to: config.vpl)
+        pinModulePref(Defaults.headingsPreference, module: name, to: config.headings)
         return mod
     }
 
     // MARK: - Chapter bodies
 
     func testCaptureKJVChapterBodies() throws {
-        let mod = try configuredModule("KJV")
+        try captureKJVChapterBodies(config: .allOn, suffix: "")
+    }
+
+    /// The all-off endpoint — the configuration a **fresh install** renders, and
+    /// the one the reader has to reproduce before the flag can be flipped on for
+    /// a user who has never touched the `▾` menu.
+    ///
+    /// Fixture names carry an `-alloff` suffix so this set sits alongside the
+    /// original 19 rather than replacing them; a divergence in either endpoint
+    /// then names which one broke.
+    func testCaptureKJVChapterBodiesAllOptionsOff() throws {
+        try captureKJVChapterBodies(config: .allOff, suffix: "-alloff")
+    }
+
+    private func captureKJVChapterBodies(config: RenderConfig, suffix: String) throws {
+        let mod = try configuredModule("KJV", config: config)
         var summary: [String] = []
 
         for entry in Self.bibleChapters {
             mod.aquireModuleLock()
             var entryCount: NSInteger = 0
             // applyBookmarkHighlights:NO — the highlight injection reads
-            // PSBookmarks, i.e. the user's own data, which is not reproducible.
+            // PSBookmarks, i.e. the user's own data. The highlighted path is
+            // captured separately, against a synthetic bookmark set.
             let maybeBody = mod.chapterBodyHTML(entry.ref,
                                                 applyBookmarkHighlights: false,
                                                 entryCount: &entryCount)
@@ -187,18 +309,27 @@ final class SwordOracleCaptureTests: XCTestCase {
             let body = try XCTUnwrap(maybeBody, "\(entry.ref) returned no body")
 
             let safe = entry.ref.replacingOccurrences(of: " ", with: "_")
-            try checkFixture("KJV-\(safe).html", actual: body)
+            try checkFixture("KJV-\(safe)\(suffix).html", actual: body)
             summary.append("\(entry.ref)\tentries=\(entryCount)\tbytes=\(body.utf8.count)\t\(entry.why)")
 
             XCTAssertGreaterThan(entryCount, 0, "\(entry.ref) produced no entries")
             XCTAssertFalse(body.isEmpty, "\(entry.ref) produced an empty body")
         }
 
-        try checkFixture("KJV-chapter-summary.tsv", actual: summary.joined(separator: "\n") + "\n")
+        try checkFixture("KJV-chapter-summary\(suffix).tsv",
+                         actual: summary.joined(separator: "\n") + "\n")
     }
 
     func testCaptureMHCCChapterBodies() throws {
-        let mod = try configuredModule("MHCC")
+        try captureMHCCChapterBodies(config: .allOn, suffix: "")
+    }
+
+    func testCaptureMHCCChapterBodiesAllOptionsOff() throws {
+        try captureMHCCChapterBodies(config: .allOff, suffix: "-alloff")
+    }
+
+    private func captureMHCCChapterBodies(config: RenderConfig, suffix: String) throws {
+        let mod = try configuredModule("MHCC", config: config)
         var summary: [String] = []
 
         for ref in Self.commentaryChapters {
@@ -211,11 +342,90 @@ final class SwordOracleCaptureTests: XCTestCase {
             let body = try XCTUnwrap(maybeBody, "\(ref) returned no body")
 
             let safe = ref.replacingOccurrences(of: " ", with: "_")
-            try checkFixture("MHCC-\(safe).html", actual: body)
+            try checkFixture("MHCC-\(safe)\(suffix).html", actual: body)
             summary.append("\(ref)\tentries=\(entryCount)\tbytes=\(body.utf8.count)")
         }
 
-        try checkFixture("MHCC-chapter-summary.tsv", actual: summary.joined(separator: "\n") + "\n")
+        try checkFixture("MHCC-chapter-summary\(suffix).tsv",
+                         actual: summary.joined(separator: "\n") + "\n")
+    }
+
+    /// The **production** render path, which nothing pinned before:
+    /// `-getChapter:` passes `applyBookmarkHighlights:YES` (SwordModule.mm:1199),
+    /// so every one of the 19 original fixtures captured a path the app never
+    /// takes. `-highlightVerse:withClass:` is not a simple wrap — it walks the
+    /// verse's block tags and re-opens the span after each one — so it is exactly
+    /// the kind of code a reimplementation gets subtly wrong.
+    ///
+    /// The bookmark set is synthetic and installed only in memory:
+    /// `PSBookmarks.saveBookmarksToFile()` is never called, and `tearDown`
+    /// restores the singleton's children. Ps 23 is chosen because it is short
+    /// enough to eyeball and its verse 1 carries a canonical preverse heading, so
+    /// the fixture also pins that a highlight does not disturb heading injection.
+    func testCaptureBookmarkHighlightedChapterBody() throws {
+        let mod = try configuredModule("KJV", config: .allOn)
+
+        let bookmarks = PSBookmarks.default()
+        savedBookmarkChildren = bookmarks.children
+
+        // A folder carrying the colour, holding bookmarks on Ps 23:1/:3/:6.
+        // getBookmarks(forBookAndChapterRef:) stamps the folder's rgbHexString
+        // onto each child at read time, which is how a bookmark gets a colour at
+        // all — a bookmark with no enclosing coloured folder never highlights.
+        let epoch = Date(timeIntervalSince1970: 0)
+        let folder = PSBookmarkFolder(name: "oracle-highlights",
+                                      dateAdded: epoch,
+                                      dateLastAccessed: epoch,
+                                      rgbHexString: "#FFCC00",
+                                      children: ["1", "3", "6"].map {
+            PSBookmark(name: "Psalms 23:\($0)",
+                       dateAdded: epoch,
+                       dateLastAccessed: epoch,
+                       bibleReference: "Psalms 23:\($0)")
+        })
+        bookmarks.children = [folder]
+
+        // Sanity-check the fixture is actually exercising the path, rather than
+        // silently capturing an unhighlighted body because the ref format drifted.
+        let colour = PSBookmarks.getHighlightRGBColourString(forBookAndChapterRef: "Psalms 23", withVerse: 1)
+        XCTAssertEqual(colour, "rgba(255,204,0,0.8)",
+                       "the synthetic bookmark set does not resolve — the highlight fixture would be a no-op")
+
+        // "Psalms 23", not "Ps 23": the highlight lookup keys on
+        // `[PSModuleController createRefString:chapter]` — the *caller's* string,
+        // not SWORD's canonical key text — and the app passes the full book name
+        // (PSModuleViewController hands `getBibleChapter:` a ref built from
+        // DefaultsLastRef, which is seeded "Genesis 1"). Passing the abbreviation
+        // renders the same bytes but silently matches no bookmark, which is why
+        // the highlighted-span assertion below is not redundant with the fixture.
+        mod.aquireModuleLock()
+        var entryCount: NSInteger = 0
+        let maybeBody = mod.chapterBodyHTML("Psalms 23",
+                                            applyBookmarkHighlights: true,
+                                            entryCount: &entryCount)
+        mod.releaseModuleLock()
+        let body = try XCTUnwrap(maybeBody, "Psalms 23 returned no body")
+
+        try checkFixture("KJV-Ps_23-highlighted.html", actual: body)
+        XCTAssertEqual(entryCount, 7, "Ps 23's loop counter changed")
+
+        // Which verses were highlighted, derived from the body rather than
+        // assumed. NOT a span count: -highlightVerse: closes and re-opens its
+        // span around *every* block element inside the verse, and
+        // -findNextBlockElement treats any non-self-closing tag as a block — so
+        // each Strong's anchor produces another pair. Ps 23 verse 1 alone yields
+        // more than 20. Segmenting on the verse anchors is the assertion that
+        // actually says "verses 1, 3 and 6, and nothing else".
+        var highlighted: [Int] = []
+        let segments = body.components(separatedBy: "<a href=\"pocketsword:versemenu:")
+        for segment in segments.dropFirst() {
+            guard let verse = Int(segment.prefix(while: { $0.isNumber })) else { continue }
+            if segment.contains("class=\"highlightedVerse\"") { highlighted.append(verse) }
+        }
+        XCTAssertEqual(highlighted, [1, 3, 6],
+                       "the highlight landed on the wrong verses")
+        XCTAssertTrue(body.contains("background-color:rgba(255,204,0,0.8);color:black;"),
+                      "the folder's colour did not reach the injected span")
     }
 
     /// The loop counter that drives `id="vv{i}"` and `pocketsword:versemenu:i`
