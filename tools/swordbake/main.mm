@@ -1155,7 +1155,36 @@ private:
                 // FTS source row. stripText() does NOT run the UTF8HTML
                 // encoding filter, so this column is raw UTF-8 (unlike the
                 // entity-escaped HTML columns).
+                //
+                // *** stripText() is taken with Strong's AND morph OFF. ***
+                // The rest of this bake runs with both On, because the chapter
+                // tokens need the anchors — but stripText() with them on
+                // interleaves markers into the verse text: `<H0430>` for Strong's
+                // and, via osisplain, a parenthesised `(8804)` for morph.
+                // PSSearchCleanDisplayText strips the first form and NOT the
+                // second (its regex is angle-bracket-only), so baking with morph
+                // on put "(8804)" into the indexed text of 21,175 of 30,862 KJV
+                // rows — searchable junk, and a divergence from the live index
+                // build, which renders under the app's per-module prefs (all-off
+                // on a fresh install).
+                //
+                // Found by PSSearchIndexParityTests diffing the two index builds
+                // row-by-row; no fixture covered it. The Word entry attributes
+                // that lemmas/word_map come from are NOT affected: osisstrongs.cpp
+                // populates them inside `if (isProcessEntryAttributes())` (:100),
+                // which runs before and independently of the `if (!option)` lemma
+                // strip (:242).
                 if (v >= 1) {
+                    mgr->setGlobalOption("Strong's Numbers", "Off");
+                    mgr->setGlobalOption("Morphological Tags", "Off");
+                    // Footnotes too: with the option on, osisplain emits each note
+                    // body inline in square brackets, so Gen 1:4's indexed text
+                    // gained "[<i>the light from…</i>: Heb. <i>between the light
+                    // and between the darkness</i>]" — HTML tags and all — into a
+                    // column that is supposed to be plain verse text. Same class of
+                    // bug as the morph markers above, same detection route.
+                    mgr->setGlobalOption("Footnotes", "Off");
+                    mgr->setGlobalOption("Cross-references", "Off");
                     const char *plainC = mod->stripText();
                     // Same order as buildWithProgress: strip the inline markers
                     // first, then test for emptiness, so the row set matches
@@ -1191,6 +1220,14 @@ private:
                         step1(insPlain, db->db);
                         plainRows++;
                     }
+                    // Restore the render config unconditionally — including on the
+                    // empty-text path. Leaving any of these Off would silently
+                    // strip the corresponding anchors from every subsequent
+                    // chapter's tokens.
+                    mgr->setGlobalOption("Strong's Numbers", "On");
+                    mgr->setGlobalOption("Morphological Tags", "On");
+                    mgr->setGlobalOption("Footnotes", "On");
+                    mgr->setGlobalOption("Cross-references", "On");
                 }
             }
 

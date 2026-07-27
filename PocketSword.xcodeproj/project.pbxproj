@@ -305,6 +305,7 @@
 		5A1F70B0000000000000VB02 /* PSVoiceRefSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */; };
 		5A1F70B0000000000000VC02 /* PSVoiceRefViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */; };
 		5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */; };
+		5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */; };
 		5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */; };
 		5A1F70B0000000000000OR02 /* SwordOracleCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000OR01 /* SwordOracleCaptureTests.swift */; };
 		5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */; };
@@ -909,6 +910,7 @@
 		5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefSession.swift; path = Classes/PSVoiceRefSession.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefViewController.swift; path = Classes/PSVoiceRefViewController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParserTests.swift; path = Classes/PSVoiceRefParserTests.swift; sourceTree = "<group>"; };
+		5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSSearchIndexParityTests.swift; path = Classes/PSSearchIndexParityTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSContentStoreTests.swift; path = Classes/PSContentStoreTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000OR01 /* SwordOracleCaptureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwordOracleCaptureTests.swift; path = Classes/SwordOracleCaptureTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderAddViewController.swift; path = Classes/PSBookmarkFolderAddViewController.swift; sourceTree = "<group>"; };
@@ -2076,6 +2078,7 @@
 				5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */,
 				5A1F70B0000000000000OR01 /* SwordOracleCaptureTests.swift */,
 				5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */,
+				5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */,
 				5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */,
 			);
 			name = PocketSwordTests;
@@ -2600,6 +2603,7 @@
 				5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */,
 				5A1F70B0000000000000OR02 /* SwordOracleCaptureTests.swift in Sources */,
 				5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */,
+				5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

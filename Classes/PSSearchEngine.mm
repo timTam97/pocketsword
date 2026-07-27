@@ -387,6 +387,145 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 
 #pragma mark - Build
 
+// Build the index from the baked content store instead of walking the live
+// module (SWORD_REMOVAL_PLAN.md Phase 3, step 7).
+//
+// Everything about the index itself is deliberately unchanged: the same FTS5
+// schema, the same seven columns in the same order, PSSearchCleanDisplayText and
+// PSFoldForIndex applied at the same points, and — critically — the SAME
+// emptiness test AFTER cleaning, because that test is what decides which rows
+// exist at all. Only the source of (reference, book_osis, testament, text_plain,
+// lemmas, word_map) changes: it comes from PSContentStore's row cursor rather
+// than from stripText() + getEntryAttributes().
+//
+// The cursor is used rather than a direct join against plain_texts because that
+// table is chunk-compressed as of schema v2 — the framing is the store's business,
+// not the index builder's.
+//
+// PSSearchCleanDisplayText stays in the path even though `text_plain` in the store
+// carries ZERO rows with `<H…>` markers (the converter already applied it), so it
+// is a no-op on this input. Leaving it in means the two build paths cannot drift
+// on that axis, and costs one regex pass per row.
+- (BOOL)buildFromContentStoreWithProgress:(PSSearchProgressBlock)progress error:(NSError **)err {
+	PSContentStore *store = [PSContentStore sharedStore];
+	if(!store) {
+		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-4
+									  userInfo:@{NSLocalizedDescriptionKey:@"no content store"}];
+		return NO;
+	}
+
+	PSContentVerseCursor *cursor = [store verseCursorForModule:_moduleName];
+	// The real row count, known up front — so the progress fraction is exact
+	// rather than divided by an estimate (the old loop's kExpected was 32000
+	// against an actual 31,102 for KJV, so it never reached ~97%).
+	const NSInteger total = cursor.count;
+	if(total == 0) {
+		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-5
+									  userInfo:@{NSLocalizedDescriptionKey:@"content store has no rows for this module"}];
+		return NO;
+	}
+
+	if(![self execSQL:@"BEGIN IMMEDIATE;" error:err]) return NO;
+
+	sqlite3_stmt *stmt = NULL;
+	const char *insertSQL =
+		"INSERT INTO verses (reference, book_osis, testament, text_plain, text_norm, lemmas, word_map) "
+		"VALUES (?, ?, ?, ?, ?, ?, ?);";
+	if(sqlite3_prepare_v2(_db, insertSQL, -1, &stmt, NULL) != SQLITE_OK) {
+		NSString *msg = [NSString stringWithUTF8String:sqlite3_errmsg(_db)];
+		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:sqlite3_errcode(_db)
+									   userInfo:@{NSLocalizedDescriptionKey: msg ?: @""}];
+		[self execSQL:@"ROLLBACK;" error:NULL];
+		return NO;
+	}
+
+	BOOL cancelled = NO, success = YES;
+	NSInteger count = 0;
+	PSContentVerseRow *row = nil;
+	// Rows arrive in `ordinal` order, which for KJV is also the order the old
+	// loop inserted them in (verses_plain.ordinal is strictly increasing and
+	// unique across all 31,102 rows) — so `ORDER BY rowid` in -search: keeps
+	// giving biblical order.
+	while((row = [cursor next]) != nil) {
+		NSString *plain = PSSearchCleanDisplayText(row.textPlain);
+		if(plain.length > 0) {
+			NSString *norm = PSFoldForIndex(plain);
+			sqlite3_bind_text(stmt, 1, [row.osisRef  UTF8String], -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt, 2, [row.bookOsis UTF8String], -1, SQLITE_TRANSIENT);
+			sqlite3_bind_int (stmt, 3, (int)row.testament);
+			sqlite3_bind_text(stmt, 4, [plain        UTF8String], -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt, 5, [norm         UTF8String], -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt, 6, [row.lemmas   UTF8String], -1, SQLITE_TRANSIENT);
+			sqlite3_bind_text(stmt, 7, [row.wordMap  UTF8String], -1, SQLITE_TRANSIENT);
+
+			if(sqlite3_step(stmt) != SQLITE_DONE) {
+				NSString *msg = [NSString stringWithUTF8String:sqlite3_errmsg(_db)];
+				if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain
+												   code:sqlite3_errcode(_db)
+											   userInfo:@{NSLocalizedDescriptionKey: msg ?: @""}];
+				success = NO;
+				sqlite3_reset(stmt);
+				break;
+			}
+			sqlite3_reset(stmt);
+		}
+
+		++count;
+		if(progress && (count % 500 == 0)) {
+			float fraction = MIN(0.99f, (float)count / (float)total);
+			BOOL localCancel = NO;
+			progress(fraction, &localCancel);
+			if(localCancel) { cancelled = YES; break; }
+		}
+	}
+	sqlite3_finalize(stmt);
+
+	// A cursor that stopped because the STORE is broken must not be mistaken for
+	// one that reached the end: that would commit a silently-truncated index.
+	if(success && !cancelled && cursor.failed) {
+		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-6
+									  userInfo:@{NSLocalizedDescriptionKey:@"content store read failed mid-build"}];
+		success = NO;
+	}
+
+	if(cancelled || !success) {
+		[self execSQL:@"ROLLBACK;" error:NULL];
+		// Report cancellation with the same code the engine path uses, so the
+		// caller can tell "the user stopped it" from "it broke" — and so
+		// -buildWithProgress: does not restart the build against SWORD.
+		if(cancelled && err) {
+			*err = [NSError errorWithDomain:PSSearchEngineErrorDomain
+									   code:NSUserCancelledError
+								   userInfo:@{NSLocalizedDescriptionKey:@"Index build cancelled"}];
+		}
+		return NO;
+	}
+	if(![self execSQL:@"COMMIT;" error:err]) return NO;
+	return YES;
+}
+
+// The meta row, shared by both build paths. module_version is nil-safe because
+// the column is TEXT.
+- (void)stampMetaForModule:(SwordModule *)mod {
+	NSString *currentVersion = [mod version];
+	sqlite3_stmt *meta = NULL;
+	const char *metaSQL =
+		"INSERT OR REPLACE INTO meta (module_name, module_version, built_at, schema_version) "
+		"VALUES (?, ?, ?, ?);";
+	if(sqlite3_prepare_v2(_db, metaSQL, -1, &meta, NULL) == SQLITE_OK) {
+		sqlite3_bind_text(meta, 1, [_moduleName UTF8String], -1, SQLITE_TRANSIENT);
+		if(currentVersion) {
+			sqlite3_bind_text(meta, 2, [currentVersion UTF8String], -1, SQLITE_TRANSIENT);
+		} else {
+			sqlite3_bind_null(meta, 2);
+		}
+		sqlite3_bind_int64(meta, 3, (sqlite3_int64)[[NSDate date] timeIntervalSince1970]);
+		sqlite3_bind_int  (meta, 4, PSSearchSchemaVersion);
+		sqlite3_step(meta);
+		sqlite3_finalize(meta);
+	}
+}
+
 - (BOOL)buildWithProgress:(PSSearchProgressBlock)progress error:(NSError **)err {
 	SwordModule *mod = self.module;
 	if(!mod) {
@@ -402,6 +541,28 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 	if(![self openDBCreatingIfNeeded:YES error:err]) return NO;
 	if(![self createSchemaIfNeeded:err])              return NO;
 
+	// Phase 3: build from the baked store when the flag is on. A failure there
+	// falls through to the SWORD walk below rather than leaving the user with no
+	// index — the same fallback policy as the render path. -dropIndex above has
+	// already cleared any partial DB, and the store path rolls its own
+	// transaction back, so the fallback starts from a clean schema either way.
+	if([PSContentReader isActive]) {
+		NSError *storeErr = nil;
+		if([self buildFromContentStoreWithProgress:progress error:&storeErr]) {
+			[self stampMetaForModule:mod];
+			if(progress) { BOOL ignored = NO; progress(1.0f, &ignored); }
+			return YES;
+		}
+		// A user cancellation must NOT silently restart the build against SWORD.
+		if(storeErr.code == NSUserCancelledError) {
+			[self dropIndex];
+			if(err) *err = storeErr;
+			return NO;
+		}
+		ALog(@"PSSearchEngine: content-store index build failed (%@); falling back to the engine",
+			 storeErr.localizedDescription);
+	}
+
 	sword::SWModule *swModule = [mod swModule];
 	if(!swModule) {
 		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-2
@@ -409,9 +570,12 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 		return NO;
 	}
 
-	// Rough upper bound for progress reporting. VerseKey iteration is
-	// O(31k) for a full Bible; we count as we go and divide.
-	const int kExpected = 32000;
+	// Upper bound for the progress fraction. Was 32000 — a guess, against an
+	// actual 31,102 for KJV, so the bar never got past ~97% before jumping to 1.0.
+	// The real count is knowable now that the store records it, and it is the same
+	// number this loop produces (verified: the converter measured 31,102 against a
+	// replica of this very loop).
+	const int kExpected = 31102;
 
 	[mod aquireModuleLock];
 
@@ -533,24 +697,7 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 		return NO;
 	}
 
-	// Stamp meta row. module_version is nil-safe because the column is TEXT.
-	NSString *currentVersion = [mod version];
-	sqlite3_stmt *meta = NULL;
-	const char *metaSQL =
-		"INSERT OR REPLACE INTO meta (module_name, module_version, built_at, schema_version) "
-		"VALUES (?, ?, ?, ?);";
-	if(sqlite3_prepare_v2(_db, metaSQL, -1, &meta, NULL) == SQLITE_OK) {
-		sqlite3_bind_text(meta, 1, [_moduleName UTF8String], -1, SQLITE_TRANSIENT);
-		if(currentVersion) {
-			sqlite3_bind_text(meta, 2, [currentVersion UTF8String], -1, SQLITE_TRANSIENT);
-		} else {
-			sqlite3_bind_null(meta, 2);
-		}
-		sqlite3_bind_int64(meta, 3, (sqlite3_int64)[[NSDate date] timeIntervalSince1970]);
-		sqlite3_bind_int  (meta, 4, PSSearchSchemaVersion);
-		sqlite3_step(meta);
-		sqlite3_finalize(meta);
-	}
+	[self stampMetaForModule:mod];
 
 	if(progress) {
 		BOOL ignored = NO;
@@ -622,6 +769,14 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 
 	// Rows are inserted during build in canonical VerseKey iteration order
 	// (Genesis 1:1 upward), so rowid gives us biblical order directly.
+	//
+	// This stays `rowid` rather than becoming `ORDER BY ordinal` now that the store
+	// drives the build, and the equivalence was verified rather than assumed:
+	// verses_plain.ordinal is strictly increasing and unique across all 31,102 KJV
+	// rows, and the cursor walks it in that order — so rowid order IS ordinal
+	// order. Switching would also mean adding an `ordinal` column to the FTS table
+	// (bumping PSSearchSchemaVersion and forcing every user to rebuild) to buy
+	// nothing.
 	[sql appendString:@" ORDER BY rowid"];
 	if(limit > 0) [sql appendFormat:@" LIMIT %d", limit];
 
