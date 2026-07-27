@@ -17,6 +17,25 @@ The app is a **mixed Swift / Objective-C++ target**. The app layer under `Classe
 - Configurations: `Debug`, `Release`, `Distribution`. Each has a **different** `PRODUCT_BUNDLE_IDENTIFIER` (`org.timsams.PocketSword` / `org.timsam.PocketSword` / `org.Crosswire.PocketSword`) — do not assume they match.
 - Deployment target: `IPHONEOS_DEPLOYMENT_TARGET = 26.0`, universal (`TARGETED_DEVICE_FAMILY = "1,2"`).
 
+### Driving the app on the simulator (Xcode MCP device interaction)
+
+Most of this app's behaviour is only observable by actually reading a chapter, so runtime verification matters. Notes from doing it, because several of these cost real time to discover:
+
+- **Session shape.** `DeviceInteractionStartWorkspaceSession` → `DeviceInteractionInstallAndRun` → `DeviceInteractionSynthesize` (repeat) → `DeviceInteractionEndSession`. Use the *Workspace* variant: the plain `DeviceInteractionStartSession` cannot install, and pairing it with a separate `RunProject` gives a session that reports `applicationState: NotRun` forever even though the app is visibly running. Always close the session — it is resource-heavy.
+- **Every Xcode MCP call needs `tabIdentifier`** (`windowtab1` for this project's single window). Omitting it returns an error listing the open windows rather than doing anything.
+- Starting a session returns `skillToTrigger: device-interaction` and instructs you to spawn a subagent for all interaction. That is the MCP's own convention, **not** a hard requirement — driving `DeviceInteractionSynthesize` inline works fine, which is what you want when the session's instructions say to avoid subagents. The `device-interaction` skill's real value is the command syntax below; if it isn't loadable, `xcrun agent skills export <dir>` writes it to disk.
+- **`interactionCommand` syntax** lives in the `device-interaction` skill, which may not be loadable in the session. The vocabulary is not guessable — `describe`, `help`, `type`, `k` are all invalid and just error. The ones that matter:
+  - `t <x> <y> [dur]` tap · `d <x> <y>` double tap · `t <x1> <y1> f <x2> <y2> [dur]` swipe
+  - `sender keyboard kbd <text>` types text; it **must be the last command in the chain** and everything after `kbd ` is verbatim. `\u{000A}` is Return (this is how you submit a search).
+  - `b h` home, `w <dur>` wait, `orientation <name>`, `drag`, `mt` multi-touch.
+  - Omit `interactionCommand` entirely to just capture state.
+- **Read the hierarchy file, not the screenshot, for coordinates.** Every call returns a `hierarchyPath`; each element carries a `hitPoint`. Guessing pixel positions off the screenshot mostly taps empty space. `grep` the hierarchy for a `label:` to find the target.
+- The response's `logsPath` plus `GetConsoleOutput` (with a `pattern` filter) is the fastest way to check for exceptions after an interaction. Expect harmless noise: a `UIAccessibilityLoaderWebShared` duplicate-class warning, `cannot add handler to 0 from 0`, and WebKit freezer-status errors are all normal here and not app bugs.
+- **The reading pane is a `WKWebView`**, so verse text, Strong's links and footnote markers do **not** appear in the UI hierarchy — only the WebView does. Verify that content by reading the screenshot image.
+- The app restores its last tab and scroll position, so a fresh launch may not start where you expect. Capture before assuming.
+- For a one-off env var on an **app** run, use `InstallAndRun`'s `environmentVariables` / `commandLineArguments` (`$(inherited)` preserves the scheme's own) rather than editing the scheme — they apply to that run only. **`RunAllTests` / `RunSomeTests` have no such parameter**, so getting an env var into a *test* run (e.g. `PSORACLE_CAPTURE` for fixture capture) means temporarily adding an `<EnvironmentVariables>` block to the scheme's `TestAction` — back the file up first and restore it immediately after, since the scheme is shared and checked in.
+- `xcodebuild ... -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test` from the CLI may fail with "Unable to find a destination" even when that simulator is booted and the MCP can target it, because the CLI resolves a different `SDKROOT`. Prefer the MCP test tools over the CLI here.
+
 ## SWORD / third-party build wiring (important)
 
 The SWORD engine is compiled **from sources in-tree** (`externals/sword/src/…` with headers in `externals/sword/include`), not linked as a prebuilt framework. Compile-time knobs live in `misc/PocketSword_Prefix.pch` (`GCC_PREFIX_HEADER`), force-included into every Obj-C(++) translation unit (Swift ignores the prefix header):
