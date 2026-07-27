@@ -21,7 +21,9 @@ exactly the engine the app compiles. The two `.c` files (`ftplib.c`,
 ## Output
 
 - `Resources/PSContent.sqlite` — chapter blobs, headings, notes, lexicon
-  entries, and the FTS build source.
+  entries, and the FTS build source. **schemaVersion 2 / tokenGrammar v2** as of
+  Phase 3; `Classes/PSContentStore.swift` is the reader and refuses to open
+  anything else, so the two must be changed together.
 - `Resources/Versification-KJV.json` — 66 books, 1189 chapters, 31102 verses.
 
 Both are deterministic: the same inputs produce byte-identical files.
@@ -33,6 +35,12 @@ Both are deterministic: the same inputs produce byte-identical files.
    This is what makes tokenisation as safe as storing baked HTML.
 2. **No `passagestudy.jsp` remnants.** Any un-tokenised anchor would otherwise
    ship as a dead link.
+3. **Post-compression validation.** Every chunk is inflated back out of SQLite and
+   compared row-by-row against what went in, and the logical row totals are
+   asserted against the Phase 2 measurements (31,102 / 27,715 `verses_plain`,
+   6,959 notes, 1,526 / 5,624 / 8,674 dict keys, 1,189 + 1,189 chapters), plus a
+   SQL check that no `verses_plain` row points outside its chunk. A compression bug
+   has to fail the bake, not the reader.
 
 ## Things the engine does that the store has to respect
 
@@ -47,6 +55,26 @@ Both are deterministic: the same inputs produce byte-identical files.
   `EntryAttributes["Heading"]` instead.
 - Lemmas is forced **Off** (KJV declares `GlobalOptionFilter=OSISLemma`; leaving
   it on emits ~145k garbage anchors).
+
+## `stripText()` is captured with four options OFF (Phase 3 fix)
+
+The bake renders chapter tokens with Strong's / morph / footnotes / cross-references
+**On** — the anchors are the point. But `stripText()` interleaves that same markup
+into the *plain* text, so capturing the FTS source under the same config put junk in
+the search index:
+
+- morph markers in the parenthesised form (`"God created (8804) the heaven"`) in
+  **21,175 of 30,862** KJV rows. `PSSearchCleanDisplayText`'s regex is
+  angle-bracket-only, so these passed straight through.
+- whole footnote bodies, HTML tags included — Gen 1:4 gained
+  `"[<i>the light from…</i>: Heb. <i>between the light and between the darkness</i>]"`.
+
+So the FTS capture now turns all four Off and restores them **unconditionally**
+afterwards, including on the empty-text path — leaving any of them Off would silently
+strip the anchors from every later chapter's tokens.
+
+Neither bug was visible to any fixture. Both were found by `PSSearchIndexParityTests`
+diffing a store-built FTS index against an engine-built one, row by row.
 
 ## Findings worth carrying into Phase 3
 
@@ -88,34 +116,40 @@ makes it fail with the byte offset and exit non-zero.
 
 ## Artifacts and the app bundle
 
-`Resources/PSContent.sqlite` and `Resources/Versification-KJV.json` are checked
-in but **deliberately not added to the app's Copy Resources phase**. Phase 2
-ships no rendering change, so bundling them now would add 43 MB to the app for
-no benefit. Phase 3 adds them to the bundle when it cuts the reader over.
+Both artifacts **are** in the app's Copy Resources phase as of Phase 3, and the app
+reads them through `Classes/PSContentStore.swift`. They are bundled by path, so
+re-running `make run` replaces them in place with no pbxproj change.
 
-## Size, and the schema change Phase 3 will make
+## Size
 
-Measured with `dbstat` (per-table on-disk pages, not the sum of column lengths):
+Measured with `dbstat` (per-table on-disk pages, not the sum of column lengths),
+after the Phase 3 schema-v2 chunk compression:
 
 | section | on disk |
 |---|---|
-| `plain_texts` + `verses_plain` + `idx_vp` (the FTS build source) | 30.2 MB |
-| `dict_entries` (uncompressed HTML) | 5.0 MB |
-| `chapters` + `bodies` (already zlib per chapter/body) | 6.4 MB |
-| `notes`, `headings`, misc | 1.4 MB |
-| **total file** | **43 MB** (14.2 MB gzipped) |
+| `plain_texts_chunks` (the FTS build source) | 5.44 MB |
+| `chapters` + `bodies` (zlib per chapter/body) | 6.37 MB |
+| `verses_plain` + `idx_vp` (the FTS skeleton) | 2.91 MB |
+| `dict_chunks` + `dict_keys` + its index | 2.09 MB |
+| `notes_chunks` + `notes_index` + its index | 0.50 MB |
+| `headings`, `content_meta`, autoindexes, misc | 0.25 MB |
+| **total file** | **17.6 MB** (12.9 MB gzipped) |
 
-> **Decided: `plain_texts` goes away in Phase 3.** It exists only so the
-> on-device index build could be a pure copy loop, and it costs two-thirds of the
-> artifact. All three of its columns are mechanically derivable from the chapter
-> tokens, so Phase 3 drops the table and derives them at index-build time
-> (43 → 15.7 MB), then chunk-compresses `dict_entries`/`notes` (→ ~11 MB, level
-> with the 10.7 MB of zips being replaced). The owner has accepted the on-device
-> index-build cost. Full plan, including the measurements that ruled out per-row
-> compression and re-compressing `chapters` with zstd, is in
-> `SWORD_REMOVAL_PLAN.md` under Phase 3.
->
-> **If you are regenerating the store for Phase 3:** before dropping the columns,
-> dump `text_plain` / `lemmas` / `word_map` for a verse corpus as fixtures. The
-> Swift derivation must reproduce them byte-for-byte, and a derivation bug does
-> not crash — search results just quietly go missing.
+Down from 43 MB (14.2 MB gzipped) at the end of Phase 2. Honest framing: the App
+Store ships a compressed IPA, so the *download* delta is ~1.3 MB; the real win is
+~25 MB on disk.
+
+Chunk sizes are per access pattern, not uniform: `plain_texts` 256 rows (walked in
+bulk by the index build), `dict_entries` 64 (one key per lexicon tap, so keep the
+per-lookup inflate cheap), `notes` 256. `chapters`/`bodies` are deliberately **not**
+re-compressed — Phase 2 measured zstd at 3% better / 1% worse on blobs already
+zlib'd per chapter, which is not worth a new dependency.
+
+> **Retracted: "drop `plain_texts` and derive it on device".**
+> Phase 2 recommended this and Phase 3 decided against it. The derivation would be a
+> second, untested implementation of `stripText()` plus the `Word`-attribute walk, and
+> a bug in it does not crash — search results just quietly go missing. Chunking gets
+> the same ~5x on that table while the column stays byte-for-byte what the live engine
+> emitted, which is what the whole oracle strategy depends on. Phase 3 then found two
+> real defects in exactly that column (see above), which is the argument made concrete.
+> See `SWORD_REMOVAL_PLAN.md` §5.6.

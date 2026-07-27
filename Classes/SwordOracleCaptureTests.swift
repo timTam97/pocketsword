@@ -255,6 +255,37 @@ final class SwordOracleCaptureTests: XCTestCase {
         throw XCTSkip("modules \(names) not installed within \(timeout)s — seeding did not complete")
     }
 
+    /// Pin the per-module prefs `-[SwordModule setPreferences]` reads
+    /// (SwordModule.mm:190-199) to the state a given fixture was captured under.
+    ///
+    /// Needed by any capture that goes through `-attributeValueForEntryData:`,
+    /// because that method calls `setPreferences`, which reads these keys off
+    /// NSUserDefaults and pushes them into SWORD as global options — overwriting
+    /// whatever `configuredModule` just set.
+    ///
+    /// Before this existed those two fixtures silently depended on prefs left in
+    /// the simulator container by ordinary app use, and failed on a freshly-wiped
+    /// one. The values below are not a guess: they are what the committed fixtures
+    /// actually contain — `KJV-scriptref-attributes.txt` holds 65 Strong's anchors
+    /// and zero morph / note / red-letter ones, so it was captured with Strong's on
+    /// and those three off. `tearDown` restores whatever was there.
+    private func pinSetPreferencesPrefs(module: String,
+                                        strongs: Bool, morphs: Bool,
+                                        footnotes: Bool, headings: Bool,
+                                        redLetter: Bool, scriptRefs: Bool) {
+        pinModulePref(Defaults.strongsPreference, module: module, to: strongs)
+        pinModulePref(Defaults.morphPreference, module: module, to: morphs)
+        pinModulePref(Defaults.footnotesPreference, module: module, to: footnotes)
+        pinModulePref(Defaults.headingsPreference, module: module, to: headings)
+        pinModulePref(Defaults.redLetterPreference, module: module, to: redLetter)
+        pinModulePref(Defaults.scriptRefsPreference, module: module, to: scriptRefs)
+        // The converter renders with these four Off regardless (see renderOptions).
+        for pref in [Defaults.greekAccentsPreference, Defaults.hvpPreference,
+                     Defaults.hebrewCantillationPreference, Defaults.glossesPreference] {
+            pinModulePref(pref, module: module, to: false)
+        }
+    }
+
     private func configuredModule(_ name: String,
                                   config: RenderConfig = .allOn) throws -> SwordModule {
         try waitForModules([name])
@@ -556,6 +587,12 @@ final class SwordOracleCaptureTests: XCTestCase {
     /// (`type=scriptRef`).
     func testCaptureFootnoteAndScriptRefAttributes() throws {
         let mod = try configuredModule("KJV")
+        // -attributeValueForEntryData: calls setPreferences, which re-reads the
+        // per-module prefs and overwrites the options set above. These are the
+        // values the committed fixture was captured under.
+        pinSetPreferencesPrefs(module: "KJV", strongs: true, morphs: false,
+                               footnotes: false, headings: false,
+                               redLetter: false, scriptRefs: false)
         var lines: [String] = []
 
         // Passages verified to carry footnotes in the KJV module (`value` is the
@@ -595,6 +632,9 @@ final class SwordOracleCaptureTests: XCTestCase {
     /// currently sitting. Pin the context first so the fixture is reproducible.
     func testCaptureScriptRefAttributes() throws {
         let mod = try configuredModule("KJV")
+        pinSetPreferencesPrefs(module: "KJV", strongs: true, morphs: false,
+                               footnotes: false, headings: false,
+                               redLetter: false, scriptRefs: false)
         mod.setChapter("Genesis 1")
 
         var lines: [String] = []

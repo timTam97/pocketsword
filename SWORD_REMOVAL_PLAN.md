@@ -107,43 +107,142 @@ Each phase should ship independently and keep the app launchable + `PersistedFor
 >
 > Two-thirds is the search-index source, stored **uncompressed** — a consequence of the "no derivation logic on device" choice, which also meant no compression was applied there. Today's shipped zips total 10.7 MB, so as it stands this is a real download-size regression. **Phase 3 fixes it structurally — see the size-reduction plan there.**
 
-### Phase 3 — Swift content reader (replace the facades)
+### Phase 3 — Swift content reader (replace the facades) — ✅ DONE
 
-Introduce the thin Swift reader (§2.2) behind the existing method names. Cut over `PSModuleController` / `PSModuleViewController` / dictionary VCs to it. SWORD is still in the tree as a fallback/oracle during this phase — do **not** delete it yet.
+The reader is in and the read paths are cut over to it. SWORD is still in the tree
+as the in-process oracle; Phase 5 deletes it.
 
-- Verify by diffing reader output against live SWORD `getChapter` / `entry(forKey:)` / `attributeValue(forEntryData:)`, verse-by-verse and key-by-key.
-- Search: point `PSSearchEngine`'s index build at the SQLite content store instead of `stripText()`; FTS5 query side is unchanged. The lone query-time `osisBookNameForLocalisedBookName:` call moves to the Phase-4 parser.
-- Add the two artifacts to the target's Copy Resources phase (Phase 2 deliberately left them out).
-- Replace `ORDER BY rowid` (`PSSearchEngine.mm:625`) with `ORDER BY ordinal` — the store carries an explicit ordinal so it can.
+**What shipped**
 
-#### Shrink the store: derive the FTS source instead of shipping it (**decided — owner is fine with on-device index builds**)
-
-Target: **43 MB → ~11 MB**, which lands level with the 10.7 MB of zips being replaced, so the download regression disappears rather than merely shrinking.
-
-The three `plain_texts` columns are not data — they are mechanical re-readings of the chapter tokens. Verified on Gen 1:1, where the chapter record is
-`In the beginning⟦H07225⟧ God⟦H0430⟧ created⟦H0853⟧⟦H01254⟧…`:
-
-| column | derivation |
+| file | role |
 |---|---|
-| `lemmas` | each Strong's token, prefixed `H`/`G`, emitted in **both** zero-pad forms → `H07225 H7225 H0430 H430 …` |
-| `word_map` | the same record segmented at token boundaries → `In the beginning\tH07225 H7225` / `God\tH0430 H430` |
-| `text_plain` | the record with tags and tokens stripped, then `PSSearchCleanDisplayText` |
+| `Classes/PSContentStore.swift` | SQLite + chunk framing. Rows out, no HTML. |
+| `Classes/PSBookOSISResolver.swift` | book name → OSIS, over `Versification-KJV.json` |
+| `Classes/PSChapterExpander.swift` | tokens → the exact HTML the filters emitted, option-gated |
+| `Classes/PSChapterAssembler.swift` | `-[SwordModule chapterBodyHTML:]`'s accumulator loop |
+| `Classes/PSContentReader.swift` | the coordinator the view controllers talk to; failure policy |
 
-Steps, in payoff order:
+Gated by `PSFeatureFlags.swiftContentReader`, **now default-on** (its own commit, so
+it is revertible by itself). Removed in Phase 5.
 
-1. **Drop `plain_texts`; derive all three at index-build time.** Keep `verses_plain` as the skeleton (`ordinal`, `osis_ref`, `book_osis`, `testament`) so scope filtering and ordering are unchanged. **43 → 15.7 MB (−63%).** The build loop becomes expand-chapter → segment → insert instead of a row copy.
-2. **Chunk-compress `dict_entries` and `notes`** (64 entries/chunk for the lexicons, 256 for notes, zstd). **→ ~11 MB.** Nearly free: lexicon entries are read one at a time and a 64-entry chunk decompresses in microseconds. `dict_entries` compresses 5× purely because nothing compressed it today.
+**The acceptance criterion, met.** `PSDifferentialTests` renders both ways in one
+process. Exhaustive tier (`PSDIFF_EXHAUSTIVE=1`), run before the flip:
 
-What the measurements ruled out:
+- KJV 1,189 chapters × 2 option endpoints = **2,378** renders byte-identical, loop
+  counter matching on every one
+- MHCC 1,189 × 2 = **2,378** renders byte-identical
+- **31,102** search-source rows identical
 
-- **Per-row compression is not worth it.** Rows average ~200 bytes, so per-row zlib/zstd only takes the FTS source 30.2 → ~14.9 MB. A trained 128 KB shared dictionary gets it to 6.7 MB while keeping per-row access — a fallback if step 1 proves too slow, but strictly worse than deriving.
-- **Do not re-compress `chapters`/`bodies` with zstd.** Measured 3% better and 1% *worse* respectively; those blobs are already zlib'd per chapter. Not worth a new dependency.
+Fast tier, every `test` run: all **15,824** lexicon entries keyed as the UI keys
+them, all **6,959** notes, a fixed strided chapter sample at both endpoints, plus
+`PSSearchIndexParityTests` comparing an entire store-built FTS index against an
+engine-built one row by row.
 
-Risks to handle in Phase 3, not later:
+**Size: 43 MB → 17.6 MB**, against the ~11 MB this section previously projected (that projection assumed dropping `plain_texts` entirely — see the retraction below). Honest framing: gzipped
+(which is what the App Store ships) it is 14.2 → 12.9 MB, so the *download* delta
+is ~1.3 MB. The real win is ~25 MB on disk.
 
-- **Derivation bugs fail silently.** A wrong `lemmas` or `word_map` does not crash — search results just quietly go missing. So the derivation needs the same fixture treatment the render path got: capture the current `text_plain` / `lemmas` / `word_map` for a verse corpus (the converter can dump them one last time before the column is dropped) and assert the Swift derivation reproduces them byte-for-byte. Keep those fixtures after the column is gone.
-- **Index-build time moves on device.** It is currently a copy loop; deriving is strictly more work on first launch. Measure it on the oldest supported device before committing, and keep `PSSearchIndexBuilder`'s existing progress UI and cancellation path — this is exactly the case they exist for.
-- `PSSearchCleanDisplayText` is what decides which rows exist (it runs *before* the emptiness test), so the derived path must apply it in the same order or the row set shifts.
+**Assumption 6 is retracted.** The FTS source is **shipped, chunk-compressed** —
+not derived on device. Deriving `text_plain`/`lemmas`/`word_map` would be a second,
+untested implementation of `stripText()` plus the `Word`-attribute walk, and a bug
+in it does not crash: search results quietly go missing. Chunking gets the same ~5×
+on that table (26.8 → 5.4 MB) while the column stays exactly what the live engine
+emitted, which is the property the whole oracle strategy rests on. §5.6 is corrected
+in place.
+
+**Store schema v2 / token grammar v2**
+
+- chunk-compressed `plain_texts_chunks` (256 rows), `dict_chunks` (64),
+  `notes_chunks` (256); `chapters`/`bodies` left alone (Phase 2 measured zstd at 3%
+  better / 1% worse on blobs already zlib'd per chapter)
+- keys stay **uncompressed** in `dict_keys` / `notes_index`: the Dictionary tab
+  drives its whole table off the key list, so `allKeys()`/`entryCount()` must not
+  inflate anything
+- `dict_keys.key COLLATE NOCASE` — load-bearing, see the findings below
+- new recursive red-letter token `\x11…\x12`
+- every chunk carries `row_count` + `raw_size`, checked on both sides rather than
+  trusted; the bake re-inflates every chunk and compares, and asserts the logical
+  row totals
+
+#### Findings from Phase 3 (things the plan had wrong or did not know)
+
+1. **`ORDER BY rowid` was NOT replaced with `ORDER BY ordinal`** (the plan said to).
+   Verified a no-op: `verses_plain.ordinal` is strictly increasing and unique across
+   all 31,102 rows and the cursor walks it in that order, so rowid order *is* ordinal
+   order. Switching would need a new FTS column, a `PSSearchSchemaVersion` bump and a
+   forced rebuild for every user, to buy nothing. A comment records the verification.
+
+2. **The dictionary-casing bug (P1).** `SwordDictionary.mm:67` stores
+   `[keyText capitalizedString]`, and `PSDictionaryViewController.swift:252` feeds
+   *that mangled string* back into the lookup — altering 1,375 of Robinson's 1,526
+   keys (`V-PAI-3S` → `V-Pai-3S`). It works today only because `Robinson.conf` omits
+   `CaseSensitiveKeys`, so `RawStr::findOffset` uppercases both sides
+   (`rawstr.cpp:188`). `COLLATE NOCASE` reproduces that exactly — safe because all
+   15,824 keys are pure ASCII with zero case-fold collisions and rowid order == binary
+   order == case-insensitive order. Verified to be a real gate: forcing the lookup
+   case-sensitive fails with "1375 of 1526 UI-cased keys do not resolve".
+   The wrong *display* casing is deliberately preserved; fixing it is Phase 4 and must
+   invalidate the on-disk key caches.
+
+3. **Two real bugs in the baked FTS text, found by the differential test, not by any
+   fixture.** The converter captured `stripText()` under the config it uses for the
+   chapter tokens (Strong's/morph/footnotes On), but `stripText()` interleaves that
+   markup into the plain text: 21,175 of 30,862 KJV rows carried `(8804)`-style morph
+   markers (the parenthesised form `PSSearchCleanDisplayText`'s angle-bracket regex
+   does not strip), and footnote bodies leaked in wholesale — Gen 1:4 held
+   `[<i>the light from…</i>: Heb. …]`, HTML tags included. The converter now takes
+   `stripText()` with all four options Off and restores them unconditionally.
+
+4. **`-buildWithProgress:` pins no global options at all**, so today's index *content*
+   varies with the user's per-module toggles. The store fixes that by construction —
+   the indexed text is the verse and nothing else, identically on every device — which
+   is why the parity test pins the engine side rather than treating the ambient case as
+   the contract.
+
+5. **Titles are gated differently in a body and in a heading.** In a chapter record
+   every title token is non-canonical (`osisheadings.cpp:132` keeps canonical preverse
+   titles out of the body while `processEntryAttributes` is on), so
+   `option || canonical` reduces to `option`; inside a stored heading the app renders
+   via `renderText(buf)`, which turns `processEntryAttributes` off, so the canonical
+   title's wrapper is emitted whatever the option says. One flat token→option table
+   gets eight of the ten all-off fixtures wrong.
+
+6. **`setPreferences` pushes eleven options, not six** — and only five have a token to
+   gate. `variants` is pinned to Primary Reading; `glosses`/`greekAccents`/
+   `hebrewPoints`/`hebrewCantillation` act on source text and their filters are not
+   even in KJV/MHCC's chains. That is the one place the reader is narrower than the
+   engine, and it is recorded in `PSContentReader`.
+
+7. **The footnote `passage` arrives URL-encoded** (`passage=Genesis+4%3A1`);
+   `data(forLink:)` splits the query without decoding it, unlike its own `sword://`
+   branch. `VerseKey::setText` tolerates that, a SQL lookup does not.
+
+8. **`sqlite3_bind_text` from Swift needs SQLITE_TRANSIENT.** The bridged
+   `const char *` is valid only for the call, so the default SQLITE_STATIC leaves a
+   dangling pointer — and the symptom is not a crash, every query silently matches
+   nothing.
+
+9. **The Dictionary tab's key-cache prompt made the tab unusable** with the reader on
+   (answering "No" left it showing "No dictionary loaded" while the reader had the keys
+   in hand). The prompt exists only because `-allKeys` walks the module from TOP; it is
+   skipped when the reader is active. Found by driving the simulator.
+
+10. **`kExpected` was 32000 against an actual 31,102**, so the index-build progress bar
+    never got past ~97%. Fixed.
+
+11. **One expected reader/SWORD difference, asserted rather than tolerated.**
+    `StrongsRealHebrew` has two on-disk entries each for `02200` and `06401`, and
+    `06401`'s second is a 21-byte `</dictionary>` stub. The converter keeps the first,
+    so the reader returns the real definition while SWORD returns the stub — the reader
+    is *better*. Consequence found by the test: `-allKeys` yields **15,826** keys, not
+    15,824, because both duplicated keys appear twice.
+
+**Still on SWORD after Phase 3** (Phase 4 work): `attributeValue(forEntryData:)`'s
+`scriptRef` and `x` branches (they need range resolution via `parseVerseList`),
+versification / `SwordBook` / ref parsing, `osisBookNameForLocalisedBookName:`, and
+the Robinson display-casing fix. The module zips must also keep seeding into
+`Documents/` for now, because `PSSearchEngine` derives its db path from
+`AbsoluteDataPath` and `hasFeature:` reads the module `.conf`.
 
 ### Phase 4 — KJV reference parser + versification (replace VerseKey)
 
@@ -162,7 +261,10 @@ Once Phases 3–4 are proven, delete the engine and the interop machinery.
 - Remove C++ from the build: prune `misc/PocketSword_Prefix.pch` C++ knobs, `-licucore`, `c++0x`, the bridging header's SWORD imports, `SWIFT_OBJC_INTERFACE_HEADER_NAME` usage if no Obj-C remains.
 - Likely remove `externals/ZipArchive` + `minizip` (confirm nothing else unzips at runtime). **Note:** if Phase 3 adopts chunk-compressed `dict_entries`/`notes`, the app needs *a* decompressor at runtime — but zlib (`-lz`) or the system `Compression` framework covers that; it does not require keeping ZipArchive/minizip, which exist only for the module zips.
 - Delete the bundled module zips (`KJV.zip`, `MHCC.zip`, `Robinson.zip`, `strongsrealgreek.zip`, `strongsrealhebrew.zip`) and the `Documents/` seeding path — the SQLite store replaces them. This is where the dead 6.7 MB Lucene index inside `KJV.zip` finally goes. Keep `locales.d.zip` only if anything still reads it after Phase 4 retires `LocaleMgr`.
-- Re-check the store size here: with Phase 3's reductions the target is ~11 MB against the 10.7 MB of zips removed, so the app should come out roughly flat rather than ~32 MB heavier.
+- Re-check the store size here: Phase 3 landed at **17.6 MB** on disk (12.9 MB gzipped) against the 10.7 MB of zips removed, so the app comes out ~7 MB heavier on disk and roughly flat as a download. If that matters, the remaining lever is the ~5.4 MB `plain_texts_chunks` — but see §5.6 for why deriving it instead was rejected.
+- Remove `PSFeatureFlags.swiftContentReader` and its pref key.
+- **Convert the reader's fallback conditions to hard failures.** `PSContentReader.swift`'s header lists all ten (missing/unopenable store, schema or grammar mismatch, absent chunk sizes, bad versification, chunk that fails to inflate or whose counters disagree, chapter record count mismatch, unresolvable MHCC body id, malformed token stream, unresolvable book, index row pointing off its chunk). Today each returns nil and falls back to SWORD; with the engine gone there is nothing to fall back to, so each needs to become a loud failure rather than a silent blank.
+- Move `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]` (4 KB of pure JS, no SWORD dependency) into Swift rather than copying it — Phase 3 deliberately kept one copy that both paths call.
 - Target should now be **pure Swift** — update `CLAUDE.md` (the whole "SWORD bridge / interop mechanics" sections become historical).
 
 ### Orthogonal (unsequenced) — bookmarks / iCloud sync removal
@@ -173,7 +275,8 @@ Not on the SWORD critical path. `PSHistoryController` only reads `name`/`type` o
 
 ## 4. Risk register
 
-- **Rendering fidelity (highest).** The pre-baked HTML must match the CSS-class/anchor vocabulary the existing shell + JS bridge expect, and the `sword://` / `passagestudy.jsp` link scheme decoded in `PSModuleController.data(forLink:)`. *Mitigation:* diff converter output against live SWORD before deleting the engine; the oracle exists until Phase 5.
+- **Rendering fidelity (highest).** ✅ **Discharged in Phase 3.** All 1,189 chapters of both shipped modules, at both option endpoints, render byte-identically to the live engine (`PSDifferentialTests`, exhaustive tier), plus all 15,824 lexicon entries, all 6,959 notes and all 31,102 search-source rows. The oracle stays until Phase 5, and the exhaustive tier must be re-run before it is deleted.
+- **Fixture-shaped testing (new, and it bit).** Three of Phase 3's real defects were invisible to fixtures and only showed up in differential or on-device testing: the Robinson casing bug (fixtures fed hardcoded true-cased keys the UI never produces), the morph/footnote leakage into the FTS text (no fixture covered that column), and the Dictionary cache prompt (only visible by driving the app). *Mitigation, now standing:* enumerate the inputs the *UI* produces, diff whole corpora rather than samples, and drive the simulator on a wiped container before believing a cutover.
 - **Reference parser correctness.** User-visible, easy to get subtly wrong (abbreviations, ranges, cross-book). *Mitigation:* dump the truth table from SWORD; exhaustive tests.
 - **Persisted-format drift.** Removing module choice / bookmarks / sync each touches `NSUserDefaults` keys and on-disk shapes locked by `PersistedFormatTests`. *Mitigation:* treat each as a migration; don't "fix" a red test — fix the code or write a real migration.
 - **Hidden SWORD semantics.** e.g. auto-normalization of odd refs, intro handling (`setIntros`), verse-0 chapter headings. *Mitigation:* the converter must exercise the same edge inputs the app does (chapter intros, preverse headings) and the diff must cover them.
@@ -188,4 +291,4 @@ Not on the SWORD critical path. `PSHistoryController` only reads `name`/`type` o
 3. SQLite as the content store (reuses the existing sqlite3 dependency already used by search).
 4. SWORD kept as an offline tool through Phase 4, deleted in Phase 5 — not removed early.
 5. Bookmarks/iCloud removal is decoupled and unscheduled here.
-6. **The FTS source is derived on device, not shipped** (decided after Phase 2 measured the cost; owner is fine with on-device index builds). This reverses Phase 2's "ship the FTS source so the index build needs zero derivation logic" stance: shipping it costs 30 of the store's 43 MB, and the columns are mechanically derivable from the chapter tokens. Trading index-build CPU on first launch for ~32 MB is the right way round. See the Phase 3 size-reduction plan.
+6. ~~**The FTS source is derived on device, not shipped.**~~ **RETRACTED in Phase 3.** The source is **shipped, chunk-compressed**. Deriving `text_plain`/`lemmas`/`word_map` on device would be a second, untested implementation of `stripText()` plus the `Word`-attribute walk, and a derivation bug does not crash — search results quietly go missing. Chunking gets the same ~5x on that table (26.8 -> 5.4 MB) while the column stays byte-for-byte what the live engine emitted, which is the property the whole oracle strategy rests on. Phase 3 also demonstrated the risk was not hypothetical: the differential test found two real defects in that column (morph markers and footnote bodies leaking into the indexed text) that no fixture caught. Final size 43 -> 17.6 MB on disk, 14.2 -> 12.9 MB gzipped.
