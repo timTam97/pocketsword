@@ -510,6 +510,24 @@ final class PSContentStore: NSObject {
         }
     }
 
+    /// Every (osisRef, marker) pair a module has a note for, in stored order.
+    /// Exists for the differential test: it is the exact set of notes the app can
+    /// ask for, so a sampled subset would leave the rest unchecked.
+    func allNoteKeys(module: String) -> [(osisRef: String, marker: String)] {
+        queue.sync {
+            guard let st = statement(
+                "SELECT osis_ref, marker FROM notes_index WHERE module=? ORDER BY chunk_id, slot;")
+            else { return [] }
+            bind(st, 1, module)
+            var out: [(osisRef: String, marker: String)] = []
+            while sqlite3_step(st) == SQLITE_ROW {
+                out.append((osisRef: Self.text(st, 0), marker: Self.text(st, 1)))
+            }
+            sqlite3_reset(st)
+            return out
+        }
+    }
+
     // MARK: - Lexicons
 
     /// A lexicon entry, or nil on a miss.
