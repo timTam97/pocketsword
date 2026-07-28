@@ -670,7 +670,22 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
     @objc(removeBookmarkHighlights)
     func removeBookmarkHighlights() {
-        let verses = PSModuleController.default().primaryBible?.getVerseMax() ?? 0
+        // SWORD_REMOVAL_PLAN.md Phase 4: the verse count comes from the baked
+        // versification table rather than `-[SwordModule getVerseMax]`.
+        //
+        // This is an upper bound for a JS loop that clears highlight spans, so it
+        // must cover the chapter currently on screen — which is `lastRef`, the same
+        // ref the render used. `-getVerseMax` read it off the module's live key,
+        // which is left pointing at that chapter by the render, so the two agree;
+        // resolving `lastRef` says so explicitly instead of depending on where the
+        // shared key happens to be left. 0 on an unresolvable ref clears nothing,
+        // which is the same no-op the engine's -1-vs-0 path produced.
+        var verses = 0
+        if let resolver = PSBookOSISResolver.shared,
+           let ref = PSModuleController.getCurrentBibleRef(),
+           let (book, chapter) = resolver.resolve(ref: ref) {
+            verses = resolver.verseMax(book: book, chapter: chapter) ?? 0
+        }
         let jsFunction = String(format: "PS_RemoveHighlights('%d')", Int32(verses))
         webView.stringByEvaluatingJavaScriptFromString(jsFunction)
     }

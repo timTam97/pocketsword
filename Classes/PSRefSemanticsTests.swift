@@ -306,6 +306,89 @@ final class PSRefSemanticsTests: XCTestCase {
         XCTAssertEqual(compared, 1188)
     }
 
+    /// **The production path.** Step 7 moved `PSModuleController.setToNextChapter()`
+    /// / `setToPreviousChapter()` onto the table, and those are what the next/prev
+    /// buttons actually call — the two tests above compare the *resolver* against the
+    /// engine, which is necessary but not sufficient.
+    ///
+    /// Drives all 1,189 chapters through the real methods, comparing each answer
+    /// against the engine driven the way the old code drove it, and additionally
+    /// asserts the verse-position side effect: `prev` must write the **destination**
+    /// chapter's verse maximum, which is what the old code read (it called
+    /// `-getVerseMax` *after* the key had already moved).
+    func testModuleControllerNavigationMatchesTheEngineIncludingVersePositions() throws {
+        let resolver = try resolver()
+        let mod = try moduleForNavigation("KJV")
+        guard let controller = PSModuleController.default() else { throw XCTSkip("no controller") }
+
+        let defaults = UserDefaults.standard
+        let savedRef = defaults.string(forKey: Defaults.lastRef)
+        let savedVerse = defaults.string(forKey: Defaults.bibleVersePosition)
+        defer {
+            if let savedRef { defaults.set(savedRef, forKey: Defaults.lastRef) }
+            if let savedVerse { defaults.set(savedVerse, forKey: Defaults.bibleVersePosition) }
+        }
+
+        var forward = 0, backward = 0
+        for book in resolver.books {
+            for chapter in 1...book.chapterCount {
+                // The app always holds the munged `name` form in lastRef.
+                let from = "\(book.name) \(chapter)"
+                let isLast = book.osisName == "Rev" && chapter == book.chapterCount
+                let isFirst = book.osisName == "Gen" && chapter == 1
+
+                if !isLast {
+                    defaults.set(from, forKey: Defaults.lastRef)
+                    mod.setChapter(from)
+                    let expected = mod.setToNextChapter()
+                    let actual = controller.setToNextChapter()
+                    guard actual == expected else {
+                        XCTFail("next from '\(from)': engine '\(expected ?? "nil")' but controller '\(actual ?? "nil")'")
+                        return
+                    }
+                    XCTAssertEqual(defaults.string(forKey: Defaults.bibleVersePosition), "1",
+                                   "next from '\(from)' must reset the verse position to 1")
+                    forward += 1
+                }
+
+                if !isFirst {
+                    defaults.set(from, forKey: Defaults.lastRef)
+                    mod.setChapter(from)
+                    let expected = mod.setToPreviousChapter()
+                    // Read the engine's verse max the way the old code did: AFTER the
+                    // move, so it is the destination chapter's.
+                    let expectedVerseMax = mod.getVerseMax()
+                    let actual = controller.setToPreviousChapter()
+                    guard actual == expected else {
+                        XCTFail("prev from '\(from)': engine '\(expected ?? "nil")' but controller '\(actual ?? "nil")'")
+                        return
+                    }
+                    XCTAssertEqual(defaults.string(forKey: Defaults.bibleVersePosition),
+                                   "\(expectedVerseMax)",
+                                   "prev from '\(from)' must write the DESTINATION chapter's verse max")
+                    guard defaults.string(forKey: Defaults.bibleVersePosition) == "\(expectedVerseMax)" else { return }
+                    backward += 1
+                }
+            }
+        }
+
+        // Both boundaries must be structural nils from the controller too.
+        defaults.set("Revelation 22", forKey: Defaults.lastRef)
+        XCTAssertNil(controller.setToNextChapter(),
+                     "the controller must return nil at Rev 22, not the clamped ref")
+        defaults.set("Genesis 1", forKey: Defaults.lastRef)
+        XCTAssertNil(controller.setToPreviousChapter(),
+                     "the controller must return nil at Gen 1, not the clamped ref")
+        // And an unresolvable lastRef must decline rather than guess.
+        defaults.set("1. Mose 1", forKey: Defaults.lastRef)
+        XCTAssertNil(controller.setToNextChapter())
+        XCTAssertNil(controller.setToPreviousChapter())
+
+        print("[refsem/fast] controller transitions compared: \(forward) next, \(backward) prev")
+        XCTAssertEqual(forward, 1188)
+        XCTAssertEqual(backward, 1188)
+    }
+
     /// The two boundaries, where the two sides deliberately differ — asserted as a
     /// difference rather than tolerated.
     ///

@@ -340,19 +340,69 @@ final class PSModuleController: NSObject {
     }
 
     // MARK: - Chapter navigation
+    //
+    // SWORD_REMOVAL_PLAN.md Phase 4: the arithmetic is the baked versification
+    // table's, not `sword::VerseKey::setChapter` + `normalize`. Three things about
+    // this deserve spelling out, because each is a place a "simplification" would
+    // silently change behaviour:
+    //
+    //  1. **Both modules navigate the same versification.** KJV and MHCC are both
+    //     KJV-versified (verified: the ref selector's system lookup always resolved
+    //     to the one table), so the *destination* is computed once. What the
+    //     per-module blocks below still do is the pref writes, whose conditional
+    //     shape is preserved exactly — including the asymmetry that `next` leaves
+    //     `commentaryVersePosition` alone when a bible is loaded while `prev` sets
+    //     it from the bible's verse maximum.
+    //
+    //  2. **The verse maximum is the DESTINATION chapter's.** The old code called
+    //     `-getVerseMax` *after* `-setToPreviousChapter` had already moved the key,
+    //     so it read the chapter being navigated to, not the one being left. Reading
+    //     the source chapter's would put the scroll position at the wrong verse on
+    //     every backward move between chapters of different length.
+    //
+    //  3. **nil at the canon boundaries**, where SWORD clamped. `normalize`
+    //     (versekey.cpp:1466-1493) pinned to the bound and merely set
+    //     KEYERR_OUTOFBOUNDS, so `-setToNextChapter` at Rev 22 handed back the very
+    //     ref it was given, and the callers' string-equality gate against
+    //     get{First,Last}RefAvailable is what turned that into a no-op. That gate is
+    //     kept — it lives in three places, one of which drives a 3-way button-enable
+    //     state, and restructuring it is a UI change that does not belong in a
+    //     substitution commit — and the nil is a second, structural guard behind it.
+    //     Returning the clamped ref instead would turn a no-op into a full re-render.
+
+    /// The table's answer for a move from the current ref, or nil at the canon
+    /// boundary / for a ref the table cannot resolve.
+    ///
+    /// Returns the **un-munged `longName`** form ("Revelation of John 22"), which is
+    /// what `-setToNextChapter` genuinely returned: `VerseKey::freshtext`
+    /// (versekey.cpp:378) built its key text from `getBookName()` =
+    /// `translate(getLongName())` = identity here. Every call site munges it
+    /// downstream through `createRefString`, and 18 of the 66 books have
+    /// `name != longName`, so returning `name` would be an off-by-a-munge visible on
+    /// Revelation and the five numbered books.
+    private func navigate(from ref: String?, forward: Bool)
+        -> (ref: String, book: PSVersificationBook, chapter: Int)? {
+        guard let resolver = PSBookOSISResolver.shared,
+              let ref = ref,
+              let (book, chapter) = resolver.resolve(ref: ref) else { return nil }
+        guard let destination = forward
+                ? resolver.nextChapter(book: book, chapter: chapter)
+                : resolver.previousChapter(book: book, chapter: chapter) else { return nil }
+        return (resolver.displayRef(destination), destination.book, destination.chapter)
+    }
 
     @objc(setToNextChapter)
     func setToNextChapter() -> String! {
+        guard let destination = navigate(from: PSModuleController.getCurrentBibleRef(),
+                                         forward: true) else { return nil }
+
         var ret: String? = nil
-        let cur = PSModuleController.getCurrentBibleRef()
-        if let primaryBible = primaryBible {
-            primaryBible.setChapter(cur)
-            ret = primaryBible.setToNextChapter()
+        if primaryBible != nil {
+            ret = destination.ref
             UserDefaults.standard.set("1", forKey: Defaults.bibleVersePosition)
         }
-        if let primaryCommentary = primaryCommentary, ret == nil {
-            primaryCommentary.setChapter(cur)
-            ret = primaryCommentary.setToNextChapter()
+        if primaryCommentary != nil, ret == nil {
+            ret = destination.ref
             UserDefaults.standard.set("1", forKey: Defaults.commentaryVersePosition)
         }
         UserDefaults.standard.synchronize()
@@ -361,20 +411,23 @@ final class PSModuleController: NSObject {
 
     @objc(setToPreviousChapter)
     func setToPreviousChapter() -> String! {
+        guard let destination = navigate(from: PSModuleController.getCurrentBibleRef(),
+                                         forward: false) else { return nil }
+        // The DESTINATION chapter's maximum — see note 2 above.
+        let destinationVerseMax = PSBookOSISResolver.shared?
+            .verseMax(book: destination.book, chapter: destination.chapter) ?? 0
+
         var ret: String? = nil
-        let cur = PSModuleController.getCurrentBibleRef()
-        var verse: Int = 0
-        if let primaryBible = primaryBible {
-            primaryBible.setChapter(cur)
-            ret = primaryBible.setToPreviousChapter()
-            verse = primaryBible.getVerseMax()
+        var verse = 0
+        if primaryBible != nil {
+            ret = destination.ref
+            verse = destinationVerseMax
             UserDefaults.standard.set(String(format: "%ld", verse), forKey: Defaults.bibleVersePosition)
         }
-        if let primaryCommentary = primaryCommentary {
+        if primaryCommentary != nil {
             if ret == nil {
-                primaryCommentary.setChapter(cur)
-                ret = primaryCommentary.setToPreviousChapter()
-                verse = primaryCommentary.getVerseMax()
+                ret = destination.ref
+                verse = destinationVerseMax
                 UserDefaults.standard.set(String(format: "%ld", verse), forKey: Defaults.commentaryVersePosition)
             } else if verse != 0 {
                 UserDefaults.standard.set(String(format: "%ld", verse), forKey: Defaults.commentaryVersePosition)
