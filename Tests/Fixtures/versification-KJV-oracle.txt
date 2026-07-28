@@ -1,0 +1,1324 @@
+# live-SWORD KJV versification oracle
+# books=66
+## [0] name=Genesis short=Gen osis=Gen chapters=50
+verseMax=31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26
+## [1] name=Exodus short=Exo osis=Exod chapters=40
+verseMax=22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38
+## [2] name=Leviticus short=Lev osis=Lev chapters=27
+verseMax=17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34
+## [3] name=Numbers short=Num osis=Num chapters=36
+verseMax=54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13
+## [4] name=Deuteronomy short=Deu osis=Deut chapters=34
+verseMax=46,37,29,49,33,25,26,20,29,22,32,32,18,29,23,22,20,22,21,20,23,30,25,22,19,19,26,68,29,20,30,52,29,12
+## [5] name=Joshua short=Jos osis=Josh chapters=24
+verseMax=18,24,17,24,15,27,26,35,27,43,23,24,33,15,63,10,18,28,51,9,45,34,16,33
+## [6] name=Judges short=Jud osis=Judg chapters=21
+verseMax=36,23,31,24,31,40,25,35,57,18,40,15,25,20,20,31,13,31,30,48,25
+## [7] name=Ruth short=Rut osis=Ruth chapters=4
+verseMax=22,23,18,22
+## [8] name=1 Samuel short=1Sa osis=1Sam chapters=31
+verseMax=28,36,21,22,12,21,17,22,27,27,15,25,23,52,35,23,58,30,24,42,15,23,29,22,44,25,12,25,11,31,13
+## [9] name=2 Samuel short=2Sa osis=2Sam chapters=24
+verseMax=27,32,39,12,25,23,29,18,13,19,27,31,39,33,37,23,29,33,43,26,22,51,39,25
+## [10] name=1 Kings short=1Ki osis=1Kgs chapters=22
+verseMax=53,46,28,34,18,38,51,66,28,29,43,33,34,31,34,34,24,46,21,43,29,53
+## [11] name=2 Kings short=2Ki osis=2Kgs chapters=25
+verseMax=18,25,27,44,27,33,20,29,37,36,21,21,25,29,38,20,41,37,37,21,26,20,37,20,30
+## [12] name=1 Chronicles short=1Ch osis=1Chr chapters=29
+verseMax=54,55,24,43,26,81,40,40,44,14,47,40,14,17,29,43,27,17,19,8,30,19,32,31,31,32,34,21,30
+## [13] name=2 Chronicles short=2Ch osis=2Chr chapters=36
+verseMax=17,18,17,22,14,42,22,18,31,19,23,16,22,15,19,14,19,34,11,37,20,12,21,27,28,23,9,27,36,27,21,33,25,33,27,23
+## [14] name=Ezra short=Ezr osis=Ezra chapters=10
+verseMax=11,70,13,24,17,22,28,36,15,44
+## [15] name=Nehemiah short=Neh osis=Neh chapters=13
+verseMax=11,20,32,23,19,19,73,18,38,39,36,47,31
+## [16] name=Esther short=Est osis=Esth chapters=10
+verseMax=22,23,15,17,14,14,10,17,32,3
+## [17] name=Job short=Job osis=Job chapters=42
+verseMax=22,13,26,21,27,30,21,22,35,22,20,25,28,22,35,22,16,21,29,29,34,30,17,25,6,14,23,28,25,31,40,22,33,37,16,33,24,41,30,24,34,17
+## [18] name=Psalms short=Psa osis=Ps chapters=150
+verseMax=6,12,8,8,12,10,17,9,20,18,7,8,6,7,5,11,15,50,14,9,13,31,6,10,22,12,14,9,11,12,24,11,22,22,28,12,40,22,13,17,13,11,5,26,17,11,9,14,20,23,19,9,6,7,23,13,11,11,17,12,8,12,11,10,13,20,7,35,36,5,24,20,28,23,10,12,20,72,13,19,16,8,18,12,13,17,7,18,52,17,16,15,5,23,11,13,12,9,9,5,8,28,22,35,45,48,43,13,31,7,10,10,9,8,18,19,2,29,176,7,8,9,4,8,5,6,5,6,8,8,3,18,3,3,21,26,9,8,24,13,10,7,12,15,21,10,20,14,9,6
+## [19] name=Proverbs short=Pro osis=Prov chapters=31
+verseMax=33,22,35,27,23,35,27,36,18,32,31,28,25,35,33,33,28,24,29,30,31,29,35,34,28,28,27,28,27,33,31
+## [20] name=Ecclesiastes short=Ecc osis=Eccl chapters=12
+verseMax=18,26,22,16,20,12,29,17,18,20,10,14
+## [21] name=Song of Solomon short=Son osis=Song chapters=8
+verseMax=17,17,11,16,16,13,13,14
+## [22] name=Isaiah short=Isa osis=Isa chapters=66
+verseMax=31,22,26,6,30,13,25,22,21,34,16,6,22,32,9,14,14,7,25,6,17,25,18,23,12,21,13,29,24,33,9,20,24,17,10,22,38,22,8,31,29,25,28,28,25,13,15,22,26,11,23,15,12,17,13,12,21,14,21,22,11,12,19,12,25,24
+## [23] name=Jeremiah short=Jer osis=Jer chapters=52
+verseMax=19,37,25,31,31,30,34,22,26,25,23,17,27,22,21,21,27,23,15,18,14,30,40,10,38,24,22,17,32,24,40,44,26,22,19,32,21,28,18,16,18,22,13,30,5,28,7,47,39,46,64,34
+## [24] name=Lamentations short=Lam osis=Lam chapters=5
+verseMax=22,22,66,22,22
+## [25] name=Ezekiel short=Eze osis=Ezek chapters=48
+verseMax=28,10,27,17,17,14,27,18,11,22,25,28,23,23,8,63,24,32,14,49,32,31,49,27,17,21,36,26,21,26,18,32,33,31,15,38,28,23,29,49,26,20,27,31,25,24,23,35
+## [26] name=Daniel short=Dan osis=Dan chapters=12
+verseMax=21,49,30,37,31,28,28,27,27,21,45,13
+## [27] name=Hosea short=Hos osis=Hos chapters=14
+verseMax=11,23,5,19,15,11,16,14,17,15,12,14,16,9
+## [28] name=Joel short=Joe osis=Joel chapters=3
+verseMax=20,32,21
+## [29] name=Amos short=Amo osis=Amos chapters=9
+verseMax=15,16,15,13,27,14,17,14,15
+## [30] name=Obadiah short=Oba osis=Obad chapters=1
+verseMax=21
+## [31] name=Jonah short=Jon osis=Jonah chapters=4
+verseMax=17,10,10,11
+## [32] name=Micah short=Mic osis=Mic chapters=7
+verseMax=16,13,12,13,15,16,20
+## [33] name=Nahum short=Nah osis=Nah chapters=3
+verseMax=15,13,19
+## [34] name=Habakkuk short=Hab osis=Hab chapters=3
+verseMax=17,20,19
+## [35] name=Zephaniah short=Zep osis=Zeph chapters=3
+verseMax=18,15,20
+## [36] name=Haggai short=Hag osis=Hag chapters=2
+verseMax=15,23
+## [37] name=Zechariah short=Zec osis=Zech chapters=14
+verseMax=21,13,10,14,11,15,14,23,17,12,17,14,9,21
+## [38] name=Malachi short=Mal osis=Mal chapters=4
+verseMax=14,17,18,6
+## [39] name=Matthew short=Mat osis=Matt chapters=28
+verseMax=25,23,17,25,48,34,29,34,38,42,30,50,58,36,39,28,27,35,30,34,46,46,39,51,46,75,66,20
+## [40] name=Mark short=Mar osis=Mark chapters=16
+verseMax=45,28,35,41,43,56,37,38,50,52,33,44,37,72,47,20
+## [41] name=Luke short=Luk osis=Luke chapters=24
+verseMax=80,52,38,44,39,49,50,56,62,42,54,59,35,35,32,31,37,43,48,47,38,71,56,53
+## [42] name=John short=Joh osis=John chapters=21
+verseMax=51,25,36,54,47,71,53,59,41,42,57,50,38,31,27,33,26,40,42,31,25
+## [43] name=Acts short=Act osis=Acts chapters=28
+verseMax=26,47,26,37,42,15,60,40,43,48,30,25,52,28,41,40,34,28,41,38,40,30,35,27,27,32,44,31
+## [44] name=Romans short=Rom osis=Rom chapters=16
+verseMax=32,29,31,25,21,23,25,39,33,21,36,21,14,23,33,27
+## [45] name=1 Corinthians short=1Co osis=1Cor chapters=16
+verseMax=31,16,23,21,13,20,40,13,27,33,34,31,13,40,58,24
+## [46] name=2 Corinthians short=2Co osis=2Cor chapters=13
+verseMax=24,17,18,18,21,18,16,24,15,18,33,21,14
+## [47] name=Galatians short=Gal osis=Gal chapters=6
+verseMax=24,21,29,31,26,18
+## [48] name=Ephesians short=Eph osis=Eph chapters=6
+verseMax=23,22,21,32,33,24
+## [49] name=Philippians short=Phi osis=Phil chapters=4
+verseMax=30,30,21,23
+## [50] name=Colossians short=Col osis=Col chapters=4
+verseMax=29,23,25,18
+## [51] name=1 Thessalonians short=1Th osis=1Thess chapters=5
+verseMax=10,20,13,18,28
+## [52] name=2 Thessalonians short=2Th osis=2Thess chapters=3
+verseMax=12,17,18
+## [53] name=1 Timothy short=1Ti osis=1Tim chapters=6
+verseMax=20,15,16,16,25,21
+## [54] name=2 Timothy short=2Ti osis=2Tim chapters=4
+verseMax=18,26,17,22
+## [55] name=Titus short=Tit osis=Titus chapters=3
+verseMax=16,15,15
+## [56] name=Philemon short=Phi osis=Phlm chapters=1
+verseMax=25
+## [57] name=Hebrews short=Heb osis=Heb chapters=13
+verseMax=14,18,19,16,14,20,28,13,28,39,40,29,25
+## [58] name=James short=Jam osis=Jas chapters=5
+verseMax=27,26,18,17,20
+## [59] name=1 Peter short=1Pe osis=1Pet chapters=5
+verseMax=25,25,22,19,14
+## [60] name=2 Peter short=2Pe osis=2Pet chapters=3
+verseMax=21,22,18
+## [61] name=1 John short=1Jo osis=1John chapters=5
+verseMax=10,29,24,21,21
+## [62] name=2 John short=2Jo osis=2John chapters=1
+verseMax=13
+## [63] name=3 John short=3Jo osis=3John chapters=1
+verseMax=14
+## [64] name=Jude short=Jud osis=Jude chapters=1
+verseMax=25
+## [65] name=Revelation short=Rev osis=Rev chapters=22
+verseMax=20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21
+# transitions: <from> -> next=<...> prev=<...>
+Genesis 1 -> next=Genesis 2 prev=Genesis 1
+Genesis 2 -> next=Genesis 3 prev=Genesis 1
+Genesis 3 -> next=Genesis 4 prev=Genesis 2
+Genesis 4 -> next=Genesis 5 prev=Genesis 3
+Genesis 5 -> next=Genesis 6 prev=Genesis 4
+Genesis 6 -> next=Genesis 7 prev=Genesis 5
+Genesis 7 -> next=Genesis 8 prev=Genesis 6
+Genesis 8 -> next=Genesis 9 prev=Genesis 7
+Genesis 9 -> next=Genesis 10 prev=Genesis 8
+Genesis 10 -> next=Genesis 11 prev=Genesis 9
+Genesis 11 -> next=Genesis 12 prev=Genesis 10
+Genesis 12 -> next=Genesis 13 prev=Genesis 11
+Genesis 13 -> next=Genesis 14 prev=Genesis 12
+Genesis 14 -> next=Genesis 15 prev=Genesis 13
+Genesis 15 -> next=Genesis 16 prev=Genesis 14
+Genesis 16 -> next=Genesis 17 prev=Genesis 15
+Genesis 17 -> next=Genesis 18 prev=Genesis 16
+Genesis 18 -> next=Genesis 19 prev=Genesis 17
+Genesis 19 -> next=Genesis 20 prev=Genesis 18
+Genesis 20 -> next=Genesis 21 prev=Genesis 19
+Genesis 21 -> next=Genesis 22 prev=Genesis 20
+Genesis 22 -> next=Genesis 23 prev=Genesis 21
+Genesis 23 -> next=Genesis 24 prev=Genesis 22
+Genesis 24 -> next=Genesis 25 prev=Genesis 23
+Genesis 25 -> next=Genesis 26 prev=Genesis 24
+Genesis 26 -> next=Genesis 27 prev=Genesis 25
+Genesis 27 -> next=Genesis 28 prev=Genesis 26
+Genesis 28 -> next=Genesis 29 prev=Genesis 27
+Genesis 29 -> next=Genesis 30 prev=Genesis 28
+Genesis 30 -> next=Genesis 31 prev=Genesis 29
+Genesis 31 -> next=Genesis 32 prev=Genesis 30
+Genesis 32 -> next=Genesis 33 prev=Genesis 31
+Genesis 33 -> next=Genesis 34 prev=Genesis 32
+Genesis 34 -> next=Genesis 35 prev=Genesis 33
+Genesis 35 -> next=Genesis 36 prev=Genesis 34
+Genesis 36 -> next=Genesis 37 prev=Genesis 35
+Genesis 37 -> next=Genesis 38 prev=Genesis 36
+Genesis 38 -> next=Genesis 39 prev=Genesis 37
+Genesis 39 -> next=Genesis 40 prev=Genesis 38
+Genesis 40 -> next=Genesis 41 prev=Genesis 39
+Genesis 41 -> next=Genesis 42 prev=Genesis 40
+Genesis 42 -> next=Genesis 43 prev=Genesis 41
+Genesis 43 -> next=Genesis 44 prev=Genesis 42
+Genesis 44 -> next=Genesis 45 prev=Genesis 43
+Genesis 45 -> next=Genesis 46 prev=Genesis 44
+Genesis 46 -> next=Genesis 47 prev=Genesis 45
+Genesis 47 -> next=Genesis 48 prev=Genesis 46
+Genesis 48 -> next=Genesis 49 prev=Genesis 47
+Genesis 49 -> next=Genesis 50 prev=Genesis 48
+Genesis 50 -> next=Exodus 1 prev=Genesis 49
+Exodus 1 -> next=Exodus 2 prev=Genesis 50
+Exodus 2 -> next=Exodus 3 prev=Exodus 1
+Exodus 3 -> next=Exodus 4 prev=Exodus 2
+Exodus 4 -> next=Exodus 5 prev=Exodus 3
+Exodus 5 -> next=Exodus 6 prev=Exodus 4
+Exodus 6 -> next=Exodus 7 prev=Exodus 5
+Exodus 7 -> next=Exodus 8 prev=Exodus 6
+Exodus 8 -> next=Exodus 9 prev=Exodus 7
+Exodus 9 -> next=Exodus 10 prev=Exodus 8
+Exodus 10 -> next=Exodus 11 prev=Exodus 9
+Exodus 11 -> next=Exodus 12 prev=Exodus 10
+Exodus 12 -> next=Exodus 13 prev=Exodus 11
+Exodus 13 -> next=Exodus 14 prev=Exodus 12
+Exodus 14 -> next=Exodus 15 prev=Exodus 13
+Exodus 15 -> next=Exodus 16 prev=Exodus 14
+Exodus 16 -> next=Exodus 17 prev=Exodus 15
+Exodus 17 -> next=Exodus 18 prev=Exodus 16
+Exodus 18 -> next=Exodus 19 prev=Exodus 17
+Exodus 19 -> next=Exodus 20 prev=Exodus 18
+Exodus 20 -> next=Exodus 21 prev=Exodus 19
+Exodus 21 -> next=Exodus 22 prev=Exodus 20
+Exodus 22 -> next=Exodus 23 prev=Exodus 21
+Exodus 23 -> next=Exodus 24 prev=Exodus 22
+Exodus 24 -> next=Exodus 25 prev=Exodus 23
+Exodus 25 -> next=Exodus 26 prev=Exodus 24
+Exodus 26 -> next=Exodus 27 prev=Exodus 25
+Exodus 27 -> next=Exodus 28 prev=Exodus 26
+Exodus 28 -> next=Exodus 29 prev=Exodus 27
+Exodus 29 -> next=Exodus 30 prev=Exodus 28
+Exodus 30 -> next=Exodus 31 prev=Exodus 29
+Exodus 31 -> next=Exodus 32 prev=Exodus 30
+Exodus 32 -> next=Exodus 33 prev=Exodus 31
+Exodus 33 -> next=Exodus 34 prev=Exodus 32
+Exodus 34 -> next=Exodus 35 prev=Exodus 33
+Exodus 35 -> next=Exodus 36 prev=Exodus 34
+Exodus 36 -> next=Exodus 37 prev=Exodus 35
+Exodus 37 -> next=Exodus 38 prev=Exodus 36
+Exodus 38 -> next=Exodus 39 prev=Exodus 37
+Exodus 39 -> next=Exodus 40 prev=Exodus 38
+Exodus 40 -> next=Leviticus 1 prev=Exodus 39
+Leviticus 1 -> next=Leviticus 2 prev=Exodus 40
+Leviticus 2 -> next=Leviticus 3 prev=Leviticus 1
+Leviticus 3 -> next=Leviticus 4 prev=Leviticus 2
+Leviticus 4 -> next=Leviticus 5 prev=Leviticus 3
+Leviticus 5 -> next=Leviticus 6 prev=Leviticus 4
+Leviticus 6 -> next=Leviticus 7 prev=Leviticus 5
+Leviticus 7 -> next=Leviticus 8 prev=Leviticus 6
+Leviticus 8 -> next=Leviticus 9 prev=Leviticus 7
+Leviticus 9 -> next=Leviticus 10 prev=Leviticus 8
+Leviticus 10 -> next=Leviticus 11 prev=Leviticus 9
+Leviticus 11 -> next=Leviticus 12 prev=Leviticus 10
+Leviticus 12 -> next=Leviticus 13 prev=Leviticus 11
+Leviticus 13 -> next=Leviticus 14 prev=Leviticus 12
+Leviticus 14 -> next=Leviticus 15 prev=Leviticus 13
+Leviticus 15 -> next=Leviticus 16 prev=Leviticus 14
+Leviticus 16 -> next=Leviticus 17 prev=Leviticus 15
+Leviticus 17 -> next=Leviticus 18 prev=Leviticus 16
+Leviticus 18 -> next=Leviticus 19 prev=Leviticus 17
+Leviticus 19 -> next=Leviticus 20 prev=Leviticus 18
+Leviticus 20 -> next=Leviticus 21 prev=Leviticus 19
+Leviticus 21 -> next=Leviticus 22 prev=Leviticus 20
+Leviticus 22 -> next=Leviticus 23 prev=Leviticus 21
+Leviticus 23 -> next=Leviticus 24 prev=Leviticus 22
+Leviticus 24 -> next=Leviticus 25 prev=Leviticus 23
+Leviticus 25 -> next=Leviticus 26 prev=Leviticus 24
+Leviticus 26 -> next=Leviticus 27 prev=Leviticus 25
+Leviticus 27 -> next=Numbers 1 prev=Leviticus 26
+Numbers 1 -> next=Numbers 2 prev=Leviticus 27
+Numbers 2 -> next=Numbers 3 prev=Numbers 1
+Numbers 3 -> next=Numbers 4 prev=Numbers 2
+Numbers 4 -> next=Numbers 5 prev=Numbers 3
+Numbers 5 -> next=Numbers 6 prev=Numbers 4
+Numbers 6 -> next=Numbers 7 prev=Numbers 5
+Numbers 7 -> next=Numbers 8 prev=Numbers 6
+Numbers 8 -> next=Numbers 9 prev=Numbers 7
+Numbers 9 -> next=Numbers 10 prev=Numbers 8
+Numbers 10 -> next=Numbers 11 prev=Numbers 9
+Numbers 11 -> next=Numbers 12 prev=Numbers 10
+Numbers 12 -> next=Numbers 13 prev=Numbers 11
+Numbers 13 -> next=Numbers 14 prev=Numbers 12
+Numbers 14 -> next=Numbers 15 prev=Numbers 13
+Numbers 15 -> next=Numbers 16 prev=Numbers 14
+Numbers 16 -> next=Numbers 17 prev=Numbers 15
+Numbers 17 -> next=Numbers 18 prev=Numbers 16
+Numbers 18 -> next=Numbers 19 prev=Numbers 17
+Numbers 19 -> next=Numbers 20 prev=Numbers 18
+Numbers 20 -> next=Numbers 21 prev=Numbers 19
+Numbers 21 -> next=Numbers 22 prev=Numbers 20
+Numbers 22 -> next=Numbers 23 prev=Numbers 21
+Numbers 23 -> next=Numbers 24 prev=Numbers 22
+Numbers 24 -> next=Numbers 25 prev=Numbers 23
+Numbers 25 -> next=Numbers 26 prev=Numbers 24
+Numbers 26 -> next=Numbers 27 prev=Numbers 25
+Numbers 27 -> next=Numbers 28 prev=Numbers 26
+Numbers 28 -> next=Numbers 29 prev=Numbers 27
+Numbers 29 -> next=Numbers 30 prev=Numbers 28
+Numbers 30 -> next=Numbers 31 prev=Numbers 29
+Numbers 31 -> next=Numbers 32 prev=Numbers 30
+Numbers 32 -> next=Numbers 33 prev=Numbers 31
+Numbers 33 -> next=Numbers 34 prev=Numbers 32
+Numbers 34 -> next=Numbers 35 prev=Numbers 33
+Numbers 35 -> next=Numbers 36 prev=Numbers 34
+Numbers 36 -> next=Deuteronomy 1 prev=Numbers 35
+Deuteronomy 1 -> next=Deuteronomy 2 prev=Numbers 36
+Deuteronomy 2 -> next=Deuteronomy 3 prev=Deuteronomy 1
+Deuteronomy 3 -> next=Deuteronomy 4 prev=Deuteronomy 2
+Deuteronomy 4 -> next=Deuteronomy 5 prev=Deuteronomy 3
+Deuteronomy 5 -> next=Deuteronomy 6 prev=Deuteronomy 4
+Deuteronomy 6 -> next=Deuteronomy 7 prev=Deuteronomy 5
+Deuteronomy 7 -> next=Deuteronomy 8 prev=Deuteronomy 6
+Deuteronomy 8 -> next=Deuteronomy 9 prev=Deuteronomy 7
+Deuteronomy 9 -> next=Deuteronomy 10 prev=Deuteronomy 8
+Deuteronomy 10 -> next=Deuteronomy 11 prev=Deuteronomy 9
+Deuteronomy 11 -> next=Deuteronomy 12 prev=Deuteronomy 10
+Deuteronomy 12 -> next=Deuteronomy 13 prev=Deuteronomy 11
+Deuteronomy 13 -> next=Deuteronomy 14 prev=Deuteronomy 12
+Deuteronomy 14 -> next=Deuteronomy 15 prev=Deuteronomy 13
+Deuteronomy 15 -> next=Deuteronomy 16 prev=Deuteronomy 14
+Deuteronomy 16 -> next=Deuteronomy 17 prev=Deuteronomy 15
+Deuteronomy 17 -> next=Deuteronomy 18 prev=Deuteronomy 16
+Deuteronomy 18 -> next=Deuteronomy 19 prev=Deuteronomy 17
+Deuteronomy 19 -> next=Deuteronomy 20 prev=Deuteronomy 18
+Deuteronomy 20 -> next=Deuteronomy 21 prev=Deuteronomy 19
+Deuteronomy 21 -> next=Deuteronomy 22 prev=Deuteronomy 20
+Deuteronomy 22 -> next=Deuteronomy 23 prev=Deuteronomy 21
+Deuteronomy 23 -> next=Deuteronomy 24 prev=Deuteronomy 22
+Deuteronomy 24 -> next=Deuteronomy 25 prev=Deuteronomy 23
+Deuteronomy 25 -> next=Deuteronomy 26 prev=Deuteronomy 24
+Deuteronomy 26 -> next=Deuteronomy 27 prev=Deuteronomy 25
+Deuteronomy 27 -> next=Deuteronomy 28 prev=Deuteronomy 26
+Deuteronomy 28 -> next=Deuteronomy 29 prev=Deuteronomy 27
+Deuteronomy 29 -> next=Deuteronomy 30 prev=Deuteronomy 28
+Deuteronomy 30 -> next=Deuteronomy 31 prev=Deuteronomy 29
+Deuteronomy 31 -> next=Deuteronomy 32 prev=Deuteronomy 30
+Deuteronomy 32 -> next=Deuteronomy 33 prev=Deuteronomy 31
+Deuteronomy 33 -> next=Deuteronomy 34 prev=Deuteronomy 32
+Deuteronomy 34 -> next=Joshua 1 prev=Deuteronomy 33
+Joshua 1 -> next=Joshua 2 prev=Deuteronomy 34
+Joshua 2 -> next=Joshua 3 prev=Joshua 1
+Joshua 3 -> next=Joshua 4 prev=Joshua 2
+Joshua 4 -> next=Joshua 5 prev=Joshua 3
+Joshua 5 -> next=Joshua 6 prev=Joshua 4
+Joshua 6 -> next=Joshua 7 prev=Joshua 5
+Joshua 7 -> next=Joshua 8 prev=Joshua 6
+Joshua 8 -> next=Joshua 9 prev=Joshua 7
+Joshua 9 -> next=Joshua 10 prev=Joshua 8
+Joshua 10 -> next=Joshua 11 prev=Joshua 9
+Joshua 11 -> next=Joshua 12 prev=Joshua 10
+Joshua 12 -> next=Joshua 13 prev=Joshua 11
+Joshua 13 -> next=Joshua 14 prev=Joshua 12
+Joshua 14 -> next=Joshua 15 prev=Joshua 13
+Joshua 15 -> next=Joshua 16 prev=Joshua 14
+Joshua 16 -> next=Joshua 17 prev=Joshua 15
+Joshua 17 -> next=Joshua 18 prev=Joshua 16
+Joshua 18 -> next=Joshua 19 prev=Joshua 17
+Joshua 19 -> next=Joshua 20 prev=Joshua 18
+Joshua 20 -> next=Joshua 21 prev=Joshua 19
+Joshua 21 -> next=Joshua 22 prev=Joshua 20
+Joshua 22 -> next=Joshua 23 prev=Joshua 21
+Joshua 23 -> next=Joshua 24 prev=Joshua 22
+Joshua 24 -> next=Judges 1 prev=Joshua 23
+Judges 1 -> next=Judges 2 prev=Joshua 24
+Judges 2 -> next=Judges 3 prev=Judges 1
+Judges 3 -> next=Judges 4 prev=Judges 2
+Judges 4 -> next=Judges 5 prev=Judges 3
+Judges 5 -> next=Judges 6 prev=Judges 4
+Judges 6 -> next=Judges 7 prev=Judges 5
+Judges 7 -> next=Judges 8 prev=Judges 6
+Judges 8 -> next=Judges 9 prev=Judges 7
+Judges 9 -> next=Judges 10 prev=Judges 8
+Judges 10 -> next=Judges 11 prev=Judges 9
+Judges 11 -> next=Judges 12 prev=Judges 10
+Judges 12 -> next=Judges 13 prev=Judges 11
+Judges 13 -> next=Judges 14 prev=Judges 12
+Judges 14 -> next=Judges 15 prev=Judges 13
+Judges 15 -> next=Judges 16 prev=Judges 14
+Judges 16 -> next=Judges 17 prev=Judges 15
+Judges 17 -> next=Judges 18 prev=Judges 16
+Judges 18 -> next=Judges 19 prev=Judges 17
+Judges 19 -> next=Judges 20 prev=Judges 18
+Judges 20 -> next=Judges 21 prev=Judges 19
+Judges 21 -> next=Ruth 1 prev=Judges 20
+Ruth 1 -> next=Ruth 2 prev=Judges 21
+Ruth 2 -> next=Ruth 3 prev=Ruth 1
+Ruth 3 -> next=Ruth 4 prev=Ruth 2
+Ruth 4 -> next=I Samuel 1 prev=Ruth 3
+1 Samuel 1 -> next=I Samuel 2 prev=Ruth 4
+1 Samuel 2 -> next=I Samuel 3 prev=I Samuel 1
+1 Samuel 3 -> next=I Samuel 4 prev=I Samuel 2
+1 Samuel 4 -> next=I Samuel 5 prev=I Samuel 3
+1 Samuel 5 -> next=I Samuel 6 prev=I Samuel 4
+1 Samuel 6 -> next=I Samuel 7 prev=I Samuel 5
+1 Samuel 7 -> next=I Samuel 8 prev=I Samuel 6
+1 Samuel 8 -> next=I Samuel 9 prev=I Samuel 7
+1 Samuel 9 -> next=I Samuel 10 prev=I Samuel 8
+1 Samuel 10 -> next=I Samuel 11 prev=I Samuel 9
+1 Samuel 11 -> next=I Samuel 12 prev=I Samuel 10
+1 Samuel 12 -> next=I Samuel 13 prev=I Samuel 11
+1 Samuel 13 -> next=I Samuel 14 prev=I Samuel 12
+1 Samuel 14 -> next=I Samuel 15 prev=I Samuel 13
+1 Samuel 15 -> next=I Samuel 16 prev=I Samuel 14
+1 Samuel 16 -> next=I Samuel 17 prev=I Samuel 15
+1 Samuel 17 -> next=I Samuel 18 prev=I Samuel 16
+1 Samuel 18 -> next=I Samuel 19 prev=I Samuel 17
+1 Samuel 19 -> next=I Samuel 20 prev=I Samuel 18
+1 Samuel 20 -> next=I Samuel 21 prev=I Samuel 19
+1 Samuel 21 -> next=I Samuel 22 prev=I Samuel 20
+1 Samuel 22 -> next=I Samuel 23 prev=I Samuel 21
+1 Samuel 23 -> next=I Samuel 24 prev=I Samuel 22
+1 Samuel 24 -> next=I Samuel 25 prev=I Samuel 23
+1 Samuel 25 -> next=I Samuel 26 prev=I Samuel 24
+1 Samuel 26 -> next=I Samuel 27 prev=I Samuel 25
+1 Samuel 27 -> next=I Samuel 28 prev=I Samuel 26
+1 Samuel 28 -> next=I Samuel 29 prev=I Samuel 27
+1 Samuel 29 -> next=I Samuel 30 prev=I Samuel 28
+1 Samuel 30 -> next=I Samuel 31 prev=I Samuel 29
+1 Samuel 31 -> next=II Samuel 1 prev=I Samuel 30
+2 Samuel 1 -> next=II Samuel 2 prev=I Samuel 31
+2 Samuel 2 -> next=II Samuel 3 prev=II Samuel 1
+2 Samuel 3 -> next=II Samuel 4 prev=II Samuel 2
+2 Samuel 4 -> next=II Samuel 5 prev=II Samuel 3
+2 Samuel 5 -> next=II Samuel 6 prev=II Samuel 4
+2 Samuel 6 -> next=II Samuel 7 prev=II Samuel 5
+2 Samuel 7 -> next=II Samuel 8 prev=II Samuel 6
+2 Samuel 8 -> next=II Samuel 9 prev=II Samuel 7
+2 Samuel 9 -> next=II Samuel 10 prev=II Samuel 8
+2 Samuel 10 -> next=II Samuel 11 prev=II Samuel 9
+2 Samuel 11 -> next=II Samuel 12 prev=II Samuel 10
+2 Samuel 12 -> next=II Samuel 13 prev=II Samuel 11
+2 Samuel 13 -> next=II Samuel 14 prev=II Samuel 12
+2 Samuel 14 -> next=II Samuel 15 prev=II Samuel 13
+2 Samuel 15 -> next=II Samuel 16 prev=II Samuel 14
+2 Samuel 16 -> next=II Samuel 17 prev=II Samuel 15
+2 Samuel 17 -> next=II Samuel 18 prev=II Samuel 16
+2 Samuel 18 -> next=II Samuel 19 prev=II Samuel 17
+2 Samuel 19 -> next=II Samuel 20 prev=II Samuel 18
+2 Samuel 20 -> next=II Samuel 21 prev=II Samuel 19
+2 Samuel 21 -> next=II Samuel 22 prev=II Samuel 20
+2 Samuel 22 -> next=II Samuel 23 prev=II Samuel 21
+2 Samuel 23 -> next=II Samuel 24 prev=II Samuel 22
+2 Samuel 24 -> next=I Kings 1 prev=II Samuel 23
+1 Kings 1 -> next=I Kings 2 prev=II Samuel 24
+1 Kings 2 -> next=I Kings 3 prev=I Kings 1
+1 Kings 3 -> next=I Kings 4 prev=I Kings 2
+1 Kings 4 -> next=I Kings 5 prev=I Kings 3
+1 Kings 5 -> next=I Kings 6 prev=I Kings 4
+1 Kings 6 -> next=I Kings 7 prev=I Kings 5
+1 Kings 7 -> next=I Kings 8 prev=I Kings 6
+1 Kings 8 -> next=I Kings 9 prev=I Kings 7
+1 Kings 9 -> next=I Kings 10 prev=I Kings 8
+1 Kings 10 -> next=I Kings 11 prev=I Kings 9
+1 Kings 11 -> next=I Kings 12 prev=I Kings 10
+1 Kings 12 -> next=I Kings 13 prev=I Kings 11
+1 Kings 13 -> next=I Kings 14 prev=I Kings 12
+1 Kings 14 -> next=I Kings 15 prev=I Kings 13
+1 Kings 15 -> next=I Kings 16 prev=I Kings 14
+1 Kings 16 -> next=I Kings 17 prev=I Kings 15
+1 Kings 17 -> next=I Kings 18 prev=I Kings 16
+1 Kings 18 -> next=I Kings 19 prev=I Kings 17
+1 Kings 19 -> next=I Kings 20 prev=I Kings 18
+1 Kings 20 -> next=I Kings 21 prev=I Kings 19
+1 Kings 21 -> next=I Kings 22 prev=I Kings 20
+1 Kings 22 -> next=II Kings 1 prev=I Kings 21
+2 Kings 1 -> next=II Kings 2 prev=I Kings 22
+2 Kings 2 -> next=II Kings 3 prev=II Kings 1
+2 Kings 3 -> next=II Kings 4 prev=II Kings 2
+2 Kings 4 -> next=II Kings 5 prev=II Kings 3
+2 Kings 5 -> next=II Kings 6 prev=II Kings 4
+2 Kings 6 -> next=II Kings 7 prev=II Kings 5
+2 Kings 7 -> next=II Kings 8 prev=II Kings 6
+2 Kings 8 -> next=II Kings 9 prev=II Kings 7
+2 Kings 9 -> next=II Kings 10 prev=II Kings 8
+2 Kings 10 -> next=II Kings 11 prev=II Kings 9
+2 Kings 11 -> next=II Kings 12 prev=II Kings 10
+2 Kings 12 -> next=II Kings 13 prev=II Kings 11
+2 Kings 13 -> next=II Kings 14 prev=II Kings 12
+2 Kings 14 -> next=II Kings 15 prev=II Kings 13
+2 Kings 15 -> next=II Kings 16 prev=II Kings 14
+2 Kings 16 -> next=II Kings 17 prev=II Kings 15
+2 Kings 17 -> next=II Kings 18 prev=II Kings 16
+2 Kings 18 -> next=II Kings 19 prev=II Kings 17
+2 Kings 19 -> next=II Kings 20 prev=II Kings 18
+2 Kings 20 -> next=II Kings 21 prev=II Kings 19
+2 Kings 21 -> next=II Kings 22 prev=II Kings 20
+2 Kings 22 -> next=II Kings 23 prev=II Kings 21
+2 Kings 23 -> next=II Kings 24 prev=II Kings 22
+2 Kings 24 -> next=II Kings 25 prev=II Kings 23
+2 Kings 25 -> next=I Chronicles 1 prev=II Kings 24
+1 Chronicles 1 -> next=I Chronicles 2 prev=II Kings 25
+1 Chronicles 2 -> next=I Chronicles 3 prev=I Chronicles 1
+1 Chronicles 3 -> next=I Chronicles 4 prev=I Chronicles 2
+1 Chronicles 4 -> next=I Chronicles 5 prev=I Chronicles 3
+1 Chronicles 5 -> next=I Chronicles 6 prev=I Chronicles 4
+1 Chronicles 6 -> next=I Chronicles 7 prev=I Chronicles 5
+1 Chronicles 7 -> next=I Chronicles 8 prev=I Chronicles 6
+1 Chronicles 8 -> next=I Chronicles 9 prev=I Chronicles 7
+1 Chronicles 9 -> next=I Chronicles 10 prev=I Chronicles 8
+1 Chronicles 10 -> next=I Chronicles 11 prev=I Chronicles 9
+1 Chronicles 11 -> next=I Chronicles 12 prev=I Chronicles 10
+1 Chronicles 12 -> next=I Chronicles 13 prev=I Chronicles 11
+1 Chronicles 13 -> next=I Chronicles 14 prev=I Chronicles 12
+1 Chronicles 14 -> next=I Chronicles 15 prev=I Chronicles 13
+1 Chronicles 15 -> next=I Chronicles 16 prev=I Chronicles 14
+1 Chronicles 16 -> next=I Chronicles 17 prev=I Chronicles 15
+1 Chronicles 17 -> next=I Chronicles 18 prev=I Chronicles 16
+1 Chronicles 18 -> next=I Chronicles 19 prev=I Chronicles 17
+1 Chronicles 19 -> next=I Chronicles 20 prev=I Chronicles 18
+1 Chronicles 20 -> next=I Chronicles 21 prev=I Chronicles 19
+1 Chronicles 21 -> next=I Chronicles 22 prev=I Chronicles 20
+1 Chronicles 22 -> next=I Chronicles 23 prev=I Chronicles 21
+1 Chronicles 23 -> next=I Chronicles 24 prev=I Chronicles 22
+1 Chronicles 24 -> next=I Chronicles 25 prev=I Chronicles 23
+1 Chronicles 25 -> next=I Chronicles 26 prev=I Chronicles 24
+1 Chronicles 26 -> next=I Chronicles 27 prev=I Chronicles 25
+1 Chronicles 27 -> next=I Chronicles 28 prev=I Chronicles 26
+1 Chronicles 28 -> next=I Chronicles 29 prev=I Chronicles 27
+1 Chronicles 29 -> next=II Chronicles 1 prev=I Chronicles 28
+2 Chronicles 1 -> next=II Chronicles 2 prev=I Chronicles 29
+2 Chronicles 2 -> next=II Chronicles 3 prev=II Chronicles 1
+2 Chronicles 3 -> next=II Chronicles 4 prev=II Chronicles 2
+2 Chronicles 4 -> next=II Chronicles 5 prev=II Chronicles 3
+2 Chronicles 5 -> next=II Chronicles 6 prev=II Chronicles 4
+2 Chronicles 6 -> next=II Chronicles 7 prev=II Chronicles 5
+2 Chronicles 7 -> next=II Chronicles 8 prev=II Chronicles 6
+2 Chronicles 8 -> next=II Chronicles 9 prev=II Chronicles 7
+2 Chronicles 9 -> next=II Chronicles 10 prev=II Chronicles 8
+2 Chronicles 10 -> next=II Chronicles 11 prev=II Chronicles 9
+2 Chronicles 11 -> next=II Chronicles 12 prev=II Chronicles 10
+2 Chronicles 12 -> next=II Chronicles 13 prev=II Chronicles 11
+2 Chronicles 13 -> next=II Chronicles 14 prev=II Chronicles 12
+2 Chronicles 14 -> next=II Chronicles 15 prev=II Chronicles 13
+2 Chronicles 15 -> next=II Chronicles 16 prev=II Chronicles 14
+2 Chronicles 16 -> next=II Chronicles 17 prev=II Chronicles 15
+2 Chronicles 17 -> next=II Chronicles 18 prev=II Chronicles 16
+2 Chronicles 18 -> next=II Chronicles 19 prev=II Chronicles 17
+2 Chronicles 19 -> next=II Chronicles 20 prev=II Chronicles 18
+2 Chronicles 20 -> next=II Chronicles 21 prev=II Chronicles 19
+2 Chronicles 21 -> next=II Chronicles 22 prev=II Chronicles 20
+2 Chronicles 22 -> next=II Chronicles 23 prev=II Chronicles 21
+2 Chronicles 23 -> next=II Chronicles 24 prev=II Chronicles 22
+2 Chronicles 24 -> next=II Chronicles 25 prev=II Chronicles 23
+2 Chronicles 25 -> next=II Chronicles 26 prev=II Chronicles 24
+2 Chronicles 26 -> next=II Chronicles 27 prev=II Chronicles 25
+2 Chronicles 27 -> next=II Chronicles 28 prev=II Chronicles 26
+2 Chronicles 28 -> next=II Chronicles 29 prev=II Chronicles 27
+2 Chronicles 29 -> next=II Chronicles 30 prev=II Chronicles 28
+2 Chronicles 30 -> next=II Chronicles 31 prev=II Chronicles 29
+2 Chronicles 31 -> next=II Chronicles 32 prev=II Chronicles 30
+2 Chronicles 32 -> next=II Chronicles 33 prev=II Chronicles 31
+2 Chronicles 33 -> next=II Chronicles 34 prev=II Chronicles 32
+2 Chronicles 34 -> next=II Chronicles 35 prev=II Chronicles 33
+2 Chronicles 35 -> next=II Chronicles 36 prev=II Chronicles 34
+2 Chronicles 36 -> next=Ezra 1 prev=II Chronicles 35
+Ezra 1 -> next=Ezra 2 prev=II Chronicles 36
+Ezra 2 -> next=Ezra 3 prev=Ezra 1
+Ezra 3 -> next=Ezra 4 prev=Ezra 2
+Ezra 4 -> next=Ezra 5 prev=Ezra 3
+Ezra 5 -> next=Ezra 6 prev=Ezra 4
+Ezra 6 -> next=Ezra 7 prev=Ezra 5
+Ezra 7 -> next=Ezra 8 prev=Ezra 6
+Ezra 8 -> next=Ezra 9 prev=Ezra 7
+Ezra 9 -> next=Ezra 10 prev=Ezra 8
+Ezra 10 -> next=Nehemiah 1 prev=Ezra 9
+Nehemiah 1 -> next=Nehemiah 2 prev=Ezra 10
+Nehemiah 2 -> next=Nehemiah 3 prev=Nehemiah 1
+Nehemiah 3 -> next=Nehemiah 4 prev=Nehemiah 2
+Nehemiah 4 -> next=Nehemiah 5 prev=Nehemiah 3
+Nehemiah 5 -> next=Nehemiah 6 prev=Nehemiah 4
+Nehemiah 6 -> next=Nehemiah 7 prev=Nehemiah 5
+Nehemiah 7 -> next=Nehemiah 8 prev=Nehemiah 6
+Nehemiah 8 -> next=Nehemiah 9 prev=Nehemiah 7
+Nehemiah 9 -> next=Nehemiah 10 prev=Nehemiah 8
+Nehemiah 10 -> next=Nehemiah 11 prev=Nehemiah 9
+Nehemiah 11 -> next=Nehemiah 12 prev=Nehemiah 10
+Nehemiah 12 -> next=Nehemiah 13 prev=Nehemiah 11
+Nehemiah 13 -> next=Esther 1 prev=Nehemiah 12
+Esther 1 -> next=Esther 2 prev=Nehemiah 13
+Esther 2 -> next=Esther 3 prev=Esther 1
+Esther 3 -> next=Esther 4 prev=Esther 2
+Esther 4 -> next=Esther 5 prev=Esther 3
+Esther 5 -> next=Esther 6 prev=Esther 4
+Esther 6 -> next=Esther 7 prev=Esther 5
+Esther 7 -> next=Esther 8 prev=Esther 6
+Esther 8 -> next=Esther 9 prev=Esther 7
+Esther 9 -> next=Esther 10 prev=Esther 8
+Esther 10 -> next=Job 1 prev=Esther 9
+Job 1 -> next=Job 2 prev=Esther 10
+Job 2 -> next=Job 3 prev=Job 1
+Job 3 -> next=Job 4 prev=Job 2
+Job 4 -> next=Job 5 prev=Job 3
+Job 5 -> next=Job 6 prev=Job 4
+Job 6 -> next=Job 7 prev=Job 5
+Job 7 -> next=Job 8 prev=Job 6
+Job 8 -> next=Job 9 prev=Job 7
+Job 9 -> next=Job 10 prev=Job 8
+Job 10 -> next=Job 11 prev=Job 9
+Job 11 -> next=Job 12 prev=Job 10
+Job 12 -> next=Job 13 prev=Job 11
+Job 13 -> next=Job 14 prev=Job 12
+Job 14 -> next=Job 15 prev=Job 13
+Job 15 -> next=Job 16 prev=Job 14
+Job 16 -> next=Job 17 prev=Job 15
+Job 17 -> next=Job 18 prev=Job 16
+Job 18 -> next=Job 19 prev=Job 17
+Job 19 -> next=Job 20 prev=Job 18
+Job 20 -> next=Job 21 prev=Job 19
+Job 21 -> next=Job 22 prev=Job 20
+Job 22 -> next=Job 23 prev=Job 21
+Job 23 -> next=Job 24 prev=Job 22
+Job 24 -> next=Job 25 prev=Job 23
+Job 25 -> next=Job 26 prev=Job 24
+Job 26 -> next=Job 27 prev=Job 25
+Job 27 -> next=Job 28 prev=Job 26
+Job 28 -> next=Job 29 prev=Job 27
+Job 29 -> next=Job 30 prev=Job 28
+Job 30 -> next=Job 31 prev=Job 29
+Job 31 -> next=Job 32 prev=Job 30
+Job 32 -> next=Job 33 prev=Job 31
+Job 33 -> next=Job 34 prev=Job 32
+Job 34 -> next=Job 35 prev=Job 33
+Job 35 -> next=Job 36 prev=Job 34
+Job 36 -> next=Job 37 prev=Job 35
+Job 37 -> next=Job 38 prev=Job 36
+Job 38 -> next=Job 39 prev=Job 37
+Job 39 -> next=Job 40 prev=Job 38
+Job 40 -> next=Job 41 prev=Job 39
+Job 41 -> next=Job 42 prev=Job 40
+Job 42 -> next=Psalms 1 prev=Job 41
+Psalms 1 -> next=Psalms 2 prev=Job 42
+Psalms 2 -> next=Psalms 3 prev=Psalms 1
+Psalms 3 -> next=Psalms 4 prev=Psalms 2
+Psalms 4 -> next=Psalms 5 prev=Psalms 3
+Psalms 5 -> next=Psalms 6 prev=Psalms 4
+Psalms 6 -> next=Psalms 7 prev=Psalms 5
+Psalms 7 -> next=Psalms 8 prev=Psalms 6
+Psalms 8 -> next=Psalms 9 prev=Psalms 7
+Psalms 9 -> next=Psalms 10 prev=Psalms 8
+Psalms 10 -> next=Psalms 11 prev=Psalms 9
+Psalms 11 -> next=Psalms 12 prev=Psalms 10
+Psalms 12 -> next=Psalms 13 prev=Psalms 11
+Psalms 13 -> next=Psalms 14 prev=Psalms 12
+Psalms 14 -> next=Psalms 15 prev=Psalms 13
+Psalms 15 -> next=Psalms 16 prev=Psalms 14
+Psalms 16 -> next=Psalms 17 prev=Psalms 15
+Psalms 17 -> next=Psalms 18 prev=Psalms 16
+Psalms 18 -> next=Psalms 19 prev=Psalms 17
+Psalms 19 -> next=Psalms 20 prev=Psalms 18
+Psalms 20 -> next=Psalms 21 prev=Psalms 19
+Psalms 21 -> next=Psalms 22 prev=Psalms 20
+Psalms 22 -> next=Psalms 23 prev=Psalms 21
+Psalms 23 -> next=Psalms 24 prev=Psalms 22
+Psalms 24 -> next=Psalms 25 prev=Psalms 23
+Psalms 25 -> next=Psalms 26 prev=Psalms 24
+Psalms 26 -> next=Psalms 27 prev=Psalms 25
+Psalms 27 -> next=Psalms 28 prev=Psalms 26
+Psalms 28 -> next=Psalms 29 prev=Psalms 27
+Psalms 29 -> next=Psalms 30 prev=Psalms 28
+Psalms 30 -> next=Psalms 31 prev=Psalms 29
+Psalms 31 -> next=Psalms 32 prev=Psalms 30
+Psalms 32 -> next=Psalms 33 prev=Psalms 31
+Psalms 33 -> next=Psalms 34 prev=Psalms 32
+Psalms 34 -> next=Psalms 35 prev=Psalms 33
+Psalms 35 -> next=Psalms 36 prev=Psalms 34
+Psalms 36 -> next=Psalms 37 prev=Psalms 35
+Psalms 37 -> next=Psalms 38 prev=Psalms 36
+Psalms 38 -> next=Psalms 39 prev=Psalms 37
+Psalms 39 -> next=Psalms 40 prev=Psalms 38
+Psalms 40 -> next=Psalms 41 prev=Psalms 39
+Psalms 41 -> next=Psalms 42 prev=Psalms 40
+Psalms 42 -> next=Psalms 43 prev=Psalms 41
+Psalms 43 -> next=Psalms 44 prev=Psalms 42
+Psalms 44 -> next=Psalms 45 prev=Psalms 43
+Psalms 45 -> next=Psalms 46 prev=Psalms 44
+Psalms 46 -> next=Psalms 47 prev=Psalms 45
+Psalms 47 -> next=Psalms 48 prev=Psalms 46
+Psalms 48 -> next=Psalms 49 prev=Psalms 47
+Psalms 49 -> next=Psalms 50 prev=Psalms 48
+Psalms 50 -> next=Psalms 51 prev=Psalms 49
+Psalms 51 -> next=Psalms 52 prev=Psalms 50
+Psalms 52 -> next=Psalms 53 prev=Psalms 51
+Psalms 53 -> next=Psalms 54 prev=Psalms 52
+Psalms 54 -> next=Psalms 55 prev=Psalms 53
+Psalms 55 -> next=Psalms 56 prev=Psalms 54
+Psalms 56 -> next=Psalms 57 prev=Psalms 55
+Psalms 57 -> next=Psalms 58 prev=Psalms 56
+Psalms 58 -> next=Psalms 59 prev=Psalms 57
+Psalms 59 -> next=Psalms 60 prev=Psalms 58
+Psalms 60 -> next=Psalms 61 prev=Psalms 59
+Psalms 61 -> next=Psalms 62 prev=Psalms 60
+Psalms 62 -> next=Psalms 63 prev=Psalms 61
+Psalms 63 -> next=Psalms 64 prev=Psalms 62
+Psalms 64 -> next=Psalms 65 prev=Psalms 63
+Psalms 65 -> next=Psalms 66 prev=Psalms 64
+Psalms 66 -> next=Psalms 67 prev=Psalms 65
+Psalms 67 -> next=Psalms 68 prev=Psalms 66
+Psalms 68 -> next=Psalms 69 prev=Psalms 67
+Psalms 69 -> next=Psalms 70 prev=Psalms 68
+Psalms 70 -> next=Psalms 71 prev=Psalms 69
+Psalms 71 -> next=Psalms 72 prev=Psalms 70
+Psalms 72 -> next=Psalms 73 prev=Psalms 71
+Psalms 73 -> next=Psalms 74 prev=Psalms 72
+Psalms 74 -> next=Psalms 75 prev=Psalms 73
+Psalms 75 -> next=Psalms 76 prev=Psalms 74
+Psalms 76 -> next=Psalms 77 prev=Psalms 75
+Psalms 77 -> next=Psalms 78 prev=Psalms 76
+Psalms 78 -> next=Psalms 79 prev=Psalms 77
+Psalms 79 -> next=Psalms 80 prev=Psalms 78
+Psalms 80 -> next=Psalms 81 prev=Psalms 79
+Psalms 81 -> next=Psalms 82 prev=Psalms 80
+Psalms 82 -> next=Psalms 83 prev=Psalms 81
+Psalms 83 -> next=Psalms 84 prev=Psalms 82
+Psalms 84 -> next=Psalms 85 prev=Psalms 83
+Psalms 85 -> next=Psalms 86 prev=Psalms 84
+Psalms 86 -> next=Psalms 87 prev=Psalms 85
+Psalms 87 -> next=Psalms 88 prev=Psalms 86
+Psalms 88 -> next=Psalms 89 prev=Psalms 87
+Psalms 89 -> next=Psalms 90 prev=Psalms 88
+Psalms 90 -> next=Psalms 91 prev=Psalms 89
+Psalms 91 -> next=Psalms 92 prev=Psalms 90
+Psalms 92 -> next=Psalms 93 prev=Psalms 91
+Psalms 93 -> next=Psalms 94 prev=Psalms 92
+Psalms 94 -> next=Psalms 95 prev=Psalms 93
+Psalms 95 -> next=Psalms 96 prev=Psalms 94
+Psalms 96 -> next=Psalms 97 prev=Psalms 95
+Psalms 97 -> next=Psalms 98 prev=Psalms 96
+Psalms 98 -> next=Psalms 99 prev=Psalms 97
+Psalms 99 -> next=Psalms 100 prev=Psalms 98
+Psalms 100 -> next=Psalms 101 prev=Psalms 99
+Psalms 101 -> next=Psalms 102 prev=Psalms 100
+Psalms 102 -> next=Psalms 103 prev=Psalms 101
+Psalms 103 -> next=Psalms 104 prev=Psalms 102
+Psalms 104 -> next=Psalms 105 prev=Psalms 103
+Psalms 105 -> next=Psalms 106 prev=Psalms 104
+Psalms 106 -> next=Psalms 107 prev=Psalms 105
+Psalms 107 -> next=Psalms 108 prev=Psalms 106
+Psalms 108 -> next=Psalms 109 prev=Psalms 107
+Psalms 109 -> next=Psalms 110 prev=Psalms 108
+Psalms 110 -> next=Psalms 111 prev=Psalms 109
+Psalms 111 -> next=Psalms 112 prev=Psalms 110
+Psalms 112 -> next=Psalms 113 prev=Psalms 111
+Psalms 113 -> next=Psalms 114 prev=Psalms 112
+Psalms 114 -> next=Psalms 115 prev=Psalms 113
+Psalms 115 -> next=Psalms 116 prev=Psalms 114
+Psalms 116 -> next=Psalms 117 prev=Psalms 115
+Psalms 117 -> next=Psalms 118 prev=Psalms 116
+Psalms 118 -> next=Psalms 119 prev=Psalms 117
+Psalms 119 -> next=Psalms 120 prev=Psalms 118
+Psalms 120 -> next=Psalms 121 prev=Psalms 119
+Psalms 121 -> next=Psalms 122 prev=Psalms 120
+Psalms 122 -> next=Psalms 123 prev=Psalms 121
+Psalms 123 -> next=Psalms 124 prev=Psalms 122
+Psalms 124 -> next=Psalms 125 prev=Psalms 123
+Psalms 125 -> next=Psalms 126 prev=Psalms 124
+Psalms 126 -> next=Psalms 127 prev=Psalms 125
+Psalms 127 -> next=Psalms 128 prev=Psalms 126
+Psalms 128 -> next=Psalms 129 prev=Psalms 127
+Psalms 129 -> next=Psalms 130 prev=Psalms 128
+Psalms 130 -> next=Psalms 131 prev=Psalms 129
+Psalms 131 -> next=Psalms 132 prev=Psalms 130
+Psalms 132 -> next=Psalms 133 prev=Psalms 131
+Psalms 133 -> next=Psalms 134 prev=Psalms 132
+Psalms 134 -> next=Psalms 135 prev=Psalms 133
+Psalms 135 -> next=Psalms 136 prev=Psalms 134
+Psalms 136 -> next=Psalms 137 prev=Psalms 135
+Psalms 137 -> next=Psalms 138 prev=Psalms 136
+Psalms 138 -> next=Psalms 139 prev=Psalms 137
+Psalms 139 -> next=Psalms 140 prev=Psalms 138
+Psalms 140 -> next=Psalms 141 prev=Psalms 139
+Psalms 141 -> next=Psalms 142 prev=Psalms 140
+Psalms 142 -> next=Psalms 143 prev=Psalms 141
+Psalms 143 -> next=Psalms 144 prev=Psalms 142
+Psalms 144 -> next=Psalms 145 prev=Psalms 143
+Psalms 145 -> next=Psalms 146 prev=Psalms 144
+Psalms 146 -> next=Psalms 147 prev=Psalms 145
+Psalms 147 -> next=Psalms 148 prev=Psalms 146
+Psalms 148 -> next=Psalms 149 prev=Psalms 147
+Psalms 149 -> next=Psalms 150 prev=Psalms 148
+Psalms 150 -> next=Proverbs 1 prev=Psalms 149
+Proverbs 1 -> next=Proverbs 2 prev=Psalms 150
+Proverbs 2 -> next=Proverbs 3 prev=Proverbs 1
+Proverbs 3 -> next=Proverbs 4 prev=Proverbs 2
+Proverbs 4 -> next=Proverbs 5 prev=Proverbs 3
+Proverbs 5 -> next=Proverbs 6 prev=Proverbs 4
+Proverbs 6 -> next=Proverbs 7 prev=Proverbs 5
+Proverbs 7 -> next=Proverbs 8 prev=Proverbs 6
+Proverbs 8 -> next=Proverbs 9 prev=Proverbs 7
+Proverbs 9 -> next=Proverbs 10 prev=Proverbs 8
+Proverbs 10 -> next=Proverbs 11 prev=Proverbs 9
+Proverbs 11 -> next=Proverbs 12 prev=Proverbs 10
+Proverbs 12 -> next=Proverbs 13 prev=Proverbs 11
+Proverbs 13 -> next=Proverbs 14 prev=Proverbs 12
+Proverbs 14 -> next=Proverbs 15 prev=Proverbs 13
+Proverbs 15 -> next=Proverbs 16 prev=Proverbs 14
+Proverbs 16 -> next=Proverbs 17 prev=Proverbs 15
+Proverbs 17 -> next=Proverbs 18 prev=Proverbs 16
+Proverbs 18 -> next=Proverbs 19 prev=Proverbs 17
+Proverbs 19 -> next=Proverbs 20 prev=Proverbs 18
+Proverbs 20 -> next=Proverbs 21 prev=Proverbs 19
+Proverbs 21 -> next=Proverbs 22 prev=Proverbs 20
+Proverbs 22 -> next=Proverbs 23 prev=Proverbs 21
+Proverbs 23 -> next=Proverbs 24 prev=Proverbs 22
+Proverbs 24 -> next=Proverbs 25 prev=Proverbs 23
+Proverbs 25 -> next=Proverbs 26 prev=Proverbs 24
+Proverbs 26 -> next=Proverbs 27 prev=Proverbs 25
+Proverbs 27 -> next=Proverbs 28 prev=Proverbs 26
+Proverbs 28 -> next=Proverbs 29 prev=Proverbs 27
+Proverbs 29 -> next=Proverbs 30 prev=Proverbs 28
+Proverbs 30 -> next=Proverbs 31 prev=Proverbs 29
+Proverbs 31 -> next=Ecclesiastes 1 prev=Proverbs 30
+Ecclesiastes 1 -> next=Ecclesiastes 2 prev=Proverbs 31
+Ecclesiastes 2 -> next=Ecclesiastes 3 prev=Ecclesiastes 1
+Ecclesiastes 3 -> next=Ecclesiastes 4 prev=Ecclesiastes 2
+Ecclesiastes 4 -> next=Ecclesiastes 5 prev=Ecclesiastes 3
+Ecclesiastes 5 -> next=Ecclesiastes 6 prev=Ecclesiastes 4
+Ecclesiastes 6 -> next=Ecclesiastes 7 prev=Ecclesiastes 5
+Ecclesiastes 7 -> next=Ecclesiastes 8 prev=Ecclesiastes 6
+Ecclesiastes 8 -> next=Ecclesiastes 9 prev=Ecclesiastes 7
+Ecclesiastes 9 -> next=Ecclesiastes 10 prev=Ecclesiastes 8
+Ecclesiastes 10 -> next=Ecclesiastes 11 prev=Ecclesiastes 9
+Ecclesiastes 11 -> next=Ecclesiastes 12 prev=Ecclesiastes 10
+Ecclesiastes 12 -> next=Song of Solomon 1 prev=Ecclesiastes 11
+Song of Solomon 1 -> next=Song of Solomon 2 prev=Ecclesiastes 12
+Song of Solomon 2 -> next=Song of Solomon 3 prev=Song of Solomon 1
+Song of Solomon 3 -> next=Song of Solomon 4 prev=Song of Solomon 2
+Song of Solomon 4 -> next=Song of Solomon 5 prev=Song of Solomon 3
+Song of Solomon 5 -> next=Song of Solomon 6 prev=Song of Solomon 4
+Song of Solomon 6 -> next=Song of Solomon 7 prev=Song of Solomon 5
+Song of Solomon 7 -> next=Song of Solomon 8 prev=Song of Solomon 6
+Song of Solomon 8 -> next=Isaiah 1 prev=Song of Solomon 7
+Isaiah 1 -> next=Isaiah 2 prev=Song of Solomon 8
+Isaiah 2 -> next=Isaiah 3 prev=Isaiah 1
+Isaiah 3 -> next=Isaiah 4 prev=Isaiah 2
+Isaiah 4 -> next=Isaiah 5 prev=Isaiah 3
+Isaiah 5 -> next=Isaiah 6 prev=Isaiah 4
+Isaiah 6 -> next=Isaiah 7 prev=Isaiah 5
+Isaiah 7 -> next=Isaiah 8 prev=Isaiah 6
+Isaiah 8 -> next=Isaiah 9 prev=Isaiah 7
+Isaiah 9 -> next=Isaiah 10 prev=Isaiah 8
+Isaiah 10 -> next=Isaiah 11 prev=Isaiah 9
+Isaiah 11 -> next=Isaiah 12 prev=Isaiah 10
+Isaiah 12 -> next=Isaiah 13 prev=Isaiah 11
+Isaiah 13 -> next=Isaiah 14 prev=Isaiah 12
+Isaiah 14 -> next=Isaiah 15 prev=Isaiah 13
+Isaiah 15 -> next=Isaiah 16 prev=Isaiah 14
+Isaiah 16 -> next=Isaiah 17 prev=Isaiah 15
+Isaiah 17 -> next=Isaiah 18 prev=Isaiah 16
+Isaiah 18 -> next=Isaiah 19 prev=Isaiah 17
+Isaiah 19 -> next=Isaiah 20 prev=Isaiah 18
+Isaiah 20 -> next=Isaiah 21 prev=Isaiah 19
+Isaiah 21 -> next=Isaiah 22 prev=Isaiah 20
+Isaiah 22 -> next=Isaiah 23 prev=Isaiah 21
+Isaiah 23 -> next=Isaiah 24 prev=Isaiah 22
+Isaiah 24 -> next=Isaiah 25 prev=Isaiah 23
+Isaiah 25 -> next=Isaiah 26 prev=Isaiah 24
+Isaiah 26 -> next=Isaiah 27 prev=Isaiah 25
+Isaiah 27 -> next=Isaiah 28 prev=Isaiah 26
+Isaiah 28 -> next=Isaiah 29 prev=Isaiah 27
+Isaiah 29 -> next=Isaiah 30 prev=Isaiah 28
+Isaiah 30 -> next=Isaiah 31 prev=Isaiah 29
+Isaiah 31 -> next=Isaiah 32 prev=Isaiah 30
+Isaiah 32 -> next=Isaiah 33 prev=Isaiah 31
+Isaiah 33 -> next=Isaiah 34 prev=Isaiah 32
+Isaiah 34 -> next=Isaiah 35 prev=Isaiah 33
+Isaiah 35 -> next=Isaiah 36 prev=Isaiah 34
+Isaiah 36 -> next=Isaiah 37 prev=Isaiah 35
+Isaiah 37 -> next=Isaiah 38 prev=Isaiah 36
+Isaiah 38 -> next=Isaiah 39 prev=Isaiah 37
+Isaiah 39 -> next=Isaiah 40 prev=Isaiah 38
+Isaiah 40 -> next=Isaiah 41 prev=Isaiah 39
+Isaiah 41 -> next=Isaiah 42 prev=Isaiah 40
+Isaiah 42 -> next=Isaiah 43 prev=Isaiah 41
+Isaiah 43 -> next=Isaiah 44 prev=Isaiah 42
+Isaiah 44 -> next=Isaiah 45 prev=Isaiah 43
+Isaiah 45 -> next=Isaiah 46 prev=Isaiah 44
+Isaiah 46 -> next=Isaiah 47 prev=Isaiah 45
+Isaiah 47 -> next=Isaiah 48 prev=Isaiah 46
+Isaiah 48 -> next=Isaiah 49 prev=Isaiah 47
+Isaiah 49 -> next=Isaiah 50 prev=Isaiah 48
+Isaiah 50 -> next=Isaiah 51 prev=Isaiah 49
+Isaiah 51 -> next=Isaiah 52 prev=Isaiah 50
+Isaiah 52 -> next=Isaiah 53 prev=Isaiah 51
+Isaiah 53 -> next=Isaiah 54 prev=Isaiah 52
+Isaiah 54 -> next=Isaiah 55 prev=Isaiah 53
+Isaiah 55 -> next=Isaiah 56 prev=Isaiah 54
+Isaiah 56 -> next=Isaiah 57 prev=Isaiah 55
+Isaiah 57 -> next=Isaiah 58 prev=Isaiah 56
+Isaiah 58 -> next=Isaiah 59 prev=Isaiah 57
+Isaiah 59 -> next=Isaiah 60 prev=Isaiah 58
+Isaiah 60 -> next=Isaiah 61 prev=Isaiah 59
+Isaiah 61 -> next=Isaiah 62 prev=Isaiah 60
+Isaiah 62 -> next=Isaiah 63 prev=Isaiah 61
+Isaiah 63 -> next=Isaiah 64 prev=Isaiah 62
+Isaiah 64 -> next=Isaiah 65 prev=Isaiah 63
+Isaiah 65 -> next=Isaiah 66 prev=Isaiah 64
+Isaiah 66 -> next=Jeremiah 1 prev=Isaiah 65
+Jeremiah 1 -> next=Jeremiah 2 prev=Isaiah 66
+Jeremiah 2 -> next=Jeremiah 3 prev=Jeremiah 1
+Jeremiah 3 -> next=Jeremiah 4 prev=Jeremiah 2
+Jeremiah 4 -> next=Jeremiah 5 prev=Jeremiah 3
+Jeremiah 5 -> next=Jeremiah 6 prev=Jeremiah 4
+Jeremiah 6 -> next=Jeremiah 7 prev=Jeremiah 5
+Jeremiah 7 -> next=Jeremiah 8 prev=Jeremiah 6
+Jeremiah 8 -> next=Jeremiah 9 prev=Jeremiah 7
+Jeremiah 9 -> next=Jeremiah 10 prev=Jeremiah 8
+Jeremiah 10 -> next=Jeremiah 11 prev=Jeremiah 9
+Jeremiah 11 -> next=Jeremiah 12 prev=Jeremiah 10
+Jeremiah 12 -> next=Jeremiah 13 prev=Jeremiah 11
+Jeremiah 13 -> next=Jeremiah 14 prev=Jeremiah 12
+Jeremiah 14 -> next=Jeremiah 15 prev=Jeremiah 13
+Jeremiah 15 -> next=Jeremiah 16 prev=Jeremiah 14
+Jeremiah 16 -> next=Jeremiah 17 prev=Jeremiah 15
+Jeremiah 17 -> next=Jeremiah 18 prev=Jeremiah 16
+Jeremiah 18 -> next=Jeremiah 19 prev=Jeremiah 17
+Jeremiah 19 -> next=Jeremiah 20 prev=Jeremiah 18
+Jeremiah 20 -> next=Jeremiah 21 prev=Jeremiah 19
+Jeremiah 21 -> next=Jeremiah 22 prev=Jeremiah 20
+Jeremiah 22 -> next=Jeremiah 23 prev=Jeremiah 21
+Jeremiah 23 -> next=Jeremiah 24 prev=Jeremiah 22
+Jeremiah 24 -> next=Jeremiah 25 prev=Jeremiah 23
+Jeremiah 25 -> next=Jeremiah 26 prev=Jeremiah 24
+Jeremiah 26 -> next=Jeremiah 27 prev=Jeremiah 25
+Jeremiah 27 -> next=Jeremiah 28 prev=Jeremiah 26
+Jeremiah 28 -> next=Jeremiah 29 prev=Jeremiah 27
+Jeremiah 29 -> next=Jeremiah 30 prev=Jeremiah 28
+Jeremiah 30 -> next=Jeremiah 31 prev=Jeremiah 29
+Jeremiah 31 -> next=Jeremiah 32 prev=Jeremiah 30
+Jeremiah 32 -> next=Jeremiah 33 prev=Jeremiah 31
+Jeremiah 33 -> next=Jeremiah 34 prev=Jeremiah 32
+Jeremiah 34 -> next=Jeremiah 35 prev=Jeremiah 33
+Jeremiah 35 -> next=Jeremiah 36 prev=Jeremiah 34
+Jeremiah 36 -> next=Jeremiah 37 prev=Jeremiah 35
+Jeremiah 37 -> next=Jeremiah 38 prev=Jeremiah 36
+Jeremiah 38 -> next=Jeremiah 39 prev=Jeremiah 37
+Jeremiah 39 -> next=Jeremiah 40 prev=Jeremiah 38
+Jeremiah 40 -> next=Jeremiah 41 prev=Jeremiah 39
+Jeremiah 41 -> next=Jeremiah 42 prev=Jeremiah 40
+Jeremiah 42 -> next=Jeremiah 43 prev=Jeremiah 41
+Jeremiah 43 -> next=Jeremiah 44 prev=Jeremiah 42
+Jeremiah 44 -> next=Jeremiah 45 prev=Jeremiah 43
+Jeremiah 45 -> next=Jeremiah 46 prev=Jeremiah 44
+Jeremiah 46 -> next=Jeremiah 47 prev=Jeremiah 45
+Jeremiah 47 -> next=Jeremiah 48 prev=Jeremiah 46
+Jeremiah 48 -> next=Jeremiah 49 prev=Jeremiah 47
+Jeremiah 49 -> next=Jeremiah 50 prev=Jeremiah 48
+Jeremiah 50 -> next=Jeremiah 51 prev=Jeremiah 49
+Jeremiah 51 -> next=Jeremiah 52 prev=Jeremiah 50
+Jeremiah 52 -> next=Lamentations 1 prev=Jeremiah 51
+Lamentations 1 -> next=Lamentations 2 prev=Jeremiah 52
+Lamentations 2 -> next=Lamentations 3 prev=Lamentations 1
+Lamentations 3 -> next=Lamentations 4 prev=Lamentations 2
+Lamentations 4 -> next=Lamentations 5 prev=Lamentations 3
+Lamentations 5 -> next=Ezekiel 1 prev=Lamentations 4
+Ezekiel 1 -> next=Ezekiel 2 prev=Lamentations 5
+Ezekiel 2 -> next=Ezekiel 3 prev=Ezekiel 1
+Ezekiel 3 -> next=Ezekiel 4 prev=Ezekiel 2
+Ezekiel 4 -> next=Ezekiel 5 prev=Ezekiel 3
+Ezekiel 5 -> next=Ezekiel 6 prev=Ezekiel 4
+Ezekiel 6 -> next=Ezekiel 7 prev=Ezekiel 5
+Ezekiel 7 -> next=Ezekiel 8 prev=Ezekiel 6
+Ezekiel 8 -> next=Ezekiel 9 prev=Ezekiel 7
+Ezekiel 9 -> next=Ezekiel 10 prev=Ezekiel 8
+Ezekiel 10 -> next=Ezekiel 11 prev=Ezekiel 9
+Ezekiel 11 -> next=Ezekiel 12 prev=Ezekiel 10
+Ezekiel 12 -> next=Ezekiel 13 prev=Ezekiel 11
+Ezekiel 13 -> next=Ezekiel 14 prev=Ezekiel 12
+Ezekiel 14 -> next=Ezekiel 15 prev=Ezekiel 13
+Ezekiel 15 -> next=Ezekiel 16 prev=Ezekiel 14
+Ezekiel 16 -> next=Ezekiel 17 prev=Ezekiel 15
+Ezekiel 17 -> next=Ezekiel 18 prev=Ezekiel 16
+Ezekiel 18 -> next=Ezekiel 19 prev=Ezekiel 17
+Ezekiel 19 -> next=Ezekiel 20 prev=Ezekiel 18
+Ezekiel 20 -> next=Ezekiel 21 prev=Ezekiel 19
+Ezekiel 21 -> next=Ezekiel 22 prev=Ezekiel 20
+Ezekiel 22 -> next=Ezekiel 23 prev=Ezekiel 21
+Ezekiel 23 -> next=Ezekiel 24 prev=Ezekiel 22
+Ezekiel 24 -> next=Ezekiel 25 prev=Ezekiel 23
+Ezekiel 25 -> next=Ezekiel 26 prev=Ezekiel 24
+Ezekiel 26 -> next=Ezekiel 27 prev=Ezekiel 25
+Ezekiel 27 -> next=Ezekiel 28 prev=Ezekiel 26
+Ezekiel 28 -> next=Ezekiel 29 prev=Ezekiel 27
+Ezekiel 29 -> next=Ezekiel 30 prev=Ezekiel 28
+Ezekiel 30 -> next=Ezekiel 31 prev=Ezekiel 29
+Ezekiel 31 -> next=Ezekiel 32 prev=Ezekiel 30
+Ezekiel 32 -> next=Ezekiel 33 prev=Ezekiel 31
+Ezekiel 33 -> next=Ezekiel 34 prev=Ezekiel 32
+Ezekiel 34 -> next=Ezekiel 35 prev=Ezekiel 33
+Ezekiel 35 -> next=Ezekiel 36 prev=Ezekiel 34
+Ezekiel 36 -> next=Ezekiel 37 prev=Ezekiel 35
+Ezekiel 37 -> next=Ezekiel 38 prev=Ezekiel 36
+Ezekiel 38 -> next=Ezekiel 39 prev=Ezekiel 37
+Ezekiel 39 -> next=Ezekiel 40 prev=Ezekiel 38
+Ezekiel 40 -> next=Ezekiel 41 prev=Ezekiel 39
+Ezekiel 41 -> next=Ezekiel 42 prev=Ezekiel 40
+Ezekiel 42 -> next=Ezekiel 43 prev=Ezekiel 41
+Ezekiel 43 -> next=Ezekiel 44 prev=Ezekiel 42
+Ezekiel 44 -> next=Ezekiel 45 prev=Ezekiel 43
+Ezekiel 45 -> next=Ezekiel 46 prev=Ezekiel 44
+Ezekiel 46 -> next=Ezekiel 47 prev=Ezekiel 45
+Ezekiel 47 -> next=Ezekiel 48 prev=Ezekiel 46
+Ezekiel 48 -> next=Daniel 1 prev=Ezekiel 47
+Daniel 1 -> next=Daniel 2 prev=Ezekiel 48
+Daniel 2 -> next=Daniel 3 prev=Daniel 1
+Daniel 3 -> next=Daniel 4 prev=Daniel 2
+Daniel 4 -> next=Daniel 5 prev=Daniel 3
+Daniel 5 -> next=Daniel 6 prev=Daniel 4
+Daniel 6 -> next=Daniel 7 prev=Daniel 5
+Daniel 7 -> next=Daniel 8 prev=Daniel 6
+Daniel 8 -> next=Daniel 9 prev=Daniel 7
+Daniel 9 -> next=Daniel 10 prev=Daniel 8
+Daniel 10 -> next=Daniel 11 prev=Daniel 9
+Daniel 11 -> next=Daniel 12 prev=Daniel 10
+Daniel 12 -> next=Hosea 1 prev=Daniel 11
+Hosea 1 -> next=Hosea 2 prev=Daniel 12
+Hosea 2 -> next=Hosea 3 prev=Hosea 1
+Hosea 3 -> next=Hosea 4 prev=Hosea 2
+Hosea 4 -> next=Hosea 5 prev=Hosea 3
+Hosea 5 -> next=Hosea 6 prev=Hosea 4
+Hosea 6 -> next=Hosea 7 prev=Hosea 5
+Hosea 7 -> next=Hosea 8 prev=Hosea 6
+Hosea 8 -> next=Hosea 9 prev=Hosea 7
+Hosea 9 -> next=Hosea 10 prev=Hosea 8
+Hosea 10 -> next=Hosea 11 prev=Hosea 9
+Hosea 11 -> next=Hosea 12 prev=Hosea 10
+Hosea 12 -> next=Hosea 13 prev=Hosea 11
+Hosea 13 -> next=Hosea 14 prev=Hosea 12
+Hosea 14 -> next=Joel 1 prev=Hosea 13
+Joel 1 -> next=Joel 2 prev=Hosea 14
+Joel 2 -> next=Joel 3 prev=Joel 1
+Joel 3 -> next=Amos 1 prev=Joel 2
+Amos 1 -> next=Amos 2 prev=Joel 3
+Amos 2 -> next=Amos 3 prev=Amos 1
+Amos 3 -> next=Amos 4 prev=Amos 2
+Amos 4 -> next=Amos 5 prev=Amos 3
+Amos 5 -> next=Amos 6 prev=Amos 4
+Amos 6 -> next=Amos 7 prev=Amos 5
+Amos 7 -> next=Amos 8 prev=Amos 6
+Amos 8 -> next=Amos 9 prev=Amos 7
+Amos 9 -> next=Obadiah 1 prev=Amos 8
+Obadiah 1 -> next=Jonah 1 prev=Amos 9
+Jonah 1 -> next=Jonah 2 prev=Obadiah 1
+Jonah 2 -> next=Jonah 3 prev=Jonah 1
+Jonah 3 -> next=Jonah 4 prev=Jonah 2
+Jonah 4 -> next=Micah 1 prev=Jonah 3
+Micah 1 -> next=Micah 2 prev=Jonah 4
+Micah 2 -> next=Micah 3 prev=Micah 1
+Micah 3 -> next=Micah 4 prev=Micah 2
+Micah 4 -> next=Micah 5 prev=Micah 3
+Micah 5 -> next=Micah 6 prev=Micah 4
+Micah 6 -> next=Micah 7 prev=Micah 5
+Micah 7 -> next=Nahum 1 prev=Micah 6
+Nahum 1 -> next=Nahum 2 prev=Micah 7
+Nahum 2 -> next=Nahum 3 prev=Nahum 1
+Nahum 3 -> next=Habakkuk 1 prev=Nahum 2
+Habakkuk 1 -> next=Habakkuk 2 prev=Nahum 3
+Habakkuk 2 -> next=Habakkuk 3 prev=Habakkuk 1
+Habakkuk 3 -> next=Zephaniah 1 prev=Habakkuk 2
+Zephaniah 1 -> next=Zephaniah 2 prev=Habakkuk 3
+Zephaniah 2 -> next=Zephaniah 3 prev=Zephaniah 1
+Zephaniah 3 -> next=Haggai 1 prev=Zephaniah 2
+Haggai 1 -> next=Haggai 2 prev=Zephaniah 3
+Haggai 2 -> next=Zechariah 1 prev=Haggai 1
+Zechariah 1 -> next=Zechariah 2 prev=Haggai 2
+Zechariah 2 -> next=Zechariah 3 prev=Zechariah 1
+Zechariah 3 -> next=Zechariah 4 prev=Zechariah 2
+Zechariah 4 -> next=Zechariah 5 prev=Zechariah 3
+Zechariah 5 -> next=Zechariah 6 prev=Zechariah 4
+Zechariah 6 -> next=Zechariah 7 prev=Zechariah 5
+Zechariah 7 -> next=Zechariah 8 prev=Zechariah 6
+Zechariah 8 -> next=Zechariah 9 prev=Zechariah 7
+Zechariah 9 -> next=Zechariah 10 prev=Zechariah 8
+Zechariah 10 -> next=Zechariah 11 prev=Zechariah 9
+Zechariah 11 -> next=Zechariah 12 prev=Zechariah 10
+Zechariah 12 -> next=Zechariah 13 prev=Zechariah 11
+Zechariah 13 -> next=Zechariah 14 prev=Zechariah 12
+Zechariah 14 -> next=Malachi 1 prev=Zechariah 13
+Malachi 1 -> next=Malachi 2 prev=Zechariah 14
+Malachi 2 -> next=Malachi 3 prev=Malachi 1
+Malachi 3 -> next=Malachi 4 prev=Malachi 2
+Malachi 4 -> next=Matthew 1 prev=Malachi 3
+Matthew 1 -> next=Matthew 2 prev=Malachi 4
+Matthew 2 -> next=Matthew 3 prev=Matthew 1
+Matthew 3 -> next=Matthew 4 prev=Matthew 2
+Matthew 4 -> next=Matthew 5 prev=Matthew 3
+Matthew 5 -> next=Matthew 6 prev=Matthew 4
+Matthew 6 -> next=Matthew 7 prev=Matthew 5
+Matthew 7 -> next=Matthew 8 prev=Matthew 6
+Matthew 8 -> next=Matthew 9 prev=Matthew 7
+Matthew 9 -> next=Matthew 10 prev=Matthew 8
+Matthew 10 -> next=Matthew 11 prev=Matthew 9
+Matthew 11 -> next=Matthew 12 prev=Matthew 10
+Matthew 12 -> next=Matthew 13 prev=Matthew 11
+Matthew 13 -> next=Matthew 14 prev=Matthew 12
+Matthew 14 -> next=Matthew 15 prev=Matthew 13
+Matthew 15 -> next=Matthew 16 prev=Matthew 14
+Matthew 16 -> next=Matthew 17 prev=Matthew 15
+Matthew 17 -> next=Matthew 18 prev=Matthew 16
+Matthew 18 -> next=Matthew 19 prev=Matthew 17
+Matthew 19 -> next=Matthew 20 prev=Matthew 18
+Matthew 20 -> next=Matthew 21 prev=Matthew 19
+Matthew 21 -> next=Matthew 22 prev=Matthew 20
+Matthew 22 -> next=Matthew 23 prev=Matthew 21
+Matthew 23 -> next=Matthew 24 prev=Matthew 22
+Matthew 24 -> next=Matthew 25 prev=Matthew 23
+Matthew 25 -> next=Matthew 26 prev=Matthew 24
+Matthew 26 -> next=Matthew 27 prev=Matthew 25
+Matthew 27 -> next=Matthew 28 prev=Matthew 26
+Matthew 28 -> next=Mark 1 prev=Matthew 27
+Mark 1 -> next=Mark 2 prev=Matthew 28
+Mark 2 -> next=Mark 3 prev=Mark 1
+Mark 3 -> next=Mark 4 prev=Mark 2
+Mark 4 -> next=Mark 5 prev=Mark 3
+Mark 5 -> next=Mark 6 prev=Mark 4
+Mark 6 -> next=Mark 7 prev=Mark 5
+Mark 7 -> next=Mark 8 prev=Mark 6
+Mark 8 -> next=Mark 9 prev=Mark 7
+Mark 9 -> next=Mark 10 prev=Mark 8
+Mark 10 -> next=Mark 11 prev=Mark 9
+Mark 11 -> next=Mark 12 prev=Mark 10
+Mark 12 -> next=Mark 13 prev=Mark 11
+Mark 13 -> next=Mark 14 prev=Mark 12
+Mark 14 -> next=Mark 15 prev=Mark 13
+Mark 15 -> next=Mark 16 prev=Mark 14
+Mark 16 -> next=Luke 1 prev=Mark 15
+Luke 1 -> next=Luke 2 prev=Mark 16
+Luke 2 -> next=Luke 3 prev=Luke 1
+Luke 3 -> next=Luke 4 prev=Luke 2
+Luke 4 -> next=Luke 5 prev=Luke 3
+Luke 5 -> next=Luke 6 prev=Luke 4
+Luke 6 -> next=Luke 7 prev=Luke 5
+Luke 7 -> next=Luke 8 prev=Luke 6
+Luke 8 -> next=Luke 9 prev=Luke 7
+Luke 9 -> next=Luke 10 prev=Luke 8
+Luke 10 -> next=Luke 11 prev=Luke 9
+Luke 11 -> next=Luke 12 prev=Luke 10
+Luke 12 -> next=Luke 13 prev=Luke 11
+Luke 13 -> next=Luke 14 prev=Luke 12
+Luke 14 -> next=Luke 15 prev=Luke 13
+Luke 15 -> next=Luke 16 prev=Luke 14
+Luke 16 -> next=Luke 17 prev=Luke 15
+Luke 17 -> next=Luke 18 prev=Luke 16
+Luke 18 -> next=Luke 19 prev=Luke 17
+Luke 19 -> next=Luke 20 prev=Luke 18
+Luke 20 -> next=Luke 21 prev=Luke 19
+Luke 21 -> next=Luke 22 prev=Luke 20
+Luke 22 -> next=Luke 23 prev=Luke 21
+Luke 23 -> next=Luke 24 prev=Luke 22
+Luke 24 -> next=John 1 prev=Luke 23
+John 1 -> next=John 2 prev=Luke 24
+John 2 -> next=John 3 prev=John 1
+John 3 -> next=John 4 prev=John 2
+John 4 -> next=John 5 prev=John 3
+John 5 -> next=John 6 prev=John 4
+John 6 -> next=John 7 prev=John 5
+John 7 -> next=John 8 prev=John 6
+John 8 -> next=John 9 prev=John 7
+John 9 -> next=John 10 prev=John 8
+John 10 -> next=John 11 prev=John 9
+John 11 -> next=John 12 prev=John 10
+John 12 -> next=John 13 prev=John 11
+John 13 -> next=John 14 prev=John 12
+John 14 -> next=John 15 prev=John 13
+John 15 -> next=John 16 prev=John 14
+John 16 -> next=John 17 prev=John 15
+John 17 -> next=John 18 prev=John 16
+John 18 -> next=John 19 prev=John 17
+John 19 -> next=John 20 prev=John 18
+John 20 -> next=John 21 prev=John 19
+John 21 -> next=Acts 1 prev=John 20
+Acts 1 -> next=Acts 2 prev=John 21
+Acts 2 -> next=Acts 3 prev=Acts 1
+Acts 3 -> next=Acts 4 prev=Acts 2
+Acts 4 -> next=Acts 5 prev=Acts 3
+Acts 5 -> next=Acts 6 prev=Acts 4
+Acts 6 -> next=Acts 7 prev=Acts 5
+Acts 7 -> next=Acts 8 prev=Acts 6
+Acts 8 -> next=Acts 9 prev=Acts 7
+Acts 9 -> next=Acts 10 prev=Acts 8
+Acts 10 -> next=Acts 11 prev=Acts 9
+Acts 11 -> next=Acts 12 prev=Acts 10
+Acts 12 -> next=Acts 13 prev=Acts 11
+Acts 13 -> next=Acts 14 prev=Acts 12
+Acts 14 -> next=Acts 15 prev=Acts 13
+Acts 15 -> next=Acts 16 prev=Acts 14
+Acts 16 -> next=Acts 17 prev=Acts 15
+Acts 17 -> next=Acts 18 prev=Acts 16
+Acts 18 -> next=Acts 19 prev=Acts 17
+Acts 19 -> next=Acts 20 prev=Acts 18
+Acts 20 -> next=Acts 21 prev=Acts 19
+Acts 21 -> next=Acts 22 prev=Acts 20
+Acts 22 -> next=Acts 23 prev=Acts 21
+Acts 23 -> next=Acts 24 prev=Acts 22
+Acts 24 -> next=Acts 25 prev=Acts 23
+Acts 25 -> next=Acts 26 prev=Acts 24
+Acts 26 -> next=Acts 27 prev=Acts 25
+Acts 27 -> next=Acts 28 prev=Acts 26
+Acts 28 -> next=Romans 1 prev=Acts 27
+Romans 1 -> next=Romans 2 prev=Acts 28
+Romans 2 -> next=Romans 3 prev=Romans 1
+Romans 3 -> next=Romans 4 prev=Romans 2
+Romans 4 -> next=Romans 5 prev=Romans 3
+Romans 5 -> next=Romans 6 prev=Romans 4
+Romans 6 -> next=Romans 7 prev=Romans 5
+Romans 7 -> next=Romans 8 prev=Romans 6
+Romans 8 -> next=Romans 9 prev=Romans 7
+Romans 9 -> next=Romans 10 prev=Romans 8
+Romans 10 -> next=Romans 11 prev=Romans 9
+Romans 11 -> next=Romans 12 prev=Romans 10
+Romans 12 -> next=Romans 13 prev=Romans 11
+Romans 13 -> next=Romans 14 prev=Romans 12
+Romans 14 -> next=Romans 15 prev=Romans 13
+Romans 15 -> next=Romans 16 prev=Romans 14
+Romans 16 -> next=I Corinthians 1 prev=Romans 15
+1 Corinthians 1 -> next=I Corinthians 2 prev=Romans 16
+1 Corinthians 2 -> next=I Corinthians 3 prev=I Corinthians 1
+1 Corinthians 3 -> next=I Corinthians 4 prev=I Corinthians 2
+1 Corinthians 4 -> next=I Corinthians 5 prev=I Corinthians 3
+1 Corinthians 5 -> next=I Corinthians 6 prev=I Corinthians 4
+1 Corinthians 6 -> next=I Corinthians 7 prev=I Corinthians 5
+1 Corinthians 7 -> next=I Corinthians 8 prev=I Corinthians 6
+1 Corinthians 8 -> next=I Corinthians 9 prev=I Corinthians 7
+1 Corinthians 9 -> next=I Corinthians 10 prev=I Corinthians 8
+1 Corinthians 10 -> next=I Corinthians 11 prev=I Corinthians 9
+1 Corinthians 11 -> next=I Corinthians 12 prev=I Corinthians 10
+1 Corinthians 12 -> next=I Corinthians 13 prev=I Corinthians 11
+1 Corinthians 13 -> next=I Corinthians 14 prev=I Corinthians 12
+1 Corinthians 14 -> next=I Corinthians 15 prev=I Corinthians 13
+1 Corinthians 15 -> next=I Corinthians 16 prev=I Corinthians 14
+1 Corinthians 16 -> next=II Corinthians 1 prev=I Corinthians 15
+2 Corinthians 1 -> next=II Corinthians 2 prev=I Corinthians 16
+2 Corinthians 2 -> next=II Corinthians 3 prev=II Corinthians 1
+2 Corinthians 3 -> next=II Corinthians 4 prev=II Corinthians 2
+2 Corinthians 4 -> next=II Corinthians 5 prev=II Corinthians 3
+2 Corinthians 5 -> next=II Corinthians 6 prev=II Corinthians 4
+2 Corinthians 6 -> next=II Corinthians 7 prev=II Corinthians 5
+2 Corinthians 7 -> next=II Corinthians 8 prev=II Corinthians 6
+2 Corinthians 8 -> next=II Corinthians 9 prev=II Corinthians 7
+2 Corinthians 9 -> next=II Corinthians 10 prev=II Corinthians 8
+2 Corinthians 10 -> next=II Corinthians 11 prev=II Corinthians 9
+2 Corinthians 11 -> next=II Corinthians 12 prev=II Corinthians 10
+2 Corinthians 12 -> next=II Corinthians 13 prev=II Corinthians 11
+2 Corinthians 13 -> next=Galatians 1 prev=II Corinthians 12
+Galatians 1 -> next=Galatians 2 prev=II Corinthians 13
+Galatians 2 -> next=Galatians 3 prev=Galatians 1
+Galatians 3 -> next=Galatians 4 prev=Galatians 2
+Galatians 4 -> next=Galatians 5 prev=Galatians 3
+Galatians 5 -> next=Galatians 6 prev=Galatians 4
+Galatians 6 -> next=Ephesians 1 prev=Galatians 5
+Ephesians 1 -> next=Ephesians 2 prev=Galatians 6
+Ephesians 2 -> next=Ephesians 3 prev=Ephesians 1
+Ephesians 3 -> next=Ephesians 4 prev=Ephesians 2
+Ephesians 4 -> next=Ephesians 5 prev=Ephesians 3
+Ephesians 5 -> next=Ephesians 6 prev=Ephesians 4
+Ephesians 6 -> next=Philippians 1 prev=Ephesians 5
+Philippians 1 -> next=Philippians 2 prev=Ephesians 6
+Philippians 2 -> next=Philippians 3 prev=Philippians 1
+Philippians 3 -> next=Philippians 4 prev=Philippians 2
+Philippians 4 -> next=Colossians 1 prev=Philippians 3
+Colossians 1 -> next=Colossians 2 prev=Philippians 4
+Colossians 2 -> next=Colossians 3 prev=Colossians 1
+Colossians 3 -> next=Colossians 4 prev=Colossians 2
+Colossians 4 -> next=I Thessalonians 1 prev=Colossians 3
+1 Thessalonians 1 -> next=I Thessalonians 2 prev=Colossians 4
+1 Thessalonians 2 -> next=I Thessalonians 3 prev=I Thessalonians 1
+1 Thessalonians 3 -> next=I Thessalonians 4 prev=I Thessalonians 2
+1 Thessalonians 4 -> next=I Thessalonians 5 prev=I Thessalonians 3
+1 Thessalonians 5 -> next=II Thessalonians 1 prev=I Thessalonians 4
+2 Thessalonians 1 -> next=II Thessalonians 2 prev=I Thessalonians 5
+2 Thessalonians 2 -> next=II Thessalonians 3 prev=II Thessalonians 1
+2 Thessalonians 3 -> next=I Timothy 1 prev=II Thessalonians 2
+1 Timothy 1 -> next=I Timothy 2 prev=II Thessalonians 3
+1 Timothy 2 -> next=I Timothy 3 prev=I Timothy 1
+1 Timothy 3 -> next=I Timothy 4 prev=I Timothy 2
+1 Timothy 4 -> next=I Timothy 5 prev=I Timothy 3
+1 Timothy 5 -> next=I Timothy 6 prev=I Timothy 4
+1 Timothy 6 -> next=II Timothy 1 prev=I Timothy 5
+2 Timothy 1 -> next=II Timothy 2 prev=I Timothy 6
+2 Timothy 2 -> next=II Timothy 3 prev=II Timothy 1
+2 Timothy 3 -> next=II Timothy 4 prev=II Timothy 2
+2 Timothy 4 -> next=Titus 1 prev=II Timothy 3
+Titus 1 -> next=Titus 2 prev=II Timothy 4
+Titus 2 -> next=Titus 3 prev=Titus 1
+Titus 3 -> next=Philemon 1 prev=Titus 2
+Philemon 1 -> next=Hebrews 1 prev=Titus 3
+Hebrews 1 -> next=Hebrews 2 prev=Philemon 1
+Hebrews 2 -> next=Hebrews 3 prev=Hebrews 1
+Hebrews 3 -> next=Hebrews 4 prev=Hebrews 2
+Hebrews 4 -> next=Hebrews 5 prev=Hebrews 3
+Hebrews 5 -> next=Hebrews 6 prev=Hebrews 4
+Hebrews 6 -> next=Hebrews 7 prev=Hebrews 5
+Hebrews 7 -> next=Hebrews 8 prev=Hebrews 6
+Hebrews 8 -> next=Hebrews 9 prev=Hebrews 7
+Hebrews 9 -> next=Hebrews 10 prev=Hebrews 8
+Hebrews 10 -> next=Hebrews 11 prev=Hebrews 9
+Hebrews 11 -> next=Hebrews 12 prev=Hebrews 10
+Hebrews 12 -> next=Hebrews 13 prev=Hebrews 11
+Hebrews 13 -> next=James 1 prev=Hebrews 12
+James 1 -> next=James 2 prev=Hebrews 13
+James 2 -> next=James 3 prev=James 1
+James 3 -> next=James 4 prev=James 2
+James 4 -> next=James 5 prev=James 3
+James 5 -> next=I Peter 1 prev=James 4
+1 Peter 1 -> next=I Peter 2 prev=James 5
+1 Peter 2 -> next=I Peter 3 prev=I Peter 1
+1 Peter 3 -> next=I Peter 4 prev=I Peter 2
+1 Peter 4 -> next=I Peter 5 prev=I Peter 3
+1 Peter 5 -> next=II Peter 1 prev=I Peter 4
+2 Peter 1 -> next=II Peter 2 prev=I Peter 5
+2 Peter 2 -> next=II Peter 3 prev=II Peter 1
+2 Peter 3 -> next=I John 1 prev=II Peter 2
+1 John 1 -> next=I John 2 prev=II Peter 3
+1 John 2 -> next=I John 3 prev=I John 1
+1 John 3 -> next=I John 4 prev=I John 2
+1 John 4 -> next=I John 5 prev=I John 3
+1 John 5 -> next=II John 1 prev=I John 4
+2 John 1 -> next=III John 1 prev=I John 5
+3 John 1 -> next=Jude 1 prev=II John 1
+Jude 1 -> next=Revelation of John 1 prev=III John 1
+Revelation 1 -> next=Revelation of John 2 prev=Jude 1
+Revelation 2 -> next=Revelation of John 3 prev=Revelation of John 1
+Revelation 3 -> next=Revelation of John 4 prev=Revelation of John 2
+Revelation 4 -> next=Revelation of John 5 prev=Revelation of John 3
+Revelation 5 -> next=Revelation of John 6 prev=Revelation of John 4
+Revelation 6 -> next=Revelation of John 7 prev=Revelation of John 5
+Revelation 7 -> next=Revelation of John 8 prev=Revelation of John 6
+Revelation 8 -> next=Revelation of John 9 prev=Revelation of John 7
+Revelation 9 -> next=Revelation of John 10 prev=Revelation of John 8
+Revelation 10 -> next=Revelation of John 11 prev=Revelation of John 9
+Revelation 11 -> next=Revelation of John 12 prev=Revelation of John 10
+Revelation 12 -> next=Revelation of John 13 prev=Revelation of John 11
+Revelation 13 -> next=Revelation of John 14 prev=Revelation of John 12
+Revelation 14 -> next=Revelation of John 15 prev=Revelation of John 13
+Revelation 15 -> next=Revelation of John 16 prev=Revelation of John 14
+Revelation 16 -> next=Revelation of John 17 prev=Revelation of John 15
+Revelation 17 -> next=Revelation of John 18 prev=Revelation of John 16
+Revelation 18 -> next=Revelation of John 19 prev=Revelation of John 17
+Revelation 19 -> next=Revelation of John 20 prev=Revelation of John 18
+Revelation 20 -> next=Revelation of John 21 prev=Revelation of John 19
+Revelation 21 -> next=Revelation of John 22 prev=Revelation of John 20
+Revelation 22 -> next=Revelation of John 22 prev=Revelation of John 21

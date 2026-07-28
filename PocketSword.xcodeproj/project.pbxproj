@@ -249,6 +249,7 @@
 		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
 		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
 		5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RP01 /* PSRefParser.swift */; };
+		5A1F70B0000000000000LR02 /* PSRefLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */; };
 		5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CA01 /* PSContent.sqlite */; };
 		5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CB01 /* Versification-KJV.json */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
@@ -308,6 +309,7 @@
 		5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */; };
 		5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */; };
 		5A1F70B000000000000DFT02 /* PSDifferentialTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000DFT01 /* PSDifferentialTests.swift */; };
+		5A1F70B0000000000000RS02 /* PSRefSemanticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */; };
 		5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */; };
 		5A1F70B0000000000000OR02 /* SwordOracleCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000OR01 /* SwordOracleCaptureTests.swift */; };
 		5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */; };
@@ -834,6 +836,7 @@
 		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000RP01 /* PSRefParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefParser.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefLinkRouter.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000CA01 /* PSContent.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = PSContent.sqlite; path = Resources/PSContent.sqlite; sourceTree = "<group>"; };
 		5A1F70B0000000000000CB01 /* Versification-KJV.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "Versification-KJV.json"; path = "Resources/Versification-KJV.json"; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
@@ -915,6 +918,7 @@
 		5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParserTests.swift; path = Classes/PSVoiceRefParserTests.swift; sourceTree = "<group>"; };
 		5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSSearchIndexParityTests.swift; path = Classes/PSSearchIndexParityTests.swift; sourceTree = "<group>"; };
 		5A1F70B000000000000DFT01 /* PSDifferentialTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSDifferentialTests.swift; path = Classes/PSDifferentialTests.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSRefSemanticsTests.swift; path = Classes/PSRefSemanticsTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSContentStoreTests.swift; path = Classes/PSContentStoreTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000OR01 /* SwordOracleCaptureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwordOracleCaptureTests.swift; path = Classes/SwordOracleCaptureTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderAddViewController.swift; path = Classes/PSBookmarkFolderAddViewController.swift; sourceTree = "<group>"; };
@@ -1988,6 +1992,7 @@
 				5A1F70B00000000000CTR501 /* PSContentReader.swift */,
 				5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */,
 				5A1F70B0000000000000RP01 /* PSRefParser.swift */,
+				5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */,
 				5A1F70B00000000000CTR301 /* PSChapterExpander.swift */,
 				5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */,
 			);
@@ -2084,6 +2089,7 @@
 				5A1F70B0000000000000OR01 /* SwordOracleCaptureTests.swift */,
 				5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */,
 				5A1F70B000000000000DFT01 /* PSDifferentialTests.swift */,
+				5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */,
 				5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */,
 				5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */,
 			);
@@ -2380,6 +2386,7 @@
 				5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */,
 				5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */,
 				5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */,
+				5A1F70B0000000000000LR02 /* PSRefLinkRouter.swift in Sources */,
 				5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */,
 				5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */,
 				5A1F70B0000000000000FF02 /* PSFeatureFlags.swift in Sources */,
@@ -2611,6 +2618,7 @@
 				5A1F70B0000000000000OR02 /* SwordOracleCaptureTests.swift in Sources */,
 				5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */,
 				5A1F70B000000000000DFT02 /* PSDifferentialTests.swift in Sources */,
+				5A1F70B0000000000000RS02 /* PSRefSemanticsTests.swift in Sources */,
 				5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

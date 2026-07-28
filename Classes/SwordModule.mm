@@ -1052,10 +1052,18 @@
                    entryCount:(NSInteger *)entryCountOut
 {
 	sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
+	// Intros must be ON for the verse-0 intro slot to exist, and it is restored
+	// before every return below. It used to be left on: -getChapter: (the only
+	// production caller) restores it itself at the end, so nothing in the app
+	// noticed, but a direct caller — the differential / oracle tests, which drive
+	// this same singleton module — left the shared key normalising against the
+	// intros-on versification, where chapter 0 is valid and "Genesis 50" + 1 is
+	// "Exodus 0" rather than "Exodus 1" (versekey.cpp:1466-1493). Save and restore.
+	const bool savedIntros = curKey->isIntros();
 	curKey->setIntros(YES);
 	curKey->setText([chapter cStringUsingEncoding: NSUTF8StringEncoding]);
 	curKey->setVerse(0);
-	
+
 	swModule->stripText();
 	NSMutableString *verses = [NSMutableString stringWithString:@""];
 	NSString *ch = [[[NSString stringWithCString: swModule->getKeyText() encoding: NSUTF8StringEncoding] componentsSeparatedByString: @":"] objectAtIndex: 0];
@@ -1182,6 +1190,11 @@
 	if(entryCountOut) {
 		*entryCountOut = i;
 	}
+
+	// Restore the flag we found. -getChapter: additionally forces it off at the end
+	// of its own body (which is now redundant but harmless, and left alone so that
+	// path is unchanged byte-for-byte).
+	curKey->setIntros(savedIntros);
 
 	return verses;
 }

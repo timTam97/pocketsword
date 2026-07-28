@@ -804,10 +804,16 @@ final class PSTabBarControllerDelegate: NSObject,
             // it's a Bible ref or dictionary entry to show.
             //
             let mod = rData[ATTRTYPE_MODULE] as? String
+            // The three-way routing predicate now lives in PSRefLinkRouter as a
+            // pure function, so it is assertable without the simulator — Phase 4
+            // step 8's deletion of the `scriptRef` branch rests on an assertion
+            // over all 14,989 baked lexicon links routing to `.dictionary`. Same
+            // decision, same inputs, no behaviour change.
             var isABibleRef = false
             if let mod = mod {
                 let modToUse = SwordManager.default()?.module(withName: mod)
-                if modToUse == nil || modToUse?.type == bible || modToUse?.type == commentary {
+                if PSRefLinkRouter.destination(forModuleName: mod,
+                                               moduleType: modToUse?.typeString()) == .bibleRef {
                     isABibleRef = true
                 } else {
                     // Should be a dictionary entry:
