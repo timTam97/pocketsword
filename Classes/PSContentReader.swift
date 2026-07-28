@@ -317,20 +317,40 @@ final class PSContentReader: NSObject {
         store?.dictEntry(module: module, key: key)
     }
 
-    /// Every key of a lexicon, **as the Dictionary tab displays them**.
+    /// Every key of a lexicon, in the module's own `.idx` order and in its **true
+    /// casing**.
     ///
-    /// `capitalizedString` is applied here because that is what
-    /// `-[SwordDictionary readKeys]` does (SwordDictionary.mm:67) and the tab both
-    /// displays and re-looks-up that string. It mangles 1,375 of Robinson's 1,526
-    /// keys (`V-PAI-3S` -> `V-Pai-3S`) and is therefore **wrong**, but it is
-    /// preserved deliberately this phase: changing it here would make the
-    /// differential test need a per-field allowlist instead of plain equality, and
-    /// would invalidate the on-disk key caches (SwordDictionary.mm:85-109). Fixing
-    /// the display is Phase 4 work, and it must clear those caches when it lands.
+    /// SWORD_REMOVAL_PLAN.md Phase 4 step 9: the `capitalizedString` this used to
+    /// apply is **gone**. It existed only because `-[SwordDictionary readKeys]`
+    /// applied it (SwordDictionary.mm), and the Dictionary tab both displayed and
+    /// re-looked-up that string — so it mangled 1,375 of Robinson's 1,526 keys
+    /// (`V-PAI-3S` -> `V-Pai-3S`) and the app got away with it only because SWORD
+    /// uppercases both sides for a module without `CaseSensitiveKeys`. Phase 3
+    /// preserved the mangling to keep the differential comparison a plain equality;
+    /// this step fixes it, at the same time as the engine side and the key-cache
+    /// invalidation, because doing any one alone leaves a broken state (see the
+    /// DefaultsDictKeyCaseFixed migration in PSLaunchViewController).
+    ///
+    /// `PSContentStore.dictKeys` already returns the true casing, so this is now a
+    /// pass-through. `dict_keys.key` stays `COLLATE NOCASE` as defence in depth: it
+    /// is what let the mangled keys resolve at all, and keeping it means a stale
+    /// cache that somehow survives the migration still finds its entry rather than
+    /// showing the user a blank definition.
     @objc(dictionaryKeysForModule:)
     func dictionaryKeys(module: String) -> [String] {
-        (store?.dictKeys(module: module) ?? []).map { ($0 as NSString).capitalized }
+        if let cached = Self.keyCache[module] { return cached }
+        let keys = store?.dictKeys(module: module) ?? []
+        // Memoise. `dictKeys` is a full table query and the Dictionary tab used to
+        // call this once *per cell* (and again per keystroke while filtering); the
+        // store is immutable and read-only, so the answer cannot change within a
+        // process.
+        if !keys.isEmpty { Self.keyCache[module] = keys }
+        return keys
     }
+
+    /// Memoised `dictionaryKeys` results. Keyed by module; never invalidated,
+    /// because the bundled store is read-only.
+    private static var keyCache: [String: [String]] = [:]
 
     @objc(dictionaryEntryCountForModule:)
     func dictionaryEntryCount(module: String) -> Int {

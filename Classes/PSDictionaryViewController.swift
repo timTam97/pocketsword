@@ -230,7 +230,8 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    /// The number of rows the table has, from the same two sources `key(at:)` reads.
+    private var rowCount: Int {
         if searching {
             return searchResults.count
         } else if dictionaryEnabled {
@@ -239,6 +240,36 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         } else {
             return 0
         }
+    }
+
+    /// **The single source of truth for "which key is at this row".**
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 4 step 9. `didSelectRowAt` used to recover the
+    /// tapped key by re-reading `cellForRowAt(indexPath).textLabel?.text` — asking
+    /// the data source to build a cell just to read back a string it had itself
+    /// written a moment earlier. That coupling of *display* to *lookup* is what made
+    /// the capitalisation bug user-visible in the first place, so it goes with it.
+    ///
+    /// The branch matters and is easy to get wrong: this table has **two** sources.
+    /// While searching, row N is `searchResults[N]`; otherwise it is key N of the
+    /// whole lexicon. Indexing the full key list unconditionally would open the
+    /// **wrong entry for every search result** — a silent mis-navigation that no
+    /// existing test covers, which is why the simulator check for step 9 explicitly
+    /// searches and then taps a result.
+    private func key(at indexPath: IndexPath) -> String? {
+        if searching {
+            guard indexPath.row < searchResults.count else { return nil }
+            return searchResults[indexPath.row]
+        }
+        guard dictionaryEnabled else { return nil }
+        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "",
+                                          or: primaryDictionary)
+        guard indexPath.row < keys.count else { return nil }
+        return keys[indexPath.row]
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        rowCount
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -254,19 +285,14 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "dict-id")
             ?? UITableViewCell(style: .default, reuseIdentifier: "dict-id")
-        if searching {
-            cell.textLabel?.text = searchResults[indexPath.row]
-        } else if dictionaryEnabled {
-            let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "",
-                                               or: primaryDictionary)
-            cell.textLabel?.text = indexPath.row < keys.count ? keys[indexPath.row] : nil
-        }
+        cell.textLabel?.text = key(at: indexPath)
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dictionarySearchBar?.resignFirstResponder()
-        guard let t = self.tableView(tableView, cellForRowAt: indexPath).textLabel?.text else {
+        // Read the key from the data source, NOT back off the cell's label.
+        guard let t = key(at: indexPath) else {
             tableView.deselectRow(at: indexPath, animated: true)
             return
         }

@@ -62,6 +62,7 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define DefaultsModuleChoiceRetired					@"DefaultsModuleChoiceRetired"
 #define DefaultsGlobalFontOnly						@"DefaultsGlobalFontOnly"
 #define DefaultsLastRefValidated					@"DefaultsLastRefValidated"
+#define DefaultsDictKeyCaseFixed					@"DefaultsDictKeyCaseFixed"
 
 #define DefaultsBibleVersePosition					@"bibleVersePosition"
 #define DefaultsCommentaryVersePosition				@"commentaryVersePosition"

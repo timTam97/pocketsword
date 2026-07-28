@@ -353,6 +353,49 @@ final class PSLaunchViewController: UIViewController {
                 defaults.synchronize()
             }
 
+            // One-shot invalidation of the lexicon key caches, for the
+            // dictionary-key casing fix (SWORD_REMOVAL_PLAN.md Phase 4 step 9).
+            //
+            // The Dictionary tab used to display — and re-look-up — a
+            // `capitalizedString` of each key, which mangled 1,375 of Robinson's
+            // 1,526 keys ("V-PAI-3S" -> "V-Pai-3S"). Both producers now return the
+            // true casing, but `-[SwordDictionary readKeys]` returns EARLY on a cache
+            // hit, so an existing install would keep showing the mangled keys
+            // forever from `<Caches>/cache-<name>-<version>`. Delete those files once
+            // so they rebuild.
+            //
+            // The version in the file name comes from `content_meta`
+            // (PSContentStore.moduleVersion), not from a live SwordDictionary — so
+            // this needs no SWORD call and survives Phase 5. As a belt-and-braces
+            // measure it also globs any other `cache-*` in the same directory, which
+            // catches a file left by a version this build does not know about.
+            if !defaults.bool(forKey: Defaults.dictKeyCaseFixed) {
+                let cacheDir = AppPaths.appSupportPath
+                var deleted: [String] = []
+                for name in [BundledModules.morphGreek, BundledModules.strongsGreek,
+                             BundledModules.strongsHebrew] {
+                    let version = PSContentStore.shared?.moduleVersion(name) ?? "0.0"
+                    let path = (cacheDir as NSString).appendingPathComponent("cache-\(name)-\(version)")
+                    if fm.fileExists(atPath: path) {
+                        try? fm.removeItem(atPath: path)
+                        deleted.append("cache-\(name)-\(version)")
+                    }
+                }
+                // Any straggler from a version we did not predict.
+                if let entries = try? fm.contentsOfDirectory(atPath: cacheDir) {
+                    for entry in entries where entry.hasPrefix("cache-") {
+                        let path = (cacheDir as NSString).appendingPathComponent(entry)
+                        try? fm.removeItem(atPath: path)
+                        deleted.append(entry)
+                    }
+                }
+                if !deleted.isEmpty {
+                    dlog("Dictionary-key casing fix: cleared key caches \(deleted)")
+                }
+                defaults.set(true, forKey: Defaults.dictKeyCaseFixed)
+                defaults.synchronize()
+            }
+
             // One-time sweep of the legacy CLucene index directories that were
             // written by pre-FTS5 versions. New indices live at
             // <AbsoluteDataPath>/search/fts.db, so the old lucene/ dirs are

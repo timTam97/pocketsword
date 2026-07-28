@@ -715,4 +715,16 @@ final class PSContentStore: NSObject {
             return value
         }
     }
+
+    /// A bundled module's `Version=` conf value, as captured at bake time.
+    ///
+    /// Exists for the Phase-4 `DefaultsDictKeyCaseFixed` migration, which has to
+    /// delete `<AppSupport>/cache-<name>-<version>` — the file name embeds the
+    /// version, and reading it here means the migration needs neither a live
+    /// `SwordDictionary` nor any SWORD call, so it survives Phase 5. Verified
+    /// byte-identical to the conf entries: Robinson 2.0, StrongsRealGreek
+    /// 1.5-150704, StrongsRealHebrew 1.090107.
+    func moduleVersion(_ name: String) -> String? {
+        moduleMeta(name, key: "version")
+    }
 }

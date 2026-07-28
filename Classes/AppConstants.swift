@@ -40,6 +40,7 @@ enum Defaults {
     static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"
     static let globalFontOnly              = "DefaultsGlobalFontOnly"
     static let lastRefValidated            = "DefaultsLastRefValidated"
+    static let dictKeyCaseFixed            = "DefaultsDictKeyCaseFixed"
 
     static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
     static let commentaryVersePosition     = "commentaryVersePosition" // macro DefaultsCommentaryVersePosition

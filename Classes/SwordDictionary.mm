@@ -64,7 +64,19 @@
                 }
                 
                 if(keyText) {
-                    [arr addObject:[keyText capitalizedString]];
+                    // SWORD_REMOVAL_PLAN.md Phase 4 step 9: the -capitalizedString
+                    // that used to be applied here is GONE. The Dictionary tab both
+                    // displays this string and re-looks-it-up, and capitalising it
+                    // mangled 1,375 of Robinson's 1,526 keys ("V-PAI-3S" ->
+                    // "V-Pai-3S"). It only ever worked because SWORD uppercases both
+                    // sides for a module without CaseSensitiveKeys.
+                    //
+                    // This MUST land together with PSContentReader.dictionaryKeys and
+                    // the DefaultsDictKeyCaseFixed cache wipe: -readKeys returns
+                    // early on a cache hit (see above), so changing this line alone
+                    // touches nothing for an existing install, and wiping the cache
+                    // alone would just rebuild a mangled one.
+                    [arr addObject:keyText];
                 }
             } else {
                 ALog(@"[SwordCommentary -readKeys] could not get keytext from sword module!");                

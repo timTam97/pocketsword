@@ -265,8 +265,21 @@ final class PSDifferentialTests: XCTestCase {
                 XCTFail("\(name) is not a SwordDictionary")
                 continue
             }
-            // -allKeys already applies capitalizedString, so this is exactly the
-            // key set the Dictionary tab can produce.
+            // -allKeys is the key set the Dictionary tab can produce. As of
+            // Phase 4 step 9 that is the module's TRUE casing: the
+            // -capitalizedString that -readKeys used to apply is gone, on both this
+            // side and the reader's. The engine's own lookup is case-insensitive for
+            // a module without CaseSensitiveKeys, so it resolves either form; the
+            // point of comparing on this set is that it is exactly what the UI can
+            // ask for.
+            //
+            // NOTE this depends on the on-disk key cache having been rebuilt — the
+            // app's DefaultsDictKeyCaseFixed migration does that, and the test host
+            // runs it at launch. A stale cache would make `keys` the old mangled set,
+            // which still resolves on both sides (COLLATE NOCASE plus the engine's
+            // own uppercasing), so this test would still pass; the true-casing
+            // assertion lives in
+            // PSContentStoreTests.testDictionaryKeysAreReturnedInTrueCasing.
             let keys = (dict.allKeys() as? [String]) ?? []
             XCTAssertFalse(keys.isEmpty, "\(name) produced no keys")
             for key in keys {

@@ -264,46 +264,82 @@ final class PSContentStoreTests: XCTestCase {
 
     // MARK: - Dictionary lookup parity (plan step 4b)
 
-    /// **The assertion the committed fixtures structurally cannot make.**
+    /// Every key the Dictionary tab can display resolves — in **both** casings.
     ///
-    /// `Robinson-entries.txt` is generated from a hardcoded key list in TRUE
-    /// casing (SwordOracleCaptureTests.swift:292), which is not what the UI
-    /// produces. `SwordDictionary.mm:67` stores `[keyText capitalizedString]`,
-    /// `PSDictionaryViewController.swift:241` renders that into the cell, and `:252`
-    /// feeds THAT SAME MANGLED STRING back into `entry(forKey:)`. For Robinson that
-    /// alters 1,375 of 1,526 keys (`V-PAI-3S` -> `V-Pai-3S`).
+    /// REWRITTEN in Phase 4 step 9, which fixed the casing rather than tolerating it.
+    /// The tab used to display and re-look-up `[keyText capitalizedString]`, mangling
+    /// 1,375 of Robinson's 1,526 keys ("V-PAI-3S" -> "V-Pai-3S"); it worked only
+    /// because Robinson.conf omits CaseSensitiveKeys, so SWMgr builds
+    /// RawLD(caseSensitive=false) (swmgr.cpp:1056) and RawStr::findOffset uppercases
+    /// both sides (rawstr.cpp:188).
     ///
-    /// It works today only because Robinson.conf omits CaseSensitiveKeys, so SWMgr
-    /// builds RawLD(caseSensitive=false) (swmgr.cpp:1056) and RawStr::findOffset
-    /// uppercases both sides (rawstr.cpp:188). A reader doing `WHERE key=?` would be
-    /// byte-perfect against every fixture and fail on ~90% of real Robinson taps.
-    ///
-    /// So: enumerate every key the Dictionary tab can display — capitalizedString
-    /// over all 15,824 stored keys — and assert each resolves.
+    /// Both directions are asserted, and they check different things now:
+    ///  1. **True casing resolves.** This is the live path after step 9 — what the
+    ///     tab now displays and looks up.
+    ///  2. **Capitalised casing still resolves.** This is no longer a live path, so
+    ///     it is `dict_keys.key COLLATE NOCASE` as **defence in depth**: a key cache
+    ///     that somehow survives the DefaultsDictKeyCaseFixed migration still finds
+    ///     its entry rather than showing the user a blank definition. Dropping the
+    ///     collation would break exactly that fallback, silently.
     func testEveryKeyTheDictionaryTabCanDisplayResolves() throws {
         let store = try store()
         var checked = 0, altered = 0
         for module in ["StrongsRealGreek", "StrongsRealHebrew", "Robinson"] {
             let keys = store.dictKeys(module: module)
             XCTAssertFalse(keys.isEmpty, "\(module) has no keys")
-            var missing: [(String, String)] = []
+            var missingTrue: [String] = []
+            var missingCapitalized: [(String, String)] = []
             for key in keys {
-                // Exactly what the cell holds: -[NSString capitalizedString].
-                let uiKey = (key as NSString).capitalized
-                if uiKey != key { altered += 1 }
                 checked += 1
-                if store.dictEntry(module: module, key: uiKey) == nil {
-                    missing.append((key, uiKey))
+                // 1. The live path: the key exactly as stored and now displayed.
+                if store.dictEntry(module: module, key: key) == nil {
+                    missingTrue.append(key)
+                }
+                // 2. Defence in depth: the old mangled form must still resolve.
+                let capitalized = (key as NSString).capitalized
+                if capitalized != key { altered += 1 }
+                if store.dictEntry(module: module, key: capitalized) == nil {
+                    missingCapitalized.append((key, capitalized))
                 }
             }
-            XCTAssertTrue(missing.isEmpty,
-                          "\(module): \(missing.count) of \(keys.count) UI-cased keys do not resolve, e.g. \(missing.prefix(5))")
+            XCTAssertTrue(missingTrue.isEmpty,
+                          "\(module): \(missingTrue.count) TRUE-cased keys do not resolve, e.g. \(missingTrue.prefix(5))")
+            XCTAssertTrue(missingCapitalized.isEmpty,
+                          "\(module): \(missingCapitalized.count) capitalised keys do not resolve — the COLLATE NOCASE"
+                          + " defence-in-depth is gone, e.g. \(missingCapitalized.prefix(5))")
         }
         XCTAssertEqual(checked, 15824, "the store no longer holds 15,824 lexicon keys")
-        // Not an incidental number: if this drops to 0 the test has stopped
-        // exercising the casing path at all and would pass on a case-sensitive
-        // index.
+        // Not incidental: if this drops to 0 the second assertion has stopped
+        // exercising the collation at all and would pass on a binary index.
         XCTAssertEqual(altered, 1375, "the number of case-altered keys changed")
+    }
+
+    /// The casing fix itself: `PSContentReader.dictionaryKeys` must now return the
+    /// **stored** casing, not a capitalised copy.
+    ///
+    /// This is the assertion that would have failed before step 9, and the one that
+    /// fails if the `capitalized` ever comes back.
+    func testDictionaryKeysAreReturnedInTrueCasing() throws {
+        let store = try store()
+        let reader = PSContentReader.shared
+        guard reader.isAvailable else { throw XCTSkip("content reader unavailable") }
+
+        for module in ["StrongsRealGreek", "StrongsRealHebrew", "Robinson"] {
+            let stored = store.dictKeys(module: module)
+            let displayed = reader.dictionaryKeys(module: module)
+            XCTAssertEqual(displayed, stored,
+                           "\(module): the reader is not returning stored casing")
+        }
+
+        // Named cases, so a regression says what broke.
+        let robinson = reader.dictionaryKeys(module: "Robinson")
+        XCTAssertTrue(robinson.contains("V-PAI-3S"),
+                      "Robinson keys should be true-cased ('V-PAI-3S'), got e.g. \(robinson.prefix(5))")
+        XCTAssertFalse(robinson.contains("V-Pai-3S"),
+                       "the capitalizedString mangling is back")
+
+        // And the true-cased key the tab now displays opens the right entry.
+        XCTAssertNotNil(reader.dictionaryEntry(module: "Robinson", key: "V-PAI-3S"))
     }
 
     /// The specific cases from the finding, spelled out so a regression names
