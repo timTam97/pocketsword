@@ -328,27 +328,38 @@ final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegat
         UIApplication.shared.open(url)
     }
 
+    /// SWORD_REMOVAL_PLAN.md Phase 4: the gazetteer is built from the baked
+    /// versification table rather than from `+[SwordManager
+    /// booksForVersificationSystem:]` over a live `sword::VersificationMgr`. The
+    /// same three name forms per book, in the same order, so the parser's alias
+    /// table is unchanged.
+    ///
+    /// Two things this fixes for free, both consequences of `PSVersificationBook`
+    /// being a value type where `SwordBook` was a reference:
+    ///
+    ///  - **Lifetime.** `versesInChapter` is an escaping closure that used to
+    ///    capture the `SwordBook` object and, through it, a raw
+    ///    `const VersificationMgr::Book *` ivar whose lifetime nothing here owned.
+    ///    A struct capture has no such hazard.
+    ///  - **Bounds.** `-verses:` answered SWORD's **-1** sentinel for an
+    ///    out-of-range chapter, and `PSVoiceRefParser` tests that count with
+    ///    `verseCount > 0, (1...verseCount).contains(verse)` — so -1 was already
+    ///    rejected, but only by accident of the comparison. Returning 0 makes the
+    ///    reject explicit (PSVoiceRefParser.swift:96 treats 0 as reject).
     private static func makeGazetteer() -> [PSVoiceRefBook] {
-        var versification = PSModuleController.default()?.primaryBible?.versification()
-        if versification == nil {
-            versification = PSModuleController.default()?.primaryCommentary?.versification()
-        }
-
-        let swordBooks = (SwordManager.books(forVersificationSystem: versification)
-            as? [SwordBook]) ?? []
-        return swordBooks.compactMap { book in
-            guard let displayName = book.name(), !displayName.isEmpty else {
-                return nil
-            }
-            let names = [book.name(), book.shortName(), book.osisName()]
-                .compactMap { $0 }
+        guard let resolver = PSBookOSISResolver.shared else { return [] }
+        return resolver.books.compactMap { book in
+            let displayName = book.name
+            guard !displayName.isEmpty else { return nil }
+            let names = [book.name, book.shortName, book.osisName]
                 .filter { !$0.isEmpty }
-            let chapterCount = book.chapters()
             return PSVoiceRefBook(
                 names: names,
                 displayName: displayName,
-                chapters: chapterCount,
-                versesInChapter: { chapter in book.verses(chapter) }
+                chapters: book.chapterCount,
+                versesInChapter: { chapter in
+                    resolver.verseMax(book: book, chapter: chapter) ?? 0
+                }
             )
         }
     }

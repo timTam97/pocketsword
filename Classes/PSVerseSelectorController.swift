@@ -6,10 +6,11 @@
 //  SwordBook; selecting a verse posts NotificationUpdateSelectedReference (and
 //  toggles navigation off) so the coordinator jumps the primary Bible there.
 //  Public API matches the original PSVerseSelectorController.{h,mm}
-//  byte-for-byte so its Swift sibling caller (PSChapterSelectorController) and
-//  any Obj-C++ caller bind unchanged: it exposes a `book` (SwordBook) and a
-//  `chapter` (NSInteger) property. SwordBook resolves as a Swift type via the
-//  bridging header (clean Foundation-only facade after Wave 0e).
+//  byte-for-byte for its Swift sibling caller (PSChapterSelectorController).
+//
+//  SWORD_REMOVAL_PLAN.md Phase 4: `book` is a `PSVersificationBook` off the baked
+//  table rather than a `SwordBook`, and its @objc annotation is dropped — nothing
+//  in Obj-C references this class.
 //
 //  Originally created by Nic Carter on 8/04/10.
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
@@ -20,12 +21,12 @@ import UIKit
 @objc(PSVerseSelectorController)
 final class PSVerseSelectorController: UITableViewController {
 
-    @objc var book: SwordBook?
-    @objc var chapter: NSInteger = 0
+    var book: PSVersificationBook?
+    var chapter: NSInteger = 0
 
     override func viewWillAppear(_ animated: Bool) {
         tableView.backgroundColor = .systemBackground
-        navigationItem.title = String(format: "%@ %d", book?.name() ?? "", Int32(chapter))
+        navigationItem.title = String(format: "%@ %d", book?.name ?? "", Int32(chapter))
         super.viewWillAppear(animated)
     }
 
@@ -35,8 +36,20 @@ final class PSVerseSelectorController: UITableViewController {
 
     // MARK: - Table view methods
 
+    /// Verses in the shown chapter, or 0.
+    ///
+    /// `SwordBook.verses:` returned SWORD's **-1** sentinel for an out-of-range
+    /// chapter, which as a table row count would have been a crash; the resolver
+    /// returns nil instead, and nil coalesces to 0 here — the same effective
+    /// behaviour the old code had for an in-range chapter, and a safer one for a
+    /// chapter that does not exist.
+    private var verseCount: Int {
+        guard let book = book, let resolver = PSBookOSISResolver.shared else { return 0 }
+        return resolver.verseMax(book: book, chapter: chapter) ?? 0
+    }
+
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        let verses = Int(book?.verses(chapter) ?? 0)
+        let verses = verseCount
         if verses < 10 {
             return nil
         }
@@ -50,7 +63,7 @@ final class PSVerseSelectorController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return book?.verses(chapter) ?? 0
+        return verseCount
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -75,7 +88,7 @@ final class PSVerseSelectorController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         NotificationCenter.default.post(name: .toggleNavigation, object: nil)
         var bcvDict: [String: String] = [:]
-        bcvDict[AppConstants.bookNameString] = book?.name() ?? ""
+        bcvDict[AppConstants.bookNameString] = book?.name ?? ""
         bcvDict[AppConstants.chapterString] = String(format: "%d", Int32(chapter))
         bcvDict[AppConstants.verseString] = String(format: "%d", Int32(indexPath.section + 1))
         NotificationCenter.default.post(name: .updateSelectedReference, object: bcvDict)

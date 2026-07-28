@@ -7,11 +7,14 @@
 //  migrated in the same step); tapping the per-row "N:1" accessory button jumps
 //  the primary Bible straight to verse 1 of that chapter via
 //  NotificationUpdateSelectedReference. Public API matches the original
-//  PSChapterSelectorController.{h,mm} byte-for-byte so the Obj-C++ caller
-//  (PSRefSelectorController.mm, via PocketSword-Swift.h) binds unchanged: it
-//  exposes a `book` (SwordBook) property and a -setBookAndInit: method.
-//  SwordBook resolves as a Swift type via the bridging header (clean
-//  Foundation-only facade after Wave 0e).
+//  PSChapterSelectorController.{h,mm}.
+//
+//  SWORD_REMOVAL_PLAN.md Phase 4: the book is a `PSVersificationBook` off the
+//  baked table rather than a `SwordBook` over a live sword::VersificationMgr.
+//  The @objc annotations on `book` and -setBookAndInit: are dropped with it:
+//  nothing in Obj-C references this class (verified — only comments in
+//  SwordManager.h and the bridging header mentioned it), and a Swift struct
+//  cannot cross the @objc boundary anyway.
 //
 //  Originally created by Nic Carter on 8/04/10.
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
@@ -22,13 +25,12 @@ import UIKit
 @objc(PSChapterSelectorController)
 final class PSChapterSelectorController: UITableViewController {
 
-    @objc var book: SwordBook?
+    var book: PSVersificationBook?
 
     private var currentChapter: Int = 0
     private var needToScroll: Bool = false
 
-    @objc(setBookAndInit:)
-    func setBookAndInit(_ newBook: SwordBook?) {
+    func setBookAndInit(_ newBook: PSVersificationBook?) {
         book = newBook
         needToScroll = true
     }
@@ -44,7 +46,7 @@ final class PSChapterSelectorController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         tableView.backgroundColor = .systemBackground
-        navigationItem.title = book?.name()
+        navigationItem.title = book?.name
         var currentBook = UserDefaults.standard.string(forKey: Defaults.lastRef) ?? ""
         currentBook = currentBook.components(separatedBy: ":")[0]
         if let spaceRange = currentBook.range(of: " ", options: .backwards) {
@@ -52,7 +54,7 @@ final class PSChapterSelectorController: UITableViewController {
             currentChapter = Int((chapterPart as NSString).intValue)
             currentBook = String(currentBook[..<spaceRange.lowerBound])
         }
-        if book?.name() != currentBook {
+        if book?.name != currentBook {
             currentChapter = 0
         }
         super.viewWillAppear(animated)
@@ -65,7 +67,7 @@ final class PSChapterSelectorController: UITableViewController {
     // MARK: - Table view methods
 
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        let chapters = Int(book?.chapters() ?? 0)
+        let chapters = book?.chapterCount ?? 0
         if chapters < 10 {
             return nil
         }
@@ -79,7 +81,7 @@ final class PSChapterSelectorController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return book?.chapters() ?? 0
+        return book?.chapterCount ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -124,7 +126,7 @@ final class PSChapterSelectorController: UITableViewController {
     private func jumpToVerseOne(_ chapterIndex: Int) {
         NotificationCenter.default.post(name: .toggleNavigation, object: nil)
         var bcvDict: [String: String] = [:]
-        bcvDict[AppConstants.bookNameString] = book?.name() ?? ""
+        bcvDict[AppConstants.bookNameString] = book?.name ?? ""
         bcvDict[AppConstants.chapterString] = String(format: "%ld", Int(chapterIndex + 1))
         bcvDict[AppConstants.verseString] = "1"
         NotificationCenter.default.post(name: .updateSelectedReference, object: bcvDict)

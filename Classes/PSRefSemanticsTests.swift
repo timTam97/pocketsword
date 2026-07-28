@@ -365,6 +365,53 @@ final class PSRefSemanticsTests: XCTestCase {
                        "Revelation + the numbered books are what make the longName choice observable")
     }
 
+    /// The ref-selector's section-index strip, and the two intentional collisions
+    /// in it.
+    ///
+    /// `PSRefSelectorController` builds the strip by adding a `shortName` only if no
+    /// EARLIER book already used it, and resolves a tap with a first-match scan. So
+    /// 66 books dedup to 64 titles and two books become unreachable from the strip:
+    /// "Jud" scrolls to **Judges** (not Jude) and "Phi" to **Philippians** (not
+    /// Philemon). That is today's visible behaviour and Phase 4 deliberately keeps
+    /// it, so it is pinned here rather than left to be "fixed" by accident — this is
+    /// the one place the collisions are asserted as UI behaviour rather than as
+    /// abbreviation lookup.
+    func testRefSelectorIndexStripKeepsItsTwoIntentionalCollisions() throws {
+        let resolver = try resolver()
+
+        // Verbatim reproduction of updateRefSelectorBooks' construction.
+        var stripTitles: [String] = []
+        var allShortNames: [String] = []
+        for book in resolver.books {
+            let short = book.shortName
+            if !allShortNames.contains(short) { stripTitles.append(short) }
+            allShortNames.append(short)
+        }
+
+        XCTAssertEqual(resolver.books.count, 66)
+        XCTAssertEqual(stripTitles.count, 64, "the strip should dedup to 64 titles")
+
+        // And the tap resolution — sectionForSectionIndexTitle's first-match scan.
+        func section(forTitle title: String) -> Int {
+            for i in 0..<resolver.books.count where resolver.books[i].shortName == title {
+                return i
+            }
+            return 0
+        }
+        XCTAssertEqual(resolver.books[section(forTitle: "Jud")].name, "Judges",
+                       "'Jud' must keep scrolling to Judges, not Jude")
+        XCTAssertEqual(resolver.books[section(forTitle: "Phi")].name, "Philippians",
+                       "'Phi' must keep scrolling to Philippians, not Philemon")
+        XCTAssertEqual(resolver.books[section(forTitle: "Gen")].name, "Genesis")
+        XCTAssertEqual(resolver.books[section(forTitle: "Rev")].name, "Revelation")
+        XCTAssertEqual(resolver.books[section(forTitle: "1Jo")].name, "1 John")
+
+        // Exactly which two books the strip cannot reach.
+        let unreachable = resolver.books.filter { section(forTitle: $0.shortName) != resolver.index(of: $0) }
+        XCTAssertEqual(Set(unreachable.map(\.name)), ["Jude", "Philemon"],
+                       "the set of strip-unreachable books changed")
+    }
+
     // MARK: - Fast tier: name -> OSIS
 
     /// The Swift resolver's `@objc osisNameForBookName:` against the engine, for all
