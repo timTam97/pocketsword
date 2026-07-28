@@ -31,7 +31,8 @@
 // .mm files, so this stays Swift-importable.
 #import "SwordManager.h"          // +defaultManager, module lookup, SW_OPTION_* / SW_ON / SW_OFF
 #import "SwordModule.h"           // -chapterBodyHTML:…, -attributeValueForEntryData:
-#import "SwordBook.h"             // versification book shape (name/shortName/osisName)
+// SwordBook.h is GONE (Phase 4 step 10): PSRefSemanticsTests compares the Swift
+// table against the committed versification-KJV-oracle.txt fixture instead.
 #import "SwordDictionary.h"       // -entryForKey: for the lexicons
 #import "PSSearchEngine.h"        // PSFoldForIndex / PSSearchCleanDisplayText
 // PSHistoryItem is Swift as of migration step 1.2 — its type is visible to the

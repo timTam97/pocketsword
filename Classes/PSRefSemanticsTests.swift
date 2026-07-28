@@ -109,14 +109,92 @@ final class PSRefSemanticsTests: XCTestCase {
         return store
     }
 
-    /// The live engine's book list. Returns nil rather than skipping so the
-    /// post-Phase-5 world (where `+booksForVersificationSystem:` is gone and this
-    /// whole comparison re-anchors on the committed fixture) needs one edit here
-    /// rather than one per test.
-    private func swordBooks() -> [SwordBook]? {
-        guard let raw = SwordManager.books(forVersificationSystem: "KJV") as? [SwordBook],
-              !raw.isEmpty else { return nil }
-        return raw
+    // MARK: - The oracle
+    //
+    // Phase 4 step 10 deleted `SwordBook` and `+booksForVersificationSystem:`, so
+    // the book-shape and verse-maxima comparisons no longer have a live engine to
+    // compare against. They now read the **committed fixture** captured in step 3
+    // while the engine was still in the tree — which is exactly why that fixture
+    // exists: so this deletion could not force a test to be weakened into a skip.
+    //
+    // The transition comparisons still drive the live `-[SwordModule
+    // setToNextChapter]` / `-setToPreviousChapter`, which Phase 5 deletes; the
+    // fixture also holds all 2,376 of those, so this parses both halves.
+
+    /// One book, as the fixture records the live engine's answer.
+    private struct OracleBook {
+        let name: String
+        let shortName: String
+        let osisName: String
+        let chapters: Int
+        let verseMax: [Int]
+    }
+
+    /// Parsed `versification-KJV-oracle.txt`. Throws (rather than skips) if it is
+    /// missing or malformed: after Phase 4 step 10 this file IS the oracle, so an
+    /// absent one means the gate is not running, not that it is inapplicable.
+    private func oracle() throws -> (books: [OracleBook], transitions: [String: (next: String, prev: String)]) {
+        let url = Self.fixtureDir().appendingPathComponent("versification-KJV-oracle.txt")
+        guard let text = try? String(contentsOf: url, encoding: .utf8) else {
+            XCTFail("versification-KJV-oracle.txt is missing — the Phase-4 oracle is gone")
+            throw XCTSkip("no oracle fixture")
+        }
+
+        var books: [OracleBook] = []
+        var transitions: [String: (next: String, prev: String)] = [:]
+        var pending: (name: String, short: String, osis: String, chapters: Int)?
+
+        for line in text.split(separator: "\n", omittingEmptySubsequences: false) {
+            let line = String(line)
+            if line.hasPrefix("## [") {
+                // ## [0] name=Genesis short=Gen osis=Gen chapters=50
+                func field(_ key: String) -> String? {
+                    guard let r = line.range(of: "\(key)=") else { return nil }
+                    let rest = line[r.upperBound...]
+                    // Values are space-delimited except `name`, which can contain
+                    // spaces ("1 Corinthians", "Song of Solomon") — so for `name`
+                    // stop at the next " short=" rather than at the next space.
+                    if key == "name" {
+                        guard let end = rest.range(of: " short=") else { return String(rest) }
+                        return String(rest[rest.startIndex..<end.lowerBound])
+                    }
+                    return String(rest.prefix { $0 != " " })
+                }
+                guard let name = field("name"), let short = field("short"),
+                      let osis = field("osis"), let chapters = field("chapters").flatMap(Int.init) else {
+                    XCTFail("malformed oracle book line: \(line)")
+                    throw XCTSkip("malformed oracle")
+                }
+                pending = (name, short, osis, chapters)
+            } else if line.hasPrefix("verseMax=") {
+                guard let p = pending else {
+                    XCTFail("oracle verseMax line with no preceding book: \(line)")
+                    throw XCTSkip("malformed oracle")
+                }
+                let maxima = line.dropFirst("verseMax=".count)
+                    .split(separator: ",").compactMap { Int($0) }
+                books.append(OracleBook(name: p.name, shortName: p.short,
+                                        osisName: p.osis, chapters: p.chapters,
+                                        verseMax: maxima))
+                pending = nil
+            } else if line.contains(" -> next="), !line.hasPrefix("#") {
+                // Genesis 1 -> next=Genesis 2 prev=Genesis 1
+                //
+                // The `!hasPrefix("#")` matters: the section header itself is
+                // "# transitions: <from> -> next=<...> prev=<...>", which matches
+                // the same substring and would be parsed as a 1,190th transition.
+                guard let arrow = line.range(of: " -> next="),
+                      let prevMark = line.range(of: " prev=") else { continue }
+                let from = String(line[line.startIndex..<arrow.lowerBound])
+                let next = String(line[arrow.upperBound..<prevMark.lowerBound])
+                let prev = String(line[prevMark.upperBound...])
+                transitions[from] = (next, prev)
+            }
+        }
+
+        XCTAssertEqual(books.count, 66, "the oracle fixture does not hold 66 books")
+        XCTAssertEqual(transitions.count, 1189, "the oracle fixture does not hold 1,189 transitions")
+        return (books, transitions)
     }
 
     private func module(_ name: String, timeout: TimeInterval = 90) throws -> SwordModule {
@@ -168,32 +246,28 @@ final class PSRefSemanticsTests: XCTestCase {
     /// and the ref selector's section index is positional.
     func testTableMatchesSwordBookOnAllFiveConsumedMembers() throws {
         let resolver = try resolver()
-        guard let books = swordBooks() else {
-            throw XCTSkip("+booksForVersificationSystem: unavailable (expected after Phase 5)")
-        }
+        let books = try oracle().books
 
-        XCTAssertEqual(books.count, 66, "the engine's KJV book list is not 66 books")
         XCTAssertEqual(resolver.books.count, 66)
 
         var compared = 0
-        for (i, swordBook) in books.enumerated() {
+        for (i, oracleBook) in books.enumerated() {
             guard let ours = resolver.book(at: i) else {
                 XCTFail("no table entry at index \(i)")
                 continue
             }
-            // -name is SwordBook's munge of the localised long name; the table's
+            // -name was SwordBook's munge of the localised long name; the table's
             // `name` is the same munge applied at bake time. F5 in the plan.
-            XCTAssertEqual(ours.name, swordBook.name(),
-                           "index \(i): name differs")
-            XCTAssertEqual(ours.shortName, swordBook.shortName(),
+            XCTAssertEqual(ours.name, oracleBook.name, "index \(i): name differs")
+            XCTAssertEqual(ours.shortName, oracleBook.shortName,
                            "index \(i) (\(ours.name)): shortName differs")
-            XCTAssertEqual(ours.osisName, swordBook.osisName(),
+            XCTAssertEqual(ours.osisName, oracleBook.osisName,
                            "index \(i) (\(ours.name)): osisName differs")
-            XCTAssertEqual(ours.chapterCount, swordBook.chapters(),
+            XCTAssertEqual(ours.chapterCount, oracleBook.chapters,
                            "index \(i) (\(ours.name)): chapterCount differs")
             // -verses: is member 5; covered per chapter by the next test, and
             // spot-checked here at chapter 1 so this test fails on all five.
-            XCTAssertEqual(resolver.verseMax(book: ours, chapter: 1), swordBook.verses(1),
+            XCTAssertEqual(resolver.verseMax(book: ours, chapter: 1), oracleBook.verseMax.first,
                            "index \(i) (\(ours.name)): verses(1) differs")
             compared += 1
         }
@@ -204,26 +278,28 @@ final class PSRefSemanticsTests: XCTestCase {
     /// All 1,189 chapters' verse maxima, and the two out-of-range directions.
     func testAllVerseMaximaMatchSwordBook() throws {
         let resolver = try resolver()
-        guard let books = swordBooks() else {
-            throw XCTSkip("+booksForVersificationSystem: unavailable (expected after Phase 5)")
-        }
+        let books = try oracle().books
 
         var compared = 0, total = 0
-        for (i, swordBook) in books.enumerated() {
+        for (i, oracleBook) in books.enumerated() {
             guard let ours = resolver.book(at: i) else { continue }
+            XCTAssertEqual(oracleBook.verseMax.count, oracleBook.chapters,
+                           "\(ours.name): the oracle's verseMax length disagrees with its chapter count")
             for chapter in 1...ours.chapterCount {
                 total += 1
                 let mine = resolver.verseMax(book: ours, chapter: chapter)
-                XCTAssertEqual(mine, swordBook.verses(chapter),
-                               "\(ours.name) \(chapter): verseMax differs")
-                guard mine == swordBook.verses(chapter) else { return }
+                let theirs = chapter <= oracleBook.verseMax.count ? oracleBook.verseMax[chapter - 1] : nil
+                XCTAssertEqual(mine, theirs, "\(ours.name) \(chapter): verseMax differs")
+                guard mine == theirs else { return }
                 compared += 1
             }
-            // Out of range in both directions. SWORD returns -1
-            // (versificationmgr.cpp Book::getVerseMax); we return nil.
-            XCTAssertEqual(swordBook.verses(0), -1, "\(ours.name): SWORD no longer returns -1 for chapter 0")
+            // Out of range in both directions. SWORD returned -1
+            // (versificationmgr.cpp Book::getVerseMax); we return nil. The -1 half is
+            // no longer assertable (SwordBook is gone), so only our side is checked —
+            // the engine's behaviour is recorded in
+            // testBoundariesClampInSwordAndReturnNilInSwift's prose and in the
+            // committed fixture.
             XCTAssertNil(resolver.verseMax(book: ours, chapter: 0))
-            XCTAssertEqual(swordBook.verses(ours.chapterCount + 1), -1)
             XCTAssertNil(resolver.verseMax(book: ours, chapter: ours.chapterCount + 1))
         }
         print("[refsem/fast] verse maxima compared: \(compared) of \(total)")
@@ -387,6 +463,59 @@ final class PSRefSemanticsTests: XCTestCase {
         print("[refsem/fast] controller transitions compared: \(forward) next, \(backward) prev")
         XCTAssertEqual(forward, 1188)
         XCTAssertEqual(backward, 1188)
+    }
+
+    /// All 2,376 transitions against the **committed fixture** rather than the live
+    /// engine.
+    ///
+    /// The two tests above still drive `-[SwordModule setToNextChapter]` /
+    /// `-setToPreviousChapter`, which Phase 5 deletes. This one does not touch the
+    /// engine at all, so it is the assertion that survives — and it is what makes
+    /// the fixture's transition half load-bearing rather than merely recorded.
+    ///
+    /// The fixture stores SWORD's raw answers, including the two clamps
+    /// ("Revelation 22 -> next=Revelation of John 22", "Genesis 1 -> prev=Genesis 1"),
+    /// so those two rows are compared against our deliberate nil rather than against
+    /// a ref.
+    func testAllTransitionsMatchTheCommittedFixture() throws {
+        let resolver = try resolver()
+        let transitions = try oracle().transitions
+
+        var compared = 0, clamps = 0
+        for book in resolver.books {
+            for chapter in 1...book.chapterCount {
+                let from = "\(book.name) \(chapter)"
+                guard let expected = transitions[from] else {
+                    XCTFail("the fixture has no transition row for '\(from)'")
+                    return
+                }
+
+                let next = resolver.nextChapter(book: book, chapter: chapter).map(resolver.displayRef)
+                let prev = resolver.previousChapter(book: book, chapter: chapter).map(resolver.displayRef)
+
+                // The fixture records SWORD's CLAMP at each canon end: the ref it was
+                // given, unchanged. We return nil there, deliberately.
+                if expected.next == from || expected.next == resolver.displayRef(book: book, chapter: chapter) {
+                    XCTAssertNil(next, "'\(from)': the fixture shows a clamp, so we must return nil")
+                    clamps += 1
+                } else {
+                    XCTAssertEqual(next, expected.next, "'\(from)' -> next")
+                    guard next == expected.next else { return }
+                }
+
+                if expected.prev == from || expected.prev == resolver.displayRef(book: book, chapter: chapter) {
+                    XCTAssertNil(prev, "'\(from)': the fixture shows a clamp, so we must return nil")
+                    clamps += 1
+                } else {
+                    XCTAssertEqual(prev, expected.prev, "'\(from)' -> prev")
+                    guard prev == expected.prev else { return }
+                }
+                compared += 1
+            }
+        }
+        print("[refsem/fast] fixture transitions compared: \(compared) chapters, \(clamps) clamps")
+        XCTAssertEqual(compared, 1189)
+        XCTAssertEqual(clamps, 2, "exactly two clamps: Gen 1 prev and Rev 22 next")
     }
 
     /// The two boundaries, where the two sides deliberately differ — asserted as a
@@ -983,10 +1112,22 @@ final class PSRefSemanticsTests: XCTestCase {
     // any test above having to be weakened: after Phase 5 the comparisons re-anchor
     // on this file. Assert-by-default, PSORACLE_CAPTURE to rewrite.
 
+    /// Re-emits the fixture from whatever oracle is still available, and asserts it
+    /// is byte-identical to the committed one.
+    ///
+    /// Phase 4 step 10 deleted `SwordBook`, so the book-shape half is now sourced
+    /// from the **table** rather than from the engine — which makes this a
+    /// round-trip: the table must still say exactly what the engine said when the
+    /// fixture was captured. The transition half still drives the live
+    /// `-[SwordModule setToNextChapter]` / `-setToPreviousChapter` (Phase 5 deletes
+    /// those; at that point this becomes a pure table-vs-fixture check).
+    ///
+    /// Under PSORACLE_CAPTURE it rewrites the file, as before. Do NOT recapture to
+    /// make a red one pass: the point of the file is that it was written while the
+    /// engine was in the tree.
     func testCaptureVersificationTable() throws {
-        guard let books = swordBooks() else {
-            throw XCTSkip("+booksForVersificationSystem: unavailable (expected after Phase 5)")
-        }
+        let resolver = try resolver()
+        let books = resolver.books
         let mod = try moduleForNavigation("KJV")
 
         var lines: [String] = []
@@ -994,19 +1135,19 @@ final class PSRefSemanticsTests: XCTestCase {
         lines.append("# books=\(books.count)")
 
         for (i, book) in books.enumerated() {
-            lines.append("## [\(i)] name=\(book.name() ?? "<nil>")"
-                         + " short=\(book.shortName() ?? "<nil>")"
-                         + " osis=\(book.osisName() ?? "<nil>")"
-                         + " chapters=\(book.chapters())")
-            let maxima = (1...book.chapters()).map { String(book.verses($0)) }
+            lines.append("## [\(i)] name=\(book.name)"
+                         + " short=\(book.shortName)"
+                         + " osis=\(book.osisName)"
+                         + " chapters=\(book.chapterCount)")
+            let maxima = book.verseMax.map(String.init)
             lines.append("verseMax=\(maxima.joined(separator: ","))")
         }
 
         // All 2,376 transitions, driven exactly as the app drives them.
         lines.append("# transitions: <from> -> next=<...> prev=<...>")
         for book in books {
-            for chapter in 1...book.chapters() {
-                let from = "\((book.name() ?? "")) \(chapter)"
+            for chapter in 1...book.chapterCount {
+                let from = "\(book.name) \(chapter)"
                 mod.setChapter(from)
                 let next = mod.setToNextChapter() ?? "<nil>"
                 mod.setChapter(from)

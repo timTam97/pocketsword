@@ -217,6 +217,17 @@ typedef enum {
 - (NSString *)setToPreviousChapter;
 - (NSInteger)getVerseMax;
 - (void)setChapter:(NSString *)chapter;
+// SWORD_REMOVAL_PLAN.md Phase 4 step 10 note: -setChapter:, -setToNextChapter,
+// -setToPreviousChapter, -getVerseMax and -setIntroductions: have NO production
+// callers any more — chapter navigation is the baked versification table's job
+// (PSBookOSISResolver + PSModuleController). They are kept because they are now
+// the *test oracle*: PSRefSemanticsTests drives them over all 1,189 chapters to
+// prove the table reproduces the engine, and PSDifferentialTests uses the same
+// pattern for rendered HTML. Phase 5 deletes them together with the engine.
+//
+// -setVerseKeyText: and -keyText do still have a production caller
+// (-[PSModuleController reload], which saves and restores the current location
+// across a reInit), so they are NOT in that list.
 - (void)setIntroductions:(BOOL)intros;
 
 /** Current key text (UTF-8, ISO-Latin-1 fallback). Foundation-only key getter. */

@@ -240,7 +240,6 @@
 		05DD866D122E5EB400115EAD /* commentary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8669122E5EB400115EAD /* commentary@2x.png */; };
 		05DD867B122E605700115EAD /* history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8679122E605700115EAD /* history@2x.png */; };
 		05DD867E122E60AC00115EAD /* dictionary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD867C122E60AC00115EAD /* dictionary@2x.png */; };
-		05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05DF558E10AA9123007CB847 /* SwordBook.mm */; };
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
 		05E37CEC10B3306300C2F1F5 /* KJV.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDA10B32F8700C2F1F5 /* KJV.zip */; };
 		5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR101 /* PSContentStore.swift */; };
@@ -826,8 +825,6 @@
 		05DD8669122E5EB400115EAD /* commentary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "commentary@2x.png"; path = "Resources/commentary@2x.png"; sourceTree = "<group>"; };
 		05DD8679122E605700115EAD /* history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "history@2x.png"; path = "Resources/history@2x.png"; sourceTree = "<group>"; };
 		05DD867C122E60AC00115EAD /* dictionary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dictionary@2x.png"; path = "Resources/dictionary@2x.png"; sourceTree = "<group>"; };
-		05DF558D10AA9123007CB847 /* SwordBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordBook.h; sourceTree = "<group>"; };
-		05DF558E10AA9123007CB847 /* SwordBook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwordBook.mm; sourceTree = "<group>"; };
 		05DF57C610ABC753007CB847 /* About.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = About.png; path = Resources/About.png; sourceTree = "<group>"; };
 		05E37CDA10B32F8700C2F1F5 /* KJV.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = KJV.zip; path = Resources/KJV.zip; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR101 /* PSContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentStore.swift; sourceTree = "<group>"; };
@@ -893,7 +890,6 @@
 		5A1F70B0000000000000E004 /* SwordModule+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordModule+Cpp.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000E005 /* SwordManager+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordManager+Cpp.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000E006 /* SwordDictionary+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordDictionary+Cpp.h"; sourceTree = "<group>"; };
-		5A1F70B0000000000000E007 /* SwordBook+Cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwordBook+Cpp.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000F001 /* PersistedFormatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistedFormatTests.swift; path = Classes/PersistedFormatTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PocketSwordTests-Bridging-Header.h"; path = "misc/PocketSwordTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000F010 /* PocketSwordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1102,9 +1098,6 @@
 				0545E26410639A4A00DD7F06 /* SwordManager.h */,
 				5A1F70B0000000000000E005 /* SwordManager+Cpp.h */,
 				0545E26510639A4A00DD7F06 /* SwordManager.mm */,
-				05DF558D10AA9123007CB847 /* SwordBook.h */,
-				5A1F70B0000000000000E007 /* SwordBook+Cpp.h */,
-				05DF558E10AA9123007CB847 /* SwordBook.mm */,
 			);
 			name = Sword;
 			path = Classes;
@@ -2555,7 +2548,6 @@
 				5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */,
 				5A1F70B00000000000ZG002 /* PSPreferencesFontTableViewController.swift in Sources */,
 				5A1F70B00000000000ZH002 /* PSDictionaryEntryViewController.swift in Sources */,
-				05DF558F10AA9123007CB847 /* SwordBook.mm in Sources */,
 				5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */,
 				5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */,
 				5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */,

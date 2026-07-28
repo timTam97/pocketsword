@@ -64,14 +64,11 @@
 // (PSDictionaryViewController) reads primaryDictionary, so SwordDictionary must be
 // a visible Swift type here. SwordDictionary itself stays Obj-C++.
 #import "SwordDictionary.h"
-// SwordBook.h is a clean Foundation-only @objc facade (subclass of SwordModule)
-// after Wave 0e — its C++ (the versificationmgr include, the
-// const sword::VersificationMgr::Book * ivar, -initWithBook:) lives in
-// SwordBook+Cpp.h, imported only by .mm files. The Swift chapter/verse
-// reference selectors (PSChapterSelectorController / PSVerseSelectorController,
-// Wave 2) hold a `SwordBook *book` property, so SwordBook must be a visible
-// Swift type here.
-#import "SwordBook.h"
+// SwordBook.h is GONE — SWORD_REMOVAL_PLAN.md Phase 4 step 10. The reference
+// selectors now hold a `PSVersificationBook` (a Swift struct over the baked
+// Resources/Versification-KJV.json) instead, so nothing Swift needs a
+// versification type from Obj-C any more, and +[SwordManager
+// booksForVersificationSystem:] went with it.
 // SSZipArchive.h is the clean Foundation-only @objc facade of the vendored
 // ZipArchive (externals/ZipArchive) — no C++ leaks. The Swift PSModuleController
 // (Wave 4) calls +[SSZipArchive unzipFileAtPath:toDestination:] in

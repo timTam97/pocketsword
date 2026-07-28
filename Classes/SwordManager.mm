@@ -25,13 +25,10 @@
 //#include "msstringmgr.h"
 #import "globals.h"
 #import "utils.h"
-//#import "SwordBook.h"
 //#import "SwordBible.h"
 //#import "SwordCommentary.h"
 #import "SwordDictionary.h"
 #import "SwordDictionary+Cpp.h"
-#import "SwordBook.h"
-#import "SwordBook+Cpp.h"  // for -[SwordBook initWithBook:] (C++ internal init)
 //#import "SwordListKey.h"
 //#import "SwordVerseKey.h"
 #include <installmgr.h>
@@ -267,33 +264,6 @@ using std::list;
 		result = [NSString stringWithCString:translated encoding:NSISOLatin1StringEncoding];
 	}
 	return result;
-}
-
-// Foundation-only wrapper over the C++ VersificationMgr so callers (e.g. the
-// Swift PSRefSelectorController) need not touch the sword:: API. Resolves the
-// named ref system, falling back to "KJV" when the name is nil/empty/unknown,
-// then materialises each book as a SwordBook (whose -initWithBook: is the only
-// place the const sword::VersificationMgr::Book* is consumed). Mirrors the
-// loop that previously lived in PSRefSelectorController.mm byte-for-byte.
-+ (NSArray *)booksForVersificationSystem:(NSString *)systemName {
-	sword::VersificationMgr *vmgr = sword::VersificationMgr::getSystemVersificationMgr();
-	const sword::VersificationMgr::System *refSystem = NULL;
-	if(systemName && [systemName length] > 0) {
-		refSystem = vmgr->getVersificationSystem([systemName cStringUsingEncoding:NSUTF8StringEncoding]);
-	}
-	if(!refSystem) {
-		refSystem = vmgr->getVersificationSystem("KJV");
-	}
-	if(!refSystem) {
-		return [NSArray array];
-	}
-	int numberOfBooks = refSystem->getBookCount();
-	NSMutableArray *books = [[NSMutableArray alloc] initWithCapacity:numberOfBooks];
-	for(int i = 0; i < numberOfBooks; i++) {
-		SwordBook *book = [[SwordBook alloc] initWithBook:refSystem->getBook(i)];
-		[books addObject:book];
-	}
-	return books;
 }
 
 static SwordManager *instance;

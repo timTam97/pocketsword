@@ -133,13 +133,6 @@
  callers (e.g. the Swift PSModuleController). Returns nil for a nil input.
  */
 + (NSString *)translateToSystemLocale:(NSString *)englishText;
-/**
- Foundation-only wrapper over the SWORD VersificationMgr. Resolves the named
- versification system (falling back to "KJV" when @c systemName is nil/empty or
- unknown) and returns its books as an ordered array of @c SwordBook objects.
- Keeps the C++ VersificationMgr API out of Swift callers (e.g. PSRefSelectorController).
- */
-+ (NSArray *)booksForVersificationSystem:(NSString *)systemName;
 
 /** Constructor */
 - (id)initWithPath:(NSString *)path;
