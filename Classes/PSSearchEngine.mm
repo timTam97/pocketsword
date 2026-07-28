@@ -27,7 +27,6 @@ const int PSSearchSchemaVersion = 4;
 @property (nonatomic, copy) NSString *dbDirectory;
 @property (nonatomic, copy) NSString *dbFilePath;
 
-+ (nullable NSString *)osisBookNameForLocalisedBookName:(NSString *)bookName;
 @end
 
 @implementation PSSearchEngine
@@ -763,7 +762,18 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 
 	NSString *bookOsis = nil;
 	if(scope == BookRange && bookName.length > 0) {
-		bookOsis = [PSSearchEngine osisBookNameForLocalisedBookName:bookName];
+		// SWORD_REMOVAL_PLAN.md Phase 4: name -> OSIS now comes from the baked
+		// versification table rather than from a live sword::VerseKey, which
+		// removes the last SWORD use from the *query* path. Verified equivalent for
+		// all 66 books in PSRefSemanticsTests.testOsisNameMatchesTheEngine; the
+		// deleted shim's whole body was setText() + getOSISBookName(), and the
+		// "localised" in its name was aspirational (translateBookName: is identity
+		// on every device — there is no `en` locale conf).
+		//
+		// A nil resolver (bundled table missing) simply leaves the scope filter
+		// off, which is the same outcome the shim's popError() path produced: an
+		// unrecognised book name searches the whole Bible rather than nothing.
+		bookOsis = [[PSBookOSISResolver sharedResolver] osisNameForBookName:bookName];
 		if(bookOsis.length > 0) { hasBook = YES; [sql appendString:@" AND book_osis = ?"]; }
 	}
 
@@ -837,18 +847,6 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 	}
 	sqlite3_finalize(stmt);
 	return results;
-}
-
-// Map a localised book name (or an OSIS short name if we're lucky enough
-// to get one) to the OSIS short name stored in book_osis. SWORD exposes a
-// VerseKey that can translate. We keep this cheap and deterministic.
-+ (NSString *)osisBookNameForLocalisedBookName:(NSString *)bookName {
-	if(bookName.length == 0) return nil;
-	sword::VerseKey vk;
-	vk.setText([bookName UTF8String]);
-	if(vk.popError()) return nil;
-	const char *osis = vk.getOSISBookName();
-	return osis ? [NSString stringWithUTF8String:osis] : nil;
 }
 
 @end
