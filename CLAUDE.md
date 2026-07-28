@@ -12,9 +12,13 @@ The app is a **mixed Swift / Objective-C++ target**. The app layer under `Classe
 
 - Open `PocketSword.xcodeproj` in Xcode and build the shared `PocketSword` scheme (there is a second scheme `PocketSword1`). There is no `.xcworkspace` and no package manager step.
 - CLI build: `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -configuration Debug -sdk iphonesimulator build` (swap to `-sdk iphoneos` and `-configuration Release`/`Distribution` as needed). You may need `CODE_SIGNING_ALLOWED=NO` for simulator builds without a dev team.
-- **Tests exist.** The `PocketSwordTests` XCTest bundle (app-hosted, `@testable import PocketSword`) has **76 tests** — 73 that run by default plus 3 env-gated: 18 in `Classes/PersistedFormatTests.swift`, 10 in `Classes/PSVoiceRefParserTests.swift`, 13 in `Classes/SwordOracleCaptureTests.swift`, 27 in `Classes/PSContentStoreTests.swift`, 2 in `Classes/PSSearchIndexParityTests.swift`, 6 in `Classes/PSDifferentialTests.swift`. Run with `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test`, or prefer the Xcode MCP test tools (the CLI `-destination` can fail to resolve even for a booted simulator). The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
+- **Tests exist.** The `PocketSwordTests` XCTest bundle (app-hosted, `@testable import PocketSword`) has **103 tests** — 96 that run by default plus 7 env-gated: 18 in `Classes/PersistedFormatTests.swift`, 10 in `Classes/PSVoiceRefParserTests.swift`, 14 in `Classes/SwordOracleCaptureTests.swift`, 28 in `Classes/PSContentStoreTests.swift`, 2 in `Classes/PSSearchIndexParityTests.swift`, 6 in `Classes/PSDifferentialTests.swift`, 25 in `Classes/PSRefSemanticsTests.swift`. Run with `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test`, or prefer the Xcode MCP test tools (the CLI `-destination` can fail to resolve even for a booted simulator). The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
 - **The oracle tests lock live SWORD output** against 33 committed fixtures under `Tests/Fixtures/` (chapter bodies at **both** option endpoints, a bookmark-highlighted body, lexicon entries, footnote/scriptRef attribute shapes), captured while the engine is still in the tree so the SWORD-removal work has an acceptance criterion after it is deleted. They **assert** by default; they only rewrite the fixtures when `PSORACLE_CAPTURE` is set in the environment (see the file header). A red one means the render path changed — do not recapture to make it pass unless the change was intended. Two of them also guard things with no other executable check: that Obj-C `PSFoldForIndex` and Swift `PSSearchQuery.foldForIndex` still agree (a byte-for-byte duplicated algorithm), and that `getChapter`'s loop counter is unchanged.
-- **`PSDifferentialTests` is the SWORD-removal acceptance criterion** and is tiered. The fast tier runs every time: all 15,824 lexicon entries keyed as the *UI* keys them, all 6,959 notes, and a fixed strided chapter sample at both option endpoints. The exhaustive tier is gated on `PSDIFF_EXHAUSTIVE=1` and covers all 1,189 chapters of both modules × both endpoints plus all 31,102 search-source rows; **re-run it before deleting the engine in Phase 5.** `PSSearchIndexParityTests` does the same job for the FTS index, comparing a store-built index against an engine-built one row by row. Getting either env var into a *test* run needs a temporary `<EnvironmentVariables>` block in the shared scheme's `TestAction` **plus** `shouldUseLaunchSchemeArgsEnv = "NO"` (the block is ignored otherwise) — back the scheme up and restore it, it is checked in.
+- **`PSDifferentialTests` is the SWORD-removal acceptance criterion** and is tiered. The fast tier runs every time: all 15,824 lexicon entries keyed as the *UI* keys them, all 6,959 notes, and a fixed strided chapter sample at both option endpoints. The exhaustive tier is gated on `PSDIFF_EXHAUSTIVE=1` and covers all 1,189 chapters of both modules × both endpoints plus all 31,102 search-source rows; **re-run it before deleting the engine in Phase 5.** `PSSearchIndexParityTests` does the same job for the FTS index, comparing a store-built index against an engine-built one row by row.
+
+- **`PSRefSemanticsTests` is the same thing for reference semantics** (Phase 4), tiered the same way and gated on `PSREF_EXHAUSTIVE=1`. Its fast tier includes the **four-part unreachability proof** that licenses the `x`/`scriptRef` deletion, and it re-derives that proof from the store rather than trusting prose. Two things about it to know before touching it: the chapter-navigation comparisons must call `moduleForNavigation(_:)`, which **pins the verse key's `intros` flag off** — `-chapterBodyHTML:` used to leak it on, and with intros on `normalize` makes chapter 0 valid so every book-boundary transition shifts by one. And the book-shape half now compares against `Tests/Fixtures/versification-KJV-oracle.txt` (66 books × 5 members, 1,189 verse maxima, all 2,376 transitions), captured while the engine was still in the tree, because `SwordBook` is gone. Do not recapture that fixture to make a red test pass.
+
+- Getting any of these env vars into a *test* run needs a temporary `<EnvironmentVariables>` block in the shared scheme's `TestAction` **plus** `shouldUseLaunchSchemeArgsEnv = "NO"` (the block is ignored otherwise) — back the scheme up and restore it, it is checked in.
 - Configurations: `Debug`, `Release`, `Distribution`. Each has a **different** `PRODUCT_BUNDLE_IDENTIFIER` (`org.timsams.PocketSword` / `org.timsam.PocketSword` / `org.Crosswire.PocketSword`) — do not assume they match.
 - Deployment target: `IPHONEOS_DEPLOYMENT_TARGET = 26.0`, universal (`TARGETED_DEVICE_FAMILY = "1,2"`).
 
@@ -102,8 +106,29 @@ underneath as a fallback and as the differential oracle, and goes in Phase 5.
   `NSMutableString` (the algorithm is index-based insertion at UTF-16 offsets;
   redoing it over `String.Index` would be a different algorithm).
 - `PSBookOSISResolver` — book **name** → OSIS abbreviation, because runtime refs
-  carry names ("Genesis 1") while `chapters` is keyed `book_osis='Gen'`. Narrow by
-  design; free-text ref parsing is Phase 4.
+  carry names ("Genesis 1") while `chapters` is keyed `book_osis='Gen'`. As of
+  Phase 4 it is also the app's whole **versification layer** — `book(at:)`,
+  `verseMax(book:chapter:)`, `nextChapter`/`previousChapter`, `displayRef` — and
+  `PSVersificationBook` is the direct replacement for the deleted `SwordBook`.
+  Two things there are deliberate and load-bearing: next/prev return **nil** at
+  Genesis 1 / Revelation 22 where `VerseKey::normalize` *clamped* (returning the
+  clamped ref would turn a no-op into a full re-render), and `displayRef` returns
+  the un-munged **`longName`** form because that is what `VerseKey::freshtext`
+  produced and every call site munges it downstream.
+- `PSRefParser` — the free-text reference parser (Phase 4):
+  `<book> [<chapter>[:<verse>[-<verse>]]]`, single book. Deliberately narrower
+  than `parseVerseList` — no lists, no cross-book/cross-chapter ranges, no roman
+  numerals, no `ff`, no `inscriptio` — and the header documents each omission with
+  the `versekey.cpp` line that implements it. Its one production caller is the
+  inbound `sword://` URL path, the only reference the app does not generate itself.
+  Note it is **wider** than `PSBookOSISResolver.resolve(ref:)` (it adds a
+  trailing-`.` and a despaced-abbreviation fallback), so anything that *persists* a
+  parsed ref must check the resolver can still resolve it — see the app delegate.
+- `PSRefLinkRouter` — the `showRef` routing predicate, extracted out of
+  `PSTabBarControllerDelegate` as a pure function so link routing is assertable
+  without the simulator. It reproduces `+[SwordModule
+  moduleTypeForModuleTypeString:]`'s `ret = bible` default, which a naive
+  type-string comparison gets wrong for an unrecognised type.
 - `PSContentReader` — the coordinator the view controllers talk to. Owns module
   selection, the **per-module** option prefs, the bookmark-highlight lookup, the
   bottom pad, the JS block, the `createHTMLString` shell and language/direction.
@@ -117,11 +142,21 @@ engine to fall back to.
 
 **Two things not to "simplify":**
 
-- `dict_keys.key` is **`COLLATE NOCASE`** on purpose. The Dictionary tab displays and
-  re-looks-up `[keyText capitalizedString]`, which mangles 1,375 of Robinson's 1,526
-  keys (`V-PAI-3S` → `V-Pai-3S`); it works today only because SWORD uppercases both
-  sides for a module without `CaseSensitiveKeys`. A binary `WHERE key=?` misses ~90%
-  of Robinson while passing every committed fixture.
+- `dict_keys.key` is **`COLLATE NOCASE`**, now as **defence in depth** rather than
+  load-bearing. The Dictionary tab used to display and re-look-up
+  `[keyText capitalizedString]`, mangling 1,375 of Robinson's 1,526 keys
+  (`V-PAI-3S` → `V-Pai-3S`) and working only because SWORD uppercases both sides for
+  a module without `CaseSensitiveKeys`. Phase 4 **fixed** that — both producers now
+  return the module's true casing, and a `DefaultsDictKeyCaseFixed` one-shot deletes
+  the `<Caches>/cache-<name>-<version>` key caches so they rebuild (the version comes
+  from `content_meta`, so the migration needs no SWORD call). Keep the collation
+  anyway: a cache that somehow survives the migration still finds its entry instead of
+  showing a blank definition, and `PSContentStoreTests` asserts **both** casings
+  resolve for all 15,824 keys so a binary `WHERE key=?` still fails the suite.
+  Relatedly, `PSDictionaryViewController` has exactly one `key(at:)` that branches on
+  `searching`; do not go back to reading the key off the cell's label, and do not
+  index the full key list unconditionally — that opens the wrong entry for every
+  search result.
 - The chapter-navigation JS lives in **one** place,
   `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`, which both the reader
   and `-getChapter:` call. It is 4 KB of pure JS with no SWORD dependency; do not
@@ -129,10 +164,14 @@ engine to fall back to.
 
 ### SWORD bridge (`Classes/Sword*.{h,mm}`, `PSSearchEngine.{h,mm}`, `VerseEnumerator.{h,mm}`) — Obj-C++, until Phase 5
 
-Objective-C++ wrappers over the C++ SWORD API. They stay `.mm` for as long as they exist — direct Swift⇄C++ interop is not viable for SWORD's operator-overloaded value-semantic API — but they are **no longer permanent, and no longer the render path**: Phase 3 moved reading to the Swift content reader above, and `SWORD_REMOVAL_PLAN.md` Phase 5 deletes this whole layer. What still routes through it: versification / ref parsing (`SwordBook`, the selector VCs), `attributeValue(forEntryData:)`'s `scriptRef` and `x` branches, `hasFeature:` (reads the module `.conf`), and the `AbsoluteDataPath` the search index db lives under — which is why the module zips must keep seeding into `Documents/` for now.
+Objective-C++ wrappers over the C++ SWORD API. They stay `.mm` for as long as they exist — direct Swift⇄C++ interop is not viable for SWORD's operator-overloaded value-semantic API — but they are **no longer permanent, and no longer the render path**: Phase 3 moved reading to the Swift content reader above, and `SWORD_REMOVAL_PLAN.md` Phase 5 deletes this whole layer. What still routes through it after Phase 4: `hasFeature:` (reads the module `.conf`), the `AbsoluteDataPath` the search index db lives under — which is why the module zips must keep seeding into `Documents/` for now — `PSSearchEngine`'s SWORD fallback index build, and `-setVerseKeyText:`/`-keyText` for `-[PSModuleController reload]`'s save/restore across a `reInit`.
+
+**Phase 4 removed the rest of the reference semantics.** Versification and ref parsing are the baked table's job now (`PSBookOSISResolver` + `PSRefParser`); `SwordBook`, `+[SwordManager booksForVersificationSystem:]` and `attributeValue(forEntryData:)`'s `scriptRef` and `x` branches are **deleted**, as is `PSSearchEngine`'s private `osisBookNameForLocalisedBookName:`. The `x`/`scriptRef` deletion rests on a four-part unreachability proof re-derived from the store on every test run (zero `action=showRef` across 122,380 record expansions plus all 1,322 headings; 6,959/6,959 notes `type='study'` with empty refLists; the only baked `sword://` links are 14,989 lexicon→lexicon ones, all of which route to the *dictionary* arm). `+translateBookName:`/`+translateToSystemLocale:` survive but have **two fewer callers**: both were verified identity for all 66 books on every device (there is no `en` locale conf, and `SWLocale(0)` has no `[Text]` section).
+
+`-setChapter:`, `-setToNextChapter`, `-setToPreviousChapter`, `-getVerseMax` and `-setIntroductions:` have **no production callers** any more — they are kept solely as the test oracle for `PSRefSemanticsTests` and go in Phase 5.
 
 - `SwordManager` (singleton via `+defaultManager`) wraps `sword::SWMgr` — enumerates installed modules, manages cipher keys, global options, and the module install path (`DEFAULT_MODULE_PATH` under `Documents/`). Its surface was pruned in the Phase-1 module-choice removal: `modulesForFeature:`, `+managerWithPath:`, `-addPath:`, `-initWithSWMgr:`, `+moduleTypes` and the `moduleListByType` / `moduleTypes` / `temporaryManager` properties are gone. `+moduleCategoryAllowed:` survives as an internal PrivateAPI helper — `-refreshModules` uses it to keep glossary/essay dictionaries out of the list.
-- `SwordModule` (+ subclasses `SwordBook`, `SwordDictionary`) wrap `sword::SWModule` and produce rendered HTML via the markup-filter chain. `-getChapter:withExtraJS:` is a thin wrapper over `-chapterBodyHTML:applyBookmarkHighlights:entryCount:`, which holds the accumulator loop. The split exists because `getChapter:`'s own output is not a stable oracle — it embeds a 120-line JS block, live font prefs and a `PSBookmarks` read — whereas the body is the contract the Swift reader must reproduce. Its `entryCount` out-param is the loop counter, which is **not** a verse count: it advances even for entries the loop skips, and it drives the `vv{i}` anchors, the `pocketsword:versemenu:` links and the bookmark-highlight lookup.
+- `SwordModule` (+ subclass `SwordDictionary`; `SwordBook` was deleted in Phase 4) wraps `sword::SWModule` and produce rendered HTML via the markup-filter chain. `-getChapter:withExtraJS:` is a thin wrapper over `-chapterBodyHTML:applyBookmarkHighlights:entryCount:`, which holds the accumulator loop. The split exists because `getChapter:`'s own output is not a stable oracle — it embeds a 120-line JS block, live font prefs and a `PSBookmarks` read — whereas the body is the contract the Swift reader must reproduce. Its `entryCount` out-param is the loop counter, which is **not** a verse count: it advances even for entries the loop skips, and it drives the `vv{i}` anchors, the `pocketsword:versemenu:` links and the bookmark-highlight lookup.
 - `SwordKey` / `SwordVerseKey` / `SwordListKey` / `VerseEnumerator` wrap SWORD's key types for references and search.
 - `PSSearchEngine.mm` owns the SQLite/FTS5 search index build and query (C++-clean public header; the `sword::`/`sqlite3` code stays in the `.mm`). **The index build reads the baked store, not `stripText()`,** when the content reader is active — `-buildFromContentStoreWithProgress:` walks `PSContentStore`'s `@objc` row cursor, and the SWORD walk remains as the fallback. The FTS schema, the column set, and the order of cleaning-then-emptiness-test are unchanged. `ORDER BY rowid` is deliberately *not* `ORDER BY ordinal`: verified equivalent (ordinal is strictly increasing and unique across all 31,102 rows), and changing it would need a schema bump plus a forced rebuild for every user. Two free functions are exported with C linkage from the header's `extern "C"` block: `PSSearchCleanDisplayText` (strips the inline `<H0430>` / `<TH8799>` markers `stripText()` interleaves when the Strong's option is on — applied *before* the emptiness test, so it decides which rows exist) and `PSFoldForIndex` (diacritic folding). `PSFoldForIndex` is duplicated byte-for-byte as Swift `PSSearchQuery.foldForIndex`; they are the index and query halves of one algorithm and a test asserts they agree. If you change one, change both.
 

@@ -85,7 +85,8 @@ Each phase should ship independently and keep the app launchable + `PersistedFor
 > **The exit criterion passed.** `crosscheck.py` expands each stored chapter, replays the accumulator loop, and diffs against the live-SWORD fixtures — two sides sharing no code (C++ writing SQLite vs Swift calling SWORD). All 11 chapter bodies reproduce byte-for-byte (including Ps 119's 177 entries, the canonical-heading path and MHCC's shared-body path) and all 14 sampled lexicon entries match. Confirmed to be a real gate by swapping two same-length records inside a chapter: it fails with the byte offset and exits non-zero.
 >
 > **Findings that correct this doc and the Phase-2 plan:**
-> 1. **There is a fifth `passagestudy.jsp` emission site.** `osishtmlhref.cpp:327` emits a `showRef`/`scripRef` anchor for every `<reference>` tag. It is **not** option-gated, uses raw `&` separators rather than `&amp;`, and emits only the opening tag (the `</a>` comes from the end-tag branch). KJV verse bodies contain none, but the canonical Psalm titles do — the self-check caught it on the first run.
+> 1. **There is a fifth `passagestudy.jsp` emission site.** `osishtmlhref.cpp:327` emits a `showRef`/`scripRef` anchor for every `<reference>` tag. It is **not** option-gated, uses raw `&` separators rather than `&amp;`, and emits only the opening tag (the `</a>` comes from the end-tag branch). KJV verse bodies contain none.
+>    **CORRECTED IN PHASE 4 (F1):** this finding went on to claim the canonical Psalm titles *do* carry such an anchor. **They do not.** Re-derived three independent ways — zero `action=showRef` across 122,380 record expansions plus all 1,322 stored headings, none in any of the 33 committed live-SWORD fixtures, and the only baked `sword://` links anywhere are 14,989 lexicon→lexicon ones. The emission site exists in the engine; no shipped content reaches it. That is what licensed deleting the `scriptRef` branch in Phase 4 step 8.
 > 2. **`verses_plain` is 31,102 rows for KJV, not 32,359.** The smaller figure matches today's index build exactly, verified against a replica of `-buildWithProgress:`. The stored text also has `PSSearchCleanDisplayText` applied, as the app does before inserting. (Phase 2 stored these columns so the index build would be a pure copy loop; Phase 3 now derives them instead — see the size-reduction plan. The 31,102 figure still matters as the row count the derived path must reproduce.)
 > 3. **`StrongsRealHebrew` has two duplicate keys on disk** (`02200`, `06401`); for `06401` the second occurrence is a 21-byte `</dictionary>` stub. `INSERT OR REPLACE` would have silently kept the stub, so first-occurrence wins and every collision is logged. 8,674 stored + 2 skipped = the 8,676 in the `.idx`.
 > 4. **Gen 1's loop counter is 32, for 31 verses** — it starts at 0 on the verse-0 intro slot and increments at the bottom of every iteration including the one that steps out of the chapter, so it lands on `verses + 1`.
@@ -181,8 +182,10 @@ in place.
    15,824 keys are pure ASCII with zero case-fold collisions and rowid order == binary
    order == case-insensitive order. Verified to be a real gate: forcing the lookup
    case-sensitive fails with "1375 of 1526 UI-cased keys do not resolve".
-   The wrong *display* casing is deliberately preserved; fixing it is Phase 4 and must
-   invalidate the on-disk key caches.
+   The wrong *display* casing was deliberately preserved here; **Phase 4 step 9 fixed
+   it** (both producers now return true casing) and invalidated the on-disk key caches
+   via the `DefaultsDictKeyCaseFixed` one-shot, as this note required. The
+   `COLLATE NOCASE` stays as defence in depth.
 
 3. **Two real bugs in the baked FTS text, found by the differential test, not by any
    fixture.** The converter captured `stripText()` under the config it uses for the
@@ -237,21 +240,143 @@ in place.
     is *better*. Consequence found by the test: `-allKeys` yields **15,826** keys, not
     15,824, because both duplicated keys appear twice.
 
-**Still on SWORD after Phase 3** (Phase 4 work): `attributeValue(forEntryData:)`'s
-`scriptRef` and `x` branches (they need range resolution via `parseVerseList`),
-versification / `SwordBook` / ref parsing, `osisBookNameForLocalisedBookName:`, and
-the Robinson display-casing fix. The module zips must also keep seeding into
+**Still on SWORD after Phase 3** (Phase 4 work — all now ✅ done, see the Phase 4
+block below): `attributeValue(forEntryData:)`'s `scriptRef` and `x` branches
+(believed to need range resolution via `parseVerseList`; Phase 4 found both
+unreachable and deleted them instead), versification / `SwordBook` / ref parsing,
+`osisBookNameForLocalisedBookName:`, and the Robinson display-casing fix. The module zips must also keep seeding into
 `Documents/` for now, because `PSSearchEngine` derives its db path from
 `AbsoluteDataPath` and `hasFeature:` reads the module `.conf`.
 
-### Phase 4 — KJV reference parser + versification (replace VerseKey)
+### Phase 4 — KJV reference parser + versification (replace VerseKey) — ✅ DONE
 
-Pure Swift; the one genuinely new algorithm. Bounded because it's KJV-only.
+Pure Swift over the already-bundled `Resources/Versification-KJV.json`. Landed as 11
+commits, one sub-area each; every commit builds and leaves the default suite green.
+**Tests: 73 → 96 default** (7 env-gated), the new ones in `PSRefSemanticsTests`.
 
-- Load the Phase-2 versification table.
-- Free-text ref parse (`"Jn 3:16"`, ranges, abbreviations) → canonical OSIS; round-trip back to display strings; chapter/verse bounds; next/prev navigation.
-- Replaces `SwordBook` (ref selector, chapter/verse selectors, voice-ref gazetteer) and the internal `VerseKey`/`ListKey` semantics.
-- Lock behavior with tests in the `PersistedFormatTests` spirit (this is correctness-sensitive and user-visible).
+What landed: `PSBookOSISResolver` extended into the whole versification layer
+(`book(at:)`, `verseMax`, `nextChapter`/`previousChapter`, `displayRef`); new
+`PSRefParser` (bounded grammar, one production caller) and `PSRefLinkRouter`
+(routing predicate as a pure function); the four selector VCs, the voice gazetteer,
+the search book-scope filter and chapter next/prev all moved off SWORD; the locale
+round-trip retired; `x`/`scriptRef` deleted; the Robinson display-casing bug fixed;
+`SwordBook` + `+booksForVersificationSystem:` deleted.
+
+#### Findings that shaped the work (all measured, not assumed)
+
+**F1. `scriptRef` is unreachable for the shipped content, exactly like `x` — and
+this *corrects* Phase-2 finding 1 below.** That finding claimed canonical Psalm
+titles carry the un-option-gated `osishtmlhref.cpp:327` `showRef` anchor. **They do
+not.** Re-derived from the store on every test run: zero `action=showRef` across
+122,380 record expansions (all 1,189 chapters × both modules × both option
+endpoints) **plus all 1,322 stored headings** — the axis a blob-shaped scan misses,
+because `headings.html` is a text column, not a blob. None of the 33 committed
+live-SWORD fixtures contains one either. The only baked `sword://` links anywhere
+are 14,989 lexicon→lexicon (`StrongsRealHebrew` 8,244 + `StrongsRealGreek` 6,745),
+and all 14,989 route to the **dictionary** arm of the web delegates, asserted
+through the `PSRefLinkRouter` seam. `x` is dead twice over: no `x` anchor is ever
+emitted, *and* all 6,959 notes are `type='study'` with an empty `refList`.
+
+**F2. `entry_count == verseMax[chapter-1] + 1` for all 1,189 chapters**, zero
+exceptions — so a chapter record's slot index **is** the verse number (slot 0 is the
+verse-0 intro). That is what let `testCaptureScriptRefAttributes` be *retargeted* at
+`PSRefParser` + `PSChapterExpander` with the fixture byte-unchanged, rather than
+deleted.
+
+**F3. `+translateBookName:` / `+translateToSystemLocale:` are identity for every
+input on every device.** There is no `en` locale conf (all 118 in `locales.d.zip`
+checked); the only English locale is `SWLocale(0)` (`swlocale.cpp:63-69`), built
+with `SWConfig(0)`, which has no `[Text]` section, so `translate` returns its input.
+Asserted 66/66. The "translate back to English" comment at `SwordManager.mm`
+described an intention the code never implemented.
+
+**F4. `content_meta` already carries the module versions that name the key-cache
+files** (`Robinson 2.0`, `StrongsRealGreek 1.5-150704`, `StrongsRealHebrew
+1.090107`), byte-identical to the `Version=` conf entries — so the cache migration
+needs no `SwordDictionary` and no SWORD call, and survives Phase 5.
+
+**F5. `Versification-KJV.json` reproduces `SwordBook`'s munges byte-exactly.**
+`name == munge(localisedName)` 66/66; `shortName == despace+first3(name)` 66/66 with
+both collisions intact; ΣΣ verseMax = 31,102. No re-munging needed.
+
+#### Two traps, both confirmed in the engine source and handled
+
+- **SWORD *clamps* at the canon boundaries, it does not error.** `normalize`
+  (`versekey.cpp:1466-1493`) pins to the bound and only sets `KEYERR_OUTOFBOUNDS`,
+  so `-setToNextChapter` at Rev 22 returned *the ref it was given*, and the callers'
+  string-equality gate is what turned that into a no-op. The table returns **nil**
+  instead; returning the clamped ref would turn a no-op into a full re-render.
+- **`setToNextChapter` returns the un-munged `longName` form.** `freshtext`
+  (`versekey.cpp:378`) builds key text from `getBookName()` = identity here, so the
+  raw return is `"Revelation of John 22"` and callers munge it downstream. 18 of 66
+  books have `name != longName`.
+
+#### Bugs found and fixed along the way (none were in the plan)
+
+1. **`-[SwordModule chapterBodyHTML:]` leaked the verse key's `intros` flag on** —
+   it set it and never restored it, unlike `-getChapter:`. Invisible in the app
+   (only `-getChapter:` calls it, and that restores), but the differential and
+   oracle tests call it directly on the same singleton module, and with intros on
+   `normalize` treats chapter 0 as valid so `"Genesis 50" + 1` is `"Exodus 0"`. All
+   65 book-boundary transitions shift. Now saved/restored, and the navigation tests
+   pin the flag rather than relying on the fix.
+2. **The inbound `sword://` path persisted unvalidated refs** to `Defaults.lastRef`
+   (`sword://KJV/Nonsense+9:9` → `"Nonsense 9"`), and persisted a chapter-less
+   `"John"` for `sword:///John`. Both now go through `PSRefParser`.
+3. **`PSRefParser` is wider than `PSBookOSISResolver.resolve(ref:)`**, so accepting
+   a ref was not enough: `sword://KJV/Gen.+1` parsed and persisted the unresolvable
+   `"Gen. 1"` (462 such spelling×shape combinations). The delegate now falls back to
+   the parser's canonical `name`-form ref whenever the URL's own spelling is not
+   reader-resolvable.
+4. **The `"Jud"` abbreviation genuinely disagrees** — Judges for us (first-writer-wins
+   over canonical order, which is what the ref-selector strip does), Jude for SWORD
+   (prefix match over `canon_abbrevs.h:429-430`). Kept, and asserted as an exact
+   expected set. `"Phi"` does *not* diverge.
+
+#### Known issues left open
+
+- **The pushed dictionary-entry view renders a blank body** (correct title, no
+  text). Verified pre-existing by stashing back to the step-8 build: identical blank
+  body there with the old mangled title, so it predates Phase 4 entirely. It is in
+  `PSDictionaryEntryViewController`'s `loadView`/web-view lifecycle, not the key
+  lookup. Worth its own commit.
+- **`PSModuleSearchController` restores `searchRange` from defaults but leaves
+  `bookName` nil**, and only `-scopeControlChanged:` populates it — so a *persisted*
+  scope=Book silently searches the whole Bible until the user taps the segment again.
+  Pre-existing and unrelated to versification.
+
+#### Deliberately out of scope, still for Phase 5
+
+`hasFeature:` · `AbsoluteDataPath` / the search-index db path · the `Documents/`
+module seeding and the five zips · `locales.d.zip` seeding, `+initLocale`,
+`+translateBookName:`, `+translateToSystemLocale:` (Phase 4 removed 2 of 4 *callers*)
+· `PSSearchEngine`'s SWORD fallback index build ·
+`PSFeatureFlags.swiftContentReader` and the reader's ten nil-returns →
+hard failures · `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]` (move,
+do not copy) · `SwordKey`/`SwordVerseKey`/`SwordListKey`/`VerseEnumerator` ·
+`-setChapter:`/`-setToNextChapter`/`-setToPreviousChapter`/`-getVerseMax`/
+`-setIntroductions:`, which now have **no production callers** and survive only as
+`PSRefSemanticsTests`' oracle.
+
+#### Verification performed
+
+- **Full clean build** (DerivedData wiped): 174 CompileC + 77 SwiftCompile, no
+  errors — the proof that the bridging-header graph is still clean with `SwordBook`
+  gone from both headers.
+- **Both exhaustive tiers re-run at step 10, 31/31 passed, 0 skipped:**
+  `PSRefSemanticsTests` — 62,204 verses vs `VerseKey` (31,102 × both name forms),
+  31,102 parser round-trips, 1,189 parser-vs-resolver agreements, 424 abbreviation
+  forms agreeing (33 rejected as out-of-scope, 2 collisions);
+  `PSDifferentialTests` — KJV 2,378 chapters, MHCC 2,378, 31,102 search-source rows.
+- **Simulator (iPhone 17 Pro)** at every cutover: ref-selector strip incl.
+  scroll-to-current; chapter/verse selectors (Judges 21 chapters, Judges 7 25
+  verses); jump-to-1:1; next/prev at Mal 4→Matt 1 and both greyed-out boundaries;
+  search scope=All 16 results vs scope=Book 3 (all 1 John) from the abbreviated
+  `"1 Joh"`; Strong's tap in a chapter **and** inside a lexicon entry; the
+  localised-`lastRef` migration firing on a seeded container; `sword://` good, bad,
+  chapter-less and trailing-period URLs; the Dictionary tab showing true-cased
+  `V-PAI-3S` after a planted mangled cache was cleared, and searching then tapping a
+  result.
 
 ### Phase 5 — Excise SWORD + C++ build wiring
 

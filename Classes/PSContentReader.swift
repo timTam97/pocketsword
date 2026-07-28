@@ -112,15 +112,14 @@ final class PSContentReader: NSObject {
         return Int(dictionary?.entryCount() ?? 0)
     }
 
-    /// The **`n` branch only** of `-[SwordModule attributeValueForEntryData:]`.
+    /// The **`n` branch only** of `-[SwordModule attributeValueForEntryData:]` —
+    /// which, as of Phase 4 step 8, is the only branch of it that renders content.
     ///
-    /// The `x` (cross-reference) and `scriptRef` branches stay on SWORD this
-    /// phase: both resolve arbitrary reference lists — including ranges — through
-    /// `parseVerseList` (SwordModule.mm:597-621), and
-    /// `testCaptureScriptRefAttributes` pins "Ps 23:1-3" yielding three elements.
-    /// Range resolution is Phase 4. (The `x` branch is also unreachable for the
-    /// shipped content: all 6,959 KJV notes are type='study' with an empty
-    /// refList.)
+    /// The `x` (cross-reference) and `scriptRef` branches are **deleted**: both were
+    /// proven unreachable for the shipped content (no `x` anchor is ever emitted and
+    /// all 6,959 notes are type='study' with an empty refList; no `action=showRef`
+    /// appears in any chapter record or stored heading, and every one of the 14,989
+    /// baked `sword://` links routes to the dictionary arm). See PSRefSemanticsTests.
     @objc(footnoteBodyForModule:data:orModule:)
     static func footnoteBody(module: String?, data: [AnyHashable: Any], or swordModule: SwordModule?) -> String? {
         if isActive, let module,
@@ -362,10 +361,10 @@ final class PSContentReader: NSObject {
     /// A footnote body, expanded, for the `n` branch of
     /// `-[SwordModule attributeValueForEntryData:]`.
     ///
-    /// The **scriptRef branch stays on SWORD** this phase: it resolves arbitrary
-    /// references including ranges through `parseVerseList`
-    /// (SwordModule.mm:597-621) — `testCaptureScriptRefAttributes` pins
-    /// "Ps 23:1-3" yielding three elements — and range resolution is Phase 4.
+    /// The scriptRef branch is **gone** (Phase 4 step 8): it was unreachable for the
+    /// shipped content, and `testCaptureScriptRefAttributes` — which pins
+    /// "Ps 23:1-3" yielding three elements — was retargeted at
+    /// `PSRefParser` + `PSChapterExpander`, fixture byte-unchanged.
     @objc(noteBodyForModule:osisRef:marker:)
     func noteBody(module: String, osisRef: String, marker: String) -> String? {
         guard let store else { return nil }
