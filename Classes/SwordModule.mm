@@ -566,59 +566,25 @@
         //char *fText = (char *)swModule->StripText(footnoteText);
 		sword::SWBuf fText = swModule->renderText(footnoteText);
         ret = [NSString stringWithUTF8String:fText.c_str()];
-    } else if([attrType isEqualToString:@"x"]) {
-        if([self isUnicode]) {
-            swModule->setKey([passage UTF8String]);
-        } else {
-            swModule->setKey([passage cStringUsingEncoding:NSISOLatin1StringEncoding]);
-        }
-        //swModule->RenderText(); // force processing of key
-        swModule->stripText(); // force processing of key
-        
-        sword::SWBuf refList = swModule->getEntryAttributes()["Footnote"][[[data objectForKey:ATTRTYPE_VALUE] UTF8String]]["refList"];
-        sword::VerseKey parser([passage UTF8String]);
-        parser.setVersificationSystem([[self versification] UTF8String]);
-        sword::ListKey refs = parser.parseVerseList(refList, parser, true);
-        
-        ret = [NSMutableArray array];
-        // collect references
-        for(refs = sword::TOP; !refs.popError(); refs++) {
-            swModule->setKey(refs);
-            if(![self error]) {
-                NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
-                NSString *text = [NSString stringWithUTF8String:swModule->stripText()];
-                
-                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
-                [dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
-                [dict setObject:key forKey:SW_OUTPUT_REF_KEY];
-                [ret addObject:dict];
-            }
-        }
-    } else if([attrType isEqualToString:@"scriptRef"] || [attrType isEqualToString:@"scripRef"]) {
-		NSString *rawKey = [[[data objectForKey:ATTRTYPE_VALUE] stringByReplacingOccurrencesOfString:@"+"
-                                                                                       withString:@" "] stringByRemovingPercentEncoding];
-		[self setChapter:[PSModuleController getCurrentBibleRef]];
-		sword::VerseKey *curKey = (sword::VerseKey*)swModule->getKey();
-		sword::VerseKey parser(curKey->getShortText());
-		parser.setVersificationSystem([[self versification] UTF8String]);
-		DLog(@"%@", rawKey);
-		sword::ListKey refs = parser.parseVerseList([rawKey UTF8String], parser, true);
-        
-		ret = [NSMutableArray array];
-		// collect references
-		for(refs = sword::TOP; !refs.popError(); refs++) {
-			swModule->setKey(refs);
-			if(![self error]) {
-				NSString *key = [NSString stringWithUTF8String:swModule->getKeyText()];
-				//NSString *text = [NSString stringWithUTF8String:swModule->StripText()];
-				NSString *text = [NSString stringWithUTF8String:swModule->renderText()];
-				
-				NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
-				[dict setObject:text forKey:SW_OUTPUT_TEXT_KEY];
-				[dict setObject:key forKey:SW_OUTPUT_REF_KEY];
-				[ret addObject:dict];                
-			}
-		}
+    // The @"x" (cross-reference) and @"scriptRef"/@"scripRef" branches have been
+    // DELETED -- SWORD_REMOVAL_PLAN.md Phase 4 step 8. Both were unreachable for the
+    // shipped content, re-derived from the baked store rather than assumed (see
+    // PSRefSemanticsTests):
+    //
+    //   * @"x" was dead twice over. No `x` anchor is emitted anywhere (zero
+    //     cross-reference tokens across all 1,189 chapters of both modules at both
+    //     option endpoints), AND all 6,959 notes are type='study' with an EMPTY
+    //     refList -- so parseVerseList had nothing to parse even if one were.
+    //   * @"scriptRef" likewise. The plan's earlier Phase-2 note claimed canonical
+    //     Psalm titles carried an un-option-gated showRef anchor; they do not. Zero
+    //     `action=showRef` in 122,380 record expansions plus all 1,322 stored
+    //     headings, none in any of the 33 committed live-SWORD fixtures, and the only
+    //     baked sword:// links anywhere are 14,989 lexicon->lexicon ones -- every one
+    //     of which routes to the *dictionary* arm of the web delegates, not the
+    //     bible-ref arm that led here.
+    //
+    // These were also the last two users of parseVerseList and of the ambient
+    // `[PSModuleController getCurrentBibleRef]` seeding at the old :600.
     } else if([attrType isEqualToString:@"Greek"] || [attrType isEqualToString:@"Hebrew"]) {
         NSString *key = [data objectForKey:ATTRTYPE_VALUE];        
 

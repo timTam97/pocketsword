@@ -859,42 +859,25 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                         entry = entry?.replacingOccurrences(of: "*x", with: "x")
                         entry = entry?.replacingOccurrences(of: "*n", with: "n")
                         entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod?.name)
-                    } else if (rData[SWRender.attrType] as? String) == "x" { // x-reference
-                        let array: [Any]?
-                        if tabType == .BibleTab {
-                            array = PSModuleController.default().primaryBible?.attributeValue(forEntryData: rData) as? [Any]
-                        } else {
-                            array = PSModuleController.default().primaryCommentary?.attributeValue(forEntryData: rData) as? [Any]
-                        }
-                        let tmpEntry = NSMutableString(string: "")
-                        for case let dict as [AnyHashable: Any] in (array ?? []) {
-                            let curRef = PSModuleController.createRefString(dict[SWRender.outputRefKey] as? String)
-                            tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef ?? "", curRef ?? "")
-                            tmpEntry.appendFormat("%@<br />", (dict[SWRender.outputTextKey] as? String) ?? "")
-                        }
-                        if !(tmpEntry.isEqual(to: "")) { // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                            entry = tmpEntry.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                            entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                            entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryBible?.name)
-                        }
                     }
-                } else if let rData = rData, (rData[SWRender.attrAction] as? String) == "showRef", tabType == .CommentaryTab {
-                    // ONLY for CommentaryTab as this is only a feature of Commentaries & dictionaries, etc.
-                    let array = PSModuleController.default().primaryBible?.attributeValue(forEntryData: rData, cleanFeed: true) as? [Any]
-                    let tmpEntry = NSMutableString(string: "")
-                    for case let dict as [AnyHashable: Any] in (array ?? []) {
-                        let curRef = PSModuleController.createRefString(dict[SWRender.outputRefKey] as? String)
-                        tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef ?? "", curRef ?? "")
-                        tmpEntry.appendFormat("%@<br />", (dict[SWRender.outputTextKey] as? String) ?? "")
-                    }
-                    if !(tmpEntry.isEqual(to: "")) { // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                        entry = tmpEntry.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                        entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                        entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryBible?.name)
-                    }
+                    // The `x` (cross-reference) arm is GONE — SWORD_REMOVAL_PLAN.md
+                    // Phase 4 step 8. No `x` anchor is ever emitted for the shipped
+                    // content (zero cross-reference tokens in the store) and all
+                    // 6,959 notes are type='study' with an EMPTY refList, so the
+                    // branch that parsed that refList had nothing to act on. Both
+                    // facts are re-derived from the store by
+                    // PSRefSemanticsTests.testEveryNoteIsAStudyNoteWithAnEmptyRefList
+                    // and testNoShippedContentEmitsAShowRefAnchor.
                 }
+                // The `showRef` arm is GONE with it. It called
+                // attributeValueForEntryData:cleanFeed:YES to expand a scriptRef
+                // into a Bible-verse list, and nothing in the shipped content can
+                // reach it: the only sword:// links anywhere are 14,989
+                // lexicon->lexicon ones, and every one of them routes to the
+                // DICTIONARY arm, not this one — asserted over all 14,989 by
+                // PSRefSemanticsTests.testEveryBakedSwordLinkRoutesToTheDictionaryArm
+                // via the PSRefLinkRouter seam. The app's own bible-ref links carry
+                // the `bible` scheme and are intercepted earlier.
 
                 if let popupContent = popupContent {
                     NotificationCenter.default.post(name: .showInfoPane, object: popupContent)

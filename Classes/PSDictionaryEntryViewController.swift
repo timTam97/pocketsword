@@ -133,21 +133,16 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
                 decisionHandler(.cancel)
                 return
 
-            } else if let rData = rData,
-                      (rData[Self.attrTypeAction] as? String) == "showRef" {
-                let array = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData, cleanFeed: true) as? [[String: Any]]
-                var tmpEntry = ""
-                for dict in array ?? [] {
-                    let curRef = PSModuleController.createRefString(dict[Self.swOutputRefKey] as? String) ?? ""
-                    tmpEntry += "<b><a href=\"bible:///\(curRef)\">\(curRef)</a>:</b> "
-                    tmpEntry += "\(dict[Self.swOutputTextKey] as? String ?? "")<br />"
-                }
-                if !tmpEntry.isEmpty {
-                    let cleaned = tmpEntry.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                    entry = PSModuleController.createInfoHTMLString(cleaned,
-                                                                   usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-                }
             }
+            // The `showRef` arm is GONE — SWORD_REMOVAL_PLAN.md Phase 4 step 8. It
+            // expanded a scriptRef into a Bible-verse list via
+            // -attributeValueForEntryData:cleanFeed:YES, and nothing in the shipped
+            // content reaches it: the only sword:// links baked into the lexicons are
+            // the 14,989 lexicon->lexicon ones handled by the branch above, and every
+            // one of them routes to the dictionary arm (asserted over all 14,989 in
+            // PSRefSemanticsTests via the PSRefLinkRouter seam). An unrecognised link
+            // now falls through to decisionHandler(.allow), which is exactly what
+            // happened before whenever the expansion produced nothing.
 
             if let entry = entry {
                 NotificationCenter.default.post(name: .showInfoPane, object: entry)

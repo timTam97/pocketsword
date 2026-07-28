@@ -888,7 +888,23 @@ final class PSTabBarControllerDelegate: NSObject,
             }
 
             if isABibleRef {
-                // handle ref:
+                // The scriptRef EXPANSION is gone — SWORD_REMOVAL_PLAN.md Phase 4
+                // step 8. This arm used to call
+                // -attributeValueForEntryData:cleanFeed: to turn a scriptRef into a
+                // list of Bible verses, and nothing in the shipped content can reach
+                // it: the only sword:// links baked anywhere are 14,989
+                // lexicon->lexicon ones, and every one routes to the DICTIONARY arm
+                // above (asserted over all 14,989 by
+                // PSRefSemanticsTests.testEveryBakedSwordLinkRoutesToTheDictionaryArm
+                // through the PSRefLinkRouter seam). The app's own bible-ref links
+                // carry the `bible` scheme and are intercepted at the top of this
+                // method, well before here.
+                //
+                // What is KEPT is the not-installed placeholder, which is the one
+                // user-visible outcome this arm still has: a link naming a module the
+                // user does not have. Everything else falls through to
+                // decisionHandler(.allow), exactly as it already did whenever the
+                // expansion produced nothing.
                 let modToUse: SwordModule?
                 if let mod = mod, mod != "" {
                     modToUse = SwordManager.default()?.module(withName: mod)
@@ -898,23 +914,6 @@ final class PSTabBarControllerDelegate: NSObject,
                 if let mod = mod, modToUse == nil {
                     entry = "<p style=\"color:grey;text-align:center;font-style:italic;\">\(mod) \(NSLocalizedString("ModuleNotInstalled", comment: "is not installed."))</p>"
                     entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: nil)
-                } else {
-                    let attributeValue = modToUse?.attributeValue(forEntryData: rData, cleanFeed: false)
-                    if let str = attributeValue as? String {
-                        entry = PSModuleController.createInfoHTMLString(str, usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-                    } else if let array = attributeValue as? [[AnyHashable: Any]] {
-                        let tmpEntry = NSMutableString(string: "")
-                        for dict in array {
-                            let curRef = PSModuleController.createRefString(dict[SW_OUTPUT_REF_KEY] as? String) ?? ""
-                            tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef)
-                            tmpEntry.appendFormat("%@<br />", (dict[SW_OUTPUT_TEXT_KEY] as? String) ?? "")
-                        }
-                        if (tmpEntry as String) != "" {
-                            // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                            entry = (tmpEntry as String).replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: modToUse?.name)
-                        }
-                    }
                 }
             }
 
@@ -923,20 +922,12 @@ final class PSTabBarControllerDelegate: NSObject,
                 let bible = PSModuleController.default()?.primaryBible
                 entry = PSContentReader.footnoteBody(module: bible?.name, data: rData, or: bible)
                 entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: bible?.name)
-            } else if (rData[ATTRTYPE_TYPE] as? String) == "x" { // x-reference
-                let array = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData) as? [[AnyHashable: Any]]
-                let tmpEntry = NSMutableString(string: "")
-                for dict in (array ?? []) {
-                    let curRef = PSModuleController.createRefString(dict[SW_OUTPUT_REF_KEY] as? String) ?? ""
-                    tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef)
-                    tmpEntry.appendFormat("%@<br />", (dict[SW_OUTPUT_TEXT_KEY] as? String) ?? "")
-                }
-                if (tmpEntry as String) != "" {
-                    // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                    entry = (tmpEntry as String).replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                    entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-                }
             }
+            // The `x` (cross-reference) arm is GONE too. No `x` anchor is ever
+            // emitted for the shipped content, AND all 6,959 notes are type='study'
+            // with an empty refList — so the branch that parsed that refList had
+            // nothing to act on either way. Both re-derived from the store by
+            // PSRefSemanticsTests.
         }
 
         if let popupContent = popupContent {

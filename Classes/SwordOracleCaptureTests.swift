@@ -623,33 +623,112 @@ final class SwordOracleCaptureTests: XCTestCase {
         try checkFixture("KJV-footnote-attributes.txt", actual: lines.joined(separator: "\n") + "\n")
     }
 
-    /// The `scriptRef` branch returns an array of {OutputRefKey, OutputTextKey}
-    /// dictionaries, one per resolved reference — a different shape from the
-    /// footnote branch's plain string, and the one the reference popup consumes.
+    /// **RETARGETED in Phase 4 step 8.** The fixture is unchanged; what produces it
+    /// is now `PSRefParser` + `PSContentStore` + `PSChapterExpander` instead of
+    /// `-[SwordModule attributeValueForEntryData:]`'s deleted `scriptRef` branch.
     ///
-    /// Note this branch calls `-setChapter:[PSModuleController getCurrentBibleRef]`
-    /// to establish the parse context, so its output depends on where the app is
-    /// currently sitting. Pin the context first so the fixture is reproducible.
+    /// The retarget is possible because of a measured property of the store: a
+    /// chapter record's slot index **is** the verse number (`entry_count ==
+    /// verseMax[chapter-1] + 1` for all 1,189 chapters, slot 0 being the verse-0
+    /// intro), so `chapterRecords()[verse]` expanded at the fixture's option
+    /// endpoint reproduces the engine's per-verse HTML byte-for-byte — 6/6 refs,
+    /// including the one range.
+    ///
+    /// So this keeps its value as a golden fixture *and* becomes the grammar test
+    /// for the parser: it exercises the abbreviated forms ("Gen 1:1", "Ps 23:1-3"),
+    /// the in-chapter range, the display format ("Psalms 23:1"), and — added here —
+    /// the three refs that pin the `name`-vs-`longName` choice for the 18 books
+    /// where they differ ("1 Cor 13:4", "III John 1", "Rev 22:21").
+    ///
+    /// The old version had to pin `-setChapter:` first, because the engine branch
+    /// seeded `parseVerseList` from `[PSModuleController getCurrentBibleRef]` —
+    /// ambient global state. `PSRefParser` takes its context explicitly and needs no
+    /// such pin, which is the whole point of that design choice.
     func testCaptureScriptRefAttributes() throws {
-        let mod = try configuredModule("KJV")
-        pinSetPreferencesPrefs(module: "KJV", strongs: true, morphs: false,
-                               footnotes: false, headings: false,
-                               redLetter: false, scriptRefs: false)
-        mod.setChapter("Genesis 1")
+        guard let store = PSContentStore.shared,
+              let resolver = PSBookOSISResolver.shared,
+              let parser = PSRefParser() else {
+            throw XCTSkip("store / resolver / parser unavailable")
+        }
+
+        // The fixture's option endpoint: Strong's on, everything else off.
+        let options = PSChapterExpander.Options(strongs: true, morphs: false,
+                                                footnotes: false, redLetter: false,
+                                                headings: false)
 
         var lines: [String] = []
         for ref in ["Gen 1:1", "John 3:16", "Ps 23:1-3", "Rom 8:28"] {
-            let data: [AnyHashable: Any] = [
-                ATTRTYPE_VALUE: ref,
-                ATTRTYPE_TYPE: "scriptRef",
-                ATTRTYPE_MODULE: "KJV",
-            ]
-            let result = mod.attributeValue(forEntryData: data)
             lines.append("### scriptRef value=\(ref)")
-            lines.append(Self.describe(result))
+            guard let parsed = parser.parse(ref) else {
+                XCTFail("PSRefParser rejected '\(ref)'")
+                continue
+            }
+            guard let records = store.chapterRecords(module: "KJV",
+                                                     bookOsis: parsed.book.osisName,
+                                                     chapter: parsed.chapter) else {
+                XCTFail("KJV \(ref) is not in the store")
+                continue
+            }
+            // The engine emitted one {ref, text} pair per verse of the range.
+            var out = ["array(\(parsed.endVerse - parsed.verse + 1)):"]
+            for verse in parsed.verse...parsed.endVerse {
+                guard verse < records.records.count,
+                      let html = PSChapterExpander.expand(records.records[verse], options: options) else {
+                    XCTFail("KJV \(ref) verse \(verse): no record / expansion failed")
+                    continue
+                }
+                // The engine's OutputRefKey is the module's own key text, which uses
+                // the localised long name ("Psalms 23:1", "I Corinthians 13:4").
+                out.append("  ref=\(parsed.book.localisedName) \(parsed.chapter):\(verse)")
+                out.append("  text=\(html)")
+            }
+            lines.append(out.joined(separator: "\n"))
         }
 
         try checkFixture("KJV-scriptref-attributes.txt", actual: lines.joined(separator: "\n") + "\n")
+    }
+
+    /// The grammar cases that pin the `name`-vs-`longName` choice, kept separate
+    /// from the committed fixture so adding them does not require a recapture.
+    ///
+    /// 18 of the 66 books have `name != longName`, and these three are the ones a
+    /// wrong choice would show up in: a numbered book, a roman-numeral spelling, and
+    /// Revelation (whose longName carries the " of John " that createRefString
+    /// strips).
+    func testScriptRefGrammarPinsTheNameVersusLongNameChoice() throws {
+        guard let store = PSContentStore.shared, let parser = PSRefParser() else {
+            throw XCTSkip("store / parser unavailable")
+        }
+        let cases: [(input: String, osis: String, chapter: Int, verse: Int,
+                     name: String, localised: String)] = [
+            ("1 Cor 13:4",  "1Cor", 13, 4,  "1 Corinthians", "I Corinthians"),
+            ("III John 1",  "3John", 1, 1,  "3 John",        "III John"),
+            ("Rev 22:21",   "Rev",  22, 21, "Revelation",    "Revelation of John"),
+        ]
+        for c in cases {
+            guard let parsed = parser.parse(c.input) else {
+                XCTFail("PSRefParser rejected '\(c.input)'")
+                continue
+            }
+            XCTAssertEqual(parsed.book.osisName, c.osis, "'\(c.input)': wrong book")
+            XCTAssertEqual(parsed.chapter, c.chapter)
+            XCTAssertEqual(parsed.verse, c.verse)
+            // `name` is the munged display form the app persists; `localisedName` is
+            // what the engine's key text used. Both must be what the table says.
+            XCTAssertEqual(parsed.book.name, c.name)
+            XCTAssertEqual(parsed.book.localisedName, c.localised)
+            XCTAssertEqual(parsed.chapterRef, "\(c.name) \(c.chapter)")
+            // And the verse actually exists in the store.
+            guard let records = store.chapterRecords(module: "KJV", bookOsis: c.osis,
+                                                     chapter: c.chapter) else {
+                XCTFail("KJV \(c.input) is not in the store")
+                continue
+            }
+            XCTAssertGreaterThan(records.records.count, c.verse,
+                                 "'\(c.input)': slot \(c.verse) is out of range")
+            XCTAssertFalse(records.records[c.verse].isEmpty,
+                           "'\(c.input)': slot \(c.verse) is empty")
+        }
     }
 
     /// Renders `attributeValue(forEntryData:)`'s heterogeneous return (NSString
