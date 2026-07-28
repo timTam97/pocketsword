@@ -316,6 +316,43 @@ final class PSLaunchViewController: UIViewController {
                 defaults.synchronize()
             }
 
+            // One-shot validation of the persisted reading position, for the
+            // SWORD-removal work (SWORD_REMOVAL_PLAN.md Phase 4).
+            //
+            // `lastRef` is the one piece of persisted state the pure-Swift reader
+            // must be able to resolve, and there are two ways an existing install
+            // can be holding one it cannot:
+            //
+            //   1. A **non-English** user. +initLocale points SWORD's locale
+            //      manager at e.g. de.conf, so `-getChapter:` was handed and
+            //      persisted a localised ref like "1. Mose 1". VerseKey parsed that;
+            //      PSBookOSISResolver, which only knows the English/OSIS spellings
+            //      the bake captured, cannot. Today that falls back to SWORD on
+            //      every page turn; after Phase 5 there is no fallback and the pane
+            //      would be blank.
+            //   2. A poisoned ref from the inbound sword:// URL path, which
+            //      persisted whatever it decoded without validating until Phase 4
+            //      step 2 — `sword://KJV/Nonsense+9:9` wrote "Nonsense 9".
+            //
+            // Reset to the app's own default once in either case. Deliberately
+            // soft: it only fires when the ref genuinely does not resolve, so an
+            // English user's position is never touched, and the flag means a user
+            // who somehow has an unresolvable ref by other means keeps it rather
+            // than being reset on every launch.
+            if !defaults.bool(forKey: Defaults.lastRefValidated) {
+                let currentRef = PSModuleController.getCurrentBibleRef() ?? ""
+                if let resolver = PSBookOSISResolver.shared, resolver.resolve(ref: currentRef) == nil {
+                    alog("lastRef '\(currentRef)' does not resolve against the versification table; resetting to Genesis 1")
+                    defaults.set("Genesis 1", forKey: Defaults.lastRef)
+                    // The verse positions belonged to the old ref, so they are
+                    // meaningless against the new one.
+                    defaults.set("1", forKey: Defaults.bibleVersePosition)
+                    defaults.set("1", forKey: Defaults.commentaryVersePosition)
+                }
+                defaults.set(true, forKey: Defaults.lastRefValidated)
+                defaults.synchronize()
+            }
+
             // One-time sweep of the legacy CLucene index directories that were
             // written by pre-FTS5 versions. New indices live at
             // <AbsoluteDataPath>/search/fts.db, so the old lucene/ dirs are

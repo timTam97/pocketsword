@@ -473,6 +473,107 @@ final class PSRefSemanticsTests: XCTestCase {
         XCTAssertEqual(identity, 66)
     }
 
+    /// The first/last available refs, which step 6 re-derived from the table
+    /// instead of round-tripping "Genesis" / "Revelation of John" through the locale
+    /// manager. They must still be byte-identical to the static defaults the app has
+    /// always shipped, because the ref selector's bounds and the chapter-navigation
+    /// gate both compare against them.
+    func testTableDerivedFirstAndLastRefsMatchTheShippedDefaults() throws {
+        let resolver = try resolver()
+        guard let first = resolver.books.first, let last = resolver.books.last else {
+            XCTFail("empty table")
+            return
+        }
+        XCTAssertEqual("\(first.name) 1", "Genesis 1")
+        XCTAssertEqual(PSModuleController.createRefString("\(last.longName) \(last.chapterCount)"),
+                       "Revelation 22")
+        // And what PSModuleController actually published at init time.
+        XCTAssertEqual(PSModuleController.getFirstRefAvailable(), "Genesis 1")
+        XCTAssertEqual(PSModuleController.getLastRefAvailable(), "Revelation 22")
+    }
+
+    /// The soft-fail migration's predicate: `resolve(ref:)` must reject exactly the
+    /// refs an existing install could be holding that the reader cannot serve, and
+    /// accept every ref the app itself produces.
+    func testLastRefValidationRejectsOnlyUnresolvableRefs() throws {
+        let resolver = try resolver()
+
+        // Refs the app can legitimately be holding — none may be reset.
+        for ref in ["Genesis 1", "Revelation 22", "1 Corinthians 13", "Psalms 119",
+                    "Song of Solomon 2", "3 John 1",
+                    // Abbreviated forms, which the sword:// path persists verbatim
+                    // when the reader can resolve them.
+                    "Jn 3", "Gen 1", "Ps 23", "1Cor 13"] {
+            XCTAssertNotNil(resolver.resolve(ref: ref),
+                            "'\(ref)' is a ref the app produces and must NOT be reset")
+        }
+
+        // Every book's canonical `name` form — what the selector VCs, history and
+        // the notification dict all produce — resolves for all 66.
+        for book in resolver.books {
+            XCTAssertNotNil(resolver.resolve(ref: "\(book.name) 1"),
+                            "\(book.osisName): the canonical ref form must resolve")
+        }
+
+        // The two shapes the migration exists for.
+        XCTAssertNil(resolver.resolve(ref: "1. Mose 1"),
+                     "a localised ref must be caught (the non-English-user case)")
+        XCTAssertNil(resolver.resolve(ref: "Nonsense 9"),
+                     "a poisoned ref from the old unvalidated sword:// path must be caught")
+        XCTAssertNil(resolver.resolve(ref: "John"),
+                     "a chapter-less ref must be caught")
+        XCTAssertNil(resolver.resolve(ref: ""))
+    }
+
+    /// **The sword:// path's persistence contract.** Whatever that path decides to
+    /// write to `lastRef` must be a ref the *reader* can resolve — accepting it at
+    /// the gate is not enough.
+    ///
+    /// This is a real gap the gate alone did not close: `PSRefParser` is
+    /// deliberately more permissive than `PSBookOSISResolver.resolve(ref:)`. The
+    /// parser adds a trailing-"." fallback and a despaced-numbered-abbreviation
+    /// fallback ("Gen.", "1 Cor") that the resolver's spelling index does not carry,
+    /// and widening that index is off-limits because PSContentStoreTests pins it. So
+    /// `sword://KJV/Gen.+1` parses, and — before the app delegate learned to fall
+    /// back to the parser's canonical form — persisted the unrenderable "Gen. 1".
+    ///
+    /// Asserted over every spelling of every book in all three shapes the parser
+    /// accepts, reproducing the delegate's exact choice of what to write.
+    func testEveryParseableRefPersistsSomethingTheReaderCanResolve() throws {
+        let resolver = try resolver()
+        let parser = try parser()
+
+        var checked = 0, fellBackToCanonical = 0
+        for book in resolver.books {
+            let spellings = [book.name, book.longName, book.localisedName, book.osisName,
+                             book.shortName, book.preferredAbbreviation, book.abbreviation]
+            for spelling in spellings where !spelling.isEmpty {
+                for candidate in [spelling,
+                                  spelling + ".",
+                                  spelling.replacingOccurrences(of: " ", with: "")] {
+                    let asGiven = "\(candidate) 1"
+                    guard let parsed = parser.parse(asGiven) else { continue }
+                    checked += 1
+
+                    // PocketSwordAppDelegate's rule, verbatim.
+                    let resolvesAsGiven = parsed.hadExplicitChapter
+                        && resolver.resolve(ref: asGiven) != nil
+                    let persisted = resolvesAsGiven ? asGiven : parsed.chapterRef
+                    if !resolvesAsGiven { fellBackToCanonical += 1 }
+
+                    XCTAssertNotNil(resolver.resolve(ref: persisted),
+                                    "'\(asGiven)' would persist '\(persisted)', which the reader cannot resolve")
+                    guard resolver.resolve(ref: persisted) != nil else { return }
+                }
+            }
+        }
+        print("[refsem/fast] parseable refs checked: \(checked)"
+              + " (\(fellBackToCanonical) fell back to the canonical name form)")
+        XCTAssertGreaterThan(checked, 400)
+        XCTAssertGreaterThan(fellBackToCanonical, 0,
+                             "the fallback is unexercised — the parser/resolver widths have converged")
+    }
+
     // MARK: - Fast tier: the parser grammar
 
     /// The grammar cases the plan names, plus the `name`-vs-`longName` pins for the

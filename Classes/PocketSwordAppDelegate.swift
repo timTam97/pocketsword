@@ -231,21 +231,30 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             return false
         }
 
-        // The parse result is otherwise NOT used to rebuild the ref: `chapter` keeps
-        // its existing derivation byte-for-byte, so every URL that worked before
-        // lands on exactly the same ref (in particular an abbreviated "Gen 3" still
-        // persists as "Gen 3", which the reader resolves, rather than being silently
-        // expanded to "Genesis 3").
+        // What actually gets persisted.
         //
-        // The one exception is a chapter-less URL (`sword:///John`, `sword:///1
-        // John`). That used to persist the chapter-less "John" as lastRef, which
-        // VerseKey absorbed but the Swift reader cannot resolve — it renders today
-        // only because of the SWORD fallback, and after Phase 5 it would be a blank
-        // pane. PSRefParser defaults a missing chapter to 1 exactly as VerseKey
-        // does, so take the chapter ref from it in that case. Note the test is the
-        // parser's own `hadExplicitChapter`, not "does the string contain a digit"
-        // — "1 John" contains one and still has no chapter.
-        let chapterToShow = parsed.hadExplicitChapter ? chapter : parsed.chapterRef
+        // Accepting a ref is not enough: `lastRef` has to be a ref the *reader* can
+        // resolve on the next launch, and `PSBookOSISResolver.resolve(ref:)` is
+        // deliberately narrower than `PSRefParser` — the parser adds a trailing-"."
+        // and a despaced-abbreviation fallback that the resolver's spelling index
+        // does not carry (widening that index is off-limits; PSContentStoreTests
+        // pins it). So `sword://KJV/Gen.+1` parses fine and would persist "Gen. 1",
+        // which the reader then declines.
+        //
+        // Keep `chapter` verbatim when the reader can resolve it — that preserves
+        // every URL that worked before byte-for-byte, in particular an abbreviated
+        // "Gen 3" staying "Gen 3" rather than being silently expanded — and fall
+        // back to the parser's canonical `name`-form ref when it cannot. The
+        // canonical form is what the selector VCs and history already use, so it is
+        // never a novel shape.
+        //
+        // This also covers the chapter-less URL (`sword:///John`, `sword:///1 John`),
+        // which used to persist the chapter-less "John": VerseKey absorbed that, the
+        // Swift reader cannot, and it renders today only via the SWORD fallback.
+        let resolver = PSBookOSISResolver.shared
+        let chapterResolvesAsGiven = parsed.hadExplicitChapter
+            && resolver?.resolve(ref: chapter) != nil
+        let chapterToShow = chapterResolvesAsGiven ? chapter : parsed.chapterRef
 
         // A verse the truncation above could not reduce to a number at all
         // ("John 3:abc" -> "a", "John 3:" -> "") would otherwise be written to the

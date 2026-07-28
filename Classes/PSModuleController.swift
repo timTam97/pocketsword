@@ -161,12 +161,32 @@ final class PSModuleController: NSObject {
         }
 
         swordManager = SwordManager.default()
-        // set localized book names
-        var book = SwordManager.translate(toSystemLocale: "Genesis")
-        PSModuleController.setFirstRefAvailable(String(format: "%@ 1", book ?? ""))
-        book = SwordManager.translate(toSystemLocale: "Revelation of John")
-        book = PSModuleController.createRefString(String(format: "%@ 22", book ?? ""))
-        PSModuleController.setLastRefAvailable(book)
+
+        // The first/last available refs, derived from the baked versification table.
+        //
+        // SWORD_REMOVAL_PLAN.md Phase 4: this used to round-trip "Genesis" and
+        // "Revelation of John" through +[SwordManager translateToSystemLocale:].
+        // That looks like a semantic change and is not — the round-trip was
+        // **identity on every device**:
+        //   - There is no `en` locale conf. All 118 confs in locales.d.zip were
+        //     checked and none has Meta/Name = "en"; the only English locale is
+        //     SWLocale(0) (swlocale.cpp:63-69), built with SWConfig(0), which sets
+        //     Meta/Name + bookAbbrevs and has **no [Text] section** — so
+        //     `translate` returns its input.
+        //   - +initLocale is only called at all when preferredLanguages.first is
+        //     not "en" (PSLaunchViewController), so on an English device the
+        //     system locale manager is never even pointed elsewhere.
+        // Asserted 66/66 in PSRefSemanticsTests.testTranslateBookNameIsIdentityForAll66.
+        //
+        // The values are byte-identical to the static defaults above
+        // ("Genesis 1" / "Revelation 22"): the table's first book is Genesis and
+        // its last is Revelation, whose longName "Revelation of John" munges to
+        // "Revelation" through createRefString exactly as before.
+        if let books = PSBookOSISResolver.shared?.books, let first = books.first, let last = books.last {
+            PSModuleController.setFirstRefAvailable("\(first.name) 1")
+            PSModuleController.setLastRefAvailable(
+                PSModuleController.createRefString("\(last.longName) \(last.chapterCount)"))
+        }
 
         setPreferences()
         reloadLastBible()

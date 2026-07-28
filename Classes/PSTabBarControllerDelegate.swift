@@ -481,7 +481,18 @@ final class PSTabBarControllerDelegate: NSObject,
 
     @objc(updateViewWithSelectedBookName:chapter:verse:)
     func updateViewWithSelectedBookName(_ bookNameString: String?, chapter: Int, verse: Int) {
-        let bookName = SwordManager.translateBookName(bookNameString)
+        // SWORD_REMOVAL_PLAN.md Phase 4: passthrough, where this used to call
+        // +[SwordManager translateBookName:]. That method's own comment claimed to
+        // "translate back to English", but it never did: there is no `en` locale
+        // conf, and the only English locale — SWLocale(0), swlocale.cpp:63-69 — is
+        // constructed with SWConfig(0) and has no [Text] section, so `translate`
+        // returns its input. Identity for all 66 books, asserted in
+        // PSRefSemanticsTests.testTranslateBookNameIsIdentityForAll66.
+        //
+        // The input is already the form the app wants: the selector VCs put
+        // `PSVersificationBook.name` in the notification dict, and lastRef is built
+        // straight from it.
+        let bookName = bookNameString
         let verseString = "\(verse)"
         let ref = (bookName ?? "") + " \(chapter)"
         let moduleController = PSModuleController.default()
