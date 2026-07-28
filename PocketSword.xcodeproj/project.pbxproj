@@ -248,6 +248,7 @@
 		5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR301 /* PSChapterExpander.swift */; };
 		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
 		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
+		5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RP01 /* PSRefParser.swift */; };
 		5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CA01 /* PSContent.sqlite */; };
 		5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CB01 /* Versification-KJV.json */; };
 		05E37CED10B3306300C2F1F5 /* MHCC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 05E37CDB10B32F8700C2F1F5 /* MHCC.zip */; };
@@ -832,6 +833,7 @@
 		5A1F70B00000000000CTR301 /* PSChapterExpander.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterExpander.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000RP01 /* PSRefParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefParser.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000CA01 /* PSContent.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = PSContent.sqlite; path = Resources/PSContent.sqlite; sourceTree = "<group>"; };
 		5A1F70B0000000000000CB01 /* Versification-KJV.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "Versification-KJV.json"; path = "Resources/Versification-KJV.json"; sourceTree = "<group>"; };
 		05E37CDB10B32F8700C2F1F5 /* MHCC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = MHCC.zip; path = Resources/MHCC.zip; sourceTree = "<group>"; };
@@ -1985,6 +1987,7 @@
 				5A1F70B00000000000CTR101 /* PSContentStore.swift */,
 				5A1F70B00000000000CTR501 /* PSContentReader.swift */,
 				5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */,
+				5A1F70B0000000000000RP01 /* PSRefParser.swift */,
 				5A1F70B00000000000CTR301 /* PSChapterExpander.swift */,
 				5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */,
 			);
@@ -2376,6 +2379,7 @@
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */,
 				5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */,
+				5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */,
 				5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */,
 				5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */,
 				5A1F70B0000000000000FF02 /* PSFeatureFlags.swift in Sources */,

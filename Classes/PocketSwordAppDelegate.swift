@@ -161,6 +161,15 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
      *
      * The old "module=list" query component is gone along with the module selector;
      * a URL naming a module that is not installed still navigates to the reference.
+     *
+     * SWORD_REMOVAL_PLAN.md Phase 4: this is the ONLY place the app accepts a
+     * reference it did not itself generate, and it used to do no validation at all
+     * — it percent-decoded, stripped "/", turned "+" into space, split on ":",
+     * kept the leading digits of the verse, and wrote the result straight to
+     * Defaults.lastRef. So `sword://KJV/Nonsense+9:9` persisted "Nonsense 9" as
+     * lastRef, which neither the reader nor the ref selector can resolve, and
+     * `sword:///John` persisted the chapter-less "John". Both now go through
+     * PSRefParser and are rejected outright rather than poisoning lastRef.
      */
     @objc(application:handleOpenURL:options:)
     @discardableResult
@@ -175,8 +184,6 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             return false
         }
 
-        self.urlToOpen = url
-
         var module: String? = url.host
         var reference = url.path
         reference = (reference.removingPercentEncoding ?? reference)
@@ -185,7 +192,8 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
         let chapter: String
         let verseRaw: String
-        if reference.range(of: ":") == nil {
+        let hadVerseSpec = reference.range(of: ":") != nil
+        if !hadVerseSpec {
             chapter = reference
             verseRaw = "1"
         } else {
@@ -205,6 +213,47 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             i += 1
         }
         let verse = String(String.UnicodeScalarView(verseChars[0..<min(i, verseChars.count)]))
+
+        // Validate the CHAPTER REF before mutating any state — that is the thing
+        // that gets persisted to Defaults.lastRef and that the reader must be able
+        // to resolve on the next launch. A book the versification does not contain,
+        // or a chapter outside it, is rejected here: lastRef is left alone, nothing
+        // is posted, and we return false so the caller sees the URL was unhandled.
+        //
+        // The verse is deliberately NOT part of this gate. It is only a scroll
+        // position, and an out-of-range one ("John 3:99") should not cost the user
+        // navigation to a chapter that genuinely exists — the JS scrollToVerse
+        // simply finds no anchor, exactly as before. So the chapter ref is
+        // validated strictly and the verse is checked separately below.
+        guard let parser = PSRefParser(),
+              let parsed = parser.parse(chapter) else {
+            alog("sword:// URL carries an unresolvable reference, ignoring: \(reference)")
+            return false
+        }
+
+        // The parse result is otherwise NOT used to rebuild the ref: `chapter` keeps
+        // its existing derivation byte-for-byte, so every URL that worked before
+        // lands on exactly the same ref (in particular an abbreviated "Gen 3" still
+        // persists as "Gen 3", which the reader resolves, rather than being silently
+        // expanded to "Genesis 3").
+        //
+        // The one exception is a chapter-less URL (`sword:///John`, `sword:///1
+        // John`). That used to persist the chapter-less "John" as lastRef, which
+        // VerseKey absorbed but the Swift reader cannot resolve — it renders today
+        // only because of the SWORD fallback, and after Phase 5 it would be a blank
+        // pane. PSRefParser defaults a missing chapter to 1 exactly as VerseKey
+        // does, so take the chapter ref from it in that case. Note the test is the
+        // parser's own `hadExplicitChapter`, not "does the string contain a digit"
+        // — "1 John" contains one and still has no chapter.
+        let chapterToShow = parsed.hadExplicitChapter ? chapter : parsed.chapterRef
+
+        // A verse the truncation above could not reduce to a number at all
+        // ("John 3:abc" -> "a", "John 3:" -> "") would otherwise be written to the
+        // verse-position defaults as a non-numeric string. Fall back to "1", the
+        // same value a URL with no verse spec at all gets.
+        let versePosition = Int(verse).map(String.init) ?? "1"
+
+        self.urlToOpen = url
 
         let params = parseQueryDictionary(from: url)
         let type = params["type"]
@@ -237,8 +286,8 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.BibleTab)
 
-            defaults.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
-            defaults.set(verse, forKey: Defaults.bibleVersePosition)
+            defaults.set(PSModuleController.createRefString(chapterToShow), forKey: Defaults.lastRef)
+            defaults.set(versePosition, forKey: Defaults.bibleVersePosition)
             defaults.synchronize()
 
             NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
@@ -251,9 +300,9 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.CommentaryTab)
 
-            defaults.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
-            defaults.set(verse, forKey: Defaults.bibleVersePosition)
-            defaults.set(verse, forKey: Defaults.commentaryVersePosition)
+            defaults.set(PSModuleController.createRefString(chapterToShow), forKey: Defaults.lastRef)
+            defaults.set(versePosition, forKey: Defaults.bibleVersePosition)
+            defaults.set(versePosition, forKey: Defaults.commentaryVersePosition)
             defaults.synchronize()
 
             NotificationCenter.default.post(name: .redisplayPrimaryCommentary, object: nil)
