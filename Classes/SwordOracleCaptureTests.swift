@@ -32,6 +32,8 @@
 //
 
 import XCTest
+import CryptoKit
+import SQLite3
 @testable import PocketSword
 
 final class SwordOracleCaptureTests: XCTestCase {
@@ -819,5 +821,184 @@ final class SwordOracleCaptureTests: XCTestCase {
                        "in the field, and")
         XCTAssertEqual(PSSearchCleanDisplayText("a [] b"), "a b")
         XCTAssertEqual(PSSearchCleanDisplayText(""), "")
+    }
+
+    // MARK: - Phase 5 pre-work: the last two engine-only fixtures
+    //
+    // Added by SWORD_REMOVAL_PLAN.md Phase 5 pre-work item 2, immediately before
+    // the engine is deleted. Same job as the rest of this file — capture what the
+    // deletion is about to make uncheckable — for the two things Phase 5 removes
+    // the last executable check for:
+    //
+    //  1. search-index-KJV.digest — all 31,102 rows of the *engine-built* FTS
+    //     index. PSSearchIndexParityTests builds it both ways in one process and
+    //     compares; with no engine there is no second way, so the engine's answer
+    //     has to be on disk. Digested rather than stored in full: SHA-256 per text
+    //     column is ~3 MB against ~8 MB, and is still row-exact.
+    //  2. chapter-loop-counters.tsv — entryCount for all 1,189 chapters of both
+    //     modules. Today exactly one value of it is pinned (Gen 1 == 32, above);
+    //     after this, all 2,378 are.
+
+    /// SHA-256, **truncated to its leading 64 bits**.
+    ///
+    /// The digest is a change detector, not a commitment scheme: it has to make any
+    /// byte change in any column change the line, and nothing more. 64 bits does
+    /// that with a ~2^-64 per-row miss probability, and keeps the committed fixture
+    /// at ~2.7 MB instead of the 8.7 MB full hex costs — a difference that matters
+    /// for a file that goes into git and is read on every test run.
+    private static func sha256Hex(_ s: String) -> String {
+        SHA256.hash(data: Data(s.utf8)).prefix(8).map { String(format: "%02x", $0) }.joined()
+    }
+
+    /// Build the KJV index **through the SWORD walk** and digest every row.
+    ///
+    /// Forcing the flag off matters: `-buildWithProgress:` prefers the store when
+    /// `PSContentReader.isActive` (PSSearchEngine.mm:548), so capturing without it
+    /// would digest the store's own output and the fixture would be a tautology.
+    func testCaptureEngineBuiltSearchIndexDigest() throws {
+        let kjv = try configuredModule("KJV")
+        guard let manager = SwordManager.default() else { throw XCTSkip("no SwordManager") }
+
+        let defaults = UserDefaults.standard
+        let flagKey = Defaults.swiftContentReaderPreference
+        let savedFlag = defaults.object(forKey: flagKey)
+        defaults.set(false, forKey: flagKey)
+        defer {
+            if let savedFlag { defaults.set(savedFlag, forKey: flagKey) }
+            else { defaults.removeObject(forKey: flagKey) }
+        }
+        XCTAssertFalse(PSContentReader.isActive,
+                       "the flag did not take effect — this would digest the store, not the engine")
+
+        // The four options that change what stripText() returns, pinned to the
+        // configuration the store was baked under. Without this the digest records
+        // whatever the last render's setPreferences happened to push — see
+        // PSSearchIndexParityTests.pinStripTextOptions.
+        for option in ["Strong's Numbers", "Morphological Tags", "Footnotes", "Cross-references"] {
+            manager.setGlobalOption(option, value: "Off")
+        }
+
+        let engine = PSSearchEngine(for: kjv)
+        do {
+            try engine.build(progress: nil)
+        } catch {
+            XCTFail("engine index build failed: \(error.localizedDescription)")
+            throw XCTSkip("build failed")
+        }
+
+        // rowid order, which is the order runQuery returns results in — so the
+        // digest pins ordering as well as content. Deliberately not ORDER BY
+        // ordinal (see PSSearchEngine's note on why those are equivalent here).
+        var db: OpaquePointer?
+        let dbPath = engine.dbPath()
+        guard sqlite3_open_v2(dbPath, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK, let db else {
+            throw XCTSkip("cannot open the built index at \(dbPath)")
+        }
+        defer { sqlite3_close(db) }
+        var st: OpaquePointer?
+        let sql = "SELECT reference, book_osis, testament, text_plain, text_norm, lemmas, word_map"
+            + " FROM verses ORDER BY rowid;"
+        guard sqlite3_prepare_v2(db, sql, -1, &st, nil) == SQLITE_OK else {
+            throw XCTSkip("cannot read the built index")
+        }
+        defer { sqlite3_finalize(st) }
+        func text(_ c: Int32) -> String {
+            guard let p = sqlite3_column_text(st, c) else { return "" }
+            return String(cString: p)
+        }
+        var lines: [String] = []
+        while sqlite3_step(st) == SQLITE_ROW {
+            lines.append([text(0), text(1), String(sqlite3_column_int(st, 2)),
+                          Self.sha256Hex(text(3)), Self.sha256Hex(text(4)),
+                          Self.sha256Hex(text(5)), Self.sha256Hex(text(6))]
+                .joined(separator: "|"))
+        }
+
+        // 31,102 is the count Phase 2 measured against the live engine. Asserted
+        // here too: a short capture would silently become a weaker fixture.
+        XCTAssertEqual(lines.count, 31102, "the engine walk no longer produces 31,102 rows")
+
+        var out = ["# live-SWORD KJV FTS index digest",
+                   "# rows=\(lines.count)",
+                   "# format: reference|book_osis|testament|sha256(text_plain)|sha256(text_norm)|sha256(lemmas)|sha256(word_map)",
+                   "# captured with Strong's/Morphs/Footnotes/Cross-references Off, in rowid order"]
+        out.append(contentsOf: lines)
+        try checkFixture("search-index-KJV.digest", actual: out.joined(separator: "\n") + "\n")
+    }
+
+    /// `entryCount` for all 1,189 chapters of both shipped modules.
+    ///
+    /// Captured at one option endpoint; the companion test below proves that is
+    /// not a loss of coverage, because the counter is driven by the module's entry
+    /// sequence rather than by the emitted markup.
+    func testCaptureChapterLoopCounters() throws {
+        guard let resolver = PSBookOSISResolver.shared else { throw XCTSkip("no resolver") }
+        var out = ["# live-SWORD chapter loop counters (-chapterBodyHTML:'s entryCount)",
+                   "# format: module\tref\tentryCount",
+                   "# NOT a verse count: the counter advances for entries the loop skips",
+                   "# and for the final iteration that steps out of the chapter."]
+        var total = 0
+
+        for module in ["KJV", "MHCC"] {
+            // configuredModule pins vpl/headings and registers them for tearDown.
+            let mod = try configuredModule(module, config: .allOff)
+            for book in resolver.books {
+                for chapter in 1...book.chapterCount {
+                    let ref = "\(book.name) \(chapter)"
+                    mod.aquireModuleLock()
+                    var entryCount: NSInteger = 0
+                    _ = mod.chapterBodyHTML(ref, applyBookmarkHighlights: false, entryCount: &entryCount)
+                    mod.releaseModuleLock()
+                    out.append("\(module)\t\(ref)\t\(entryCount)")
+                    total += 1
+                }
+            }
+        }
+
+        print("[oracle] loop counters captured: \(total)")
+        XCTAssertEqual(total, 2378, "1,189 chapters x 2 modules")
+        try checkFixture("chapter-loop-counters.tsv", actual: out.joined(separator: "\n") + "\n")
+    }
+
+    /// The invariant that licenses capturing the counter at one endpoint only:
+    /// `entryCount` does not depend on the render options.
+    ///
+    /// It should not — the counter is incremented once per entry the `do…while`
+    /// visits and the loop's continuation test is on the *key*, not on the
+    /// rendered markup — but "should not" is exactly what a fixture is for.
+    func testLoopCounterIsIndependentOfRenderOptions() throws {
+        guard let resolver = PSBookOSISResolver.shared else { throw XCTSkip("no resolver") }
+
+        var flat: [String] = []
+        for book in resolver.books {
+            for chapter in 1...book.chapterCount { flat.append("\(book.name) \(chapter)") }
+        }
+        // Stride 37 — prime, so unaligned to book boundaries. ~32 chapters.
+        let refs = flat.enumerated().filter { $0.offset % 37 == 0 }.map(\.element)
+
+        var seen: [String: NSInteger] = [:]
+        var compared = 0
+        for module in ["KJV", "MHCC"] {
+            for config in [RenderConfig.allOn, RenderConfig.allOff] {
+                let mod = try configuredModule(module, config: config)
+                for ref in refs {
+                    mod.aquireModuleLock()
+                    var count: NSInteger = 0
+                    _ = mod.chapterBodyHTML(ref, applyBookmarkHighlights: false, entryCount: &count)
+                    mod.releaseModuleLock()
+                    let key = "\(module)|\(ref)"
+                    if let first = seen[key] {
+                        XCTAssertEqual(first, count,
+                                       "\(module) \(ref): the loop counter changed with the render options — "
+                                       + "chapter-loop-counters.tsv would only cover one endpoint")
+                        compared += 1
+                    } else {
+                        seen[key] = count
+                    }
+                }
+            }
+        }
+        print("[oracle] counter-invariance comparisons: \(compared)")
+        XCTAssertGreaterThan(compared, 50, "the sample collapsed")
     }
 }
