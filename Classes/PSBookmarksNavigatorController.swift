@@ -317,7 +317,12 @@ class PSBookmarksNavigatorController: UITableViewController {
                     (rowObject as? PSBookmark)?.dateLastAccessed = Date()
                     PSBookmarks.saveBookmarksToFile()
                     NotificationCenter.default.post(name: .showBibleTab, object: nil)
-                    if let moduleNames = PSModuleController.default().swordManager?.moduleNames(), moduleNames.count != 0 {
+                    // The `swordManager.moduleNames()?.count != 0` guard is GONE
+                    // (Phase 5 step 5): five modules always ship, there is no UI to
+                    // remove one, and the store that provides them is fatal if absent.
+                    // So the condition was unconditionally true and is now written that
+                    // way rather than asking a manager that is about to be deleted.
+                    do {
                         let fullRef = ((rowObject as? PSBookmark)?.ref ?? "").components(separatedBy: ":")
                         let ref = fullRef[0]
                         let defaults = UserDefaults.standard

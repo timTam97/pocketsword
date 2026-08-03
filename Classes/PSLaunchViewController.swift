@@ -108,14 +108,29 @@ final class PSLaunchViewController: UIViewController {
         defaults.removeObject(forKey: Defaults.moduleCipherKeysKey)
         defaults.removeObject(forKey: kLocalesVersion)
         defaults.synchronize()
-        // Fixed module set, so iterate the known names instead of asking SWORD what
-        // is installed. Each of the five is a dictionary at most once, and
-        // -removeCache / -resetPreferences are both safe on any module type.
+        // Phase 5 step 5: the loop no longer asks SWORD for each module.
+        //
+        // It used to call two methods per bundled module:
+        //
+        //  * `-[SwordDictionary removeCache]` deleted the on-disk lexicon key cache.
+        //    The reader has no such cache — it reads `dict_keys` straight out of the
+        //    store — and any cache left by an older build is already deleted by the
+        //    `DefaultsDictKeyCaseFixed` one-shot below. Nothing left to remove.
+        //  * `-[SwordModule resetPreferences]` (SwordModule.mm:215-231) removed twelve
+        //    per-module `NSUserDefaults` keys. Those are ordinary defaults with no
+        //    SWORD involvement, so they are cleared directly below — the same twelve
+        //    keys, for the same fixed five modules, in the same order.
         for name in BundledModules.all {
-            guard let mod = moduleManager.swordManager?.module(withName: name) else { continue }
-            (mod as? SwordDictionary)?.removeCache()
-            mod.resetPreferences()
+            for pref in [Defaults.redLetterPreference, Defaults.strongsPreference,
+                         Defaults.morphPreference, Defaults.greekAccentsPreference,
+                         Defaults.hvpPreference, Defaults.hebrewCantillationPreference,
+                         Defaults.scriptRefsPreference, Defaults.footnotesPreference,
+                         Defaults.headingsPreference, Defaults.glossesPreference,
+                         Defaults.fontSizePreference, Defaults.fontNamePreference] {
+                defaults.psRemove(pref, forModule: name)
+            }
         }
+        defaults.synchronize()
         moduleManager.primaryBible = nil
         moduleManager.primaryCommentary = nil
         moduleManager.primaryDictionary = nil
@@ -171,10 +186,14 @@ final class PSLaunchViewController: UIViewController {
 
             if !kjv {
                 defaults.synchronize()
-                if let kjvModule = moduleManager.swordManager?.module(withName: "KJV") {
-                    // if it's already installed, remove the search index because it will now be out of date
-                    kjvModule.deleteSearchIndex()
-                }
+                // The KJV module is about to be re-seeded, so any existing search
+                // index is stale. Dropped through the name-keyed engine as of Phase 5
+                // step 5/6 — -[SwordModule deleteSearchIndex] was a thin wrapper over
+                // exactly this. The whole kKJVVersion block goes in step 9 with the
+                // zips.
+                let engine = PSSearchEngine(forModuleName: "KJV")
+                engine.dropIndex()
+                PSSearchEngine.invalidateEngine(forModuleName: "KJV")
                 moduleManager.installModulesFromZip(Bundle.main.path(forResource: "KJV", ofType: "zip"),
                                                     ofType: bible, removeZip: false, internalModule: true)
                 moduleManager.installModulesFromZip(Bundle.main.path(forResource: "MHCC", ofType: "zip"),

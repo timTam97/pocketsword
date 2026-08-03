@@ -50,6 +50,11 @@ private enum SWRender {
     // SW_OUTPUT_*_KEY (SwordModule.h)
     static let outputTextKey = "OutputTextKey"
     static let outputRefKey = "OutputRefKey"
+
+    // SWMOD_CATEGORY_BIBLES (SwordManager.h) — the module `type` string, which is
+    // what content_meta stores and what `ModuleType == bible` was derived from
+    // (+[SwordModule moduleTypeForModuleTypeString:]).
+    static let typeBibles = "Biblical Texts"
 }
 
 @objc(PSModuleViewController)
@@ -350,11 +355,14 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         }
     }
 
-    /// The active module for this tab's `▾` settings menu: the primary Bible on the
-    /// Bible tab, the primary commentary on the Commentary tab.
-    private var settingsMenuModule: SwordModule? {
-        (tabType == .BibleTab) ? PSModuleController.default().primaryBible
-                               : PSModuleController.default().primaryCommentary
+    /// The active module for this tab's `▾` settings menu, by NAME: the primary Bible
+    /// on the Bible tab, the primary commentary on the Commentary tab.
+    ///
+    /// Phase 5 step 5: was a `SwordModule`, read only for its `name`, its
+    /// `hasFeature:` answers and its `type`. All three now come from `content_meta`.
+    private var settingsMenuModuleName: String? {
+        (tabType == .BibleTab) ? PSModuleController.default().primaryBibleName
+                               : PSModuleController.default().primaryCommentaryName
     }
 
     /// The redisplay notification this tab's renderer listens for.
@@ -367,22 +375,40 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
     /// keyed on the module's own name — the same domain `-[SwordModule setPreferences]`
     /// reads on every render, which is what makes these toggles actually take effect.
     ///
-    /// Feature gating uses -[SwordModule hasFeature:], matching what the old
-    /// per-module preferences screen did. Note hasFeature: also matches
-    /// GlobalOptionFilter entries (OSIS/GBF/ThML/UTF8-prefixed and bare), not just
-    /// `Feature=` lines — so KJV's OSISFootnotes / OSISHeadings / OSISRedLetterWords
-    /// filters satisfy the Footnotes / Headings / RedLetterWords gates even though it
-    /// declares only `Feature=StrongsNumbers`.
+    /// Feature gating reads the BAKED feature set (`content_meta`'s
+    /// `module.<name>.features`) as of Phase 5 step 5, which holds exactly what
+    /// `-[SwordModule hasFeature:]` answered. That matters because hasFeature: also
+    /// matched GlobalOptionFilter entries (OSIS/GBF/ThML/UTF8-prefixed and bare), not
+    /// just `Feature=` lines — so KJV's OSISFootnotes / OSISHeadings /
+    /// OSISRedLetterWords filters satisfy the Footnotes / Headings / RedLetterWords
+    /// gates even though it declares only `Feature=StrongsNumbers`.
+    ///
+    /// Measured consequence worth knowing: KJV yields **six** rows, not seven. It has
+    /// no `OSISScripref` filter and no `Feature=Scripref`, so the Cross-references row
+    /// was never in its menu — verified against the live engine in step 4, so this is
+    /// a record of existing behaviour rather than a change.
     ///
     /// A module that advertises nothing (e.g. MHCC, whose conf declares no `Feature=`
     /// and no `GlobalOptionFilter`) yields NO rows at all now that the font moved to
     /// Preferences — so the button hides itself rather than presenting an empty menu.
     @objc(rebuildSettingsMenu)
     func rebuildSettingsMenu() {
-        guard let module = settingsMenuModule, let modName = module.name else {
+        guard let modName = settingsMenuModuleName, let store = PSContentStore.shared else {
             setSettingsMenu(nil)
             return
         }
+
+        /// Whether this module advertises a feature — from the BAKED feature set
+        /// (`module.<name>.features` in `content_meta`) rather than a live
+        /// `-[SwordModule hasFeature:]`. The converter reproduced hasFeature:'s full
+        /// rule, prefixed GlobalOptionFilter matching included, and
+        /// PSDifferentialTests checked all 75 answers against the engine while it was
+        /// still in the tree.
+        func has(_ feature: String) -> Bool { store.moduleHasFeature(modName, feature) }
+
+        /// Whether this tab is showing a Bible, which is the verse-per-line gate.
+        /// `module.type == bible` became a `content_meta` type-string comparison.
+        let isBible = store.moduleMeta(modName, key: "type") == SWRender.typeBibles
 
         let prefix = (tabType == .BibleTab) ? "bible" : "commentary"
         var topLevel: [UIMenuElement] = []
@@ -391,7 +417,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         func addToggle(_ title: String, pref: String, id: String, pushesToSword: Bool) {
             let action = UIAction(title: title, image: nil,
                                   identifier: UIAction.Identifier("\(prefix).\(id)")) { [weak self] _ in
-                guard let self = self, let mName = self.settingsMenuModule?.name else { return }
+                guard let self = self, let mName = self.settingsMenuModuleName else { return }
                 let current = UserDefaults.standard.psBool(pref, forModule: mName)
                 UserDefaults.standard.psSet(!current, forPref: pref, module: mName)
                 UserDefaults.standard.synchronize()
@@ -407,31 +433,31 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                                    options: .displayInline, children: [action]))
         }
 
-        if module.hasFeature(SWRender.featureStrongs) || module.hasFeature(SWRender.confFeatureStrongs) {
+        if has(SWRender.featureStrongs) || has(SWRender.confFeatureStrongs) {
             addToggle(NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
                       pref: Defaults.strongsPreference, id: "strongs", pushesToSword: true)
         }
-        if module.hasFeature(SWRender.featureMorph) {
+        if has(SWRender.featureMorph) {
             addToggle(NSLocalizedString("PreferencesMorphTagsTitle", comment: "Morphological Tags"),
                       pref: Defaults.morphPreference, id: "morph", pushesToSword: true)
         }
-        if module.hasFeature(SWRender.featureHeadings) {
+        if has(SWRender.featureHeadings) {
             addToggle(NSLocalizedString("PreferencesHeadingsTitle", comment: "Headings"),
                       pref: Defaults.headingsPreference, id: "headings", pushesToSword: true)
         }
-        if module.hasFeature(SWRender.featureFootnotes) {
+        if has(SWRender.featureFootnotes) {
             addToggle(NSLocalizedString("PreferencesFootnotesTitle", comment: "Footnotes"),
                       pref: Defaults.footnotesPreference, id: "footnotes", pushesToSword: true)
         }
-        if module.hasFeature(SWRender.featureScriptRef) {
+        if has(SWRender.featureScriptRef) {
             addToggle(NSLocalizedString("PreferencesCrossReferencesTitle", comment: "Cross-references"),
                       pref: Defaults.scriptRefsPreference, id: "xref", pushesToSword: true)
         }
-        if module.hasFeature(SWRender.featureRedLetterWords) {
+        if has(SWRender.featureRedLetterWords) {
             addToggle(NSLocalizedString("PreferencesRedLetterTitle", comment: "Red Letter"),
                       pref: Defaults.redLetterPreference, id: "redLetter", pushesToSword: true)
         }
-        if module.type == bible {
+        if isBible {
             // VPL is a rendering-side option only — it never went through
             // -setPreferences (see PSModulePreferencesController's old vplChanged:).
             addToggle(NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),

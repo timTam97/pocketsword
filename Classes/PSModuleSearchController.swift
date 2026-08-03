@@ -208,10 +208,9 @@ final class PSModuleSearchController: UIViewController,
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        let mod = activeModule()
-        let hasIndex = mod?.hasSearchIndex() ?? false
-        if let mod = mod, !hasIndex {
-            offerToBuildIndex(for: mod)
+        if let name = activeModuleName(),
+           !(PSSearchEngine(forModuleName: name).indexIsFresh()) {
+            offerToBuildIndex(forModuleName: name)
         }
     }
 
@@ -223,8 +222,7 @@ final class PSModuleSearchController: UIViewController,
 
         // Decide searchingEnabled before the first draw so the table header
         // doesn't flash "No search index" for a module that already has one.
-        let mod = activeModule()
-        searchingEnabled = (mod != nil && mod!.hasSearchIndex())
+        searchingEnabled = activeEngine()?.indexIsFresh() ?? false
 
         refreshView()
 
@@ -238,21 +236,39 @@ final class PSModuleSearchController: UIViewController,
 
     // MARK: - Active module helper
 
-    private func activeModule() -> SwordModule? {
+    /// The module this list searches, as a **name**.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 5: this returned a `SwordModule`, and all
+    /// of its callers only ever needed the name — to key the search engine, to ask
+    /// about a feature, or to look a verse up. Returning the name is what lets those
+    /// three go through the baked store and the name-keyed engine instead.
+    private func activeModuleName() -> String? {
         switch listType_ {
         case .BibleTab:
-            return PSModuleController.default().primaryBible
+            return PSModuleController.default().primaryBibleName
         case .CommentaryTab:
-            return PSModuleController.default().primaryCommentary
+            return PSModuleController.default().primaryCommentaryName
         default:
             return nil
         }
     }
 
+    /// Whether the active module carries Strong's numbers, from the baked feature
+    /// set (`content_meta`) rather than a live `-hasFeature:`.
+    ///
+    /// Both spellings are still checked, exactly as before: `Strongs` is the
+    /// GlobalOptionFilter form and `StrongsNumbers` the `Feature=` form, and KJV
+    /// answers YES to both.
     private func strongsFeatureAvailable() -> Bool {
-        guard let mod = activeModule() else { return false }
-        return mod.hasFeature(PSModuleSearchController.featureStrongs)
-            || mod.hasFeature(PSModuleSearchController.confFeatureStrongs)
+        guard let name = activeModuleName(), let store = PSContentStore.shared else { return false }
+        return store.moduleHasFeature(name, PSModuleSearchController.featureStrongs)
+            || store.moduleHasFeature(name, PSModuleSearchController.confFeatureStrongs)
+    }
+
+    /// The search engine for the active module, or nil if there is no active module.
+    private func activeEngine() -> PSSearchEngine? {
+        guard let name = activeModuleName() else { return nil }
+        return PSSearchEngine(forModuleName: name)
     }
 
     // MARK: - History item
@@ -339,7 +355,7 @@ final class PSModuleSearchController: UIViewController,
 
     // MARK: - Index-missing prompt
 
-    private func offerToBuildIndex(for mod: SwordModule) {
+    private func offerToBuildIndex(forModuleName moduleName: String) {
         searchingEnabled = false
         refreshView()
 
@@ -358,7 +374,7 @@ final class PSModuleSearchController: UIViewController,
             style: .default,
             handler: { [weak self] _ in
                 guard let self = self else { return }
-                let b = PSSearchIndexBuilder(module: mod)
+                let b = PSSearchIndexBuilder(moduleName: moduleName)
                 b.delegate = self
                 b.present(from: self)
             }))
@@ -589,7 +605,7 @@ final class PSModuleSearchController: UIViewController,
         // ── MAIN-THREAD SNAPSHOT (race fix R13) ─────────────────────────────
         // Resolve the module and capture every query input into immutable locals
         // BEFORE dispatching. The background closure reads ONLY these `let`s.
-        guard let mod = activeModule(), mod.hasSearchIndex() else {
+        guard let engine = activeEngine(), engine.indexIsFresh() else {
             results = nil
             strongsHighlightPerResult = nil
             resultsTable.reloadData()
@@ -609,7 +625,6 @@ final class PSModuleSearchController: UIViewController,
         let generation = queryGeneration
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            let engine = PSSearchEngine(for: mod)
             let raw = engine.runQuery(capturedExpression,
                                       scope: capturedScope,
                                       bookName: capturedBookName,
@@ -619,9 +634,7 @@ final class PSModuleSearchController: UIViewController,
             let entries = NSMutableArray()
             var highlights: [[String]]? = (capturedStrongsTokens?.count ?? 0) > 0 ? [] : nil
             for r in raw {
-                if let e = SwordModuleTextEntry(key: r.reference, andText: r.fullText) {
-                    entries.add(e)
-                }
+                entries.add(PSVerseTextEntry(key: r.reference, text: r.fullText))
                 if highlights != nil {
                     highlights!.append(r.strongsHighlightWords ?? [])
                 }
@@ -803,19 +816,24 @@ final class PSModuleSearchController: UIViewController,
         guard let cell = cell else { return UITableViewCell() }
 
         guard let results = results, indexPath.row < results.count,
-              let entry = results[indexPath.row] as? SwordModuleTextEntry else {
+              let entry = results[indexPath.row] as? PSVerseTextEntry else {
             return cell
         }
         cell.textLabel?.text = entry.key
 
         // If the entry is missing its full text (e.g. old cached history entries),
-        // pull it from the module on demand.
-        if entry.text == nil {
-            let mod = activeModule()
-            let ref = PSModuleController.createRefString(entry.key)
-            if let pulled = mod?.textEntry(forKey: ref, textType: TextTypeStripped), let pulledText = pulled.text {
-                entry.text = PSSearchCleanDisplayText(pulledText)
-            }
+        // pull it from the content store on demand.
+        //
+        // Phase 5 step 5: this went through -[SwordModule textEntryForKey:textType:]
+        // with TextTypeStripped, i.e. stripText(). The store's plain_texts column IS
+        // stripText()'s output — captured with the four marker-emitting options off —
+        // so PSSearchCleanDisplayText is still applied, exactly as before, because a
+        // row cached by an older build may carry markers from whatever option state
+        // that build rendered under.
+        if entry.text == nil, let name = activeModuleName(), let key = entry.key,
+           let ref = PSModuleController.createRefString(key),
+           let pulled = PSContentStore.shared?.plainText(module: name, osisRef: ref) {
+            entry.text = PSSearchCleanDisplayText(pulled)
         }
         var txt = entry.text ?? ""
         txt = txt.replacingOccurrences(of: "\n", with: " ")
@@ -843,7 +861,7 @@ final class PSModuleSearchController: UIViewController,
         guard let results = results, indexPath.row < results.count else { return }
 
         notifyDelegateOfNewHistoryItem()
-        guard let entry = results[indexPath.row] as? SwordModuleTextEntry, let ref = entry.key else { return }
+        guard let entry = results[indexPath.row] as? PSVerseTextEntry, let ref = entry.key else { return }
         let parts = ref.components(separatedBy: ":")
         let verse = parts.count > 1 ? parts[1] : "1"
         let bookChapter = parts.first ?? ref

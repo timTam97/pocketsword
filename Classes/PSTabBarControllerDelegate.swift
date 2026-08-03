@@ -822,31 +822,38 @@ final class PSTabBarControllerDelegate: NSObject,
             // decision, same inputs, no behaviour change.
             var isABibleRef = false
             if let mod = mod {
-                let modToUse = SwordManager.default()?.module(withName: mod)
+                // The module's type comes from content_meta as of Phase 5 step 5 —
+                // which is what PSRefLinkRouter's own test already used. A nil here
+                // means "not a module we ship", and the router's documented
+                // `ret = bible` default sends that down the bibleRef arm, exactly as
+                // an uninstalled module did before.
+                let store = PSContentStore.shared
+                let moduleType = store?.moduleMeta(mod, key: "type")
                 if PSRefLinkRouter.destination(forModuleName: mod,
-                                               moduleType: modToUse?.typeString()) == .bibleRef {
+                                               moduleType: moduleType) == .bibleRef {
                     isABibleRef = true
                 } else {
-                    // Should be a dictionary entry:
-                    let swordDictionary = SwordManager.default()?.module(withName: mod) as? SwordDictionary
+                    // Should be a dictionary entry.
                     var strongs = false
-                    if let swordDictionary = swordDictionary {
-                        entry = PSContentReader.entry(module: swordDictionary.name ?? "",
+                    if let store = store {
+                        entry = PSContentReader.entry(module: mod,
                                                       key: rData[ATTRTYPE_VALUE] as? String)
 
                         var strongsSearchTerm = ""
-                        if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_GREEKDEF) && swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
+                        let hasGreekDef = store.moduleHasFeature(mod, SWMOD_CONF_FEATURE_GREEKDEF)
+                        let hasHebrewDef = store.moduleHasFeature(mod, SWMOD_CONF_FEATURE_HEBREWDEF)
+                        if hasGreekDef && hasHebrewDef {
                             // should already have a prefix
                             strongsSearchTerm = (rData[ATTRTYPE_VALUE] as? String) ?? ""
                             strongs = true
-                        } else if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_GREEKDEF) {
+                        } else if hasGreekDef {
                             let greek = NSMutableString(string: (rData[ATTRTYPE_VALUE] as? String) ?? "")
                             while greek.length > 0 && greek.character(at: 0) == unichar(UInt8(ascii: "0")) {
                                 greek.deleteCharacters(in: NSRange(location: 0, length: 1))
                             }
                             strongsSearchTerm = "G\(greek)"
                             strongs = true
-                        } else if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
+                        } else if hasHebrewDef {
                             let hebrew = NSMutableString(string: (rData[ATTRTYPE_VALUE] as? String) ?? "")
                             while hebrew.length > 0 && hebrew.character(at: 0) == unichar(UInt8(ascii: "0")) {
                                 hebrew.deleteCharacters(in: NSRange(location: 0, length: 1))
@@ -904,13 +911,16 @@ final class PSTabBarControllerDelegate: NSObject,
                 // user does not have. Everything else falls through to
                 // decisionHandler(.allow), exactly as it already did whenever the
                 // expansion produced nothing.
-                let modToUse: SwordModule?
+                // Whether the named module is one we ship, from content_meta. An
+                // empty/absent module name means "the primary Bible", which always
+                // exists — so only a NAMED, unknown module produces the placeholder.
+                let moduleIsKnown: Bool
                 if let mod = mod, mod != "" {
-                    modToUse = SwordManager.default()?.module(withName: mod)
+                    moduleIsKnown = PSContentStore.shared?.moduleMeta(mod, key: "type") != nil
                 } else {
-                    modToUse = PSModuleController.default()?.primaryBible
+                    moduleIsKnown = PSModuleController.default()?.primaryBibleName != nil
                 }
-                if let mod = mod, modToUse == nil {
+                if let mod = mod, !moduleIsKnown {
                     entry = "<p style=\"color:grey;text-align:center;font-style:italic;\">\(mod) \(NSLocalizedString("ModuleNotInstalled", comment: "is not installed."))</p>"
                     entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: nil)
                 }
@@ -918,9 +928,9 @@ final class PSTabBarControllerDelegate: NSObject,
 
         } else if let rData = rData, (rData[ATTRTYPE_ACTION] as? String) == "showNote" {
             if (rData[ATTRTYPE_TYPE] as? String) == "n" { // footnote
-                let bible = PSModuleController.default()?.primaryBible
-                entry = PSContentReader.footnoteBody(module: bible?.name, data: rData)
-                entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: bible?.name)
+                let bible = PSModuleController.default()?.primaryBibleName
+                entry = PSContentReader.footnoteBody(module: bible, data: rData)
+                entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: bible)
             }
             // The `x` (cross-reference) arm is GONE too. No `x` anchor is ever
             // emitted for the shipped content, AND all 6,959 notes are type='study'

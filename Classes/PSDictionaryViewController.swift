@@ -23,9 +23,10 @@ import UIKit
 @objc(PSDictionaryViewController)
 final class PSDictionaryViewController: UITableViewController, UISearchBarDelegate {
 
-    // SWMOD_CONF_FEATURE_IMAGES from SwordManager.h — an Obj-C `#define @"Images"`
-    // string macro, which does NOT import into Swift, so the literal is mirrored
-    // here verbatim. It must stay byte-identical to SwordManager.h.
+    // SWMOD_CONF_FEATURE_IMAGES — an Obj-C `#define @"Images"` string macro (now in
+    // globals.h, moved there by Phase 5 step 2), which does NOT import into Swift, so
+    // the literal is mirrored here verbatim. It must stay byte-identical, because it
+    // is the key the baked feature set is queried with.
     private static let swModConfFeatureImages = "Images"
 
     /// Display titles for the three fixed-role bundled lexicons, keyed by module
@@ -244,11 +245,14 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         let entryVC = PSDictionaryEntryViewController(nibName: nil, bundle: nil)
         entryVC.setDictionaryEntryTitle(t)
         entryVC.setDictionaryEntryText(descr)
-        if primaryDictionary?.hasFeature(Self.swModConfFeatureImages) == true {
-            entryVC.setScalesPageToFit(true)
-        } else {
-            entryVC.setScalesPageToFit(false)
-        }
+        // The Images gate, from the baked feature set (Phase 5 step 5). No bundled
+        // lexicon declares `Feature=Images`, so this is always the `false` arm — the
+        // branch is kept, and driven from real data, rather than being collapsed to a
+        // constant: a lexicon that DID declare it would need the `true` arm, and
+        // hardcoding would make that a silent behaviour change.
+        let name = primaryDictionary?.name ?? ""
+        let hasImages = PSContentStore.shared?.moduleHasFeature(name, Self.swModConfFeatureImages) ?? false
+        entryVC.setScalesPageToFit(hasImages)
         if let navigationController = navigationController {
             navigationController.pushViewController(entryVC, animated: true)
         } else {

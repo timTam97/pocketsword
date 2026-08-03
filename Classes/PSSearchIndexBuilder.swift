@@ -13,7 +13,7 @@
 //
 //  The public surface is preserved verbatim for the (still Obj-C++) consumer
 //  PSModuleSearchController: the @objc class name PSSearchIndexBuilder, the
-//  -initWithModule: / -presentFromViewController: methods, the readonly `module`
+//  -initWithModuleName: / -presentFromViewController: methods, the readonly `moduleName`
 //  property, and the @objc PSSearchIndexBuilderDelegate protocol (kept @objc so
 //  the Obj-C conformer binds, per migration-plan risk R11).
 //
@@ -29,7 +29,10 @@ protocol PSSearchIndexBuilderDelegate: NSObjectProtocol {
 final class PSSearchIndexBuilder: UIViewController {
 
     @objc weak var delegate: PSSearchIndexBuilderDelegate?
-    @objc private(set) var module: SwordModule
+    /// The module being indexed, as a **name** (Phase 5 step 5). It was a
+    /// `SwordModule`, used only for its `name` (the sheet's subtitle) and to key the
+    /// search engine — both of which take a name now.
+    @objc private(set) var moduleName: String
 
     // Set from the main thread (cancel button / bg-task expiration) and read
     // from the build worker thread inside the progress block. Guarded by a lock
@@ -49,8 +52,8 @@ final class PSSearchIndexBuilder: UIViewController {
     private var progressView: UIProgressView!
     private var cancelButton: UIButton!
 
-    @objc init(module: SwordModule) {
-        self.module = module
+    @objc init(moduleName: String) {
+        self.moduleName = moduleName
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .pageSheet
         self.isModalInPresentation = true // disallow pull-to-dismiss mid-build
@@ -78,7 +81,7 @@ final class PSSearchIndexBuilder: UIViewController {
         stack.addArrangedSubview(titleLabel)
 
         moduleLabel = UILabel()
-        moduleLabel.text = module.name
+        moduleLabel.text = moduleName
         moduleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         moduleLabel.textColor = .secondaryLabel
         moduleLabel.textAlignment = .center
@@ -125,8 +128,7 @@ final class PSSearchIndexBuilder: UIViewController {
             self?.cancelRequested = true
         }
 
-        let mod = module
-        let engine = PSSearchEngine(for: mod)
+        let engine = PSSearchEngine(forModuleName: moduleName)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             var err: NSError?

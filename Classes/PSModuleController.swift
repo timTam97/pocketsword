@@ -78,6 +78,24 @@ final class PSModuleController: NSObject {
     @objc var swordManager: SwordManager!
     @objc var busyTimer: Timer?
 
+    // MARK: - Primary module NAMES
+    //
+    // SWORD_REMOVAL_PLAN.md Phase 5 step 5. Every surviving consumer of the three
+    // `primary*` properties above only reads `.name` off them, so step 7 replaces
+    // the objects with plain `String?` names. These accessors are the seam: call
+    // sites move onto them in this commit, and in step 7 they stop delegating to a
+    // `SwordModule` and become the stored properties themselves. Splitting it that
+    // way keeps the call-site churn and the bridge deletion in separate commits.
+
+    /// The Bible being read, by name.
+    @objc var primaryBibleName: String? { primaryBible?.name }
+
+    /// The commentary being read, by name.
+    @objc var primaryCommentaryName: String? { primaryCommentary?.name }
+
+    /// The lexicon being browsed, by name.
+    @objc var primaryDictionaryName: String? { primaryDictionary?.name }
+
     // MARK: - Singleton
 
     private static var instance: PSModuleController?
@@ -313,10 +331,12 @@ final class PSModuleController: NSObject {
 
     @objc(loadPrimaryDictionary:)
     func loadPrimaryDictionary(_ newText: String!) {
-        if let primaryDictionary = primaryDictionary {
-            primaryDictionary.releaseKeys() // release some memory
-        }
-
+        // The `primaryDictionary.releaseKeys()` that was here is GONE (Phase 5 step
+        // 5). `-releaseKeys` was SwordDictionary-only, and it existed because
+        // -[SwordDictionary allKeys] built a large in-memory key array by walking the
+        // module. The reader memoises its keys from an immutable read-only store, so
+        // there is nothing to release — and dropping them would only force the next
+        // lookup to re-query.
         if let newText = newText {
             primaryDictionary = swordManager?.module(withName: newText) as? SwordDictionary
             UserDefaults.standard.set(newText, forKey: Defaults.lastDictionary)
@@ -332,11 +352,17 @@ final class PSModuleController: NSObject {
     // never called by the OS - must be called manually!
     @objc(didReceiveMemoryWarning)
     func didReceiveMemoryWarning() {
-        // add things that can be released if we need to clear up some memory
-        // won't be called by the OS, need to call this ourselves
-        if let primaryDictionary = primaryDictionary {
-            primaryDictionary.releaseKeys() // release some memory
-        }
+        // Deliberately a NO-OP as of Phase 5 step 5.
+        //
+        // Its only body was `primaryDictionary.releaseKeys()`, which dropped the
+        // in-memory lexicon key array the engine had walked the module to build. The
+        // reader's equivalent is memoised from an immutable, read-only, mmap-able
+        // SQLite store, so there is nothing worth releasing.
+        //
+        // The METHOD is kept rather than deleted because it is called MANUALLY (the
+        // name is a lie — the OS never invokes this), so removing it would mean
+        // touching its callers for no benefit, and it is the obvious place to hang a
+        // future release if one is ever needed.
     }
 
     // MARK: - Chapter navigation
@@ -886,13 +912,13 @@ final class PSModuleController: NSObject {
             }
         }
         if let moduleName = moduleName {
-            // check if module is RTL or LTR
-            if let mod = PSModuleController.default()?.swordManager?.module(withName: moduleName) {
-                if mod.isRTL() {
-                    lgMarginRight = lgMarginLeft
-                    lgMarginLeft = 0
-                    lgVersePadding = "right"
-                }
+            // check if module is RTL or LTR — from content_meta as of Phase 5 step 5,
+            // not from a live module. `moduleName` is passed in for this check ALONE:
+            // the font is global, so nothing else here is per-module.
+            if PSContentStore.shared?.moduleIsRTL(moduleName) == true {
+                lgMarginRight = lgMarginLeft
+                lgMarginLeft = 0
+                lgVersePadding = "right"
             }
         }
 

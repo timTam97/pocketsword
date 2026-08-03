@@ -5,6 +5,7 @@
 
 #import "PSSearchEngine.h"
 #import "PocketSword-Swift.h"
+#import "SwordManager.h"
 #import "SwordModule.h"
 #import "SwordModule+Cpp.h"
 #import <sqlite3.h>
@@ -17,7 +18,14 @@ NSString * const PSSearchEngineErrorDomain = @"PSSearchEngineErrorDomain";
 NSString * const PSSearchHighlightOpen     = @"[[HL]]";
 NSString * const PSSearchHighlightClose    = @"[[/HL]]";
 
-const int PSSearchSchemaVersion = 4;
+// Bumped 4 -> 5 by SWORD_REMOVAL_PLAN.md Phase 5 step 6, which MOVED the index from
+// <AbsoluteDataPath>/search/fts.db to <Caches>/search/<module>.db. The bump is what
+// forces the one-time rebuild for an upgrading user: -indexIsFresh compares the
+// stored schema_version, so an index at the old path is never even looked for and a
+// freshly-created one at the new path is stale until built. No migration — see the
+// plan's decision table; moving the file would buy nothing over a rebuild the
+// existing prompt already handles, and the old tree is swept by step 9's one-shot.
+const int PSSearchSchemaVersion = 5;
 
 @interface PSSearchEngine () {
 	sqlite3 *_db;
@@ -43,41 +51,57 @@ const int PSSearchSchemaVersion = 4;
 }
 
 + (instancetype)engineForModule:(SwordModule *)mod {
-	if(!mod) return nil;
+	return [self engineForModuleName:mod.name];
+}
+
+// Keyed by NAME as of Phase 5 step 6. It always was, in effect — the old
+// +engineForModule: used mod.name as the cache key — but the engine no longer holds
+// the SwordModule at all, so there is nothing to "re-attach" on a cache hit and the
+// module-reload dance is gone with it.
++ (instancetype)engineForModuleName:(NSString *)name {
+	if(!name) return nil;
 	NSMapTable *cache = [self cache];
 	@synchronized(cache) {
-		PSSearchEngine *existing = [cache objectForKey:mod.name];
-		if(existing) {
-			// Re-attach the module in case it was reloaded between calls.
-			existing.module = mod;
-			return existing;
-		}
-		PSSearchEngine *engine = [[PSSearchEngine alloc] initWithModule:mod];
-		if(engine) [cache setObject:engine forKey:mod.name];
+		PSSearchEngine *existing = [cache objectForKey:name];
+		if(existing) return existing;
+		PSSearchEngine *engine = [[PSSearchEngine alloc] initWithModuleName:name];
+		if(engine) [cache setObject:engine forKey:name];
 		return engine;
 	}
 }
 
 + (void)invalidateEngineForModule:(SwordModule *)mod {
-	if(!mod) return;
+	[self invalidateEngineForModuleName:mod.name];
+}
+
++ (void)invalidateEngineForModuleName:(NSString *)name {
+	if(!name) return;
 	NSMapTable *cache = [self cache];
 	@synchronized(cache) {
-		PSSearchEngine *existing = [cache objectForKey:mod.name];
+		PSSearchEngine *existing = [cache objectForKey:name];
+		// closeDB BEFORE removing, or the handle leaks with the last reference.
 		if(existing) [existing closeDB];
-		[cache removeObjectForKey:mod.name];
+		[cache removeObjectForKey:name];
 	}
 }
 
 #pragma mark - Init / paths
 
 - (instancetype)initWithModule:(SwordModule *)mod {
+	return [self initWithModuleName:mod.name];
+}
+
+// The real initialiser as of Phase 5 step 6: a module NAME is all the engine needs.
+// The path no longer comes from the module's own AbsoluteDataPath conf entry (which
+// dies with the zips), and the version comes from content_meta rather than
+// [mod version], so nothing here touches SWORD.
+- (instancetype)initWithModuleName:(NSString *)name {
+	if(!name) return nil;
 	self = [super init];
 	if(self) {
-		_module = mod;
-		_moduleName = [mod.name copy];
-		NSString *dataPath = [mod configEntryForKey:@"AbsoluteDataPath"];
-		_dbDirectory = [dataPath stringByAppendingPathComponent:@"search"];
-		_dbFilePath  = [_dbDirectory stringByAppendingPathComponent:@"fts.db"];
+		_moduleName = [name copy];
+		_dbDirectory = [PSPaths searchIndexDirectory];
+		_dbFilePath  = [PSPaths searchIndexPathForModule:name];
 	}
 	return self;
 }
@@ -204,8 +228,12 @@ const int PSSearchSchemaVersion = 4;
 		return NO;
 	}
 
-	SwordModule *mod = self.module;
-	NSString *currentVersion = mod ? [mod version] : nil;
+	// The module's Version= conf value, from content_meta rather than [mod version]
+	// (Phase 5 step 4 made PSContentStore.moduleVersion @objc for exactly this).
+	// Same string either way — the converter captured it from the same conf entry —
+	// so an index built before this change still compares equal on version. What
+	// forces the rebuild is the schema_version bump, not this.
+	NSString *currentVersion = [[PSContentStore sharedStore] moduleVersionForModule:_moduleName];
 	sqlite3_bind_text(stmt, 1, [_moduleName UTF8String], -1, SQLITE_TRANSIENT);
 
 	BOOL fresh = NO;
@@ -504,9 +532,9 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 }
 
 // The meta row, shared by both build paths. module_version is nil-safe because
-// the column is TEXT.
-- (void)stampMetaForModule:(SwordModule *)mod {
-	NSString *currentVersion = [mod version];
+// the column is TEXT. Reads the version from content_meta, not from a SwordModule.
+- (void)stampMeta {
+	NSString *currentVersion = [[PSContentStore sharedStore] moduleVersionForModule:_moduleName];
 	sqlite3_stmt *meta = NULL;
 	const char *metaSQL =
 		"INSERT OR REPLACE INTO meta (module_name, module_version, built_at, schema_version) "
@@ -526,13 +554,6 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 }
 
 - (BOOL)buildWithProgress:(PSSearchProgressBlock)progress error:(NSError **)err {
-	SwordModule *mod = self.module;
-	if(!mod) {
-		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-1
-									  userInfo:@{NSLocalizedDescriptionKey:@"module is nil"}];
-		return NO;
-	}
-
 	// Start fresh: if there's any prior DB, drop it. A half-built index is
 	// worse than none.
 	[self dropIndex];
@@ -550,7 +571,7 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 	{
 		NSError *storeErr = nil;
 		if([self buildFromContentStoreWithProgress:progress error:&storeErr]) {
-			[self stampMetaForModule:mod];
+			[self stampMeta];
 			if(progress) { BOOL ignored = NO; progress(1.0f, &ignored); }
 			return YES;
 		}
@@ -564,7 +585,11 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 			 storeErr.localizedDescription);
 	}
 
-	sword::SWModule *swModule = [mod swModule];
+	// The SWORD fallback walk. The engine no longer holds a SwordModule (step 6 made
+	// it name-keyed), so it resolves one here — the last thing in this file that
+	// touches the engine at all. Step 7 deletes this whole arm.
+	SwordModule *mod = [[SwordManager defaultManager] moduleWithName:_moduleName];
+	sword::SWModule *swModule = mod ? [mod swModule] : NULL;
 	if(!swModule) {
 		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-2
 									  userInfo:@{NSLocalizedDescriptionKey:@"no sword::SWModule"}];
@@ -698,7 +723,7 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 		return NO;
 	}
 
-	[self stampMetaForModule:mod];
+	[self stampMeta];
 
 	if(progress) {
 		BOOL ignored = NO;
@@ -718,11 +743,16 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 		[fm removeItemAtPath:_dbFilePath error:&err];
 		if(err) ALog(@"PSSearchEngine: failed to remove %@: %@", _dbFilePath, err);
 	}
-	// Try to remove the enclosing search/ dir if it ended up empty.
-	NSArray *remaining = [fm contentsOfDirectoryAtPath:_dbDirectory error:NULL];
-	if(remaining && remaining.count == 0) {
-		[fm removeItemAtPath:_dbDirectory error:NULL];
-	}
+	// The enclosing directory is deliberately LEFT IN PLACE (Phase 5 step 6).
+	//
+	// This used to remove <AbsoluteDataPath>/search when it was empty, which was
+	// safe because that directory held exactly one module's fts.db. The index now
+	// lives at <Caches>/search/<module>.db, so KJV and MHCC SHARE the directory and
+	// removing it on one module's drop would delete the other's index — or, if the
+	// other engine had it open, leave it writing to an unlinked file.
+	//
+	// Not removing it costs an empty directory in Caches, which the OS may purge
+	// anyway and -ensureDirectoryExists recreates on demand.
 }
 
 #pragma mark - Query

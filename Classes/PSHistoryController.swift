@@ -297,10 +297,13 @@ class PSHistoryController: UITableViewController {
         var mod: String?
         if rowArray.count > 2 {
             mod = rowArray[2] as? String
-            let swordModule = PSModuleController.default().swordManager?.module(withName: mod)
-            if swordModule == nil {
+            // The module's type from content_meta (Phase 5 step 5). A nil type means
+            // the history row names a module we do not ship — same fallback to
+            // lastBible as when SwordManager could not find it.
+            let type = mod.flatMap { PSContentStore.shared?.moduleMeta($0, key: "type") }
+            if type == nil {
                 mod = UserDefaults.standard.string(forKey: Defaults.lastBible)
-            } else if let swordModule = swordModule, swordModule.type == commentary {
+            } else if type == "Commentaries" {
                 moduleIsCommentary = true
             }
             if moduleIsCommentary {

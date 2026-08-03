@@ -269,10 +269,11 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
         let isBible: Bool // determined first by "module" if present, then fall back to "type", then default to "bible"
         if let mod = module, !mod.isEmpty {
-            // they requested a specific module
-            let requestedModule = PSModuleController.default()?.swordManager?.module(withName: mod)
-            if let requestedModule = requestedModule {
-                isBible = (requestedModule.type == bible)
+            // they requested a specific module. Its type comes from content_meta as of
+            // Phase 5 step 5; a nil means we do not ship it, which is the same
+            // "not installed" branch as before.
+            if let type = PSContentStore.shared?.moduleMeta(mod, key: "type") {
+                isBible = (type == "Biblical Texts")
             } else {
                 // The requested module is not installed. With a fixed bundled module
                 // set that is the common case for a foreign sword:// link, so ignore

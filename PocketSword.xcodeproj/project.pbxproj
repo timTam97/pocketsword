@@ -247,6 +247,7 @@
 		5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR301 /* PSChapterExpander.swift */; };
 		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
 		5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */; };
+		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
 		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
 		5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RP01 /* PSRefParser.swift */; };
 		5A1F70B0000000000000LR02 /* PSRefLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */; };
@@ -833,6 +834,7 @@
 		5A1F70B00000000000CTR301 /* PSChapterExpander.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterExpander.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterNavigationJS.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000RP01 /* PSRefParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefParser.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefLinkRouter.swift; sourceTree = "<group>"; };
@@ -1991,6 +1993,7 @@
 				5A1F70B00000000000CTR301 /* PSChapterExpander.swift */,
 				5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */,
 				5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */,
+				5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */,
 			);
 			name = "PS-other";
 			path = Classes;
@@ -2380,6 +2383,7 @@
 				5A1F70B0000000000000C002 /* AppConstants.swift in Sources */,
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,
+				5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */,
 				5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */,
 				5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */,
 				5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */,

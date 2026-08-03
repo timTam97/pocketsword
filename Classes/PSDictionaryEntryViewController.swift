@@ -35,6 +35,8 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
     private static let attrTypeValue  = "value"        // ATTRTYPE_VALUE
     private static let swOutputRefKey = "OutputRefKey"  // SW_OUTPUT_REF_KEY
     private static let swOutputTextKey = "OutputTextKey" // SW_OUTPUT_TEXT_KEY
+    /// SWMOD_CATEGORY_DICTIONARIES — the module `type` string content_meta stores.
+    private static let typeDictionaries = "Lexicons / Dictionaries"
 
     @objc var entryHTML: String?
     @objc var entryTitle: String?
@@ -112,8 +114,16 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
 
                 let mod = module
 
-                let swordDictionary = PSModuleController.default()?.swordManager?.module(withName: mod) as? SwordDictionary
-                if swordDictionary != nil {
+                // Phase 5 step 5 (a FOURTEENTH call site — the plan's table lists
+                // thirteen and missed this one; same shape as the others).
+                //
+                // The `swordManager.module(withName:) as? SwordDictionary` here was an
+                // "is this module installed, and is it a lexicon?" test, used only to
+                // choose between rendering the entry and showing the not-installed
+                // placeholder. content_meta answers both halves: a nil type means we do
+                // not ship it, and the type string says whether it is a lexicon.
+                let moduleType = PSContentStore.shared?.moduleMeta(mod, key: "type")
+                if moduleType == Self.typeDictionaries {
                     entry = PSContentReader.entry(module: mod,
                                                   key: rData[Self.attrTypeValue] as? String ?? "")
                 } else {

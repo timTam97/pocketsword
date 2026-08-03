@@ -280,6 +280,47 @@ enum AppPaths {
 
     /// DEFAULT_MMM_PATH — Temporary dir, path-component "MMM" (NO trailing slash)
     static var mmmPath: String { (NSTemporaryDirectory() as NSString).appendingPathComponent("MMM") }
+
+    /// The FTS search index for a module: `<Caches>/search/<module>.db`.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 6. The index used to live at
+    /// `<AbsoluteDataPath>/search/fts.db`, a path that came out of SWORD's own conf
+    /// munging (`swmgr.cpp:1110` strips the trailing component for RawLD / RawLD4 /
+    /// zLD) and therefore cannot survive the module zips going away. Derived data
+    /// belongs in Caches regardless: it is rebuildable, and Caches is the directory
+    /// the OS is allowed to purge.
+    ///
+    /// Keyed by module **name** rather than one file per directory, so two modules
+    /// can share the directory — only KJV and MHCC are ever indexed, but nothing
+    /// here assumes that.
+    static func searchIndexPath(for module: String) -> String {
+        (searchIndexDirectory as NSString).appendingPathComponent("\(module).db")
+    }
+
+    /// The directory holding every module's search index.
+    static var searchIndexDirectory: String {
+        (cachesDirectory() as NSString).appendingPathComponent("search")
+    }
+}
+
+/// Obj-C's window onto `AppPaths`.
+///
+/// `AppPaths` is an `enum` namespace, and `@objc` cannot be applied to an enum's
+/// members, so the two paths `PSSearchEngine.mm` needs are re-exposed here on a
+/// class. This exists only for the one commit-range where the engine is still
+/// Obj-C: step 8 ports it to Swift, after which the engine calls `AppPaths`
+/// directly and this class is deleted.
+@objc(PSPaths)
+final class PSPaths: NSObject {
+    /// `<Caches>/search/<module>.db`
+    @objc(searchIndexPathForModule:)
+    static func searchIndexPath(for module: String) -> String {
+        AppPaths.searchIndexPath(for: module)
+    }
+
+    /// `<Caches>/search`
+    @objc(searchIndexDirectory)
+    static var searchIndexDirectory: String { AppPaths.searchIndexDirectory }
 }
 
 // MARK: - Logging shims

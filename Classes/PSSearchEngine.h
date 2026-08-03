@@ -61,20 +61,35 @@ typedef void (^PSSearchProgressBlock)(float fraction, BOOL *cancel);
 
 @interface PSSearchEngine : NSObject
 
-/// Returns a cached engine for the given module. Never nil for a valid module.
-+ (instancetype)engineForModule:(SwordModule *)mod;
+/// Returns a cached engine for the named module. Never nil for a non-nil name.
+///
+/// **Name-keyed as of SWORD_REMOVAL_PLAN.md Phase 5 step 6.** The engine used to
+/// take a `SwordModule` and derive its db path from that module's
+/// `AbsoluteDataPath` conf entry; it now needs only the name, because the path is
+/// `<Caches>/search/<name>.db` and the version comes from `content_meta`.
++ (instancetype)engineForModuleName:(NSString *)name;
 
-/// Drops the in-memory cache entry for this module. Call after deleting the
-/// on-disk index so a subsequent engineForModule: reopens cleanly.
+/// Drops the in-memory cache entry for this module, closing its handle first.
+/// Call after deleting the on-disk index so a subsequent lookup reopens cleanly.
++ (void)invalidateEngineForModuleName:(NSString *)name;
+
+/// Deprecated `SwordModule`-taking spellings, kept for the one commit-range where
+/// both exist. They forward to the by-name versions above and are deleted with the
+/// bridge in step 7.
++ (instancetype)engineForModule:(SwordModule *)mod;
 + (void)invalidateEngineForModule:(SwordModule *)mod;
 
 /// Absolute path to the FTS5 database file for this module
-/// (<AbsoluteDataPath>/search/fts.db).
+/// (`<Caches>/search/<module>.db`).
 - (NSString *)dbPath;
 
 /// YES iff the DB file exists and its meta row matches the module's current
-/// Version and our schema version. A NO return means either absent or stale
-/// — either way, the caller should offer to rebuild.
+/// Version (read from `content_meta`) and our schema version. A NO return means
+/// either absent or stale — either way, the caller should offer to rebuild.
+///
+/// Note this is what makes the step-6 relocation a one-time rebuild rather than a
+/// migration: `PSSearchSchemaVersion` went 4 -> 5, so an index carrying 4 is stale
+/// wherever it sits.
 - (BOOL)indexIsFresh;
 
 /// Builds the index from scratch. Blocks the calling thread; expected to run
@@ -84,7 +99,9 @@ typedef void (^PSSearchProgressBlock)(float fraction, BOOL *cancel);
 - (BOOL)buildWithProgress:(nullable PSSearchProgressBlock)progress
 					error:(NSError **)err;
 
-/// Removes the on-disk index (and the enclosing search/ directory if empty).
+/// Removes the on-disk index. Does NOT remove the enclosing directory: as of step 6
+/// every module's index shares `<Caches>/search`, so dropping KJV's must not delete
+/// MHCC's.
 - (void)dropIndex;
 
 /// Runs a query against an already-built index. Returns an empty array if

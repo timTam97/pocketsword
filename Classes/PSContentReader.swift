@@ -279,16 +279,19 @@ final class PSContentReader: NSObject {
             return nil
         }
 
-        // Language + direction, as -getChapter: does at SwordModule.mm:1346-1350.
-        // Both come from the module .conf, which is still on disk this phase (the
-        // zips keep seeding into Documents/ — see the plan's open dependency), so
-        // this reads them from the live module rather than duplicating the values.
-        // Phase 5 takes them from content_meta.
-        if let mod = SwordManager.default()?.module(withName: module) {
-            if mod.isRTL() {
+        // Language + direction, as -getChapter: did at SwordModule.mm:1346-1350.
+        //
+        // Phase 5 step 5: from `content_meta` (`module.<name>.{direction,lang}`)
+        // rather than a live module. All five shipped modules are Lang=en with no
+        // Direction=, so both substitutions are no-ops today — but the values are
+        // READ rather than assumed, because that is a property of the content and not
+        // of this code. PSDifferentialTests.testBakedFeatureSetMatchesTheEngine
+        // checked the baked answers against the engine while it was still here.
+        if let store {
+            if store.moduleIsRTL(module) {
                 text = text.replacingOccurrences(of: "dir=\"ltr\"", with: "dir=\"rtl\"")
             }
-            if let lang = mod.lang(), !lang.isEmpty {
+            if let lang = store.moduleLang(module) {
                 text = text.replacingOccurrences(of: "xml:lang=\"en\"",
                                                  with: "xml:lang=\"\(lang)\" lang=\"\(lang)\"")
             }
