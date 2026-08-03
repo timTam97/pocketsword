@@ -82,9 +82,12 @@ enum Defaults {
 
     // Feature flags (see PSFeatureFlags) - absent means off
     static let voiceRefEnabledPreference   = "voiceRefEnabled"          // macro DefaultsVoiceRefEnabledPreference
-    // Swift-only (SWORD_REMOVAL_PLAN.md Phase 3): no globals.h macro, because no
-    // Obj-C reads it — the reader and all its call sites are Swift. Removed in
-    // Phase 5 with the flag.
+    // **RETIRED** (Phase 5 step 1). Was the Phase-3 kill switch for reading through
+    // PSContentReader instead of the SWORD engine. The engine is gone, so the flag
+    // is gone with it; the key stays declared and unread so it is not reused, and a
+    // device still holding `swiftContentReader = NO` from the Phase-3/4 era is
+    // unaffected because nothing consults it. Swift-only: there was never a
+    // globals.h macro, because no Obj-C read it.
     static let swiftContentReaderPreference = "swiftContentReader"
 
     // from createHTMLString:

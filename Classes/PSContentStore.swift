@@ -119,9 +119,10 @@ final class PSContentStore: NSObject {
 
     // MARK: - Failure reporting
 
-    /// Loud in debug, logged in release, and always nil-returning at the call
-    /// site. A blank chapter must never be the user-visible outcome of a reader
-    /// bug: while the feature flag exists the caller falls back to SWORD.
+    /// **Loud-and-nil.** Loud in debug, logged in release, and always nil-returning
+    /// at the call site. One bad datum — a malformed token stream, an unresolvable
+    /// book, a chunk slot that does not exist — must not brick the app: the user
+    /// sees that one chapter or lookup fail and can navigate away.
     ///
     /// `report: false` logs but does not assert. That exists for exactly one
     /// caller: the tests that deliberately feed the reader a broken store or a
@@ -137,6 +138,37 @@ final class PSContentStore: NSObject {
         }
     }
 
+    /// **Fatal.** The store itself is unusable, so every read would fail and the
+    /// app cannot do its job at all.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 1: through Phase 4 these conditions were
+    /// `fail` too, because the caller fell back to SWORD. There is no fallback now,
+    /// so returning nil would mean a permanently blank app that looks to the user
+    /// like it lost their data, and to us like nothing happened. All four callers
+    /// are build-integrity failures — the store and the versification JSON are
+    /// bundled resources validated by PSContentStoreTests and cannot vary at
+    /// runtime — so if one trips, every install of that build is broken and a crash
+    /// report naming the invariant is the outcome we want.
+    ///
+    /// This traps in **release as well as debug**, unlike `fail`. That is the whole
+    /// point: `assertionFailure` compiles out of a release build, which is exactly
+    /// where a blank app would otherwise ship silently.
+    ///
+    /// `report: false` degrades to `fail`'s behaviour — log and let the caller
+    /// return nil. Same single purpose: the negative tests
+    /// (`testAbsentStoreFailsRatherThanCrashing`, `testWrongSchemaVersionIsRefused`,
+    /// `testWrongTokenGrammarIsRefused`, `testMissingChunkSizesAreRefused`,
+    /// `testMalformedVersificationIsRefused`) construct a deliberately-broken store
+    /// and assert the initialiser returns nil. Those tests are the executable proof
+    /// that the *detection* is right; trapping is what production does with it.
+    static func fatal(_ message: String, report: Bool = true,
+                      file: StaticString = #fileID, line: UInt = #line) {
+        alog("PSContentStore: FATAL: \(message)")
+        if report {
+            fatalError("PSContentStore: \(message)", file: file, line: line)
+        }
+    }
+
     // MARK: - Connection
 
     private var db: OpaquePointer?
@@ -146,12 +178,16 @@ final class PSContentStore: NSObject {
     private let queue = DispatchQueue(label: "org.timsams.PocketSword.contentstore")
     private var statements: [String: OpaquePointer] = [:]
 
-    /// The shared instance over the bundled store. `nil` if the store is missing
-    /// or fails validation — callers fall back to SWORD.
+    /// The shared instance over the bundled store.
+    ///
+    /// Phase 5: a missing or invalid store is **fatal** — there is no engine to fall
+    /// back to, so the type stays Optional only for the tests' benefit (they build
+    /// deliberately-broken stores with `reportFailures: false`). In production this
+    /// either returns a usable store or traps.
     @objc(sharedStore)
     static let shared: PSContentStore? = {
         guard let url = Bundle.main.url(forResource: "PSContent", withExtension: "sqlite") else {
-            PSContentStore.fail("PSContent.sqlite is not in the app bundle")
+            PSContentStore.fatal("PSContent.sqlite is not in the app bundle")
             return nil
         }
         return PSContentStore(path: url.path)
@@ -168,7 +204,7 @@ final class PSContentStore: NSObject {
         // stops SQLite trying to create a -wal/-journal sidecar next to it.
         let rc = sqlite3_open_v2(path, &handle, SQLITE_OPEN_READONLY, nil)
         guard rc == SQLITE_OK, let handle = handle else {
-            PSContentStore.fail("cannot open \(path): \(rc)", report: reportFailures)
+            PSContentStore.fatal("cannot open \(path): \(rc)", report: reportFailures)
             if handle != nil { sqlite3_close(handle) }
             return nil
         }
@@ -196,7 +232,7 @@ final class PSContentStore: NSObject {
         var meta: [String: String] = [:]
         var st: OpaquePointer?
         guard sqlite3_prepare_v2(db, "SELECT key, value FROM content_meta;", -1, &st, nil) == SQLITE_OK else {
-            PSContentStore.fail("content_meta is unreadable: \(lastError())", report: reportFailures)
+            PSContentStore.fatal("content_meta is unreadable: \(lastError())", report: reportFailures)
             return false
         }
         while sqlite3_step(st) == SQLITE_ROW {
@@ -207,11 +243,11 @@ final class PSContentStore: NSObject {
 
         let version = Int(meta["schemaVersion"] ?? "") ?? -1
         guard version == Self.expectedSchemaVersion else {
-            PSContentStore.fail("schemaVersion is \(meta["schemaVersion"] ?? "absent"), expected \(Self.expectedSchemaVersion)", report: reportFailures)
+            PSContentStore.fatal("schemaVersion is \(meta["schemaVersion"] ?? "absent"), expected \(Self.expectedSchemaVersion)", report: reportFailures)
             return false
         }
         guard meta["tokenGrammar"] == Self.expectedTokenGrammar else {
-            PSContentStore.fail("tokenGrammar is \(meta["tokenGrammar"] ?? "absent"), expected \(Self.expectedTokenGrammar)", report: reportFailures)
+            PSContentStore.fatal("tokenGrammar is \(meta["tokenGrammar"] ?? "absent"), expected \(Self.expectedTokenGrammar)", report: reportFailures)
             return false
         }
         // Absent chunk-size keys are a v2 store written before they were added;
@@ -221,7 +257,7 @@ final class PSContentStore: NSObject {
               let dict = Int(meta["chunkRows.dict"] ?? ""),
               let notes = Int(meta["chunkRows.notes"] ?? ""),
               plain > 0, dict > 0, notes > 0 else {
-            PSContentStore.fail("content_meta is missing the chunkRows.* sizes", report: reportFailures)
+            PSContentStore.fatal("content_meta is missing the chunkRows.* sizes", report: reportFailures)
             return false
         }
         chunkRowsPlain = plain

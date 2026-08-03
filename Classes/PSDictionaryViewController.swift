@@ -13,7 +13,6 @@
 //  Zero C++ — it reaches the SWORD engine only through the Foundation-only
 //  facades (PSModuleController.primaryDictionary -> SwordDictionary) and the
 //  PSModuleController HTML helpers, all visible via the bridging header.
-//  MBProgressHUD (Obj-C, UIKit-only) is reached through the bridging header.
 //
 //  Created by Nic Carter on 21/12/09.
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
@@ -22,7 +21,7 @@
 import UIKit
 
 @objc(PSDictionaryViewController)
-final class PSDictionaryViewController: UITableViewController, UISearchBarDelegate, MBProgressHUDDelegate {
+final class PSDictionaryViewController: UITableViewController, UISearchBarDelegate {
 
     // SWMOD_CONF_FEATURE_IMAGES from SwordManager.h — an Obj-C `#define @"Images"`
     // string macro, which does NOT import into Swift, so the literal is mirrored
@@ -131,81 +130,25 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             }
         }
 
-        // SWORD_REMOVAL_PLAN.md Phase 3: the whole cache dance below exists because
-        // -[SwordDictionary allKeys] walks the module from TOP and is slow enough
-        // to need a HUD and an opt-in on-disk key cache. The content store keeps
-        // the keys in an UNCOMPRESSED index precisely so that is unnecessary, so
-        // with the reader active there is nothing to cache or wait for — skip
-        // straight to enabled.
+        // SWORD_REMOVAL_PLAN.md Phase 5 step 1: **there is nothing to wait for.**
         //
-        // Not just an optimisation: leaving the prompt in place meant answering
-        // "No" left the tab showing "No dictionary loaded" for ever, even though
-        // the reader had the keys in hand. Found by driving the simulator, not by
-        // a test — the fixtures cannot see it.
-        if PSContentReader.isActive, primaryDictionary != nil {
+        // What used to be here was a "cache this lexicon's keys?" prompt, a
+        // MBProgressHUD, a background -allKeys walk and an MBProgressHUDDelegate
+        // callback — all of it because `-[SwordDictionary allKeys]` walked the module
+        // from TOP and was slow enough to need a progress indicator and an opt-in
+        // on-disk key cache. The baked store keeps the keys in an UNCOMPRESSED index
+        // precisely so that is unnecessary, and Phase 3 already skipped the whole
+        // dance whenever the reader was active. With the engine gone the other branch
+        // is unreachable, so it is deleted rather than left as dead code.
+        //
+        // That prompt was also a real bug, found by driving the simulator rather than
+        // by any test: answering "No" left the tab showing "No dictionary loaded"
+        // for ever, even though the keys were in hand.
+        if primaryDictionary != nil {
             dictionarySearchBar?.isUserInteractionEnabled = true
             dictionaryEnabled = true
             if reloadData { tableView.reloadData() }
-            return
         }
-
-        if let primaryDictionary = primaryDictionary {
-            if !primaryDictionary.keysLoaded() {
-                if !primaryDictionary.keysCached() {
-                    // ask whether to cache the keys now or another time
-                    let cacheTitle = "\(primaryDictionary.name ?? "") \(NSLocalizedString("CacheDictionaryKeysTitle", comment: "Cache?"))"
-                    let alert = UIAlertController(title: cacheTitle,
-                                                  message: NSLocalizedString("CacheDictionaryKeysMsg", comment: "Cache the keys?"),
-                                                  preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("No", comment: "No"), style: .cancel) { [weak self] _ in
-                        guard let self = self else { return }
-                        self.dictionarySearchBar?.isUserInteractionEnabled = false
-                        self.dictionaryEnabled = false
-                        self.tableView.reloadData()
-                    })
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Yes"), style: .default) { [weak self] _ in
-                        guard let self = self else { return }
-                        let hud = MBProgressHUD.showAdded(to: self.view, animated: true)
-                        self.view.addSubview(hud)
-                        hud.delegate = self
-                        DispatchQueue.global(qos: .userInitiated).async {
-                            _ = self.primaryDictionary?.allKeys()
-                            DispatchQueue.main.async {
-                                hud.hide(animated: true)
-                            }
-                        }
-                        self.dictionaryEnabled = true
-                        self.dictionarySearchBar?.isUserInteractionEnabled = true
-                    })
-                    present(alert, animated: true, completion: nil)
-                    return
-                } else {
-                    // need to load it
-                    let hud = MBProgressHUD.showAdded(to: view, animated: true)
-                    view.addSubview(hud)
-
-                    // Register for HUD callbacks so we can remove it from the window at the right time
-                    hud.delegate = self
-                    DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                        _ = self?.primaryDictionary?.allKeys()
-                        DispatchQueue.main.async {
-                            hud.hide(animated: true)
-                        }
-                    }
-                }
-            }
-        }
-        dictionarySearchBar?.isUserInteractionEnabled = true
-        dictionaryEnabled = true
-    }
-
-    func hudWasHidden(_ hud: MBProgressHUD) {
-        // Remove HUD from screen when the HUD was hidden
-        hud.removeFromSuperview()
-        if searching {
-            searchDictionaryEntries()
-        }
-        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -235,8 +178,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         if searching {
             return searchResults.count
         } else if dictionaryEnabled {
-            return PSContentReader.entryCount(module: primaryDictionary?.name ?? "",
-                                              or: primaryDictionary)
+            return PSContentReader.entryCount(module: primaryDictionary?.name ?? "")
         } else {
             return 0
         }
@@ -262,8 +204,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             return searchResults[indexPath.row]
         }
         guard dictionaryEnabled else { return nil }
-        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "",
-                                          or: primaryDictionary)
+        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "")
         guard indexPath.row < keys.count else { return nil }
         return keys[indexPath.row]
     }
@@ -296,8 +237,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             tableView.deselectRow(at: indexPath, animated: true)
             return
         }
-        let rawDescr = PSContentReader.entry(module: primaryDictionary?.name ?? "",
-                                            key: t, or: primaryDictionary) ?? ""
+        let rawDescr = PSContentReader.entry(module: primaryDictionary?.name ?? "", key: t) ?? ""
         let body = "<div style=\"-webkit-text-size-adjust: none;\"><b>\(t)</b><br /><p>\(rawDescr)</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>"
         let descr = PSModuleController.createInfoHTMLString(body, usingModuleForPreferences: primaryDictionary?.name)
 
@@ -406,8 +346,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     @objc func searchDictionaryEntries() {
         searchResults.removeAll()
         let searchText = dictionarySearchBar?.text ?? ""
-        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "",
-                                           or: primaryDictionary)
+        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "")
 
         for t in keys {
             if t.range(of: searchText, options: .caseInsensitive) != nil {

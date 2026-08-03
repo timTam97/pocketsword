@@ -832,8 +832,7 @@ final class PSTabBarControllerDelegate: NSObject,
                     var strongs = false
                     if let swordDictionary = swordDictionary {
                         entry = PSContentReader.entry(module: swordDictionary.name ?? "",
-                                                      key: rData[ATTRTYPE_VALUE] as? String,
-                                                      or: swordDictionary)
+                                                      key: rData[ATTRTYPE_VALUE] as? String)
 
                         var strongsSearchTerm = ""
                         if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_GREEKDEF) && swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
@@ -920,7 +919,7 @@ final class PSTabBarControllerDelegate: NSObject,
         } else if let rData = rData, (rData[ATTRTYPE_ACTION] as? String) == "showNote" {
             if (rData[ATTRTYPE_TYPE] as? String) == "n" { // footnote
                 let bible = PSModuleController.default()?.primaryBible
-                entry = PSContentReader.footnoteBody(module: bible?.name, data: rData, or: bible)
+                entry = PSContentReader.footnoteBody(module: bible?.name, data: rData)
                 entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: bible?.name)
             }
             // The `x` (cross-reference) arm is GONE too. No `x` anchor is ever

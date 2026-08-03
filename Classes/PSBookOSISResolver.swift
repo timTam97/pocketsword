@@ -63,11 +63,14 @@ final class PSBookOSISResolver: NSObject {
     /// module's key text, which uses the long name).
     private let byOsis: [String: PSVersificationBook]
 
-    /// The shared instance over the bundled dump, or nil if it is missing or
-    /// malformed — callers fall back to SWORD.
+    /// The shared instance over the bundled dump.
+    ///
+    /// Phase 5: a missing or malformed dump is **fatal** — it is the app's whole
+    /// versification layer and there is no engine behind it. Optional only so the
+    /// tests can build broken copies with `reportFailures: false`.
     static let shared: PSBookOSISResolver? = {
         guard let url = Bundle.main.url(forResource: "Versification-KJV", withExtension: "json") else {
-            PSContentStore.fail("Versification-KJV.json is not in the app bundle")
+            PSContentStore.fatal("Versification-KJV.json is not in the app bundle")
             return nil
         }
         return PSBookOSISResolver(url: url)
@@ -78,7 +81,7 @@ final class PSBookOSISResolver: NSObject {
         guard let data = try? Data(contentsOf: url),
               let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let raw = root["books"] as? [[String: Any]] else {
-            PSContentStore.fail("Versification-KJV.json is unreadable at \(url.path)", report: reportFailures)
+            PSContentStore.fatal("Versification-KJV.json is unreadable at \(url.path)", report: reportFailures)
             return nil
         }
 
@@ -88,7 +91,7 @@ final class PSBookOSISResolver: NSObject {
             guard let osis = entry["osisName"] as? String,
                   let name = entry["name"] as? String,
                   let verseMax = entry["verseMax"] as? [Int], !verseMax.isEmpty else {
-                PSContentStore.fail("Versification-KJV.json has a malformed book entry", report: reportFailures)
+                PSContentStore.fatal("Versification-KJV.json has a malformed book entry", report: reportFailures)
                 return nil
             }
             parsed.append(PSVersificationBook(
@@ -103,7 +106,7 @@ final class PSBookOSISResolver: NSObject {
                 verseMax: verseMax))
         }
         guard parsed.count == 66 else {
-            PSContentStore.fail("Versification-KJV.json holds \(parsed.count) books, expected 66", report: reportFailures)
+            PSContentStore.fatal("Versification-KJV.json holds \(parsed.count) books, expected 66", report: reportFailures)
             return nil
         }
         books = parsed

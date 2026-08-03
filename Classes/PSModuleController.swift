@@ -616,17 +616,16 @@ final class PSModuleController: NSObject {
             }
             NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
         }
-        // SWORD_REMOVAL_PLAN.md Phase 3: read through the pure-Swift reader when the
-        // flag is on, and fall back to the engine if it declines (see
-        // PSContentReader's failure policy). `createHTMLString` is untouched — the
-        // reader calls the same shell builder.
+        // SWORD_REMOVAL_PLAN.md Phase 5 step 1: the reader is the ONLY render path.
+        // The `getChapter(_:withExtraJS:)` fallback arm is gone — there is no engine
+        // behind it — so a nil here reaches the user as a blank pane. That is why
+        // the reader's own failure policy now splits into fatal (the store is
+        // unusable at all) and loud-and-nil (this one chapter is bad); see
+        // PSContentReader's header.
         var text: String?
-        if PSFeatureFlags.swiftContentReader, let name = primaryBible?.name {
+        if let name = primaryBible?.name {
             text = PSContentReader.shared.chapterPage(module: name, ref: chapter,
                                                       kind: .bible, extraJS: extraJS)
-        }
-        if text == nil {
-            text = primaryBible?.getChapter(chapter, withExtraJS: extraJS)
         }
 
         UserDefaults.standard.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
@@ -649,12 +648,9 @@ final class PSModuleController: NSObject {
             NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
         }
         var text: String?
-        if PSFeatureFlags.swiftContentReader, let name = primaryCommentary?.name {
+        if let name = primaryCommentary?.name {
             text = PSContentReader.shared.chapterPage(module: name, ref: chapter,
                                                       kind: .commentary, extraJS: extraJS)
-        }
-        if text == nil {
-            text = primaryCommentary?.getChapter(chapter, withExtraJS: extraJS)
         }
 
         UserDefaults.standard.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)

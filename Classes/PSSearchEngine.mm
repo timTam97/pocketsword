@@ -540,12 +540,14 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 	if(![self openDBCreatingIfNeeded:YES error:err]) return NO;
 	if(![self createSchemaIfNeeded:err])              return NO;
 
-	// Phase 3: build from the baked store when the flag is on. A failure there
-	// falls through to the SWORD walk below rather than leaving the user with no
-	// index — the same fallback policy as the render path. -dropIndex above has
-	// already cleared any partial DB, and the store path rolls its own
-	// transaction back, so the fallback starts from a clean schema either way.
-	if([PSContentReader isActive]) {
+	// Build from the baked store. Phase 5 step 1 removed the
+	// `if([PSContentReader isActive])` gate along with the feature flag: the store
+	// path is now unconditional, and the SWORD walk below survives only as the
+	// failure fallback until step 7 deletes it outright.
+	//
+	// -dropIndex above has already cleared any partial DB, and the store path rolls
+	// its own transaction back, so the fallback starts from a clean schema either way.
+	{
 		NSError *storeErr = nil;
 		if([self buildFromContentStoreWithProgress:progress error:&storeErr]) {
 			[self stampMetaForModule:mod];

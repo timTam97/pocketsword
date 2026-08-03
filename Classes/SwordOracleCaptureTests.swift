@@ -850,81 +850,19 @@ final class SwordOracleCaptureTests: XCTestCase {
         SHA256.hash(data: Data(s.utf8)).prefix(8).map { String(format: "%02x", $0) }.joined()
     }
 
-    /// Build the KJV index **through the SWORD walk** and digest every row.
-    ///
-    /// Forcing the flag off matters: `-buildWithProgress:` prefers the store when
-    /// `PSContentReader.isActive` (PSSearchEngine.mm:548), so capturing without it
-    /// would digest the store's own output and the fixture would be a tautology.
-    func testCaptureEngineBuiltSearchIndexDigest() throws {
-        let kjv = try configuredModule("KJV")
-        guard let manager = SwordManager.default() else { throw XCTSkip("no SwordManager") }
-
-        let defaults = UserDefaults.standard
-        let flagKey = Defaults.swiftContentReaderPreference
-        let savedFlag = defaults.object(forKey: flagKey)
-        defaults.set(false, forKey: flagKey)
-        defer {
-            if let savedFlag { defaults.set(savedFlag, forKey: flagKey) }
-            else { defaults.removeObject(forKey: flagKey) }
-        }
-        XCTAssertFalse(PSContentReader.isActive,
-                       "the flag did not take effect — this would digest the store, not the engine")
-
-        // The four options that change what stripText() returns, pinned to the
-        // configuration the store was baked under. Without this the digest records
-        // whatever the last render's setPreferences happened to push — see
-        // PSSearchIndexParityTests.pinStripTextOptions.
-        for option in ["Strong's Numbers", "Morphological Tags", "Footnotes", "Cross-references"] {
-            manager.setGlobalOption(option, value: "Off")
-        }
-
-        let engine = PSSearchEngine(for: kjv)
-        do {
-            try engine.build(progress: nil)
-        } catch {
-            XCTFail("engine index build failed: \(error.localizedDescription)")
-            throw XCTSkip("build failed")
-        }
-
-        // rowid order, which is the order runQuery returns results in — so the
-        // digest pins ordering as well as content. Deliberately not ORDER BY
-        // ordinal (see PSSearchEngine's note on why those are equivalent here).
-        var db: OpaquePointer?
-        let dbPath = engine.dbPath()
-        guard sqlite3_open_v2(dbPath, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK, let db else {
-            throw XCTSkip("cannot open the built index at \(dbPath)")
-        }
-        defer { sqlite3_close(db) }
-        var st: OpaquePointer?
-        let sql = "SELECT reference, book_osis, testament, text_plain, text_norm, lemmas, word_map"
-            + " FROM verses ORDER BY rowid;"
-        guard sqlite3_prepare_v2(db, sql, -1, &st, nil) == SQLITE_OK else {
-            throw XCTSkip("cannot read the built index")
-        }
-        defer { sqlite3_finalize(st) }
-        func text(_ c: Int32) -> String {
-            guard let p = sqlite3_column_text(st, c) else { return "" }
-            return String(cString: p)
-        }
-        var lines: [String] = []
-        while sqlite3_step(st) == SQLITE_ROW {
-            lines.append([text(0), text(1), String(sqlite3_column_int(st, 2)),
-                          Self.sha256Hex(text(3)), Self.sha256Hex(text(4)),
-                          Self.sha256Hex(text(5)), Self.sha256Hex(text(6))]
-                .joined(separator: "|"))
-        }
-
-        // 31,102 is the count Phase 2 measured against the live engine. Asserted
-        // here too: a short capture would silently become a weaker fixture.
-        XCTAssertEqual(lines.count, 31102, "the engine walk no longer produces 31,102 rows")
-
-        var out = ["# live-SWORD KJV FTS index digest",
-                   "# rows=\(lines.count)",
-                   "# format: reference|book_osis|testament|sha256(text_plain)|sha256(text_norm)|sha256(lemmas)|sha256(word_map)",
-                   "# captured with Strong's/Morphs/Footnotes/Cross-references Off, in rowid order"]
-        out.append(contentsOf: lines)
-        try checkFixture("search-index-KJV.digest", actual: out.joined(separator: "\n") + "\n")
-    }
+    // `testCaptureEngineBuiltSearchIndexDigest` lived here and has been **removed**
+    // by Phase 5 step 1, having done its one job.
+    //
+    // It forced `swiftContentReader` off so that `-buildWithProgress:` would take
+    // the SWORD walk rather than the store, and digested the result into
+    // `Tests/Fixtures/search-index-KJV.digest`. Step 1 retires that flag and makes
+    // the store path unconditional, so the engine walk can no longer be *selected* —
+    // which means the capture can no longer capture the engine, and keeping it would
+    // have silently started digesting the store into its own oracle.
+    //
+    // The fixture it produced is committed and is now the acceptance criterion in
+    // `PSSearchIndexParityTests.testStoreBuiltIndexMatchesTheEngineDigest`. Do not
+    // recreate this capture.
 
     /// `entryCount` for all 1,189 chapters of both shipped modules.
     ///

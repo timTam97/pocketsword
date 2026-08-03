@@ -11,20 +11,33 @@
 //  being read, the per-module option prefs, the bookmark highlight lookup, the
 //  bottom padding, the navigation JS, the HTML shell, and language/direction.
 //
-//  === FAILURE POLICY (while PSFeatureFlags.swiftContentReader exists) ===
+//  === FAILURE POLICY (Phase 5 step 1: no engine to fall back to) ===
 //
-//  Every failure takes ONE path: report through PSContentStore.fail — which is
-//  assertionFailure in debug (loud during development) and alog in release — and
-//  return nil, so the caller falls back to SWORD. A blank chapter must never be
-//  the user-visible outcome of a reader bug.
+//  Through Phase 4 every failure took one path — report through
+//  `PSContentStore.fail` and return nil, so the caller fell back to SWORD. There
+//  is no SWORD any more, so "return nil" now means "show the user nothing". The
+//  ten conditions are therefore **split by whether the app can still function**:
 //
-//  The conditions that return nil, which is exactly the list PHASE 5 MUST CONVERT
-//  TO HARD FAILURES once there is no SWORD left to fall back to:
+//  FATAL (the store itself is unusable — every read would fail, so the app cannot
+//  do its job at all). These call `PSContentStore.fatal`, which traps. A crash
+//  report naming the broken invariant beats a permanently blank app that looks
+//  like it merely lost its data:
 //
 //    1. Resources/PSContent.sqlite absent from the bundle, or unopenable.
 //    2. content_meta schemaVersion != 2 or tokenGrammar != "v2".
 //    3. content_meta missing the chunkRows.* sizes.
 //    4. Resources/Versification-KJV.json absent, unparseable, or not 66 books.
+//
+//  All four are build-integrity failures: the store and the versification JSON are
+//  bundled resources, validated by PSContentStoreTests, and cannot vary at
+//  runtime. If one of them is wrong, every install of that build is wrong — which
+//  is exactly the class of bug that must not ship quietly.
+//
+//  LOUD-AND-NIL (one datum is bad; the rest of the store is fine). These keep
+//  reporting through `PSContentStore.fail` — assertionFailure in debug, alog in
+//  release — and return nil. One malformed chapter must not brick the app; the
+//  user sees that one chapter fail and can navigate away:
+//
 //    5. A chunk that fails to inflate, or whose row_count / raw_size disagrees
 //       with its blob.
 //    6. A chapter blob whose record count disagrees with entry_count.
@@ -34,9 +47,9 @@
 //    9. An unresolvable book name, or a chapter outside the book.
 //   10. A dict_keys / notes_index row pointing at a slot its chunk does not have.
 //
-//  Note what is NOT in that list, because it is normal rather than a failure:
+//  Note what is in NEITHER list, because it is normal rather than a failure:
 //  a chapter absent from `chapters` (the converter omits wholly-empty ones, and
-//  the reader renders the same "empty chapter" message the engine does), and a
+//  the reader renders the same "empty chapter" message the engine did), and a
 //  dictionary or note lookup that simply misses (nil is the right answer).
 //
 
@@ -59,57 +72,41 @@ final class PSContentReader: NSObject {
         super.init()
     }
 
-    /// Whether the reader is usable at all. The feature flag gates *intent*; this
-    /// gates *capability*, and both must hold.
+    /// Whether the reader is usable at all.
+    ///
+    /// Phase 5 retired `isActive` (the feature flag's *intent* half) and collapsed
+    /// every caller onto this. In practice it is always true in production: the two
+    /// things it checks are the store and the versification dump, and both are now
+    /// fatal if absent. It stays because the tests construct readers over broken
+    /// stores, and because `false` is a more useful thing for a test to assert than
+    /// a trap.
     @objc var isAvailable: Bool { store != nil && resolver != nil }
 
-    /// Whether a caller should route through the reader: the flag AND capability.
-    /// Every call site still handles a nil result from the specific read, so this
-    /// is the cheap up-front check, not the only guard.
-    @objc static var isActive: Bool {
-        PSFeatureFlags.swiftContentReader && PSContentReader.shared.isAvailable
-    }
-
-    // MARK: - SwordDictionary shims
+    // MARK: - Lexicon lookups
     //
     // The lexicon call sites (`PSDictionaryViewController`,
     // `PSDictionaryEntryViewController`, `PSModuleViewController`,
-    // `PSTabBarControllerDelegate`) all hold a `SwordDictionary` and call
-    // -entryForKey: / -allKeys / -entryCount on it. These three take the module by
-    // name instead, so a call site becomes a one-line conditional rather than a
-    // restructure — which matters because two of those files hold near-duplicate
-    // copies of the same decode block.
+    // `PSTabBarControllerDelegate`) used to hold a `SwordDictionary` and pass it as
+    // an `or:` fallback. Phase 5 step 1 drops that parameter everywhere: a miss is
+    // now simply a miss, and nil is the right answer for one.
 
-    /// `-[SwordDictionary entryForKey:]`, through the reader when it is active.
-    @objc(entryForModule:key:orDictionary:)
-    static func entry(module: String, key: String?, or dictionary: SwordDictionary?) -> String? {
+    /// A lexicon entry for `key`, or nil if the lexicon does not have it.
+    @objc(entryForModule:key:)
+    static func entry(module: String, key: String?) -> String? {
         guard let key else { return nil }
-        if isActive, let html = shared.dictionaryEntry(module: module, key: key) {
-            return html
-        }
-        // Either the reader is off, or this was a genuine miss. Fall through to
-        // SWORD: while the flag exists a miss must not look different from today.
-        return dictionary?.entry(forKey: key)
+        return shared.dictionaryEntry(module: module, key: key)
     }
 
-    /// `-[SwordDictionary allKeys]`, through the reader when it is active.
-    @objc(allKeysForModule:orDictionary:)
-    static func allKeys(module: String, or dictionary: SwordDictionary?) -> [String] {
-        if isActive {
-            let keys = shared.dictionaryKeys(module: module)
-            if !keys.isEmpty { return keys }
-        }
-        return (dictionary?.allKeys() as? [String]) ?? []
+    /// Every key of a lexicon, in the module's own order and true casing.
+    @objc(allKeysForModule:)
+    static func allKeys(module: String) -> [String] {
+        shared.dictionaryKeys(module: module)
     }
 
-    /// `-[SwordDictionary entryCount]`, through the reader when it is active.
-    @objc(entryCountForModule:orDictionary:)
-    static func entryCount(module: String, or dictionary: SwordDictionary?) -> Int {
-        if isActive {
-            let count = shared.dictionaryEntryCount(module: module)
-            if count > 0 { return count }
-        }
-        return Int(dictionary?.entryCount() ?? 0)
+    /// How many entries a lexicon has.
+    @objc(entryCountForModule:)
+    static func entryCount(module: String) -> Int {
+        shared.dictionaryEntryCount(module: module)
     }
 
     /// The **`n` branch only** of `-[SwordModule attributeValueForEntryData:]` —
@@ -120,15 +117,14 @@ final class PSContentReader: NSObject {
     /// all 6,959 notes are type='study' with an empty refList; no `action=showRef`
     /// appears in any chapter record or stored heading, and every one of the 14,989
     /// baked `sword://` links routes to the dictionary arm). See PSRefSemanticsTests.
-    @objc(footnoteBodyForModule:data:orModule:)
-    static func footnoteBody(module: String?, data: [AnyHashable: Any], or swordModule: SwordModule?) -> String? {
-        if isActive, let module,
-           let passage = data[ATTRTYPE_PASSAGE] as? String,
-           let marker = data[ATTRTYPE_VALUE] as? String,
-           let body = shared.noteBody(module: module, osisRef: passage, marker: marker) {
-            return body
+    @objc(footnoteBodyForModule:data:)
+    static func footnoteBody(module: String?, data: [AnyHashable: Any]) -> String? {
+        guard let module,
+              let passage = data[ATTRTYPE_PASSAGE] as? String,
+              let marker = data[ATTRTYPE_VALUE] as? String else {
+            return nil
         }
-        return swordModule?.attributeValue(forEntryData: data) as? String
+        return shared.noteBody(module: module, osisRef: passage, marker: marker)
     }
 
     // MARK: - Options
