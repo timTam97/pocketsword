@@ -192,4 +192,85 @@ final class PSSearchIndexParityTests: XCTestCase {
                        "the phrase query's first hit moved")
         print("[search-parity] queries: \(out.mapValues { $0.count })")
     }
+
+    // MARK: - Text normalisation (MOVED here from SwordOracleCaptureTests, step 12)
+
+    /// `PSSearchCleanDisplayText` strips the inline `<H0430>` / `<TH8799>` markers
+    /// that `stripText()` interleaves when the Strong's option is on, plus the
+    /// `" [] "` empty-tag marker, collapsing whatever whitespace that leaves —
+    /// including a space stranded before punctuation.
+    ///
+    /// This is load-bearing beyond display: it is applied **before** the emptiness
+    /// test in the index build, so it decides which rows exist at all.
+    ///
+    /// Step 8 ports this function to Swift as `PSSearchQuery.cleanDisplayText`; these
+    /// five cases move with it and are what makes that port checkable.
+    func testCleanDisplayTextStripsInlineMarkers() {
+        XCTAssertEqual(PSSearchCleanDisplayText("And God <H0430> divided <H0996> the light"),
+                       "And God divided the light")
+        XCTAssertEqual(PSSearchCleanDisplayText("word <TH8799> in <TG5707> place"),
+                       "word in place")
+        XCTAssertEqual(PSSearchCleanDisplayText("in the field <H7704> , and"),
+                       "in the field, and")
+        XCTAssertEqual(PSSearchCleanDisplayText("a [] b"), "a b")
+        XCTAssertEqual(PSSearchCleanDisplayText(""), "")
+    }
+
+    /// The diacritic fold, pinned against **known vectors** rather than against a
+    /// second implementation.
+    ///
+    /// `SwordOracleCaptureTests.testFoldForIndexAgreesBetweenObjCAndSwift` asserted
+    /// that Obj-C `PSFoldForIndex` and Swift `PSSearchQuery.foldForIndex` — a
+    /// byte-for-byte duplicated algorithm — agreed. Step 8 deletes the Obj-C copy, so
+    /// that guard has nothing left to compare and the duplication it warned about
+    /// simply ends.
+    ///
+    /// Rather than drop the coverage, this pins the surviving Swift copy's actual
+    /// output on the ranges the fold exists for: Greek polytonic accents
+    /// (U+0300-U+036F after NFD), Hebrew points and cantillation (U+0591-U+05C7,
+    /// which FTS5's `remove_diacritics=2` leaves alone), Latin diacritics in both
+    /// precomposed and decomposed form, and the other combining-mark ranges. Those
+    /// are exactly the inputs a regression would break, and the expectations are
+    /// the values the Obj-C original produced.
+    ///
+    /// While both copies still exist, it ALSO cross-checks them — so this test is
+    /// strictly stronger than the one it replaces until step 8, and stays useful
+    /// after.
+    func testFoldForIndexHandlesEveryTargetedRange() {
+        let cases: [(input: String, expected: String)] = [
+            ("", ""),
+            ("plain ascii text", "plain ascii text"),
+            ("MiXeD CaSe", "mixed case"),
+            // Greek polytonic: accents dropped, letters lower-cased.
+            ("ἀγάπη", "αγαπη"),
+            ("Θεός", "θεος"),
+            ("λόγος", "λογος"),
+            // Hebrew: points and cantillation dropped, consonants kept.
+            ("אֱלֹהִים", "אלהים"),
+            ("בְּרֵאשִׁית", "בראשית"),
+            ("יְהוָ֣ה", "יהוה"),
+            // Latin, precomposed and decomposed — must fold identically.
+            ("café", "cafe"),
+            ("cafe\u{0301}", "cafe"),
+            // The other dropped combining ranges.
+            ("a\u{20D0}b", "ab"),
+            ("x\u{FE20}y", "xy"),
+            ("q\u{1DC0}r", "qr"),
+        ]
+        for c in cases {
+            XCTAssertEqual(PSSearchQuery.foldForIndex(c.input), c.expected,
+                           "fold of \(c.input.debugDescription)")
+        }
+
+        // Non-BMP input must survive the surrogate-pair branch without corruption.
+        XCTAssertEqual(PSSearchQuery.foldForIndex("𝔊𝔯𝔢𝔢𝔨 text").hasSuffix(" text"), true)
+        XCTAssertFalse(PSSearchQuery.foldForIndex("😀 emoji").isEmpty)
+
+        // And while the Obj-C copy is still in the tree, the two must agree — the
+        // original guard, kept for as long as it can mean anything.
+        for c in cases {
+            XCTAssertEqual(PSFoldForIndex(c.input), PSSearchQuery.foldForIndex(c.input),
+                           "Obj-C and Swift folds disagree for \(c.input.debugDescription)")
+        }
+    }
 }

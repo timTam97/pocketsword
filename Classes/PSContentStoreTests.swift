@@ -212,6 +212,77 @@ final class PSContentStoreTests: XCTestCase {
         }
     }
 
+    /// **MOVED here from `SwordOracleCaptureTests` by Phase 5 step 12.**
+    ///
+    /// Headings are the subtlest axis in the whole conversion, so assert the two
+    /// distinct mechanisms are both actually present in the rendered bodies rather
+    /// than trusting the byte comparison against the fixtures alone. A body that lost
+    /// all its headings would still match a fixture if the fixture were ever
+    /// recaptured wrong; this says what must be *in* it.
+    ///
+    ///  * Non-canonical titles (1,250 of KJV's 1,388) sit in intro-only entry slots
+    ///    and reach the body only because Headings is On. Genesis 1 carries
+    ///    `<title type="main">` and `<title type="chapter">CHAPTER 1.</title>`,
+    ///    emitted unclassed as `<p><b>…</b></p>` by osishtmlhref.cpp:439.
+    ///  * Canonical Psalm titles (138) are routed to
+    ///    EntryAttributes["Heading"]["Preverse"] and are injected by the accumulator
+    ///    loop's own glue, not by the markup filter. Psalm 3 is one.
+    ///
+    /// It used to drive `-[SwordModule chapterBodyHTML:]`; it now drives the reader,
+    /// which is the thing that has to keep being right.
+    func testBothHeadingMechanismsSurviveIntoTheRenderedBody() throws {
+        let gen1 = try renderBody(module: "KJV", ref: "Gen 1", options: .allOn).body
+        XCTAssertTrue(gen1.contains("<p><b>"),
+                      "Gen 1 body lost its intro titles — the headings option is probably off")
+        XCTAssertTrue(gen1.uppercased().contains("CHAPTER 1"),
+                      "Gen 1 body lost the chapter title specifically")
+
+        let ps3 = try renderBody(module: "KJV", ref: "Ps 3", options: .allOn).body
+        XCTAssertTrue(ps3.contains("<p><b>"),
+                      "Ps 3 body lost its canonical preverse title")
+
+        // And the negative half, which the original did not assert: with headings
+        // OFF, Gen 1's non-canonical intro titles must be GONE, while Ps 3's
+        // canonical one must survive (the injection is gated `headings || canonical`).
+        let gen1Off = try renderBody(module: "KJV", ref: "Gen 1", options: .allOff).body
+        XCTAssertFalse(gen1Off.uppercased().contains("CHAPTER 1"),
+                       "Gen 1's non-canonical chapter title must vanish with headings off")
+        let ps3Off = try renderBody(module: "KJV", ref: "Ps 3", options: .allOff).body
+        XCTAssertTrue(ps3Off.contains("<p><b>"),
+                      "Ps 3's title is canonical, so it must survive headings being off")
+    }
+
+    /// **MOVED here from `SwordOracleCaptureTests` by Phase 5 step 12.**
+    ///
+    /// The loop counter for all 2,378 chapters, against the fixture captured from the
+    /// live engine in the Phase 5 pre-work. The old version pinned exactly one value
+    /// (Gen 1 == 32); `testEntryCountsMatchTheCapturedLoopCounter` above pins eight.
+    /// This pins every one.
+    ///
+    /// The counter is not a verse count — it advances for entries the loop skips and
+    /// for the final iteration that steps out of the chapter — and it drives the
+    /// `vv{i}` anchors, the `pocketsword:versemenu:` links, the bookmark-highlight
+    /// lookup and the JS `versepos` bounds, so an off-by-one here is a user-visible
+    /// mis-scroll.
+    func testAllChapterLoopCountersMatchTheCapturedFixture() throws {
+        let text = try fixture("chapter-loop-counters.tsv")
+        var compared = 0
+        for line in text.split(separator: "\n") where !line.hasPrefix("#") {
+            let f = line.split(separator: "\t", omittingEmptySubsequences: false)
+            guard f.count == 3, let expected = Int(f[2]) else { continue }
+            let module = String(f[0]), ref = String(f[1])
+            let kind: PSChapterAssembler.ModuleKind = (module == "MHCC") ? .commentary : .bible
+            // The fixture was captured at the all-off endpoint; the companion
+            // invariance test proved the counter does not vary with the options.
+            let result = try renderBody(module: module, ref: ref, options: .allOff, kind: kind)
+            XCTAssertEqual(result.entryCount, expected, "\(module) \(ref) loop counter")
+            if result.entryCount != expected { return }  // one report is enough
+            compared += 1
+        }
+        print("[store] loop counters compared: \(compared)")
+        XCTAssertEqual(compared, 2378, "1,189 chapters x 2 modules")
+    }
+
     /// The `plain_texts`-by-ref reader step 4 added, which step 5 uses in place of
     /// `-[SwordModule textEntryForKey:textType:]`.
     func testPlainTextByRefLookup() throws {

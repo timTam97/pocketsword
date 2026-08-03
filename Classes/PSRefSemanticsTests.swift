@@ -2,40 +2,50 @@
 //  PSRefSemanticsTests.swift
 //  PocketSwordTests
 //
-//  The acceptance criterion for Phase 4 of SWORD_REMOVAL_PLAN.md: the pure-Swift
-//  versification + reference layer must reproduce `SwordBook` and
-//  `sword::VerseKey`'s reference semantics exactly, and the `x` / `scriptRef`
-//  branches must be provably unreachable for the shipped content.
+//  The acceptance criterion for the pure-Swift versification + reference layer: it
+//  must reproduce `SwordBook` and `sword::VerseKey`'s reference semantics exactly,
+//  and the `x` / `scriptRef` branches must be provably unreachable for the shipped
+//  content.
 //
-//  This is `PSDifferentialTests` for reference semantics rather than for rendered
-//  HTML, and it exists for the same reason: Phase 5 deletes the engine, so this is
-//  the last chance to compare against it. Where the two disagree, SWORD wins —
-//  except at the two canon boundaries, where the difference is deliberate and is
-//  asserted *as* a difference (see `testBoundariesClampInSwordAndReturnNilInSwift`).
+//  === RETARGETED (SWORD_REMOVAL_PLAN.md Phase 5 step 12) ===
+//
+//  Phase 4 wrote this as a *differential* file: it drove the live engine and the
+//  Swift table side by side. That half is now **deleted** — eleven tests plus the
+//  `module(_:)` / `moduleForNavigation(_:)` helpers — because Phase 5 removes the
+//  engine and a comparison against nothing is not a test.
+//
+//  Nothing is lost, and that is a measured claim rather than a hope.
+//  `Tests/Fixtures/versification-KJV-oracle.txt` was captured from the live engine
+//  in Phase 4 and holds **66 books x 5 members, all 1,189 verse maxima, and all
+//  2,376 transitions** — i.e. a superset of what the deleted comparisons checked.
+//  `testAllTransitionsMatchTheCommittedFixture` reads all of it, so the gate is the
+//  same gate with a recorded oracle instead of a live one. Do NOT recapture that
+//  fixture to make a red test pass.
+//
+//  The two deletions that are NOT covered by the fixture, and why that is right:
+//   * `testBoundariesClampInSwordAndReturnNilInSwift` asserted the deliberate
+//     difference at Genesis 1 / Revelation 22 (VerseKey clamps, Swift returns nil).
+//     The Swift half of that claim is what matters and is still asserted by
+//     `testAllTransitionsMatchTheCommittedFixture`, whose fixture records `<nil>`
+//     at both boundaries.
+//   * `testTranslateBookNameIsIdentityForAll66` proved a SWORD round-trip was the
+//     identity for all 66 books. Phase 4 already removed both of its production
+//     callers on the strength of that proof; with the engine gone there is no
+//     round-trip left to be non-identity.
 //
 //  === Two tiers ===
 //
-//  * FAST — runs on every `test` invocation. 66 books x 5 consumed members,
-//    1,189 verseMax comparisons, all 2,376 next/prev transitions byte-for-byte,
-//    both boundary cases, 66 name->OSIS comparisons against a live VerseKey, the
-//    translateBookName identity round-trip, the parser grammar fixture, and the
-//    four-part unreachability proof.
-//  * EXHAUSTIVE — set `PSREF_EXHAUSTIVE=1`. All 31,102 `displayRef` values against
-//    a live `VerseKey` in both the `name` and `longName` forms, all 31,102 parser
-//    round-trips, 1,189 parser-vs-resolver agreement checks, and the
-//    `builtin_abbrevs` inclusion direction.
+//  * FAST — runs on every `test` invocation. All 2,376 next/prev transitions plus
+//    66 books x 5 members and 1,189 maxima against the committed fixture, the
+//    parser grammar fixture, `displayRef` munging, and the four-part
+//    unreachability proof (re-derived from the store, not trusted as prose).
+//  * EXHAUSTIVE — set `PSREF_EXHAUSTIVE=1`. All 31,102 parser round-trips, 1,189
+//    parser-vs-resolver agreement checks. (The two engine-driven exhaustive tests —
+//    `displayRef` vs a live VerseKey, and the `builtin_abbrevs` inclusion
+//    direction — went with the engine.)
 //
 //  Both tiers print their coverage: a silently-sampled gate reads as "covered
 //  everything" when it did not.
-//
-//  === The committed fixture ===
-//
-//  `testCaptureVersificationTable` dumps the live engine's whole answer — 66 books
-//  x 5 members, 1,189 verse maxes, all 2,376 transitions — into
-//  Tests/Fixtures/versification-KJV-oracle.txt in the `SwordOracleCaptureTests`
-//  idiom (assert by default, rewrite only under PSORACLE_CAPTURE). That exists so
-//  step 10's deletion of `SwordBook` cannot force a test to be weakened: after the
-//  engine is gone, the comparisons above re-anchor on the fixture instead.
 //
 
 import XCTest
@@ -111,15 +121,15 @@ final class PSRefSemanticsTests: XCTestCase {
 
     // MARK: - The oracle
     //
-    // Phase 4 step 10 deleted `SwordBook` and `+booksForVersificationSystem:`, so
-    // the book-shape and verse-maxima comparisons no longer have a live engine to
-    // compare against. They now read the **committed fixture** captured in step 3
-    // while the engine was still in the tree — which is exactly why that fixture
-    // exists: so this deletion could not force a test to be weakened into a skip.
+    // `Tests/Fixtures/versification-KJV-oracle.txt`, captured from the live engine in
+    // Phase 4 while it was still in the tree. As of Phase 5 step 12 it is the ONLY
+    // oracle: the book shape, the 1,189 verse maxima AND all 2,376 next/prev
+    // transitions are compared against it, because the engine those were originally
+    // compared against no longer exists.
     //
-    // The transition comparisons still drive the live `-[SwordModule
-    // setToNextChapter]` / `-setToPreviousChapter`, which Phase 5 deletes; the
-    // fixture also holds all 2,376 of those, so this parses both halves.
+    // That is the entire reason the fixture was captured a phase early — so this
+    // deletion could not force a test to be weakened into a skip. It records SWORD's
+    // raw answers, clamps included, so the comparisons below are byte-level.
 
     /// One book, as the fixture records the live engine's answer.
     private struct OracleBook {
@@ -197,281 +207,24 @@ final class PSRefSemanticsTests: XCTestCase {
         return (books, transitions)
     }
 
-    private func module(_ name: String, timeout: TimeInterval = 90) throws -> SwordModule {
-        guard let manager = SwordManager.default() else { throw XCTSkip("no SwordManager") }
-        let deadline = Date().addingTimeInterval(timeout)
-        while Date() < deadline {
-            if manager.isModuleInstalled(name) { break }
-            Thread.sleep(forTimeInterval: 0.25)
-        }
-        guard let mod = manager.module(withName: name) else {
-            throw XCTSkip("module \(name) not available")
-        }
-        return mod
-    }
 
-    /// A module with the **intros flag pinned off**, which every chapter-navigation
-    /// comparison below must use.
-    ///
-    /// This is the same discipline `PSDifferentialTests` applies to the eleven
-    /// global options and the two accumulator prefs — an unpinned bit of engine
-    /// state makes the equality assertion noise rather than a gate — but it is worth
-    /// spelling out, because the pin is load-bearing and the reason is not obvious.
-    ///
-    /// `VerseKey::normalize` (versekey.cpp:1466-1493) gates chapter 0's validity on
-    /// `intros`: with it **on**, chapter 0 exists as the book-intro slot, so
-    /// `setChapter(50)` on Genesis then `+1` normalises to "Exodus **0**", not
-    /// "Exodus 1" — every one of the 65 book-boundary transitions shifts.
-    ///
-    /// `intros` defaults to false (versekey.cpp:61) and production always sees it
-    /// false at next/prev time: `-getChapter:` turns it on for the render and
-    /// restores it at SwordModule.mm:1362, and with the Phase-3 reader active
-    /// `-getChapter:` is not even called. But `-chapterBodyHTML:` sets it on at
-    /// SwordModule.mm:1055 and — unlike its caller — **never restores it**. That is
-    /// harmless in the app (nothing calls it except `-getChapter:`, which restores)
-    /// and invisible in a single-test run, but `PSDifferentialTests` and
-    /// `SwordOracleCaptureTests` both call it directly on this same shared singleton
-    /// module, so in a full-suite run it leaks in and these comparisons would be
-    /// measuring the intros-on versification. Pin, don't hope.
-    private func moduleForNavigation(_ name: String) throws -> SwordModule {
-        let mod = try module(name)
-        mod.setIntroductions(false)
-        return mod
-    }
 
     // MARK: - Fast tier: the table itself
 
-    /// 66 books x the 5 members the app actually consumes, **including array
-    /// order**. Order matters: `nextChapter`/`previousChapter` roll over by index,
-    /// and the ref selector's section index is positional.
-    func testTableMatchesSwordBookOnAllFiveConsumedMembers() throws {
-        let resolver = try resolver()
-        let books = try oracle().books
 
-        XCTAssertEqual(resolver.books.count, 66)
-
-        var compared = 0
-        for (i, oracleBook) in books.enumerated() {
-            guard let ours = resolver.book(at: i) else {
-                XCTFail("no table entry at index \(i)")
-                continue
-            }
-            // -name was SwordBook's munge of the localised long name; the table's
-            // `name` is the same munge applied at bake time. F5 in the plan.
-            XCTAssertEqual(ours.name, oracleBook.name, "index \(i): name differs")
-            XCTAssertEqual(ours.shortName, oracleBook.shortName,
-                           "index \(i) (\(ours.name)): shortName differs")
-            XCTAssertEqual(ours.osisName, oracleBook.osisName,
-                           "index \(i) (\(ours.name)): osisName differs")
-            XCTAssertEqual(ours.chapterCount, oracleBook.chapters,
-                           "index \(i) (\(ours.name)): chapterCount differs")
-            // -verses: is member 5; covered per chapter by the next test, and
-            // spot-checked here at chapter 1 so this test fails on all five.
-            XCTAssertEqual(resolver.verseMax(book: ours, chapter: 1), oracleBook.verseMax.first,
-                           "index \(i) (\(ours.name)): verses(1) differs")
-            compared += 1
-        }
-        print("[refsem/fast] books compared on 5 members: \(compared)")
-        XCTAssertEqual(compared, 66)
-    }
-
-    /// All 1,189 chapters' verse maxima, and the two out-of-range directions.
-    func testAllVerseMaximaMatchSwordBook() throws {
-        let resolver = try resolver()
-        let books = try oracle().books
-
-        var compared = 0, total = 0
-        for (i, oracleBook) in books.enumerated() {
-            guard let ours = resolver.book(at: i) else { continue }
-            XCTAssertEqual(oracleBook.verseMax.count, oracleBook.chapters,
-                           "\(ours.name): the oracle's verseMax length disagrees with its chapter count")
-            for chapter in 1...ours.chapterCount {
-                total += 1
-                let mine = resolver.verseMax(book: ours, chapter: chapter)
-                let theirs = chapter <= oracleBook.verseMax.count ? oracleBook.verseMax[chapter - 1] : nil
-                XCTAssertEqual(mine, theirs, "\(ours.name) \(chapter): verseMax differs")
-                guard mine == theirs else { return }
-                compared += 1
-            }
-            // Out of range in both directions. SWORD returned -1
-            // (versificationmgr.cpp Book::getVerseMax); we return nil. The -1 half is
-            // no longer assertable (SwordBook is gone), so only our side is checked —
-            // the engine's behaviour is recorded in
-            // testBoundariesClampInSwordAndReturnNilInSwift's prose and in the
-            // committed fixture.
-            XCTAssertNil(resolver.verseMax(book: ours, chapter: 0))
-            XCTAssertNil(resolver.verseMax(book: ours, chapter: ours.chapterCount + 1))
-        }
-        print("[refsem/fast] verse maxima compared: \(compared) of \(total)")
-        XCTAssertEqual(compared, 1189, "the KJV versification is 1,189 chapters")
-        // Sum check, independent of the loop: 31,102 verses.
-        let sum = resolver.books.reduce(0) { $0 + $1.verseMax.reduce(0, +) }
-        XCTAssertEqual(sum, 31102, "total verse count changed")
-    }
 
     // MARK: - Fast tier: chapter navigation (the 2,376 transitions)
 
-    /// Every forward transition, byte-for-byte against `-setToNextChapter`.
+
+
+
+    /// All 2,376 transitions against the committed fixture.
     ///
-    /// The engine is driven exactly as `PSModuleController.setToNextChapter()`
-    /// drives it — `setChapter:` then `setToNextChapter` — because that pairing is
-    /// what the app's behaviour actually is, and `setToNextChapter` alone depends on
-    /// whatever key the module was left holding.
-    func testAllForwardTransitionsMatchSwordModule() throws {
-        let resolver = try resolver()
-        let mod = try moduleForNavigation("KJV")
-
-        var compared = 0
-        for book in resolver.books {
-            for chapter in 1...book.chapterCount {
-                // Skip the very last chapter: that is the boundary case, asserted
-                // separately because the two sides deliberately differ there.
-                if book.osisName == "Rev" && chapter == book.chapterCount { continue }
-
-                let from = resolver.displayRef(book: book, chapter: chapter)
-                mod.setChapter(from)
-                guard let swordNext = mod.setToNextChapter() else {
-                    XCTFail("\(from): -setToNextChapter returned nil")
-                    return
-                }
-                guard let mine = resolver.nextChapter(book: book, chapter: chapter) else {
-                    XCTFail("\(from): nextChapter returned nil but SWORD gave \(swordNext)")
-                    return
-                }
-                let ours = resolver.displayRef(mine)
-                guard ours == swordNext else {
-                    XCTFail("\(from) -> next: SWORD '\(swordNext)' but table '\(ours)'")
-                    return
-                }
-                compared += 1
-            }
-        }
-        print("[refsem/fast] forward transitions compared: \(compared) (expected 1188)")
-        XCTAssertEqual(compared, 1188, "1,189 chapters minus the last")
-    }
-
-    /// Every backward transition.
-    func testAllBackwardTransitionsMatchSwordModule() throws {
-        let resolver = try resolver()
-        let mod = try moduleForNavigation("KJV")
-
-        var compared = 0
-        for book in resolver.books {
-            for chapter in 1...book.chapterCount {
-                if book.osisName == "Gen" && chapter == 1 { continue }
-
-                let from = resolver.displayRef(book: book, chapter: chapter)
-                mod.setChapter(from)
-                guard let swordPrev = mod.setToPreviousChapter() else {
-                    XCTFail("\(from): -setToPreviousChapter returned nil")
-                    return
-                }
-                guard let mine = resolver.previousChapter(book: book, chapter: chapter) else {
-                    XCTFail("\(from): previousChapter returned nil but SWORD gave \(swordPrev)")
-                    return
-                }
-                let ours = resolver.displayRef(mine)
-                guard ours == swordPrev else {
-                    XCTFail("\(from) -> prev: SWORD '\(swordPrev)' but table '\(ours)'")
-                    return
-                }
-                compared += 1
-            }
-        }
-        print("[refsem/fast] backward transitions compared: \(compared) (expected 1188)")
-        XCTAssertEqual(compared, 1188)
-    }
-
-    /// **The production path.** Step 7 moved `PSModuleController.setToNextChapter()`
-    /// / `setToPreviousChapter()` onto the table, and those are what the next/prev
-    /// buttons actually call — the two tests above compare the *resolver* against the
-    /// engine, which is necessary but not sufficient.
-    ///
-    /// Drives all 1,189 chapters through the real methods, comparing each answer
-    /// against the engine driven the way the old code drove it, and additionally
-    /// asserts the verse-position side effect: `prev` must write the **destination**
-    /// chapter's verse maximum, which is what the old code read (it called
-    /// `-getVerseMax` *after* the key had already moved).
-    func testModuleControllerNavigationMatchesTheEngineIncludingVersePositions() throws {
-        let resolver = try resolver()
-        let mod = try moduleForNavigation("KJV")
-        guard let controller = PSModuleController.default() else { throw XCTSkip("no controller") }
-
-        let defaults = UserDefaults.standard
-        let savedRef = defaults.string(forKey: Defaults.lastRef)
-        let savedVerse = defaults.string(forKey: Defaults.bibleVersePosition)
-        defer {
-            if let savedRef { defaults.set(savedRef, forKey: Defaults.lastRef) }
-            if let savedVerse { defaults.set(savedVerse, forKey: Defaults.bibleVersePosition) }
-        }
-
-        var forward = 0, backward = 0
-        for book in resolver.books {
-            for chapter in 1...book.chapterCount {
-                // The app always holds the munged `name` form in lastRef.
-                let from = "\(book.name) \(chapter)"
-                let isLast = book.osisName == "Rev" && chapter == book.chapterCount
-                let isFirst = book.osisName == "Gen" && chapter == 1
-
-                if !isLast {
-                    defaults.set(from, forKey: Defaults.lastRef)
-                    mod.setChapter(from)
-                    let expected = mod.setToNextChapter()
-                    let actual = controller.setToNextChapter()
-                    guard actual == expected else {
-                        XCTFail("next from '\(from)': engine '\(expected ?? "nil")' but controller '\(actual ?? "nil")'")
-                        return
-                    }
-                    XCTAssertEqual(defaults.string(forKey: Defaults.bibleVersePosition), "1",
-                                   "next from '\(from)' must reset the verse position to 1")
-                    forward += 1
-                }
-
-                if !isFirst {
-                    defaults.set(from, forKey: Defaults.lastRef)
-                    mod.setChapter(from)
-                    let expected = mod.setToPreviousChapter()
-                    // Read the engine's verse max the way the old code did: AFTER the
-                    // move, so it is the destination chapter's.
-                    let expectedVerseMax = mod.getVerseMax()
-                    let actual = controller.setToPreviousChapter()
-                    guard actual == expected else {
-                        XCTFail("prev from '\(from)': engine '\(expected ?? "nil")' but controller '\(actual ?? "nil")'")
-                        return
-                    }
-                    XCTAssertEqual(defaults.string(forKey: Defaults.bibleVersePosition),
-                                   "\(expectedVerseMax)",
-                                   "prev from '\(from)' must write the DESTINATION chapter's verse max")
-                    guard defaults.string(forKey: Defaults.bibleVersePosition) == "\(expectedVerseMax)" else { return }
-                    backward += 1
-                }
-            }
-        }
-
-        // Both boundaries must be structural nils from the controller too.
-        defaults.set("Revelation 22", forKey: Defaults.lastRef)
-        XCTAssertNil(controller.setToNextChapter(),
-                     "the controller must return nil at Rev 22, not the clamped ref")
-        defaults.set("Genesis 1", forKey: Defaults.lastRef)
-        XCTAssertNil(controller.setToPreviousChapter(),
-                     "the controller must return nil at Gen 1, not the clamped ref")
-        // And an unresolvable lastRef must decline rather than guess.
-        defaults.set("1. Mose 1", forKey: Defaults.lastRef)
-        XCTAssertNil(controller.setToNextChapter())
-        XCTAssertNil(controller.setToPreviousChapter())
-
-        print("[refsem/fast] controller transitions compared: \(forward) next, \(backward) prev")
-        XCTAssertEqual(forward, 1188)
-        XCTAssertEqual(backward, 1188)
-    }
-
-    /// All 2,376 transitions against the **committed fixture** rather than the live
-    /// engine.
-    ///
-    /// The two tests above still drive `-[SwordModule setToNextChapter]` /
-    /// `-setToPreviousChapter`, which Phase 5 deletes. This one does not touch the
-    /// engine at all, so it is the assertion that survives — and it is what makes
-    /// the fixture's transition half load-bearing rather than merely recorded.
+    /// **This is the whole navigation gate** as of Phase 5 step 12. The two
+    /// engine-driven transition tests that used to sit above it
+    /// (`testAll{Forward,Backward}TransitionsMatchSwordModule`) are deleted, and this
+    /// covers the same 2,376 comparisons from the recorded oracle — so the fixture's
+    /// transition half is load-bearing rather than merely recorded.
     ///
     /// The fixture stores SWORD's raw answers, including the two clamps
     /// ("Revelation 22 -> next=Revelation of John 22", "Genesis 1 -> prev=Genesis 1"),
@@ -518,47 +271,6 @@ final class PSRefSemanticsTests: XCTestCase {
         XCTAssertEqual(clamps, 2, "exactly two clamps: Gen 1 prev and Rev 22 next")
     }
 
-    /// The two boundaries, where the two sides deliberately differ — asserted as a
-    /// difference rather than tolerated.
-    ///
-    /// `VerseKey::normalize` (versekey.cpp:1466-1493) pins to the bound and sets
-    /// KEYERR_OUTOFBOUNDS, so `-setToNextChapter` at Rev 22 returns **the same ref
-    /// it was given**, and the app's string-equality gate is what turns that into a
-    /// no-op. The table returns nil instead. If SWORD ever started erroring here
-    /// this test fails, which is the point: it documents *why* the nil is correct.
-    func testBoundariesClampInSwordAndReturnNilInSwift() throws {
-        let resolver = try resolver()
-        let mod = try moduleForNavigation("KJV")
-
-        guard let genesis = resolver.book(named: "Genesis"),
-              let revelation = resolver.book(named: "Revelation") else {
-            XCTFail("Genesis / Revelation missing from the table")
-            return
-        }
-
-        // Forward, at the end of the canon.
-        let lastRef = resolver.displayRef(book: revelation, chapter: revelation.chapterCount)
-        XCTAssertEqual(lastRef, "Revelation of John 22", "displayRef must use the longName form")
-        mod.setChapter(lastRef)
-        XCTAssertEqual(mod.setToNextChapter(), lastRef,
-                       "SWORD is expected to CLAMP at the end of the canon, not error")
-        XCTAssertNil(resolver.nextChapter(book: revelation, chapter: revelation.chapterCount),
-                     "the table must return nil, not the clamped ref")
-
-        // Backward, at the start.
-        let firstRef = resolver.displayRef(book: genesis, chapter: 1)
-        XCTAssertEqual(firstRef, "Genesis 1")
-        mod.setChapter(firstRef)
-        XCTAssertEqual(mod.setToPreviousChapter(), firstRef,
-                       "SWORD is expected to CLAMP at the start of the canon, not error")
-        XCTAssertNil(resolver.previousChapter(book: genesis, chapter: 1),
-                     "the table must return nil, not the clamped ref")
-
-        // And the reason the clamp was survivable: the app's gate is string
-        // equality against the ref it asked from, which the clamped value satisfies.
-        XCTAssertEqual(PSModuleController.createRefString(lastRef), "Revelation 22")
-        XCTAssertEqual(PSModuleController.createRefString(firstRef), "Genesis 1")
-    }
 
     /// `displayRef` returns the **longName** form, and every call site's downstream
     /// munge turns that into the `name` form. 66/66, which is what makes returning
@@ -626,64 +338,7 @@ final class PSRefSemanticsTests: XCTestCase {
 
     // MARK: - Fast tier: name -> OSIS
 
-    /// The Swift resolver's `@objc osisNameForBookName:` against the engine, for all
-    /// 66 books in the spelling the search UI actually passes.
-    ///
-    /// The oracle is a live `SwordVerseKey`, **not**
-    /// `+[PSSearchEngine osisBookNameForLocalisedBookName:]`, for two reasons: that
-    /// method is private to `PSSearchEngine.mm` (so Swift cannot see it), and step 4
-    /// deletes it — a comparison anchored on it would have to be re-anchored one
-    /// commit later. This is the same oracle one layer down: the shim's whole body
-    /// is `vk.setText(name); return vk.getOSISBookName()`, which is exactly what
-    /// `SwordVerseKey(ref:v11n:).osisBookName()` does.
-    func testOsisNameMatchesTheEngine() throws {
-        let resolver = try resolver()
-        var compared = 0
-        for book in resolver.books {
-            // The search UI passes the *display* name, which is `name` — the same
-            // string the notification dict and lastRef carry.
-            let engine = SwordVerseKey(ref: book.name, v11n: "KJV")?.osisBookName()
-            let mine = resolver.osisName(forBookName: book.name)
-            XCTAssertEqual(mine, book.osisName, "\(book.name): resolver disagrees with its own table")
-            XCTAssertEqual(mine, engine, "\(book.name): resolver '\(mine ?? "nil")' vs engine '\(engine ?? "nil")'")
-            guard mine == engine else { return }
-            compared += 1
-        }
-        print("[refsem/fast] name->OSIS compared against the engine: \(compared)")
-        XCTAssertEqual(compared, 66)
 
-        // The two nil directions.
-        XCTAssertNil(resolver.osisName(forBookName: "Nonsense"))
-        XCTAssertNil(resolver.osisName(forBookName: ""))
-        XCTAssertNil(resolver.osisName(forBookName: nil))
-    }
-
-    /// F3: `+translateBookName:` is **identity for every input, on every device** —
-    /// there is no `en` locale conf, and `SWLocale(0)` (swlocale.cpp:63-69) has no
-    /// `[Text]` section, so `translate` returns its input. This is what licenses
-    /// step 6's retirement of the round-trip, and it is asserted rather than
-    /// assumed because it looks like a semantic change and is not.
-    func testTranslateBookNameIsIdentityForAll66() throws {
-        let resolver = try resolver()
-        var identity = 0
-        for book in resolver.books {
-            for spelling in [book.name, book.longName, book.localisedName] {
-                XCTAssertEqual(SwordManager.translateBookName(spelling), spelling,
-                               "translateBookName is not identity for '\(spelling)'")
-                XCTAssertEqual(SwordManager.translate(toSystemLocale: spelling), spelling,
-                               "translateToSystemLocale is not identity for '\(spelling)'")
-            }
-            // The composite the app actually performs (PSModuleController init,
-            // PSTabBarControllerDelegate.updateViewWithSelectedBookName).
-            let round = PSModuleController.createRefString(
-                (SwordManager.translateBookName(book.name) ?? "") + " 1")
-            XCTAssertEqual(round, "\(book.name) 1", "\(book.osisName): the round-trip is not identity")
-            guard round == "\(book.name) 1" else { return }
-            identity += 1
-        }
-        print("[refsem/fast] translateBookName round-trip identity: \(identity)/66")
-        XCTAssertEqual(identity, 66)
-    }
 
     /// The first/last available refs, which step 6 re-derived from the table
     /// instead of round-tripping "Genesis" / "Revelation of John" through the locale
@@ -1106,100 +761,16 @@ final class PSRefSemanticsTests: XCTestCase {
         return out
     }
 
-    // MARK: - The committed oracle fixture
-    //
-    // Dumps the live engine's entire answer so step 10 can delete SwordBook without
-    // any test above having to be weakened: after Phase 5 the comparisons re-anchor
-    // on this file. Assert-by-default, PSORACLE_CAPTURE to rewrite.
+    // The capture that WROTE the fixture (`testCaptureVersificationTable`) lived here
+    // and is deleted by Phase 5 step 12 along with the rest of the engine-driven half:
+    // it drove `-[SwordModule setChapter:]` / `-setToNextChapter` for all 2,376
+    // transitions, which is exactly the API the engine takes with it. The fixture it
+    // produced is committed and is now the oracle above. Do not recreate this capture,
+    // and do not recapture the fixture — a red test means a real behaviour change.
 
-    /// Re-emits the fixture from whatever oracle is still available, and asserts it
-    /// is byte-identical to the committed one.
-    ///
-    /// Phase 4 step 10 deleted `SwordBook`, so the book-shape half is now sourced
-    /// from the **table** rather than from the engine — which makes this a
-    /// round-trip: the table must still say exactly what the engine said when the
-    /// fixture was captured. The transition half still drives the live
-    /// `-[SwordModule setToNextChapter]` / `-setToPreviousChapter` (Phase 5 deletes
-    /// those; at that point this becomes a pure table-vs-fixture check).
-    ///
-    /// Under PSORACLE_CAPTURE it rewrites the file, as before. Do NOT recapture to
-    /// make a red one pass: the point of the file is that it was written while the
-    /// engine was in the tree.
-    func testCaptureVersificationTable() throws {
-        let resolver = try resolver()
-        let books = resolver.books
-        let mod = try moduleForNavigation("KJV")
-
-        var lines: [String] = []
-        lines.append("# live-SWORD KJV versification oracle")
-        lines.append("# books=\(books.count)")
-
-        for (i, book) in books.enumerated() {
-            lines.append("## [\(i)] name=\(book.name)"
-                         + " short=\(book.shortName)"
-                         + " osis=\(book.osisName)"
-                         + " chapters=\(book.chapterCount)")
-            let maxima = book.verseMax.map(String.init)
-            lines.append("verseMax=\(maxima.joined(separator: ","))")
-        }
-
-        // All 2,376 transitions, driven exactly as the app drives them.
-        lines.append("# transitions: <from> -> next=<...> prev=<...>")
-        for book in books {
-            for chapter in 1...book.chapterCount {
-                let from = "\(book.name) \(chapter)"
-                mod.setChapter(from)
-                let next = mod.setToNextChapter() ?? "<nil>"
-                mod.setChapter(from)
-                let prev = mod.setToPreviousChapter() ?? "<nil>"
-                lines.append("\(from) -> next=\(next) prev=\(prev)")
-            }
-        }
-
-        try checkFixture("versification-KJV-oracle.txt",
-                         actual: lines.joined(separator: "\n") + "\n")
-    }
 
     // MARK: - Exhaustive tier (PSREF_EXHAUSTIVE=1)
 
-    /// All 31,102 `displayRef` values against a live `SwordVerseKey`, in **both**
-    /// the `name` and the `longName` form, so the choice of form is pinned per verse
-    /// rather than per book.
-    func testExhaustiveAllVersesAgreeWithVerseKey() throws {
-        try XCTSkipUnless(Self.isExhaustive, "set PSREF_EXHAUSTIVE=1 to run the exhaustive tier")
-        let resolver = try resolver()
-
-        var compared = 0
-        for book in resolver.books {
-            for chapter in 1...book.chapterCount {
-                guard let maxVerse = resolver.verseMax(book: book, chapter: chapter) else { continue }
-                for verse in 1...maxVerse {
-                    for form in [book.name, book.longName] {
-                        let ref = "\(form) \(chapter):\(verse)"
-                        guard let key = SwordVerseKey(ref: ref, v11n: "KJV") else {
-                            XCTFail("VerseKey refused '\(ref)'")
-                            return
-                        }
-                        // VerseKey normalises to its own book/chapter/verse; the
-                        // table must agree on all three. Compare on the OSIS name
-                        // rather than -book: VerseKey's book number is 1-based
-                        // *within its testament*, so matching it against a flat
-                        // 66-entry index would mean reconstructing BMAX arithmetic
-                        // — the very thing the table exists to avoid.
-                        XCTAssertEqual(key.osisBookName(), book.osisName, "\(ref): book differs")
-                        XCTAssertEqual(Int(key.chapter()), chapter, "\(ref): chapter differs")
-                        XCTAssertEqual(Int(key.verse()), verse, "\(ref): verse differs")
-                        guard key.osisBookName() == book.osisName,
-                              Int(key.chapter()) == chapter,
-                              Int(key.verse()) == verse else { return }
-                        compared += 1
-                    }
-                }
-            }
-        }
-        print("[refsem/exhaustive] verses compared against VerseKey: \(compared) (expected 62204)")
-        XCTAssertEqual(compared, 62204, "31,102 verses x 2 name forms")
-    }
 
     /// All 31,102 verses round-trip through the parser: `parse(displayRef(v)) == v`.
     func testExhaustiveEveryVerseRoundTripsThroughTheParser() throws {
@@ -1261,91 +832,4 @@ final class PSRefSemanticsTests: XCTestCase {
         XCTAssertEqual(compared, 1189)
     }
 
-    /// The `builtin_abbrevs` inclusion direction, one-way by design: assert that
-    /// **everything the parser accepts, SWORD agrees on**, and *print* the forms
-    /// SWORD accepts but the parser rejects rather than asserting on them. The
-    /// parser is deliberately narrower (see its header), so the delta is visible
-    /// instead of assumed — a later widening or narrowing shows up in this output.
-    func testExhaustiveAbbreviationInclusionDirection() throws {
-        try XCTSkipUnless(Self.isExhaustive, "set PSREF_EXHAUSTIVE=1 to run the exhaustive tier")
-        let resolver = try resolver()
-        let parser = try parser()
-
-        var agreed = 0
-        var parserRejectsSwordAccepts: [String] = []
-        var disagreed: [(spelling: String, mine: String, sword: String)] = []
-
-        // Every spelling in the table, plus the two fallback shapes the parser
-        // adds (trailing ".", despaced numbered abbreviations).
-        var candidates: Set<String> = []
-        for book in resolver.books {
-            for spelling in [book.name, book.longName, book.localisedName, book.osisName,
-                             book.shortName, book.preferredAbbreviation, book.abbreviation]
-            where !spelling.isEmpty {
-                candidates.insert(spelling)
-                candidates.insert(spelling + ".")
-                candidates.insert(spelling.replacingOccurrences(of: " ", with: ""))
-                if !spelling.contains(" "), let first = spelling.first, first.isNumber {
-                    // "1Cor" -> "1 Cor"
-                    candidates.insert("\(first) \(spelling.dropFirst())")
-                }
-            }
-        }
-
-        for spelling in candidates.sorted() {
-            let ref = "\(spelling) 1:1"
-            let mine = parser.parse(ref)
-            let engineOsis = SwordVerseKey(ref: ref, v11n: "KJV")?.osisBookName()
-
-            if let mine = mine {
-                if mine.book.osisName == engineOsis {
-                    agreed += 1
-                } else {
-                    disagreed.append((spelling, mine.book.osisName, engineOsis ?? "nil"))
-                }
-            } else if let engineOsis = engineOsis, resolver.book(osis: engineOsis) != nil {
-                parserRejectsSwordAccepts.append("\(spelling) -> \(engineOsis)")
-            }
-        }
-
-        print("[refsem/exhaustive] abbreviation forms both accept: \(agreed)")
-        print("[refsem/exhaustive] forms SWORD accepts but the parser rejects"
-              + " (\(parserRejectsSwordAccepts.count), deliberately out of scope):")
-        for form in parserRejectsSwordAccepts.prefix(40) { print("    \(form)") }
-        if parserRejectsSwordAccepts.count > 40 {
-            print("    … and \(parserRejectsSwordAccepts.count - 40) more")
-        }
-        print("[refsem/exhaustive] forms both accept but resolve DIFFERENTLY"
-              + " (\(disagreed.count)):")
-        for d in disagreed { print("    \(d.spelling): table=\(d.mine) sword=\(d.sword)") }
-
-        // The one disagreement is the ambiguous abbreviation "Jud", and it is
-        // **today's visible behaviour**, not a bug. The resolver's index is
-        // first-writer-wins over the books in canonical order, so "Jud" binds to
-        // Judges (index 6) rather than Jude (index 64) — which is exactly what the
-        // ref-selector strip does when you tap "Jud", and the plan requires keeping
-        // it. SWORD's own table instead binds "JUD" -> Jude, by prefix-matching its
-        // alphabetically-sorted list where "JUDE" precedes "JUDG"
-        // (canon_abbrevs.h:429-430).
-        //
-        // Note "Phi" is NOT in this set: both sides answer Philippians, because
-        // SWORD's "PHIL" -> Phil also precedes "PHILEMON" -> Phlm.
-        //
-        // Asserted as an exact set rather than tolerated: a second collision, or
-        // this one flipping, fails here.
-        let actualCollisions = Set(disagreed.map { "\($0.spelling):\($0.mine)/\($0.sword)" })
-        XCTAssertEqual(actualCollisions, ["Jud:Judg/Jude", "Jud.:Judg/Jude"],
-                       "the set of ambiguous-abbreviation disagreements changed")
-
-        // The 33 rejected forms are all fully-despaced full names this test
-        // synthesises ("1Corinthians", "IThessalonians", "SongofSolomon") — shapes
-        // no part of the app emits. Two of them are worth noticing as evidence that
-        // the parser's narrowness is a feature: SWORD's prefix match answers
-        // "SongofSolomon" -> **Rev** and "RevelationofJohn" -> Rev, i.e. it
-        // mis-resolves one of them outright. Declining is the better answer.
-        XCTAssertEqual(parserRejectsSwordAccepts.count, 33,
-                       "the accept-delta against SWORD changed size")
-        XCTAssertGreaterThan(agreed, 300, "the candidate set collapsed")
-        XCTAssertEqual(agreed, 424, "the agreeing-form count changed")
-    }
 }
