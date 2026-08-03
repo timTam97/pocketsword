@@ -262,12 +262,13 @@ final class PSContentReader: NSObject {
         // Identical to -getChapter:'s own six pads.
         let body = rendered.body + "<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"
 
-        // The navigation JS comes from +[SwordModule chapterNavigationJSWithEntryCount:extraJS:]
-        // rather than a copy here. It is 4 KB of pure JS with no SWORD dependency,
-        // and a duplicate would be the single most likely thing in this phase to
-        // drift unnoticed. Phase 5 moves the method (not a copy of it) into Swift
-        // when SwordModule.mm is deleted.
-        let js = SwordModule.chapterNavigationJS(withEntryCount: rendered.entryCount, extraJS: extraJS)
+        // The navigation JS now comes from the Swift `PSChapterNavigationJS`
+        // (SWORD_REMOVAL_PLAN.md Phase 5 step 3), which was generated from
+        // `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`'s own bytes
+        // rather than retyped. `PSChapterNavigationJSTests` asserts the two are
+        // byte-identical for as long as both exist; the Obj-C copy dies with the
+        // bridge in step 7, and the assertion with it.
+        let js = PSChapterNavigationJS.script(entryCount: rendered.entryCount, extraJS: extraJS)
 
         guard var text = PSModuleController.createHTMLString(body,
                                                             usingPreferences: true,

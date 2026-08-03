@@ -898,6 +898,71 @@ final class SwordOracleCaptureTests: XCTestCase {
         try checkFixture("chapter-loop-counters.tsv", actual: out.joined(separator: "\n") + "\n")
     }
 
+    // MARK: - Chapter-navigation JS: the Swift port equals the Obj-C original
+
+    /// The step-3 equality gate: `PSChapterNavigationJS.script` must produce exactly
+    /// what `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]` produces.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 3 is a "move, not a copy", staged: the
+    /// Swift version is added, `PSContentReader` is pointed at it, and this asserts
+    /// the two agree byte-for-byte while both exist. Step 7 deletes the Obj-C copy
+    /// and this test with it — so this test's whole job is to make that deletion
+    /// safe.
+    ///
+    /// The Swift literal was *generated* from the Obj-C format string's bytes rather
+    /// than retyped (see PSChapterNavigationJS's header for why: 124 lines of
+    /// backslash-newline line splicing with significant tabs inside). This asserts
+    /// the generation was faithful.
+    ///
+    /// The `entryCount` values are not arbitrary: 32 / 7 / 177 / 26 / 22 are the real
+    /// loop counters for Gen 1, Ps 23, Ps 119, Matt 1 and Rev 22 (see
+    /// chapter-loop-counters.tsv), 1 and 0 are the degenerate ends, and 1000 is
+    /// past any real chapter. The `extraJS` values cover empty (a plain page turn)
+    /// and both shapes the render path actually injects.
+    func testChapterNavigationJSSwiftMatchesObjC() {
+        for entryCount in [0, 1, 7, 22, 26, 32, 177, 1000] {
+            for extra in ["",
+                          "scrollToVerse(5);",
+                          "startDetLocPoll(); scrollToPosition(1234);"] {
+                // `+chapterNavigationJSWithEntryCount:extraJS:` has no nullability
+                // annotation, so it imports as String! — unwrap it explicitly rather
+                // than letting the comparison happen between an optional and a
+                // String, which would compare unequal for the wrong reason.
+                guard let objc = SwordModule.chapterNavigationJS(withEntryCount: entryCount,
+                                                                extraJS: extra) else {
+                    XCTFail("Obj-C navigation JS was nil for entryCount=\(entryCount)")
+                    return
+                }
+                let swift = PSChapterNavigationJS.script(entryCount: entryCount,
+                                                        extraJS: extra)
+                guard objc != swift else { continue }
+                let e = Array(objc), a = Array(swift)
+                var i = 0
+                while i < min(e.count, a.count), e[i] == a[i] { i += 1 }
+                let lo = max(0, i - 50)
+                XCTFail("""
+                    navigation JS differs for entryCount=\(entryCount) extraJS=\(extra.debugDescription)
+                      first difference at character \(i) (Obj-C \(e.count) chars, Swift \(a.count))
+                      Obj-C: \(String(e[lo..<min(e.count, i + 50)]).debugDescription)
+                      Swift: \(String(a[lo..<min(a.count, i + 50)]).debugDescription)
+                    """)
+                return
+            }
+        }
+
+        // Not vacuous: the block must actually be the script, carry the count in all
+        // four places the format string put it, and end with the deliberate
+        // `-->` + tabs + `</script>` quirk (no newline after the comment close).
+        let js = PSChapterNavigationJS.script(entryCount: 32, extraJS: "scrollToVerse(5);")
+        XCTAssertTrue(js.hasPrefix("<script type=\"text/javascript\">\n<!--\n"))
+        XCTAssertTrue(js.hasSuffix("-->\t\t\t\t\t</script>\n"),
+                      "the no-newline-after--->  quirk was tidied away")
+        XCTAssertEqual(js.components(separatedBy: "32").count - 1, 4,
+                       "entryCount should appear in all four substitution slots")
+        XCTAssertTrue(js.contains("resetArrays()\n\t\t\t\t\t\tscrollToVerse(5);\n"),
+                      "extraJS must sit inside window.onload, right after resetArrays()")
+    }
+
     /// The invariant that licenses capturing the counter at one endpoint only:
     /// `entryCount` does not depend on the render options.
     ///
