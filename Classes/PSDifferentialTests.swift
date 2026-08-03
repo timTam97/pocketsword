@@ -316,6 +316,48 @@ final class PSDifferentialTests: XCTestCase {
         XCTAssertEqual(allowed, 2, "06401 should be visited exactly twice (it is duplicated on disk)")
     }
 
+    /// **The step-4 gate.** Every baked `module.<name>.{features,lang,direction}`
+    /// answer must equal what the live engine answers.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 4 bakes `-[SwordModule hasFeature:]`'s
+    /// verdict — not its inputs — because the rule is not a `Feature=` lookup: it
+    /// also matches a `GlobalOptionFilter=` entry bare or prefixed GBF / ThML /
+    /// UTF8 / OSIS. The converter reimplements that rule, so it has to be checked
+    /// against the thing it reimplements, once, while the engine is still here.
+    /// Step 5 then rewires seven `hasFeature:` call sites onto the baked answers.
+    ///
+    /// This is deleted with the rest of this file in step 12; what survives is
+    /// `PSContentStoreTests.testBakedModuleMetadataMatchesTheModuleConfs`, which
+    /// pins the same answers as literals.
+    func testBakedFeatureSetMatchesTheEngine() throws {
+        guard let store = PSContentStore.shared else { throw XCTSkip("no store") }
+
+        // Every feature string the app asks about anywhere, plus the ones the
+        // converter bakes. A false YES matters as much as a false NO — a spurious
+        // row in the `▾` menu writes a pref that changes nothing.
+        let queried = ["Strongs", "StrongsNumbers", "Morph", "Headings", "Footnotes",
+                       "Scripref", "RedLetterWords", "Lemma", "GreekDef", "HebrewDef",
+                       "GreekParse", "HebrewParse", "Glossary", "DailyDevotion", "Images"]
+
+        var compared = 0
+        for name in ["KJV", "MHCC", "Robinson", "StrongsRealGreek", "StrongsRealHebrew"] {
+            let mod = try module(name)
+            for feature in queried {
+                XCTAssertEqual(store.moduleHasFeature(name, feature),
+                               mod.hasFeature(feature),
+                               "\(name) hasFeature(\(feature)): baked answer disagrees with the engine")
+                compared += 1
+            }
+            // lang / direction, from the same module the engine read them off.
+            XCTAssertEqual(store.moduleLang(name), mod.lang(),
+                           "\(name): baked lang disagrees with the engine")
+            XCTAssertEqual(store.moduleIsRTL(name), mod.isRTL(),
+                           "\(name): baked direction disagrees with the engine")
+        }
+        print("[differential/fast] baked feature answers compared: \(compared)")
+        XCTAssertEqual(compared, 75, "5 modules x 15 features")
+    }
+
     /// All 6,959 notes, through the `n` branch.
     func testAllNotesAgree() throws {
         let mod = try module("KJV")

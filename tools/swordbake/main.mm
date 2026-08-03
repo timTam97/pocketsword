@@ -974,6 +974,64 @@ private:
     sqlite3_finalize(st);
 }
 
+// -----------------------------------------------------------------------
+// Baked module metadata (SWORD_REMOVAL_PLAN.md Phase 5 step 4)
+// -----------------------------------------------------------------------
+
+// The exact feature set `-[SwordModule hasFeature:]` answers YES for.
+//
+// Baking the ANSWER, not the inputs. hasFeature: is not a `Feature=` lookup:
+// it also matches a `GlobalOptionFilter=` entry that is the feature name either
+// bare or prefixed `GBF` / `ThML` / `UTF8` / `OSIS` (SwordModule.mm:732-752).
+// That is why KJV — which declares only `Feature=StrongsNumbers` and
+// `Feature=NoParagraphs` — nonetheless answers YES for Morph, Headings,
+// Footnotes, Scripref and RedLetterWords, from its six `GlobalOptionFilter=OSIS*`
+// lines; and why MHCC, which declares neither kind, answers NO to everything and
+// so gets no `▾` menu rows at all and hides the button.
+//
+// Reproducing that here rather than in the reader is the point: a reader-side
+// reimplementation would be a second copy of the rule with no engine to check it
+// against, whereas this runs against the live `.conf` parser one last time.
+//
+// The queried set is exactly what the app asks about — every string passed to
+// hasFeature: anywhere in the tree, which is a closed set because there is no UI
+// to add a module:
+//   PSModuleViewController.rebuildSettingsMenu: Strongs, StrongsNumbers, Morph,
+//     Headings, Footnotes, Scripref (note the spelling — not "Scriptref"),
+//     RedLetterWords
+//   PSModuleSearchController:  Strongs, StrongsNumbers
+//   PSTabBarControllerDelegate: GreekDef, HebrewDef
+//   PSDictionaryViewController: Images
+// GreekParse / HebrewParse / Glossary / DailyDevotion are included because they
+// are cheap and the .conf files do use GreekParse (Robinson) — a future reader
+// asking about one should get a real answer rather than a silent NO.
+- (NSString *)featureListForModule:(sword::SWModule *)mod {
+    static NSArray<NSString *> *queried = @[
+        @"Strongs", @"StrongsNumbers", @"Morph", @"Headings", @"Footnotes",
+        @"Scripref", @"RedLetterWords", @"Lemma", @"GreekDef", @"HebrewDef",
+        @"GreekParse", @"HebrewParse", @"Glossary", @"DailyDevotion", @"Images",
+    ];
+    NSMutableArray<NSString *> *has = [NSMutableArray array];
+    for (NSString *feature in queried) {
+        const char *f = [feature UTF8String];
+        BOOL yes = mod->getConfig().has("Feature", f);
+        if (!yes) {
+            for (NSString *prefix in @[@"GBF", @"ThML", @"UTF8", @"OSIS", @""]) {
+                NSString *candidate = [prefix stringByAppendingString:feature];
+                if (mod->getConfig().has("GlobalOptionFilter", [candidate UTF8String])) {
+                    yes = YES;
+                    break;
+                }
+            }
+        }
+        if (yes) [has addObject:feature];
+    }
+    // '|' delimited. Safe: every name above is alphanumeric, and the reader
+    // splits on the same character. Empty string for a module with no features
+    // (MHCC), which the reader must treat as "no rows" rather than "unknown".
+    return [has componentsJoinedByString:@"|"];
+}
+
 // Round-trip gate: expanding the tokens must reproduce the exact input bytes,
 // and no passagestudy.jsp substring may survive in the tokenised form.
 - (std::string)tokeniseChecked:(const std::string &)rendered where:(const char *)where {
@@ -1683,6 +1741,25 @@ private:
         [self setMeta:[NSString stringWithFormat:@"module.%@.version", name]
                    to:mod->getConfigEntry("Version") ? [NSString stringWithUTF8String:mod->getConfigEntry("Version")] : @""];
         [self setMeta:[NSString stringWithFormat:@"module.%@.type", name] to:t];
+
+        // Phase 5 step 4: the last three things the app read off the live module.
+        //
+        // `lang` mirrors -[SwordModule lang] (swModule->getLanguage()), used for
+        // chapterPage's xml:lang substitution. `direction` mirrors the raw
+        // `Direction=` conf entry, which -isRTL compares against "RtoL"; the
+        // comparison stays in the reader so the *value* is what is baked, not the
+        // verdict. All five shipped modules are Lang=en with no Direction=, so this
+        // is provably a no-op today — which is exactly why the reader must read the
+        // baked value rather than hardcoding "en": the no-op is a property of the
+        // content, not of the code.
+        const char *lang = mod->getLanguage();
+        [self setMeta:[NSString stringWithFormat:@"module.%@.lang", name]
+                   to:lang ? [NSString stringWithUTF8String:lang] : @""];
+        const char *dir = mod->getConfigEntry("Direction");
+        [self setMeta:[NSString stringWithFormat:@"module.%@.direction", name]
+                   to:dir ? [NSString stringWithUTF8String:dir] : @""];
+        [self setMeta:[NSString stringWithFormat:@"module.%@.features", name]
+                   to:[self featureListForModule:mod]];
 
         if ([t isEqualToString:@"Biblical Texts"]) {
             [self bakeVerseModule:mod name:name isCommentary:NO];

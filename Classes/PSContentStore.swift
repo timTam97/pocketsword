@@ -735,9 +735,59 @@ final class PSContentStore: NSObject {
         }
     }
 
+    // MARK: - Verse text by reference
+
+    /// One `plain_texts` row, looked up by its `osis_ref` rather than walked.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 4. The store exposed only the sequential
+    /// `Cursor` above (for the index build); there was no way to ask for a single
+    /// verse. `PSModuleSearchController` needs one, for a narrow case: a search-history
+    /// entry cached by an older build with a nil `text`, which it used to re-pull
+    /// through `-[SwordModule textEntryForKey:textType:]`.
+    ///
+    /// Returns nil for a ref the module does not have, which is a legitimate miss
+    /// (the caller then shows the reference with no preview, exactly as it did when
+    /// the engine returned nil).
+    func plainText(module: String, osisRef: String) -> String? {
+        queue.sync {
+            guard let st = statement(
+                "SELECT text_id FROM verses_plain WHERE module=? AND osis_ref=? LIMIT 1;") else {
+                return nil
+            }
+            bind(st, 1, module)
+            bind(st, 2, osisRef)
+            guard sqlite3_step(st) == SQLITE_ROW else {
+                sqlite3_reset(st)
+                return nil   // not a failure: the module simply has no such verse
+            }
+            let textID = Int(sqlite3_column_int64(st, 0))
+            sqlite3_reset(st)
+
+            // Same chunk arithmetic the Cursor does, with the chunk size read from
+            // content_meta rather than hardcoded — a skew would address the wrong
+            // slot and return plausible but wrong text.
+            let chunk = textID / chunkRowsPlain
+            let slot = textID % chunkRowsPlain
+            guard let fields = chunkRows(table: "plain_texts_chunks", module: module, chunkID: chunk) else {
+                return nil   // chunkRows has already reported the specific failure
+            }
+            guard slot < fields.count, fields[slot].count == 3 else {
+                Self.fail("plain_texts \(module): text_id \(textID) is not a 3-field row")
+                return nil
+            }
+            return fields[slot][0]
+        }
+    }
+
     // MARK: - Module metadata
 
-    /// `content_meta`'s per-module values (`module.<name>.type` / `.version`).
+    /// `content_meta`'s per-module values (`module.<name>.type` / `.version` /
+    /// `.lang` / `.direction` / `.features`).
+    ///
+    /// `@objc` as of Phase 5 step 4 so `PSSearchEngine.mm` can read a module's
+    /// version while it is still Obj-C — `indexIsFresh` and `stampMetaForModule`
+    /// both did that through `[mod version]`, and step 7 deletes `SwordModule`.
+    @objc(moduleMetaForModule:key:)
     func moduleMeta(_ name: String, key: String) -> String? {
         queue.sync {
             guard let st = statement("SELECT value FROM content_meta WHERE key=?;") else { return nil }
@@ -760,7 +810,48 @@ final class PSContentStore: NSObject {
     /// `SwordDictionary` nor any SWORD call, so it survives Phase 5. Verified
     /// byte-identical to the conf entries: Robinson 2.0, StrongsRealGreek
     /// 1.5-150704, StrongsRealHebrew 1.090107.
+    ///
+    /// `@objc` for the same reason as `moduleMeta` above.
+    @objc(moduleVersionForModule:)
     func moduleVersion(_ name: String) -> String? {
         moduleMeta(name, key: "version")
+    }
+
+    /// A module's `Lang=` conf value ("en" for all five shipped modules).
+    func moduleLang(_ name: String) -> String? {
+        let lang = moduleMeta(name, key: "lang")
+        return (lang?.isEmpty ?? true) ? nil : lang
+    }
+
+    /// Whether a module renders right-to-left, i.e. what `-[SwordModule isRTL]`
+    /// answered: its `Direction=` conf entry equals `"RtoL"`.
+    ///
+    /// The *comparison* lives here rather than in the converter so what is baked is
+    /// the raw conf value, not a verdict — a future module with `Direction=BiDi`
+    /// would then still be readable without a re-bake. No shipped module declares
+    /// `Direction=` at all, so this is false for all five.
+    func moduleIsRTL(_ name: String) -> Bool {
+        moduleMeta(name, key: "direction") == "RtoL"
+    }
+
+    /// Whether `-[SwordModule hasFeature:]` would have answered YES for `feature`.
+    ///
+    /// The answer is baked (`module.<name>.features`, '|' delimited) rather than
+    /// recomputed, because `hasFeature:` is not a `Feature=` lookup: it also matches
+    /// a `GlobalOptionFilter=` entry bare or prefixed GBF / ThML / UTF8 / OSIS. See
+    /// the converter's `-featureListForModule:` for the rule and why reproducing it
+    /// on the reader side would have been a second untested copy.
+    ///
+    /// Consequences worth knowing, both measured from the bake:
+    ///  * KJV answers YES for Strongs, StrongsNumbers, Morph, Headings, Footnotes,
+    ///    RedLetterWords and Lemma — six of those from its `GlobalOptionFilter=OSIS*`
+    ///    lines, not from `Feature=`. It does NOT answer YES for `Scripref`: there is
+    ///    no `OSISScripref` filter in its conf, so the cross-references row was never
+    ///    in KJV's `▾` menu.
+    ///  * MHCC answers NO to everything (it declares neither kind), so its menu has
+    ///    no rows and the button hides itself.
+    func moduleHasFeature(_ name: String, _ feature: String) -> Bool {
+        guard let list = moduleMeta(name, key: "features"), !list.isEmpty else { return false }
+        return list.split(separator: "|").contains { $0 == feature }
     }
 }

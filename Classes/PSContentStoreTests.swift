@@ -153,6 +153,103 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertEqual(store.moduleMeta("MHCC", key: "type"), "Commentaries")
     }
 
+    /// The three per-module keys Phase 5 step 4 added to `content_meta`, which
+    /// step 5 uses to replace live `hasFeature:` / `isRTL` / `lang` calls.
+    ///
+    /// These are asserted as exact expected values rather than "non-nil", because
+    /// the whole point of baking them is that they are a fixed property of the
+    /// shipped content — a changed answer here means the `▾` menu, the RTL
+    /// substitution or the lexicon routing silently changed.
+    func testBakedModuleMetadataMatchesTheModuleConfs() throws {
+        let store = try store()
+
+        // lang / direction. All five are Lang=en with no Direction=, so RTL is
+        // false everywhere. Asserted rather than assumed: it is what licenses
+        // step 5's claim that the substitution is a no-op today.
+        for module in ["KJV", "MHCC", "Robinson", "StrongsRealGreek", "StrongsRealHebrew"] {
+            XCTAssertEqual(store.moduleLang(module), "en", "\(module) Lang=")
+            XCTAssertFalse(store.moduleIsRTL(module), "\(module) should not be RTL")
+            XCTAssertEqual(store.moduleMeta(module, key: "direction"), "",
+                           "\(module) declares no Direction=")
+        }
+
+        // The feature answers, exactly as -[SwordModule hasFeature:] gave them.
+        //
+        // KJV's list is the interesting one: it declares only
+        // `Feature=StrongsNumbers` and `Feature=NoParagraphs`, but hasFeature: also
+        // matches OSIS-prefixed GlobalOptionFilter entries, so six more come from
+        // its `GlobalOptionFilter=OSIS*` lines. Note `Scripref` is NOT among them —
+        // there is no OSISScripref filter — so the cross-references row was never in
+        // KJV's menu, which is a fact worth pinning before step 5 rewires the gate.
+        let expected: [String: Set<String>] = [
+            "KJV": ["Strongs", "StrongsNumbers", "Morph", "Headings",
+                    "Footnotes", "RedLetterWords", "Lemma"],
+            "MHCC": [],
+            "Robinson": ["GreekParse"],
+            "StrongsRealGreek": ["GreekDef"],
+            "StrongsRealHebrew": ["HebrewDef"],
+        ]
+        // Every feature string the app ever asks about, so a YES that should be a NO
+        // is caught as well as the reverse.
+        let queried = ["Strongs", "StrongsNumbers", "Morph", "Headings", "Footnotes",
+                       "Scripref", "RedLetterWords", "Lemma", "GreekDef", "HebrewDef",
+                       "GreekParse", "HebrewParse", "Glossary", "DailyDevotion", "Images"]
+        for (module, features) in expected {
+            for feature in queried {
+                XCTAssertEqual(store.moduleHasFeature(module, feature),
+                               features.contains(feature),
+                               "\(module) hasFeature(\(feature))")
+            }
+        }
+
+        // MHCC declaring nothing is what makes its `▾` button hide itself, and no
+        // bundled lexicon declares Images, so the dictionary entry view always
+        // takes setScalesPageToFit(false).
+        XCTAssertEqual(store.moduleMeta("MHCC", key: "features"), "",
+                       "MHCC must have an EMPTY feature list — its ▾ button hides on this")
+        for lexicon in ["Robinson", "StrongsRealGreek", "StrongsRealHebrew"] {
+            XCTAssertFalse(store.moduleHasFeature(lexicon, "Images"), "\(lexicon) Images")
+        }
+    }
+
+    /// The `plain_texts`-by-ref reader step 4 added, which step 5 uses in place of
+    /// `-[SwordModule textEntryForKey:textType:]`.
+    func testPlainTextByRefLookup() throws {
+        let store = try store()
+
+        // A hit returns the same text the sequential cursor produces for that ref,
+        // which is the strongest available statement: the two paths do the same
+        // chunk arithmetic and must land on the same slot.
+        let cursor = store.verseCursor(module: "KJV")
+        var checked = 0
+        while let row = cursor.next(), checked < 500 {
+            // Stride through rather than testing all 31,102 — the arithmetic is
+            // uniform, and the exhaustive version of this claim is the index digest.
+            if checked % 50 == 0 {
+                XCTAssertEqual(store.plainText(module: "KJV", osisRef: row.osisRef),
+                               row.textPlain,
+                               "by-ref lookup disagrees with the cursor for \(row.osisRef)")
+            }
+            checked += 1
+        }
+        XCTAssertFalse(cursor.failed)
+        XCTAssertGreaterThan(checked, 400, "the walk collapsed")
+
+        // Known content, so a systematically-wrong-but-self-consistent answer fails.
+        let gen11 = store.plainText(module: "KJV", osisRef: "Genesis 1:1")
+        XCTAssertNotNil(gen11)
+        XCTAssertTrue(gen11?.contains("In the beginning") == true,
+                      "Genesis 1:1 plain text: \(gen11 ?? "<nil>")")
+
+        // A miss is nil, not a crash and not a neighbouring verse. This is the case
+        // the caller actually depends on: a stale history entry naming a ref the
+        // module does not have shows no preview rather than the wrong one.
+        XCTAssertNil(store.plainText(module: "KJV", osisRef: "Genesis 999:1"))
+        XCTAssertNil(store.plainText(module: "KJV", osisRef: "Nonexistent 1:1"))
+        XCTAssertNil(store.plainText(module: "Robinson", osisRef: "Genesis 1:1"),
+                     "a lexicon has no verses_plain rows")
+    }
+
     // MARK: - Chapter bodies vs the live-SWORD fixtures
 
     /// The acceptance criterion: the reader reproduces the captured engine output
