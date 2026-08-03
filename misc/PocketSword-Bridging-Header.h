@@ -16,6 +16,13 @@
 // went Swift in Wave 4 and its header was deleted — so the umbrella must be imported
 // here directly. Obj-C++ TUs (PSSearchEngine.mm / SwordManager.mm / SwordModule.mm)
 // consume the generated header and do not honour its `@import WebKit;` under c++0x.
+// globals.h MUST stay ahead of the Sword*.h chain below. As of
+// SWORD_REMOVAL_PLAN.md Phase 5 step 2 it carries the shared constants that used to
+// live only in SwordModule.h / SwordManager.h (the ATTRTYPE_* / SW_OUTPUT_*_KEY
+// keys, the SWMOD_CONF_FEATURE_* strings, and `ModuleType`), because surviving Swift
+// files read them and those headers are deleted in step 7. Both copies are guarded,
+// so whichever is seen first wins — and it should be this one, so the eventual
+// deletion changes nothing about which definition Swift compiled against.
 #import "globals.h"
 // PocketSwordAppDelegate (+ main.m) was migrated to Swift in Wave 4 (FINAL) —
 // PocketSwordAppDelegate.swift is now the @main entry point and main.m is deleted.
@@ -26,10 +33,12 @@
 // reaches it via the generated PocketSword-Swift.h. Do NOT re-import a
 // PocketSwordAppDelegate.h here.
 // MBProgressHUD.h is a vendored Foundation/UIKit/CoreGraphics-only Obj-C class
-// (externals/MBProgressHUD) — no C++. The Swift PSDictionaryViewController (Wave
-// 3) shows an MBProgressHUD while caching dictionary keys and conforms to
-// MBProgressHUDDelegate, so both the class and its delegate protocol must be
-// Swift-visible here. MBProgressHUD itself stays Obj-C.
+// (externals/MBProgressHUD) — no C++. Its remaining Swift consumer is
+// PSTabBarControllerDelegate.displayTitle:. PSDictionaryViewController used to show
+// one while caching dictionary keys and conformed to MBProgressHUDDelegate, but the
+// baked store made the whole cache dance unnecessary and Phase 5 step 1 deleted it,
+// so only the class (not the delegate protocol) is still needed. MBProgressHUD
+// itself stays Obj-C, and survives the phase.
 #import "MBProgressHUD.h"
 // PSWebView was migrated to Swift in Wave 4 (render-path cluster) — its former
 // PSWebView.{h,mm} are deleted. The Swift @objc(PSWebView) class and the @objc

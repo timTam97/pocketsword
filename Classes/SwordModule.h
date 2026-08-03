@@ -38,14 +38,21 @@ typedef enum {
     TextTypeRendered
 }TextPullType;
 
+// Guarded because globals.h now carries an identical copy (SWORD_REMOVAL_PLAN.md
+// Phase 5 step 2): surviving Swift files read `ModuleType`, and this header is
+// deleted in step 7. Whichever header the translation unit sees first defines the
+// type; the other skips. Both copies must stay byte-identical until then.
+#ifndef PS_MODULETYPE_DEFINED
+#define PS_MODULETYPE_DEFINED
 typedef enum {
 	unknown_type = -1,
-	bible       = 0x0001, 
-    commentary  = 0x0002, 
+	bible       = 0x0001,
+    commentary  = 0x0002,
     dictionary  = 0x0004,
     genbook     = 0x0008
     //devotional  = 0x0010 -- this is a ModuleCategory!
 }ModuleType;
+#endif
 
 typedef enum {
 	undefinedCategory	= 0x0000, 
