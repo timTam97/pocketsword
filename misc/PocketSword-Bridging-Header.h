@@ -55,62 +55,25 @@
 // VC base PSModuleViewController) reference them directly. No Obj-C++ caller of the
 // coordinator remains, so this line is gone. Do NOT re-import a
 // PSTabBarControllerDelegate.h here.)
-#import "SwordModuleTextEntry.h"
-#import "VerseEnumerator.h"
-// Sword*.h clean facades, sanitized in 0e (all C++ moved to per-class +Cpp.h
-// imported only by .mm files). Adding the two top-level facades transitively
-// pulls in the clean SwordModule.h / SwordVerseKey.h / SwordKey.h /
-// SwordDictionary.h chain — all now Foundation-only and Swift-importable.
-#import "SwordManager.h"
-#import "SwordModule.h"
-// SwordDictionary.h is a clean Foundation-only @objc facade (subclass of
-// SwordModule) after Wave 0e — its only leak (-initWithSWModule:swordManager:)
-// moved to SwordDictionary+Cpp.h, imported only by .mm files; the header now just
-// #imports the clean SwordModule.h facade. PSModuleController.h only @class-
-// forward-declares SwordDictionary (never #imports it), so without this the
-// generated Swift interface DROPS PSModuleController.primaryDictionary (its type
-// is an incomplete Obj-C class to Swift). The Swift Dictionary tab
-// (PSDictionaryViewController) reads primaryDictionary, so SwordDictionary must be
-// a visible Swift type here. SwordDictionary itself stays Obj-C++.
-#import "SwordDictionary.h"
-// SwordBook.h is GONE — SWORD_REMOVAL_PLAN.md Phase 4 step 10. The reference
-// selectors now hold a `PSVersificationBook` (a Swift struct over the baked
-// Resources/Versification-KJV.json) instead, so nothing Swift needs a
-// versification type from Obj-C any more, and +[SwordManager
-// booksForVersificationSystem:] went with it.
-// SSZipArchive.h is the clean Foundation-only @objc facade of the vendored
-// ZipArchive (externals/ZipArchive) — no C++ leaks. The Swift PSModuleController
-// (Wave 4) calls +[SSZipArchive unzipFileAtPath:toDestination:] in
-// -installModulesFromZip:..., so the class must be Swift-visible here. ZipArchive
-// itself stays Obj-C.
-#import "SSZipArchive.h"
-// (PSModuleController was migrated to Swift in Wave 4 — its former
-// PSModuleController.{h,mm} are deleted. The Swift @objc(PSModuleController) class
-// lives in the same module, so Swift callers reference it directly; every Obj-C++
-// caller (PSTabBarControllerDelegate.mm, the render cluster, PSLaunchViewController.mm,
-// PocketSwordAppDelegate.mm, SwordModule.mm) reaches it via the generated
-// PocketSword-Swift.h. The 9 sword:: seams it used were extracted to Foundation
-// @objc methods on SwordManager / SwordModule, so no C++ crosses into Swift.)
-// (PSDictionaryViewController was migrated to Swift in Wave 3 — its former
-// PSDictionaryViewController.h is deleted. The Swift class and the @objc
-// PSDictionaryViewControllerDelegate protocol live in the same module, so the
-// Swift PSDictionaryOverlayViewController references them directly; any Obj-C++
-// TU (PSTabBarControllerDelegate.mm) reaches them via the generated
-// PocketSword-Swift.h.)
-// (PSBookmarksNavigatorController was migrated to Swift in Wave 3 — its former
-// PSBookmarksNavigatorController.{h,mm} are deleted. The Swift @objc class lives
-// in the same module, so the Swift PSBookmarkAddViewController references it
-// directly; the Obj-C++ PSTabBarControllerDelegate.mm reaches it via the
-// generated PocketSword-Swift.h.)
-// PSSearchEngine.h is C++-clean (Foundation + globals.h + `@class SwordModule;`
-// `@class PSSearchResult;` — all the sword:: / sqlite3 / FTS5 index-build code
-// lives in PSSearchEngine.mm, which STAYS Obj-C++ permanently per the plan).
-// Its public query-side surface (+engineForModule:/-runQuery:.../-buildWithProgress:/
-// -indexIsFresh/-dropIndex) is all Foundation-typed, and every referenced type is
-// already Swift-visible: SwordModule (via SwordModule.h above), PSSearchResult (a
-// Swift @objc final class), and PSSearchType/PSSearchRange (NS_ENUM in globals.h).
-// Exposing it here lets the Wave-3 Swift query-side caller PSModuleSearchController
-// drive the engine directly; the engine itself is never rewritten in Swift.
+// The SWORD BRIDGE IS GONE (SWORD_REMOVAL_PLAN.md Phase 5 step 7).
+//
+// This block used to import SwordModuleTextEntry.h, VerseEnumerator.h,
+// SwordManager.h, SwordModule.h, SwordDictionary.h and SSZipArchive.h — the
+// Foundation-only facades over the Obj-C++ bridge, plus the vendored unzip. All of
+// those files are deleted:
+//
+//  * The Sword*.{h,mm,+Cpp.h} chain, VerseEnumerator and utils.h went with the
+//    engine. Everything they provided now comes from the baked
+//    Resources/PSContent.sqlite via the pure-Swift PSContentStore / PSContentReader
+//    / PSBookOSISResolver.
+//  * SwordModuleTextEntry (the one clean Obj-C DTO) became the Swift
+//    PSVerseTextEntry — there is no Swift/Obj-C++ boundary left for a DTO to cross.
+//  * SSZipArchive's only two callers were the module-seeding paths, deleted in
+//    step 9 along with the zips they unpacked.
+//
+// Do NOT re-add any of them. The whole reason this header was carefully curated —
+// keeping C++ out of Swift's import graph — no longer applies, because there is no
+// C++ in the target.
 #import "PSSearchEngine.h"
 // (PSHistoryController was migrated to Swift in Wave 3 — its former
 // PSHistoryController.{h,mm} are deleted. The Swift @objc(PSHistoryController)

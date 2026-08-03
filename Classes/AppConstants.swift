@@ -41,6 +41,11 @@ enum Defaults {
     static let globalFontOnly              = "DefaultsGlobalFontOnly"
     static let lastRefValidated            = "DefaultsLastRefValidated"
     static let dictKeyCaseFixed            = "DefaultsDictKeyCaseFixed"
+    /// One-shot: delete the Documents/ trees the SWORD era left behind
+    /// (mods.d / modules / locales.d / unused) plus <Caches>/InstallMgr.
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 9. Swift-only — no globals.h macro,
+    /// because no Obj-C reads it.
+    static let swordRetired = "DefaultsSwordRetired"
 
     static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
     static let commentaryVersePosition     = "commentaryVersePosition" // macro DefaultsCommentaryVersePosition

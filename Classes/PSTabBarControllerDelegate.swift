@@ -372,7 +372,7 @@ final class PSTabBarControllerDelegate: NSObject,
     @objc(toggleVoiceRef:)
     func toggleVoiceRef(_ sender: Any?) {
         guard PSFeatureFlags.voiceReferenceEnabled,
-              PSModuleController.default()?.primaryBible != nil,
+              PSModuleController.default()?.primaryBibleName != nil,
               tabBarController.presentedViewController == nil else {
             return
         }
@@ -410,7 +410,7 @@ final class PSTabBarControllerDelegate: NSObject,
                let selView = tabBarController.selectedViewController?.view,
                bibleWeb.isDescendant(of: selView) {
                 // bible tab
-                if PSModuleController.default()?.primaryBible == nil {
+                if PSModuleController.default()?.primaryBibleName == nil {
                     // no Bible selected, so ignore...
                     return
                 }
@@ -439,7 +439,7 @@ final class PSTabBarControllerDelegate: NSObject,
                       let selView = tabBarController.selectedViewController?.view,
                       commWeb.isDescendant(of: selView) {
                 // commentary tab
-                if PSModuleController.default()?.primaryCommentary == nil {
+                if PSModuleController.default()?.primaryCommentaryName == nil {
                     // no Commentary selected, so ignore...
                     return
                 }
@@ -504,10 +504,10 @@ final class PSTabBarControllerDelegate: NSObject,
             bibleTabController?.webView?.stringByEvaluatingJavaScriptFromString(javascript)
             commentaryTabController?.scrollToVerse(verse)
             commentaryTabController?.webView?.stringByEvaluatingJavaScriptFromString(javascript)
-            if moduleController?.primaryBible != nil {
+            if moduleController?.primaryBibleName != nil {
                 setTabTitle("\(ref):\(verseString)", ofTab: .BibleTab)
             }
-            if moduleController?.primaryCommentary != nil {
+            if moduleController?.primaryCommentaryName != nil {
                 setTabTitle("\(ref):\(verseString)", ofTab: .CommentaryTab)
             }
         } else {
@@ -643,11 +643,11 @@ final class PSTabBarControllerDelegate: NSObject,
         }
 
         var titleString = "\(PSModuleController.createRefString(ref) ?? ""):\(versePosition ?? "1")"
-        if PSModuleController.default()?.primaryBible != nil {
+        if PSModuleController.default()?.primaryBibleName != nil {
             setTabTitle(titleString, ofTab: .BibleTab)
         }
         titleString = "\(PSModuleController.createRefString(ref) ?? ""):\(cVersePosition)"
-        if PSModuleController.default()?.primaryCommentary != nil {
+        if PSModuleController.default()?.primaryCommentaryName != nil {
             setTabTitle(titleString, ofTab: .CommentaryTab)
         }
 

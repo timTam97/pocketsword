@@ -22,18 +22,18 @@
 
 #import "globals.h"               // PSSearchType / PSSearchRange NS_ENUMs + keys
 
-// The SWORD bridge facades, for SwordOracleCaptureTests: it captures golden
-// fixtures from the live engine (chapter bodies, lexicon entries, footnote and
-// scriptRef attribute lookups) while the engine is still in the tree, so the
-// Phase-3 Swift content reader has an acceptance criterion after SWORD is
-// deleted. All four headers are the C++-clean Foundation-only facades -- the
-// sword:: types live in their sibling +Cpp.h headers, which are imported only by
-// .mm files, so this stays Swift-importable.
-#import "SwordManager.h"          // +defaultManager, module lookup, SW_OPTION_* / SW_ON / SW_OFF
-#import "SwordModule.h"           // -chapterBodyHTML:…, -attributeValueForEntryData:
-// SwordBook.h is GONE (Phase 4 step 10): PSRefSemanticsTests compares the Swift
-// table against the committed versification-KJV-oracle.txt fixture instead.
-#import "SwordDictionary.h"       // -entryForKey: for the lexicons
+// The four Sword*.h facade imports are GONE (SWORD_REMOVAL_PLAN.md Phase 5).
+//
+// They existed for the engine-driven tests — SwordOracleCaptureTests and
+// PSDifferentialTests captured and compared live-engine output, and
+// PSRefSemanticsTests drove VerseKey directly. Step 12 deleted those tests and
+// retargeted their claims onto the committed fixtures (versification-KJV-oracle.txt,
+// search-index-KJV.digest, chapter-loop-counters.tsv and the chapter-body HTML), and
+// step 7 deleted the headers themselves.
+//
+// What remains is the one thing the tests still cannot reach through
+// `@testable import`: PSSearchEngine's two C-linkage free functions. Step 8 ports
+// the engine to Swift and this import goes too, leaving globals.h alone.
 #import "PSSearchEngine.h"        // PSFoldForIndex / PSSearchCleanDisplayText
 // PSHistoryItem is Swift as of migration step 1.2 — its type is visible to the
 // test bundle via `@testable import PocketSword`, so it is NOT imported here.

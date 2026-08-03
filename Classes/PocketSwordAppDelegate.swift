@@ -326,7 +326,9 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         UserDefaults.standard.synchronize()
         PSModuleController.releaseDefaultModuleController()
-        SwordManager.releaseDefaultManager()
+        // `SwordManager.releaseDefaultManager()` is GONE (Phase 5 step 7): there is no
+        // manager. The content store closes its handle in `deinit`, and the process is
+        // terminating anyway.
     }
 
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {

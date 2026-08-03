@@ -64,17 +64,13 @@ final class PSSearchIndexParityTests: XCTestCase {
     /// Build the KJV index through the store and return one digest line per row, in
     /// the same format and the same order the fixture holds.
     private func buildAndDigest() throws -> [String] {
-        guard let manager = SwordManager.default() else { throw XCTSkip("no SwordManager") }
-        let deadline = Date().addingTimeInterval(90)
-        while Date() < deadline {
-            if manager.isModuleInstalled("KJV") { break }
-            Thread.sleep(forTimeInterval: 0.25)
-        }
-        guard let kjv = manager.module(withName: "KJV") else {
-            throw XCTSkip("module KJV not available")
-        }
-
-        let engine = PSSearchEngine(for: kjv)
+        // No `isModuleInstalled` poll any more (Phase 5 step 7). That 90-second wait
+        // existed because the module zips were unpacked on a detached background
+        // thread with no completion signal, so a test could race the unzip. The
+        // content store is a BUNDLED resource — it is there or the app trapped at
+        // launch — so there is nothing to wait for, and the poll would have silently
+        // become a 90-second delay followed by an XCTSkip.
+        let engine = PSSearchEngine(forModuleName: "KJV")
         do {
             try engine.build(progress: nil)
         } catch {
@@ -154,17 +150,7 @@ final class PSSearchIndexParityTests: XCTestCase {
     /// "a query finds them" are different failures (a tokenizer or FTS-expression
     /// change breaks the second without touching the first).
     func testQueriesReturnNonVacuousResults() throws {
-        guard let manager = SwordManager.default() else { throw XCTSkip("no SwordManager") }
-        let deadline = Date().addingTimeInterval(90)
-        while Date() < deadline {
-            if manager.isModuleInstalled("KJV") { break }
-            Thread.sleep(forTimeInterval: 0.25)
-        }
-        guard let kjv = manager.module(withName: "KJV") else {
-            throw XCTSkip("module KJV not available")
-        }
-
-        let engine = PSSearchEngine(for: kjv)
+        let engine = PSSearchEngine(forModuleName: "KJV")
         do {
             try engine.build(progress: nil)
         } catch {

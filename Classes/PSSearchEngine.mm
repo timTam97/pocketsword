@@ -5,14 +5,7 @@
 
 #import "PSSearchEngine.h"
 #import "PocketSword-Swift.h"
-#import "SwordManager.h"
-#import "SwordModule.h"
-#import "SwordModule+Cpp.h"
 #import <sqlite3.h>
-#import <swmodule.h>
-#import <versekey.h>
-#import <listkey.h>
-#import <swkey.h>
 
 NSString * const PSSearchEngineErrorDomain = @"PSSearchEngineErrorDomain";
 NSString * const PSSearchHighlightOpen     = @"[[HL]]";
@@ -30,7 +23,6 @@ const int PSSearchSchemaVersion = 5;
 @interface PSSearchEngine () {
 	sqlite3 *_db;
 }
-@property (nonatomic, weak) SwordModule *module;
 @property (nonatomic, copy) NSString *moduleName;
 @property (nonatomic, copy) NSString *dbDirectory;
 @property (nonatomic, copy) NSString *dbFilePath;
@@ -50,10 +42,6 @@ const int PSSearchSchemaVersion = 5;
 	return cache;
 }
 
-+ (instancetype)engineForModule:(SwordModule *)mod {
-	return [self engineForModuleName:mod.name];
-}
-
 // Keyed by NAME as of Phase 5 step 6. It always was, in effect — the old
 // +engineForModule: used mod.name as the cache key — but the engine no longer holds
 // the SwordModule at all, so there is nothing to "re-attach" on a cache hit and the
@@ -70,10 +58,6 @@ const int PSSearchSchemaVersion = 5;
 	}
 }
 
-+ (void)invalidateEngineForModule:(SwordModule *)mod {
-	[self invalidateEngineForModuleName:mod.name];
-}
-
 + (void)invalidateEngineForModuleName:(NSString *)name {
 	if(!name) return;
 	NSMapTable *cache = [self cache];
@@ -87,14 +71,9 @@ const int PSSearchSchemaVersion = 5;
 
 #pragma mark - Init / paths
 
-- (instancetype)initWithModule:(SwordModule *)mod {
-	return [self initWithModuleName:mod.name];
-}
-
-// The real initialiser as of Phase 5 step 6: a module NAME is all the engine needs.
-// The path no longer comes from the module's own AbsoluteDataPath conf entry (which
-// dies with the zips), and the version comes from content_meta rather than
-// [mod version], so nothing here touches SWORD.
+// A module NAME is all the engine needs. The path is <Caches>/search/<name>.db and
+// the version comes from content_meta, so nothing here touches SWORD — which as of
+// Phase 5 step 7 is not a design choice but a fact: there is no SWORD.
 - (instancetype)initWithModuleName:(NSString *)name {
 	if(!name) return nil;
 	self = [super init];
@@ -321,97 +300,6 @@ NSString *PSSearchCleanDisplayText(NSString *plain) {
 	return [out stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-// Extract the space-separated lemma string for the current verse position on
-// swModule. Each `H`-prefixed Strong's number is emitted in BOTH forms (e.g.
-// "H430 H0430") so either input spelling hits. Greek lemmas ("G25", etc.) are
-// emitted once as-is.
-static NSString *PSLemmasForCurrentVerse(sword::SWModule *swModule) {
-	NSMutableString *out = [NSMutableString string];
-	sword::AttributeList &words = swModule->getEntryAttributes()["Word"];
-	for(sword::AttributeList::iterator it = words.begin(); it != words.end(); ++it) {
-		int parts = atoi(it->second["PartCount"].c_str());
-		if(parts < 1) parts = 1;
-		for(int i = 1; i <= parts; ++i) {
-			sword::SWBuf key = (parts == 1) ? "Lemma" : sword::SWBuf().setFormatted("Lemma.%d", i);
-			sword::AttributeValue::iterator li = it->second.find(key);
-			if(li == it->second.end()) continue;
-			const char *lemmaCStr = li->second.c_str();
-			if(!lemmaCStr || !*lemmaCStr) continue;
-			// Lemma values can contain class prefixes like "strong:H0430" —
-			// split on ':' if present and keep the trailing token.
-			const char *colon = strrchr(lemmaCStr, ':');
-			const char *token = colon ? (colon + 1) : lemmaCStr;
-			if(!*token) continue;
-
-			if(out.length > 0) [out appendString:@" "];
-			NSString *t = [NSString stringWithUTF8String:token];
-			[out appendString:t];
-
-			// H-numbers come in two forms depending on module (H0430 vs H430);
-			// emit both so queries work regardless of which the module uses.
-			if(t.length >= 2 && [t characterAtIndex:0] == 'H') {
-				if([t characterAtIndex:1] == '0') {
-					[out appendFormat:@" H%@", [t substringFromIndex:2]];
-				} else {
-					[out appendFormat:@" H0%@", [t substringFromIndex:1]];
-				}
-			}
-		}
-	}
-	return out;
-}
-
-// Emit per-verse word→lemmas map, one line per Word entry:
-//   <surface text>\t<lemma1> <lemma2> ...
-// Lemmas include BOTH H-forms (H0430 and H430) to match PSLemmasForCurrentVerse
-// and the query builder, so either spelling the user types resolves correctly.
-// Entries with no surface text (SWORD occasionally emits empty Word slots) are
-// skipped. Tabs/newlines in surface text are replaced with spaces to protect
-// the line/column delimiters we control.
-static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
-	NSMutableString *out = [NSMutableString string];
-	sword::AttributeList &words = swModule->getEntryAttributes()["Word"];
-	for(sword::AttributeList::iterator it = words.begin(); it != words.end(); ++it) {
-		const char *textCStr = it->second["Text"].c_str();
-		if(!textCStr || !*textCStr) continue;
-		NSString *surface = [NSString stringWithUTF8String:textCStr];
-		if(!surface) continue;
-		surface = [surface stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		if(surface.length == 0) continue;
-		surface = [surface stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
-		surface = [surface stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-
-		NSMutableArray<NSString *> *lemmas = [NSMutableArray array];
-		int parts = atoi(it->second["PartCount"].c_str());
-		if(parts < 1) parts = 1;
-		for(int i = 1; i <= parts; ++i) {
-			sword::SWBuf key = (parts == 1) ? "Lemma" : sword::SWBuf().setFormatted("Lemma.%d", i);
-			sword::AttributeValue::iterator li = it->second.find(key);
-			if(li == it->second.end()) continue;
-			const char *lemmaCStr = li->second.c_str();
-			if(!lemmaCStr || !*lemmaCStr) continue;
-			const char *colon = strrchr(lemmaCStr, ':');
-			const char *token = colon ? (colon + 1) : lemmaCStr;
-			if(!*token) continue;
-			NSString *t = [NSString stringWithUTF8String:token];
-			if(t.length == 0) continue;
-			[lemmas addObject:t];
-			if(t.length >= 2 && [t characterAtIndex:0] == 'H') {
-				if([t characterAtIndex:1] == '0') {
-					[lemmas addObject:[@"H" stringByAppendingString:[t substringFromIndex:2]]];
-				} else {
-					[lemmas addObject:[@"H0" stringByAppendingString:[t substringFromIndex:1]]];
-				}
-			}
-		}
-		if(lemmas.count == 0) continue;
-
-		if(out.length > 0) [out appendString:@"\n"];
-		[out appendFormat:@"%@\t%@", surface, [lemmas componentsJoinedByString:@" "]];
-	}
-	return out;
-}
-
 #pragma mark - Build
 
 // Build the index from the baked content store instead of walking the live
@@ -561,175 +449,28 @@ static NSString *PSWordMapForCurrentVerse(sword::SWModule *swModule) {
 	if(![self openDBCreatingIfNeeded:YES error:err]) return NO;
 	if(![self createSchemaIfNeeded:err])              return NO;
 
-	// Build from the baked store. Phase 5 step 1 removed the
-	// `if([PSContentReader isActive])` gate along with the feature flag: the store
-	// path is now unconditional, and the SWORD walk below survives only as the
-	// failure fallback until step 7 deletes it outright.
+	// The baked store is the ONLY source (SWORD_REMOVAL_PLAN.md Phase 5 step 7).
 	//
-	// -dropIndex above has already cleared any partial DB, and the store path rolls
-	// its own transaction back, so the fallback starts from a clean schema either way.
-	{
-		NSError *storeErr = nil;
-		if([self buildFromContentStoreWithProgress:progress error:&storeErr]) {
-			[self stampMeta];
-			if(progress) { BOOL ignored = NO; progress(1.0f, &ignored); }
-			return YES;
-		}
-		// A user cancellation must NOT silently restart the build against SWORD.
-		if(storeErr.code == NSUserCancelledError) {
-			[self dropIndex];
-			if(err) *err = storeErr;
-			return NO;
-		}
-		ALog(@"PSSearchEngine: content-store index build failed (%@); falling back to the engine",
-			 storeErr.localizedDescription);
-	}
-
-	// The SWORD fallback walk. The engine no longer holds a SwordModule (step 6 made
-	// it name-keyed), so it resolves one here — the last thing in this file that
-	// touches the engine at all. Step 7 deletes this whole arm.
-	SwordModule *mod = [[SwordManager defaultManager] moduleWithName:_moduleName];
-	sword::SWModule *swModule = mod ? [mod swModule] : NULL;
-	if(!swModule) {
-		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-2
-									  userInfo:@{NSLocalizedDescriptionKey:@"no sword::SWModule"}];
-		return NO;
-	}
-
-	// Upper bound for the progress fraction. Was 32000 — a guess, against an
-	// actual 31,102 for KJV, so the bar never got past ~97% before jumping to 1.0.
-	// The real count is knowable now that the store records it, and it is the same
-	// number this loop produces (verified: the converter measured 31,102 against a
-	// replica of this very loop).
-	const int kExpected = 31102;
-
-	[mod aquireModuleLock];
-
-	// Snapshot the module's current key so we can restore the reader's
-	// position afterwards, then drive off the module's own VerseKey (which
-	// is what stripText() / getEntryAttributes() read from).
-	sword::VerseKey *modKey = My_SWDYNAMIC_CAST(VerseKey, swModule->getKey());
-	if(!modKey) {
-		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:-3
-									  userInfo:@{NSLocalizedDescriptionKey:@"module key is not a VerseKey"}];
-		[mod releaseModuleLock];
-		return NO;
-	}
-	sword::VerseKey savedKey = *modKey;
-	BOOL savedIntros = modKey->isIntros();
-	modKey->setIntros(false);
-	*modKey = sword::TOP;
-
-	if(![self execSQL:@"BEGIN IMMEDIATE;" error:err]) {
-		modKey->setIntros(savedIntros);
-		*modKey = savedKey;
-		[mod releaseModuleLock];
-		return NO;
-	}
-
-	sqlite3_stmt *stmt = NULL;
-	const char *insertSQL =
-		"INSERT INTO verses (reference, book_osis, testament, text_plain, text_norm, lemmas, word_map) "
-		"VALUES (?, ?, ?, ?, ?, ?, ?);";
-	if(sqlite3_prepare_v2(_db, insertSQL, -1, &stmt, NULL) != SQLITE_OK) {
-		NSString *msg = [NSString stringWithUTF8String:sqlite3_errmsg(_db)];
-		if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain code:sqlite3_errcode(_db)
-									   userInfo:@{NSLocalizedDescriptionKey: msg ?: @""}];
-		[self execSQL:@"ROLLBACK;" error:NULL];
-		modKey->setIntros(savedIntros);
-		*modKey = savedKey;
-		[mod releaseModuleLock];
-		return NO;
-	}
-
-	BOOL cancelled = NO;
-	BOOL success = YES;
-	int count = 0;
-
-	while(!modKey->popError()) {
-		// stripText() triggers parsing, which populates getEntryAttributes()
-		// (the lemmas live there). Must be called before PSLemmasForCurrentVerse.
-		const char *plainC = swModule->stripText();
-		if(!plainC) plainC = "";
-		NSString *rawPlain = [NSString stringWithUTF8String:plainC];
-		if(!rawPlain) rawPlain = [NSString stringWithCString:plainC encoding:NSISOLatin1StringEncoding] ?: @"";
-		// Strip Strong's / morph markers that SWORD interleaves inline when
-		// the global Strong's-display option is ON. Must run before norm/
-		// lemma extraction so search results render cleanly.
-		NSString *plain = PSSearchCleanDisplayText(rawPlain);
-
-		if(plain.length > 0) {
-			const char *refC       = modKey->getText();
-			const char *bookOsisC  = modKey->getOSISBookName();
-			int testament          = modKey->getTestament();
-			NSString *reference    = refC      ? [NSString stringWithUTF8String:refC]      : @"";
-			NSString *bookOsis     = bookOsisC ? [NSString stringWithUTF8String:bookOsisC] : @"";
-			NSString *norm         = PSFoldForIndex(plain);
-			NSString *lemmas       = PSLemmasForCurrentVerse(swModule);
-			NSString *wordMap      = PSWordMapForCurrentVerse(swModule);
-
-			sqlite3_bind_text(stmt, 1, [reference UTF8String], -1, SQLITE_TRANSIENT);
-			sqlite3_bind_text(stmt, 2, [bookOsis  UTF8String], -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int (stmt, 3, testament);
-			sqlite3_bind_text(stmt, 4, [plain     UTF8String], -1, SQLITE_TRANSIENT);
-			sqlite3_bind_text(stmt, 5, [norm      UTF8String], -1, SQLITE_TRANSIENT);
-			sqlite3_bind_text(stmt, 6, [lemmas    UTF8String], -1, SQLITE_TRANSIENT);
-			sqlite3_bind_text(stmt, 7, [wordMap   UTF8String], -1, SQLITE_TRANSIENT);
-
-			if(sqlite3_step(stmt) != SQLITE_DONE) {
-				NSString *msg = [NSString stringWithUTF8String:sqlite3_errmsg(_db)];
-				if(err) *err = [NSError errorWithDomain:PSSearchEngineErrorDomain
-												   code:sqlite3_errcode(_db)
-											   userInfo:@{NSLocalizedDescriptionKey: msg ?: @""}];
-				success = NO;
-				sqlite3_reset(stmt);
-				break;
-			}
-			sqlite3_reset(stmt);
-		}
-
-		++count;
-		if(progress && (count % 500 == 0)) {
-			float fraction = MIN(0.99f, (float)count / (float)kExpected);
-			BOOL localCancel = NO;
-			progress(fraction, &localCancel);
-			if(localCancel) { cancelled = YES; break; }
-		}
-
-		(*modKey)++;
-	}
-
-	sqlite3_finalize(stmt);
-
-	if(cancelled || !success) {
-		[self execSQL:@"ROLLBACK;" error:NULL];
-	} else {
-		if(![self execSQL:@"COMMIT;" error:err]) success = NO;
-	}
-
-	// Restore the module's original key position so other readers aren't
-	// left at the end of the Bible.
-	modKey->setIntros(savedIntros);
-	*modKey = savedKey;
-	[mod releaseModuleLock];
-
-	if(cancelled || !success) {
+	// What used to follow this was a ~145-line SWORD fallback walk: a VerseKey
+	// iteration from TOP, stripText() per verse, and the PSLemmasForCurrentVerse /
+	// PSWordMapForCurrentVerse entry-attribute readers. It is deleted along with the
+	// engine. What it produced is not lost — Tests/Fixtures/search-index-KJV.digest
+	// records all 31,102 of its rows, and PSSearchIndexParityTests compares this path
+	// against that digest on every run.
+	//
+	// The `NSUserCancelledError` re-entry guard went with it: it existed only to stop
+	// a user cancellation silently restarting the build against SWORD. A cancellation
+	// now simply propagates, like any other failure.
+	NSError *storeErr = nil;
+	if(![self buildFromContentStoreWithProgress:progress error:&storeErr]) {
+		// -dropIndex so a partial index is never left behind to be treated as fresh.
 		[self dropIndex];
-		if(cancelled && err) {
-			*err = [NSError errorWithDomain:PSSearchEngineErrorDomain
-									   code:NSUserCancelledError
-								   userInfo:@{NSLocalizedDescriptionKey:@"Index build cancelled"}];
-		}
+		if(err) *err = storeErr;
 		return NO;
 	}
 
 	[self stampMeta];
-
-	if(progress) {
-		BOOL ignored = NO;
-		progress(1.0f, &ignored);
-	}
-
+	if(progress) { BOOL ignored = NO; progress(1.0f, &ignored); }
 	return YES;
 }
 

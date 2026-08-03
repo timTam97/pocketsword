@@ -345,7 +345,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
     func setModuleNameViaNotification() {
         autoreleasepool {
             rebuildSettingsMenu()
-            if tabType != .BibleTab && PSModuleController.default().primaryCommentary == nil {
+            if tabType != .BibleTab && PSModuleController.default().primaryCommentaryName == nil {
                 // The real empty-state path: no commentary installed, so there is
                 // nothing to page through.
                 titleSegmentedControl?.setTitle("PocketSword", forSegmentAt: 1)
@@ -414,16 +414,13 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         var topLevel: [UIMenuElement] = []
 
         /// One inline-grouped boolean toggle over a per-module pref key.
-        func addToggle(_ title: String, pref: String, id: String, pushesToSword: Bool) {
+        func addToggle(_ title: String, pref: String, id: String) {
             let action = UIAction(title: title, image: nil,
                                   identifier: UIAction.Identifier("\(prefix).\(id)")) { [weak self] _ in
                 guard let self = self, let mName = self.settingsMenuModuleName else { return }
                 let current = UserDefaults.standard.psBool(pref, forModule: mName)
                 UserDefaults.standard.psSet(!current, forPref: pref, module: mName)
                 UserDefaults.standard.synchronize()
-                if pushesToSword {
-                    PSModuleController.default().setPreferences()
-                }
                 NotificationCenter.default.post(name: self.redisplayNotification, object: nil)
                 self.rebuildSettingsMenu()
             }
@@ -435,33 +432,33 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
         if has(SWRender.featureStrongs) || has(SWRender.confFeatureStrongs) {
             addToggle(NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
-                      pref: Defaults.strongsPreference, id: "strongs", pushesToSword: true)
+                      pref: Defaults.strongsPreference, id: "strongs")
         }
         if has(SWRender.featureMorph) {
             addToggle(NSLocalizedString("PreferencesMorphTagsTitle", comment: "Morphological Tags"),
-                      pref: Defaults.morphPreference, id: "morph", pushesToSword: true)
+                      pref: Defaults.morphPreference, id: "morph")
         }
         if has(SWRender.featureHeadings) {
             addToggle(NSLocalizedString("PreferencesHeadingsTitle", comment: "Headings"),
-                      pref: Defaults.headingsPreference, id: "headings", pushesToSword: true)
+                      pref: Defaults.headingsPreference, id: "headings")
         }
         if has(SWRender.featureFootnotes) {
             addToggle(NSLocalizedString("PreferencesFootnotesTitle", comment: "Footnotes"),
-                      pref: Defaults.footnotesPreference, id: "footnotes", pushesToSword: true)
+                      pref: Defaults.footnotesPreference, id: "footnotes")
         }
         if has(SWRender.featureScriptRef) {
             addToggle(NSLocalizedString("PreferencesCrossReferencesTitle", comment: "Cross-references"),
-                      pref: Defaults.scriptRefsPreference, id: "xref", pushesToSword: true)
+                      pref: Defaults.scriptRefsPreference, id: "xref")
         }
         if has(SWRender.featureRedLetterWords) {
             addToggle(NSLocalizedString("PreferencesRedLetterTitle", comment: "Red Letter"),
-                      pref: Defaults.redLetterPreference, id: "redLetter", pushesToSword: true)
+                      pref: Defaults.redLetterPreference, id: "redLetter")
         }
         if isBible {
             // VPL is a rendering-side option only — it never went through
             // -setPreferences (see PSModulePreferencesController's old vplChanged:).
             addToggle(NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),
-                      pref: Defaults.vplPreference, id: "vpl", pushesToSword: false)
+                      pref: Defaults.vplPreference, id: "vpl")
         }
 
         // No Font row here: font name + size are a single GLOBAL setting configured
@@ -877,12 +874,12 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                 } else if let rData = rData, (rData[SWRender.attrAction] as? String) == "showNote" {
                     if (rData[SWRender.attrType] as? String) == "n" { // footnote
                         let mod = (tabType == .BibleTab)
-                            ? PSModuleController.default().primaryBible
-                            : PSModuleController.default().primaryCommentary
-                        entry = PSContentReader.footnoteBody(module: mod?.name, data: rData)
+                            ? PSModuleController.default().primaryBibleName
+                            : PSModuleController.default().primaryCommentaryName
+                        entry = PSContentReader.footnoteBody(module: mod, data: rData)
                         entry = entry?.replacingOccurrences(of: "*x", with: "x")
                         entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod?.name)
+                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod)
                     }
                     // The `x` (cross-reference) arm is GONE — SWORD_REMOVAL_PLAN.md
                     // Phase 4 step 8. No `x` anchor is ever emitted for the shipped

@@ -15,7 +15,6 @@
 #import <Foundation/Foundation.h>
 #import "globals.h"
 
-@class SwordModule;
 @class PSSearchResult;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -72,12 +71,6 @@ typedef void (^PSSearchProgressBlock)(float fraction, BOOL *cancel);
 /// Drops the in-memory cache entry for this module, closing its handle first.
 /// Call after deleting the on-disk index so a subsequent lookup reopens cleanly.
 + (void)invalidateEngineForModuleName:(NSString *)name;
-
-/// Deprecated `SwordModule`-taking spellings, kept for the one commit-range where
-/// both exist. They forward to the by-name versions above and are deleted with the
-/// bridge in step 7.
-+ (instancetype)engineForModule:(SwordModule *)mod;
-+ (void)invalidateEngineForModule:(SwordModule *)mod;
 
 /// Absolute path to the FTS5 database file for this module
 /// (`<Caches>/search/<module>.db`).

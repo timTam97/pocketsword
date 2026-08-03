@@ -58,3 +58,33 @@ deletes that file, and step 8 deletes `PSFoldForIndex`, so there is a window whe
 the duplication is unguarded. Nothing modifies either copy in that window, but to
 avoid weakening the algorithm's coverage, step 12 pins the **Swift** fold against
 known vectors in a surviving test rather than simply dropping the guard.
+
+## A pre-existing bug found while verifying 9+7 (NOT caused by this phase)
+
+The Dictionary tab's **entry screen renders a blank pane**. Tap any Robinson key
+and the navigation title is correct (`A-APF`) while the body is empty.
+
+Confirmed pre-existing, not a Phase-5 regression: the same tap on the unmodified
+parent commit (`8251013`, before any of the 9+7 work) produces the identical blank
+pane. The store definitely has the content — `dict_keys` resolves `A-APF` and its
+entry inflates to `<i>Part of Speech</i>: Adjective<br />…`, and zero of Robinson's
+1,526 entries are empty — so the loss is somewhere between
+`PSDictionaryViewController.didSelectRowAt` building the HTML and
+`PSDictionaryEntryViewController`'s WKWebView painting it.
+
+I first guessed the cause was the `background-color: transparent` that
+`createInfoHTMLString` injects for the frosted-glass info popup (added by 9d7baf3,
+"Enhance strongs popup", 2026-07-21), since the entry screen is a full-screen push
+with nothing behind it to show through. **That guess was wrong** — adding a
+`transparentBackground: false` opt-out changed nothing — and the change was
+reverted rather than left in as a plausible-looking non-fix.
+
+Deliberately NOT fixed here. It is outside the plan's scope, it predates the
+phase, and diagnosing it properly means instrumenting the WKWebView load
+(`didFinish` / `didFail` / a `document.body.innerHTML` evaluation), which is its
+own piece of work. Worth doing next; the lexicon *lookup* is fine, so this is a
+presentation bug affecting one screen.
+
+Note the plan's own simulator checklist asks to "search then tap a result" on the
+Dictionary tab — so this would have been caught by the final verification step
+regardless.

@@ -132,15 +132,15 @@ class PSHistoryController: UITableViewController {
 
         if tabForHistory == .BibleTab {
             verse = defaults.string(forKey: Defaults.bibleVersePosition)
-            if let primaryBible = PSModuleController.default().primaryBible {
+            if let primaryBible = PSModuleController.default().primaryBibleName {
                 valid = true
-                mod = primaryBible.name
+                mod = primaryBible
             }
         } else if tabForHistory == .CommentaryTab {
             verse = defaults.string(forKey: Defaults.commentaryVersePosition)
-            if let primaryCommentary = PSModuleController.default().primaryCommentary {
+            if let primaryCommentary = PSModuleController.default().primaryCommentaryName {
                 valid = true
-                mod = primaryCommentary.name
+                mod = primaryCommentary
             }
         } else {
             alog("\nWe don't know which tab we're on!  :(")

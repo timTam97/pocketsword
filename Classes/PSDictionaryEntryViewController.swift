@@ -133,7 +133,7 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
                 let t = (rData[Self.attrTypeValue] as? String)?.removingPercentEncoding
                 let body = "<div style=\"-webkit-text-size-adjust: none;\"><b>\(t ?? "")</b><br /><p>\(entry ?? "")</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>"
                 let descr = PSModuleController.createInfoHTMLString(body,
-                                                                   usingModuleForPreferences: PSModuleController.default()?.primaryDictionary?.name)
+                                                                   usingModuleForPreferences: PSModuleController.default()?.primaryDictionaryName)
                 setDictionaryEntryTitle(t)
                 if let descr = descr {
                     dictionaryDescriptionWebView?.loadHTMLString(descr, baseURL: nil)

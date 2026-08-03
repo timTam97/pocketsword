@@ -245,14 +245,12 @@ class PSPreferencesController: PSBasePreferencesController {
                 let greekAccentsSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
                 let displayGreekAccents = UserDefaults.standard.bool(forKey: Defaults.greekAccentsPreference)
                 greekAccentsSwitch.isOn = displayGreekAccents
-                greekAccentsSwitch.addTarget(self, action: #selector(displayGreekAccentsChanged(_:)), for: .valueChanged)
                 cell.addSubview(greekAccentsSwitch)
                 cell.textLabel?.text = NSLocalizedString("PreferencesGreekAccentsTitle", comment: "Greek Accents")
             case LANG_HEBREWPTS_ROW:
                 let hvpSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
                 let displayHVP = UserDefaults.standard.bool(forKey: Defaults.hvpPreference)
                 hvpSwitch.isOn = displayHVP
-                hvpSwitch.addTarget(self, action: #selector(displayHVPChanged(_:)), for: .valueChanged)
                 cell.addSubview(hvpSwitch)
                 cell.textLabel?.text = NSLocalizedString("PreferencesHVPTitle", comment: "Hebrew Vowel Points")
                 cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 10.0)
@@ -260,7 +258,6 @@ class PSPreferencesController: PSBasePreferencesController {
                 let hebrewCantillationSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
                 let displayHebrewCantillation = UserDefaults.standard.bool(forKey: Defaults.hebrewCantillationPreference)
                 hebrewCantillationSwitch.isOn = displayHebrewCantillation
-                hebrewCantillationSwitch.addTarget(self, action: #selector(displayHebrewCantillationChanged(_:)), for: .valueChanged)
                 cell.addSubview(hebrewCantillationSwitch)
                 cell.textLabel?.text = NSLocalizedString("PreferencesHebrewCantillationTitle", comment: "Hebrew Cantillation")
             default:
@@ -374,69 +371,36 @@ class PSPreferencesController: PSBasePreferencesController {
         UserDefaults.standard.synchronize()
     }
 
-    @objc func displayStrongsChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.strongsPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
+    // The NINE per-module display handlers that were here are GONE
+    // (SWORD_REMOVAL_PLAN.md Phase 5 step 7), along with the
+    // `moduleController.setPreferences()` each of them called.
+    //
+    // `setPreferences` read the per-module prefs and pushed them into SWORD as global
+    // options; with no SWORD there is nothing to push, and nothing read the result.
+    // The handlers went with it, and the split is worth recording because it is not
+    // what it looks like:
+    //
+    //  * SIX were already dead code — displayStrongsChanged, displayMorphChanged,
+    //    xrefChanged, footnotesChanged, headingsChanged, redLetterChanged. No
+    //    `addTarget` referenced any of them (verified: zero `#selector` uses), and
+    //    `cellForRowAt` never builds a row that would install one.
+    //  * THREE were wired — displayGreekAccentsChanged, displayHVPChanged,
+    //    displayHebrewCantillationChanged — but only from rows in
+    //    `LANG_SECTION = 44`, which is deliberately >= `PREF__SECTIONS = 2` and so
+    //    is never asked for by `numberOfSections`. Unreachable in practice.
+    //
+    // The LIVE per-module toggles are the per-tab `▾` menu in
+    // PSModuleViewController.rebuildSettingsMenu, which writes the same
+    // NSUserDefaults keys directly and is unaffected. Its `pushesToSword:` parameter
+    // is dropped in this commit for the same reason.
 
-    @objc func displayMorphChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.morphPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
-    @objc func displayGreekAccentsChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.greekAccentsPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
-    @objc func displayHVPChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.hvpPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
-    @objc func displayHebrewCantillationChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.hebrewCantillationPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
-    @objc func xrefChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.scriptRefsPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
-    @objc func footnotesChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.footnotesPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
-    @objc func headingsChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.headingsPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
+
 
     @objc func fontSizeChanged(_ sender: UISlider) {
         let f = Int(sender.value)
@@ -446,13 +410,6 @@ class PSPreferencesController: PSBasePreferencesController {
         NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
     }
 
-    @objc func redLetterChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.redLetterPreference)
-        UserDefaults.standard.synchronize()
-        moduleController.setPreferences()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-    }
 
     @objc func vplChanged(_ sender: UISwitch) {
         let n = sender.isOn

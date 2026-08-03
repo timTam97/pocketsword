@@ -11,7 +11,7 @@
 //
 //  Swift port (Wave 3) of the former Classes/PSDictionaryViewController.{h,mm}.
 //  Zero C++ — it reaches the SWORD engine only through the Foundation-only
-//  facades (PSModuleController.primaryDictionary -> SwordDictionary) and the
+//  facades (PSModuleController.primaryDictionaryName) and the
 //  PSModuleController HTML helpers, all visible via the bridging header.
 //
 //  Created by Nic Carter on 21/12/09.
@@ -46,8 +46,10 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     private var dictionaryEnabled = false
     private var overlayViewController: PSDictionaryOverlayViewController?
 
-    private var primaryDictionary: SwordDictionary? {
-        PSModuleController.default()?.primaryDictionary as? SwordDictionary
+    /// The lexicon currently being browsed, by name (Phase 5 step 7 — it was a
+    /// `SwordDictionary`, read only for its `name`).
+    private var primaryDictionaryName: String? {
+        PSModuleController.default()?.primaryDictionaryName
     }
 
     // MARK: - Lifecycle
@@ -55,7 +57,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     /// Rebuilds the fixed 3-way lexicon menu, checkmarking whichever lexicon is
     /// currently loaded as the primary dictionary.
     private func rebuildLexiconMenu() {
-        let currentName = primaryDictionary?.name
+        let currentName = primaryDictionaryName
         let actions: [UIMenuElement] = BundledModules.lexicons.map { modName in
             let action = UIAction(title: Self.lexiconTitles[modName] ?? modName,
                                   image: nil,
@@ -102,8 +104,8 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
 
     @objc func setDictionaryTitleViaNotification() {
         autoreleasepool {
-            if let primaryDictionary = primaryDictionary {
-                let newText = primaryDictionary.name ?? ""
+            if let primaryDictionaryName {
+                let newText = primaryDictionaryName
                 let i = (newText.count > 8) ? 8 : newText.count
                 // ".." is the equiv of another char, so if length <= 9, use the
                 // full name. e.g. "Swe1917Of" should display the full name.
@@ -117,7 +119,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     }
 
     @objc func reloadDictionaryData(_ reloadData: Bool) {
-        if primaryDictionary == nil {
+        if primaryDictionaryName == nil {
             let lastDictionary = UserDefaults.standard.string(forKey: Defaults.lastDictionary)
 
             if let lastDictionary = lastDictionary {
@@ -145,7 +147,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         // That prompt was also a real bug, found by driving the simulator rather than
         // by any test: answering "No" left the tab showing "No dictionary loaded"
         // for ever, even though the keys were in hand.
-        if primaryDictionary != nil {
+        if primaryDictionaryName != nil {
             dictionarySearchBar?.isUserInteractionEnabled = true
             dictionaryEnabled = true
             if reloadData { tableView.reloadData() }
@@ -179,7 +181,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         if searching {
             return searchResults.count
         } else if dictionaryEnabled {
-            return PSContentReader.entryCount(module: primaryDictionary?.name ?? "")
+            return PSContentReader.entryCount(module: primaryDictionaryName ?? "")
         } else {
             return 0
         }
@@ -205,7 +207,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             return searchResults[indexPath.row]
         }
         guard dictionaryEnabled else { return nil }
-        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "")
+        let keys = PSContentReader.allKeys(module: primaryDictionaryName ?? "")
         guard indexPath.row < keys.count else { return nil }
         return keys[indexPath.row]
     }
@@ -238,9 +240,9 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
             tableView.deselectRow(at: indexPath, animated: true)
             return
         }
-        let rawDescr = PSContentReader.entry(module: primaryDictionary?.name ?? "", key: t) ?? ""
+        let rawDescr = PSContentReader.entry(module: primaryDictionaryName ?? "", key: t) ?? ""
         let body = "<div style=\"-webkit-text-size-adjust: none;\"><b>\(t)</b><br /><p>\(rawDescr)</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>"
-        let descr = PSModuleController.createInfoHTMLString(body, usingModuleForPreferences: primaryDictionary?.name)
+        let descr = PSModuleController.createInfoHTMLString(body, usingModuleForPreferences: primaryDictionaryName)
 
         let entryVC = PSDictionaryEntryViewController(nibName: nil, bundle: nil)
         entryVC.setDictionaryEntryTitle(t)
@@ -250,7 +252,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
         // branch is kept, and driven from real data, rather than being collapsed to a
         // constant: a lexicon that DID declare it would need the `true` arm, and
         // hardcoding would make that a silent behaviour change.
-        let name = primaryDictionary?.name ?? ""
+        let name = primaryDictionaryName ?? ""
         let hasImages = PSContentStore.shared?.moduleHasFeature(name, Self.swModConfFeatureImages) ?? false
         entryVC.setScalesPageToFit(hasImages)
         if let navigationController = navigationController {
@@ -350,7 +352,7 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
     @objc func searchDictionaryEntries() {
         searchResults.removeAll()
         let searchText = dictionarySearchBar?.text ?? ""
-        let keys = PSContentReader.allKeys(module: primaryDictionary?.name ?? "")
+        let keys = PSContentReader.allKeys(module: primaryDictionaryName ?? "")
 
         for t in keys {
             if t.range(of: searchText, options: .caseInsensitive) != nil {
