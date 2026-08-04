@@ -162,7 +162,7 @@ final class PSTabBarControllerDelegate: NSObject,
         tabs.insert(bookmarksTab, at: 3)
 
         // add the Preferences tab.
-        let preferencesViewController = PSPreferencesController(style: .grouped)
+        let preferencesViewController = PSPreferencesController(style: .insetGrouped)
         let preferencesTabBarItem = UITabBarItem(title: NSLocalizedString("TabBarTitlePreferences", comment: "Preferences"),
                                                  image: UIImage(named: "gear-24.png"), tag: 9)
         if PSResizing.iPad() {

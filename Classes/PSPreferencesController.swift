@@ -25,6 +25,91 @@
 
 import UIKit
 
+private final class PSFontSizePreferenceCell: UITableViewCell {
+
+    let slider = UISlider()
+
+    private let titleLabel = UILabel()
+    private let valueLabel = UILabel()
+    private let minimumSizeLabel = UILabel()
+    private let maximumSizeLabel = UILabel()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        selectionStyle = .none
+        contentView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 14,
+            leading: 16,
+            bottom: 16,
+            trailing: 16
+        )
+
+        titleLabel.font = .preferredFont(forTextStyle: .body)
+        titleLabel.adjustsFontForContentSizeCategory = true
+        titleLabel.numberOfLines = 0
+
+        valueLabel.font = .preferredFont(forTextStyle: .body)
+        valueLabel.adjustsFontForContentSizeCategory = true
+        valueLabel.textColor = .secondaryLabel
+        valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        minimumSizeLabel.text = "A"
+        minimumSizeLabel.font = .preferredFont(forTextStyle: .caption2)
+        minimumSizeLabel.adjustsFontForContentSizeCategory = true
+        minimumSizeLabel.textColor = .secondaryLabel
+
+        maximumSizeLabel.text = "A"
+        maximumSizeLabel.font = .preferredFont(forTextStyle: .title3)
+        maximumSizeLabel.adjustsFontForContentSizeCategory = true
+        maximumSizeLabel.textColor = .secondaryLabel
+
+        slider.isContinuous = true
+
+        let heading = UIStackView(arrangedSubviews: [titleLabel, valueLabel])
+        heading.axis = .horizontal
+        heading.alignment = .firstBaseline
+        heading.spacing = 12
+
+        let control = UIStackView(arrangedSubviews: [minimumSizeLabel, slider, maximumSizeLabel])
+        control.axis = .horizontal
+        control.alignment = .center
+        control.spacing = 12
+
+        let stack = UIStackView(arrangedSubviews: [heading, control])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 10
+        contentView.addSubview(stack)
+
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            stack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            stack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
+            slider.widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func configure(title: String, value: Int, maximumValue: Float) {
+        titleLabel.text = title
+        slider.minimumValue = 10
+        slider.maximumValue = maximumValue
+        slider.value = Float(value)
+        slider.accessibilityLabel = title
+        updateValue(value)
+    }
+
+    func updateValue(_ value: Int) {
+        valueLabel.text = String(value)
+        slider.accessibilityValue = String(value)
+    }
+}
+
 @objc(PSPreferencesController)
 class PSPreferencesController: PSBasePreferencesController {
 
@@ -49,10 +134,11 @@ class PSPreferencesController: PSBasePreferencesController {
     private let INSOMNIA_ROW        = 0
     private let ROTATION_LOCK_ROW   = 1
     private let FULLSCREEN_MODE_ROW = 2
-    private let FULLSCREEN_NOTE_ROW = 3
-    private let DEVICE__ROWS        = 4 // total rows in section
+    private let DEVICE__ROWS        = 3 // total rows in section
 
-    private var fontSizeLabel: UILabel!
+    private static let fontSizeCellIdentifier = "prefs-font-size"
+    private static let fontNameCellIdentifier = "prefs-font-name"
+    private static let switchCellIdentifier = "prefs-switch"
 
     private var moduleController: PSModuleController { PSModuleController.default()! }
 
@@ -66,12 +152,17 @@ class PSPreferencesController: PSBasePreferencesController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.title = NSLocalizedString("PreferencesTitle", comment: "Preferences")
-        fontSizeLabel = UILabel(frame: CGRect(x: 140.0, y: 2.0, width: 20.0, height: 42.0))
-        fontSizeLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
-        fontSizeLabel.textColor = UIColor.label
-        fontSizeLabel.backgroundColor = UIColor.clear
-        fontSizeLabel.text = "12"
+        navigationItem.title = NSLocalizedString("PreferencesTitle", comment: "Preferences")
+        navigationItem.largeTitleDisplayMode = .never
+
+        tableView.backgroundColor = .systemGroupedBackground
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 56
+        tableView.cellLayoutMarginsFollowReadableWidth = true
+        tableView.register(
+            PSFontSizePreferenceCell.self,
+            forCellReuseIdentifier: Self.fontSizeCellIdentifier
+        )
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -128,205 +219,130 @@ class PSPreferencesController: PSBasePreferencesController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case DEVICE_SECTION:
-            switch indexPath.row {
-            case FULLSCREEN_NOTE_ROW:
-                return 75
-            default:
-                return 45
-            }
-        default:
-            return 45
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        if section == DEVICE_SECTION {
+            return NSLocalizedString(
+                "PreferencesFullscreenNote",
+                comment: "How to enter and leave full screen manually"
+            )
         }
+        return nil
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let CellIdentifierPlain  = "prefs-plain"
-        let CellIdentifierStyled = "prefs-styled"
-        let CellIdentifierFS     = "prefs-fs"
-
-        var cell: UITableViewCell! = nil
-        var resetCell = true
-        var xx: CGFloat = 0.0
-        let deviceIsPad = PSResizing.iPad()
-        let interfaceOrientation = PSResizing.currentInterfaceOrientation()
-        if interfaceOrientation == .landscapeLeft || interfaceOrientation == .landscapeRight {
-            xx = 160.0
-            if deviceIsPad {
-                xx += 95.0
-            }
-        }
-        if deviceIsPad {
-            xx += 420.0
-        }
-
         switch indexPath.section {
         case DISPLAY_SECTION:
             switch indexPath.row {
             case FONT_SIZE_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierFS)
-                if cell == nil {
-                    cell = UITableViewCell(style: .default, reuseIdentifier: CellIdentifierFS)
-                    var fssX: CGFloat = 170.0
-                    if deviceIsPad {
-                        fssX = 135.0
-                    }
-                    let fontSizeSlider = UISlider(frame: CGRect(x: fssX, y: 0, width: 125, height: 50))
-                    fontSizeSlider.autoresizingMask = .flexibleLeftMargin
-                    fontSizeSlider.minimumValue = 10.0
-                    if PSResizing.iPad() {
-                        fontSizeSlider.maximumValue = 36.0
-                    } else {
-                        fontSizeSlider.maximumValue = 20.0
-                    }
-                    let fontSize = UserDefaults.standard.integer(forKey: Defaults.fontSizePreference)
-                    if fontSize != 0 { // defaults default to 0 if it's not previously set...
-                        fontSizeSlider.value = Float(fontSize)
-                    } else {
-                        fontSizeSlider.value = 12.0
-                        UserDefaults.standard.set(12, forKey: Defaults.fontSizePreference)
-                        UserDefaults.standard.synchronize()
-                    }
-                    fontSizeSlider.isContinuous = true
-                    fontSizeSlider.addTarget(self, action: #selector(fontSizeChanged(_:)), for: .valueChanged)
-                    cell.contentView.addSubview(fontSizeSlider)
-                    cell.contentView.addSubview(fontSizeLabel)
+                guard let cell = tableView.dequeueReusableCell(
+                    withIdentifier: Self.fontSizeCellIdentifier,
+                    for: indexPath
+                ) as? PSFontSizePreferenceCell else {
+                    return UITableViewCell()
                 }
-                resetCell = false
+                let fontSize = preferredFontSize()
+                cell.configure(
+                    title: NSLocalizedString("PreferencesFontSizeTitle", comment: "Text Size"),
+                    value: fontSize,
+                    maximumValue: PSResizing.iPad() ? 36 : 20
+                )
+                cell.slider.removeTarget(nil, action: nil, for: .valueChanged)
+                cell.slider.addTarget(
+                    self,
+                    action: #selector(fontSizeChanged(_:)),
+                    for: .valueChanged
+                )
+                return cell
             case FONT_NAME_ROW:
-                cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierStyled)
-                if cell == nil {
-                    cell = UITableViewCell(style: .value1, reuseIdentifier: CellIdentifierStyled)
-                }
-            default:
-                break
-            }
-        case LANG_SECTION, DEVICE_SECTION:
-            cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifierPlain)
-            if cell == nil {
-                cell = UITableViewCell(style: .default, reuseIdentifier: CellIdentifierPlain)
-            }
-        default:
-            break
-        }
-
-        cell.selectionStyle = .none
-        cell.accessoryType = .none
-        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 12.0)
-        cell.textLabel?.textColor = UIColor.label
-
-        if resetCell {
-            cell.accessoryView = nil
-            for subv in cell.subviews {
-                if subv.isMember(of: UISlider.self) || subv.isMember(of: UISwitch.self) {
-                    subv.removeFromSuperview()
-                }
-            }
-        }
-
-        switch indexPath.section {
-        case DISPLAY_SECTION:
-            switch indexPath.row {
-            case FONT_SIZE_ROW:
-                break
-            case FONT_NAME_ROW:
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: Self.fontNameCellIdentifier
+                ) ?? UITableViewCell(style: .value1, reuseIdentifier: Self.fontNameCellIdentifier)
+                configureTextCell(cell)
                 cell.textLabel?.text = NSLocalizedString("PreferencesFontTitle", comment: "Font")
+                cell.detailTextLabel?.text =
+                    UserDefaults.standard.string(forKey: Defaults.fontNamePreference)
+                    ?? AppConstants.defaultFontName
+                cell.detailTextLabel?.font = .preferredFont(forTextStyle: .subheadline)
+                cell.detailTextLabel?.adjustsFontForContentSizeCategory = true
+                cell.detailTextLabel?.textColor = .secondaryLabel
                 cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .blue
+                cell.selectionStyle = .default
+                return cell
             default:
-                break
-            }
-        case LANG_SECTION:
-            switch indexPath.row {
-            case LANG_GREEKACC_ROW:
-                let greekAccentsSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let displayGreekAccents = UserDefaults.standard.bool(forKey: Defaults.greekAccentsPreference)
-                greekAccentsSwitch.isOn = displayGreekAccents
-                cell.addSubview(greekAccentsSwitch)
-                cell.textLabel?.text = NSLocalizedString("PreferencesGreekAccentsTitle", comment: "Greek Accents")
-            case LANG_HEBREWPTS_ROW:
-                let hvpSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let displayHVP = UserDefaults.standard.bool(forKey: Defaults.hvpPreference)
-                hvpSwitch.isOn = displayHVP
-                cell.addSubview(hvpSwitch)
-                cell.textLabel?.text = NSLocalizedString("PreferencesHVPTitle", comment: "Hebrew Vowel Points")
-                cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 10.0)
-            case LANG_HEBREWCANT_ROW:
-                let hebrewCantillationSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let displayHebrewCantillation = UserDefaults.standard.bool(forKey: Defaults.hebrewCantillationPreference)
-                hebrewCantillationSwitch.isOn = displayHebrewCantillation
-                cell.addSubview(hebrewCantillationSwitch)
-                cell.textLabel?.text = NSLocalizedString("PreferencesHebrewCantillationTitle", comment: "Hebrew Cantillation")
-            default:
-                break
+                return UITableViewCell()
             }
         case DEVICE_SECTION:
             switch indexPath.row {
             case INSOMNIA_ROW:
-                let insomniaSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let insomniaMode = UserDefaults.standard.bool(forKey: Defaults.insomniaPreference)
-                insomniaSwitch.isOn = insomniaMode
-                insomniaSwitch.addTarget(self, action: #selector(insomniaModeChanged(_:)), for: .valueChanged)
-                cell.accessoryView = insomniaSwitch
-                cell.textLabel?.text = NSLocalizedString("PreferencesDisableAutoLockTitle", comment: "")
+                return switchCell(
+                    tableView,
+                    title: NSLocalizedString("PreferencesDisableAutoLockTitle", comment: "Keep Screen Awake"),
+                    isOn: UserDefaults.standard.bool(forKey: Defaults.insomniaPreference),
+                    action: #selector(insomniaModeChanged(_:))
+                )
             case ROTATION_LOCK_ROW:
-                let rotationLockSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
                 let rotationLockPosition = UserDefaults.standard.integer(forKey: Defaults.rotationLockPosition)
-                if rotationLockPosition == kRotationEnabled {
-                    rotationLockSwitch.isOn = false
-                } else {
-                    rotationLockSwitch.isOn = true
-                }
-                rotationLockSwitch.addTarget(self, action: #selector(rotationLockChanged(_:)), for: .valueChanged)
-                cell.accessoryView = rotationLockSwitch
-                cell.textLabel?.text = NSLocalizedString("PreferencesRotationLock", comment: "Rotation Lock")
+                return switchCell(
+                    tableView,
+                    title: NSLocalizedString("PreferencesRotationLock", comment: "Lock Rotation"),
+                    isOn: rotationLockPosition != kRotationEnabled,
+                    action: #selector(rotationLockChanged(_:))
+                )
             case FULLSCREEN_MODE_ROW:
-                let fullscreenModeSwitch = UISwitch(frame: CGRect(x: xx + 200, y: 10, width: 0, height: 0))
-                let fullscreenMode = UserDefaults.standard.bool(forKey: Defaults.fullscreenModePreference)
-                fullscreenModeSwitch.isOn = fullscreenMode
-                fullscreenModeSwitch.addTarget(self, action: #selector(fullscreenModeChanged(_:)), for: .valueChanged)
-                cell.accessoryView = fullscreenModeSwitch
-                cell.textLabel?.text = NSLocalizedString("PreferencesFullscreenModeTitle", comment: "Fullscreen Mode")
-                cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.textLabel?.numberOfLines = 2
-            case FULLSCREEN_NOTE_ROW:
-                cell.textLabel?.text = NSLocalizedString("PreferencesFullscreenNote", comment: "With fullscreen mode disabled, you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.")
-                cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.textLabel?.numberOfLines = 4
-                cell.textLabel?.textColor = UIColor.secondaryLabel
-                cell.textLabel?.font = UIFont.systemFont(ofSize: 12.0)
+                return switchCell(
+                    tableView,
+                    title: NSLocalizedString(
+                        "PreferencesFullscreenModeTitle",
+                        comment: "Automatic Full Screen"
+                    ),
+                    isOn: UserDefaults.standard.bool(forKey: Defaults.fullscreenModePreference),
+                    action: #selector(fullscreenModeChanged(_:))
+                )
             default:
-                break
+                return UITableViewCell()
             }
         default:
-            break
+            return UITableViewCell()
+        }
+    }
+
+    private func preferredFontSize() -> Int {
+        let savedValue = UserDefaults.standard.integer(forKey: Defaults.fontSizePreference)
+        guard savedValue == 0 else {
+            return savedValue
         }
 
-        // some of the cells can be changed from elsewhere, so we now need to set the text for some cell labels:
-        switch indexPath.section {
-        case DISPLAY_SECTION:
-            switch indexPath.row {
-            case FONT_SIZE_ROW:
-                let fontSize = UserDefaults.standard.integer(forKey: Defaults.fontSizePreference)
-                cell.textLabel?.text = String(format: "%@:", NSLocalizedString("PreferencesFontSizeTitle", comment: "Font Size"))
-                fontSizeLabel.text = String(format: "%ld", fontSize)
-            case FONT_NAME_ROW:
-                var font = UserDefaults.standard.string(forKey: Defaults.fontNamePreference)
-                if font == nil {
-                    font = AppConstants.defaultFontName
-                }
-                cell.detailTextLabel?.text = font
-                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12.0)
-            default:
-                break
-            }
-        default:
-            break
-        }
+        let defaultValue = 12
+        UserDefaults.standard.set(defaultValue, forKey: Defaults.fontSizePreference)
+        return defaultValue
+    }
 
+    private func configureTextCell(_ cell: UITableViewCell) {
+        cell.accessoryView = nil
+        cell.accessoryType = .none
+        cell.textLabel?.font = .preferredFont(forTextStyle: .body)
+        cell.textLabel?.adjustsFontForContentSizeCategory = true
+        cell.textLabel?.textColor = .label
+        cell.textLabel?.numberOfLines = 0
+    }
+
+    private func switchCell(
+        _ tableView: UITableView,
+        title: String,
+        isOn: Bool,
+        action: Selector
+    ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Self.switchCellIdentifier)
+            ?? UITableViewCell(style: .default, reuseIdentifier: Self.switchCellIdentifier)
+        configureTextCell(cell)
+        cell.selectionStyle = .none
+        cell.textLabel?.text = title
+
+        let toggle = UISwitch()
+        toggle.isOn = isOn
+        toggle.accessibilityLabel = title
+        toggle.addTarget(self, action: action, for: .valueChanged)
+        cell.accessoryView = toggle
         return cell
     }
 
@@ -336,7 +352,7 @@ class PSPreferencesController: PSBasePreferencesController {
         case DISPLAY_SECTION:
             switch indexPath.row {
             case FONT_NAME_ROW:
-                let fontTableViewController = PSPreferencesFontTableViewController(style: .grouped)
+                let fontTableViewController = PSPreferencesFontTableViewController(style: .insetGrouped)
                 fontTableViewController.preferencesController = self
                 self.navigationController?.pushViewController(fontTableViewController, animated: true)
             default:
@@ -406,7 +422,11 @@ class PSPreferencesController: PSBasePreferencesController {
         let f = Int(sender.value)
         UserDefaults.standard.set(f, forKey: Defaults.fontSizePreference)
         UserDefaults.standard.synchronize()
-        fontSizeLabel.text = String(format: "%ld", f)
+        if let cell = tableView.cellForRow(
+            at: IndexPath(row: FONT_SIZE_ROW, section: DISPLAY_SECTION)
+        ) as? PSFontSizePreferenceCell {
+            cell.updateValue(f)
+        }
         NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
     }
 
