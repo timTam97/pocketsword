@@ -206,8 +206,51 @@ final class PSModuleSearchController: UIViewController,
         rebuildOptionsMenu()
     }
 
+    // ── The scope bar's 16pt-too-high bug ────────────────────────────────────
+    //
+    // This screen is presented inside a sheet (see -toggleMultiList). While the
+    // sheet settles, UIKit moves the navigation bar down by 16pt *within* the
+    // navigation controller's view (frame.origin.y 0 → 16) — but it does not mark
+    // that view as needing layout, so our safeAreaInsets.top is never
+    // re-propagated. It stays at the pre-shift 108pt while the bar actually ends
+    // at 124pt, and the table's adjustedContentInset.top stays 108 with it. The
+    // scope bar lives in the table header, so it lands 16pt too high — tucked
+    // under the search field, which is what the user sees.
+    //
+    // Any later layout pass flushes the correct value, which is why dragging the
+    // sheet a little and releasing "fixes" it: measured navSuperFrame y=16 with
+    // safeTop still 108, then 124 the moment a layout pass ran.
+    //
+    // So re-assert it once, from `viewDidAppear`, whenever the two genuinely
+    // disagree. Three things about the shape here are deliberate:
+    //
+    //  * The guard IS the correctness condition — our top safe area must reach the
+    //    bar's bottom edge — not a delay or a hardcoded 16. If UIKit stops
+    //    shifting the bar, or shifts it by something else, this keeps working and
+    //    costs nothing when the values already agree.
+    //  * `setNeedsLayout` is required, not just `layoutIfNeeded`: the shift happens
+    //    without dirtying the view, so `layoutIfNeeded` alone is a no-op (measured).
+    //  * `viewDidAppear` is the trigger, NOT `viewDidLayoutSubviews`. Our own
+    //    layout callback never fires at the moment of disagreement (the shift skips
+    //    layout entirely), and dirtying an ancestor from inside a layout pass risks
+    //    an unbounded layout loop if a disagreement is ever unresolvable. Later
+    //    causes — a detent drag, rotation — already run a real layout pass of their
+    //    own, which is precisely why dragging the sheet fixed it by hand.
+    private func reassertSafeAreaAgainstNavigationBar() {
+        guard let navView = navigationController?.view,
+              let navBar = navigationController?.navigationBar,
+              navBar.superview != nil else { return }
+
+        let barBottomInView = navBar.convert(CGPoint(x: 0, y: navBar.bounds.maxY), to: view).y
+        guard abs(barBottomInView - view.safeAreaInsets.top) > 0.5 else { return }
+
+        navView.setNeedsLayout()
+        navView.layoutIfNeeded()
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        reassertSafeAreaAgainstNavigationBar()
 
         if let name = activeModuleName(),
            !PSSearchEngine.engine(forModuleName: name).indexIsFresh() {
