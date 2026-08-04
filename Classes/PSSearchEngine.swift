@@ -37,8 +37,12 @@
 //   4. **`PSSearchQuery.cleanDisplayText` is applied BEFORE the emptiness test**
 //      in the build loop, so it decides which rows exist at all, not merely how
 //      they read.
-//   5. **`invalidate(forModuleName:)` closes the handle before dropping the cache
-//      entry**, or the handle leaks with the last reference.
+//   5. **`dropIndex` must NOT remove the enclosing directory.** As of step 6 every
+//      module's index lives at `<Caches>/search/<module>.db`, so KJV and MHCC SHARE
+//      that directory — removing it on one module's drop would delete the other's
+//      index, or leave an engine holding it open writing to an unlinked file. It
+//      used to remove the directory, safely, back when the directory held exactly
+//      one module's `fts.db`.
 //
 //  Two things the Obj-C version carried that are deliberately NOT reproduced:
 //
@@ -133,15 +137,22 @@ final class PSSearchEngine {
         return engine
     }
 
-    /// Drops the in-memory cache entry for this module, closing its handle first.
-    /// Call after deleting the on-disk index so a subsequent lookup reopens cleanly.
-    static func invalidate(forModuleName name: String) {
-        cacheLock.lock()
-        defer { cacheLock.unlock() }
-        // closeDB BEFORE removing, or the handle leaks with the last reference.
-        cache[name]?.closeDB()
-        cache.removeValue(forKey: name)
-    }
+    // There is deliberately no `invalidate(forModuleName:)`.
+    //
+    // The Obj-C original had one — it closed the handle and dropped the cache entry —
+    // and its only caller was the KJV re-seed path's `-deleteSearchIndex`, which went
+    // with the seeding in Phase 5 step 9. It is not ported for the same reason the
+    // `PSSearchEngineErrorDomain` contract was not: nothing read it.
+    //
+    // Nothing is lost by its absence, which is the part worth stating. `dropIndex()`
+    // already closes the handle before unlinking the file, and a cached engine whose
+    // file has been dropped is not stale — the next `runQuery` / `indexIsFresh`
+    // reopens on demand, and `indexIsFresh` returns false while the file is missing.
+    // So the cache never hands back a handle to a deleted index.
+    //
+    // If a future caller does need to evict, note the ordering the original had:
+    // close the handle FIRST, then remove the entry, or the handle leaks with the
+    // last reference.
 
     // MARK: - Init / paths
 

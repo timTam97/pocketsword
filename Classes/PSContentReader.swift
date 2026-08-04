@@ -349,6 +349,15 @@ final class PSContentReader: NSObject {
 
     /// Memoised `dictionaryKeys` results. Keyed by module; never invalidated,
     /// because the bundled store is read-only.
+    ///
+    /// **MAIN-THREAD ONLY, and deliberately unsynchronised.** Every caller is a
+    /// UIKit data-source path on the Dictionary tab (`key(at:)`, `rowCount`,
+    /// `searchDictionaryEntries`), so there is no contention to protect against and a
+    /// lock would be dead weight on a per-cell call. That is an invariant, not an
+    /// accident: `PSContentStore` funnels through a serial queue and `PSSearchEngine`
+    /// runs FULLMUTEX precisely because they are reached off the main thread, and
+    /// this is not. A background caller must add synchronisation here first — an
+    /// unguarded dictionary write racing a read is a crash, not a stale answer.
     private static var keyCache: [String: [String]] = [:]
 
     @objc(dictionaryEntryCountForModule:)

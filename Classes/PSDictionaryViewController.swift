@@ -120,11 +120,33 @@ final class PSDictionaryViewController: UITableViewController, UISearchBarDelega
 
     @objc func reloadDictionaryData(_ reloadData: Bool) {
         if primaryDictionaryName == nil {
-            let lastDictionary = UserDefaults.standard.string(forKey: Defaults.lastDictionary)
+            // Only a lexicon we actually SHIP may be restored.
+            //
+            // A `lastDictionary` naming anything else — a module sideloaded before the
+            // module list was retired — would otherwise be loaded anyway, leaving
+            // `dictionaryEnabled` true over an empty key list. That is a blank tab
+            // whose header says nothing is wrong (`titleForHeaderInSection` only
+            // reports "none loaded" when `dictionaryEnabled` is false), and with no
+            // removal UI the user's only way out is the `▾` menu.
+            //
+            // The `DefaultsSimplifiedCleanupDone` migration used to clear such a value
+            // at launch, and it went with the SWORD-era seeding it was wrapped in. The
+            // check belongs here regardless: `reloadLastBible` / `reloadLastCommentary`
+            // validate their own persisted names against `content_meta` for the same
+            // reason, and doing it at the READ means a stale value cannot come back
+            // from a path that has not been written yet.
+            let stored = UserDefaults.standard.string(forKey: Defaults.lastDictionary)
+            let lastDictionary = stored.flatMap { BundledModules.lexicons.contains($0) ? $0 : nil }
 
             if let lastDictionary = lastDictionary {
                 PSModuleController.default()?.loadPrimaryDictionary(lastDictionary)
             } else {
+                // Drop a name we are never going to honour, so it stops being read on
+                // every appearance. A no-op when there was nothing stored.
+                if stored != nil {
+                    dlog("Dictionary: dropping unshippable lastDictionary '\(stored ?? "")'")
+                    UserDefaults.standard.removeObject(forKey: Defaults.lastDictionary)
+                }
                 navigationItem.rightBarButtonItem?.title = NSLocalizedString("None", comment: "None")
                 dictionarySearchBar?.isUserInteractionEnabled = false
                 dictionaryEnabled = false

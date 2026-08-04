@@ -55,10 +55,12 @@ enum PSChapterAssembler {
         /// loop does itself, which is a different mechanism from the markup
         /// filter's interverse emission — hence `headings || canonical`.
         var headingsOn = true
-        /// The ref string used for the bookmark-highlight lookup. This is the
-        /// CALLER's ref (`createRefString(chapter)`), not SWORD's canonical key
-        /// text: "Psalms 23", not "Ps 23". Nil disables highlighting.
-        var bookmarkRef: String?
+        // No `bookmarkRef` here: highlighting is driven entirely by the
+        // `highlightColour` closure `assemble` takes, and the caller decides what ref
+        // that closure keys on — PSContentReader passes the CALLER's ref through
+        // createRefString ("Psalms 23"), not SWORD's canonical key text ("Ps 23"),
+        // because the abbreviation renders identical bytes but matches no bookmark.
+        // A ref on Config would be a second, unread way to say the same thing.
     }
 
     // MARK: - Assembly
