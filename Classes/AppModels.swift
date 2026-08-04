@@ -153,16 +153,28 @@ final class SettingsModel {
 final class LibraryModel {
     var bookmarks: [BookmarkNode]
     var history: [HistoryEntry]
+    private(set) var dictionaryModule: String?
+    private(set) var dictionaryKeys: [String] = []
+    private(set) var visibleDictionaryKeys: [String] = []
+    var dictionaryQuery = "" {
+        didSet {
+            guard dictionaryQuery != oldValue else { return }
+            filterDictionaryKeys()
+        }
+    }
 
     @ObservationIgnored private let bookmarkStore: BookmarkStore
     @ObservationIgnored private let historyStore: HistoryStore
+    @ObservationIgnored private let dictionaryStore: DictionaryStore
 
     init(
         bookmarkStore: BookmarkStore = BookmarkStore(),
-        historyStore: HistoryStore = HistoryStore()
+        historyStore: HistoryStore = HistoryStore(),
+        dictionaryStore: DictionaryStore = DictionaryStore()
     ) {
         self.bookmarkStore = bookmarkStore
         self.historyStore = historyStore
+        self.dictionaryStore = dictionaryStore
         self.bookmarks = bookmarkStore.snapshot()
         self.history = historyStore.snapshot()
     }
@@ -173,6 +185,133 @@ final class LibraryModel {
 
     func reloadHistory() {
         history = historyStore.snapshot()
+    }
+
+    func bookmarkNode(id: UUID) -> BookmarkNode? {
+        findBookmark(id: id, in: bookmarks)
+    }
+
+    func bookmarkChildren(in parentID: UUID?) -> [BookmarkNode] {
+        guard let parentID,
+              let parent = findBookmark(id: parentID, in: bookmarks),
+              case .folder(_, let children) = parent.kind else {
+            return parentID == nil ? bookmarks : []
+        }
+        return children
+    }
+
+    func addBookmarkFolder(
+        name: String,
+        color: BookmarkColor?,
+        parentID: UUID?
+    ) throws {
+        try bookmarkStore.addFolder(name: name, color: color, to: parentID)
+        reloadBookmarks()
+    }
+
+    func renameBookmark(id: UUID, to name: String) throws {
+        try bookmarkStore.rename(id: id, to: name)
+        reloadBookmarks()
+    }
+
+    func updateBookmarkFolder(
+        id: UUID,
+        name: String,
+        color: BookmarkColor?
+    ) throws {
+        try bookmarkStore.updateFolder(id: id, name: name, color: color)
+        reloadBookmarks()
+    }
+
+    func removeBookmark(id: UUID) {
+        guard bookmarkStore.remove(id: id) else { return }
+        reloadBookmarks()
+    }
+
+    func reorderBookmarks(
+        parentID: UUID?,
+        sources: [UUID],
+        before destinationID: UUID?
+    ) {
+        guard bookmarkStore.reorder(
+            parentID: parentID,
+            sources: sources,
+            before: destinationID
+        ) else {
+            return
+        }
+        reloadBookmarks()
+    }
+
+    func openBookmark(id: UUID) -> String? {
+        guard let reference = bookmarkStore.markAccessed(id: id) else {
+            return nil
+        }
+        reloadBookmarks()
+        return reference
+    }
+
+    func removeHistory(id: HistoryEntry.ID) {
+        guard historyStore.remove(id: id) else { return }
+        reloadHistory()
+    }
+
+    func clearHistory() {
+        historyStore.clear()
+        reloadHistory()
+    }
+
+    func reloadDictionary() {
+        apply(dictionaryStore.snapshot())
+    }
+
+    func selectDictionary(module: String) {
+        dictionaryQuery = ""
+        apply(dictionaryStore.select(module: module))
+    }
+
+    func dictionaryEntry(key: String) -> DictionaryEntryDocument? {
+        guard let dictionaryModule else { return nil }
+        return dictionaryStore.entry(module: dictionaryModule, key: key)
+    }
+
+    func dictionaryEntry(
+        module: String,
+        key: String
+    ) -> DictionaryEntryDocument {
+        dictionaryStore.entry(module: module, key: key)
+    }
+
+    private func apply(_ snapshot: DictionarySnapshot) {
+        dictionaryModule = snapshot.module
+        dictionaryKeys = snapshot.keys
+        filterDictionaryKeys()
+    }
+
+    private func filterDictionaryKeys() {
+        guard !dictionaryQuery.isEmpty else {
+            visibleDictionaryKeys = dictionaryKeys
+            return
+        }
+        visibleDictionaryKeys = dictionaryKeys.filter {
+            $0.range(of: dictionaryQuery, options: .caseInsensitive) != nil
+        }
+    }
+
+    private func findBookmark(
+        id: UUID,
+        in nodes: [BookmarkNode]
+    ) -> BookmarkNode? {
+        for node in nodes {
+            if node.id == id {
+                return node
+            }
+            if case .folder(_, let children) = node.kind,
+               let match = findBookmark(id: id, in: children) {
+                return match
+            }
+        }
+        return nil
     }
 }
 

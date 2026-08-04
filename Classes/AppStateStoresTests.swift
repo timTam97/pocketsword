@@ -1,4 +1,5 @@
 import XCTest
+import Observation
 @testable import PocketSword
 
 private final class HistoryCloudStoreStub: HistoryCloudStoring {
@@ -331,6 +332,229 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
+    func testBookmarkStoreMutatesNestedTreeAndPreservesObjectIdentity() throws {
+        let first = PSBookmark(
+            name: "First",
+            dateAdded: Date(timeIntervalSince1970: 10),
+            dateLastAccessed: Date(timeIntervalSince1970: 20),
+            bibleReference: "John 1:1"
+        )
+        let second = PSBookmark(
+            name: "Second",
+            dateAdded: Date(timeIntervalSince1970: 30),
+            dateLastAccessed: Date(timeIntervalSince1970: 40),
+            bibleReference: "John 1:2"
+        )
+        let folder = PSBookmarkFolder(
+            name: "Study",
+            dateAdded: nil,
+            dateLastAccessed: nil,
+            rgbHexString: nil,
+            children: [first, second]
+        )
+        let root = PSBookmarkFolder(
+            name: "Bookmarks",
+            dateAdded: nil,
+            dateLastAccessed: nil,
+            rgbHexString: nil,
+            children: [folder]
+        )
+        let center = NotificationCenter()
+        var saveCount = 0
+        var changeCount = 0
+        let observer = center.addObserver(
+            forName: .bookmarksChanged,
+            object: nil,
+            queue: nil
+        ) { _ in
+            changeCount += 1
+        }
+        defer { center.removeObserver(observer) }
+        let store = BookmarkStore(
+            rootProvider: { root },
+            save: {
+                saveCount += 1
+                return true
+            },
+            notificationCenter: center
+        )
+
+        try store.addFolder(
+            name: "Notes",
+            color: BookmarkColor(hexString: "#12ABEF"),
+            to: folder.id
+        )
+        let notes = try XCTUnwrap(
+            store.children(in: folder.id).first { $0.name == "Notes" }
+        )
+        try store.updateFolder(
+            id: notes.id,
+            name: "Notes 2",
+            color: BookmarkColor(hexString: "#FF0000")
+        )
+        store.reorder(
+            parentID: folder.id,
+            sources: [second.id],
+            before: first.id
+        )
+        try store.rename(id: first.id, to: "Opening")
+
+        let children = store.children(in: folder.id)
+        XCTAssertEqual(children.map(\.id), [second.id, first.id, notes.id])
+        XCTAssertEqual(children[1].name, "Opening")
+        XCTAssertEqual(store.node(id: notes.id)?.name, "Notes 2")
+        XCTAssertEqual(
+            (folder.children?[1] as? PSBookmarkObject)?.id,
+            first.id
+        )
+        XCTAssertEqual(
+            (folder.children?[2] as? PSBookmarkFolder)?.rgbHexString,
+            "#FF0000"
+        )
+        XCTAssertEqual(store.markAccessed(id: first.id), "John 1:1")
+        XCTAssertTrue(store.remove(id: second.id))
+        XCTAssertEqual(store.children(in: folder.id).map(\.id), [first.id, notes.id])
+        XCTAssertEqual(saveCount, 6)
+        XCTAssertEqual(changeCount, 5)
+    }
+
+    func testBookmarkStoreRejectsDuplicateAndInvalidFolderNames() throws {
+        let folder = PSBookmarkFolder(
+            name: "Study",
+            dateAdded: nil,
+            dateLastAccessed: nil,
+            rgbHexString: nil,
+            children: nil
+        )
+        let root = PSBookmarkFolder(
+            name: "Bookmarks",
+            dateAdded: nil,
+            dateLastAccessed: nil,
+            rgbHexString: nil,
+            children: [folder]
+        )
+        let store = BookmarkStore(
+            rootProvider: { root },
+            save: { true },
+            notificationCenter: NotificationCenter()
+        )
+
+        XCTAssertThrowsError(
+            try store.addFolder(name: "Study", color: nil, to: nil)
+        ) {
+            XCTAssertEqual($0 as? BookmarkMutationError, .duplicateFolder)
+        }
+        XCTAssertThrowsError(
+            try store.addFolder(
+                name: "Bad\(AppConstants.folderSeparatorString)Name",
+                color: nil,
+                to: nil
+            )
+        ) {
+            XCTAssertEqual($0 as? BookmarkMutationError, .invalidFolderName)
+        }
+    }
+
+    @MainActor
+    func testLibraryBookmarkChildrenParticipateInObservation() throws {
+        let root = PSBookmarkFolder(
+            name: "Bookmarks",
+            dateAdded: nil,
+            dateLastAccessed: nil,
+            rgbHexString: nil,
+            children: nil
+        )
+        let library = LibraryModel(
+            bookmarkStore: BookmarkStore(
+                rootProvider: { root },
+                save: { true },
+                notificationCenter: NotificationCenter()
+            ),
+            historyStore: HistoryStore(
+                defaults: defaults,
+                cloudStore: HistoryCloudStoreStub(),
+                notificationCenter: NotificationCenter()
+            )
+        )
+        var changed = false
+        withObservationTracking {
+            _ = library.bookmarkChildren(in: nil).count
+        } onChange: {
+            changed = true
+        }
+
+        try library.addBookmarkFolder(
+            name: "Study",
+            color: nil,
+            parentID: nil
+        )
+
+        XCTAssertTrue(changed)
+        XCTAssertEqual(library.bookmarkChildren(in: nil).first?.name, "Study")
+    }
+
+    @MainActor
+    func testLibraryModelRestoresFiltersAndSelectsDictionary() {
+        defaults.set(
+            BundledModules.strongsGreek,
+            forKey: Defaults.lastDictionary
+        )
+        var selectedModule: String?
+        let keys = [
+            BundledModules.strongsGreek: ["G0001", "G0002", "Word"],
+            BundledModules.strongsHebrew: ["H0001"],
+        ]
+        let dictionaryStore = DictionaryStore(
+            defaults: defaults,
+            moduleProvider: { selectedModule },
+            moduleLoader: {
+                selectedModule = $0
+                if let module = $0 {
+                    self.defaults.set(module, forKey: Defaults.lastDictionary)
+                }
+            },
+            moduleTypeProvider: { _ in "Lexicons / Dictionaries" },
+            keysProvider: { keys[$0] ?? [] },
+            entryProvider: { module, key in "\(module):\(key)" },
+            htmlBuilder: { body, _ in "<html>\(body)</html>" }
+        )
+        let library = LibraryModel(
+            bookmarkStore: BookmarkStore(
+                rootProvider: { PSBookmarkFolder() },
+                save: { true },
+                notificationCenter: NotificationCenter()
+            ),
+            historyStore: HistoryStore(
+                defaults: defaults,
+                cloudStore: HistoryCloudStoreStub(),
+                notificationCenter: NotificationCenter()
+            ),
+            dictionaryStore: dictionaryStore
+        )
+
+        library.reloadDictionary()
+
+        XCTAssertEqual(library.dictionaryModule, BundledModules.strongsGreek)
+        XCTAssertEqual(library.visibleDictionaryKeys.count, 3)
+
+        library.dictionaryQuery = "0002"
+        XCTAssertEqual(library.visibleDictionaryKeys, ["G0002"])
+        XCTAssertTrue(
+            library.dictionaryEntry(key: "G0002")?.html.contains(
+                "\(BundledModules.strongsGreek):G0002"
+            ) ?? false
+        )
+
+        library.selectDictionary(module: BundledModules.strongsHebrew)
+        XCTAssertEqual(library.dictionaryModule, BundledModules.strongsHebrew)
+        XCTAssertEqual(library.dictionaryQuery, "")
+        XCTAssertEqual(library.visibleDictionaryKeys, ["H0001"])
+        XCTAssertEqual(
+            defaults.string(forKey: Defaults.lastDictionary),
+            BundledModules.strongsHebrew
+        )
+    }
+
     func testHistoryStoreUsesNaturalIDsAndPersistsRemoval() throws {
         let firstDate = Date(timeIntervalSince1970: 200)
         let secondDate = Date(timeIntervalSince1970: 100)
@@ -364,7 +588,7 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(entries[0].id.reference, "John 3:16")
         XCTAssertEqual(entries[0].id.moduleName, "KJV")
         XCTAssertEqual(entries[0].id.dateAdded, firstDate)
-        XCTAssertTrue(store.remove(at: 0))
+        XCTAssertTrue(store.remove(id: entries[0].id))
         XCTAssertEqual(
             defaults.array(forKey: AppConstants.historyName)?.count,
             1

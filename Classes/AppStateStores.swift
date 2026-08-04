@@ -132,6 +132,12 @@ struct BookmarkColor: Equatable, Hashable {
     let green: UInt8
     let blue: UInt8
 
+    init(red: UInt8, green: UInt8, blue: UInt8) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+    }
+
     init?(hexString: String?) {
         guard var value = hexString, !value.isEmpty else {
             return nil
@@ -165,17 +171,194 @@ struct BookmarkNode: Identifiable, Equatable {
     let kind: Kind
 }
 
+enum BookmarkMutationError: Error, Equatable, Identifiable {
+    case duplicateFolder
+    case invalidFolderName
+    case missingNode
+
+    var id: Int {
+        switch self {
+        case .duplicateFolder: 0
+        case .invalidFolderName: 1
+        case .missingNode: 2
+        }
+    }
+}
+
 final class BookmarkStore {
     private let rootProvider: () -> PSBookmarkFolder
+    private let save: () -> Bool
+    private let notificationCenter: NotificationCenter
 
-    init(rootProvider: @escaping () -> PSBookmarkFolder = {
-        PSBookmarks.default()
-    }) {
+    init(
+        rootProvider: @escaping () -> PSBookmarkFolder = {
+            PSBookmarks.default()
+        },
+        save: @escaping () -> Bool = {
+            PSBookmarks.saveBookmarksToFile()
+        },
+        notificationCenter: NotificationCenter = .default
+    ) {
         self.rootProvider = rootProvider
+        self.save = save
+        self.notificationCenter = notificationCenter
     }
 
     func snapshot() -> [BookmarkNode] {
-        (rootProvider().children ?? []).compactMap { child in
+        nodes(in: rootProvider())
+    }
+
+    func children(in parentID: UUID?) -> [BookmarkNode] {
+        guard let parentID else {
+            return snapshot()
+        }
+        guard let folder = object(id: parentID) as? PSBookmarkFolder else {
+            return []
+        }
+        return nodes(in: folder)
+    }
+
+    func node(id: UUID) -> BookmarkNode? {
+        object(id: id).map(node(from:))
+    }
+
+    func addFolder(
+        name: String,
+        color: BookmarkColor?,
+        to parentID: UUID?
+    ) throws {
+        guard !name.contains(AppConstants.folderSeparatorString) else {
+            throw BookmarkMutationError.invalidFolderName
+        }
+        guard let parent = folder(id: parentID) else {
+            throw BookmarkMutationError.missingNode
+        }
+        guard !containsFolder(named: name, excluding: nil, in: parent) else {
+            throw BookmarkMutationError.duplicateFolder
+        }
+
+        parent.addChild(
+            PSBookmarkFolder(
+                name: name,
+                dateAdded: Date(),
+                dateLastAccessed: Date(),
+                rgbHexString: color?.hexString,
+                children: nil
+            )
+        )
+        commit()
+    }
+
+    func rename(id: UUID, to name: String) throws {
+        try renameObject(id: id, to: name)
+        commit()
+    }
+
+    func updateFolder(
+        id: UUID,
+        name: String,
+        color: BookmarkColor?
+    ) throws {
+        try renameObject(id: id, to: name)
+        guard let folder = object(id: id) as? PSBookmarkFolder else {
+            throw BookmarkMutationError.missingNode
+        }
+        folder.rgbHexString = color?.hexString
+        commit()
+    }
+
+    private func renameObject(id: UUID, to name: String) throws {
+        guard let object = object(id: id),
+              let parent = parentFolder(containing: id, in: rootProvider()) else {
+            throw BookmarkMutationError.missingNode
+        }
+        if object is PSBookmarkFolder {
+            guard !name.contains(AppConstants.folderSeparatorString) else {
+                throw BookmarkMutationError.invalidFolderName
+            }
+            guard !containsFolder(named: name, excluding: id, in: parent) else {
+                throw BookmarkMutationError.duplicateFolder
+            }
+        }
+        if let bookmark = object as? PSBookmark, name.isEmpty {
+            bookmark.name = bookmark.ref
+        } else {
+            object.name = name
+        }
+        object.dateLastAccessed = Date()
+    }
+
+    @discardableResult
+    func remove(id: UUID) -> Bool {
+        guard let parent = parentFolder(containing: id, in: rootProvider()) else {
+            return false
+        }
+        var children = parent.children ?? []
+        guard let index = children.firstIndex(where: {
+            ($0 as? PSBookmarkObject)?.id == id
+        }) else {
+            return false
+        }
+        children.remove(at: index)
+        parent.children = children
+        commit()
+        return true
+    }
+
+    @discardableResult
+    func reorder(
+        parentID: UUID?,
+        sources: [UUID],
+        before destinationID: UUID?
+    ) -> Bool {
+        guard let parent = folder(id: parentID) else {
+            return false
+        }
+        let sourceIDs = Set(sources)
+        guard !sourceIDs.isEmpty else {
+            return false
+        }
+
+        var children = parent.children ?? []
+        let moving = children.compactMap { child -> PSBookmarkObject? in
+            guard let object = child as? PSBookmarkObject,
+                  sourceIDs.contains(object.id) else {
+                return nil
+            }
+            return object
+        }
+        guard moving.count == sourceIDs.count else {
+            return false
+        }
+
+        children.removeAll {
+            guard let object = $0 as? PSBookmarkObject else { return false }
+            return sourceIDs.contains(object.id)
+        }
+        if let destinationID,
+           let destinationIndex = children.firstIndex(where: {
+               ($0 as? PSBookmarkObject)?.id == destinationID
+           }) {
+            children.insert(contentsOf: moving, at: destinationIndex)
+        } else {
+            children.append(contentsOf: moving)
+        }
+        parent.children = children
+        commit()
+        return true
+    }
+
+    func markAccessed(id: UUID) -> String? {
+        guard let bookmark = object(id: id) as? PSBookmark else {
+            return nil
+        }
+        bookmark.dateLastAccessed = Date()
+        _ = save()
+        return bookmark.ref
+    }
+
+    private func nodes(in folder: PSBookmarkFolder) -> [BookmarkNode] {
+        (folder.children ?? []).compactMap { child in
             guard let child = child as? PSBookmarkObject else {
                 return nil
             }
@@ -205,6 +388,188 @@ final class BookmarkStore {
             dateAdded: object.dateAdded,
             dateLastAccessed: object.dateLastAccessed,
             kind: kind
+        )
+    }
+
+    private func folder(id: UUID?) -> PSBookmarkFolder? {
+        guard let id else {
+            return rootProvider()
+        }
+        return object(id: id) as? PSBookmarkFolder
+    }
+
+    private func object(id: UUID) -> PSBookmarkObject? {
+        findObject(id: id, in: rootProvider())
+    }
+
+    private func findObject(
+        id: UUID,
+        in folder: PSBookmarkFolder
+    ) -> PSBookmarkObject? {
+        for case let child as PSBookmarkObject in folder.children ?? [] {
+            if child.id == id {
+                return child
+            }
+            if let childFolder = child as? PSBookmarkFolder,
+               let match = findObject(id: id, in: childFolder) {
+                return match
+            }
+        }
+        return nil
+    }
+
+    private func parentFolder(
+        containing id: UUID,
+        in folder: PSBookmarkFolder
+    ) -> PSBookmarkFolder? {
+        for case let child as PSBookmarkObject in folder.children ?? [] {
+            if child.id == id {
+                return folder
+            }
+            if let childFolder = child as? PSBookmarkFolder,
+               let match = parentFolder(containing: id, in: childFolder) {
+                return match
+            }
+        }
+        return nil
+    }
+
+    private func containsFolder(
+        named name: String,
+        excluding id: UUID?,
+        in parent: PSBookmarkFolder
+    ) -> Bool {
+        (parent.children ?? []).contains {
+            guard let folder = $0 as? PSBookmarkFolder else { return false }
+            return folder.id != id && folder.name == name
+        }
+    }
+
+    private func commit() {
+        _ = save()
+        notificationCenter.post(name: .bookmarksChanged, object: nil)
+    }
+}
+
+struct DictionarySnapshot: Equatable {
+    let module: String?
+    let keys: [String]
+}
+
+struct DictionaryEntryDocument: Identifiable, Equatable {
+    struct ID: Hashable {
+        let module: String
+        let key: String
+    }
+
+    let module: String
+    let key: String
+    let html: String
+
+    var id: ID {
+        ID(module: module, key: key)
+    }
+}
+
+final class DictionaryStore {
+    typealias ModuleProvider = () -> String?
+    typealias ModuleLoader = (String?) -> Void
+    typealias ModuleTypeProvider = (String) -> String?
+    typealias KeysProvider = (String) -> [String]
+    typealias EntryProvider = (String, String) -> String?
+    typealias HTMLBuilder = (String, String) -> String?
+
+    private let defaults: UserDefaults
+    private let moduleProvider: ModuleProvider
+    private let moduleLoader: ModuleLoader
+    private let moduleTypeProvider: ModuleTypeProvider
+    private let keysProvider: KeysProvider
+    private let entryProvider: EntryProvider
+    private let htmlBuilder: HTMLBuilder
+
+    init(
+        defaults: UserDefaults = .standard,
+        moduleProvider: @escaping ModuleProvider = {
+            PSModuleController.default()?.primaryDictionaryName
+        },
+        moduleLoader: @escaping ModuleLoader = {
+            PSModuleController.default()?.loadPrimaryDictionary($0)
+        },
+        moduleTypeProvider: @escaping ModuleTypeProvider = {
+            PSContentStore.shared?.moduleMeta($0, key: "type")
+        },
+        keysProvider: @escaping KeysProvider = {
+            PSContentReader.allKeys(module: $0)
+        },
+        entryProvider: @escaping EntryProvider = {
+            PSContentReader.entry(module: $0, key: $1)
+        },
+        htmlBuilder: @escaping HTMLBuilder = {
+            PSModuleController.createInfoHTMLString(
+                $0,
+                usingModuleForPreferences: $1
+            )
+        }
+    ) {
+        self.defaults = defaults
+        self.moduleProvider = moduleProvider
+        self.moduleLoader = moduleLoader
+        self.moduleTypeProvider = moduleTypeProvider
+        self.keysProvider = keysProvider
+        self.entryProvider = entryProvider
+        self.htmlBuilder = htmlBuilder
+    }
+
+    func snapshot() -> DictionarySnapshot {
+        var module = moduleProvider()
+        if let current = module, !BundledModules.lexicons.contains(current) {
+            module = nil
+        }
+        if module == nil {
+            let stored = defaults.string(forKey: Defaults.lastDictionary)
+            if let stored, BundledModules.lexicons.contains(stored) {
+                moduleLoader(stored)
+                module = stored
+            } else if stored != nil {
+                defaults.removeObject(forKey: Defaults.lastDictionary)
+            }
+        }
+        return DictionarySnapshot(
+            module: module,
+            keys: module.map(keysProvider) ?? []
+        )
+    }
+
+    func select(module: String) -> DictionarySnapshot {
+        guard BundledModules.lexicons.contains(module) else {
+            return snapshot()
+        }
+        moduleLoader(module)
+        return DictionarySnapshot(
+            module: module,
+            keys: keysProvider(module)
+        )
+    }
+
+    func entry(module: String, key: String) -> DictionaryEntryDocument {
+        let rawDescription: String
+        if moduleTypeProvider(module) == "Lexicons / Dictionaries" {
+            rawDescription = entryProvider(module, key) ?? ""
+        } else {
+            let notInstalled = String(
+                localized: "ModuleNotInstalled",
+                comment: "A referenced module is not installed."
+            )
+            rawDescription = "<span style=\"color:grey;text-align:center;"
+                + "font-style:italic;\">\(module) \(notInstalled)</span>"
+        }
+        let body = "<div style=\"-webkit-text-size-adjust: none;\">"
+            + "<b>\(key)</b><br /><p>\(rawDescription)</p>"
+            + "<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>"
+        return DictionaryEntryDocument(
+            module: module,
+            key: key,
+            html: htmlBuilder(body, module) ?? body
         )
     }
 }
@@ -282,6 +647,14 @@ final class HistoryStore {
         history.remove(at: index)
         persist(history, notify: notify)
         return true
+    }
+
+    @discardableResult
+    func remove(id: HistoryEntry.ID, notify: Bool = true) -> Bool {
+        guard let index = snapshot().firstIndex(where: { $0.id == id }) else {
+            return false
+        }
+        return remove(at: index, notify: notify)
     }
 
     func clear() {

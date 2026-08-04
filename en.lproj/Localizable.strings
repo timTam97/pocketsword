@@ -30,6 +30,11 @@
 "Ok" = "Ok";
 "Cancel" = "Cancel";
 "Error" = "Error";
+"Delete" = "Delete";
+"Rename" = "Rename";
+"Save" = "Save";
+"LibraryUpdateFailedTitle" = "Couldn’t Update Library";
+"LibraryUpdateFailedMessage" = "The library changed before this action could be completed. Please try again.";
 
 // Module About
 "AboutModuleName" = "Module name: ";

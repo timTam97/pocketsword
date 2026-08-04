@@ -2,9 +2,9 @@
 
 ## Execution Status
 
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-05
 
-**Overall state:** In progress. Waves 1 through 3 are complete. Wave 4 library
+**Overall state:** In progress. Waves 1 through 4 are complete. Wave 5 search
 workspace replacement is next.
 
 ### Verified environment
@@ -43,7 +43,7 @@ workspace replacement is next.
 - [x] Wave 1: Baseline settings, XCUITest target, and deterministic baselines
 - [x] Wave 2: Typed domain values, observable models, coordinators, and stores
 - [x] Wave 3: Supporting SwiftUI screens
-- [ ] Wave 4: Library workspace
+- [x] Wave 4: Library workspace
 - [ ] Wave 5: Search workspace and background indexing
 - [ ] Wave 6: SwiftUI WebKit reader
 - [ ] Wave 7: iOS 27 toolbar and reading chrome
@@ -82,6 +82,11 @@ workspace replacement is next.
 - Wave 3 has replaced launch, book/chapter/verse reference selection, voice
   reference, Preferences, font picker, and About content with SwiftUI views
   hosted by thin UIKit adapters until the app-lifecycle cutover.
+- Wave 4 has replaced Dictionary, Bookmarks, and History with SwiftUI views.
+  Dictionary selection/search and linked entries use the baked content store;
+  bookmark CRUD, colors, recursive navigation, and iOS 27 drag reordering use
+  the typed bookmark store; History uses the existing iCloud-backed store and
+  natural row identities.
 - The SwiftUI reference picker preserves the existing notification payload,
   direct chapter/verse-one jumps, current-reference highlighting, and the
   64-entry first-match short-book index contract.
@@ -202,6 +207,29 @@ workspace replacement is next.
   interrupted before manual chapter/verse and landscape inspection, and live
   voice UI remains unavailable on the simulator because it has no audio input;
   voice rendering transitions are verified at the observable-model boundary.
+- **2026-08-05:** Completed Wave 4 with SwiftUI Dictionary, Bookmarks, and
+  History surfaces hosted by the existing UIKit coordinator. Added typed
+  dictionary restore/filter/entry generation plus recursive bookmark add,
+  rename, color, delete, access-date, and reorder mutations without changing
+  the positional plist schema.
+- **2026-08-05:** Live iPhone 17 Pro verification found and fixed two migration
+  defects. Bookmark folder creation initially updated persistence without
+  invalidating the view because the screen read directly from `BookmarkStore`;
+  it now traverses `LibraryModel.bookmarks` so Observation refreshes the list.
+  A redundant row context menu also intercepted the long press required by
+  iOS 27 `.reorderable()` and was removed in favor of the existing swipe
+  actions.
+- **2026-08-05:** Live verification confirmed dictionary module selection,
+  incremental search, nonblank entry HTML, and lexicon-to-lexicon navigation;
+  bookmark creation, highlight colors, rename, confirmed deletion, and empty
+  state; and History empty state, toolbar controls, Search switching, and close
+  behavior without portrait clipping or overlap. A deterministic XCUITest
+  additionally creates two folders, reorders them through the iOS 27 drag API,
+  and cleans them up.
+- **2026-08-05:** Wave 4 verification is green. The shared scheme on iPhone 17
+  Pro passed 105 standard unit tests, skipped the 2 opt-in exhaustive tests,
+  and passed all 5 XCUITests (112 total results). A separate Xcode MCP generic
+  iOS device build also succeeded.
 
 ## Summary
 

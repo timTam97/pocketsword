@@ -16,6 +16,7 @@
 		B22000000000000000000013 /* AppStateStoresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000003 /* AppStateStoresTests.swift */; };
 		B23000000000000000000011 /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* LaunchCoordinator.swift */; };
 		B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24000000000000000000001 /* SwiftUISupportingViews.swift */; };
+		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
@@ -220,6 +221,7 @@
 		B22000000000000000000003 /* AppStateStoresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppStateStoresTests.swift; path = Classes/AppStateStoresTests.swift; sourceTree = "<group>"; };
 		B23000000000000000000001 /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
 		B24000000000000000000001 /* SwiftUISupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISupportingViews.swift; sourceTree = "<group>"; };
+		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -794,6 +796,7 @@
 				B22000000000000000000002 /* LegacyStateBridge.swift */,
 				B23000000000000000000001 /* LaunchCoordinator.swift */,
 				B24000000000000000000001 /* SwiftUISupportingViews.swift */,
+				B25000000000000000000001 /* SwiftUILibraryViews.swift */,
 				B21000000000000000000002 /* URLRouter.swift */,
 				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
 				5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */,
@@ -1160,6 +1163,7 @@
 				B22000000000000000000012 /* LegacyStateBridge.swift in Sources */,
 				B23000000000000000000011 /* LaunchCoordinator.swift in Sources */,
 				B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */,
+				B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */,
 				B21000000000000000000012 /* URLRouter.swift in Sources */,
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,

@@ -147,9 +147,13 @@ final class PSTabBarControllerDelegate: NSObject,
         tabs.insert(bTab, at: 0)
         self.bibleTabController = bvc
 
+        let library = PocketSwordAppDelegate.shared()?.session.library
+            ?? LibraryModel()
+
         // add the Dictionary Tab.
-        let dictionaryViewController = PSDictionaryViewController(style: .grouped)
-        let dictionaryTab = UINavigationController(rootViewController: dictionaryViewController)
+        let dictionaryTab = UIHostingController(
+            rootView: DictionaryView(library: library)
+        )
         let dTBI = UITabBarItem(title: NSLocalizedString("TabBarTitleDictionary", comment: "Dictionary"),
                                 image: UIImage(named: "dictionary.png"), tag: 99)
         dTBI.accessibilityIdentifier = "workspace.library.dictionary"
@@ -158,8 +162,14 @@ final class PSTabBarControllerDelegate: NSObject,
 
         // add the bookmarks tab.
         PSBookmarks.importBookmarksFromV2()
-        let bookmarksViewController = PSBookmarksNavigatorController(style: .grouped)
-        let bookmarksTab = UINavigationController(rootViewController: bookmarksViewController)
+        let bookmarksTab = UIHostingController(
+            rootView: BookmarksView(
+                library: library,
+                openBookmark: { [weak self] reference in
+                    self?.openLibraryReference(reference, module: nil)
+                }
+            )
+        )
         let tbI = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 0)
         tbI.accessibilityIdentifier = "workspace.library.bookmarks"
         bookmarksTab.tabBarItem = tbI
@@ -320,14 +330,33 @@ final class PSTabBarControllerDelegate: NSObject,
         } else {
             let multiList = UITabBarController()
             multiListController = multiList
-            let historyController = PSHistoryController()
+            let library = PocketSwordAppDelegate.shared()?.session.library
+                ?? LibraryModel()
+            let historyController = UIHostingController(
+                rootView: HistoryView(
+                    library: library,
+                    close: { [weak self] in
+                        self?.toggleMultiList()
+                    },
+                    openHistoryEntry: { [weak self] entry in
+                        self?.openLibraryReference(
+                            entry.reference ?? "",
+                            module: entry.moduleName,
+                            closeMultiList: true
+                        )
+                    }
+                )
+            )
+            historyController.tabBarItem = UITabBarItem(
+                tabBarSystemItem: .history,
+                tag: 0
+            )
             let searchController = PSModuleSearchController()
             let searchNavigationController = UINavigationController(rootViewController: searchController)
             searchNavigationController.title = NSLocalizedString("SearchTitle", comment: "")
-            let historyNavigationController = UINavigationController(rootViewController: historyController)
             multiList.delegate = searchController
             searchController.delegate = self
-            multiList.viewControllers = [historyNavigationController, searchNavigationController]
+            multiList.viewControllers = [historyController, searchNavigationController]
 
             let bibleOnScreen: Bool = {
                 if let bibleWeb = bibleTabController?.webView,
@@ -339,7 +368,6 @@ final class PSTabBarControllerDelegate: NSObject,
             }()
 
             if bibleOnScreen {
-                historyController.setListType(.BibleTab)
                 searchController.setListType(.BibleTab)
                 if savedSearchResultsTab == .BibleTab, let item = savedSearchHistoryItem, item.results != nil {
                     // restore the previous search term:
@@ -355,7 +383,6 @@ final class PSTabBarControllerDelegate: NSObject,
                     multiList.selectedViewController = searchNavigationController
                 }
             } else {
-                historyController.setListType(.CommentaryTab)
                 searchController.setListType(.CommentaryTab)
                 if savedSearchResultsTab == .CommentaryTab, let item = savedSearchHistoryItem, item.results != nil {
                     // restore the previous search term:
@@ -373,6 +400,27 @@ final class PSTabBarControllerDelegate: NSObject,
                 multiList.selectedViewController = searchNavigationController
             }
             tabBarController.present(multiList, animated: true, completion: nil)
+        }
+    }
+
+    private func openLibraryReference(
+        _ reference: String,
+        module: String?,
+        closeMultiList: Bool = false
+    ) {
+        var components = URLComponents()
+        components.scheme = "sword"
+        components.host = module
+        components.path = "/\(reference)"
+        guard let url = components.url else { return }
+
+        _ = PocketSwordAppDelegate.shared()?.application(
+            UIApplication.shared,
+            handleOpen: url,
+            options: nil
+        )
+        if closeMultiList {
+            toggleMultiList()
         }
     }
 

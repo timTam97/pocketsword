@@ -34,9 +34,11 @@ final class PocketSwordUITests: XCTestCase {
 
         selectTab("workspace.library.dictionary")
         XCTAssertTrue(app.searchFields["Search Dictionary"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["dictionary.module-menu"].exists)
 
         selectTab("workspace.library.bookmarks")
         XCTAssertTrue(app.navigationBars["Bookmarks"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["bookmarks.add-folder"].exists)
     }
 
     @MainActor
@@ -121,6 +123,8 @@ final class PocketSwordUITests: XCTestCase {
         historyAndSearch.tap()
 
         XCTAssertTrue(app.navigationBars["History"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["history.close"].exists)
+        XCTAssertTrue(app.buttons["history.clear"].exists)
 
         let search = app.tabBars.buttons["Search"].firstMatch
         XCTAssertTrue(search.waitForExistence(timeout: 5))
@@ -129,10 +133,75 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     @MainActor
+    func testBookmarkFolderCrudAndReordering() throws {
+        let firstName = "UI Drag A"
+        let secondName = "UI Drag B"
+
+        selectTab("workspace.library.bookmarks")
+        deleteFolderIfPresent(named: "Drag-A")
+        deleteFolderIfPresent(named: "Drag-B")
+        deleteFolderIfPresent(named: firstName)
+        deleteFolderIfPresent(named: secondName)
+        defer {
+            deleteFolderIfPresent(named: "Drag-A")
+            deleteFolderIfPresent(named: "Drag-B")
+            deleteFolderIfPresent(named: firstName)
+            deleteFolderIfPresent(named: secondName)
+        }
+
+        createFolder(named: firstName)
+        createFolder(named: secondName)
+
+        let first = app.buttons[firstName]
+        let second = app.buttons[secondName]
+        XCTAssertTrue(first.waitForExistence(timeout: 5))
+        XCTAssertTrue(second.waitForExistence(timeout: 5))
+        XCTAssertGreaterThan(second.frame.minY, first.frame.minY)
+
+        second.press(forDuration: 1, thenDragTo: first)
+
+        let reordered = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                second.frame.minY < first.frame.minY
+            },
+            object: nil
+        )
+        wait(for: [reordered], timeout: 5)
+        XCTAssertLessThan(second.frame.minY, first.frame.minY)
+    }
+
+    @MainActor
     private func selectTab(_ identifier: String) {
         let tab = app.tabBars.buttons[identifier]
         XCTAssertTrue(tab.waitForExistence(timeout: 5), "Missing tab \(identifier)")
         tab.tap()
         XCTAssertTrue(tab.isSelected, "Tab \(identifier) was not selected")
+    }
+
+    @MainActor
+    private func createFolder(named name: String) {
+        app.buttons["bookmarks.add-folder"].tap()
+        let field = app.textFields["bookmarks.folder-name"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText(name)
+        app.buttons["bookmarks.folder-save"].tap()
+        XCTAssertTrue(app.buttons[name].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    private func deleteFolderIfPresent(named name: String) {
+        let row = app.buttons[name]
+        guard row.waitForExistence(timeout: 1) else { return }
+        row.swipeLeft()
+
+        let deleteAction = app.buttons["Delete"].firstMatch
+        guard deleteAction.waitForExistence(timeout: 2) else { return }
+        deleteAction.tap()
+
+        let confirmation = app.buttons["Delete"].firstMatch
+        guard confirmation.waitForExistence(timeout: 2) else { return }
+        confirmation.tap()
+        _ = row.waitForNonExistence(timeout: 5)
     }
 }
