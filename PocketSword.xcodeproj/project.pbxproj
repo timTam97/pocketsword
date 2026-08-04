@@ -11,6 +11,11 @@
 		B21000000000000000000011 /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000001 /* AppModels.swift */; };
 		B21000000000000000000012 /* URLRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000002 /* URLRouter.swift */; };
 		B21000000000000000000013 /* URLRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000003 /* URLRouterTests.swift */; };
+		B22000000000000000000011 /* AppStateStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000001 /* AppStateStores.swift */; };
+		B22000000000000000000012 /* LegacyStateBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000002 /* LegacyStateBridge.swift */; };
+		B22000000000000000000013 /* AppStateStoresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000003 /* AppStateStoresTests.swift */; };
+		B23000000000000000000011 /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* LaunchCoordinator.swift */; };
+		B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24000000000000000000001 /* SwiftUISupportingViews.swift */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
@@ -210,6 +215,11 @@
 		B21000000000000000000001 /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		B21000000000000000000002 /* URLRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRouter.swift; sourceTree = "<group>"; };
 		B21000000000000000000003 /* URLRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = URLRouterTests.swift; path = Classes/URLRouterTests.swift; sourceTree = "<group>"; };
+		B22000000000000000000001 /* AppStateStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStores.swift; sourceTree = "<group>"; };
+		B22000000000000000000002 /* LegacyStateBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyStateBridge.swift; sourceTree = "<group>"; };
+		B22000000000000000000003 /* AppStateStoresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppStateStoresTests.swift; path = Classes/AppStateStoresTests.swift; sourceTree = "<group>"; };
+		B23000000000000000000001 /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
+		B24000000000000000000001 /* SwiftUISupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISupportingViews.swift; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -780,6 +790,10 @@
 			children = (
 				0545E29A1063A09500DD7F06 /* globals.h */,
 				B21000000000000000000001 /* AppModels.swift */,
+				B22000000000000000000001 /* AppStateStores.swift */,
+				B22000000000000000000002 /* LegacyStateBridge.swift */,
+				B23000000000000000000001 /* LaunchCoordinator.swift */,
+				B24000000000000000000001 /* SwiftUISupportingViews.swift */,
 				B21000000000000000000002 /* URLRouter.swift */,
 				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
 				5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */,
@@ -887,6 +901,7 @@
 		5A1F70B0000000000000F060 /* PocketSwordTests */ = {
 			isa = PBXGroup;
 			children = (
+				B22000000000000000000003 /* AppStateStoresTests.swift */,
 				B21000000000000000000003 /* URLRouterTests.swift */,
 				5A1F70B0000000000000F001 /* PersistedFormatTests.swift */,
 				5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */,
@@ -1141,6 +1156,10 @@
 			files = (
 				5A1F70B0000000000000C002 /* AppConstants.swift in Sources */,
 				B21000000000000000000011 /* AppModels.swift in Sources */,
+				B22000000000000000000011 /* AppStateStores.swift in Sources */,
+				B22000000000000000000012 /* LegacyStateBridge.swift in Sources */,
+				B23000000000000000000011 /* LaunchCoordinator.swift in Sources */,
+				B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */,
 				B21000000000000000000012 /* URLRouter.swift in Sources */,
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,
@@ -1202,6 +1221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B22000000000000000000013 /* AppStateStoresTests.swift in Sources */,
 				B21000000000000000000013 /* URLRouterTests.swift in Sources */,
 				5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */,
 				5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */,

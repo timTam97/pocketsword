@@ -89,6 +89,9 @@ final class PSModuleSearchController: UIViewController,
     /// highlight in that row for a Strong's search. Empty array for rows with no
     /// mapped words; nil for non-Strong's searches.
     private var strongsHighlightPerResult: [[String]]?
+    private lazy var searchModel: SearchModel = {
+        PocketSwordAppDelegate.shared()?.session.search ?? SearchModel()
+    }()
 
     /// Bumped on the MAIN thread at every search dispatch. A background
     /// completion only applies its results if it still holds the latest value.
@@ -116,10 +119,9 @@ final class PSModuleSearchController: UIViewController,
         navigationItem.title = NSLocalizedString("SearchTitle", comment: "")
         setSearchTitle()
 
-        let defaults = UserDefaults.standard
-        fuzzySearch = defaults.bool(forKey: Defaults.lastSearchFuzzy)
-        searchType = PSSearchType(rawValue: defaults.integer(forKey: Defaults.lastSearchType)) ?? .AndSearch
-        searchRange = PSSearchRange(rawValue: defaults.integer(forKey: Defaults.lastSearchRange)) ?? .AllRange
+        fuzzySearch = searchModel.fuzzySearch
+        searchType = searchModel.matchType
+        searchRange = searchModel.range
     }
 
     required init?(coder: NSCoder) {
@@ -266,7 +268,9 @@ final class PSModuleSearchController: UIViewController,
 
         // Decide searchingEnabled before the first draw so the table header
         // doesn't flash "No search index" for a module that already has one.
-        searchingEnabled = activeEngine()?.indexIsFresh() ?? false
+        searchModel.module = activeModuleName()
+        searchModel.indexCoordinator.refresh(module: searchModel.module)
+        searchingEnabled = searchModel.indexCoordinator.state == .ready
 
         refreshView()
 
@@ -344,6 +348,8 @@ final class PSModuleSearchController: UIViewController,
                                                    matchType: searchType,
                                                    fuzzy: fuzzySearch,
                                                    strongs: strongsSearch)
+        searchModel.expression = searchTerm
+        syncSearchModelState()
         scopeControl?.selectedSegmentIndex = scopeIndex(for: searchRange)
         setSearchTitle()
     }
@@ -418,7 +424,10 @@ final class PSModuleSearchController: UIViewController,
             style: .default,
             handler: { [weak self] _ in
                 guard let self = self else { return }
-                let b = PSSearchIndexBuilder(moduleName: moduleName)
+                let b = PSSearchIndexBuilder(
+                    moduleName: moduleName,
+                    indexCoordinator: self.searchModel.indexCoordinator
+                )
                 b.delegate = self
                 b.present(from: self)
             }))
@@ -518,10 +527,8 @@ final class PSModuleSearchController: UIViewController,
     }
 
     private func persistOptionsAndResearch() {
-        let defaults = UserDefaults.standard
-        defaults.set(fuzzySearch, forKey: Defaults.lastSearchFuzzy)
-        defaults.set(searchType.rawValue, forKey: Defaults.lastSearchType)
-        defaults.set(searchRange.rawValue, forKey: Defaults.lastSearchRange)
+        syncSearchModelState()
+        searchModel.persistOptions()
         rebuildOptionsMenu()
         scheduleDebouncedSearch()
     }
@@ -558,7 +565,8 @@ final class PSModuleSearchController: UIViewController,
         } else {
             bookName = nil
         }
-        UserDefaults.standard.set(searchRange.rawValue, forKey: Defaults.lastSearchRange)
+        syncSearchModelState()
+        searchModel.persistOptions()
         scheduleDebouncedSearch()
     }
 
@@ -578,6 +586,7 @@ final class PSModuleSearchController: UIViewController,
             results = nil
             strongsHighlightPerResult = nil
             searchTerm = nil
+            searchModel.clearResults()
             resultsTable.reloadData()
             setSearchTitle()
             return
@@ -598,6 +607,7 @@ final class PSModuleSearchController: UIViewController,
     private func runSearchForCurrentText() {
         let raw = searchController.searchBar.text ?? ""
         searchTermToDisplay = raw
+        searchModel.query = raw
 
         // Strong's mode is sticky — it gets restored from the saved history item
         // after a "Find all occurrences" popup even if the user then types a plain
@@ -616,6 +626,7 @@ final class PSModuleSearchController: UIViewController,
         guard let expr = expr, !expr.isEmpty else {
             results = nil
             strongsHighlightPerResult = nil
+            searchModel.clearResults()
             resultsTable.reloadData()
             return
         }
@@ -652,11 +663,14 @@ final class PSModuleSearchController: UIViewController,
         guard let engine = activeEngine(), engine.indexIsFresh() else {
             results = nil
             strongsHighlightPerResult = nil
+            searchModel.clearResults()
             resultsTable.reloadData()
             return
         }
 
         let capturedExpression = expression
+        searchModel.expression = expression
+        syncSearchModelState()
         let capturedScope = searchRange
         let capturedBookName = bookName.map { String($0) }   // defensive copy
         let capturedStrongsTokens: [String]? = strongsSearch
@@ -692,6 +706,7 @@ final class PSModuleSearchController: UIViewController,
 
                 self.results = entries
                 self.strongsHighlightPerResult = highlights
+                self.searchModel.setResults(raw)
                 self.notifyDelegateOfNewHistoryItem()
                 self.resultsTable.reloadData()
                 self.setSearchTitle()
@@ -711,6 +726,8 @@ final class PSModuleSearchController: UIViewController,
         results = nil
         strongsHighlightPerResult = nil
         searchTermToDisplay = nil
+        searchModel.query = ""
+        searchModel.clearResults()
         resultsTable.reloadData()
         setSearchTitle()
     }
@@ -954,6 +971,16 @@ final class PSModuleSearchController: UIViewController,
         if (results?.count ?? 0) > 0 {
             savedTablePosition = resultsTable.indexPathsForVisibleRows as NSArray?
         }
+    }
+
+    private func syncSearchModelState() {
+        searchModel.query = searchTermToDisplay ?? ""
+        searchModel.strongsSearch = strongsSearch
+        searchModel.fuzzySearch = fuzzySearch
+        searchModel.matchType = searchType
+        searchModel.range = searchRange
+        searchModel.bookName = bookName
+        searchModel.module = activeModuleName()
     }
 
     // MARK: - Legacy plumbing

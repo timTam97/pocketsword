@@ -140,14 +140,9 @@ class PSPreferencesController: PSBasePreferencesController {
     private static let fontNameCellIdentifier = "prefs-font-name"
     private static let switchCellIdentifier = "prefs-switch"
 
-    private var moduleController: PSModuleController { PSModuleController.default()! }
-
-    // RotationPosition NS_ENUM ordinals (globals.h). Mirrored as raw Int constants —
-    // exactly as PSResizing.swift does — because the Clang importer renames the cases
-    // (common-prefix stripping) and the persisted value is the raw NSInteger ordinal.
-    private let kRotationEnabled = 0
-    private let kRotationLockedInPortrait = 1
-    private let kRotationLockedInLandscape = 2
+    private lazy var settingsModel: SettingsModel = {
+        PocketSwordAppDelegate.shared()?.session.settings ?? SettingsModel()
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -259,9 +254,7 @@ class PSPreferencesController: PSBasePreferencesController {
                 ) ?? UITableViewCell(style: .value1, reuseIdentifier: Self.fontNameCellIdentifier)
                 configureTextCell(cell)
                 cell.textLabel?.text = NSLocalizedString("PreferencesFontTitle", comment: "Font")
-                cell.detailTextLabel?.text =
-                    UserDefaults.standard.string(forKey: Defaults.fontNamePreference)
-                    ?? AppConstants.defaultFontName
+                cell.detailTextLabel?.text = settingsModel.fontName
                 cell.detailTextLabel?.font = .preferredFont(forTextStyle: .subheadline)
                 cell.detailTextLabel?.adjustsFontForContentSizeCategory = true
                 cell.detailTextLabel?.textColor = .secondaryLabel
@@ -277,15 +270,14 @@ class PSPreferencesController: PSBasePreferencesController {
                 return switchCell(
                     tableView,
                     title: NSLocalizedString("PreferencesDisableAutoLockTitle", comment: "Keep Screen Awake"),
-                    isOn: UserDefaults.standard.bool(forKey: Defaults.insomniaPreference),
+                    isOn: settingsModel.keepScreenAwake,
                     action: #selector(insomniaModeChanged(_:))
                 )
             case ROTATION_LOCK_ROW:
-                let rotationLockPosition = UserDefaults.standard.integer(forKey: Defaults.rotationLockPosition)
                 return switchCell(
                     tableView,
                     title: NSLocalizedString("PreferencesRotationLock", comment: "Lock Rotation"),
-                    isOn: rotationLockPosition != kRotationEnabled,
+                    isOn: settingsModel.rotationLock != .unlocked,
                     action: #selector(rotationLockChanged(_:))
                 )
             case FULLSCREEN_MODE_ROW:
@@ -295,7 +287,7 @@ class PSPreferencesController: PSBasePreferencesController {
                         "PreferencesFullscreenModeTitle",
                         comment: "Automatic Full Screen"
                     ),
-                    isOn: UserDefaults.standard.bool(forKey: Defaults.fullscreenModePreference),
+                    isOn: settingsModel.automaticFullscreen,
                     action: #selector(fullscreenModeChanged(_:))
                 )
             default:
@@ -307,14 +299,8 @@ class PSPreferencesController: PSBasePreferencesController {
     }
 
     private func preferredFontSize() -> Int {
-        let savedValue = UserDefaults.standard.integer(forKey: Defaults.fontSizePreference)
-        guard savedValue == 0 else {
-            return savedValue
-        }
-
-        let defaultValue = 12
-        UserDefaults.standard.set(defaultValue, forKey: Defaults.fontSizePreference)
-        return defaultValue
+        settingsModel.ensureFontSizeDefault()
+        return settingsModel.fontSize
     }
 
     private func configureTextCell(_ cell: UITableViewCell) {
@@ -371,20 +357,17 @@ class PSPreferencesController: PSBasePreferencesController {
         let interfaceOrientation = PSResizing.currentInterfaceOrientation()
 
         if sender.isOn {
-            let locked = (interfaceOrientation == .landscapeLeft || interfaceOrientation == .landscapeRight)
-                ? kRotationLockedInLandscape
-                : kRotationLockedInPortrait
-            UserDefaults.standard.setValue(NSNumber(value: Int32(locked)), forKey: Defaults.rotationLockPosition)
+            settingsModel.rotationLock =
+                (interfaceOrientation == .landscapeLeft || interfaceOrientation == .landscapeRight)
+                ? .landscape
+                : .portrait
         } else {
-            UserDefaults.standard.setValue(NSNumber(value: Int32(kRotationEnabled)), forKey: Defaults.rotationLockPosition)
+            settingsModel.rotationLock = .unlocked
         }
-        UserDefaults.standard.synchronize()
     }
 
     @objc func fullscreenModeChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.fullscreenModePreference)
-        UserDefaults.standard.synchronize()
+        settingsModel.automaticFullscreen = sender.isOn
     }
 
     // The NINE per-module display handlers that were here are GONE
@@ -420,14 +403,12 @@ class PSPreferencesController: PSBasePreferencesController {
 
     @objc func fontSizeChanged(_ sender: UISlider) {
         let f = Int(sender.value)
-        UserDefaults.standard.set(f, forKey: Defaults.fontSizePreference)
-        UserDefaults.standard.synchronize()
+        settingsModel.fontSize = f
         if let cell = tableView.cellForRow(
             at: IndexPath(row: FONT_SIZE_ROW, section: DISPLAY_SECTION)
         ) as? PSFontSizePreferenceCell {
             cell.updateValue(f)
         }
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
     }
 
 
@@ -439,17 +420,12 @@ class PSPreferencesController: PSBasePreferencesController {
     }
 
     override func fontNameChanged(_ newFont: String) {
-        UserDefaults.standard.set(newFont, forKey: Defaults.fontNamePreference)
-        UserDefaults.standard.synchronize()
+        settingsModel.fontName = newFont
         self.tableView.reloadData()
-        NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
     }
 
     @objc func insomniaModeChanged(_ sender: UISwitch) {
-        let n = sender.isOn
-        UserDefaults.standard.set(n, forKey: Defaults.insomniaPreference)
-        UserDefaults.standard.synchronize()
-        UIApplication.shared.isIdleTimerDisabled = n
+        settingsModel.keepScreenAwake = sender.isOn
     }
 
 }

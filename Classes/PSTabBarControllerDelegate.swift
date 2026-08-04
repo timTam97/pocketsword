@@ -41,6 +41,7 @@
 //
 
 import UIKit
+import SwiftUI
 import WebKit
 import QuartzCore
 
@@ -106,6 +107,7 @@ final class PSTabBarControllerDelegate: NSObject,
     // Search tab
     @objc var savedSearchHistoryItem: PSSearchHistoryItem?
     @objc var savedSearchResultsTab: ShownTab = .BibleTab
+    private var settingsTabController: UIViewController?
 
     @objc override init() {
         super.init()
@@ -164,7 +166,19 @@ final class PSTabBarControllerDelegate: NSObject,
         tabs.insert(bookmarksTab, at: 3)
 
         // add the Preferences tab.
-        let preferencesViewController = PSPreferencesController(style: .insetGrouped)
+        let settings = PocketSwordAppDelegate.shared()?.session.settings
+            ?? SettingsModel()
+        let preferencesViewController = UIHostingController(
+            rootView: SettingsView(
+                settings: settings,
+                maximumFontSize: PSResizing.iPad() ? 36 : 20
+            )
+        )
+        preferencesViewController.title = NSLocalizedString(
+            "PreferencesTitle",
+            comment: "Preferences"
+        )
+        preferencesViewController.navigationItem.largeTitleDisplayMode = .never
         let preferencesTabBarItem = UITabBarItem(title: NSLocalizedString("TabBarTitlePreferences", comment: "Preferences"),
                                                  image: UIImage(named: "gear-24.png"), tag: 9)
         preferencesTabBarItem.accessibilityIdentifier = "workspace.settings.preferences"
@@ -172,13 +186,22 @@ final class PSTabBarControllerDelegate: NSObject,
             let preferencesIPadTab = UINavigationController(rootViewController: preferencesViewController)
             preferencesIPadTab.tabBarItem = preferencesTabBarItem
             tabs.insert(preferencesIPadTab, at: 4)
+            settingsTabController = preferencesIPadTab
         } else {
             preferencesViewController.tabBarItem = preferencesTabBarItem
             tabs.insert(preferencesViewController, at: 4)
+            settingsTabController = preferencesViewController
         }
 
         // add the About tab.
-        let aboutViewController = PSAboutScreenController()
+        let aboutViewController = UIHostingController(
+            rootView: AboutView(information: .current())
+        )
+        aboutViewController.title = NSLocalizedString(
+            "AboutTitle",
+            comment: "About"
+        )
+        aboutViewController.navigationItem.largeTitleDisplayMode = .never
         let aboutTBI = UITabBarItem(title: NSLocalizedString("TabBarTitleAbout", comment: "About"),
                                     image: UIImage(named: "About.png"), tag: 0)
         aboutTBI.accessibilityIdentifier = "workspace.settings.about"
@@ -971,11 +994,8 @@ final class PSTabBarControllerDelegate: NSObject,
                 }
             }
         case .PreferencesTab:
-            for uivc in tabBarController.viewControllers ?? [] {
-                if uivc is PSPreferencesController {
-                    tabBarController.selectedViewController = uivc
-                    break
-                }
+            if let settingsTabController {
+                tabBarController.selectedViewController = settingsTabController
             }
         default:
             break

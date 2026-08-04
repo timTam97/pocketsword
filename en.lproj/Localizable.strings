@@ -271,3 +271,18 @@
 "VoiceRefOpenSettings" = "Open Settings";
 "VoiceRefUnavailable" = "Voice input isn’t available for this language.";
 "VoiceOverVoiceRefButton" = "Speak a Bible reference";
+
+// SwiftUI supporting screens
+"SettingsReadingPreview" = "In the beginning God created the heaven and the earth.";
+"SettingsReadingPreviewReference" = "Genesis 1:1";
+"AboutCommunityTitle" = "PocketSword and CrossWire";
+"AboutProjectLink" = "PocketSword Project";
+"AboutCrossWireLink" = "CrossWire Bible Society";
+"AboutUserForumsLink" = "User Forums";
+"AboutCompanionAppsTitle" = "Companion Scripture Apps";
+"AboutCreditsTitle" = "Credits";
+"AboutDevelopedByText" = "Developed by Nic Carter and the CrossWire Bible Society.";
+"AboutContributorsText" = "With help from David Bell, Manfred Bergmann, Christoffer Björkskog, Jan Bubík, Vincenzo Carrubba, Cheree Lynley Designs, Dominique Corbex, Bruno Gätjens González, Grace Community Church (HK), Yiguang Hu, John Huss, Nakamaru Kunio, Laurence Rezkalla, Timothy Shen, Vitaliy, Ian Wagner, Henko van de Weerd, and PocketSword beta testers.";
+"AboutOpenSourceTitle" = "Open Source";
+"AboutFontLicenseText" = "Ezra SIL and Gentium Plus are distributed under the SIL Open Font License.";
+"AboutFeedbackTitle" = "Feedback and Translation";

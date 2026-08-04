@@ -200,6 +200,10 @@ extension Notification.Name {
     static let addBookmarkInFolder          = Notification.Name("NotificationAddBookmarkInFolder")
 
     static let updateSelectedReference      = Notification.Name("NotificationUpdateSelectedReference")
+
+    // SwiftUI migration bridge only. Posted after the legacy reset routine clears
+    // defaults so observable models can reload without re-persisting old values.
+    static let appStateDidReset             = Notification.Name("PocketSwordAppStateDidReset")
 }
 
 // MARK: - Per-module preference accessors

@@ -34,16 +34,7 @@ final class PSSearchIndexBuilder: UIViewController {
     /// search engine — both of which take a name now.
     @objc private(set) var moduleName: String
 
-    // Set from the main thread (cancel button / bg-task expiration) and read
-    // from the build worker thread inside the progress block. Guarded by a lock
-    // to replace the original `volatile BOOL` with a memory-safe equivalent.
-    private let cancelLock = NSLock()
-    private var _cancelRequested = false
-    private var cancelRequested: Bool {
-        get { cancelLock.lock(); defer { cancelLock.unlock() }; return _cancelRequested }
-        set { cancelLock.lock(); _cancelRequested = newValue; cancelLock.unlock() }
-    }
-
+    private let indexCoordinator: SearchIndexCoordinator
     private var bgTask: UIBackgroundTaskIdentifier = .invalid
     private var buildFinished = false
 
@@ -52,8 +43,19 @@ final class PSSearchIndexBuilder: UIViewController {
     private var progressView: UIProgressView!
     private var cancelButton: UIButton!
 
-    @objc init(moduleName: String) {
+    @objc convenience init(moduleName: String) {
+        self.init(
+            moduleName: moduleName,
+            indexCoordinator: SearchIndexCoordinator()
+        )
+    }
+
+    init(
+        moduleName: String,
+        indexCoordinator: SearchIndexCoordinator
+    ) {
         self.moduleName = moduleName
+        self.indexCoordinator = indexCoordinator
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .pageSheet
         self.isModalInPresentation = true // disallow pull-to-dismiss mid-build
@@ -115,7 +117,7 @@ final class PSSearchIndexBuilder: UIViewController {
     }
 
     @objc private func cancelTapped() {
-        cancelRequested = true
+        indexCoordinator.cancel()
         cancelButton.isEnabled = false
         titleLabel.text = NSLocalizedString("SearchBuildingCancellingLabel", comment: "Cancelling…")
     }
@@ -125,48 +127,30 @@ final class PSSearchIndexBuilder: UIViewController {
         // backgrounds the app mid-build. Expiration flips the cancel flag so we
         // tear down cleanly rather than getting killed with a half-written DB.
         bgTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-            self?.cancelRequested = true
-        }
-
-        let engine = PSSearchEngine.engine(forModuleName: moduleName)
-
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            var err: Error?
-            let ok: Bool
-            do {
-                // `cancel` is an `inout Bool` as of Phase 5 step 8, where it was a
-                // `BOOL *` out-param on the Obj-C block. Same contract: the engine
-                // reads it back the instant this returns and aborts the transaction.
-                try engine.build(progress: { fraction, cancel in
-                    cancel = self?.cancelRequested ?? true
-                    DispatchQueue.main.async {
-                        self?.progressView.progress = fraction
-                    }
-                })
-                ok = true
-            } catch {
-                err = error
-                ok = false
-            }
-
-            let cancelled = self?.cancelRequested ?? true
             DispatchQueue.main.async {
-                self?.finish(success: ok, cancelled: cancelled, error: err)
+                self?.indexCoordinator.cancel()
             }
         }
+
+        indexCoordinator.onStateChange = { [weak self] state in
+            guard let self else { return }
+            if case .building(let progress) = state {
+                self.progressView.progress = progress
+            }
+        }
+        indexCoordinator.onCompletion = { [weak self] success, cancelled in
+            self?.finish(success: success, cancelled: cancelled)
+        }
+        indexCoordinator.build(module: moduleName)
     }
 
-    private func finish(success: Bool, cancelled: Bool, error: Error?) {
+    private func finish(success: Bool, cancelled: Bool) {
         if buildFinished { return }
         buildFinished = true
 
         if bgTask != .invalid {
             UIApplication.shared.endBackgroundTask(bgTask)
             bgTask = .invalid
-        }
-
-        if !success && !cancelled, let error = error {
-            alog("PSSearchIndexBuilder: build failed: \(error)")
         }
 
         let delegate = self.delegate

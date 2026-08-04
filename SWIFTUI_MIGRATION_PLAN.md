@@ -4,8 +4,8 @@
 
 **Last updated:** 2026-08-04
 
-**Overall state:** In progress. Wave 1 is complete and Wave 2 state extraction
-is underway.
+**Overall state:** In progress. Waves 1 and 2 are complete and Wave 3 supporting
+screen replacement is underway.
 
 ### Verified environment
 
@@ -41,7 +41,7 @@ is underway.
 - [x] Repository and persistence-contract audit
 - [x] Confirm Xcode 27, iOS 27 SDK, and baseline device build
 - [x] Wave 1: Baseline settings, XCUITest target, and deterministic baselines
-- [ ] Wave 2: Typed domain values, observable models, coordinators, and stores
+- [x] Wave 2: Typed domain values, observable models, coordinators, and stores
 - [ ] Wave 3: Supporting SwiftUI screens
 - [ ] Wave 4: Library workspace
 - [ ] Wave 5: Search workspace and background indexing
@@ -64,6 +64,24 @@ is underway.
 - `PocketSwordUITests` is part of the shared `PocketSword` scheme and covers the
   legacy reading/library destinations, Settings/About through More, and the
   History/Search modal using stable accessibility identifiers.
+- `AppSession` now owns observable reading, settings, library, and search models.
+  Typed stores preserve the legacy defaults keys for reading position, modules,
+  font, display, rotation, fullscreen, idle-timer, history, and search
+  preferences.
+- `LegacyStateBridge` temporarily mirrors the existing UIKit notification flow
+  into `AppSession` and routes settings side effects back through the legacy
+  redisplay and idle-timer paths.
+- Bookmark nodes carry runtime UUIDs that are deliberately excluded from the
+  positional plist schema. History and search result snapshots use natural
+  persisted reference/module/date identities.
+- `LaunchCoordinator` owns preference reset and all one-shot launch migrations;
+  the legacy launch controller is now only the temporary UIKit spinner and
+  delegate adapter.
+- `HistoryStore` owns the iCloud observer, notification interpretation, legacy
+  recursive merge/dedup/cap behavior, and local/cloud write-back.
+- Wave 3 has replaced the Preferences, font picker, and About destination
+  content with SwiftUI views hosted by the existing UIKit tab coordinator.
+  MessageUI is no longer used by the live About path; feedback uses `mailto:`.
 
 ### Execution rules
 
@@ -113,6 +131,53 @@ is underway.
   verse positions, rejection, and observable state. The full Xcode MCP run on
   iPhone 17 Pro is green: 82 unit tests passed, the 2 exhaustive opt-in tests
   skipped, and all 3 XCUITests passed (87 total).
+- **2026-08-04:** Continued Wave 2 with typed `SettingsStore` and
+  `ReadingStateStore`, observable `SettingsModel`, and the temporary
+  `LegacyStateBridge`. The existing UIKit preferences controller now reads and
+  writes through `SettingsModel`; accepted URL routes persist through the typed
+  reading store without changing wire keys or value types. Added five focused
+  store/model/bridge tests. The full Xcode MCP run on iPhone 17 Pro is green:
+  87 unit tests passed, the 2 exhaustive opt-in tests skipped, and all 3
+  XCUITests passed (92 total results). A focused rerun of the five new tests also
+  passed after clearing the bridge's actor-isolation warnings.
+- **2026-08-04:** Expanded Wave 2 with `BookmarkStore`, `HistoryStore`,
+  `LibraryModel`, runtime-only bookmark UUIDs, typed bookmark colors and tree
+  snapshots, and natural history-row IDs. The legacy history controller now
+  delegates clear/delete persistence to `HistoryStore`, and bookmark/history
+  notifications refresh `LibraryModel`.
+- **2026-08-04:** Added `SearchOptionsStore`, `SearchModel`, natural search-result
+  IDs, and an observable cancellable `SearchIndexCoordinator`. The legacy search
+  controller mirrors options/query/results into the model, and the existing
+  index-build sheet now uses the shared coordinator without changing its modal
+  UI or background-task behavior.
+- **2026-08-04:** Added seven more focused store/model/coordinator tests (12 new
+  Wave 2 tests in total). The latest full Xcode MCP run on iPhone 17 Pro is
+  green: 94 unit tests passed, the 2 exhaustive opt-in tests skipped, and all 3
+  XCUITests passed (99 total results). A separate Xcode MCP generic iOS device
+  build also succeeded.
+- **2026-08-04:** Completed Wave 2 by extracting `LaunchCoordinator` from
+  `PSLaunchViewController` and moving iCloud notification handling plus the
+  byte-locked recursive merge/dedup/cap implementation from
+  `PSHistoryController` into `HistoryStore`. Added three focused launch/cloud
+  tests. The focused seven-test launch/history slice passed, followed by a green
+  full Xcode MCP run on iPhone 17 Pro: 97 unit tests passed, the 2 exhaustive
+  opt-in tests skipped, and all 3 XCUITests passed (102 total results).
+- **2026-08-04:** Started Wave 3 with SwiftUI Preferences, live reading-font
+  preview, font picker, and native About content. The existing UIKit tab
+  coordinator hosts these views during the mixed migration, preserving the More
+  navigation and accessibility identifiers. About feedback now uses `mailto:`
+  instead of the live MessageUI path. Added settings-binding and mail-link unit
+  coverage plus stable XCUITest identifiers for the font action, size slider,
+  device toggles, and About header.
+- **2026-08-04:** Verified the Wave 3 supporting-screen slice through Xcode MCP
+  and live device interaction on iPhone 17 Pro. Font selection dismisses and
+  updates the preview, only the selected font exposes selected/checkmark
+  semantics, the About app icon and version render in the first viewport, and
+  the full About list clears the tab bar without clipping. The final shared
+  scheme run is green: 99 standard unit tests passed, the 2 exhaustive opt-in
+  tests skipped, and all 3 XCUITests passed (104 total results). Wave 3 remains
+  in progress: launch, reference picker, and voice-reference SwiftUI views are
+  still outstanding.
 
 ## Summary
 

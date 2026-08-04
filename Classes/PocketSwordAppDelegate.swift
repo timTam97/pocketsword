@@ -20,10 +20,7 @@
 //  via @objc(sharedAppDelegate) so the Obj-C++ caller binds unchanged.
 //
 //  Responsibilities preserved EXACTLY from the .mm:
-//   - registers for NSUbiquitousKeyValueStore change notifications (iCloud history
-//     sync) in didFinishLaunchingWithOptions and routes the server/initial-sync
-//     change for PSHistoryName through
-//     +[PSHistoryController synchronizeHistoryItemsFromCloud:].
+//   - starts HistoryStore's iCloud history synchronization.
 //   - hands scene configuration to PocketSwordSceneDelegate (Swift, same module).
 //   - routes sword:// URLs via application(_:handleOpen:options:) — pinned to the
 //     Obj-C selector application:handleOpenURL:options: so the Swift scene delegate
@@ -58,7 +55,22 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
     @objc var urlToOpen: URL?
     @objc var tabBarControllerDelegate: PSTabBarControllerDelegate?
-    let session = AppSession()
+    let session: AppSession
+    private let historyStore: HistoryStore
+    private let readingStateStore = ReadingStateStore()
+    private lazy var legacyStateBridge = LegacyStateBridge(
+        session: session,
+        readingStore: readingStateStore
+    )
+
+    override init() {
+        let historyStore = HistoryStore()
+        self.historyStore = historyStore
+        self.session = AppSession(
+            library: LibraryModel(historyStore: historyStore)
+        )
+        super.init()
+    }
 
     /// + (PocketSwordAppDelegate *)sharedAppDelegate — Obj-C selector pinned so the
     /// Obj-C++ coordinator's [PocketSwordAppDelegate sharedAppDelegate] binds
@@ -68,49 +80,10 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
         return UIApplication.shared.delegate as? PocketSwordAppDelegate
     }
 
-    @objc func storeDidChange(_ notification: Notification) {
-        // We get more information from the notification, by using:
-        //  NSUbiquitousKeyValueStoreChangeReasonKey or NSUbiquitousKeyValueStoreChangedKeysKey constants
-        // against the notification's userInfo.
-        guard let userInfo = notification.userInfo else { return }
-
-        // get the reason (initial download, external change or quota violation change)
-        guard let reasonForChange = userInfo[NSUbiquitousKeyValueStoreChangeReasonKey] as? NSNumber else {
-            return
-        }
-
-        // reason was deduced, go ahead and check for the change
-        let reason = reasonForChange.intValue
-        if reason == NSUbiquitousKeyValueStoreServerChange ||
-            // the value changed from the remote server
-            reason == NSUbiquitousKeyValueStoreInitialSyncChange {
-            // initial syncs happen the first time the device is synced
-
-            let initialSync = (reason == NSUbiquitousKeyValueStoreInitialSyncChange)
-
-            let changedKeys = userInfo[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] ?? []
-
-            // in case you have more than one key,
-            // loop through and check for the one we want (PSHistoryName)
-            for changedKey in changedKeys {
-                if changedKey == AppConstants.historyName {
-                    PSHistoryController.synchronizeHistoryItemsFromCloud(initialSync)
-                }
-            }
-        }
-    }
-
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        if NSClassFromString("NSUbiquitousKeyValueStore") != nil {
-            // register to observe notifications from the store
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(storeDidChange(_:)),
-                name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-                object: NSUbiquitousKeyValueStore.default)
-        }
-
+        legacyStateBridge.start()
+        historyStore.startCloudSync()
         return true
     }
 
@@ -171,7 +144,6 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
         self.urlToOpen = route.sourceURL
         session.apply(route)
 
-        let defaults = UserDefaults.standard
         switch route.destination {
         case .bible(let module):
             if let mod = module {
@@ -182,9 +154,7 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.BibleTab)
 
-            defaults.set(route.persistedChapterRef, forKey: Defaults.lastRef)
-            defaults.set(route.versePosition, forKey: Defaults.bibleVersePosition)
-            defaults.synchronize()
+            readingStateStore.persist(route)
 
             NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
             PSHistoryController.addHistoryItem(.BibleTab)
@@ -196,10 +166,7 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.CommentaryTab)
 
-            defaults.set(route.persistedChapterRef, forKey: Defaults.lastRef)
-            defaults.set(route.versePosition, forKey: Defaults.bibleVersePosition)
-            defaults.set(route.versePosition, forKey: Defaults.commentaryVersePosition)
-            defaults.synchronize()
+            readingStateStore.persist(route)
 
             NotificationCenter.default.post(name: .redisplayPrimaryCommentary, object: nil)
             //NotificationCenter.default.post(name: NotificationAddCommentaryHistoryItem, object: nil)

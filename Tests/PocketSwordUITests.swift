@@ -49,6 +49,20 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertTrue(preferences.waitForExistence(timeout: 5))
         preferences.tap()
         XCTAssertTrue(app.navigationBars["Preferences"].waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.sliders["settings.font-size"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.buttons["settings.font"].exists)
+        XCTAssertTrue(app.switches["settings.keep-awake"].exists)
+        XCTAssertTrue(app.switches["settings.rotation-lock"].exists)
+        XCTAssertTrue(app.switches["settings.automatic-fullscreen"].exists)
+
+        app.buttons["settings.font"].tap()
+        XCTAssertTrue(app.navigationBars["Font"].waitForExistence(timeout: 5))
+        let arial = app.buttons["Arial"]
+        XCTAssertTrue(arial.waitForExistence(timeout: 5))
+        arial.tap()
+        XCTAssertTrue(app.navigationBars["Preferences"].waitForExistence(timeout: 5))
 
         let backToMore = app.navigationBars.buttons["More"]
         XCTAssertTrue(backToMore.waitForExistence(timeout: 5))
@@ -58,6 +72,10 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertTrue(about.waitForExistence(timeout: 5))
         about.tap()
         XCTAssertTrue(app.navigationBars["About"].waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.descendants(matching: .any)["about.header"]
+                .waitForExistence(timeout: 5)
+        )
     }
 
     @MainActor
