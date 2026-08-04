@@ -192,8 +192,8 @@ class PSPreferencesController: PSBasePreferencesController {
                     }
                     fontSizeSlider.isContinuous = true
                     fontSizeSlider.addTarget(self, action: #selector(fontSizeChanged(_:)), for: .valueChanged)
-                    cell.addSubview(fontSizeSlider)
-                    cell.addSubview(fontSizeLabel)
+                    cell.contentView.addSubview(fontSizeSlider)
+                    cell.contentView.addSubview(fontSizeLabel)
                 }
                 resetCell = false
             case FONT_NAME_ROW:
