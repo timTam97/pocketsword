@@ -1,5 +1,28 @@
 # PocketSword SWORD-Removal Plan (Direction + Phasing)
 
+> ## ✅ COMPLETE — all five phases done, `opus/sword-migration`
+>
+> **The CrossWire SWORD C++ engine and its Obj-C++ bridge are gone. The app target is
+> pure Swift** (`Classes/` = 58 `.swift` + `globals.h`; the only other Obj-C in the
+> target is the vendored `externals/MBProgressHUD`). `CompileC` went 174 → 1;
+> `-licucore`, `c++0x`, `HEADER_SEARCH_PATHS`, `SWIFT_OBJC_INTERFACE_HEADER_NAME`, the
+> `+Cpp.h` split and the generated-header dance are all deleted. ~47k LOC removed.
+>
+> Deleted: `externals/sword` (~42k LOC C++), the `Sword*.{h,mm,+Cpp.h}` bridge (~4.7k
+> LOC Obj-C++), `VerseEnumerator`, `SwordModuleTextEntry`, `utils.h`, `PSSearchEngine.{h,mm}`
+> (ported to Swift), `tools/swordbake`, `externals/ZipArchive` + minizip, the six module
+> zips, and the whole `Documents/` seeding path. Per-device disk saving ~18.7 MB.
+>
+> Read the per-phase status blocks below for what each shipped and — more usefully — the
+> findings that **correct this plan**. Phase 5's block also records the step-ordering
+> cycle, which `PHASE5_ORDERING.md` covers in full.
+>
+> Not done, and deliberately out of scope: **bookmarks / iCloud-sync removal** (see
+> "Orthogonal" at the end of §3). It never blocked the C++ removal and is its own
+> persisted-format event.
+>
+> ---
+>
 > Status: direction agreed, ready to break into per-phase plans. Goal: **eliminate the CrossWire SWORD C++ engine and its Obj-C++ bridge**, leaving a pure-Swift app serving a fixed set of bundled modules. This is a *simplification* project — the win is measured in deleted code, not added features.
 >
 > This doc is intentionally lighter than `SWIFT_MIGRATION_PLAN.md`. It fixes the target architecture, the phase ordering, and the load-bearing risks. Each phase is meant to be picked up in its own session, planned in detail there, and implemented independently.
@@ -378,9 +401,114 @@ do not copy) · `SwordKey`/`SwordVerseKey`/`SwordListKey`/`VerseEnumerator` ·
   `V-PAI-3S` after a planted mangled cache was cleared, and searching then tapping a
   result.
 
-### Phase 5 — Excise SWORD + C++ build wiring
+### Phase 5 — Excise SWORD + C++ build wiring — ✅ DONE
 
-Once Phases 3–4 are proven, delete the engine and the interop machinery.
+> **Status: complete. The CrossWire SWORD C++ engine is out of the tree and the app
+> target is pure Swift.** Landed as 8 build-green commits on `opus/sword-migration`;
+> suite 76 passed / 2 skipped / 0 failed at every one, and the skip count never moved
+> (the plan's own false-green trap). `Classes/` is **58 `.swift` files + `globals.h`**.
+>
+> **What shipped, in the order it had to happen:**
+>
+> | commit | step | what landed |
+> |---|---|---|
+> | `1680f35` | pre-work | both exhaustive tiers re-run + 2 new fixtures captured |
+> | `d69fc38` | 1 | retire the feature flag; split the ten nil-returns fatal / loud-and-nil |
+> | `0272d89` | 2 | migrate shared constants out of the SWORD headers into `globals.h` |
+> | `84abd61` | 3 | chapter-navigation JS → Swift, asserted byte-equal against the Obj-C |
+> | `8abc705` | 4 | bake `lang` / `direction` / `features` into `content_meta` + re-bake |
+> | `4663e77` | 5+6 | 14 production call sites cut; search index → `<Caches>/search/<module>.db` |
+> | `8251013` | 12 | retarget the test suite *(moved EARLY — see the cycle below)* |
+> | `69f4888` | 9+7 | delete the bridge, the zips and the seeding (23 files, ~4,700 lines) |
+> | `cdbb72e` | 8 | port `PSSearchEngine` to Swift — **the target becomes pure Swift** |
+> | `fa09511` | 10 | delete `externals/sword`, `tools/swordbake`, `externals/ZipArchive` |
+> | `ce1cd68` | 11 | strip the C++ build wiring |
+>
+> **The step order in the list below contains a CYCLE (7 / 9 / 12).** Full write-up in
+> `PHASE5_ORDERING.md`. Summary: **7 before 9 fails to build** (step 7 deletes
+> `swordManager`, which `installModulesFromZip` / `setPreferences` still use until 9);
+> **9 before 7 builds and renders NOTHING** (`reloadLastBible` resolved `primaryBible`
+> through `swordManager`, so with the seeding gone the reading pane shows the
+> "NoModulesInstalled" placeholder — tests pass, the app is blank, and no test can see
+> it because the pane is a `WKWebView`); **9 before 12 goes false-green** (with no zips
+> every engine-driven test hits its 90 s `isModuleInstalled` poll and *skips*). 7 and 9
+> are mutually dependent and were committed together, with 12 moved ahead of them.
+> Resolved order: `12 → (9+7) → 8 → 10 → 11 → 13`.
+>
+> **Four other findings that correct this plan:**
+> - **KJV has SIX `▾` rows, not seven.** It has no `OSISScripref` filter and no
+>   `Feature=Scripref`, so Cross-references was *never* in its menu. Verified against
+>   the live engine before deletion (75 answers) and on-device. Its seventh baked
+>   feature is `Lemma`. Do not "fix" this into a behaviour change.
+> - **FOURTEEN production call sites, not thirteen.** The table below missed
+>   `PSDictionaryEntryViewController:115`, which used
+>   `swordManager.module(withName:) as? SwordDictionary` as an "is this installed, and
+>   is it a lexicon?" test. `content_meta` answers both halves.
+> - **Step 2's migration list was too broad.** `TextPullType` should NOT have migrated
+>   (its one caller is replaced in step 5, so moving it would be carrying a corpse);
+>   same for `ATTRTYPE_NOTENUMBER` (zero references) and `ModuleCategory` (only
+>   `SwordManager.mm` read it). Also `ModuleType` cannot use an `#ifndef <own name>`
+>   guard — an identical *macro* redefinition is legal C, but a duplicate
+>   `typedef enum` re-declaring the same enumerators is a hard error. Both headers
+>   shared a `PS_MODULETYPE_DEFINED` guard instead.
+> - **Two pbxproj scopes, not one.** `HEADER_SEARCH_PATHS` is on the **app target**
+>   (`1D6058940`/`1D6058950`/`E982FA660`); `CLANG_CXX_LANGUAGE_STANDARD`,
+>   `OTHER_LDFLAGS`, `GCC_PREFIX_HEADER` and `SWIFT_OBJC_*` are on the **project**
+>   (`C01FCF4F`/`C01FCF50`/`E982FA650`). Conflating them would have left the app target
+>   inheriting `c++0x`. `CLANG_CXX_LIBRARY` was never set here at all.
+>
+> **`setPreferences` was nine callers, three wired, six dead.** All nine were in
+> `PSPreferencesController`; exactly three (`displayGreekAccentsChanged`,
+> `displayHVPChanged`, `displayHebrewCantillationChanged`) were wired, and all three sat
+> in the deliberately-unreachable `LANG_SECTION = 44`. The other six had no `addTarget`
+> and no other route in. The whole method and every caller went in step 7.
+>
+> **Verification banked (do not redo — the oracles are gone):**
+> - `PSDIFF_EXHAUSTIVE=1` → KJV **2,378** · MHCC **2,378** · search rows **31,102**
+> - `PSREF_EXHAUSTIVE=1` → **62,204** verses · **31,102** round-trips · **1,189**
+>   agreements · **424** abbreviations
+> - `tools/swordbake/crosscheck.py` → PASSED (15,824 UI-cased keys resolve)
+> - Two new fixtures, captured from the live engine and now asserting on every run:
+>   `Tests/Fixtures/search-index-KJV.digest` (31,102 rows of the **engine-built** index,
+>   2.7 MB — full SHA-256 hex came to 8.7 MB, so it is truncated to the leading 64 bits:
+>   a change detector, not a commitment scheme) and
+>   `Tests/Fixtures/chapter-loop-counters.tsv` (`entryCount` for all 1,189 chapters ×
+>   both modules). **Do not recreate either.** The capture code is deleted.
+> - Clean build, DerivedData wiped, **all three configurations**: Debug/simulator,
+>   Release/device, Distribution/device. `CompileC` **174 → 1** (`MBProgressHUD.m`),
+>   `SwiftCompile` 59.
+> - Simulator, genuinely wiped container: renders; `Documents/` **0 B**; no `.zip` in
+>   the bundle; KJV `▾` = 6 rows and **MHCC has no settings button at all**; Dictionary
+>   shows no cache prompt with true-cased keys.
+> - **Final pass** (see the end of this block for the full list): Mal 4 → Mat 1, both
+>   canon boundaries, ref/chapter/verse selectors, Strong's tap, footnote tap,
+>   dictionary search-then-tap, search across all four scopes, the four `sword://`
+>   shapes, and the upgrade path.
+>
+> **The upgrade path, measured.** From a container planted in the pre-Phase-5 shape
+> (`mods.d`, `modules` incl. a legacy `search/fts.db` and a `lucene/` dir, `locales.d`,
+> `unused`, `<Caches>/InstallMgr`), one launch of the new build takes `Documents/` from
+> **13 MB → 4 KB**: all four directories and `InstallMgr` removed, **`PSBookmarks.plist`
+> untouched** (it sits at `Documents/` root, outside all four — the one piece of
+> irreplaceable user data down there), `lastRef` preserved, and the new
+> `<Caches>/search/KJV.db` left alone. The `DefaultsSwordRetired` one-shot is idempotent:
+> re-launching does not re-sweep.
+>
+> **One pre-existing bug, investigated and NOT reproduced.** An earlier session recorded
+> "the Dictionary tab's entry screen renders a blank pane" as pre-existing (reproduced on
+> the unmodified parent commit `8251013`) and deliberately left it. The final pass could
+> not reproduce it on either dictionary path — search-then-tap (`V-PAI-3S`) and plain-list
+> tap (`A-APF-C`) both render correctly. The pane needs a beat to load; the earlier
+> diagnosis appears to have screenshotted a `WKWebView` mid-load. Nothing was changed for
+> it. If it resurfaces, the thing to instrument is the WebView load, and note that the
+> earlier guess (the info-popup `background-color: transparent`) was tested and **wrong**.
+>
+> **Size outcome, realised:** shipped resources 10.7 MB zips + 17.6 MB store → **17.6 MB
+> store**; `Documents/` after first launch ~18.7 MB → **0**; source 42k LOC C++ + 4.7k LOC
+> Obj-C++ → **0**. Download is roughly flat (12.9 MB gzipped store vs the zips it
+> replaces); the win is ~18.7 MB of per-device disk and the entire C++ toolchain.
+
+The original step list, for the record:
 
 - Remove `externals/sword`, `Sword*.{h,mm,+Cpp.h}`, the SWORD parts of `PSSearchEngine.mm`, `VerseEnumerator.{h,mm}`.
 - Remove C++ from the build: prune `misc/PocketSword_Prefix.pch` C++ knobs, `-licucore`, `c++0x`, the bridging header's SWORD imports, `SWIFT_OBJC_INTERFACE_HEADER_NAME` usage if no Obj-C remains.
@@ -400,7 +528,7 @@ Not on the SWORD critical path. `PSHistoryController` only reads `name`/`type` o
 
 ## 4. Risk register
 
-- **Rendering fidelity (highest).** ✅ **Discharged in Phase 3.** All 1,189 chapters of both shipped modules, at both option endpoints, render byte-identically to the live engine (`PSDifferentialTests`, exhaustive tier), plus all 15,824 lexicon entries, all 6,959 notes and all 31,102 search-source rows. The oracle stays until Phase 5, and the exhaustive tier must be re-run before it is deleted.
+- **Rendering fidelity (highest).** ✅ **Discharged in Phase 3, and re-discharged in Phase 5 before the oracle was destroyed.** All 1,189 chapters of both shipped modules, at both option endpoints, render byte-identically to the live engine (`PSDifferentialTests`, exhaustive tier), plus all 15,824 lexicon entries, all 6,959 notes and all 31,102 search-source rows. Phase 5's pre-work re-ran both exhaustive tiers with the expected numbers (KJV 2,378 · MHCC 2,378 · 31,102 rows; 62,204 verses · 31,102 round-trips · 1,189 agreements · 424 abbreviations) and then **moved the oracle to disk** rather than losing it: the chapter-body fixtures, `versification-KJV-oracle.txt`, `search-index-KJV.digest` (31,102 rows) and `chapter-loop-counters.tsv` (2,378 rows) are all engine-captured and all still asserted on every run. Nothing to re-run; nothing to recapture. A red one of those is a real behaviour change.
 - **Fixture-shaped testing (new, and it bit).** Three of Phase 3's real defects were invisible to fixtures and only showed up in differential or on-device testing: the Robinson casing bug (fixtures fed hardcoded true-cased keys the UI never produces), the morph/footnote leakage into the FTS text (no fixture covered that column), and the Dictionary cache prompt (only visible by driving the app). *Mitigation, now standing:* enumerate the inputs the *UI* produces, diff whole corpora rather than samples, and drive the simulator on a wiped container before believing a cutover.
 - **Reference parser correctness.** User-visible, easy to get subtly wrong (abbreviations, ranges, cross-book). *Mitigation:* dump the truth table from SWORD; exhaustive tests.
 - **Persisted-format drift.** Removing module choice / bookmarks / sync each touches `NSUserDefaults` keys and on-disk shapes locked by `PersistedFormatTests`. *Mitigation:* treat each as a migration; don't "fix" a red test — fix the code or write a real migration.

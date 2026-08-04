@@ -59,7 +59,25 @@ the duplication is unguarded. Nothing modifies either copy in that window, but t
 avoid weakening the algorithm's coverage, step 12 pins the **Swift** fold against
 known vectors in a surviving test rather than simply dropping the guard.
 
-## A pre-existing bug found while verifying 9+7 (NOT caused by this phase)
+## A pre-existing bug found while verifying 9+7 — ⚠️ NOT REPRODUCIBLE, see the update
+
+> **UPDATE (final Phase-5 verification pass).** This does **not** reproduce. Both
+> dictionary paths render correctly on the completed phase: search-then-tap
+> (`V-PAI-3S` → *Verb / Present / Active / Indicative / third / Singular*) and
+> plain-list tap (`A-APF-C` → *Adjective / Accusative / Plural / Feminine /
+> Comparative*). Nothing was changed to make that true — no fix was applied for this
+> at any point, and the one attempt (below) was reverted.
+>
+> The most likely explanation is that **the original diagnosis screenshotted a
+> `WKWebView` mid-load.** The pane genuinely is empty for a beat after the push; the
+> footnote popup shows the same behaviour, and inserting a `w 2.0` before capturing
+> makes both render. The analysis below was written from a screenshot taken
+> immediately after the tap.
+>
+> Left in place as a record of the investigation, and because the reasoning about
+> where the content *could* be lost is still correct if it ever resurfaces. If it
+> does: instrument the WebView load, and note that the `background-color:
+> transparent` hypothesis was tested and **disproved**.
 
 The Dictionary tab's **entry screen renders a blank pane**. Tap any Robinson key
 and the navigation title is correct (`A-APF`) while the body is empty.
@@ -87,4 +105,4 @@ presentation bug affecting one screen.
 
 Note the plan's own simulator checklist asks to "search then tap a result" on the
 Dictionary tab — so this would have been caught by the final verification step
-regardless.
+regardless. It was: that step is what established the bug does not exist.
