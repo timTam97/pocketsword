@@ -127,6 +127,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         case .BibleTab:
             let tbi = UITabBarItem(title: NSLocalizedString("TabBarTitleBible", comment: "Bible"),
                                    image: UIImage(named: "bible.png"), tag: 10)
+            tbi.accessibilityIdentifier = "workspace.read.bible"
             self.tabBarItem = tbi
             NotificationCenter.default.addObserver(self, selector: #selector(setModuleNameViaNotification),
                                                    name: .newPrimaryBible, object: nil)
@@ -135,6 +136,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         case .CommentaryTab:
             let tbi = UITabBarItem(title: NSLocalizedString("TabBarTitleCommentary", comment: "Commentary"),
                                    image: UIImage(named: "commentary.png"), tag: 10)
+            tbi.accessibilityIdentifier = "workspace.read.commentary"
             self.tabBarItem = tbi
             NotificationCenter.default.addObserver(self, selector: #selector(setModuleNameViaNotification),
                                                    name: .newPrimaryCommentary, object: nil)
@@ -490,6 +492,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                                            style: .plain, target: vc,
                                            action: NSSelectorFromString("toggleMultiList:"))
         searchButton.accessibilityLabel = NSLocalizedString("VoiceOverHistoryAndSearchButton", comment: "")
+        searchButton.accessibilityIdentifier = "reading.history-search"
         self.navigationItem.leftBarButtonItem = searchButton
 
         let rightButton = UIBarButtonItem(image: UIImage(systemName: "textformat"),

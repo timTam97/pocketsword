@@ -64,7 +64,7 @@ import Foundation
 
 /// A parsed single-book reference. `verse`/`endVerse` are always populated —
 /// an absent verse spec means verse 1, matching `VerseKey`'s own default.
-struct PSParsedReference: Equatable {
+struct BibleReference: Equatable {
     let book: PSVersificationBook
     let chapter: Int
     let verse: Int
@@ -96,7 +96,7 @@ struct PSParsedReference: Equatable {
         isRange ? "\(chapterRef):\(verse)-\(endVerse)" : "\(chapterRef):\(verse)"
     }
 
-    static func == (lhs: PSParsedReference, rhs: PSParsedReference) -> Bool {
+    static func == (lhs: BibleReference, rhs: BibleReference) -> Bool {
         lhs.book.osisName == rhs.book.osisName
             && lhs.chapter == rhs.chapter
             && lhs.verse == rhs.verse
@@ -105,6 +105,8 @@ struct PSParsedReference: Equatable {
             && lhs.hadExplicitVerse == rhs.hadExplicitVerse
     }
 }
+
+typealias PSParsedReference = BibleReference
 
 struct PSRefParser {
 

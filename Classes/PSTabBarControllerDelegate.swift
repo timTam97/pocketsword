@@ -150,6 +150,7 @@ final class PSTabBarControllerDelegate: NSObject,
         let dictionaryTab = UINavigationController(rootViewController: dictionaryViewController)
         let dTBI = UITabBarItem(title: NSLocalizedString("TabBarTitleDictionary", comment: "Dictionary"),
                                 image: UIImage(named: "dictionary.png"), tag: 99)
+        dTBI.accessibilityIdentifier = "workspace.library.dictionary"
         dictionaryTab.tabBarItem = dTBI
         tabs.insert(dictionaryTab, at: 2)
 
@@ -158,6 +159,7 @@ final class PSTabBarControllerDelegate: NSObject,
         let bookmarksViewController = PSBookmarksNavigatorController(style: .grouped)
         let bookmarksTab = UINavigationController(rootViewController: bookmarksViewController)
         let tbI = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 0)
+        tbI.accessibilityIdentifier = "workspace.library.bookmarks"
         bookmarksTab.tabBarItem = tbI
         tabs.insert(bookmarksTab, at: 3)
 
@@ -165,6 +167,7 @@ final class PSTabBarControllerDelegate: NSObject,
         let preferencesViewController = PSPreferencesController(style: .insetGrouped)
         let preferencesTabBarItem = UITabBarItem(title: NSLocalizedString("TabBarTitlePreferences", comment: "Preferences"),
                                                  image: UIImage(named: "gear-24.png"), tag: 9)
+        preferencesTabBarItem.accessibilityIdentifier = "workspace.settings.preferences"
         if PSResizing.iPad() {
             let preferencesIPadTab = UINavigationController(rootViewController: preferencesViewController)
             preferencesIPadTab.tabBarItem = preferencesTabBarItem
@@ -178,6 +181,7 @@ final class PSTabBarControllerDelegate: NSObject,
         let aboutViewController = PSAboutScreenController()
         let aboutTBI = UITabBarItem(title: NSLocalizedString("TabBarTitleAbout", comment: "About"),
                                     image: UIImage(named: "About.png"), tag: 0)
+        aboutTBI.accessibilityIdentifier = "workspace.settings.about"
         if PSResizing.iPad() {
             let aboutIPadTab = UINavigationController(rootViewController: aboutViewController)
             aboutIPadTab.tabBarItem = aboutTBI

@@ -52,11 +52,13 @@
 import UIKit
 
 @main
+@MainActor
 @objc(PocketSwordAppDelegate)
 final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
     @objc var urlToOpen: URL?
     @objc var tabBarControllerDelegate: PSTabBarControllerDelegate?
+    let session = AppSession()
 
     /// + (PocketSwordAppDelegate *)sharedAppDelegate — Obj-C selector pinned so the
     /// Obj-C++ coordinator's [PocketSwordAppDelegate sharedAppDelegate] binds
@@ -121,24 +123,6 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
         return configuration
     }
 
-    /// Parse url's query portion (like key=value&name=something) into a dictionary.
-    private func parseQueryDictionary(from url: URL) -> [String: String] {
-        var result: [String: String] = [:]
-        guard let query = url.query, !query.isEmpty else {
-            return result
-        }
-
-        let pairs = query.components(separatedBy: "&")
-        for keyValueStr in pairs {
-            let keyValueArray = keyValueStr.components(separatedBy: "=")
-            if keyValueArray.count > 1 {
-                result[keyValueArray[0]] = keyValueArray[1]
-            }
-        }
-
-        return result
-    }
-
     /*
      * The URL format is as follows:
      *
@@ -180,114 +164,16 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
                      // iOS-26-deprecated UIApplication.OpenURLOptionsKey. The @objc
                      // selector (application:handleOpenURL:options:) is unaffected.
                      options: [AnyHashable: Any]?) -> Bool {
-        guard let url = url, url.scheme == "sword" else {
+        guard let route = URLRouter()?.route(for: url) else {
             return false
         }
 
-        var module: String? = url.host
-        var reference = url.path
-        reference = (reference.removingPercentEncoding ?? reference)
-            .replacingOccurrences(of: "/", with: "")
-            .replacingOccurrences(of: "+", with: " ")
-
-        let chapter: String
-        let verseRaw: String
-        let hadVerseSpec = reference.range(of: ":") != nil
-        if !hadVerseSpec {
-            chapter = reference
-            verseRaw = "1"
-        } else {
-            let parts = reference.components(separatedBy: ":")
-            chapter = parts[0]
-            verseRaw = parts[1]
-        }
-
-        // preserve only the first number in verse, i.e. change 28-30 into 28, or change 26,28;30 into 26
-        let digits = CharacterSet.decimalDigits
-        let verseChars = Array(verseRaw.unicodeScalars)
-        var i = 1
-        while i < verseChars.count {
-            if !digits.contains(verseChars[i]) {
-                break
-            }
-            i += 1
-        }
-        let verse = String(String.UnicodeScalarView(verseChars[0..<min(i, verseChars.count)]))
-
-        // Validate the CHAPTER REF before mutating any state — that is the thing
-        // that gets persisted to Defaults.lastRef and that the reader must be able
-        // to resolve on the next launch. A book the versification does not contain,
-        // or a chapter outside it, is rejected here: lastRef is left alone, nothing
-        // is posted, and we return false so the caller sees the URL was unhandled.
-        //
-        // The verse is deliberately NOT part of this gate. It is only a scroll
-        // position, and an out-of-range one ("John 3:99") should not cost the user
-        // navigation to a chapter that genuinely exists — the JS scrollToVerse
-        // simply finds no anchor, exactly as before. So the chapter ref is
-        // validated strictly and the verse is checked separately below.
-        guard let parser = PSRefParser(),
-              let parsed = parser.parse(chapter) else {
-            alog("sword:// URL carries an unresolvable reference, ignoring: \(reference)")
-            return false
-        }
-
-        // What actually gets persisted.
-        //
-        // Accepting a ref is not enough: `lastRef` has to be a ref the *reader* can
-        // resolve on the next launch, and `PSBookOSISResolver.resolve(ref:)` is
-        // deliberately narrower than `PSRefParser` — the parser adds a trailing-"."
-        // and a despaced-abbreviation fallback that the resolver's spelling index
-        // does not carry (widening that index is off-limits; PSContentStoreTests
-        // pins it). So `sword://KJV/Gen.+1` parses fine and would persist "Gen. 1",
-        // which the reader then declines.
-        //
-        // Keep `chapter` verbatim when the reader can resolve it — that preserves
-        // every URL that worked before byte-for-byte, in particular an abbreviated
-        // "Gen 3" staying "Gen 3" rather than being silently expanded — and fall
-        // back to the parser's canonical `name`-form ref when it cannot. The
-        // canonical form is what the selector VCs and history already use, so it is
-        // never a novel shape.
-        //
-        // This also covers the chapter-less URL (`sword:///John`, `sword:///1 John`),
-        // which used to persist the chapter-less "John": VerseKey absorbed that, the
-        // Swift reader cannot, and it renders today only via the SWORD fallback.
-        let resolver = PSBookOSISResolver.shared
-        let chapterResolvesAsGiven = parsed.hadExplicitChapter
-            && resolver?.resolve(ref: chapter) != nil
-        let chapterToShow = chapterResolvesAsGiven ? chapter : parsed.chapterRef
-
-        // A verse the truncation above could not reduce to a number at all
-        // ("John 3:abc" -> "a", "John 3:" -> "") would otherwise be written to the
-        // verse-position defaults as a non-numeric string. Fall back to "1", the
-        // same value a URL with no verse spec at all gets.
-        let versePosition = Int(verse).map(String.init) ?? "1"
-
-        self.urlToOpen = url
-
-        let params = parseQueryDictionary(from: url)
-        let type = params["type"]
-
-        let isBible: Bool // determined first by "module" if present, then fall back to "type", then default to "bible"
-        if let mod = module, !mod.isEmpty {
-            // they requested a specific module. Its type comes from content_meta as of
-            // Phase 5 step 5; a nil means we do not ship it, which is the same
-            // "not installed" branch as before.
-            if let type = PSContentStore.shared?.moduleMeta(mod, key: "type") {
-                isBible = (type == "Biblical Texts")
-            } else {
-                // The requested module is not installed. With a fixed bundled module
-                // set that is the common case for a foreign sword:// link, so ignore
-                // the module component and still navigate to the reference.
-                module = nil
-                isBible = (type == nil || type == "bible")
-            }
-        } else {
-            // no module requested
-            isBible = (type == nil || type == "bible")
-        }
+        self.urlToOpen = route.sourceURL
+        session.apply(route)
 
         let defaults = UserDefaults.standard
-        if isBible {
+        switch route.destination {
+        case .bible(let module):
             if let mod = module {
                 // they requested a specific module and it is available
                 PSModuleController.default()?.loadPrimaryBible(mod)
@@ -296,13 +182,13 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.BibleTab)
 
-            defaults.set(PSModuleController.createRefString(chapterToShow), forKey: Defaults.lastRef)
-            defaults.set(versePosition, forKey: Defaults.bibleVersePosition)
+            defaults.set(route.persistedChapterRef, forKey: Defaults.lastRef)
+            defaults.set(route.versePosition, forKey: Defaults.bibleVersePosition)
             defaults.synchronize()
 
             NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
             PSHistoryController.addHistoryItem(.BibleTab)
-        } else {
+        case .commentary(let module):
             if let mod = module {
                 // they requested a specific module and it is available
                 PSModuleController.default()?.loadPrimaryCommentary(mod)
@@ -310,9 +196,9 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.CommentaryTab)
 
-            defaults.set(PSModuleController.createRefString(chapterToShow), forKey: Defaults.lastRef)
-            defaults.set(versePosition, forKey: Defaults.bibleVersePosition)
-            defaults.set(versePosition, forKey: Defaults.commentaryVersePosition)
+            defaults.set(route.persistedChapterRef, forKey: Defaults.lastRef)
+            defaults.set(route.versePosition, forKey: Defaults.bibleVersePosition)
+            defaults.set(route.versePosition, forKey: Defaults.commentaryVersePosition)
             defaults.synchronize()
 
             NotificationCenter.default.post(name: .redisplayPrimaryCommentary, object: nil)

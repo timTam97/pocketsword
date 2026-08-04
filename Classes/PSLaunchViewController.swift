@@ -141,7 +141,7 @@ final class PSLaunchViewController: UIViewController {
 
     @objc func startInitializingPocketSword() {
         autoreleasepool {
-            guard let moduleManager = PSModuleController.default() else { return }
+            guard PSModuleController.default() != nil else { return }
             let defaults = UserDefaults.standard
 
             // testing unlocking mechanism:
@@ -324,14 +324,15 @@ final class PSLaunchViewController: UIViewController {
                 defaults.synchronize()
             }
 
-            if defaults.bool(forKey: Defaults.insomniaPreference) {
-                UIApplication.shared.isIdleTimerDisabled = true
-            }
+            let shouldDisableIdleTimer = defaults.bool(forKey: Defaults.insomniaPreference)
 
             try? fm.removeItem(atPath: AppPaths.mmmPath) // delete our normal tmp folder...
 
             if let delegate = delegate {
                 DispatchQueue.main.async {
+                    if shouldDisableIdleTimer {
+                        UIApplication.shared.isIdleTimerDisabled = true
+                    }
                     delegate.finishedInitializingPocketSword(self)
                 }
             }

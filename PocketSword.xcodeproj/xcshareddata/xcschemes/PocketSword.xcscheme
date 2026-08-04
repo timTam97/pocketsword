@@ -34,6 +34,20 @@
                ReferencedContainer = "container:PocketSword.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B20000000000000000000020"
+               BuildableName = "PocketSwordUITests.xctest"
+               BlueprintName = "PocketSwordUITests"
+               ReferencedContainer = "container:PocketSword.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -49,6 +63,16 @@
                BlueprintIdentifier = "5A1F70B0000000000000F020"
                BuildableName = "PocketSwordTests.xctest"
                BlueprintName = "PocketSwordTests"
+               ReferencedContainer = "container:PocketSword.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B20000000000000000000020"
+               BuildableName = "PocketSwordUITests.xctest"
+               BlueprintName = "PocketSwordUITests"
                ReferencedContainer = "container:PocketSword.xcodeproj">
             </BuildableReference>
          </TestableReference>
