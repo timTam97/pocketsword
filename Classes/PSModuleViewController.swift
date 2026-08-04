@@ -153,7 +153,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         segControl.isMomentary = true
 
         let arrowWidth: CGFloat = 50.0
-        let refWidth: CGFloat = 78.0
+        let refWidth: CGFloat = 95.0
         segControl.setWidth(arrowWidth, forSegmentAt: 0)
         segControl.setWidth(refWidth, forSegmentAt: 1)
         segControl.setWidth(arrowWidth, forSegmentAt: 2)
