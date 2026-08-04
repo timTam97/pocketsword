@@ -153,6 +153,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         let segments: [Any] = [backImg as Any, "Gen 23:23", forwardImg as Any]
         let segControl = UISegmentedControl(items: segments)
         segControl.isMomentary = true
+        segControl.accessibilityIdentifier = "reading.reference-picker"
 
         let arrowWidth: CGFloat = 50.0
         let refWidth: CGFloat = 95.0

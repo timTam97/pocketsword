@@ -418,7 +418,7 @@ final class PSTabBarControllerDelegate: NSObject,
         if let sheet = voiceController.sheetPresentationController {
             let identifier = UISheetPresentationController.Detent.Identifier("voiceReference")
             sheet.detents = [
-                .custom(identifier: identifier) { _ in 280 }
+                .custom(identifier: identifier) { _ in 320 }
             ]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
@@ -441,10 +441,11 @@ final class PSTabBarControllerDelegate: NSObject,
                     // no Bible selected, so ignore...
                     return
                 }
-                let refSel = PSRefSelectorController(style: .plain)
+                let refSel = PSRefSelectorController()
                 refSelectorController = refSel
                 refSel.setupNavigation()
                 let refNav = UINavigationController(rootViewController: refSel)
+                refNav.setNavigationBarHidden(true, animated: false)
                 refNavigationController = refNav
                 if !iPad {
                     refSel.willShowNavigation()
@@ -470,10 +471,11 @@ final class PSTabBarControllerDelegate: NSObject,
                     // no Commentary selected, so ignore...
                     return
                 }
-                let refSel = PSRefSelectorController(style: .plain)
+                let refSel = PSRefSelectorController()
                 refSelectorController = refSel
                 refSel.setupNavigation()
                 let refNav = UINavigationController(rootViewController: refSel)
+                refNav.setNavigationBarHidden(true, animated: false)
                 refNavigationController = refNav
                 if !iPad {
                     refSel.willShowNavigation()

@@ -88,6 +88,7 @@
 
 "None" = "None";
 "CloseButtonTitle" = "Close";
+"LaunchProgressLabel" = "Opening PocketSword";
 "NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email Us";

@@ -1,5 +1,615 @@
 import SwiftUI
 import UIKit
+import Observation
+
+struct LaunchView: View {
+    var body: some View {
+        ZStack {
+            Color(uiColor: .systemBackground)
+                .ignoresSafeArea()
+            ProgressView()
+                .controlSize(.large)
+                .accessibilityLabel(Text("LaunchProgressLabel"))
+                .accessibilityIdentifier("launch.progress")
+        }
+    }
+}
+
+struct ReferencePickerBook: Identifiable, Equatable, Hashable {
+    let id: String
+    let name: String
+    let shortName: String
+    let verseCounts: [Int]
+
+    init(
+        id: String,
+        name: String,
+        shortName: String,
+        verseCounts: [Int]
+    ) {
+        self.id = id
+        self.name = name
+        self.shortName = shortName
+        self.verseCounts = verseCounts
+    }
+
+    init(_ book: PSVersificationBook) {
+        self.init(
+            id: book.osisName,
+            name: book.name,
+            shortName: book.shortName,
+            verseCounts: book.verseMax
+        )
+    }
+
+    var chapterCount: Int {
+        verseCounts.count
+    }
+
+    func verseCount(chapter: Int) -> Int {
+        guard verseCounts.indices.contains(chapter - 1) else { return 0 }
+        return verseCounts[chapter - 1]
+    }
+}
+
+struct ReferencePickerSelection: Equatable {
+    let bookName: String
+    let chapter: Int
+    let verse: Int
+}
+
+struct ReferencePickerIndexEntry: Identifiable, Equatable {
+    var id: String { shortName }
+
+    let shortName: String
+    let bookID: String
+}
+
+enum ReferencePickerDestination: Hashable {
+    case chapters(bookID: String)
+    case verses(bookID: String, chapter: Int)
+}
+
+@MainActor
+@Observable
+final class ReferencePickerModel {
+    var books: [ReferencePickerBook]
+    var indexEntries: [ReferencePickerIndexEntry]
+    var currentBookID: String?
+    var currentChapter: Int?
+    var path: [ReferencePickerDestination] = []
+    var showsCancel: Bool
+
+    @ObservationIgnored var onSelection: ((ReferencePickerSelection) -> Void)?
+    @ObservationIgnored var onCancel: (() -> Void)?
+
+    init(
+        books: [ReferencePickerBook] = [],
+        currentReference: String? = nil,
+        showsCancel: Bool = false
+    ) {
+        self.books = books
+        self.indexEntries = Self.makeIndexEntries(books: books)
+        self.showsCancel = showsCancel
+        updateCurrentReference(currentReference)
+    }
+
+    func reload(
+        books: [ReferencePickerBook],
+        currentReference: String?
+    ) {
+        self.books = books
+        indexEntries = Self.makeIndexEntries(books: books)
+        path = []
+        updateCurrentReference(currentReference)
+    }
+
+    func clearBooks() {
+        books = []
+        indexEntries = []
+        currentBookID = nil
+        currentChapter = nil
+        path = []
+    }
+
+    func updateCurrentReference(_ reference: String?) {
+        guard let chapterReference = reference?
+            .components(separatedBy: ":")
+            .first,
+              let separator = chapterReference.range(
+                of: " ",
+                options: .backwards
+              ),
+              let chapter = Int(chapterReference[separator.upperBound...]) else {
+            currentBookID = nil
+            currentChapter = nil
+            return
+        }
+
+        let bookName = String(chapterReference[..<separator.lowerBound])
+        currentBookID = books.first { $0.name == bookName }?.id
+        currentChapter = currentBookID == nil ? nil : chapter
+    }
+
+    func book(id: String) -> ReferencePickerBook? {
+        books.first { $0.id == id }
+    }
+
+    func openChapters(for bookID: String) {
+        guard book(id: bookID) != nil else { return }
+        path.append(.chapters(bookID: bookID))
+    }
+
+    func openVerses(for bookID: String, chapter: Int) {
+        guard let book = book(id: bookID),
+              (1...book.chapterCount).contains(chapter) else {
+            return
+        }
+        path.append(.verses(bookID: bookID, chapter: chapter))
+    }
+
+    func select(bookID: String, chapter: Int, verse: Int) {
+        guard let book = book(id: bookID),
+              (1...book.chapterCount).contains(chapter),
+              (1...book.verseCount(chapter: chapter)).contains(verse) else {
+            return
+        }
+        onSelection?(
+            ReferencePickerSelection(
+                bookName: book.name,
+                chapter: chapter,
+                verse: verse
+            )
+        )
+    }
+
+    func cancel() {
+        onCancel?()
+    }
+
+    private static func makeIndexEntries(
+        books: [ReferencePickerBook]
+    ) -> [ReferencePickerIndexEntry] {
+        var seen: Set<String> = []
+        return books.compactMap { book in
+            guard seen.insert(book.shortName).inserted else { return nil }
+            return ReferencePickerIndexEntry(
+                shortName: book.shortName,
+                bookID: book.id
+            )
+        }
+    }
+}
+
+struct ReferencePickerView: View {
+    let model: ReferencePickerModel
+
+    var body: some View {
+        @Bindable var model = model
+
+        NavigationStack(path: $model.path) {
+            ReferenceBookList(model: model)
+                .navigationDestination(
+                    for: ReferencePickerDestination.self
+                ) { destination in
+                    switch destination {
+                    case .chapters(let bookID):
+                        if let book = model.book(id: bookID) {
+                            ReferenceChapterList(model: model, book: book)
+                        }
+                    case .verses(let bookID, let chapter):
+                        if let book = model.book(id: bookID) {
+                            ReferenceVerseList(
+                                model: model,
+                                book: book,
+                                chapter: chapter
+                            )
+                        }
+                    }
+                }
+        }
+    }
+}
+
+private struct ReferenceBookList: View {
+    let model: ReferencePickerModel
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            List(model.books) { book in
+                ReferenceBookRow(
+                    id: book.id,
+                    name: book.name,
+                    isCurrent: model.currentBookID == book.id,
+                    open: { model.openChapters(for: book.id) },
+                    jumpToStart: {
+                        model.select(bookID: book.id, chapter: 1, verse: 1)
+                    }
+                )
+                .id(book.id)
+            }
+            .task(id: model.currentBookID) {
+                await Task.yield()
+                if let currentBookID = model.currentBookID {
+                    proxy.scrollTo(currentBookID, anchor: .center)
+                }
+            }
+            .contentMargins(.trailing, 32, for: .scrollContent)
+            .overlay(alignment: .trailing) {
+                ReferenceBookIndex(entries: model.indexEntries) { bookID in
+                    proxy.scrollTo(bookID, anchor: .center)
+                }
+            }
+        }
+        .navigationTitle("RefSelectorBookTitle")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if model.showsCancel {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        model.cancel()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .accessibilityLabel(Text("Cancel"))
+                    .help("Cancel")
+                }
+            }
+        }
+    }
+}
+
+private struct ReferenceBookIndex: View {
+    let entries: [ReferencePickerIndexEntry]
+    let scrollTo: (String) -> Void
+
+    @State private var lastBookID: String?
+
+    var body: some View {
+        GeometryReader { geometry in
+            let rowHeight = max(
+                geometry.size.height / CGFloat(max(entries.count, 1)),
+                0.1
+            )
+
+            VStack(spacing: 0) {
+                ForEach(entries) { entry in
+                    Text(entry.shortName)
+                        .font(.caption2)
+                        .minimumScaleFactor(0.45)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: rowHeight)
+                }
+            }
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        let index = min(
+                            max(Int(value.location.y / rowHeight), 0),
+                            entries.count - 1
+                        )
+                        guard entries.indices.contains(index) else { return }
+                        let bookID = entries[index].bookID
+                        guard bookID != lastBookID else { return }
+                        lastBookID = bookID
+                        scrollTo(bookID)
+                    }
+                    .onEnded { _ in
+                        lastBookID = nil
+                    }
+            )
+        }
+        .frame(width: 32)
+        .padding(.vertical, 4)
+        .accessibilityHidden(true)
+    }
+}
+
+private struct ReferenceBookRow: View {
+    let id: String
+    let name: String
+    let isCurrent: Bool
+    let open: () -> Void
+    let jumpToStart: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(action: open) {
+                HStack(spacing: 10) {
+                    Text(name)
+                        .foregroundStyle(isCurrent ? Color.accentColor : .primary)
+                    Spacer()
+                    if isCurrent {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                    }
+                    Image(systemName: "chevron.forward")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("reference.book.\(id)")
+
+            Button(action: jumpToStart) {
+                Text(verbatim: "1:1")
+                    .monospacedDigit()
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel(Text("\(name) 1:1"))
+            .accessibilityIdentifier("reference.book-start.\(id)")
+        }
+    }
+}
+
+private struct ReferenceChapterList: View {
+    let model: ReferencePickerModel
+    let book: ReferencePickerBook
+
+    var body: some View {
+        List {
+            ForEach(1...book.chapterCount, id: \.self) { chapter in
+                ReferenceChapterRow(
+                    bookID: book.id,
+                    chapter: chapter,
+                    title: ReferencePickerText.chapter(chapter),
+                    isCurrent: model.currentBookID == book.id
+                        && model.currentChapter == chapter,
+                    open: {
+                        model.openVerses(
+                            for: book.id,
+                            chapter: chapter
+                        )
+                    },
+                    jumpToStart: {
+                        model.select(
+                            bookID: book.id,
+                            chapter: chapter,
+                            verse: 1
+                        )
+                    }
+                )
+            }
+        }
+        .navigationTitle(book.name)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct ReferenceChapterRow: View {
+    let bookID: String
+    let chapter: Int
+    let title: String
+    let isCurrent: Bool
+    let open: () -> Void
+    let jumpToStart: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(action: open) {
+                HStack(spacing: 10) {
+                    Text(title)
+                        .foregroundStyle(isCurrent ? Color.accentColor : .primary)
+                    Spacer()
+                    if isCurrent {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                    }
+                    Image(systemName: "chevron.forward")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("reference.chapter.\(chapter)")
+
+            Button(action: jumpToStart) {
+                Text(verbatim: "\(chapter):1")
+                    .monospacedDigit()
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel(Text("\(title), verse 1"))
+            .accessibilityIdentifier(
+                "reference.chapter-start.\(bookID).\(chapter)"
+            )
+        }
+    }
+}
+
+private struct ReferenceVerseList: View {
+    let model: ReferencePickerModel
+    let book: ReferencePickerBook
+    let chapter: Int
+
+    var body: some View {
+        List {
+            ForEach(
+                1...book.verseCount(chapter: chapter),
+                id: \.self
+            ) { verse in
+                Button {
+                    model.select(
+                        bookID: book.id,
+                        chapter: chapter,
+                        verse: verse
+                    )
+                } label: {
+                    Text(ReferencePickerText.verse(verse))
+                        .foregroundStyle(.primary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("reference.verse.\(verse)")
+            }
+        }
+        .navigationTitle("\(book.name) \(chapter)")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private enum ReferencePickerText {
+    static func chapter(_ chapter: Int) -> String {
+        String.localizedStringWithFormat(
+            String(localized: "RefSelectorChapterTitle"),
+            chapter
+        )
+    }
+
+    static func verse(_ verse: Int) -> String {
+        String.localizedStringWithFormat(
+            String(localized: "RefSelectorVerseTitle"),
+            verse
+        )
+    }
+}
+
+struct VoiceReferenceView: View {
+    let model: VoiceReferenceModel
+
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        VStack(spacing: 14) {
+            VoiceReferenceHeader(
+                isListening: model.isListening,
+                status: model.status.text
+            )
+            VoiceReferenceTranscriptView(
+                transcript: model.transcript,
+                preview: model.preview
+            )
+            VoiceReferenceProgress(progress: model.downloadProgress)
+            Spacer(minLength: 0)
+            VoiceReferenceActionBar(
+                action: model.action,
+                isActionEnabled: model.isActionEnabled,
+                showsCancel: model.showsCancel,
+                cancel: model.cancel,
+                performAction: {
+                    if model.action == .openSettings,
+                       let url = URL(
+                        string: UIApplication.openSettingsURLString
+                       ) {
+                        openURL(url)
+                    } else {
+                        model.performPrimaryAction()
+                    }
+                }
+            )
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 18)
+        .task {
+            model.start()
+        }
+        .onDisappear {
+            model.cancelSession()
+        }
+        .accessibilityIdentifier("voice-reference")
+    }
+}
+
+private struct VoiceReferenceHeader: View {
+    let isListening: Bool
+    let status: LocalizedStringResource?
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "microphone")
+                .font(.system(.largeTitle, weight: .medium))
+                .foregroundStyle(.tint)
+                .symbolEffect(
+                    .variableColor.iterative,
+                    options: .repeat(.continuous),
+                    isActive: isListening
+                )
+                .accessibilityHidden(true)
+            if let status {
+                Text(status)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+    }
+}
+
+private struct VoiceReferenceTranscriptView: View {
+    let transcript: VoiceReferenceTranscript
+    let preview: String
+
+    var body: some View {
+        VStack(spacing: 6) {
+            VStack {
+                switch transcript {
+                case .empty:
+                    Color.clear
+                case .prompt:
+                    Text("VoiceRefPrompt")
+                case .value(let value):
+                    Text(value)
+                }
+            }
+            .font(.headline)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, minHeight: 42)
+
+            Text(preview)
+                .font(.subheadline)
+                .foregroundStyle(.green)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, minHeight: 20)
+        }
+    }
+}
+
+private struct VoiceReferenceProgress: View {
+    let progress: Progress?
+
+    var body: some View {
+        ZStack {
+            if let progress {
+                ProgressView(progress)
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 8)
+    }
+}
+
+private struct VoiceReferenceActionBar: View {
+    let action: VoiceReferenceAction
+    let isActionEnabled: Bool
+    let showsCancel: Bool
+    let cancel: () -> Void
+    let performAction: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            if showsCancel {
+                Button("Cancel", action: cancel)
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("voice-reference.cancel")
+            }
+            if let title = action.title {
+                Button(title, action: performAction)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!isActionEnabled)
+                    .accessibilityIdentifier("voice-reference.action")
+            }
+        }
+        .controlSize(.large)
+        .frame(maxWidth: .infinity, minHeight: 44)
+    }
+}
 
 enum StudyFonts {
     static let all = [

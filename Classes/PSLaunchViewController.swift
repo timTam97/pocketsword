@@ -15,6 +15,7 @@
 //  Free Software Foundation version 2.
 //
 
+import SwiftUI
 import UIKit
 
 // PSLaunchDelegate — the bootstrap-finished handshake the scene delegate conforms
@@ -26,50 +27,19 @@ protocol PSLaunchDelegate: NSObjectProtocol {
 }
 
 @objc(PSLaunchViewController)
-final class PSLaunchViewController: UIViewController {
+final class PSLaunchViewController: UIHostingController<LaunchView> {
 
     @objc weak var delegate: PSLaunchDelegate?
     private let launchCoordinator: LaunchCoordinator
 
     init(launchCoordinator: LaunchCoordinator = LaunchCoordinator()) {
         self.launchCoordinator = launchCoordinator
-        super.init(nibName: nil, bundle: nil)
+        super.init(rootView: LaunchView())
     }
 
     required init?(coder: NSCoder) {
         self.launchCoordinator = LaunchCoordinator()
-        super.init(coder: coder)
-    }
-
-    // MARK: - View
-
-    // Build the view hierarchy programmatically (no nib) — a grey background
-    // matching the launch image plus a centred spinner.
-    override func loadView() {
-        let aiFrame: CGRect
-        if PSResizing.iPad() {
-            let uiOrientation = PSResizing.currentInterfaceOrientation()
-            if uiOrientation == .landscapeLeft || uiOrientation == .landscapeRight {
-                aiFrame = CGRect(x: 494, y: 370, width: 37, height: 37)
-            } else {
-                aiFrame = CGRect(x: 366, y: 499, width: 37, height: 37)
-            }
-        } else {
-            let screenRect = PSResizing.mainScreenBounds()
-            aiFrame = CGRect(x: screenRect.size.width / 2.0 - (37.0 / 2.0),
-                             y: screenRect.size.height / 2.0 - (37.0 / 2.0),
-                             width: 37, height: 37)
-        }
-
-        let base = UIView(frame: PSResizing.mainScreenBounds())
-        // the same grey as the launch image bg
-        base.backgroundColor = UIColor(hue: 202.0 / 360.0, saturation: 0.11, brightness: 0.4, alpha: 1.0)
-        let activityInd = UIActivityIndicatorView(style: .large)
-        activityInd.hidesWhenStopped = false
-        base.addSubview(activityInd)
-        activityInd.frame = aiFrame
-        activityInd.startAnimating()
-        self.view = base
+        super.init(coder: coder, rootView: LaunchView())
     }
 
     // MARK: - Reset

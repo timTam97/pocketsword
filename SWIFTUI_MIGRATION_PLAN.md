@@ -4,8 +4,8 @@
 
 **Last updated:** 2026-08-04
 
-**Overall state:** In progress. Waves 1 and 2 are complete and Wave 3 supporting
-screen replacement is underway.
+**Overall state:** In progress. Waves 1 through 3 are complete. Wave 4 library
+workspace replacement is next.
 
 ### Verified environment
 
@@ -42,7 +42,7 @@ screen replacement is underway.
 - [x] Confirm Xcode 27, iOS 27 SDK, and baseline device build
 - [x] Wave 1: Baseline settings, XCUITest target, and deterministic baselines
 - [x] Wave 2: Typed domain values, observable models, coordinators, and stores
-- [ ] Wave 3: Supporting SwiftUI screens
+- [x] Wave 3: Supporting SwiftUI screens
 - [ ] Wave 4: Library workspace
 - [ ] Wave 5: Search workspace and background indexing
 - [ ] Wave 6: SwiftUI WebKit reader
@@ -79,9 +79,16 @@ screen replacement is underway.
   delegate adapter.
 - `HistoryStore` owns the iCloud observer, notification interpretation, legacy
   recursive merge/dedup/cap behavior, and local/cloud write-back.
-- Wave 3 has replaced the Preferences, font picker, and About destination
-  content with SwiftUI views hosted by the existing UIKit tab coordinator.
-  MessageUI is no longer used by the live About path; feedback uses `mailto:`.
+- Wave 3 has replaced launch, book/chapter/verse reference selection, voice
+  reference, Preferences, font picker, and About content with SwiftUI views
+  hosted by thin UIKit adapters until the app-lifecycle cutover.
+- The SwiftUI reference picker preserves the existing notification payload,
+  direct chapter/verse-one jumps, current-reference highlighting, and the
+  64-entry first-match short-book index contract.
+- Voice-reference speech and parsing remain in `PSVoiceRefSession` and
+  `PSVoiceRefParser`; `VoiceReferenceModel` now maps session states into the
+  SwiftUI sheet. Permission recovery uses `openSettings`.
+- MessageUI is no longer used by the live About path; feedback uses `mailto:`.
 
 ### Execution rules
 
@@ -175,9 +182,26 @@ screen replacement is underway.
   semantics, the About app icon and version render in the first viewport, and
   the full About list clears the tab bar without clipping. The final shared
   scheme run is green: 99 standard unit tests passed, the 2 exhaustive opt-in
-  tests skipped, and all 3 XCUITests passed (104 total results). Wave 3 remains
-  in progress: launch, reference picker, and voice-reference SwiftUI views are
-  still outstanding.
+  tests skipped, and all 3 XCUITests passed (104 total results).
+- **2026-08-04:** Completed the remaining Wave 3 screens. `LaunchView` now owns
+  the initialization surface; `ReferencePickerView` owns book, chapter, and
+  verse navigation behind the existing notification contract; and
+  `VoiceReferenceView` plus `VoiceReferenceModel` replace the UIKit voice sheet
+  while retaining the existing speech session and parser.
+- **2026-08-04:** Added stable reference-picker accessibility identifiers, a
+  deterministic XCUITest that selects Genesis 1:1, and focused tests for
+  reference validation/index identity and voice-session state mapping. The
+  SwiftUI short-book scrub index preserves the legacy 64-title first-match
+  behavior, including the `Jud` and `Phi` collisions.
+- **2026-08-04:** Xcode MCP build-for-testing succeeds and the final shared
+  scheme run is green on iPhone 17 Pro: 101 standard unit tests passed, the 2
+  `PSREF_EXHAUSTIVE` opt-in tests skipped, and all 4 XCUITests passed (107 total
+  results). Live portrait inspection confirmed the SwiftUI book list renders
+  without clipping or overlap and marks the current book selected. The complete
+  book/chapter/verse flow passed through XCUITest. The interaction session was
+  interrupted before manual chapter/verse and landscape inspection, and live
+  voice UI remains unavailable on the simulator because it has no audio input;
+  voice rendering transitions are verified at the observable-model boundary.
 
 ## Summary
 

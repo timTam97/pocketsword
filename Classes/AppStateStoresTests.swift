@@ -124,6 +124,103 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
+    @MainActor
+    func testReferencePickerUsesStableBookIDsAndValidatedSelection() {
+        let genesis = ReferencePickerBook(
+            id: "Gen",
+            name: "Genesis",
+            shortName: "Gen",
+            verseCounts: [31, 25]
+        )
+        let john = ReferencePickerBook(
+            id: "John",
+            name: "John",
+            shortName: "Joh",
+            verseCounts: [51, 25, 36]
+        )
+        let model = ReferencePickerModel(
+            books: [genesis, john],
+            currentReference: "John 3:16"
+        )
+        var selection: ReferencePickerSelection?
+        model.onSelection = {
+            selection = $0
+        }
+
+        XCTAssertEqual(model.currentBookID, "John")
+        XCTAssertEqual(model.currentChapter, 3)
+        XCTAssertEqual(
+            model.indexEntries,
+            [
+                ReferencePickerIndexEntry(
+                    shortName: "Gen",
+                    bookID: "Gen"
+                ),
+                ReferencePickerIndexEntry(
+                    shortName: "Joh",
+                    bookID: "John"
+                ),
+            ]
+        )
+
+        model.openChapters(for: "John")
+        model.openVerses(for: "John", chapter: 3)
+        XCTAssertEqual(
+            model.path,
+            [
+                .chapters(bookID: "John"),
+                .verses(bookID: "John", chapter: 3),
+            ]
+        )
+
+        model.select(bookID: "John", chapter: 3, verse: 16)
+        XCTAssertEqual(
+            selection,
+            ReferencePickerSelection(
+                bookName: "John",
+                chapter: 3,
+                verse: 16
+            )
+        )
+
+        model.select(bookID: "John", chapter: 4, verse: 1)
+        XCTAssertEqual(selection?.chapter, 3)
+    }
+
+    @MainActor
+    func testVoiceReferenceModelMapsSessionStatesForSwiftUI() {
+        let john = PSVoiceRefBook(
+            names: ["John"],
+            displayName: "John",
+            chapters: 21,
+            versesInChapter: { chapter in
+                chapter == 3 ? 36 : 1
+            }
+        )
+        let model = VoiceReferenceModel(books: [john])
+
+        model.apply(.listening(volatileText: "John 3 16"))
+
+        XCTAssertEqual(model.status, .listening)
+        XCTAssertEqual(model.transcript, .value("John 3 16"))
+        XCTAssertEqual(model.preview, "John 3:16")
+        XCTAssertEqual(model.action, .done)
+        XCTAssertTrue(model.isListening)
+
+        model.apply(.finished(candidates: ["not a reference"]))
+
+        XCTAssertEqual(model.status, .noMatch)
+        XCTAssertEqual(model.transcript, .value("not a reference"))
+        XCTAssertEqual(model.action, .tryAgain)
+        XCTAssertTrue(model.showsCancel)
+
+        model.apply(.failed(.microphoneDenied))
+
+        XCTAssertEqual(model.status, .microphoneDenied)
+        XCTAssertEqual(model.action, .openSettings)
+        XCTAssertEqual(model.transcript, .empty)
+    }
+
     func testReadingStateStoreLoadsLegacyPositionAndModules() throws {
         defaults.set("John 3", forKey: Defaults.lastRef)
         defaults.set("KJV-Test", forKey: Defaults.lastBible)

@@ -79,6 +79,40 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     @MainActor
+    func testReferencePickerSelectsVerse() throws {
+        selectTab("workspace.read.bible")
+
+        let referenceControl = app.segmentedControls[
+            "reading.reference-picker"
+        ]
+        XCTAssertTrue(referenceControl.waitForExistence(timeout: 5))
+        referenceControl.buttons.element(boundBy: 1).tap()
+
+        XCTAssertTrue(
+            app.navigationBars["Select Book"].waitForExistence(timeout: 5)
+        )
+        let genesis = app.buttons["reference.book.Gen"]
+        XCTAssertTrue(genesis.waitForExistence(timeout: 5))
+        genesis.tap()
+
+        XCTAssertTrue(app.navigationBars["Genesis"].waitForExistence(timeout: 5))
+        let chapter = app.buttons["reference.chapter.1"]
+        XCTAssertTrue(chapter.waitForExistence(timeout: 5))
+        chapter.tap()
+
+        XCTAssertTrue(
+            app.navigationBars["Genesis 1"].waitForExistence(timeout: 5)
+        )
+        let verse = app.buttons["reference.verse.1"]
+        XCTAssertTrue(verse.waitForExistence(timeout: 5))
+        verse.tap()
+
+        XCTAssertTrue(
+            app.navigationBars["Select Book"].waitForNonExistence(timeout: 5)
+        )
+    }
+
+    @MainActor
     func testHistoryAndSearchAreReachableFromReading() throws {
         selectTab("workspace.read.bible")
         let historyAndSearch = app.navigationBars["BibleTabTitleString"]

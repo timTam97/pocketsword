@@ -3,359 +3,276 @@
 //  PocketSword
 //
 
+import Foundation
+import Observation
+import SwiftUI
 import UIKit
 
+enum VoiceReferenceStatus: Equatable {
+    case none
+    case prompt
+    case listening
+    case downloading
+    case noMatch
+    case microphoneDenied
+    case unavailable
+
+    var text: LocalizedStringResource? {
+        switch self {
+        case .none:
+            nil
+        case .prompt:
+            "VoiceRefPrompt"
+        case .listening:
+            "VoiceRefListening"
+        case .downloading:
+            "VoiceRefDownloadingModel"
+        case .noMatch:
+            "VoiceRefNoMatch"
+        case .microphoneDenied:
+            "VoiceRefMicDenied"
+        case .unavailable:
+            "VoiceRefUnavailable"
+        }
+    }
+}
+
+enum VoiceReferenceTranscript: Equatable {
+    case empty
+    case prompt
+    case value(String)
+}
+
+enum VoiceReferenceAction: Equatable {
+    case none
+    case done
+    case tryAgain
+    case openSettings
+
+    var title: LocalizedStringResource? {
+        switch self {
+        case .none:
+            nil
+        case .done:
+            "Done"
+        case .tryAgain:
+            "VoiceRefTryAgain"
+        case .openSettings:
+            "VoiceRefOpenSettings"
+        }
+    }
+}
+
 @MainActor
-final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegate {
-    var onReferenceResolved: ((PSParsedRef) -> Void)?
+@Observable
+final class VoiceReferenceModel: PSVoiceRefSessionDelegate {
+    typealias SessionFactory = @MainActor ([String]) -> PSVoiceRefSession
 
-    private let parser: PSVoiceRefParser
-    private let contextualStrings: [String]
-    private var session: PSVoiceRefSession?
-    private var hasStarted = false
-    private var pendingReference: PSParsedRef?
+    private(set) var status: VoiceReferenceStatus = .prompt
+    private(set) var transcript: VoiceReferenceTranscript = .empty
+    private(set) var preview = ""
+    private(set) var downloadProgress: Progress?
+    private(set) var isListening = false
+    private(set) var action: VoiceReferenceAction = .none
+    private(set) var isActionEnabled = true
+    private(set) var showsCancel = true
 
-    private let micImageView = UIImageView(
-        image: UIImage(systemName: "microphone",
-                       withConfiguration: UIImage.SymbolConfiguration(pointSize: 38,
-                                                                      weight: .medium))
-    )
-    private let statusLabel = UILabel()
-    private let transcriptLabel = UILabel()
-    private let previewLabel = UILabel()
-    private let progressView = UIProgressView(progressViewStyle: .default)
-    private let actionButton = UIButton(type: .system)
-    private let cancelButton = UIButton(type: .system)
+    @ObservationIgnored var onCancel: (() -> Void)?
+    @ObservationIgnored var onReferenceResolved: ((PSParsedRef) -> Void)?
 
-    init() {
-        let books = Self.makeGazetteer()
-        parser = PSVoiceRefParser(books: books)
-        contextualStrings = Self.makeContextualStrings(from: books)
-        super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = .pageSheet
-        preferredContentSize = CGSize(width: 420, height: 280)
-    }
+    @ObservationIgnored private let parser: PSVoiceRefParser
+    @ObservationIgnored private let contextualStrings: [String]
+    @ObservationIgnored private let sessionFactory: SessionFactory
+    @ObservationIgnored private var session: PSVoiceRefSession?
+    @ObservationIgnored private var resolutionTask: Task<Void, Never>?
 
-    required init?(coder: NSCoder) {
-        let books = Self.makeGazetteer()
-        parser = PSVoiceRefParser(books: books)
-        contextualStrings = Self.makeContextualStrings(from: books)
-        super.init(coder: coder)
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        configureViews()
-        configureLayout()
-        resetForListening()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        guard !hasStarted else { return }
-        hasStarted = true
-        beginSession()
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        session?.cancel()
-        session = nil
-    }
-
-    func voiceRefSession(_ session: PSVoiceRefSession,
-                         didChangeState state: PSVoiceRefSession.State) {
-        guard session === self.session else { return }
-
-        switch state {
-        case .requestingPermission, .checkingAssets, .preparing:
-            stopListeningAnimation()
-            statusLabel.text = NSLocalizedString("VoiceRefPrompt", comment: "")
-            transcriptLabel.text = ""
-            previewLabel.text = ""
-            progressView.isHidden = true
-            actionButton.isHidden = true
-
-        case .downloadingModel(let progress):
-            stopListeningAnimation()
-            statusLabel.text = NSLocalizedString("VoiceRefDownloadingModel", comment: "")
-            transcriptLabel.text = ""
-            previewLabel.text = ""
-            progressView.observedProgress = progress
-            progressView.isHidden = false
-            actionButton.isHidden = true
-
-        case .listening(let volatileText):
-            startListeningAnimation()
-            statusLabel.text = NSLocalizedString("VoiceRefListening", comment: "")
-            transcriptLabel.text = volatileText.isEmpty
-                ? NSLocalizedString("VoiceRefPrompt", comment: "")
-                : volatileText
-            updatePreview(for: volatileText)
-            progressView.isHidden = true
-            configureAction(title: NSLocalizedString("Done", comment: ""),
-                            selector: #selector(doneTapped),
-                            visible: !volatileText.isEmpty)
-
-        case .finalizing:
-            stopListeningAnimation()
-            statusLabel.text = NSLocalizedString("VoiceRefListening", comment: "")
-            actionButton.isEnabled = false
-
-        case .finished(let candidates):
-            stopListeningAnimation()
-            actionButton.isEnabled = true
-            handleFinished(candidates: candidates)
-
-        case .failed(let error):
-            stopListeningAnimation()
-            actionButton.isEnabled = true
-            show(error: error)
+    init(
+        books: [PSVoiceRefBook]? = nil,
+        sessionFactory: SessionFactory? = nil
+    ) {
+        let books = books ?? Self.makeGazetteer()
+        self.parser = PSVoiceRefParser(books: books)
+        self.contextualStrings = Self.makeContextualStrings(from: books)
+        self.sessionFactory = sessionFactory ?? {
+            PSVoiceRefSession(contextualStrings: $0)
         }
     }
 
-    private func configureViews() {
-        micImageView.tintColor = .systemBlue
-        micImageView.contentMode = .scaleAspectFit
-        micImageView.setContentHuggingPriority(.required, for: .vertical)
-        micImageView.isAccessibilityElement = false
-
-        statusLabel.font = .preferredFont(forTextStyle: .subheadline)
-        statusLabel.textColor = .secondaryLabel
-        statusLabel.textAlignment = .center
-        statusLabel.adjustsFontForContentSizeCategory = true
-
-        transcriptLabel.font = .preferredFont(forTextStyle: .headline)
-        transcriptLabel.textColor = .label
-        transcriptLabel.textAlignment = .center
-        transcriptLabel.numberOfLines = 2
-        transcriptLabel.adjustsFontForContentSizeCategory = true
-
-        previewLabel.font = .preferredFont(forTextStyle: .subheadline)
-        previewLabel.textColor = .systemGreen
-        previewLabel.textAlignment = .center
-        previewLabel.numberOfLines = 1
-        previewLabel.adjustsFontForContentSizeCategory = true
-
-        progressView.isHidden = true
-
-        var actionConfiguration = UIButton.Configuration.filled()
-        actionConfiguration.cornerStyle = .small
-        actionButton.configuration = actionConfiguration
-        actionButton.isHidden = true
-
-        var cancelConfiguration = UIButton.Configuration.plain()
-        cancelConfiguration.title = NSLocalizedString("Cancel", comment: "")
-        cancelConfiguration.cornerStyle = .small
-        cancelButton.configuration = cancelConfiguration
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-    }
-
-    private func configureLayout() {
-        let buttonStack = UIStackView(arrangedSubviews: [cancelButton, actionButton])
-        buttonStack.axis = .horizontal
-        buttonStack.alignment = .fill
-        buttonStack.distribution = .fillEqually
-        buttonStack.spacing = 12
-
-        let stack = UIStackView(arrangedSubviews: [
-            micImageView,
-            statusLabel,
-            transcriptLabel,
-            previewLabel,
-            progressView,
-            buttonStack
-        ])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.spacing = 9
-        stack.setCustomSpacing(14, after: progressView)
-        view.addSubview(stack)
-
-        NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                                           constant: 24),
-            stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                                            constant: -24),
-            stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                       constant: 18),
-            stack.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                          constant: -16),
-            micImageView.heightAnchor.constraint(equalToConstant: 44),
-            transcriptLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 42),
-            previewLabel.heightAnchor.constraint(equalToConstant: 20),
-            progressView.heightAnchor.constraint(equalToConstant: 4),
-            buttonStack.heightAnchor.constraint(equalToConstant: 44)
-        ])
-    }
-
-    private func beginSession() {
-        let session = PSVoiceRefSession(contextualStrings: contextualStrings)
+    func start() {
+        guard session == nil else { return }
+        let session = sessionFactory(contextualStrings)
         session.delegate = self
         self.session = session
         session.start()
     }
 
-    private func resetForListening() {
-        pendingReference = nil
-        stopListeningAnimation()
-        statusLabel.text = NSLocalizedString("VoiceRefPrompt", comment: "")
-        transcriptLabel.text = ""
-        previewLabel.text = ""
-        previewLabel.textColor = .systemGreen
-        progressView.observedProgress = nil
-        progressView.isHidden = true
-        actionButton.isEnabled = true
-        actionButton.isHidden = true
+    func cancel() {
+        cancelSession()
+        onCancel?()
     }
 
-    private func updatePreview(for transcript: String) {
-        guard !transcript.isEmpty,
-              let parsed = parser.parse(candidate: transcript) else {
-            previewLabel.text = ""
-            return
+    func cancelSession() {
+        resolutionTask?.cancel()
+        resolutionTask = nil
+        session?.cancel()
+        session = nil
+    }
+
+    func performPrimaryAction() {
+        switch action {
+        case .done:
+            isActionEnabled = false
+            session?.finish()
+        case .tryAgain:
+            retry()
+        case .none, .openSettings:
+            break
         }
-        previewLabel.text = formatted(parsed)
+    }
+
+    func voiceRefSession(
+        _ session: PSVoiceRefSession,
+        didChangeState state: PSVoiceRefSession.State
+    ) {
+        guard session === self.session else { return }
+        apply(state)
+    }
+
+    func apply(_ state: PSVoiceRefSession.State) {
+        switch state {
+        case .requestingPermission, .checkingAssets, .preparing:
+            status = .prompt
+            transcript = .empty
+            preview = ""
+            downloadProgress = nil
+            isListening = false
+            action = .none
+            isActionEnabled = true
+
+        case .downloadingModel(let progress):
+            status = .downloading
+            transcript = .empty
+            preview = ""
+            downloadProgress = progress
+            isListening = false
+            action = .none
+            isActionEnabled = true
+
+        case .listening(let volatileText):
+            status = .listening
+            transcript = volatileText.isEmpty
+                ? .prompt
+                : .value(volatileText)
+            preview = formattedPreview(for: volatileText)
+            downloadProgress = nil
+            isListening = true
+            action = volatileText.isEmpty ? .none : .done
+            isActionEnabled = true
+
+        case .finalizing:
+            isListening = false
+            isActionEnabled = false
+
+        case .finished(let candidates):
+            isListening = false
+            isActionEnabled = true
+            handleFinished(candidates: candidates)
+
+        case .failed(let error):
+            isListening = false
+            isActionEnabled = true
+            show(error: error)
+        }
+    }
+
+    private func retry() {
+        session?.cancel()
+        session = nil
+        resetForListening()
+        start()
+    }
+
+    private func resetForListening() {
+        status = .prompt
+        transcript = .empty
+        preview = ""
+        downloadProgress = nil
+        isListening = false
+        action = .none
+        isActionEnabled = true
+        showsCancel = true
+    }
+
+    private func formattedPreview(for candidate: String) -> String {
+        guard !candidate.isEmpty,
+              let reference = parser.parse(candidate: candidate) else {
+            return ""
+        }
+        return Self.formatted(reference)
     }
 
     private func handleFinished(candidates: [String]) {
-        guard let parsed = parser.parse(candidates: candidates) else {
-            statusLabel.text = NSLocalizedString("VoiceRefNoMatch", comment: "")
-            transcriptLabel.text = candidates.first ?? ""
-            previewLabel.text = ""
-            progressView.isHidden = true
-            configureAction(title: NSLocalizedString("VoiceRefTryAgain", comment: ""),
-                            selector: #selector(tryAgainTapped),
-                            visible: true)
+        downloadProgress = nil
+        preview = ""
+
+        guard let reference = parser.parse(candidates: candidates) else {
+            status = .noMatch
+            transcript = candidates.first.map(VoiceReferenceTranscript.value)
+                ?? .empty
+            action = .tryAgain
+            showsCancel = true
             return
         }
 
-        pendingReference = parsed
-        statusLabel.text = ""
-        transcriptLabel.text = formatted(parsed)
-        previewLabel.text = ""
-        progressView.isHidden = true
-        actionButton.isHidden = true
-        cancelButton.isHidden = true
-
-        Task { [weak self] in
+        status = .none
+        transcript = .value(Self.formatted(reference))
+        action = .none
+        showsCancel = false
+        resolutionTask?.cancel()
+        resolutionTask = Task { @MainActor [weak self] in
             try? await Task.sleep(nanoseconds: 400_000_000)
-            guard let self, let reference = self.pendingReference else { return }
-            self.dismiss(animated: true) {
-                self.onReferenceResolved?(reference)
-            }
+            guard !Task.isCancelled else { return }
+            self?.onReferenceResolved?(reference)
         }
     }
 
     private func show(error: PSVoiceRefError) {
-        progressView.observedProgress = nil
-        progressView.isHidden = true
-        previewLabel.text = ""
+        downloadProgress = nil
+        preview = ""
+        transcript = .empty
+        showsCancel = true
 
         switch error {
         case .microphoneDenied:
-            statusLabel.text = NSLocalizedString("VoiceRefMicDenied", comment: "")
-            transcriptLabel.text = ""
-            configureAction(title: NSLocalizedString("VoiceRefOpenSettings", comment: ""),
-                            selector: #selector(openSettingsTapped),
-                            visible: true)
+            status = .microphoneDenied
+            action = .openSettings
 
         case .unsupportedLocale, .noAudioInput, .speechAssetsUnavailable:
-            statusLabel.text = NSLocalizedString("VoiceRefUnavailable", comment: "")
-            transcriptLabel.text = ""
-            actionButton.isHidden = true
+            status = .unavailable
+            action = .none
 
-        case .modelDownloadFailed, .audioSessionFailed, .recognitionFailed, .audioInterrupted:
-            statusLabel.text = NSLocalizedString("VoiceRefUnavailable", comment: "")
-            transcriptLabel.text = ""
-            configureAction(title: NSLocalizedString("VoiceRefTryAgain", comment: ""),
-                            selector: #selector(tryAgainTapped),
-                            visible: true)
+        case .modelDownloadFailed,
+             .audioSessionFailed,
+             .recognitionFailed,
+             .audioInterrupted:
+            status = .unavailable
+            action = .tryAgain
         }
     }
 
-    private func configureAction(title: String, selector: Selector, visible: Bool) {
-        actionButton.removeTarget(nil, action: nil, for: .allEvents)
-        actionButton.configuration?.title = title
-        actionButton.addTarget(self, action: selector, for: .touchUpInside)
-        actionButton.isHidden = !visible
-    }
-
-    private func formatted(_ reference: PSParsedRef) -> String {
+    private static func formatted(_ reference: PSParsedRef) -> String {
         "\(reference.displayBookName) \(reference.chapter):\(reference.verse)"
     }
 
-    private func startListeningAnimation() {
-        guard micImageView.layer.animation(forKey: "voiceRefPulse") == nil else { return }
-        micImageView.addSymbolEffect(.variableColor.iterative,
-                                     options: .repeat(.continuous))
-        let pulse = CABasicAnimation(keyPath: "transform.scale")
-        pulse.fromValue = 0.94
-        pulse.toValue = 1.06
-        pulse.duration = 0.75
-        pulse.autoreverses = true
-        pulse.repeatCount = .infinity
-        micImageView.layer.add(pulse, forKey: "voiceRefPulse")
-    }
-
-    private func stopListeningAnimation() {
-        micImageView.removeAllSymbolEffects()
-        micImageView.layer.removeAnimation(forKey: "voiceRefPulse")
-    }
-
-    @objc private func doneTapped() {
-        actionButton.isEnabled = false
-        session?.finish()
-    }
-
-    @objc private func cancelTapped() {
-        session?.cancel()
-        dismiss(animated: true)
-    }
-
-    @objc private func tryAgainTapped() {
-        session?.cancel()
-        session = nil
-        cancelButton.isHidden = false
-        resetForListening()
-        beginSession()
-    }
-
-    @objc private func openSettingsTapped() {
-        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(url)
-    }
-
-    /// SWORD_REMOVAL_PLAN.md Phase 4: the gazetteer is built from the baked
-    /// versification table rather than from `+[SwordManager
-    /// booksForVersificationSystem:]` over a live `sword::VersificationMgr`. The
-    /// same three name forms per book, in the same order, so the parser's alias
-    /// table is unchanged.
-    ///
-    /// Two things this fixes for free, both consequences of `PSVersificationBook`
-    /// being a value type where `SwordBook` was a reference:
-    ///
-    ///  - **Lifetime.** `versesInChapter` is an escaping closure that used to
-    ///    capture the `SwordBook` object and, through it, a raw
-    ///    `const VersificationMgr::Book *` ivar whose lifetime nothing here owned.
-    ///    A struct capture has no such hazard.
-    ///  - **Bounds.** `-verses:` answered SWORD's **-1** sentinel for an
-    ///    out-of-range chapter, and `PSVoiceRefParser` tests that count with
-    ///    `verseCount > 0, (1...verseCount).contains(verse)` — so -1 was already
-    ///    rejected, but only by accident of the comparison. Returning 0 makes the
-    ///    reject explicit (PSVoiceRefParser.swift:96 treats 0 as reject).
     private static func makeGazetteer() -> [PSVoiceRefBook] {
         guard let resolver = PSBookOSISResolver.shared else { return [] }
         return resolver.books.compactMap { book in
-            let displayName = book.name
-            guard !displayName.isEmpty else { return nil }
+            guard !book.name.isEmpty else { return nil }
             let names = [book.name, book.shortName, book.osisName]
                 .filter { !$0.isEmpty }
             return PSVoiceRefBook(
                 names: names,
-                displayName: displayName,
+                displayName: book.name,
                 chapters: book.chapterCount,
                 versesInChapter: { chapter in
                     resolver.verseMax(book: book, chapter: chapter) ?? 0
@@ -364,19 +281,61 @@ final class PSVoiceRefViewController: UIViewController, PSVoiceRefSessionDelegat
         }
     }
 
-    // Bias the recognizer toward the spoken book names. We deliberately use the
-    // full display names only — abbreviations ("SongSol", "1Jn") aren't spoken
-    // words, and number words are already in the system vocabulary, so neither
-    // helps as a contextual hint. Apple recommends keeping the list under 100
-    // phrases; the canon fits well within that.
-    private static func makeContextualStrings(from books: [PSVoiceRefBook]) -> [String] {
+    private static func makeContextualStrings(
+        from books: [PSVoiceRefBook]
+    ) -> [String] {
         var seen: Set<String> = []
         var result: [String] = []
         for book in books {
-            let name = book.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !name.isEmpty, seen.insert(name.lowercased()).inserted else { continue }
+            let name = book.displayName.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+            guard !name.isEmpty,
+                  seen.insert(name.lowercased()).inserted else {
+                continue
+            }
             result.append(name)
         }
         return Array(result.prefix(100))
+    }
+}
+
+@MainActor
+final class PSVoiceRefViewController: UIHostingController<VoiceReferenceView> {
+    var onReferenceResolved: ((PSParsedRef) -> Void)?
+
+    private let model: VoiceReferenceModel
+
+    convenience init() {
+        self.init(model: VoiceReferenceModel())
+    }
+
+    init(model: VoiceReferenceModel) {
+        self.model = model
+        super.init(rootView: VoiceReferenceView(model: model))
+        configure()
+    }
+
+    required init?(coder: NSCoder) {
+        let model = VoiceReferenceModel()
+        self.model = model
+        super.init(
+            coder: coder,
+            rootView: VoiceReferenceView(model: model)
+        )
+        configure()
+    }
+
+    private func configure() {
+        modalPresentationStyle = .pageSheet
+        preferredContentSize = CGSize(width: 420, height: 320)
+        model.onCancel = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+        model.onReferenceResolved = { [weak self] reference in
+            self?.dismiss(animated: true) {
+                self?.onReferenceResolved?(reference)
+            }
+        }
     }
 }
