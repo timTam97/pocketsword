@@ -289,14 +289,19 @@ final class PSBookOSISResolver: NSObject {
     }
 }
 
-// MARK: - Obj-C seam
+// MARK: - Former Obj-C seam
 //
-// `PSSearchEngine.mm`'s book-scope filter needs name -> OSIS, which was its own
-// private `-osisBookNameForLocalisedBookName:` over a live `sword::VerseKey`.
-// These two members are the entire Obj-C surface of the resolver; everything else
-// is Swift-only. `PSBookOSISResolver` therefore derives from NSObject (it did not
-// need to before), which is why `init?` calls `super.init()` — the stored
-// properties are all assigned before that, as Swift requires.
+// `PSSearchEngine.mm`'s book-scope filter needed name -> OSIS, which had been its own
+// private `-osisBookNameForLocalisedBookName:` over a live `sword::VerseKey`. These
+// two members were the entire Obj-C surface of the resolver, and are why
+// `PSBookOSISResolver` derives from NSObject at all (which is why `init?` calls
+// `super.init()` — the stored properties are all assigned before that, as Swift
+// requires).
+//
+// **Phase 5 step 8 ported the engine to Swift**, so nothing in Obj-C calls either of
+// these now: the engine reaches `shared` and `book(named:)` directly. They are kept
+// because `PSRefSemanticsTests` exercises `osisName(forBookName:)` as the named entry
+// point for that lookup, and because they document what the deleted shim did.
 extension PSBookOSISResolver {
 
     /// + [PSBookOSISResolver sharedResolver] — nil if the bundled table is missing

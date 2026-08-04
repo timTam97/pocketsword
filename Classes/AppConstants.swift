@@ -308,25 +308,11 @@ enum AppPaths {
     }
 }
 
-/// Obj-C's window onto `AppPaths`.
-///
-/// `AppPaths` is an `enum` namespace, and `@objc` cannot be applied to an enum's
-/// members, so the two paths `PSSearchEngine.mm` needs are re-exposed here on a
-/// class. This exists only for the one commit-range where the engine is still
-/// Obj-C: step 8 ports it to Swift, after which the engine calls `AppPaths`
-/// directly and this class is deleted.
-@objc(PSPaths)
-final class PSPaths: NSObject {
-    /// `<Caches>/search/<module>.db`
-    @objc(searchIndexPathForModule:)
-    static func searchIndexPath(for module: String) -> String {
-        AppPaths.searchIndexPath(for: module)
-    }
-
-    /// `<Caches>/search`
-    @objc(searchIndexDirectory)
-    static var searchIndexDirectory: String { AppPaths.searchIndexDirectory }
-}
+// The `@objc(PSPaths)` shim that used to sit here is DELETED (SWORD_REMOVAL_PLAN.md
+// Phase 5 step 8). `AppPaths` is an `enum` namespace and `@objc` cannot be applied
+// to an enum's members, so the two search-index paths were re-exposed on a class for
+// the one commit-range where `PSSearchEngine` was still Obj-C. The engine is Swift
+// now and calls `AppPaths` directly.
 
 // MARK: - Logging shims
 //

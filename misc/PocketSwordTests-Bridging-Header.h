@@ -31,10 +31,17 @@
 // search-index-KJV.digest, chapter-loop-counters.tsv and the chapter-body HTML), and
 // step 7 deleted the headers themselves.
 //
-// What remains is the one thing the tests still cannot reach through
-// `@testable import`: PSSearchEngine's two C-linkage free functions. Step 8 ports
-// the engine to Swift and this import goes too, leaving globals.h alone.
-#import "PSSearchEngine.h"        // PSFoldForIndex / PSSearchCleanDisplayText
+// The PSSearchEngine.h import is GONE too (step 8). It existed for the one thing the
+// tests could not reach through `@testable import`: the engine's two C-linkage free
+// functions, `PSFoldForIndex` and `PSSearchCleanDisplayText`. Step 8 ported the
+// engine to Swift — `PSFoldForIndex` deleted outright (its Swift twin
+// `PSSearchQuery.foldForIndex` was already byte-identical), `PSSearchCleanDisplayText`
+// moved to `PSSearchQuery.cleanDisplayText` — and both are now internal Swift members
+// the test bundle sees through `@testable import`.
+//
+// **globals.h is therefore the ONLY thing either bridging header imports from this
+// project**, and the app target contains no Obj-C other than it and the vendored
+// MBProgressHUD.
 // PSHistoryItem is Swift as of migration step 1.2 — its type is visible to the
 // test bundle via `@testable import PocketSword`, so it is NOT imported here.
 // PSSearchHistoryItem is Swift as of migration step 1.2 — its type is visible to

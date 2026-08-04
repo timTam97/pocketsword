@@ -74,7 +74,10 @@
 // Do NOT re-add any of them. The whole reason this header was carefully curated —
 // keeping C++ out of Swift's import graph — no longer applies, because there is no
 // C++ in the target.
-#import "PSSearchEngine.h"
+//
+// PSSearchEngine.h went the same way in step 8, which ported the engine to Swift and
+// made this target pure Swift apart from globals.h and MBProgressHUD. There is no
+// third project import left to add.
 // (PSHistoryController was migrated to Swift in Wave 3 — its former
 // PSHistoryController.{h,mm} are deleted. The Swift @objc(PSHistoryController)
 // class lives in the same module, so Swift callers (PSModuleSearchController,

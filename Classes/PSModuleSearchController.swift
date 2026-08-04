@@ -8,11 +8,12 @@
 //  snippets. Replaces the 2009-era drill-down options table.
 //
 //  Migrated from PSModuleSearchController.{h,mm} (Swift migration Wave 3). The
-//  former .mm contained ZERO sword:: usage — it drives the still-Obj-C++
-//  PSSearchEngine via its clean Foundation-only facade (engineForModule: /
-//  runQuery:…) and the Swift PSSearchQuery / PSSearchResult / PSSearchHistoryItem
-//  value types directly (same module). The @objc PSModuleSearchControllerDelegate
-//  protocol is preserved so the still-Obj-C++ PSTabBarControllerDelegate binds.
+//  former .mm contained ZERO sword:: usage — it drove PSSearchEngine through its
+//  clean Foundation-only facade, and the Swift PSSearchQuery / PSSearchResult /
+//  PSSearchHistoryItem value types directly (same module). As of
+//  SWORD_REMOVAL_PLAN.md Phase 5 step 8 the engine is Swift too, so every type on
+//  this screen's path is. The @objc PSModuleSearchControllerDelegate protocol is
+//  kept because PSTabBarControllerDelegate conforms to it via @objc dispatch.
 //
 //  ── Search-crash fix carried forward (risk R13) ───────────────────────────
 //  The original Obj-C runSearchWithExpression: read self.searchRange /
@@ -209,7 +210,7 @@ final class PSModuleSearchController: UIViewController,
         super.viewDidAppear(animated)
 
         if let name = activeModuleName(),
-           !(PSSearchEngine(forModuleName: name).indexIsFresh()) {
+           !PSSearchEngine.engine(forModuleName: name).indexIsFresh() {
             offerToBuildIndex(forModuleName: name)
         }
     }
@@ -268,7 +269,7 @@ final class PSModuleSearchController: UIViewController,
     /// The search engine for the active module, or nil if there is no active module.
     private func activeEngine() -> PSSearchEngine? {
         guard let name = activeModuleName() else { return nil }
-        return PSSearchEngine(forModuleName: name)
+        return PSSearchEngine.engine(forModuleName: name)
     }
 
     // MARK: - History item
@@ -629,8 +630,7 @@ final class PSModuleSearchController: UIViewController,
                                       scope: capturedScope,
                                       bookName: capturedBookName,
                                       limit: 1000,
-                                      strongsTokens: capturedStrongsTokens,
-                                      cancelFlag: nil)
+                                      strongsTokens: capturedStrongsTokens)
             let entries = NSMutableArray()
             var highlights: [[String]]? = (capturedStrongsTokens?.count ?? 0) > 0 ? [] : nil
             for r in raw {
@@ -827,13 +827,15 @@ final class PSModuleSearchController: UIViewController,
         // Phase 5 step 5: this went through -[SwordModule textEntryForKey:textType:]
         // with TextTypeStripped, i.e. stripText(). The store's plain_texts column IS
         // stripText()'s output — captured with the four marker-emitting options off —
-        // so PSSearchCleanDisplayText is still applied, exactly as before, because a
-        // row cached by an older build may carry markers from whatever option state
-        // that build rendered under.
+        // so the marker cleaning is still applied, exactly as before, because a row
+        // cached by an older build may carry markers from whatever option state that
+        // build rendered under. (Step 8 moved that function out of the Obj-C engine:
+        // `PSSearchCleanDisplayText` is now `PSSearchQuery.cleanDisplayText`, same
+        // three regexes in the same order.)
         if entry.text == nil, let name = activeModuleName(), let key = entry.key,
            let ref = PSModuleController.createRefString(key),
            let pulled = PSContentStore.shared?.plainText(module: name, osisRef: ref) {
-            entry.text = PSSearchCleanDisplayText(pulled)
+            entry.text = PSSearchQuery.cleanDisplayText(pulled)
         }
         var txt = entry.text ?? ""
         txt = txt.replacingOccurrences(of: "\n", with: " ")

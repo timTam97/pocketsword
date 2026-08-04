@@ -44,9 +44,15 @@ import SQLite3
 import zlib
 
 /// One row of `plain_texts` joined with its `verses_plain` skeleton — the FTS
-/// build source. `@objc` and NSString-only so `PSSearchEngine.mm` can consume it
-/// across the bridge (it already imports `PocketSword-Swift.h`), following
-/// `SwordModuleTextEntry` as the precedent for a DTO that crosses the boundary.
+/// build source.
+///
+/// The `@objc` here (and on `Cursor`, `moduleMeta` and `moduleVersion` below) is
+/// **vestigial as of Phase 5 step 8**: it existed so `PSSearchEngine.mm` could
+/// consume these across the bridge, following `SwordModuleTextEntry` as the
+/// precedent for a DTO that crossed the boundary. The engine is Swift now and there
+/// is no boundary. The annotations are kept because they cost nothing and removing
+/// them would be a no-op churn across a file 32 tests read; do not take them as
+/// evidence that an Obj-C caller still exists.
 @objc(PSContentVerseRow)
 final class PSContentVerseRow: NSObject {
     @objc let ordinal: Int
@@ -649,8 +655,8 @@ final class PSContentStore: NSObject {
     // MARK: - FTS build source
 
     /// Row-oriented cursor over `verses_plain` joined with its chunked text, so
-    /// callers never see chunk framing. `@objc` because `PSSearchEngine.mm` drives
-    /// the index build and already imports `PocketSword-Swift.h`.
+    /// callers never see chunk framing. Driven by `PSSearchEngine`'s index build —
+    /// which was Obj-C++ when this was written, hence the vestigial `@objc`.
     ///
     /// Rows come out in `ordinal` order, which for KJV is also `rowid` order —
     /// `verses_plain.ordinal` is strictly increasing and unique across all 31,102
@@ -784,9 +790,10 @@ final class PSContentStore: NSObject {
     /// `content_meta`'s per-module values (`module.<name>.type` / `.version` /
     /// `.lang` / `.direction` / `.features`).
     ///
-    /// `@objc` as of Phase 5 step 4 so `PSSearchEngine.mm` can read a module's
-    /// version while it is still Obj-C — `indexIsFresh` and `stampMetaForModule`
-    /// both did that through `[mod version]`, and step 7 deletes `SwordModule`.
+    /// Made `@objc` by Phase 5 step 4 so `PSSearchEngine.mm` could read a module's
+    /// version while it was still Obj-C — `indexIsFresh` and `stampMetaForModule`
+    /// both did that through `[mod version]`, and step 7 deleted `SwordModule`. Step 8
+    /// made the engine Swift, so the annotation is now vestigial.
     @objc(moduleMetaForModule:key:)
     func moduleMeta(_ name: String, key: String) -> String? {
         queue.sync {
@@ -811,7 +818,8 @@ final class PSContentStore: NSObject {
     /// byte-identical to the conf entries: Robinson 2.0, StrongsRealGreek
     /// 1.5-150704, StrongsRealHebrew 1.090107.
     ///
-    /// `@objc` for the same reason as `moduleMeta` above.
+    /// Also read by `PSSearchEngine`'s freshness check and meta stamp, which is why
+    /// step 4 made it `@objc` — see `moduleMeta` above for why that no longer matters.
     @objc(moduleVersionForModule:)
     func moduleVersion(_ name: String) -> String? {
         moduleMeta(name, key: "version")

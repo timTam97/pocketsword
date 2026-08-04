@@ -319,7 +319,7 @@
 		5A1F70B00000000000ZR002 /* PocketSwordSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */; };
 		5A1F70B00000000000ZS002 /* PocketSwordAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */; };
 		5A1F70B00000000000ZT002 /* PSTabBarControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZT001 /* PSTabBarControllerDelegate.swift */; };
-		A100000000000000000001F2 /* PSSearchEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F2 /* PSSearchEngine.mm */; };
+		A100000000000000000001F3 /* PSSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F3 /* PSSearchEngine.swift */; };
 		A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F9 /* libsqlite3.tbd */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
 		D2BFDF4F25E709D500E04366 /* rtranspgdrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2BFDF4E25E709D500E04366 /* rtranspgdrive.cpp */; settings = {COMPILER_FLAGS = "-Wno-unused-function"; }; };
@@ -897,8 +897,7 @@
 		5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordAppDelegate.swift; path = Classes/PocketSwordAppDelegate.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZT001 /* PSTabBarControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSTabBarControllerDelegate.swift; path = Classes/PSTabBarControllerDelegate.swift; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
-		A100000000000000000000F1 /* PSSearchEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSSearchEngine.h; path = Classes/PSSearchEngine.h; sourceTree = "<group>"; };
-		A100000000000000000000F2 /* PSSearchEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PSSearchEngine.mm; path = Classes/PSSearchEngine.mm; sourceTree = "<group>"; };
+		A100000000000000000000F3 /* PSSearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchEngine.swift; path = Classes/PSSearchEngine.swift; sourceTree = "<group>"; };
 		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		A9C105E21C4D6E9C006C755A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -1833,8 +1832,7 @@
 				5A1F70B0000000000000N001 /* PSHistoryItem.swift */,
 				5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */,
 				5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */,
-				A100000000000000000000F1 /* PSSearchEngine.h */,
-				A100000000000000000000F2 /* PSSearchEngine.mm */,
+				A100000000000000000000F3 /* PSSearchEngine.swift */,
 				5A1F70B0000000000000O001 /* PSSearchQuery.swift */,
 				5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */,
 				5A1F70B0000000000000L001 /* PSSearchResult.swift */,
@@ -2474,7 +2472,7 @@
 				5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */,
 				5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */,
 				5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */,
-				A100000000000000000001F2 /* PSSearchEngine.mm in Sources */,
+				A100000000000000000001F3 /* PSSearchEngine.swift in Sources */,
 				5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */,
 				5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */,
 				5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */,

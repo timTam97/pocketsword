@@ -22,9 +22,11 @@
 //  the oracle moved from "the engine, live" to "the engine, recorded".
 //
 //  The failure mode this guards is silent: a derivation bug does not crash, search
-//  results just quietly go missing. It runs the real `-buildWithProgress:`, so it
-//  takes tens of seconds, and it is kept in the default suite anyway for exactly
-//  that reason.
+//  results just quietly go missing. It runs the real `build(progress:)`, so it takes
+//  tens of seconds, and it is kept in the default suite anyway for exactly that
+//  reason. Since step 8 that build is the Swift `PSSearchEngine`, so this file is
+//  also the acceptance criterion for that port: the digest is 31,102 rows of the
+//  ORIGINAL Obj-C engine's output, and the Swift engine has to reproduce every one.
 //
 //  Do NOT recapture the digest to make a red test pass — see the fixture header.
 //
@@ -70,7 +72,7 @@ final class PSSearchIndexParityTests: XCTestCase {
         // content store is a BUNDLED resource — it is there or the app trapped at
         // launch — so there is nothing to wait for, and the poll would have silently
         // become a 90-second delay followed by an XCTSkip.
-        let engine = PSSearchEngine(forModuleName: "KJV")
+        let engine = PSSearchEngine.engine(forModuleName: "KJV")
         do {
             try engine.build(progress: nil)
         } catch {
@@ -79,7 +81,7 @@ final class PSSearchIndexParityTests: XCTestCase {
         }
 
         var db: OpaquePointer?
-        let dbPath = engine.dbPath()
+        let dbPath = engine.dbPath
         guard sqlite3_open_v2(dbPath, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK, let db else {
             throw XCTSkip("cannot open the built index at \(dbPath)")
         }
@@ -150,7 +152,7 @@ final class PSSearchIndexParityTests: XCTestCase {
     /// "a query finds them" are different failures (a tokenizer or FTS-expression
     /// change breaks the second without touching the first).
     func testQueriesReturnNonVacuousResults() throws {
-        let engine = PSSearchEngine(forModuleName: "KJV")
+        let engine = PSSearchEngine.engine(forModuleName: "KJV")
         do {
             try engine.build(progress: nil)
         } catch {
@@ -163,8 +165,8 @@ final class PSSearchIndexParityTests: XCTestCase {
         for query in ["\"lovingkindness\"", "\"in the beginning\"", "\"Nicodemus\"",
                       "\"shepherd\"", "\"zzzzznotaword\""] {
             let hits = engine.runQuery(query, scope: .AllRange, bookName: nil,
-                                       limit: 50, strongsTokens: nil, cancelFlag: nil)
-            out[query] = hits.map { $0.reference ?? "" }
+                                       limit: 50, strongsTokens: nil)
+            out[query] = hits.map { $0.reference }
         }
 
         XCTAssertFalse(out["\"in the beginning\""]?.isEmpty ?? true, "phrase query found nothing")
@@ -181,25 +183,27 @@ final class PSSearchIndexParityTests: XCTestCase {
 
     // MARK: - Text normalisation (MOVED here from SwordOracleCaptureTests, step 12)
 
-    /// `PSSearchCleanDisplayText` strips the inline `<H0430>` / `<TH8799>` markers
-    /// that `stripText()` interleaves when the Strong's option is on, plus the
-    /// `" [] "` empty-tag marker, collapsing whatever whitespace that leaves —
-    /// including a space stranded before punctuation.
+    /// `cleanDisplayText` strips the inline `<H0430>` / `<TH8799>` markers that
+    /// `stripText()` interleaves when the Strong's option is on, plus the `" [] "`
+    /// empty-tag marker, collapsing whatever whitespace that leaves — including a
+    /// space stranded before punctuation.
     ///
     /// This is load-bearing beyond display: it is applied **before** the emptiness
     /// test in the index build, so it decides which rows exist at all.
     ///
-    /// Step 8 ports this function to Swift as `PSSearchQuery.cleanDisplayText`; these
-    /// five cases move with it and are what makes that port checkable.
+    /// These five cases were written against the C-linkage `PSSearchCleanDisplayText`
+    /// in `PSSearchEngine.mm`. Step 8 ported it to `PSSearchQuery.cleanDisplayText`
+    /// and the cases came across unchanged, which is what makes that port checkable:
+    /// the expectations are the Obj-C original's outputs, not the port's.
     func testCleanDisplayTextStripsInlineMarkers() {
-        XCTAssertEqual(PSSearchCleanDisplayText("And God <H0430> divided <H0996> the light"),
+        XCTAssertEqual(PSSearchQuery.cleanDisplayText("And God <H0430> divided <H0996> the light"),
                        "And God divided the light")
-        XCTAssertEqual(PSSearchCleanDisplayText("word <TH8799> in <TG5707> place"),
+        XCTAssertEqual(PSSearchQuery.cleanDisplayText("word <TH8799> in <TG5707> place"),
                        "word in place")
-        XCTAssertEqual(PSSearchCleanDisplayText("in the field <H7704> , and"),
+        XCTAssertEqual(PSSearchQuery.cleanDisplayText("in the field <H7704> , and"),
                        "in the field, and")
-        XCTAssertEqual(PSSearchCleanDisplayText("a [] b"), "a b")
-        XCTAssertEqual(PSSearchCleanDisplayText(""), "")
+        XCTAssertEqual(PSSearchQuery.cleanDisplayText("a [] b"), "a b")
+        XCTAssertEqual(PSSearchQuery.cleanDisplayText(""), "")
     }
 
     /// The diacritic fold, pinned against **known vectors** rather than against a
@@ -207,21 +211,20 @@ final class PSSearchIndexParityTests: XCTestCase {
     ///
     /// `SwordOracleCaptureTests.testFoldForIndexAgreesBetweenObjCAndSwift` asserted
     /// that Obj-C `PSFoldForIndex` and Swift `PSSearchQuery.foldForIndex` — a
-    /// byte-for-byte duplicated algorithm — agreed. Step 8 deletes the Obj-C copy, so
-    /// that guard has nothing left to compare and the duplication it warned about
-    /// simply ends.
+    /// byte-for-byte duplicated algorithm — agreed. **Step 8 deleted the Obj-C copy**
+    /// rather than porting it, so that guard has nothing left to compare and the
+    /// duplication it warned about simply ends. Its cross-check loop is gone from
+    /// this test with it.
     ///
-    /// Rather than drop the coverage, this pins the surviving Swift copy's actual
-    /// output on the ranges the fold exists for: Greek polytonic accents
-    /// (U+0300-U+036F after NFD), Hebrew points and cantillation (U+0591-U+05C7,
-    /// which FTS5's `remove_diacritics=2` leaves alone), Latin diacritics in both
-    /// precomposed and decomposed form, and the other combining-mark ranges. Those
-    /// are exactly the inputs a regression would break, and the expectations are
-    /// the values the Obj-C original produced.
-    ///
-    /// While both copies still exist, it ALSO cross-checks them — so this test is
-    /// strictly stronger than the one it replaces until step 8, and stays useful
-    /// after.
+    /// What remains is the coverage that does not depend on a second implementation:
+    /// the surviving copy's actual output on every range the fold exists for — Greek
+    /// polytonic accents (U+0300-U+036F after NFD), Hebrew points and cantillation
+    /// (U+0591-U+05C7, which FTS5's `remove_diacritics=2` leaves alone), Latin
+    /// diacritics in both precomposed and decomposed form, and the other
+    /// combining-mark ranges. Those are exactly the inputs a regression would break,
+    /// and **the expectations are the values the Obj-C original produced** — verified
+    /// empirically against it while it was still in the tree, not derived from the
+    /// Swift copy they now check.
     func testFoldForIndexHandlesEveryTargetedRange() {
         let cases: [(input: String, expected: String)] = [
             ("", ""),
@@ -251,12 +254,5 @@ final class PSSearchIndexParityTests: XCTestCase {
         // Non-BMP input must survive the surrogate-pair branch without corruption.
         XCTAssertEqual(PSSearchQuery.foldForIndex("𝔊𝔯𝔢𝔢𝔨 text").hasSuffix(" text"), true)
         XCTAssertFalse(PSSearchQuery.foldForIndex("😀 emoji").isEmpty)
-
-        // And while the Obj-C copy is still in the tree, the two must agree — the
-        // original guard, kept for as long as it can mean anything.
-        for c in cases {
-            XCTAssertEqual(PSFoldForIndex(c.input), PSSearchQuery.foldForIndex(c.input),
-                           "Obj-C and Swift folds disagree for \(c.input.debugDescription)")
-        }
     }
 }

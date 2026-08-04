@@ -6,16 +6,16 @@
 //  a module. Replaces the crosswire.org-download flow that used to live in
 //  PSIndexController.
 //
-//  This VC owns the progress UI and a UIBackgroundTask; it drives the
-//  still-Obj-C++ PSSearchEngine via its clean Foundation-only facade
-//  (-buildWithProgress:error:). The C++ / sqlite3 / FTS5 index-build path stays
-//  in PSSearchEngine.mm permanently per the migration plan.
+//  This VC owns the progress UI and a UIBackgroundTask; the sqlite3 / FTS5
+//  index-build itself is PSSearchEngine's job (`build(progress:)`). That engine was
+//  Obj-C++ when this file was written and the Swift-migration plan expected it to
+//  stay that way; SWORD_REMOVAL_PLAN.md Phase 5 step 8 ported it, so the whole path
+//  is Swift now.
 //
-//  The public surface is preserved verbatim for the (still Obj-C++) consumer
-//  PSModuleSearchController: the @objc class name PSSearchIndexBuilder, the
-//  -initWithModuleName: / -presentFromViewController: methods, the readonly `moduleName`
-//  property, and the @objc PSSearchIndexBuilderDelegate protocol (kept @objc so
-//  the Obj-C conformer binds, per migration-plan risk R11).
+//  The public surface is preserved verbatim from the Obj-C original: the @objc class
+//  name PSSearchIndexBuilder, the -initWithModuleName: / -presentFromViewController:
+//  methods, the readonly `moduleName` property, and the @objc
+//  PSSearchIndexBuilderDelegate protocol (kept @objc per migration-plan risk R11).
 //
 
 import UIKit
@@ -128,21 +128,24 @@ final class PSSearchIndexBuilder: UIViewController {
             self?.cancelRequested = true
         }
 
-        let engine = PSSearchEngine(forModuleName: moduleName)
+        let engine = PSSearchEngine.engine(forModuleName: moduleName)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            var err: NSError?
+            var err: Error?
             let ok: Bool
             do {
+                // `cancel` is an `inout Bool` as of Phase 5 step 8, where it was a
+                // `BOOL *` out-param on the Obj-C block. Same contract: the engine
+                // reads it back the instant this returns and aborts the transaction.
                 try engine.build(progress: { fraction, cancel in
-                    cancel.pointee = ObjCBool(self?.cancelRequested ?? true)
+                    cancel = self?.cancelRequested ?? true
                     DispatchQueue.main.async {
                         self?.progressView.progress = fraction
                     }
                 })
                 ok = true
-            } catch let buildErr as NSError {
-                err = buildErr
+            } catch {
+                err = error
                 ok = false
             }
 
@@ -153,7 +156,7 @@ final class PSSearchIndexBuilder: UIViewController {
         }
     }
 
-    private func finish(success: Bool, cancelled: Bool, error: NSError?) {
+    private func finish(success: Bool, cancelled: Bool, error: Error?) {
         if buildFinished { return }
         buildFinished = true
 
