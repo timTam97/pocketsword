@@ -130,6 +130,10 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertTrue(search.waitForExistence(timeout: 5))
         search.tap()
         XCTAssertTrue(app.navigationBars["Search"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.searchFields["Search"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["search.module-menu"].exists)
+        XCTAssertTrue(app.buttons["search.options"].exists)
+        XCTAssertTrue(app.segmentedControls["search.scope"].exists)
     }
 
     @MainActor

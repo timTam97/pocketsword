@@ -4,8 +4,8 @@
 
 **Last updated:** 2026-08-05
 
-**Overall state:** In progress. Waves 1 through 4 are complete. Wave 5 search
-workspace replacement is next.
+**Overall state:** In progress. Waves 1 through 5 are complete. Wave 6 SwiftUI
+WebKit reader replacement is next.
 
 ### Verified environment
 
@@ -44,7 +44,7 @@ workspace replacement is next.
 - [x] Wave 2: Typed domain values, observable models, coordinators, and stores
 - [x] Wave 3: Supporting SwiftUI screens
 - [x] Wave 4: Library workspace
-- [ ] Wave 5: Search workspace and background indexing
+- [x] Wave 5: Search workspace and background indexing
 - [ ] Wave 6: SwiftUI WebKit reader
 - [ ] Wave 7: iOS 27 toolbar and reading chrome
 - [ ] Wave 8: SwiftUI app lifecycle and four-workspace cutover
@@ -87,6 +87,17 @@ workspace replacement is next.
   bookmark CRUD, colors, recursive navigation, and iOS 27 drag reordering use
   the typed bookmark store; History uses the existing iCloud-backed store and
   natural row identities.
+- Wave 5 has replaced the live search controller with a SwiftUI workspace.
+  `SearchModel` now owns module selection, persisted filters, 250 ms debouncing,
+  generation-based stale-result rejection, Strong's mode, history restoration,
+  result snapshots, and highlighted full-verse results. The old UIKit search
+  controller remains compiled but has no live instantiation and is retained only
+  until the UIKit coordinator is removed.
+- Search index builds persist an interrupted module and submit a
+  `BGProcessingTaskRequest`. The launch-registered background manager restarts
+  the same transactional `PSSearchEngine` build, cancels cleanly on expiration,
+  retries expired work, and clears the pending marker only after success or a
+  terminal failure.
 - The SwiftUI reference picker preserves the existing notification payload,
   direct chapter/verse-one jumps, current-reference highlighting, and the
   64-entry first-match short-book index contract.
@@ -230,6 +241,34 @@ workspace replacement is next.
   Pro passed 105 standard unit tests, skipped the 2 opt-in exhaustive tests,
   and passed all 5 XCUITests (112 total results). A separate Xcode MCP generic
   iOS device build also succeeded.
+- **2026-08-05:** Completed Wave 5 with a dedicated SwiftUI search workspace
+  hosted by the existing History/Search sheet. KJV and MHCC module selection,
+  all/OT/NT/current-book scopes, all/any/exact matching, fuzzy and Strong's
+  toggles, 250 ms debouncing, stale-result rejection, highlighted full verses,
+  saved search restoration, and result-to-reader navigation now live in
+  `SearchModel` and `SearchView`.
+- **2026-08-05:** Added launch-registered `BGProcessingTaskRequest` recovery for
+  interrupted transactional index builds. The pending module survives process
+  interruption, task expiration cancels and resubmits, and focused tests cover
+  both scheduling persistence and execution of the pending build through the
+  same closure used by the system task handler. System-timed task delivery was
+  not manually forced; registration, submission, expiration wiring, and
+  recovery execution are verified at their deterministic seams.
+- **2026-08-05:** Live iPhone 17 Pro verification found and fixed two SwiftUI
+  search defects. Changing to a module without an index initially recreated the
+  search host and cleared the query; the content now keeps a stable root, so
+  KJV -> MHCC -> KJV preserves `love` and reruns 281 results. Search activation
+  also hid toolbar-only module/options actions; both icon menus now remain in
+  the persistent scope bar without overlap while the field is focused.
+- **2026-08-05:** Live verification confirmed KJV and MHCC selection, the MHCC
+  missing-index/build state, nonblank `love` results with visible yellow match
+  highlighting, all match options, Fuzzy and Strong's controls, query-preserving
+  module switching, and result navigation. With Fuzzy persisted on, selecting
+  `Genesis 22:2` closed the sheet and moved the reader to `Gen 22:2`.
+- **2026-08-05:** Wave 5 verification is green. The final shared-scheme run on
+  iPhone 17 Pro passed 109 standard unit tests, skipped the 2
+  `PSREF_EXHAUSTIVE` opt-in tests, and passed all 5 XCUITests (116 total
+  results). A separate Xcode MCP generic iOS device build also succeeded.
 
 ## Summary
 

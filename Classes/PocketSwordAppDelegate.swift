@@ -57,6 +57,7 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
     @objc var tabBarControllerDelegate: PSTabBarControllerDelegate?
     let session: AppSession
     private let historyStore: HistoryStore
+    private let searchIndexBackgroundManager: SearchIndexBackgroundManager
     private let readingStateStore = ReadingStateStore()
     private lazy var legacyStateBridge = LegacyStateBridge(
         session: session,
@@ -65,9 +66,23 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
     override init() {
         let historyStore = HistoryStore()
+        let searchIndexBackgroundManager = SearchIndexBackgroundManager()
         self.historyStore = historyStore
+        self.searchIndexBackgroundManager = searchIndexBackgroundManager
         self.session = AppSession(
-            library: LibraryModel(historyStore: historyStore)
+            library: LibraryModel(historyStore: historyStore),
+            search: SearchModel(
+                indexBuildStarted: {
+                    searchIndexBackgroundManager.beginForegroundBuild(
+                        module: $0
+                    )
+                },
+                indexBuildFinished: {
+                    searchIndexBackgroundManager.finishForegroundBuild(
+                        module: $0
+                    )
+                }
+            )
         )
         super.init()
     }
@@ -82,6 +97,8 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        _ = searchIndexBackgroundManager.register()
+        searchIndexBackgroundManager.resumePendingBuildIfNeeded()
         legacyStateBridge.start()
         historyStore.startCloudSync()
         return true

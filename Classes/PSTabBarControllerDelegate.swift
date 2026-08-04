@@ -346,17 +346,17 @@ final class PSTabBarControllerDelegate: NSObject,
                         )
                     }
                 )
+                .onAppear {
+                    UserDefaults.standard.set(
+                        ShownMultiListTab.HistoryTab.rawValue,
+                        forKey: Defaults.lastMultiListTab
+                    )
+                }
             )
             historyController.tabBarItem = UITabBarItem(
                 tabBarSystemItem: .history,
                 tag: 0
             )
-            let searchController = PSModuleSearchController()
-            let searchNavigationController = UINavigationController(rootViewController: searchController)
-            searchNavigationController.title = NSLocalizedString("SearchTitle", comment: "")
-            multiList.delegate = searchController
-            searchController.delegate = self
-            multiList.viewControllers = [historyController, searchNavigationController]
 
             let bibleOnScreen: Bool = {
                 if let bibleWeb = bibleTabController?.webView,
@@ -367,40 +367,106 @@ final class PSTabBarControllerDelegate: NSObject,
                 return bibleTabController?.isFullScreen ?? false
             }()
 
-            if bibleOnScreen {
-                searchController.setListType(.BibleTab)
-                if savedSearchResultsTab == .BibleTab, let item = savedSearchHistoryItem, item.results != nil {
-                    // restore the previous search term:
-                    searchController.setSearchHistoryItem(item)
-                    // [multiListController setSelectedViewController:searchNavigationController];
-                } else if let item = savedSearchHistoryItem,
-                          (item.searchTerm != nil || (item.searchTermToDisplay?.count ?? 0) > 0) {
-                    // Strong's-popup-triggered searches arrive with only
-                    // searchTermToDisplay + strongsSearch set — the FTS5
-                    // expression is built later in setSearchHistoryItem:.
-                    searchController.setSearchHistoryItem(item)
-                    self.savedSearchHistoryItem = nil
-                    multiList.selectedViewController = searchNavigationController
-                }
-            } else {
-                searchController.setListType(.CommentaryTab)
-                if savedSearchResultsTab == .CommentaryTab, let item = savedSearchHistoryItem, item.results != nil {
-                    // restore the previous search term:
-                    searchController.setSearchHistoryItem(item)
-                    // [multiListController setSelectedViewController:searchNavigationController];
-                } else if let item = savedSearchHistoryItem,
-                          (item.searchTerm != nil || (item.searchTermToDisplay?.count ?? 0) > 0) {
-                    searchController.setSearchHistoryItem(item)
-                    self.savedSearchHistoryItem = nil
-                    multiList.selectedViewController = searchNavigationController
-                }
+            let moduleController = PSModuleController.default()
+            var searchModules: [SearchModuleChoice] = []
+            if let bible = moduleController?.primaryBibleName {
+                searchModules.append(
+                    SearchModuleChoice(id: bible, kind: .bible)
+                )
+            }
+            if let commentary = moduleController?.primaryCommentaryName {
+                searchModules.append(
+                    SearchModuleChoice(id: commentary, kind: .commentary)
+                )
+            }
+            let preferredModule = bibleOnScreen
+                ? moduleController?.primaryBibleName
+                : moduleController?.primaryCommentaryName
+            let preferredTab: ShownTab = bibleOnScreen
+                ? .BibleTab
+                : .CommentaryTab
+            var historyItemToRestore: PSSearchHistoryItem?
+            var shouldSelectSearch = false
+
+            if savedSearchResultsTab == preferredTab,
+               let item = savedSearchHistoryItem,
+               item.results != nil {
+                historyItemToRestore = item
+            } else if let item = savedSearchHistoryItem,
+                      item.searchTerm != nil
+                        || (item.searchTermToDisplay?.count ?? 0) > 0 {
+                historyItemToRestore = item
+                savedSearchHistoryItem = nil
+                shouldSelectSearch = true
             }
 
-            if UserDefaults.standard.integer(forKey: DefaultsLastMultiListTab) == ShownMultiListTab.SearchTab.rawValue {
-                multiList.selectedViewController = searchNavigationController
+            let searchModel = PocketSwordAppDelegate.shared()?.session.search
+                ?? SearchModel()
+            searchModel.onHistoryChange = {
+                [weak self, weak searchModel] item in
+                guard let self, let searchModel else { return }
+                self.savedSearchResultsTab = searchModel.moduleKind == .bible
+                    ? .BibleTab
+                    : .CommentaryTab
+                self.savedSearchHistoryItem = item
+            }
+            let searchController = UIHostingController(
+                rootView: SearchView(
+                    search: searchModel,
+                    moduleChoices: searchModules,
+                    preferredModule: preferredModule,
+                    currentBookName: currentSearchBookName(),
+                    restoredHistoryItem: historyItemToRestore,
+                    close: { [weak self, weak searchModel] in
+                        guard let self else { return }
+                        self.savedSearchHistoryItem =
+                            searchModel?.historyItem()
+                        self.toggleMultiList()
+                    },
+                    openResult: {
+                        [weak self, weak searchModel] reference, module in
+                        guard let self else { return }
+                        self.savedSearchHistoryItem =
+                            searchModel?.historyItem()
+                        self.openLibraryReference(
+                            reference,
+                            module: module,
+                            closeMultiList: true
+                        )
+                    }
+                )
+                .onAppear {
+                    UserDefaults.standard.set(
+                        ShownMultiListTab.SearchTab.rawValue,
+                        forKey: Defaults.lastMultiListTab
+                    )
+                }
+            )
+            searchController.tabBarItem = UITabBarItem(
+                tabBarSystemItem: .search,
+                tag: 0
+            )
+            searchController.tabBarItem.accessibilityIdentifier =
+                "workspace.search"
+            multiList.viewControllers = [historyController, searchController]
+
+            if shouldSelectSearch
+                || UserDefaults.standard.integer(
+                    forKey: Defaults.lastMultiListTab
+                ) == ShownMultiListTab.SearchTab.rawValue {
+                multiList.selectedViewController = searchController
             }
             tabBarController.present(multiList, animated: true, completion: nil)
         }
+    }
+
+    private func currentSearchBookName() -> String? {
+        guard let reference = PSModuleController.getCurrentBibleRef(),
+              let lastSpace = reference.range(of: " ", options: .backwards)
+        else {
+            return nil
+        }
+        return String(reference[..<lastSpace.lowerBound])
     }
 
     private func openLibraryReference(

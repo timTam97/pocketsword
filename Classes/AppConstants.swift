@@ -35,6 +35,7 @@ enum Defaults {
     static let lastSearchFuzzy             = "DefaultsLastSearchFuzzy"
     static let lastSearchType              = "DefaultsLastSearchType"
     static let lastSearchRange             = "DefaultsLastSearchRange"
+    static let pendingSearchIndexModule    = "PendingSearchIndexModule"
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
     static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"

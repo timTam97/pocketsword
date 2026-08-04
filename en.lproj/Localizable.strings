@@ -241,6 +241,13 @@
 "SearchBuildingIndexTitle" = "Building search index…";
 "SearchBuildingCancellingLabel" = "Cancelling…";
 "NoSearchIndexMsg" = "No search index is built for this module. Build one now?";
+"SearchBuildIndexButton" = "Build Index";
+"SearchIndexCancelledTitle" = "Index Build Cancelled";
+"SearchIndexFailedTitle" = "Index Build Failed";
+"SearchEmptyPromptTitle" = "Search Scripture";
+"SearchEmptyPromptMessage" = "Enter a word, phrase, or Strong's number.";
+"SearchModuleButtonLabel" = "Search Module";
+"SearchResultCountFormat" = "%lld Results";
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";

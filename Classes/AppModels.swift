@@ -323,6 +323,11 @@ struct SearchResultRow: Identifiable, Equatable {
     let strongsHighlightWords: [String]
 }
 
+struct SearchModuleChoice: Identifiable, Equatable {
+    let id: String
+    let kind: ReadingMode
+}
+
 enum SearchIndexState: Equatable {
     case unavailable
     case ready
@@ -461,6 +466,14 @@ final class SearchIndexCoordinator {
 @MainActor
 @Observable
 final class SearchModel {
+    typealias QueryOperation = (
+        _ module: String,
+        _ expression: String,
+        _ range: PSSearchRange,
+        _ bookName: String?,
+        _ strongsTokens: [String]?
+    ) -> [PSSearchResult]
+
     var query = ""
     var expression: String?
     var module: String?
@@ -470,20 +483,109 @@ final class SearchModel {
     var range: PSSearchRange
     var bookName: String?
     var results: [SearchResultRow] = []
+    private(set) var modules: [SearchModuleChoice] = []
+    private(set) var moduleKind: ReadingMode = .bible
+    private(set) var strongsAvailable = false
+    private(set) var isSearching = false
+    private(set) var highlightTerms: [String] = []
 
     @ObservationIgnored private let optionsStore: SearchOptionsStore
     @ObservationIgnored let indexCoordinator: SearchIndexCoordinator
+    @ObservationIgnored private let queryOperation: QueryOperation
+    @ObservationIgnored private let featureProvider: (String, String) -> Bool
+    @ObservationIgnored private let debounceInterval: TimeInterval
+    @ObservationIgnored private let indexBuildStarted: (String) -> Void
+    @ObservationIgnored private let indexBuildFinished: (String) -> Void
+    @ObservationIgnored private var debounceTimer: Timer?
+    @ObservationIgnored private var queryGeneration: UInt = 0
+    @ObservationIgnored var onHistoryChange: (
+        @MainActor (PSSearchHistoryItem?) -> Void
+    )?
 
     init(
         optionsStore: SearchOptionsStore = SearchOptionsStore(),
-        indexCoordinator: SearchIndexCoordinator? = nil
+        indexCoordinator: SearchIndexCoordinator? = nil,
+        debounceInterval: TimeInterval = 0.25,
+        featureProvider: @escaping (String, String) -> Bool = {
+            PSContentStore.shared?.moduleHasFeature($0, $1) ?? false
+        },
+        queryOperation: @escaping QueryOperation = {
+            module,
+            expression,
+            range,
+            bookName,
+            strongsTokens in
+            PSSearchEngine.engine(forModuleName: module).runQuery(
+                expression,
+                scope: range,
+                bookName: bookName,
+                limit: 1000,
+                strongsTokens: strongsTokens
+            )
+        },
+        indexBuildStarted: @escaping (String) -> Void = { _ in },
+        indexBuildFinished: @escaping (String) -> Void = { _ in }
     ) {
         self.optionsStore = optionsStore
         self.indexCoordinator = indexCoordinator ?? SearchIndexCoordinator()
+        self.debounceInterval = debounceInterval
+        self.featureProvider = featureProvider
+        self.queryOperation = queryOperation
+        self.indexBuildStarted = indexBuildStarted
+        self.indexBuildFinished = indexBuildFinished
         let options = optionsStore.snapshot()
         self.fuzzySearch = options.fuzzy
         self.matchType = options.matchType
         self.range = options.range
+    }
+
+    func configure(
+        modules: [SearchModuleChoice],
+        preferredModule: String?,
+        currentBookName: String?,
+        restoring historyItem: PSSearchHistoryItem?
+    ) {
+        self.modules = modules
+
+        let selected = modules.first(where: { $0.id == module })
+            ?? modules.first(where: { $0.id == preferredModule })
+            ?? modules.first
+        if let selected {
+            applyModule(selected, clearExistingResults: module != selected.id)
+        } else {
+            module = nil
+            indexCoordinator.refresh(module: nil)
+        }
+
+        if let historyItem {
+            restore(historyItem, currentBookName: currentBookName)
+        } else {
+            updateBookName(currentBookName)
+            if !query.isEmpty {
+                scheduleSearch(immediate: true)
+            }
+        }
+    }
+
+    func selectModule(_ choice: SearchModuleChoice) {
+        guard module != choice.id else { return }
+        applyModule(choice, clearExistingResults: true)
+        if !query.isEmpty, indexCoordinator.state == .ready {
+            scheduleSearch(immediate: true)
+        }
+    }
+
+    func queryDidChange() {
+        scheduleSearch()
+    }
+
+    func optionsDidChange(currentBookName: String?) {
+        if strongsSearch && !strongsAvailable {
+            strongsSearch = false
+        }
+        updateBookName(currentBookName)
+        persistOptions()
+        scheduleSearch()
     }
 
     func persistOptions() {
@@ -507,8 +609,291 @@ final class SearchModel {
     }
 
     func clearResults() {
+        debounceTimer?.invalidate()
+        debounceTimer = nil
+        queryGeneration &+= 1
+        isSearching = false
         expression = nil
         results = []
+        highlightTerms = []
+    }
+
+    func searchNow() {
+        debounceTimer?.invalidate()
+        debounceTimer = nil
+        runSearch()
+    }
+
+    func startIndexBuild() {
+        guard let module else { return }
+        indexBuildStarted(module)
+        indexCoordinator.onCompletion = { [weak self] success, _ in
+            guard let self else { return }
+            self.indexBuildFinished(module)
+            if success {
+                self.scheduleSearch(immediate: true)
+            }
+        }
+        indexCoordinator.build(module: module)
+    }
+
+    func cancelIndexBuild() {
+        indexCoordinator.cancel()
+    }
+
+    func historyItem() -> PSSearchHistoryItem? {
+        let term = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !term.isEmpty else { return nil }
+
+        let item = PSSearchHistoryItem(
+            searchTermToDisplay: query,
+            strongs: strongsSearch,
+            fuzzy: fuzzySearch,
+            type: matchType,
+            range: range,
+            book: range == .BookRange ? bookName : nil
+        )
+        let entries = NSMutableArray(capacity: results.count)
+        for result in results {
+            entries.add(
+                PSVerseTextEntry(
+                    key: result.reference,
+                    text: result.text
+                )
+            )
+        }
+        item?.results = entries
+        return item
+    }
+
+    static func highlightTerms(
+        query: String,
+        matchType: PSSearchType,
+        strongs: Bool
+    ) -> [String] {
+        guard !strongs, !query.isEmpty else { return [] }
+        if matchType == .ExactSearch {
+            return query.count >= 2 ? [query] : []
+        }
+
+        var terms: [String] = []
+        let characters = Array(query.utf16)
+        var index = 0
+        while index < characters.count {
+            let character = characters[index]
+            if character == 0x20 || character == 0x09 || character == 0x0A {
+                index += 1
+                continue
+            }
+            if character == 0x22 {
+                index += 1
+                let start = index
+                while index < characters.count, characters[index] != 0x22 {
+                    index += 1
+                }
+                let phrase = String(
+                    utf16CodeUnits: Array(characters[start..<index]),
+                    count: index - start
+                )
+                if index < characters.count {
+                    index += 1
+                }
+                if phrase.utf16.count >= 2 {
+                    terms.append(phrase)
+                }
+            } else {
+                let start = index
+                while index < characters.count {
+                    let value = characters[index]
+                    if value == 0x20 || value == 0x09
+                        || value == 0x0A || value == 0x22 {
+                        break
+                    }
+                    index += 1
+                }
+                let word = String(
+                    utf16CodeUnits: Array(characters[start..<index]),
+                    count: index - start
+                )
+                if word.utf16.count >= 2 {
+                    terms.append(word)
+                }
+            }
+        }
+        return terms
+    }
+
+    private func applyModule(
+        _ choice: SearchModuleChoice,
+        clearExistingResults: Bool
+    ) {
+        module = choice.id
+        moduleKind = choice.kind
+        strongsAvailable = featureProvider(choice.id, "Strongs")
+            || featureProvider(choice.id, "StrongsNumbers")
+        if !strongsAvailable {
+            strongsSearch = false
+        }
+        if clearExistingResults {
+            clearResults()
+        }
+        indexCoordinator.refresh(module: choice.id)
+    }
+
+    private func restore(
+        _ historyItem: PSSearchHistoryItem,
+        currentBookName: String?
+    ) {
+        query = historyItem.cleanedDisplayTerm()
+        fuzzySearch = historyItem.fuzzySearch
+        matchType = historyItem.searchType
+        range = historyItem.searchRange
+        strongsSearch = historyItem.strongsSearch && strongsAvailable
+        bookName = range == .BookRange
+            ? (historyItem.bookName ?? currentBookName)
+            : nil
+
+        let restoredRows: [SearchResultRow] = historyItem.results?.compactMap {
+            element -> SearchResultRow? in
+            guard let entry = element as? PSVerseTextEntry,
+                  let reference = entry.key else {
+                return nil
+            }
+            return SearchResultRow(
+                reference: reference,
+                text: entry.text,
+                strongsHighlightWords: []
+            )
+        } ?? []
+        results = restoredRows
+        expression = PSSearchQuery.fts5Expression(
+            fromUserInput: query,
+            matchType: matchType,
+            fuzzy: fuzzySearch,
+            strongs: strongsSearch
+        )
+        highlightTerms = Self.highlightTerms(
+            query: query,
+            matchType: matchType,
+            strongs: strongsSearch
+        )
+        persistOptions()
+
+        if !query.isEmpty, indexCoordinator.state == .ready {
+            scheduleSearch(immediate: true)
+        }
+    }
+
+    private func updateBookName(_ currentBookName: String?) {
+        bookName = range == .BookRange ? currentBookName : nil
+    }
+
+    private func scheduleSearch(immediate: Bool = false) {
+        debounceTimer?.invalidate()
+        debounceTimer = nil
+        queryGeneration &+= 1
+
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            isSearching = false
+            expression = nil
+            results = []
+            highlightTerms = []
+            onHistoryChange?(nil)
+            return
+        }
+        guard indexCoordinator.state == .ready else {
+            isSearching = false
+            return
+        }
+        if immediate || debounceInterval == 0 {
+            runSearch()
+            return
+        }
+
+        debounceTimer = Timer.scheduledTimer(
+            withTimeInterval: debounceInterval,
+            repeats: false
+        ) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.runSearch()
+            }
+        }
+    }
+
+    private func runSearch() {
+        debounceTimer?.invalidate()
+        debounceTimer = nil
+        guard let module, indexCoordinator.state == .ready else {
+            isSearching = false
+            return
+        }
+
+        if strongsSearch && !Self.inputLooksLikeStrongs(query) {
+            strongsSearch = false
+        }
+        guard let expression = PSSearchQuery.fts5Expression(
+            fromUserInput: query,
+            matchType: matchType,
+            fuzzy: fuzzySearch,
+            strongs: strongsSearch
+        ), !expression.isEmpty else {
+            clearResults()
+            return
+        }
+
+        self.expression = expression
+        highlightTerms = Self.highlightTerms(
+            query: query,
+            matchType: matchType,
+            strongs: strongsSearch
+        )
+        let capturedRange = range
+        let capturedBookName = bookName
+        let capturedStrongsTokens = strongsSearch
+            ? PSSearchQuery.strongsTokens(fromUserInput: query)
+            : nil
+        let operation = queryOperation
+
+        queryGeneration &+= 1
+        let generation = queryGeneration
+        isSearching = true
+
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let rawResults = operation(
+                module,
+                expression,
+                capturedRange,
+                capturedBookName,
+                capturedStrongsTokens
+            )
+            DispatchQueue.main.async {
+                guard let self, self.queryGeneration == generation else {
+                    return
+                }
+                self.isSearching = false
+                self.setResults(rawResults)
+                self.onHistoryChange?(self.historyItem())
+            }
+        }
+    }
+
+    private static func inputLooksLikeStrongs(_ input: String) -> Bool {
+        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return false }
+
+        for token in trimmed.components(separatedBy: .whitespaces) {
+            let units = Array(token.utf16)
+            guard units.count >= 2 else { continue }
+            let prefix = units[0]
+            guard prefix == 0x48 || prefix == 0x47
+                    || prefix == 0x68 || prefix == 0x67 else {
+                continue
+            }
+            if units.dropFirst().allSatisfy({ $0 >= 0x30 && $0 <= 0x39 }) {
+                return true
+            }
+        }
+        return false
     }
 }
 

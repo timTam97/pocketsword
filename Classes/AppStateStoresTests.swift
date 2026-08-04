@@ -879,6 +879,192 @@ final class AppStateStoresTests: XCTestCase {
     }
 
     @MainActor
+    func testSearchModelRejectsAStaleCompletion() async {
+        let newestSearchCompleted = expectation(
+            description: "Newest search completed"
+        )
+        let coordinator = SearchIndexCoordinator(
+            freshnessProvider: { _ in true },
+            buildOperation: { _, _ in }
+        )
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: coordinator,
+            debounceInterval: 0,
+            featureProvider: { _, _ in false },
+            queryOperation: { _, expression, _, _, _ in
+                if expression.contains("first") {
+                    Thread.sleep(forTimeInterval: 0.15)
+                    return [
+                        PSSearchResult(
+                            reference: "Genesis 1:1",
+                            fullText: "first"
+                        ),
+                    ]
+                }
+                Thread.sleep(forTimeInterval: 0.01)
+                return [
+                    PSSearchResult(
+                        reference: "John 3:16",
+                        fullText: "second"
+                    ),
+                ]
+            }
+        )
+        model.onHistoryChange = { _ in
+            if model.results.first?.reference == "John 3:16" {
+                newestSearchCompleted.fulfill()
+            }
+        }
+        model.configure(
+            modules: [
+                SearchModuleChoice(id: "KJV", kind: .bible),
+            ],
+            preferredModule: "KJV",
+            currentBookName: "John",
+            restoring: nil
+        )
+
+        model.query = "first"
+        model.queryDidChange()
+        model.query = "second"
+        model.queryDidChange()
+
+        await fulfillment(of: [newestSearchCompleted], timeout: 2)
+        try? await Task.sleep(for: .milliseconds(250))
+
+        XCTAssertEqual(model.results.map(\.reference), ["John 3:16"])
+        XCTAssertEqual(model.results.first?.text, "second")
+    }
+
+    @MainActor
+    func testSearchModelRestoresHistoryAndStrongHighlights() throws {
+        let coordinator = SearchIndexCoordinator(
+            freshnessProvider: { _ in false },
+            buildOperation: { _, _ in }
+        )
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: coordinator,
+            featureProvider: { module, feature in
+                module == "KJV" && feature == "Strongs"
+            }
+        )
+        let historyItem = try XCTUnwrap(
+            PSSearchHistoryItem(
+                searchTermToDisplay: "H430",
+                strongs: true,
+                fuzzy: false,
+                type: .OrSearch,
+                range: .BookRange,
+                book: "Genesis"
+            )
+        )
+        historyItem.results = [
+            PSVerseTextEntry(
+                key: "Genesis 1:1",
+                text: "In the beginning God created"
+            ),
+        ]
+
+        model.configure(
+            modules: [
+                SearchModuleChoice(id: "KJV", kind: .bible),
+                SearchModuleChoice(id: "MHCC", kind: .commentary),
+            ],
+            preferredModule: "KJV",
+            currentBookName: "John",
+            restoring: historyItem
+        )
+
+        XCTAssertEqual(model.query, "H430")
+        XCTAssertTrue(model.strongsSearch)
+        XCTAssertEqual(model.range, .BookRange)
+        XCTAssertEqual(model.bookName, "Genesis")
+        XCTAssertEqual(model.results.first?.reference, "Genesis 1:1")
+        XCTAssertEqual(
+            SearchModel.highlightTerms(
+                query: "love \"the world\" a",
+                matchType: .AndSearch,
+                strongs: false
+            ),
+            ["love", "the world"]
+        )
+    }
+
+    func testSearchIndexBackgroundManagerPersistsRecoveryRequest() {
+        var submittedIdentifiers: [String] = []
+        var cancelledIdentifiers: [String] = []
+        let scheduler = SearchIndexBackgroundManager.Scheduler(
+            register: { _, _ in true },
+            submit: { request, completion in
+                submittedIdentifiers.append(request.identifier)
+                completion(nil)
+            },
+            cancel: {
+                cancelledIdentifiers.append($0)
+            }
+        )
+        let manager = SearchIndexBackgroundManager(
+            defaults: defaults,
+            taskIdentifier: "test.search-index",
+            scheduler: scheduler,
+            buildOperation: { _, _ in }
+        )
+
+        manager.beginForegroundBuild(module: "KJV")
+
+        XCTAssertEqual(
+            defaults.string(forKey: Defaults.pendingSearchIndexModule),
+            "KJV"
+        )
+        XCTAssertEqual(submittedIdentifiers, ["test.search-index"])
+
+        manager.finishForegroundBuild(module: "KJV")
+
+        XCTAssertNil(
+            defaults.string(forKey: Defaults.pendingSearchIndexModule)
+        )
+        XCTAssertEqual(cancelledIdentifiers, ["test.search-index"])
+    }
+
+    func testSearchIndexBackgroundManagerPerformsPendingBuild() {
+        let completed = expectation(description: "Pending index build completed")
+        defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
+        var builtModules: [String] = []
+        let scheduler = SearchIndexBackgroundManager.Scheduler(
+            register: { _, _ in true },
+            submit: { _, completion in completion(nil) },
+            cancel: { _ in }
+        )
+        let manager = SearchIndexBackgroundManager(
+            defaults: defaults,
+            taskIdentifier: "test.search-index",
+            scheduler: scheduler,
+            buildOperation: { module, progress in
+                builtModules.append(module)
+                var cancel = false
+                progress?(1, &cancel)
+                XCTAssertFalse(cancel)
+            }
+        )
+
+        manager.performPendingBuild(
+            cancellationRequested: { false }
+        ) { success, shouldRetry in
+            XCTAssertTrue(success)
+            XCTAssertFalse(shouldRetry)
+            completed.fulfill()
+        }
+
+        wait(for: [completed], timeout: 2)
+        XCTAssertEqual(builtModules, ["KJV"])
+        XCTAssertNil(
+            defaults.string(forKey: Defaults.pendingSearchIndexModule)
+        )
+    }
+
+    @MainActor
     func testLegacyBridgeMirrorsNotificationsAndSettingsSideEffects() {
         defaults.set("John 3", forKey: Defaults.lastRef)
         defaults.set("16", forKey: Defaults.bibleVersePosition)
