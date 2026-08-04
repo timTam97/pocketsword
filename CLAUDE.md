@@ -172,7 +172,42 @@ which; keep it accurate if you add a failure.
   identical bytes for several `entryCount` values, precisely so the move could not be a
   silent retype; the Obj-C copy and the assertion died together with the bridge in
   step 7. Keep it one copy. Note all four `%ld` substitutions take the **same**
-  `entryCount`, and `extraJS` goes inside `window.onload`.
+  `entryCount`.
+  - **It emits TWO blocks, and where each lands in the document is load-bearing.**
+    `script(entryCount:)` goes in `<head>` (definitions + a `window.onload` that
+    re-measures and re-applies); `bootScript(extraJS:)` goes at the very **end of
+    `<body>`**, appended by `PSContentReader.chapterPage` after the six pads, and is
+    what performs the initial scroll. A script there runs after parse but **before
+    the first paint**, so a chapter opened at John 3:20 paints already scrolled.
+  - `extraJS` used to go inside `window.onload` instead, and `scrollToVerse` /
+    `scrollToPosition` each wrapped their work in a 250 ms `setTimeout`. That
+    combination *was* the jerky jump the user reported: `onload` fires post-paint, so
+    the top of the chapter was painted and only then did the page jump. Do not move
+    `extraJS` back into `onload` and do not reintroduce the timeouts.
+  - The `onload` re-apply (`psReapplyInitialScroll`) exists because a late-loading
+    webfont or image can shift the measured verse offsets. It is guarded on
+    `psUserScrolled`, set by **capturing** `touchstart` / `wheel` listeners. Guard on
+    *input*, not on comparing `window.pageYOffset` to the offset applied at boot: an
+    offset comparison cannot tell a user scroll from a reflow, so it would disable
+    the re-apply in exactly the case it exists to fix.
+
+### Chapter paging restores NO position, in both directions
+
+`-prevChapter` and `-nextChapter` (`PSModuleViewController`) both pass
+`RestoreNoPosition`, landing at the **start** of the chapter they move to.
+
+`prevChapter` used to pass `RestoreVersePosition`, which was a bug. That restore type
+reads the *shared* `Defaults{Bible,Commentary}VersePosition` — the verse you were on in
+the chapter you are **leaving** — so paging back from John 3:20 restored "verse 20"
+into John 2 and dumped you near the bottom of a chapter you had just arrived at.
+`nextChapter` had always zeroed `verseToShow` and passed `RestoreNoPosition`, so the
+two directions were also asymmetric. Chapter paging is not a position-restoring
+operation; the verse-position defaults exist for the *ref-selection* and
+*search/history* paths, which name a verse explicitly.
+
+Note the same button is reachable via `topReloadTriggered` (pull-down) and the
+`bibleSwipeRight` / `commentarySwipeRight` notifications — all route through
+`prevChapter`, so all three got the fix.
 
 ### Search (`Classes/PSSearchEngine.swift`, `PSSearchQuery.swift`, `PSSearchIndexBuilder.swift`)
 

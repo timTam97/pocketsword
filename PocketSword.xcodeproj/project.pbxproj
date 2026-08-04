@@ -91,17 +91,6 @@
 		05DD867B122E605700115EAD /* history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD8679122E605700115EAD /* history@2x.png */; };
 		05DD867E122E60AC00115EAD /* dictionary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DD867C122E60AC00115EAD /* dictionary@2x.png */; };
 		05DF57C710ABC753007CB847 /* About.png in Resources */ = {isa = PBXBuildFile; fileRef = 05DF57C610ABC753007CB847 /* About.png */; };
-		5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR101 /* PSContentStore.swift */; };
-		5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */; };
-		5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR301 /* PSChapterExpander.swift */; };
-		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
-		5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */; };
-		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
-		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
-		5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RP01 /* PSRefParser.swift */; };
-		5A1F70B0000000000000LR02 /* PSRefLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */; };
-		5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CA01 /* PSContent.sqlite */; };
-		5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CB01 /* Versification-KJV.json */; };
 		05E6A75717FADF790063B18C /* splash-iPad-landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75517FADF790063B18C /* splash-iPad-landscape.png */; };
 		05E6A75817FADF790063B18C /* splash-iPad-portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75617FADF790063B18C /* splash-iPad-portrait.png */; };
 		05E6A75C17FAE06D0063B18C /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E6A75917FAE06D0063B18C /* Icon-76.png */; };
@@ -125,19 +114,25 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		5A1F70B0000000000000C002 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000C001 /* AppConstants.swift */; };
-		5A1F70B0000000000000FF02 /* PSFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000FF01 /* PSFeatureFlags.swift */; };
+		5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CA01 /* PSContent.sqlite */; };
+		5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CB01 /* Versification-KJV.json */; };
+		5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */; };
 		5A1F70B0000000000000D002 /* PSResizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000D001 /* PSResizing.swift */; };
 		5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000F001 /* PersistedFormatTests.swift */; };
+		5A1F70B0000000000000FF02 /* PSFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000FF01 /* PSFeatureFlags.swift */; };
 		5A1F70B0000000000000G002 /* PSBookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000G001 /* PSBookmarkObject.swift */; };
 		5A1F70B0000000000000H002 /* PSBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000H001 /* PSBookmark.swift */; };
 		5A1F70B0000000000000I002 /* PSBookmarkFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */; };
 		5A1F70B0000000000000J002 /* PSBookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000J001 /* PSBookmarks.swift */; };
 		5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000K001 /* PSBookmarkTableViewCell.swift */; };
 		5A1F70B0000000000000L002 /* PSSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000L001 /* PSSearchResult.swift */; };
+		5A1F70B0000000000000LR02 /* PSRefLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */; };
 		5A1F70B0000000000000M002 /* PSSearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */; };
 		5A1F70B0000000000000N002 /* PSHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000N001 /* PSHistoryItem.swift */; };
 		5A1F70B0000000000000O002 /* PSSearchQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000O001 /* PSSearchQuery.swift */; };
 		5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000P001 /* SearchWebView.swift */; };
+		5A1F70B0000000000000RP02 /* PSRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RP01 /* PSRefParser.swift */; };
+		5A1F70B0000000000000RS02 /* PSRefSemanticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */; };
 		5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */; };
 		5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */; };
 		5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */; };
@@ -147,15 +142,20 @@
 		5A1F70B0000000000000VB02 /* PSVoiceRefSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */; };
 		5A1F70B0000000000000VC02 /* PSVoiceRefViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */; };
 		5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */; };
-		5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */; };
-		5A1F70B0000000000000RS02 /* PSRefSemanticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */; };
-		5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */; };
 		5A1F70B0000000000000W002 /* PSBookmarkFolderAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */; };
 		5A1F70B0000000000000X002 /* PSBookmarkAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */; };
 		5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */; };
 		5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */; };
 		5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */; };
 		5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZL01 /* PSHistoryController.swift */; };
+		5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */; };
+		5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR101 /* PSContentStore.swift */; };
+		5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */; };
+		5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR301 /* PSChapterExpander.swift */; };
+		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
+		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
+		5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */; };
+		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
 		5A1F70B00000000000ZA002 /* PSModuleSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */; };
 		5A1F70B00000000000ZC002 /* PSBasePreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */; };
 		5A1F70B00000000000ZD002 /* PSPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZD001 /* PSPreferencesController.swift */; };
@@ -297,17 +297,6 @@
 		05DD8679122E605700115EAD /* history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "history@2x.png"; path = "Resources/history@2x.png"; sourceTree = "<group>"; };
 		05DD867C122E60AC00115EAD /* dictionary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dictionary@2x.png"; path = "Resources/dictionary@2x.png"; sourceTree = "<group>"; };
 		05DF57C610ABC753007CB847 /* About.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = About.png; path = Resources/About.png; sourceTree = "<group>"; };
-		5A1F70B00000000000CTR101 /* PSContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentStore.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSBookOSISResolver.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000CTR301 /* PSChapterExpander.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterExpander.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterNavigationJS.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000RP01 /* PSRefParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefParser.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefLinkRouter.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000CA01 /* PSContent.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = PSContent.sqlite; path = Resources/PSContent.sqlite; sourceTree = "<group>"; };
-		5A1F70B0000000000000CB01 /* Versification-KJV.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "Versification-KJV.json"; path = "Resources/Versification-KJV.json"; sourceTree = "<group>"; };
 		05E6A75517FADF790063B18C /* splash-iPad-landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "splash-iPad-landscape.png"; path = "Resources/splash-iPad-landscape.png"; sourceTree = "<group>"; };
 		05E6A75617FADF790063B18C /* splash-iPad-portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "splash-iPad-portrait.png"; path = "Resources/splash-iPad-portrait.png"; sourceTree = "<group>"; };
 		05E6A75917FAE06D0063B18C /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-76.png"; path = "Resources/Icon-76.png"; sourceTree = "<group>"; };
@@ -335,21 +324,27 @@
 		28A0AB4B0D9B1048005BE974 /* PocketSword_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PocketSword_Prefix.pch; path = misc/PocketSword_Prefix.pch; sourceTree = "<group>"; };
 		33354D062FCD55D800252A83 /* PocketSword-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "PocketSword-Bridging-Header.h"; path = "misc/PocketSword-Bridging-Header.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000C001 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000FF01 /* PSFeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSFeatureFlags.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000CA01 /* PSContent.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = PSContent.sqlite; path = Resources/PSContent.sqlite; sourceTree = "<group>"; };
+		5A1F70B0000000000000CB01 /* Versification-KJV.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "Versification-KJV.json"; path = "Resources/Versification-KJV.json"; sourceTree = "<group>"; };
+		5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSContentStoreTests.swift; path = Classes/PSContentStoreTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000D001 /* PSResizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSResizing.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F001 /* PersistedFormatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistedFormatTests.swift; path = Classes/PersistedFormatTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PocketSwordTests-Bridging-Header.h"; path = "misc/PocketSwordTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000F010 /* PocketSwordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A1F70B0000000000000FF01 /* PSFeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSFeatureFlags.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000G001 /* PSBookmarkObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkObject.swift; path = Classes/PSBookmarkObject.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000H001 /* PSBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmark.swift; path = Classes/PSBookmark.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000I001 /* PSBookmarkFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolder.swift; path = Classes/PSBookmarkFolder.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000J001 /* PSBookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarks.swift; path = Classes/PSBookmarks.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000K001 /* PSBookmarkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkTableViewCell.swift; path = Classes/PSBookmarkTableViewCell.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000L001 /* PSSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchResult.swift; path = Classes/PSSearchResult.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000LR01 /* PSRefLinkRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefLinkRouter.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000M001 /* PSSearchHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchHistoryItem.swift; path = Classes/PSSearchHistoryItem.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000N001 /* PSHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryItem.swift; path = Classes/PSHistoryItem.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000O001 /* PSSearchQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchQuery.swift; path = Classes/PSSearchQuery.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000P001 /* SearchWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchWebView.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000RP01 /* PSRefParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSRefParser.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSRefSemanticsTests.swift; path = Classes/PSRefSemanticsTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSChapterSelectorController.swift; path = Classes/PSChapterSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVerseSelectorController.swift; path = Classes/PSVerseSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000T001 /* PSInfoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSInfoPopupViewController.swift; path = Classes/PSInfoPopupViewController.swift; sourceTree = "<group>"; };
@@ -359,15 +354,20 @@
 		5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefSession.swift; path = Classes/PSVoiceRefSession.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000VC01 /* PSVoiceRefViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefViewController.swift; path = Classes/PSVoiceRefViewController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParserTests.swift; path = Classes/PSVoiceRefParserTests.swift; sourceTree = "<group>"; };
-		5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSSearchIndexParityTests.swift; path = Classes/PSSearchIndexParityTests.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000RS01 /* PSRefSemanticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSRefSemanticsTests.swift; path = Classes/PSRefSemanticsTests.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSContentStoreTests.swift; path = Classes/PSContentStoreTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000W001 /* PSBookmarkFolderAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkFolderAddViewController.swift; path = Classes/PSBookmarkFolderAddViewController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkAddViewController.swift; path = Classes/PSBookmarkAddViewController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSAboutScreenController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchIndexBuilder.swift; path = Classes/PSSearchIndexBuilder.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSRefSelectorController.swift; path = Classes/PSRefSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000ZL01 /* PSHistoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryController.swift; path = Classes/PSHistoryController.swift; sourceTree = "<group>"; };
+		5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSSearchIndexParityTests.swift; path = Classes/PSSearchIndexParityTests.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000CTR101 /* PSContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentStore.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSBookOSISResolver.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000CTR301 /* PSChapterExpander.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterExpander.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterNavigationJS.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZA001 /* PSModuleSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleSearchController.swift; path = Classes/PSModuleSearchController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZC001 /* PSBasePreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBasePreferencesController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZD001 /* PSPreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSPreferencesController.swift; sourceTree = "<group>"; };
@@ -1179,7 +1179,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = misc/Info.plist;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -1203,7 +1203,7 @@
 				);
 				INFOPLIST_FILE = misc/Info.plist;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -1459,7 +1459,7 @@
 				);
 				INFOPLIST_FILE = misc/Info.plist;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",

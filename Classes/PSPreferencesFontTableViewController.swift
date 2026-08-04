@@ -109,6 +109,11 @@ final class PSPreferencesFontTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = NSLocalizedString("FontPreferenceTitle", comment: "Font")
+        navigationItem.largeTitleDisplayMode = .never
+        tableView.backgroundColor = .systemGroupedBackground
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 52
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         reloadFontStrings()
     }
 
@@ -152,9 +157,12 @@ final class PSPreferencesFontTableViewController: UITableViewController {
 
         let fontName = fontStrings?[indexPath.row]
         cell.textLabel?.text = fontName
-        if let fontName = fontName {
-            cell.textLabel?.font = UIFont(name: fontName, size: 15.0)
-        }
+        let baseFont = fontName.flatMap { UIFont(name: $0, size: 17) }
+            ?? UIFont.systemFont(ofSize: 17)
+        cell.textLabel?.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: baseFont)
+        cell.textLabel?.adjustsFontForContentSizeCategory = true
+        cell.textLabel?.textColor = .label
+        cell.selectionStyle = .default
 
         if font == cell.textLabel?.text {
             cell.accessoryType = .checkmark
@@ -166,6 +174,7 @@ final class PSPreferencesFontTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if let fontName = fontStrings?[indexPath.row] {
             preferencesController?.fontNameChanged(fontName)
         }

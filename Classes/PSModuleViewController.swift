@@ -153,7 +153,7 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         segControl.isMomentary = true
 
         let arrowWidth: CGFloat = 50.0
-        let refWidth: CGFloat = 78.0
+        let refWidth: CGFloat = 95.0
         segControl.setWidth(arrowWidth, forSegmentAt: 0)
         segControl.setWidth(refWidth, forSegmentAt: 1)
         segControl.setWidth(arrowWidth, forSegmentAt: 2)
@@ -295,8 +295,19 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
     }
 
     // Loads the previous chapter into the Web View
+    //
+    // Restores NO position, i.e. lands at the START of the previous chapter — the
+    // same as -nextChapter, and symmetric with it.
+    //
+    // This used to pass RestoreVersePosition, which reads the *shared*
+    // Defaults{Bible,Commentary}VersePosition — the verse you were on in the chapter
+    // you are LEAVING. Paging back from John 3:20 therefore restored "verse 20" into
+    // John 2, dumping you near the bottom of a chapter you had just arrived at.
+    // Chapter paging is not a position-restoring operation; going back a chapter
+    // means going to its beginning.
     @objc(prevChapter)
     func prevChapter() {
+        verseToShow = 0
         let currentRef = PSModuleController.getCurrentBibleRef()
         if currentRef == PSModuleController.getFirstRefAvailable() {
             return
@@ -312,10 +323,10 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
         switch tabType {
         case .BibleTab:
-            delegate?.displayChapter(ref, with: BibleViewPoll, restore: RestoreVersePosition)
+            delegate?.displayChapter(ref, with: BibleViewPoll, restore: RestoreNoPosition)
             PSHistoryController.addHistoryItem(.BibleTab)
         case .CommentaryTab:
-            delegate?.displayChapter(ref, with: CommentaryViewPoll, restore: RestoreVersePosition)
+            delegate?.displayChapter(ref, with: CommentaryViewPoll, restore: RestoreNoPosition)
             PSHistoryController.addHistoryItem(.CommentaryTab)
         default:
             break

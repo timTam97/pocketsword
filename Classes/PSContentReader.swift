@@ -259,16 +259,25 @@ final class PSContentReader: NSObject {
                                          applyBookmarkHighlights: true) else {
             return nil
         }
-        // Identical to -getChapter:'s own six pads.
-        let body = rendered.body + "<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"
+        // Identical to -getChapter:'s own six pads, then the pre-paint boot block.
+        //
+        // `bootScript` MUST be last in the body: it is what performs the initial
+        // scroll, and a script at the end of <body> runs after parse but before the
+        // first paint, so the chapter appears already scrolled to the target verse
+        // instead of painting at the top and then jumping. It carries the `extraJS`
+        // that used to be spliced into `window.onload` (which fires post-paint —
+        // that was the jerkiness). See PSChapterNavigationJS's header.
+        let body = rendered.body
+            + "<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"
+            + PSChapterNavigationJS.bootScript(extraJS: extraJS)
 
         // The navigation JS now comes from the Swift `PSChapterNavigationJS`
         // (SWORD_REMOVAL_PLAN.md Phase 5 step 3), which was generated from
         // `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`'s own bytes
-        // rather than retyped. `PSChapterNavigationJSTests` asserts the two are
-        // byte-identical for as long as both exist; the Obj-C copy dies with the
+        // rather than retyped. `PSChapterNavigationJSTests` asserted the two were
+        // byte-identical for as long as both existed; the Obj-C copy died with the
         // bridge in step 7, and the assertion with it.
-        let js = PSChapterNavigationJS.script(entryCount: rendered.entryCount, extraJS: extraJS)
+        let js = PSChapterNavigationJS.script(entryCount: rendered.entryCount)
 
         guard var text = PSModuleController.createHTMLString(body,
                                                             usingPreferences: true,

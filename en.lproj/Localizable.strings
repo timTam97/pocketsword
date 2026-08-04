@@ -49,15 +49,15 @@
 
 //changed for v1.3.3ish
 "PreferencesTitle" = "Preferences";
-"PreferencesDisplayPreferencesTitle" = "Display Preferences";
-"PreferencesDevicePreferencesTitle" = "Device Preferences";
-"PreferencesFontSizeTitle" = "Font Size";
+"PreferencesDisplayPreferencesTitle" = "Reading";
+"PreferencesDevicePreferencesTitle" = "Device";
+"PreferencesFontSizeTitle" = "Text Size";
 "PreferencesNightModeTitle" = "Night Mode";
 "PreferencesVPLTitle" = "Verse Per Line";
 "PreferencesFontTitle" = "Font";
 "PreferencesRedLetterTitle" = "Red Letter";
 "PreferencesRedLetterNote" = "Note that Red Letter mode is only available for certain modules";
-"PreferencesDisableAutoLockTitle" = "Disable auto-sleep";
+"PreferencesDisableAutoLockTitle" = "Keep Screen Awake";
 
 "AboutTitle" = "About";
 
@@ -162,11 +162,11 @@
 "VoiceOverNextChapterButton" = "Next Chapter";
 "VoiceOverHistoryAndSearchButton" = "History and Search";
 "PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Automatic Fullscreen Mode";
-"PreferencesFullscreenNote" = "With Automatic Fullscreen Mode disabled you can still switch to and from fullscreen with a 2-finger tap in the Bible and Commentary tabs.";
+"PreferencesFullscreenModeTitle" = "Automatic Full Screen";
+"PreferencesFullscreenNote" = "When off, use a two-finger tap in Bible or Commentary to enter or leave full screen.";
 
 // new v1.3.4 strings:
-"PreferencesRotationLock" = "Rotation Lock";
+"PreferencesRotationLock" = "Lock Rotation";
 
 // new v1.3.5 strings:
 "PreferencesFontDefaultTitle" = "Use custom Font";
