@@ -90,7 +90,7 @@ final class PSAboutScreenController: UIViewController, WKNavigationDelegate, MFM
         	  \n\
         	  <p>PocketSword benefits from the following Open Source projects:<br />\n\
         	  &bull; <i><a href="http://www.crosswire.org/sword/index.jsp">The SWORD Project</a></i><br />\n\
-        	  &bull; <i><a href="https://github.com/ZipArchive/ZipArchive">ZipArchive</a></i><br />\n\
+        	  &bull; <i><a href="https://github.com/jdg/MBProgressHUD">MBProgressHUD</a></i><br />\n\
         	  </p>\
         	  <br />\n\
         	  <br />\n\
