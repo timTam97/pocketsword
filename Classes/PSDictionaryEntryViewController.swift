@@ -35,6 +35,8 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
     private static let attrTypeValue  = "value"        // ATTRTYPE_VALUE
     private static let swOutputRefKey = "OutputRefKey"  // SW_OUTPUT_REF_KEY
     private static let swOutputTextKey = "OutputTextKey" // SW_OUTPUT_TEXT_KEY
+    /// SWMOD_CATEGORY_DICTIONARIES — the module `type` string content_meta stores.
+    private static let typeDictionaries = "Lexicons / Dictionaries"
 
     @objc var entryHTML: String?
     @objc var entryTitle: String?
@@ -112,9 +114,18 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
 
                 let mod = module
 
-                let swordDictionary = PSModuleController.default()?.swordManager?.module(withName: mod) as? SwordDictionary
-                if let swordDictionary = swordDictionary {
-                    entry = swordDictionary.entry(forKey: rData[Self.attrTypeValue] as? String ?? "")
+                // Phase 5 step 5 (a FOURTEENTH call site — the plan's table lists
+                // thirteen and missed this one; same shape as the others).
+                //
+                // The `swordManager.module(withName:) as? SwordDictionary` here was an
+                // "is this module installed, and is it a lexicon?" test, used only to
+                // choose between rendering the entry and showing the not-installed
+                // placeholder. content_meta answers both halves: a nil type means we do
+                // not ship it, and the type string says whether it is a lexicon.
+                let moduleType = PSContentStore.shared?.moduleMeta(mod, key: "type")
+                if moduleType == Self.typeDictionaries {
+                    entry = PSContentReader.entry(module: mod,
+                                                  key: rData[Self.attrTypeValue] as? String ?? "")
                 } else {
                     let notInstalled = NSLocalizedString("ModuleNotInstalled", comment: "is not installed.")
                     entry = "<p style=\"color:grey;text-align:center;font-style:italic;\">\(mod) \(notInstalled)</p>"
@@ -122,7 +133,7 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
                 let t = (rData[Self.attrTypeValue] as? String)?.removingPercentEncoding
                 let body = "<div style=\"-webkit-text-size-adjust: none;\"><b>\(t ?? "")</b><br /><p>\(entry ?? "")</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></div>"
                 let descr = PSModuleController.createInfoHTMLString(body,
-                                                                   usingModuleForPreferences: PSModuleController.default()?.primaryDictionary?.name)
+                                                                   usingModuleForPreferences: PSModuleController.default()?.primaryDictionaryName)
                 setDictionaryEntryTitle(t)
                 if let descr = descr {
                     dictionaryDescriptionWebView?.loadHTMLString(descr, baseURL: nil)
@@ -131,21 +142,16 @@ final class PSDictionaryEntryViewController: UIViewController, WKNavigationDeleg
                 decisionHandler(.cancel)
                 return
 
-            } else if let rData = rData,
-                      (rData[Self.attrTypeAction] as? String) == "showRef" {
-                let array = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData, cleanFeed: true) as? [[String: Any]]
-                var tmpEntry = ""
-                for dict in array ?? [] {
-                    let curRef = PSModuleController.createRefString(dict[Self.swOutputRefKey] as? String) ?? ""
-                    tmpEntry += "<b><a href=\"bible:///\(curRef)\">\(curRef)</a>:</b> "
-                    tmpEntry += "\(dict[Self.swOutputTextKey] as? String ?? "")<br />"
-                }
-                if !tmpEntry.isEmpty {
-                    let cleaned = tmpEntry.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                    entry = PSModuleController.createInfoHTMLString(cleaned,
-                                                                   usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-                }
             }
+            // The `showRef` arm is GONE — SWORD_REMOVAL_PLAN.md Phase 4 step 8. It
+            // expanded a scriptRef into a Bible-verse list via
+            // -attributeValueForEntryData:cleanFeed:YES, and nothing in the shipped
+            // content reaches it: the only sword:// links baked into the lexicons are
+            // the 14,989 lexicon->lexicon ones handled by the branch above, and every
+            // one of them routes to the dictionary arm (asserted over all 14,989 in
+            // PSRefSemanticsTests via the PSRefLinkRouter seam). An unrecognised link
+            // now falls through to decisionHandler(.allow), which is exactly what
+            // happened before whenever the expansion produced nothing.
 
             if let entry = entry {
                 NotificationCenter.default.post(name: .showInfoPane, object: entry)

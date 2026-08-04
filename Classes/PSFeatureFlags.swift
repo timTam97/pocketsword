@@ -22,4 +22,14 @@ enum PSFeatureFlags {
     static var voiceReferenceEnabled: Bool {
         UserDefaults.standard.bool(forKey: Defaults.voiceRefEnabledPreference)
     }
+
+    // `swiftContentReader` is **gone** (SWORD_REMOVAL_PLAN.md Phase 5 step 1). It
+    // gated reading through `PSContentReader` instead of the SWORD engine, and
+    // there is no longer an engine to gate against: the reader is the only render
+    // path, so a flag whose "off" branch cannot be taken is worse than no flag —
+    // it implies a fallback that does not exist.
+    //
+    // The `swiftContentReader` user default is left declared in AppConstants so the
+    // key is not reused, and is never read or written. A device that has it set to
+    // NO from the Phase-3/4 era is unaffected: nothing consults it.
 }

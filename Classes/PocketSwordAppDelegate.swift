@@ -149,18 +149,27 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
      * path (required): a bible reference, for example: "John+3:16" or "John 3"
      *
      * query (optional): for example:
-     *   "?type=bible" or
-     *   "?type=commentary&module=list"
+     *   "?type=bible"
      *   - type is either "bible" or "commentary".  bible is the default if not present.
-     *   - module=list, then the current module will be selected, but the user
-     *       will be presented with a list of installed modules to choose from.
      *
      * Some complete example URLs are:
      * sword:///John+3:16                                (verse with no module specified)
      * sword://KJV/John+3:16                             (verse with module)
-     * sword://ESV/John+3:16?type=bible                  (verse with module and fall-back type if not installed)
-     * sword:///John+3:16?type=bible&module=list         (verse with list of bible modules)
-     * sword:///John+3:16?type=commentary&module=list    (verse with list of commentary modules)
+     * sword://ESV/John+3:16?type=bible                  (verse with a foreign module; the
+     *                                                    module is ignored and the reference
+     *                                                    is shown in the bundled module)
+     *
+     * The old "module=list" query component is gone along with the module selector;
+     * a URL naming a module that is not installed still navigates to the reference.
+     *
+     * SWORD_REMOVAL_PLAN.md Phase 4: this is the ONLY place the app accepts a
+     * reference it did not itself generate, and it used to do no validation at all
+     * — it percent-decoded, stripped "/", turned "+" into space, split on ":",
+     * kept the leading digits of the verse, and wrote the result straight to
+     * Defaults.lastRef. So `sword://KJV/Nonsense+9:9` persisted "Nonsense 9" as
+     * lastRef, which neither the reader nor the ref selector can resolve, and
+     * `sword:///John` persisted the chapter-less "John". Both now go through
+     * PSRefParser and are rejected outright rather than poisoning lastRef.
      */
     @objc(application:handleOpenURL:options:)
     @discardableResult
@@ -175,8 +184,6 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             return false
         }
 
-        self.urlToOpen = url
-
         var module: String? = url.host
         var reference = url.path
         reference = (reference.removingPercentEncoding ?? reference)
@@ -185,7 +192,8 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
         let chapter: String
         let verseRaw: String
-        if reference.range(of: ":") == nil {
+        let hadVerseSpec = reference.range(of: ":") != nil
+        if !hadVerseSpec {
             chapter = reference
             verseRaw = "1"
         } else {
@@ -206,34 +214,81 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
         }
         let verse = String(String.UnicodeScalarView(verseChars[0..<min(i, verseChars.count)]))
 
+        // Validate the CHAPTER REF before mutating any state — that is the thing
+        // that gets persisted to Defaults.lastRef and that the reader must be able
+        // to resolve on the next launch. A book the versification does not contain,
+        // or a chapter outside it, is rejected here: lastRef is left alone, nothing
+        // is posted, and we return false so the caller sees the URL was unhandled.
+        //
+        // The verse is deliberately NOT part of this gate. It is only a scroll
+        // position, and an out-of-range one ("John 3:99") should not cost the user
+        // navigation to a chapter that genuinely exists — the JS scrollToVerse
+        // simply finds no anchor, exactly as before. So the chapter ref is
+        // validated strictly and the verse is checked separately below.
+        guard let parser = PSRefParser(),
+              let parsed = parser.parse(chapter) else {
+            alog("sword:// URL carries an unresolvable reference, ignoring: \(reference)")
+            return false
+        }
+
+        // What actually gets persisted.
+        //
+        // Accepting a ref is not enough: `lastRef` has to be a ref the *reader* can
+        // resolve on the next launch, and `PSBookOSISResolver.resolve(ref:)` is
+        // deliberately narrower than `PSRefParser` — the parser adds a trailing-"."
+        // and a despaced-abbreviation fallback that the resolver's spelling index
+        // does not carry (widening that index is off-limits; PSContentStoreTests
+        // pins it). So `sword://KJV/Gen.+1` parses fine and would persist "Gen. 1",
+        // which the reader then declines.
+        //
+        // Keep `chapter` verbatim when the reader can resolve it — that preserves
+        // every URL that worked before byte-for-byte, in particular an abbreviated
+        // "Gen 3" staying "Gen 3" rather than being silently expanded — and fall
+        // back to the parser's canonical `name`-form ref when it cannot. The
+        // canonical form is what the selector VCs and history already use, so it is
+        // never a novel shape.
+        //
+        // This also covers the chapter-less URL (`sword:///John`, `sword:///1 John`),
+        // which used to persist the chapter-less "John": VerseKey absorbed that, the
+        // Swift reader cannot, and it renders today only via the SWORD fallback.
+        let resolver = PSBookOSISResolver.shared
+        let chapterResolvesAsGiven = parsed.hadExplicitChapter
+            && resolver?.resolve(ref: chapter) != nil
+        let chapterToShow = chapterResolvesAsGiven ? chapter : parsed.chapterRef
+
+        // A verse the truncation above could not reduce to a number at all
+        // ("John 3:abc" -> "a", "John 3:" -> "") would otherwise be written to the
+        // verse-position defaults as a non-numeric string. Fall back to "1", the
+        // same value a URL with no verse spec at all gets.
+        let versePosition = Int(verse).map(String.init) ?? "1"
+
+        self.urlToOpen = url
+
         let params = parseQueryDictionary(from: url)
         let type = params["type"]
-        let LIST = "list"
 
         let isBible: Bool // determined first by "module" if present, then fall back to "type", then default to "bible"
         if let mod = module, !mod.isEmpty {
-            // they requested a specific module
-            let requestedModule = PSModuleController.default()?.swordManager?.module(withName: mod)
-            if let requestedModule = requestedModule {
-                isBible = (requestedModule.type == bible)
+            // they requested a specific module. Its type comes from content_meta as of
+            // Phase 5 step 5; a nil means we do not ship it, which is the same
+            // "not installed" branch as before.
+            if let type = PSContentStore.shared?.moduleMeta(mod, key: "type") {
+                isBible = (type == "Biblical Texts")
             } else {
-                // requested module is not installed or does not exist, so display the list of installed modules
-                // TODO: prompting the user to install the module (if available) might be better
-                module = LIST
+                // The requested module is not installed. With a fixed bundled module
+                // set that is the common case for a foreign sword:// link, so ignore
+                // the module component and still navigate to the reference.
+                module = nil
                 isBible = (type == nil || type == "bible")
             }
         } else {
             // no module requested
             isBible = (type == nil || type == "bible")
-
-            if let moduleInQuery = params["module"], moduleInQuery == LIST {
-                module = LIST
-            }
         }
 
         let defaults = UserDefaults.standard
         if isBible {
-            if let mod = module, mod != LIST {
+            if let mod = module {
                 // they requested a specific module and it is available
                 PSModuleController.default()?.loadPrimaryBible(mod)
                 //defaults.set(mod, forKey: Defaults.lastBible)
@@ -241,23 +296,23 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
             tabBarControllerDelegate?.setShownTabTo(.BibleTab)
 
-            defaults.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
-            defaults.set(verse, forKey: Defaults.bibleVersePosition)
+            defaults.set(PSModuleController.createRefString(chapterToShow), forKey: Defaults.lastRef)
+            defaults.set(versePosition, forKey: Defaults.bibleVersePosition)
             defaults.synchronize()
 
             NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
             PSHistoryController.addHistoryItem(.BibleTab)
         } else {
-            if let mod = module, mod != LIST {
+            if let mod = module {
                 // they requested a specific module and it is available
                 PSModuleController.default()?.loadPrimaryCommentary(mod)
             }
 
             tabBarControllerDelegate?.setShownTabTo(.CommentaryTab)
 
-            defaults.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
-            defaults.set(verse, forKey: Defaults.bibleVersePosition)
-            defaults.set(verse, forKey: Defaults.commentaryVersePosition)
+            defaults.set(PSModuleController.createRefString(chapterToShow), forKey: Defaults.lastRef)
+            defaults.set(versePosition, forKey: Defaults.bibleVersePosition)
+            defaults.set(versePosition, forKey: Defaults.commentaryVersePosition)
             defaults.synchronize()
 
             NotificationCenter.default.post(name: .redisplayPrimaryCommentary, object: nil)
@@ -265,26 +320,19 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
             PSHistoryController.addHistoryItem(.CommentaryTab)
         }
 
-        if let mod = module, mod == LIST {
-            tabBarControllerDelegate?.toggleModulesList(animated: false, with: nil, fromButton: nil)
-        }
-
         return true
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         UserDefaults.standard.synchronize()
-        PSLanguageCode.doneWithLookupTable()
         PSModuleController.releaseDefaultModuleController()
-        SwordManager.releaseDefaultManager()
+        // `SwordManager.releaseDefaultManager()` is GONE (Phase 5 step 7): there is no
+        // manager. The content store closes its handle in `deinit`, and the process is
+        // terminating anyway.
     }
 
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
         PSModuleController.default()?.didReceiveMemoryWarning()
-    }
-
-    deinit {
-        PSLanguageCode.doneWithLookupTable()
     }
 }
 

@@ -1,0 +1,8 @@
+### footnote passage=Genesis 4:1 value=1
+string: <i>Cain</i>: that is, <i>Gotten</i>, or, <i>Acquired</i>
+### footnote passage=Genesis 4:10 value=1
+string: <i>blood</i>: Heb. <i>bloods</i>
+### footnote passage=Esther 1:19 value=1
+string: <i>If it&#8230;</i>: Heb. <i>If it be good with the king</i>
+### footnote passage=Esther 1:19 value=4
+string: <i>be not&#8230;</i>: Heb. <i>pass not away</i>

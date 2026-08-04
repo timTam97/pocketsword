@@ -6,16 +6,16 @@
 //  a module. Replaces the crosswire.org-download flow that used to live in
 //  PSIndexController.
 //
-//  This VC owns the progress UI and a UIBackgroundTask; it drives the
-//  still-Obj-C++ PSSearchEngine via its clean Foundation-only facade
-//  (-buildWithProgress:error:). The C++ / sqlite3 / FTS5 index-build path stays
-//  in PSSearchEngine.mm permanently per the migration plan.
+//  This VC owns the progress UI and a UIBackgroundTask; the sqlite3 / FTS5
+//  index-build itself is PSSearchEngine's job (`build(progress:)`). That engine was
+//  Obj-C++ when this file was written and the Swift-migration plan expected it to
+//  stay that way; SWORD_REMOVAL_PLAN.md Phase 5 step 8 ported it, so the whole path
+//  is Swift now.
 //
-//  The public surface is preserved verbatim for the (still Obj-C++) consumer
-//  PSModuleSearchController: the @objc class name PSSearchIndexBuilder, the
-//  -initWithModule: / -presentFromViewController: methods, the readonly `module`
-//  property, and the @objc PSSearchIndexBuilderDelegate protocol (kept @objc so
-//  the Obj-C conformer binds, per migration-plan risk R11).
+//  The public surface is preserved verbatim from the Obj-C original: the @objc class
+//  name PSSearchIndexBuilder, the -initWithModuleName: / -presentFromViewController:
+//  methods, the readonly `moduleName` property, and the @objc
+//  PSSearchIndexBuilderDelegate protocol (kept @objc per migration-plan risk R11).
 //
 
 import UIKit
@@ -29,7 +29,10 @@ protocol PSSearchIndexBuilderDelegate: NSObjectProtocol {
 final class PSSearchIndexBuilder: UIViewController {
 
     @objc weak var delegate: PSSearchIndexBuilderDelegate?
-    @objc private(set) var module: SwordModule
+    /// The module being indexed, as a **name** (Phase 5 step 5). It was a
+    /// `SwordModule`, used only for its `name` (the sheet's subtitle) and to key the
+    /// search engine — both of which take a name now.
+    @objc private(set) var moduleName: String
 
     // Set from the main thread (cancel button / bg-task expiration) and read
     // from the build worker thread inside the progress block. Guarded by a lock
@@ -49,8 +52,8 @@ final class PSSearchIndexBuilder: UIViewController {
     private var progressView: UIProgressView!
     private var cancelButton: UIButton!
 
-    @objc init(module: SwordModule) {
-        self.module = module
+    @objc init(moduleName: String) {
+        self.moduleName = moduleName
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .pageSheet
         self.isModalInPresentation = true // disallow pull-to-dismiss mid-build
@@ -78,7 +81,7 @@ final class PSSearchIndexBuilder: UIViewController {
         stack.addArrangedSubview(titleLabel)
 
         moduleLabel = UILabel()
-        moduleLabel.text = module.name
+        moduleLabel.text = moduleName
         moduleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         moduleLabel.textColor = .secondaryLabel
         moduleLabel.textAlignment = .center
@@ -125,22 +128,24 @@ final class PSSearchIndexBuilder: UIViewController {
             self?.cancelRequested = true
         }
 
-        let mod = module
-        let engine = PSSearchEngine(for: mod)
+        let engine = PSSearchEngine.engine(forModuleName: moduleName)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            var err: NSError?
+            var err: Error?
             let ok: Bool
             do {
+                // `cancel` is an `inout Bool` as of Phase 5 step 8, where it was a
+                // `BOOL *` out-param on the Obj-C block. Same contract: the engine
+                // reads it back the instant this returns and aborts the transaction.
                 try engine.build(progress: { fraction, cancel in
-                    cancel.pointee = ObjCBool(self?.cancelRequested ?? true)
+                    cancel = self?.cancelRequested ?? true
                     DispatchQueue.main.async {
                         self?.progressView.progress = fraction
                     }
                 })
                 ok = true
-            } catch let buildErr as NSError {
-                err = buildErr
+            } catch {
+                err = error
                 ok = false
             }
 
@@ -151,7 +156,7 @@ final class PSSearchIndexBuilder: UIViewController {
         }
     }
 
-    private func finish(success: Bool, cancelled: Bool, error: NSError?) {
+    private func finish(success: Bool, cancelled: Bool, error: Error?) {
         if buildFinished { return }
         buildFinished = true
 

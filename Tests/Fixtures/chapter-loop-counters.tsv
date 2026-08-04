@@ -1,0 +1,2382 @@
+# live-SWORD chapter loop counters (-chapterBodyHTML:'s entryCount)
+# format: module	ref	entryCount
+# NOT a verse count: the counter advances for entries the loop skips
+# and for the final iteration that steps out of the chapter.
+KJV	Genesis 1	32
+KJV	Genesis 2	26
+KJV	Genesis 3	25
+KJV	Genesis 4	27
+KJV	Genesis 5	33
+KJV	Genesis 6	23
+KJV	Genesis 7	25
+KJV	Genesis 8	23
+KJV	Genesis 9	30
+KJV	Genesis 10	33
+KJV	Genesis 11	33
+KJV	Genesis 12	21
+KJV	Genesis 13	19
+KJV	Genesis 14	25
+KJV	Genesis 15	22
+KJV	Genesis 16	17
+KJV	Genesis 17	28
+KJV	Genesis 18	34
+KJV	Genesis 19	39
+KJV	Genesis 20	19
+KJV	Genesis 21	35
+KJV	Genesis 22	25
+KJV	Genesis 23	21
+KJV	Genesis 24	68
+KJV	Genesis 25	35
+KJV	Genesis 26	36
+KJV	Genesis 27	47
+KJV	Genesis 28	23
+KJV	Genesis 29	36
+KJV	Genesis 30	44
+KJV	Genesis 31	56
+KJV	Genesis 32	33
+KJV	Genesis 33	21
+KJV	Genesis 34	32
+KJV	Genesis 35	30
+KJV	Genesis 36	44
+KJV	Genesis 37	37
+KJV	Genesis 38	31
+KJV	Genesis 39	24
+KJV	Genesis 40	24
+KJV	Genesis 41	58
+KJV	Genesis 42	39
+KJV	Genesis 43	35
+KJV	Genesis 44	35
+KJV	Genesis 45	29
+KJV	Genesis 46	35
+KJV	Genesis 47	32
+KJV	Genesis 48	23
+KJV	Genesis 49	34
+KJV	Genesis 50	27
+KJV	Exodus 1	23
+KJV	Exodus 2	26
+KJV	Exodus 3	23
+KJV	Exodus 4	32
+KJV	Exodus 5	24
+KJV	Exodus 6	31
+KJV	Exodus 7	26
+KJV	Exodus 8	33
+KJV	Exodus 9	36
+KJV	Exodus 10	30
+KJV	Exodus 11	11
+KJV	Exodus 12	52
+KJV	Exodus 13	23
+KJV	Exodus 14	32
+KJV	Exodus 15	28
+KJV	Exodus 16	37
+KJV	Exodus 17	17
+KJV	Exodus 18	28
+KJV	Exodus 19	26
+KJV	Exodus 20	27
+KJV	Exodus 21	37
+KJV	Exodus 22	32
+KJV	Exodus 23	34
+KJV	Exodus 24	19
+KJV	Exodus 25	41
+KJV	Exodus 26	38
+KJV	Exodus 27	22
+KJV	Exodus 28	44
+KJV	Exodus 29	47
+KJV	Exodus 30	39
+KJV	Exodus 31	19
+KJV	Exodus 32	36
+KJV	Exodus 33	24
+KJV	Exodus 34	36
+KJV	Exodus 35	36
+KJV	Exodus 36	39
+KJV	Exodus 37	30
+KJV	Exodus 38	32
+KJV	Exodus 39	44
+KJV	Exodus 40	39
+KJV	Leviticus 1	18
+KJV	Leviticus 2	17
+KJV	Leviticus 3	18
+KJV	Leviticus 4	36
+KJV	Leviticus 5	20
+KJV	Leviticus 6	31
+KJV	Leviticus 7	39
+KJV	Leviticus 8	37
+KJV	Leviticus 9	25
+KJV	Leviticus 10	21
+KJV	Leviticus 11	48
+KJV	Leviticus 12	9
+KJV	Leviticus 13	60
+KJV	Leviticus 14	58
+KJV	Leviticus 15	34
+KJV	Leviticus 16	35
+KJV	Leviticus 17	17
+KJV	Leviticus 18	31
+KJV	Leviticus 19	38
+KJV	Leviticus 20	28
+KJV	Leviticus 21	25
+KJV	Leviticus 22	34
+KJV	Leviticus 23	45
+KJV	Leviticus 24	24
+KJV	Leviticus 25	56
+KJV	Leviticus 26	47
+KJV	Leviticus 27	35
+KJV	Numbers 1	55
+KJV	Numbers 2	35
+KJV	Numbers 3	52
+KJV	Numbers 4	50
+KJV	Numbers 5	32
+KJV	Numbers 6	28
+KJV	Numbers 7	90
+KJV	Numbers 8	27
+KJV	Numbers 9	24
+KJV	Numbers 10	37
+KJV	Numbers 11	36
+KJV	Numbers 12	17
+KJV	Numbers 13	34
+KJV	Numbers 14	46
+KJV	Numbers 15	42
+KJV	Numbers 16	51
+KJV	Numbers 17	14
+KJV	Numbers 18	33
+KJV	Numbers 19	23
+KJV	Numbers 20	30
+KJV	Numbers 21	36
+KJV	Numbers 22	42
+KJV	Numbers 23	31
+KJV	Numbers 24	26
+KJV	Numbers 25	19
+KJV	Numbers 26	66
+KJV	Numbers 27	24
+KJV	Numbers 28	32
+KJV	Numbers 29	41
+KJV	Numbers 30	17
+KJV	Numbers 31	55
+KJV	Numbers 32	43
+KJV	Numbers 33	57
+KJV	Numbers 34	30
+KJV	Numbers 35	35
+KJV	Numbers 36	14
+KJV	Deuteronomy 1	47
+KJV	Deuteronomy 2	38
+KJV	Deuteronomy 3	30
+KJV	Deuteronomy 4	50
+KJV	Deuteronomy 5	34
+KJV	Deuteronomy 6	26
+KJV	Deuteronomy 7	27
+KJV	Deuteronomy 8	21
+KJV	Deuteronomy 9	30
+KJV	Deuteronomy 10	23
+KJV	Deuteronomy 11	33
+KJV	Deuteronomy 12	33
+KJV	Deuteronomy 13	19
+KJV	Deuteronomy 14	30
+KJV	Deuteronomy 15	24
+KJV	Deuteronomy 16	23
+KJV	Deuteronomy 17	21
+KJV	Deuteronomy 18	23
+KJV	Deuteronomy 19	22
+KJV	Deuteronomy 20	21
+KJV	Deuteronomy 21	24
+KJV	Deuteronomy 22	31
+KJV	Deuteronomy 23	26
+KJV	Deuteronomy 24	23
+KJV	Deuteronomy 25	20
+KJV	Deuteronomy 26	20
+KJV	Deuteronomy 27	27
+KJV	Deuteronomy 28	69
+KJV	Deuteronomy 29	30
+KJV	Deuteronomy 30	21
+KJV	Deuteronomy 31	31
+KJV	Deuteronomy 32	53
+KJV	Deuteronomy 33	30
+KJV	Deuteronomy 34	13
+KJV	Joshua 1	19
+KJV	Joshua 2	25
+KJV	Joshua 3	18
+KJV	Joshua 4	25
+KJV	Joshua 5	16
+KJV	Joshua 6	28
+KJV	Joshua 7	27
+KJV	Joshua 8	36
+KJV	Joshua 9	28
+KJV	Joshua 10	44
+KJV	Joshua 11	24
+KJV	Joshua 12	25
+KJV	Joshua 13	34
+KJV	Joshua 14	16
+KJV	Joshua 15	64
+KJV	Joshua 16	11
+KJV	Joshua 17	19
+KJV	Joshua 18	29
+KJV	Joshua 19	52
+KJV	Joshua 20	10
+KJV	Joshua 21	46
+KJV	Joshua 22	35
+KJV	Joshua 23	17
+KJV	Joshua 24	34
+KJV	Judges 1	37
+KJV	Judges 2	24
+KJV	Judges 3	32
+KJV	Judges 4	25
+KJV	Judges 5	32
+KJV	Judges 6	41
+KJV	Judges 7	26
+KJV	Judges 8	36
+KJV	Judges 9	58
+KJV	Judges 10	19
+KJV	Judges 11	41
+KJV	Judges 12	16
+KJV	Judges 13	26
+KJV	Judges 14	21
+KJV	Judges 15	21
+KJV	Judges 16	32
+KJV	Judges 17	14
+KJV	Judges 18	32
+KJV	Judges 19	31
+KJV	Judges 20	49
+KJV	Judges 21	26
+KJV	Ruth 1	23
+KJV	Ruth 2	24
+KJV	Ruth 3	19
+KJV	Ruth 4	23
+KJV	1 Samuel 1	29
+KJV	1 Samuel 2	37
+KJV	1 Samuel 3	22
+KJV	1 Samuel 4	23
+KJV	1 Samuel 5	13
+KJV	1 Samuel 6	22
+KJV	1 Samuel 7	18
+KJV	1 Samuel 8	23
+KJV	1 Samuel 9	28
+KJV	1 Samuel 10	28
+KJV	1 Samuel 11	16
+KJV	1 Samuel 12	26
+KJV	1 Samuel 13	24
+KJV	1 Samuel 14	53
+KJV	1 Samuel 15	36
+KJV	1 Samuel 16	24
+KJV	1 Samuel 17	59
+KJV	1 Samuel 18	31
+KJV	1 Samuel 19	25
+KJV	1 Samuel 20	43
+KJV	1 Samuel 21	16
+KJV	1 Samuel 22	24
+KJV	1 Samuel 23	30
+KJV	1 Samuel 24	23
+KJV	1 Samuel 25	45
+KJV	1 Samuel 26	26
+KJV	1 Samuel 27	13
+KJV	1 Samuel 28	26
+KJV	1 Samuel 29	12
+KJV	1 Samuel 30	32
+KJV	1 Samuel 31	14
+KJV	2 Samuel 1	28
+KJV	2 Samuel 2	33
+KJV	2 Samuel 3	40
+KJV	2 Samuel 4	13
+KJV	2 Samuel 5	26
+KJV	2 Samuel 6	24
+KJV	2 Samuel 7	30
+KJV	2 Samuel 8	19
+KJV	2 Samuel 9	14
+KJV	2 Samuel 10	20
+KJV	2 Samuel 11	28
+KJV	2 Samuel 12	32
+KJV	2 Samuel 13	40
+KJV	2 Samuel 14	34
+KJV	2 Samuel 15	38
+KJV	2 Samuel 16	24
+KJV	2 Samuel 17	30
+KJV	2 Samuel 18	34
+KJV	2 Samuel 19	44
+KJV	2 Samuel 20	27
+KJV	2 Samuel 21	23
+KJV	2 Samuel 22	52
+KJV	2 Samuel 23	40
+KJV	2 Samuel 24	26
+KJV	1 Kings 1	54
+KJV	1 Kings 2	47
+KJV	1 Kings 3	29
+KJV	1 Kings 4	35
+KJV	1 Kings 5	19
+KJV	1 Kings 6	39
+KJV	1 Kings 7	52
+KJV	1 Kings 8	67
+KJV	1 Kings 9	29
+KJV	1 Kings 10	30
+KJV	1 Kings 11	44
+KJV	1 Kings 12	34
+KJV	1 Kings 13	35
+KJV	1 Kings 14	32
+KJV	1 Kings 15	35
+KJV	1 Kings 16	35
+KJV	1 Kings 17	25
+KJV	1 Kings 18	47
+KJV	1 Kings 19	22
+KJV	1 Kings 20	44
+KJV	1 Kings 21	30
+KJV	1 Kings 22	54
+KJV	2 Kings 1	19
+KJV	2 Kings 2	26
+KJV	2 Kings 3	28
+KJV	2 Kings 4	45
+KJV	2 Kings 5	28
+KJV	2 Kings 6	34
+KJV	2 Kings 7	21
+KJV	2 Kings 8	30
+KJV	2 Kings 9	38
+KJV	2 Kings 10	37
+KJV	2 Kings 11	22
+KJV	2 Kings 12	22
+KJV	2 Kings 13	26
+KJV	2 Kings 14	30
+KJV	2 Kings 15	39
+KJV	2 Kings 16	21
+KJV	2 Kings 17	42
+KJV	2 Kings 18	38
+KJV	2 Kings 19	38
+KJV	2 Kings 20	22
+KJV	2 Kings 21	27
+KJV	2 Kings 22	21
+KJV	2 Kings 23	38
+KJV	2 Kings 24	21
+KJV	2 Kings 25	31
+KJV	1 Chronicles 1	55
+KJV	1 Chronicles 2	56
+KJV	1 Chronicles 3	25
+KJV	1 Chronicles 4	44
+KJV	1 Chronicles 5	27
+KJV	1 Chronicles 6	82
+KJV	1 Chronicles 7	41
+KJV	1 Chronicles 8	41
+KJV	1 Chronicles 9	45
+KJV	1 Chronicles 10	15
+KJV	1 Chronicles 11	48
+KJV	1 Chronicles 12	41
+KJV	1 Chronicles 13	15
+KJV	1 Chronicles 14	18
+KJV	1 Chronicles 15	30
+KJV	1 Chronicles 16	44
+KJV	1 Chronicles 17	28
+KJV	1 Chronicles 18	18
+KJV	1 Chronicles 19	20
+KJV	1 Chronicles 20	9
+KJV	1 Chronicles 21	31
+KJV	1 Chronicles 22	20
+KJV	1 Chronicles 23	33
+KJV	1 Chronicles 24	32
+KJV	1 Chronicles 25	32
+KJV	1 Chronicles 26	33
+KJV	1 Chronicles 27	35
+KJV	1 Chronicles 28	22
+KJV	1 Chronicles 29	31
+KJV	2 Chronicles 1	18
+KJV	2 Chronicles 2	19
+KJV	2 Chronicles 3	18
+KJV	2 Chronicles 4	23
+KJV	2 Chronicles 5	15
+KJV	2 Chronicles 6	43
+KJV	2 Chronicles 7	23
+KJV	2 Chronicles 8	19
+KJV	2 Chronicles 9	32
+KJV	2 Chronicles 10	20
+KJV	2 Chronicles 11	24
+KJV	2 Chronicles 12	17
+KJV	2 Chronicles 13	23
+KJV	2 Chronicles 14	16
+KJV	2 Chronicles 15	20
+KJV	2 Chronicles 16	15
+KJV	2 Chronicles 17	20
+KJV	2 Chronicles 18	35
+KJV	2 Chronicles 19	12
+KJV	2 Chronicles 20	38
+KJV	2 Chronicles 21	21
+KJV	2 Chronicles 22	13
+KJV	2 Chronicles 23	22
+KJV	2 Chronicles 24	28
+KJV	2 Chronicles 25	29
+KJV	2 Chronicles 26	24
+KJV	2 Chronicles 27	10
+KJV	2 Chronicles 28	28
+KJV	2 Chronicles 29	37
+KJV	2 Chronicles 30	28
+KJV	2 Chronicles 31	22
+KJV	2 Chronicles 32	34
+KJV	2 Chronicles 33	26
+KJV	2 Chronicles 34	34
+KJV	2 Chronicles 35	28
+KJV	2 Chronicles 36	24
+KJV	Ezra 1	12
+KJV	Ezra 2	71
+KJV	Ezra 3	14
+KJV	Ezra 4	25
+KJV	Ezra 5	18
+KJV	Ezra 6	23
+KJV	Ezra 7	29
+KJV	Ezra 8	37
+KJV	Ezra 9	16
+KJV	Ezra 10	45
+KJV	Nehemiah 1	12
+KJV	Nehemiah 2	21
+KJV	Nehemiah 3	33
+KJV	Nehemiah 4	24
+KJV	Nehemiah 5	20
+KJV	Nehemiah 6	20
+KJV	Nehemiah 7	74
+KJV	Nehemiah 8	19
+KJV	Nehemiah 9	39
+KJV	Nehemiah 10	40
+KJV	Nehemiah 11	37
+KJV	Nehemiah 12	48
+KJV	Nehemiah 13	32
+KJV	Esther 1	23
+KJV	Esther 2	24
+KJV	Esther 3	16
+KJV	Esther 4	18
+KJV	Esther 5	15
+KJV	Esther 6	15
+KJV	Esther 7	11
+KJV	Esther 8	18
+KJV	Esther 9	33
+KJV	Esther 10	4
+KJV	Job 1	23
+KJV	Job 2	14
+KJV	Job 3	27
+KJV	Job 4	22
+KJV	Job 5	28
+KJV	Job 6	31
+KJV	Job 7	22
+KJV	Job 8	23
+KJV	Job 9	36
+KJV	Job 10	23
+KJV	Job 11	21
+KJV	Job 12	26
+KJV	Job 13	29
+KJV	Job 14	23
+KJV	Job 15	36
+KJV	Job 16	23
+KJV	Job 17	17
+KJV	Job 18	22
+KJV	Job 19	30
+KJV	Job 20	30
+KJV	Job 21	35
+KJV	Job 22	31
+KJV	Job 23	18
+KJV	Job 24	26
+KJV	Job 25	7
+KJV	Job 26	15
+KJV	Job 27	24
+KJV	Job 28	29
+KJV	Job 29	26
+KJV	Job 30	32
+KJV	Job 31	41
+KJV	Job 32	23
+KJV	Job 33	34
+KJV	Job 34	38
+KJV	Job 35	17
+KJV	Job 36	34
+KJV	Job 37	25
+KJV	Job 38	42
+KJV	Job 39	31
+KJV	Job 40	25
+KJV	Job 41	35
+KJV	Job 42	18
+KJV	Psalms 1	7
+KJV	Psalms 2	13
+KJV	Psalms 3	9
+KJV	Psalms 4	9
+KJV	Psalms 5	13
+KJV	Psalms 6	11
+KJV	Psalms 7	18
+KJV	Psalms 8	10
+KJV	Psalms 9	21
+KJV	Psalms 10	19
+KJV	Psalms 11	8
+KJV	Psalms 12	9
+KJV	Psalms 13	7
+KJV	Psalms 14	8
+KJV	Psalms 15	6
+KJV	Psalms 16	12
+KJV	Psalms 17	16
+KJV	Psalms 18	51
+KJV	Psalms 19	15
+KJV	Psalms 20	10
+KJV	Psalms 21	14
+KJV	Psalms 22	32
+KJV	Psalms 23	7
+KJV	Psalms 24	11
+KJV	Psalms 25	23
+KJV	Psalms 26	13
+KJV	Psalms 27	15
+KJV	Psalms 28	10
+KJV	Psalms 29	12
+KJV	Psalms 30	13
+KJV	Psalms 31	25
+KJV	Psalms 32	12
+KJV	Psalms 33	23
+KJV	Psalms 34	23
+KJV	Psalms 35	29
+KJV	Psalms 36	13
+KJV	Psalms 37	41
+KJV	Psalms 38	23
+KJV	Psalms 39	14
+KJV	Psalms 40	18
+KJV	Psalms 41	14
+KJV	Psalms 42	12
+KJV	Psalms 43	6
+KJV	Psalms 44	27
+KJV	Psalms 45	18
+KJV	Psalms 46	12
+KJV	Psalms 47	10
+KJV	Psalms 48	15
+KJV	Psalms 49	21
+KJV	Psalms 50	24
+KJV	Psalms 51	20
+KJV	Psalms 52	10
+KJV	Psalms 53	7
+KJV	Psalms 54	8
+KJV	Psalms 55	24
+KJV	Psalms 56	14
+KJV	Psalms 57	12
+KJV	Psalms 58	12
+KJV	Psalms 59	18
+KJV	Psalms 60	13
+KJV	Psalms 61	9
+KJV	Psalms 62	13
+KJV	Psalms 63	12
+KJV	Psalms 64	11
+KJV	Psalms 65	14
+KJV	Psalms 66	21
+KJV	Psalms 67	8
+KJV	Psalms 68	36
+KJV	Psalms 69	37
+KJV	Psalms 70	6
+KJV	Psalms 71	25
+KJV	Psalms 72	21
+KJV	Psalms 73	29
+KJV	Psalms 74	24
+KJV	Psalms 75	11
+KJV	Psalms 76	13
+KJV	Psalms 77	21
+KJV	Psalms 78	73
+KJV	Psalms 79	14
+KJV	Psalms 80	20
+KJV	Psalms 81	17
+KJV	Psalms 82	9
+KJV	Psalms 83	19
+KJV	Psalms 84	13
+KJV	Psalms 85	14
+KJV	Psalms 86	18
+KJV	Psalms 87	8
+KJV	Psalms 88	19
+KJV	Psalms 89	53
+KJV	Psalms 90	18
+KJV	Psalms 91	17
+KJV	Psalms 92	16
+KJV	Psalms 93	6
+KJV	Psalms 94	24
+KJV	Psalms 95	12
+KJV	Psalms 96	14
+KJV	Psalms 97	13
+KJV	Psalms 98	10
+KJV	Psalms 99	10
+KJV	Psalms 100	6
+KJV	Psalms 101	9
+KJV	Psalms 102	29
+KJV	Psalms 103	23
+KJV	Psalms 104	36
+KJV	Psalms 105	46
+KJV	Psalms 106	49
+KJV	Psalms 107	44
+KJV	Psalms 108	14
+KJV	Psalms 109	32
+KJV	Psalms 110	8
+KJV	Psalms 111	11
+KJV	Psalms 112	11
+KJV	Psalms 113	10
+KJV	Psalms 114	9
+KJV	Psalms 115	19
+KJV	Psalms 116	20
+KJV	Psalms 117	3
+KJV	Psalms 118	30
+KJV	Psalms 119	177
+KJV	Psalms 120	8
+KJV	Psalms 121	9
+KJV	Psalms 122	10
+KJV	Psalms 123	5
+KJV	Psalms 124	9
+KJV	Psalms 125	6
+KJV	Psalms 126	7
+KJV	Psalms 127	6
+KJV	Psalms 128	7
+KJV	Psalms 129	9
+KJV	Psalms 130	9
+KJV	Psalms 131	4
+KJV	Psalms 132	19
+KJV	Psalms 133	4
+KJV	Psalms 134	4
+KJV	Psalms 135	22
+KJV	Psalms 136	27
+KJV	Psalms 137	10
+KJV	Psalms 138	9
+KJV	Psalms 139	25
+KJV	Psalms 140	14
+KJV	Psalms 141	11
+KJV	Psalms 142	8
+KJV	Psalms 143	13
+KJV	Psalms 144	16
+KJV	Psalms 145	22
+KJV	Psalms 146	11
+KJV	Psalms 147	21
+KJV	Psalms 148	15
+KJV	Psalms 149	10
+KJV	Psalms 150	7
+KJV	Proverbs 1	34
+KJV	Proverbs 2	23
+KJV	Proverbs 3	36
+KJV	Proverbs 4	28
+KJV	Proverbs 5	24
+KJV	Proverbs 6	36
+KJV	Proverbs 7	28
+KJV	Proverbs 8	37
+KJV	Proverbs 9	19
+KJV	Proverbs 10	33
+KJV	Proverbs 11	32
+KJV	Proverbs 12	29
+KJV	Proverbs 13	26
+KJV	Proverbs 14	36
+KJV	Proverbs 15	34
+KJV	Proverbs 16	34
+KJV	Proverbs 17	29
+KJV	Proverbs 18	25
+KJV	Proverbs 19	30
+KJV	Proverbs 20	31
+KJV	Proverbs 21	32
+KJV	Proverbs 22	30
+KJV	Proverbs 23	36
+KJV	Proverbs 24	35
+KJV	Proverbs 25	29
+KJV	Proverbs 26	29
+KJV	Proverbs 27	28
+KJV	Proverbs 28	29
+KJV	Proverbs 29	28
+KJV	Proverbs 30	34
+KJV	Proverbs 31	32
+KJV	Ecclesiastes 1	19
+KJV	Ecclesiastes 2	27
+KJV	Ecclesiastes 3	23
+KJV	Ecclesiastes 4	17
+KJV	Ecclesiastes 5	21
+KJV	Ecclesiastes 6	13
+KJV	Ecclesiastes 7	30
+KJV	Ecclesiastes 8	18
+KJV	Ecclesiastes 9	19
+KJV	Ecclesiastes 10	21
+KJV	Ecclesiastes 11	11
+KJV	Ecclesiastes 12	15
+KJV	Song of Solomon 1	18
+KJV	Song of Solomon 2	18
+KJV	Song of Solomon 3	12
+KJV	Song of Solomon 4	17
+KJV	Song of Solomon 5	17
+KJV	Song of Solomon 6	14
+KJV	Song of Solomon 7	14
+KJV	Song of Solomon 8	15
+KJV	Isaiah 1	32
+KJV	Isaiah 2	23
+KJV	Isaiah 3	27
+KJV	Isaiah 4	7
+KJV	Isaiah 5	31
+KJV	Isaiah 6	14
+KJV	Isaiah 7	26
+KJV	Isaiah 8	23
+KJV	Isaiah 9	22
+KJV	Isaiah 10	35
+KJV	Isaiah 11	17
+KJV	Isaiah 12	7
+KJV	Isaiah 13	23
+KJV	Isaiah 14	33
+KJV	Isaiah 15	10
+KJV	Isaiah 16	15
+KJV	Isaiah 17	15
+KJV	Isaiah 18	8
+KJV	Isaiah 19	26
+KJV	Isaiah 20	7
+KJV	Isaiah 21	18
+KJV	Isaiah 22	26
+KJV	Isaiah 23	19
+KJV	Isaiah 24	24
+KJV	Isaiah 25	13
+KJV	Isaiah 26	22
+KJV	Isaiah 27	14
+KJV	Isaiah 28	30
+KJV	Isaiah 29	25
+KJV	Isaiah 30	34
+KJV	Isaiah 31	10
+KJV	Isaiah 32	21
+KJV	Isaiah 33	25
+KJV	Isaiah 34	18
+KJV	Isaiah 35	11
+KJV	Isaiah 36	23
+KJV	Isaiah 37	39
+KJV	Isaiah 38	23
+KJV	Isaiah 39	9
+KJV	Isaiah 40	32
+KJV	Isaiah 41	30
+KJV	Isaiah 42	26
+KJV	Isaiah 43	29
+KJV	Isaiah 44	29
+KJV	Isaiah 45	26
+KJV	Isaiah 46	14
+KJV	Isaiah 47	16
+KJV	Isaiah 48	23
+KJV	Isaiah 49	27
+KJV	Isaiah 50	12
+KJV	Isaiah 51	24
+KJV	Isaiah 52	16
+KJV	Isaiah 53	13
+KJV	Isaiah 54	18
+KJV	Isaiah 55	14
+KJV	Isaiah 56	13
+KJV	Isaiah 57	22
+KJV	Isaiah 58	15
+KJV	Isaiah 59	22
+KJV	Isaiah 60	23
+KJV	Isaiah 61	12
+KJV	Isaiah 62	13
+KJV	Isaiah 63	20
+KJV	Isaiah 64	13
+KJV	Isaiah 65	26
+KJV	Isaiah 66	25
+KJV	Jeremiah 1	20
+KJV	Jeremiah 2	38
+KJV	Jeremiah 3	26
+KJV	Jeremiah 4	32
+KJV	Jeremiah 5	32
+KJV	Jeremiah 6	31
+KJV	Jeremiah 7	35
+KJV	Jeremiah 8	23
+KJV	Jeremiah 9	27
+KJV	Jeremiah 10	26
+KJV	Jeremiah 11	24
+KJV	Jeremiah 12	18
+KJV	Jeremiah 13	28
+KJV	Jeremiah 14	23
+KJV	Jeremiah 15	22
+KJV	Jeremiah 16	22
+KJV	Jeremiah 17	28
+KJV	Jeremiah 18	24
+KJV	Jeremiah 19	16
+KJV	Jeremiah 20	19
+KJV	Jeremiah 21	15
+KJV	Jeremiah 22	31
+KJV	Jeremiah 23	41
+KJV	Jeremiah 24	11
+KJV	Jeremiah 25	39
+KJV	Jeremiah 26	25
+KJV	Jeremiah 27	23
+KJV	Jeremiah 28	18
+KJV	Jeremiah 29	33
+KJV	Jeremiah 30	25
+KJV	Jeremiah 31	41
+KJV	Jeremiah 32	45
+KJV	Jeremiah 33	27
+KJV	Jeremiah 34	23
+KJV	Jeremiah 35	20
+KJV	Jeremiah 36	33
+KJV	Jeremiah 37	22
+KJV	Jeremiah 38	29
+KJV	Jeremiah 39	19
+KJV	Jeremiah 40	17
+KJV	Jeremiah 41	19
+KJV	Jeremiah 42	23
+KJV	Jeremiah 43	14
+KJV	Jeremiah 44	31
+KJV	Jeremiah 45	6
+KJV	Jeremiah 46	29
+KJV	Jeremiah 47	8
+KJV	Jeremiah 48	48
+KJV	Jeremiah 49	40
+KJV	Jeremiah 50	47
+KJV	Jeremiah 51	65
+KJV	Jeremiah 52	35
+KJV	Lamentations 1	23
+KJV	Lamentations 2	23
+KJV	Lamentations 3	67
+KJV	Lamentations 4	23
+KJV	Lamentations 5	23
+KJV	Ezekiel 1	29
+KJV	Ezekiel 2	11
+KJV	Ezekiel 3	28
+KJV	Ezekiel 4	18
+KJV	Ezekiel 5	18
+KJV	Ezekiel 6	15
+KJV	Ezekiel 7	28
+KJV	Ezekiel 8	19
+KJV	Ezekiel 9	12
+KJV	Ezekiel 10	23
+KJV	Ezekiel 11	26
+KJV	Ezekiel 12	29
+KJV	Ezekiel 13	24
+KJV	Ezekiel 14	24
+KJV	Ezekiel 15	9
+KJV	Ezekiel 16	64
+KJV	Ezekiel 17	25
+KJV	Ezekiel 18	33
+KJV	Ezekiel 19	15
+KJV	Ezekiel 20	50
+KJV	Ezekiel 21	33
+KJV	Ezekiel 22	32
+KJV	Ezekiel 23	50
+KJV	Ezekiel 24	28
+KJV	Ezekiel 25	18
+KJV	Ezekiel 26	22
+KJV	Ezekiel 27	37
+KJV	Ezekiel 28	27
+KJV	Ezekiel 29	22
+KJV	Ezekiel 30	27
+KJV	Ezekiel 31	19
+KJV	Ezekiel 32	33
+KJV	Ezekiel 33	34
+KJV	Ezekiel 34	32
+KJV	Ezekiel 35	16
+KJV	Ezekiel 36	39
+KJV	Ezekiel 37	29
+KJV	Ezekiel 38	24
+KJV	Ezekiel 39	30
+KJV	Ezekiel 40	50
+KJV	Ezekiel 41	27
+KJV	Ezekiel 42	21
+KJV	Ezekiel 43	28
+KJV	Ezekiel 44	32
+KJV	Ezekiel 45	26
+KJV	Ezekiel 46	25
+KJV	Ezekiel 47	24
+KJV	Ezekiel 48	36
+KJV	Daniel 1	22
+KJV	Daniel 2	50
+KJV	Daniel 3	31
+KJV	Daniel 4	38
+KJV	Daniel 5	32
+KJV	Daniel 6	29
+KJV	Daniel 7	29
+KJV	Daniel 8	28
+KJV	Daniel 9	28
+KJV	Daniel 10	22
+KJV	Daniel 11	46
+KJV	Daniel 12	14
+KJV	Hosea 1	12
+KJV	Hosea 2	24
+KJV	Hosea 3	6
+KJV	Hosea 4	20
+KJV	Hosea 5	16
+KJV	Hosea 6	12
+KJV	Hosea 7	17
+KJV	Hosea 8	15
+KJV	Hosea 9	18
+KJV	Hosea 10	16
+KJV	Hosea 11	13
+KJV	Hosea 12	15
+KJV	Hosea 13	17
+KJV	Hosea 14	10
+KJV	Joel 1	21
+KJV	Joel 2	33
+KJV	Joel 3	22
+KJV	Amos 1	16
+KJV	Amos 2	17
+KJV	Amos 3	16
+KJV	Amos 4	14
+KJV	Amos 5	28
+KJV	Amos 6	15
+KJV	Amos 7	18
+KJV	Amos 8	15
+KJV	Amos 9	16
+KJV	Obadiah 1	22
+KJV	Jonah 1	18
+KJV	Jonah 2	11
+KJV	Jonah 3	11
+KJV	Jonah 4	12
+KJV	Micah 1	17
+KJV	Micah 2	14
+KJV	Micah 3	13
+KJV	Micah 4	14
+KJV	Micah 5	16
+KJV	Micah 6	17
+KJV	Micah 7	21
+KJV	Nahum 1	16
+KJV	Nahum 2	14
+KJV	Nahum 3	20
+KJV	Habakkuk 1	18
+KJV	Habakkuk 2	21
+KJV	Habakkuk 3	20
+KJV	Zephaniah 1	19
+KJV	Zephaniah 2	16
+KJV	Zephaniah 3	21
+KJV	Haggai 1	16
+KJV	Haggai 2	24
+KJV	Zechariah 1	22
+KJV	Zechariah 2	14
+KJV	Zechariah 3	11
+KJV	Zechariah 4	15
+KJV	Zechariah 5	12
+KJV	Zechariah 6	16
+KJV	Zechariah 7	15
+KJV	Zechariah 8	24
+KJV	Zechariah 9	18
+KJV	Zechariah 10	13
+KJV	Zechariah 11	18
+KJV	Zechariah 12	15
+KJV	Zechariah 13	10
+KJV	Zechariah 14	22
+KJV	Malachi 1	15
+KJV	Malachi 2	18
+KJV	Malachi 3	19
+KJV	Malachi 4	7
+KJV	Matthew 1	26
+KJV	Matthew 2	24
+KJV	Matthew 3	18
+KJV	Matthew 4	26
+KJV	Matthew 5	49
+KJV	Matthew 6	35
+KJV	Matthew 7	30
+KJV	Matthew 8	35
+KJV	Matthew 9	39
+KJV	Matthew 10	43
+KJV	Matthew 11	31
+KJV	Matthew 12	51
+KJV	Matthew 13	59
+KJV	Matthew 14	37
+KJV	Matthew 15	40
+KJV	Matthew 16	29
+KJV	Matthew 17	28
+KJV	Matthew 18	36
+KJV	Matthew 19	31
+KJV	Matthew 20	35
+KJV	Matthew 21	47
+KJV	Matthew 22	47
+KJV	Matthew 23	40
+KJV	Matthew 24	52
+KJV	Matthew 25	47
+KJV	Matthew 26	76
+KJV	Matthew 27	67
+KJV	Matthew 28	21
+KJV	Mark 1	46
+KJV	Mark 2	29
+KJV	Mark 3	36
+KJV	Mark 4	42
+KJV	Mark 5	44
+KJV	Mark 6	57
+KJV	Mark 7	38
+KJV	Mark 8	39
+KJV	Mark 9	51
+KJV	Mark 10	53
+KJV	Mark 11	34
+KJV	Mark 12	45
+KJV	Mark 13	38
+KJV	Mark 14	73
+KJV	Mark 15	48
+KJV	Mark 16	21
+KJV	Luke 1	81
+KJV	Luke 2	53
+KJV	Luke 3	39
+KJV	Luke 4	45
+KJV	Luke 5	40
+KJV	Luke 6	50
+KJV	Luke 7	51
+KJV	Luke 8	57
+KJV	Luke 9	63
+KJV	Luke 10	43
+KJV	Luke 11	55
+KJV	Luke 12	60
+KJV	Luke 13	36
+KJV	Luke 14	36
+KJV	Luke 15	33
+KJV	Luke 16	32
+KJV	Luke 17	38
+KJV	Luke 18	44
+KJV	Luke 19	49
+KJV	Luke 20	48
+KJV	Luke 21	39
+KJV	Luke 22	72
+KJV	Luke 23	57
+KJV	Luke 24	54
+KJV	John 1	52
+KJV	John 2	26
+KJV	John 3	37
+KJV	John 4	55
+KJV	John 5	48
+KJV	John 6	72
+KJV	John 7	54
+KJV	John 8	60
+KJV	John 9	42
+KJV	John 10	43
+KJV	John 11	58
+KJV	John 12	51
+KJV	John 13	39
+KJV	John 14	32
+KJV	John 15	28
+KJV	John 16	34
+KJV	John 17	27
+KJV	John 18	41
+KJV	John 19	43
+KJV	John 20	32
+KJV	John 21	26
+KJV	Acts 1	27
+KJV	Acts 2	48
+KJV	Acts 3	27
+KJV	Acts 4	38
+KJV	Acts 5	43
+KJV	Acts 6	16
+KJV	Acts 7	61
+KJV	Acts 8	41
+KJV	Acts 9	44
+KJV	Acts 10	49
+KJV	Acts 11	31
+KJV	Acts 12	26
+KJV	Acts 13	53
+KJV	Acts 14	29
+KJV	Acts 15	42
+KJV	Acts 16	41
+KJV	Acts 17	35
+KJV	Acts 18	29
+KJV	Acts 19	42
+KJV	Acts 20	39
+KJV	Acts 21	41
+KJV	Acts 22	31
+KJV	Acts 23	36
+KJV	Acts 24	28
+KJV	Acts 25	28
+KJV	Acts 26	33
+KJV	Acts 27	45
+KJV	Acts 28	32
+KJV	Romans 1	33
+KJV	Romans 2	30
+KJV	Romans 3	32
+KJV	Romans 4	26
+KJV	Romans 5	22
+KJV	Romans 6	24
+KJV	Romans 7	26
+KJV	Romans 8	40
+KJV	Romans 9	34
+KJV	Romans 10	22
+KJV	Romans 11	37
+KJV	Romans 12	22
+KJV	Romans 13	15
+KJV	Romans 14	24
+KJV	Romans 15	34
+KJV	Romans 16	28
+KJV	1 Corinthians 1	32
+KJV	1 Corinthians 2	17
+KJV	1 Corinthians 3	24
+KJV	1 Corinthians 4	22
+KJV	1 Corinthians 5	14
+KJV	1 Corinthians 6	21
+KJV	1 Corinthians 7	41
+KJV	1 Corinthians 8	14
+KJV	1 Corinthians 9	28
+KJV	1 Corinthians 10	34
+KJV	1 Corinthians 11	35
+KJV	1 Corinthians 12	32
+KJV	1 Corinthians 13	14
+KJV	1 Corinthians 14	41
+KJV	1 Corinthians 15	59
+KJV	1 Corinthians 16	25
+KJV	2 Corinthians 1	25
+KJV	2 Corinthians 2	18
+KJV	2 Corinthians 3	19
+KJV	2 Corinthians 4	19
+KJV	2 Corinthians 5	22
+KJV	2 Corinthians 6	19
+KJV	2 Corinthians 7	17
+KJV	2 Corinthians 8	25
+KJV	2 Corinthians 9	16
+KJV	2 Corinthians 10	19
+KJV	2 Corinthians 11	34
+KJV	2 Corinthians 12	22
+KJV	2 Corinthians 13	15
+KJV	Galatians 1	25
+KJV	Galatians 2	22
+KJV	Galatians 3	30
+KJV	Galatians 4	32
+KJV	Galatians 5	27
+KJV	Galatians 6	19
+KJV	Ephesians 1	24
+KJV	Ephesians 2	23
+KJV	Ephesians 3	22
+KJV	Ephesians 4	33
+KJV	Ephesians 5	34
+KJV	Ephesians 6	25
+KJV	Philippians 1	31
+KJV	Philippians 2	31
+KJV	Philippians 3	22
+KJV	Philippians 4	24
+KJV	Colossians 1	30
+KJV	Colossians 2	24
+KJV	Colossians 3	26
+KJV	Colossians 4	19
+KJV	1 Thessalonians 1	11
+KJV	1 Thessalonians 2	21
+KJV	1 Thessalonians 3	14
+KJV	1 Thessalonians 4	19
+KJV	1 Thessalonians 5	29
+KJV	2 Thessalonians 1	13
+KJV	2 Thessalonians 2	18
+KJV	2 Thessalonians 3	19
+KJV	1 Timothy 1	21
+KJV	1 Timothy 2	16
+KJV	1 Timothy 3	17
+KJV	1 Timothy 4	17
+KJV	1 Timothy 5	26
+KJV	1 Timothy 6	22
+KJV	2 Timothy 1	19
+KJV	2 Timothy 2	27
+KJV	2 Timothy 3	18
+KJV	2 Timothy 4	23
+KJV	Titus 1	17
+KJV	Titus 2	16
+KJV	Titus 3	16
+KJV	Philemon 1	26
+KJV	Hebrews 1	15
+KJV	Hebrews 2	19
+KJV	Hebrews 3	20
+KJV	Hebrews 4	17
+KJV	Hebrews 5	15
+KJV	Hebrews 6	21
+KJV	Hebrews 7	29
+KJV	Hebrews 8	14
+KJV	Hebrews 9	29
+KJV	Hebrews 10	40
+KJV	Hebrews 11	41
+KJV	Hebrews 12	30
+KJV	Hebrews 13	26
+KJV	James 1	28
+KJV	James 2	27
+KJV	James 3	19
+KJV	James 4	18
+KJV	James 5	21
+KJV	1 Peter 1	26
+KJV	1 Peter 2	26
+KJV	1 Peter 3	23
+KJV	1 Peter 4	20
+KJV	1 Peter 5	15
+KJV	2 Peter 1	22
+KJV	2 Peter 2	23
+KJV	2 Peter 3	19
+KJV	1 John 1	11
+KJV	1 John 2	30
+KJV	1 John 3	25
+KJV	1 John 4	22
+KJV	1 John 5	22
+KJV	2 John 1	14
+KJV	3 John 1	15
+KJV	Jude 1	26
+KJV	Revelation 1	21
+KJV	Revelation 2	30
+KJV	Revelation 3	23
+KJV	Revelation 4	12
+KJV	Revelation 5	15
+KJV	Revelation 6	18
+KJV	Revelation 7	18
+KJV	Revelation 8	14
+KJV	Revelation 9	22
+KJV	Revelation 10	12
+KJV	Revelation 11	20
+KJV	Revelation 12	18
+KJV	Revelation 13	19
+KJV	Revelation 14	21
+KJV	Revelation 15	9
+KJV	Revelation 16	22
+KJV	Revelation 17	19
+KJV	Revelation 18	25
+KJV	Revelation 19	22
+KJV	Revelation 20	16
+KJV	Revelation 21	28
+KJV	Revelation 22	22
+MHCC	Genesis 1	32
+MHCC	Genesis 2	26
+MHCC	Genesis 3	25
+MHCC	Genesis 4	27
+MHCC	Genesis 5	33
+MHCC	Genesis 6	23
+MHCC	Genesis 7	25
+MHCC	Genesis 8	23
+MHCC	Genesis 9	30
+MHCC	Genesis 10	33
+MHCC	Genesis 11	33
+MHCC	Genesis 12	21
+MHCC	Genesis 13	19
+MHCC	Genesis 14	25
+MHCC	Genesis 15	22
+MHCC	Genesis 16	17
+MHCC	Genesis 17	28
+MHCC	Genesis 18	34
+MHCC	Genesis 19	39
+MHCC	Genesis 20	19
+MHCC	Genesis 21	35
+MHCC	Genesis 22	25
+MHCC	Genesis 23	21
+MHCC	Genesis 24	68
+MHCC	Genesis 25	35
+MHCC	Genesis 26	36
+MHCC	Genesis 27	47
+MHCC	Genesis 28	23
+MHCC	Genesis 29	36
+MHCC	Genesis 30	44
+MHCC	Genesis 31	56
+MHCC	Genesis 32	33
+MHCC	Genesis 33	21
+MHCC	Genesis 34	32
+MHCC	Genesis 35	30
+MHCC	Genesis 36	44
+MHCC	Genesis 37	37
+MHCC	Genesis 38	31
+MHCC	Genesis 39	24
+MHCC	Genesis 40	24
+MHCC	Genesis 41	58
+MHCC	Genesis 42	39
+MHCC	Genesis 43	35
+MHCC	Genesis 44	35
+MHCC	Genesis 45	29
+MHCC	Genesis 46	35
+MHCC	Genesis 47	32
+MHCC	Genesis 48	23
+MHCC	Genesis 49	34
+MHCC	Genesis 50	27
+MHCC	Exodus 1	23
+MHCC	Exodus 2	26
+MHCC	Exodus 3	23
+MHCC	Exodus 4	32
+MHCC	Exodus 5	24
+MHCC	Exodus 6	31
+MHCC	Exodus 7	26
+MHCC	Exodus 8	33
+MHCC	Exodus 9	36
+MHCC	Exodus 10	30
+MHCC	Exodus 11	11
+MHCC	Exodus 12	52
+MHCC	Exodus 13	23
+MHCC	Exodus 14	32
+MHCC	Exodus 15	28
+MHCC	Exodus 16	37
+MHCC	Exodus 17	17
+MHCC	Exodus 18	28
+MHCC	Exodus 19	26
+MHCC	Exodus 20	27
+MHCC	Exodus 21	37
+MHCC	Exodus 22	32
+MHCC	Exodus 23	34
+MHCC	Exodus 24	19
+MHCC	Exodus 25	41
+MHCC	Exodus 26	38
+MHCC	Exodus 27	22
+MHCC	Exodus 28	44
+MHCC	Exodus 29	47
+MHCC	Exodus 30	39
+MHCC	Exodus 31	19
+MHCC	Exodus 32	36
+MHCC	Exodus 33	24
+MHCC	Exodus 34	36
+MHCC	Exodus 35	36
+MHCC	Exodus 36	39
+MHCC	Exodus 37	30
+MHCC	Exodus 38	32
+MHCC	Exodus 39	44
+MHCC	Exodus 40	39
+MHCC	Leviticus 1	18
+MHCC	Leviticus 2	17
+MHCC	Leviticus 3	18
+MHCC	Leviticus 4	36
+MHCC	Leviticus 5	20
+MHCC	Leviticus 6	31
+MHCC	Leviticus 7	39
+MHCC	Leviticus 8	37
+MHCC	Leviticus 9	25
+MHCC	Leviticus 10	21
+MHCC	Leviticus 11	48
+MHCC	Leviticus 12	9
+MHCC	Leviticus 13	60
+MHCC	Leviticus 14	58
+MHCC	Leviticus 15	34
+MHCC	Leviticus 16	35
+MHCC	Leviticus 17	17
+MHCC	Leviticus 18	31
+MHCC	Leviticus 19	38
+MHCC	Leviticus 20	28
+MHCC	Leviticus 21	25
+MHCC	Leviticus 22	34
+MHCC	Leviticus 23	45
+MHCC	Leviticus 24	24
+MHCC	Leviticus 25	56
+MHCC	Leviticus 26	47
+MHCC	Leviticus 27	35
+MHCC	Numbers 1	55
+MHCC	Numbers 2	35
+MHCC	Numbers 3	52
+MHCC	Numbers 4	50
+MHCC	Numbers 5	32
+MHCC	Numbers 6	28
+MHCC	Numbers 7	90
+MHCC	Numbers 8	27
+MHCC	Numbers 9	24
+MHCC	Numbers 10	37
+MHCC	Numbers 11	36
+MHCC	Numbers 12	17
+MHCC	Numbers 13	34
+MHCC	Numbers 14	46
+MHCC	Numbers 15	42
+MHCC	Numbers 16	51
+MHCC	Numbers 17	14
+MHCC	Numbers 18	33
+MHCC	Numbers 19	23
+MHCC	Numbers 20	30
+MHCC	Numbers 21	36
+MHCC	Numbers 22	42
+MHCC	Numbers 23	31
+MHCC	Numbers 24	26
+MHCC	Numbers 25	19
+MHCC	Numbers 26	66
+MHCC	Numbers 27	24
+MHCC	Numbers 28	32
+MHCC	Numbers 29	41
+MHCC	Numbers 30	17
+MHCC	Numbers 31	55
+MHCC	Numbers 32	43
+MHCC	Numbers 33	57
+MHCC	Numbers 34	30
+MHCC	Numbers 35	35
+MHCC	Numbers 36	14
+MHCC	Deuteronomy 1	47
+MHCC	Deuteronomy 2	38
+MHCC	Deuteronomy 3	30
+MHCC	Deuteronomy 4	50
+MHCC	Deuteronomy 5	34
+MHCC	Deuteronomy 6	26
+MHCC	Deuteronomy 7	27
+MHCC	Deuteronomy 8	21
+MHCC	Deuteronomy 9	30
+MHCC	Deuteronomy 10	23
+MHCC	Deuteronomy 11	33
+MHCC	Deuteronomy 12	33
+MHCC	Deuteronomy 13	19
+MHCC	Deuteronomy 14	30
+MHCC	Deuteronomy 15	24
+MHCC	Deuteronomy 16	23
+MHCC	Deuteronomy 17	21
+MHCC	Deuteronomy 18	23
+MHCC	Deuteronomy 19	22
+MHCC	Deuteronomy 20	21
+MHCC	Deuteronomy 21	24
+MHCC	Deuteronomy 22	31
+MHCC	Deuteronomy 23	26
+MHCC	Deuteronomy 24	23
+MHCC	Deuteronomy 25	20
+MHCC	Deuteronomy 26	20
+MHCC	Deuteronomy 27	27
+MHCC	Deuteronomy 28	69
+MHCC	Deuteronomy 29	30
+MHCC	Deuteronomy 30	21
+MHCC	Deuteronomy 31	31
+MHCC	Deuteronomy 32	53
+MHCC	Deuteronomy 33	30
+MHCC	Deuteronomy 34	13
+MHCC	Joshua 1	19
+MHCC	Joshua 2	25
+MHCC	Joshua 3	18
+MHCC	Joshua 4	25
+MHCC	Joshua 5	16
+MHCC	Joshua 6	28
+MHCC	Joshua 7	27
+MHCC	Joshua 8	36
+MHCC	Joshua 9	28
+MHCC	Joshua 10	44
+MHCC	Joshua 11	24
+MHCC	Joshua 12	25
+MHCC	Joshua 13	34
+MHCC	Joshua 14	16
+MHCC	Joshua 15	64
+MHCC	Joshua 16	11
+MHCC	Joshua 17	19
+MHCC	Joshua 18	29
+MHCC	Joshua 19	52
+MHCC	Joshua 20	10
+MHCC	Joshua 21	46
+MHCC	Joshua 22	35
+MHCC	Joshua 23	17
+MHCC	Joshua 24	34
+MHCC	Judges 1	37
+MHCC	Judges 2	24
+MHCC	Judges 3	32
+MHCC	Judges 4	25
+MHCC	Judges 5	32
+MHCC	Judges 6	41
+MHCC	Judges 7	26
+MHCC	Judges 8	36
+MHCC	Judges 9	58
+MHCC	Judges 10	19
+MHCC	Judges 11	41
+MHCC	Judges 12	16
+MHCC	Judges 13	26
+MHCC	Judges 14	21
+MHCC	Judges 15	21
+MHCC	Judges 16	32
+MHCC	Judges 17	14
+MHCC	Judges 18	32
+MHCC	Judges 19	31
+MHCC	Judges 20	49
+MHCC	Judges 21	26
+MHCC	Ruth 1	23
+MHCC	Ruth 2	24
+MHCC	Ruth 3	19
+MHCC	Ruth 4	23
+MHCC	1 Samuel 1	29
+MHCC	1 Samuel 2	37
+MHCC	1 Samuel 3	22
+MHCC	1 Samuel 4	23
+MHCC	1 Samuel 5	13
+MHCC	1 Samuel 6	22
+MHCC	1 Samuel 7	18
+MHCC	1 Samuel 8	23
+MHCC	1 Samuel 9	28
+MHCC	1 Samuel 10	28
+MHCC	1 Samuel 11	16
+MHCC	1 Samuel 12	26
+MHCC	1 Samuel 13	24
+MHCC	1 Samuel 14	53
+MHCC	1 Samuel 15	36
+MHCC	1 Samuel 16	24
+MHCC	1 Samuel 17	59
+MHCC	1 Samuel 18	31
+MHCC	1 Samuel 19	25
+MHCC	1 Samuel 20	43
+MHCC	1 Samuel 21	16
+MHCC	1 Samuel 22	24
+MHCC	1 Samuel 23	30
+MHCC	1 Samuel 24	23
+MHCC	1 Samuel 25	45
+MHCC	1 Samuel 26	26
+MHCC	1 Samuel 27	13
+MHCC	1 Samuel 28	26
+MHCC	1 Samuel 29	12
+MHCC	1 Samuel 30	32
+MHCC	1 Samuel 31	14
+MHCC	2 Samuel 1	28
+MHCC	2 Samuel 2	33
+MHCC	2 Samuel 3	40
+MHCC	2 Samuel 4	13
+MHCC	2 Samuel 5	26
+MHCC	2 Samuel 6	24
+MHCC	2 Samuel 7	30
+MHCC	2 Samuel 8	19
+MHCC	2 Samuel 9	14
+MHCC	2 Samuel 10	20
+MHCC	2 Samuel 11	28
+MHCC	2 Samuel 12	32
+MHCC	2 Samuel 13	40
+MHCC	2 Samuel 14	34
+MHCC	2 Samuel 15	38
+MHCC	2 Samuel 16	24
+MHCC	2 Samuel 17	30
+MHCC	2 Samuel 18	34
+MHCC	2 Samuel 19	44
+MHCC	2 Samuel 20	27
+MHCC	2 Samuel 21	23
+MHCC	2 Samuel 22	52
+MHCC	2 Samuel 23	40
+MHCC	2 Samuel 24	26
+MHCC	1 Kings 1	54
+MHCC	1 Kings 2	47
+MHCC	1 Kings 3	29
+MHCC	1 Kings 4	35
+MHCC	1 Kings 5	19
+MHCC	1 Kings 6	39
+MHCC	1 Kings 7	52
+MHCC	1 Kings 8	67
+MHCC	1 Kings 9	29
+MHCC	1 Kings 10	30
+MHCC	1 Kings 11	44
+MHCC	1 Kings 12	34
+MHCC	1 Kings 13	35
+MHCC	1 Kings 14	32
+MHCC	1 Kings 15	35
+MHCC	1 Kings 16	35
+MHCC	1 Kings 17	25
+MHCC	1 Kings 18	47
+MHCC	1 Kings 19	22
+MHCC	1 Kings 20	44
+MHCC	1 Kings 21	30
+MHCC	1 Kings 22	54
+MHCC	2 Kings 1	19
+MHCC	2 Kings 2	26
+MHCC	2 Kings 3	28
+MHCC	2 Kings 4	45
+MHCC	2 Kings 5	28
+MHCC	2 Kings 6	34
+MHCC	2 Kings 7	21
+MHCC	2 Kings 8	30
+MHCC	2 Kings 9	38
+MHCC	2 Kings 10	37
+MHCC	2 Kings 11	22
+MHCC	2 Kings 12	22
+MHCC	2 Kings 13	26
+MHCC	2 Kings 14	30
+MHCC	2 Kings 15	39
+MHCC	2 Kings 16	21
+MHCC	2 Kings 17	42
+MHCC	2 Kings 18	38
+MHCC	2 Kings 19	38
+MHCC	2 Kings 20	22
+MHCC	2 Kings 21	27
+MHCC	2 Kings 22	21
+MHCC	2 Kings 23	38
+MHCC	2 Kings 24	21
+MHCC	2 Kings 25	31
+MHCC	1 Chronicles 1	55
+MHCC	1 Chronicles 2	56
+MHCC	1 Chronicles 3	25
+MHCC	1 Chronicles 4	44
+MHCC	1 Chronicles 5	27
+MHCC	1 Chronicles 6	82
+MHCC	1 Chronicles 7	41
+MHCC	1 Chronicles 8	41
+MHCC	1 Chronicles 9	45
+MHCC	1 Chronicles 10	15
+MHCC	1 Chronicles 11	48
+MHCC	1 Chronicles 12	41
+MHCC	1 Chronicles 13	15
+MHCC	1 Chronicles 14	18
+MHCC	1 Chronicles 15	30
+MHCC	1 Chronicles 16	44
+MHCC	1 Chronicles 17	28
+MHCC	1 Chronicles 18	18
+MHCC	1 Chronicles 19	20
+MHCC	1 Chronicles 20	9
+MHCC	1 Chronicles 21	31
+MHCC	1 Chronicles 22	20
+MHCC	1 Chronicles 23	33
+MHCC	1 Chronicles 24	32
+MHCC	1 Chronicles 25	32
+MHCC	1 Chronicles 26	33
+MHCC	1 Chronicles 27	35
+MHCC	1 Chronicles 28	22
+MHCC	1 Chronicles 29	31
+MHCC	2 Chronicles 1	18
+MHCC	2 Chronicles 2	19
+MHCC	2 Chronicles 3	18
+MHCC	2 Chronicles 4	23
+MHCC	2 Chronicles 5	15
+MHCC	2 Chronicles 6	43
+MHCC	2 Chronicles 7	23
+MHCC	2 Chronicles 8	19
+MHCC	2 Chronicles 9	32
+MHCC	2 Chronicles 10	20
+MHCC	2 Chronicles 11	24
+MHCC	2 Chronicles 12	17
+MHCC	2 Chronicles 13	23
+MHCC	2 Chronicles 14	16
+MHCC	2 Chronicles 15	20
+MHCC	2 Chronicles 16	15
+MHCC	2 Chronicles 17	20
+MHCC	2 Chronicles 18	35
+MHCC	2 Chronicles 19	12
+MHCC	2 Chronicles 20	38
+MHCC	2 Chronicles 21	21
+MHCC	2 Chronicles 22	13
+MHCC	2 Chronicles 23	22
+MHCC	2 Chronicles 24	28
+MHCC	2 Chronicles 25	29
+MHCC	2 Chronicles 26	24
+MHCC	2 Chronicles 27	10
+MHCC	2 Chronicles 28	28
+MHCC	2 Chronicles 29	37
+MHCC	2 Chronicles 30	28
+MHCC	2 Chronicles 31	22
+MHCC	2 Chronicles 32	34
+MHCC	2 Chronicles 33	26
+MHCC	2 Chronicles 34	34
+MHCC	2 Chronicles 35	28
+MHCC	2 Chronicles 36	24
+MHCC	Ezra 1	12
+MHCC	Ezra 2	71
+MHCC	Ezra 3	14
+MHCC	Ezra 4	25
+MHCC	Ezra 5	18
+MHCC	Ezra 6	23
+MHCC	Ezra 7	29
+MHCC	Ezra 8	37
+MHCC	Ezra 9	16
+MHCC	Ezra 10	45
+MHCC	Nehemiah 1	12
+MHCC	Nehemiah 2	21
+MHCC	Nehemiah 3	33
+MHCC	Nehemiah 4	24
+MHCC	Nehemiah 5	20
+MHCC	Nehemiah 6	20
+MHCC	Nehemiah 7	74
+MHCC	Nehemiah 8	19
+MHCC	Nehemiah 9	39
+MHCC	Nehemiah 10	40
+MHCC	Nehemiah 11	37
+MHCC	Nehemiah 12	48
+MHCC	Nehemiah 13	32
+MHCC	Esther 1	23
+MHCC	Esther 2	24
+MHCC	Esther 3	16
+MHCC	Esther 4	18
+MHCC	Esther 5	15
+MHCC	Esther 6	15
+MHCC	Esther 7	11
+MHCC	Esther 8	18
+MHCC	Esther 9	33
+MHCC	Esther 10	4
+MHCC	Job 1	23
+MHCC	Job 2	14
+MHCC	Job 3	27
+MHCC	Job 4	22
+MHCC	Job 5	28
+MHCC	Job 6	31
+MHCC	Job 7	22
+MHCC	Job 8	23
+MHCC	Job 9	36
+MHCC	Job 10	23
+MHCC	Job 11	21
+MHCC	Job 12	26
+MHCC	Job 13	29
+MHCC	Job 14	23
+MHCC	Job 15	36
+MHCC	Job 16	23
+MHCC	Job 17	17
+MHCC	Job 18	22
+MHCC	Job 19	30
+MHCC	Job 20	30
+MHCC	Job 21	35
+MHCC	Job 22	31
+MHCC	Job 23	18
+MHCC	Job 24	26
+MHCC	Job 25	7
+MHCC	Job 26	15
+MHCC	Job 27	24
+MHCC	Job 28	29
+MHCC	Job 29	26
+MHCC	Job 30	32
+MHCC	Job 31	41
+MHCC	Job 32	23
+MHCC	Job 33	34
+MHCC	Job 34	38
+MHCC	Job 35	17
+MHCC	Job 36	34
+MHCC	Job 37	25
+MHCC	Job 38	42
+MHCC	Job 39	31
+MHCC	Job 40	25
+MHCC	Job 41	35
+MHCC	Job 42	18
+MHCC	Psalms 1	7
+MHCC	Psalms 2	13
+MHCC	Psalms 3	9
+MHCC	Psalms 4	9
+MHCC	Psalms 5	13
+MHCC	Psalms 6	11
+MHCC	Psalms 7	18
+MHCC	Psalms 8	10
+MHCC	Psalms 9	21
+MHCC	Psalms 10	19
+MHCC	Psalms 11	8
+MHCC	Psalms 12	9
+MHCC	Psalms 13	7
+MHCC	Psalms 14	8
+MHCC	Psalms 15	6
+MHCC	Psalms 16	12
+MHCC	Psalms 17	16
+MHCC	Psalms 18	51
+MHCC	Psalms 19	15
+MHCC	Psalms 20	10
+MHCC	Psalms 21	14
+MHCC	Psalms 22	32
+MHCC	Psalms 23	7
+MHCC	Psalms 24	11
+MHCC	Psalms 25	23
+MHCC	Psalms 26	13
+MHCC	Psalms 27	15
+MHCC	Psalms 28	10
+MHCC	Psalms 29	12
+MHCC	Psalms 30	13
+MHCC	Psalms 31	25
+MHCC	Psalms 32	12
+MHCC	Psalms 33	23
+MHCC	Psalms 34	23
+MHCC	Psalms 35	29
+MHCC	Psalms 36	13
+MHCC	Psalms 37	41
+MHCC	Psalms 38	23
+MHCC	Psalms 39	14
+MHCC	Psalms 40	18
+MHCC	Psalms 41	14
+MHCC	Psalms 42	12
+MHCC	Psalms 43	6
+MHCC	Psalms 44	27
+MHCC	Psalms 45	18
+MHCC	Psalms 46	12
+MHCC	Psalms 47	10
+MHCC	Psalms 48	15
+MHCC	Psalms 49	21
+MHCC	Psalms 50	24
+MHCC	Psalms 51	20
+MHCC	Psalms 52	10
+MHCC	Psalms 53	7
+MHCC	Psalms 54	8
+MHCC	Psalms 55	24
+MHCC	Psalms 56	14
+MHCC	Psalms 57	12
+MHCC	Psalms 58	12
+MHCC	Psalms 59	18
+MHCC	Psalms 60	13
+MHCC	Psalms 61	9
+MHCC	Psalms 62	13
+MHCC	Psalms 63	12
+MHCC	Psalms 64	11
+MHCC	Psalms 65	14
+MHCC	Psalms 66	21
+MHCC	Psalms 67	8
+MHCC	Psalms 68	36
+MHCC	Psalms 69	37
+MHCC	Psalms 70	6
+MHCC	Psalms 71	25
+MHCC	Psalms 72	21
+MHCC	Psalms 73	29
+MHCC	Psalms 74	24
+MHCC	Psalms 75	11
+MHCC	Psalms 76	13
+MHCC	Psalms 77	21
+MHCC	Psalms 78	73
+MHCC	Psalms 79	14
+MHCC	Psalms 80	20
+MHCC	Psalms 81	17
+MHCC	Psalms 82	9
+MHCC	Psalms 83	19
+MHCC	Psalms 84	13
+MHCC	Psalms 85	14
+MHCC	Psalms 86	18
+MHCC	Psalms 87	8
+MHCC	Psalms 88	19
+MHCC	Psalms 89	53
+MHCC	Psalms 90	18
+MHCC	Psalms 91	17
+MHCC	Psalms 92	16
+MHCC	Psalms 93	6
+MHCC	Psalms 94	24
+MHCC	Psalms 95	12
+MHCC	Psalms 96	14
+MHCC	Psalms 97	13
+MHCC	Psalms 98	10
+MHCC	Psalms 99	10
+MHCC	Psalms 100	6
+MHCC	Psalms 101	9
+MHCC	Psalms 102	29
+MHCC	Psalms 103	23
+MHCC	Psalms 104	36
+MHCC	Psalms 105	46
+MHCC	Psalms 106	49
+MHCC	Psalms 107	44
+MHCC	Psalms 108	14
+MHCC	Psalms 109	32
+MHCC	Psalms 110	8
+MHCC	Psalms 111	11
+MHCC	Psalms 112	11
+MHCC	Psalms 113	10
+MHCC	Psalms 114	9
+MHCC	Psalms 115	19
+MHCC	Psalms 116	20
+MHCC	Psalms 117	3
+MHCC	Psalms 118	30
+MHCC	Psalms 119	177
+MHCC	Psalms 120	8
+MHCC	Psalms 121	9
+MHCC	Psalms 122	10
+MHCC	Psalms 123	5
+MHCC	Psalms 124	9
+MHCC	Psalms 125	6
+MHCC	Psalms 126	7
+MHCC	Psalms 127	6
+MHCC	Psalms 128	7
+MHCC	Psalms 129	9
+MHCC	Psalms 130	9
+MHCC	Psalms 131	4
+MHCC	Psalms 132	19
+MHCC	Psalms 133	4
+MHCC	Psalms 134	4
+MHCC	Psalms 135	22
+MHCC	Psalms 136	27
+MHCC	Psalms 137	10
+MHCC	Psalms 138	9
+MHCC	Psalms 139	25
+MHCC	Psalms 140	14
+MHCC	Psalms 141	11
+MHCC	Psalms 142	8
+MHCC	Psalms 143	13
+MHCC	Psalms 144	16
+MHCC	Psalms 145	22
+MHCC	Psalms 146	11
+MHCC	Psalms 147	21
+MHCC	Psalms 148	15
+MHCC	Psalms 149	10
+MHCC	Psalms 150	7
+MHCC	Proverbs 1	34
+MHCC	Proverbs 2	23
+MHCC	Proverbs 3	36
+MHCC	Proverbs 4	28
+MHCC	Proverbs 5	24
+MHCC	Proverbs 6	36
+MHCC	Proverbs 7	28
+MHCC	Proverbs 8	37
+MHCC	Proverbs 9	19
+MHCC	Proverbs 10	33
+MHCC	Proverbs 11	32
+MHCC	Proverbs 12	29
+MHCC	Proverbs 13	26
+MHCC	Proverbs 14	36
+MHCC	Proverbs 15	34
+MHCC	Proverbs 16	34
+MHCC	Proverbs 17	29
+MHCC	Proverbs 18	25
+MHCC	Proverbs 19	30
+MHCC	Proverbs 20	31
+MHCC	Proverbs 21	32
+MHCC	Proverbs 22	30
+MHCC	Proverbs 23	36
+MHCC	Proverbs 24	35
+MHCC	Proverbs 25	29
+MHCC	Proverbs 26	29
+MHCC	Proverbs 27	28
+MHCC	Proverbs 28	29
+MHCC	Proverbs 29	28
+MHCC	Proverbs 30	34
+MHCC	Proverbs 31	32
+MHCC	Ecclesiastes 1	19
+MHCC	Ecclesiastes 2	27
+MHCC	Ecclesiastes 3	23
+MHCC	Ecclesiastes 4	17
+MHCC	Ecclesiastes 5	21
+MHCC	Ecclesiastes 6	13
+MHCC	Ecclesiastes 7	30
+MHCC	Ecclesiastes 8	18
+MHCC	Ecclesiastes 9	19
+MHCC	Ecclesiastes 10	21
+MHCC	Ecclesiastes 11	11
+MHCC	Ecclesiastes 12	15
+MHCC	Song of Solomon 1	18
+MHCC	Song of Solomon 2	18
+MHCC	Song of Solomon 3	12
+MHCC	Song of Solomon 4	17
+MHCC	Song of Solomon 5	17
+MHCC	Song of Solomon 6	14
+MHCC	Song of Solomon 7	14
+MHCC	Song of Solomon 8	15
+MHCC	Isaiah 1	32
+MHCC	Isaiah 2	23
+MHCC	Isaiah 3	27
+MHCC	Isaiah 4	7
+MHCC	Isaiah 5	31
+MHCC	Isaiah 6	14
+MHCC	Isaiah 7	26
+MHCC	Isaiah 8	23
+MHCC	Isaiah 9	22
+MHCC	Isaiah 10	35
+MHCC	Isaiah 11	17
+MHCC	Isaiah 12	7
+MHCC	Isaiah 13	23
+MHCC	Isaiah 14	33
+MHCC	Isaiah 15	10
+MHCC	Isaiah 16	15
+MHCC	Isaiah 17	15
+MHCC	Isaiah 18	8
+MHCC	Isaiah 19	26
+MHCC	Isaiah 20	7
+MHCC	Isaiah 21	18
+MHCC	Isaiah 22	26
+MHCC	Isaiah 23	19
+MHCC	Isaiah 24	24
+MHCC	Isaiah 25	13
+MHCC	Isaiah 26	22
+MHCC	Isaiah 27	14
+MHCC	Isaiah 28	30
+MHCC	Isaiah 29	25
+MHCC	Isaiah 30	34
+MHCC	Isaiah 31	10
+MHCC	Isaiah 32	21
+MHCC	Isaiah 33	25
+MHCC	Isaiah 34	18
+MHCC	Isaiah 35	11
+MHCC	Isaiah 36	23
+MHCC	Isaiah 37	39
+MHCC	Isaiah 38	23
+MHCC	Isaiah 39	9
+MHCC	Isaiah 40	32
+MHCC	Isaiah 41	30
+MHCC	Isaiah 42	26
+MHCC	Isaiah 43	29
+MHCC	Isaiah 44	29
+MHCC	Isaiah 45	26
+MHCC	Isaiah 46	14
+MHCC	Isaiah 47	16
+MHCC	Isaiah 48	23
+MHCC	Isaiah 49	27
+MHCC	Isaiah 50	12
+MHCC	Isaiah 51	24
+MHCC	Isaiah 52	16
+MHCC	Isaiah 53	13
+MHCC	Isaiah 54	18
+MHCC	Isaiah 55	14
+MHCC	Isaiah 56	13
+MHCC	Isaiah 57	22
+MHCC	Isaiah 58	15
+MHCC	Isaiah 59	22
+MHCC	Isaiah 60	23
+MHCC	Isaiah 61	12
+MHCC	Isaiah 62	13
+MHCC	Isaiah 63	20
+MHCC	Isaiah 64	13
+MHCC	Isaiah 65	26
+MHCC	Isaiah 66	25
+MHCC	Jeremiah 1	20
+MHCC	Jeremiah 2	38
+MHCC	Jeremiah 3	26
+MHCC	Jeremiah 4	32
+MHCC	Jeremiah 5	32
+MHCC	Jeremiah 6	31
+MHCC	Jeremiah 7	35
+MHCC	Jeremiah 8	23
+MHCC	Jeremiah 9	27
+MHCC	Jeremiah 10	26
+MHCC	Jeremiah 11	24
+MHCC	Jeremiah 12	18
+MHCC	Jeremiah 13	28
+MHCC	Jeremiah 14	23
+MHCC	Jeremiah 15	22
+MHCC	Jeremiah 16	22
+MHCC	Jeremiah 17	28
+MHCC	Jeremiah 18	24
+MHCC	Jeremiah 19	16
+MHCC	Jeremiah 20	19
+MHCC	Jeremiah 21	15
+MHCC	Jeremiah 22	31
+MHCC	Jeremiah 23	41
+MHCC	Jeremiah 24	11
+MHCC	Jeremiah 25	39
+MHCC	Jeremiah 26	25
+MHCC	Jeremiah 27	23
+MHCC	Jeremiah 28	18
+MHCC	Jeremiah 29	33
+MHCC	Jeremiah 30	25
+MHCC	Jeremiah 31	41
+MHCC	Jeremiah 32	45
+MHCC	Jeremiah 33	27
+MHCC	Jeremiah 34	23
+MHCC	Jeremiah 35	20
+MHCC	Jeremiah 36	33
+MHCC	Jeremiah 37	22
+MHCC	Jeremiah 38	29
+MHCC	Jeremiah 39	19
+MHCC	Jeremiah 40	17
+MHCC	Jeremiah 41	19
+MHCC	Jeremiah 42	23
+MHCC	Jeremiah 43	14
+MHCC	Jeremiah 44	31
+MHCC	Jeremiah 45	6
+MHCC	Jeremiah 46	29
+MHCC	Jeremiah 47	8
+MHCC	Jeremiah 48	48
+MHCC	Jeremiah 49	40
+MHCC	Jeremiah 50	47
+MHCC	Jeremiah 51	65
+MHCC	Jeremiah 52	35
+MHCC	Lamentations 1	23
+MHCC	Lamentations 2	23
+MHCC	Lamentations 3	67
+MHCC	Lamentations 4	23
+MHCC	Lamentations 5	23
+MHCC	Ezekiel 1	29
+MHCC	Ezekiel 2	11
+MHCC	Ezekiel 3	28
+MHCC	Ezekiel 4	18
+MHCC	Ezekiel 5	18
+MHCC	Ezekiel 6	15
+MHCC	Ezekiel 7	28
+MHCC	Ezekiel 8	19
+MHCC	Ezekiel 9	12
+MHCC	Ezekiel 10	23
+MHCC	Ezekiel 11	26
+MHCC	Ezekiel 12	29
+MHCC	Ezekiel 13	24
+MHCC	Ezekiel 14	24
+MHCC	Ezekiel 15	9
+MHCC	Ezekiel 16	64
+MHCC	Ezekiel 17	25
+MHCC	Ezekiel 18	33
+MHCC	Ezekiel 19	15
+MHCC	Ezekiel 20	50
+MHCC	Ezekiel 21	33
+MHCC	Ezekiel 22	32
+MHCC	Ezekiel 23	50
+MHCC	Ezekiel 24	28
+MHCC	Ezekiel 25	18
+MHCC	Ezekiel 26	22
+MHCC	Ezekiel 27	37
+MHCC	Ezekiel 28	27
+MHCC	Ezekiel 29	22
+MHCC	Ezekiel 30	27
+MHCC	Ezekiel 31	19
+MHCC	Ezekiel 32	33
+MHCC	Ezekiel 33	34
+MHCC	Ezekiel 34	32
+MHCC	Ezekiel 35	16
+MHCC	Ezekiel 36	39
+MHCC	Ezekiel 37	29
+MHCC	Ezekiel 38	24
+MHCC	Ezekiel 39	30
+MHCC	Ezekiel 40	50
+MHCC	Ezekiel 41	27
+MHCC	Ezekiel 42	21
+MHCC	Ezekiel 43	28
+MHCC	Ezekiel 44	32
+MHCC	Ezekiel 45	26
+MHCC	Ezekiel 46	25
+MHCC	Ezekiel 47	24
+MHCC	Ezekiel 48	36
+MHCC	Daniel 1	22
+MHCC	Daniel 2	50
+MHCC	Daniel 3	31
+MHCC	Daniel 4	38
+MHCC	Daniel 5	32
+MHCC	Daniel 6	29
+MHCC	Daniel 7	29
+MHCC	Daniel 8	28
+MHCC	Daniel 9	28
+MHCC	Daniel 10	22
+MHCC	Daniel 11	46
+MHCC	Daniel 12	14
+MHCC	Hosea 1	12
+MHCC	Hosea 2	24
+MHCC	Hosea 3	6
+MHCC	Hosea 4	20
+MHCC	Hosea 5	16
+MHCC	Hosea 6	12
+MHCC	Hosea 7	17
+MHCC	Hosea 8	15
+MHCC	Hosea 9	18
+MHCC	Hosea 10	16
+MHCC	Hosea 11	13
+MHCC	Hosea 12	15
+MHCC	Hosea 13	17
+MHCC	Hosea 14	10
+MHCC	Joel 1	21
+MHCC	Joel 2	33
+MHCC	Joel 3	22
+MHCC	Amos 1	16
+MHCC	Amos 2	17
+MHCC	Amos 3	16
+MHCC	Amos 4	14
+MHCC	Amos 5	28
+MHCC	Amos 6	15
+MHCC	Amos 7	18
+MHCC	Amos 8	15
+MHCC	Amos 9	16
+MHCC	Obadiah 1	22
+MHCC	Jonah 1	18
+MHCC	Jonah 2	11
+MHCC	Jonah 3	11
+MHCC	Jonah 4	12
+MHCC	Micah 1	17
+MHCC	Micah 2	14
+MHCC	Micah 3	13
+MHCC	Micah 4	14
+MHCC	Micah 5	16
+MHCC	Micah 6	17
+MHCC	Micah 7	21
+MHCC	Nahum 1	16
+MHCC	Nahum 2	14
+MHCC	Nahum 3	20
+MHCC	Habakkuk 1	18
+MHCC	Habakkuk 2	21
+MHCC	Habakkuk 3	20
+MHCC	Zephaniah 1	19
+MHCC	Zephaniah 2	16
+MHCC	Zephaniah 3	21
+MHCC	Haggai 1	16
+MHCC	Haggai 2	24
+MHCC	Zechariah 1	22
+MHCC	Zechariah 2	14
+MHCC	Zechariah 3	11
+MHCC	Zechariah 4	15
+MHCC	Zechariah 5	12
+MHCC	Zechariah 6	16
+MHCC	Zechariah 7	15
+MHCC	Zechariah 8	24
+MHCC	Zechariah 9	18
+MHCC	Zechariah 10	13
+MHCC	Zechariah 11	18
+MHCC	Zechariah 12	15
+MHCC	Zechariah 13	10
+MHCC	Zechariah 14	22
+MHCC	Malachi 1	15
+MHCC	Malachi 2	18
+MHCC	Malachi 3	19
+MHCC	Malachi 4	7
+MHCC	Matthew 1	26
+MHCC	Matthew 2	24
+MHCC	Matthew 3	18
+MHCC	Matthew 4	26
+MHCC	Matthew 5	49
+MHCC	Matthew 6	35
+MHCC	Matthew 7	30
+MHCC	Matthew 8	35
+MHCC	Matthew 9	39
+MHCC	Matthew 10	43
+MHCC	Matthew 11	31
+MHCC	Matthew 12	51
+MHCC	Matthew 13	59
+MHCC	Matthew 14	37
+MHCC	Matthew 15	40
+MHCC	Matthew 16	29
+MHCC	Matthew 17	28
+MHCC	Matthew 18	36
+MHCC	Matthew 19	31
+MHCC	Matthew 20	35
+MHCC	Matthew 21	47
+MHCC	Matthew 22	47
+MHCC	Matthew 23	40
+MHCC	Matthew 24	52
+MHCC	Matthew 25	47
+MHCC	Matthew 26	76
+MHCC	Matthew 27	67
+MHCC	Matthew 28	21
+MHCC	Mark 1	46
+MHCC	Mark 2	29
+MHCC	Mark 3	36
+MHCC	Mark 4	42
+MHCC	Mark 5	44
+MHCC	Mark 6	57
+MHCC	Mark 7	38
+MHCC	Mark 8	39
+MHCC	Mark 9	51
+MHCC	Mark 10	53
+MHCC	Mark 11	34
+MHCC	Mark 12	45
+MHCC	Mark 13	38
+MHCC	Mark 14	73
+MHCC	Mark 15	48
+MHCC	Mark 16	21
+MHCC	Luke 1	81
+MHCC	Luke 2	53
+MHCC	Luke 3	39
+MHCC	Luke 4	45
+MHCC	Luke 5	40
+MHCC	Luke 6	50
+MHCC	Luke 7	51
+MHCC	Luke 8	57
+MHCC	Luke 9	63
+MHCC	Luke 10	43
+MHCC	Luke 11	55
+MHCC	Luke 12	60
+MHCC	Luke 13	36
+MHCC	Luke 14	36
+MHCC	Luke 15	33
+MHCC	Luke 16	32
+MHCC	Luke 17	38
+MHCC	Luke 18	44
+MHCC	Luke 19	49
+MHCC	Luke 20	48
+MHCC	Luke 21	39
+MHCC	Luke 22	72
+MHCC	Luke 23	57
+MHCC	Luke 24	54
+MHCC	John 1	52
+MHCC	John 2	26
+MHCC	John 3	37
+MHCC	John 4	55
+MHCC	John 5	48
+MHCC	John 6	72
+MHCC	John 7	54
+MHCC	John 8	60
+MHCC	John 9	42
+MHCC	John 10	43
+MHCC	John 11	58
+MHCC	John 12	51
+MHCC	John 13	39
+MHCC	John 14	32
+MHCC	John 15	28
+MHCC	John 16	34
+MHCC	John 17	27
+MHCC	John 18	41
+MHCC	John 19	43
+MHCC	John 20	32
+MHCC	John 21	26
+MHCC	Acts 1	27
+MHCC	Acts 2	48
+MHCC	Acts 3	27
+MHCC	Acts 4	38
+MHCC	Acts 5	43
+MHCC	Acts 6	16
+MHCC	Acts 7	61
+MHCC	Acts 8	41
+MHCC	Acts 9	44
+MHCC	Acts 10	49
+MHCC	Acts 11	31
+MHCC	Acts 12	26
+MHCC	Acts 13	53
+MHCC	Acts 14	29
+MHCC	Acts 15	42
+MHCC	Acts 16	41
+MHCC	Acts 17	35
+MHCC	Acts 18	29
+MHCC	Acts 19	42
+MHCC	Acts 20	39
+MHCC	Acts 21	41
+MHCC	Acts 22	31
+MHCC	Acts 23	36
+MHCC	Acts 24	28
+MHCC	Acts 25	28
+MHCC	Acts 26	33
+MHCC	Acts 27	45
+MHCC	Acts 28	32
+MHCC	Romans 1	33
+MHCC	Romans 2	30
+MHCC	Romans 3	32
+MHCC	Romans 4	26
+MHCC	Romans 5	22
+MHCC	Romans 6	24
+MHCC	Romans 7	26
+MHCC	Romans 8	40
+MHCC	Romans 9	34
+MHCC	Romans 10	22
+MHCC	Romans 11	37
+MHCC	Romans 12	22
+MHCC	Romans 13	15
+MHCC	Romans 14	24
+MHCC	Romans 15	34
+MHCC	Romans 16	28
+MHCC	1 Corinthians 1	32
+MHCC	1 Corinthians 2	17
+MHCC	1 Corinthians 3	24
+MHCC	1 Corinthians 4	22
+MHCC	1 Corinthians 5	14
+MHCC	1 Corinthians 6	21
+MHCC	1 Corinthians 7	41
+MHCC	1 Corinthians 8	14
+MHCC	1 Corinthians 9	28
+MHCC	1 Corinthians 10	34
+MHCC	1 Corinthians 11	35
+MHCC	1 Corinthians 12	32
+MHCC	1 Corinthians 13	14
+MHCC	1 Corinthians 14	41
+MHCC	1 Corinthians 15	59
+MHCC	1 Corinthians 16	25
+MHCC	2 Corinthians 1	25
+MHCC	2 Corinthians 2	18
+MHCC	2 Corinthians 3	19
+MHCC	2 Corinthians 4	19
+MHCC	2 Corinthians 5	22
+MHCC	2 Corinthians 6	19
+MHCC	2 Corinthians 7	17
+MHCC	2 Corinthians 8	25
+MHCC	2 Corinthians 9	16
+MHCC	2 Corinthians 10	19
+MHCC	2 Corinthians 11	34
+MHCC	2 Corinthians 12	22
+MHCC	2 Corinthians 13	15
+MHCC	Galatians 1	25
+MHCC	Galatians 2	22
+MHCC	Galatians 3	30
+MHCC	Galatians 4	32
+MHCC	Galatians 5	27
+MHCC	Galatians 6	19
+MHCC	Ephesians 1	24
+MHCC	Ephesians 2	23
+MHCC	Ephesians 3	22
+MHCC	Ephesians 4	33
+MHCC	Ephesians 5	34
+MHCC	Ephesians 6	25
+MHCC	Philippians 1	31
+MHCC	Philippians 2	31
+MHCC	Philippians 3	22
+MHCC	Philippians 4	24
+MHCC	Colossians 1	30
+MHCC	Colossians 2	24
+MHCC	Colossians 3	26
+MHCC	Colossians 4	19
+MHCC	1 Thessalonians 1	11
+MHCC	1 Thessalonians 2	21
+MHCC	1 Thessalonians 3	14
+MHCC	1 Thessalonians 4	19
+MHCC	1 Thessalonians 5	29
+MHCC	2 Thessalonians 1	13
+MHCC	2 Thessalonians 2	18
+MHCC	2 Thessalonians 3	19
+MHCC	1 Timothy 1	21
+MHCC	1 Timothy 2	16
+MHCC	1 Timothy 3	17
+MHCC	1 Timothy 4	17
+MHCC	1 Timothy 5	26
+MHCC	1 Timothy 6	22
+MHCC	2 Timothy 1	19
+MHCC	2 Timothy 2	27
+MHCC	2 Timothy 3	18
+MHCC	2 Timothy 4	23
+MHCC	Titus 1	17
+MHCC	Titus 2	16
+MHCC	Titus 3	16
+MHCC	Philemon 1	26
+MHCC	Hebrews 1	15
+MHCC	Hebrews 2	19
+MHCC	Hebrews 3	20
+MHCC	Hebrews 4	17
+MHCC	Hebrews 5	15
+MHCC	Hebrews 6	21
+MHCC	Hebrews 7	29
+MHCC	Hebrews 8	14
+MHCC	Hebrews 9	29
+MHCC	Hebrews 10	40
+MHCC	Hebrews 11	41
+MHCC	Hebrews 12	30
+MHCC	Hebrews 13	26
+MHCC	James 1	28
+MHCC	James 2	27
+MHCC	James 3	19
+MHCC	James 4	18
+MHCC	James 5	21
+MHCC	1 Peter 1	26
+MHCC	1 Peter 2	26
+MHCC	1 Peter 3	23
+MHCC	1 Peter 4	20
+MHCC	1 Peter 5	15
+MHCC	2 Peter 1	22
+MHCC	2 Peter 2	23
+MHCC	2 Peter 3	19
+MHCC	1 John 1	11
+MHCC	1 John 2	30
+MHCC	1 John 3	25
+MHCC	1 John 4	22
+MHCC	1 John 5	22
+MHCC	2 John 1	14
+MHCC	3 John 1	15
+MHCC	Jude 1	26
+MHCC	Revelation 1	21
+MHCC	Revelation 2	30
+MHCC	Revelation 3	23
+MHCC	Revelation 4	12
+MHCC	Revelation 5	15
+MHCC	Revelation 6	18
+MHCC	Revelation 7	18
+MHCC	Revelation 8	14
+MHCC	Revelation 9	22
+MHCC	Revelation 10	12
+MHCC	Revelation 11	20
+MHCC	Revelation 12	18
+MHCC	Revelation 13	19
+MHCC	Revelation 14	21
+MHCC	Revelation 15	9
+MHCC	Revelation 16	22
+MHCC	Revelation 17	19
+MHCC	Revelation 18	25
+MHCC	Revelation 19	22
+MHCC	Revelation 20	16
+MHCC	Revelation 21	28
+MHCC	Revelation 22	22

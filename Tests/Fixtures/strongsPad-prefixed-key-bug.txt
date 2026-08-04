@@ -1,0 +1,28 @@
+# HISTORICAL RECORD — no test reads this file any more.
+#
+# SWORD_REMOVAL_PLAN.md Phase 5 step 12. This was captured by
+# SwordOracleCaptureTests.testStrongsPaddingBareNumbersAreCorrectPrefixedAreNot,
+# which documented a real user-visible bug in the ENGINE that the Swift reader was
+# expected to fix. That test is deleted with the engine, so nothing asserts against
+# these bytes; they are kept because the bug they describe is the reason the
+# reader's lookup rules look the way they do.
+#
+# The bug: SWLD::strongsPad (swld.cpp:124-167) pads a numeric key to 5 digits, but
+# when the key carries a leading G/H it advances past the letter and pads to FOUR
+# digits without re-prepending it — so "H430" became "0430", which is not a key.
+# rawstr4.cpp:234-241 then snapped to a neighbouring entry and set no error,
+# silently returning the wrong definition.
+#
+# The fix, and where it is asserted now:
+# PSContentStoreTests.testDictionaryLookupCasingAndPaddingCases asserts
+# dictEntry(module:"StrongsRealHebrew", key:"H430") == nil — a miss is a miss. The
+# app was never affected in the first place, because osishtmlhref.cpp:66 strips the
+# G/H prefix before the lookup, so it always passed the bare number.
+#
+# Do not delete this file to "clean up"; do not treat it as an expectation.
+
+strongsPad drops a leading G/H without re-prepending it, so 'H430'
+pads to '0430' (4 digits) and rawstr4 snaps to a neighbour with no
+error set. Phase 3 must return nil on a miss instead.
+  entry(forKey: "430")  -> <a name="00430"><b>430</b></a><br /> &#1488;&#1500;&#1492;&#…
+  entry(forKey: "H430") -> <a name="08674"><b>8674</b></a><br /> &#1514;&#1468;&#1514;&…

@@ -36,6 +36,11 @@ private enum SWRender {
     // SWMOD_FEATURE_* / SWMOD_CONF_FEATURE_* (SwordManager.h)
     static let featureStrongs = "Strongs"
     static let confFeatureStrongs = "StrongsNumbers"
+    static let featureMorph = "Morph"
+    static let featureHeadings = "Headings"
+    static let featureFootnotes = "Footnotes"
+    static let featureScriptRef = "Scripref"          // not Scriptref
+    static let featureRedLetterWords = "RedLetterWords"
 
     // ATTRTYPE_* (SwordModule.h)
     static let attrType = "type"
@@ -45,6 +50,11 @@ private enum SWRender {
     // SW_OUTPUT_*_KEY (SwordModule.h)
     static let outputTextKey = "OutputTextKey"
     static let outputRefKey = "OutputRefKey"
+
+    // SWMOD_CATEGORY_BIBLES (SwordManager.h) — the module `type` string, which is
+    // what content_meta stores and what `ModuleType == bible` was derived from
+    // (+[SwordModule moduleTypeForModuleTypeString:]).
+    static let typeBibles = "Biblical Texts"
 }
 
 @objc(PSModuleViewController)
@@ -334,17 +344,10 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
     @objc(setModuleNameViaNotification)
     func setModuleNameViaNotification() {
         autoreleasepool {
-            if tabType == .BibleTab {
-                rebuildBibleSettingsMenu()
-                return
-            }
-            if let module = PSModuleController.default().primaryCommentary, let name = module.name {
-                let i = (name.count > 5) ? 5 : name.count
-                let prefix = String(name.prefix(i))
-                let newTitle = (name.count > i) ? "\(prefix).." : prefix
-                moduleButton?.title = newTitle
-            } else {
-                moduleButton?.title = NSLocalizedString("None", comment: "None")
+            rebuildSettingsMenu()
+            if tabType != .BibleTab && PSModuleController.default().primaryCommentaryName == nil {
+                // The real empty-state path: no commentary installed, so there is
+                // nothing to page through.
                 titleSegmentedControl?.setTitle("PocketSword", forSegmentAt: 1)
                 setEnabledNextButton(false)
                 setEnabledPreviousButton(false)
@@ -352,51 +355,122 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         }
     }
 
-    @objc(rebuildBibleSettingsMenu)
-    func rebuildBibleSettingsMenu() {
-        let bible = PSModuleController.default().primaryBible
-        guard let modName = bible?.name else {
-            self.moduleButton?.menu = nil
+    /// The active module for this tab's `▾` settings menu, by NAME: the primary Bible
+    /// on the Bible tab, the primary commentary on the Commentary tab.
+    ///
+    /// Phase 5 step 5: was a `SwordModule`, read only for its `name`, its
+    /// `hasFeature:` answers and its `type`. All three now come from `content_meta`.
+    private var settingsMenuModuleName: String? {
+        (tabType == .BibleTab) ? PSModuleController.default().primaryBibleName
+                               : PSModuleController.default().primaryCommentaryName
+    }
+
+    /// The redisplay notification this tab's renderer listens for.
+    private var redisplayNotification: Notification.Name {
+        (tabType == .BibleTab) ? .redisplayPrimaryBible : .redisplayPrimaryCommentary
+    }
+
+    /// Builds the per-tab `▾` (textformat) settings menu from the active module's
+    /// advertised features. Every row writes the PER-MODULE pref key ("<pref>_<mod>")
+    /// keyed on the module's own name — the same domain `-[SwordModule setPreferences]`
+    /// reads on every render, which is what makes these toggles actually take effect.
+    ///
+    /// Feature gating reads the BAKED feature set (`content_meta`'s
+    /// `module.<name>.features`) as of Phase 5 step 5, which holds exactly what
+    /// `-[SwordModule hasFeature:]` answered. That matters because hasFeature: also
+    /// matched GlobalOptionFilter entries (OSIS/GBF/ThML/UTF8-prefixed and bare), not
+    /// just `Feature=` lines — so KJV's OSISFootnotes / OSISHeadings /
+    /// OSISRedLetterWords filters satisfy the Footnotes / Headings / RedLetterWords
+    /// gates even though it declares only `Feature=StrongsNumbers`.
+    ///
+    /// Measured consequence worth knowing: KJV yields **six** rows, not seven. It has
+    /// no `OSISScripref` filter and no `Feature=Scripref`, so the Cross-references row
+    /// was never in its menu — verified against the live engine in step 4, so this is
+    /// a record of existing behaviour rather than a change.
+    ///
+    /// A module that advertises nothing (e.g. MHCC, whose conf declares no `Feature=`
+    /// and no `GlobalOptionFilter`) yields NO rows at all now that the font moved to
+    /// Preferences — so the button hides itself rather than presenting an empty menu.
+    @objc(rebuildSettingsMenu)
+    func rebuildSettingsMenu() {
+        guard let modName = settingsMenuModuleName, let store = PSContentStore.shared else {
+            setSettingsMenu(nil)
             return
         }
 
+        /// Whether this module advertises a feature — from the BAKED feature set
+        /// (`module.<name>.features` in `content_meta`) rather than a live
+        /// `-[SwordModule hasFeature:]`. The converter reproduced hasFeature:'s full
+        /// rule, prefixed GlobalOptionFilter matching included, and
+        /// PSDifferentialTests checked all 75 answers against the engine while it was
+        /// still in the tree.
+        func has(_ feature: String) -> Bool { store.moduleHasFeature(modName, feature) }
+
+        /// Whether this tab is showing a Bible, which is the verse-per-line gate.
+        /// `module.type == bible` became a `content_meta` type-string comparison.
+        let isBible = store.moduleMeta(modName, key: "type") == SWRender.typeBibles
+
+        let prefix = (tabType == .BibleTab) ? "bible" : "commentary"
         var topLevel: [UIMenuElement] = []
 
-        let hasStrongs = (bible?.hasFeature(SWRender.featureStrongs) ?? false) || (bible?.hasFeature(SWRender.confFeatureStrongs) ?? false)
-        if hasStrongs {
-            let strongsToggle = UIAction(title: NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
-                                         image: nil,
-                                         identifier: UIAction.Identifier("bible.strongs")) { [weak self] _ in
-                let mName = PSModuleController.default().primaryBible?.name ?? ""
-                let current = UserDefaults.standard.psBool(Defaults.strongsPreference, forModule: mName)
-                UserDefaults.standard.psSet(!current, forPref: Defaults.strongsPreference, module: mName)
+        /// One inline-grouped boolean toggle over a per-module pref key.
+        func addToggle(_ title: String, pref: String, id: String) {
+            let action = UIAction(title: title, image: nil,
+                                  identifier: UIAction.Identifier("\(prefix).\(id)")) { [weak self] _ in
+                guard let self = self, let mName = self.settingsMenuModuleName else { return }
+                let current = UserDefaults.standard.psBool(pref, forModule: mName)
+                UserDefaults.standard.psSet(!current, forPref: pref, module: mName)
                 UserDefaults.standard.synchronize()
-                PSModuleController.default().setPreferences()
-                NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
-                self?.rebuildBibleSettingsMenu()
+                NotificationCenter.default.post(name: self.redisplayNotification, object: nil)
+                self.rebuildSettingsMenu()
             }
-            strongsToggle.state = UserDefaults.standard.psBool(Defaults.strongsPreference, forModule: modName) ? .on : .off
+            action.state = UserDefaults.standard.psBool(pref, forModule: modName) ? .on : .off
             topLevel.append(UIMenu(title: "", image: nil,
-                                   identifier: UIMenu.Identifier("bible.strongsGroup"),
-                                   options: .displayInline, children: [strongsToggle]))
+                                   identifier: UIMenu.Identifier("\(prefix).\(id)Group"),
+                                   options: .displayInline, children: [action]))
         }
 
-        let vplToggle = UIAction(title: NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),
-                                 image: nil,
-                                 identifier: UIAction.Identifier("bible.vpl")) { [weak self] _ in
-            let mName = PSModuleController.default().primaryBible?.name ?? ""
-            let current = UserDefaults.standard.psBool(Defaults.vplPreference, forModule: mName)
-            UserDefaults.standard.psSet(!current, forPref: Defaults.vplPreference, module: mName)
-            UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
-            self?.rebuildBibleSettingsMenu()
+        if has(SWRender.featureStrongs) || has(SWRender.confFeatureStrongs) {
+            addToggle(NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
+                      pref: Defaults.strongsPreference, id: "strongs")
         }
-        vplToggle.state = UserDefaults.standard.psBool(Defaults.vplPreference, forModule: modName) ? .on : .off
-        topLevel.append(UIMenu(title: "", image: nil,
-                               identifier: UIMenu.Identifier("bible.vplGroup"),
-                               options: .displayInline, children: [vplToggle]))
+        if has(SWRender.featureMorph) {
+            addToggle(NSLocalizedString("PreferencesMorphTagsTitle", comment: "Morphological Tags"),
+                      pref: Defaults.morphPreference, id: "morph")
+        }
+        if has(SWRender.featureHeadings) {
+            addToggle(NSLocalizedString("PreferencesHeadingsTitle", comment: "Headings"),
+                      pref: Defaults.headingsPreference, id: "headings")
+        }
+        if has(SWRender.featureFootnotes) {
+            addToggle(NSLocalizedString("PreferencesFootnotesTitle", comment: "Footnotes"),
+                      pref: Defaults.footnotesPreference, id: "footnotes")
+        }
+        if has(SWRender.featureScriptRef) {
+            addToggle(NSLocalizedString("PreferencesCrossReferencesTitle", comment: "Cross-references"),
+                      pref: Defaults.scriptRefsPreference, id: "xref")
+        }
+        if has(SWRender.featureRedLetterWords) {
+            addToggle(NSLocalizedString("PreferencesRedLetterTitle", comment: "Red Letter"),
+                      pref: Defaults.redLetterPreference, id: "redLetter")
+        }
+        if isBible {
+            // VPL is a rendering-side option only — it never went through
+            // -setPreferences (see PSModulePreferencesController's old vplChanged:).
+            addToggle(NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),
+                      pref: Defaults.vplPreference, id: "vpl")
+        }
 
-        self.moduleButton?.menu = UIMenu(title: "", children: topLevel)
+        // No Font row here: font name + size are a single GLOBAL setting configured
+        // in the Preferences pane, not per module.
+        setSettingsMenu(topLevel.isEmpty ? nil : UIMenu(title: "", children: topLevel))
+    }
+
+    /// Installs the display-settings menu, hiding the button entirely when there is
+    /// nothing to show (an empty UIMenu renders as a button that does nothing).
+    private func setSettingsMenu(_ menu: UIMenu?) {
+        moduleButton?.menu = menu
+        moduleButton?.isHidden = (menu == nil)
     }
 
     @objc(setDelegate:)
@@ -407,13 +481,13 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
         searchButton.accessibilityLabel = NSLocalizedString("VoiceOverHistoryAndSearchButton", comment: "")
         self.navigationItem.leftBarButtonItem = searchButton
 
-        let rightButton: UIBarButtonItem
-        if tabType == .BibleTab {
-            rightButton = UIBarButtonItem(image: UIImage(systemName: "textformat"),
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "textformat"),
                                           style: .plain, target: nil, action: nil)
-            self.moduleButton = rightButton
-            rebuildBibleSettingsMenu()
+        rightButton.accessibilityLabel = NSLocalizedString("VoiceOverDisplaySettingsButton", comment: "")
+        self.moduleButton = rightButton
+        rebuildSettingsMenu()
 
+        if tabType == .BibleTab {
             if PSFeatureFlags.voiceReferenceEnabled {
                 let voiceButton = UIBarButtonItem(
                     image: UIImage(systemName: "microphone"),
@@ -434,9 +508,6 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                 navigationItem.rightBarButtonItem = rightButton
             }
         } else {
-            rightButton = UIBarButtonItem(title: "None", style: .plain, target: vc,
-                                          action: NSSelectorFromString("toggleModulesListFromButton:"))
-            self.moduleButton = rightButton
             setModuleNameViaNotification()
             navigationItem.rightBarButtonItem = rightButton
         }
@@ -622,7 +693,22 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
     @objc(removeBookmarkHighlights)
     func removeBookmarkHighlights() {
-        let verses = PSModuleController.default().primaryBible?.getVerseMax() ?? 0
+        // SWORD_REMOVAL_PLAN.md Phase 4: the verse count comes from the baked
+        // versification table rather than `-[SwordModule getVerseMax]`.
+        //
+        // This is an upper bound for a JS loop that clears highlight spans, so it
+        // must cover the chapter currently on screen — which is `lastRef`, the same
+        // ref the render used. `-getVerseMax` read it off the module's live key,
+        // which is left pointing at that chapter by the render, so the two agree;
+        // resolving `lastRef` says so explicitly instead of depending on where the
+        // shared key happens to be left. 0 on an unresolvable ref clears nothing,
+        // which is the same no-op the engine's -1-vs-0 path produced.
+        var verses = 0
+        if let resolver = PSBookOSISResolver.shared,
+           let ref = PSModuleController.getCurrentBibleRef(),
+           let (book, chapter) = resolver.resolve(ref: ref) {
+            verses = resolver.verseMax(book: book, chapter: chapter) ?? 0
+        }
         let jsFunction = String(format: "PS_RemoveHighlights('%d')", Int32(verses))
         webView.stringByEvaluatingJavaScriptFromString(jsFunction)
     }
@@ -737,18 +823,16 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                     //
                     // Strong's Numbers
                     //
-                    var mod = UserDefaults.standard.object(forKey: Defaults.strongsGreekModule) as? String
+                    var mod = BundledModules.strongsGreek
                     var hebrew = false
                     if (rData[SWRender.attrType] as? String) == "Hebrew" {
-                        mod = UserDefaults.standard.object(forKey: Defaults.strongsHebrewModule) as? String
+                        mod = BundledModules.strongsHebrew
                         hebrew = true
                     }
 
                     let rawNumber = (rData[SWRender.attrValue] as? String) ?? ""
                     let strongsReference = "\(hebrew ? "H" : "G")\(rawNumber)"
-                    if let swordDictionary = SwordManager.default().module(withName: mod) as? SwordDictionary {
-                        entry = swordDictionary.entry(forKey: rawNumber)
-                    }
+                    entry = PSContentReader.entry(module: mod, key: rawNumber)
                     let hasDefinition = entry != nil
                     // Keep the raw rendered entry so the popup can pull the
                     // Greek/Hebrew lemma out for its header (only when it's a
@@ -776,13 +860,11 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
                     //
                     // Morphological Tags
                     //
-                    let mod = UserDefaults.standard.object(forKey: Defaults.morphGreekModule) as? String
+                    let mod = BundledModules.morphGreek
                     if (rData[SWRender.attrType] as? String)?.hasPrefix("strongMorph") == true {
                         entry = NSLocalizedString("MorphHebrewNotSupported", comment: "")
                     } else {
-                        if let swordDictionary = SwordManager.default().module(withName: mod) as? SwordDictionary {
-                            entry = swordDictionary.entry(forKey: rData[SWRender.attrValue] as? String)
-                        }
+                        entry = PSContentReader.entry(module: mod, key: rData[SWRender.attrValue] as? String)
                         if entry == nil {
                             entry = NSLocalizedString("NoMorphGreekModuleInstalled", comment: "")
                         }
@@ -791,53 +873,32 @@ class PSModuleViewController: UIViewController, WKNavigationDelegate, PSWebViewD
 
                 } else if let rData = rData, (rData[SWRender.attrAction] as? String) == "showNote" {
                     if (rData[SWRender.attrType] as? String) == "n" { // footnote
-                        if tabType == .BibleTab {
-                            entry = PSModuleController.default().primaryBible?.attributeValue(forEntryData: rData) as? String
-                            entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                            entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryBible?.name)
-                        } else {
-                            entry = PSModuleController.default().primaryCommentary?.attributeValue(forEntryData: rData) as? String
-                            entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                            entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryCommentary?.name)
-                        }
-                    } else if (rData[SWRender.attrType] as? String) == "x" { // x-reference
-                        let array: [Any]?
-                        if tabType == .BibleTab {
-                            array = PSModuleController.default().primaryBible?.attributeValue(forEntryData: rData) as? [Any]
-                        } else {
-                            array = PSModuleController.default().primaryCommentary?.attributeValue(forEntryData: rData) as? [Any]
-                        }
-                        let tmpEntry = NSMutableString(string: "")
-                        for case let dict as [AnyHashable: Any] in (array ?? []) {
-                            let curRef = PSModuleController.createRefString(dict[SWRender.outputRefKey] as? String)
-                            tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef ?? "", curRef ?? "")
-                            tmpEntry.appendFormat("%@<br />", (dict[SWRender.outputTextKey] as? String) ?? "")
-                        }
-                        if !(tmpEntry.isEqual(to: "")) { // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                            entry = tmpEntry.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                            entry = entry?.replacingOccurrences(of: "*x", with: "x")
-                            entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryBible?.name)
-                        }
-                    }
-                } else if let rData = rData, (rData[SWRender.attrAction] as? String) == "showRef", tabType == .CommentaryTab {
-                    // ONLY for CommentaryTab as this is only a feature of Commentaries & dictionaries, etc.
-                    let array = PSModuleController.default().primaryBible?.attributeValue(forEntryData: rData, cleanFeed: true) as? [Any]
-                    let tmpEntry = NSMutableString(string: "")
-                    for case let dict as [AnyHashable: Any] in (array ?? []) {
-                        let curRef = PSModuleController.createRefString(dict[SWRender.outputRefKey] as? String)
-                        tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef ?? "", curRef ?? "")
-                        tmpEntry.appendFormat("%@<br />", (dict[SWRender.outputTextKey] as? String) ?? "")
-                    }
-                    if !(tmpEntry.isEqual(to: "")) { // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                        entry = tmpEntry.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+                        let mod = (tabType == .BibleTab)
+                            ? PSModuleController.default().primaryBibleName
+                            : PSModuleController.default().primaryCommentaryName
+                        entry = PSContentReader.footnoteBody(module: mod, data: rData)
                         entry = entry?.replacingOccurrences(of: "*x", with: "x")
                         entry = entry?.replacingOccurrences(of: "*n", with: "n")
-                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default().primaryBible?.name)
+                        entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: mod)
                     }
+                    // The `x` (cross-reference) arm is GONE — SWORD_REMOVAL_PLAN.md
+                    // Phase 4 step 8. No `x` anchor is ever emitted for the shipped
+                    // content (zero cross-reference tokens in the store) and all
+                    // 6,959 notes are type='study' with an EMPTY refList, so the
+                    // branch that parsed that refList had nothing to act on. Both
+                    // facts are re-derived from the store by
+                    // PSRefSemanticsTests.testEveryNoteIsAStudyNoteWithAnEmptyRefList
+                    // and testNoShippedContentEmitsAShowRefAnchor.
                 }
+                // The `showRef` arm is GONE with it. It called
+                // attributeValueForEntryData:cleanFeed:YES to expand a scriptRef
+                // into a Bible-verse list, and nothing in the shipped content can
+                // reach it: the only sword:// links anywhere are 14,989
+                // lexicon->lexicon ones, and every one of them routes to the
+                // DICTIONARY arm, not this one — asserted over all 14,989 by
+                // PSRefSemanticsTests.testEveryBakedSwordLinkRoutesToTheDictionaryArm
+                // via the PSRefLinkRouter seam. The app's own bible-ref links carry
+                // the `bible` scheme and are intercepted earlier.
 
                 if let popupContent = popupContent {
                     NotificationCenter.default.post(name: .showInfoPane, object: popupContent)

@@ -1,119 +1,60 @@
-#import <MessageUI/MessageUI.h>  // system framework umbrella (NOT a project
-// header). The Swift PSAboutScreenController (Wave 2) conforms to
-// MFMailComposeViewControllerDelegate for the feedback-email flow, so the
-// generated PocketSword-Swift.h declares that protocol in PSAboutScreenController's
-// @interface conformance list. The bridging header is #imported into the generated
-// header, so importing the MessageUI umbrella here makes MFMailComposeViewControllerDelegate
-// resolvable in every .mm that consumes PocketSword-Swift.h — Obj-C++ TUs do not
-// honour the generated header's `@import MessageUI;` (clang module-import is off
-// for c++0x).
-#import <WebKit/WebKit.h>  // system framework umbrella, same rationale as MessageUI
-// above. After Wave 4 (FINAL) the @objc(PSTabBarControllerDelegate) coordinator
-// conforms to WKNavigationDelegate and exposes -webView:decidePolicyForNavigationAction:
-// decisionHandler:, so the generated PocketSword-Swift.h now declares WKNavigationDelegate /
-// WKNavigationActionPolicy / WKWebView / WKNavigationAction at the class level. WebKit
-// previously reached the generated header transitively via PSWebView.h, but PSWebView
-// went Swift in Wave 4 and its header was deleted — so the umbrella must be imported
-// here directly. Obj-C++ TUs (PSSearchEngine.mm / SwordManager.mm / SwordModule.mm)
-// consume the generated header and do not honour its `@import WebKit;` under c++0x.
+//
+//  PocketSword-Bridging-Header.h
+//  PocketSword
+//
+//  The app target's window from Swift onto Objective-C. It is down to TWO project
+//  imports, and there is nothing else it could usefully import: as of
+//  SWORD_REMOVAL_PLAN.md Phase 5 the target is pure Swift apart from
+//  Classes/globals.h and the vendored externals/MBProgressHUD.
+//
+//  ── What this header used to be for, and why that is over ──────────────────
+//
+//  This was the load-bearing artifact of the whole Swift migration. A Swift bridging
+//  header is parsed in **Objective-C mode, not Obj-C++**, so it can never see a
+//  `sword::` type — and the entire interop scheme (clean Foundation-only `Sword*.h`
+//  facades with all C++ quarantined in sibling `Sword*+Cpp.h` headers imported only
+//  by `.mm` files) existed to keep C++ out of anything Swift imported. Every import
+//  below carried a comment explaining why it was safe; a wrong add re-tainted the
+//  whole Swift import graph.
+//
+//  None of that applies now. Phase 5 deleted externals/sword, the Sword*.{h,mm,+Cpp.h}
+//  bridge, VerseEnumerator, SwordModuleTextEntry, utils.h, externals/ZipArchive, and
+//  finally PSSearchEngine.{h,mm} (ported to Swift in step 8) — so there is no C++ in
+//  the target to keep out. Step 11 then removed the build settings that supported it:
+//  CLANG_CXX_LANGUAGE_STANDARD (`c++0x`), OTHER_LDFLAGS (`-licucore`),
+//  HEADER_SEARCH_PATHS (externals/sword/include + the long-dead externals/clucene),
+//  and SWIFT_OBJC_INTERFACE_HEADER_NAME.
+//
+//  That last one is why the two system-framework umbrellas below are also gone.
+//  They were not here for Swift — Swift imports UIKit/WebKit/MessageUI itself. They
+//  were here for the **generated** header, PocketSword-Swift.h: Obj-C++ TUs under
+//  `c++0x` do not honour its `@import Foundation;`-style module imports, so any
+//  system protocol an @objc Swift class conformed to (MFMailComposeViewControllerDelegate,
+//  WKNavigationDelegate) had to be resolvable by the time a `.mm` consumed the
+//  generated header, and pre-importing the umbrella here was how that happened. With
+//  no `.mm` left there is no consumer, so SWIFT_OBJC_INTERFACE_HEADER_NAME is unset
+//  and the generated header is no longer produced.
+//
+//  Do NOT re-add any of it. If a future change needs a Swift class visible to Obj-C,
+//  the thing to reconsider is whether that Obj-C should exist at all.
+//
+
+// globals.h — the Obj-C source of truth for the Defaults* / notification-name /
+// ShownTab / PSSearch* constants and enums. Swift needs it for the NS_ENUMs it still
+// uses by their bare cases (PSSearchType / PSSearchRange / ShownTab / ModuleType) and
+// for the ATTRTYPE_* / SW_OUTPUT_*_KEY / SWMOD_* literals that Phase 5 step 2 moved
+// here out of the (now deleted) SwordModule.h and SwordManager.h.
+//
+// Classes/AppConstants.swift mirrors every wire string in it BYTE-FOR-BYTE and the
+// two are dual-maintained — change a literal in one, change it in the other, or
+// persisted data breaks. The test bundle's bridging header imports this same file,
+// and it is the ONLY thing either of them imports from the project.
 #import "globals.h"
-// PocketSwordAppDelegate (+ main.m) was migrated to Swift in Wave 4 (FINAL) —
-// PocketSwordAppDelegate.swift is now the @main entry point and main.m is deleted.
-// Its former PocketSwordAppDelegate.{h,mm} are removed, so this line is gone. The
-// Swift @objc(PocketSwordAppDelegate) class lives in the same module; Swift callers
-// (PocketSwordSceneDelegate.swift) reference it directly, and the one Obj-C++ caller
-// (PSTabBarControllerDelegate.mm: [PocketSwordAppDelegate sharedAppDelegate].urlToOpen)
-// reaches it via the generated PocketSword-Swift.h. Do NOT re-import a
-// PocketSwordAppDelegate.h here.
-// MBProgressHUD.h is a vendored Foundation/UIKit/CoreGraphics-only Obj-C class
-// (externals/MBProgressHUD) — no C++. The Swift PSDictionaryViewController (Wave
-// 3) shows an MBProgressHUD while caching dictionary keys and conforms to
-// MBProgressHUDDelegate, so both the class and its delegate protocol must be
-// Swift-visible here. MBProgressHUD itself stays Obj-C.
+
+// MBProgressHUD.h — vendored Foundation/UIKit/CoreGraphics-only Obj-C (no C++), and
+// the last Objective-C source file in the target. Its one Swift consumer is
+// PSTabBarControllerDelegate.displayTitle:. PSDictionaryViewController used to show
+// one while caching dictionary keys and conformed to MBProgressHUDDelegate, but the
+// baked store made that cache dance unnecessary and Phase 5 step 1 deleted it — so
+// only the class, not the delegate protocol, is still needed.
 #import "MBProgressHUD.h"
-// PSWebView was migrated to Swift in Wave 4 (render-path cluster) — its former
-// PSWebView.{h,mm} are deleted. The Swift @objc(PSWebView) class and the @objc
-// PSWebViewDelegate protocol live in the same module, so Swift callers (the render
-// VC base PSModuleViewController.swift) reference them directly; the Obj-C++
-// coordinator (PSTabBarControllerDelegate.mm) reaches them via the generated
-// PocketSword-Swift.h. Do NOT re-import PSWebView.h here.
-// (PSTabBarControllerDelegate was migrated to Swift in Wave 4 (FINAL) — it is the
-// LAST app-layer file ported. Its former PSTabBarControllerDelegate.{h,mm} are
-// deleted. The Swift @objc(PSTabBarControllerDelegate) class — plus the
-// @objc(PSLoadingViewController) sidecar and the RestorePositionType / PollingType
-// enums that rode along in the old translation unit — live in the same module, so
-// Swift callers (PocketSwordSceneDelegate, PocketSwordAppDelegate, the render-path
-// VC base PSModuleViewController) reference them directly. No Obj-C++ caller of the
-// coordinator remains, so this line is gone. Do NOT re-import a
-// PSTabBarControllerDelegate.h here.)
-#import "SwordModuleTextEntry.h"
-#import "VerseEnumerator.h"
-// Sword*.h clean facades, sanitized in 0e (all C++ moved to per-class +Cpp.h
-// imported only by .mm files). Adding the two top-level facades transitively
-// pulls in the clean SwordModule.h / SwordVerseKey.h / SwordKey.h /
-// SwordDictionary.h chain — all now Foundation-only and Swift-importable.
-#import "SwordManager.h"
-#import "SwordModule.h"
-// SwordDictionary.h is a clean Foundation-only @objc facade (subclass of
-// SwordModule) after Wave 0e — its only leak (-initWithSWModule:swordManager:)
-// moved to SwordDictionary+Cpp.h, imported only by .mm files; the header now just
-// #imports the clean SwordModule.h facade. PSModuleController.h only @class-
-// forward-declares SwordDictionary (never #imports it), so without this the
-// generated Swift interface DROPS PSModuleController.primaryDictionary (its type
-// is an incomplete Obj-C class to Swift). The Wave-3 Swift PSModuleSelectorController
-// reads/compares primaryDictionary, so SwordDictionary must be a visible Swift type
-// here. SwordDictionary itself stays Obj-C++.
-#import "SwordDictionary.h"
-// SwordBook.h is a clean Foundation-only @objc facade (subclass of SwordModule)
-// after Wave 0e — its C++ (the versificationmgr include, the
-// const sword::VersificationMgr::Book * ivar, -initWithBook:) lives in
-// SwordBook+Cpp.h, imported only by .mm files. The Swift chapter/verse
-// reference selectors (PSChapterSelectorController / PSVerseSelectorController,
-// Wave 2) hold a `SwordBook *book` property, so SwordBook must be a visible
-// Swift type here.
-#import "SwordBook.h"
-// SSZipArchive.h is the clean Foundation-only @objc facade of the vendored
-// ZipArchive (externals/ZipArchive) — no C++ leaks. The Swift PSModuleController
-// (Wave 4) calls +[SSZipArchive unzipFileAtPath:toDestination:] in
-// -installModulesFromZip:..., so the class must be Swift-visible here. ZipArchive
-// itself stays Obj-C.
-#import "SSZipArchive.h"
-// (PSModuleController was migrated to Swift in Wave 4 — its former
-// PSModuleController.{h,mm} are deleted. The Swift @objc(PSModuleController) class
-// lives in the same module, so Swift callers reference it directly; every Obj-C++
-// caller (PSTabBarControllerDelegate.mm, the render cluster, PSLaunchViewController.mm,
-// PocketSwordAppDelegate.mm, SwordModule.mm) reaches it via the generated
-// PocketSword-Swift.h. The 9 sword:: seams it used were extracted to Foundation
-// @objc methods on SwordManager / SwordModule, so no C++ crosses into Swift.)
-// (PSDictionaryViewController was migrated to Swift in Wave 3 — its former
-// PSDictionaryViewController.h is deleted. The Swift class and the @objc
-// PSDictionaryViewControllerDelegate protocol live in the same module, so the
-// Swift PSDictionaryOverlayViewController references them directly; any Obj-C++
-// TU (PSTabBarControllerDelegate.mm) reaches them via the generated
-// PocketSword-Swift.h.)
-// (PSBookmarksNavigatorController was migrated to Swift in Wave 3 — its former
-// PSBookmarksNavigatorController.{h,mm} are deleted. The Swift @objc class lives
-// in the same module, so the Swift PSBookmarkAddViewController references it
-// directly; the Obj-C++ PSTabBarControllerDelegate.mm reaches it via the
-// generated PocketSword-Swift.h.)
-// PSSearchEngine.h is C++-clean (Foundation + globals.h + `@class SwordModule;`
-// `@class PSSearchResult;` — all the sword:: / sqlite3 / FTS5 index-build code
-// lives in PSSearchEngine.mm, which STAYS Obj-C++ permanently per the plan).
-// Its public query-side surface (+engineForModule:/-runQuery:.../-buildWithProgress:/
-// -indexIsFresh/-dropIndex) is all Foundation-typed, and every referenced type is
-// already Swift-visible: SwordModule (via SwordModule.h above), PSSearchResult (a
-// Swift @objc final class), and PSSearchType/PSSearchRange (NS_ENUM in globals.h).
-// Exposing it here lets the Wave-3 Swift query-side caller PSModuleSearchController
-// drive the engine directly; the engine itself is never rewritten in Swift.
-#import "PSSearchEngine.h"
-// (PSHistoryController was migrated to Swift in Wave 3 — its former
-// PSHistoryController.{h,mm} are deleted. The Swift @objc(PSHistoryController)
-// class lives in the same module, so Swift callers (PSModuleSearchController,
-// PSBookmarksNavigatorController) reference it directly; the Obj-C++ callers
-// (PocketSwordAppDelegate.mm, PSModuleViewController.mm, PSTabBarControllerDelegate.mm)
-// reach it via the generated PocketSword-Swift.h.)
-// (PSPreferencesFontTableViewController and PSPreferencesModuleSelectorTableViewController
-// were migrated to Swift in Wave 3; their members live in the respective .swift files,
-// visible to Swift callers in the same module and to any Obj-C TU via the generated
-// PocketSword-Swift.h. The Wave-3 prefs cluster — PSPreferencesController /
-// PSModulePreferencesController / PSBasePreferencesController — is also Swift.)

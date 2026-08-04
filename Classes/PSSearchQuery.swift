@@ -9,14 +9,23 @@
 //    * Strong's toggle (H0xxx / Hxxx equivalence under a lemmas: column filter)
 //    * Diacritic folding so accented input matches unaccented storage
 //
+//  Also, as of SWORD_REMOVAL_PLAN.md Phase 5 step 8, the two **index-side** text
+//  rules that used to be C-linkage free functions in PSSearchEngine.mm:
+//  `foldForIndex` (which was duplicated there byte-for-byte as `PSFoldForIndex`)
+//  and `cleanDisplayText` (which was `PSSearchCleanDisplayText`). Both are now
+//  single copies called by both halves — the index build in PSSearchEngine.swift
+//  and the query/display path here — so the drift those duplicates risked, and the
+//  test that existed to catch it, are gone.
+//
 //  Migrated from PSSearchQuery.{h,mm} (Swift migration PR 1.2). This file is a
 //  pure-Foundation value leaf — the former .mm contained NO sword:: usage. The
 //  diacritic-folding sequence (NFD -> drop combining-mark ranges -> NFC ->
-//  lowercase) is reproduced BYTE-FOR-BYTE because it must stay compatible with
-//  PSSearchEngine's stored `text_norm` FTS5 column (PSFoldForIndex); any drift
-//  silently corrupts search matching (Risk R1). Exposed to the still-Obj-C++
-//  callers (PSModuleSearchController.mm, SwordModule.mm) via @objc; the class
-//  method surface matches the former Obj-C class byte-for-byte.
+//  lowercase) is reproduced BYTE-FOR-BYTE from that .mm because it must stay
+//  compatible with the stored `text_norm` FTS5 column of every index already built
+//  on a user's device; any drift silently corrupts search matching (Risk R1). The
+//  `@objc` annotations are vestigial — nothing in Obj-C calls this any more — and
+//  are kept only because the selector names are part of no persisted format and
+//  removing them buys nothing.
 //
 
 import Foundation
@@ -24,10 +33,20 @@ import Foundation
 @objc(PSSearchQuery)
 final class PSSearchQuery: NSObject {
 
-    // MARK: - Folding (must match PSSearchEngine's PSFoldForIndex)
+    // MARK: - Folding
 
-    /// Fold diacritics for storage/query normalisation. Exposed so the engine's
-    /// stored `text_norm` column and the parser use the same rules.
+    /// Fold diacritics for storage/query normalisation. The engine's stored
+    /// `text_norm` column and the parser use the same rules **because they call this
+    /// same function** — as of SWORD_REMOVAL_PLAN.md Phase 5 step 8 this is the only
+    /// copy.
+    ///
+    /// It used to be one of two: the index half was the C-linkage `PSFoldForIndex` in
+    /// `PSSearchEngine.mm`, a byte-for-byte duplicate of this, and the two were held
+    /// in sync only by a test asserting they agreed. Step 8 ported the engine to
+    /// Swift, so `PSFoldForIndex` is deleted rather than translated and the
+    /// duplication both files warned about is over. The known-vector coverage that
+    /// cross-check carried lives on in
+    /// `PSSearchIndexParityTests.testFoldForIndexHandlesEveryTargetedRange`.
     @objc(foldForIndex:)
     class func foldForIndex(_ s: String) -> String {
         if s.isEmpty { return "" }
@@ -64,6 +83,67 @@ final class PSSearchQuery: NSObject {
         }
         let assembled = String(utf16CodeUnits: out, count: out.count)
         return assembled.precomposedStringWithCanonicalMapping.lowercased()
+    }
+
+    // MARK: - Display cleaning
+
+    // Compiled once. Swift's lazy `static let` gives the same once-only,
+    // thread-safe initialisation the Obj-C `dispatch_once` block did. Each is
+    // Optional and each use is guarded, exactly as the original guarded its
+    // `regularExpressionWithPattern:…error:NULL` results — the patterns are
+    // constants and always compile, so the guards never fire, but skipping a step
+    // beats trapping if one ever stops compiling.
+    private static let markerRe = try? NSRegularExpression(
+        pattern: "<[A-Z][A-Z0-9]*\\d[A-Z0-9-]*>", options: [])
+    private static let wsRe = try? NSRegularExpression(pattern: "\\s+", options: [])
+    private static let wsBeforePunctRe = try? NSRegularExpression(
+        pattern: "\\s+([,.;:!?\\)\\]])", options: [])
+
+    /// Strip SWORD's inline Strong's / morph markers (e.g. `<H0430>`, `<TH8799>`)
+    /// and the `" [] "` empty-tag marker from a `stripText()` result, collapsing any
+    /// whitespace the removal left behind — including a space stranded just before
+    /// punctuation (e.g. `"field ,"`).
+    ///
+    /// When SWORD's global Strong's-display option was ON, `stripText()` returned
+    /// verse text with markers interleaved inline — e.g. `"And God <H0430> divided
+    /// <H0996> <H0914> the light"`. Those are unreadable in search results, so any
+    /// `<[A-Z]+\d+[A-Z0-9-]*>` token goes (Strong's: H0430, G3056; morph: TH8799,
+    /// TG5707).
+    ///
+    /// **This is load-bearing beyond display.** `PSSearchEngine`'s build loop applies
+    /// it *before* the emptiness test, so it decides which rows exist in the index at
+    /// all, not merely how they read. The three regexes, their order, and the trim
+    /// are therefore reproduced exactly.
+    ///
+    /// Ported from the C-linkage `PSSearchCleanDisplayText` in `PSSearchEngine.mm` by
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 8. It lives here rather than on the engine
+    /// because its other caller is `PSModuleSearchController`'s lazy text fill, and
+    /// this class is already the home of the query/index text rules. It operates on
+    /// `NSMutableString` rather than `String` for the same reason
+    /// `PSChapterAssembler.highlightVerse` does: `NSRegularExpression`'s
+    /// replace-in-place API works in UTF-16 offsets, and redoing it over
+    /// `String.Index` would be a different algorithm.
+    class func cleanDisplayText(_ plain: String) -> String {
+        if plain.isEmpty { return "" }
+        let out = NSMutableString(string: plain)
+        if let markerRe {
+            markerRe.replaceMatches(in: out, options: [],
+                                    range: NSRange(location: 0, length: out.length),
+                                    withTemplate: " ")
+        }
+        out.replaceOccurrences(of: " [] ", with: " ", options: [],
+                               range: NSRange(location: 0, length: out.length))
+        if let wsRe {
+            wsRe.replaceMatches(in: out, options: [],
+                                range: NSRange(location: 0, length: out.length),
+                                withTemplate: " ")
+        }
+        if let wsBeforePunctRe {
+            wsBeforePunctRe.replaceMatches(in: out, options: [],
+                                           range: NSRange(location: 0, length: out.length),
+                                           withTemplate: "$1")
+        }
+        return (out as String).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     // MARK: - Tokenisation

@@ -88,8 +88,6 @@
 
 "None" = "None";
 "CloseButtonTitle" = "Close";
-"CacheDictionaryKeysTitle" = "Cache?";
-"CacheDictionaryKeysMsg" = "This Dictionary has yet to be initialised, do you wish to cache this Dictionary now?";
 "NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email Us";
@@ -152,6 +150,7 @@
 // new v1.3.0 strings:
 "PreferencesHeadingsTitle" = "Headings";
 "DictionarySearchPlaceholderText" = "Search Dictionary";
+"DictionaryNoneLoaded" = "No dictionary loaded";
 
 // new v1.3.2 strings:
 
@@ -239,7 +238,6 @@
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
-"PreferencesModuleSectionNote" = "Module-specific display preferences (such as Strong's Numbers, Red Letter mode, etc) are set for each individual module. To change them, select your module from the list at the bottom of this screen.";
 
 // new v1.4.2 strings:
 "HistoryClearButtonTitle" = "Clear All";
@@ -253,6 +251,15 @@
 
 // new v1.4.5 strings:
 "PreferencesGlossesTitle" = "Glosses";
+
+// Per-tab display-settings menu (the "textformat" button on the Bible /
+// Commentary tabs). These rows replaced the buried per-module preferences screen.
+"PreferencesMorphTagsTitle" = "Morphological Tags";
+"VoiceOverDisplaySettingsButton" = "Display Settings";
+
+// Restored: 5654f92 deleted this while its call site survived, so the search
+// screen rendered the raw key.
+"NoSearchIndexTitle" = "No Search Index";
 
 // Voice reference
 "VoiceRefListening" = "Listening…";

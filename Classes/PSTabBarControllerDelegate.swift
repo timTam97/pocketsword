@@ -80,8 +80,7 @@ final class PSTabBarControllerDelegate: NSObject,
                                         PSModuleSearchControllerDelegate,
                                         UIPopoverPresentationControllerDelegate,
                                         UIAdaptivePresentationControllerDelegate,
-                                        WKNavigationDelegate,
-                                        PSDictionaryViewControllerDelegate {
+                                        WKNavigationDelegate {
 
     // Tab bar
     @objc var tabBarController: UITabBarController!
@@ -103,8 +102,6 @@ final class PSTabBarControllerDelegate: NSObject,
 
     // MultiList (history + search)
     private var multiListController: UITabBarController?
-
-    private var moduleSelectorViewController: PSModuleSelectorController?
 
     // Search tab
     @objc var savedSearchHistoryItem: PSSearchHistoryItem?
@@ -150,7 +147,6 @@ final class PSTabBarControllerDelegate: NSObject,
 
         // add the Dictionary Tab.
         let dictionaryViewController = PSDictionaryViewController(style: .grouped)
-        dictionaryViewController.delegate = self
         let dictionaryTab = UINavigationController(rootViewController: dictionaryViewController)
         let dTBI = UITabBarItem(title: NSLocalizedString("TabBarTitleDictionary", comment: "Dictionary"),
                                 image: UIImage(named: "dictionary.png"), tag: 99)
@@ -214,7 +210,6 @@ final class PSTabBarControllerDelegate: NSObject,
         nc.addObserver(self, selector: #selector(redisplayCommentaryChapter), name: .redisplayPrimaryCommentary, object: nil)
 
         nc.addObserver(self, selector: #selector(toggleMultiListNoArg), name: .toggleMultiList, object: nil)
-        nc.addObserver(self, selector: #selector(toggleModulesList(_:)), name: .toggleModuleList, object: nil)
         nc.addObserver(self, selector: #selector(toggleNavigation), name: .toggleNavigation, object: nil)
 
         nc.addObserver(self, selector: #selector(hideInfo), name: .hideInfoPane, object: nil)
@@ -354,26 +349,8 @@ final class PSTabBarControllerDelegate: NSObject,
         }
     }
 
-    @objc(toggleModulesList:)
-    func toggleModulesList(_ notification: Notification?) {
-        if let notification = notification {
-            toggleModulesList(animated: true, with: notification.object as? SwordModule, fromButton: nil)
-        } else {
-            toggleModulesList(animated: true, with: nil, fromButton: nil)
-        }
-    }
-
-    // PSDictionaryViewControllerDelegate (selector pinned to -toggleModulesListFromButton:).
-    @objc(toggleModulesListFromButton:)
-    func toggleModulesList(fromButton sender: Any?) {
-        toggleModulesList(animated: true, with: nil, fromButton: sender)
-    }
-
     @objc(presentationControllerDidDismiss:)
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        if moduleSelectorViewController != nil {
-            moduleSelectorViewController = nil
-        }
         if refNavigationController != nil {
             refSelectorController = nil
             refNavigationController = nil
@@ -381,46 +358,6 @@ final class PSTabBarControllerDelegate: NSObject,
         if let infoPopup = infoPopupController,
            presentationController.presentedViewController == infoPopup {
             infoPopupController = nil
-        }
-    }
-
-    @objc(toggleModulesListAnimated:withModule:fromButton:)
-    func toggleModulesList(animated: Bool, with swordModule: SwordModule?, fromButton sender: Any?) {
-        let iPad = PSResizing.iPad()
-        if moduleSelectorViewController != nil || (tabBarController.presentedViewController != nil) {
-            tabBarController.dismiss(animated: animated, completion: nil)
-            moduleSelectorViewController = nil
-        } else {
-            let modSelector = PSModuleSelectorController(nibName: nil, bundle: nil)
-            moduleSelectorViewController = modSelector
-            let modSelectorNavController = UINavigationController(rootViewController: modSelector)
-
-            // set the module selector to use the correct module type.
-            if let commWeb = commentaryTabController?.webView,
-               let selView = tabBarController.selectedViewController?.view,
-               commWeb.isDescendant(of: selView) {
-                modSelector.listType = .CommentaryTab
-            } else {
-                modSelector.listType = .DictionaryTab
-            }
-
-            if iPad {
-                modSelectorNavController.modalPresentationStyle = .popover
-                modSelectorNavController.preferredContentSize = modSelector.preferredContentSize
-                if let sender = sender as? UIBarButtonItem {
-                    modSelectorNavController.popoverPresentationController?.barButtonItem = sender
-                } else {
-                    dlog("We should only be calling toggleModulesList with a sender now!")
-                    let theSpot = CGRect(x: 50, y: (PSResizing.mainScreenBounds().size.width - 50), width: 10, height: 10)
-                    modSelectorNavController.popoverPresentationController?.sourceView = tabBarController.view
-                    modSelectorNavController.popoverPresentationController?.sourceRect = theSpot
-                }
-                modSelectorNavController.popoverPresentationController?.permittedArrowDirections = .any
-                modSelectorNavController.popoverPresentationController?.delegate = self
-                tabBarController.present(modSelectorNavController, animated: animated, completion: nil)
-            } else {
-                tabBarController.present(modSelectorNavController, animated: animated, completion: nil)
-            }
         }
     }
 
@@ -435,7 +372,7 @@ final class PSTabBarControllerDelegate: NSObject,
     @objc(toggleVoiceRef:)
     func toggleVoiceRef(_ sender: Any?) {
         guard PSFeatureFlags.voiceReferenceEnabled,
-              PSModuleController.default()?.primaryBible != nil,
+              PSModuleController.default()?.primaryBibleName != nil,
               tabBarController.presentedViewController == nil else {
             return
         }
@@ -473,7 +410,7 @@ final class PSTabBarControllerDelegate: NSObject,
                let selView = tabBarController.selectedViewController?.view,
                bibleWeb.isDescendant(of: selView) {
                 // bible tab
-                if PSModuleController.default()?.primaryBible == nil {
+                if PSModuleController.default()?.primaryBibleName == nil {
                     // no Bible selected, so ignore...
                     return
                 }
@@ -502,7 +439,7 @@ final class PSTabBarControllerDelegate: NSObject,
                       let selView = tabBarController.selectedViewController?.view,
                       commWeb.isDescendant(of: selView) {
                 // commentary tab
-                if PSModuleController.default()?.primaryCommentary == nil {
+                if PSModuleController.default()?.primaryCommentaryName == nil {
                     // no Commentary selected, so ignore...
                     return
                 }
@@ -544,7 +481,18 @@ final class PSTabBarControllerDelegate: NSObject,
 
     @objc(updateViewWithSelectedBookName:chapter:verse:)
     func updateViewWithSelectedBookName(_ bookNameString: String?, chapter: Int, verse: Int) {
-        let bookName = SwordManager.translateBookName(bookNameString)
+        // SWORD_REMOVAL_PLAN.md Phase 4: passthrough, where this used to call
+        // +[SwordManager translateBookName:]. That method's own comment claimed to
+        // "translate back to English", but it never did: there is no `en` locale
+        // conf, and the only English locale — SWLocale(0), swlocale.cpp:63-69 — is
+        // constructed with SWConfig(0) and has no [Text] section, so `translate`
+        // returns its input. Identity for all 66 books, asserted in
+        // PSRefSemanticsTests.testTranslateBookNameIsIdentityForAll66.
+        //
+        // The input is already the form the app wants: the selector VCs put
+        // `PSVersificationBook.name` in the notification dict, and lastRef is built
+        // straight from it.
+        let bookName = bookNameString
         let verseString = "\(verse)"
         let ref = (bookName ?? "") + " \(chapter)"
         let moduleController = PSModuleController.default()
@@ -556,10 +504,10 @@ final class PSTabBarControllerDelegate: NSObject,
             bibleTabController?.webView?.stringByEvaluatingJavaScriptFromString(javascript)
             commentaryTabController?.scrollToVerse(verse)
             commentaryTabController?.webView?.stringByEvaluatingJavaScriptFromString(javascript)
-            if moduleController?.primaryBible != nil {
+            if moduleController?.primaryBibleName != nil {
                 setTabTitle("\(ref):\(verseString)", ofTab: .BibleTab)
             }
-            if moduleController?.primaryCommentary != nil {
+            if moduleController?.primaryCommentaryName != nil {
                 setTabTitle("\(ref):\(verseString)", ofTab: .CommentaryTab)
             }
         } else {
@@ -695,11 +643,11 @@ final class PSTabBarControllerDelegate: NSObject,
         }
 
         var titleString = "\(PSModuleController.createRefString(ref) ?? ""):\(versePosition ?? "1")"
-        if PSModuleController.default()?.primaryBible != nil {
+        if PSModuleController.default()?.primaryBibleName != nil {
             setTabTitle(titleString, ofTab: .BibleTab)
         }
         titleString = "\(PSModuleController.createRefString(ref) ?? ""):\(cVersePosition)"
-        if PSModuleController.default()?.primaryCommentary != nil {
+        if PSModuleController.default()?.primaryCommentaryName != nil {
             setTabTitle(titleString, ofTab: .CommentaryTab)
         }
 
@@ -867,31 +815,45 @@ final class PSTabBarControllerDelegate: NSObject,
             // it's a Bible ref or dictionary entry to show.
             //
             let mod = rData[ATTRTYPE_MODULE] as? String
+            // The three-way routing predicate now lives in PSRefLinkRouter as a
+            // pure function, so it is assertable without the simulator — Phase 4
+            // step 8's deletion of the `scriptRef` branch rests on an assertion
+            // over all 14,989 baked lexicon links routing to `.dictionary`. Same
+            // decision, same inputs, no behaviour change.
             var isABibleRef = false
             if let mod = mod {
-                let modToUse = SwordManager.default()?.module(withName: mod)
-                if modToUse == nil || modToUse?.type == bible || modToUse?.type == commentary {
+                // The module's type comes from content_meta as of Phase 5 step 5 —
+                // which is what PSRefLinkRouter's own test already used. A nil here
+                // means "not a module we ship", and the router's documented
+                // `ret = bible` default sends that down the bibleRef arm, exactly as
+                // an uninstalled module did before.
+                let store = PSContentStore.shared
+                let moduleType = store?.moduleMeta(mod, key: "type")
+                if PSRefLinkRouter.destination(forModuleName: mod,
+                                               moduleType: moduleType) == .bibleRef {
                     isABibleRef = true
                 } else {
-                    // Should be a dictionary entry:
-                    let swordDictionary = SwordManager.default()?.module(withName: mod) as? SwordDictionary
+                    // Should be a dictionary entry.
                     var strongs = false
-                    if let swordDictionary = swordDictionary {
-                        entry = swordDictionary.entry(forKey: rData[ATTRTYPE_VALUE] as? String)
+                    if let store = store {
+                        entry = PSContentReader.entry(module: mod,
+                                                      key: rData[ATTRTYPE_VALUE] as? String)
 
                         var strongsSearchTerm = ""
-                        if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_GREEKDEF) && swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
+                        let hasGreekDef = store.moduleHasFeature(mod, SWMOD_CONF_FEATURE_GREEKDEF)
+                        let hasHebrewDef = store.moduleHasFeature(mod, SWMOD_CONF_FEATURE_HEBREWDEF)
+                        if hasGreekDef && hasHebrewDef {
                             // should already have a prefix
                             strongsSearchTerm = (rData[ATTRTYPE_VALUE] as? String) ?? ""
                             strongs = true
-                        } else if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_GREEKDEF) {
+                        } else if hasGreekDef {
                             let greek = NSMutableString(string: (rData[ATTRTYPE_VALUE] as? String) ?? "")
                             while greek.length > 0 && greek.character(at: 0) == unichar(UInt8(ascii: "0")) {
                                 greek.deleteCharacters(in: NSRange(location: 0, length: 1))
                             }
                             strongsSearchTerm = "G\(greek)"
                             strongs = true
-                        } else if swordDictionary.hasFeature(SWMOD_CONF_FEATURE_HEBREWDEF) {
+                        } else if hasHebrewDef {
                             let hebrew = NSMutableString(string: (rData[ATTRTYPE_VALUE] as? String) ?? "")
                             while hebrew.length > 0 && hebrew.character(at: 0) == unichar(UInt8(ascii: "0")) {
                                 hebrew.deleteCharacters(in: NSRange(location: 0, length: 1))
@@ -932,54 +894,49 @@ final class PSTabBarControllerDelegate: NSObject,
             }
 
             if isABibleRef {
-                // handle ref:
-                let modToUse: SwordModule?
+                // The scriptRef EXPANSION is gone — SWORD_REMOVAL_PLAN.md Phase 4
+                // step 8. This arm used to call
+                // -attributeValueForEntryData:cleanFeed: to turn a scriptRef into a
+                // list of Bible verses, and nothing in the shipped content can reach
+                // it: the only sword:// links baked anywhere are 14,989
+                // lexicon->lexicon ones, and every one routes to the DICTIONARY arm
+                // above (asserted over all 14,989 by
+                // PSRefSemanticsTests.testEveryBakedSwordLinkRoutesToTheDictionaryArm
+                // through the PSRefLinkRouter seam). The app's own bible-ref links
+                // carry the `bible` scheme and are intercepted at the top of this
+                // method, well before here.
+                //
+                // What is KEPT is the not-installed placeholder, which is the one
+                // user-visible outcome this arm still has: a link naming a module the
+                // user does not have. Everything else falls through to
+                // decisionHandler(.allow), exactly as it already did whenever the
+                // expansion produced nothing.
+                // Whether the named module is one we ship, from content_meta. An
+                // empty/absent module name means "the primary Bible", which always
+                // exists — so only a NAMED, unknown module produces the placeholder.
+                let moduleIsKnown: Bool
                 if let mod = mod, mod != "" {
-                    modToUse = SwordManager.default()?.module(withName: mod)
+                    moduleIsKnown = PSContentStore.shared?.moduleMeta(mod, key: "type") != nil
                 } else {
-                    modToUse = PSModuleController.default()?.primaryBible
+                    moduleIsKnown = PSModuleController.default()?.primaryBibleName != nil
                 }
-                if let mod = mod, modToUse == nil {
+                if let mod = mod, !moduleIsKnown {
                     entry = "<p style=\"color:grey;text-align:center;font-style:italic;\">\(mod) \(NSLocalizedString("ModuleNotInstalled", comment: "is not installed."))</p>"
                     entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: nil)
-                } else {
-                    let attributeValue = modToUse?.attributeValue(forEntryData: rData, cleanFeed: false)
-                    if let str = attributeValue as? String {
-                        entry = PSModuleController.createInfoHTMLString(str, usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-                    } else if let array = attributeValue as? [[AnyHashable: Any]] {
-                        let tmpEntry = NSMutableString(string: "")
-                        for dict in array {
-                            let curRef = PSModuleController.createRefString(dict[SW_OUTPUT_REF_KEY] as? String) ?? ""
-                            tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef)
-                            tmpEntry.appendFormat("%@<br />", (dict[SW_OUTPUT_TEXT_KEY] as? String) ?? "")
-                        }
-                        if (tmpEntry as String) != "" {
-                            // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                            entry = (tmpEntry as String).replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                            entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: modToUse?.name)
-                        }
-                    }
                 }
             }
 
         } else if let rData = rData, (rData[ATTRTYPE_ACTION] as? String) == "showNote" {
             if (rData[ATTRTYPE_TYPE] as? String) == "n" { // footnote
-                entry = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData) as? String
-                entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-            } else if (rData[ATTRTYPE_TYPE] as? String) == "x" { // x-reference
-                let array = PSModuleController.default()?.primaryBible?.attributeValue(forEntryData: rData) as? [[AnyHashable: Any]]
-                let tmpEntry = NSMutableString(string: "")
-                for dict in (array ?? []) {
-                    let curRef = PSModuleController.createRefString(dict[SW_OUTPUT_REF_KEY] as? String) ?? ""
-                    tmpEntry.appendFormat("<b><a href=\"bible:///%@\">%@</a>:</b> ", curRef, curRef)
-                    tmpEntry.appendFormat("%@<br />", (dict[SW_OUTPUT_TEXT_KEY] as? String) ?? "")
-                }
-                if (tmpEntry as String) != "" {
-                    // "[ ]" appear in the TEXT_KEYs where notes should appear, so we remove them here!
-                    entry = (tmpEntry as String).replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-                    entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: PSModuleController.default()?.primaryBible?.name)
-                }
+                let bible = PSModuleController.default()?.primaryBibleName
+                entry = PSContentReader.footnoteBody(module: bible, data: rData)
+                entry = PSModuleController.createInfoHTMLString(entry, usingModuleForPreferences: bible)
             }
+            // The `x` (cross-reference) arm is GONE too. No `x` anchor is ever
+            // emitted for the shipped content, AND all 6,959 notes are type='study'
+            // with an empty refList — so the branch that parsed that refList had
+            // nothing to act on either way. Both re-derived from the store by
+            // PSRefSemanticsTests.
         }
 
         if let popupContent = popupContent {

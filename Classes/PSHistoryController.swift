@@ -132,15 +132,15 @@ class PSHistoryController: UITableViewController {
 
         if tabForHistory == .BibleTab {
             verse = defaults.string(forKey: Defaults.bibleVersePosition)
-            if let primaryBible = PSModuleController.default().primaryBible {
+            if let primaryBible = PSModuleController.default().primaryBibleName {
                 valid = true
-                mod = primaryBible.name
+                mod = primaryBible
             }
         } else if tabForHistory == .CommentaryTab {
             verse = defaults.string(forKey: Defaults.commentaryVersePosition)
-            if let primaryCommentary = PSModuleController.default().primaryCommentary {
+            if let primaryCommentary = PSModuleController.default().primaryCommentaryName {
                 valid = true
-                mod = primaryCommentary.name
+                mod = primaryCommentary
             }
         } else {
             alog("\nWe don't know which tab we're on!  :(")
@@ -297,10 +297,13 @@ class PSHistoryController: UITableViewController {
         var mod: String?
         if rowArray.count > 2 {
             mod = rowArray[2] as? String
-            let swordModule = PSModuleController.default().swordManager?.module(withName: mod)
-            if swordModule == nil {
+            // The module's type from content_meta (Phase 5 step 5). A nil type means
+            // the history row names a module we do not ship — same fallback to
+            // lastBible as when SwordManager could not find it.
+            let type = mod.flatMap { PSContentStore.shared?.moduleMeta($0, key: "type") }
+            if type == nil {
                 mod = UserDefaults.standard.string(forKey: Defaults.lastBible)
-            } else if let swordModule = swordModule, swordModule.type == commentary {
+            } else if type == "Commentaries" {
                 moduleIsCommentary = true
             }
             if moduleIsCommentary {

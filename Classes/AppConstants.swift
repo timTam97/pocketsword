@@ -37,28 +37,63 @@ enum Defaults {
     static let lastSearchRange             = "DefaultsLastSearchRange"
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
+    static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"
+    static let globalFontOnly              = "DefaultsGlobalFontOnly"
+    static let lastRefValidated            = "DefaultsLastRefValidated"
+    static let dictKeyCaseFixed            = "DefaultsDictKeyCaseFixed"
+    /// One-shot: delete the Documents/ trees the SWORD era left behind
+    /// (mods.d / modules / locales.d / unused) plus <Caches>/InstallMgr.
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 9. Swift-only — no globals.h macro,
+    /// because no Obj-C reads it.
+    static let swordRetired = "DefaultsSwordRetired"
 
     static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
     static let commentaryVersePosition     = "commentaryVersePosition" // macro DefaultsCommentaryVersePosition
 
     // Default modules
+    //
+    // RETIRED: these "the user deleted this bundled module, don't re-seed it" flags
+    // are no longer written — there is no removal UI, so a set flag could never be
+    // cleared and would suppress a bundled module forever. The `moduleChoiceRetired`
+    // migration clears any that are already set. Kept so the names are not reused.
     static let kjvRemoved                  = "DefaultsKJVRemoved"
     static let mhccRemoved                 = "DefaultsMHCCRemoved"
     static let strongsRealHebrewRemoved    = "DefaultsStrongsRealHebrewRemoved"
     static let robinsonRemoved             = "DefaultsRobinsonRemoved"
     static let strongsRealGreekRemoved     = "DefaultsStrongsRealGreekRemoved"
 
+    /// All five retired `Defaults*Removed` flags, for the one-shot migration.
+    static let bundledModuleRemovedFlags = [kjvRemoved, mhccRemoved,
+                                           strongsRealHebrewRemoved,
+                                           robinsonRemoved,
+                                           strongsRealGreekRemoved]
+
     // Preferences - general
+    //
+    // RETIRED, NOT REUSABLE: the three lexicon-role keys are no longer read or
+    // written — the roles are hardcoded (see `BundledModules`). A persisted value can
+    // legitimately be the localized string "None" (written by the old
+    // removeModule), so honouring a stale one would break Strong's / morph lookups.
     static let strongsHebrewModule         = "DefaultsStrongsHebrewModule"
     static let strongsGreekModule          = "DefaultsStrongsGreekModule"
     static let morphHebrewModule           = "DefaultsMorphHebrewModule"
     static let morphGreekModule            = "DefaultsMorphGreekModule"
+
+    /// The four retired lexicon-role keys, for the one-shot migration.
+    static let retiredLexiconKeys = [strongsHebrewModule, strongsGreekModule,
+                                     morphHebrewModule, morphGreekModule]
     static let fullscreenModePreference    = "fullscreenModePreference"      // macro DefaultsFullscreenModePreference
     static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
-    static let moduleMaintainerModePreference = "moduleMaintainerModePreference" // macro DefaultsModuleMaintainerModePreference
 
     // Feature flags (see PSFeatureFlags) - absent means off
     static let voiceRefEnabledPreference   = "voiceRefEnabled"          // macro DefaultsVoiceRefEnabledPreference
+    // **RETIRED** (Phase 5 step 1). Was the Phase-3 kill switch for reading through
+    // PSContentReader instead of the SWORD engine. The engine is gone, so the flag
+    // is gone with it; the key stays declared and unread so it is not reused, and a
+    // device still holding `swiftContentReader = NO` from the Phase-3/4 era is
+    // unaffected because nothing consults it. Swift-only: there was never a
+    // globals.h macro, because no Obj-C read it.
+    static let swiftContentReaderPreference = "swiftContentReader"
 
     // from createHTMLString:
     static let fontNamePreference          = "fontNamePreference"
@@ -79,6 +114,32 @@ enum Defaults {
     static let glossesPreference           = "glossesPreference"
 
     static let rotationLockPosition        = "rotationLockedPosition"        // macro ROTATION_LOCK_POSITION
+}
+
+// MARK: - Bundled modules
+//
+// The app ships exactly these five modules (unpacked from the zips in Resources/
+// on first launch) and there is no UI to add, remove, or pick a different one.
+// The three lexicon ROLES are fixed by their .conf features and are NOT
+// interchangeable: StrongsRealGreek is `Feature=GreekDef`, StrongsRealHebrew is
+// `HebrewDef`, Robinson is `GreekParse`.
+//
+// These replace the former DefaultsStrongsGreekModule / DefaultsStrongsHebrew
+// Module / DefaultsMorphGreekModule persisted keys, which are retired (see the
+// note next to their declarations above).
+
+enum BundledModules {
+    static let bible = "KJV"
+    static let commentary = "MHCC"
+    static let strongsGreek = "StrongsRealGreek"
+    static let strongsHebrew = "StrongsRealHebrew"
+    static let morphGreek = "Robinson"
+
+    /// The three fixed-role lexicons, in Dictionary-tab menu order.
+    static let lexicons = [strongsGreek, strongsHebrew, morphGreek]
+
+    /// All five bundled modules.
+    static let all = [bible, commentary, strongsGreek, strongsHebrew, morphGreek]
 }
 
 // MARK: - Font names + misc string / int constants
@@ -103,17 +164,16 @@ enum AppConstants {
 // MARK: - Notification names
 //
 // rawValue MUST equal the existing @"..." literal in globals.h so that Obj-C and
-// Swift observers/posters interoperate during the mixed phase. NOTE the ONE
-// wire-string mismatch: moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged"
-// (drops the "Notification" prefix). All other 24 match their macro name.
+// Swift observers/posters interoperate during the mixed phase. All of these match
+// their macro name. (The one former wire-string mismatch,
+// moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged", went away with
+// Module Maintainer Mode.)
 
 extension Notification.Name {
-    static let modulesChanged               = Notification.Name("NotificationModulesChanged")
     static let bibleSwipeRight              = Notification.Name("NotificationBibleSwipeRight")
     static let bibleSwipeLeft               = Notification.Name("NotificationBibleSwipeLeft")
     static let commentarySwipeRight         = Notification.Name("NotificationCommentarySwipeRight")
     static let commentarySwipeLeft          = Notification.Name("NotificationCommentarySwipeLeft")
-    static let moduleMaintainerModeChanged  = Notification.Name("ModuleMaintainerModeChanged") // MISMATCH (no "Notification" prefix)
 
     static let refSelectorResetBooks        = Notification.Name("NotificationRefSelectorResetBooks")
     static let newPrimaryBible              = Notification.Name("NotificationNewPrimaryBible")
@@ -124,12 +184,10 @@ extension Notification.Name {
 
     static let redisplayPrimaryBible        = Notification.Name("NotificationRedisplayPrimaryBible")
     static let redisplayPrimaryCommentary   = Notification.Name("NotificationRedisplayPrimaryCommentary")
-    static let primaryDictionaryChanged     = Notification.Name("NotificationPrimaryDictionaryChanged")
     static let bookmarksChanged             = Notification.Name("NotificationBookmarksChanged")
     static let historyChanged               = Notification.Name("NotificationHistoryChanged")
 
     static let toggleMultiList              = Notification.Name("NotificationToggleMultiList")
-    static let toggleModuleList             = Notification.Name("NotificationToggleModuleList")
     static let toggleNavigation             = Notification.Name("NotificationToggleNavigation")
 
     static let hideInfoPane                 = Notification.Name("NotificationHideInfoPane")
@@ -142,12 +200,6 @@ extension Notification.Name {
     static let addBookmarkInFolder          = Notification.Name("NotificationAddBookmarkInFolder")
 
     static let updateSelectedReference      = Notification.Name("NotificationUpdateSelectedReference")
-}
-
-/// Swift analogue of the `SendNotifyModulesChanged(X)` statement macro
-/// (globals.h:141 — posts NotificationModulesChanged with the given object).
-func sendNotifyModulesChanged(_ object: Any? = nil) {
-    NotificationCenter.default.post(name: .modulesChanged, object: object)
 }
 
 // MARK: - Per-module preference accessors
@@ -233,7 +285,34 @@ enum AppPaths {
 
     /// DEFAULT_MMM_PATH — Temporary dir, path-component "MMM" (NO trailing slash)
     static var mmmPath: String { (NSTemporaryDirectory() as NSString).appendingPathComponent("MMM") }
+
+    /// The FTS search index for a module: `<Caches>/search/<module>.db`.
+    ///
+    /// SWORD_REMOVAL_PLAN.md Phase 5 step 6. The index used to live at
+    /// `<AbsoluteDataPath>/search/fts.db`, a path that came out of SWORD's own conf
+    /// munging (`swmgr.cpp:1110` strips the trailing component for RawLD / RawLD4 /
+    /// zLD) and therefore cannot survive the module zips going away. Derived data
+    /// belongs in Caches regardless: it is rebuildable, and Caches is the directory
+    /// the OS is allowed to purge.
+    ///
+    /// Keyed by module **name** rather than one file per directory, so two modules
+    /// can share the directory — only KJV and MHCC are ever indexed, but nothing
+    /// here assumes that.
+    static func searchIndexPath(for module: String) -> String {
+        (searchIndexDirectory as NSString).appendingPathComponent("\(module).db")
+    }
+
+    /// The directory holding every module's search index.
+    static var searchIndexDirectory: String {
+        (cachesDirectory() as NSString).appendingPathComponent("search")
+    }
 }
+
+// The `@objc(PSPaths)` shim that used to sit here is DELETED (SWORD_REMOVAL_PLAN.md
+// Phase 5 step 8). `AppPaths` is an `enum` namespace and `@objc` cannot be applied
+// to an enum's members, so the two search-index paths were re-exposed on a class for
+// the one commit-range where `PSSearchEngine` was still Obj-C. The engine is Swift
+// now and calls `AppPaths` directly.
 
 // MARK: - Logging shims
 //

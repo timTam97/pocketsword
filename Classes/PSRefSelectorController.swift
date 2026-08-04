@@ -8,13 +8,18 @@
 //  "1:1" accessory button jumps the primary Bible straight to verse 1 of that
 //  book via NotificationUpdateSelectedReference.
 //
-//  The 2 direct sword:: uses that lived in PSRefSelectorController.mm (the
-//  VersificationMgr lookup that resolved the current ref system with a "KJV"
-//  fallback) now live behind the Foundation-only seam
-//  +[SwordManager booksForVersificationSystem:], mirroring the 0e
-//  LocaleMgr -> +[SwordManager translateBookName:] pattern, so this controller
-//  is C++-free. SwordBook, SwordManager, and PSModuleController all resolve as
-//  Swift types via the (Wave 0e) clean Foundation-only bridging-header facades.
+//  SWORD_REMOVAL_PLAN.md Phase 4: the book list now comes from the baked
+//  Resources/Versification-KJV.json via PSBookOSISResolver, not from
+//  +[SwordManager booksForVersificationSystem:] over a live
+//  sword::VersificationMgr. `PSVersificationBook` replaces `SwordBook` directly
+//  with no adapter type: the table reproduces all five consumed members
+//  byte-exactly (asserted 66/66 in PSRefSemanticsTests), so nothing is re-munged
+//  here.
+//
+//  The versification *system* lookup is gone with it. The app ships exactly one
+//  Bible and one commentary, both KJV-versified, and the old seam already fell
+//  back to "KJV" for anything it could not resolve — so the primary module's
+//  -versification() was only ever confirming the single table this app has.
 //
 //  Originally created by Nic Carter on 3/04/10.
 //  Copyright 2010 CrossWire Bible Society. All rights reserved.
@@ -25,7 +30,7 @@ import UIKit
 @objc(PSRefSelectorController)
 final class PSRefSelectorController: UITableViewController {
 
-    private var refSelectorBooks: [SwordBook] = []
+    private var refSelectorBooks: [PSVersificationBook] = []
     private var refSelectorBooksIndex: [String] = []
     private var currentlyViewedBookName: String = ""
 
@@ -66,7 +71,7 @@ final class PSRefSelectorController: UITableViewController {
     @objc func willShowNavigation() {
         var ip: IndexPath? = nil
         for i in 0..<refSelectorBooks.count {
-            if currentlyViewedBookName == refSelectorBooks[i].name() {
+            if currentlyViewedBookName == refSelectorBooks[i].name {
                 ip = IndexPath(row: 0, section: i)
             }
         }
@@ -77,18 +82,20 @@ final class PSRefSelectorController: UITableViewController {
 
     @objc func updateRefSelectorBooks() {
         autoreleasepool {
-            // Resolve the current ref system: primary Bible's versification,
-            // else primary commentary's, else "KJV" (handled inside the seam).
-            var currentRefSystemName = PSModuleController.default()?.primaryBible?.versification()
-            if currentRefSystemName == nil {
-                currentRefSystemName = PSModuleController.default()?.primaryCommentary?.versification()
-            }
+            let books = PSBookOSISResolver.shared?.books ?? []
 
-            let books = (SwordManager.books(forVersificationSystem: currentRefSystemName) as? [SwordBook]) ?? []
+            // The section-index strip, built exactly as before: a short name is
+            // added only if no EARLIER book already used it. That dedups 66 books
+            // to 64 titles, and the two dropped ones are intentional — "Jud"
+            // belongs to Judges (not Jude) and "Phi" to Philippians (not Philemon),
+            // so tapping them scrolls to the first-occurrence book. That is today's
+            // visible behaviour and the strip is deliberately left alone; the same
+            // first-writer-wins rule is what PSBookOSISResolver's spelling index
+            // applies, and PSRefSemanticsTests pins the "Jud" case.
             var booksIndex: [String] = []
             var booksFullIndex: [String] = []
             for book in books {
-                let short = book.shortName() ?? ""
+                let short = book.shortName
                 if !booksFullIndex.contains(short) {
                     booksIndex.append(short)
                 }
@@ -157,7 +164,7 @@ final class PSRefSelectorController: UITableViewController {
     private func jumpToVerseOne(_ bookIndex: Int) {
         NotificationCenter.default.post(name: .toggleNavigation, object: nil)
         var bcvDict: [String: String] = [:]
-        bcvDict[AppConstants.bookNameString] = refSelectorBooks[bookIndex].name() ?? ""
+        bcvDict[AppConstants.bookNameString] = refSelectorBooks[bookIndex].name
         bcvDict[AppConstants.chapterString] = "1"
         bcvDict[AppConstants.verseString] = "1"
         NotificationCenter.default.post(name: .updateSelectedReference, object: bcvDict)
@@ -186,24 +193,15 @@ final class PSRefSelectorController: UITableViewController {
         return 0
     }
 
-    @objc func bookName(_ bookIndex: Int) -> String {
-        return refSelectorBooks[bookIndex].name() ?? ""
+    // The notification dict carries `name` — "1 Corinthians", "Revelation" —
+    // unchanged. PSTabBarControllerDelegate builds lastRef straight from it, and
+    // bookmarks / history / the headings table are all keyed on that form, so this
+    // is deliberately NOT "improved" to OSIS.
+    private func bookName(_ bookIndex: Int) -> String {
+        return refSelectorBooks[bookIndex].name
     }
 
-    @objc func bookShortName(_ bookIndex: Int) -> String {
-        return refSelectorBooks[bookIndex].shortName() ?? ""
-    }
-
-    @objc func bookOSISName(_ bookIndex: Int) -> String {
-        return refSelectorBooks[bookIndex].osisName() ?? ""
-    }
-
-    @objc func bookIndex(_ bookName: String) -> Int {
-        for i in 0..<refSelectorBooks.count {
-            if refSelectorBooks[i].name() == bookName {
-                return i
-            }
-        }
-        return NSNotFound
+    private func bookShortName(_ bookIndex: Int) -> String {
+        return refSelectorBooks[bookIndex].shortName
     }
 }

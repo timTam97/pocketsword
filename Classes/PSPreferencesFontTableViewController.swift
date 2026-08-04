@@ -32,7 +32,6 @@ final class PSPreferencesFontTableViewController: UITableViewController {
 
     private static let cellIdentifier = "fontPreferencesTable"
 
-    @objc var moduleName: String?
     @objc weak var preferencesController: PSBasePreferencesController?
 
     private var fontStrings: [String]?
@@ -100,14 +99,11 @@ final class PSPreferencesFontTableViewController: UITableViewController {
         }
     }
 
-    // The selected font: global pref, overridden by the per-module pref when a
-    // moduleName is set, falling back to the default font (matches the old .mm).
+    // The selected font: the single global pref, falling back to the default font.
+    // (The former per-module override went away when the font picker moved out of
+    // the per-tab display-settings menus and into Preferences.)
     private func selectedFontName() -> String {
-        var font = UserDefaults.standard.string(forKey: Defaults.fontNamePreference)
-        if let moduleName = moduleName {
-            font = UserDefaults.standard.psString(Defaults.fontNamePreference, forModule: moduleName)
-        }
-        return font ?? AppConstants.defaultFontName
+        UserDefaults.standard.string(forKey: Defaults.fontNamePreference) ?? AppConstants.defaultFontName
     }
 
     override func viewDidLoad() {

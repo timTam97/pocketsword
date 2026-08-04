@@ -10,13 +10,17 @@
 //  init finishes — at which point the scene delegate swaps the root VC to the
 //  tab bar.
 //
-//  The bootstrap seeds Documents/Built-in/ from the bundled Resources zips (KJV /
-//  MHCC / Robinson / StrongsRealGreek / StrongsRealHebrew + locales.d) and runs
-//  the one-off migrations (DefaultsLuceneSwept / DefaultsSimplifiedCleanupDone,
-//  plus the legacy built-in-module-path move and the locale install). The
-//  migration-flag KEYS and the seeding gates are preserved BYTE-FOR-BYTE from the
-//  original .mm — they decide whether bundled modules re-seed on launch, so any
-//  drift would re-install or orphan user content.
+//  The bootstrap seeds Documents/ from the bundled Resources zips (KJV / MHCC /
+//  Robinson / StrongsRealGreek / StrongsRealHebrew + locales.d) and runs the
+//  one-off migrations (DefaultsLuceneSwept / DefaultsSimplifiedCleanupDone /
+//  DefaultsModuleChoiceRetired, plus the legacy Documents/Built-in/ path cleanup
+//  and the locale install). The migration-flag KEYS are load-bearing — they decide
+//  whether bundled modules re-seed on launch, so any drift would re-install or
+//  orphan user content.
+//
+//  NOTE: Documents/Built-in/ is NOT a live install location. The zips all unpack
+//  into Documents/ (AppPaths.modulePath); AppPaths.builtinModulePath is referenced
+//  only to delete the legacy directory left by old builds.
 //
 //  ZERO sword:: — every SWORD touch goes through the Foundation @objc facades
 //  (PSModuleController / SwordManager / SwordModule / SwordDictionary), exactly as
@@ -38,11 +42,6 @@ import UIKit
 private let kLocalesVersion        = "loadedSWORDLocales-130708"
 private let kStrongsRealGreekVersion = "loadedBundledStrongsRealGreek-v1.5-150704"
 private let kKJVVersion            = "loadedKJV-v2.9"
-
-// SWMOD_CATEGORY_DICTIONARIES is an @"literal" #define in SwordManager.h that
-// Swift cannot see; mirror its value verbatim (matches PSModuleController.swift /
-// PSModuleSelectorController.swift).
-private let kCategoryDictionaries  = "Lexicons / Dictionaries"
 
 // PSLaunchDelegate — the bootstrap-finished handshake the scene delegate conforms
 // to. Kept @objc (the still-Obj-C PocketSwordSceneDelegate conforms to it) and
@@ -104,30 +103,37 @@ final class PSLaunchViewController: UIViewController {
         defaults.removeObject(forKey: Defaults.vplPreference)
         defaults.removeObject(forKey: Defaults.redLetterPreference)
         defaults.removeObject(forKey: Defaults.insomniaPreference)
-        defaults.removeObject(forKey: Defaults.moduleMaintainerModePreference)
         defaults.removeObject(forKey: "bibleHistory")
         defaults.removeObject(forKey: "commentaryHistory")
         defaults.removeObject(forKey: Defaults.moduleCipherKeysKey)
         defaults.removeObject(forKey: kLocalesVersion)
-        defaults.removeObject(forKey: Defaults.kjvRemoved)
-        defaults.removeObject(forKey: Defaults.mhccRemoved)
-        defaults.removeObject(forKey: Defaults.strongsRealGreekRemoved)
-        defaults.removeObject(forKey: Defaults.strongsRealHebrewRemoved)
-        defaults.removeObject(forKey: Defaults.robinsonRemoved)
         defaults.synchronize()
-        if let dicts = moduleManager.swordManager?.modules(forType: kCategoryDictionaries) as? [SwordDictionary] {
-            for dict in dicts {
-                dict.removeCache()
+        // Phase 5 step 5: the loop no longer asks SWORD for each module.
+        //
+        // It used to call two methods per bundled module:
+        //
+        //  * `-[SwordDictionary removeCache]` deleted the on-disk lexicon key cache.
+        //    The reader has no such cache — it reads `dict_keys` straight out of the
+        //    store — and any cache left by an older build is already deleted by the
+        //    `DefaultsDictKeyCaseFixed` one-shot below. Nothing left to remove.
+        //  * `-[SwordModule resetPreferences]` (SwordModule.mm:215-231) removed twelve
+        //    per-module `NSUserDefaults` keys. Those are ordinary defaults with no
+        //    SWORD involvement, so they are cleared directly below — the same twelve
+        //    keys, for the same fixed five modules, in the same order.
+        for name in BundledModules.all {
+            for pref in [Defaults.redLetterPreference, Defaults.strongsPreference,
+                         Defaults.morphPreference, Defaults.greekAccentsPreference,
+                         Defaults.hvpPreference, Defaults.hebrewCantillationPreference,
+                         Defaults.scriptRefsPreference, Defaults.footnotesPreference,
+                         Defaults.headingsPreference, Defaults.glossesPreference,
+                         Defaults.fontSizePreference, Defaults.fontNamePreference] {
+                defaults.psRemove(pref, forModule: name)
             }
         }
-        if let moduleList = moduleManager.swordManager?.listModules() as? [SwordModule] {
-            for mod in moduleList {
-                mod.resetPreferences()
-            }
-        }
-        moduleManager.primaryBible = nil
-        moduleManager.primaryCommentary = nil
-        moduleManager.primaryDictionary = nil
+        defaults.synchronize()
+        moduleManager.primaryBibleName = nil
+        moduleManager.primaryCommentaryName = nil
+        moduleManager.primaryDictionaryName = nil
         NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
     }
 
@@ -146,286 +152,176 @@ final class PSLaunchViewController: UIViewController {
                 PSLaunchViewController.resetPreferences()
             }
 
-            var kjv = defaults.bool(forKey: kKJVVersion)
-            let loadedLocales = defaults.bool(forKey: kLocalesVersion)
-            var strongsAndMorph = defaults.bool(forKey: "loadedBundledStrongsAndMorph")
-            var strongsRealGreek = defaults.bool(forKey: kStrongsRealGreekVersion)
-            let removeModulePrefs = defaults.bool(forKey: "removedModulePreferences")
-
             let fm = FileManager.default
 
-            if fm.fileExists(atPath: AppPaths.builtinModulePath) {
-                // getting rid of the built-in module path, as it seems to cause broken
-                let kjvConf = (AppPaths.builtinModulePath as NSString).appendingPathComponent("mods.d/kjv.conf")
-                if fm.fileExists(atPath: kjvConf) {
-                    let kjvExtension = "modules/texts/ztext/kjv"
-                    let luceneExtension = (kjvExtension as NSString).appendingPathComponent("lucene")
-                    let kjvLucene = (AppPaths.builtinModulePath as NSString).appendingPathComponent(luceneExtension)
-                    if fm.fileExists(atPath: kjvLucene) {
-                        // to be nice, let's move their kjv lucene index across for them :P
-                        let kjvNewLucene = (AppPaths.modulePath as NSString).appendingPathComponent(luceneExtension)
-                        try? fm.createDirectory(atPath: (AppPaths.modulePath as NSString).appendingPathComponent(kjvExtension),
-                                                withIntermediateDirectories: true, attributes: nil)
-                        try? fm.moveItem(atPath: kjvLucene, toPath: kjvNewLucene)
-                    }
+            // One-shot un-stick migration for the retirement of module choice.
+            //
+            // LOAD-BEARING. A user who previously swiped a bundled module away in the
+            // (now deleted) module list has a sticky Defaults*Removed flag. With no
+            // removal UI they can never clear it, and the seeding below would suppress
+            // that module forever. So clear all five flags once, and drop the retired
+            // lexicon-role prefs so no stale "None" is left behind.
+            //
+            // Also deletes any "<pref>_" keys: PSModulePreferencesController derived
+            // its per-module key from a nav-item title nothing had set since Apr 2026,
+            // so every write it made landed in that bogus domain. Those values are
+            // settings the user never saw take effect, so applying them now would be
+            // wrong — they are simply removed.
+            if !defaults.bool(forKey: Defaults.moduleChoiceRetired) {
+                for flag in Defaults.bundledModuleRemovedFlags {
+                    defaults.removeObject(forKey: flag)
                 }
-
-                // delete this old folder
-                try? fm.removeItem(atPath: AppPaths.builtinModulePath)
-                moduleManager.reload()
-                kjv = false
-                strongsAndMorph = false
-                strongsRealGreek = false
-            }
-
-            if !kjv {
-                defaults.synchronize()
-                if let kjvModule = moduleManager.swordManager?.module(withName: "KJV") {
-                    // if it's already installed, remove the search index because it will now be out of date
-                    kjvModule.deleteSearchIndex()
+                for key in Defaults.retiredLexiconKeys {
+                    defaults.removeObject(forKey: key)
                 }
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "KJV", ofType: "zip"),
-                                                    ofType: bible, removeZip: false, internalModule: true)
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "MHCC", ofType: "zip"),
-                                                    ofType: commentary, removeZip: false, internalModule: true)
-                defaults.set(true, forKey: kKJVVersion)
-            }
-
-            if !strongsAndMorph {
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealhebrew", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "Robinson", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-                defaults.set("Robinson", forKey: Defaults.morphGreekModule)
-                defaults.set("StrongsRealHebrew", forKey: Defaults.strongsHebrewModule)
-                defaults.set(true, forKey: "loadedBundledStrongsAndMorph")
+                for key in defaults.dictionaryRepresentation().keys where key.hasSuffix("_") {
+                    dlog("Module-choice retirement: dropping orphaned pref key \(key)")
+                    defaults.removeObject(forKey: key)
+                }
+                defaults.set(true, forKey: Defaults.moduleChoiceRetired)
                 defaults.synchronize()
             }
 
-            if !strongsRealGreek {
-                // remove existing module, if it exists:
-                if moduleManager.swordManager?.isModuleInstalled("StrongsRealGreek") == true {
-                    dlog("\nRemoving existing StrongsRealGreek module & updating...")
-                    moduleManager.removeModule("StrongsRealGreek")
-                } else {
-                    dlog("\nInstalling StrongsRealGreek for the first time...")
+            // One-shot cleanup for the global-font / Module-Maintainer-Mode
+            // retirement. The font is now a single GLOBAL setting configured in
+            // Preferences, so the per-module "<fontNamePreference>_<mod>" /
+            // "<fontSizePreference>_<mod>" / "<fontDefaultsPreference>_<mod>" keys no
+            // longer affect rendering — they would just sit in the plist looking
+            // authoritative. Drop them, along with the retired Module Maintainer Mode
+            // pref, for the five bundled modules.
+            if !defaults.bool(forKey: Defaults.globalFontOnly) {
+                for name in BundledModules.all {
+                    defaults.psRemove(Defaults.fontNamePreference, forModule: name)
+                    defaults.psRemove(Defaults.fontSizePreference, forModule: name)
+                    defaults.psRemove(Defaults.fontDefaultsPreference, forModule: name)
                 }
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealgreek", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-                defaults.set(true, forKey: kStrongsRealGreekVersion)
-                let curSGM = defaults.string(forKey: Defaults.strongsGreekModule)
-                if curSGM == nil || curSGM == NSLocalizedString("None", comment: "None") {
-                    defaults.set("StrongsRealGreek", forKey: Defaults.strongsGreekModule)
-                    defaults.synchronize()
-                }
-            }
-
-            // Test if we need to reinstall the built-in modules?
-            let kjvModule = moduleManager.swordManager?.isModuleInstalled("KJV") ?? false
-            let kjvModuleRemoved = defaults.bool(forKey: Defaults.kjvRemoved)
-
-            let mhccModule = moduleManager.swordManager?.isModuleInstalled("MHCC") ?? false
-            let mhccModuleRemoved = defaults.bool(forKey: Defaults.mhccRemoved)
-
-            let robinsonModule = moduleManager.swordManager?.isModuleInstalled("Robinson") ?? false
-            let robinsonModuleRemoved = defaults.bool(forKey: Defaults.robinsonRemoved)
-
-            let strongsrealhebrewModule = moduleManager.swordManager?.isModuleInstalled("StrongsRealHebrew") ?? false
-            let strongsrealhebrewModuleRemoved = defaults.bool(forKey: Defaults.strongsRealHebrewRemoved)
-
-            let strongsrealgreekModule = moduleManager.swordManager?.isModuleInstalled("StrongsRealGreek") ?? false
-            let strongsrealgreekModuleRemoved = defaults.bool(forKey: Defaults.strongsRealGreekRemoved)
-
-            if !kjvModule && !kjvModuleRemoved {
-                // reinstall the kjv module!
-                dlog("reinstalling KJV")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "KJV", ofType: "zip"),
-                                                    ofType: bible, removeZip: false, internalModule: true)
-            }
-            if !mhccModule && !mhccModuleRemoved {
-                // reinstall the mhcc module!
-                dlog("reinstalling MHCC")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "MHCC", ofType: "zip"),
-                                                    ofType: commentary, removeZip: false, internalModule: true)
-            }
-            if !robinsonModule && !robinsonModuleRemoved {
-                dlog("reinstalling Robinson")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "Robinson", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-            }
-            if !strongsrealgreekModule && !strongsrealgreekModuleRemoved {
-                dlog("reinstalling StrongsRealGreek")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealgreek", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-            }
-            if !strongsrealhebrewModule && !strongsrealhebrewModuleRemoved {
-                dlog("reinstalling StrongsRealHebrew")
-                moduleManager.installModulesFromZip(Bundle.main.path(forResource: "strongsrealhebrew", ofType: "zip"),
-                                                    ofType: dictionary, removeZip: false, internalModule: true)
-            }
-
-            if !removeModulePrefs {
-                if let moduleList = moduleManager.swordManager?.listModules() as? [SwordModule] {
-                    for mod in moduleList {
-                        mod.resetPreferences()
-                    }
-                }
-                defaults.set(true, forKey: "removedModulePreferences")
+                defaults.removeObject(forKey: "moduleMaintainerModePreference")
+                defaults.set(true, forKey: Defaults.globalFontOnly)
                 defaults.synchronize()
             }
 
-            // One-time wipe of modules that the user previously downloaded from
-            // CrossWire (or sideloaded). The simplified build ships the five
-            // bundled modules and nothing else; any extras become orphaned.
-            if !defaults.bool(forKey: Defaults.simplifiedCleanupDone) {
-                let bundled: Set<String> = ["KJV", "MHCC", "Robinson",
-                                            "StrongsRealHebrew",
-                                            "StrongsRealGreek"]
-                let installed = (moduleManager.swordManager?.listModules() as? [SwordModule]) ?? []
-                // snapshot names up front because removeModule: reloads the manager
-                var toRemove: [String] = []
-                for mod in installed {
-                    if let name = mod.name, !bundled.contains(name) {
-                        toRemove.append(name)
+            // One-shot validation of the persisted reading position, for the
+            // SWORD-removal work (SWORD_REMOVAL_PLAN.md Phase 4).
+            //
+            // `lastRef` is the one piece of persisted state the pure-Swift reader
+            // must be able to resolve, and there are two ways an existing install
+            // can be holding one it cannot:
+            //
+            //   1. A **non-English** user. +initLocale points SWORD's locale
+            //      manager at e.g. de.conf, so `-getChapter:` was handed and
+            //      persisted a localised ref like "1. Mose 1". VerseKey parsed that;
+            //      PSBookOSISResolver, which only knows the English/OSIS spellings
+            //      the bake captured, cannot. Today that falls back to SWORD on
+            //      every page turn; after Phase 5 there is no fallback and the pane
+            //      would be blank.
+            //   2. A poisoned ref from the inbound sword:// URL path, which
+            //      persisted whatever it decoded without validating until Phase 4
+            //      step 2 — `sword://KJV/Nonsense+9:9` wrote "Nonsense 9".
+            //
+            // Reset to the app's own default once in either case. Deliberately
+            // soft: it only fires when the ref genuinely does not resolve, so an
+            // English user's position is never touched, and the flag means a user
+            // who somehow has an unresolvable ref by other means keeps it rather
+            // than being reset on every launch.
+            if !defaults.bool(forKey: Defaults.lastRefValidated) {
+                let currentRef = PSModuleController.getCurrentBibleRef() ?? ""
+                if let resolver = PSBookOSISResolver.shared, resolver.resolve(ref: currentRef) == nil {
+                    alog("lastRef '\(currentRef)' does not resolve against the versification table; resetting to Genesis 1")
+                    defaults.set("Genesis 1", forKey: Defaults.lastRef)
+                    // The verse positions belonged to the old ref, so they are
+                    // meaningless against the new one.
+                    defaults.set("1", forKey: Defaults.bibleVersePosition)
+                    defaults.set("1", forKey: Defaults.commentaryVersePosition)
+                }
+                defaults.set(true, forKey: Defaults.lastRefValidated)
+                defaults.synchronize()
+            }
+
+            // One-shot invalidation of the lexicon key caches, for the
+            // dictionary-key casing fix (SWORD_REMOVAL_PLAN.md Phase 4 step 9).
+            //
+            // The Dictionary tab used to display — and re-look-up — a
+            // `capitalizedString` of each key, which mangled 1,375 of Robinson's
+            // 1,526 keys ("V-PAI-3S" -> "V-Pai-3S"). Both producers now return the
+            // true casing, but `-[SwordDictionary readKeys]` returns EARLY on a cache
+            // hit, so an existing install would keep showing the mangled keys
+            // forever from `<Caches>/cache-<name>-<version>`. Delete those files once
+            // so they rebuild.
+            //
+            // The version in the file name comes from `content_meta`
+            // (PSContentStore.moduleVersion), not from a live SwordDictionary — so
+            // this needs no SWORD call and survives Phase 5. As a belt-and-braces
+            // measure it also globs any other `cache-*` in the same directory, which
+            // catches a file left by a version this build does not know about.
+            if !defaults.bool(forKey: Defaults.dictKeyCaseFixed) {
+                let cacheDir = AppPaths.appSupportPath
+                var deleted: [String] = []
+                for name in [BundledModules.morphGreek, BundledModules.strongsGreek,
+                             BundledModules.strongsHebrew] {
+                    let version = PSContentStore.shared?.moduleVersion(name) ?? "0.0"
+                    let path = (cacheDir as NSString).appendingPathComponent("cache-\(name)-\(version)")
+                    if fm.fileExists(atPath: path) {
+                        try? fm.removeItem(atPath: path)
+                        deleted.append("cache-\(name)-\(version)")
                     }
                 }
-                for name in toRemove {
-                    dlog("Simplified-cleanup: removing non-bundled module \(name)")
-                    moduleManager.removeModule(name)
+                // Any straggler from a version we did not predict.
+                if let entries = try? fm.contentsOfDirectory(atPath: cacheDir) {
+                    for entry in entries where entry.hasPrefix("cache-") {
+                        let path = (cacheDir as NSString).appendingPathComponent(entry)
+                        try? fm.removeItem(atPath: path)
+                        deleted.append(entry)
+                    }
                 }
-                // Drop any primary* prefs that pointed at a removed module.
-                if let lastBible = defaults.string(forKey: Defaults.lastBible), !bundled.contains(lastBible) {
-                    defaults.removeObject(forKey: Defaults.lastBible)
+                if !deleted.isEmpty {
+                    dlog("Dictionary-key casing fix: cleared key caches \(deleted)")
                 }
-                if let lastCom = defaults.string(forKey: Defaults.lastCommentary), !bundled.contains(lastCom) {
-                    defaults.removeObject(forKey: Defaults.lastCommentary)
+                defaults.set(true, forKey: Defaults.dictKeyCaseFixed)
+                defaults.synchronize()
+            }
+
+            // One-shot sweep of everything the SWORD era left in Documents/.
+            //
+            // SWORD_REMOVAL_PLAN.md Phase 5 step 9. The five module zips are gone from
+            // the bundle and nothing unpacks into Documents/ any more, so the trees an
+            // existing install is carrying are pure waste — about 18.7 MB of unpacked
+            // modules per device. Deleting `Documents/modules` is also what removes the
+            // legacy `<AbsoluteDataPath>/**/search/fts.db` indices, since step 6 moved
+            // the index to `<Caches>/search/<module>.db`.
+            //
+            // The four directories are exactly what the SWORD layer created:
+            //   mods.d     — module .conf files
+            //   modules    — the module data itself (+ legacy lucene/ and search/ trees)
+            //   locales.d  — the installed SWORD locale
+            //   unused     — where locales.d.zip was staged before install
+            // plus <Caches>/InstallMgr, the InstallMgr scratch directory.
+            //
+            // **PSBookmarks.plist is at the Documents/ ROOT** (PSBookmarks.swift:46),
+            // outside all four, so the user's bookmarks are untouched. Verified rather
+            // than assumed — it is the one piece of irreplaceable user data down there.
+            // Reading history lives in NSUserDefaults, not on disk.
+            //
+            // The `<Caches>/cache-*` lexicon key caches are NOT swept here: the
+            // DefaultsDictKeyCaseFixed one-shot above already deletes them, and doing it
+            // twice would just be noise.
+            if !defaults.bool(forKey: Defaults.swordRetired) {
+                let docs = AppPaths.modulePath
+                for dir in ["mods.d", "modules", "locales.d", "unused"] {
+                    let path = (docs as NSString).appendingPathComponent(dir)
+                    guard fm.fileExists(atPath: path) else { continue }
+                    do {
+                        try fm.removeItem(atPath: path)
+                        dlog("SWORD retirement: removed Documents/\(dir)")
+                    } catch {
+                        // Logged, not fatal: a failure here wastes disk but breaks
+                        // nothing, and the flag is still set so it is not retried on
+                        // every launch.
+                        alog("SWORD retirement: could not remove Documents/\(dir): \(error)")
+                    }
                 }
-                if let lastDict = defaults.string(forKey: Defaults.lastDictionary), !bundled.contains(lastDict) {
-                    defaults.removeObject(forKey: Defaults.lastDictionary)
-                }
-                // Stale devotional key from the removed feature.
-                defaults.removeObject(forKey: "lastDevotional")
-                // Remove the old InstallMgr scratch dir if it still exists from
-                // pre-simplification builds.
                 try? fm.removeItem(atPath: AppPaths.installerPath)
-                defaults.set(true, forKey: Defaults.simplifiedCleanupDone)
+                defaults.set(true, forKey: Defaults.swordRetired)
                 defaults.synchronize()
-            }
-
-            // One-time sweep of the legacy CLucene index directories that were
-            // written by pre-FTS5 versions. New indices live at
-            // <AbsoluteDataPath>/search/fts.db, so the old lucene/ dirs are
-            // orphaned and just waste disk. Guarded so we don't re-scan on
-            // every launch.
-            if !defaults.bool(forKey: Defaults.luceneSwept) {
-                let modsForSweep = (moduleManager.swordManager?.listModules() as? [SwordModule]) ?? []
-                for mod in modsForSweep {
-                    guard let dataPath = mod.configEntry(forKey: "AbsoluteDataPath"), !dataPath.isEmpty else { continue }
-                    let legacy = (dataPath as NSString).appendingPathComponent("lucene")
-                    if fm.fileExists(atPath: legacy) {
-                        try? fm.removeItem(atPath: legacy)
-                    }
-                }
-                defaults.set(true, forKey: Defaults.luceneSwept)
-                defaults.synchronize()
-            }
-
-            let docPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-            let swLocales = ((docPath as NSString).appendingPathComponent("unused") as NSString).appendingPathComponent("locales.d")
-            // "install" the l10n strings into SWORD for the current locale.
-            let localePath = (docPath as NSString).appendingPathComponent("locales.d")
-
-            // if there's an update for the locales or if iOS has removed our locales:
-            if !loadedLocales || !fm.fileExists(atPath: (docPath as NSString).appendingPathComponent("unused")) {
-                if let localesZIP = Bundle.main.path(forResource: "locales.d", ofType: "zip") {
-                    dlog("\n\n\(localesZIP)\n\n")
-                    try? fm.removeItem(atPath: swLocales)   // delete it if it already exists
-                    try? fm.removeItem(atPath: localePath)  // delete the currently installed ones, too.
-
-                    // unzip the archive
-                    SSZipArchive.unzipFile(atPath: localesZIP, toDestination: swLocales)
-
-                    defaults.set(true, forKey: kLocalesVersion)
-                    defaults.synchronize()
-
-                    // make sure we're not backing up this folder, now that we're installing stuff in here...
-                    PSResizing.addSkipBackupAttribute(toItemAtPath: (docPath as NSString).appendingPathComponent("unused"))
-                }
-            }
-
-            let availLocales = NSLocale.preferredLanguages                                   // the iPhone locale
-            let currentlyInstalledStrings = (try? fm.contentsOfDirectory(atPath: localePath)) // currently installed SWORD locale
-            var lang: String? = nil   // language we're going to use this time around
-            var haveLocale = false
-            var alreadyInstalled = false
-
-            if availLocales.first == "en" {
-                // do nothing if it's English.
-                lang = "en"
-                alreadyInstalled = true
-                haveLocale = true
-            } else if let installedStrings = currentlyInstalledStrings,
-                      let first = availLocales.first,
-                      installedStrings.contains("\(first)-utf8.conf") {
-                // do nothing if it's the non-English locale we used last time.
-                alreadyInstalled = true
-                haveLocale = true
-                lang = availLocales.first
-            }
-
-            let availStrings = (try? fm.contentsOfDirectory(atPath: swLocales)) ?? []
-            var iter = availLocales.makeIterator()
-            while !haveLocale, var loc = iter.next() {
-
-                // replace "-" with "_" as SWORD and iOS use different ways of signifying locales...
-                loc = loc.replacingOccurrences(of: "-", with: "_")
-
-                if loc == "en" {
-                    lang = loc
-                    alreadyInstalled = true
-                    break // default, do nothing.
-                }
-
-                if let installedStrings = currentlyInstalledStrings,
-                   installedStrings.contains("\(loc)-utf8.conf") {
-                    // we do this because it could be the non-primary iPhone locale...
-                    alreadyInstalled = true
-                    lang = loc
-                    break
-                }
-                // check if this locale is available in SWORD
-                for swLoc in availStrings {
-                    if swLoc.hasPrefix(loc) {
-                        haveLocale = true
-                        lang = swLoc
-                        break
-                    }
-                }
-                if !haveLocale {
-                    // perhaps we have something else we can fall back on?
-                    if let dashRange = loc.range(of: "_") {
-                        loc = String(loc[loc.startIndex..<dashRange.lowerBound])
-                        // check if this modified locale is available in SWORD
-                        for swLoc in availStrings {
-                            if swLoc.hasPrefix(loc) {
-                                haveLocale = true
-                                lang = swLoc
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-            if !alreadyInstalled {
-                try? fm.removeItem(atPath: localePath)
-                try? fm.createDirectory(atPath: localePath, withIntermediateDirectories: false, attributes: nil)
-                if haveLocale, let lang = lang {
-                    let srcLocale = (swLocales as NSString).appendingPathComponent(lang)
-                    let dstLocale = (localePath as NSString).appendingPathComponent(lang)
-                    try? fm.copyItem(atPath: srcLocale, toPath: dstLocale)
-                    SwordManager.initLocale()
-                    moduleManager.reload()
-                }
             }
 
             if defaults.bool(forKey: Defaults.insomniaPreference) {

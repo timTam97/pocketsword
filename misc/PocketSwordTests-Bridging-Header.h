@@ -21,6 +21,27 @@
 //
 
 #import "globals.h"               // PSSearchType / PSSearchRange NS_ENUMs + keys
+
+// The four Sword*.h facade imports are GONE (SWORD_REMOVAL_PLAN.md Phase 5).
+//
+// They existed for the engine-driven tests — SwordOracleCaptureTests and
+// PSDifferentialTests captured and compared live-engine output, and
+// PSRefSemanticsTests drove VerseKey directly. Step 12 deleted those tests and
+// retargeted their claims onto the committed fixtures (versification-KJV-oracle.txt,
+// search-index-KJV.digest, chapter-loop-counters.tsv and the chapter-body HTML), and
+// step 7 deleted the headers themselves.
+//
+// The PSSearchEngine.h import is GONE too (step 8). It existed for the one thing the
+// tests could not reach through `@testable import`: the engine's two C-linkage free
+// functions, `PSFoldForIndex` and `PSSearchCleanDisplayText`. Step 8 ported the
+// engine to Swift — `PSFoldForIndex` deleted outright (its Swift twin
+// `PSSearchQuery.foldForIndex` was already byte-identical), `PSSearchCleanDisplayText`
+// moved to `PSSearchQuery.cleanDisplayText` — and both are now internal Swift members
+// the test bundle sees through `@testable import`.
+//
+// **globals.h is therefore the ONLY thing either bridging header imports from this
+// project**, and the app target contains no Obj-C other than it and the vendored
+// MBProgressHUD.
 // PSHistoryItem is Swift as of migration step 1.2 — its type is visible to the
 // test bundle via `@testable import PocketSword`, so it is NOT imported here.
 // PSSearchHistoryItem is Swift as of migration step 1.2 — its type is visible to

@@ -67,15 +67,27 @@ final class PSModuleController: NSObject {
 
     // MARK: - Properties (selectors preserved for Obj-C / Swift callers)
 
-    // Declared as implicitly-unwrapped optionals to preserve the bridged surface of
-    // the original Obj-C `@property (strong) SwordModule *` declarations (which the
-    // Clang importer surfaced to Swift as `SwordModule!`). Keeps both the
-    // `.default().primaryBible` (non-optional deref) and `.default()?.primaryBible?`
-    // (optional-chained) Swift call sites from Waves 1-3 compiling unchanged.
-    @objc var primaryBible: SwordModule!
-    @objc var primaryCommentary: SwordModule!
-    @objc var primaryDictionary: SwordDictionary!
-    @objc var swordManager: SwordManager!
+    // MARK: - The three primary modules, by NAME
+    //
+    // SWORD_REMOVAL_PLAN.md Phase 5 step 7. These were `SwordModule!` /
+    // `SwordDictionary!` objects plus a `SwordManager!`. Every consumer only ever read
+    // `.name` off them — step 5 moved the call sites onto the `*Name` accessors, and
+    // this step makes the names the stored properties and deletes the objects and the
+    // manager outright.
+    //
+    // `nil` means "not resolved yet", which `getBibleChapter` / `getCommentaryChapter`
+    // handle by calling `reloadLast*` — the same shape as before, without a module
+    // lookup behind it.
+
+    /// The Bible being read, by name.
+    @objc var primaryBibleName: String?
+
+    /// The commentary being read, by name.
+    @objc var primaryCommentaryName: String?
+
+    /// The lexicon being browsed, by name.
+    @objc var primaryDictionaryName: String?
+
     @objc var busyTimer: Timer?
 
     // MARK: - Singleton
@@ -90,15 +102,9 @@ final class PSModuleController: NSObject {
     @objc(defaultModuleController)
     class func `default`() -> PSModuleController! {
         if instance == nil {
-            // unfortunately, the sword::InstallMgr won't create these directories &
-            // will silently fail if they don't exist!
-            try? FileManager.default.createDirectory(atPath: AppPaths.modulePath + "mods.d",
-                                                     withIntermediateDirectories: true,
-                                                     attributes: nil)
-            if !FileManager.default.fileExists(atPath: AppPaths.modulePath + "mods.d") {
-                alog("Couldn't create mods.d")
-            }
-            // use default path
+            // The `mods.d` creation that was here is GONE (Phase 5 step 9): it existed
+            // because sword::InstallMgr silently failed if the directory was absent,
+            // and there is no InstallMgr and nothing to install.
             instance = PSModuleController()
         }
         return instance
@@ -139,121 +145,60 @@ final class PSModuleController: NSObject {
     @objc override init() {
         super.init()
 
-        // migration of modules, for v1.3.0: will allow backup of modules with iTunes sync...
-        if FileManager.default.fileExists(atPath: AppPaths.modulePathOld + "mods.d") {
-            // need to migrate from the old to the new...
-            var fromPath = AppPaths.modulePathOld + "mods.d"
-            var toPath = AppPaths.modulePath + "mods.d"
-            do {
-                try FileManager.default.moveItem(atPath: fromPath, toPath: toPath)
-                alog("moved mods.d from \(fromPath) to \(toPath)")
-            } catch {
-                alog("failed to move mods.d folder")
-            }
-            fromPath = AppPaths.modulePathOld + "modules"
-            toPath = AppPaths.modulePath + "modules"
-            do {
-                try FileManager.default.moveItem(atPath: fromPath, toPath: toPath)
-                dlog("moved modules from \(fromPath) to \(toPath)")
-            } catch {
-                dlog("failed to move modules folder")
-            }
+        // The Caches -> Documents mods.d/modules migration that was here is GONE
+        // (Phase 5 step 9). It dated from v1.3.0 and moved SWORD's module trees so
+        // iTunes would back them up; there are no module trees now, and step 9's
+        // DefaultsSwordRetired one-shot deletes both locations outright. Moving a
+        // directory in order to then delete it would be theatre.
+
+        // The first/last available refs, derived from the baked versification table.
+        //
+        // SWORD_REMOVAL_PLAN.md Phase 4: this used to round-trip "Genesis" and
+        // "Revelation of John" through +[SwordManager translateToSystemLocale:].
+        // That looks like a semantic change and is not — the round-trip was
+        // **identity on every device**:
+        //   - There is no `en` locale conf. All 118 confs in locales.d.zip were
+        //     checked and none has Meta/Name = "en"; the only English locale is
+        //     SWLocale(0) (swlocale.cpp:63-69), built with SWConfig(0), which sets
+        //     Meta/Name + bookAbbrevs and has **no [Text] section** — so
+        //     `translate` returns its input.
+        //   - +initLocale is only called at all when preferredLanguages.first is
+        //     not "en" (PSLaunchViewController), so on an English device the
+        //     system locale manager is never even pointed elsewhere.
+        // Asserted 66/66 in PSRefSemanticsTests.testTranslateBookNameIsIdentityForAll66.
+        //
+        // The values are byte-identical to the static defaults above
+        // ("Genesis 1" / "Revelation 22"): the table's first book is Genesis and
+        // its last is Revelation, whose longName "Revelation of John" munges to
+        // "Revelation" through createRefString exactly as before.
+        if let books = PSBookOSISResolver.shared?.books, let first = books.first, let last = books.last {
+            PSModuleController.setFirstRefAvailable("\(first.name) 1")
+            PSModuleController.setLastRefAvailable(
+                PSModuleController.createRefString("\(last.longName) \(last.chapterCount)"))
         }
 
-        swordManager = SwordManager.default()
-        // set localized book names
-        var book = SwordManager.translate(toSystemLocale: "Genesis")
-        PSModuleController.setFirstRefAvailable(String(format: "%@ 1", book ?? ""))
-        book = SwordManager.translate(toSystemLocale: "Revelation of John")
-        book = PSModuleController.createRefString(String(format: "%@ 22", book ?? ""))
-        PSModuleController.setLastRefAvailable(book)
-
-        setPreferences()
+        // `setPreferences()` is gone — see the note above `reloadLastBible`. The
+        // per-module option prefs are read by the reader at render time
+        // (PSContentReader.options(forModule:)); nothing pushes them anywhere.
         reloadLastBible()
         reloadLastCommentary()
     }
 
     // MARK: - Preferences
 
-    @objc(setPreferences)
-    func setPreferences() {
-        guard let swordManager = swordManager else { return }
-        let defaults = UserDefaults.standard
-        let redLetter = defaults.bool(forKey: Defaults.redLetterPreference)
-        let strongs = defaults.bool(forKey: Defaults.strongsPreference)
-        let morphs = defaults.bool(forKey: Defaults.morphPreference)
-        let greekAccents = defaults.bool(forKey: Defaults.greekAccentsPreference)
-        let hvp = defaults.bool(forKey: Defaults.hvpPreference)
-        let hebrewCantillation = defaults.bool(forKey: Defaults.hebrewCantillationPreference)
-        let scriptRefs = defaults.bool(forKey: Defaults.scriptRefsPreference)
-        let footnotes = defaults.bool(forKey: Defaults.footnotesPreference)
-        let headings = defaults.bool(forKey: Defaults.headingsPreference)
-
-        swordManager.setGlobalOption(SW.optionScriptRefs, value: scriptRefs ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionStrongs, value: strongs ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionMorphs, value: morphs ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionHeadings, value: headings ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionFootnotes, value: footnotes ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionRedLetterWords, value: redLetter ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionGreekAccents, value: greekAccents ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionHebrewPoints, value: hvp ? SW.on : SW.off)
-        swordManager.setGlobalOption(SW.optionHebrewCantillation, value: hebrewCantillation ? SW.on : SW.off)
-
-        // constants:
-        swordManager.setGlobalOption(SW.optionVariants, value: SW.optionVariantsPrimary) // could make this an option?
-        swordManager.setGlobalOption(SW.optionGlosses, value: SW.on)
-    }
 
     // MARK: - Module install
 
-    // note: this will install all the modules contained within a supplied ZIP file.
-    @objc(installModulesFromZip:ofType:removeZip:internalModule:)
-    func installModulesFromZip(_ zippedModule: String!, ofType modType: ModuleType, removeZip temporaryZip: Bool, internalModule: Bool) {
-        guard let zippedModule = zippedModule else { return }
-
-        // unfortunately, the sword::InstallMgr won't create these directories &
-        // will silently fail if they don't exist!
-        try? FileManager.default.createDirectory(atPath: AppPaths.modulePath + "mods.d",
-                                                 withIntermediateDirectories: true,
-                                                 attributes: nil)
-        if !FileManager.default.fileExists(atPath: AppPaths.modulePath + "mods.d") {
-            alog("Couldn't create mods.d")
-        }
-
-        dlog("\n\n\(zippedModule)\n\n")
-        let outfile = (AppPaths.mmmPath as NSString).appendingPathComponent("out")
-
-        let fileManager = FileManager.default
-        try? fileManager.removeItem(atPath: outfile)
-
-        // unzip the archive
-        SSZipArchive.unzipFile(atPath: zippedModule, toDestination: outfile)
-
-        // install the module/s contained in the archive:
-        swordManager?.installModules(fromPath: outfile)
-        _ = PSResizing.addSkipBackupAttribute(toItemAtPath: AppPaths.modulePath)
-
-        reload()
-
-        if temporaryZip {
-            try? fileManager.removeItem(atPath: zippedModule)
-        }
-        try? fileManager.removeItem(atPath: outfile)
-
-        if (primaryBible == nil && modType == bible) || (primaryCommentary == nil && modType == commentary) {
-            NotificationCenter.default.post(name: .resetBibleAndCommentaryView, object: nil)
-        }
-    }
 
     // MARK: - Loaded check
 
     @objc(isLoaded:)
     func isLoaded(_ module: String) -> Bool {
-        if let primaryBible = primaryBible, primaryBible.name == module {
+        if let primaryBibleName, primaryBibleName == module {
             return true
-        } else if let primaryCommentary = primaryCommentary, primaryCommentary.name == module {
+        } else if let primaryCommentaryName, primaryCommentaryName == module {
             return true
-        } else if let primaryDictionary = primaryDictionary, primaryDictionary.name == module {
+        } else if let primaryDictionaryName, primaryDictionaryName == module {
             return true
         }
         return false
@@ -276,63 +221,117 @@ final class PSModuleController: NSObject {
 
     @objc(loadPrimaryBible:)
     func loadPrimaryBible(_ newText: String!) {
-        primaryBible = swordManager?.module(withName: newText)
+        primaryBibleName = newText
         UserDefaults.standard.set(newText, forKey: Defaults.lastBible)
         UserDefaults.standard.synchronize()
-        NotificationCenter.default.post(name: .refSelectorResetBooks, object: nil)
         NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
     }
 
     @objc(loadPrimaryCommentary:)
     func loadPrimaryCommentary(_ newText: String!) {
-        primaryCommentary = swordManager?.module(withName: newText)
-        NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
+        primaryCommentaryName = newText
         UserDefaults.standard.set(newText, forKey: Defaults.lastCommentary)
         UserDefaults.standard.synchronize()
+        NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
     }
 
+    /// Load a lexicon as the primary dictionary.
+    ///
+    /// The `primaryDictionary.releaseKeys()` that used to open this method is GONE
+    /// (Phase 5 step 5): `-releaseKeys` was SwordDictionary-only, and the reader
+    /// memoises keys from an immutable read-only store, so there is nothing to release.
     @objc(loadPrimaryDictionary:)
     func loadPrimaryDictionary(_ newText: String!) {
-        if let primaryDictionary = primaryDictionary {
-            primaryDictionary.releaseKeys() // release some memory
-        }
-
-        if let newText = newText {
-            primaryDictionary = swordManager?.module(withName: newText) as? SwordDictionary
+        primaryDictionaryName = newText
+        if let newText {
             UserDefaults.standard.set(newText, forKey: Defaults.lastDictionary)
-            UserDefaults.standard.synchronize()
         } else {
-            primaryDictionary = nil
             UserDefaults.standard.removeObject(forKey: Defaults.lastDictionary)
-            UserDefaults.standard.synchronize()
         }
+        UserDefaults.standard.synchronize()
         NotificationCenter.default.post(name: .newPrimaryDictionary, object: nil)
     }
 
     // never called by the OS - must be called manually!
     @objc(didReceiveMemoryWarning)
     func didReceiveMemoryWarning() {
-        // add things that can be released if we need to clear up some memory
-        // won't be called by the OS, need to call this ourselves
-        if let primaryDictionary = primaryDictionary {
-            primaryDictionary.releaseKeys() // release some memory
-        }
+        // Deliberately a NO-OP as of Phase 5 step 5.
+        //
+        // Its only body was `primaryDictionary.releaseKeys()`, which dropped the
+        // in-memory lexicon key array the engine had walked the module to build. The
+        // reader's equivalent is memoised from an immutable, read-only, mmap-able
+        // SQLite store, so there is nothing worth releasing.
+        //
+        // The METHOD is kept rather than deleted because it is called MANUALLY (the
+        // name is a lie — the OS never invokes this), so removing it would mean
+        // touching its callers for no benefit, and it is the obvious place to hang a
+        // future release if one is ever needed.
     }
 
     // MARK: - Chapter navigation
+    //
+    // SWORD_REMOVAL_PLAN.md Phase 4: the arithmetic is the baked versification
+    // table's, not `sword::VerseKey::setChapter` + `normalize`. Three things about
+    // this deserve spelling out, because each is a place a "simplification" would
+    // silently change behaviour:
+    //
+    //  1. **Both modules navigate the same versification.** KJV and MHCC are both
+    //     KJV-versified (verified: the ref selector's system lookup always resolved
+    //     to the one table), so the *destination* is computed once. What the
+    //     per-module blocks below still do is the pref writes, whose conditional
+    //     shape is preserved exactly — including the asymmetry that `next` leaves
+    //     `commentaryVersePosition` alone when a bible is loaded while `prev` sets
+    //     it from the bible's verse maximum.
+    //
+    //  2. **The verse maximum is the DESTINATION chapter's.** The old code called
+    //     `-getVerseMax` *after* `-setToPreviousChapter` had already moved the key,
+    //     so it read the chapter being navigated to, not the one being left. Reading
+    //     the source chapter's would put the scroll position at the wrong verse on
+    //     every backward move between chapters of different length.
+    //
+    //  3. **nil at the canon boundaries**, where SWORD clamped. `normalize`
+    //     (versekey.cpp:1466-1493) pinned to the bound and merely set
+    //     KEYERR_OUTOFBOUNDS, so `-setToNextChapter` at Rev 22 handed back the very
+    //     ref it was given, and the callers' string-equality gate against
+    //     get{First,Last}RefAvailable is what turned that into a no-op. That gate is
+    //     kept — it lives in three places, one of which drives a 3-way button-enable
+    //     state, and restructuring it is a UI change that does not belong in a
+    //     substitution commit — and the nil is a second, structural guard behind it.
+    //     Returning the clamped ref instead would turn a no-op into a full re-render.
+
+    /// The table's answer for a move from the current ref, or nil at the canon
+    /// boundary / for a ref the table cannot resolve.
+    ///
+    /// Returns the **un-munged `longName`** form ("Revelation of John 22"), which is
+    /// what `-setToNextChapter` genuinely returned: `VerseKey::freshtext`
+    /// (versekey.cpp:378) built its key text from `getBookName()` =
+    /// `translate(getLongName())` = identity here. Every call site munges it
+    /// downstream through `createRefString`, and 18 of the 66 books have
+    /// `name != longName`, so returning `name` would be an off-by-a-munge visible on
+    /// Revelation and the five numbered books.
+    private func navigate(from ref: String?, forward: Bool)
+        -> (ref: String, book: PSVersificationBook, chapter: Int)? {
+        guard let resolver = PSBookOSISResolver.shared,
+              let ref = ref,
+              let (book, chapter) = resolver.resolve(ref: ref) else { return nil }
+        guard let destination = forward
+                ? resolver.nextChapter(book: book, chapter: chapter)
+                : resolver.previousChapter(book: book, chapter: chapter) else { return nil }
+        return (resolver.displayRef(destination), destination.book, destination.chapter)
+    }
 
     @objc(setToNextChapter)
     func setToNextChapter() -> String! {
+        guard let destination = navigate(from: PSModuleController.getCurrentBibleRef(),
+                                         forward: true) else { return nil }
+
         var ret: String? = nil
-        let cur = PSModuleController.getCurrentBibleRef()
-        if let primaryBible = primaryBible {
-            primaryBible.setChapter(cur)
-            ret = primaryBible.setToNextChapter()
+        if primaryBibleName != nil {
+            ret = destination.ref
             UserDefaults.standard.set("1", forKey: Defaults.bibleVersePosition)
         }
-        if let primaryCommentary = primaryCommentary, ret == nil {
-            primaryCommentary.setChapter(cur)
-            ret = primaryCommentary.setToNextChapter()
+        if primaryCommentaryName != nil, ret == nil {
+            ret = destination.ref
             UserDefaults.standard.set("1", forKey: Defaults.commentaryVersePosition)
         }
         UserDefaults.standard.synchronize()
@@ -341,20 +340,23 @@ final class PSModuleController: NSObject {
 
     @objc(setToPreviousChapter)
     func setToPreviousChapter() -> String! {
+        guard let destination = navigate(from: PSModuleController.getCurrentBibleRef(),
+                                         forward: false) else { return nil }
+        // The DESTINATION chapter's maximum — see note 2 above.
+        let destinationVerseMax = PSBookOSISResolver.shared?
+            .verseMax(book: destination.book, chapter: destination.chapter) ?? 0
+
         var ret: String? = nil
-        let cur = PSModuleController.getCurrentBibleRef()
-        var verse: Int = 0
-        if let primaryBible = primaryBible {
-            primaryBible.setChapter(cur)
-            ret = primaryBible.setToPreviousChapter()
-            verse = primaryBible.getVerseMax()
+        var verse = 0
+        if primaryBibleName != nil {
+            ret = destination.ref
+            verse = destinationVerseMax
             UserDefaults.standard.set(String(format: "%ld", verse), forKey: Defaults.bibleVersePosition)
         }
-        if let primaryCommentary = primaryCommentary {
+        if primaryCommentaryName != nil {
             if ret == nil {
-                primaryCommentary.setChapter(cur)
-                ret = primaryCommentary.setToPreviousChapter()
-                verse = primaryCommentary.getVerseMax()
+                ret = destination.ref
+                verse = destinationVerseMax
                 UserDefaults.standard.set(String(format: "%ld", verse), forKey: Defaults.commentaryVersePosition)
             } else if verse != 0 {
                 UserDefaults.standard.set(String(format: "%ld", verse), forKey: Defaults.commentaryVersePosition)
@@ -366,203 +368,58 @@ final class PSModuleController: NSObject {
 
     // MARK: - Reload
 
-    @objc(reload)
-    func reload() {
-        var restoreBible = false
-        var restoreCommentary = false
-        var restoreDictionary = false
-        var ch: String?
-        var dictLoc: String?
-        var bibleName: String?
-        var commentaryName: String?
-        var dictionaryName: String?
-
-        if let primaryBible = primaryBible {
-            restoreBible = true
-            ch = (primaryBible.keyText() ?? "").components(separatedBy: ":").first
-            bibleName = primaryBible.name
-        }
-
-        if let primaryCommentary = primaryCommentary {
-            restoreCommentary = true
-            // doesn't matter that we may write over ch, they'll be the same.
-            ch = (primaryCommentary.keyText() ?? "").components(separatedBy: ":").first
-            commentaryName = primaryCommentary.name
-        }
-
-        if let primaryDictionary = primaryDictionary {
-            restoreDictionary = true
-            dictLoc = primaryDictionary.keyText()
-            dictionaryName = primaryDictionary.name
-        }
-
-        swordManager?.reInit()
-        setPreferences()
-
-        if restoreBible {
-            primaryBible = swordManager?.module(withName: bibleName)
-            if let primaryBible = primaryBible {
-                primaryBible.setVerseKeyText(ch)
-            }
-        }
-
-        if restoreCommentary {
-            primaryCommentary = swordManager?.module(withName: commentaryName)
-            if let primaryCommentary = primaryCommentary {
-                primaryCommentary.setVerseKeyText(ch)
-            }
-        }
-
-        if restoreDictionary {
-            primaryDictionary = swordManager?.module(withName: dictionaryName) as? SwordDictionary
-            if let primaryDictionary = primaryDictionary {
-                primaryDictionary.setKeyString(dictLoc)
-            }
-        }
-
-        NotificationCenter.default.post(name: .refSelectorResetBooks, object: nil)
-    }
 
     // MARK: - Remove module
 
-    @objc(removeModule:)
-    @discardableResult
-    func removeModule(_ name: String!) -> Bool {
-        dlog("Removing module: \(name ?? "")")
-
-        // if it's a built-in module, don't automatically re-install it at next launch!
-        let userDefaults = UserDefaults.standard
-        if name == "KJV" {
-            userDefaults.set(true, forKey: Defaults.kjvRemoved)
-        } else if name == "MHCC" {
-            userDefaults.set(true, forKey: Defaults.mhccRemoved)
-        } else if name == "StrongsRealHebrew" {
-            userDefaults.set(true, forKey: Defaults.strongsRealHebrewRemoved)
-        } else if name == "StrongsRealGreek" {
-            userDefaults.set(true, forKey: Defaults.strongsRealGreekRemoved)
-        } else if name == "Robinson" {
-            userDefaults.set(true, forKey: Defaults.robinsonRemoved)
-        }
-
-        let moduleToRemove = swordManager?.module(withName: name)
-        var success = false
-
-        let primaryBibleName: String? = primaryBible?.name
-        let primaryCommentaryName: String? = primaryCommentary?.name
-        let primaryDictionaryName: String? = primaryDictionary?.name
-
-        let numberOfBibles = (swordManager?.modules(forType: SW.categoryBibles) ?? []).count
-        let numberOfCommentaries = (swordManager?.modules(forType: SW.categoryCommentaries) ?? []).count
-
-        if let moduleToRemove = moduleToRemove {
-            if moduleToRemove.typeString() == SW.categoryDictionaries {
-                // need to remove the dictionary cache, if it exists
-                (moduleToRemove as? SwordDictionary)?.removeCache()
-            }
-            success = swordManager?.removeModuleNamed(name) ?? false
-        }
-
-        if name == primaryBibleName {
-            primaryBible = nil
-            UserDefaults.standard.removeObject(forKey: Defaults.lastBible)
-            UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: .redisplayPrimaryBible, object: nil)
-        } else if name == primaryCommentaryName {
-            primaryCommentary = nil
-            UserDefaults.standard.removeObject(forKey: Defaults.lastCommentary)
-            UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: .redisplayPrimaryCommentary, object: nil)
-        } else if name == primaryDictionaryName {
-            primaryDictionary = nil
-            UserDefaults.standard.removeObject(forKey: Defaults.lastDictionary)
-            UserDefaults.standard.synchronize()
-        }
-
-        reload()
-
-        if numberOfBibles == 1 && primaryBible == nil {
-            // well, we now have 0, ie, none!
-            NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
-        }
-
-        if numberOfCommentaries == 1 && primaryCommentary == nil {
-            // no commentaries left...
-            NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
-        }
-
-        if name == primaryDictionaryName {
-            if let dicts = swordManager?.modules(forType: SW.categoryDictionaries), dicts.count > 0 {
-                // set the primaryDictionary to the next available dictionary.
-                if let first = dicts.first as? SwordModule {
-                    loadPrimaryDictionary(first.name)
-                }
-            }
-            NotificationCenter.default.post(name: .reloadDictionaryData, object: nil)
-        }
-
-        // if it's the module selected for one of our lookups, need to set that to @"None"
-        let defaults = UserDefaults.standard
-        if name == (defaults.object(forKey: Defaults.morphGreekModule) as? String) {
-            defaults.set(NSLocalizedString("None", comment: "None"), forKey: Defaults.morphGreekModule)
-            defaults.synchronize()
-        } else if name == (defaults.object(forKey: Defaults.strongsGreekModule) as? String) {
-            defaults.set(NSLocalizedString("None", comment: "None"), forKey: Defaults.strongsGreekModule)
-            defaults.synchronize()
-        } else if name == (defaults.object(forKey: Defaults.strongsHebrewModule) as? String) {
-            defaults.set(NSLocalizedString("None", comment: "None"), forKey: Defaults.strongsHebrewModule)
-            defaults.synchronize()
-        }
-
-        return success
-    }
 
     // MARK: - Reload last bible / commentary
 
+    // `reload()` and `removeModule(_:)` are GONE (SWORD_REMOVAL_PLAN.md Phase 5).
+    //
+    // `reload()` existed to `reInit` the SwordManager and save/restore each primary
+    // module's key text across that re-init. With no manager there is nothing to
+    // re-initialise, and the primaries are now plain names that no re-init can
+    // invalidate.
+    //
+    // `removeModule(_:)` uninstalled a module through InstallMgr. Its only callers were
+    // bootstrap-internal (the StrongsRealGreek update and the non-bundled-module
+    // cleanup sweep), and both went with the seeding in step 9. There has been no
+    // user-facing removal since the module list was retired.
+
+    // MARK: - Reload last bible / commentary
+
+    /// Resolve the primary Bible from `lastBible`, falling back to the bundled one.
+    ///
+    /// Phase 5 step 7: this used to ask SwordManager for the module and, failing that,
+    /// take the first of `modules(forType: "Biblical Texts")`. There is no manager and
+    /// no module list — the app ships exactly one Bible — so a persisted name is
+    /// honoured only if it names a module we actually ship.
     @objc(reloadLastBible)
     func reloadLastBible() {
         let defaults = UserDefaults.standard
-        let lastModule = defaults.string(forKey: Defaults.lastBible)
-
-        if let lastModule = lastModule {
-            primaryBible = swordManager?.module(withName: lastModule)
+        let last = defaults.string(forKey: Defaults.lastBible)
+        if let last, PSContentStore.shared?.moduleMeta(last, key: "type") != nil {
+            primaryBibleName = last
+        } else {
+            primaryBibleName = BundledModules.bible
+            defaults.set(BundledModules.bible, forKey: Defaults.lastBible)
+            defaults.synchronize()
         }
-
-        if primaryBible == nil,
-           let bibles = swordManager?.modules(forType: SW.categoryBibles), bibles.count > 0 {
-            primaryBible = bibles[0] as? SwordModule
-            let bundleId = Bundle.main.bundleIdentifier ?? ""
-            var prefs = defaults.persistentDomain(forName: bundleId) ?? [:]
-            if let name = primaryBible?.name {
-                prefs[Defaults.lastBible] = name
-            }
-            defaults.setPersistentDomain(prefs, forName: bundleId)
-            UserDefaults.standard.synchronize()
-        }
-        NotificationCenter.default.post(name: .refSelectorResetBooks, object: nil)
-        NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
     }
 
+    /// Resolve the primary commentary from `lastCommentary`. Same shape as
+    /// `reloadLastBible` — see there for why the module-list fallback is gone.
     @objc(reloadLastCommentary)
     func reloadLastCommentary() {
         let defaults = UserDefaults.standard
-        let lastModule = defaults.string(forKey: Defaults.lastCommentary)
-
-        if let lastModule = lastModule {
-            primaryCommentary = swordManager?.module(withName: lastModule)
+        let last = defaults.string(forKey: Defaults.lastCommentary)
+        if let last, PSContentStore.shared?.moduleMeta(last, key: "type") != nil {
+            primaryCommentaryName = last
+        } else {
+            primaryCommentaryName = BundledModules.commentary
+            defaults.set(BundledModules.commentary, forKey: Defaults.lastCommentary)
+            defaults.synchronize()
         }
-
-        if primaryCommentary == nil,
-           let commentaries = swordManager?.modules(forType: SW.categoryCommentaries), commentaries.count > 0 {
-            primaryCommentary = commentaries[0] as? SwordModule
-            let bundleId = Bundle.main.bundleIdentifier ?? ""
-            var prefs = defaults.persistentDomain(forName: bundleId) ?? [:]
-            if let name = primaryCommentary?.name {
-                prefs[Defaults.lastCommentary] = name
-            }
-            defaults.setPersistentDomain(prefs, forName: bundleId)
-            UserDefaults.standard.synchronize()
-        }
-        NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
     }
 
     // MARK: - Chapter text
@@ -570,18 +427,31 @@ final class PSModuleController: NSObject {
     // Grabs the bible text for a given chapter (e.g. "Gen 1")
     @objc(getBibleChapter:withExtraJS:)
     func getBibleChapter(_ chapter: String!, withExtraJS extraJS: String!) -> String! {
-        if primaryBible == nil {
-            reload()
+        if primaryBibleName == nil {
+            // `reload()` (a SwordManager reInit) is gone; reloadLastBible resolves the
+            // name from `lastBible` or falls back to the bundled Bible, so the
+            // "still nil" arm below is unreachable in practice. It is KEPT because it is
+            // the only user-visible statement of "no content at all".
             reloadLastBible()
 
-            if primaryBible == nil {
+            if primaryBibleName == nil {
                 return PSModuleController.createHTMLString(String(format: "<center>%@</center>", NSLocalizedString("NoModulesInstalled", comment: "")),
                                                           usingPreferences: true, withJS: "",
                                                           usingModuleForPreferences: nil, fixedWidth: true)
             }
             NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
         }
-        let text = primaryBible?.getChapter(chapter, withExtraJS: extraJS)
+        // SWORD_REMOVAL_PLAN.md Phase 5 step 1: the reader is the ONLY render path.
+        // The `getChapter(_:withExtraJS:)` fallback arm is gone — there is no engine
+        // behind it — so a nil here reaches the user as a blank pane. That is why
+        // the reader's own failure policy now splits into fatal (the store is
+        // unusable at all) and loud-and-nil (this one chapter is bad); see
+        // PSContentReader's header.
+        var text: String?
+        if let name = primaryBibleName {
+            text = PSContentReader.shared.chapterPage(module: name, ref: chapter,
+                                                      kind: .bible, extraJS: extraJS)
+        }
 
         UserDefaults.standard.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
         UserDefaults.standard.synchronize()
@@ -591,18 +461,21 @@ final class PSModuleController: NSObject {
     // Grabs the commentary text for a given chapter (e.g. "Gen 1")
     @objc(getCommentaryChapter:withExtraJS:)
     func getCommentaryChapter(_ chapter: String!, withExtraJS extraJS: String!) -> String! {
-        if primaryCommentary == nil {
-            reload()
+        if primaryCommentaryName == nil {
             reloadLastCommentary()
 
-            if primaryCommentary == nil {
+            if primaryCommentaryName == nil {
                 return PSModuleController.createHTMLString(String(format: "<center>%@</center>", NSLocalizedString("NoModulesInstalled", comment: "")),
                                                           usingPreferences: true, withJS: "",
                                                           usingModuleForPreferences: nil, fixedWidth: true)
             }
             NotificationCenter.default.post(name: .newPrimaryCommentary, object: nil)
         }
-        let text = primaryCommentary?.getChapter(chapter, withExtraJS: extraJS)
+        var text: String?
+        if let name = primaryCommentaryName {
+            text = PSContentReader.shared.chapterPage(module: name, ref: chapter,
+                                                      kind: .commentary, extraJS: extraJS)
+        }
 
         UserDefaults.standard.set(PSModuleController.createRefString(chapter), forKey: Defaults.lastRef)
         UserDefaults.standard.synchronize()
@@ -793,18 +666,13 @@ final class PSModuleController: NSObject {
         var fontSize = "14"
         let linkColor = "fuchsia"
 
+        // Font name + size are GLOBAL only. The per-module "<pref>_<mod>" font keys
+        // used to override these, but the font picker now lives solely in the
+        // Preferences pane (one font for the whole app), so `moduleName` no longer
+        // affects typography — it is still used further down for the RTL check.
         var fs = UserDefaults.standard.integer(forKey: Defaults.fontSizePreference)
         if usePrefs {
             fontName = (UserDefaults.standard.object(forKey: Defaults.fontNamePreference) as? String) ?? fontName
-
-            // if we're provided with a moduleName, try to use that module's prefs
-            if let moduleName = moduleName {
-                if let fn = UserDefaults.standard.psString(Defaults.fontNamePreference, forModule: moduleName) {
-                    fontName = fn
-                }
-                let fsMod = UserDefaults.standard.psInteger(Defaults.fontSizePreference, forModule: moduleName)
-                fs = (fsMod == 0) ? fs : fsMod
-            }
 
             if fontName.isEmpty {
                 fontName = AppConstants.defaultFontName
@@ -842,13 +710,13 @@ final class PSModuleController: NSObject {
             }
         }
         if let moduleName = moduleName {
-            // check if module is RTL or LTR
-            if let mod = PSModuleController.default()?.swordManager?.module(withName: moduleName) {
-                if mod.isRTL() {
-                    lgMarginRight = lgMarginLeft
-                    lgMarginLeft = 0
-                    lgVersePadding = "right"
-                }
+            // check if module is RTL or LTR — from content_meta as of Phase 5 step 5,
+            // not from a live module. `moduleName` is passed in for this check ALONE:
+            // the font is global, so nothing else here is per-module.
+            if PSContentStore.shared?.moduleIsRTL(moduleName) == true {
+                lgMarginRight = lgMarginLeft
+                lgMarginLeft = 0
+                lgVersePadding = "right"
             }
         }
 
