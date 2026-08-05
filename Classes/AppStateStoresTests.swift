@@ -951,6 +951,91 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(collector.snapshot().count, 2)
     }
 
+    /// A Strong's lookup made BEFORE the Search workspace has ever appeared must
+    /// still turn Strong's mode on.
+    ///
+    /// Second device report on this path: the query filled in as `H430` but
+    /// "Strong's Numbers" was unchecked, so the engine searched for the literal
+    /// text and returned "No Results for H430". The cause was
+    /// `strongsSearch = strongsAvailable`, and `strongsAvailable` is only resolved
+    /// by `applyModule` during `configure(...)` — which has not run if the user
+    /// went straight from the reader to a Strong's link on a fresh launch. It read
+    /// its `false` default and switched the mode off.
+    ///
+    /// So this test deliberately does NOT call `configure(...)` first. That absence
+    /// is the whole point.
+    @MainActor
+    func testStrongsQueryEnablesStrongsModeBeforeTheWorkspaceIsConfigured() {
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            ),
+            debounceInterval: 0,
+            // Would be `true` for KJV, but it is never consulted here: nothing has
+            // resolved a module yet, which is exactly the unconfigured state.
+            featureProvider: { _, _ in true },
+            queryOperation: { _, _, _, _, _ in [] }
+        )
+
+        XCTAssertFalse(
+            model.strongsAvailable,
+            "Precondition: an unconfigured model has not resolved its module."
+        )
+
+        model.startStrongsQuery("H430", currentBookName: nil)
+
+        XCTAssertEqual(model.query, "H430")
+        XCTAssertTrue(
+            model.strongsSearch,
+            "Strong's mode must be on — the term IS a Strong's number, and with the "
+                + "mode off the query searches for the literal text \"H430\"."
+        )
+
+        // And `optionsDidChange`, which SearchView fires from
+        // `.onChange(of: search.strongsSearch)`, must not undo it.
+        model.optionsDidChange(currentBookName: nil)
+        XCTAssertTrue(
+            model.strongsSearch,
+            "optionsDidChange must not clear the mode before a module is resolved."
+        )
+    }
+
+    /// A module that genuinely has no Strong's index still clears the mode.
+    ///
+    /// The guard above keys on `module != nil` rather than removing the capability
+    /// check outright, so this is the other half: once a module IS resolved and it
+    /// does not advertise Strong's, the mode goes off as it always did.
+    @MainActor
+    func testStrongsQueryRespectsAModuleWithoutStrongs() {
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            ),
+            debounceInterval: 0,
+            featureProvider: { _, _ in false },
+            queryOperation: { _, _, _, _, _ in [] }
+        )
+        model.configure(
+            modules: [SearchModuleChoice(id: "MHCC", kind: .commentary)],
+            preferredModule: "MHCC",
+            currentBookName: nil,
+            restoring: nil
+        )
+        XCTAssertFalse(model.strongsAvailable)
+
+        model.startStrongsQuery("H430", currentBookName: nil)
+
+        XCTAssertEqual(model.query, "H430")
+        XCTAssertFalse(
+            model.strongsSearch,
+            "MHCC advertises no Strong's, so the mode must stay off."
+        )
+    }
+
     @MainActor
     func testSearchIndexCoordinatorReportsProgressAndCompletion() async {
         let completed = expectation(description: "Index build completed")

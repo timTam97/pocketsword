@@ -633,7 +633,28 @@ final class SearchModel {
         guard !trimmed.isEmpty else { return }
 
         query = trimmed
-        strongsSearch = strongsAvailable
+
+        // Strong's mode is ON by definition: the term IS a Strong's number, and
+        // with the mode off the query searches for the literal text "H430" and
+        // finds nothing.
+        //
+        // Do NOT gate this on `strongsAvailable`. That flag is only resolved by
+        // `applyModule`, which runs from `configure(...)` — and the reader can call
+        // this BEFORE the Search workspace has ever appeared, when the flag is
+        // still its `false` default. Reading it then turns the mode off and the
+        // search silently returns nothing, which is exactly what a device report
+        // showed: the field filled in with `H430`, Strong's Numbers unchecked, "No
+        // Results".
+        //
+        // The module's real capability is still honoured, from whichever side knows
+        // it: if the module is already resolved we check it here, and if it is not,
+        // `applyModule`'s own `if !strongsAvailable { strongsSearch = false }`
+        // clears the mode during `configure(...)` before the search runs.
+        strongsSearch = true
+        if module != nil, !strongsAvailable {
+            strongsSearch = false
+        }
+
         updateBookName(currentBookName)
         // Re-check freshness: the index may have been built (or dropped) since the
         // last time this model looked, and `scheduleSearch` refuses to run unless
@@ -655,7 +676,12 @@ final class SearchModel {
     }
 
     func optionsDidChange(currentBookName: String?) {
-        if strongsSearch && !strongsAvailable {
+        // `module != nil` is load-bearing, for the same reason it is in
+        // `startStrongsQuery`: `strongsAvailable` is only resolved once
+        // `applyModule` has run, so before then it is `false` and this would clear
+        // a mode the caller just deliberately set. `SearchView` calls this from
+        // `.onChange(of: search.strongsSearch)`, so it fires on exactly that write.
+        if strongsSearch, module != nil, !strongsAvailable {
             strongsSearch = false
         }
         updateBookName(currentBookName)

@@ -615,6 +615,21 @@ stashed, and is now worked around in `startStrongsSearch`.
   device could NOT be driven from here — `DeviceInteractionStartWorkspaceSession`
   lists only simulators even with the phone connected and selected as the run
   destination — so the reproduction was on the iOS 27 simulator.
+- **2026-08-05:** A second device report on the same path: the query now filled in
+  as `H430` but "Strong's Numbers" was unchecked, so it searched for the literal
+  text and found nothing. `startStrongsQuery` had opened with
+  `strongsSearch = strongsAvailable`, and that flag is only resolved by
+  `applyModule` during `configure(...)` — which has not run when the user goes
+  straight from the reader to a Strong's link on a fresh launch, so it read `false`
+  and switched the mode off. `optionsDidChange` carried the identical mistake and
+  would have re-cleared it anyway. Both now gate on `module != nil` before
+  consulting the flag. Two tests added: one that deliberately never calls
+  `configure`, and one that keeps MHCC (no Strong's) correctly switched off so the
+  guard cannot degrade into "always on". Verified live on a fresh launch — 1,000
+  results and the toggle checked.
+  **Process note:** the second bug was hiding *behind* the first — the same tap
+  path, but only reachable once the query stopped being stale. Fixing one symptom
+  on a path this long does not mean the path works; re-drive it end to end.
 - **2026-08-05:** Wave 8 verification is green and the wave is complete. The full
   Xcode MCP run on the iPhone 17 Pro iOS 27 simulator passed **123 tests, failed
   0**, and skipped the 2 `PSREF_EXHAUSTIVE` opt-in tests (125 total) — 118 unit
@@ -967,6 +982,38 @@ and read one expression where it wanted two.
 
 **Verified:** H430 → 1,000 results for "God", then H1254 → 46 results with
 "created" highlighted in Genesis 1:1, 1:21, 1:27 and 2:3.
+
+#### Second round: the mode was filled in but switched off
+
+The first fix exposed a second bug on the same path, again reported from the
+device: the query now populated correctly as `H430`, but **"Strong's Numbers" was
+unchecked**, so the engine searched for the literal text and returned "No Results
+for H430".
+
+`startStrongsQuery` opened with `strongsSearch = strongsAvailable`, and
+`strongsAvailable` is only resolved by `applyModule` — which runs from
+`configure(...)`. Going straight from the reader to a Strong's link on a fresh
+launch means `configure` has never run, so the flag was still its `false` default
+and the assignment turned the mode *off*. The same latent mistake sat in
+`optionsDidChange`, which `SearchView` fires from
+`.onChange(of: search.strongsSearch)` — so it would have re-cleared the mode even
+if the first line had set it.
+
+Both now check `module != nil` before consulting `strongsAvailable`: the mode is on
+by definition for a Strong's term, and the module's real capability is honoured from
+whichever side actually knows it (here if the module is resolved, otherwise by
+`applyModule`'s own clearing during `configure`). MHCC, which advertises no
+Strong's, still correctly gets the mode switched off —
+`testStrongsQueryRespectsAModuleWithoutStrongs` pins that half so the guard cannot
+be loosened into "always on".
+
+`testStrongsQueryEnablesStrongsModeBeforeTheWorkspaceIsConfigured` pins the fix,
+and deliberately does **not** call `configure(...)` first — that absence is the
+entire point of the test.
+
+**Verified on a fresh launch, reader → Strong's link → Find all occurrences with no
+prior visit to Search:** 1,000 results for "God", and the options menu shows
+"Strong's Numbers" checked.
 
 **Not yet verified, and carried into Wave 9:**
 

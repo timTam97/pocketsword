@@ -109,6 +109,8 @@ Both bridging headers now import **`globals.h` and nothing else** — Wave 8 rem
 
 **A fifth, related trap: a workspace is PERSISTENT where a modal was fresh.** "Find all occurrences" used to hand a `PSSearchHistoryItem` to the search UI for its `configure(...)` to pick up, which worked because the UIKit multi-list was rebuilt on every present. `SearchView` guards `configure` behind `@State private var configured`, so as a workspace it runs **once per launch** — and every Strong's search after the first silently showed the previous term's results. Anything that "seeds" a workspace from outside must drive its model directly (`SearchModel.startStrongsQuery`), not leave a value for a one-shot `.task` to find.
 
+**The corollary, which cost a second round-trip: state `configure(...)` computes is not available before it runs.** `SearchModel.strongsAvailable` is set by `applyModule`, which only runs from `configure`. `startStrongsQuery` opened with `strongsSearch = strongsAvailable` and therefore switched Strong's mode *off* whenever the user went reader → Strong's link on a fresh launch, searching for the literal text "H430" and finding nothing. Both `startStrongsQuery` and `optionsDidChange` now gate that capability check on `module != nil`. When seeding a model from outside its view, assume **nothing** the view's setup would have computed has been computed.
+
 Both the Library section switch and the Bible/commentary mode switch are `Menu`s, deliberately: a toolbar slot beside chapter navigation is too cramped for a segmented control, and a menu names the active choice instead of leaving an icon to guess at.
 
 ### The Swift content reader (`Classes/PSContent*`, `PSChapter*`, `PSBookOSISResolver` — the render path)
