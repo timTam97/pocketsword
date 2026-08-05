@@ -4,8 +4,23 @@
 
 **Last updated:** 2026-08-05
 
-**Overall state:** In progress. Waves 1 through 5 are complete. Wave 6 SwiftUI
-WebKit reader replacement is next.
+**Overall state:** In progress. Waves 1 through 6 are complete; Wave 7 (iOS 27
+toolbar and reading chrome) is the next wave.
+
+Wave 6 replaced the reader with a SwiftUI `WebPage`/`WebView` surface and is
+verified on the iOS 27 iPhone 17 Pro simulator: nonblank Bible and commentary
+content, next/previous chapter navigation, scrolling, the expected portrait and
+landscape reader frames with no text painting outside them, rotation position
+restoration in both directions, Strong's lookup, Strong's "Find all occurrences"
+search, the verse menu, bookmark-highlight refresh, and relaunch restoration. The
+full shared scheme is green (116 passed, 0 failed, the 2 `PSREF_EXHAUSTIVE` tests
+skipped, all 5 XCUITests passed) and a separate generic iOS device build
+succeeds with `CompileC` still 1, so the target remains pure Swift.
+
+Runtime verification also surfaced a **pre-existing** iOS 27 floating-tab-bar
+crash on the rotate-then-Strong's-search path. It was confirmed pre-existing by
+reproducing the identical stack on `108e8a3` with the whole Wave 6 worktree
+stashed, and is now worked around in `startStrongsSearch`.
 
 ### Verified environment
 
@@ -45,7 +60,7 @@ WebKit reader replacement is next.
 - [x] Wave 3: Supporting SwiftUI screens
 - [x] Wave 4: Library workspace
 - [x] Wave 5: Search workspace and background indexing
-- [ ] Wave 6: SwiftUI WebKit reader
+- [x] Wave 6: SwiftUI WebKit reader
 - [ ] Wave 7: iOS 27 toolbar and reading chrome
 - [ ] Wave 8: SwiftUI app lifecycle and four-workspace cutover
 - [ ] Wave 9: Native SwiftUI reader and WebKit removal
@@ -93,6 +108,14 @@ WebKit reader replacement is next.
   result snapshots, and highlighted full-verse results. The old UIKit search
   controller remains compiled but has no live instantiation and is retained only
   until the UIKit coordinator is removed.
+- Wave 6 now has an in-progress native SwiftUI WebKit surface in
+  `SwiftUIReaderViews.swift`. `ReaderWebPageModel` owns `WebPage`, typed
+  `NavigationDeciding`, ordered JavaScript calls, navigation events, and WebView
+  scroll callbacks. `PSModuleViewController` temporarily hosts that view while
+  retaining the existing UIKit reading chrome and presentation actions.
+- The old `PSWebView.swift` wrapper has been deleted and removed from explicit
+  Xcode target membership. This is not yet a completion claim: the latest load
+  race and safe-area changes still require runtime verification.
 - Search index builds persist an interrupted module and submit a
   `BGProcessingTaskRequest`. The launch-registered background manager restarts
   the same transactional `PSSearchEngine` build, cancels cleanly on expiration,
@@ -269,6 +292,139 @@ WebKit reader replacement is next.
   iPhone 17 Pro passed 109 standard unit tests, skipped the 2
   `PSREF_EXHAUSTIVE` opt-in tests, and passed all 5 XCUITests (116 total
   results). A separate Xcode MCP generic iOS device build also succeeded.
+- **2026-08-05:** Started Wave 6. Added `SwiftUIReaderViews.swift` using
+  `WebPage`, SwiftUI `WebView`, `NavigationDeciding`,
+  `webViewOnScrollGeometryChange`, and queued `callJavaScript` operations.
+  `PSModuleViewController` now hosts this surface, while its existing chapter,
+  bookmark, verse-menu, Strong's, morph, note, fullscreen, and coordinator
+  contracts remain in place. Removed the obsolete `PSWebView.swift` wrapper.
+- **2026-08-05:** Added typed parsing coverage for `pocketsword:currentverse`,
+  `pocketsword:versemenu`, and `arraydump` bridge URLs, plus an XCUITest
+  assertion that `reading.web-content` exists in both Bible and commentary.
+  Xcode MCP build-for-testing succeeded, and the focused bridge-parser plus
+  reading/library XCUITest slice passed 2/2. This accessibility-only XCUITest did
+  not prove that chapter text was nonblank.
+- **2026-08-05:** The first live iPhone 17 Pro run found a real Wave 6
+  regression: the Bible WebView remained on its blank placeholder even though
+  next/previous chapter titles changed. Commentary rendered nonblank content,
+  but text extended beneath the floating tab bar, especially in landscape.
+  Runtime logs also recorded `startDetLocPoll`/`stopDetLocPoll` reference errors.
+- **2026-08-05:** Traced the blank Bible to cancellation of the placeholder
+  navigation's per-load event task racing the immediately superseding Bible
+  load. The current worktree no longer cancels that task, marks new loads
+  synchronously, gates the appearance-time poll call on a finished page,
+  restores the legacy two-point scroll callback threshold, and attempts to frame
+  the hosted reader inside the controller safe area. Xcode MCP
+  build-for-testing succeeds after these fixes. A subsequent launch still showed
+  commentary text beneath the floating tab bar, and the user interrupted before
+  the Bible load fix or rotation behavior could be rechecked.
+- **2026-08-05:** Resumed live verification on iPhone 17 Pro. The Bible load
+  race fix is effective: Genesis text rendered nonblank, next/previous chapter
+  changed both reference and text, scrolling advanced the visible verse, and
+  commentary rendered nonblank content. The active scheme was the shared
+  `PocketSword` scheme on the iOS 27 iPhone 17 Pro simulator, and the launch log
+  no longer contained the prior `startDetLocPoll`/`stopDetLocPoll` reference
+  errors.
+- **2026-08-05:** Hierarchy evidence isolated the remaining layout and rotation
+  defects. In portrait, `reading.web-content` was
+  `{{0,116},{402,675}}` and ended at the tab bar's `y=791`, but WebView text
+  still painted beyond the host bounds. In landscape, the reader was
+  `{{62,78},{750,260}}` while the tab bar began at `y=319`, producing a
+  measured 19-point overlap. Rotating after scrolling from `Gen 2:4` restored
+  `Gen 2:2` instead.
+- **2026-08-05:** Applied but did not yet build the next fixes. The SwiftUI
+  WebView and hosting view now clip to bounds; the host frame is capped at the
+  converted tab-bar top with a deterministic geometry test for the observed
+  portrait and landscape frames. Rotation now suppresses transient
+  scroll-persistence callbacks, restores the captured `currentShownVerse` after
+  `resetArrays()`, and records the resulting JavaScript `pageYOffset`. The
+  fullscreen host now uses the tab-bar controller's live bounds. These edits
+  are only code-complete at this checkpoint, not build- or runtime-verified.
+- **2026-08-05:** Built the clipping/tab-bar-frame/rotation patch (Xcode MCP
+  `BuildProject(buildForTesting: true)`, no diagnostics; `CompileC` remains 1)
+  and ran the focused slice: `testReaderBridgeEventsPreserveNavigationPayloads`
+  and `testReaderFrameStopsAtOverlappingTabBar` both pass. The scheme now
+  exposes 118 enabled tests.
+- **2026-08-05:** Live iPhone 17 Pro verification cleared every Wave 6 layout and
+  rotation defect. Portrait `reading.web-content` is `{{0,116},{402,675}}` ending
+  exactly at the tab bar's `y=791`; landscape is `{{62,78},{750,241}}` ending
+  exactly at the tab bar's `y=319`, so the previously measured 19-point overlap is
+  gone and text no longer paints outside the reader in either orientation. Bible
+  and commentary both render nonblank, next/previous chapter changes reference and
+  text, and scrolling advanced the title from `Gen 5:1` to `Gen 5:9`. Rotating to
+  landscape and back preserved `Gen 5:9` **and** its scroll offset in both
+  directions, so the earlier `Gen 2:4` -> `Gen 2:2` regression is fixed. The
+  launch log contains no JavaScript reference errors.
+- **2026-08-05:** Exercised the study surfaces through the SwiftUI reader. A
+  Strong's link opened the H2421 Hebrew lexicon entry with its full definition;
+  "Find all occurrences" returned 235 results with visible yellow match
+  highlighting; the verse menu opened as "Verse 12" and carried the correct verse
+  into Add Bookmark as `Genesis 5:12`; saving a bookmark into a yellow-highlight
+  folder repainted verse 12 yellow live through `bookmarksChanged`; and a relaunch
+  restored `Gen 5:9` with its scroll position. Test bookmarks and the test folder
+  were deleted afterward.
+- **2026-08-05:** Runtime verification found a crash that is **not** a migration
+  regression. Rotating the device while the Strong's popup is open and then
+  tapping "Find all occurrences" traps in
+  `-[_UITabBarVisualProvider_FloatingAccessibility layoutSubviews]` with an
+  AnimationKit assertion (`Missing animationAndComposerGetter`,
+  `EXC_BREAKPOINT`), with no app frames on the stack. Confirmed pre-existing by
+  stashing the whole Wave 6 worktree and reproducing the identical stack on
+  `108e8a3`. A pageSheet takes the presenter's view off the window, so the tab bar
+  controller cannot lay out while the popup is up; the deferred rotation's first
+  layout is then forced to run inside the next sheet transition's
+  alongside-animation block, where the iOS 27 floating tab bar's animatable
+  properties assert. Worked around in `startStrongsSearch` by presenting the
+  multi-list unanimated, which keeps that layout out of any animation block. Two
+  other approaches were tried and did **not** work (deferring the present via
+  `DispatchQueue.main.async`, and dismissing unanimated plus an explicit
+  `layoutIfNeeded`); both are recorded in the code comment so they are not
+  retried. Verified: the rotate-then-search sequence that reproduced twice now
+  returns its 235 results, and the ordinary no-rotation path still works. Wave 7
+  replaces this chrome with the native SwiftUI toolbar and should retire the
+  workaround with it.
+
+- **2026-08-05:** Wave 6 verification is green and the wave is complete. The full
+  shared-scheme run on iPhone 17 Pro passed 116 standard tests, skipped the 2
+  `PSREF_EXHAUSTIVE` opt-in tests, and passed all 5 XCUITests (118 total). A
+  separate generic iOS device build with Xcode 27 beta also succeeds, and a clean
+  device build still reports `CompileC` 1 (`MBProgressHUD.m` only), so deleting
+  `PSWebView.swift` and adding `SwiftUIReaderViews.swift` did not disturb the
+  pure-Swift invariant. `git diff --check` and
+  `plutil -lint PocketSword.xcodeproj/project.pbxproj` pass.
+
+### Wave 6 status
+
+**Worktree state:** Complete but intentionally uncommitted.
+
+Changed files:
+
+- `Classes/SwiftUIReaderViews.swift` (new): `WebPage` model, navigation decider,
+  bridge URL parser, scroll callbacks, and SwiftUI `WebView`.
+- `Classes/PSModuleViewController.swift`: SwiftUI hosting adapter plus retained
+  reader behavior and popup routing.
+- `Classes/PSTabBarControllerDelegate.swift`: reader visibility, chapter load,
+  JavaScript, and highlighting calls now use the hosting adapter, plus the
+  unanimated multi-list present that works around the pre-existing iOS 27
+  floating-tab-bar crash.
+- `Classes/AppStateStoresTests.swift`: bridge URL parsing and reader-frame
+  geometry tests.
+- `Tests/PocketSwordUITests.swift`: `reading.web-content` reachability checks.
+- `Classes/PSWebView.swift` (deleted) and
+  `PocketSword.xcodeproj/project.pbxproj` (membership updated).
+
+Not verified for Wave 6, and carried into Wave 7/8, whose chrome and cutover work
+replaces these surfaces: a footnote link (the Strong's path was exercised
+instead), fullscreen/Focus mode through the SwiftUI reader, iPad, Dynamic Type,
+VoiceOver, and RTL.
+
+Carry into Wave 7:
+
+- The `startStrongsSearch` unanimated-present workaround should be retired when
+  the native SwiftUI toolbar and sheet presentation replace this UIKit chrome.
+  Re-test the rotate-then-Strong's-search path after that change; if the
+  floating-tab-bar assertion is gone, drop the workaround and its
+  `suppressMultiListPresentAnimation` flag.
 
 ## Summary
 

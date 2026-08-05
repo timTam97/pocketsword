@@ -1,5 +1,6 @@
 import XCTest
 import Observation
+import UIKit
 @testable import PocketSword
 
 private final class HistoryCloudStoreStub: HistoryCloudStoring {
@@ -1061,6 +1062,55 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(builtModules, ["KJV"])
         XCTAssertNil(
             defaults.string(forKey: Defaults.pendingSearchIndexModule)
+        )
+    }
+
+    func testReaderBridgeEventsPreserveNavigationPayloads() throws {
+        XCTAssertEqual(
+            ReaderBridgeEvent(
+                url: try XCTUnwrap(
+                    URL(string: "pocketsword:currentverse:16:241.75:200")
+                )
+            ),
+            .currentVerse(verse: 16, scrollPosition: 241.75)
+        )
+        XCTAssertEqual(
+            ReaderBridgeEvent(
+                url: try XCTUnwrap(
+                    URL(string: "pocketsword:versemenu:8")
+                )
+            ),
+            .verseMenu(verse: 8)
+        )
+        XCTAssertEqual(
+            ReaderBridgeEvent(
+                url: try XCTUnwrap(URL(string: "arraydump:0:42.5:99:"))
+            ),
+            .versePositions([0, 42.5, 99, 0])
+        )
+        XCTAssertNil(
+            ReaderBridgeEvent(
+                url: try XCTUnwrap(URL(string: "pocketsword:currentverse"))
+            )
+        )
+    }
+
+    func testReaderFrameStopsAtOverlappingTabBar() {
+        let portraitSafeArea = CGRect(x: 0, y: 116, width: 402, height: 675)
+        XCTAssertEqual(
+            PSModuleViewController.readerFrame(
+                safeAreaFrame: portraitSafeArea,
+                tabBarFrame: CGRect(x: 0, y: 791, width: 402, height: 83)
+            ),
+            portraitSafeArea
+        )
+
+        XCTAssertEqual(
+            PSModuleViewController.readerFrame(
+                safeAreaFrame: CGRect(x: 62, y: 78, width: 750, height: 260),
+                tabBarFrame: CGRect(x: 0, y: 319, width: 874, height: 64)
+            ),
+            CGRect(x: 62, y: 78, width: 750, height: 241)
         )
     }
 

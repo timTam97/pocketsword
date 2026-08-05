@@ -19,6 +19,7 @@
 		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
 		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
 		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
+		B27000000000000000000011 /* SwiftUIReaderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000001 /* SwiftUIReaderViews.swift */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
@@ -176,7 +177,6 @@
 		5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */; };
 		5A1F70B00000000000ZJ002 /* PSBookmarksNavigatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */; };
 		5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZK001 /* PSModuleController.swift */; };
-		5A1F70B00000000000ZM002 /* PSWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZM001 /* PSWebView.swift */; };
 		5A1F70B00000000000ZN002 /* PSModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZN001 /* PSModuleViewController.swift */; };
 		5A1F70B00000000000ZO002 /* PSBibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZO001 /* PSBibleViewController.swift */; };
 		5A1F70B00000000000ZP002 /* PSCommentaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */; };
@@ -226,6 +226,7 @@
 		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
+		B27000000000000000000001 /* SwiftUIReaderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderViews.swift; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -408,7 +409,6 @@
 		5A1F70B00000000000ZI001 /* PSDictionaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSDictionaryViewController.swift; path = Classes/PSDictionaryViewController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZJ001 /* PSBookmarksNavigatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarksNavigatorController.swift; path = Classes/PSBookmarksNavigatorController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZK001 /* PSModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleController.swift; path = Classes/PSModuleController.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000ZM001 /* PSWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSWebView.swift; path = Classes/PSWebView.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZN001 /* PSModuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleViewController.swift; path = Classes/PSModuleViewController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZO001 /* PSBibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBibleViewController.swift; path = Classes/PSBibleViewController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSCommentaryViewController.swift; path = Classes/PSCommentaryViewController.swift; sourceTree = "<group>"; };
@@ -756,7 +756,6 @@
 				5A1F70B00000000000ZN001 /* PSModuleViewController.swift */,
 				5A1F70B00000000000ZP001 /* PSCommentaryViewController.swift */,
 				5A1F70B00000000000ZO001 /* PSBibleViewController.swift */,
-				5A1F70B00000000000ZM001 /* PSWebView.swift */,
 			);
 			name = "b & c";
 			sourceTree = "<group>";
@@ -803,6 +802,7 @@
 				B25000000000000000000001 /* SwiftUILibraryViews.swift */,
 				B26000000000000000000001 /* SwiftUISearchViews.swift */,
 				B26000000000000000000002 /* SearchIndexBackgroundManager.swift */,
+				B27000000000000000000001 /* SwiftUIReaderViews.swift */,
 				B21000000000000000000002 /* URLRouter.swift */,
 				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
 				5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */,
@@ -1172,6 +1172,7 @@
 				B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */,
 				B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */,
 				B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */,
+				B27000000000000000000011 /* SwiftUIReaderViews.swift in Sources */,
 				B21000000000000000000012 /* URLRouter.swift in Sources */,
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,
@@ -1223,7 +1224,6 @@
 				5A1F70B0000000000000K002 /* PSBookmarkTableViewCell.swift in Sources */,
 				5A1F70B00000000000ZQ002 /* PSLaunchViewController.swift in Sources */,
 				5A1F70B00000000000ZR002 /* PocketSwordSceneDelegate.swift in Sources */,
-				5A1F70B00000000000ZM002 /* PSWebView.swift in Sources */,
 				055C8A55173C9F49009FF47D /* MBProgressHUD.m in Sources */,
 				5A1F70B00000000000ZN002 /* PSModuleViewController.swift in Sources */,
 			);

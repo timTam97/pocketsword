@@ -28,9 +28,17 @@ final class PocketSwordUITests: XCTestCase {
     func testReadingAndLibraryDestinationsAreReachable() throws {
         selectTab("workspace.read.bible")
         XCTAssertTrue(app.navigationBars["BibleTabTitleString"].exists)
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.web-content"]
+                .waitForExistence(timeout: 5)
+        )
 
         selectTab("workspace.read.commentary")
         XCTAssertTrue(app.navigationBars["CommentaryTabTitleString"].exists)
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.web-content"]
+                .waitForExistence(timeout: 5)
+        )
 
         selectTab("workspace.library.dictionary")
         XCTAssertTrue(app.searchFields["Search Dictionary"].waitForExistence(timeout: 5))

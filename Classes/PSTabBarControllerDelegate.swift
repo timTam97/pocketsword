@@ -104,6 +104,9 @@ final class PSTabBarControllerDelegate: NSObject,
     // MultiList (history + search)
     private var multiListController: UITabBarController?
 
+    // Set by -startStrongsSearch only; see the comment there.
+    private var suppressMultiListPresentAnimation = false
+
     // Search tab
     @objc var savedSearchHistoryItem: PSSearchHistoryItem?
     @objc var savedSearchResultsTab: ShownTab = .BibleTab
@@ -296,13 +299,11 @@ final class PSTabBarControllerDelegate: NSObject,
         // NB: the original .mm had identical branches here (a copy/paste of the
         // bible-webView isDescendantOf check in both arms) — preserved verbatim so
         // behaviour is byte-identical.
-        if let bibleWeb = bibleTabController?.webView,
-           let selView = tabBarController.selectedViewController?.view,
-           bibleWeb.isDescendant(of: selView) {
+        if let selView = tabBarController.selectedViewController?.view,
+           bibleTabController?.isReaderVisible(in: selView) == true {
             self.savedSearchResultsTab = .BibleTab
-        } else if let bibleWeb = bibleTabController?.webView,
-                  let selView = tabBarController.selectedViewController?.view,
-                  bibleWeb.isDescendant(of: selView) {
+        } else if let selView = tabBarController.selectedViewController?.view,
+                  bibleTabController?.isReaderVisible(in: selView) == true {
             self.savedSearchResultsTab = .CommentaryTab
         }
         self.savedSearchHistoryItem = newSearchHistoryItem
@@ -359,9 +360,8 @@ final class PSTabBarControllerDelegate: NSObject,
             )
 
             let bibleOnScreen: Bool = {
-                if let bibleWeb = bibleTabController?.webView,
-                   let selView = tabBarController.selectedViewController?.view,
-                   bibleWeb.isDescendant(of: selView) {
+                if let selView = tabBarController.selectedViewController?.view,
+                   bibleTabController?.isReaderVisible(in: selView) == true {
                     return true
                 }
                 return bibleTabController?.isFullScreen ?? false
@@ -456,7 +456,8 @@ final class PSTabBarControllerDelegate: NSObject,
                 ) == ShownMultiListTab.SearchTab.rawValue {
                 multiList.selectedViewController = searchController
             }
-            tabBarController.present(multiList, animated: true, completion: nil)
+            tabBarController.present(multiList, animated: !suppressMultiListPresentAnimation, completion: nil)
+            suppressMultiListPresentAnimation = false
         }
     }
 
@@ -547,9 +548,8 @@ final class PSTabBarControllerDelegate: NSObject,
             refSelectorController = nil
             refNavigationController = nil
         } else {
-            if let bibleWeb = bibleTabController?.webView,
-               let selView = tabBarController.selectedViewController?.view,
-               bibleWeb.isDescendant(of: selView) {
+            if let selView = tabBarController.selectedViewController?.view,
+               bibleTabController?.isReaderVisible(in: selView) == true {
                 // bible tab
                 if PSModuleController.default()?.primaryBibleName == nil {
                     // no Bible selected, so ignore...
@@ -577,9 +577,9 @@ final class PSTabBarControllerDelegate: NSObject,
                     refSel.willShowNavigation()
                     tabBarController.present(refNav, animated: true, completion: nil)
                 }
-            } else if let commWeb = commentaryTabController?.webView,
-                      let selView = tabBarController.selectedViewController?.view,
-                      commWeb.isDescendant(of: selView) {
+            } else if let selView = tabBarController.selectedViewController?.view,
+                      commentaryTabController?.isReaderVisible(in: selView)
+                        == true {
                 // commentary tab
                 if PSModuleController.default()?.primaryCommentaryName == nil {
                     // no Commentary selected, so ignore...
@@ -642,11 +642,8 @@ final class PSTabBarControllerDelegate: NSObject,
         let currentRef = PSModuleController.getCurrentBibleRef()
         if currentRef == ref {
             // we only need to move to the selected verse rather than reload the whole chapter
-            let javascript = "scrollToVerse(\(verseString));"
             bibleTabController?.scrollToVerse(verse)
-            bibleTabController?.webView?.stringByEvaluatingJavaScriptFromString(javascript)
             commentaryTabController?.scrollToVerse(verse)
-            commentaryTabController?.webView?.stringByEvaluatingJavaScriptFromString(javascript)
             if moduleController?.primaryBibleName != nil {
                 setTabTitle("\(ref):\(verseString)", ofTab: .BibleTab)
             }
@@ -654,18 +651,17 @@ final class PSTabBarControllerDelegate: NSObject,
                 setTabTitle("\(ref):\(verseString)", ofTab: .CommentaryTab)
             }
         } else {
-            if let bibleWeb = bibleTabController?.webView,
-               let selView = tabBarController.selectedViewController?.view,
-               bibleWeb.isDescendant(of: selView) {
+            if let selView = tabBarController.selectedViewController?.view,
+               bibleTabController?.isReaderVisible(in: selView) == true {
                 // bible tab
                 UserDefaults.standard.set(verseString, forKey: DefaultsBibleVersePosition)
                 UserDefaults.standard.set(verseString, forKey: DefaultsCommentaryVersePosition)
                 UserDefaults.standard.synchronize()
                 displayChapter(ref, with: BibleViewPoll, restore: RestoreVersePosition)
                 PSHistoryController.addHistoryItem(.BibleTab)
-            } else if let commWeb = commentaryTabController?.webView,
-                      let selView = tabBarController.selectedViewController?.view,
-                      commWeb.isDescendant(of: selView) {
+            } else if let selView = tabBarController.selectedViewController?.view,
+                      commentaryTabController?.isReaderVisible(in: selView)
+                        == true {
                 // commentary tab
                 UserDefaults.standard.set(verseString, forKey: DefaultsBibleVersePosition)
                 UserDefaults.standard.set(verseString, forKey: DefaultsCommentaryVersePosition)
@@ -753,13 +749,13 @@ final class PSTabBarControllerDelegate: NSObject,
         case .bible:
             bibleJavascript.append("startDetLocPoll();\n")
             let bText = PSModuleController.default()?.getBibleChapter(ref, withExtraJS: bibleJavascript as String)
-            bibleTabController?.webView?.loadHTMLString(bText ?? "", baseURL: URL(fileURLWithPath: Bundle.main.resourcePath ?? ""))
+            bibleTabController?.loadHTMLString(bText ?? "")
             commentaryTabController?.refToShow = ref
             commentaryTabController?.jsToShow = commentaryJavascript as String
         case .commentary:
             commentaryJavascript.append("startDetLocPoll();\n")
             let cText = PSModuleController.default()?.getCommentaryChapter(ref, withExtraJS: commentaryJavascript as String)
-            commentaryTabController?.webView?.loadHTMLString(cText ?? "", baseURL: URL(fileURLWithPath: Bundle.main.resourcePath ?? ""))
+            commentaryTabController?.loadHTMLString(cText ?? "")
             bibleTabController?.refToShow = ref
             bibleTabController?.jsToShow = bibleJavascript as String
         case .none:
@@ -817,9 +813,9 @@ final class PSTabBarControllerDelegate: NSObject,
     func highlightSearchTerm(_ term: String?, forTab tab: ShownTab) {
         switch tab {
         case .BibleTab:
-            bibleTabController?.webView?.wkWebView?.highlightAllOccurencesOfString(term ?? "", completion: nil)
+            bibleTabController?.highlightAllOccurrences(of: term ?? "")
         case .CommentaryTab:
-            commentaryTabController?.webView?.wkWebView?.highlightAllOccurencesOfString(term ?? "", completion: nil)
+            commentaryTabController?.highlightAllOccurrences(of: term ?? "")
         default:
             break
         }
@@ -880,6 +876,32 @@ final class PSTabBarControllerDelegate: NSObject,
         searchItem.searchTermToDisplay = term
         searchItem.strongsSearch = true
         self.savedSearchHistoryItem = searchItem
+        // Present the multi-list WITHOUT animation from here, which is the only
+        // path that dismisses one sheet and immediately presents another.
+        //
+        // Rotating the device while the Strong's popup is open and then tapping
+        // "Find all occurrences" used to trap in
+        // -[_UITabBarVisualProvider_FloatingAccessibility layoutSubviews] with an
+        // AnimationKit assertion ("Missing animationAndComposerGetter"). A
+        // pageSheet takes the presenter's view off the window, so the tab bar
+        // controller cannot lay out while the popup is up; the rotation is
+        // deferred, and its first layout in the new orientation is then forced to
+        // run inside the next sheet transition's alongside-animation block, where
+        // the iOS 27 floating tab bar's animatable properties assert. There are no
+        // app frames on the stack.
+        //
+        // Presenting unanimated keeps that layout out of an animation block
+        // entirely. Verified on iOS 27 / iPhone 17 Pro: the rotate-then-search
+        // sequence that reproduced twice now completes with results, and the
+        // ordinary no-rotation path still works.
+        //
+        // NOT a migration regression — the identical crash reproduces on the
+        // pre-Wave-6 commit. Two other approaches were tried and did NOT fix it
+        // (deferring the present with DispatchQueue.main.async, and dismissing
+        // unanimated plus an explicit layoutIfNeeded), so do not "simplify" this
+        // back into an animated present. Wave 7 replaces this chrome with the
+        // native SwiftUI toolbar and should retire the workaround with it.
+        suppressMultiListPresentAnimation = true
         hideInfoWithCompletion { [weak self] in
             self?.toggleMultiList()
         }
