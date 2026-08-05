@@ -299,3 +299,7 @@
 "AboutOpenSourceTitle" = "Open Source";
 "AboutFontLicenseText" = "Ezra SIL and Gentium Plus are distributed under the SIL Open Font License.";
 "AboutFeedbackTitle" = "Feedback and Translation";
+
+// SwiftUI reading chrome (Wave 7)
+"VoiceOverFocusModeButton" = "Enter Focus Mode";
+"VoiceOverExitFocusModeButton" = "Exit Focus Mode";

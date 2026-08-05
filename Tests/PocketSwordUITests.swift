@@ -26,18 +26,29 @@ final class PocketSwordUITests: XCTestCase {
 
     @MainActor
     func testReadingAndLibraryDestinationsAreReachable() throws {
+        // Wave 7: the reading chrome is drawn by ReaderScreen's own SwiftUI
+        // NavigationStack, and the enclosing UIKit navigation bar (which carried the
+        // "BibleTabTitleString" / "CommentaryTabTitleString" titles) is hidden. The
+        // reader is now identified by its own controls rather than by that bar.
         selectTab("workspace.read.bible")
-        XCTAssertTrue(app.navigationBars["BibleTabTitleString"].exists)
         XCTAssertTrue(
             app.descendants(matching: .any)["reading.web-content"]
                 .waitForExistence(timeout: 5)
         )
+        XCTAssertTrue(
+            app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.buttons["reading.previous-chapter"].exists)
+        XCTAssertTrue(app.buttons["reading.next-chapter"].exists)
+        XCTAssertTrue(app.buttons["reading.focus-mode"].exists)
 
         selectTab("workspace.read.commentary")
-        XCTAssertTrue(app.navigationBars["CommentaryTabTitleString"].exists)
         XCTAssertTrue(
             app.descendants(matching: .any)["reading.web-content"]
                 .waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(
+            app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
         )
 
         selectTab("workspace.library.dictionary")
@@ -92,11 +103,12 @@ final class PocketSwordUITests: XCTestCase {
     func testReferencePickerSelectsVerse() throws {
         selectTab("workspace.read.bible")
 
-        let referenceControl = app.segmentedControls[
-            "reading.reference-picker"
-        ]
-        XCTAssertTrue(referenceControl.waitForExistence(timeout: 5))
-        referenceControl.buttons.element(boundBy: 1).tap()
+        // Wave 7: the three-segment UISegmentedControl became three buttons, and
+        // the reference button opens the picker as a popover rather than the
+        // coordinator presenting a wrapped PSRefSelectorController.
+        let referenceButton = app.buttons["reading.reference-picker"]
+        XCTAssertTrue(referenceButton.waitForExistence(timeout: 5))
+        referenceButton.tap()
 
         XCTAssertTrue(
             app.navigationBars["Select Book"].waitForExistence(timeout: 5)
@@ -125,8 +137,11 @@ final class PocketSwordUITests: XCTestCase {
     @MainActor
     func testHistoryAndSearchAreReachableFromReading() throws {
         selectTab("workspace.read.bible")
-        let historyAndSearch = app.navigationBars["BibleTabTitleString"]
-            .buttons["reading.history-search"]
+        // Wave 7: History & Search is a secondary study action, so it lives in the
+        // iOS 27 ToolbarOverflowMenu rather than as a left bar-button item.
+        openReadingOverflowMenu()
+        // Matched by label: menu rows expose their title, not our identifier.
+        let historyAndSearch = app.buttons["History and Search"]
         XCTAssertTrue(historyAndSearch.waitForExistence(timeout: 5))
         historyAndSearch.tap()
 
@@ -178,8 +193,93 @@ final class PocketSwordUITests: XCTestCase {
             },
             object: nil
         )
-        wait(for: [reordered], timeout: 5)
+        // 15s, not 5s: the long-press-then-drag that drives iOS 27's
+        // `.reorderable()` is timing-sensitive, and this occasionally missed the
+        // window under the load of a full-suite run while passing in isolation.
+        // The assertion is unchanged — only the patience for the animation is.
+        wait(for: [reordered], timeout: 15)
         XCTAssertLessThan(second.frame.minY, first.frame.minY)
+    }
+
+    /// Opens the reading toolbar's iOS 27 overflow menu.
+    ///
+    /// `ToolbarOverflowMenu` is system-provided, so its button carries the
+    /// system's own identity rather than one we set: confirmed on the iOS 27
+    /// simulator as identifier `OverflowBarButtonItem` / label "More". Matched by
+    /// identifier, since the label is localized.
+    @MainActor
+    private func openReadingOverflowMenu() {
+        let overflow = app.buttons["OverflowBarButtonItem"].firstMatch
+        XCTAssertTrue(
+            overflow.waitForExistence(timeout: 5),
+            "Could not find the reading toolbar's overflow menu."
+        )
+        overflow.tap()
+    }
+
+    @MainActor
+    func testFocusModeHidesAndRestoresTheTabBar() throws {
+        selectTab("workspace.read.bible")
+
+        let focus = app.buttons["reading.focus-mode"]
+        XCTAssertTrue(focus.waitForExistence(timeout: 5))
+        let tabBarButton = app.tabBars.buttons["workspace.read.bible"]
+        XCTAssertTrue(tabBarButton.exists)
+
+        focus.tap()
+        // Focus mode hides the tab bar via setTabBarHidden(_:animated:) and the
+        // navigation bar via toolbarVisibility, so only the chapter remains. The
+        // pinned Focus control itself must survive, since it is the way back out.
+        XCTAssertTrue(tabBarButton.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.web-content"].exists
+        )
+
+        let exitFocus = app.buttons["reading.focus-mode"]
+        XCTAssertTrue(exitFocus.waitForExistence(timeout: 5))
+        exitFocus.tap()
+        XCTAssertTrue(tabBarButton.waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testDisplayTogglesAppearForBibleAndNotCommentary() throws {
+        // NB: UIKit renders a SwiftUI menu's rows as cells that expose their LABEL
+        // but drop the `accessibilityIdentifier` (verified in the iOS 27 hierarchy),
+        // so these rows are matched by their localized titles. The exhaustive
+        // id/pref/order assertions live in
+        // AppStateStoresTests.testDisplayTogglesMatchBakedFeatureSets, which reads
+        // the same pure builder this menu is populated from.
+        selectTab("workspace.read.bible")
+        openReadingOverflowMenu()
+        // KJV earns six rows; cross-references is deliberately absent (no
+        // OSISScripref filter, no Feature=Scripref).
+        XCTAssertTrue(
+            app.buttons["Strong's Numbers"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.buttons["Verse Per Line"].exists)
+        XCTAssertFalse(app.buttons["Cross-references"].exists)
+        dismissMenu()
+
+        selectTab("workspace.read.commentary")
+        openReadingOverflowMenu()
+        // MHCC advertises nothing, so it contributes no display rows at all — only
+        // the always-present History & Search action.
+        XCTAssertTrue(
+            app.buttons["History and Search"].waitForExistence(timeout: 5)
+        )
+        XCTAssertFalse(app.buttons["Strong's Numbers"].exists)
+        XCTAssertFalse(app.buttons["Verse Per Line"].exists)
+        dismissMenu()
+    }
+
+    @MainActor
+    private func dismissMenu() {
+        // A menu is dismissed by tapping outside it. The reader fills the screen,
+        // but tapping its centre would hit a verse link, so use a corner well
+        // clear of the menu (which anchors to the trailing side of the top bar).
+        app.coordinate(
+            withNormalizedOffset: CGVector(dx: 0.08, dy: 0.9)
+        ).tap()
     }
 
     @MainActor

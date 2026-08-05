@@ -4,8 +4,37 @@
 
 **Last updated:** 2026-08-05
 
-**Overall state:** In progress. Waves 1 through 6 are complete; Wave 7 (iOS 27
-toolbar and reading chrome) is the next wave.
+**Overall state:** In progress. Waves 1 through 7 are complete; Wave 8 (SwiftUI
+app lifecycle and four-workspace cutover) is the next wave.
+
+Wave 7 replaced the UIKit reading chrome with a SwiftUI `NavigationStack` toolbar
+and is verified on the iOS 27 iPhone 17 Pro simulator. The three-segment
+`UISegmentedControl` in `navigationItem.titleView` and the three
+`UIBarButtonItem`s are gone; chapter navigation sits at `.principal` with
+`visibilityPriority(.high)`, Focus mode is pinned at `.topBarPinnedTrailing`, and
+the secondary study actions live in a `ToolbarOverflowMenu`.
+
+Two API-name corrections to the original brief, both confirmed against the
+installed iOS 27 SDK's `SwiftUI.swiftinterface`:
+
+- The navigation-bar modifier is **`toolbarMinimizationBehavior(_:for:)`**, not
+  the `toolbarMinimizeBehavior` this document named. `tabBarMinimizeBehavior` is
+  the separate *tab bar* API (used here as `UITabBarController`'s
+  `tabBarMinimizeBehavior` property, since the tab bar is still UIKit).
+- Toolbar item priority is expressed with
+  `visibilityPriority(_: ToolbarItemVisibilityPriority)` on `ToolbarContent`.
+
+The `startStrongsSearch` workaround **could not be retired**, contrary to this
+plan's expectation — see the Wave 7 status section.
+
+**Known and deliberately deferred:** the reader is **letterboxed, not
+edge-to-edge**. Content stops at the toolbar and at the floating tab bar instead
+of scrolling beneath them, leaving a black band at each end. This is the safe half
+of a tradeoff whose other half (Wave 6's overlap) hid text outright. Fixing it
+properly belongs to Wave 9's native reader, where it is a one-call
+`contentMargins`; doing it in the WebView would mean moving the insets into the
+HTML and disturbing fixture-pinned verse-offset math for a view Wave 9 deletes.
+Logged as a Wave 9 acceptance criterion.
 
 Wave 6 replaced the reader with a SwiftUI `WebPage`/`WebView` surface and is
 verified on the iOS 27 iPhone 17 Pro simulator: nonblank Bible and commentary
@@ -44,9 +73,14 @@ stashed, and is now worked around in `startStrongsSearch`.
     build
   ```
 
-- Simulator discovery is blocked from sandboxed shell commands by
-  `CoreSimulatorService connection became invalid`. Xcode MCP can access the
-  installed iOS 27 simulators and is the verification path for this migration.
+- Xcode MCP can access the installed iOS 27 simulators and is the primary
+  verification path for this migration.
+- Simulator discovery from shell commands was blocked earlier in this migration by
+  `CoreSimulatorService connection became invalid`. As of Wave 7 it works:
+  `xcrun simctl list devices available` reports the booted iPhone 17 Pro, and
+  `xcodebuild ... -destination 'platform=iOS Simulator,id=<UUID>' test` runs the
+  suite. Target the simulator **by `id`**, not by `name` — the name form is what
+  produced the "Unable to find a destination" failures CLAUDE.md records.
 - The Wave 1 Xcode scheme is green on the iPhone 17 Pro iOS 27 simulator:
   76 standard unit tests passed, the 2 `PSREF_EXHAUSTIVE` opt-in tests skipped,
   and 3 deterministic XCUITests passed.
@@ -61,7 +95,7 @@ stashed, and is now worked around in `startStrongsSearch`.
 - [x] Wave 4: Library workspace
 - [x] Wave 5: Search workspace and background indexing
 - [x] Wave 6: SwiftUI WebKit reader
-- [ ] Wave 7: iOS 27 toolbar and reading chrome
+- [x] Wave 7: iOS 27 toolbar and reading chrome
 - [ ] Wave 8: SwiftUI app lifecycle and four-workspace cutover
 - [ ] Wave 9: Native SwiftUI reader and WebKit removal
 - [ ] Final all-configuration builds, tests, UI verification, and static audit
@@ -108,14 +142,23 @@ stashed, and is now worked around in `startStrongsSearch`.
   result snapshots, and highlighted full-verse results. The old UIKit search
   controller remains compiled but has no live instantiation and is retained only
   until the UIKit coordinator is removed.
-- Wave 6 now has an in-progress native SwiftUI WebKit surface in
+- Wave 6 replaced the reading surface with a native SwiftUI WebKit surface in
   `SwiftUIReaderViews.swift`. `ReaderWebPageModel` owns `WebPage`, typed
   `NavigationDeciding`, ordered JavaScript calls, navigation events, and WebView
-  scroll callbacks. `PSModuleViewController` temporarily hosts that view while
-  retaining the existing UIKit reading chrome and presentation actions.
-- The old `PSWebView.swift` wrapper has been deleted and removed from explicit
-  Xcode target membership. This is not yet a completion claim: the latest load
-  race and safe-area changes still require runtime verification.
+  scroll callbacks. The old `PSWebView.swift` wrapper is deleted and removed from
+  explicit Xcode target membership.
+- Wave 7 replaced the reading chrome with `SwiftUIReaderChrome.swift`.
+  `ReaderScreen` wraps the reader in a `NavigationStack` and owns chapter
+  navigation, the reference picker, Focus mode, and the study-action overflow
+  menu; `ReaderChromeModel` is the observable state the host pushes into. The
+  per-module display toggles are built by the pure
+  `ReaderDisplayToggle.toggles(forModule:store:)`, still gated on the baked
+  feature set and still writing `"<pref>_<ModuleName>"`.
+  `PSModuleViewController` is now a thin host: it keeps the coordinator contracts
+  (`displayChapter`, `setTabTitle`, the notification observers, the verse menu,
+  info-popup routing) and hides the enclosing UIKit navigation bar. Focus mode
+  uses `setTabBarHidden(_:animated:)` instead of reparenting views.
+  `PSRefSelectorController.swift` is deleted.
 - Search index builds persist an interrupted module and submit a
   `BGProcessingTaskRequest`. The launch-registered background manager restarts
   the same transactional `PSSearchEngine` build, cancels cleanly on expiration,
@@ -392,6 +435,67 @@ stashed, and is now worked around in `startStrongsSearch`.
   `PSWebView.swift` and adding `SwiftUIReaderViews.swift` did not disturb the
   pure-Swift invariant. `git diff --check` and
   `plutil -lint PocketSword.xcodeproj/project.pbxproj` pass.
+- **2026-08-05:** Started Wave 7 by checking the iOS 27 SDK's own
+  `SwiftUI.swiftinterface` rather than trusting this plan's symbol names, which
+  found two corrections: the modifier is `toolbarMinimizationBehavior(_:for:)`
+  (this plan said `toolbarMinimizeBehavior`, which is the tab-bar API), and item
+  priority is `visibilityPriority(_:)` with `ToolbarItemVisibilityPriority`.
+  `toolbarOverflowMenu`, `ToolbarOverflowMenu` and `.topBarPinnedTrailing` are all
+  present as described.
+- **2026-08-05:** Added `SwiftUIReaderChrome.swift` and reduced
+  `PSModuleViewController` to a chrome host. The per-module display menu became
+  the pure `ReaderDisplayToggle.toggles(forModule:store:)`, so the KJV-six-rows /
+  MHCC-zero contract is assertable without the simulator for the first time —
+  previously it could only be checked by counting rows in a live `UIMenu`.
+  Deleted `PSRefSelectorController.swift`, which nothing instantiated once the
+  picker moved into the reader. A device build succeeds with `CompileC` still 1.
+- **2026-08-05:** Live iPhone 17 Pro verification found and fixed three Wave 7
+  defects. An `ignoresSafeArea(edges: .bottom)` reintroduced the Wave 6
+  paint-under-the-tab-bar defect; removing it fixed the overlap but leaves the
+  reader letterboxed rather than edge-to-edge, which is now logged as a Wave 9
+  acceptance criterion rather than papered over. The reference picker presented as an invisible
+  320x49 strip because it was anchored on the `NavigationStack` with a forced
+  compact popover adaptation; it now hangs off the reference button and adapts to
+  a sheet on iPhone, which is also what the legacy chrome did. Focus mode was a
+  trap: `toolbarVisibility(.hidden)` hid the pinned Focus control along with the
+  bar, leaving zero buttons and no way out.
+- **2026-08-05:** Live verification confirmed the finished chrome. `Gen 1:1` opens
+  with Previous correctly disabled; next chapter moves both reference and text;
+  the reference picker completes Genesis to Chapter 5 to Verse 5, dismisses, and
+  lands scrolled to verse 5; the overflow menu shows History and Search plus
+  exactly six KJV display rows with **no** cross-references row; toggling Strong's
+  off re-renders without the `<0xxxx>` markers and holds position; Focus mode
+  hides the tab bar and status bar, reclaims the space, flips the control to "Exit
+  Focus Mode", and restores cleanly; landscape lays out correctly with no overlap;
+  rotation preserves the reference; a Strong's link opens H8141 with its Hebrew
+  lemma; and the commentary tab's overflow menu correctly has **no** display rows.
+  The launch log contains no JavaScript reference errors.
+- **2026-08-05:** Tested whether Wave 7 retires the `startStrongsSearch`
+  workaround, as this plan expected. It does **not**. With the line removed, the
+  rotate-then-"Find all occurrences" path still crashed
+  (`applicationState: Crashed`, plus a fresh `.ips` whose signature matches the
+  documented one: `AnimationKit`, `EXC_BREAKPOINT`,
+  `_UITabBarVisualProvider_FloatingAccessibility`, `layoutSubviews`). Restoring the
+  line made the same sequence return its 647 results. The assertion lives in the
+  UIKit tab bar presenting a UIKit sheet, neither of which Wave 7 replaced, so the
+  workaround is carried to Wave 8 and the negative result is recorded in the code.
+- **2026-08-05:** The full Xcode MCP run then caught a defect the manual pass had
+  missed: opening History & Search from the new overflow menu crashed with the same
+  floating-tab-bar signature, because a menu is itself a presentation and tapping a
+  row dismisses it as the multi-list goes up. Manual verification had only ever
+  reached History & Search from the old bar-button item, so moving it into the menu
+  changed its presentation context uncovered. Fixed with a `toggleMultiListFromMenu`
+  that applies the same unanimated present; re-verified on device that the row now
+  opens the History sheet with its entries.
+- **2026-08-05:** Wave 7 verification is green and the wave is complete. The full
+  Xcode MCP run on iPhone 17 Pro passed **120 tests, failed 0**, and skipped the 2
+  `PSREF_EXHAUSTIVE` opt-in tests (122 total). `testBookmarkFolderCrudAndReordering`
+  — a Wave 4 test, untouched here — failed once under full-suite load and passed in
+  isolation, so its long-press-then-drag wait went from 5 s to 15 s; the assertion
+  is unchanged. A separate generic iOS device build with Xcode 27 beta also
+  succeeds, and a clean device build still reports `CompileC` 1
+  (`MBProgressHUD.m` only), so the target remains pure Swift. `git diff --check`
+  and `plutil -lint PocketSword.xcodeproj/project.pbxproj` pass.
 
 ### Wave 6 status
 
@@ -425,6 +529,114 @@ Carry into Wave 7:
   Re-test the rotate-then-Strong's-search path after that change; if the
   floating-tab-bar assertion is gone, drop the workaround and its
   `suppressMultiListPresentAnimation` flag.
+  **Resolved in Wave 7: tested, still required. Carried to Wave 8.**
+
+### Wave 7 status
+
+**Worktree state:** Complete.
+
+Changed files:
+
+- `Classes/SwiftUIReaderChrome.swift` (new): `ReaderDisplayToggle` (the pure
+  per-module toggle builder), `ReaderChromeModel`, `ReaderScreen`,
+  `ReaderReferenceControl`.
+- `Classes/PSModuleViewController.swift`: reduced to a chrome host. Deleted the
+  segmented control, the three bar-button items, `rebuildSettingsMenu`'s `UIMenu`
+  construction, `setSettingsMenu`, `segmentedControlAction`,
+  `setVoiceOverForRefSegmentedControlSubviews`, `readerFrame`/`layoutReaderHost`,
+  and `previousTabBarView`. Focus mode rewritten. Hosts the reference picker.
+- `Classes/PSTabBarControllerDelegate.swift`: `toggleNavigation` reduced to a
+  reader seam; `refSelectorController`/`refNavigationController` and the
+  iPhone-sheet-vs-iPad-popover branch removed; added `visibleReader` and
+  `toggleMultiListFromMenu`; set `tabBarMinimizeBehavior = .onScrollDown`.
+- `Classes/PSRefSelectorController.swift` (deleted): nothing instantiated it once
+  the picker moved into the reader, and the `refSelectorResetBooks` notification
+  it observed has no poster anywhere in the tree.
+- `Classes/AppStateStoresTests.swift`: dropped `testReaderFrameStopsAtOverlappingTabBar`
+  (it pinned the deleted clamp); added three chrome/toggle tests.
+- `Tests/PocketSwordUITests.swift`: reading identifiers updated; added Focus-mode
+  and display-toggle tests.
+- `en.lproj/Localizable.strings`: `VoiceOverFocusModeButton` /
+  `VoiceOverExitFocusModeButton`.
+
+Four defects were found and fixed. The first three came from live interaction; the
+fourth was caught by the XCUITests, on a path manual verification had missed:
+
+1. **Text painted under the floating tab bar.** An `ignoresSafeArea(edges:
+   .bottom)` on the reader reintroduced the exact Wave 6 defect. Removed, which
+   fixed the overlap.
+   **Partially resolved, and knowingly so:** removing it is the safe half of a
+   tradeoff, not the target design. The reader now *stops* at the chrome rather
+   than flowing under it, so the chapter is letterboxed — black bands top and
+   bottom. Both directions have now been wrong once each (Wave 6 overlap, Wave 7
+   letterboxing); the answer is a full-height scroll view with inset *content*,
+   which is a Wave 9 acceptance criterion because in a WebView it means moving the
+   insets into the HTML and disturbing the fixture-pinned verse-offset math for a
+   view Wave 9 deletes. See the Wave 9 section, and the long comment at the top of
+   `ReaderScreen.body`.
+2. **The reference picker presented as an invisible 320x49 strip.** It was a
+   `.popover` on the `NavigationStack` with `presentationCompactAdaptation(.popover)`.
+   Moved onto the reference `Button` (so the arrow points at what it changes) and
+   the forced compact adaptation dropped — letting iPhone adapt to a sheet is both
+   the system default and what the legacy chrome did (`toggleNavigation` presented
+   a modal on iPhone, a popover only on iPad).
+3. **Focus mode was a trap.** `toolbarVisibility(.hidden)` hid the navigation bar
+   *including* the `.topBarPinnedTrailing` Focus control, so the hierarchy
+   contained zero buttons and there was no way back out. Focus mode now keeps the
+   bar and hides only the tab bar and status bar.
+4. **Opening History & Search from the overflow menu crashed the app**, with the
+   same floating-tab-bar AnimationKit signature as the Strong's path. A menu is
+   itself a presentation, so tapping a row tears it down while the multi-list goes
+   up in the same beat — the identical one-sheet-out/one-sheet-in shape. Fixed with
+   the same remedy, via a new `toggleMultiListFromMenu` that sets
+   `suppressMultiListPresentAnimation` before presenting. `toggleVoiceRef` is on
+   the same menu but already guards on `presentedViewController == nil`, so it
+   fails safe rather than crashing.
+
+Defect 4 is worth noting as a process point: manual interaction had exercised
+History & Search only from the *old* bar-button item, so moving it into the
+overflow menu changed its presentation context and nothing in the manual pass
+re-covered it. The XCUITest caught it.
+
+Focus mode also no longer reparents views. It used to move the reader host into
+`tabBarController.view`, stash the old root view, and reassign
+`tabBarController.view` on exit while hand-animating `tabBar.alpha`. It now calls
+`setTabBarHidden(_:animated:)` (iOS 18+) and lets `ReaderScreen` follow the same
+`isFocused` flag.
+
+**The `startStrongsSearch` workaround is still required.** Wave 7 was expected to
+retire it. Re-tested with the SwiftUI toolbar in place and the line removed:
+rotating with the Strong's popup open and then tapping "Find all occurrences"
+still crashed, with the same signature in a fresh crash report (`AnimationKit`,
+`EXC_BREAKPOINT`, `_UITabBarVisualProvider_FloatingAccessibility`,
+`layoutSubviews`). The assertion is in the UIKit tab bar the coordinator still
+owns, presenting a UIKit sheet — neither is what Wave 7 replaced. Restored, and
+the code comment now records the negative result so it is not retried blindly.
+Re-test after the Wave 8 cutover.
+
+Not verified for Wave 7, carried into Wave 8: a footnote link, iPad (including
+the picker's popover arm, which is now the system's adaptation rather than an
+explicit branch), Dynamic Type, VoiceOver, and RTL.
+
+Carry into Wave 8:
+
+- Re-test **both** unanimated-present paths once the tab bar and the
+  History/Search presentation are SwiftUI — the rotate-then-Strong's-search one and
+  the overflow-menu one — and drop `suppressMultiListPresentAnimation` plus
+  `toggleMultiListFromMenu` if the assertion is gone. Any *new* control that
+  presents the multi-list from inside another presentation needs the same
+  treatment until then.
+- Three image resources are now unreferenced by code — `back-white.png`,
+  `forward-white.png` (the old segmented-control arrows) and `history.png` (the
+  old bar-button icon), all replaced by SF Symbols. They are still bundled; remove
+  them with the rest of the UIKit asset sweep rather than piecemeal.
+- `PSChapterSelectorController` is compiled but nothing instantiates it, and it is
+  the only thing that instantiates `PSVerseSelectorController` — so that pair is
+  dead as a unit (they predate the SwiftUI picker). `PSModuleSearchController` has
+  likewise had no live instantiation since Wave 5. Both selector controllers still
+  post `NotificationToggleNavigation`, which is now the only remaining poster of
+  that notification; once they go, `toggleNavigation`'s observer registration can
+  go with them. Sweep all of this when the UIKit coordinator is removed.
 
 ## Summary
 
@@ -461,7 +673,46 @@ Carry into Wave 7:
 6. **Read/WebKit:** Use `WebPage`/`WebView` and `NavigationDeciding` for chapters, JavaScript restoration, links, notes, Strong's/morph actions, bookmarks, and highlighting. Use a single Bible/commentary pane on all devices.
 7. **iOS 27 chrome:** Keep reference and chapter navigation at high toolbar priority, pin Focus mode with `.topBarPinnedTrailing`, place secondary study actions in `ToolbarOverflowMenu`, and minimize normal reading chrome with `toolbarMinimizeBehavior`.
 8. **App cutover:** Introduce `@main PocketSwordApp`, `WindowGroup`, four-workspace `TabView`, `NavigationStack`, `onOpenURL`, and `scenePhase`. Remove the UIKit coordinator, app/scene delegates, controllers, notification routing, `PSResizing`, MessageUI, MBProgressHUD, and bridging headers.
-9. **Native reader:** Add SwiftSoup via SPM, parse the existing assembled HTML into `ChapterDocument`, and render stable verse rows using `LazyVStack`, `AttributedString`, native scrolling, typed links, context menus, notes, headings, red letter, and bookmark colors. Remove WebKit and JavaScript resources after feature-parity acceptance.
+9. **Native reader:** Add SwiftSoup via SPM, parse the existing assembled HTML into `ChapterDocument`, and render stable verse rows using `LazyVStack`, `AttributedString`, native scrolling, typed links, context menus, notes, headings, red letter, and bookmark colors. Remove WebKit and JavaScript resources after feature-parity acceptance. **Acceptance criterion: edge-to-edge reading** — see below.
+
+### Wave 9 acceptance criterion: edge-to-edge reading
+
+**The reader must scroll content under the chrome, not stop at it.** As of Wave 7
+the chapter is *letterboxed*: the scroll view ends at the toolbar and at the
+floating tab bar, so the reader shows black bands top and bottom. Wave 9 is where
+this gets fixed, and it is a criterion rather than a nicety — it is the most
+visible thing about the reading surface.
+
+The target is a full-height scroll view whose **content** carries the safe-area
+insets: text flows edge-to-edge and scrolls beneath translucent bars, while no
+line is ever obscured at rest. Concretely, `contentMargins` (or
+`safeAreaPadding`) on the `LazyVStack`'s scroll view, plus
+`ignoresSafeArea` on the scroll view itself. In a native scroll view this is
+one call; native scrolling handles the rest.
+
+Both halves of the tradeoff have already been got wrong once each, so neither is
+an acceptable end state:
+
+- Wave 6 let the WebView extend under the tab bar with no content inset, and
+  lines painted permanently behind it.
+- Wave 7 kept the WebView inside the safe area, which fixed the overlap and
+  produced the current letterboxing.
+
+**Why this was not fixed in the WebView.** For a WebView the insets have to come
+from the HTML — `viewport-fit=cover` plus `env(safe-area-inset-*)` in
+`PSModuleController.createHTMLString`, replacing `PSContentReader.chapterPage`'s
+six hardcoded `<p>&nbsp;</p>` pads (themselves a faithful port of
+`-getChapter:`'s own six). Every verse offset that `versePositionArray`,
+`scrollToVerse`, `scrollHappened` and the two-point scroll threshold measure sits
+downstream of where content begins, and the chapter-body fixtures plus
+`chapter-loop-counters.tsv` pin the surrounding output. That is a change to the
+render path and its scroll math, in a WebView this wave deletes — so it is paid
+for once, here, in the reader that survives.
+
+A cheap intermediate exists if the bands need to look deliberate before Wave 9
+lands: make the toolbar and tab bar backgrounds opaque, so the boundary reads as
+a chrome edge rather than as clipped content. Cosmetic only, and it carries none
+of the scroll-math risk.
 
 ## Verification
 
@@ -470,4 +721,12 @@ Carry into Wave 7:
 - Cover launch, all workspaces, reading navigation, Bible/commentary switching, search, dictionary, bookmark CRUD/reordering, history, voice states, Focus mode, and relaunch restoration with XCUITest.
 - Verify light/dark mode, Dynamic Type, VoiceOver, RTL, iPhone/iPad, rotation, constrained toolbar overflow, interrupted launch, and empty/error states.
 - The native reader requires workflow and feature parity, not pixel-identical WebKit output.
+- **Check the reader's top and bottom edges explicitly, in both orientations.** The
+  chapter must flow edge-to-edge and scroll under the chrome, with no black band at
+  either end and no line obscured at rest. This has been wrong in both directions
+  across Waves 6 and 7 (overlap, then letterboxing) and is a Wave 9 acceptance
+  criterion — see the section under Wave 9. A hierarchy dump alone does NOT catch
+  it: the `reading.web-content` frame reports full-window in both the broken and
+  the correct case, because the identifier sits on the container rather than the
+  scrolling WebView. Read the screenshot.
 - Finish with all three configurations and a static audit showing no project-owned UIKit imports, symbols, Objective-C sources, or UIKit-only dependencies.

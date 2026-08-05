@@ -92,11 +92,11 @@ final class PSTabBarControllerDelegate: NSObject,
     // Commentary tab
     @objc var commentaryTabController: PSCommentaryViewController?
 
-    // Bible & Commentary tab
-    private var refSelectorController: PSRefSelectorController?
-    private var refNavigationController: UINavigationController?
-    // (refTitleSplashView / refTitleSplashTimer were dead ivars in the .mm — never
-    // assigned or read — so they are dropped.)
+    // (refSelectorController / refNavigationController are GONE as of Wave 7: the
+    // reference picker is a SwiftUI popover owned by the reader, so the coordinator
+    // neither builds nor presents it. refTitleSplashView / refTitleSplashTimer were
+    // dead ivars in the original .mm — never assigned or read — and were dropped
+    // during the Swift port.)
 
     // Info popup (Strong's, morph, footnotes, xrefs, dict entries).
     private var infoPopupController: PSInfoPopupViewController?
@@ -231,6 +231,10 @@ final class PSTabBarControllerDelegate: NSObject,
 
         tabBarController.customizableViewControllers = nil
         tabBarController.selectedIndex = 0
+        // Wave 7: quiet the tab bar while reading, to match the navigation bar's
+        // `toolbarMinimizationBehavior(.onScrollDown)`. The reading tabs are the
+        // only long-scrolling surfaces, and the bar comes back on a scroll up.
+        tabBarController.tabBarMinimizeBehavior = .onScrollDown
         tabBarController.moreNavigationController.topViewController?.navigationItem.rightBarButtonItem = nil
         tabBarController.delegate = self
 
@@ -311,6 +315,28 @@ final class PSTabBarControllerDelegate: NSObject,
 
     @objc(toggleMultiList:)
     func toggleMultiList(_ sender: Any?) {
+        toggleMultiList()
+    }
+
+    /// Opens the History/Search multi-list from a control that is ITSELF a
+    /// presentation — currently the reader's `ToolbarOverflowMenu`.
+    ///
+    /// A menu counts as a presentation, so tapping a row tears it down and this
+    /// present goes up in the same beat. That is the same one-sheet-out /
+    /// one-sheet-in shape as `startStrongsSearch`, and it trips the same iOS 27
+    /// floating-tab-bar AnimationKit assertion
+    /// (`_UITabBarVisualProvider_FloatingAccessibility layoutSubviews`,
+    /// `EXC_BREAKPOINT`, no app frames on the stack). Reproduced on iPhone 17 Pro
+    /// by tapping the overflow menu's "History and Search" row, which crashed with
+    /// a signature identical to the one recorded in `startStrongsSearch`.
+    ///
+    /// Presenting unanimated keeps that layout out of an animation block, which is
+    /// the same remedy, verified the same way. See `startStrongsSearch` for the
+    /// full analysis and for the two approaches that did NOT work.
+    @objc func toggleMultiListFromMenu() {
+        if multiListController?.presentingViewController == nil {
+            suppressMultiListPresentAnimation = true
+        }
         toggleMultiList()
     }
 
@@ -493,10 +519,6 @@ final class PSTabBarControllerDelegate: NSObject,
 
     @objc(presentationControllerDidDismiss:)
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        if refNavigationController != nil {
-            refSelectorController = nil
-            refNavigationController = nil
-        }
         if let infoPopup = infoPopupController,
            presentationController.presentedViewController == infoPopup {
             infoPopupController = nil
@@ -541,74 +563,53 @@ final class PSTabBarControllerDelegate: NSObject,
         tabBarController.present(voiceController, animated: true)
     }
 
+    /// Opens or closes the reference picker on whichever reader is on screen.
+    ///
+    /// Wave 7 moved the picker into a SwiftUI popover that `ReaderScreen` presents,
+    /// anchored on the reference button itself. That deleted a lot from here: the
+    /// `PSRefSelectorController` construction, the wrapping `UINavigationController`
+    /// with its hidden bar, the `setupNavigation` / `willShowNavigation` priming
+    /// pair, and the explicit iPhone-sheet-vs-iPad-popover branch — SwiftUI's own
+    /// compact adaptation makes that split for us, jumping to the same two
+    /// presentations this code used to build by hand. The `!PSResizing.iPad()`
+    /// Cancel-button rule is preserved in `makeReferencePicker`.
+    ///
+    /// The jointly-owned ivars went with it, so `presentationControllerDidDismiss`
+    /// no longer has a ref-selector case. What is PRESERVED is the guard that a
+    /// tab with no module cannot open a picker, and the notification contract:
+    /// a selection still posts `toggleNavigation` (to close) followed by
+    /// `updateSelectedReference` — see `PSModuleViewController.makeReferencePicker`.
     @objc func toggleNavigation() {
-        let iPad = PSResizing.iPad()
-        if refNavigationController != nil || (tabBarController.presentedViewController != nil) {
-            tabBarController.dismiss(animated: true, completion: nil)
-            refSelectorController = nil
-            refNavigationController = nil
-        } else {
-            if let selView = tabBarController.selectedViewController?.view,
-               bibleTabController?.isReaderVisible(in: selView) == true {
-                // bible tab
-                if PSModuleController.default()?.primaryBibleName == nil {
-                    // no Bible selected, so ignore...
-                    return
-                }
-                let refSel = PSRefSelectorController()
-                refSelectorController = refSel
-                refSel.setupNavigation()
-                let refNav = UINavigationController(rootViewController: refSel)
-                refNav.setNavigationBarHidden(true, animated: false)
-                refNavigationController = refNav
-                if !iPad {
-                    refSel.willShowNavigation()
-                    tabBarController.present(refNav, animated: true, completion: nil)
-                } else {
-                    refNav.modalPresentationStyle = .popover
-                    let viewToPresentPopoverFrom = bibleTabController?.titleSegmentedControl
-                    var rect = viewToPresentPopoverFrom?.frame ?? .zero
-                    rect.origin.x = 0
-                    rect.origin.y = 0
-                    refNav.popoverPresentationController?.sourceView = viewToPresentPopoverFrom
-                    refNav.popoverPresentationController?.sourceRect = rect
-                    refNav.popoverPresentationController?.permittedArrowDirections = .up
-                    refNav.popoverPresentationController?.delegate = self
-                    refSel.willShowNavigation()
-                    tabBarController.present(refNav, animated: true, completion: nil)
-                }
-            } else if let selView = tabBarController.selectedViewController?.view,
-                      commentaryTabController?.isReaderVisible(in: selView)
-                        == true {
-                // commentary tab
-                if PSModuleController.default()?.primaryCommentaryName == nil {
-                    // no Commentary selected, so ignore...
-                    return
-                }
-                let refSel = PSRefSelectorController()
-                refSelectorController = refSel
-                refSel.setupNavigation()
-                let refNav = UINavigationController(rootViewController: refSel)
-                refNav.setNavigationBarHidden(true, animated: false)
-                refNavigationController = refNav
-                if !iPad {
-                    refSel.willShowNavigation()
-                    tabBarController.present(refNav, animated: true, completion: nil)
-                } else {
-                    refNav.modalPresentationStyle = .popover
-                    let viewToPresentPopoverFrom = commentaryTabController?.titleSegmentedControl
-                    var rect = viewToPresentPopoverFrom?.frame ?? .zero
-                    rect.origin.x = 0
-                    rect.origin.y = 0
-                    refNav.popoverPresentationController?.sourceView = viewToPresentPopoverFrom
-                    refNav.popoverPresentationController?.sourceRect = rect
-                    refNav.popoverPresentationController?.permittedArrowDirections = .up
-                    refNav.popoverPresentationController?.delegate = self
-                    refSel.willShowNavigation()
-                    tabBarController.present(refNav, animated: true, completion: nil)
-                }
-            }
+        guard let reader = visibleReader else { return }
+
+        if reader.isPresentingReferencePicker {
+            reader.toggleReferencePicker()
+            return
         }
+
+        let hasModule = (reader.tabType == .BibleTab)
+            ? PSModuleController.default()?.primaryBibleName != nil
+            : PSModuleController.default()?.primaryCommentaryName != nil
+        guard hasModule else {
+            // no module selected for this tab, so ignore...
+            return
+        }
+        reader.toggleReferencePicker()
+    }
+
+    /// The reader whose view is currently on screen, or nil if neither is.
+    /// Consolidates the `isReaderVisible(in:)` check that was repeated inline.
+    private var visibleReader: PSModuleViewController? {
+        guard let selView = tabBarController.selectedViewController?.view else {
+            return nil
+        }
+        if bibleTabController?.isReaderVisible(in: selView) == true {
+            return bibleTabController
+        }
+        if commentaryTabController?.isReaderVisible(in: selView) == true {
+            return commentaryTabController
+        }
+        return nil
     }
 
     @objc(updateViewWithSelectedBookChapterVerse:)
@@ -899,8 +900,20 @@ final class PSTabBarControllerDelegate: NSObject,
         // pre-Wave-6 commit. Two other approaches were tried and did NOT fix it
         // (deferring the present with DispatchQueue.main.async, and dismissing
         // unanimated plus an explicit layoutIfNeeded), so do not "simplify" this
-        // back into an animated present. Wave 7 replaces this chrome with the
-        // native SwiftUI toolbar and should retire the workaround with it.
+        // back into an animated present.
+        //
+        // Wave 7 EXPECTED to retire this along with the UIKit reading chrome, and
+        // it CANNOT. Re-tested on iOS 27 / iPhone 17 Pro with the SwiftUI toolbar
+        // in place and this line removed: rotating with the Strong's popup open
+        // and then tapping "Find all occurrences" still trapped, with the same
+        // signature in the crash report (`AnimationKit`, `EXC_BREAKPOINT`,
+        // `_UITabBarVisualProvider_FloatingAccessibility`, `layoutSubviews`).
+        //
+        // That makes sense: the assertion is in the UIKit tab bar the coordinator
+        // still owns, and the multi-list is still a UIKit sheet presented from it.
+        // Neither is what Wave 7 replaced. Re-test after the Wave 8 cutover moves
+        // the tab bar and this presentation into SwiftUI, which is the change that
+        // could actually remove the offending layout.
         suppressMultiListPresentAnimation = true
         hideInfoWithCompletion { [weak self] in
             self?.toggleMultiList()

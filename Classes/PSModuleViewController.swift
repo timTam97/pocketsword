@@ -3,8 +3,20 @@
 //  PocketSword
 //
 //  Shared UIKit host for the Bible and commentary tabs during the mixed migration.
-//  SwiftUIReaderWebView owns the live WebPage/WebView surface; this controller keeps
-//  the existing navigation chrome and presentation actions until the app cutover.
+//  `ReaderScreen` (SwiftUIReaderChrome.swift) owns the live WebPage/WebView surface
+//  AND, as of Wave 7, the whole reading chrome; this controller is now a thin
+//  adapter that keeps the coordinator contracts (-displayChapter:, -setTabTitle:,
+//  the notification observers, the verse menu, the info-popup routing) and pushes
+//  chrome state into a ReaderChromeModel.
+//
+//  Wave 7 removed from here: the three-segment UISegmentedControl that lived in
+//  navigationItem.titleView, the history/search + textformat + microphone
+//  UIBarButtonItems, `rebuildSettingsMenu`'s UIMenu construction (now the pure
+//  `ReaderDisplayToggle.toggles(forModule:store:)`), and
+//  `setVoiceOverForRefSegmentedControlSubviews` (the SwiftUI buttons carry their
+//  own permanent accessibility labels, so there is nothing to re-apply). The
+//  UIKit navigation bar itself is hidden — SwiftUI's NavigationStack inside the
+//  host draws the bar now.
 //
 //  Created by Nic Carter on 3/11/09.
 //  Copyright 2009 The CrossWire Bible Society. All rights reserved.
@@ -14,33 +26,20 @@ import UIKit
 import SwiftUI
 import WebKit
 
-// SWORD feature / passagestudy attribute / output-key names are @"literal" #defines
-// in the Obj-C facade headers (SwordManager.h / SwordModule.h). Obj-C string #defines
-// do NOT import into Swift, so these mirror the literals byte-for-byte (same approach
-// as PSModuleController.swift). Wire strings unchanged.
+// SWORD passagestudy attribute names are @"literal" #defines in globals.h. Obj-C
+// string #defines do NOT import into Swift, so these mirror the literals
+// byte-for-byte (same approach as PSModuleController.swift). Wire strings unchanged.
+//
+// Wave 7 removed the feature-name constants (SWMOD_FEATURE_* / SWMOD_CONF_FEATURE_*,
+// plus SWMOD_CATEGORY_BIBLES) from this enum: the display menu they gated moved to
+// `ReaderDisplayToggle` in SwiftUIReaderChrome.swift, which carries its own mirrored
+// copies. The unused SW_OUTPUT_*_KEY pair went with them. What is left is only what
+// the info-popup routing below reads out of `+dataForLink:`.
 private enum SWRender {
-    // SWMOD_FEATURE_* / SWMOD_CONF_FEATURE_* (SwordManager.h)
-    static let featureStrongs = "Strongs"
-    static let confFeatureStrongs = "StrongsNumbers"
-    static let featureMorph = "Morph"
-    static let featureHeadings = "Headings"
-    static let featureFootnotes = "Footnotes"
-    static let featureScriptRef = "Scripref"          // not Scriptref
-    static let featureRedLetterWords = "RedLetterWords"
-
-    // ATTRTYPE_* (SwordModule.h)
+    // ATTRTYPE_* (globals.h)
     static let attrType = "type"
     static let attrAction = "action"
     static let attrValue = "value"
-
-    // SW_OUTPUT_*_KEY (SwordModule.h)
-    static let outputTextKey = "OutputTextKey"
-    static let outputRefKey = "OutputRefKey"
-
-    // SWMOD_CATEGORY_BIBLES (SwordManager.h) — the module `type` string, which is
-    // what content_meta stores and what `ModuleType == bible` was derived from
-    // (+[SwordModule moduleTypeForModuleTypeString:]).
-    static let typeBibles = "Biblical Texts"
 }
 
 @objc(PSModuleViewController)
@@ -48,10 +47,9 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
 
     // MARK: - State
 
-    @objc var titleSegmentedControl: UISegmentedControl?
-    @objc var moduleButton: UIBarButtonItem?
     private var readerModel: ReaderWebPageModel!
-    private var readerHostController: UIHostingController<SwiftUIReaderWebView>!
+    private var chromeModel: ReaderChromeModel!
+    private var readerHostController: UIHostingController<ReaderScreen>!
 
     // weak back-reference to the coordinator (the old `delegate` ivar/property).
     // NOT @objc: the custom -setDelegate: below does non-trivial bar-button setup,
@@ -64,7 +62,6 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
     @objc var jsToShow: String?
     @objc var tappedVerse: String?
     @objc private(set) var isFullScreen: Bool = false
-    private var previousTabBarView: UIView?
     private var finishedLoading: Bool = false
     @objc var versePositionArray: NSArray?
     private var currentShownVerse: NSInteger = 0
@@ -98,9 +95,31 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
 
         let model = ReaderWebPageModel()
         model.delegate = self
+        let chrome = ReaderChromeModel()
+        chrome.isBibleTab = (tabType == .BibleTab)
+        readerModel = model
+        chromeModel = chrome
+
         let host = UIHostingController(
-            rootView: SwiftUIReaderWebView(model: model)
+            rootView: ReaderScreen(
+                chrome: chrome,
+                reader: model,
+                makeReferencePicker: { [weak self] in
+                    self?.makeReferencePicker()
+                        ?? ReferencePickerView(model: ReferencePickerModel())
+                }
+            )
         )
+        // Wave 7: the host fills the controller's view outright. Wave 6 had to cap
+        // the frame at the floating tab bar's top because a bare WebView cannot
+        // inset itself; `ReaderScreen`'s NavigationStack takes the safe area into
+        // account for us, so `readerFrame`'s clamp is gone along with the manual
+        // `viewDidLayoutSubviews` pass.
+        //
+        // Note this only makes the reader stop AT the chrome, not flow under it —
+        // the chapter is currently letterboxed rather than edge-to-edge. See the
+        // long comment at the top of `ReaderScreen.body` for why that is left to
+        // Wave 9 rather than fixed in the WebView.
         host.view.frame = baseView.bounds
         host.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         host.view.backgroundColor = .systemBackground
@@ -108,11 +127,94 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
         addChild(host)
         baseView.addSubview(host.view)
         host.didMove(toParent: self)
-        readerModel = model
         readerHostController = host
+
+        configureChromeCallbacks()
 
         loadHTMLString("<html><body>&nbsp;</body></html>")
         currentShownVerse = 1
+    }
+
+    /// Wires the SwiftUI chrome's actions back onto the existing UIKit paths, so
+    /// every one of them keeps its current behaviour (history entry, MBProgressHUD
+    /// title in focus mode, redisplay notification, ...).
+    private func configureChromeCallbacks() {
+        chromeModel.onPreviousChapter = { [weak self] in
+            self?.prevChapter()
+        }
+        chromeModel.onNextChapter = { [weak self] in
+            self?.nextChapter()
+        }
+        chromeModel.onHistoryAndSearch = { [weak self] in
+            guard let self else { return }
+            // Goes through the -FromMenu variant: this action fires from the
+            // ToolbarOverflowMenu, which is itself a presentation, so the
+            // present must be unanimated to avoid the iOS 27 floating-tab-bar
+            // assertion. See PSTabBarControllerDelegate.toggleMultiListFromMenu.
+            self.delegate?.toggleMultiListFromMenu()
+        }
+        chromeModel.onVoiceReference = { [weak self] in
+            guard let self else { return }
+            self.delegate?.toggleVoiceRef(self)
+        }
+        chromeModel.onToggleFocus = { [weak self] in
+            self?.toggleFullscreen()
+        }
+        chromeModel.onDisplayToggle = { [weak self] toggle in
+            guard let self, let modName = self.settingsMenuModuleName else {
+                return
+            }
+            // Identical to the UIKit UIAction handler this replaces: flip the
+            // PER-MODULE pref key ("<pref>_<ModuleName>"), redisplay, and rebuild
+            // so the checkmark reflects the new value.
+            let current = UserDefaults.standard.psBool(
+                toggle.preference,
+                forModule: modName
+            )
+            UserDefaults.standard.psSet(
+                !current,
+                forPref: toggle.preference,
+                module: modName
+            )
+            UserDefaults.standard.synchronize()
+            NotificationCenter.default.post(
+                name: self.redisplayNotification,
+                object: nil
+            )
+            self.rebuildSettingsMenu()
+        }
+    }
+
+    /// Builds the SwiftUI reference picker for the popover, preserving the
+    /// notification contract the UIKit `PSRefSelectorController` posted:
+    /// `toggleNavigation` to close, then `updateSelectedReference` with the
+    /// book-name / chapter / verse payload.
+    private func makeReferencePicker() -> ReferencePickerView {
+        let model = ReferencePickerModel(
+            books: (PSBookOSISResolver.shared?.books ?? [])
+                .map(ReferencePickerBook.init),
+            currentReference: PSModuleController.getCurrentBibleRef(),
+            // Same rule the deleted PSRefSelectorController.setupNavigation used:
+            // the iPhone presentation adapts to a sheet, which needs an explicit
+            // Cancel; an iPad popover is dismissed by tapping outside it.
+            showsCancel: !PSResizing.iPad()
+        )
+        model.onCancel = { [weak self] in
+            self?.chromeModel.isPresentingReferencePicker = false
+        }
+        model.onSelection = { [weak self] selection in
+            guard let self else { return }
+            self.chromeModel.isPresentingReferencePicker = false
+            NotificationCenter.default.post(
+                name: .updateSelectedReference,
+                object: [
+                    AppConstants.bookNameString: selection.bookName,
+                    AppConstants.chapterString: String(selection.chapter),
+                    AppConstants.verseString: String(selection.verse),
+                ]
+            )
+        }
+        return ReferencePickerView(model: model)
     }
 
     override func viewDidLoad() {
@@ -141,72 +243,16 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
             break
         }
 
-        let backImg = UIImage(named: "back-white.png")
-        backImg?.accessibilityLabel = NSLocalizedString("VoiceOverPreviousChapterButton", comment: "")
-        let forwardImg = UIImage(named: "forward-white.png")
-        forwardImg?.accessibilityLabel = NSLocalizedString("VoiceOverNextChapterButton", comment: "")
-        let segments: [Any] = [backImg as Any, "Gen 23:23", forwardImg as Any]
-        let segControl = UISegmentedControl(items: segments)
-        segControl.isMomentary = true
-        segControl.accessibilityIdentifier = "reading.reference-picker"
-
-        let arrowWidth: CGFloat = 50.0
-        let refWidth: CGFloat = 95.0
-        segControl.setWidth(arrowWidth, forSegmentAt: 0)
-        segControl.setWidth(refWidth, forSegmentAt: 1)
-        segControl.setWidth(arrowWidth, forSegmentAt: 2)
-        segControl.addTarget(self, action: #selector(segmentedControlAction(_:)), for: .valueChanged)
-        self.navigationItem.titleView = segControl
-        self.titleSegmentedControl = segControl
+        // The chrome is drawn by ReaderScreen's own NavigationStack, so the
+        // enclosing UIKit navigation bar must go — leaving it visible stacks two
+        // bars. The UINavigationController is still the tab's root because the
+        // coordinator builds it that way until the Wave 8 cutover.
+        navigationController?.setNavigationBarHidden(true, animated: false)
 
         isFullScreen = false
         NotificationCenter.default.addObserver(self, selector: #selector(redoBookmarkHighlights),
                                                name: .bookmarksChanged, object: nil)
         finishedLoading = false
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        guard !isFullScreen else {
-            return
-        }
-        layoutReaderHost()
-    }
-
-    static func readerFrame(
-        safeAreaFrame: CGRect,
-        tabBarFrame: CGRect?
-    ) -> CGRect {
-        guard let tabBarFrame,
-              tabBarFrame.maxX > safeAreaFrame.minX,
-              tabBarFrame.minX < safeAreaFrame.maxX,
-              tabBarFrame.minY > safeAreaFrame.minY,
-              tabBarFrame.minY < safeAreaFrame.maxY else {
-            return safeAreaFrame
-        }
-
-        return CGRect(
-            x: safeAreaFrame.minX,
-            y: safeAreaFrame.minY,
-            width: safeAreaFrame.width,
-            height: tabBarFrame.minY - safeAreaFrame.minY
-        )
-    }
-
-    private func layoutReaderHost() {
-        let tabBarFrame: CGRect?
-        if let tabBar = tabBarController?.tabBar,
-           !tabBar.isHidden,
-           tabBar.alpha > 0.01 {
-            tabBarFrame = view.convert(tabBar.bounds, from: tabBar)
-        } else {
-            tabBarFrame = nil
-        }
-
-        readerHostController.view.frame = Self.readerFrame(
-            safeAreaFrame: view.safeAreaLayoutGuide.layoutFrame,
-            tabBarFrame: tabBarFrame
-        )
     }
 
     // MARK: - Scroll / verse positioning
@@ -281,21 +327,6 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
         }
     }
 
-    @objc(segmentedControlAction:)
-    func segmentedControlAction(_ sender: Any) {
-        guard let segControl = sender as? UISegmentedControl else { return }
-        switch segControl.selectedSegmentIndex {
-        case 0: // previous
-            prevChapter()
-        case 1: // Ref
-            delegate?.toggleNavigation()
-        case 2: // next
-            nextChapter()
-        default:
-            break
-        }
-    }
-
     // Loads the next chapter into the Web View
     @objc(nextChapter)
     func nextChapter() {
@@ -366,21 +397,25 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
 
     @objc(setEnabledNextButton:)
     func setEnabledNextButton(_ enabled: Bool) {
-        titleSegmentedControl?.setEnabled(enabled, forSegmentAt: 2)
+        chromeModel?.isNextEnabled = enabled
     }
 
     @objc(setEnabledPreviousButton:)
     func setEnabledPreviousButton(_ enabled: Bool) {
-        titleSegmentedControl?.setEnabled(enabled, forSegmentAt: 0)
+        chromeModel?.isPreviousEnabled = enabled
     }
 
     @objc(setTabTitle:)
     func setTabTitle(_ title: String?) {
-        let titleToDisplay = PSModuleController.createTitleRefString(title)
-        titleSegmentedControl?.setTitle(titleToDisplay, forSegmentAt: 1)
-        if let subviews = titleSegmentedControl?.subviews {
-            PSModuleViewController.setVoiceOverForRefSegmentedControlSubviews(subviews)
-        }
+        // +createTitleRefString: is still what shortens the displayed reference
+        // (the "1 Cor"/"1. Cor" leading-number handling and the 3-char book mask);
+        // only the control it lands in changed. The un-munged form becomes the
+        // accessibility label, which is what the old
+        // -setVoiceOverForRefSegmentedControlSubviews: applied to the title
+        // segment on every title change.
+        chromeModel?.title = PSModuleController.createTitleRefString(title) ?? ""
+        chromeModel?.accessibilityReference =
+            PSModuleController.getCurrentBibleRef() ?? ""
     }
 
     @objc(setModuleNameViaNotification)
@@ -390,7 +425,8 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
             if tabType != .BibleTab && PSModuleController.default().primaryCommentaryName == nil {
                 // The real empty-state path: no commentary installed, so there is
                 // nothing to page through.
-                titleSegmentedControl?.setTitle("PocketSword", forSegmentAt: 1)
+                chromeModel?.title = "PocketSword"
+                chromeModel?.accessibilityReference = "PocketSword"
                 setEnabledNextButton(false)
                 setEnabledPreviousButton(false)
             }
@@ -412,149 +448,41 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
         (tabType == .BibleTab) ? .redisplayPrimaryBible : .redisplayPrimaryCommentary
     }
 
-    /// Builds the per-tab `▾` (textformat) settings menu from the active module's
-    /// advertised features. Every row writes the PER-MODULE pref key ("<pref>_<mod>")
-    /// keyed on the module's own name — the same domain `-[SwordModule setPreferences]`
-    /// reads on every render, which is what makes these toggles actually take effect.
+    /// Rebuilds the per-tab display toggles from the active module's advertised
+    /// features and refreshes their current values.
     ///
-    /// Feature gating reads the BAKED feature set (`content_meta`'s
-    /// `module.<name>.features`) as of Phase 5 step 5, which holds exactly what
-    /// `-[SwordModule hasFeature:]` answered. That matters because hasFeature: also
-    /// matched GlobalOptionFilter entries (OSIS/GBF/ThML/UTF8-prefixed and bare), not
-    /// just `Feature=` lines — so KJV's OSISFootnotes / OSISHeadings /
-    /// OSISRedLetterWords filters satisfy the Footnotes / Headings / RedLetterWords
-    /// gates even though it declares only `Feature=StrongsNumbers`.
-    ///
-    /// Measured consequence worth knowing: KJV yields **six** rows, not seven. It has
-    /// no `OSISScripref` filter and no `Feature=Scripref`, so the Cross-references row
-    /// was never in its menu — verified against the live engine in step 4, so this is
-    /// a record of existing behaviour rather than a change.
-    ///
-    /// A module that advertises nothing (e.g. MHCC, whose conf declares no `Feature=`
-    /// and no `GlobalOptionFilter`) yields NO rows at all now that the font moved to
-    /// Preferences — so the button hides itself rather than presenting an empty menu.
+    /// The gating rule, the row order and the per-module `"<pref>_<ModuleName>"` key
+    /// format all moved verbatim into the pure
+    /// `ReaderDisplayToggle.toggles(forModule:store:)`, which is where the KJV-six /
+    /// MHCC-zero contract is now documented and asserted. This method is just the
+    /// push into the observable chrome; an empty result hides the control, which is
+    /// the same outcome as the old `setSettingsMenu(nil)`.
     @objc(rebuildSettingsMenu)
     func rebuildSettingsMenu() {
-        guard let modName = settingsMenuModuleName, let store = PSContentStore.shared else {
-            setSettingsMenu(nil)
-            return
-        }
-
-        /// Whether this module advertises a feature — from the BAKED feature set
-        /// (`module.<name>.features` in `content_meta`) rather than a live
-        /// `-[SwordModule hasFeature:]`. The converter reproduced hasFeature:'s full
-        /// rule, prefixed GlobalOptionFilter matching included, and
-        /// PSDifferentialTests checked all 75 answers against the engine while it was
-        /// still in the tree.
-        func has(_ feature: String) -> Bool { store.moduleHasFeature(modName, feature) }
-
-        /// Whether this tab is showing a Bible, which is the verse-per-line gate.
-        /// `module.type == bible` became a `content_meta` type-string comparison.
-        let isBible = store.moduleMeta(modName, key: "type") == SWRender.typeBibles
-
-        let prefix = (tabType == .BibleTab) ? "bible" : "commentary"
-        var topLevel: [UIMenuElement] = []
-
-        /// One inline-grouped boolean toggle over a per-module pref key.
-        func addToggle(_ title: String, pref: String, id: String) {
-            let action = UIAction(title: title, image: nil,
-                                  identifier: UIAction.Identifier("\(prefix).\(id)")) { [weak self] _ in
-                guard let self = self, let mName = self.settingsMenuModuleName else { return }
-                let current = UserDefaults.standard.psBool(pref, forModule: mName)
-                UserDefaults.standard.psSet(!current, forPref: pref, module: mName)
-                UserDefaults.standard.synchronize()
-                NotificationCenter.default.post(name: self.redisplayNotification, object: nil)
-                self.rebuildSettingsMenu()
-            }
-            action.state = UserDefaults.standard.psBool(pref, forModule: modName) ? .on : .off
-            topLevel.append(UIMenu(title: "", image: nil,
-                                   identifier: UIMenu.Identifier("\(prefix).\(id)Group"),
-                                   options: .displayInline, children: [action]))
-        }
-
-        if has(SWRender.featureStrongs) || has(SWRender.confFeatureStrongs) {
-            addToggle(NSLocalizedString("PreferencesStrongsPreferencesTitle", comment: "Strong's Numbers"),
-                      pref: Defaults.strongsPreference, id: "strongs")
-        }
-        if has(SWRender.featureMorph) {
-            addToggle(NSLocalizedString("PreferencesMorphTagsTitle", comment: "Morphological Tags"),
-                      pref: Defaults.morphPreference, id: "morph")
-        }
-        if has(SWRender.featureHeadings) {
-            addToggle(NSLocalizedString("PreferencesHeadingsTitle", comment: "Headings"),
-                      pref: Defaults.headingsPreference, id: "headings")
-        }
-        if has(SWRender.featureFootnotes) {
-            addToggle(NSLocalizedString("PreferencesFootnotesTitle", comment: "Footnotes"),
-                      pref: Defaults.footnotesPreference, id: "footnotes")
-        }
-        if has(SWRender.featureScriptRef) {
-            addToggle(NSLocalizedString("PreferencesCrossReferencesTitle", comment: "Cross-references"),
-                      pref: Defaults.scriptRefsPreference, id: "xref")
-        }
-        if has(SWRender.featureRedLetterWords) {
-            addToggle(NSLocalizedString("PreferencesRedLetterTitle", comment: "Red Letter"),
-                      pref: Defaults.redLetterPreference, id: "redLetter")
-        }
-        if isBible {
-            // VPL is a rendering-side option only — it never went through
-            // -setPreferences (see PSModulePreferencesController's old vplChanged:).
-            addToggle(NSLocalizedString("PreferencesVPLTitle", comment: "Verse Per Line"),
-                      pref: Defaults.vplPreference, id: "vpl")
-        }
-
-        // No Font row here: font name + size are a single GLOBAL setting configured
-        // in the Preferences pane, not per module.
-        setSettingsMenu(topLevel.isEmpty ? nil : UIMenu(title: "", children: topLevel))
-    }
-
-    /// Installs the display-settings menu, hiding the button entirely when there is
-    /// nothing to show (an empty UIMenu renders as a button that does nothing).
-    private func setSettingsMenu(_ menu: UIMenu?) {
-        moduleButton?.menu = menu
-        moduleButton?.isHidden = (menu == nil)
+        chromeModel?.reloadDisplayToggles(forModule: settingsMenuModuleName)
     }
 
     @objc(setDelegate:)
     func setDelegate(_ vc: PSTabBarControllerDelegate?) {
-        let searchButton = UIBarButtonItem(image: UIImage(named: "history.png"),
-                                           style: .plain, target: vc,
-                                           action: NSSelectorFromString("toggleMultiList:"))
-        searchButton.accessibilityLabel = NSLocalizedString("VoiceOverHistoryAndSearchButton", comment: "")
-        searchButton.accessibilityIdentifier = "reading.history-search"
-        self.navigationItem.leftBarButtonItem = searchButton
-
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "textformat"),
-                                          style: .plain, target: nil, action: nil)
-        rightButton.accessibilityLabel = NSLocalizedString("VoiceOverDisplaySettingsButton", comment: "")
-        self.moduleButton = rightButton
+        // Wave 7: the history/search, display-settings and microphone
+        // UIBarButtonItems are gone. Their actions are `ToolbarOverflowMenu`
+        // buttons in ReaderScreen, wired through `configureChromeCallbacks`, so
+        // the only thing left to do here is take the back-reference and prime the
+        // chrome's state.
+        delegate = vc
         rebuildSettingsMenu()
 
         if tabType == .BibleTab {
             if PSFeatureFlags.voiceReferenceEnabled {
-                let voiceButton = UIBarButtonItem(
-                    image: UIImage(systemName: "microphone"),
-                    style: .plain,
-                    target: vc,
-                    action: NSSelectorFromString("toggleVoiceRef:")
-                )
-                voiceButton.accessibilityLabel = NSLocalizedString("VoiceOverVoiceRefButton", comment: "")
-                voiceButton.isHidden = true
-                navigationItem.rightBarButtonItems = [rightButton, voiceButton]
-
-                Task {
+                Task { [weak self] in
                     if case .available = await PSVoiceRefSession.availability() {
-                        voiceButton.isHidden = false
+                        self?.chromeModel?.isVoiceAvailable = true
                     }
                 }
-            } else {
-                navigationItem.rightBarButtonItem = rightButton
             }
         } else {
             setModuleNameViaNotification()
-            navigationItem.rightBarButtonItem = rightButton
         }
-        delegate = vc
     }
 
     @objc(setVerseToShow:)
@@ -562,13 +490,31 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
         verseToShow = verseNumber
     }
 
+    /// Opens or closes the reference picker.
+    ///
+    /// Wave 7 moved the picker into a popover anchored on the SwiftUI reference
+    /// button, so it is presented by `ReaderScreen` rather than by the coordinator.
+    /// This is the seam the coordinator's `-toggleNavigation` (and the
+    /// `NotificationToggleNavigation` observers behind it) now drives.
+    @objc(toggleReferencePicker)
+    func toggleReferencePicker() {
+        guard let chromeModel else { return }
+        chromeModel.isPresentingReferencePicker.toggle()
+    }
+
+    /// Whether this reader currently has the picker up — the coordinator uses this
+    /// to decide whether a `toggleNavigation` should close rather than open.
+    var isPresentingReferencePicker: Bool {
+        chromeModel?.isPresentingReferencePicker ?? false
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let transparentAppearance = UINavigationBarAppearance()
-        transparentAppearance.configureWithTransparentBackground()
-        self.navigationController?.navigationBar.standardAppearance = transparentAppearance
-        self.navigationController?.navigationBar.scrollEdgeAppearance = transparentAppearance
+        // The enclosing UIKit navigation bar stays hidden for the reading tabs —
+        // ReaderScreen's NavigationStack draws the bar. Re-asserted here because
+        // returning from a pushed More-tab controller can restore it.
+        navigationController?.setNavigationBarHidden(true, animated: false)
 
         if let refToShow = refToShow {
             let webText: String?
@@ -650,32 +596,34 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
         return .slide
     }
 
+    /// Focus mode: hide the tab bar and the navigation bar so only the chapter
+    /// remains.
+    ///
+    /// Wave 7 rewrote this. It used to REPARENT `readerHostController.view` into
+    /// `tabBarController.view`, stash the old `tabBarController.view` in
+    /// `previousTabBarView`, and on exit ASSIGN `tabBarController.view =
+    /// previousTabBarView` — i.e. it swapped a view controller's root view out from
+    /// under it and animated `tabBar.alpha` by hand. On iOS 27 the floating tab bar
+    /// is not a plain subview whose alpha can be faded, and forcing its layout
+    /// inside an animation block is exactly the shape that trips the
+    /// `_UITabBarVisualProvider_FloatingAccessibility` AnimationKit assertion
+    /// documented in `startStrongsSearch`.
+    ///
+    /// `setTabBarHidden(_:animated:)` (iOS 18+) is the supported way to do this: the
+    /// tab bar controller keeps its own view, animates itself, and republishes the
+    /// safe area so the SwiftUI reader re-insets on its own. The navigation bar is
+    /// hidden by `ReaderScreen`'s `toolbarVisibility`, driven off the same
+    /// `isFocused` flag, and the status bar follows `prefersStatusBarHidden`.
     @objc(toggleFullscreen)
     func toggleFullscreen() {
         evaluateJavaScript("stopDetLocPoll();")
         isFullScreen = !isFullScreen
+        chromeModel?.isFocused = isFullScreen
 
         setNeedsStatusBarAppearanceUpdate()
+        tabBarController?.setTabBarHidden(isFullScreen, animated: true)
 
-        let readerView = readerHostController.view!
-        readerView.removeFromSuperview()
-        if isFullScreen {
-            // previousTabBarView is an ivar to hang on to the original view...
-            previousTabBarView = self.tabBarController?.view
-            self.tabBarController?.view.addSubview(readerView)
-            readerView.frame = self.tabBarController?.view.bounds
-                ?? PSResizing.getOrientationRect(.portrait)
-        } else {
-            self.view.addSubview(readerView)
-            self.tabBarController?.view = previousTabBarView
-            layoutReaderHost()
-        }
-
-        UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState, animations: {
-            self.tabBarController?.tabBar.alpha = (self.isFullScreen) ? 0 : 1
-        }, completion: { _ in
-            self.evaluateJavaScript("startDetLocPoll();")
-        })
+        evaluateJavaScript("startDetLocPoll();")
     }
 
     override func didReceiveMemoryWarning() {
@@ -1017,21 +965,11 @@ class PSModuleViewController: UIViewController, ReaderWebPageModelDelegate {
         present(actionSheet, animated: true)
     }
 
-    @objc(setVoiceOverForRefSegmentedControlSubviews:)
-    class func setVoiceOverForRefSegmentedControlSubviews(_ subviews: [UIView]) {
-        for segmentView in subviews {
-            if segmentView.accessibilityLabel == "forward-white.png" ||
-                segmentView.accessibilityLabel == NSLocalizedString("VoiceOverNextChapterButton", comment: "") {
-                // forward button
-                segmentView.accessibilityLabel = NSLocalizedString("VoiceOverNextChapterButton", comment: "")
-            } else if segmentView.accessibilityLabel == "back-white.png" ||
-                        segmentView.accessibilityLabel == NSLocalizedString("VoiceOverPreviousChapterButton", comment: "") {
-                // backward button
-                segmentView.accessibilityLabel = NSLocalizedString("VoiceOverPreviousChapterButton", comment: "")
-            } else {
-                // chapter title
-                segmentView.accessibilityLabel = PSModuleController.getCurrentBibleRef()
-            }
-        }
-    }
+    // -setVoiceOverForRefSegmentedControlSubviews: is GONE (Wave 7). It existed
+    // because -setTitle:forSegmentAt: rebuilt a UISegmentedControl's subviews and
+    // dropped their accessibility labels, so every title change had to walk the
+    // subviews and re-derive each one from its image filename. The SwiftUI buttons
+    // in ReaderReferenceControl carry permanent .accessibilityLabel modifiers, and
+    // the reference button's label is bound to the chrome model, so there is
+    // nothing to re-apply.
 }

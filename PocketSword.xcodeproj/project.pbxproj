@@ -20,6 +20,7 @@
 		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
 		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
 		B27000000000000000000011 /* SwiftUIReaderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000001 /* SwiftUIReaderViews.swift */; };
+		B27000000000000000000012 /* SwiftUIReaderChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000002 /* SwiftUIReaderChrome.swift */; };
 		05034D0510FC569000884C98 /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0410FC569000884C98 /* dictionary.png */; };
 		05034D0710FC570F00884C98 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 05034D0610FC570F00884C98 /* history.png */; };
 		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
@@ -159,7 +160,6 @@
 		5A1F70B0000000000000X002 /* PSBookmarkAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */; };
 		5A1F70B0000000000000Y002 /* PSAboutScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */; };
 		5A1F70B0000000000000Z002 /* PSSearchIndexBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */; };
-		5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */; };
 		5A1F70B0000000000000ZL02 /* PSHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000ZL01 /* PSHistoryController.swift */; };
 		5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */; };
 		5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR101 /* PSContentStore.swift */; };
@@ -227,6 +227,7 @@
 		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
 		B27000000000000000000001 /* SwiftUIReaderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderViews.swift; sourceTree = "<group>"; };
+		B27000000000000000000002 /* SwiftUIReaderChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderChrome.swift; sourceTree = "<group>"; };
 		05034D0410FC569000884C98 /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Resources/dictionary.png; sourceTree = "<group>"; };
 		05034D0610FC570F00884C98 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = history.png; path = Resources/history.png; sourceTree = "<group>"; };
 		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
@@ -391,7 +392,6 @@
 		5A1F70B0000000000000X001 /* PSBookmarkAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSBookmarkAddViewController.swift; path = Classes/PSBookmarkAddViewController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000Y001 /* PSAboutScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSAboutScreenController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000Z001 /* PSSearchIndexBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSSearchIndexBuilder.swift; path = Classes/PSSearchIndexBuilder.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSRefSelectorController.swift; path = Classes/PSRefSelectorController.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000ZL01 /* PSHistoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSHistoryController.swift; path = Classes/PSHistoryController.swift; sourceTree = "<group>"; };
 		5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSSearchIndexParityTests.swift; path = Classes/PSSearchIndexParityTests.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR101 /* PSContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentStore.swift; sourceTree = "<group>"; };
@@ -695,7 +695,6 @@
 		054C55B711AD09F600633371 /* ref selector */ = {
 			isa = PBXGroup;
 			children = (
-				5A1F70B0000000000000ZK01 /* PSRefSelectorController.swift */,
 				5A1F70B0000000000000S001 /* PSChapterSelectorController.swift */,
 				5A1F70B0000000000000S003 /* PSVerseSelectorController.swift */,
 				5A1F70B0000000000000VA01 /* PSVoiceRefParser.swift */,
@@ -803,6 +802,7 @@
 				B26000000000000000000001 /* SwiftUISearchViews.swift */,
 				B26000000000000000000002 /* SearchIndexBackgroundManager.swift */,
 				B27000000000000000000001 /* SwiftUIReaderViews.swift */,
+				B27000000000000000000002 /* SwiftUIReaderChrome.swift */,
 				B21000000000000000000002 /* URLRouter.swift */,
 				5A1F70B00000000000ZQ001 /* PSLaunchViewController.swift */,
 				5A1F70B00000000000ZR001 /* PocketSwordSceneDelegate.swift */,
@@ -1173,6 +1173,7 @@
 				B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */,
 				B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */,
 				B27000000000000000000011 /* SwiftUIReaderViews.swift in Sources */,
+				B27000000000000000000012 /* SwiftUIReaderChrome.swift in Sources */,
 				B21000000000000000000012 /* URLRouter.swift in Sources */,
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,
@@ -1209,7 +1210,6 @@
 				5A1F70B0000000000000T002 /* PSInfoPopupViewController.swift in Sources */,
 				5A1F70B00000000000ZI002 /* PSDictionaryViewController.swift in Sources */,
 				5A1F70B0000000000000P002 /* SearchWebView.swift in Sources */,
-				5A1F70B0000000000000ZK02 /* PSRefSelectorController.swift in Sources */,
 				5A1F70B0000000000000S002 /* PSChapterSelectorController.swift in Sources */,
 				5A1F70B0000000000000S004 /* PSVerseSelectorController.swift in Sources */,
 				5A1F70B0000000000000U002 /* PSDictionaryOverlayViewController.swift in Sources */,

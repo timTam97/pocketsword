@@ -1095,23 +1095,118 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
-    func testReaderFrameStopsAtOverlappingTabBar() {
-        let portraitSafeArea = CGRect(x: 0, y: 116, width: 402, height: 675)
-        XCTAssertEqual(
-            PSModuleViewController.readerFrame(
-                safeAreaFrame: portraitSafeArea,
-                tabBarFrame: CGRect(x: 0, y: 791, width: 402, height: 83)
-            ),
-            portraitSafeArea
+    // `testReaderFrameStopsAtOverlappingTabBar` is GONE (Wave 7). It pinned
+    // `PSModuleViewController.readerFrame`, the manual clamp that capped the Wave 6
+    // reader host at the floating tab bar's top because a bare SwiftUI `WebView`
+    // could not inset itself. `ReaderScreen`'s `NavigationStack` participates in the
+    // safe area properly, so the host now fills the controller's view and both the
+    // clamp and its test are deleted rather than adjusted.
+
+    /// The per-module display toggles a module's BAKED feature set earns it.
+    ///
+    /// This is the Wave 7 home of a contract that was previously only observable by
+    /// counting rows in a live `UIMenu`: **KJV yields exactly six rows, and
+    /// Cross-references is not among them** (it has no `OSISScripref` filter and no
+    /// `Feature=Scripref`), while **MHCC yields zero**, which is what makes the
+    /// control hide itself instead of presenting an empty menu.
+    func testDisplayTogglesMatchBakedFeatureSets() throws {
+        let store = try XCTUnwrap(
+            PSContentStore.shared,
+            "PSContentStore.shared is required for the baked feature set."
         )
 
-        XCTAssertEqual(
-            PSModuleViewController.readerFrame(
-                safeAreaFrame: CGRect(x: 62, y: 78, width: 750, height: 260),
-                tabBarFrame: CGRect(x: 0, y: 319, width: 874, height: 64)
-            ),
-            CGRect(x: 62, y: 78, width: 750, height: 241)
+        let kjv = ReaderDisplayToggle.toggles(
+            forModule: BundledModules.bible,
+            store: store
         )
+        XCTAssertEqual(
+            kjv.map(\.id),
+            ["strongs", "morph", "headings", "footnotes", "redLetter", "vpl"],
+            "KJV earns six rows in this order, with no cross-references row."
+        )
+        XCTAssertFalse(kjv.contains { $0.id == "xref" })
+        // Each row must carry the same unsuffixed pref name the UIKit menu wrote,
+        // because the persisted key is "<pref>_<ModuleName>".
+        XCTAssertEqual(
+            kjv.map(\.preference),
+            [
+                Defaults.strongsPreference,
+                Defaults.morphPreference,
+                Defaults.headingsPreference,
+                Defaults.footnotesPreference,
+                Defaults.redLetterPreference,
+                Defaults.vplPreference,
+            ]
+        )
+
+        XCTAssertTrue(
+            ReaderDisplayToggle.toggles(
+                forModule: BundledModules.commentary,
+                store: store
+            ).isEmpty,
+            "MHCC declares no Feature= and no GlobalOptionFilter, so it earns no rows."
+        )
+
+        // A nil module or a nil store yields nothing rather than crashing — the
+        // old `guard let ... else { setSettingsMenu(nil) }` path.
+        XCTAssertTrue(
+            ReaderDisplayToggle.toggles(forModule: nil, store: store).isEmpty
+        )
+        XCTAssertTrue(
+            ReaderDisplayToggle.toggles(
+                forModule: BundledModules.bible,
+                store: nil
+            ).isEmpty
+        )
+    }
+
+    /// The chrome model reads each toggle's CURRENT per-module value, so the
+    /// checkmark reflects the pref rather than a stale snapshot.
+    @MainActor
+    func testChromeModelReflectsPerModuleToggleValues() throws {
+        let store = try XCTUnwrap(PSContentStore.shared)
+        defaults.psSet(
+            true,
+            forPref: Defaults.strongsPreference,
+            module: BundledModules.bible
+        )
+        defaults.psSet(
+            false,
+            forPref: Defaults.vplPreference,
+            module: BundledModules.bible
+        )
+
+        let chrome = ReaderChromeModel()
+        chrome.reloadDisplayToggles(
+            forModule: BundledModules.bible,
+            store: store,
+            defaults: defaults
+        )
+
+        XCTAssertEqual(chrome.displayToggles.count, 6)
+        XCTAssertEqual(chrome.displayToggleValues["strongs"], true)
+        XCTAssertEqual(chrome.displayToggleValues["vpl"], false)
+
+        // Switching to a module with no features empties both, which is what hides
+        // the control.
+        chrome.reloadDisplayToggles(
+            forModule: BundledModules.commentary,
+            store: store,
+            defaults: defaults
+        )
+        XCTAssertTrue(chrome.displayToggles.isEmpty)
+        XCTAssertTrue(chrome.displayToggleValues.isEmpty)
+    }
+
+    /// The accessibility-identifier prefix keeps the UIKit menu's per-tab spelling
+    /// ("bible." / "commentary."), so the identifiers do not change meaning.
+    @MainActor
+    func testChromeIdentifierPrefixFollowsTab() {
+        let chrome = ReaderChromeModel()
+        chrome.isBibleTab = true
+        XCTAssertEqual(chrome.identifierPrefix, "bible")
+        chrome.isBibleTab = false
+        XCTAssertEqual(chrome.identifierPrefix, "commentary")
     }
 
     @MainActor
