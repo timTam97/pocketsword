@@ -1065,7 +1065,79 @@ prior visit to Search:** 1,000 results for "God", and the options menu shows
 6. **Read/WebKit:** Use `WebPage`/`WebView` and `NavigationDeciding` for chapters, JavaScript restoration, links, notes, Strong's/morph actions, bookmarks, and highlighting. Use a single Bible/commentary pane on all devices.
 7. **iOS 27 chrome:** Keep reference and chapter navigation at high toolbar priority, pin Focus mode with `.topBarPinnedTrailing`, place secondary study actions in `ToolbarOverflowMenu`, and minimize normal reading chrome with `toolbarMinimizeBehavior`.
 8. **App cutover:** Introduce `@main PocketSwordApp`, `WindowGroup`, four-workspace `TabView`, `NavigationStack`, `onOpenURL`, and `scenePhase`. Remove the UIKit coordinator, app/scene delegates, controllers, notification routing, `PSResizing`, MessageUI, MBProgressHUD, and bridging headers.
-9. **Native reader:** Add SwiftSoup via SPM, parse the existing assembled HTML into `ChapterDocument`, and render stable verse rows using `LazyVStack`, `AttributedString`, native scrolling, typed links, context menus, notes, headings, red letter, and bookmark colors. Remove WebKit and JavaScript resources after feature-parity acceptance. **Acceptance criterion: edge-to-edge reading** — see below.
+9. **Native reader:** Expand the store's tokens **directly** into `ChapterDocument`
+   (no HTML, no SwiftSoup — see the revision below), and render stable verse rows
+   using `LazyVStack`, `AttributedString`, native scrolling, typed links, context
+   menus, notes, headings, red letter, and bookmark colors. Remove WebKit and
+   JavaScript resources after feature-parity acceptance. **Acceptance criterion:
+   edge-to-edge reading** — see below.
+
+### Wave 9 revision: token→document, not HTML→SwiftSoup
+
+**Decided 2026-08-05, before any Wave 9 code.** This plan said "Add SwiftSoup via
+SPM, parse the existing assembled HTML into `ChapterDocument`". That is **not** what
+Wave 9 does, and the reason is a measurement rather than a preference.
+
+The chapter corpus was scanned in full — all 2,378 chapter rows expanded through the
+v2 token grammar, 61,190 non-empty records plus all 1,322 stored headings — and the
+emitted HTML vocabulary is a **closed set of six inline tags**:
+
+| tag | occurrences | attributes |
+|---|---|---|
+| `a` | 597,505 | `href`, `class` ∈ {`strongs` 374,047, `morph` 216,499, `n` 6,959} |
+| `i` | 21,609 | `class="transChangeAdded"` (only value) |
+| `font` | 6,892 | `size="-1"` (only value) |
+| `p` / `b` | 2,506 each | none — always the `<p><b>…</b></p>` title pair |
+| `span` | 2,038 | `class="WordOfChrist"` (only value) |
+
+Entities are numeric only (`&#182;` ×2,970, `&#8217;` ×1,997, `&#8211;` ×797, plus a
+long tail of one-offs). **No** `blockquote`, `div`, `table`, `ruby`, `br` or `<!P>`
+appears in any chapter record — which independently re-confirms that
+`PSChapterAssembler`'s three deliberately-ported unreachable branches (the `lg`
+blockquote move, `hackChapterToAccommodateBrokenLG`, the post-loop blockquote close)
+are still unreachable.
+
+So the pipeline is:
+
+```
+tokens ──PSChapterExpander──▶ HTML          (KEPT: byte-locked by fixtures, now a test oracle)
+tokens ──PSChapterDocumentBuilder──▶ ChapterDocument ──▶ LazyVStack   (the render path)
+```
+
+Three reasons this is the right altitude:
+
+1. **Serializing to HTML only to re-parse it is a round trip through a format we
+   own.** The app generates that HTML itself, from a token stream that already *is*
+   a structured document. SwiftSoup would be a ~30k-LOC HTML5 parser earning its
+   keep on six known tags.
+2. **It reintroduces a third-party dependency into a repo whose last two projects
+   removed ~47k lines of them.** There is no CocoaPods and no SPM today and
+   `externals/` is empty; the token→document route keeps it that way.
+3. **The two emitters share one gating table and are held together by a test, not by
+   hope.** Both consume the same `PSChapterExpander.Options`, so a divergence is a
+   parity-test failure across all 2,378 chapters rather than a silently different
+   render. This is the same shape as the deliberate three-implementation redundancy
+   the file header for `PSChapterExpander` describes.
+
+**What this does NOT change.** The HTML path stays exactly as it is and stays
+fixture-pinned — `PSContentStoreTests`' chapter-body fixtures at both option
+endpoints, the highlighted-body fixture, and `chapter-loop-counters.tsv` all keep
+passing untouched. They are what makes the native path checkable at all, so
+**nothing in Wave 9 may edit a fixture or relax one of those assertions.**
+
+The *lexicon* vocabulary is genuinely wider than the chapter one (`br`, `sup`, `sub`,
+`q`, `bib`, `latin`, `greek`, `description`, `pronunciation`, plus 14,298 `a name=`
+anchors and 14,989 lexicon→lexicon `href`s) and footnotes narrower (`i`, `font`
+only). The study-popup port is therefore its own step with its own vocabulary, not a
+reuse of the chapter renderer.
+
+**WebKit removal is full, not partial.** All three surfaces go: the reader, the study
+popup (`StudyPopupWebView`) and the dictionary entry (`DictionaryEntryWebView`), so
+`import WebKit` leaves the target entirely along with both JS resources and the
+`createHTMLString` / `createInfoHTMLString` / `createStrongsInfoHTMLString` shells.
+Stopping at the reader would leave the final static audit inheriting WebKit and two
+`UIViewRepresentable`s. `PSInfoPopupContent`'s lemma/transliteration parser is
+**kept** — it is content, not presentation.
 
 ### Wave 9 acceptance criterion: edge-to-edge reading
 
