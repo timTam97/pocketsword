@@ -609,19 +609,35 @@ protocol HistoryCloudStoring: AnyObject {
 extension NSUbiquitousKeyValueStore: HistoryCloudStoring {}
 
 final class HistoryStore {
+    /// Resolves the module name to record for a reading mode. Injectable for the
+    /// same reason `defaults` is: `PSModuleController` is a singleton over
+    /// `UserDefaults.standard`, so a test cannot otherwise control what
+    /// `addEntry` writes into the module slot.
+    typealias ModuleNameProvider = (ReadingMode) -> String?
+
     private let defaults: UserDefaults
     private let cloudStore: HistoryCloudStoring
     private let notificationCenter: NotificationCenter
+    private let moduleNameProvider: ModuleNameProvider
     private var cloudObserver: NSObjectProtocol?
 
     init(
         defaults: UserDefaults = .standard,
         cloudStore: HistoryCloudStoring = NSUbiquitousKeyValueStore.default,
-        notificationCenter: NotificationCenter = .default
+        notificationCenter: NotificationCenter = .default,
+        moduleNameProvider: @escaping ModuleNameProvider = { mode in
+            switch mode {
+            case .bible:
+                PSModuleController.default()?.primaryBibleName
+            case .commentary:
+                PSModuleController.default()?.primaryCommentaryName
+            }
+        }
     ) {
         self.defaults = defaults
         self.cloudStore = cloudStore
         self.notificationCenter = notificationCenter
+        self.moduleNameProvider = moduleNameProvider
     }
 
     deinit {
@@ -636,6 +652,97 @@ final class HistoryStore {
             }
             return HistoryEntry(item: item)
         }
+    }
+
+    /// Records the reference currently being read.
+    ///
+    /// Wave 8 moved this off `PSHistoryController` (a `UITableViewController`,
+    /// deleted with the rest of the UIKit list layer) onto the store that already
+    /// owns every other write to this key. The **serialized shape is unchanged and
+    /// must stay so** — `[ref, "0", mod, NSDate]`, positional, with `"0"` a
+    /// literal string standing in for a scroll amount that has never been
+    /// written. `PersistedFormatTests` locks it.
+    ///
+    /// Three quirks are preserved deliberately:
+    ///
+    ///  1. **The de-duplication scans for the first match and stops.** It compares
+    ///     the reference, then treats a row with no module as matching any module,
+    ///     which is how pre-1.4 rows (written without one) get replaced rather
+    ///     than accumulating.
+    ///  2. **The cap uses `>=`**, so the list settles at 99 entries rather than
+    ///     `historyMaxEntries` = 100. Off by one, and persisted; changing it would
+    ///     make one extra row appear for every user on upgrade.
+    ///  3. **No entry is written at all when the relevant module is absent.** The
+    ///     `valid` flag gates the whole body, so a commentary-mode navigation with
+    ///     no commentary installed records nothing.
+    ///
+    /// The parameter was a `ShownTab`; it is a `ReadingMode` now, which is the
+    /// same two-way distinction the callers actually had.
+    func addEntry(mode: ReadingMode) {
+        var history = defaults.array(forKey: AppConstants.historyName)
+            .map { NSMutableArray(array: $0) }
+
+        let verse: String?
+        let module: String?
+        switch mode {
+        case .bible:
+            verse = defaults.string(forKey: Defaults.bibleVersePosition)
+            module = moduleNameProvider(.bible)
+        case .commentary:
+            verse = defaults.string(forKey: Defaults.commentaryVersePosition)
+            module = moduleNameProvider(.commentary)
+        }
+        guard let module else { return }
+
+        // The chapter reference comes from THIS store's `defaults`, not from
+        // `PSModuleController.getCurrentBibleRef()`, which always reads
+        // `UserDefaults.standard`. Both read the same `lastRef` key and apply the
+        // same munging, so behaviour is identical in the app — but going through
+        // the global made the injected `defaults` a half-truth, and a test that
+        // seeded a suite got the *device's* current chapter written into its
+        // history row.
+        let chapterRef = PSRefHelper.createRefString(
+            defaults.string(forKey: Defaults.lastRef) ?? "Genesis 1"
+        )
+        let reference = "\(chapterRef):\(verse ?? "")"
+        let entry: [Any] = [reference, "0" /* scroll */, module, Date()]
+
+        if history == nil {
+            history = NSMutableArray()
+            // Seeding the persistent domain is what the original did to make the
+            // key exist before the first `set`. Kept: `setPersistentDomain` also
+            // flushes, and removing it changes when the file first appears.
+            let bundleId = Bundle.main.bundleIdentifier ?? ""
+            var preferences = defaults.persistentDomain(forName: bundleId) ?? [:]
+            preferences[AppConstants.historyName] = history
+            defaults.setPersistentDomain(preferences, forName: bundleId)
+        } else if let history {
+            for index in 0..<history.count {
+                guard let existing = history[index] as? [Any],
+                      !existing.isEmpty,
+                      reference == existing[0] as? String else {
+                    continue
+                }
+                let existingModule = existing.count > 2
+                    ? existing[2] as? String
+                    : nil
+                if existingModule == nil || module == existingModule {
+                    history.removeObject(at: index)
+                    break
+                }
+            }
+        }
+
+        guard let history else { return }
+        history.insert(entry, at: 0)
+        if history.count >= AppConstants.historyMaxEntries {
+            history.removeLastObject()
+        }
+
+        defaults.set(history, forKey: AppConstants.historyName)
+        defaults.synchronize()
+        cloudStore.set(history, forKey: AppConstants.historyName)
+        notificationCenter.post(name: .historyChanged, object: nil)
     }
 
     @discardableResult

@@ -693,7 +693,12 @@ final class PSModuleController: NSObject {
         var lgVersePadding = "left"
         var lgVersePaddingInt = "1.7"
         var lgVerseWidth = 1
-        if PSResizing.iPad() {
+        // Wave 8: was `PSResizing.iPad()`, whose whole body was this idiom.
+        // `PSResizing` is deleted — its other 20-odd methods computed manual frames
+        // for a UIKit layout that no longer exists (`resizeViewsOnAppear`,
+        // `resizeViewsOnRotate`, `statusBarHeight`, `mainScreenBounds`) and its
+        // `supportedInterfaceOrientations` moved to the scene delegate.
+        if UIDevice.current.userInterfaceIdiom != .phone {
             iPadPadding = "padding: 10px;\n"
             lineHeight = "1.6"
             if fs <= 24 {

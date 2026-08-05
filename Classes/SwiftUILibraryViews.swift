@@ -4,19 +4,26 @@ import Observation
 
 struct DictionaryView: View {
     let library: LibraryModel
+    /// The Library workspace's section switch, hosted in this view's own toolbar.
+    /// Each section owns its `NavigationStack`, so the picker has to be declared
+    /// inside each of them — see `LibraryWorkspace`.
+    @Binding var section: LibrarySection
 
     var body: some View {
         @Bindable var library = library
 
         NavigationStack {
             DictionaryKeyList(library: library)
-                .navigationTitle("TabBarTitleDictionary")
+                .navigationBarTitleDisplayMode(.inline)
                 .searchable(
                     text: $library.dictionaryQuery,
                     placement: .navigationBarDrawer(displayMode: .always),
                     prompt: Text("DictionarySearchPlaceholderText")
                 )
                 .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        LibrarySectionPicker(section: $section)
+                    }
                     ToolbarItem(placement: .primaryAction) {
                         DictionaryModuleMenu(library: library)
                     }
@@ -186,6 +193,7 @@ private struct DictionaryEntryWebView: UIViewRepresentable {
 
 struct BookmarksView: View {
     let library: LibraryModel
+    @Binding var section: LibrarySection
     let openBookmark: (String) -> Void
 
     @State private var path: [UUID] = []
@@ -196,6 +204,10 @@ struct BookmarksView: View {
                 library: library,
                 parentID: nil,
                 title: String(localized: "BookmarksTitle"),
+                // Only the ROOT folder screen hosts the section switch. A pushed
+                // folder shows its own name and a back button, which is the
+                // navigation the user is actually in at that point.
+                section: $section,
                 openBookmark: openBookmark
             )
             .navigationDestination(for: UUID.self) { folderID in
@@ -205,6 +217,7 @@ struct BookmarksView: View {
                         library: library,
                         parentID: folderID,
                         title: folder.name ?? "",
+                        section: nil,
                         openBookmark: openBookmark
                     )
                 }
@@ -217,6 +230,8 @@ private struct BookmarkFolderScreen: View {
     let library: LibraryModel
     let parentID: UUID?
     let title: String
+    /// Non-nil only on the root screen; a pushed folder shows its own title.
+    let section: Binding<LibrarySection>?
     let openBookmark: (String) -> Void
 
     @State private var renameTarget: BookmarkNode? = nil
@@ -298,8 +313,14 @@ private struct BookmarkFolderScreen: View {
                 before: destinationID
             )
         }
-        .navigationTitle(title)
+        .navigationTitle(section == nil ? title : "")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            if let section {
+                ToolbarItem(placement: .principal) {
+                    LibrarySectionPicker(section: section)
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     folderDraft = BookmarkFolderDraft(
@@ -610,7 +631,7 @@ private struct BookmarkColorChoice: Identifiable {
 
 struct HistoryView: View {
     let library: LibraryModel
-    let close: () -> Void
+    @Binding var section: LibrarySection
     let openHistoryEntry: (HistoryEntry) -> Void
 
     @State private var deleteTarget: HistoryEntry? = nil
@@ -648,14 +669,13 @@ struct HistoryView: View {
             }
             .listStyle(.insetGrouped)
             .swipeActionsContainer()
-            .navigationTitle("HistoryTitle")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(action: close) {
-                        Image(systemName: "xmark")
-                    }
-                    .accessibilityLabel(Text("CloseButtonTitle"))
-                    .accessibilityIdentifier("history.close")
+                // No Close button: History was half of a presented modal through
+                // Wave 7, and its Close dismissed that modal. As a workspace
+                // section there is nothing to close.
+                ToolbarItem(placement: .principal) {
+                    LibrarySectionPicker(section: $section)
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
@@ -722,7 +742,10 @@ private struct HistoryRow: View {
     }
 }
 
-private extension BookmarkMutationError {
+// Not `private`: `BookmarkEditorView` in SwiftUIStudyViews.swift shows the same
+// three failures with the same wording, and duplicating the mapping would let the
+// two drift.
+extension BookmarkMutationError {
     var title: LocalizedStringResource {
         switch self {
         case .duplicateFolder:

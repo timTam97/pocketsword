@@ -2,10 +2,17 @@
 //  PocketSword-Bridging-Header.h
 //  PocketSword
 //
-//  The app target's window from Swift onto Objective-C. It is down to TWO project
-//  imports, and there is nothing else it could usefully import: as of
-//  SWORD_REMOVAL_PLAN.md Phase 5 the target is pure Swift apart from
-//  Classes/globals.h and the vendored externals/MBProgressHUD.
+//  The app target's window from Swift onto Objective-C. It is down to ONE import —
+//  Classes/globals.h — and there is nothing else it could usefully import: as of
+//  SWIFTUI_MIGRATION_PLAN.md Wave 8 the target contains no Objective-C
+//  *implementation* at all, only that one header of enums and constants.
+//
+//  Wave 8 removed the MBProgressHUD.h import along with the vendored library. Its
+//  last consumer was `+[PSTabBarControllerDelegate displayTitle:]`, the Focus-mode
+//  chapter toast, now a SwiftUI overlay (`ChapterToast` in SwiftUIReaderChrome.swift).
+//  `externals/` is empty and `GCC_PREFIX_HEADER` is unset, because there is no longer
+//  a C or Objective-C translation unit for a prefix header to prefix — a clean build
+//  now reports **`CompileC` 0**, where it reported 1 for the whole SWORD-removal era.
 //
 //  ── What this header used to be for, and why that is over ──────────────────
 //
@@ -50,11 +57,3 @@
 // persisted data breaks. The test bundle's bridging header imports this same file,
 // and it is the ONLY thing either of them imports from the project.
 #import "globals.h"
-
-// MBProgressHUD.h — vendored Foundation/UIKit/CoreGraphics-only Obj-C (no C++), and
-// the last Objective-C source file in the target. Its one Swift consumer is
-// PSTabBarControllerDelegate.displayTitle:. PSDictionaryViewController used to show
-// one while caching dictionary keys and conformed to MBProgressHUDDelegate, but the
-// baked store made that cache dance unnecessary and Phase 5 step 1 deleted it — so
-// only the class, not the delegate protocol, is still needed.
-#import "MBProgressHUD.h"

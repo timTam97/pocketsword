@@ -1,12 +1,21 @@
 //
-//  PSVoiceRefViewController.swift
+//  VoiceReferenceModel.swift
 //  PocketSword
+//
+//  The observable state behind the voice-reference sheet: it maps
+//  `PSVoiceRefSession`'s states onto what the view shows, and parses each
+//  candidate transcript through `PSVoiceRefParser`.
+//
+//  Wave 8 renamed this file out of `PSVoiceRefViewController.swift` and deleted the
+//  `UIHostingController` subclass that shared it. That subclass did two things —
+//  set a 320pt `pageSheet` detent and forward two closures — both of which are
+//  modifiers on the `.sheet` in `VoiceReferenceSheet` (SwiftUIStudyViews.swift).
+//  The session and the parser are untouched.
 //
 
 import Foundation
 import Observation
 import SwiftUI
-import UIKit
 
 enum VoiceReferenceStatus: Equatable {
     case none
@@ -297,45 +306,5 @@ final class VoiceReferenceModel: PSVoiceRefSessionDelegate {
             result.append(name)
         }
         return Array(result.prefix(100))
-    }
-}
-
-@MainActor
-final class PSVoiceRefViewController: UIHostingController<VoiceReferenceView> {
-    var onReferenceResolved: ((PSParsedRef) -> Void)?
-
-    private let model: VoiceReferenceModel
-
-    convenience init() {
-        self.init(model: VoiceReferenceModel())
-    }
-
-    init(model: VoiceReferenceModel) {
-        self.model = model
-        super.init(rootView: VoiceReferenceView(model: model))
-        configure()
-    }
-
-    required init?(coder: NSCoder) {
-        let model = VoiceReferenceModel()
-        self.model = model
-        super.init(
-            coder: coder,
-            rootView: VoiceReferenceView(model: model)
-        )
-        configure()
-    }
-
-    private func configure() {
-        modalPresentationStyle = .pageSheet
-        preferredContentSize = CGSize(width: 420, height: 320)
-        model.onCancel = { [weak self] in
-            self?.dismiss(animated: true)
-        }
-        model.onReferenceResolved = { [weak self] reference in
-            self?.dismiss(animated: true) {
-                self?.onReferenceResolved?(reference)
-            }
-        }
     }
 }

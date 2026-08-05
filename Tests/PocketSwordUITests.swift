@@ -1,5 +1,18 @@
 import XCTest
 
+/// Wave 8 rewrote the navigation these tests drive.
+///
+/// The app had six tabs plus a modally-presented History/Search pair; it now has
+/// four workspaces — Read, Search, Library, Settings — so "select a tab" means
+/// something different, and several destinations moved:
+///
+/// - Bible and Commentary were two tabs; they are two modes of the Read workspace,
+///   switched by `reading.mode` rather than by the tab bar.
+/// - Search was half of a modal; it is a workspace with `TabRole.search`.
+/// - History was the other half; it is a Library section.
+/// - Dictionary and Bookmarks were tabs; they are Library sections.
+/// - Preferences and About were rows under the system "More" list; Settings is a
+///   workspace, with About pushed from its toolbar.
 final class PocketSwordUITests: XCTestCase {
     private var app: XCUIApplication!
 
@@ -10,7 +23,6 @@ final class PocketSwordUITests: XCTestCase {
         app.launchArguments += [
             "-AppleLanguages", "(en)",
             "-AppleLocale", "en_US",
-            "-DefaultsLastMultiListTab", "0"
         ]
         app.launch()
 
@@ -18,80 +30,90 @@ final class PocketSwordUITests: XCTestCase {
             app.wait(for: .runningForeground, timeout: 20),
             "PocketSword did not reach the foreground."
         )
+        // The reader's own controls, not a tab title: the Read workspace draws its
+        // chrome with a SwiftUI NavigationStack and has no navigation-bar title.
         XCTAssertTrue(
-            app.tabBars.buttons["workspace.read.bible"].waitForExistence(timeout: 20),
+            app.buttons["reading.reference-picker"].waitForExistence(timeout: 20),
             "PocketSword did not finish initialization."
         )
     }
 
     @MainActor
-    func testReadingAndLibraryDestinationsAreReachable() throws {
-        // Wave 7: the reading chrome is drawn by ReaderScreen's own SwiftUI
-        // NavigationStack, and the enclosing UIKit navigation bar (which carried the
-        // "BibleTabTitleString" / "CommentaryTabTitleString" titles) is hidden. The
-        // reader is now identified by its own controls rather than by that bar.
-        selectTab("workspace.read.bible")
+    func testAllFourWorkspacesAreReachable() throws {
         XCTAssertTrue(
             app.descendants(matching: .any)["reading.web-content"]
                 .waitForExistence(timeout: 5)
-        )
-        XCTAssertTrue(
-            app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
         )
         XCTAssertTrue(app.buttons["reading.previous-chapter"].exists)
         XCTAssertTrue(app.buttons["reading.next-chapter"].exists)
         XCTAssertTrue(app.buttons["reading.focus-mode"].exists)
 
-        selectTab("workspace.read.commentary")
-        XCTAssertTrue(
-            app.descendants(matching: .any)["reading.web-content"]
-                .waitForExistence(timeout: 5)
-        )
-        XCTAssertTrue(
-            app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
-        )
+        selectWorkspace("Search")
+        XCTAssertTrue(app.navigationBars["Search"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["search.module-menu"].exists)
+        XCTAssertTrue(app.buttons["search.options"].exists)
+        XCTAssertTrue(app.segmentedControls["search.scope"].exists)
 
-        selectTab("workspace.library.dictionary")
-        XCTAssertTrue(app.searchFields["Search Dictionary"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["dictionary.module-menu"].exists)
-
-        selectTab("workspace.library.bookmarks")
-        XCTAssertTrue(app.navigationBars["Bookmarks"].waitForExistence(timeout: 5))
+        selectWorkspace("Library")
+        // The Library sections set no `navigationTitle`: the `library.section`
+        // menu sits in the principal slot and names the active section itself.
+        XCTAssertTrue(
+            app.buttons["library.section"].waitForExistence(timeout: 5)
+        )
         XCTAssertTrue(app.buttons["bookmarks.add-folder"].exists)
-    }
 
-    @MainActor
-    func testSettingsAndAboutAreReachableFromMore() throws {
-        let more = app.tabBars.buttons["More"]
-        XCTAssertTrue(more.waitForExistence(timeout: 5))
-        more.tap()
-
-        let preferences = app.tables.staticTexts["Preferences"].firstMatch
-        XCTAssertTrue(preferences.waitForExistence(timeout: 5))
-        preferences.tap()
-        XCTAssertTrue(app.navigationBars["Preferences"].waitForExistence(timeout: 5))
+        selectWorkspace("Settings")
         XCTAssertTrue(
-            app.sliders["settings.font-size"].waitForExistence(timeout: 5)
+            app.navigationBars["Preferences"].waitForExistence(timeout: 5)
         )
+        XCTAssertTrue(app.sliders["settings.font-size"].exists)
         XCTAssertTrue(app.buttons["settings.font"].exists)
         XCTAssertTrue(app.switches["settings.keep-awake"].exists)
         XCTAssertTrue(app.switches["settings.rotation-lock"].exists)
         XCTAssertTrue(app.switches["settings.automatic-fullscreen"].exists)
+    }
+
+    @MainActor
+    func testBibleAndCommentaryModesBothRender() throws {
+        selectWorkspace("Read")
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.web-content"]
+                .waitForExistence(timeout: 5)
+        )
+
+        selectReadingMode("Commentary")
+        XCTAssertTrue(
+            app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.web-content"].exists
+        )
+
+        selectReadingMode("Bible")
+        XCTAssertTrue(
+            app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
+        )
+    }
+
+    @MainActor
+    func testSettingsFontPickerAndAbout() throws {
+        selectWorkspace("Settings")
+        XCTAssertTrue(
+            app.navigationBars["Preferences"].waitForExistence(timeout: 5)
+        )
 
         app.buttons["settings.font"].tap()
         XCTAssertTrue(app.navigationBars["Font"].waitForExistence(timeout: 5))
         let arial = app.buttons["Arial"]
         XCTAssertTrue(arial.waitForExistence(timeout: 5))
         arial.tap()
-        XCTAssertTrue(app.navigationBars["Preferences"].waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.navigationBars["Preferences"].waitForExistence(timeout: 5)
+        )
 
-        let backToMore = app.navigationBars.buttons["More"]
-        XCTAssertTrue(backToMore.waitForExistence(timeout: 5))
-        backToMore.tap()
-
-        let about = app.tables.staticTexts["About"].firstMatch
-        XCTAssertTrue(about.waitForExistence(timeout: 5))
-        about.tap()
+        // Wave 8: About is pushed from the Settings toolbar rather than being a
+        // second "More" row.
+        app.buttons["workspace.settings.about"].tap()
         XCTAssertTrue(app.navigationBars["About"].waitForExistence(timeout: 5))
         XCTAssertTrue(
             app.descendants(matching: .any)["about.header"]
@@ -101,11 +123,8 @@ final class PocketSwordUITests: XCTestCase {
 
     @MainActor
     func testReferencePickerSelectsVerse() throws {
-        selectTab("workspace.read.bible")
+        selectWorkspace("Read")
 
-        // Wave 7: the three-segment UISegmentedControl became three buttons, and
-        // the reference button opens the picker as a popover rather than the
-        // coordinator presenting a wrapped PSRefSelectorController.
         let referenceButton = app.buttons["reading.reference-picker"]
         XCTAssertTrue(referenceButton.waitForExistence(timeout: 5))
         referenceButton.tap()
@@ -134,29 +153,110 @@ final class PocketSwordUITests: XCTestCase {
         )
     }
 
+    /// The reader's overflow-menu "History and Search" action switches to the
+    /// Search workspace.
+    ///
+    /// This replaces `testHistoryAndSearchAreReachableFromReading`, whose subject
+    /// — a modally-presented `UITabBarController` — no longer exists. The action
+    /// itself survives because the reader is still where you are when you decide to
+    /// search; it changes the tab selection now instead of presenting a sheet.
+    ///
+    /// That change is also what retires the `suppressMultiListPresentAnimation`
+    /// workaround: the Wave 7 crash this path used to hit needed a UIKit sheet
+    /// dismissing while another UIKit sheet was presented, and a tab selection is
+    /// neither.
     @MainActor
-    func testHistoryAndSearchAreReachableFromReading() throws {
-        selectTab("workspace.read.bible")
-        // Wave 7: History & Search is a secondary study action, so it lives in the
-        // iOS 27 ToolbarOverflowMenu rather than as a left bar-button item.
+    func testReadingOverflowMenuOpensTheSearchWorkspace() throws {
+        selectWorkspace("Read")
         openReadingOverflowMenu()
-        // Matched by label: menu rows expose their title, not our identifier.
+
+        // Matched by label: UIKit renders a SwiftUI menu's rows as cells that
+        // expose their title but drop the accessibility identifier.
         let historyAndSearch = app.buttons["History and Search"]
         XCTAssertTrue(historyAndSearch.waitForExistence(timeout: 5))
         historyAndSearch.tap()
 
-        XCTAssertTrue(app.navigationBars["History"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["history.close"].exists)
-        XCTAssertTrue(app.buttons["history.clear"].exists)
-
-        let search = app.tabBars.buttons["Search"].firstMatch
-        XCTAssertTrue(search.waitForExistence(timeout: 5))
-        search.tap()
         XCTAssertTrue(app.navigationBars["Search"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.searchFields["Search"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["search.module-menu"].exists)
-        XCTAssertTrue(app.buttons["search.options"].exists)
-        XCTAssertTrue(app.segmentedControls["search.scope"].exists)
+    }
+
+    @MainActor
+    func testLibrarySectionsSwitch() throws {
+        selectWorkspace("Library")
+        XCTAssertTrue(app.buttons["bookmarks.add-folder"].waitForExistence(timeout: 5))
+
+        selectLibrarySection("History")
+        XCTAssertTrue(app.buttons["history.clear"].waitForExistence(timeout: 5))
+        // Wave 8: History is a workspace section, so there is nothing to close and
+        // the Close button is deliberately absent.
+        XCTAssertFalse(app.buttons["history.close"].exists)
+
+        selectLibrarySection("Dictionary")
+        XCTAssertTrue(
+            app.searchFields["Search Dictionary"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.buttons["dictionary.module-menu"].exists)
+
+        selectLibrarySection("Bookmarks")
+        XCTAssertTrue(
+            app.buttons["bookmarks.add-folder"].waitForExistence(timeout: 5)
+        )
+    }
+
+    @MainActor
+    func testFocusModeHidesAndRestoresTheTabBar() throws {
+        selectWorkspace("Read")
+
+        let focus = app.buttons["reading.focus-mode"]
+        XCTAssertTrue(focus.waitForExistence(timeout: 5))
+        let readTab = app.tabBars.buttons["Read"]
+        XCTAssertTrue(readTab.exists)
+
+        focus.tap()
+        // Focus mode hides the tab bar (via `toolbarVisibility(for: .tabBar)`) and
+        // the status bar, leaving only the chapter. The pinned Focus control must
+        // survive, since it is the way back out.
+        XCTAssertTrue(readTab.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.web-content"].exists
+        )
+
+        let exitFocus = app.buttons["reading.focus-mode"]
+        XCTAssertTrue(exitFocus.waitForExistence(timeout: 5))
+        exitFocus.tap()
+        XCTAssertTrue(readTab.waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testDisplayTogglesAppearForBibleAndNotCommentary() throws {
+        // NB: UIKit renders a SwiftUI menu's rows as cells that expose their LABEL
+        // but drop the `accessibilityIdentifier` (verified in the iOS 27
+        // hierarchy), so these rows are matched by their localized titles. The
+        // exhaustive id/pref/order assertions live in
+        // AppStateStoresTests.testDisplayTogglesMatchBakedFeatureSets, which reads
+        // the same pure builder this menu is populated from.
+        selectWorkspace("Read")
+        selectReadingMode("Bible")
+        openReadingOverflowMenu()
+        // KJV earns six rows; cross-references is deliberately absent (no
+        // OSISScripref filter, no Feature=Scripref).
+        XCTAssertTrue(
+            app.buttons["Strong's Numbers"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.buttons["Verse Per Line"].exists)
+        XCTAssertFalse(app.buttons["Cross-references"].exists)
+        dismissMenu()
+
+        selectReadingMode("Commentary")
+        openReadingOverflowMenu()
+        // MHCC advertises nothing, so it contributes no display rows at all — only
+        // the always-present History & Search action.
+        XCTAssertTrue(
+            app.buttons["History and Search"].waitForExistence(timeout: 5)
+        )
+        XCTAssertFalse(app.buttons["Strong's Numbers"].exists)
+        XCTAssertFalse(app.buttons["Verse Per Line"].exists)
+        dismissMenu()
     }
 
     @MainActor
@@ -164,14 +264,10 @@ final class PocketSwordUITests: XCTestCase {
         let firstName = "UI Drag A"
         let secondName = "UI Drag B"
 
-        selectTab("workspace.library.bookmarks")
-        deleteFolderIfPresent(named: "Drag-A")
-        deleteFolderIfPresent(named: "Drag-B")
+        selectWorkspace("Library")
         deleteFolderIfPresent(named: firstName)
         deleteFolderIfPresent(named: secondName)
         defer {
-            deleteFolderIfPresent(named: "Drag-A")
-            deleteFolderIfPresent(named: "Drag-B")
             deleteFolderIfPresent(named: firstName)
             deleteFolderIfPresent(named: secondName)
         }
@@ -201,12 +297,14 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertLessThan(second.frame.minY, first.frame.minY)
     }
 
+    // MARK: - Helpers
+
     /// Opens the reading toolbar's iOS 27 overflow menu.
     ///
-    /// `ToolbarOverflowMenu` is system-provided, so its button carries the
-    /// system's own identity rather than one we set: confirmed on the iOS 27
-    /// simulator as identifier `OverflowBarButtonItem` / label "More". Matched by
-    /// identifier, since the label is localized.
+    /// `ToolbarOverflowMenu` is system-provided, so its button carries the system's
+    /// own identity rather than one we set: confirmed on the iOS 27 simulator as
+    /// identifier `OverflowBarButtonItem` / label "More". Matched by identifier,
+    /// since the label is localized.
     @MainActor
     private func openReadingOverflowMenu() {
         let overflow = app.buttons["OverflowBarButtonItem"].firstMatch
@@ -218,76 +316,67 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     @MainActor
-    func testFocusModeHidesAndRestoresTheTabBar() throws {
-        selectTab("workspace.read.bible")
-
-        let focus = app.buttons["reading.focus-mode"]
-        XCTAssertTrue(focus.waitForExistence(timeout: 5))
-        let tabBarButton = app.tabBars.buttons["workspace.read.bible"]
-        XCTAssertTrue(tabBarButton.exists)
-
-        focus.tap()
-        // Focus mode hides the tab bar via setTabBarHidden(_:animated:) and the
-        // navigation bar via toolbarVisibility, so only the chapter remains. The
-        // pinned Focus control itself must survive, since it is the way back out.
-        XCTAssertTrue(tabBarButton.waitForNonExistence(timeout: 5))
-        XCTAssertTrue(
-            app.descendants(matching: .any)["reading.web-content"].exists
-        )
-
-        let exitFocus = app.buttons["reading.focus-mode"]
-        XCTAssertTrue(exitFocus.waitForExistence(timeout: 5))
-        exitFocus.tap()
-        XCTAssertTrue(tabBarButton.waitForExistence(timeout: 5))
-    }
-
-    @MainActor
-    func testDisplayTogglesAppearForBibleAndNotCommentary() throws {
-        // NB: UIKit renders a SwiftUI menu's rows as cells that expose their LABEL
-        // but drop the `accessibilityIdentifier` (verified in the iOS 27 hierarchy),
-        // so these rows are matched by their localized titles. The exhaustive
-        // id/pref/order assertions live in
-        // AppStateStoresTests.testDisplayTogglesMatchBakedFeatureSets, which reads
-        // the same pure builder this menu is populated from.
-        selectTab("workspace.read.bible")
-        openReadingOverflowMenu()
-        // KJV earns six rows; cross-references is deliberately absent (no
-        // OSISScripref filter, no Feature=Scripref).
-        XCTAssertTrue(
-            app.buttons["Strong's Numbers"].waitForExistence(timeout: 5)
-        )
-        XCTAssertTrue(app.buttons["Verse Per Line"].exists)
-        XCTAssertFalse(app.buttons["Cross-references"].exists)
-        dismissMenu()
-
-        selectTab("workspace.read.commentary")
-        openReadingOverflowMenu()
-        // MHCC advertises nothing, so it contributes no display rows at all — only
-        // the always-present History & Search action.
-        XCTAssertTrue(
-            app.buttons["History and Search"].waitForExistence(timeout: 5)
-        )
-        XCTAssertFalse(app.buttons["Strong's Numbers"].exists)
-        XCTAssertFalse(app.buttons["Verse Per Line"].exists)
-        dismissMenu()
-    }
-
-    @MainActor
     private func dismissMenu() {
         // A menu is dismissed by tapping outside it. The reader fills the screen,
-        // but tapping its centre would hit a verse link, so use a corner well
-        // clear of the menu (which anchors to the trailing side of the top bar).
+        // but tapping its centre would hit a verse link, so use a corner well clear
+        // of the menu (which anchors to the trailing side of the top bar).
         app.coordinate(
-            withNormalizedOffset: CGVector(dx: 0.08, dy: 0.9)
+            withNormalizedOffset: CGVector(dx: 0.08, dy: 0.75)
         ).tap()
     }
 
+    /// Selects a workspace by its LABEL, not an identifier.
+    ///
+    /// `Tab`'s `accessibilityIdentifier` does not reach the tab-bar button —
+    /// verified in the iOS 27 hierarchy, where the four buttons carry only their
+    /// localized labels. Note the on-screen order is Read, Library, Settings,
+    /// Search: `TabRole.search` moves Search to the trailing position regardless of
+    /// where it is declared.
     @MainActor
-    private func selectTab(_ identifier: String) {
-        let tab = app.tabBars.buttons[identifier]
-        XCTAssertTrue(tab.waitForExistence(timeout: 5), "Missing tab \(identifier)")
+    private func selectWorkspace(_ label: String) {
+        let tab = app.tabBars.buttons[label]
+        XCTAssertTrue(
+            tab.waitForExistence(timeout: 5),
+            "Missing workspace \(label)"
+        )
         tab.tap()
-        XCTAssertTrue(tab.isSelected, "Tab \(identifier) was not selected")
+        XCTAssertTrue(tab.isSelected, "Workspace \(label) was not selected")
+    }
+
+    /// Switches the Read workspace between Bible and commentary, through the
+    /// `reading.mode` menu in the toolbar's leading slot.
+    @MainActor
+    private func selectReadingMode(_ label: String) {
+        let control = app.buttons["reading.mode"]
+        XCTAssertTrue(
+            control.waitForExistence(timeout: 5),
+            "Missing the reading-mode control"
+        )
+        control.tap()
+        let option = app.buttons[label].firstMatch
+        XCTAssertTrue(
+            option.waitForExistence(timeout: 5),
+            "Missing reading mode \(label)"
+        )
+        option.tap()
+    }
+
+    /// Switches the Library workspace's section, through the `library.section`
+    /// menu that occupies the navigation bar's principal slot.
+    @MainActor
+    private func selectLibrarySection(_ label: String) {
+        let control = app.buttons["library.section"]
+        XCTAssertTrue(
+            control.waitForExistence(timeout: 5),
+            "Missing the library section control"
+        )
+        control.tap()
+        let option = app.buttons[label].firstMatch
+        XCTAssertTrue(
+            option.waitForExistence(timeout: 5),
+            "Missing library section \(label)"
+        )
+        option.tap()
     }
 
     @MainActor

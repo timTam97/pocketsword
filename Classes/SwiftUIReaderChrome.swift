@@ -36,6 +36,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 // SWORD feature names, mirrored byte-for-byte from `globals.h`'s @"literal"
 // #defines (Obj-C string #defines do not import into Swift). Same approach and
@@ -234,51 +235,32 @@ final class ReaderChromeModel {
     }
 }
 
-/// The reading surface plus its iOS 27 chrome.
+/// The Read workspace: the active pane, its iOS 27 chrome, the mode switch, and
+/// the study surfaces the reader raises.
+///
+/// Wave 8 folded `PSModuleViewController` into this. The WebView, the toolbar and
+/// the reference picker are unchanged from Wave 7; what is new is everything the
+/// UIKit host used to do around them — the Bible/commentary switch (two tabs, now
+/// one workspace), the study popup and verse menu (presented from here rather than
+/// by the coordinator), the bookmark editor, the voice sheet, and the Focus-mode
+/// chapter toast that replaces `MBProgressHUD`.
 struct ReaderScreen: View {
-    let chrome: ReaderChromeModel
-    let reader: ReaderWebPageModel
-    /// Built on demand so the picker's book list is only constructed when the
-    /// picker opens, and so the host keeps ownership of the notification contract
-    /// it posts into.
-    let makeReferencePicker: () -> ReferencePickerView
+    let reading: ReadingWorkspaceModel
+
+    private var chrome: ReaderChromeModel { reading.activePane.chrome }
 
     var body: some View {
+        @Bindable var reading = reading
+
         NavigationStack {
-            // No `ignoresSafeArea` here — but read the tradeoff before "fixing"
-            // this in either direction, because both directions have been wrong.
-            //
-            // A bare `ignoresSafeArea(edges: .bottom)` reproduces the Wave 6
-            // defect: the chapter paints PAST the floating tab bar, with lines
-            // permanently hidden behind it. Confirmed on device in Wave 7 and
-            // reverted.
-            //
-            // Staying inside the safe area, as here, is the safe half of the
-            // tradeoff and NOT the target design. It letterboxes: the scroll view
-            // ends at the chrome, so the reader shows black bands top and bottom
-            // instead of content flowing edge-to-edge beneath translucent bars.
-            //
-            // The real answer is BOTH — a full-height scroll view whose *content*
-            // carries safe-area insets, so nothing is ever obscured at rest but
-            // the text still scrolls under the chrome. That is deliberately NOT
-            // attempted here: for a WebView the insets have to come from the HTML
-            // (`viewport-fit=cover` + `env(safe-area-inset-*)` in
-            // `createHTMLString`, replacing `chapterPage`'s six hardcoded
-            // `<p>&nbsp;</p>` pads), and every verse offset that
-            // `versePositionArray` / `scrollToVerse` / `scrollHappened` measure
-            // sits downstream of that, with the chapter-body fixtures and
-            // `chapter-loop-counters.tsv` pinning the surrounding output.
-            //
-            // Wave 9 DELETES this WebView for a `LazyVStack`, where the same
-            // result is a `contentMargins` / `safeAreaPadding` call and native
-            // scrolling handles it. It is logged as a Wave 9 acceptance criterion
-            // in SWIFTUI_MIGRATION_PLAN.md. Do not pay for it twice here.
-            SwiftUIReaderWebView(model: reader)
+            readerPanes
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         ReaderReferenceControl(
                             chrome: chrome,
-                            makeReferencePicker: makeReferencePicker
+                            makeReferencePicker: {
+                                makeReferencePicker(reading: reading)
+                            }
                         )
                     }
                     .visibilityPriority(.high)
@@ -302,6 +284,22 @@ struct ReaderScreen: View {
                         )
                         .accessibilityIdentifier("reading.focus-mode")
                     }
+
+                    // The Bible/commentary switch, at the bar's LEADING edge.
+                    //
+                    // It was `.bottomBar` first, and that was wrong on iOS 27:
+                    // the floating tab bar occupies the bottom, so the picker
+                    // landed on top of it (measured on device — picker at y=798,
+                    // tab bar at y=795) and taps went to the tab bar instead.
+                    // There is no bottom edge to put a bar on any more.
+                    //
+                    // Not `.principal` either: that slot holds the reference
+                    // control, which Wave 7 gave `.high` visibility priority
+                    // precisely so a constrained width sheds everything else
+                    // before it sheds chapter navigation.
+                    ToolbarItem(placement: .topBarLeading) {
+                        ReadingModePicker(reading: reading)
+                    }
                 }
                 .toolbarOverflowMenu {
                     Button {
@@ -309,7 +307,7 @@ struct ReaderScreen: View {
                     } label: {
                         Label(
                             "VoiceOverHistoryAndSearchButton",
-                            systemImage: "clock.arrow.circlepath"
+                            systemImage: "magnifyingglass"
                         )
                     }
                     .accessibilityIdentifier("reading.history-search")
@@ -343,8 +341,8 @@ struct ReaderScreen: View {
                     for: .navigationBar
                 )
                 // Focus mode deliberately KEEPS the navigation bar. It hides the
-                // tab bar (in the host, via setTabBarHidden) and the status bar,
-                // which is what actually buys the screen back.
+                // tab bar (in `WorkspaceTabs`, via `toolbarVisibility`) and the
+                // status bar, which is what actually buys the screen back.
                 //
                 // Do NOT add `toolbarVisibility(.hidden)` here. It was tried and
                 // hides the whole bar INCLUDING the `.topBarPinnedTrailing` Focus
@@ -354,10 +352,209 @@ struct ReaderScreen: View {
                 // hidden. The bar also still minimizes on scroll down, so ordinary
                 // reading in Focus mode is uninterrupted either way.
                 .navigationBarTitleDisplayMode(.inline)
-                .statusBarHidden(chrome.isFocused)
+                .statusBarHidden(reading.isFocused)
+                // Focus mode hides the TAB bar (not this one), which is what
+                // actually buys the screen back. Wave 7 did this with
+                // `setTabBarHidden(_:animated:)` on the `UITabBarController`.
+                //
+                // It must be applied HERE, to content inside the tab — putting it
+                // on the `TabView` itself does nothing at all, which cost a
+                // round-trip to discover: the Focus control flipped to "exit"
+                // while the tab bar stayed put.
+                .toolbarVisibility(
+                    reading.isFocused ? .hidden : .automatic,
+                    for: .tabBar
+                )
+                .sheet(item: $reading.studyPopup) { popup in
+                    StudyPopupSheet(
+                        content: popup.content,
+                        findAllOccurrences: reading.startStrongsSearch
+                    )
+                }
+                .sheet(item: $reading.bookmarkDraft) { draft in
+                    NavigationStack {
+                        BookmarkEditorView(draft: draft)
+                    }
+                }
+                .sheet(isPresented: $reading.isPresentingVoiceReference) {
+                    VoiceReferenceSheet(reading: reading)
+                }
+                .confirmationDialog(
+                    verseMenuTitle,
+                    item: $reading.verseMenuTarget,
+                    titleVisibility: .visible
+                ) { target in
+                    Button("VerseContextualMenuAddBookmark") {
+                        reading.addBookmark(for: target)
+                    }
+                    Button("VerseContextualMenuCommentary") {
+                        reading.showInCommentary(verse: target.verse)
+                    }
+                    Button("Cancel", role: .cancel) {}
+                }
         }
     }
+
+    /// BOTH panes stay in the hierarchy, with the inactive one hidden.
+    ///
+    /// This is not a stylistic choice. `displayChapter` renders the polled pane and
+    /// defers a `refToShow` / `jsToShow` into the other, which that pane applies
+    /// when it next appears — so the inactive pane has to exist to receive the
+    /// deferral. Rendering only the active pane (a plain `if`) would tear down its
+    /// `WebPage`, losing both the pending work and the scroll position, which is
+    /// the Wave 6 blank-page failure mode in a new disguise.
+    ///
+    /// On the safe area: there is no `ignoresSafeArea` here, and both directions
+    /// have been wrong once. A bare `ignoresSafeArea(edges: .bottom)` reproduces
+    /// the Wave 6 defect — the chapter paints PAST the floating tab bar with lines
+    /// permanently hidden behind it. Staying inside the safe area, as here,
+    /// letterboxes instead: the scroll view ends at the chrome, so the reader shows
+    /// black bands rather than content flowing edge-to-edge beneath translucent
+    /// bars. The real answer is BOTH — a full-height scroll view whose *content*
+    /// carries the insets — and it is deliberately not attempted here, because for
+    /// a WebView the insets have to come from the HTML (`viewport-fit=cover` +
+    /// `env(safe-area-inset-*)` in `createHTMLString`, replacing `chapterPage`'s
+    /// six hardcoded `<p>&nbsp;</p>` pads) and every verse offset that
+    /// `versePositions` / `scrollToVerse` / `scrollHappened` measure sits
+    /// downstream of that, with the chapter-body fixtures and
+    /// `chapter-loop-counters.tsv` pinning the surrounding output. Wave 9 deletes
+    /// this WebView for a `LazyVStack`, where the same result is one
+    /// `contentMargins` call. Do not pay for it twice.
+    private var readerPanes: some View {
+        ZStack {
+            SwiftUIReaderWebView(model: reading.bible.reader)
+                .opacity(reading.mode == .bible ? 1 : 0)
+                .accessibilityHidden(reading.mode != .bible)
+            SwiftUIReaderWebView(model: reading.commentary.reader)
+                .opacity(reading.mode == .commentary ? 1 : 0)
+                .accessibilityHidden(reading.mode != .commentary)
+        }
+        .overlay(alignment: .top) {
+            ChapterToast(text: reading.chapterToast)
+        }
+        .onGeometryChange(for: CGSize.self, of: \.size) { old, new in
+            // Rotation, or an iPad split-view resize. Both panes re-measure their
+            // verse offsets and restore the verse they were on: the offsets are
+            // width-dependent, so Wave 6 found that not doing this restored the
+            // wrong verse (Gen 2:4 came back as Gen 2:2).
+            guard old != .zero, old != new else { return }
+            reading.prepareForSizeChange()
+            reading.restoreAfterSizeChange()
+        }
+    }
+
+    /// The verse menu's title — "Verse 12".
+    private var verseMenuTitle: String {
+        guard let verse = reading.verseMenuTarget?.verse else { return "" }
+        return String.localizedStringWithFormat(
+            String(localized: "RefSelectorVerseTitle"),
+            verse
+        )
+    }
+
+    /// Builds the reference picker, preserving the contract the deleted
+    /// `PSRefSelectorController` had and Wave 7's `makeReferencePicker` kept: a
+    /// selection closes the picker and applies book/chapter/verse. The
+    /// `NotificationUpdateSelectedReference` post in between is gone — the
+    /// coordinator that observed it is gone, and this is a direct call now.
+    private func makeReferencePicker(
+        reading: ReadingWorkspaceModel
+    ) -> ReferencePickerView {
+        let model = ReferencePickerModel(
+            books: (PSBookOSISResolver.shared?.books ?? [])
+                .map(ReferencePickerBook.init),
+            currentReference: PSModuleController.getCurrentBibleRef(),
+            // The same rule `PSRefSelectorController.setupNavigation` used: the
+            // iPhone presentation adapts to a sheet, which needs an explicit
+            // Cancel; an iPad popover is dismissed by tapping outside it.
+            showsCancel: UIDevice.current.userInterfaceIdiom == .phone
+        )
+        let chrome = reading.activePane.chrome
+        model.onCancel = {
+            chrome.isPresentingReferencePicker = false
+        }
+        model.onSelection = { selection in
+            chrome.isPresentingReferencePicker = false
+            reading.selectReference(
+                bookName: selection.bookName,
+                chapter: selection.chapter,
+                verse: selection.verse
+            )
+        }
+        return ReferencePickerView(model: model)
+    }
 }
+
+/// The Bible/commentary switch.
+///
+/// Replaces two tab-bar items with one control, which is the point of merging them
+/// into a single workspace: they are two views of the same reference, and the old
+/// pair made switching a navigation act rather than a display choice.
+///
+/// A `Menu` rather than a segmented `Picker`, for the same reason the Library's
+/// section switch is: it has to fit in a toolbar slot alongside chapter navigation
+/// and the study actions, and a two-segment control there is both cramped and
+/// unlabelled. The menu shows which mode is active by name.
+private struct ReadingModePicker: View {
+    let reading: ReadingWorkspaceModel
+
+    var body: some View {
+        @Bindable var reading = reading
+
+        Menu {
+            Picker("WorkspaceRead", selection: $reading.mode) {
+                Label("TabBarTitleBible", systemImage: "book.closed")
+                    .tag(ReadingMode.bible)
+                Label("TabBarTitleCommentary", systemImage: "text.book.closed")
+                    .tag(ReadingMode.commentary)
+            }
+            .pickerStyle(.inline)
+        } label: {
+            Image(
+                systemName: reading.mode == .bible
+                    ? "book.closed"
+                    : "text.book.closed"
+            )
+        }
+        .accessibilityLabel(
+            Text(
+                reading.mode == .bible
+                    ? "TabBarTitleBible"
+                    : "TabBarTitleCommentary"
+            )
+        )
+        .accessibilityIdentifier("reading.mode")
+    }
+}
+
+/// The Focus-mode chapter toast.
+///
+/// This is `+[PSTabBarControllerDelegate displayTitle:]`, which showed a
+/// text-only `MBProgressHUD` on the key window for 0.75 s whenever a chapter
+/// changed while in Focus mode (where there is no visible reference to read).
+/// Retiring it removes the app target's last Objective-C dependency — the vendored
+/// `MBProgressHUD` was the only `CompileC` unit in the build.
+private struct ChapterToast: View {
+    let text: String?
+
+    var body: some View {
+        ZStack {
+            if let text {
+                Text(text)
+                    .font(.headline)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 12)
+                    .background(.regularMaterial, in: .capsule)
+                    .transition(.opacity)
+                    .accessibilityIdentifier("reading.chapter-toast")
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: text)
+        .padding(.top, 8)
+        .allowsHitTesting(false)
+    }
+}
+
 
 /// [‹ | Gen 23:23 | ›] — the replacement for the three-segment
 /// `UISegmentedControl` that lived in `navigationItem.titleView`.

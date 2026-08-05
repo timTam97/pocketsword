@@ -4,37 +4,57 @@
 
 **Last updated:** 2026-08-05
 
-**Overall state:** In progress. Waves 1 through 7 are complete; Wave 8 (SwiftUI
-app lifecycle and four-workspace cutover) is the next wave.
+**Overall state:** In progress. Waves 1 through 8 are complete; Wave 9 (native
+SwiftUI reader and WebKit removal) is the next and final implementation wave.
 
-Wave 7 replaced the UIKit reading chrome with a SwiftUI `NavigationStack` toolbar
-and is verified on the iOS 27 iPhone 17 Pro simulator. The three-segment
-`UISegmentedControl` in `navigationItem.titleView` and the three
-`UIBarButtonItem`s are gone; chapter navigation sits at `.principal` with
-`visibilityPriority(.high)`, Focus mode is pinned at `.topBarPinnedTrailing`, and
-the secondary study actions live in a `ToolbarOverflowMenu`.
+Wave 8 cut the app over to a SwiftUI lifecycle and four workspaces. `@main` is
+now `PocketSwordApp`, and the UIKit coordination layer is deleted: no
+`UITabBarController`, no `UINavigationController`, no scene delegate driving
+launch, no `PSTabBarControllerDelegate`, no `PSModuleViewController`. **28 files
+and ~9,500 lines were removed**, against ~3,100 added.
 
-Two API-name corrections to the original brief, both confirmed against the
-installed iOS 27 SDK's `SwiftUI.swiftinterface`:
+**The app target now contains no Objective-C implementation at all.** The
+vendored `MBProgressHUD` is gone — its only consumer was the Focus-mode chapter
+toast — so `misc/PocketSword_Prefix.pch` and `GCC_PREFIX_HEADER` went with it and
+a clean build reports **`CompileC` 0**, where it reported 1 throughout the
+SWORD-removal era. `Classes/globals.h` survives as a header of enums and
+constants (`PSSearchType` / `PSSearchRange` / the `ATTRTYPE_*` literals), still
+dual-maintained with `AppConstants.swift`, and is the only thing either bridging
+header imports.
 
-- The navigation-bar modifier is **`toolbarMinimizationBehavior(_:for:)`**, not
-  the `toolbarMinimizeBehavior` this document named. `tabBarMinimizeBehavior` is
-  the separate *tab bar* API (used here as `UITabBarController`'s
-  `tabBarMinimizeBehavior` property, since the tab bar is still UIKit).
-- Toolbar item priority is expressed with
-  `visibilityPriority(_: ToolbarItemVisibilityPriority)` on `ToolbarContent`.
+**The `startStrongsSearch` workaround is retired**, which Waves 6 and 7 both
+expected and neither achieved. Wave 7 diagnosed it correctly: the iOS 27
+floating-tab-bar AnimationKit assertion needed a UIKit sheet dismissing while a
+UIKit sheet was presented, from a tab bar the coordinator owned. Wave 8 removed
+all three — "Find all occurrences" changes the tab selection instead of
+presenting a second sheet. `suppressMultiListPresentAnimation` and
+`toggleMultiListFromMenu` are deleted.
 
-The `startStrongsSearch` workaround **could not be retired**, contrary to this
-plan's expectation — see the Wave 7 status section.
+**Known and deliberately deferred:** the reader is still **letterboxed, not
+edge-to-edge**, and this remains Wave 9's acceptance criterion. Nothing in Wave 8
+changed that tradeoff — the WebView still stops at the chrome.
 
-**Known and deliberately deferred:** the reader is **letterboxed, not
-edge-to-edge**. Content stops at the toolbar and at the floating tab bar instead
-of scrolling beneath them, leaving a black band at each end. This is the safe half
-of a tradeoff whose other half (Wave 6's overlap) hid text outright. Fixing it
-properly belongs to Wave 9's native reader, where it is a one-call
-`contentMargins`; doing it in the WebView would mean moving the insets into the
-HTML and disturbing fixture-pinned verse-offset math for a view Wave 9 deletes.
-Logged as a Wave 9 acceptance criterion.
+### Wave 8: what the four workspaces replaced
+
+| Before | After |
+|---|---|
+| Bible tab + Commentary tab | **Read**, one workspace, mode picker in the bottom bar |
+| Search — half of a modal `UITabBarController` | **Search**, a workspace with `TabRole.search` |
+| History — the other half of that modal | **Library** → History |
+| Dictionary tab, Bookmarks tab | **Library** → Dictionary / Bookmarks |
+| Preferences + About, rows under the system "More" list | **Settings**, with About pushed from its toolbar |
+
+The multi-list modal is gone outright rather than reproduced: with Search and
+Library each one tap away, a sheet that showed the same two screens would be a
+second route to them.
+
+The letterboxing detail, unchanged since Wave 7: content stops at the toolbar and
+at the floating tab bar instead of scrolling beneath them, leaving a black band at
+each end. This is the safe half of a tradeoff whose other half (Wave 6's overlap)
+hid text outright. Fixing it properly belongs to Wave 9's native reader, where it
+is a one-call `contentMargins`; doing it in the WebView would mean moving the
+insets into the HTML and disturbing fixture-pinned verse-offset math for a view
+Wave 9 deletes.
 
 Wave 6 replaced the reader with a SwiftUI `WebPage`/`WebView` surface and is
 verified on the iOS 27 iPhone 17 Pro simulator: nonblank Bible and commentary
@@ -96,36 +116,57 @@ stashed, and is now worked around in `startStrongsSearch`.
 - [x] Wave 5: Search workspace and background indexing
 - [x] Wave 6: SwiftUI WebKit reader
 - [x] Wave 7: iOS 27 toolbar and reading chrome
-- [ ] Wave 8: SwiftUI app lifecycle and four-workspace cutover
+- [x] Wave 8: SwiftUI app lifecycle and four-workspace cutover
 - [ ] Wave 9: Native SwiftUI reader and WebKit removal
 - [ ] Final all-configuration builds, tests, UI verification, and static audit
 
 ### Current repository facts
 
-- The app logic is already Swift except for vendored `MBProgressHUD`.
+- **The app target is pure Swift with no Objective-C implementation.** As of
+  Wave 8 the only non-Swift file is `Classes/globals.h`, a header of enums and
+  constants; `externals/` and the prefix header are gone, and `CompileC` is 0.
+- **UIKit is no longer the lifecycle or the navigation.** `PocketSwordAppDelegate`
+  survives as a `@UIApplicationDelegateAdaptor` holding two things UIKit still
+  owns — the `BGTaskScheduler` registration, which must complete before
+  `didFinishLaunching` returns, and iOS 27's
+  `supportedInterfaceOrientations(for:)` on a minimal scene delegate, which is
+  how the rotation-lock preference is now enforced. Everything else is SwiftUI.
+- UIKit types still appear where SwiftUI has no equivalent and the type is a
+  *value or a leaf*: `UIDevice.current.userInterfaceIdiom` for the iPad checks,
+  `UIFont`/`UIColor` inside the search highlighter and the study palette, and two
+  `UIViewRepresentable` WebView wrappers (the study popup and the dictionary
+  entry). None of them is a view controller.
 - Baked content, reference parsing, FTS5 search, bookmark serialization, history
   serialization/iCloud merge, and voice-reference parsing already exist in
   Swift and must remain the behavior-preserving foundation.
-- UIKit still owns the application lifecycle, navigation, and screen layer.
 - The Xcode project uses explicit file and target membership.
 - `PocketSword` is the shared scheme containing `PocketSwordTests`.
 - Project, app, unit-test, and UI-test deployment settings are aligned at 27.0.
-- `PocketSwordUITests` is part of the shared `PocketSword` scheme and covers the
-  legacy reading/library destinations, Settings/About through More, and the
-  History/Search modal using stable accessibility identifiers.
+- `PocketSwordUITests` is part of the shared `PocketSword` scheme. Wave 8 rewrote
+  it for the four workspaces: it covers all four tabs, both reading modes, the
+  Library section switch, Settings/About, the reference picker, Focus mode, the
+  display toggles, and bookmark folder CRUD/reordering, all through stable
+  accessibility identifiers.
 - `AppSession` now owns observable reading, settings, library, and search models.
   Typed stores preserve the legacy defaults keys for reading position, modules,
   font, display, rotation, fullscreen, idle-timer, history, and search
   preferences.
-- `LegacyStateBridge` temporarily mirrors the existing UIKit notification flow
-  into `AppSession` and routes settings side effects back through the legacy
-  redisplay and idle-timer paths.
+- `LegacyStateBridge` is **deleted** (Wave 8). It existed to mirror UIKit
+  notification state into `AppSession` during the mixed migration. Its two jobs
+  now sit where the data lives: `AppSession.start()` seeds reading state and wires
+  the settings side effects, and `LibraryModel.startObservingChanges()` refreshes
+  bookmarks/history off `bookmarksChanged` / `historyChanged`.
 - Bookmark nodes carry runtime UUIDs that are deliberately excluded from the
   positional plist schema. History and search result snapshots use natural
   persisted reference/module/date identities.
-- `LaunchCoordinator` owns preference reset and all one-shot launch migrations;
-  the legacy launch controller is now only the temporary UIKit spinner and
-  delegate adapter.
+- `LaunchCoordinator` owns preference reset and all one-shot launch migrations. As
+  of Wave 8 it is driven straight from `RootView`'s `.task` through a
+  `LaunchPhase` switch; `PSLaunchViewController` and the `@objc PSLaunchDelegate`
+  handshake are deleted. The **order remains load-bearing**: nothing may touch
+  `PSModuleController`, the content store or the reader until `prepare()` returns,
+  because `DefaultsLastRefValidated` can rewrite `lastRef` out from under a
+  render — so `ReadingWorkspaceModel.start()` is called from the `.ready`
+  transition, never from `init`.
 - `HistoryStore` owns the iCloud observer, notification interpretation, legacy
   recursive merge/dedup/cap behavior, and local/cloud write-back.
 - Wave 3 has replaced launch, book/chapter/verse reference selection, voice
@@ -487,6 +528,89 @@ stashed, and is now worked around in `startStrongsSearch`.
   changed its presentation context uncovered. Fixed with a `toggleMultiListFromMenu`
   that applies the same unanimated present; re-verified on device that the row now
   opens the History sheet with its entries.
+- **2026-08-05:** Started Wave 8 by checking the iOS 27 SDK's own
+  `SwiftUI.swiftinterface` for every symbol the cutover needs, which found one
+  correction and one absence: `Tab(_:systemImage:value:role:)` and
+  `TabRole.search` are present as described, `tabBarMinimizeBehavior` is a plain
+  `View` modifier (not `for:`-qualified like the navigation-bar one), and
+  **`BackgroundTask.appRefresh` is unavailable on iOS** — so the `.backgroundTask`
+  scene modifier was dropped and `SearchIndexBackgroundManager` keeps sole
+  ownership of the `BGTaskScheduler` registration, which is where it has to be
+  anyway (before `didFinishLaunching` returns).
+- **2026-08-05:** Completed the Wave 8 cutover. `@main PocketSwordApp` with a
+  four-workspace `TabView`; `ReadingWorkspaceModel` + `ReaderPaneModel` replacing
+  the coordinator and the reader view controllers; the study popup, verse menu,
+  bookmark editor and voice sheet as SwiftUI presentations; 28 files deleted
+  including the vendored `MBProgressHUD` and the prefix header. `AppSession` took
+  over `sword://` routing from the app delegate, with the pending-URL hold the
+  scene delegate used to own.
+- **2026-08-05:** The first build attempt failed on the bridging header rather
+  than on Swift, which was the useful ordering: `MBProgressHUD.h` could not be
+  found because the library was deleted, and fixing that surfaced the three
+  remaining references to deleted code (`PSResizing.iPad()` in
+  `PSModuleController`, `PSHistoryController.addHistoryItem` in `AppSession`, and
+  the `LegacyStateBridge` tests). Build green after those.
+- **2026-08-05:** Retargeted the two `LegacyStateBridge` tests onto what replaced
+  the bridge (`AppSession.start()` and `LibraryModel.startObservingChanges()`),
+  keeping their original claims, and added a third pinning
+  `HistoryStore.addEntry`'s persisted row shape — a writer that had no direct
+  coverage before, because it was only reachable through a view controller. That
+  new test immediately failed for a real reason: `addEntry` was reading the
+  chapter reference through `PSModuleController.getCurrentBibleRef()`
+  (`UserDefaults.standard`) while writing to an injected `defaults`, so a test
+  seeding its own suite got the device's current chapter. Fixed by reading
+  `lastRef` from the store's own `defaults` and injecting the module-name lookup.
+- **2026-08-05:** 31 of 32 `AppStateStoresTests` passed on the first simulator
+  run; the one failure was the new history test above, and it passed after the
+  seam fix along with the three other retargeted tests. The initial attempt had
+  reported all 32 "not run" — the active run destination was a physical device,
+  locked and with an unsigned test bundle. Switched to the iPhone 17 Pro iOS 27
+  simulator.
+- **2026-08-05:** Swept the UIKit asset and dead-code residue Wave 7 deferred:
+  `PSSearchIndexBuilder` (a modal progress sheet with no live instantiation since
+  Wave 5 replaced it with `SearchView`'s inline states) and 16 tab-icon PNGs, all
+  now SF Symbols. **Editing `project.pbxproj` while a test run was in flight
+  crashed Xcode** and took the MCP connection with it — the run had to be
+  restarted. Do all project-file surgery before starting a test run, not during.
+- **2026-08-05:** The first full Wave 8 suite run was 118 unit tests passed, 2
+  `PSREF_EXHAUSTIVE` skipped, and **5 XCUITest failures** — every one in the
+  rewritten UI tests, and every one about failing to *find* a control rather than
+  about behaviour. Live inspection on the iPhone 17 Pro then found why, and all
+  three causes were real defects in the new navigation rather than test bugs: the
+  `tabViewBottomAccessory` Library picker rendered nothing (that modifier declares
+  one accessory for the whole `TabView`, not one per section), the `.bottomBar`
+  reading-mode picker sat on top of the floating tab bar (y=798 against y=795, so
+  taps went to the tab bar), and `Tab`'s `accessibilityIdentifier` never reaches
+  the tab-bar button. Fixed by moving both pickers into `.principal` /
+  `.topBarLeading` as `Menu`s and matching tabs by label.
+- **2026-08-05:** Re-verified live after the fixes: launch to Genesis 1:1 with
+  Strong's numbers; all four workspaces reachable in the order Read, Library,
+  Settings, Search (`TabRole.search` moves Search to the trailing slot); the
+  Library section menu switching Bookmarks → History with correct empty states and
+  no Close button; and the reading-mode menu switching Bible → Commentary with
+  MHCC's Genesis 1 rendering, which exercises the `refToShow` deferral across a
+  pane switch. That run took the XCUITests from 5 failures to 2.
+- **2026-08-05:** The two remaining XCUITest failures were **both real defects**,
+  and both were "the state is right, the effect is absent" — exactly what a build
+  cannot catch. `toolbarVisibility(_:for: .tabBar)` applied to the `TabView` does
+  nothing, so Focus mode flipped its control to "Exit Focus Mode" with the tab bar
+  still on screen; it has to be applied to content *inside* a tab. And
+  `ReadingWorkspaceModel.start()` posted `.newPrimaryBible` before registering its
+  observers, so the KJV overflow menu had no Display Settings section at all. The
+  old coordinator survived that ordering because its `init` force-loaded both
+  reader views and `setDelegate` rebuilt the menu directly; with no view to
+  force-load, the order carries the whole burden. Fixed both, and re-verified on
+  device: six KJV toggle rows in the documented order with no Cross-references row,
+  and Focus mode hiding the tab bar, reclaiming the space, and restoring cleanly.
+- **2026-08-05:** Wave 8 verification is green and the wave is complete. The full
+  Xcode MCP run on the iPhone 17 Pro iOS 27 simulator passed **123 tests, failed
+  0**, and skipped the 2 `PSREF_EXHAUSTIVE` opt-in tests (125 total) — 118 unit
+  tests plus 7 XCUITests over the four workspaces. All three configurations build
+  for a generic iOS device (Debug, Release, Distribution), and a clean device build
+  reports **`CompileC` 0** with `SwiftCompile` 51, so the target is not merely pure
+  Swift but has no C-family translation unit at all. `Classes/` contains zero
+  `UIViewController` subclasses. `git diff --check` and `plutil -lint` on the
+  pbxproj, `Info.plist` and `Localizable.strings` all pass.
 - **2026-08-05:** Wave 7 verification is green and the wave is complete. The full
   Xcode MCP run on iPhone 17 Pro passed **120 tests, failed 0**, and skipped the 2
   `PSREF_EXHAUSTIVE` opt-in tests (122 total). `testBookmarkFolderCrudAndReordering`
@@ -637,6 +761,168 @@ Carry into Wave 8:
   post `NotificationToggleNavigation`, which is now the only remaining poster of
   that notification; once they go, `toggleNavigation`'s observer registration can
   go with them. Sweep all of this when the UIKit coordinator is removed.
+  **All three carries are resolved in Wave 8.**
+
+### Wave 8 status
+
+**Worktree state:** Complete and verified. The full shared scheme is green on the
+iPhone 17 Pro iOS 27 simulator — **123 passed, 0 failed**, the 2
+`PSREF_EXHAUSTIVE` opt-in tests skipped (125 total). Navigation and the reading
+surface are runtime-verified; several study surfaces remain unexercised — see "Not
+yet verified".
+
+**Static audit:** a clean generic-device build (`-sdk iphoneos`, Debug, Xcode 27
+beta) succeeds with **`CompileC` 0** and `SwiftCompile` 51. **All three
+configurations build** for a generic device — Debug, Release and Distribution.
+`Classes/` contains **zero `UIViewController` subclasses** and exactly one non-Swift
+file (`globals.h`). `git diff --check` and `plutil -lint` on the pbxproj,
+`Info.plist` and `Localizable.strings` all pass.
+
+New files:
+
+- `Classes/PocketSwordApp.swift`: `@main`, `WindowGroup`, the `LaunchPhase` gate
+  that replaces `PSLaunchViewController`, the four-workspace `TabView`, and the
+  Library/Settings workspace composition.
+- `Classes/ReadingWorkspace.swift`: `ReadingWorkspaceModel` (what
+  `PSTabBarControllerDelegate` was, minus the tab bar) and `ReaderPaneModel` (what
+  `PSModuleViewController` was, minus the view controller). Two panes exist for
+  the app's lifetime.
+- `Classes/SwiftUIStudyViews.swift`: `StudyPopupSheet`, `BookmarkEditorView`,
+  `VoiceReferenceSheet`.
+- `Classes/PSInfoPopupContent.swift` and `Classes/VoiceReferenceModel.swift`: the
+  halves of two deleted view-controller files that were worth keeping — the
+  Strong's lemma/transliteration parser and the voice-session state mapping.
+
+Deleted (28 files): `PSTabBarControllerDelegate`, `PSModuleViewController`,
+`PSBibleViewController`, `PSCommentaryViewController`, `PSLaunchViewController`,
+`PocketSwordSceneDelegate`, `LegacyStateBridge`, `PSInfoPopupViewController`,
+`PSVoiceRefViewController`, `PSBookmarkAddViewController`,
+`PSBookmarksNavigatorController`, `PSBookmarkFolderAddViewController`,
+`PSBookmarkFolderColourSelectorViewController`, `PSBookmarkTableViewCell`,
+`PSChapterSelectorController`, `PSVerseSelectorController`,
+`PSModuleSearchController`, `PSDictionaryViewController`,
+`PSDictionaryEntryViewController`, `PSDictionaryOverlayViewController`,
+`PSPreferencesController`, `PSBasePreferencesController`,
+`PSPreferencesFontTableViewController`, `PSAboutScreenController`,
+`PSHistoryController`, `PSSearchIndexBuilder`, `SearchWebView`, `PSResizing`,
+plus `externals/MBProgressHUD`, `misc/PocketSword_Prefix.pch`, and 16 unreferenced
+tab-icon PNGs.
+
+Five things in the cutover are worth spelling out, because each is a place a
+later "simplification" would silently break reading:
+
+1. **Both reader panes stay in the view hierarchy**, with the inactive one at
+   `opacity(0)` and `accessibilityHidden`. This is not styling. `displayChapter`
+   renders the polled pane and defers a `refToShow` / `jsToShow` into the *other*,
+   which that pane applies on next appearance — so the inactive pane must exist to
+   receive it. A plain `if` would tear down its `WebPage` and lose both the pending
+   work and the scroll position, which is the Wave 6 blank-page failure in a new
+   disguise.
+2. **`ReadingWorkspaceModel.start()` runs only after `LaunchCoordinator.prepare()`
+   returns.** The `DefaultsLastRefValidated` migration can rewrite `lastRef`, and
+   the reader renders from it. `AppSession` holds an incoming `sword://` URL in
+   `pendingURL` for the same reason, replaying it from the `.ready` transition —
+   which is exactly what the deleted scene delegate's `_pendingLaunchURL` did.
+3. **Five of the coordinator's thirteen notification observers survive**, and only
+   because something outside the reader still posts them:
+   `resetBibleAndCommentaryView` (a font change), `redisplayPrimary{Bible,Commentary}`
+   (a display-toggle flip, the URL router), `bookmarksChanged`, and
+   `newPrimary{Bible,Commentary}`. The other eight were the reader talking to
+   itself and are now method calls. `toggleNavigation`, `toggleMultiList`,
+   `showInfoPane`, `hideInfoPane`, `rotateInfoPane`, `showBibleTab`,
+   `showCommentaryTab` and `updateSelectedReference` have no posters left.
+4. **`HistoryStore.addEntry` gained injectable seams, and that was a real fix.**
+   Moving `+addHistoryItem:` off `PSHistoryController` exposed that it read the
+   chapter reference through `PSModuleController.getCurrentBibleRef()` — which
+   always reads `UserDefaults.standard` — while writing to an injected `defaults`.
+   The first test written against it wrote the *device's* current chapter into a
+   test suite's history. It now reads `lastRef` from its own `defaults` and takes a
+   `moduleNameProvider`. Behaviour in the app is identical; the store is no longer
+   half-injectable.
+5. **`PSResizing` is deleted, not ported.** Twenty-odd of its methods computed
+   manual frames for a UIKit layout that no longer exists
+   (`resizeViewsOnAppear`, `resizeViewsOnRotate`, `statusBarHeight`,
+   `mainScreenBounds`). Its two live uses went to their natural homes: `iPad()`
+   became `UIDevice.current.userInterfaceIdiom != .phone` at the three call sites
+   that wanted it, and `supportedInterfaceOrientations` became the scene delegate's
+   iOS 27 hook.
+
+**Focus mode and the tab bar.** Wave 7 hid the tab bar with
+`setTabBarHidden(_:animated:)` on the `UITabBarController`; it is now
+`toolbarVisibility(reading.isFocused ? .hidden : .automatic, for: .tabBar)` on the
+`TabView`. Same behaviour, including the safe-area republish that lets the reader
+re-inset. The navigation bar still deliberately stays visible in Focus mode — the
+Wave 7 finding that `toolbarVisibility(.hidden)` also hides the
+`.topBarPinnedTrailing` Focus control, leaving no way out, is unchanged and the
+comment recording it is carried forward.
+
+**Five defects were found by live inspection, all fixed.** Every one was invisible
+to the build and to the unit suite, and three of the five made a control render or
+do *nothing* rather than render wrongly — which is the failure mode a hierarchy
+dump catches and a passing build never will:
+
+1. **`tabViewBottomAccessory` cannot host a per-section control.** The Library's
+   section picker was declared there and rendered **nothing at all** — the
+   hierarchy dump for the Library workspace was 82 lines with no picker in it.
+   That modifier declares ONE accessory for the whole `TabView` (the shape the
+   Music mini-player uses), so a control that differs per section has no business
+   in it. Moved to `.principal` in each section's own toolbar, replacing the
+   per-section `navigationTitle`, which is also why each section keeps its own
+   `NavigationStack`.
+2. **The reading-mode picker at `.bottomBar` sat on top of the floating tab bar.**
+   Measured on device: picker at y=798, tab bar at y=795. On iOS 27 the floating
+   tab bar occupies the bottom edge, so there is no bottom bar to put anything in
+   — taps went to the tab bar. Moved to `.topBarLeading`. (Not `.principal`: that
+   is the reference control, which Wave 7 gave `.high` visibility priority.)
+3. **`Tab`'s `accessibilityIdentifier` does not reach the tab-bar button.** The
+   four buttons expose only their localized labels ("Read", "Library",
+   "Settings", "Search"). The identifiers were removed rather than left as a
+   comforting lie, and the XCUITests match tabs by label.
+4. **`toolbarVisibility(_:for: .tabBar)` on the `TabView` does nothing**, so Focus
+   mode did not hide the tab bar. On device the Focus control flipped to "Exit
+   Focus Mode" with the tab bar still sitting there — the state was right and the
+   effect was absent. The modifier has to be applied to the content *inside* a
+   tab; it now sits on `ReaderScreen`'s `NavigationStack`. This is the direct
+   replacement for Wave 7's `setTabBarHidden(_:animated:)`.
+5. **`ReadingWorkspaceModel.start()` posted `.newPrimaryBible` before registering
+   its observers**, so nothing ever built the display-toggle rows: the KJV overflow
+   menu showed only "History and Search", with no Display Settings section at all.
+   Observers are now registered first, and both panes are additionally primed by a
+   direct `refreshForModuleChange()` call. The old coordinator got away with the
+   opposite order for two reasons that no longer hold — its `init` force-loaded
+   both reader views (`_ = cvc.view`) so they had already registered in
+   `viewDidLoad`, and `setDelegate` called `rebuildSettingsMenu()` directly. There
+   is no view to force-load now.
+
+Both pickers became `Menu`s rather than segmented `Picker`s in the process: a
+toolbar slot next to chapter navigation is too cramped for a segmented control,
+and the menu names the active mode/section instead of leaving an icon to guess at.
+
+Live inspection also confirmed the **tab order is Read, Library, Settings,
+Search** — `Search` is declared second, and `TabRole.search` moves it to the
+trailing position, which is what the role is for.
+
+**Verified live on iPhone 17 Pro / iOS 27:** launch through to the reader with
+Genesis 1:1 rendered and Strong's numbers visible; all four workspaces reachable;
+the Library section menu opening and switching Bookmarks → History (correct empty
+states, and no Close button, which is the intended change); the reading-mode menu
+switching Bible → Commentary with MHCC's Genesis 1 commentary rendering — which
+also exercises the `refToShow` deferral across a pane switch, the mechanism that
+most needed a live check; the overflow menu showing **exactly the six KJV display
+rows in the documented order** (Strong's Numbers, Morphological Tags, Headings,
+Footnotes, Red Letter, Verse Per Line) with **no Cross-references row**; and Focus
+mode hiding the tab bar and status bar, reclaiming the space, keeping its exit
+control, and restoring all four tabs on exit.
+
+**Not yet verified, and carried into Wave 9:**
+
+- The retirement of the `startStrongsSearch` workaround — rotate with the Strong's
+  popup open, then tap "Find all occurrences". This is the single most important
+  outstanding check, because the claim is that a crash is *gone*.
+- The study popup itself, the verse menu, the bookmark editor's flattened folder
+  picker, `onGeometryChange`-driven rotation restore, the chapter toast,
+  search-index building, and the launch-failure view.
+- Still carried from Wave 7: a footnote link, iPad, Dynamic Type, VoiceOver, RTL.
 
 ## Summary
 

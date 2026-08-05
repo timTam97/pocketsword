@@ -303,3 +303,11 @@
 // SwiftUI reading chrome (Wave 7)
 "VoiceOverFocusModeButton" = "Enter Focus Mode";
 "VoiceOverExitFocusModeButton" = "Exit Focus Mode";
+
+// SwiftUI app lifecycle and the four workspaces (Wave 8)
+"WorkspaceRead" = "Read";
+"WorkspaceSearch" = "Search";
+"WorkspaceLibrary" = "Library";
+"WorkspaceSettings" = "Settings";
+"LaunchFailedTitle" = "PocketSword could not start";
+"LaunchFailedMessage" = "The bundled Bible content could not be opened. Reinstalling PocketSword should fix this.";

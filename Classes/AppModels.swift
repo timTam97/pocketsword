@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UIKit
 
 enum Workspace: String, CaseIterable, Equatable {
     case read
@@ -166,17 +167,57 @@ final class LibraryModel {
     @ObservationIgnored private let bookmarkStore: BookmarkStore
     @ObservationIgnored private let historyStore: HistoryStore
     @ObservationIgnored private let dictionaryStore: DictionaryStore
+    @ObservationIgnored private let notificationCenter: NotificationCenter
+    @ObservationIgnored private var observers: [NSObjectProtocol] = []
 
     init(
         bookmarkStore: BookmarkStore = BookmarkStore(),
         historyStore: HistoryStore = HistoryStore(),
-        dictionaryStore: DictionaryStore = DictionaryStore()
+        dictionaryStore: DictionaryStore = DictionaryStore(),
+        notificationCenter: NotificationCenter = .default
     ) {
         self.bookmarkStore = bookmarkStore
         self.historyStore = historyStore
         self.dictionaryStore = dictionaryStore
+        self.notificationCenter = notificationCenter
         self.bookmarks = bookmarkStore.snapshot()
         self.history = historyStore.snapshot()
+    }
+
+    deinit {
+        for observer in observers {
+            notificationCenter.removeObserver(observer)
+        }
+    }
+
+    /// Starts refreshing on the two notifications that change this model's data
+    /// from outside it: `bookmarksChanged` (the bookmark editor, and the store's
+    /// own mutations) and `historyChanged` (a new entry, a clear, or an iCloud
+    /// merge).
+    ///
+    /// `LegacyStateBridge` used to do this, as part of mirroring UIKit state into
+    /// `AppSession`. That was the right place while a UIKit controller owned the
+    /// lists; now that the lists are SwiftUI reading straight off this model, the
+    /// model is the right place, and the bridge is deleted.
+    func startObservingChanges() {
+        guard observers.isEmpty else { return }
+        for (name, handler) in [
+            (Notification.Name.bookmarksChanged, { [weak self] in
+                self?.reloadBookmarks()
+            }),
+            (Notification.Name.historyChanged, { [weak self] in
+                self?.reloadHistory()
+            }),
+        ] as [(Notification.Name, @MainActor () -> Void)] {
+            let observer = notificationCenter.addObserver(
+                forName: name,
+                object: nil,
+                queue: .main
+            ) { _ in
+                MainActor.assumeIsolated { handler() }
+            }
+            observers.append(observer)
+        }
     }
 
     func reloadBookmarks() {
@@ -185,6 +226,12 @@ final class LibraryModel {
 
     func reloadHistory() {
         history = historyStore.snapshot()
+    }
+
+    /// Records the reference currently being read. The store posts
+    /// `historyChanged`, which refreshes `history` through the observer above.
+    func recordHistory(mode: ReadingMode) {
+        historyStore.addEntry(mode: mode)
     }
 
     func bookmarkNode(id: UUID) -> BookmarkNode? {
@@ -907,13 +954,30 @@ final class AppSession {
     @ObservationIgnored let library: LibraryModel
     @ObservationIgnored let search: SearchModel
 
+    /// The reading workspace, wired in once it exists. Weak because the workspace
+    /// holds the session; this is the back-edge.
+    @ObservationIgnored weak var readingWorkspace: ReadingWorkspaceModel?
+
+    @ObservationIgnored private let readingStore: ReadingStateStore
+    /// A `sword://` URL that arrived before launch preparation finished, replayed
+    /// from `replayPendingURL()`.
+    ///
+    /// The old scene delegate cached this in `_pendingLaunchURL` for the same
+    /// reason: a URL can be delivered with the scene-connection options, before
+    /// the reader exists to navigate. `onOpenURL` can likewise fire while
+    /// `LaunchPhase` is still `.preparing`, and routing then would render a
+    /// chapter that the `DefaultsLastRefValidated` migration is about to rewrite.
+    @ObservationIgnored private var pendingURL: URL?
+    @ObservationIgnored private var isReady = false
+
     init(
         selectedWorkspace: Workspace = .read,
         lastOpenedURL: URL? = nil,
         reading: ReadingModel? = nil,
         settings: SettingsModel? = nil,
         library: LibraryModel? = nil,
-        search: SearchModel? = nil
+        search: SearchModel? = nil,
+        readingStore: ReadingStateStore = ReadingStateStore()
     ) {
         self.selectedWorkspace = selectedWorkspace
         self.lastOpenedURL = lastOpenedURL
@@ -921,6 +985,98 @@ final class AppSession {
         self.settings = settings ?? SettingsModel()
         self.library = library ?? LibraryModel()
         self.search = search ?? SearchModel()
+        self.readingStore = readingStore
+    }
+
+    /// Wires the side effects that `LegacyStateBridge` used to mirror through
+    /// `NotificationCenter`.
+    ///
+    /// The bridge existed so a SwiftUI settings change could reach the UIKit
+    /// render path it did not know about. Both ends are SwiftUI now, so these are
+    /// direct: a font/size change posts the redisplay the reader observes, and the
+    /// keep-awake toggle sets the idle timer. `LegacyStateBridge` itself is
+    /// deleted — its notification *observers* were mirroring UIKit state into
+    /// `AppSession`, and there is no UIKit state left to mirror.
+    func start() {
+        settings.onReadingAppearanceChanged = {
+            NotificationCenter.default.post(
+                name: .resetBibleAndCommentaryView,
+                object: nil
+            )
+        }
+        settings.onKeepScreenAwakeChanged = { value in
+            UIApplication.shared.isIdleTimerDisabled = value
+        }
+        // Materializes the font-size default (12) so the Settings slider has a
+        // value to sit at rather than snapping from 0 on first drag. The deleted
+        // `PSPreferencesController` did this lazily from its cell builder, which
+        // meant the key only appeared once the user visited Preferences.
+        settings.ensureFontSizeDefault()
+        library.startObservingChanges()
+        reading.apply(readingStore.snapshot())
+    }
+
+    /// Routes an incoming `sword://` URL, or defers it if launch is still running.
+    ///
+    /// This is `-application:handleOpenURL:options:` minus the delegate. The
+    /// behaviour is unchanged, including the two things that look incidental and
+    /// are not:
+    ///
+    ///  - **A URL the parser cannot resolve is ignored**, not guessed at: no
+    ///    navigation, no history entry, one `alog` line from `URLRouter`. This is
+    ///    the only reference the app does not itself generate, which is why
+    ///    `PSRefParser` exists.
+    ///  - **The persist happens before the redisplay.** `readingStore.persist`
+    ///    writes `lastRef` and the verse position; the reader then renders from
+    ///    those. Reversing the order renders the previous chapter.
+    @discardableResult
+    func open(_ url: URL?) -> Bool {
+        guard isReady else {
+            pendingURL = url
+            return false
+        }
+        guard let route = URLRouter()?.route(for: url) else {
+            return false
+        }
+
+        lastOpenedURL = route.sourceURL
+        selectedWorkspace = .read
+        reading.apply(route)
+        readingStore.persist(route)
+
+        switch route.destination {
+        case .bible(let module):
+            if let module {
+                PSModuleController.default()?.loadPrimaryBible(module)
+            }
+            readingWorkspace?.mode = .bible
+            NotificationCenter.default.post(
+                name: .redisplayPrimaryBible,
+                object: nil
+            )
+            library.recordHistory(mode: .bible)
+        case .commentary(let module):
+            if let module {
+                PSModuleController.default()?.loadPrimaryCommentary(module)
+            }
+            readingWorkspace?.mode = .commentary
+            NotificationCenter.default.post(
+                name: .redisplayPrimaryCommentary,
+                object: nil
+            )
+            library.recordHistory(mode: .commentary)
+        }
+
+        return true
+    }
+
+    /// Opens the launch URL held back during preparation, if there was one. Called
+    /// once, from the `.ready` transition.
+    func replayPendingURL() {
+        isReady = true
+        guard let url = pendingURL else { return }
+        pendingURL = nil
+        open(url)
     }
 
     func apply(_ route: URLRoute) {

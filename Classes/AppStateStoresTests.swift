@@ -1209,55 +1209,57 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(chrome.identifierPrefix, "commentary")
     }
 
+    /// `AppSession.start()` restores the persisted reading position and wires the
+    /// settings side effects.
+    ///
+    /// Wave 8 retargeted this off `LegacyStateBridge`, which is deleted. The bridge
+    /// existed to mirror UIKit notification state into `AppSession` during the mixed
+    /// migration; both ends are SwiftUI now, so `start()` does the two things that
+    /// actually mattered — seed `reading` from `ReadingStateStore`, and post the
+    /// redisplay a font change needs — directly. The **claims** are the bridge's:
+    /// the restored snapshot must carry both verse positions independently, and a
+    /// font change must reach the reader.
     @MainActor
-    func testLegacyBridgeMirrorsNotificationsAndSettingsSideEffects() {
+    func testSessionStartRestoresReadingStateAndWiresSettingsEffects() {
         defaults.set("John 3", forKey: Defaults.lastRef)
         defaults.set("16", forKey: Defaults.bibleVersePosition)
         defaults.set("17", forKey: Defaults.commentaryVersePosition)
         let settings = SettingsModel(store: SettingsStore(defaults: defaults))
-        let session = AppSession(settings: settings)
-        let center = NotificationCenter()
-        var idleTimerValues: [Bool] = []
-        let bridge = LegacyStateBridge(
-            session: session,
-            readingStore: ReadingStateStore(defaults: defaults),
-            notificationCenter: center,
-            idleTimerHandler: { idleTimerValues.append($0) }
+        let session = AppSession(
+            settings: settings,
+            readingStore: ReadingStateStore(defaults: defaults)
         )
 
-        bridge.start()
+        session.start()
 
         XCTAssertEqual(session.reading.reference?.chapterRef, "John 3")
         XCTAssertEqual(session.reading.bibleVerse, 16)
+        XCTAssertEqual(session.reading.commentaryVerse, 17)
 
-        defaults.set("Psalms 23", forKey: Defaults.lastRef)
-        defaults.set("4", forKey: Defaults.commentaryVersePosition)
-        center.post(name: .showCommentaryTab, object: nil)
-
-        XCTAssertEqual(session.selectedWorkspace, .read)
-        XCTAssertEqual(session.reading.mode, .commentary)
-        XCTAssertEqual(session.reading.reference?.chapterRef, "Psalms 23")
-        XCTAssertEqual(session.reading.commentaryVerse, 4)
-
-        settings.keepScreenAwake = true
-        XCTAssertEqual(idleTimerValues, [true])
-
+        // A font change must post the redisplay the reader observes; that post IS
+        // the whole mechanism by which Preferences reaches the reading surface.
+        let redisplayed = expectation(
+            forNotification: .resetBibleAndCommentaryView,
+            object: nil
+        )
         settings.fontName = "Gentium Plus"
-        defaults.removeObject(forKey: Defaults.fontNamePreference)
-        defaults.removeObject(forKey: Defaults.insomniaPreference)
-        center.post(name: .appStateDidReset, object: nil)
-
-        XCTAssertEqual(settings.fontName, AppConstants.defaultFontName)
-        XCTAssertFalse(settings.keepScreenAwake)
-        XCTAssertNil(defaults.object(forKey: Defaults.fontNamePreference))
-        XCTAssertNil(defaults.object(forKey: Defaults.insomniaPreference))
-        XCTAssertEqual(idleTimerValues, [true])
-
-        bridge.stop()
+        wait(for: [redisplayed], timeout: 2)
+        XCTAssertEqual(
+            defaults.string(forKey: Defaults.fontNamePreference),
+            "Gentium Plus"
+        )
     }
 
+    /// `LibraryModel` refreshes its snapshots off `bookmarksChanged` /
+    /// `historyChanged`.
+    ///
+    /// Also a retargeted bridge test: the observers moved from `LegacyStateBridge`
+    /// onto the model that owns the data, so this drives them where they now live.
+    /// The claim is unchanged — a mutation behind the store's back, announced by
+    /// notification, must reach the published arrays, because that is what makes the
+    /// SwiftUI lists update.
     @MainActor
-    func testLegacyBridgeReloadsLibrarySnapshots() {
+    func testLibraryModelReloadsSnapshotsOnChangeNotifications() {
         let firstBookmark = PSBookmark(
             name: "First",
             dateAdded: nil,
@@ -1272,26 +1274,18 @@ final class AppStateStoresTests: XCTestCase {
             children: [firstBookmark]
         )
         let center = NotificationCenter()
-        let historyStore = HistoryStore(
-            defaults: defaults,
-            cloudStore: HistoryCloudStoreStub(),
-            notificationCenter: center
-        )
         let library = LibraryModel(
             bookmarkStore: BookmarkStore(rootProvider: { root }),
-            historyStore: historyStore
+            historyStore: HistoryStore(
+                defaults: defaults,
+                cloudStore: HistoryCloudStoreStub(),
+                notificationCenter: center
+            ),
+            notificationCenter: center
         )
-        let session = AppSession(
-            settings: SettingsModel(store: SettingsStore(defaults: defaults)),
-            library: library
-        )
-        let bridge = LegacyStateBridge(
-            session: session,
-            readingStore: ReadingStateStore(defaults: defaults),
-            notificationCenter: center,
-            idleTimerHandler: { _ in }
-        )
-        bridge.start()
+        library.startObservingChanges()
+
+        XCTAssertEqual(library.bookmarks.count, 1)
 
         root.children = [
             firstBookmark,
@@ -1309,9 +1303,54 @@ final class AppStateStoresTests: XCTestCase {
         center.post(name: .bookmarksChanged, object: nil)
         center.post(name: .historyChanged, object: nil)
 
-        XCTAssertEqual(session.library.bookmarks.count, 2)
-        XCTAssertEqual(session.library.history.count, 1)
+        XCTAssertEqual(library.bookmarks.count, 2)
+        XCTAssertEqual(library.history.count, 1)
+    }
 
-        bridge.stop()
+    /// `HistoryStore.addEntry` writes the byte-exact persisted row shape.
+    ///
+    /// Wave 8 moved this off `PSHistoryController` (a deleted
+    /// `UITableViewController`) onto the store. The persisted format is
+    /// `[ref, "0", module, NSDate]` — positional, with `"0"` a literal string — and
+    /// `PersistedFormatTests` locks the reader side of it. This locks the writer,
+    /// which had no direct coverage before: it was only reachable through a view
+    /// controller.
+    @MainActor
+    func testHistoryStoreAddEntryWritesThePersistedRowShape() throws {
+        defaults.set("Genesis 5", forKey: Defaults.lastRef)
+        defaults.set("9", forKey: Defaults.bibleVersePosition)
+        defaults.removeObject(forKey: AppConstants.historyName)
+
+        let store = HistoryStore(
+            defaults: defaults,
+            cloudStore: HistoryCloudStoreStub(),
+            notificationCenter: NotificationCenter(),
+            moduleNameProvider: { _ in BundledModules.bible }
+        )
+        store.addEntry(mode: .bible)
+
+        let history = try XCTUnwrap(
+            defaults.array(forKey: AppConstants.historyName)
+        )
+        XCTAssertEqual(history.count, 1)
+        let row = try XCTUnwrap(history[0] as? [Any])
+        XCTAssertEqual(row.count, 4)
+        XCTAssertEqual(row[0] as? String, "Genesis 5:9")
+        XCTAssertEqual(
+            row[1] as? String,
+            "0",
+            "The scroll slot is the literal string \"0\", not a number."
+        )
+        XCTAssertEqual(row[2] as? String, BundledModules.bible)
+        XCTAssertNotNil(row[3] as? Date)
+
+        // Re-recording the same reference in the same module REPLACES the row
+        // rather than appending, which is what keeps the list from filling with
+        // one entry per scroll.
+        store.addEntry(mode: .bible)
+        XCTAssertEqual(
+            defaults.array(forKey: AppConstants.historyName)?.count,
+            1
+        )
     }
 }
