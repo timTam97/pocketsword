@@ -404,28 +404,24 @@ struct ReaderScreen: View {
     /// `WebPage`, losing both the pending work and the scroll position, which is
     /// the Wave 6 blank-page failure mode in a new disguise.
     ///
-    /// On the safe area: there is no `ignoresSafeArea` here, and both directions
-    /// have been wrong once. A bare `ignoresSafeArea(edges: .bottom)` reproduces
-    /// the Wave 6 defect — the chapter paints PAST the floating tab bar with lines
-    /// permanently hidden behind it. Staying inside the safe area, as here,
-    /// letterboxes instead: the scroll view ends at the chrome, so the reader shows
-    /// black bands rather than content flowing edge-to-edge beneath translucent
-    /// bars. The real answer is BOTH — a full-height scroll view whose *content*
-    /// carries the insets — and it is deliberately not attempted here, because for
-    /// a WebView the insets have to come from the HTML (`viewport-fit=cover` +
-    /// `env(safe-area-inset-*)` in `createHTMLString`, replacing `chapterPage`'s
-    /// six hardcoded `<p>&nbsp;</p>` pads) and every verse offset that
-    /// `versePositions` / `scrollToVerse` / `scrollHappened` measure sits
-    /// downstream of that, with the chapter-body fixtures and
-    /// `chapter-loop-counters.tsv` pinning the surrounding output. Wave 9 deletes
-    /// this WebView for a `LazyVStack`, where the same result is one
-    /// `contentMargins` call. Do not pay for it twice.
+    /// On the safe area: **Wave 9 resolved this**, and the resolution lives in
+    /// `ChapterTextView` rather than here. The reader is now a native scroll view
+    /// that ignores the vertical safe area while its *content* carries the insets
+    /// (`contentMargins(… for: .scrollContent)`), so the chapter flows edge-to-edge
+    /// and scrolls beneath the translucent bars with no line obscured at rest.
+    ///
+    /// Both halves of that tradeoff were wrong once each before: Wave 6 let the
+    /// WebView extend under the floating tab bar with no content inset and lines
+    /// painted permanently behind it; Wave 7 kept it inside the safe area, which
+    /// fixed the overlap and left the chapter letterboxed. Do not add an
+    /// `ignoresSafeArea` here — the scroll view owns it now, and adding a second one
+    /// at this level would inset nothing and reintroduce the overlap.
     private var readerPanes: some View {
         ZStack {
-            SwiftUIReaderWebView(model: reading.bible.reader)
+            ChapterTextView(pane: reading.bible)
                 .opacity(reading.mode == .bible ? 1 : 0)
                 .accessibilityHidden(reading.mode != .bible)
-            SwiftUIReaderWebView(model: reading.commentary.reader)
+            ChapterTextView(pane: reading.commentary)
                 .opacity(reading.mode == .commentary ? 1 : 0)
                 .accessibilityHidden(reading.mode != .commentary)
         }

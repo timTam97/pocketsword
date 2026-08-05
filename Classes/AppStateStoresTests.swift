@@ -1252,34 +1252,54 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
-    func testReaderBridgeEventsPreserveNavigationPayloads() throws {
-        XCTAssertEqual(
-            ReaderBridgeEvent(
-                url: try XCTUnwrap(
-                    URL(string: "pocketsword:currentverse:16:241.75:200")
-                )
-            ),
-            .currentVerse(verse: 16, scrollPosition: 241.75)
-        )
-        XCTAssertEqual(
-            ReaderBridgeEvent(
-                url: try XCTUnwrap(
-                    URL(string: "pocketsword:versemenu:8")
-                )
-            ),
-            .verseMenu(verse: 8)
-        )
-        XCTAssertEqual(
-            ReaderBridgeEvent(
-                url: try XCTUnwrap(URL(string: "arraydump:0:42.5:99:"))
-            ),
-            .versePositions([0, 42.5, 99, 0])
-        )
-        XCTAssertNil(
-            ReaderBridgeEvent(
-                url: try XCTUnwrap(URL(string: "pocketsword:currentverse"))
+    /// Every chapter link survives the round trip to the URL the text carries.
+    ///
+    /// **This replaces `testReaderBridgeEventsPreserveNavigationPayloads`** (Wave 6),
+    /// which pinned the `pocketsword:currentverse:` / `pocketsword:versemenu:` /
+    /// `arraydump:` shapes the JavaScript bridge used. Wave 9 deleted that bridge
+    /// with the WebView: verse position is the pane's own state, and there is no
+    /// offset table to dump. The *claim* is carried forward unchanged though — a link
+    /// tapped in the chapter text must reach its handler with its payload intact —
+    /// and the round trip is the new place that can silently break.
+    ///
+    /// It matters because `AttributedString.link` is the only way SwiftUI makes a
+    /// span of `Text` tappable, so a typed `InlineLink` has to become a URL and come
+    /// back. A lossy encoding would not fail to build; it would open the wrong
+    /// lexicon entry.
+    func testChapterLinksSurviveTheURLRoundTrip() throws {
+        let cases: [InlineLink] = [
+            .strongs(type: "Hebrew", value: "0430"),
+            .strongs(type: "Greek", value: "2222"),
+            // The `-` flag bakes an EMPTY type, which is the case an encoding that
+            // assumes two path components would drop.
+            .strongs(type: "", value: "1254"),
+            .morph(type: "robinson%3AN-ASF", value: "N-ASF"),
+            // The reconstructed `strongMorph%3A…` form, which carries a percent
+            // escape of its own.
+            .morph(type: "strongMorph%3ATH8804", value: "TH8804"),
+            // `passage` arrives URL-encoded off the anchor and is decoded downstream
+            // by `PSContentReader.noteBody`, so it must survive as-is rather than
+            // being decoded in transit.
+            .note(kind: "n", value: "1", module: "KJV", passage: "Genesis+4%3A1"),
+            .scriptRef(value: "Gen 1:1"),
+            .verseMenu(verse: 16),
+        ]
+
+        for link in cases {
+            let url = try XCTUnwrap(link.url, "\(link) produced no URL")
+            let decoded = try XCTUnwrap(
+                InlineLink(url: url),
+                "\(link) did not decode back from \(url)"
             )
-        )
+            XCTAssertEqual(decoded, link, "round trip changed \(link) via \(url)")
+        }
+
+        // Anything that is not ours must decode to nil, so the view's `openURL`
+        // handler falls through to `.systemAction` — which is what lets MHCC's own
+        // `sword://` scripture links keep working.
+        XCTAssertNil(InlineLink(url: try XCTUnwrap(URL(string: "sword://Bible/John%203:16"))))
+        XCTAssertNil(InlineLink(url: try XCTUnwrap(URL(string: "https://crosswire.org"))))
+        XCTAssertNil(InlineLink(url: try XCTUnwrap(URL(string: "pslink://nonsense/1"))))
     }
 
     // `testReaderFrameStopsAtOverlappingTabBar` is GONE (Wave 7). It pinned

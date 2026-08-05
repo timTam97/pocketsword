@@ -79,6 +79,89 @@ enum InlineLink: Equatable, Hashable {
     /// across 122,380 record expansions), carried so a future module cannot
     /// silently lose its links.
     case scriptRef(value: String)
+    /// The verse NUMBER itself, which was `pocketsword:versemenu:<i>` on a Bible
+    /// and `#verse<i>` on a commentary. Not produced by the token grammar — the
+    /// assembler synthesised it around each verse — so the renderer attaches it to
+    /// the superscript label rather than the builder emitting it.
+    case verseMenu(verse: Int)
+
+    /// A compact URL for this link.
+    ///
+    /// SwiftUI only makes a span of `Text` tappable through
+    /// `AttributedString.link`, so the typed value has to reach the view as a URL.
+    /// This is deliberately NOT the old `passagestudy.jsp?action=…&type=…&value=…`
+    /// shape: that string was SWORD's, had to be split on `&`/`=` without decoding
+    /// (`+[PSModuleController data(forLink:)]`), and re-parsing it is the round trip
+    /// Wave 9 removed from the render path. `pslink://` is this app's own, one
+    /// component per field, percent-encoded once.
+    var url: URL? {
+        var components = URLComponents()
+        components.scheme = "pslink"
+        switch self {
+        case .strongs(let type, let value):
+            components.host = "strongs"
+            components.path = "/\(type)/\(value)"
+        case .morph(let type, let value):
+            components.host = "morph"
+            components.path = "/\(type)/\(value)"
+        case .note(let kind, let value, let module, let passage):
+            components.host = "note"
+            components.path = "/\(kind)/\(value)/\(module)"
+            // `passage` arrives URL-encoded off the anchor and
+            // `PSContentReader.noteBody` decodes it itself, so it is carried as a
+            // query item rather than a path component — a path component would be
+            // double-encoded and then double-decoded.
+            components.queryItems = [URLQueryItem(name: "passage", value: passage)]
+        case .scriptRef(let value):
+            components.host = "scriptref"
+            components.queryItems = [URLQueryItem(name: "value", value: value)]
+        case .verseMenu(let verse):
+            components.host = "versemenu"
+            components.path = "/\(verse)"
+        }
+        return components.url
+    }
+
+    /// The inverse of `url`. Returns nil for anything that is not a `pslink://`.
+    init?(url: URL) {
+        guard url.scheme == "pslink", let host = url.host else { return nil }
+        // `pathComponents` leads with "/" for a rooted path; drop it.
+        let parts = url.pathComponents.filter { $0 != "/" }
+        let query = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .queryItems ?? []
+        func queryValue(_ name: String) -> String {
+            query.first { $0.name == name }?.value ?? ""
+        }
+
+        switch host {
+        case "strongs":
+            // An empty `type` is legitimate (the `-` flag), so a two-component path
+            // is the encoded form of type="" — hence the padding rather than a
+            // count check that would reject it.
+            guard parts.count >= 1 else { return nil }
+            let type = parts.count >= 2 ? parts[0] : ""
+            let value = parts.count >= 2 ? parts[1] : parts[0]
+            self = .strongs(type: type, value: value)
+        case "morph":
+            guard parts.count >= 1 else { return nil }
+            let type = parts.count >= 2 ? parts[0] : ""
+            let value = parts.count >= 2 ? parts[1] : parts[0]
+            self = .morph(type: type, value: value)
+        case "note":
+            guard parts.count >= 2 else { return nil }
+            self = .note(kind: parts[0],
+                         value: parts[1],
+                         module: parts.count >= 3 ? parts[2] : "",
+                         passage: queryValue("passage"))
+        case "scriptref":
+            self = .scriptRef(value: queryValue("value"))
+        case "versemenu":
+            guard let first = parts.first, let verse = Int(first) else { return nil }
+            self = .verseMenu(verse: verse)
+        default:
+            return nil
+        }
+    }
 }
 
 /// The typographic axes a run can carry, as a set rather than a class name.
@@ -153,6 +236,42 @@ struct ChapterVerse: Identifiable, Equatable, Hashable {
     var highlightColour: String?
     /// The intro slot (`i == 0`) has no verse number and renders without a label.
     var isIntro: Bool { number == 0 }
+
+    /// Whether this verse OPENS a paragraph.
+    ///
+    /// The KJV marks paragraph starts with a pilcrow (`&#182;`), and it does so
+    /// cleanly: measured over the whole module, all **2,970** pilcrows sit at the
+    /// start of a verse's visible text and **none** appears mid-verse. So the
+    /// marker is trustworthy as a paragraph boundary, which is what lets the
+    /// flowing-prose layout break where the translators intended rather than at an
+    /// arbitrary verse count.
+    ///
+    /// Verse 1 of every chapter also opens a paragraph, whether or not it carries a
+    /// pilcrow.
+    var startsParagraph: Bool = false
+}
+
+/// A run of verses that render as one flowing paragraph.
+///
+/// This exists because of what the reader looked like BEFORE Wave 9, which is easy
+/// to get wrong from the plan's wording alone. With verse-per-line OFF — the
+/// default, and how the app has always read — the HTML ran verses together as
+/// continuous prose with superscript numbers inline; only with the toggle ON did
+/// each verse get its own line. A `LazyVStack` with one row per verse would have
+/// silently made every chapter verse-per-line and left the per-module VPL toggle
+/// with nothing to do.
+///
+/// So the document groups verses into paragraphs, and the view picks its unit:
+/// paragraphs in prose mode, verses in verse-per-line mode. Both of today's
+/// layouts survive and the toggle keeps meaning.
+struct ChapterParagraph: Identifiable, Equatable {
+    /// The first verse's number — stable, and what `ScrollPosition(id:)` targets in
+    /// prose mode.
+    var id: Int { verses.first?.number ?? 0 }
+    var verses: [ChapterVerse]
+    /// Headings that precede the paragraph, hoisted off its first verse so they
+    /// render above it rather than inside the flowed text.
+    var headings: [ChapterHeading] = []
 }
 
 /// A whole rendered chapter.
@@ -166,6 +285,29 @@ struct ChapterDocument: Equatable {
     var emptyMessage: String?
 
     var isEmpty: Bool { verses.isEmpty }
+
+    /// `verses` regrouped into flowing paragraphs, for the prose layout.
+    ///
+    /// Breaks where a verse carries the KJV's own pilcrow (and always before the
+    /// first verse). A heading forces a break too: a heading belongs above a
+    /// paragraph, never inside one.
+    var paragraphs: [ChapterParagraph] {
+        var out: [ChapterParagraph] = []
+        for verse in verses {
+            let breaksHere = out.isEmpty
+                || verse.startsParagraph
+                || !verse.headings.isEmpty
+            if breaksHere {
+                var opening = verse
+                let headings = opening.headings
+                opening.headings = []
+                out.append(ChapterParagraph(verses: [opening], headings: headings))
+            } else {
+                out[out.count - 1].verses.append(verse)
+            }
+        }
+        return out
+    }
 }
 
 // MARK: - Builder
@@ -299,6 +441,11 @@ enum PSChapterDocumentBuilder {
 
                 verse.runs = runs
                 verse.highlightColour = highlightColour(i)
+                // The KJV's own paragraph marker. All 2,970 of them sit at the
+                // start of a verse's visible text (measured over the module), so a
+                // leading pilcrow is a reliable "new paragraph here". The glyph
+                // itself stays in the text, exactly as the HTML rendered it.
+                verse.startsParagraph = Self.opensParagraph(runs)
 
                 // The assembler drops a bible intro slot whose whole content was a
                 // `<br />`; with no `br` in the corpus that reduces to dropping an
@@ -318,6 +465,22 @@ enum PSChapterDocumentBuilder {
             document.emptyMessage = emptyChapterMessage()
         }
         return document
+    }
+
+    /// Whether a verse's runs open with the KJV's paragraph pilcrow.
+    ///
+    /// Scans past leading whitespace and past marker runs: a paragraph-opening
+    /// verse in a red-letter passage begins with the `WordOfChrist` space, and one
+    /// with Strong's on may lead with `<3588>`, so testing only the very first
+    /// character would miss both. Measured: John 3:16 is exactly this shape.
+    private static func opensParagraph(_ runs: [InlineRun]) -> Bool {
+        for run in runs {
+            if run.isMarker { continue }
+            let trimmed = run.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty { continue }
+            return trimmed.hasPrefix("\u{00B6}")
+        }
+        return false
     }
 
     /// The assembler's leading-whitespace strip, applied across runs.

@@ -248,6 +248,78 @@ final class PSContentReader: NSObject {
         return (result.body, result.entryCount)
     }
 
+    /// The typed chapter document the native SwiftUI reader renders — Wave 9's
+    /// replacement for `chapterPage`.
+    ///
+    /// Same inputs, same option prefs, same bookmark-highlight lookup as
+    /// `chapterBody`; the difference is that it emits `ChapterDocument` values
+    /// instead of HTML, so there is no shell, no CSS, no navigation JS and no six
+    /// `&nbsp;` pads. See `PSChapterDocument.swift` for why the token stream gets a
+    /// second emitter rather than the HTML being parsed.
+    ///
+    /// `PSChapterDocumentParityTests` asserts this agrees with `chapterBody` on
+    /// text, verse identity, `entryCount` and every link target, for all 1,189
+    /// chapters × both modules × both option endpoints.
+    func chapterDocument(module: String,
+                         ref: String,
+                         kind: PSChapterAssembler.ModuleKind,
+                         options: PSChapterExpander.Options? = nil,
+                         applyBookmarkHighlights: Bool = true,
+                         reportFailures: Bool = true) -> ChapterDocument? {
+        guard let store, let resolver else {
+            PSContentStore.fail("reader is unavailable", report: reportFailures)
+            return nil
+        }
+        guard let (book, chapter) = resolver.resolve(ref: ref) else {
+            PSContentStore.fail("cannot resolve ref '\(ref)'", report: reportFailures)
+            return nil
+        }
+        let opts = options ?? self.options(forModule: module)
+
+        guard let records = store.chapterRecords(module: module,
+                                                 bookOsis: book.osisName,
+                                                 chapter: chapter) else {
+            // Not a failure: the converter omits wholly-empty chapters. Same
+            // message the engine rendered, now as a document field.
+            var document = ChapterDocument()
+            document.emptyMessage = emptyChapterMessage(bookName: book.name,
+                                                        chapter: chapter)
+            return document
+        }
+        // Headings are keyed by the module's own key text, which uses the LONG
+        // (roman-numeral) book name — see `chapterBody`.
+        let headings = store.headings(module: module,
+                                      bookName: book.longName,
+                                      chapter: chapter)
+
+        var config = PSChapterDocumentBuilder.Config()
+        config.kind = kind
+        config.headingsOn = opts.headings
+
+        // The highlight lookup takes the CALLER's ref through createRefString, not
+        // SWORD's abbreviation — passing "Ps 23" renders identical text but matches
+        // no bookmark. Identical to `chapterBody`; not interchangeable.
+        let highlightRef = applyBookmarkHighlights
+            ? PSRefHelper.createRefString(ref)
+            : nil
+
+        return PSChapterDocumentBuilder.build(
+            records: records.records,
+            headings: headings,
+            config: config,
+            options: opts,
+            highlightColour: { verse in
+                guard let highlightRef else { return nil }
+                return PSBookmarks.getHighlightRGBColourString(
+                    forBookAndChapterRef: highlightRef,
+                    withVerse: verse
+                )
+            },
+            emptyChapterMessage: self.emptyChapterMessage(bookName: book.name,
+                                                          chapter: chapter),
+            reportFailures: reportFailures)
+    }
+
     /// The full page — body + bottom padding + navigation JS + the HTML shell —
     /// i.e. the equivalent of `-[SwordModule getChapter:withExtraJS:]`, which is
     /// what `PSModuleController.getBibleChapter(_:withExtraJS:)` returns.
@@ -314,6 +386,16 @@ final class PSContentReader: NSObject {
     private func emptyChapterBody(bookName: String, chapter: Int) -> String {
         let message = NSLocalizedString("EmptyChapterWarning", comment: "This chapter is empty for this module.")
         return "<p style=\"color:grey;text-align:center;font-style:italic;\">\(message) (\(bookName) \(chapter))</p>"
+    }
+
+    /// The same message as plain text, for the native reader.
+    ///
+    /// `emptyChapterBody` wraps it in the `<p style="…">` the engine emitted; the
+    /// native reader styles the notice itself, so it wants the string alone. Both
+    /// read the one localisation key, so the two cannot drift.
+    private func emptyChapterMessage(bookName: String, chapter: Int) -> String {
+        let message = NSLocalizedString("EmptyChapterWarning", comment: "This chapter is empty for this module.")
+        return "\(message) (\(bookName) \(chapter))"
     }
 
     // MARK: - Lexicons

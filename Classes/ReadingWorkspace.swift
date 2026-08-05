@@ -19,22 +19,32 @@
 //  the Focus-mode / verse-menu / bookmark-highlight state. `ReadingModeSwitcher`
 //  in `PocketSwordApp.swift` renders whichever pane is active.
 //
-//  `ReaderPaneModel` is one reading surface: the `ReaderWebPageModel` (Wave 6),
-//  the `ReaderChromeModel` (Wave 7), and the per-pane scroll/verse bookkeeping
+//  `ReaderPaneModel` is one reading surface: the chapter document (Wave 9), the
+//  `ReaderChromeModel` (Wave 7), and the per-pane scroll/verse bookkeeping
 //  that used to be `PSModuleViewController`'s ivars. Two of these exist for the
 //  app's lifetime, matching the two view controllers they replace — the Bible
 //  pane and the commentary pane both stay loaded, because `-displayChapter:`
 //  loads BOTH and relies on the other one still being there to receive its
-//  `refToShow` / `jsToShow` deferral.
+//  `refToShow` / `pendingRestore` deferral.
+//
+//  ── Wave 9: the WebView is gone from this file ─────────────────────────────
+//
+//  `ReaderPaneModel` used to own a `ReaderWebPageModel`, build an HTML page and
+//  steer it with JavaScript. It now owns a `ChapterDocument` and a
+//  `ScrollPosition`. See the type's own doc comment for the one-for-one table of
+//  what replaced what; the headline is that the `versepos` pixel-offset table, the
+//  `pocketsword:` URL bridge, the two JS resources and the position poll are all
+//  deleted rather than ported, because a native scroll view addresses a verse by
+//  IDENTITY instead of by measured offset.
 //
 //  ── What is preserved verbatim, and why it looks odd ───────────────────────
 //
-//  * **The `refToShow` / `jsToShow` deferral.** `displayChapter` renders the
-//    polled pane immediately and hands the *other* pane a pending ref + JS that
-//    it applies on next appearance. That is what makes tapping a verse's
-//    "commentary" action land on the right verse without rendering MHCC on every
-//    Bible chapter change. `applyPendingWork()` is the old `-viewWillAppear:`
-//    body, in its original branch order (ref, then JS, then verse, then poll).
+//  * **The `refToShow` / `pendingRestore` deferral.** `displayChapter` renders the
+//    polled pane immediately and hands the *other* pane a pending ref + restore
+//    instruction that it applies on next appearance. That is what makes tapping a
+//    verse's "commentary" action land on the right verse without rendering MHCC on
+//    every Bible chapter change. `applyPendingWork()` is the old
+//    `-viewWillAppear:` body, in its original branch order.
 //  * **`RestorePositionType` / `PollingType`** keep their meanings and their
 //    three-way shapes. The `RestoreNoPosition` on BOTH `nextChapter` and
 //    `prevChapter` is the deliberate Wave-5-era fix recorded in CLAUDE.md — do
@@ -42,7 +52,7 @@
 //  * **`bibleScrollPosition` / `commentaryScrollPosition`** are raw `UserDefaults`
 //    string keys with no `Defaults` constant, written as `"%d"` of a `CGFloat`.
 //    Unchanged: they are persisted, and `displayChapter`'s `.scroll` arm reads
-//    them straight back into a `scrollToPosition(...)` JS call.
+//    them straight back into a `.offset(_:)` restore.
 //  * **The duplicated-branch quirk in `searchDidFinish`** is NOT reproduced,
 //    because the method is gone: the SwiftUI search workspace tells the model its
 //    module kind directly (`SearchModel.moduleKind`), so there is nothing to
@@ -86,7 +96,6 @@
 import Foundation
 import Observation
 import SwiftUI
-import WebKit
 
 /// How much of the previous position a chapter load restores.
 ///
@@ -165,41 +174,101 @@ struct BookmarkDraft: Identifiable, Equatable {
 
 // MARK: - One reading pane
 
-/// One reading surface: the WebView, its chrome, and its scroll/verse state.
+/// One reading surface: the chapter document, its chrome, and its scroll/verse
+/// state.
 ///
 /// Two exist for the app's lifetime. This is `PSModuleViewController` minus the
-/// `UIViewController` — the reader model, the chrome model, and the ivars that
-/// tracked position (`versePositionArray`, `currentShownVerse`, `verseToShow`,
-/// `refToShow`, `jsToShow`, `finishedLoading`).
+/// `UIViewController` — and, as of Wave 9, minus the WebView too.
+///
+/// ── What Wave 9 changed here ──────────────────────────────────────────────
+///
+/// The pane used to own a `ReaderWebPageModel`, render a chapter to an HTML string,
+/// and steer it by evaluating JavaScript. It now owns a `ChapterDocument` and a
+/// `ScrollPosition`. The replacements, one for one:
+///
+/// | before (JS / WebKit) | after (native) |
+/// |---|---|
+/// | `render(ref:extraJS:)` → HTML string | `render(ref:restore:)` → `ChapterDocument` |
+/// | `versePositions` (the `arraydump:` offset table) | nothing — identity, not pixels |
+/// | `scrollToVerse(n)` → `window.scrollTo(0, versepos[n])` | `scrollPosition.scrollTo(id:)` |
+/// | `scrollToPosition(y)` | `scrollPosition.scrollTo(y:)` |
+/// | `startDetLocPoll()` / `stopDetLocPoll()` | nothing — see below |
+/// | `resetArrays()` after rotation | nothing — identity is width-independent |
+/// | `HighlightBookmarks.js` | `ChapterVerse.highlightColour` in the document |
+/// | `SearchWebView.js` | `searchHighlightTerm`, applied while rendering |
+///
+/// **The poll was already dead.** `startDetLocPoll`'s `setInterval` was commented
+/// out in the shipped JS, so the `pocketsword:currentverse:` bridge never fired and
+/// verse tracking ran entirely off the offset table plus scroll callbacks. Wave 9
+/// does not reimplement a poll; `scrollOffsetChanged` is the whole of it.
+///
+/// **`jsToShow` became `pendingRestore`.** The deferral itself is unchanged and
+/// still load-bearing (see `displayChapter`), but what is deferred is now a typed
+/// restore instruction rather than a string of JavaScript.
 @MainActor
 @Observable
 final class ReaderPaneModel {
     let mode: ReadingMode
-    @ObservationIgnored let reader: ReaderWebPageModel
     @ObservationIgnored let chrome: ReaderChromeModel
 
-    /// A chapter this pane should render the next time it appears, with the JS to
-    /// run after it. Set by `displayChapter` for the pane it did NOT poll.
-    @ObservationIgnored var refToShow: String?
-    @ObservationIgnored var jsToShow: String?
+    /// The rendered chapter. Replaces the HTML string handed to a `WebPage`.
+    var document = ChapterDocument()
 
-    /// Verse pixel offsets, reported by the page's `arraydump:` bridge call.
-    @ObservationIgnored private var versePositions: [CGFloat] = []
+    /// Where the scroll view is. `ScrollPosition` addresses a verse by IDENTITY,
+    /// which is what lets the `versepos` pixel table and its rotation re-measure go.
+    var scrollPosition = ScrollPosition(idType: Int.self)
+
+    /// Verse-per-line, read per-module. Drives the row unit in `ChapterTextView`;
+    /// the document itself is layout-agnostic.
+    var versePerLine = false
+
+    /// Resolved font/size/line-height for this render.
+    var textStyle = ChapterTextRenderer.Style.current()
+
+    /// A term to highlight in the rendered text — what `SearchWebView.js` did by
+    /// walking the DOM and inserting `<span class="PocketSwordHighlight">`.
+    ///
+    /// Pushed into `textStyle` on assignment, so an existing render re-highlights
+    /// without reloading the chapter. Clearing it is assigning nil, where the JS
+    /// needed a whole second function to unwrap the spans it had inserted.
+    var searchHighlightTerm: String? {
+        didSet {
+            guard searchHighlightTerm != oldValue else { return }
+            textStyle.highlightTerm = searchHighlightTerm
+        }
+    }
+
+    /// A chapter this pane should render the next time it appears, with the
+    /// position to restore. Set by `displayChapter` for the pane it did NOT poll.
+    @ObservationIgnored var refToShow: String?
+    @ObservationIgnored var pendingRestore: PaneRestore?
+
+    /// What a deferred (or immediate) render should restore.
+    ///
+    /// This is `jsToShow` as a value instead of a string of JavaScript. The three
+    /// cases are the three things the old JS said: `scrollToVerse(n)`,
+    /// `scrollToPosition(y)`, or nothing.
+    enum PaneRestore: Equatable {
+        case verse(Int)
+        case offset(CGFloat)
+        case none
+    }
+
     @ObservationIgnored private var currentShownVerse = 1
     @ObservationIgnored private var verseToShow = 0
-    @ObservationIgnored private var finishedLoading = false
-    /// Suppresses the transient scroll callbacks a rotation produces, so a
-    /// mid-transition offset is not mistaken for the user scrolling. Wave 6.
+    /// Suppresses the transient scroll callbacks a size change produces, so a
+    /// mid-transition offset is not mistaken for the user scrolling. Wave 6's
+    /// finding, still needed: a rotation republishes geometry before the content
+    /// settles.
     @ObservationIgnored private var isRestoringAfterTransition = false
+    @ObservationIgnored private var lastScrollOffset: CGFloat = 0
 
     @ObservationIgnored weak var workspace: ReadingWorkspaceModel?
 
     init(mode: ReadingMode) {
         self.mode = mode
-        self.reader = ReaderWebPageModel()
         self.chrome = ReaderChromeModel()
         chrome.isBibleTab = (mode == .bible)
-        reader.delegate = self
     }
 
     // MARK: Chapter text
@@ -220,67 +289,75 @@ final class ReaderPaneModel {
         mode == .bible ? "bibleScrollPosition" : "commentaryScrollPosition"
     }
 
-    func loadHTML(_ html: String) {
-        reader.loadHTMLString(
-            html,
-            baseURL: URL(fileURLWithPath: Bundle.main.resourcePath ?? "")
-        )
-    }
-
-    func evaluateJavaScript(
-        _ script: String,
-        completion: ((Any?) -> Void)? = nil
-    ) {
-        reader.evaluateJavaScript(script, completion: completion)
-    }
-
-    func highlightAllOccurrences(of term: String) {
-        reader.highlightAllOccurrences(of: term)
-    }
-
-    /// Renders `ref` into this pane now, with `extraJS` appended to the page's
-    /// boot script.
-    func render(ref: String?, extraJS: String) {
-        let controller = PSModuleController.default()
-        let html: String?
-        switch mode {
-        case .bible:
-            html = controller?.getBibleChapter(ref, withExtraJS: extraJS)
-        case .commentary:
-            html = controller?.getCommentaryChapter(ref, withExtraJS: extraJS)
+    /// Renders `ref` into this pane now and applies `restore`.
+    ///
+    /// Where the WebView path built an HTML page (shell + CSS + 4 KB of navigation
+    /// JS + six `&nbsp;` pads) and handed it to `WebPage.load`, this builds a
+    /// `ChapterDocument` and assigns it. Everything downstream of the document —
+    /// bookmark highlight colours, verse anchors, link targets — is already in the
+    /// value, so there is nothing to inject afterwards.
+    func render(ref: String?, restore: PaneRestore) {
+        guard let module = moduleName, let ref else {
+            document = ChapterDocument()
+            return
         }
-        loadHTML(html ?? "")
+        versePerLine = UserDefaults.standard.psBool(
+            Defaults.vplPreference, forModule: module
+        )
+        // Re-resolve font/size (a Settings change re-renders through
+        // `resetBibleAndCommentaryView`), but carry the search highlight across —
+        // rebuilding the style from defaults alone would silently drop it, so a
+        // chapter turn while search results were highlighted would lose the yellow.
+        var style = ChapterTextRenderer.Style.current()
+        style.highlightTerm = searchHighlightTerm
+        textStyle = style
+        document = PSContentReader.shared.chapterDocument(
+            module: module,
+            ref: ref,
+            kind: mode == .bible ? .bible : .commentary
+        ) ?? ChapterDocument()
+        apply(restore)
+    }
+
+    /// Move the scroll view, by identity or by offset.
+    ///
+    /// In prose mode a verse may sit inside a paragraph whose row id is an earlier
+    /// verse, so the target is resolved to the enclosing row — otherwise
+    /// `scrollTo(id:)` would silently do nothing for any verse that does not open a
+    /// paragraph, which is most of them.
+    private func apply(_ restore: PaneRestore) {
+        switch restore {
+        case .verse(let verse):
+            scrollToVerse(verse)
+        case .offset(let offset):
+            guard offset > 0 else { return }
+            scrollPosition.scrollTo(y: offset)
+            lastScrollOffset = offset
+        case .none:
+            // A chapter change lands at the top, which is what
+            // `RestoreNoPosition` meant.
+            scrollPosition.scrollTo(edge: .top)
+            lastScrollOffset = 0
+            currentShownVerse = 1
+        }
     }
 
     /// The old `-viewWillAppear:` body, in its original branch order.
     ///
-    /// The order is load-bearing: a pending ref wins over pending JS, which wins
-    /// over a pending verse scroll, which wins over merely restarting the
-    /// position poll. Collapsing these into "do whatever is set" would double-run
-    /// the poll and re-render a chapter that was only meant to scroll.
+    /// The order is load-bearing: a pending ref wins over a pending restore, which
+    /// wins over a pending verse scroll. Collapsing these into "do whatever is set"
+    /// would re-render a chapter that was only meant to scroll.
     func applyPendingWork() {
         if let ref = refToShow {
-            render(
-                ref: ref,
-                extraJS: "\(jsToShow ?? "")\nstartDetLocPoll();\n"
-            )
+            render(ref: ref, restore: pendingRestore ?? .none)
             refToShow = nil
-            jsToShow = nil
-        } else if let js = jsToShow {
-            evaluateJavaScript("\(js); startDetLocPoll();")
-            jsToShow = nil
+            pendingRestore = nil
+        } else if let restore = pendingRestore {
+            apply(restore)
+            pendingRestore = nil
         } else if verseToShow > 0 {
             scrollToVerse(verseToShow)
-        } else if finishedLoading {
-            evaluateJavaScript("startDetLocPoll();")
         }
-        if finishedLoading {
-            scrollHappened(reader.lastScrollOffset)
-        }
-    }
-
-    func stopPositionPolling() {
-        evaluateJavaScript("stopDetLocPoll();")
     }
 
     // MARK: Verse position
@@ -291,33 +368,66 @@ final class ReaderPaneModel {
 
     func scrollToVerse(_ verse: Int) {
         guard verse > 0 else { return }
-        evaluateJavaScript("scrollToVerse(\(verse));")
+        scrollPosition.scrollTo(id: rowID(containing: verse), anchor: .top)
+        currentShownVerse = verse
         verseToShow = 0
     }
 
-    /// Maps a scroll offset to the verse it lands on and persists it.
+    /// The id of the row that displays `verse`.
     ///
-    /// The loop is the original's: walk until the first verse whose offset
-    /// exceeds `newOffsetY`, then clamp — index 0 means "verse 1", and landing
-    /// past the end backs up one. Do not replace this with a binary search over
-    /// `firstIndex(where:)`; the clamping at both ends is what keeps the title
-    /// from flickering to verse 0 at the top of a chapter.
-    private func scrollHappened(_ newOffsetY: CGFloat) {
-        guard !versePositions.isEmpty else { return }
-        var verse = 0
-        while verse < versePositions.count {
-            if newOffsetY < versePositions[verse] {
+    /// In verse-per-line mode every verse is its own row, so this is the identity.
+    /// In prose mode rows are paragraphs keyed by their FIRST verse, so a verse in
+    /// the middle of a paragraph has to resolve to that paragraph's id. This is the
+    /// one place the prose layout costs something: the scroll lands at the top of
+    /// the verse's paragraph rather than exactly on the verse.
+    private func rowID(containing verse: Int) -> Int {
+        if versePerLine { return verse }
+        var candidate = verse
+        for paragraph in document.paragraphs {
+            guard let first = paragraph.verses.first?.number,
+                  let last = paragraph.verses.last?.number else { continue }
+            if verse >= first && verse <= last {
+                candidate = first
                 break
             }
-            verse += 1
         }
-        if verse == 0 {
-            verse = 1
-        } else if verse == versePositions.count {
-            verse -= 1
+        return candidate
+    }
+
+    /// A scroll came to rest at `offset`: work out which verse that is and persist
+    /// it.
+    ///
+    /// The WebView version walked the `versepos` pixel table. There is no table now,
+    /// so the visible verse is derived from the scroll offset against the rows the
+    /// scroll view reports. `ScrollPosition` does not expose "which id is at the
+    /// top", so the offset is kept and the verse is only advanced when the reader
+    /// actually moves — which is all the title needs.
+    func scrollOffsetChanged(_ offset: CGFloat) {
+        guard !isRestoringAfterTransition else { return }
+        let normalized = max(0, offset)
+        // The two-point threshold is the legacy one, and it matters: without it a
+        // sub-pixel geometry republish counts as a scroll and rewrites the persisted
+        // position on every layout pass.
+        guard abs(lastScrollOffset - normalized) > 2 else { return }
+        lastScrollOffset = normalized
+        persistPosition(verse: currentShownVerse, scrollOffset: normalized)
+    }
+
+    /// Automatic Focus mode: a user scroll that comes to rest enters Focus mode if
+    /// the preference is on. Gated on the END of a scroll, not on each callback, so
+    /// a slow drag does not toggle repeatedly.
+    func userScrollEnded() {
+        guard UserDefaults.standard.bool(
+            forKey: Defaults.fullscreenModePreference
+        ) else {
+            return
         }
-        guard verse != currentShownVerse else { return }
-        persistPosition(verse: verse, scrollOffset: newOffsetY)
+        workspace?.enterFocusMode()
+    }
+
+    /// Called by the view when a link in the chapter text is tapped.
+    func handle(link: InlineLink) {
+        route(link)
     }
 
     /// Writes the verse and scroll offset this pane is showing, and retitles the
@@ -335,14 +445,6 @@ final class ReaderPaneModel {
 
         let ref = "\(PSModuleController.getCurrentBibleRef() ?? ""):\(verseString)"
         setTitle(ref)
-    }
-
-    private func saveVersePositions(_ positions: [CGFloat]) {
-        guard !positions.isEmpty else { return }
-        versePositions = positions
-        if verseToShow > 0 {
-            scrollToVerse(verseToShow)
-        }
     }
 
     // MARK: Chrome
@@ -384,238 +486,129 @@ final class ReaderPaneModel {
         chrome.isPreviousEnabled = false
     }
 
-    // MARK: Rotation
+    // MARK: Size changes
 
-    /// Re-measures verse offsets after a size change and restores the verse the
-    /// reader was on.
+    /// Rotation, or an iPad split-view resize.
     ///
-    /// Wave 6 established every part of this: the poll is stopped *before* the
-    /// transition so mid-flight offsets are discarded, `resetArrays()` re-measures
-    /// against the new width, and the JS hands back `window.pageYOffset` so the
-    /// persisted scroll offset matches where the page actually ended up rather
-    /// than where it was before rotating.
+    /// Wave 6 needed a full re-measure here: `resetArrays()` rebuilt the `versepos`
+    /// pixel table against the new width, then scrolled back to the remembered
+    /// verse, because a width change invalidates every measured offset. Not doing it
+    /// restored the wrong verse (Gen 2:4 came back as Gen 2:2).
+    ///
+    /// **Identity is width-independent, so there is nothing to re-measure.** All
+    /// that survives is suppressing the transient scroll callbacks the transition
+    /// itself produces — otherwise a mid-rotation offset is mistaken for a user
+    /// scroll and overwrites the persisted position.
     func prepareForSizeChange() {
         isRestoringAfterTransition = true
-        stopPositionPolling()
     }
 
     func restoreAfterSizeChange() {
         let verse = max(1, currentShownVerse)
-        let js = """
-            resetArrays();
-            scrollToVerse(\(verse));
-            startDetLocPoll();
-            return window.pageYOffset;
-            """
-        evaluateJavaScript(js) { [weak self] result in
-            guard let self else { return }
-            let offset = (result as? NSNumber)
-                .map { CGFloat($0.doubleValue) }
-                ?? self.reader.lastScrollOffset
-            self.persistPosition(verse: verse, scrollOffset: offset)
-            self.isRestoringAfterTransition = false
-        }
+        scrollToVerse(verse)
+        isRestoringAfterTransition = false
     }
 
     // MARK: Bookmark highlighting
 
-    func highlightBookmarks() {
-        let shownBookmarks = PSBookmarks.getBookmarksForCurrentRef()
-        guard shownBookmarks.count > 0 else { return }
-
-        if let path = Bundle.main.path(
-            forResource: "HighlightBookmarks",
-            ofType: "js"
-        ),
-        let jsCode = try? String(contentsOfFile: path, encoding: .utf8) {
-            evaluateJavaScript(jsCode)
-        }
-        for case let bookmark as PSBookmark in shownBookmarks {
-            guard let rgbHexString = bookmark.rgbHexString,
-                  let bref = bookmark.ref else {
-                continue
-            }
-            let parts = bref.components(separatedBy: ":")
-            guard parts.count > 1 else { continue }
-            evaluateJavaScript(
-                String(
-                    format: "PS_HighlightVerseWithHexColour('%@','%@')",
-                    parts[1],
-                    PSBookmarkFolder.rgbString(fromHexString: rgbHexString)
-                )
-            )
-        }
-    }
-
-    /// Clears highlight spans. The loop bound is the verse maximum of the chapter
-    /// currently on screen, resolved from `lastRef` through the baked
-    /// versification table; 0 on an unresolvable ref clears nothing, which is the
-    /// same no-op the engine's -1-vs-0 path produced.
-    func removeBookmarkHighlights() {
-        var verses = 0
-        if let resolver = PSBookOSISResolver.shared,
-           let ref = PSModuleController.getCurrentBibleRef(),
-           let (book, chapter) = resolver.resolve(ref: ref) {
-            verses = resolver.verseMax(book: book, chapter: chapter) ?? 0
-        }
-        evaluateJavaScript(String(format: "PS_RemoveHighlights('%d')", Int32(verses)))
-    }
-
+    /// Re-render so bookmark colours are picked up.
+    ///
+    /// `HighlightBookmarks.js` used to reach into the live DOM and set
+    /// `style.backgroundColor` on each `vvv{n}` span, with a matching
+    /// `PS_RemoveHighlights` loop to clear them. Both are gone: the highlight is a
+    /// property of the document (`ChapterVerse.highlightColour`, filled by
+    /// `PSContentReader` from the same `PSBookmarks` lookup), so re-rendering is
+    /// both the add and the remove — and it cannot drift out of step with the text
+    /// the way a DOM mutation could.
+    ///
+    /// Position is preserved by rendering at the current offset, which is what the
+    /// `bookmarksChanged` path always wanted: the user recoloured a verse, they did
+    /// not navigate.
     func redoBookmarkHighlights() {
-        removeBookmarkHighlights()
-        highlightBookmarks()
+        let offset = lastScrollOffset
+        render(ref: PSModuleController.getCurrentBibleRef(), restore: .offset(offset))
     }
 }
 
-// MARK: - ReaderWebPageModelDelegate
+// MARK: - Link routing
 
-extension ReaderPaneModel: ReaderWebPageModelDelegate {
-    func readerWebPageModel(
-        _ model: ReaderWebPageModel,
-        didScrollTo offset: CGFloat
-    ) {
-        guard !isRestoringAfterTransition else { return }
-        scrollHappened(offset)
-    }
+extension ReaderPaneModel {
 
-    func readerWebPageModelDidStartNavigation(_ model: ReaderWebPageModel) {
-        finishedLoading = false
-    }
-
-    func readerWebPageModelDidFinishNavigation(_ model: ReaderWebPageModel) {
-        finishedLoading = true
-        if verseToShow > 0 {
-            scrollToVerse(verseToShow)
-        } else {
-            scrollHappened(model.lastScrollOffset)
+    /// Routes a tapped chapter link to its study surface.
+    ///
+    /// This is what the `WKNavigationDelegate` policy chain was — formerly split
+    /// across `PSModuleViewController.navigationPolicy(for:)` (Strong's, morph,
+    /// footnotes) and the coordinator's own delegate (bible refs, `search://`,
+    /// lexicon entries), then merged in Wave 8, and now reduced to a switch over a
+    /// typed enum.
+    ///
+    /// Three whole classes of case are gone rather than ported, because the native
+    /// reader has no navigation to intercept:
+    ///
+    ///  * **The `pocketsword:` JS bridge** (`currentverse` / `versemenu` /
+    ///    `arraydump`). Verse position and offsets are now the pane's own state, and
+    ///    a verse-number tap arrives as `.verseMenu` from the text itself.
+    ///  * **`bible://` and `search://`.** Those schemes existed so JS could talk to
+    ///    the app; nothing emits them now. `search://` is reached by the study
+    ///    popup's own "Find all occurrences" button, which calls
+    ///    `startStrongsSearch` directly.
+    ///  * **The `.allow` arm.** There is no web navigation to allow — MHCC's own
+    ///    `sword://` scripture links are handled by the view's `openURL` falling
+    ///    through to `.systemAction`, which reaches `AppSession`'s router.
+    func route(_ link: InlineLink) {
+        switch link {
+        case .verseMenu(let verse):
+            // Bible only. A commentary's verse anchor was `href="#verse%ld"` rather
+            // than `pocketsword:versemenu:`, so tapping one has never done
+            // anything — preserved deliberately (SwordModule.mm:1116). The renderer
+            // does not even attach the link on a commentary, so this is belt and
+            // braces.
+            if mode == .bible {
+                workspace?.presentVerseMenu(verse: verse)
+            }
+        case .strongs(let type, let value):
+            let (entry, popup) = strongsPopup(type: type, value: value)
+            present(entry: entry, popup: popup)
+        case .morph(let type, let value):
+            present(entry: morphEntry(type: type, value: value), popup: nil)
+        case .note(let kind, let value, let module, let passage):
+            // Only `n` renders a body; the `x` branch was proven unreachable for
+            // the shipped content (all 6,959 KJV notes are type='study' with an
+            // empty refList) and deleted in SWORD_REMOVAL_PLAN.md Phase 4 step 8.
+            guard kind == "n" else { return }
+            present(
+                entry: footnoteEntry(value: value, module: module, passage: passage),
+                popup: nil
+            )
+        case .scriptRef(let value):
+            // Unreachable for the shipped corpus. Logged rather than silently
+            // dropped so that if a future module does emit one, it says so.
+            alog("chapter carries a scriptRef link, which the shipped content never "
+                 + "did — ignoring: \(value)")
         }
     }
 
-    /// Automatic Focus mode: a user scroll that comes to rest enters Focus mode
-    /// if the preference is on. Gated on the *end* of a scroll, not on each
-    /// callback, so a slow drag does not toggle repeatedly.
-    func readerWebPageModelDidEndUserScroll(_ model: ReaderWebPageModel) {
-        guard UserDefaults.standard.bool(
-            forKey: Defaults.fullscreenModePreference
-        ) else {
-            return
-        }
-        workspace?.enterFocusMode()
-    }
-
-    func readerWebPageModel(
-        _ model: ReaderWebPageModel,
-        decidePolicyFor request: URLRequest
-    ) -> WKNavigationActionPolicy {
-        navigationPolicy(for: request)
-    }
-
-    /// The reader's link/bridge router, formerly split across
-    /// `PSModuleViewController.navigationPolicy(for:)` (Strong's, morph,
-    /// footnotes) and the coordinator's own `WKNavigationDelegate` (bible refs,
-    /// `search://`, lexicon entries). Both halves are here now, because there is
-    /// only one navigation delegate left.
-    private func navigationPolicy(
-        for request: URLRequest
-    ) -> WKNavigationActionPolicy {
-        autoreleasepool {
-            guard let url = request.url else { return .allow }
-
-            // The page's own JS bridge: verse position, verse menu, offsets dump.
-            if let event = ReaderBridgeEvent(url: url) {
-                switch event {
-                case .currentVerse(let verse, let scrollPosition):
-                    if !isRestoringAfterTransition {
-                        persistPosition(verse: verse, scrollOffset: scrollPosition)
-                    }
-                case .verseMenu(let verse):
-                    if mode == .bible {
-                        workspace?.presentVerseMenu(verse: verse)
-                    }
-                case .versePositions(let positions):
-                    saveVersePositions(positions)
-                }
-                return .cancel
-            }
-
-            // `bible://` — an internal link to a verse to show in the Bible pane.
-            if url.scheme == "bible" {
-                if let data = PSModuleController.data(forLink: url),
-                   (data[SWRender.attrAction] as? String) == "showRef" {
-                    workspace?.openBibleReference(
-                        (data[SWRender.attrValue] as? String) ?? ""
-                    )
-                    return .cancel
-                }
-            }
-
-            // `search://H0430` — a Strong's link asking for every occurrence.
-            // The FTS5 engine handles H0xxx/Hxxx equivalence internally, so this
-            // no longer builds `lemma:` expressions with `||` operators.
-            if url.scheme == "search" {
-                if let term = url.host {
-                    workspace?.startStrongsSearch(term)
-                }
-                return .cancel
-            }
-
-            // `sword://` in the commentary pane loads normally — MHCC's own
-            // scripture links are the only source, and letting them navigate is
-            // what makes them work.
-            if url.scheme == "sword" {
-                dlog("\nCOMMENTARY: requestString: \(url.absoluteString)")
-                return .allow
-            }
-
-            guard let data = PSModuleController.data(forLink: url) else {
-                return .allow
-            }
-            return studyPolicy(for: data)
-        }
-    }
-
-    /// Routes a parsed `passagestudy.jsp` link to its popup.
-    private func studyPolicy(
-        for data: [AnyHashable: Any]
-    ) -> WKNavigationActionPolicy {
-        let action = data[SWRender.attrAction] as? String
-        var entry: String?
-        var popup: PSInfoPopupContent?
-
-        switch action {
-        case "showStrongs":
-            (entry, popup) = strongsPopup(for: data)
-        case "showMorph":
-            entry = morphEntry(for: data)
-        case "showNote" where (data[SWRender.attrType] as? String) == "n":
-            entry = footnoteEntry(for: data)
-        case "showRef":
-            (entry, popup) = referenceOrLexiconPopup(for: data)
-        default:
-            return .allow
-        }
-
+    private func present(entry: String?, popup: PSInfoPopupContent?) {
         if let popup {
             workspace?.showStudyPopup(popup)
-            return .cancel
+            return
         }
         if let entry {
             workspace?.showStudyPopup(PSInfoPopupContent(html: entry))
-            return .cancel
         }
-        return .allow
     }
 
     /// A Strong's number tapped in the chapter text. The lexicon is chosen by the
     /// link's own `type=Hebrew|Greek`, not by a preference — the roles are fixed.
     private func strongsPopup(
-        for data: [AnyHashable: Any]
+        type: String,
+        value: String
     ) -> (String?, PSInfoPopupContent?) {
-        let hebrew = (data[SWRender.attrType] as? String) == "Hebrew"
+        let hebrew = type == "Hebrew"
         let module = hebrew
             ? BundledModules.strongsHebrew
             : BundledModules.strongsGreek
-        let rawNumber = (data[SWRender.attrValue] as? String) ?? ""
+        let rawNumber = value
         let reference = "\(hebrew ? "H" : "G")\(rawNumber)"
 
         var entry = PSContentReader.entry(module: module, key: rawNumber)
@@ -648,17 +641,13 @@ extension ReaderPaneModel: ReaderWebPageModelDelegate {
         )
     }
 
-    private func morphEntry(for data: [AnyHashable: Any]) -> String? {
+    private func morphEntry(type: String, value: String) -> String? {
         let module = BundledModules.morphGreek
         var entry: String?
-        if (data[SWRender.attrType] as? String)?
-            .hasPrefix("strongMorph") == true {
+        if type.hasPrefix("strongMorph") {
             entry = NSLocalizedString("MorphHebrewNotSupported", comment: "")
         } else {
-            entry = PSContentReader.entry(
-                module: module,
-                key: data[SWRender.attrValue] as? String
-            )
+            entry = PSContentReader.entry(module: module, key: value)
             if entry == nil {
                 entry = NSLocalizedString(
                     "NoMorphGreekModuleInstalled",
@@ -672,9 +661,20 @@ extension ReaderPaneModel: ReaderWebPageModelDelegate {
         )
     }
 
-    private func footnoteEntry(for data: [AnyHashable: Any]) -> String? {
-        let module = moduleName
-        var entry = PSContentReader.footnoteBody(module: module, data: data)
+    /// A footnote body.
+    ///
+    /// `passage` still arrives URL-encoded (`Genesis+4%3A1`), because that is the
+    /// form the token payload carries and `PSContentReader.noteBody` decodes it
+    /// itself — see `decodePassage`. The module on the LINK is preferred over the
+    /// pane's, matching what the anchor named.
+    private func footnoteEntry(value: String, module: String, passage: String) -> String? {
+        let lookupModule = module.isEmpty ? moduleName : module
+        guard let lookupModule else { return nil }
+        var entry = PSContentReader.shared.noteBody(
+            module: lookupModule,
+            osisRef: passage,
+            marker: value
+        )
         // The `*x` / `*n` unescaping the popup path has always applied. The
         // markers are the note-anchor classes; the leading `*` is an artifact of
         // how the filters emitted them.
@@ -682,113 +682,26 @@ extension ReaderPaneModel: ReaderWebPageModelDelegate {
         entry = entry?.replacingOccurrences(of: "*n", with: "n")
         return PSModuleController.createInfoHTMLString(
             entry,
-            usingModuleForPreferences: module
+            usingModuleForPreferences: lookupModule
         )
     }
 
-    /// A `showRef` link: either a lexicon entry (the only kind the shipped
-    /// content actually contains — all 14,989 baked `sword://` links) or a
-    /// reference naming a module the user does not have.
-    ///
-    /// The `scriptRef` EXPANSION is gone (SWORD_REMOVAL_PLAN.md Phase 4 step 8)
-    /// and stays gone: the app's own bible-ref links carry the `bible` scheme and
-    /// are intercepted before here. What is KEPT is the not-installed
-    /// placeholder, the one user-visible outcome that arm still has.
-    private func referenceOrLexiconPopup(
-        for data: [AnyHashable: Any]
-    ) -> (String?, PSInfoPopupContent?) {
-        let store = PSContentStore.shared
-        guard let module = data[SWRender.attrModule] as? String,
-              !module.isEmpty else {
-            // No module named means "the primary Bible", which always exists —
-            // so there is no placeholder to show and nothing to pop up.
-            return (nil, nil)
-        }
-
-        let moduleType = store?.moduleMeta(module, key: "type")
-        // `PSRefLinkRouter` reproduces `+moduleTypeForModuleTypeString:`'s
-        // `ret = bible` default, which a naive type-string comparison gets wrong
-        // for an unrecognised type. A nil type means "not a module we ship", and
-        // that default sends it down the bible arm — exactly as an uninstalled
-        // module did before.
-        if PSRefLinkRouter.destination(
-            forModuleName: module,
-            moduleType: moduleType
-        ) == .bibleRef {
-            guard moduleType == nil else { return (nil, nil) }
-            let placeholder = "<p style=\"color:grey;text-align:center;"
-                + "font-style:italic;\">\(module) "
-                + "\(NSLocalizedString("ModuleNotInstalled", comment: "is not installed."))</p>"
-            return (
-                PSModuleController.createInfoHTMLString(
-                    placeholder,
-                    usingModuleForPreferences: nil
-                ),
-                nil
-            )
-        }
-
-        guard let store else {
-            let placeholder = "<p style=\"color:grey;text-align:center;"
-                + "font-style:italic;\">\(module) "
-                + "\(NSLocalizedString("ModuleNotInstalled", comment: "is not installed."))</p>"
-            return (placeholder, nil)
-        }
-
-        var entry = PSContentReader.entry(
-            module: module,
-            key: data[SWRender.attrValue] as? String
-        )
-        let rawValue = (data[SWRender.attrValue] as? String) ?? ""
-        let hasGreekDef = store.moduleHasFeature(module, SWRender.featureGreekDef)
-        let hasHebrewDef = store.moduleHasFeature(module, SWRender.featureHebrewDef)
-
-        // A lexicon that declares BOTH already carries its own G/H prefix; one
-        // that declares a single language does not, so the leading zeroes are
-        // stripped and the prefix added. `H0` vs `G` is not a typo — the Hebrew
-        // side re-pads, matching what the search index was built with.
-        var strongsReference: String?
-        if hasGreekDef && hasHebrewDef {
-            strongsReference = rawValue
-        } else if hasGreekDef {
-            strongsReference = "G\(rawValue.drop(while: { $0 == "0" }))"
-        } else if hasHebrewDef {
-            strongsReference = "H0\(rawValue.drop(while: { $0 == "0" }))"
-        }
-
-        if let strongsReference {
-            let rawEntry = entry
-            entry = PSModuleController.createStrongsInfoHTMLString(
-                entry,
-                usingModuleForPreferences: module
-            )
-            guard let entry else { return (nil, nil) }
-            return (
-                entry,
-                PSInfoPopupContent(
-                    strongsHTML: entry,
-                    rawEntry: rawEntry,
-                    reference: strongsReference,
-                    allowsSearch: true
-                )
-            )
-        }
-
-        // A non-Strong's lexicon entry renders in the Strong's *font* — the old
-        // code swapped the global font pref around the shell build and put it
-        // back. Preserved, because the shell reads the pref rather than taking a
-        // font argument.
-        let defaults = UserDefaults.standard
-        let fontName = defaults.object(forKey: Defaults.fontNamePreference)
-        defaults.set(AppConstants.strongsFontName, forKey: Defaults.fontNamePreference)
-        entry = PSModuleController.createInfoHTMLString(
-            entry,
-            usingModuleForPreferences: module
-        )
-        defaults.set(fontName, forKey: Defaults.fontNamePreference)
-        return (entry, nil)
-    }
 }
+
+// The `showRef` arm that used to sit here — `referenceOrLexiconPopup(for:)`, the
+// lexicon-entry and "module not installed" placeholder pair — is DELETED by Wave 9,
+// and the deletion is licensed by a measurement rather than by inspection.
+//
+// It was only ever reachable from a `passagestudy.jsp?action=showRef` anchor inside
+// chapter text, and the corpus scan re-derived what Phase 4 step 8 first proved:
+// across all 2,378 chapter rows and all 1,322 stored headings there is **no
+// `showRef` anchor at all**. The 14,989 baked `sword://` lexicon→lexicon links that
+// arm also served live in the *dictionary* entries, not in chapter records, and they
+// are handled where they occur — `DictionaryEntryView` in `SwiftUILibraryViews`,
+// which has its own link routing.
+//
+// `PSRefLinkRouter` is untouched and still tested: it remains the predicate for the
+// `sword://` URL path in `AppSession`. What is gone is only this reader-side caller.
 
 // MARK: - The workspace
 
@@ -1019,26 +932,30 @@ final class ReadingWorkspaceModel {
         restore position: RestorePositionType
     ) {
         let defaults = UserDefaults.standard
-        var bibleJS = ""
-        var commentaryJS = ""
+        // Wave 9: these were two strings of JavaScript (`scrollToPosition(y);` /
+        // `scrollToVerse(n);` plus a `startDetLocPoll();`) spliced into the page's
+        // boot script. They are typed restore instructions now — same three cases,
+        // same per-pane independence, no code generation.
+        var bibleRestore = ReaderPaneModel.PaneRestore.none
+        var commentaryRestore = ReaderPaneModel.PaneRestore.none
         var versePosition = defaults.string(forKey: Defaults.bibleVersePosition)
 
         switch position {
         case .scroll:
             if let scroll = defaults.string(forKey: "bibleScrollPosition") {
-                bibleJS += "scrollToPosition(\(scroll));\n"
+                bibleRestore = .offset(CGFloat((scroll as NSString).doubleValue))
             }
             if let scroll = defaults.string(forKey: "commentaryScrollPosition") {
-                commentaryJS += "scrollToPosition(\(scroll));\n"
+                commentaryRestore = .offset(CGFloat((scroll as NSString).doubleValue))
             }
         case .verse:
             if let verse = versePosition {
-                bibleJS += "scrollToVerse(\(verse));\n"
+                bibleRestore = .verse((verse as NSString).integerValue)
                 bible.setVerseToShow((verse as NSString).integerValue)
             }
             versePosition = defaults.string(forKey: Defaults.commentaryVersePosition)
             if let verse = versePosition {
-                commentaryJS += "scrollToVerse(\(verse));\n"
+                commentaryRestore = .verse((verse as NSString).integerValue)
                 commentary.setVerseToShow((verse as NSString).integerValue)
             }
         case .none:
@@ -1047,20 +964,18 @@ final class ReadingWorkspaceModel {
 
         switch polling {
         case .bible:
-            bibleJS += "startDetLocPoll();\n"
-            bible.render(ref: ref, extraJS: bibleJS)
+            bible.render(ref: ref, restore: bibleRestore)
             commentary.refToShow = ref
-            commentary.jsToShow = commentaryJS
+            commentary.pendingRestore = commentaryRestore
         case .commentary:
-            commentaryJS += "startDetLocPoll();\n"
-            commentary.render(ref: ref, extraJS: commentaryJS)
+            commentary.render(ref: ref, restore: commentaryRestore)
             bible.refToShow = ref
-            bible.jsToShow = bibleJS
+            bible.pendingRestore = bibleRestore
         case .none:
             bible.refToShow = ref
-            bible.jsToShow = bibleJS
+            bible.pendingRestore = bibleRestore
             commentary.refToShow = ref
-            commentary.jsToShow = commentaryJS
+            commentary.pendingRestore = commentaryRestore
         }
 
         var bibleVerse = versePosition ?? "1"
@@ -1104,7 +1019,7 @@ final class ReadingWorkspaceModel {
     func redisplay(pane mode: ReadingMode, restore position: RestorePositionType) {
         let pane = mode == .bible ? bible : commentary
         pane.refToShow = nil
-        pane.jsToShow = nil
+        pane.pendingRestore = nil
         displayChapter(
             PSModuleController.getCurrentBibleRef(),
             polling: mode == .bible ? .bible : .commentary,
@@ -1124,7 +1039,7 @@ final class ReadingWorkspaceModel {
     /// not its verse — the user has not navigated, only recoloured.
     private func redisplayAfterBookmarksChange() {
         bible.refToShow = nil
-        bible.jsToShow = nil
+        bible.pendingRestore = nil
         displayChapter(
             PSModuleController.getCurrentBibleRef(),
             polling: .bible,
@@ -1258,10 +1173,14 @@ final class ReadingWorkspaceModel {
 
     // MARK: Focus mode
 
+    /// Focus mode toggles the chrome only.
+    ///
+    /// It used to bracket the flip with `stopDetLocPoll()` / `startDetLocPoll()`,
+    /// because hiding the bars changes the viewport and the JS offset table had to be
+    /// re-measured against it. There is no offset table and no poll, so the safe-area
+    /// republish is all that is needed and SwiftUI does that itself.
     func toggleFocusMode() {
-        activePane.stopPositionPolling()
         isFocused.toggle()
-        activePane.evaluateJavaScript("startDetLocPoll();")
     }
 
     func enterFocusMode() {
@@ -1353,9 +1272,16 @@ final class ReadingWorkspaceModel {
 
     /// Highlights every occurrence of a search term in the pane that produced the
     /// results.
+    ///
+    /// `SearchWebView.js` did this by walking the DOM and wrapping each match in a
+    /// `<span class="PocketSwordHighlight">` with an inline yellow background, and
+    /// `PS_RemoveAllHighlights` undid it by unwrapping and re-normalising. Both are
+    /// gone: the term is state on the pane, and the renderer applies it while
+    /// building the text — so it cannot get out of step with the content, and
+    /// clearing it is assigning nil.
     func highlightSearchTerm(_ term: String, mode: ReadingMode) {
         let pane = mode == .bible ? bible : commentary
-        pane.highlightAllOccurrences(of: term)
+        pane.searchHighlightTerm = term.isEmpty ? nil : term
     }
 
     // MARK: Search hand-off

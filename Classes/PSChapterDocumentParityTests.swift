@@ -266,6 +266,14 @@ final class PSChapterDocumentParityTests: XCTestCase {
             // Unreachable for the shipped corpus, and the HTML emitter writes only
             // an opening anchor with no class, so there is nothing to pair it with.
             return nil
+        case .verseMenu:
+            // Not produced by the token grammar: the RENDERER attaches it to the
+            // superscript verse label, the way the assembler synthesised
+            // `pocketsword:versemenu:` around each verse. The comparison already
+            // strips those anchors from the HTML side (see `plainText(fromHTML:)`)
+            // and checks verse identity separately, so counting it here would
+            // compare a label against nothing.
+            return nil
         case nil:
             return nil
         }

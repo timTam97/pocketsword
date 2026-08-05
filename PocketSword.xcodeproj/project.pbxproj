@@ -18,7 +18,6 @@
 		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
 		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
 		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
-		B27000000000000000000011 /* SwiftUIReaderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000001 /* SwiftUIReaderViews.swift */; };
 		B27000000000000000000012 /* SwiftUIReaderChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000002 /* SwiftUIReaderChrome.swift */; };
 		B280000000000000000000011 /* PocketSwordApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000001 /* PocketSwordApp.swift */; };
 		B280000000000000000000021 /* ReadingWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000002 /* ReadingWorkspace.swift */; };
@@ -141,6 +140,7 @@
 		5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR301 /* PSChapterExpander.swift */; };
 		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
 		5A1F70B00000000000WAVE902 /* PSChapterDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */; };
+		5A1F70B00000000000WAVE912 /* SwiftUINativeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */; };
 		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
 		5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */; };
 		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
@@ -187,7 +187,6 @@
 		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
-		B27000000000000000000001 /* SwiftUIReaderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderViews.swift; sourceTree = "<group>"; };
 		B27000000000000000000002 /* SwiftUIReaderChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderChrome.swift; sourceTree = "<group>"; };
 		B28000000000000000000001 /* PocketSwordApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketSwordApp.swift; sourceTree = "<group>"; };
 		B28000000000000000000002 /* ReadingWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingWorkspace.swift; sourceTree = "<group>"; };
@@ -333,6 +332,7 @@
 		5A1F70B00000000000CTR301 /* PSChapterExpander.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterExpander.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterDocument.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUINativeReader.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterNavigationJS.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
@@ -665,7 +665,6 @@
 				B25000000000000000000001 /* SwiftUILibraryViews.swift */,
 				B26000000000000000000001 /* SwiftUISearchViews.swift */,
 				B26000000000000000000002 /* SearchIndexBackgroundManager.swift */,
-				B27000000000000000000001 /* SwiftUIReaderViews.swift */,
 				B27000000000000000000002 /* SwiftUIReaderChrome.swift */,
 				B28000000000000000000001 /* PocketSwordApp.swift */,
 				B28000000000000000000002 /* ReadingWorkspace.swift */,
@@ -683,6 +682,7 @@
 				5A1F70B00000000000CTR301 /* PSChapterExpander.swift */,
 				5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */,
 				5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */,
+				5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */,
 				5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */,
 				5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */,
 			);
@@ -1020,7 +1020,6 @@
 				B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */,
 				B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */,
 				B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */,
-				B27000000000000000000011 /* SwiftUIReaderViews.swift in Sources */,
 				B27000000000000000000012 /* SwiftUIReaderChrome.swift in Sources */,
 				B280000000000000000000011 /* PocketSwordApp.swift in Sources */,
 				B280000000000000000000021 /* ReadingWorkspace.swift in Sources */,
@@ -1030,6 +1029,7 @@
 				B21000000000000000000012 /* URLRouter.swift in Sources */,
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000WAVE902 /* PSChapterDocument.swift in Sources */,
+				5A1F70B00000000000WAVE912 /* SwiftUINativeReader.swift in Sources */,
 				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,
 				5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */,
 				5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */,
