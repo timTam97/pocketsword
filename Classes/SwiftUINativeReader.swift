@@ -507,6 +507,77 @@ private struct ChapterRunsText: View {
     }
 }
 
+// MARK: - Lexicon entries and footnotes
+
+/// The native renderer for a lexicon entry or a footnote — Wave 9's replacement for
+/// `StudyPopupWebView` and `DictionaryEntryWebView`.
+///
+/// A `ScrollView` of `Text`, one per `EntryBlock`. It inherits the sheet's material
+/// for free, which is what `createInfoHTMLString`'s injected
+/// `html, body { background-color: transparent; }` was working around, and it needs
+/// none of the 60 lines of CSS `createStrongsInfoHTMLString` pushed into the page to
+/// make a WebView resemble the sheet it sat in.
+struct EntryTextView: View {
+    let document: EntryDocument
+    /// Tapping a cross-link. `nil` in the study popup, which has nowhere to
+    /// navigate to; the Dictionary screen supplies it.
+    var openLink: ((EntryLink) -> Void)?
+    var topInset: CGFloat = 0
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(document.blocks) { block in
+                    Text(attributed(block))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, blockSpacing(block))
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, topInset)
+            .padding(.bottom, 28)
+        }
+        .environment(\.openURL, OpenURLAction { url in
+            guard let link = EntryLink(url: url) else { return .systemAction }
+            openLink?(link)
+            return .handled
+        })
+        .textSelection(.enabled)
+    }
+
+    /// An empty block is the lexicons' paragraph spacing (a doubled `<br />`), so it
+    /// contributes space rather than a blank line of text.
+    private func blockSpacing(_ block: EntryBlock) -> CGFloat {
+        block.runs.allSatisfy { $0.text.trimmingCharacters(in: .whitespaces).isEmpty }
+            ? 8
+            : 2
+    }
+
+    private func attributed(_ block: EntryBlock) -> AttributedString {
+        var out = AttributedString()
+        for run in block.runs where !run.text.isEmpty {
+            var piece = AttributedString(run.text)
+            var size: CGFloat = 17
+            if run.style.contains(.smaller) { size = 13 }
+            var font = Font.system(size: size)
+            if run.style.contains(.bold) { font = font.bold() }
+            if run.style.contains(.italic) || run.style.contains(.transChangeAdded) {
+                font = font.italic()
+            }
+            piece.font = font
+            if run.style.contains(.superscript) { piece.baselineOffset = 5 }
+            if run.style.contains(.subscript) { piece.baselineOffset = -3 }
+            if let link = run.entryLink, let url = link.url {
+                piece.link = url
+                piece.foregroundColor = StudyPalette.accent
+                piece.underlineStyle = .single
+            }
+            out += piece
+        }
+        return out
+    }
+}
+
 private struct EmptyChapterNotice: View {
     let message: String
 

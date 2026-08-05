@@ -24,7 +24,6 @@
 		B280000000000000000000031 /* SwiftUIStudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000003 /* SwiftUIStudyViews.swift */; };
 		B280000000000000000000041 /* PSInfoPopupContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000004 /* PSInfoPopupContent.swift */; };
 		B280000000000000000000051 /* VoiceReferenceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000005 /* VoiceReferenceModel.swift */; };
-		05034D2810FD63E300884C98 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 05034D2110FD61CE00884C98 /* SearchWebView.js */; };
 		050410B0125766CF00EFB6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4D00C1254A6670088C902 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0505FE8D12C9A55800A3C65B /* disabled-Footnotes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */; };
 		0505FE8E12C9A55800A3C65B /* disabled-Headings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0505FE7A12C9A55800A3C65B /* disabled-Headings@2x.png */; };
@@ -65,7 +64,6 @@
 		0552D1311295230300A4994B /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12E1295230300A4994B /* Icon-Small.png */; };
 		0552D1321295230300A4994B /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0552D12F1295230300A4994B /* Icon-Small@2x.png */; };
 		0562FD7C16BB8BCF003A8C70 /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0562FD7B16BB8BCF003A8C70 /* libSystem.B.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		056BC3A012ECFC950029F3A2 /* HighlightBookmarks.js in Resources */ = {isa = PBXBuildFile; fileRef = 056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */; };
 		056BC70E12F0E3F00029F3A2 /* bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC70A12F0E3F00029F3A2 /* bookmark.png */; };
 		056BC70F12F0E3F00029F3A2 /* bookmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC70B12F0E3F00029F3A2 /* bookmark@2x.png */; };
 		056BC73C12F0E8E00029F3A2 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73812F0E8E00029F3A2 /* folder.png */; };
@@ -141,8 +139,8 @@
 		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
 		5A1F70B00000000000WAVE902 /* PSChapterDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */; };
 		5A1F70B00000000000WAVE912 /* SwiftUINativeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */; };
+		5A1F70B00000000000WAVE922 /* PSEntryDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE921 /* PSEntryDocument.swift */; };
 		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
-		5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */; };
 		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
 		5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZK001 /* PSModuleController.swift */; };
 		5A1F70B00000000000ZS002 /* PocketSwordAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */; };
@@ -193,7 +191,6 @@
 		B28000000000000000000003 /* SwiftUIStudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIStudyViews.swift; sourceTree = "<group>"; };
 		B28000000000000000000004 /* PSInfoPopupContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSInfoPopupContent.swift; sourceTree = "<group>"; };
 		B28000000000000000000005 /* VoiceReferenceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceReferenceModel.swift; sourceTree = "<group>"; };
-		05034D2110FD61CE00884C98 /* SearchWebView.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = SearchWebView.js; path = Resources/SearchWebView.js; sourceTree = "<group>"; };
 		0505FE7912C9A55800A3C65B /* disabled-Footnotes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Footnotes@2x.png"; path = "Resources/disabled-Footnotes@2x.png"; sourceTree = "<group>"; };
 		0505FE7A12C9A55800A3C65B /* disabled-Headings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Headings@2x.png"; path = "Resources/disabled-Headings@2x.png"; sourceTree = "<group>"; };
 		0505FE7B12C9A55800A3C65B /* disabled-Morph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "disabled-Morph@2x.png"; path = "Resources/disabled-Morph@2x.png"; sourceTree = "<group>"; };
@@ -242,7 +239,6 @@
 		0552D12E1295230300A4994B /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "Resources/Icon-Small.png"; sourceTree = "<group>"; };
 		0552D12F1295230300A4994B /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
 		0562FD7B16BB8BCF003A8C70 /* libSystem.B.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B.tbd; path = ../iPhoneOS.sdk/usr/lib/libSystem.B.tbd; sourceTree = SDKROOT; };
-		056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = HighlightBookmarks.js; path = Resources/HighlightBookmarks.js; sourceTree = "<group>"; };
 		056BC70A12F0E3F00029F3A2 /* bookmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bookmark.png; path = Resources/bookmark.png; sourceTree = "<group>"; };
 		056BC70B12F0E3F00029F3A2 /* bookmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bookmark@2x.png"; path = "Resources/bookmark@2x.png"; sourceTree = "<group>"; };
 		056BC73812F0E8E00029F3A2 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resources/folder.png; sourceTree = "<group>"; };
@@ -333,8 +329,8 @@
 		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterDocument.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUINativeReader.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000WAVE921 /* PSEntryDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSEntryDocument.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterNavigationJS.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZK001 /* PSModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleController.swift; path = Classes/PSModuleController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordAppDelegate.swift; path = Classes/PocketSwordAppDelegate.swift; sourceTree = "<group>"; };
@@ -545,8 +541,6 @@
 			isa = PBXGroup;
 			children = (
 				0528684E13E00D300044A388 /* Padauk.ttf */,
-				05034D2110FD61CE00884C98 /* SearchWebView.js */,
-				056BC39A12ECFC750029F3A2 /* HighlightBookmarks.js */,
 			);
 			name = misc;
 			sourceTree = "<group>";
@@ -683,7 +677,7 @@
 				5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */,
 				5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */,
 				5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */,
-				5A1F70B00000000000NAV01 /* PSChapterNavigationJS.swift */,
+				5A1F70B00000000000WAVE921 /* PSEntryDocument.swift */,
 				5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */,
 			);
 			name = "PS-other";
@@ -905,9 +899,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				056BC3A012ECFC950029F3A2 /* HighlightBookmarks.js in Resources */,
 				05E6A76317FAE14F0063B18C /* Icon-100.png in Resources */,
-				05034D2810FD63E300884C98 /* SearchWebView.js in Resources */,
 				5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */,
 				5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */,
 				E9BD1D540ED34003006A60E9 /* LICENSE.txt in Resources */,
@@ -1030,7 +1022,7 @@
 				5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */,
 				5A1F70B00000000000WAVE902 /* PSChapterDocument.swift in Sources */,
 				5A1F70B00000000000WAVE912 /* SwiftUINativeReader.swift in Sources */,
-				5A1F70B00000000000NAV02 /* PSChapterNavigationJS.swift in Sources */,
+				5A1F70B00000000000WAVE922 /* PSEntryDocument.swift in Sources */,
 				5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */,
 				5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */,
 				5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */,

@@ -544,6 +544,85 @@ final class PSChapterDocumentParityTests: XCTestCase {
                       + "reader will drop them silently.")
     }
 
+    // MARK: - Lexicon entries (Wave 9's other native surface)
+
+    /// A lexicon entry renders its definition, its cross-links, and NOT its own key.
+    ///
+    /// Three separate device-found defects live in this one test, all in the same
+    /// six-character preamble every entry opens with —
+    /// `<a name="04399"><b>4399</b></a><br />`:
+    ///
+    ///  * the key number must not render (the popup header already shows it, and the
+    ///    WebView hid it with `a[name]:first-child { display: none }` — CSS this wave
+    ///    deleted);
+    ///  * clearing the pending text is not enough, because `<b>` flushes and the
+    ///    number is already a run by the time `</a>` arrives;
+    ///  * `.bold` must be reset, or it leaks into the Hebrew lemma that follows.
+    ///
+    /// It also pins the cross-link, which is the whole reason a lexicon entry is
+    /// worth rendering natively rather than as static text: all 14,989 of them.
+    func testLexiconEntryDropsItsKeyAnchorAndKeepsCrossLinks() throws {
+        let store = try store()
+        // H4399 — the entry that exposed the `<b>`-inside-anchor case on device.
+        let html = try XCTUnwrap(
+            store.dictEntry(module: BundledModules.strongsHebrew, key: "04399"),
+            "StrongsRealHebrew 04399 is missing from the store"
+        )
+        XCTAssertTrue(html.hasPrefix("<a name=\"04399\"><b>4399</b></a>"),
+                      "the fixture's shape changed; this test targets the key anchor")
+
+        let document = PSEntryDocumentBuilder.build(html: html)
+        let text = document.blocks
+            .map { $0.runs.map(\.text).joined() }
+            .joined(separator: "\n")
+
+        // The key number is gone from the BODY.
+        XCTAssertFalse(text.hasPrefix("4399"),
+                       "the entry's own key anchor still renders: \(text.prefix(40))")
+        // The definition survived.
+        XCTAssertTrue(text.contains("deputyship"),
+                      "the definition is missing: \(text.prefix(80))")
+        // The Hebrew lemma survived, and is not bold — `.bold` from the key anchor's
+        // `<b>` must not leak past it.
+        let lemmaRuns = document.blocks
+            .flatMap(\.runs)
+            .filter { $0.text.unicodeScalars.contains { $0.value >= 0x0590 && $0.value <= 0x05FF } }
+        XCTAssertFalse(lemmaRuns.isEmpty, "the Hebrew lemma did not render")
+        for run in lemmaRuns {
+            XCTAssertFalse(run.style.contains(.bold),
+                           "bold leaked out of the key anchor into the lemma")
+        }
+
+        // The cross-link to 4397 is a real link, and round-trips.
+        let links = document.blocks.flatMap(\.runs).compactMap(\.entryLink)
+        XCTAssertTrue(
+            links.contains(.lexicon(module: BundledModules.strongsHebrew, key: "04397")),
+            "the sword:// cross-link did not resolve; found \(links)"
+        )
+        for link in links {
+            let url = try XCTUnwrap(link.url)
+            XCTAssertEqual(EntryLink(url: url), link, "entry link round trip failed")
+        }
+    }
+
+    /// A footnote renders as text. The narrowest vocabulary of the three (`i` and
+    /// `font` only, over 13,918 fields), and the one with no header to fall back on
+    /// if it comes out empty.
+    func testFootnoteBodyRendersAsText() throws {
+        let reader = PSContentReader.shared
+        // Genesis 4:1 carries KJV's first footnote; the passage arrives URL-encoded
+        // off the anchor, which `noteBody` decodes itself.
+        let body = reader.noteBody(module: "KJV", osisRef: "Genesis+4%3A1", marker: "1")
+        guard let body else {
+            throw XCTSkip("KJV Genesis 4:1 note 1 is not in the store")
+        }
+        let document = PSEntryDocumentBuilder.build(html: body)
+        let text = document.blocks.map { $0.runs.map(\.text).joined() }.joined()
+        XCTAssertFalse(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                       "the footnote rendered empty")
+        XCTAssertFalse(text.contains("<"), "a tag survived into the rendered text")
+    }
+
     /// Tag NAMES (lowercased, attributes dropped) appearing literally in a record.
     private static func rawTags(in record: String) -> [String] {
         var out: [String] = []

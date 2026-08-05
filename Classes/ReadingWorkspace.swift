@@ -459,8 +459,12 @@ final class ReaderPaneModel {
     /// the view knows which row is at the top — see `tracksTopmostVerse`. Both write
     /// through `persistPosition`, so the pair stays consistent whichever moves first.
     func topmostVerseChanged(_ verse: Int) {
-        guard !isRestoringAfterTransition, verse != currentShownVerse else { return }
-        persistPosition(verse: verse, scrollOffset: lastScrollOffset)
+        // The clamp lives in `persistPosition`, so comparing the RAW value here
+        // would let verse 0 through as "changed" forever (0 != 1) and rewrite the
+        // position on every layout pass.
+        let clamped = max(1, verse)
+        guard !isRestoringAfterTransition, clamped != currentShownVerse else { return }
+        persistPosition(verse: clamped, scrollOffset: lastScrollOffset)
     }
 
     /// Automatic Focus mode: a user scroll that comes to rest enters Focus mode if
@@ -484,6 +488,16 @@ final class ReaderPaneModel {
     /// chrome. `"%d"` of a `CGFloat` is the original's formatting — the persisted
     /// value has always been a truncated integer in a string.
     private func persistPosition(verse: Int, scrollOffset: CGFloat) {
+        // Clamped at the single write point, so no caller can persist verse 0.
+        //
+        // The jsToShow-era code could not write a 0 because `currentVerse()` opened
+        // with `if(now < 5) return 1;`. The native reader CAN: the intro slot is loop
+        // counter 0 (`ChapterVerse.isIntro`), so a chapter whose first row is an
+        // intro reports "verse 0" as the topmost row, and MHCC has one in most
+        // chapters. Seen on device as a "Gen 2:0" toolbar title, and worse than
+        // cosmetic — the value is persisted, and a `.verse` restore reads it back, so
+        // `scrollToVerse(0)` would silently do nothing on the next launch.
+        let verse = max(1, verse)
         currentShownVerse = verse
         let verseString = String(format: "%d", Int32(verse))
         let defaults = UserDefaults.standard
@@ -663,7 +677,9 @@ extension ReaderPaneModel {
 
         var entry = PSContentReader.entry(module: module, key: rawNumber)
         let hasDefinition = entry != nil
-        // The raw (pre-shell) entry is what the popup's lemma parser reads.
+        // The raw entry is what the popup's lemma parser reads. Wave 9: it is now
+        // also what the popup RENDERS — `createStrongsInfoHTMLString` is gone, so
+        // there is no longer a shelled copy alongside the raw one.
         let rawEntry = hasDefinition ? entry : nil
         if entry == nil {
             entry = NSLocalizedString(
@@ -673,10 +689,6 @@ extension ReaderPaneModel {
                 comment: ""
             )
         }
-        entry = PSModuleController.createStrongsInfoHTMLString(
-            entry,
-            usingModuleForPreferences: module
-        )
         guard let entry else { return (nil, nil) }
         return (
             entry,
@@ -705,10 +717,7 @@ extension ReaderPaneModel {
                 )
             }
         }
-        return PSModuleController.createInfoHTMLString(
-            entry,
-            usingModuleForPreferences: module
-        )
+        return entry
     }
 
     /// A footnote body.
@@ -730,10 +739,7 @@ extension ReaderPaneModel {
         // how the filters emitted them.
         entry = entry?.replacingOccurrences(of: "*x", with: "x")
         entry = entry?.replacingOccurrences(of: "*n", with: "n")
-        return PSModuleController.createInfoHTMLString(
-            entry,
-            usingModuleForPreferences: lookupModule
-        )
+        return entry
     }
 
 }

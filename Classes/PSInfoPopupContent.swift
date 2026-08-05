@@ -21,10 +21,18 @@
 //
 
 import UIKit
-import WebKit
 
 final class PSInfoPopupContent: NSObject {
-    let html: String
+    /// The entry's own HTML — the lexicon/footnote body as the store yields it,
+    /// **not** a full page.
+    ///
+    /// Wave 9: this used to be the output of `createInfoHTMLString` /
+    /// `createStrongsInfoHTMLString`, i.e. an XHTML document with a `<head>`, a
+    /// `<style>` block, a viewport meta and (for a Strong's entry) 60 further lines
+    /// of injected CSS whose whole job was to make a `WKWebView` look like the sheet
+    /// it sat in. `EntryTextView` renders the body natively and inherits the sheet's
+    /// material, so the shells are gone and this is the raw body again.
+    let entryHTML: String
     let contextTitle: String?
     let reference: String?
     let searchTerm: String?
@@ -43,7 +51,7 @@ final class PSInfoPopupContent: NSObject {
     }
 
     init(html: String) {
-        self.html = html
+        self.entryHTML = html
         self.contextTitle = nil
         self.reference = nil
         self.searchTerm = nil
@@ -56,7 +64,7 @@ final class PSInfoPopupContent: NSObject {
         let isHebrew = normalizedReference.hasPrefix("H")
         let lexeme = Self.parseStrongsLexeme(fromRenderedEntry: rawEntry)
 
-        self.html = html
+        self.entryHTML = html
         self.contextTitle = NSLocalizedString(
             isHebrew ? "PreferencesHebrewStrongsLexiconTitle" : "PreferencesGreekStrongsLexiconTitle",
             comment: ""

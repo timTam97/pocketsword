@@ -1,5 +1,4 @@
 import SwiftUI
-import WebKit
 import Observation
 
 struct DictionaryView: View {
@@ -125,11 +124,13 @@ private struct DictionaryEntryView: View {
     var body: some View {
         let entry = linkedEntry ?? initialEntry
 
-        DictionaryEntryWebView(
-            entry: entry,
-            openDictionaryLink: { module, key in
+        EntryTextView(
+            document: PSEntryDocumentBuilder.build(html: entry.html),
+            openLink: { link in
+                guard case .lexicon(let module, let key) = link else { return }
                 linkedEntry = library.dictionaryEntry(module: module, key: key)
-            }
+            },
+            topInset: 8
         )
         .navigationTitle(entry.key)
         .navigationBarTitleDisplayMode(.inline)
@@ -137,59 +138,13 @@ private struct DictionaryEntryView: View {
     }
 }
 
-private struct DictionaryEntryWebView: UIViewRepresentable {
-    let entry: DictionaryEntryDocument
-    let openDictionaryLink: (String, String) -> Void
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(openDictionaryLink: openDictionaryLink)
-    }
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView(frame: .zero)
-        webView.navigationDelegate = context.coordinator
-        return webView
-    }
-
-    func updateUIView(_ webView: WKWebView, context: Context) {
-        context.coordinator.openDictionaryLink = openDictionaryLink
-        guard context.coordinator.loadedEntryID != entry.id else { return }
-        context.coordinator.loadedEntryID = entry.id
-        webView.loadHTMLString(entry.html, baseURL: Bundle.main.resourceURL)
-    }
-
-    final class Coordinator: NSObject, WKNavigationDelegate {
-        var loadedEntryID: DictionaryEntryDocument.ID?
-        var openDictionaryLink: (String, String) -> Void
-
-        init(openDictionaryLink: @escaping (String, String) -> Void) {
-            self.openDictionaryLink = openDictionaryLink
-        }
-
-        func webView(
-            _ webView: WKWebView,
-            decidePolicyFor navigationAction: WKNavigationAction,
-            decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
-        ) {
-            guard let url = navigationAction.request.url,
-                  let data = PSModuleController.data(forLink: url),
-                  let module = data["modulename"] as? String,
-                  !module.isEmpty,
-                  module != "Bible",
-                  (data["action"] as? String) != "showImage",
-                  let rawKey = data["value"] as? String else {
-                decisionHandler(.allow)
-                return
-            }
-
-            openDictionaryLink(
-                module,
-                rawKey.removingPercentEncoding ?? rawKey
-            )
-            decisionHandler(.cancel)
-        }
-    }
-}
+// `DictionaryEntryWebView` is DELETED (Wave 9). It was a `UIViewRepresentable`
+// `WKWebView` plus a `WKNavigationDelegate` coordinator whose only job was to
+// intercept `sword://` cross-links and re-route them through
+// `+[PSModuleController data(forLink:)]`. `EntryTextView` renders the entry
+// natively and `PSEntryDocumentBuilder` resolves those cross-links while parsing,
+// so the entry is now real selectable text with real accessibility elements — all
+// 14,989 lexicon-to-lexicon links included.
 
 struct BookmarksView: View {
     let library: LibraryModel

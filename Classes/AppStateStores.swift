@@ -504,12 +504,11 @@ final class DictionaryStore {
         entryProvider: @escaping EntryProvider = {
             PSContentReader.entry(module: $0, key: $1)
         },
-        htmlBuilder: @escaping HTMLBuilder = {
-            PSModuleController.createInfoHTMLString(
-                $0,
-                usingModuleForPreferences: $1
-            )
-        }
+        // Wave 9: the entry's own HTML, not a shelled page.
+        // `createInfoHTMLString` is deleted — `EntryTextView` renders the body
+        // natively — so this is an identity pass. The seam is KEPT rather than
+        // removed because the tests inject through it.
+        htmlBuilder: @escaping HTMLBuilder = { body, _ in body }
     ) {
         self.defaults = defaults
         self.moduleProvider = moduleProvider

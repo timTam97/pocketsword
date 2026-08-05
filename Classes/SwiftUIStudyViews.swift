@@ -29,7 +29,6 @@
 
 import SwiftUI
 import UIKit
-import WebKit
 
 // MARK: - Study popup
 
@@ -48,8 +47,8 @@ struct StudyPopupSheet: View {
             if content.isStrongsEntry {
                 StudyPopupHeader(content: content)
             }
-            StudyPopupWebView(
-                html: content.html,
+            EntryTextView(
+                document: PSEntryDocumentBuilder.build(html: content.entryHTML),
                 // A non-Strong's entry gets top padding because it has no header
                 // to sit under; the old code set the same 20pt as a scroll-view
                 // content inset.
@@ -145,48 +144,18 @@ private struct StudyPopupHeader: View {
     }
 }
 
-/// The definition WebView.
-///
-/// A plain `WKWebView` rather than the Wave 6 `WebPage`/`WebView` pair: this shows
-/// static HTML with no navigation policy, no JavaScript bridge and no scroll
-/// callbacks, so it needs none of that machinery. It IS transparent over the
-/// sheet's material — `createInfoHTMLString` injects
-/// `html, body { background-color: transparent; }` for exactly this, and an
-/// opaque WebView would paint a solid rectangle over the frosted glass.
-private struct StudyPopupWebView: UIViewRepresentable {
-    let html: String
-    let topInset: CGFloat
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView(frame: .zero)
-        webView.backgroundColor = .clear
-        webView.isOpaque = false
-        webView.scrollView.backgroundColor = .clear
-        return webView
-    }
-
-    func updateUIView(_ webView: WKWebView, context: Context) {
-        let insets = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
-        webView.scrollView.contentInset = insets
-        webView.scrollView.verticalScrollIndicatorInsets = insets
-        guard context.coordinator.loadedHTML != html else { return }
-        context.coordinator.loadedHTML = html
-        webView.loadHTMLString(html, baseURL: nil)
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator()
-    }
-
-    final class Coordinator {
-        var loadedHTML: String?
-    }
-}
+// `StudyPopupWebView` is DELETED (Wave 9). It was a transparent `WKWebView` over
+// the sheet's material, and it needed `createInfoHTMLString` to inject
+// `html, body { background-color: transparent; }` for exactly that reason — plus
+// `createStrongsInfoHTMLString`'s 60 further lines of CSS to make it resemble the
+// sheet it sat in. `EntryTextView` is a `Text` in that sheet, so it inherits the
+// material and the type styles for free, and the definition becomes selectable
+// text with real accessibility elements.
 
 /// The study accent, matching `PSInfoPopupViewController.studyAccent` and the
 /// `--study-accent` custom property `createStrongsInfoHTMLString` injects, so the
 /// header rail and the entry's own links are the same colour.
-private enum StudyPalette {
+enum StudyPalette {
     static let accent = Color(
         uiColor: UIColor { traits in
             traits.userInterfaceStyle == .dark

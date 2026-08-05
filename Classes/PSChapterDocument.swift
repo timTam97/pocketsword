@@ -188,16 +188,27 @@ struct InlineRun: Equatable, Hashable {
     var style: InlineStyle = []
     var link: InlineLink?
 
+    /// A lexicon cross-link, when this run came from an ENTRY rather than a chapter
+    /// (see `PSEntryDocument.swift`).
+    ///
+    /// A separate field rather than a case on `InlineLink`, because the two
+    /// vocabularies are genuinely disjoint: a chapter record never contains a
+    /// lexicon cross-link, and a lexicon entry never contains a verse-menu target.
+    /// Merging them would put permanently-unreachable cases in both routers.
+    var entryLink: EntryLink?
+
     /// A Strong's/morph anchor's own text is decorative — `<H0430>` / `(8804)` —
     /// and the view renders it superscript-small. Marking it lets the reader
     /// offer "hide markers" and lets the search highlighter skip it, neither of
     /// which is possible once it is flattened into the verse text.
     var isMarker: Bool = false
 
-    init(text: String, style: InlineStyle = [], link: InlineLink? = nil, isMarker: Bool = false) {
+    init(text: String, style: InlineStyle = [], link: InlineLink? = nil,
+         entryLink: EntryLink? = nil, isMarker: Bool = false) {
         self.text = text
         self.style = style
         self.link = link
+        self.entryLink = entryLink
         self.isMarker = isMarker
     }
 }
