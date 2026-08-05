@@ -6,21 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 PocketSword is a GPL'd iOS Bible-study app. It **was** built on the CrossWire SWORD C++ API (https://www.crosswire.org/sword/); it now ships that project's *content*, baked offline into a bundled SQLite store, with no C++ at runtime. This repo is a fork of `bitbucket.org/niccarter/pocketsword` updated for new iPhones and iOS 26.
 
-**The target is pure Swift.** `Classes/` is 46 `.swift` files plus exactly one header, `globals.h` (enums + macros, consumed via both bridging headers). As of SWIFTUI_MIGRATION_PLAN.md Wave 8 there is **no Objective-C implementation at all** — the vendored `externals/MBProgressHUD` is gone, `externals/` is empty, and there is no C++, no Objective-C++, no `.mm` anywhere.
+**The target is pure Swift.** `Classes/` is 48 `.swift` files plus exactly one header, `globals.h` (enums + macros, consumed via both bridging headers). As of SWIFTUI_MIGRATION_PLAN.md Wave 8 there is **no Objective-C implementation at all** — the vendored `externals/MBProgressHUD` is gone, `externals/` is empty, and there is no C++, no Objective-C++, no `.mm` anywhere.
 
 Getting there was two projects, both complete on `opus/sword-migration`:
 - `SWIFT_MIGRATION_PLAN.md` moved the app layer under `Classes/` from Obj-C to Swift, leaving a deliberately-permanent Obj-C++ SWORD bridge.
 - `SWORD_REMOVAL_PLAN.md` then deleted that bridge and the engine under it. Phase 3 moved content *reading* to a pure-Swift reader over the baked store; Phase 4 did the same for versification and reference parsing; **Phase 5 deleted `externals/sword`, the `Sword*.{h,mm,+Cpp.h}` bridge, `tools/swordbake`, `externals/ZipArchive`, the module zips and the whole C++ build wiring**, and ported `PSSearchEngine` to Swift. ~47k LOC removed. Read its per-phase status blocks before assuming anything in this file's history section still applies.
 
-There is no CocoaPods/SPM and, as of Wave 8, no vendored third-party code either — `externals/` is empty. **The UI is SwiftUI**: `@main PocketSwordApp` with a four-workspace `TabView` (Read / Search / Library / Settings). There are **no XIBs** and only a `LaunchScreen.storyboard`. UIKit survives only as leaf values and two `UIViewRepresentable` WebView wrappers, plus a `@UIApplicationDelegateAdaptor` holding the `BGTaskScheduler` registration and the scene orientation hook.
+There is no CocoaPods/SPM and, as of Wave 8, no vendored third-party code either — `externals/` is empty. **The UI is SwiftUI**: `@main PocketSwordApp` with a four-workspace `TabView` (Read / Search / Library / Settings). There are **no XIBs** and only a `LaunchScreen.storyboard`. **As of Wave 9 there is no WebKit either** — `import WebKit` appears nowhere in the target, the reader is a native `ScrollView` + `LazyVStack` over `AttributedString`, and both `UIViewRepresentable` WebView wrappers are gone. UIKit survives only as leaf values (`UIColor` / `UIFont` / `UIDevice` / `UIApplication`) plus a `@UIApplicationDelegateAdaptor` holding the `BGTaskScheduler` registration and the scene orientation hook.
 
 ## Build / run
 
 - Open `PocketSword.xcodeproj` in Xcode and build the shared `PocketSword` scheme (there is a second scheme `PocketSword1`). There is no `.xcworkspace` and no package manager step.
 - CLI build: `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -configuration Debug -sdk iphonesimulator build` (swap to `-sdk iphoneos` and `-configuration Release`/`Distribution` as needed). You may need `CODE_SIGNING_ALLOWED=NO` for simulator builds without a dev team. **`/usr/bin/xcodebuild` resolves stable Xcode and fails this iOS-26 project with "Found no destinations"** — use `DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer /Applications/Xcode-beta.app/Contents/Developer/usr/bin/xcodebuild`, or prefer the Xcode MCP build/test tools.
-- A clean build should show **`CompileC` 0** and `SwiftCompile` 51 (measured on a clean `-sdk iphoneos` Debug build after Wave 8). There is no C or Objective-C translation unit left in the target — Wave 8 removed the last one, `MBProgressHUD.m`. **Any** `CompileC` at all means non-Swift sources came back into the target; that is a regression, not a detail.
-- **Tests exist, in two bundles.** `PocketSwordTests` (app-hosted, `@testable import PocketSword`) has **120 tests** — 118 that run by default plus 2 env-gated: 18 in `Classes/PersistedFormatTests.swift`, 10 in `Classes/PSVoiceRefParserTests.swift`, 32 in `Classes/PSContentStoreTests.swift`, 4 in `Classes/PSSearchIndexParityTests.swift`, 14 in `Classes/PSRefSemanticsTests.swift`, 8 in `Classes/URLRouterTests.swift`, and 32 in `Classes/AppStateStoresTests.swift` (the SwiftUI-migration models and stores). `PocketSwordUITests` adds XCUITests over the four workspaces — see SWIFTUI_MIGRATION_PLAN.md. **The expected result is 118 passed / 2 skipped / 0 failed** for the unit bundle. Run with the Xcode MCP test tools, or `xcodebuild … test` with the `DEVELOPER_DIR` caveat above. The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
-- **Check the skip count, not just the pass count.** The expected result is *76 passed / 2 skipped / 0 failed*. The 2 skips are the `PSREF_EXHAUSTIVE` pair. Historically, every engine-driven test polled `isModuleInstalled(name)` with a 90 s timeout and then `XCTSkip`ed, so a mis-ordered commit **skipped rather than failed** — that trap is what dictated Phase 5's step order (see `PHASE5_ORDERING.md`). Those tests are gone, but the habit is still the right one.
+- A clean build should show **`CompileC` 0** and `SwiftCompile` 52 (measured on a clean `-sdk iphoneos` Debug build after Wave 9). There is no C or Objective-C translation unit left in the target — Wave 8 removed the last one, `MBProgressHUD.m`. **Any** `CompileC` at all means non-Swift sources came back into the target; that is a regression, not a detail.
+- **Tests exist, in two bundles.** `PocketSwordTests` (app-hosted, `@testable import PocketSword`) has **128 tests** — 125 that run by default plus 3 env-gated (the 2 `PSREF_EXHAUSTIVE` plus Wave 9's `PSDOC_EXHAUSTIVE`): 18 in `Classes/PersistedFormatTests.swift`, 10 in `Classes/PSVoiceRefParserTests.swift`, 32 in `Classes/PSContentStoreTests.swift`, 4 in `Classes/PSSearchIndexParityTests.swift`, 14 in `Classes/PSRefSemanticsTests.swift`, 6 in `Classes/URLRouterTests.swift`, 35 in `Classes/AppStateStoresTests.swift` (the SwiftUI-migration models and stores), and 9 in `Classes/PSChapterDocumentParityTests.swift` (Wave 9's native-reader gate). `PocketSwordUITests` adds XCUITests over the four workspaces — see SWIFTUI_MIGRATION_PLAN.md. **The expected result is 125 passed / 3 skipped / 0 failed** for the unit bundle, plus 11 XCUITests. Run with the Xcode MCP test tools, or `xcodebuild … test` with the `DEVELOPER_DIR` caveat above. The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
+- **Check the skip count, not just the pass count.** The 3 skips are the `PSREF_EXHAUSTIVE` pair plus `PSDOC_EXHAUSTIVE`'s `testNativeDocumentMatchesHTMLForEveryChapter` — the last of which walks all 1,189 chapters × 2 modules × 2 option endpoints (4,756 comparisons, ~30 s) and is the real gate on the native reader, so run it when you touch either emitter. Historically, every engine-driven test polled `isModuleInstalled(name)` with a 90 s timeout and then `XCTSkip`ed, so a mis-ordered commit **skipped rather than failed** — that trap is what dictated Phase 5's step order (see `PHASE5_ORDERING.md`). Those tests are gone, but the habit is still the right one.
 - **The whole suite runs against committed fixtures that were captured from the live SWORD engine, and the engine is gone.** There is no way to regenerate any of them, so a red fixture test is a real behaviour change — never "fix" one by recapturing. The `PSORACLE_CAPTURE` env var and the capture code it gated are deleted. Under `Tests/Fixtures/`:
   - chapter bodies at **both** option endpoints, a bookmark-highlighted body, lexicon entries, footnote attribute shapes — read by `PSContentStoreTests`
   - `versification-KJV-oracle.txt` — 66 books × 5 members, 1,189 verse maxima, **all 2,376 transitions**; this single fixture is the whole versification gate now that `SwordBook` is gone
@@ -47,13 +47,16 @@ Most of this app's behaviour is only observable by actually reading a chapter, s
   - Omit `interactionCommand` entirely to just capture state.
 - **Read the hierarchy file, not the screenshot, for coordinates.** Every call returns a `hierarchyPath`; each element carries a `hitPoint`. Guessing pixel positions off the screenshot mostly taps empty space. `grep` the hierarchy for a `label:` to find the target.
 - The response's `logsPath` plus `GetConsoleOutput` (with a `pattern` filter) is the fastest way to check for exceptions after an interaction. Expect harmless noise: a `UIAccessibilityLoaderWebShared` duplicate-class warning, `cannot add handler to 0 from 0`, and WebKit freezer-status errors are all normal here and not app bugs.
-- **The reading pane is a `WKWebView`** (a SwiftUI `WebView` over `WebPage` since Wave 6), so verse text, Strong's links and footnote markers do **not** appear in the UI hierarchy — only the container, at `reading.web-content`, does. Verify that content by reading the screenshot image. This cuts both ways for layout too: the identifier sits on the container and reports full-window whether the chapter is letterboxed or edge-to-edge, so a hierarchy dump cannot tell you which.
+- **The reading pane is native SwiftUI text as of Wave 9, and this inverts the old advice.** It used to be a `WKWebView`, so verse text, Strong's links and footnote markers did **not** appear in the UI hierarchy — only the container, at `reading.web-content`, did, and content had to be verified by reading the screenshot. Now **every verse and every link is a real accessibility element**: a verse is a `StaticText` with its full text as the label, and each Strong's / morph / footnote / verse-menu target is a `Link` whose identifier is its `pslink://` URL (e.g. `pslink://strongs/Hebrew/0430`). So `grep` the hierarchy for the text or the link you want — it is there, and it is tappable by `hitPoint`.
+  - The identifier is now `reading.chapter-content`, and it sits on the **`ScrollView` itself** rather than a container, so its frame is meaningful: letterboxing is visible as a frame that stops short of the window. (The old identifier reported full-window in both the broken and the correct case, which is why the previous note said a hierarchy dump could not tell you which.)
+  - **BOTH panes carry that identifier**, because both stay in the hierarchy for the app's lifetime with the inactive one at `opacity(0)` — an XCUITest must use `.firstMatch`.
+  - Screenshots are still the right tool for *typography* (is a verse number distinguishable from a Strong's marker?), which is how the Wave 9 verse-number weight defect was found.
 - **SwiftUI controls need their identifiers checked against a real dump, not assumed.** Wave 8 found three cases where an identifier or placement silently did not work — `Tab`'s `accessibilityIdentifier` never reaches the tab-bar button, a `.bottomBar` toolbar item lands on top of the floating tab bar, and `tabViewBottomAccessory` is per-`TabView` rather than per-tab. A menu row also exposes its *label* and drops the identifier. `grep` the hierarchy before writing an XCUITest matcher.
 - The app restores its last tab and scroll position, so a fresh launch may not start where you expect. Capture before assuming.
 - For a one-off env var on an **app** run, use `InstallAndRun`'s `environmentVariables` / `commandLineArguments` (`$(inherited)` preserves the scheme's own) rather than editing the scheme — they apply to that run only. **`RunAllTests` / `RunSomeTests` have no such parameter**, so getting an env var into a *test* run (the only one left is `PSREF_EXHAUSTIVE`) means temporarily adding an `<EnvironmentVariables>` block to the scheme's `TestAction` **plus** `shouldUseLaunchSchemeArgsEnv = "NO"` — back the file up first and restore it immediately after, since the scheme is shared and checked in.
 - `xcodebuild ... -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test` from the CLI may fail with "Unable to find a destination" even when that simulator is booted and the MCP can target it, because the CLI resolves a different `SDKROOT`. Prefer the MCP test tools over the CLI here; for builds, `DEVELOPER_DIR=/Applications/Xcode-beta.app/…` plus that Xcode's own `xcodebuild` works.
 - **`simctl` and the MCP session fight over the debug session.** `xcrun simctl terminate` / `launch` / `openurl` all work and are the only way to do some things (`openurl` for the `sword://` shapes; a `launch` after editing the prefs plist to re-run a one-shot migration). But a `simctl terminate` out from under the MCP makes the next `Synthesize` report `applicationState: Crashed` even though nothing crashed — check for an actual `.ips` crash report and `launchctl list | grep -i pocketsword` before believing it, then `InstallAndRun` to re-attach. Also note **a reinstall assigns a new container UUID**, so re-resolve with `xcrun simctl get_app_container <device> <bundle-id> data` rather than reusing the path.
-- **The pane needs a beat to load.** Both the info popup and the dictionary entry screen are `WKWebView`s; screenshotting immediately after the tap shows an empty pane that looks exactly like a rendering bug. Insert a `w 2.0` before capturing. A previous session recorded a "Dictionary blank pane" defect on this basis that the final Phase-5 pass could not reproduce on either dictionary path.
+- **A sheet still needs a beat to appear.** The info popup and the dictionary entry screen are native `Text` as of Wave 9 rather than `WKWebView`s, so there is no page load to wait for — but the *sheet presentation* still animates, and screenshotting immediately after the tap catches it mid-transition looking like an empty pane. Insert a `w 2.0` before capturing. (A pre-Wave-9 session recorded a "Dictionary blank pane" defect on this basis that the final Phase-5 pass could not reproduce; the underlying WebView load it blamed no longer exists.)
 
 ## Build wiring
 
@@ -164,9 +167,57 @@ which; keep it accurate if you add a failure.
   without the simulator. It reproduces `+[SwordModule
   moduleTypeForModuleTypeString:]`'s `ret = bible` default, which a naive
   type-string comparison gets wrong for an unrecognised type.
-- `PSContentReader` — the coordinator the view controllers talk to. Owns module
-  selection, the **per-module** option prefs, the bookmark-highlight lookup, the
-  bottom pad, the JS block, the `createHTMLString` shell and language/direction.
+- `PSContentReader` — the coordinator the reader talks to. Owns module selection,
+  the **per-module** option prefs and the bookmark-highlight lookup. Two entry
+  points, and the distinction matters:
+  - `chapterDocument(module:ref:kind:)` is **the render path** (Wave 9). It returns
+    a typed `ChapterDocument` the SwiftUI reader renders directly.
+  - `chapterBody(module:ref:kind:…)` returns the engine-exact HTML and is now a
+    **test oracle rather than a render path**. Keep it: its output is pinned
+    byte-for-byte by fixtures captured from the live SWORD engine, which is gone and
+    cannot be re-run, and `PSChapterDocumentParityTests` is what proves the native
+    document agrees with it.
+  - `chapterPage` (the full HTML page — shell, CSS, JS, six `&nbsp;` pads) is
+    **deleted**, along with `createHTMLString` and language/direction substitution
+    (the latter was a no-op for all five shipped modules: every one is `Lang=en`
+    with no `Direction=`).
+
+### The native reader (`Classes/PSChapterDocument.swift`, `SwiftUINativeReader.swift`, `PSEntryDocument.swift`)
+
+Wave 9 replaced the WebView with native SwiftUI text. Three things are worth knowing
+before changing any of it:
+
+- **The token grammar has TWO emitters, deliberately.** `PSChapterExpander` produces
+  the engine-exact HTML; `PSChapterDocumentBuilder` produces `ChapterDocument` from
+  the same tokens and the same `PSChapterExpander.Options`. They are independent on
+  purpose — that independence is what makes the parity test mean something — so **do
+  not make one call the other.** The plan originally called for SwiftSoup over the
+  HTML; the corpus was measured instead and found to be a closed set of six inline
+  tags (`a`, `i.transChangeAdded`, `font size="-1"`, the `<p><b>` title pair,
+  `span.WordOfChrist`), so a second emitter beats a 30k-LOC HTML5 parser and a new
+  dependency. See `PSChapterDocument.swift`'s header for the measurements.
+- **Lexicon entries and footnotes have their OWN renderer** (`PSEntryDocument.swift`),
+  because their vocabulary is genuinely wider: `br` (40,469 — the only line break,
+  and all Robinson has), `a name=` targets vs `a href=` cross-links (14,298 / 14,989),
+  `sup`/`sub`, `q`, `bib bn=`, plus strays. Reusing the chapter renderer for them
+  drops most of their structure.
+- **Scroll position is IDENTITY, not pixels.** `ScrollPosition(id:)` addresses a
+  verse, so the JS `versepos` offset table, the `arraydump:` bridge, and the rotation
+  re-measure are all gone rather than ported — a rotation keeps its anchor for free.
+  The one place this costs something: in prose mode rows are *paragraphs*, so
+  `scrollToVerse` lands at the top of the verse's paragraph rather than exactly on the
+  verse (`rowID(containing:)`).
+  - **Applying a scroll in the same update as a document change silently does
+    nothing** — the target resolves against the row set being replaced. `apply(_:)`
+    defers it by one update for exactly this reason; do not "simplify" that away.
+
+**Verse layout honours the verse-per-line pref, and this is not cosmetic.** With VPL
+OFF (the default) verses flow together as prose, breaking at the KJV's own pilcrow —
+all 2,970 of which sit at the start of a verse's visible text, none mid-verse. With it
+ON each verse is its own row. Rendering one row per verse unconditionally would make
+every chapter verse-per-line and leave the toggle inert. **A commentary always breaks
+per verse** regardless: MHCC carries no pilcrows at all (zero across 28,904 records),
+and the assembler always wrapped each commentary verse in its own `<p>`.
 
 **Two things not to "simplify":**
 
@@ -185,31 +236,18 @@ which; keep it accurate if you add a failure.
   `searching`; do not go back to reading the key off the cell's label, and do not
   index the full key list unconditionally — that opens the wrong entry for every
   search result.
-- The chapter-navigation JS lives in **one** place, now
-  `Classes/PSChapterNavigationJS.swift`. It is 4 KB of pure JS. It was
-  `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`, and Phase 5 step 3
-  *added* the Swift version alongside it with a test asserting the two produced
-  identical bytes for several `entryCount` values, precisely so the move could not be a
-  silent retype; the Obj-C copy and the assertion died together with the bridge in
-  step 7. Keep it one copy. Note all four `%ld` substitutions take the **same**
-  `entryCount`.
-  - **It emits TWO blocks, and where each lands in the document is load-bearing.**
-    `script(entryCount:)` goes in `<head>` (definitions + a `window.onload` that
-    re-measures and re-applies); `bootScript(extraJS:)` goes at the very **end of
-    `<body>`**, appended by `PSContentReader.chapterPage` after the six pads, and is
-    what performs the initial scroll. A script there runs after parse but **before
-    the first paint**, so a chapter opened at John 3:20 paints already scrolled.
-  - `extraJS` used to go inside `window.onload` instead, and `scrollToVerse` /
-    `scrollToPosition` each wrapped their work in a 250 ms `setTimeout`. That
-    combination *was* the jerky jump the user reported: `onload` fires post-paint, so
-    the top of the chapter was painted and only then did the page jump. Do not move
-    `extraJS` back into `onload` and do not reintroduce the timeouts.
-  - The `onload` re-apply (`psReapplyInitialScroll`) exists because a late-loading
-    webfont or image can shift the measured verse offsets. It is guarded on
-    `psUserScrolled`, set by **capturing** `touchstart` / `wheel` listeners. Guard on
-    *input*, not on comparing `window.pageYOffset` to the offset applied at boot: an
-    offset comparison cannot tell a user scroll from a reflow, so it would disable
-    the re-apply in exactly the case it exists to fix.
+> Historical, and do not resurrect it: the reader used to inject 4 KB of
+> chapter-navigation JavaScript (`PSChapterNavigationJS`, itself a port of
+> `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`) that built a
+> `versepos` table of measured `offsetTop` values, reported it back through an
+> `arraydump:` URL, and scrolled by looking a verse up in it. Two further JS
+> resources (`SearchWebView.js`, `HighlightBookmarks.js`) mutated the live DOM to
+> highlight search hits and bookmark colours. **Wave 9 deleted all three**, because a
+> native scroll view addresses a verse by identity: there is no table to measure, no
+> bridge to report it, and no DOM to mutate. The `window.onload` re-apply, the
+> `psUserScrolled` guard, the jerky-jump `setTimeout` history and the two-emission-site
+> rule went with them. If you are tempted to reintroduce any of it, the thing it
+> solved does not exist any more.
 
 ### Chapter paging restores NO position, in both directions
 
@@ -261,7 +299,7 @@ The `PSSearchEngineErrorDomain` + negative-sentinel-code contract was **not pres
 
 ### App-level module layer (`Classes/PSModule*`, `Classes/PS*ViewController` — Swift)
 
-- `PSModuleController` (singleton via `+defaultModuleController`) holds the **primary Bible / commentary / dictionary the user is currently reading, as `String?` names** (`primaryBibleName` / `primaryCommentaryName` / `primaryDictionaryName`), and builds the HTML shells (`+createHTMLString:…`, `+createInfoHTMLString:…`) and ref-string helpers. It no longer unpacks anything, has no `swordManager`, and has no `reload()` / `removeModule` / `setPreferences` — see the historical block above for why each went.
+- `PSModuleController` (singleton via `+defaultModuleController`) holds the **primary Bible / commentary / dictionary the user is currently reading, as `String?` names** (`primaryBibleName` / `primaryCommentaryName` / `primaryDictionaryName`) and the ref-string helpers (`+createRefString:`, `+createTitleRefString:`). The HTML shells (`+createHTMLString:`, `+createInfoHTMLString:`, `+createStrongsInfoHTMLString:`) and the chapter getters (`-getBibleChapter:withExtraJS:`, `-getCommentaryChapter:withExtraJS:`) are **deleted** in Wave 9. Note the `lastRef` write moved out of those getters into `ReaderPaneModel.render` — missing it was a real defect, since the toolbar title and relaunch restoration both read that key. It no longer unpacks anything, has no `swordManager`, and has no `reload()` / `removeModule` / `setPreferences` — see the historical block above for why each went.
 - `ReaderPaneModel` (`Classes/ReadingWorkspace.swift`) is one reading surface — what `PSModuleViewController` / `PSBibleViewController` / `PSCommentaryViewController` were. Two exist for the app's lifetime and **both stay in the view hierarchy**, with the inactive one at `opacity(0)`: `displayChapter` renders the polled pane and defers a `refToShow` / `jsToShow` into the *other*, so the inactive pane has to exist to receive it. Rendering only the active pane would tear down its `WebPage` and lose both the pending work and the scroll position. Tapped verses / Strong's lookups arrive through `ReaderWebPageModelDelegate` and are routed to a `StudyPopupSheet`.
 - `LaunchCoordinator` performs first-run bootstrap, driven from `RootView`'s `.task`. **There is no seeding any more** — no zips, nothing written to `Documents/`. What it still does: `resetPreferences`, the insomnia pref, the `MMM` temp cleanup, and five one-shot migrations — `DefaultsModuleChoiceRetired`, `DefaultsGlobalFontOnly`, `DefaultsLastRefValidated`, `DefaultsDictKeyCaseFixed`, and `DefaultsSwordRetired`.
 - **`DefaultsSwordRetired` is the upgrade path**, and it is the only thing standing between an upgrading user and ~18.7 MB of orphaned files. It deletes `Documents/{mods.d,modules,locales.d,unused}` and `<Caches>/InstallMgr`. Measured on a planted pre-Phase-5 container: `Documents/` 13 MB → 4 KB, idempotent on relaunch. **`PSBookmarks.plist` is at `Documents/` root** (`PSBookmarks.swift:46`), outside all four — verified safe, and it is the one piece of irreplaceable user data down there, so do not widen the sweep to `Documents/` itself. Deleting `Documents/modules` is also what removes the legacy search index. The `<Caches>/cache-*` lexicon key caches are **not** swept here — `DefaultsDictKeyCaseFixed` already does it.
@@ -279,7 +317,7 @@ Display prefs are split by scope, and the split is **load-bearing**:
   - **MHCC declares neither, so it contributes no rows at all** and the display Section is omitted rather than presented empty. Both counts are asserted without the simulator by `AppStateStoresTests.testDisplayTogglesMatchBakedFeatureSets`.
 - **Global** prefs — **font name + size** plus the device options — live in `SettingsView` (`SwiftUISupportingViews.swift`), the Settings workspace. There is exactly **one** font for the whole app. (This was `PSPreferencesController`, whose `LANG_SECTION = 44` was deliberately out of range and unreachable; it is deleted.)
 
-**Font is global, deliberately.** `createHTMLString` reads only the unsuffixed `fontNamePreference` / `fontSizePreference`; the per-module `"<fontpref>_<mod>"` override was removed when the picker moved into Settings. The `DefaultsGlobalFontOnly` migration deletes the orphaned per-module font/size/defaults keys so they can't sit in the plist looking authoritative. `moduleName` is still passed to `createHTMLString`, but now only for the RTL check.
+**Font is global, deliberately.** `ChapterTextRenderer.Style.current()` reads only the unsuffixed `fontNamePreference` / `fontSizePreference` — the same two keys `createHTMLString` read before Wave 9 deleted it; the per-module `"<fontpref>_<mod>"` override was removed when the picker moved into Settings. The `DefaultsGlobalFontOnly` migration deletes the orphaned per-module font/size/defaults keys so they can't sit in the plist looking authoritative.
 
 **The per-module content toggles stay per-module.** The original reason was mechanical: `-[SwordModule getChapter:]` called `-setPreferences`, which read the per-module keys off `self.name` and pushed them into SWORD as global options, so a toggle written to the global domain was silently clobbered on every render. `setPreferences` and SWORD are both gone, so that specific trap is too — but the *scope* is still right. The toggles are genuinely per-module (KJV has six, MHCC has none), and flattening them into global Preferences would mean one module's menu writing keys another module's render reads. Font is the deliberate exception, and always was.
 

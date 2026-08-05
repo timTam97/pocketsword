@@ -4,8 +4,21 @@
 
 **Last updated:** 2026-08-05
 
-**Overall state:** In progress. Waves 1 through 8 are complete; Wave 9 (native
-SwiftUI reader and WebKit removal) is the next and final implementation wave.
+**Overall state:** In progress. Waves 1 through 9 are complete. **WebKit is gone
+from the app target** — `import WebKit` appears nowhere, both JavaScript resources
+and all three HTML shells are deleted, and the reader is a native SwiftUI
+`ScrollView` + `LazyVStack` over `AttributedString`.
+
+**Wave 9's acceptance criterion is met: the reader is edge-to-edge.** Measured on
+the iPhone 17 Pro — the scroll view is the full `402x874` window with `136pt`/`113pt`
+content margins, verse 1 starting at the navigation bar's own bottom edge (y≈116) and
+content scrolling beneath the floating tab bar at y=791. No black bands, no line
+obscured at rest, in either orientation. The letterboxing carried since Wave 7 is
+resolved, and so is the Wave 6 overlap — for the first time both halves are right at
+once.
+
+Remaining: the final all-configuration/static-audit pass, most of which Wave 9
+already ran (see its status block).
 
 Wave 8 cut the app over to a SwiftUI lifecycle and four workspaces. `@main` is
 now `PocketSwordApp`, and the UIKit coordination layer is deleted: no
@@ -117,7 +130,7 @@ stashed, and is now worked around in `startStrongsSearch`.
 - [x] Wave 6: SwiftUI WebKit reader
 - [x] Wave 7: iOS 27 toolbar and reading chrome
 - [x] Wave 8: SwiftUI app lifecycle and four-workspace cutover
-- [ ] Wave 9: Native SwiftUI reader and WebKit removal
+- [x] Wave 9: Native SwiftUI reader and WebKit removal
 - [ ] Final all-configuration builds, tests, UI verification, and static audit
 
 ### Current repository facts
@@ -1029,6 +1042,133 @@ prior visit to Search:** 1,000 results for "God", and the options menu shows
   device connected and selected as the run destination, so this bug was reproduced
   on the iOS 27 simulator rather than on the reporting hardware. Worth re-checking
   on the device itself.
+
+### Wave 9 status
+
+**Worktree state:** Complete. WebKit is gone from the target.
+
+**Static audit:** a clean generic-device build (`-sdk iphoneos`, Debug, Xcode 27
+beta) succeeds with **`CompileC` 0** and `SwiftCompile` 52. **All three
+configurations build** for a generic device — Debug, Release and Distribution.
+`grep` over `Classes/*.swift` finds **zero** non-comment occurrences of
+`import WebKit`, `WKWebView`, `WKNavigation`, `WebPage` or `UIViewRepresentable`, and
+zero `UIViewController` / `UITableViewController` / `UIHostingController` subclasses.
+`Resources/` contains no `.js`. The only non-Swift file in `Classes/` is still
+`globals.h`. Every `UITabBarController` / `UINavigationController` /
+`UIVisualEffectView` / `UIStackView` / `UISegmentedControl` / `UIAction` mention that
+remains is inside a comment; the live UIKit surface is `UIColor` / `UIFont` /
+`UIDevice` / `UIApplication` leaf values plus the app-delegate adaptor.
+
+New files:
+
+- `Classes/PSChapterDocument.swift`: `InlineLink` / `InlineStyle` / `InlineRun` /
+  `ChapterHeading` / `ChapterVerse` / `ChapterParagraph` / `ChapterDocument`, and
+  `PSChapterDocumentBuilder` — the second emitter over the v2 token grammar.
+- `Classes/SwiftUINativeReader.swift`: `ChapterTextRenderer` (runs →
+  `AttributedString`), `ChapterTextView` (the `ScrollView` + `LazyVStack`),
+  `EntryTextView` (lexicon entries and footnotes).
+- `Classes/PSEntryDocument.swift`: `EntryLink` / `EntryBlock` / `EntryDocument` and
+  the lexicon/note parser.
+- `Classes/PSChapterDocumentParityTests.swift`: the differential gate.
+
+Deleted: `Classes/SwiftUIReaderViews.swift` (the Wave 6 `WebPage`/`WebView` pair),
+`Classes/PSChapterNavigationJS.swift`, `Resources/SearchWebView.js`,
+`Resources/HighlightBookmarks.js`, `PSContentReader.chapterPage`,
+`PSModuleController`'s `createHTMLString` / `createInfoHTMLString` /
+`createStrongsInfoHTMLString` / `getBibleChapter:withExtraJS:` /
+`getCommentaryChapter:withExtraJS:`, `StudyPopupWebView`, `DictionaryEntryWebView`,
+and the reader's `referenceOrLexiconPopup` `showRef` arm.
+
+**The design changed from the plan, on a measurement.** See "Wave 9 revision" above:
+the chapter corpus is a closed set of six inline tags, so the token stream gets a
+second emitter rather than SwiftSoup parsing HTML the app generates itself. No
+third-party dependency was added; `externals/` is still empty.
+
+**What the parity test buys.** `PSChapterDocumentParityTests` compares the native
+document against the fixture-pinned HTML emitter on text, verse identity,
+`entryCount` and every link target. Its exhaustive tier (`PSDOC_EXHAUSTIVE=1`) walks
+all 1,189 chapters × 2 modules × 2 option endpoints — **4,756 comparisons, ~30 s** —
+and passes. The HTML path is deliberately KEPT for exactly this reason: its fixtures
+were captured from a SWORD engine that no longer exists, so it is a real oracle.
+
+**A layout question the plan did not ask, and getting it wrong would have been
+silent.** With verse-per-line OFF — the default, and how the app has always read —
+the HTML ran verses together as flowing prose with superscript numbers inline; only
+with the toggle ON did each verse get its own line. One `LazyVStack` row per verse
+would have made every chapter verse-per-line and left the per-module VPL toggle with
+nothing to do. The document therefore groups verses into `ChapterParagraph`s and the
+view picks its unit. Paragraph breaks come from the KJV's own pilcrow, which is
+trustworthy: measured over the module, **all 2,970 sit at the start of a verse's
+visible text and none appears mid-verse**.
+
+**Nine defects were found by driving the simulator, none of which the build or the
+unit suite could see.** Four in the reader:
+
+1. **`lastRef` stopped being written, so the toolbar lied.** It was a side effect of
+   `-getBibleChapter:withExtraJS:`, which the native reader does not call. Paging to
+   Genesis 2 moved the text while the title still read "Genesis 1", and the stale
+   persisted ref would have reopened the wrong chapter on relaunch.
+2. **The scroll target was dropped when the document changed in the same update.**
+   Assigning `document` and mutating `scrollPosition` synchronously resolves the
+   target against the row set being replaced. Flipping Verse Per Line at Genesis 1:1
+   landed on verse 6 while the persisted position still correctly said verse 1 — and
+   the same path serves the font change and every display toggle.
+3. **The verse never advanced while scrolling.** `bibleVersePosition` stuck at 1 with
+   the reader at verse 11, which also breaks relaunch restoration. The replacement
+   for the JS `currentVerse()` scan has to live in the VIEW, since only the view
+   knows where a row sits.
+4. **The commentary rendered as one enormous paragraph.** MHCC has no pilcrows —
+   measured: zero across all 28,904 records — so a chapter flowed into a single
+   2,000-point block. A commentary now always breaks per verse, which is also what it
+   always was: the assembler wrapped every commentary verse in its own `<p>`.
+
+Three in the lexicon renderer, all in the six characters every entry opens with
+(`<a name="04399"><b>4399</b></a><br />`): the key number rendered (the WebView hid
+it with `a[name]:first-child { display: none }` — CSS this wave deleted); clearing
+the pending text was not enough because `<b>` flushes, so the number was already a
+run by the time `</a>` arrived; and `.bold` leaked into the Hebrew lemma. Plus:
+
+8. **`persistPosition` could write verse 0.** The intro slot is loop counter 0, so a
+   chapter whose first row is an intro reported verse 0 as topmost — the toolbar read
+   "Gen 2:0", and the value is persisted, so a `.verse` restore would call
+   `scrollToVerse(0)` and silently do nothing. The JS could not produce this:
+   `currentVerse()` opened with `if(now < 5) return 1;`.
+9. **Verse numbers were indistinguishable from Strong's markers.** In the WebView
+   they differed by COLOUR alone (both 70% superscripts, one body-coloured and one
+   grey); at 12pt in flowing prose the chapter read as one run of superscripts. They
+   are 0.75em semibold now, so the distinction is structural rather than by hue.
+
+**What the native reader deletes rather than ports**, because a scroll view addresses
+a verse by IDENTITY and not by measured offset: the `versepos` offset table and the
+`arraydump:` bridge that filled it; `scrollToVerse` / `scrollToPosition` /
+`findPosition`; the rotation re-measure (Wave 6 needed `resetArrays()` because
+offsets are width-dependent — identity is not, so the anchor survives a rotation for
+free, verified on device); and the position poll. Worth recording: **the poll was
+already dead** — its `setInterval` is commented out in the shipped JS, so the
+`pocketsword:currentverse:` bridge never fired.
+
+**An unexpected dividend: the chapter is now inspectable.** In the WebView the verse
+text, Strong's links and footnote markers were invisible to XCUITest and to
+VoiceOver — only the container had an identifier, which is why CLAUDE.md says to read
+the screenshot. Every verse and every link is now a real accessibility element
+carrying its `pslink://` target, so `testStrongsLinkOpensItsLexiconEntry` and
+`testChapterScrollsUnderTheChromeEdgeToEdge` can assert things no previous wave
+could.
+
+**Verified live on iPhone 17 Pro / iOS 27:** Genesis 1 in prose with pilcrow
+paragraph breaks and in verse-per-line; six KJV display rows in the documented order
+with no Cross-references row; H430 → אלהים then H1254 → בּרא, so the second lookup
+runs its own term (the Wave 8 regression stays fixed) and returns 46 results with
+"created" highlighted in Gen 1:1/1:21/1:27/2:3; H776 and H4399 with lemma,
+transliteration, definition and a tappable cross-link; the verse menu; MHCC Genesis 1
+and 2 through the pane deferral; chapter paging; and rotation to landscape and back
+preserving verse and offset.
+
+**Not yet verified, and carried forward:** iPad, Dynamic Type, VoiceOver, RTL (all
+carried since Wave 7), the bookmark editor's flattened folder picker, the chapter
+toast, search-index building, and the launch-failure view. Also still unverified on
+**physical hardware** — `DeviceInteractionStartWorkspaceSession` offers only
+simulators.
 
 ## Summary
 

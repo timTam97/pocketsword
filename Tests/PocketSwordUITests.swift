@@ -41,7 +41,7 @@ final class PocketSwordUITests: XCTestCase {
     @MainActor
     func testAllFourWorkspacesAreReachable() throws {
         XCTAssertTrue(
-            app.descendants(matching: .any)["reading.web-content"]
+            app.descendants(matching: .any)["reading.chapter-content"]
                 .waitForExistence(timeout: 5)
         )
         XCTAssertTrue(app.buttons["reading.previous-chapter"].exists)
@@ -77,7 +77,7 @@ final class PocketSwordUITests: XCTestCase {
     func testBibleAndCommentaryModesBothRender() throws {
         selectWorkspace("Read")
         XCTAssertTrue(
-            app.descendants(matching: .any)["reading.web-content"]
+            app.descendants(matching: .any)["reading.chapter-content"]
                 .waitForExistence(timeout: 5)
         )
 
@@ -86,7 +86,7 @@ final class PocketSwordUITests: XCTestCase {
             app.buttons["reading.reference-picker"].waitForExistence(timeout: 5)
         )
         XCTAssertTrue(
-            app.descendants(matching: .any)["reading.web-content"].exists
+            app.descendants(matching: .any)["reading.chapter-content"].exists
         )
 
         selectReadingMode("Bible")
@@ -203,6 +203,80 @@ final class PocketSwordUITests: XCTestCase {
         )
     }
 
+    /// Wave 9's acceptance criterion: the chapter is EDGE-TO-EDGE.
+    ///
+    /// The reader must be a full-height scroll view whose content is inset, so text
+    /// flows to the physical edges and scrolls beneath the translucent bars with no
+    /// line obscured at rest. Both halves of that tradeoff were wrong once each
+    /// before — Wave 6 let the WebView paint under the floating tab bar, Wave 7 kept
+    /// it inside the safe area and letterboxed the chapter — so both are asserted.
+    ///
+    /// Note what this can and cannot see. The old `reading.web-content` identifier
+    /// sat on a *container* and reported full-window in both the broken and the
+    /// correct case, which is why CLAUDE.md says a hierarchy dump does not catch
+    /// letterboxing. The native reader's identifier is on the `ScrollView` ITSELF, so
+    /// its frame is now meaningful — that is what makes this assertable at all.
+    @MainActor
+    func testChapterScrollsUnderTheChromeEdgeToEdge() throws {
+        // `.firstMatch` is required, not incidental: BOTH panes carry this
+        // identifier because both stay in the hierarchy for the app's lifetime (the
+        // inactive one at `opacity(0)`), which is what lets `displayChapter` defer a
+        // render into the pane that is not on screen. A bare subscript throws
+        // "multiple matching elements".
+        let reader = app.descendants(matching: .any)
+            .matching(identifier: "reading.chapter-content")
+            .firstMatch
+        XCTAssertTrue(reader.waitForExistence(timeout: 10))
+
+        let readerFrame = reader.frame
+        let window = app.windows.firstMatch.frame
+
+        // The scroll view fills the window vertically. Letterboxing shows up here as
+        // a frame that stops at the chrome — Wave 7's reader was
+        // {{0,116},{402,675}} against a 874-point window.
+        XCTAssertEqual(readerFrame.minY, window.minY, accuracy: 1,
+                       "the reader does not reach the top edge — letterboxed")
+        XCTAssertEqual(readerFrame.maxY, window.maxY, accuracy: 1,
+                       "the reader does not reach the bottom edge — letterboxed")
+
+        // ...and the CONTENT is inset, so the first verse is not hidden behind the
+        // navigation bar. This is the other half: a full-height scroll view with no
+        // content inset is the Wave 6 defect.
+        let navigationBarBottom = app.navigationBars.firstMatch.frame.maxY
+        let firstVerse = app.links["pslink://versemenu/1"]
+        if firstVerse.waitForExistence(timeout: 5) {
+            XCTAssertGreaterThanOrEqual(
+                firstVerse.frame.minY, navigationBarBottom - 1,
+                "verse 1 is painted behind the navigation bar"
+            )
+        }
+    }
+
+    /// A Strong's number in the chapter text opens its lexicon entry.
+    ///
+    /// Wave 9 made this assertable for the first time: in the WebView the verse text
+    /// and its links were invisible to XCUITest (only the container had an
+    /// identifier, which is why CLAUDE.md says to read the screenshot). The native
+    /// reader's links are real accessibility elements carrying their `pslink://`
+    /// target, so the whole tap path can be driven from a test.
+    @MainActor
+    func testStrongsLinkOpensItsLexiconEntry() throws {
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.chapter-content"]
+                .waitForExistence(timeout: 10)
+        )
+        // Genesis 1:1's first Strong's number, H07225 (bereshith).
+        let strongs = app.links["pslink://strongs/Hebrew/07225"]
+        guard strongs.waitForExistence(timeout: 5) else {
+            throw XCTSkip("Strong's numbers are switched off for this module")
+        }
+        strongs.tap()
+
+        let popup = app.descendants(matching: .any)["study.popup"]
+        XCTAssertTrue(popup.firstMatch.waitForExistence(timeout: 10),
+                      "tapping a Strong's number did not open the study popup")
+    }
+
     @MainActor
     func testFocusModeHidesAndRestoresTheTabBar() throws {
         selectWorkspace("Read")
@@ -218,7 +292,7 @@ final class PocketSwordUITests: XCTestCase {
         // survive, since it is the way back out.
         XCTAssertTrue(readTab.waitForNonExistence(timeout: 5))
         XCTAssertTrue(
-            app.descendants(matching: .any)["reading.web-content"].exists
+            app.descendants(matching: .any)["reading.chapter-content"].exists
         )
 
         let exitFocus = app.buttons["reading.focus-mode"]
