@@ -301,6 +301,24 @@ final class ReaderPaneModel {
             document = ChapterDocument()
             return
         }
+        // ── `lastRef` is persisted HERE, and it has to be. ──
+        //
+        // It used to be a side effect of `-getBibleChapter:withExtraJS:` /
+        // `-getCommentaryChapter:withExtraJS:`, which wrote it just before
+        // returning the HTML. The native reader does not call either, so nothing was
+        // updating it — and because `lastRef` is what `getCurrentBibleRef()` reads,
+        // and the chrome title is built from that, paging to Genesis 2 moved the TEXT
+        // while the toolbar still said "Genesis 1". Found on device; the persisted
+        // ref was stale too, so a relaunch would have reopened the wrong chapter.
+        //
+        // Written before the document is built, matching the original ordering
+        // relative to the highlight lookup: `PSBookmarks.getBookmarksForCurrentRef()`
+        // reads `lastRef`, so a bookmark on the chapter being opened has to see the
+        // new value.
+        UserDefaults.standard.set(
+            PSModuleController.createRefString(ref),
+            forKey: Defaults.lastRef
+        )
         versePerLine = UserDefaults.standard.psBool(
             Defaults.vplPreference, forModule: module
         )
@@ -325,20 +343,45 @@ final class ReaderPaneModel {
     /// verse, so the target is resolved to the enclosing row — otherwise
     /// `scrollTo(id:)` would silently do nothing for any verse that does not open a
     /// paragraph, which is most of them.
+    ///
+    /// **The scroll is applied in a separate update from the document assignment,
+    /// and that is load-bearing.** Setting `document` and then mutating
+    /// `scrollPosition` synchronously puts both in one SwiftUI update, and the scroll
+    /// target is then resolved against the row set that is being replaced — so the
+    /// request is simply dropped and the scroll view keeps its old *content offset*
+    /// against new row heights. Measured on device: flipping Verse Per Line at
+    /// Genesis 1:1 landed on verse 6, while the persisted position still correctly
+    /// read verse 1. The same path serves the font change and every display toggle,
+    /// so it would have moved the reader on all of them.
+    ///
+    /// This is not the Wave 6 "jerky jump" in disguise: that was a scroll applied
+    /// after the first PAINT of a newly-loaded page (`window.onload` plus a 250 ms
+    /// timeout). This is one update later on an already-visible chapter, which is
+    /// what makes the target resolvable at all.
     private func apply(_ restore: PaneRestore) {
         switch restore {
         case .verse(let verse):
-            scrollToVerse(verse)
+            guard verse > 0 else { return }
+            currentShownVerse = verse
+            verseToShow = 0
+            let target = rowID(containing: verse)
+            Task { @MainActor [weak self] in
+                self?.scrollPosition.scrollTo(id: target, anchor: .top)
+            }
         case .offset(let offset):
             guard offset > 0 else { return }
-            scrollPosition.scrollTo(y: offset)
             lastScrollOffset = offset
+            Task { @MainActor [weak self] in
+                self?.scrollPosition.scrollTo(y: offset)
+            }
         case .none:
             // A chapter change lands at the top, which is what
             // `RestoreNoPosition` meant.
-            scrollPosition.scrollTo(edge: .top)
             lastScrollOffset = 0
             currentShownVerse = 1
+            Task { @MainActor [weak self] in
+                self?.scrollPosition.scrollTo(edge: .top)
+            }
         }
     }
 
@@ -367,10 +410,7 @@ final class ReaderPaneModel {
     }
 
     func scrollToVerse(_ verse: Int) {
-        guard verse > 0 else { return }
-        scrollPosition.scrollTo(id: rowID(containing: verse), anchor: .top)
-        currentShownVerse = verse
-        verseToShow = 0
+        apply(.verse(verse))
     }
 
     /// The id of the row that displays `verse`.
@@ -411,6 +451,16 @@ final class ReaderPaneModel {
         guard abs(lastScrollOffset - normalized) > 2 else { return }
         lastScrollOffset = normalized
         persistPosition(verse: currentShownVerse, scrollOffset: normalized)
+    }
+
+    /// The topmost visible verse changed, as reported by the view.
+    ///
+    /// The verse and the offset are persisted from two different places because only
+    /// the view knows which row is at the top — see `tracksTopmostVerse`. Both write
+    /// through `persistPosition`, so the pair stays consistent whichever moves first.
+    func topmostVerseChanged(_ verse: Int) {
+        guard !isRestoringAfterTransition, verse != currentShownVerse else { return }
+        persistPosition(verse: verse, scrollOffset: lastScrollOffset)
     }
 
     /// Automatic Focus mode: a user scroll that comes to rest enters Focus mode if

@@ -119,9 +119,18 @@ enum ChapterTextRenderer {
     /// verse has never done anything (SwordModule.mm:1116).
     static func verseLabel(_ number: Int, style: Style,
                            tappable: Bool = false) -> AttributedString {
-        var label = AttributedString("\(number)")
-        label.font = .custom(style.fontName, size: style.fontSize * 0.7)
-        label.baselineOffset = style.fontSize * 0.34
+        // A trailing hair space so the number never touches the first word.
+        var label = AttributedString("\(number)\u{200A}")
+        // 0.75 rather than the CSS's 0.7, and SEMIBOLD. In the WebView a verse
+        // number was distinguishable from a Strong's marker by colour alone — both
+        // were 70% superscripts, the number in body colour and the marker in grey.
+        // Measured on device, that is not enough at 12pt in flowing prose: the
+        // numbers disappeared into the markers and the chapter read as one run of
+        // superscripts. Weight separates them structurally rather than by hue, which
+        // also survives a user who cannot distinguish the two greys.
+        label.font = .custom(style.fontName, size: style.fontSize * 0.75)
+            .weight(.semibold)
+        label.baselineOffset = style.fontSize * 0.32
         label.foregroundColor = .primary
         if tappable, let url = InlineLink.verseMenu(verse: number).url {
             label.link = url
@@ -280,12 +289,14 @@ struct ChapterTextView: View {
                         ForEach(pane.document.verses) { verse in
                             VerseRow(verse: verse, pane: pane, style: pane.textStyle)
                                 .id(verse.number)
+                                .tracksTopmostVerse([verse], pane: pane)
                         }
                     } else {
                         ForEach(pane.document.paragraphs) { paragraph in
                             ParagraphRow(paragraph: paragraph, pane: pane,
                                          style: pane.textStyle)
                                 .id(paragraph.id)
+                                .tracksTopmostVerse(paragraph.verses, pane: pane)
                         }
                     }
                 }
@@ -337,6 +348,36 @@ struct ChapterTextView: View {
     /// full-width, so the phone gets a modest gutter too.
     private var horizontalPadding: CGFloat {
         UIDevice.current.userInterfaceIdiom == .phone ? 16 : 20
+    }
+}
+
+private extension View {
+    /// Reports this row's verse to the pane while it is the topmost visible one.
+    ///
+    /// This is the replacement for the JS `currentVerse()` scan, and it is the piece
+    /// that has to live in the VIEW rather than the model: only the view knows where
+    /// a row actually sits, because the whole point of Wave 9 is that the model no
+    /// longer holds measured offsets.
+    ///
+    /// `currentVerse()` walked the `versepos` table for the first entry past
+    /// `window.pageYOffset` and clamped at both ends. The native equivalent asks each
+    /// row whether it straddles the top of the viewport, which needs no table and
+    /// stays correct across a rotation for free.
+    ///
+    /// Found on device: without this, `scrollOffsetChanged` persisted the OFFSET but
+    /// re-persisted the old verse, so `bibleVersePosition` stuck at 1 while the
+    /// reader sat at verse 11 — and the toolbar title went with it. That also breaks
+    /// relaunch restoration, since `.verse` restores read that key.
+    func tracksTopmostVerse(_ verses: [ChapterVerse], pane: ReaderPaneModel) -> some View {
+        onGeometryChange(for: Bool.self) { proxy in
+            // The row covers the top of the reading area (in the scroll view's own
+            // space, where 0 is the top of the visible content).
+            let frame = proxy.frame(in: .scrollView)
+            return frame.minY <= 1 && frame.maxY > 1
+        } action: { _, isTopmost in
+            guard isTopmost, let first = verses.first else { return }
+            pane.topmostVerseChanged(first.number)
+        }
     }
 }
 

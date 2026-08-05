@@ -344,7 +344,7 @@ enum PSChapterDocumentBuilder {
         // No `versePerLine`: it was a *layout* choice expressed as markup (a
         // `<br />` and a `<span id>` per verse). The native reader lays verses out
         // as rows either way, so the toggle drives row layout in the view instead
-        // of the document. See `ReaderVerseRow`.
+        // of the document. See `VerseRow` / `ParagraphRow`.
     }
 
     /// Build a document from one chapter's expanded-in-place records.
@@ -445,7 +445,16 @@ enum PSChapterDocumentBuilder {
                 // start of a verse's visible text (measured over the module), so a
                 // leading pilcrow is a reliable "new paragraph here". The glyph
                 // itself stays in the text, exactly as the HTML rendered it.
-                verse.startsParagraph = Self.opensParagraph(runs)
+                //
+                // A COMMENTARY always breaks. MHCC carries no pilcrows at all
+                // (measured: zero across all 28,904 records), so flowing it as prose
+                // ran a whole chapter into one block — found on device, where
+                // Genesis 2 rendered as a single 2,000-point paragraph. That is not
+                // merely ugly: it is also wrong, because the assembler wrapped every
+                // commentary verse in its own `<p>`, so per-verse blocks are what
+                // the module has always rendered as.
+                verse.startsParagraph = config.kind == .commentary
+                    || Self.opensParagraph(runs)
 
                 // The assembler drops a bible intro slot whose whole content was a
                 // `<br />`; with no `br` in the corpus that reduces to dropping an
