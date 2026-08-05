@@ -602,6 +602,19 @@ stashed, and is now worked around in `startStrongsSearch`.
   force-load, the order carries the whole burden. Fixed both, and re-verified on
   device: six KJV toggle rows in the documented order with no Cross-references row,
   and Focus mode hiding the tab bar, reclaiming the space, and restoring cleanly.
+- **2026-08-05:** A physical-device report — "Strong's search is not working" —
+  turned out to be a real Wave 8 regression that the green suite had missed
+  entirely, and it only reproduces on the SECOND lookup: the first works, and every
+  one after it shows the previous term's results. `startStrongsSearch` handed a
+  `PSSearchHistoryItem` to `SearchView`, whose `configure(...)` runs once per
+  launch behind a `@State` guard; the UIKit multi-list had been rebuilt on every
+  present, so that hand-off used to fire every time. Replaced with
+  `SearchModel.startStrongsQuery`, which the reader calls directly, and pinned by
+  `testRepeatedStrongsQueriesEachRunTheirOwnTerm`. Verified H430 → 1,000 results
+  then H1254 → 46 results with "created" highlighted. Also worth recording: the
+  device could NOT be driven from here — `DeviceInteractionStartWorkspaceSession`
+  lists only simulators even with the phone connected and selected as the run
+  destination — so the reproduction was on the iOS 27 simulator.
 - **2026-08-05:** Wave 8 verification is green and the wave is complete. The full
   Xcode MCP run on the iPhone 17 Pro iOS 27 simulator passed **123 tests, failed
   0**, and skipped the 2 `PSREF_EXHAUSTIVE` opt-in tests (125 total) — 118 unit
@@ -914,15 +927,61 @@ Footnotes, Red Letter, Verse Per Line) with **no Cross-references row**; and Foc
 mode hiding the tab bar and status bar, reclaiming the space, keeping its exit
 control, and restoring all four tabs on exit.
 
+### Wave 8 follow-up: Strong's search only worked once per launch
+
+**Reported from a physical iPhone 17 Pro after Wave 8 landed, reproduced on the
+iOS 27 simulator, fixed.** A sixth defect of the same family as the other five —
+silent, with no crash and no failing test.
+
+**Symptom.** The first "Find all occurrences" worked. Every subsequent one showed
+the *previous* term's results: tapping H1254 (בּרא, "created") displayed H430's
+1,000 rows for "God", with the search field still reading `H430`.
+
+**Cause.** `startStrongsSearch` parked a `PSSearchHistoryItem` in
+`savedSearchHistoryItem` and switched tabs, expecting `SearchView` to pick it up.
+But `SearchView` applies a restored item only from `configure(...)`, which its
+`.task` runs **once**, behind `@State private var configured`. On every later
+switch to the Search workspace that guard short-circuits, so the seeded item was
+never read. The hand-off worked in the UIKit era because the multi-list was
+*constructed fresh on every present* — the coordinator built a new
+`UIHostingController` each time, so `configure` genuinely did run once per search.
+Turning that modal into a persistent workspace removed the thing the mechanism
+depended on, and nothing failed loudly when it did.
+
+**Fix.** `SearchModel.startStrongsQuery(_:currentBookName:)` — the reader drives
+the model directly instead of leaving a note for the view to find. It also
+deliberately does **not** inherit the persisted match-type/fuzzy options the way
+`restore(_:)` does: a Strong's lookup is an exact lemma query, and picking up a
+stale "any word" or fuzzy setting from the user's last free-text search is its own
+wrong-results bug waiting to happen.
+
+`savedSearchHistoryItem` is no longer written here. It is the *reader's* memory of
+the last completed search, and pre-loading it with a query that has not run yet
+made the reader restore a resultless item.
+
+**Guarded by** `testRepeatedStrongsQueriesEachRunTheirOwnTerm`, which asserts two
+successive lookups issue two different FTS5 expressions (and that a whitespace-only
+term is ignored rather than clearing a good query). The test must *await* the
+queries: `runSearch` dispatches to a global queue, and the first version of it raced
+and read one expression where it wanted two.
+
+**Verified:** H430 → 1,000 results for "God", then H1254 → 46 results with
+"created" highlighted in Genesis 1:1, 1:21, 1:27 and 2:3.
+
 **Not yet verified, and carried into Wave 9:**
 
-- The retirement of the `startStrongsSearch` workaround — rotate with the Strong's
-  popup open, then tap "Find all occurrences". This is the single most important
-  outstanding check, because the claim is that a crash is *gone*.
-- The study popup itself, the verse menu, the bookmark editor's flattened folder
-  picker, `onGeometryChange`-driven rotation restore, the chapter toast,
-  search-index building, and the launch-failure view.
+- The retirement of the `startStrongsSearch` unanimated-present workaround — rotate
+  with the Strong's popup open, then tap "Find all occurrences". The ordinary
+  no-rotation path is now verified twice over; the *rotation* variant is not.
+- The verse menu, the bookmark editor's flattened folder picker,
+  `onGeometryChange`-driven rotation restore, the chapter toast, search-index
+  building, and the launch-failure view.
 - Still carried from Wave 7: a footnote link, iPad, Dynamic Type, VoiceOver, RTL.
+- **The physical-device path cannot be driven from here.**
+  `DeviceInteractionStartWorkspaceSession` offers only simulators even with the
+  device connected and selected as the run destination, so this bug was reproduced
+  on the iOS 27 simulator rather than on the reporting hardware. Worth re-checking
+  on the device itself.
 
 ## Summary
 

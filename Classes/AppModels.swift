@@ -614,6 +614,34 @@ final class SearchModel {
         }
     }
 
+    /// Seeds a Strong's query from outside the search UI and runs it.
+    ///
+    /// This is the "Find all occurrences" path, and it exists because
+    /// `configure(...)` is **not** re-entrant in practice: `SearchView` runs it once
+    /// behind a `@State` guard, so on the second and subsequent Strong's searches
+    /// the seeded history item was never applied and the workspace kept showing the
+    /// *previous* term's results. Tapping H1254 showed H430's 1,000 rows —
+    /// reproduced on iOS 27 and reported from a device.
+    ///
+    /// Unlike `restore(_:)` this deliberately does NOT read persisted match/fuzzy
+    /// options: a Strong's lookup is an exact lemma query, and inheriting a stale
+    /// "any word" or fuzzy setting from the user's last free-text search is what
+    /// makes a lemma query return the wrong thing. It sets the three options the
+    /// query needs and leaves the rest alone.
+    func startStrongsQuery(_ term: String, currentBookName: String?) {
+        let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        query = trimmed
+        strongsSearch = strongsAvailable
+        updateBookName(currentBookName)
+        // Re-check freshness: the index may have been built (or dropped) since the
+        // last time this model looked, and `scheduleSearch` refuses to run unless
+        // the coordinator says `.ready`.
+        indexCoordinator.refresh(module: module)
+        scheduleSearch(immediate: true)
+    }
+
     func selectModule(_ choice: SearchModuleChoice) {
         guard module != choice.id else { return }
         applyModule(choice, clearExistingResults: true)

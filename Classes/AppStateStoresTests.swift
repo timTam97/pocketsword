@@ -3,6 +3,39 @@ import Observation
 import UIKit
 @testable import PocketSword
 
+/// Collects the FTS5 expressions a `SearchModel` actually queried with.
+///
+/// `SearchModel.runSearch` dispatches to a global queue, so a test cannot read a
+/// plain captured array immediately after calling in — that races, and reads 1
+/// where it wants 2. This holds them behind a lock and lets the test await a
+/// count.
+private final class ExpressionCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var expressions: [String] = []
+
+    func record(_ expression: String) {
+        lock.lock()
+        expressions.append(expression)
+        lock.unlock()
+    }
+
+    func snapshot() -> [String] {
+        lock.lock()
+        defer { lock.unlock() }
+        return expressions
+    }
+
+    func wait(forCount count: Int, in testCase: XCTestCase) async {
+        let reached = XCTNSPredicateExpectation(
+            predicate: NSPredicate { [weak self] _, _ in
+                (self?.snapshot().count ?? 0) >= count
+            },
+            object: nil
+        )
+        await testCase.fulfillment(of: [reached], timeout: 5)
+    }
+}
+
 private final class HistoryCloudStoreStub: HistoryCloudStoring {
     private(set) var values: [String: Any] = [:]
 
@@ -847,6 +880,75 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(model.results.first?.id, "John 3:16")
         XCTAssertEqual(model.results.first?.text, "For God so loved the world")
         XCTAssertEqual(model.results.first?.strongsHighlightWords, ["loved"])
+    }
+
+    /// A SECOND "Find all occurrences" must run the new term, not re-show the
+    /// previous one's results.
+    ///
+    /// This is the regression test for a device-reported bug: the reader parked a
+    /// `PSSearchHistoryItem` for `SearchView` to pick up in `configure(...)`, but
+    /// that runs once per launch behind a `@State` guard, so every Strong's search
+    /// after the first silently displayed the earlier term. Tapping H1254 showed
+    /// H430's 1,000 rows. `startStrongsQuery` drives the model directly instead.
+    @MainActor
+    func testRepeatedStrongsQueriesEachRunTheirOwnTerm() async {
+        // The query runs on a global queue, so the expressions are collected
+        // behind a lock and awaited rather than read straight after the call.
+        let collector = ExpressionCollector()
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            ),
+            debounceInterval: 0,
+            featureProvider: { _, _ in true },
+            queryOperation: { _, expression, _, _, _ in
+                collector.record(expression)
+                return [
+                    PSSearchResult(
+                        reference: "Genesis 1:1",
+                        fullText: "In the beginning"
+                    ),
+                ]
+            }
+        )
+        model.configure(
+            modules: [SearchModuleChoice(id: "KJV", kind: .bible)],
+            preferredModule: "KJV",
+            currentBookName: "Genesis",
+            restoring: nil
+        )
+
+        model.startStrongsQuery("H430", currentBookName: "Genesis")
+        XCTAssertEqual(model.query, "H430")
+        XCTAssertTrue(model.strongsSearch)
+        await collector.wait(forCount: 1, in: self)
+
+        // The second lookup is the one that used to fail.
+        model.startStrongsQuery("H1254", currentBookName: "Genesis")
+        XCTAssertEqual(
+            model.query,
+            "H1254",
+            "A second Strong's lookup must replace the query, not keep the first."
+        )
+        await collector.wait(forCount: 2, in: self)
+
+        let expressions = collector.snapshot()
+        XCTAssertTrue(
+            expressions[0].contains("430"),
+            "First query should search H430; got \(expressions[0])"
+        )
+        XCTAssertTrue(
+            expressions[1].contains("1254"),
+            "Second query should search H1254; got \(expressions[1])"
+        )
+
+        // An empty or whitespace-only term is ignored rather than clearing the
+        // query, so a malformed link cannot wipe a good search.
+        model.startStrongsQuery("   ", currentBookName: "Genesis")
+        XCTAssertEqual(model.query, "H1254")
+        XCTAssertEqual(collector.snapshot().count, 2)
     }
 
     @MainActor

@@ -1329,13 +1329,25 @@ final class ReadingWorkspaceModel {
     func startStrongsSearch(_ term: String) {
         guard !term.isEmpty else { return }
 
-        let item = PSSearchHistoryItem()
-        item.searchTermToDisplay = term
-        item.strongsSearch = true
-        savedSearchHistoryItem = item
-        savedSearchResultsMode = mode
-
         studyPopup = nil
+        savedSearchResultsMode = mode
+        // Drive the search model DIRECTLY rather than parking a
+        // `PSSearchHistoryItem` for `configure(...)` to pick up.
+        //
+        // The seeded-item route worked exactly once per launch and then silently
+        // showed stale results: `SearchView` calls `configure(...)` from a `.task`
+        // behind a `@State private var configured` guard, so the second Strong's
+        // search never applied its item. Tapping H1254 showed H430's results —
+        // reported from a device and reproduced on iOS 27.
+        //
+        // `savedSearchHistoryItem` is deliberately NOT set here. It is the
+        // *reader's* memory of the last search, written when the user leaves the
+        // search workspace, and pre-loading it with a query that has not run yet
+        // would make the reader restore a resultless item.
+        session?.search.startStrongsQuery(
+            term,
+            currentBookName: currentSearchBookName
+        )
         session?.selectedWorkspace = .search
     }
 

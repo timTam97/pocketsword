@@ -107,6 +107,8 @@ Both bridging headers now import **`globals.h` and nothing else** — Wave 8 rem
 
 **The common thread in all four: a SwiftUI modifier in the wrong place fails silently.** None of them produced a warning, a crash, or a test failure at the unit level — the state was correct and the effect was simply absent. Drive the simulator and `grep` the hierarchy; do not infer from a green build.
 
+**A fifth, related trap: a workspace is PERSISTENT where a modal was fresh.** "Find all occurrences" used to hand a `PSSearchHistoryItem` to the search UI for its `configure(...)` to pick up, which worked because the UIKit multi-list was rebuilt on every present. `SearchView` guards `configure` behind `@State private var configured`, so as a workspace it runs **once per launch** — and every Strong's search after the first silently showed the previous term's results. Anything that "seeds" a workspace from outside must drive its model directly (`SearchModel.startStrongsQuery`), not leave a value for a one-shot `.task` to find.
+
 Both the Library section switch and the Bible/commentary mode switch are `Menu`s, deliberately: a toolbar slot beside chapter navigation is too cramped for a segmented control, and a menu names the active choice instead of leaving an icon to guess at.
 
 ### The Swift content reader (`Classes/PSContent*`, `PSChapter*`, `PSBookOSISResolver` — the render path)
