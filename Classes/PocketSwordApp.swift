@@ -271,6 +271,13 @@ private struct SearchWorkspace: View {
             openResult: { reference, module in
                 reading.savedSearchHistoryItem = session.search.historyItem()
                 reading.savedSearchResultsMode = session.search.moduleKind
+                // Carry the results list's own highlight terms into the chapter,
+                // so the verse you land on marks the words the row did. The same
+                // `search.highlightTerms` the rows use, so the two cannot disagree.
+                reading.highlightSearchTerms(
+                    session.search.highlightTerms,
+                    mode: session.search.moduleKind
+                )
                 reading.openLibraryReference(reference, module: module)
                 session.selectedWorkspace = .read
             }

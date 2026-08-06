@@ -88,9 +88,10 @@ enum ChapterTextRenderer {
         /// view-level switch the search highlighter uses.
         var showsMarkers = true
 
-        /// A term to highlight, case-insensitively — what `SearchWebView.js` walked
-        /// the DOM to do.
-        var highlightTerm: String?
+        /// The terms to highlight, case-insensitively — what `SearchWebView.js`
+        /// walked the DOM to do. Empty for a Strong's search, where the match is a
+        /// lemma the marker points at rather than text present in the verse.
+        var highlightTerms: [String] = []
 
         /// Resolve from the same defaults keys the HTML shell used, so a font
         /// chosen in Settings applies identically.
@@ -141,7 +142,7 @@ enum ChapterTextRenderer {
     /// One verse's text.
     static func text(for verse: ChapterVerse, style: Style) -> AttributedString {
         var out = attributed(runs: verse.runs, style: style)
-        if let term = style.highlightTerm, !term.isEmpty {
+        for term in style.highlightTerms where !term.isEmpty {
             applyHighlight(term, to: &out)
         }
         return out

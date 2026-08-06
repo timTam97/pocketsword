@@ -1111,13 +1111,12 @@ private struct AboutOpenSourceSection: View {
                     string: "https://www.crosswire.org/sword/"
                 )!
             )
-            AboutLinkRow(
-                title: "MBProgressHUD",
-                systemImage: "shippingbox",
-                destination: URL(
-                    string: "https://github.com/jdg/MBProgressHUD"
-                )!
-            )
+            // No MBProgressHUD row: Wave 8 deleted the vendored library along with
+            // its only consumer, and `externals/` is now empty. The app ships no
+            // third-party code at all, so crediting one is a factual error on a
+            // screen whose whole job is attribution. The SWORD Project stays —
+            // its *content* is still what the app reads, baked into
+            // PSContent.sqlite even though none of its code remains.
             Text("AboutFontLicenseText")
                 .font(.footnote)
                 .foregroundStyle(.secondary)

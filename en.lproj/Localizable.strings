@@ -93,8 +93,8 @@
 
 "None" = "None";
 "CloseButtonTitle" = "Close";
+"CancelButtonTitle" = "Cancel";
 "LaunchProgressLabel" = "Opening PocketSword";
-"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email Us";
 "NoSearchIndexInstalled" = "No Search Index Installed";
@@ -120,6 +120,16 @@
 
 
 "MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+
+/* Shown as the study popup's body when a marker's entry is not in the bundled
+   lexicon. These used to say a module was "not installed", which no longer means
+   anything: all five modules ship inside PSContent.sqlite and there is no way to
+   add or remove one, so a miss is a gap in the lexicon rather than a missing
+   download. The morph one is genuinely reachable — 20 real KJV morph tags have no
+   Robinson entry. */
+"NoMorphGreekModuleInstalled" = "No morphological analysis is available for this word.";
+"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew lexicon entry is available for this number.";
+"NoGreekStrongsNumbersModuleInstalled" = "No Greek lexicon entry is available for this number.";
 
 "AboutModuleFeaturesTitle" = "Module Features";
 "AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";

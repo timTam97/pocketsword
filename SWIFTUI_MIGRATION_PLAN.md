@@ -2,12 +2,15 @@
 
 ## Execution Status
 
-**Last updated:** 2026-08-05
+**Last updated:** 2026-08-06
 
-**Overall state:** In progress. Waves 1 through 9 are complete. **WebKit is gone
-from the app target** — `import WebKit` appears nowhere, both JavaScript resources
-and all three HTML shells are deleted, and the reader is a native SwiftUI
-`ScrollView` + `LazyVStack` over `AttributedString`.
+**Overall state:** **Complete.** All nine waves plus the final
+all-configuration/verification/static-audit pass are done. **WebKit is gone from
+the app target** — `import WebKit` appears nowhere, both JavaScript resources and
+all three HTML shells are deleted, and the reader is a native SwiftUI `ScrollView`
++ `LazyVStack` over `AttributedString`. As of the final pass WebKit is no longer
+even *linked*: the framework was still in the Frameworks phase, required rather
+than weak, so the app loaded it at launch for zero symbols.
 
 **Wave 9's acceptance criterion is met: the reader is edge-to-edge.** Measured on
 the iPhone 17 Pro — the scroll view is the full `402x874` window with `136pt`/`113pt`
@@ -17,8 +20,8 @@ obscured at rest, in either orientation. The letterboxing carried since Wave 7 i
 resolved, and so is the Wave 6 overlap — for the first time both halves are right at
 once.
 
-Remaining: the final all-configuration/static-audit pass, most of which Wave 9
-already ran (see its status block).
+Nothing remains. The final pass's results are in the "Final pass" section at the
+end of this document.
 
 Wave 8 cut the app over to a SwiftUI lifecycle and four workspaces. `@main` is
 now `PocketSwordApp`, and the UIKit coordination layer is deleted: no
@@ -43,9 +46,13 @@ all three — "Find all occurrences" changes the tab selection instead of
 presenting a second sheet. `suppressMultiListPresentAnimation` and
 `toggleMultiListFromMenu` are deleted.
 
-**Known and deliberately deferred:** the reader is still **letterboxed, not
-edge-to-edge**, and this remains Wave 9's acceptance criterion. Nothing in Wave 8
-changed that tradeoff — the WebView still stops at the chrome.
+> **Historical, and superseded by the paragraph at the top of this section.** Wave
+> 8 recorded here that "the reader is still letterboxed, not edge-to-edge, and this
+> remains Wave 9's acceptance criterion". That was true when written and Wave 9
+> fixed it; the sentence survived the Wave 9 documentation pass and sat 34 lines
+> below its own contradiction until the final pass caught it. Kept as a dated note
+> rather than deleted, because the two-directions-wrong history (Wave 6 overlap,
+> Wave 7 letterboxing) is the reason the criterion existed at all.
 
 ### Wave 8: what the four workspaces replaced
 
@@ -131,7 +138,7 @@ stashed, and is now worked around in `startStrongsSearch`.
 - [x] Wave 7: iOS 27 toolbar and reading chrome
 - [x] Wave 8: SwiftUI app lifecycle and four-workspace cutover
 - [x] Wave 9: Native SwiftUI reader and WebKit removal
-- [ ] Final all-configuration builds, tests, UI verification, and static audit
+- [x] Final all-configuration builds, tests, UI verification, and static audit
 
 ### Current repository facts
 
@@ -145,10 +152,14 @@ stashed, and is now worked around in `startStrongsSearch`.
   `supportedInterfaceOrientations(for:)` on a minimal scene delegate, which is
   how the rotation-lock preference is now enforced. Everything else is SwiftUI.
 - UIKit types still appear where SwiftUI has no equivalent and the type is a
-  *value or a leaf*: `UIDevice.current.userInterfaceIdiom` for the iPad checks,
-  `UIFont`/`UIColor` inside the search highlighter and the study palette, and two
-  `UIViewRepresentable` WebView wrappers (the study popup and the dictionary
-  entry). None of them is a view controller.
+  *value or a leaf*: `UIDevice.current.userInterfaceIdiom` for the iPad checks and
+  `UIFont`/`UIColor`/`UIImage`/`UIApplication` inside the search highlighter, the
+  study palette and the About screen. None of them is a view controller, and
+  **there is no `UIViewRepresentable` left at all** — Wave 9 deleted both WebView
+  wrappers (the study popup and the dictionary entry) along with WebKit. Four files
+  (`PSBookmarkObject`, `PSModuleController`, `PSChapterDocument`, `PSRefParser`)
+  still carry an `import UIKit` that nothing in them uses; harmless, and left alone
+  rather than churned.
 - Baked content, reference parsing, FTS5 search, bookmark serialization, history
   serialization/iCloud merge, and voice-reference parsing already exist in
   Swift and must remain the behavior-preserving foundation.
@@ -193,14 +204,15 @@ stashed, and is now worked around in `startStrongsSearch`.
 - Wave 5 has replaced the live search controller with a SwiftUI workspace.
   `SearchModel` now owns module selection, persisted filters, 250 ms debouncing,
   generation-based stale-result rejection, Strong's mode, history restoration,
-  result snapshots, and highlighted full-verse results. The old UIKit search
-  controller remains compiled but has no live instantiation and is retained only
-  until the UIKit coordinator is removed.
-- Wave 6 replaced the reading surface with a native SwiftUI WebKit surface in
-  `SwiftUIReaderViews.swift`. `ReaderWebPageModel` owns `WebPage`, typed
-  `NavigationDeciding`, ordered JavaScript calls, navigation events, and WebView
-  scroll callbacks. The old `PSWebView.swift` wrapper is deleted and removed from
-  explicit Xcode target membership.
+  result snapshots, and highlighted full-verse results. (`PSModuleSearchController`
+  was still compiled at the end of Wave 5; Wave 8 deleted it.)
+- Wave 6 replaced the reading surface with a SwiftUI WebKit surface in
+  `SwiftUIReaderViews.swift` — `ReaderWebPageModel` owning `WebPage`, typed
+  `NavigationDeciding`, ordered JavaScript calls, navigation events and WebView
+  scroll callbacks — and deleted the old `PSWebView.swift` wrapper. **Wave 9 then
+  deleted all of it**: the reading surface today is `SwiftUINativeReader.swift`, a
+  `ScrollView` + `LazyVStack` over `AttributedString`, and neither
+  `SwiftUIReaderViews.swift` nor `ReaderWebPageModel` exists.
 - Wave 7 replaced the reading chrome with `SwiftUIReaderChrome.swift`.
   `ReaderScreen` wraps the reader in a `NavigationStack` and owns chapter
   navigation, the reference picker, Focus mode, and the study-action overflow
@@ -208,10 +220,10 @@ stashed, and is now worked around in `startStrongsSearch`.
   per-module display toggles are built by the pure
   `ReaderDisplayToggle.toggles(forModule:store:)`, still gated on the baked
   feature set and still writing `"<pref>_<ModuleName>"`.
-  `PSModuleViewController` is now a thin host: it keeps the coordinator contracts
-  (`displayChapter`, `setTabTitle`, the notification observers, the verse menu,
-  info-popup routing) and hides the enclosing UIKit navigation bar. Focus mode
-  uses `setTabBarHidden(_:animated:)` instead of reparenting views.
+  At the end of Wave 7 `PSModuleViewController` was a thin host keeping the
+  coordinator contracts, and Focus mode called `setTabBarHidden(_:animated:)`;
+  **Wave 8 deleted that controller** and Focus mode is now
+  `toolbarVisibility(_:for: .tabBar)` applied to content *inside* a tab.
   `PSRefSelectorController.swift` is deleted.
 - Search index builds persist an interrupted module and submit a
   `BGProcessingTaskRequest`. The launch-registered background manager restarts
@@ -661,6 +673,23 @@ stashed, and is now worked around in `startStrongsSearch`.
   succeeds, and a clean device build still reports `CompileC` 1
   (`MBProgressHUD.m` only), so the target remains pure Swift. `git diff --check`
   and `plutil -lint PocketSword.xcodeproj/project.pbxproj` pass.
+- **2026-08-06:** Ran the final pass — all three configurations clean, the full
+  suite, the env-gated exhaustive tier, iPad and Dynamic Type verification, and a
+  seven-lens static audit with every finding adversarially verified. It found six
+  real defects that nine waves plus a green suite had passed over, all silent: the
+  app's signing entitlements were being copied into the bundle as a resource; the
+  search highlighter had **never once run** in any era (its only historical caller
+  was a commented-out debug line, so tapping a search result has never highlighted
+  the term); `WebKit.framework` was still linked, required rather than weak, for
+  zero symbols; four localization keys were used but undefined and rendered as raw
+  keys; `dlog()` was a no-op in every configuration because `-DDEBUG` was set via
+  `OTHER_CFLAGS` and cannot reach Swift; and an XCUITest was silently creating its
+  bookmark folders under truncated names and stranding them where its own
+  exact-name cleanup could not see them. Fixed all six, plus the 32 unreferenced
+  toggle icons and the About screen's attribution for a library deleted in Wave 8.
+  Corrected 21 documentation-versus-reality defects, including this document
+  contradicting itself about whether the reader was still letterboxed. Full details
+  in the "Final pass" section.
 
 ### Wave 6 status
 
@@ -864,12 +893,14 @@ later "simplification" would silently break reading:
    the reader renders from it. `AppSession` holds an incoming `sword://` URL in
    `pendingURL` for the same reason, replaying it from the `.ready` transition —
    which is exactly what the deleted scene delegate's `_pendingLaunchURL` did.
-3. **Five of the coordinator's thirteen notification observers survive**, and only
+3. **Six of the coordinator's twelve notification observers survive**, and only
    because something outside the reader still posts them:
    `resetBibleAndCommentaryView` (a font change), `redisplayPrimary{Bible,Commentary}`
    (a display-toggle flip, the URL router), `bookmarksChanged`, and
-   `newPrimary{Bible,Commentary}`. The other eight were the reader talking to
-   itself and are now method calls. `toggleNavigation`, `toggleMultiList`,
+   `newPrimary{Bible,Commentary}`. That is six once the braces are expanded, which
+   is what the code registers (`ReadingWorkspace.swift:873-890`) — this bullet said
+   "five of thirteen" until the final pass counted them. The other eight were the
+   reader talking to itself and are now method calls. `toggleNavigation`, `toggleMultiList`,
    `showInfoPane`, `hideInfoPane`, `rotateInfoPane`, `showBibleTab`,
    `showCommentaryTab` and `updateSelectedReference` have no posters left.
 4. **`HistoryStore.addEntry` gained injectable seams, and that was a real fix.**
@@ -1164,11 +1195,207 @@ transliteration, definition and a tappable cross-link; the verse menu; MHCC Gene
 and 2 through the pane deferral; chapter paging; and rotation to landscape and back
 preserving verse and offset.
 
-**Not yet verified, and carried forward:** iPad, Dynamic Type, VoiceOver, RTL (all
-carried since Wave 7), the bookmark editor's flattened folder picker, the chapter
-toast, search-index building, and the launch-failure view. Also still unverified on
-**physical hardware** — `DeviceInteractionStartWorkspaceSession` offers only
-simulators.
+**Not yet verified at the end of Wave 9, and carried into the final pass:** iPad,
+Dynamic Type, VoiceOver, RTL (all carried since Wave 7), the bookmark editor's
+flattened folder picker, the chapter toast, search-index building, and the
+launch-failure view. Also still unverified on **physical hardware** —
+`DeviceInteractionStartWorkspaceSession` offers only simulators. See the final-pass
+section for which of these were closed and which are still open.
+
+## Final pass: all-configuration builds, full suite, UI verification, static audit
+
+**Ran 2026-08-06. Complete.** This is the last checklist item, and it was not a
+formality: it found **six real defects** in code that nine waves, a green suite and
+a clean build had all passed over. Every one was silent — nothing crashed, nothing
+failed, nothing warned except where noted.
+
+### Builds — all three configurations, clean, generic iOS device
+
+`CompileC` **0** and `SwiftCompile` **52** on a clean Debug `-sdk iphoneos` build;
+Release and Distribution also succeed (they report `SwiftCompile` 2 because
+whole-module optimization batches the files, not because fewer are compiled). The
+only remaining warning is one deliberately-retained deprecation, below.
+
+### Tests
+
+**146 tests: 143 passed, 0 failed, 3 skipped** — the 3 being exactly the env-gated
+trio. Run separately with `PSREF_EXHAUSTIVE=1` and `PSDOC_EXHAUSTIVE=1` in the
+scheme's `TestAction` (plus `shouldUseLaunchSchemeArgsEnv = "NO"`, or the block is
+ignored), **all three pass with 0 skipped** — including
+`testNativeDocumentMatchesHTMLForEveryChapter`, the 4,756-comparison native-reader
+parity gate. The scheme was backed up and restored byte-for-byte afterwards.
+
+Worth recording, because CLAUDE.md warns about exactly this: the two lexicon
+XCUITests **actually ran** rather than skipping silently, because
+`strongsPreference_KJV` was already true in the simulator's container plist.
+
+### The six defects
+
+1. **`Entitlements.plist` was in Copy Bundle Resources.** The app's own signing
+   entitlements — keychain access group, ubiquity KVS identifier — were being copied
+   into the bundle as a readable plist. Only the Distribution build warned, so only
+   an archive would ever have surfaced it. Removed from the Resources phase;
+   `CODE_SIGN_ENTITLEMENTS` and the file reference stay, since those are what
+   actually sign the app. Verified absent from the built `.app`.
+2. **The search highlighter had never run, in any era.** `highlightSearchTerm` had
+   zero callers. Wave 9 built the renderer half (`ChapterTextRenderer.applyHighlight`)
+   and the pane state, and nothing set it — and tracing it back through `git`, the
+   only caller it *ever* had was a commented-out debug line in the Obj-C original
+   (`// [self highlightSearchTerm: @"and" forTab: BibleTab];`). So tapping a search
+   result has never highlighted the term in the chapter it opens, while the results
+   list highlighted its own rows. Wired to the search-result hand-off, taking the
+   term **list** (`SearchModel.highlightTerms`, which splits words, honours quoted
+   phrases and returns empty for a Strong's query) rather than one string, and
+   cleared on chapter paging — otherwise the yellow follows the reader forever, which
+   is what `PS_RemoveAllHighlights` existed to prevent. Two unit tests pin it.
+3. **`WebKit.framework` was still linked**, and *required* rather than weak, so every
+   launch loaded the whole framework for zero symbols — Wave 9 removed all the code
+   but not the link. `MessageUI.framework` likewise, weak-linked, for a feedback path
+   that is a plain `mailto:` URL. Both unlinked; verified with `otool -L` on the built
+   binary.
+4. **Four localization keys were used but undefined**, so they rendered as raw key
+   text. `CancelButtonTitle` on the search-index build sheet, and three lexicon /
+   morph fallbacks displayed *as the popup body* — `NoMorphGreekModuleInstalled` is
+   genuinely reachable, on 20 real KJV morph tags with no Robinson entry. Added, and
+   reworded: "module not installed" means nothing now that all five modules ship
+   inside `PSContent.sqlite` with no way to add or remove one. Also removed a
+   duplicate `NoSearchIndexMsg` whose first definition advertised the deleted in-app
+   index download and was shadowed by the second.
+5. **`dlog()` was a no-op in all three configurations.** The app target set
+   `OTHER_CFLAGS = "-DDEBUG"`, which reaches C — and the target has had no C
+   translation unit since Wave 8. `SWIFT_ACTIVE_COMPILATION_CONDITIONS` was never
+   set, so `#if DEBUG` was false everywhere and every `dlog` call compiled to
+   nothing, including in Debug. Swapped for
+   `SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG` on the app target's Debug config.
+6. **`testBookmarkFolderCrudAndReordering` was creating its folders under truncated
+   names.** It failed looking like the drag flake its own comment described, and was
+   not: typing "UI Drag B" then tapping Save persisted **"UI Drag "**, losing the last
+   character every time, because a SwiftUI `TextField`'s binding is not current for
+   the final keystroke until the field commits and Save takes focus in the same beat.
+   `XCUIElement.value` is useless as a check — it reported the full string while the
+   app saved the prefix. The field is committed with a newline first now.
+   The second half was worse than the red test: cleanup matched **exact** names, so
+   each truncated folder was invisible to it and accumulated in `PSBookmarks.plist`,
+   where it eventually tripped the store's duplicate-name guard with a failure
+   pointing nowhere near the cause. One such stray was found on the simulator and is
+   what made this reproduce. Cleanup is a prefix sweep now, so the suite repairs the
+   device instead of degrading it — verified by watching the plist go from the stray
+   plus two folders to an empty root.
+
+**One deprecation is deliberately NOT fixed.** iOS 27 deprecates
+`AVAudioNode.installTap(onBus:bufferSize:format:block:)` in favour of an
+`error:`-taking variant, but that method is `NS_REFINED_FOR_SWIFT` and the Xcode 27
+beta 4 SDK **ships no refinement for it**. The only spelling that type-checks is
+`try inputNode.__installTap(onBus:bufferSize:format:error: ()) { … }` — a
+double-underscore private name plus a placeholder `()` where `throws` should have
+consumed the `NSError**`. Verified against the SDK; every other spelling fails.
+Taking that to silence one warning would break when the refinement lands, so the
+warning stays and the code comment records the finding.
+
+The other iOS 27 AVFAudio deprecation **was** migrated:
+`AVAudioSession.interruptionNotification` + `InterruptionType.began` →
+`didBecomeInactiveNotification`. Not mechanical — the old notification fired *only*
+for an interruption, while the new one also fires for the app's own
+`setActive(false)`, so the handler now requires
+`DeactivationContext.source == .system` or `deactivateAudioSession()` would report
+`.audioInterrupted` on its own teardown.
+
+### UI verification — what the final pass closed
+
+**iPad is verified**, for the first time since it was deferred in Wave 7. On the
+iPad Pro 11-inch / iOS 27: Genesis 1 renders in prose with pilcrow paragraph breaks;
+the reference picker adapts to a **popover anchored on the reference button** with
+Genesis check-marked, the short-book scrub index and the direct `1:1` jumps — the
+arm Wave 7 left as "the system's adaptation rather than an explicit branch", never
+exercised until now; Library shows its `library.section` principal-slot menu and
+correct empty state; Settings shows the live reading preview, font/size controls and
+three device toggles. No clipping or overlap in either orientation.
+
+**Edge-to-edge is confirmed by frame measurement on both device classes**, which is
+now possible because `reading.chapter-content` sits on the `ScrollView` itself:
+iPhone 17 Pro `{{0,0},{402,874}}` against a 402x874 window with the tab bar at
+y=795 *over* scrolling content; iPad portrait `{{0,0},{834,1210}}` and landscape
+`{{0,0},{1210,834}}`. 149 Strong's links present as real accessibility elements.
+
+**Dynamic Type is verified** at `accessibility-extra-large`
+(`xcrun simctl ui <dev> content_size accessibility-extra-large` — note the
+underscore; the hyphenated form is not a valid option): chapter text scales and
+reflows without clipping, verse numbers stay distinguishable from body text, and the
+chrome and tab bar survive. Restored to `large` afterwards.
+
+**Still not verified, and honestly still open:** VoiceOver, RTL (the app ships
+English only, so RTL has no in-app trigger), the bookmark editor's flattened folder
+picker, the chapter toast, a live search-index build, and the launch-failure view.
+**Physical hardware remains undrivable from here** —
+`DeviceInteractionStartWorkspaceSession` lists only simulators even with a device
+connected and selected.
+
+Two process notes worth keeping: `xcrun simctl ui` **kills an attached
+device-interaction session**, so change the content size and then re-establish the
+session; and a workspace session binds to the run destination that was active when
+it was *created*, so switch destinations first (`XcodeSwitchRunDestination`) and
+start the session after.
+
+### Static audit
+
+Seven independent read-only audit lenses over the tree, each finding adversarially
+verified: **56 findings, 49 survived refutation, 7 refuted**. The refuted ones
+matter as much as the rest — they included a miscounted deletion list, a line-count
+claim that was right under a scope the finder had not tested, and three
+"stale comment" reports where the comment was accurate for the date it was written.
+
+Positive results worth recording, all re-derived rather than trusted:
+
+- **Pure Swift is structurally guaranteed, not just observed.** The app target's
+  Sources phase is exactly 40 `.swift` files, the unit-test phase 8, the UI-test
+  phase 1 — 49 total, cross-checked both directions against the 48 files in
+  `Classes/` plus `Tests/`. Zero `.m`/`.mm`/`.cpp`/`.c` anywhere in the repo. Three
+  headers exist (`globals.h` and the two bridging headers) and both bridging headers
+  import `globals.h` and nothing else.
+- **Zero non-comment WebKit occurrences** across `Classes/*.swift` — all 47 hits are
+  comments — and zero `UIViewController` / `UITableViewController` /
+  `UIHostingController` / `UIViewRepresentable` declarations. One `#selector`
+  remains, the `AVAudioSession` observer.
+- **All 12 load-bearing reader/search invariants hold**, each with a file:line
+  citation: the two emitters never call each other and share one gating table;
+  `PSContentStore` is `SQLITE_OPEN_READONLY` behind a serial queue with `import
+  zlib`; `PSSearchEngine` binds `SQLITE_TRANSIENT` everywhere, opens `FULLMUTEX`
+  with a 2 s busy timeout and no serial queue, keeps `ORDER BY rowid`, and
+  `dropIndex` does not remove the shared directory; the scroll application is still
+  deferred by one update; `EntryTextView` claims `.handled` only with a handler; both
+  paging directions still restore no position.
+- **The `globals.h` ↔ `AppConstants.swift` wire-string contract is exact**: 78
+  shared literals, byte-identical, zero divergences; 43/43 `Defaults*` macros mirror
+  with the right keys including every macro-name≠key case; 23/23 notification
+  literals match.
+- **All eight per-file test counts in CLAUDE.md matched** before this pass added two.
+- **No `.acorn` source documents are bundled** (27 files, 3.0 MB, on disk only), and
+  the three PNGs Wave 7 flagged as unreferenced-but-bundled were already deleted in
+  Wave 8.
+
+Acted on: the 32 `disabled-*`/`enabled-*` toggle icons Wave 8 replaced with SF
+Symbols were still in the Resources phase and are now removed (128 pbxproj lines,
+28,698 bytes) — this closes Wave 7's deferred "UIKit asset sweep" carry. Also fixed
+the About screen's **MBProgressHUD attribution**, which credited a library deleted in
+Wave 8 on a screen whose whole job is attribution, and the test bridging header's
+present-tense claim that the app target still contained it.
+
+Left deliberately: nine loose launch-image PNGs (1.16 MB) that duplicate
+`Images.xcassets/LaunchImage.launchimage` for a launch path that uses
+`LaunchScreen.storyboard`, 15 further orphaned UIKit-era PNGs (29,775 B), four
+`import UIKit` lines in files that use nothing from UIKit, and a handful of dead
+constants/methods. All are inert, none affects behaviour, and each is a
+documentation-free deletion that would add churn to a diff already carrying six
+behaviour fixes. Recorded here so the next sweep has the list.
+
+Also corrected in this pass: **21 documentation-versus-reality defects** across this
+plan and CLAUDE.md, including this document's own Execution Status contradicting
+itself (edge-to-edge "met" 34 lines above "still letterboxed"), the Summary still
+prescribing SwiftSoup after the Wave 9 revision rejected it, "Current repository
+facts" describing the deleted Wave 6 WebKit reader and `PSModuleViewController` in
+the present tense, CLAUDE.md pinning the deployment target at 26.0 when all 12
+assignments read 27.0, and a "five of thirteen observers" count whose own list
+enumerates six.
 
 ## Summary
 
@@ -1176,12 +1403,22 @@ simulators.
 - Final navigation: **Read**, **Search**, **Library**, and **Settings**.
 - Use quiet, system-native styling with SF Symbols and semantic colors; retain selectable study fonts.
 - Preserve all bookmark, history/iCloud, search-history, defaults, baked-content, and `sword://` formats.
-- Ship a SwiftUI WebKit reader first, then replace it with native SwiftUI rendering through SwiftSoup.
+- Ship a SwiftUI WebKit reader first (Wave 6), then replace it with native SwiftUI
+  rendering (Wave 9). **Not through SwiftSoup** — that was this plan's original
+  prescription and the Wave 9 revision rejected it on a measurement; the token
+  stream gets a second emitter instead, and no third-party dependency was added.
+  See "Wave 9 revision" below.
 
 ## iOS 27 Baseline
 
-- Set every project, app, and test Debug/Release/Distribution deployment setting to `27.0`; the effective app target is currently 27, but project defaults and tests remain 26.
-- Install Xcode 27, the iOS 27 SDK, and an iOS 27 simulator runtime. The current Xcode 26.6/iOS 26.5 installation cannot verify this target.
+- Set every project, app, and test Debug/Release/Distribution deployment setting to
+  `27.0`. **Done in Wave 1** — all 12 `IPHONEOS_DEPLOYMENT_TARGET` assignments
+  (4 targets × 3 configurations) read `27.0`, so the original "project defaults and
+  tests remain 26" no longer applies.
+- Install Xcode 27, the iOS 27 SDK, and an iOS 27 simulator runtime. **Done** —
+  Xcode 27.0 beta 4 (`27A5228h`) at `/Applications/Xcode-beta.app`, with the iOS
+  27.0 SDK and simulator runtime. A 26.6 install still exists and is still what
+  `/usr/bin/xcodebuild` resolves, which is why every command sets `DEVELOPER_DIR`.
 - Keep Swift 5 and minimal concurrency checking during this migration; handle Swift 6 separately.
 - Treat `@State` as an SDK 27 macro: initialize state either at declaration or exactly once through an explicit initializer, never both, and do not compose wrappers on `@State`.
 - Use trailing-closure `overlay`/`background` forms and avoid hard-coded `TupleView` types under SDK 27's unified `@ContentBuilder`.
@@ -1189,7 +1426,11 @@ simulators.
 ## Architecture
 
 - Add stable `@MainActor @Observable` models: `AppSession`, `ReadingModel`, `SearchModel`, `LibraryModel`, and `SettingsModel`.
-- Add typed values: `Workspace`, `ReadingMode`, `BibleReference`, `StudyLink`, `ChapterRequest`, `ChapterDocument`, `ChapterBlock`, and `InlineRun`.
+- Add typed values: `Workspace`, `ReadingMode`, `BibleReference`, `ChapterDocument`
+  and `InlineRun`. (This list originally also named `StudyLink`, `ChapterRequest`
+  and `ChapterBlock`; none was ever created. Their jobs went to `InlineLink` /
+  `EntryLink`, to plain `chapterDocument(module:ref:kind:)` arguments, and to
+  `ChapterParagraph` / `ChapterVerse` / `ChapterHeading` respectively.)
 - Extract behavior into `LaunchCoordinator`, `HistoryStore`, `BookmarkStore`, `SearchIndexCoordinator`, and `URLRouter`.
 - Give bookmark nodes runtime UUIDs excluded from serialization; use natural stable IDs for dictionary, history, chapter, and search rows.
 - Replace UIKit bookmark colors with a hex/RGB value type and convert to `SwiftUI.Color` in views.
@@ -1329,8 +1570,16 @@ of the scroll-math risk.
   chapter must flow edge-to-edge and scroll under the chrome, with no black band at
   either end and no line obscured at rest. This has been wrong in both directions
   across Waves 6 and 7 (overlap, then letterboxing) and is a Wave 9 acceptance
-  criterion — see the section under Wave 9. A hierarchy dump alone does NOT catch
-  it: the `reading.web-content` frame reports full-window in both the broken and
-  the correct case, because the identifier sits on the container rather than the
-  scrolling WebView. Read the screenshot.
+  criterion — see the section under Wave 9.
+  **Wave 9 inverted how you check this.** The old advice was "a hierarchy dump does
+  NOT catch it, read the screenshot", because `reading.web-content` sat on a
+  container and reported full-window whether the WebView inside it was letterboxed
+  or not. The identifier is now `reading.chapter-content` and it sits on the
+  `ScrollView` **itself**, so its frame is the measurement: letterboxing shows up as
+  a frame that stops short of the window. Confirmed in the final pass — iPhone 17
+  Pro `{{0,0},{402,874}}` against an `402x874` window, iPad Pro 11-inch
+  `{{0,0},{834,1210}}` portrait and `{{0,0},{1210,834}}` landscape. Note **both**
+  panes carry the identifier (the inactive one at `opacity(0)`), so use
+  `.firstMatch`. Screenshots are still the right tool for *typography* — that is how
+  the Wave 9 verse-number weight defect was found.
 - Finish with all three configurations and a static audit showing no project-owned UIKit imports, symbols, Objective-C sources, or UIKit-only dependencies.

@@ -803,6 +803,92 @@ final class PSChapterDocumentParityTests: XCTestCase {
         XCTAssertFalse(text.contains("<"), "a tag survived into the rendered text")
     }
 
+    // MARK: - Search highlighting
+
+    /// Every term in the list gets highlighted, not just the first, and a marker
+    /// run is left alone.
+    ///
+    /// This exists because the highlighter shipped with **no caller at all**. The
+    /// renderer and the pane state were both built in Wave 9, but nothing ever set
+    /// the term — and tracing it back, the only caller it ever had in any era was a
+    /// commented-out debug line in the Obj-C original. So a green suite, a clean
+    /// build and a live device all agreed the feature was fine while it had never
+    /// once run. A unit test on the pure renderer is what makes that impossible to
+    /// repeat: it fails if the multi-term loop regresses to a single term, and the
+    /// XCUITest cannot cover it because the highlight is an attribute rather than
+    /// an accessibility value.
+    @MainActor
+    func testEveryHighlightTermIsAppliedAndMarkersAreSkipped() throws {
+        var style = ChapterTextRenderer.Style.current()
+        style.highlightTerms = ["God", "light"]
+
+        let verse = ChapterVerse(
+            number: 3,
+            runs: [
+                InlineRun(text: "And God said, Let there be light: "),
+                InlineRun(text: "<H0430>", isMarker: true),
+                InlineRun(text: "and there was light."),
+            ]
+        )
+
+        let text = ChapterTextRenderer.text(for: verse, style: style)
+        let string = String(text.characters)
+
+        // Both terms, and every occurrence of each: "God" once, "light" twice.
+        var highlighted: [String] = []
+        for run in text.runs where run.backgroundColor != nil {
+            highlighted.append(String(text[run.range].characters))
+        }
+        XCTAssertTrue(
+            highlighted.contains("God"),
+            "the first term was not highlighted — got \(highlighted)"
+        )
+        XCTAssertEqual(
+            highlighted.filter { $0 == "light" }.count, 2,
+            "the second term was not highlighted at every occurrence — "
+                + "got \(highlighted)"
+        )
+        XCTAssertFalse(
+            string.isEmpty,
+            "the verse rendered empty"
+        )
+    }
+
+    /// An empty term list highlights nothing — the state a Strong's search leaves,
+    /// and the state chapter paging restores.
+    ///
+    /// `SearchModel.highlightTerms` returns `[]` for a Strong's query on purpose:
+    /// the match is a lemma the marker points at, not text present in the verse, so
+    /// highlighting the raw "H430" would mark nothing and highlighting the lemma
+    /// would mark the wrong thing.
+    @MainActor
+    func testNoHighlightTermsLeavesTheVerseUnmarked() throws {
+        var style = ChapterTextRenderer.Style.current()
+        style.highlightTerms = []
+
+        let verse = ChapterVerse(
+            number: 1,
+            runs: [InlineRun(text: "In the beginning God created the heaven.")]
+        )
+
+        let text = ChapterTextRenderer.text(for: verse, style: style)
+        for run in text.runs {
+            XCTAssertNil(
+                run.backgroundColor,
+                "an empty term list still highlighted "
+                    + "\(String(text[run.range].characters))"
+            )
+        }
+
+        XCTAssertEqual(
+            SearchModel.highlightTerms(
+                query: "H430", matchType: .AndSearch, strongs: true
+            ),
+            [],
+            "a Strong's query must contribute no highlight terms"
+        )
+    }
+
     /// Tag NAMES (lowercased, attributes dropped) appearing literally in a record.
     private static func rawTags(in record: String) -> [String] {
         var out: [String] = []

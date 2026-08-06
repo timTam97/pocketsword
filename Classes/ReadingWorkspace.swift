@@ -195,7 +195,7 @@ struct BookmarkDraft: Identifiable, Equatable {
 /// | `startDetLocPoll()` / `stopDetLocPoll()` | nothing — see below |
 /// | `resetArrays()` after rotation | nothing — identity is width-independent |
 /// | `HighlightBookmarks.js` | `ChapterVerse.highlightColour` in the document |
-/// | `SearchWebView.js` | `searchHighlightTerm`, applied while rendering |
+/// | `SearchWebView.js` | `searchHighlightTerms`, applied while rendering |
 ///
 /// **The poll was already dead.** `startDetLocPoll`'s `setInterval` was commented
 /// out in the shipped JS, so the `pocketsword:currentverse:` bridge never fired and
@@ -225,16 +225,21 @@ final class ReaderPaneModel {
     /// Resolved font/size/line-height for this render.
     var textStyle = ChapterTextRenderer.Style.current()
 
-    /// A term to highlight in the rendered text — what `SearchWebView.js` did by
+    /// The terms to highlight in the rendered text — what `SearchWebView.js` did by
     /// walking the DOM and inserting `<span class="PocketSwordHighlight">`.
     ///
     /// Pushed into `textStyle` on assignment, so an existing render re-highlights
-    /// without reloading the chapter. Clearing it is assigning nil, where the JS
+    /// without reloading the chapter. Clearing it is assigning `[]`, where the JS
     /// needed a whole second function to unwrap the spans it had inserted.
-    var searchHighlightTerm: String? {
+    ///
+    /// A list rather than one string because an "all words" / "any words" query
+    /// matches on several, and the results list already highlights each of them —
+    /// highlighting only the first in the reader would disagree with the row the
+    /// user tapped.
+    var searchHighlightTerms: [String] = [] {
         didSet {
-            guard searchHighlightTerm != oldValue else { return }
-            textStyle.highlightTerm = searchHighlightTerm
+            guard searchHighlightTerms != oldValue else { return }
+            textStyle.highlightTerms = searchHighlightTerms
         }
     }
 
@@ -327,7 +332,7 @@ final class ReaderPaneModel {
         // rebuilding the style from defaults alone would silently drop it, so a
         // chapter turn while search results were highlighted would lose the yellow.
         var style = ChapterTextRenderer.Style.current()
-        style.highlightTerm = searchHighlightTerm
+        style.highlightTerms = searchHighlightTerms
         textStyle = style
         document = PSContentReader.shared.chapterDocument(
             module: module,
@@ -1122,6 +1127,12 @@ final class ReadingWorkspaceModel {
     }
 
     private func page(forward: Bool) {
+        // Paging away from the chapter a search result landed on ends that
+        // result's highlight. Without this the yellow follows the reader through
+        // every subsequent chapter until the app relaunches, which is what
+        // `PS_RemoveAllHighlights` existed to prevent — the JS had to unwrap the
+        // spans it had inserted, where clearing state is an empty array.
+        activePane.searchHighlightTerms = []
         activePane.setVerseToShow(0)
         let current = PSModuleController.getCurrentBibleRef()
         let boundary = forward
@@ -1335,9 +1346,26 @@ final class ReadingWorkspaceModel {
     /// gone: the term is state on the pane, and the renderer applies it while
     /// building the text — so it cannot get out of step with the content, and
     /// clearing it is assigning nil.
-    func highlightSearchTerm(_ term: String, mode: ReadingMode) {
+    ///
+    /// **This is called from the search-result hand-off, and was not before.** The
+    /// renderer half was built in Wave 9 and the pane state with it, but nothing
+    /// ever set it: the final audit found `highlightSearchTerm` had zero callers,
+    /// and tracing it back through `git` showed the only one it ever had was a
+    /// commented-out debug line in the Obj-C original
+    /// (`// [self highlightSearchTerm: @"and" forTab: BibleTab];`,
+    /// `PSTabBarControllerDelegate.mm:209`). So the reader has never highlighted a
+    /// searched term, in any era — the results list highlighted its own rows and
+    /// the chapter you landed on did not. Wiring it is the smaller change than
+    /// deleting a working renderer, and it is what the results list already implies.
+    ///
+    /// Takes the term LIST rather than one string, because that is what the search
+    /// side actually has: `SearchModel.highlightTerms` splits an all/any-words query
+    /// into its words, honours quoted phrases, drops one-character noise, and
+    /// returns **empty** for a Strong's search — where the matched text is a lemma
+    /// the marker points at, not text present in the verse.
+    func highlightSearchTerms(_ terms: [String], mode: ReadingMode) {
         let pane = mode == .bible ? bible : commentary
-        pane.searchHighlightTerm = term.isEmpty ? nil : term
+        pane.searchHighlightTerms = terms.filter { !$0.isEmpty }
     }
 
     // MARK: Search hand-off
