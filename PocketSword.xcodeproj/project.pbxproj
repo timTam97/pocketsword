@@ -69,7 +69,6 @@
 		056BC73C12F0E8E00029F3A2 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73812F0E8E00029F3A2 /* folder.png */; };
 		056BC73D12F0E8E00029F3A2 /* folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 056BC73912F0E8E00029F3A2 /* folder@2x.png */; };
 		056CD38616BB6D6200AA0674 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 056CD38516BB6D6200AA0674 /* libz.1.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
-		05717C9513F27B8000753423 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C1DA460ED9DC1E009F76D2 /* Entitlements.plist */; };
 		057CBD551769839D005BC6BB /* disabled-Glosses.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD511769839D005BC6BB /* disabled-Glosses.png */; };
 		057CBD561769839D005BC6BB /* disabled-Glosses@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD521769839D005BC6BB /* disabled-Glosses@2x.png */; };
 		057CBD571769839D005BC6BB /* enabled-Glosses.png in Resources */ = {isa = PBXBuildFile; fileRef = 057CBD531769839D005BC6BB /* enabled-Glosses.png */; };
@@ -956,7 +955,6 @@
 				052EC90013DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */,
 				052EC90213DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */,
 				0528685213E012660044A388 /* code2000.ttf in Resources */,
-				05717C9513F27B8000753423 /* Entitlements.plist in Resources */,
 				050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */,
 				05E6A75C17FAE06D0063B18C /* Icon-76.png in Resources */,
 				05F4D226160189940072620A /* Default-568h@2x.png in Resources */,

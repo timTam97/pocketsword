@@ -392,11 +392,11 @@ final class PocketSwordUITests: XCTestCase {
         let secondName = "UI Drag B"
 
         selectWorkspace("Library")
-        deleteFolderIfPresent(named: firstName)
-        deleteFolderIfPresent(named: secondName)
+        // Prefix sweep, not two exact names: it also collects any truncated
+        // leftover ("UI Drag ") from an earlier interrupted or raced run.
+        deleteFoldersIfPresent(withPrefix: "UI Drag")
         defer {
-            deleteFolderIfPresent(named: firstName)
-            deleteFolderIfPresent(named: secondName)
+            deleteFoldersIfPresent(withPrefix: "UI Drag")
         }
 
         createFolder(named: firstName)
@@ -513,23 +513,66 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
         field.typeText(name)
+
+        // Commit the field before tapping Save, and verify the commit landed.
+        //
+        // This is not defensive padding — without it the folder is created under
+        // a TRUNCATED name. Measured on the iOS 27 simulator: typing "UI Drag B"
+        // and tapping Save persisted "UI Drag ", losing exactly the last
+        // character, on every run rather than intermittently.
+        //
+        // The cause is that a SwiftUI `TextField`'s binding is not necessarily
+        // current for the final keystroke until the field commits, and tapping
+        // Save takes focus away in the same beat. `XCUIElement.value` is NOT a
+        // usable check for this: it reported the full "UI Drag B" while the
+        // draft the app saved held only the prefix, so asserting on it passes
+        // while the bug is live. Typing the newline commits the field the way a
+        // user pressing Return does, and the row assertion below — which reads
+        // the name back out of the app's own list — is what actually proves it.
+        //
+        // Getting this wrong is worse than a red test: the truncated folder was
+        // invisible to the old exact-name cleanup, so it accumulated in
+        // PSBookmarks.plist and later tripped the store's duplicate-name guard
+        // with a failure that pointed nowhere near the cause.
+        field.typeText("\n")
+
         app.buttons["bookmarks.folder-save"].tap()
-        XCTAssertTrue(app.buttons[name].waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.buttons[name].waitForExistence(timeout: 5),
+            "The folder was not created as \"\(name)\" — check for a truncated "
+                + "name in PSBookmarks.plist."
+        )
     }
 
+    /// Deletes leftover test folders, matched by **prefix** rather than by exact
+    /// name.
+    ///
+    /// Exact-name cleanup is not self-healing: a folder that ever lands under a
+    /// slightly different name than intended is invisible to the next run and
+    /// accumulates in `PSBookmarks.plist` forever, where the store's
+    /// duplicate-name guard eventually fails a create for a reason that looks
+    /// nothing like the cause. Sweeping the prefix means the suite repairs the
+    /// device instead of degrading it.
     @MainActor
-    private func deleteFolderIfPresent(named name: String) {
-        let row = app.buttons[name]
-        guard row.waitForExistence(timeout: 1) else { return }
-        row.swipeLeft()
+    private func deleteFoldersIfPresent(withPrefix prefix: String) {
+        let matches = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", prefix)
+        )
+        // Bounded rather than `while`: a row that will not delete would
+        // otherwise spin here until the test times out with no diagnosis.
+        for _ in 0..<8 {
+            let row = matches.firstMatch
+            guard row.waitForExistence(timeout: 1) else { return }
+            row.swipeLeft()
 
-        let deleteAction = app.buttons["Delete"].firstMatch
-        guard deleteAction.waitForExistence(timeout: 2) else { return }
-        deleteAction.tap()
+            let deleteAction = app.buttons["Delete"].firstMatch
+            guard deleteAction.waitForExistence(timeout: 2) else { return }
+            deleteAction.tap()
 
-        let confirmation = app.buttons["Delete"].firstMatch
-        guard confirmation.waitForExistence(timeout: 2) else { return }
-        confirmation.tap()
-        _ = row.waitForNonExistence(timeout: 5)
+            let confirmation = app.buttons["Delete"].firstMatch
+            guard confirmation.waitForExistence(timeout: 2) else { return }
+            confirmation.tap()
+            _ = row.waitForNonExistence(timeout: 5)
+        }
     }
 }
