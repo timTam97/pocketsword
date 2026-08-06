@@ -7,7 +7,6 @@ struct SearchView: View {
     let preferredModule: String?
     let currentBookName: String?
     let restoredHistoryItem: PSSearchHistoryItem?
-    let close: () -> Void
     let openResult: (_ reference: String, _ module: String) -> Void
 
     @State private var configured = false
@@ -21,6 +20,15 @@ struct SearchView: View {
                 openResult: openResult
             )
             .navigationTitle("SearchTitle")
+            // Inline, deliberately, and it is not cosmetic: the scope picker
+            // below is pinned with `safeAreaInset(edge: .top)`, which sits at
+            // the top of the safe area — *under* the navigation bar's
+            // large-title region. With a large title, overscrolling the results
+            // revealed the title and the search drawer BELOW that opaque bar
+            // (and left ~200pt of empty large-title space at rest). Inline has
+            // no expanding region to reveal, so the drawer and the picker stay
+            // put. `DictionaryView` pins its title inline for the same reason.
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(
                 text: $search.query,
                 placement: .navigationBarDrawer(displayMode: .always),
@@ -28,15 +36,6 @@ struct SearchView: View {
             )
             .safeAreaInset(edge: .top, spacing: 0) {
                 SearchScopePicker(search: search)
-            }
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(action: close) {
-                        Image(systemName: "xmark")
-                    }
-                    .accessibilityLabel(Text("CloseButtonTitle"))
-                    .accessibilityIdentifier("search.close")
-                }
             }
         }
         .onChange(of: search.query) {

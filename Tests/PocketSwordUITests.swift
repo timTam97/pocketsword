@@ -277,6 +277,59 @@ final class PocketSwordUITests: XCTestCase {
                       "tapping a Strong's number did not open the study popup")
     }
 
+    /// A cross-link INSIDE a lexicon entry navigates to the entry it names.
+    ///
+    /// Three device-reported defects met here, all in `PSEntryDocument` /
+    /// `EntryTextView`, and all invisible to a unit test because they are about
+    /// whether a tap does anything:
+    ///
+    ///  * the popup passed no `openLink` while its `OpenURLAction` still returned
+    ///    `.handled`, so every cross-link was swallowed — the link highlighted on
+    ///    press and went nowhere;
+    ///  * the link's run range was inferred at `</a>` by walking backwards, so it
+    ///    jacketed the prose back to the previous link instead of its own number;
+    ///  * the entry it opens is reached in place, with a Back button, rather than by
+    ///    stacking a second sheet.
+    ///
+    /// H07225's entry ("In the beginning") cross-links to H07218 (rosh). The link's
+    /// identifier is its `pslink://lexicon/…` URL, so the assertion is on the
+    /// TARGET, not merely on something being tappable.
+    @MainActor
+    func testLexiconCrossLinkNavigatesWithinThePopup() throws {
+        XCTAssertTrue(
+            app.descendants(matching: .any)["reading.chapter-content"]
+                .waitForExistence(timeout: 10)
+        )
+        let strongs = app.links["pslink://strongs/Hebrew/07225"]
+        guard strongs.waitForExistence(timeout: 5) else {
+            throw XCTSkip("Strong's numbers are switched off for this module")
+        }
+        strongs.tap()
+
+        let popup = app.descendants(matching: .any)["study.popup"]
+        XCTAssertTrue(popup.firstMatch.waitForExistence(timeout: 10),
+                      "the study popup did not open")
+
+        // The cross-link is a real, addressable element — not a span of dead text.
+        let crossLink = app.links["pslink://lexicon/StrongsRealHebrew?key=07218"]
+        guard crossLink.waitForExistence(timeout: 5) else {
+            throw XCTSkip("H07225's entry does not cross-link to H07218 in this build")
+        }
+        crossLink.tap()
+
+        // Following it swaps the entry in place and offers a way back. "Back" is the
+        // proof the navigation happened: it exists only while the trail is non-empty.
+        let back = app.buttons["Back"]
+        XCTAssertTrue(back.waitForExistence(timeout: 10),
+                      "tapping a lexicon cross-link did nothing — no entry was pushed")
+
+        back.tap()
+        XCTAssertTrue(back.waitForNonExistence(timeout: 5),
+                      "Back did not return to the entry the reader opened")
+        XCTAssertTrue(popup.firstMatch.exists,
+                      "going back dismissed the popup instead of popping the trail")
+    }
+
     @MainActor
     func testFocusModeHidesAndRestoresTheTabBar() throws {
         selectWorkspace("Read")

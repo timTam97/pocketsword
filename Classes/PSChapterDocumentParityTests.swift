@@ -605,6 +605,186 @@ final class PSChapterDocumentParityTests: XCTestCase {
         }
     }
 
+    /// A cross-link jackets ONLY its own anchor text, not the prose leading up to it.
+    ///
+    /// Device-reported on H3899 ("lechem"): tapping the "3898" of "From 3898" showed
+    /// the ENTIRE definition underlined and tinted as one link — "From 3898; food
+    /// (for man or {beast}) … See also 1036". The `</a>` handler walked `runs`
+    /// backwards from the end with no lower bound, stopping only at the previous
+    /// already-linked run, so every unlinked run between two cross-links was swept
+    /// into the second one.
+    ///
+    /// All 14,989 baked cross-link anchors wrap a bare number (measured: 0 non-digit
+    /// inner texts), which is what makes this assertable corpus-wide — see
+    /// `testEveryLexiconCrossLinkIsBoundToItsOwnAnchorText`.
+    func testCrossLinkDoesNotSwallowTheProseBeforeIt() throws {
+        let store = try store()
+        let html = try XCTUnwrap(
+            store.dictEntry(module: BundledModules.strongsHebrew, key: "03899"),
+            "StrongsRealHebrew 03899 is missing from the store"
+        )
+
+        let document = PSEntryDocumentBuilder.build(html: html)
+        let linked = document.blocks.flatMap(\.runs).filter { $0.entryLink != nil }
+        XCTAssertFalse(linked.isEmpty, "the cross-links did not resolve at all")
+
+        // Every linked run is a bare Strong's number. Before the fix the run holding
+        // "; food (for man or {beast}) especially " carried a link too.
+        for run in linked {
+            let text = run.text.trimmingCharacters(in: .whitespaces)
+            XCTAssertFalse(
+                text.isEmpty,
+                "an empty run was linked"
+            )
+            XCTAssertTrue(
+                text.allSatisfy(\.isNumber),
+                "a cross-link swallowed prose: '\(run.text)'"
+            )
+        }
+
+        // The definition text itself is present and NOT linked.
+        let unlinkedText = document.blocks
+            .flatMap(\.runs)
+            .filter { $0.entryLink == nil }
+            .map(\.text)
+            .joined()
+        XCTAssertTrue(unlinkedText.contains("victuals"),
+                      "the definition body is missing or was absorbed into a link")
+    }
+
+    /// The Greek lexicon's lemma line survives the key-anchor preamble.
+    ///
+    /// The two Strong's lexicons shape that preamble differently, and only one shape
+    /// was accounted for. All 8,674 StrongsRealHebrew entries put the `<br />`
+    /// immediately after the key anchor; all 5,624 StrongsRealGreek entries carry a
+    /// whole lemma line first — `<a name="03588">3588</a> <b>ὁ</b> [O(] {ho}
+    /// \<i>ho</i>\<br/>`. The unconditional `skipNextBreak` therefore consumed the
+    /// GREEK LEMMA'S own break, running "…{ho} \ho\" into "including the feminine…"
+    /// and losing the trailing backslash with it.
+    func testGreekLexiconKeepsItsLemmaLineBreak() throws {
+        let store = try store()
+        let html = try XCTUnwrap(
+            store.dictEntry(module: BundledModules.strongsGreek, key: "03588"),
+            "StrongsRealGreek 03588 is missing from the store"
+        )
+        XCTAssertTrue(html.hasPrefix("<a name=\"03588\">3588</a> <b>"),
+                      "the fixture's shape changed; this test targets the Greek preamble")
+
+        let document = PSEntryDocumentBuilder.build(html: html)
+        let texts = document.blocks.map { $0.runs.map(\.text).joined() }
+
+        // The key number is still dropped — that fix must not regress.
+        let joined = texts.joined(separator: "\n")
+        XCTAssertFalse(joined.trimmingCharacters(in: .whitespaces).hasPrefix("3588"),
+                       "the Greek key anchor still renders: \(joined.prefix(40))")
+
+        // The lemma line is its OWN block, not run into the next one.
+        let lemmaBlock = try XCTUnwrap(
+            texts.first { $0.contains("{ho}") },
+            "the Greek lemma line is missing: \(texts.prefix(3))"
+        )
+        XCTAssertFalse(
+            lemmaBlock.contains("including the feminine"),
+            "the lemma's own <br/> was swallowed: '\(lemmaBlock)'"
+        )
+        XCTAssertTrue(
+            texts.contains { $0.contains("including the feminine") },
+            "the second line is missing entirely: \(texts.prefix(3))"
+        )
+    }
+
+    /// Corpus-wide: no cross-link anywhere jackets anything but its own number, and
+    /// every one of them resolves to a real target.
+    ///
+    /// This is the sweep the two entry-specific tests above generalise. It walks all
+    /// three lexicons' 15,824 entries, so it is the exhaustive tier's business —
+    /// except that it is fast enough (a few seconds) to keep in the default suite,
+    /// and the failure it guards is the silent kind: a link that looks live and
+    /// selects the wrong text.
+    func testEveryLexiconCrossLinkIsBoundToItsOwnAnchorText() throws {
+        let store = try store()
+        var anchors = 0
+        var checkedEntries = 0
+
+        for module in BundledModules.lexicons {
+            for key in store.dictKeys(module: module) {
+                guard let html = store.dictEntry(module: module, key: key),
+                      html.contains("href=") else { continue }
+                checkedEntries += 1
+                let document = PSEntryDocumentBuilder.build(html: html)
+                for run in document.blocks.flatMap(\.runs) {
+                    guard let link = run.entryLink else { continue }
+                    anchors += 1
+                    let text = run.text.trimmingCharacters(in: .whitespaces)
+                    XCTAssertTrue(
+                        !text.isEmpty && text.allSatisfy(\.isNumber),
+                        "\(module) \(key): a link jackets non-anchor text '\(run.text)'"
+                    )
+                    // The target exists. A cross-link to a missing entry would open a
+                    // blank sheet, which is what `lexiconEntry` returning nil avoids —
+                    // but it should never arise for the shipped corpus.
+                    guard case .lexicon(let targetModule, let targetKey) = link else {
+                        return XCTFail("\(module) \(key): unexpected link kind")
+                    }
+                    XCTAssertNotNil(
+                        store.dictEntry(module: targetModule, key: targetKey),
+                        "\(module) \(key): cross-link to missing \(targetModule)/\(targetKey)"
+                    )
+                }
+            }
+        }
+
+        // The measured corpus: 14,989 cross-links over 11,442 entries that carry one.
+        XCTAssertEqual(anchors, 14_989,
+                       "the cross-link count changed; the store or the parser moved")
+        XCTAssertEqual(checkedEntries, 11_442,
+                       "the number of entries carrying a cross-link changed")
+    }
+
+    /// A cross-link followed from inside a popup resolves, and takes its `G`/`H`
+    /// prefix from the TARGET module rather than the source.
+    ///
+    /// 317 of the baked links point from the Greek lexicon into the Hebrew one, so
+    /// deriving the prefix from the entry being read would label those `G` and pick
+    /// the Greek script font for a Hebrew lemma.
+    func testFollowedCrossLinkTakesItsPrefixFromTheTargetModule() throws {
+        let hebrew = try XCTUnwrap(
+            PSInfoPopupContent.lexiconEntry(
+                module: BundledModules.strongsHebrew,
+                key: "03898",
+                allowsSearch: true
+            ),
+            "the Hebrew cross-link target did not resolve"
+        )
+        XCTAssertEqual(hebrew.reference, "H3898")
+        XCTAssertTrue(hebrew.isHebrew)
+        XCTAssertEqual(hebrew.searchTerm, "H3898",
+                       "find-all should stay available on a followed entry")
+
+        let greek = try XCTUnwrap(
+            PSInfoPopupContent.lexiconEntry(
+                module: BundledModules.strongsGreek,
+                key: "03588",
+                allowsSearch: false
+            ),
+            "the Greek cross-link target did not resolve"
+        )
+        XCTAssertEqual(greek.reference, "G3588")
+        XCTAssertFalse(greek.isHebrew)
+        XCTAssertNil(greek.searchTerm,
+                     "find-all must stay suppressed when the source suppressed it")
+
+        // A miss returns nil rather than an empty sheet.
+        XCTAssertNil(
+            PSInfoPopupContent.lexiconEntry(
+                module: BundledModules.strongsHebrew,
+                key: "99999",
+                allowsSearch: false
+            ),
+            "a missing cross-link target should not produce a popup"
+        )
+    }
+
     /// A footnote renders as text. The narrowest vocabulary of the three (`i` and
     /// `font` only, over 13,918 fields), and the one with no header to fall back on
     /// if it comes out empty.

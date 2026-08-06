@@ -109,11 +109,25 @@ enum PSEntryDocumentBuilder {
         var style: InlineStyle = []
         var pendingLink: EntryLink?
         var linkDepth = 0
+        /// Index into `runs` of the first run the open anchor emitted, which is what
+        /// BOUNDS the link when it closes. See `applyPendingLink()`.
+        var linkStartRun = 0
         var text = ""
         var blockIndex = 0
         /// Inside the entry's own `<a name="…">` key anchor, whose text is dropped.
         var suppressingKeyAnchor = false
-        /// Swallow the `<br />` that follows that anchor.
+        /// Swallow the `<br />` that IMMEDIATELY follows that anchor, so the dropped
+        /// key does not leave an empty first line.
+        ///
+        /// "Immediately" is load-bearing and was missing. The two Strong's lexicons
+        /// shape their preamble differently — measured over all 14,298 key anchors:
+        /// all 8,674 Hebrew entries are `<a name="03899"><b>3899</b></a><br />`, with
+        /// the break adjacent, but all 5,624 **Greek** entries are
+        /// `<a name="03588">3588</a> <b>ὁ</b> [O(] {ho} \<i>ho</i>\<br/>` — a whole
+        /// lemma line before the first break. An unconditional flag therefore fired on
+        /// the Greek lemma's OWN break, discarding the trailing `\` and running the
+        /// lemma line into "including the feminine …". So the flag is cleared as soon
+        /// as any content is emitted.
         var skipNextBreak = false
 
         func flushText() {
@@ -124,6 +138,11 @@ enum PSEntryDocumentBuilder {
                           link: nil, isMarker: false)
             )
             text = ""
+            // Real content has been emitted, so the pending `<br />` is no longer the
+            // key anchor's own — see `skipNextBreak`.
+            if !decoded.trimmingCharacters(in: .whitespaces).isEmpty {
+                skipNextBreak = false
+            }
         }
 
         func flushBlock() {
@@ -135,6 +154,35 @@ enum PSEntryDocumentBuilder {
             )
             blockIndex += 1
             runs = []
+            // `runs` is a fresh array, so a still-open anchor's start index has to
+            // move with it or `applyPendingLink` would bound against a stale offset.
+            // No shipped entry breaks a line inside an anchor (measured: 0 of 14,989),
+            // so this is defence in depth rather than a live case.
+            linkStartRun = 0
+        }
+
+        /// Tag the runs the just-closed anchor emitted with its link.
+        ///
+        /// **Bounded at `linkStartRun`, which is the whole point.** This used to walk
+        /// `runs` backwards from the end and stop at the first already-linked run,
+        /// on the theory that that was where the previous cross-link ended. It is
+        /// not: a lexicon entry is one long block of prose with a cross-link every
+        /// few words ("From 3898; food (for man or {beast}) …"), and the runs between
+        /// two links are ordinary text carrying no link at all. So the backwards walk
+        /// ran past the anchor it was closing, through the definition text, and
+        /// stopped only at the *previous* link — jacketing the entire span between
+        /// them. Reported from a device on H3899, where tapping "3898" underlined and
+        /// coloured the whole of "From 3898; food (for man or {beast}) especially
+        /// {bread} or grain (for making it): - ([shew-]) {bread} X {eat} {food}
+        /// {fruit} {loaf} {meat} victuals. See also 1036".
+        ///
+        /// Recording where the anchor OPENED is exact, needs no heuristic, and is
+        /// what makes two adjacent cross-links stay separate.
+        func applyPendingLink() {
+            guard let link = pendingLink, linkStartRun < runs.count else { return }
+            for index in linkStartRun..<runs.count {
+                runs[index].entryLink = link
+            }
         }
 
         var i = html.startIndex
@@ -202,7 +250,12 @@ enum PSEntryDocumentBuilder {
                 // cross-link or makes every headword tappable.
                 if let href = attribute("href", in: tag) {
                     pendingLink = lexiconLink(from: href)
-                    if pendingLink != nil { linkDepth = 1 }
+                    if pendingLink != nil {
+                        linkDepth = 1
+                        // `flushText()` above has already emitted everything before
+                        // the anchor, so the next run appended is the anchor's first.
+                        linkStartRun = runs.count
+                    }
                 } else if runs.isEmpty, document.blocks.isEmpty,
                           attribute("name", in: tag) != nil {
                     // The ENTRY'S OWN key anchor, which every lexicon entry opens
@@ -238,15 +291,7 @@ enum PSEntryDocumentBuilder {
                 }
                 flushText()
                 if linkDepth > 0 {
-                    // Re-tag the runs emitted since the anchor opened. Walking
-                    // backwards and stopping at the first already-linked run is what
-                    // keeps two adjacent cross-links from merging into one.
-                    if let link = pendingLink {
-                        for index in runs.indices.reversed() {
-                            guard runs[index].entryLink == nil else { break }
-                            runs[index].entryLink = link
-                        }
-                    }
+                    applyPendingLink()
                     pendingLink = nil
                     linkDepth = 0
                 }

@@ -42,19 +42,44 @@ struct StudyPopupSheet: View {
     let content: PSInfoPopupContent
     let findAllOccurrences: (String) -> Void
 
+    /// Cross-links followed from the entry the reader opened, innermost last.
+    ///
+    /// A lexicon entry's whole value is that "From 3898" is navigable, and 14,989 of
+    /// those links are baked into the shipped content. They resolve **in place**
+    /// rather than by stacking sheets: a `.medium` detent sheet cannot present
+    /// another sheet over itself without the tab-bar layout assertion Wave 8
+    /// documented, and a `NavigationStack` inside a half-height sheet spends a fifth
+    /// of the visible area on a bar. So the sheet swaps its content and offers a Back
+    /// button while the trail is non-empty.
+    @State private var trail: [PSInfoPopupContent] = []
+
+    /// What is actually on screen: the deepest cross-link followed, or the entry the
+    /// reader opened.
+    private var current: PSInfoPopupContent {
+        trail.last ?? content
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            if content.isStrongsEntry {
-                StudyPopupHeader(content: content)
+            if !trail.isEmpty {
+                backBar
+            }
+            if current.isStrongsEntry {
+                StudyPopupHeader(content: current)
             }
             EntryTextView(
-                document: PSEntryDocumentBuilder.build(html: content.entryHTML),
+                document: PSEntryDocumentBuilder.build(html: current.entryHTML),
+                openLink: follow,
                 // A non-Strong's entry gets top padding because it has no header
                 // to sit under; the old code set the same 20pt as a scroll-view
                 // content inset.
-                topInset: content.isStrongsEntry ? 0 : 20
+                topInset: current.isStrongsEntry ? 0 : 20
             )
-            if let searchTerm = content.searchTerm {
+            // `current` changes identity when a cross-link is followed, which resets
+            // the entry's scroll offset. Without this the new definition opens
+            // scrolled to wherever the previous one sat.
+            .id(current.reference ?? "root-\(trail.count)")
+            if let searchTerm = current.searchTerm {
                 Divider()
                 Button {
                     findAllOccurrences(searchTerm)
@@ -73,6 +98,41 @@ struct StudyPopupSheet: View {
         .presentationDragIndicator(.visible)
         .presentationBackground(.regularMaterial)
         .accessibilityIdentifier("study.popup")
+    }
+
+    private var backBar: some View {
+        HStack {
+            Button {
+                _ = trail.popLast()
+            } label: {
+                Label("RefSelectorBackButtonTitle", systemImage: "chevron.left")
+                    .font(.subheadline.weight(.medium))
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(StudyPalette.accent)
+            .accessibilityIdentifier("study.back")
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 16)
+    }
+
+    /// Follow a cross-link, or do nothing if its target is not in the store.
+    ///
+    /// "Find all occurrences" stays available on a followed entry only if it was
+    /// available on the one the reader opened — that flag is Bible-only (the
+    /// commentary has no Strong's index to search) and is a property of where the
+    /// popup was raised from, not of the entry now showing.
+    private func follow(_ link: EntryLink) {
+        guard case .lexicon(let module, let key) = link,
+              let next = PSInfoPopupContent.lexiconEntry(
+                  module: module,
+                  key: key,
+                  allowsSearch: content.searchTerm != nil
+              ) else {
+            return
+        }
+        trail.append(next)
     }
 }
 

@@ -519,8 +519,11 @@ private struct ChapterRunsText: View {
 /// make a WebView resemble the sheet it sat in.
 struct EntryTextView: View {
     let document: EntryDocument
-    /// Tapping a cross-link. `nil` in the study popup, which has nowhere to
-    /// navigate to; the Dictionary screen supplies it.
+    /// Tapping a cross-link.
+    ///
+    /// When `nil` the link is left to the system rather than swallowed — see the
+    /// `openURL` override below. Both call sites supply one; `nil` exists so a
+    /// preview or a future read-only surface cannot silently eat a tap.
     var openLink: ((EntryLink) -> Void)?
     var topInset: CGFloat = 0
 
@@ -538,8 +541,20 @@ struct EntryTextView: View {
             .padding(.bottom, 28)
         }
         .environment(\.openURL, OpenURLAction { url in
-            guard let link = EntryLink(url: url) else { return .systemAction }
-            openLink?(link)
+            // `.handled` is claimed ONLY when there is a handler to claim it for.
+            //
+            // The bug this guards was upstream — `StudyPopupSheet` simply passed no
+            // `openLink`, so `openLink?(link)` was a no-op on a link that looked live
+            // and highlighted on press. Both call sites now pass one, so this arm is
+            // unreachable in the shipping app; it is kept so that a future surface
+            // which forgets to wire `openLink` degrades to the system's handling
+            // instead of silently eating the tap. Verified by reverting the sheet:
+            // `testLexiconCrossLinkNavigatesWithinThePopup` goes red, and reverting
+            // this guard alone does NOT reproduce the defect.
+            guard let link = EntryLink(url: url), let openLink else {
+                return .systemAction
+            }
+            openLink(link)
             return .handled
         })
         .textSelection(.enabled)

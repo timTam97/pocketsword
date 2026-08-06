@@ -75,6 +75,44 @@ final class PSInfoPopupContent: NSObject {
         self.transliteration = lexeme.transliteration
     }
 
+    /// The content for a lexicon entry reached by tapping a cross-link inside
+    /// another one ("From 3898", "See also 1036").
+    ///
+    /// Returns nil when the target is missing from the store, so the caller can leave
+    /// the current entry on screen rather than pushing a blank one.
+    ///
+    /// The `G`/`H` prefix comes from the **target** module, not the one being read:
+    /// 317 of the 14,989 baked cross-links point from the Greek lexicon into the
+    /// Hebrew one (`StrongsRealGreek` → `StrongsRealHebrew`), so deriving the prefix
+    /// from the source would label those entries `G` and pick the wrong script font
+    /// for the lemma.
+    static func lexiconEntry(
+        module: String,
+        key: String,
+        allowsSearch: Bool
+    ) -> PSInfoPopupContent? {
+        guard let entry = PSContentReader.entry(module: module, key: key) else {
+            return nil
+        }
+        let prefix: String
+        switch module {
+        case BundledModules.strongsHebrew: prefix = "H"
+        case BundledModules.strongsGreek: prefix = "G"
+        default:
+            // Robinson, or anything unrecognised. No baked cross-link targets it
+            // (measured: all 14,989 hrefs address one of the two Strong's lexicons),
+            // and a morph code is not a Strong's reference — so render the body with
+            // no lemma header rather than inventing a prefix for it.
+            return PSInfoPopupContent(html: entry)
+        }
+        return PSInfoPopupContent(
+            strongsHTML: entry,
+            rawEntry: entry,
+            reference: prefix + key,
+            allowsSearch: allowsSearch
+        )
+    }
+
     private static func normalizedStrongsReference(_ reference: String) -> String {
         let uppercased = reference
             .trimmingCharacters(in: .whitespacesAndNewlines)

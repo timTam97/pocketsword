@@ -268,12 +268,6 @@ private struct SearchWorkspace: View {
             preferredModule: reading.preferredSearchModule,
             currentBookName: reading.currentSearchBookName,
             restoredHistoryItem: reading.searchHistoryItemToRestore(),
-            // A workspace is not dismissible, so "close" goes back to reading —
-            // which is what closing the old modal did.
-            close: {
-                reading.savedSearchHistoryItem = session.search.historyItem()
-                session.selectedWorkspace = .read
-            },
             openResult: { reference, module in
                 reading.savedSearchHistoryItem = session.search.historyItem()
                 reading.savedSearchResultsMode = session.search.moduleKind
