@@ -429,10 +429,18 @@ struct ReaderScreen: View {
             ChapterToast(text: reading.chapterToast)
         }
         .onGeometryChange(for: CGSize.self, of: \.size) { old, new in
-            // Rotation, or an iPad split-view resize. Both panes re-measure their
-            // verse offsets and restore the verse they were on: the offsets are
-            // width-dependent, so Wave 6 found that not doing this restored the
-            // wrong verse (Gen 2:4 came back as Gen 2:2).
+            // Rotation, or an iPad split-view resize. There are no measured verse
+            // offsets to rebuild any more — Wave 6 needed `resetArrays()` because
+            // `versepos` was width-dependent, and identity is not — so all this pair
+            // does is re-anchor each pane on the verse it was showing and SUPPRESS
+            // the transient scroll callbacks the transition emits, which would
+            // otherwise be mistaken for a user scroll and overwrite the persisted
+            // position.
+            //
+            // The two calls are deliberately back to back:
+            // `restoreAfterSizeChange` keeps the suppression alive until its own
+            // deferred scroll has landed, so the window is not zero-length. Do not
+            // try to "pair" them across separate callbacks.
             guard old != .zero, old != new else { return }
             reading.prepareForSizeChange()
             reading.restoreAfterSizeChange()

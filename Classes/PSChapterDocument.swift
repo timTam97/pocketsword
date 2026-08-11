@@ -302,6 +302,13 @@ struct ChapterDocument: Equatable {
     /// Breaks where a verse carries the KJV's own pilcrow (and always before the
     /// first verse). A heading forces a break too: a heading belongs above a
     /// paragraph, never inside one.
+    ///
+    /// **This DERIVES on every call — it walks and reallocates every verse — so it
+    /// must not be called from a SwiftUI view body.** It is left computed rather than
+    /// stored so this type keeps its synthesized `Equatable` and its all-defaulted
+    /// memberwise `init` (the parity tests build on both), and so no producer can
+    /// leave a stored copy stale by touching `verses`; the reader calls it once per
+    /// document and caches the result in `ReaderPaneModel.paragraphs`.
     var paragraphs: [ChapterParagraph] {
         var out: [ChapterParagraph] = []
         for verse in verses {

@@ -103,7 +103,16 @@ enum ChapterTextRenderer {
             let size = defaults.integer(forKey: Defaults.fontSizePreference)
             return Style(
                 fontName: name,
-                fontSize: CGFloat(size == 0 ? 14 : size),
+                // The absent-key fallback is ONE constant, shared with
+                // `SettingsStore.snapshot()` / `ensureFontSizeDefault()` — the value
+                // the Settings slider reads and writes. It used to be a literal 14
+                // here (the deleted HTML shell's own fallback) against the store's
+                // 12: normally invisible, because `AppSession.start()` materializes
+                // the default before the first render, but
+                // `LaunchCoordinator.resetPreferences()` REMOVES the key and nothing
+                // re-runs `ensureFontSizeDefault()`, so after a Settings-bundle
+                // reset the chapter rendered at 14pt while the slider read 12.
+                fontSize: CGFloat(size == 0 ? AppConstants.defaultFontSize : size),
                 lineSpacingMultiple: UIDevice.current.userInterfaceIdiom == .phone
                     ? 1.4
                     : 1.6
@@ -293,7 +302,7 @@ struct ChapterTextView: View {
                                 .tracksTopmostVerse([verse], pane: pane)
                         }
                     } else {
-                        ForEach(pane.document.paragraphs) { paragraph in
+                        ForEach(pane.paragraphs) { paragraph in
                             ParagraphRow(paragraph: paragraph, pane: pane,
                                          style: pane.textStyle)
                                 .id(paragraph.id)
@@ -327,12 +336,35 @@ struct ChapterTextView: View {
                 for: .scrollContent
             )
             .ignoresSafeArea(edges: .vertical)
-            .onScrollGeometryChange(for: CGFloat.self) { geometry in
-                geometry.contentOffset.y + geometry.contentInsets.top
-            } action: { _, offset in
-                pane.scrollOffsetChanged(offset)
+            .onScrollGeometryChange(for: ReaderScrollSample.self) { geometry in
+                // The offset is unchanged — `contentOffset.y + contentInsets.top` is
+                // the persisted value, and it is the space `ScrollPosition
+                // .scrollTo(y:)` consumes. MEASURED, because it reads like a bug and
+                // a code review flagged it as one: with a 200pt content margin in a
+                // context whose safe area is 0, `scrollTo(y: 300)` lands at
+                // `contentOffset.y == 100`, and the reachable maximum in this space is
+                // `contentSize.height - containerSize.height` exactly. Changing this
+                // to a plain `contentOffset.y` would introduce a safe-area-sized
+                // upward drift on every launch. The two heights ride along because the model
+                // cannot otherwise tell an unlaid-out scroll view's zero from a real
+                // position, nor a landed restore from one the chapter is too short to
+                // honour. Observing the heights as well means the action also fires
+                // as the content settles, which is what DRAINS a pending restore
+                // deterministically instead of on a timer.
+                ReaderScrollSample(
+                    offset: geometry.contentOffset.y + geometry.contentInsets.top,
+                    contentHeight: geometry.contentSize.height,
+                    containerHeight: geometry.containerSize.height
+                )
+            } action: { _, sample in
+                pane.scrollOffsetChanged(sample)
             }
             .onScrollPhaseChange { oldPhase, newPhase in
+                // A finger on the reader abandons any restore still in flight, which
+                // is what lets the restore gate be a gate rather than a timeout.
+                if newPhase == .tracking || newPhase == .interacting {
+                    pane.userBeganScrolling()
+                }
                 if oldPhase != .animating, oldPhase.isScrolling, newPhase == .idle {
                     pane.userScrollEnded()
                 }
@@ -527,6 +559,36 @@ struct EntryTextView: View {
     /// preview or a future read-only surface cannot silently eat a tap.
     var openLink: ((EntryLink) -> Void)?
     var topInset: CGFloat = 0
+    /// Typography, resolved from the same two GLOBAL font preferences the chapter
+    /// reader uses — `ChapterTextRenderer.Style.current()`, not a second reader of
+    /// those keys.
+    ///
+    /// Wave 9 hardcoded 17pt/13pt here, which silently stopped honouring the size
+    /// the user chose: every deleted entry shell went through
+    /// `createHTMLString(_:usingPreferences: true, …)`, whose `body` rule was
+    /// `font-size: <fontSizePreference>pt`. A footnote body and a dictionary
+    /// definition have always been read at the Settings size, and are again.
+    var style: ChapterTextRenderer.Style = .current()
+    /// Whether the body renders in the SYSTEM face instead of the user's font.
+    ///
+    /// The two deleted shells differed here deliberately, and the difference is
+    /// preserved: `createInfoHTMLString` (footnotes, morph entries, the Dictionary
+    /// tab) inherited `font-family: <fontNamePreference>`, while
+    /// `createStrongsInfoHTMLString` overrode it to `-apple-system,
+    /// BlinkMacSystemFont, "Helvetica Neue", sans-serif` for the Strong's
+    /// definition. So the user's font is the default and the Strong's arm opts out.
+    var usesSystemFace = false
+    /// The legibility floor for entry body text.
+    ///
+    /// A definition is dense reference prose — abbreviations, transliterations,
+    /// parenthetical glosses — and the deleted shell's CSS `12pt` rendered at
+    /// about 16 device points, so resolving the raw preference at the bottom of
+    /// the slider would show this text smaller than it has ever been shown. Above
+    /// the floor the preference wins outright; below it, legibility does. The
+    /// chapter text has no floor — it is the thing the slider is calibrated
+    /// against — so the bottom of the range deliberately moves one and not the
+    /// other.
+    static let minimumBodySize: CGFloat = 14
 
     var body: some View {
         ScrollView {
@@ -573,16 +635,40 @@ struct EntryTextView: View {
         var out = AttributedString()
         for run in block.runs where !run.text.isEmpty {
             var piece = AttributedString(run.text)
-            var size: CGFloat = 17
-            if run.style.contains(.smaller) { size = 13 }
-            var font = Font.system(size: size)
+            // `.smaller` in an ENTRY is `<font size="-1">` (plus the Hebrew vowel
+            // `<sup>`), and `createHTMLString` rewrote that tag to a literal
+            // `font-size: <fs - 2>pt`. Two points, NOT the chapter renderer's 0.7:
+            // that factor is the `a.strongs` / `a.morph` marker size, which
+            // dominates a chapter by three orders of magnitude and does not occur in
+            // an entry at all.
+            //
+            // The body size is the preference against a legibility FLOOR (see
+            // `minimumBodySize`), so the bottom of the slider range is inert here
+            // while the chapter text keeps shrinking.
+            let base = max(style.fontSize, Self.minimumBodySize)
+            var size = base
+            if run.style.contains(.smaller) {
+                size = max(base - 2, 9)
+            }
+            var font = usesSystemFace
+                ? Font.system(size: size)
+                : Font.custom(style.fontName, size: size)
             if run.style.contains(.bold) { font = font.bold() }
             if run.style.contains(.italic) || run.style.contains(.transChangeAdded) {
                 font = font.italic()
             }
             piece.font = font
-            if run.style.contains(.superscript) { piece.baselineOffset = 5 }
-            if run.style.contains(.subscript) { piece.baselineOffset = -3 }
+            // The flat 5pt / -3pt raise, expressed as a RATIO of the resolved size:
+            // 5/13 and -3/13 were the raises at the old hardcoded 13pt smaller size,
+            // so the raise-to-size relationship is preserved while the raise itself
+            // now tracks the preference — which is what `PSEntryDocumentBuilder`'s
+            // `sup`/`sub` comment already claims happens here.
+            if run.style.contains(.superscript) {
+                piece.baselineOffset = size * 0.38
+            }
+            if run.style.contains(.subscript) {
+                piece.baselineOffset = -size * 0.23
+            }
             if let link = run.entryLink, let url = link.url {
                 piece.link = url
                 piece.foregroundColor = StudyPalette.accent

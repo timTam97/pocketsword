@@ -6,7 +6,19 @@ struct SearchView: View {
     let moduleChoices: [SearchModuleChoice]
     let preferredModule: String?
     let currentBookName: String?
-    let restoredHistoryItem: PSSearchHistoryItem?
+    /// Pulled inside `.task`, NOT passed as a value, and that is load-bearing.
+    ///
+    /// `ReadingWorkspaceModel.searchHistoryItemToRestore()` **consumes** the
+    /// reader's saved item on its query-only arm — it nils
+    /// `savedSearchHistoryItem` before returning. This is a persistent workspace:
+    /// the enclosing `SearchWorkspace.body` re-evaluates on any observed change
+    /// (it reads `reading.mode` through `preferredSearchModule`), while
+    /// `configure(...)` runs once per launch behind `@State configured`.
+    /// Evaluating the argument in `body` therefore consumed the value on passes
+    /// that never reached `configure`, silently discarding the reader's memory of
+    /// the last search. As a closure the consume happens on the one path that
+    /// uses the result.
+    let restoredHistoryItem: () -> PSSearchHistoryItem?
     let openResult: (_ reference: String, _ module: String) -> Void
 
     @State private var configured = false
@@ -63,7 +75,7 @@ struct SearchView: View {
                 modules: moduleChoices,
                 preferredModule: preferredModule,
                 currentBookName: currentBookName,
-                restoring: restoredHistoryItem
+                restoring: restoredHistoryItem()
             )
         }
     }

@@ -13,6 +13,19 @@ struct DictionaryView: View {
 
         NavigationStack {
             DictionaryKeyList(library: library)
+                // Value-based navigation: the entry is loaded HERE, on push,
+                // not when a row is realized — see `DictionaryKeyList`.
+                // `String` is unambiguous in this stack: it declares no other
+                // typed destination, and `DictionaryEntryView` resolves its
+                // cross-links in place rather than pushing another screen.
+                .navigationDestination(for: String.self) { key in
+                    if let entry = library.dictionaryEntry(key: key) {
+                        DictionaryEntryView(
+                            initialEntry: entry,
+                            library: library
+                        )
+                    }
+                }
                 .navigationBarTitleDisplayMode(.inline)
                 .searchable(
                     text: $library.dictionaryQuery,
@@ -50,14 +63,16 @@ private struct DictionaryKeyList: View {
                     .listRowBackground(Color.clear)
             } else {
                 ForEach(library.visibleDictionaryKeys, id: \.self) { key in
-                    NavigationLink {
-                        if let entry = library.dictionaryEntry(key: key) {
-                            DictionaryEntryView(
-                                initialEntry: entry,
-                                library: library
-                            )
-                        }
-                    } label: {
+                    // `NavigationLink(value:)`, NOT the destination-closure
+                    // form: a `@ViewBuilder` destination is built when the ROW
+                    // is realized, so that form ran one `dictEntry` lookup —
+                    // SQLite read + zlib inflate, on the main actor, through
+                    // the store's serial queue — for every row scrolled past
+                    // (8,674 of them in Strong's Hebrew). The row still carries
+                    // its own KEY, never an index into a list the search field
+                    // is narrowing; `DictionaryView`'s `navigationDestination`
+                    // resolves it on push.
+                    NavigationLink(value: key) {
                         Text(key)
                     }
                     .accessibilityIdentifier("dictionary.key.\(key)")
@@ -610,8 +625,14 @@ struct HistoryView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    // A STABLE identifier. `entry.id.hashValue` was reseeded
+                    // every launch — Swift hashes String and Date with a
+                    // per-process seed — so an out-of-process XCUITest could
+                    // never compute it. Reference plus module is the row's own
+                    // key, and needs no change to the byte-locked persisted row.
                     .accessibilityIdentifier(
-                        "history.item.\(entry.id.hashValue)"
+                        "history.item.\(entry.reference ?? "")"
+                            + "|\(entry.moduleName ?? "")"
                     )
                     .swipeActions(allowsFullSwipe: false) {
                         Button(role: .destructive) {

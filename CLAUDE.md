@@ -19,8 +19,8 @@ There is no CocoaPods/SPM and, as of Wave 8, no vendored third-party code either
 - Open `PocketSword.xcodeproj` in Xcode and build the shared `PocketSword` scheme (there is a second scheme `PocketSword1`). There is no `.xcworkspace` and no package manager step.
 - CLI build: `xcodebuild -project PocketSword.xcodeproj -scheme PocketSword -configuration Debug -sdk iphonesimulator build` (swap to `-sdk iphoneos` and `-configuration Release`/`Distribution` as needed). You may need `CODE_SIGNING_ALLOWED=NO` for simulator builds without a dev team. **`/usr/bin/xcodebuild` resolves stable Xcode and fails this iOS-26 project with "Found no destinations"** — use `DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer /Applications/Xcode-beta.app/Contents/Developer/usr/bin/xcodebuild`, or prefer the Xcode MCP build/test tools.
 - A clean build should show **`CompileC` 0** and `SwiftCompile` 52 (measured on a clean `-sdk iphoneos` Debug build after Wave 9). There is no C or Objective-C translation unit left in the target — Wave 8 removed the last one, `MBProgressHUD.m`. **Any** `CompileC` at all means non-Swift sources came back into the target; that is a regression, not a detail.
-- **Tests exist, in two bundles.** `PocketSwordTests` (app-hosted, `@testable import PocketSword`) has **134 tests** — 131 that run by default plus 3 env-gated (the 2 `PSREF_EXHAUSTIVE` plus Wave 9's `PSDOC_EXHAUSTIVE`): 18 in `Classes/PersistedFormatTests.swift`, 10 in `Classes/PSVoiceRefParserTests.swift`, 32 in `Classes/PSContentStoreTests.swift`, 4 in `Classes/PSSearchIndexParityTests.swift`, 14 in `Classes/PSRefSemanticsTests.swift`, 6 in `Classes/URLRouterTests.swift`, 35 in `Classes/AppStateStoresTests.swift` (the SwiftUI-migration models and stores), and 15 in `Classes/PSChapterDocumentParityTests.swift` (Wave 9's native-reader gate, including four that pin the lexicon-entry renderer and its cross-links, plus the final pass's two search-highlight tests). `PocketSwordUITests` adds XCUITests over the four workspaces — see SWIFTUI_MIGRATION_PLAN.md. **The expected result is 131 passed / 3 skipped / 0 failed** for the unit bundle, plus **12** XCUITests (Wave 9's two lexicon tests included — see the skip-count note below, because both skip silently on a freshly erased simulator). Run with the Xcode MCP test tools, or `xcodebuild … test` with the `DEVELOPER_DIR` caveat above. The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
-- **Check the skip count, not just the pass count.** The 3 skips are the `PSREF_EXHAUSTIVE` pair plus `PSDOC_EXHAUSTIVE`'s `testNativeDocumentMatchesHTMLForEveryChapter` — the last of which walks all 1,189 chapters × 2 modules × 2 option endpoints (4,756 comparisons, ~30 s) and is the real gate on the native reader, so run it when you touch either emitter. Historically, every engine-driven test polled `isModuleInstalled(name)` with a 90 s timeout and then `XCTSkip`ed, so a mis-ordered commit **skipped rather than failed** — that trap is what dictated Phase 5's step order (see `PHASE5_ORDERING.md`). Those tests are gone, but the habit is still the right one — and it is **live in the XCUITest bundle**: the two lexicon tests (`testStrongsLinkOpensItsLexiconEntry`, `testLexiconCrossLinkNavigatesWithinThePopup`) `XCTSkip` when Strong's markers are off, which is the state of a **freshly erased simulator**, so they report green having asserted nothing. Turn the pref on first — `plutil -replace strongsPreference_KJV -bool YES <container>/Library/Preferences/org.timsams.PocketSword.plist` (the per-module key; note `simctl spawn defaults write` does *not* take, the app's container plist has to be edited directly) — and check the run log actually says it tapped the link.
+- **Tests exist, in two bundles.** `PocketSwordTests` (app-hosted, `@testable import PocketSword`) has **139 tests** — 136 that run by default plus 3 env-gated (the 2 `PSREF_EXHAUSTIVE` plus Wave 9's `PSDOC_EXHAUSTIVE`): 18 in `Classes/PersistedFormatTests.swift`, 10 in `Classes/PSVoiceRefParserTests.swift`, 32 in `Classes/PSContentStoreTests.swift`, 4 in `Classes/PSSearchIndexParityTests.swift`, 14 in `Classes/PSRefSemanticsTests.swift`, 6 in `Classes/URLRouterTests.swift`, 39 in `Classes/AppStateStoresTests.swift` (the SwiftUI-migration models and stores), and 16 in `Classes/PSChapterDocumentParityTests.swift` (Wave 9's native-reader gate, including five that pin the lexicon-entry renderer and its cross-links, plus the final pass's two search-highlight tests). `PocketSwordUITests` adds XCUITests over the four workspaces — see SWIFTUI_MIGRATION_PLAN.md. **The expected result is 136 passed / 3 skipped / 0 failed** for the unit bundle, plus **12** XCUITests (Wave 9's two lexicon tests included — see the skip-count note below, because both skip silently on a freshly erased simulator). Run with the Xcode MCP test tools, or `xcodebuild … test` with the `DEVELOPER_DIR` caveat above. The persisted-format tests **lock the byte-exact persisted formats** (history / bookmark / search-history serialization and the per-module pref-key format) and encode existing read/write quirks deliberately — a change that flips one red means you altered a persisted format and will corrupt user data. Do not "fix" a test to make it pass; fix the code.
+- **Check the skip count, not just the pass count.** The 3 skips are the `PSREF_EXHAUSTIVE` pair plus `PSDOC_EXHAUSTIVE`'s `testNativeDocumentMatchesHTMLForEveryChapter` — the last of which walks all 1,189 chapters × 2 modules × 2 option endpoints (4,756 comparisons, ~30 s) and is the real gate on the native reader, so run it when you touch either emitter. Historically, every engine-driven test polled `isModuleInstalled(name)` with a 90 s timeout and then `XCTSkip`ed, so a mis-ordered commit **skipped rather than failed** — that trap is what dictated Phase 5's step order (see `PHASE5_ORDERING.md`). Those tests are gone, but the habit is still the right one — and it is **live in the XCUITest bundle**: the two lexicon tests (`testStrongsLinkOpensItsLexiconEntry`, `testLexiconCrossLinkNavigatesWithinThePopup`) `XCTSkip` when Strong's markers are off, which is the state of a **freshly erased simulator**, so they report green having asserted nothing. Turn the pref on first — `plutil -replace strongsPreference_KJV -bool YES <container>/Library/Preferences/org.timsams.PocketSword.plist` (the per-module key; note `simctl spawn defaults write` does *not* take, the app's container plist has to be edited directly) — and check the run log actually says it tapped the link. **On a container that has already been launched, editing the plist is ALSO not enough**: `cfprefsd` inside the simulator runtime has the old value cached and hands the app that instead, silently. Flush it with `xcrun simctl spawn <device> launchctl kill SIGKILL system/com.apple.cfprefsd.xpc.daemon` after the edit and before the launch. Measured the trap the expensive way — three device measurements were wasted believing seeded values had taken; the cheap check is to seed `fontSizePreference` to something absurd like 30 and confirm the text visibly changes, which is unmistakable in a screenshot.
 - **The whole suite runs against committed fixtures that were captured from the live SWORD engine, and the engine is gone.** There is no way to regenerate any of them, so a red fixture test is a real behaviour change — never "fix" one by recapturing. The `PSORACLE_CAPTURE` env var and the capture code it gated are deleted. Under `Tests/Fixtures/`:
   - chapter bodies at **both** option endpoints, a bookmark-highlighted body, lexicon entries, footnote attribute shapes — read by `PSContentStoreTests`
   - `versification-KJV-oracle.txt` — 66 books × 5 members, 1,189 verse maxima, **all 2,376 transitions**; this single fixture is the whole versification gate now that `SwordBook` is gone
@@ -83,7 +83,7 @@ The store is at **schemaVersion 2 / tokenGrammar v2** and `Classes/PSContentStor
 
 Both bridging headers now import **`globals.h` and nothing else** — Wave 8 removed the app header's `MBProgressHUD.h` import with the library. If you are looking for the elaborate interop scheme this section used to describe, it is deleted; `misc/PocketSword-Bridging-Header.h`'s own header comment explains what it was for and why it no longer applies. **Do not reconstruct it.**
 
-- **`globals.h` ↔ `AppConstants.swift` are dual-maintained, and this is still live.** `globals.h` is the source of truth for the `Defaults*` / notification-name / `ShownTab` / `PSSearch*` constants and the `ModuleType` / `ATTRTYPE_*` / `SW_OUTPUT_*_KEY` / `SWMOD_*` values that Phase 5 step 2 moved into it out of the then-doomed `SwordModule.h` / `SwordManager.h`. `Classes/AppConstants.swift` mirrors every wire string **byte-for-byte** (persisted default keys, `Notification.Name` raw values, the `"<pref>_<mod>"` per-module-key format, the `DEFAULT_*_PATH` expressions). The persisted key often differs from the macro name (`DefaultsLastRef` → `"lastRef"`) — that half is still live. The notification mismatch this used to name (`moduleMaintainerModeChanged` → `"ModuleMaintainerModeChanged"`, no prefix) is **gone**: the notification went with the maintainer-mode feature, all 23 surviving notification literals equal their macro names, and the only trace is the comment recording it at `AppConstants.swift:170`. Change a literal in one, change it in the other, or persisted data breaks.
+- **`globals.h` ↔ `AppConstants.swift` are dual-maintained, and this is still live.** `globals.h` is the source of truth for the `Defaults*` / notification-name / `ShownTab` / `PSSearch*` constants and the `ModuleType` / `ATTRTYPE_*` / `SW_OUTPUT_*_KEY` / `SWMOD_*` values that Phase 5 step 2 moved into it out of the then-doomed `SwordModule.h` / `SwordManager.h`. `Classes/AppConstants.swift` mirrors every wire string **byte-for-byte** (persisted default keys, `Notification.Name` raw values, the `"<pref>_<mod>"` per-module-key format, the `DEFAULT_*_PATH` expressions). The persisted key often differs from the macro name (`DefaultsLastRef` → `"lastRef"`) — that half is still live. The notification mismatch this used to name (`moduleMaintainerModeChanged` → `"ModuleMaintainerModeChanged"`, no prefix) is **gone**: the notification went with the maintainer-mode feature, all 23 surviving notification literals equal their macro names, and the only trace is the comment recording it at `AppConstants.swift:177`. Change a literal in one, change it in the other, or persisted data breaks.
 - **`SWIFT_OBJC_INTERFACE_HEADER_NAME` is unset, so `PocketSword-Swift.h` is not generated.** Many Swift file headers still explain that an Obj-C++ caller reached them "via the generated `PocketSword-Swift.h`" — that is history, accurate for when it was written. No Obj-C consumer remains.
 - **`@objc` annotations are now largely vestigial.** `@objc(PSContentStore)`, `@objc(PSSearchResult)`, `@objc(PSContentVerseRow)`, the resolver's `@objc` seam, and so on exist because an Obj-C++ caller used to need them. They are kept where removing them would be pure churn, and the ones that matter say so in a comment. **Do not read an `@objc` as evidence that an Obj-C caller exists.** As of Wave 8 there are **no** load-bearing ones left in the app layer: the last of them were the `#selector` observer registrations and delegate protocols on the deleted UIKit controllers. What remains is `@objc` on model types (`PSHistoryItem`, `PSSearchHistoryItem`, the bookmark chain, `PSContentStore`) where it is inert, plus `NSObject` subclassing where `NSSortDescriptor` / `NSMutableArray` behaviour is relied on by a byte-locked persisted format.
 - `SWIFT_VERSION = 5.0`, `SWIFT_STRICT_CONCURRENCY = minimal`.
@@ -98,7 +98,7 @@ Both bridging headers now import **`globals.h` and nothing else** — Wave 8 rem
 
 **The order in step 3 is load-bearing.** Nothing may touch `PSModuleController`, the content store or the reader until `prepare()` returns, because the one-shot migrations it runs — `DefaultsLastRefValidated` in particular — can rewrite `lastRef` out from under a render. That is also why `AppSession` parks an incoming URL in `pendingURL` until `replayPendingURL()`, exactly as the deleted scene delegate's `_pendingLaunchURL` did.
 
-`ReadingWorkspaceModel` (`Classes/ReadingWorkspace.swift`) is the running app's reading coordinator — what `PSTabBarControllerDelegate` was, minus the tab bar. It owns the two `ReaderPaneModel`s (Bible and commentary), the `displayChapter` fan-out between them, the study-popup routing, and Focus mode. **Cross-object coordination is now method calls, not notifications**: only six of the coordinator's twelve observers survive, and only because something outside the reader still posts them (`resetBibleAndCommentaryView`, `redisplayPrimary{Bible,Commentary}`, `bookmarksChanged`, `newPrimary{Bible,Commentary}` — six once the braces are expanded, which is what `ReadingWorkspace.swift:873-890` registers; this said "five of thirteen" until it was counted). `toggleNavigation`, `toggleMultiList`, `showInfoPane`, `hideInfoPane`, `rotateInfoPane`, `showBibleTab`, `showCommentaryTab` and `updateSelectedReference` have **no posters left**.
+`ReadingWorkspaceModel` (`Classes/ReadingWorkspace.swift`) is the running app's reading coordinator — what `PSTabBarControllerDelegate` was, minus the tab bar. It owns the two `ReaderPaneModel`s (Bible and commentary), the `displayChapter` fan-out between them, the study-popup routing, and Focus mode. **Cross-object coordination is now method calls, not notifications**: only six of the coordinator's twelve observers survive, and only because something outside the reader still posts them (`resetBibleAndCommentaryView`, `redisplayPrimary{Bible,Commentary}`, `bookmarksChanged`, `newPrimary{Bible,Commentary}` — six once the braces are expanded, which is what `ReadingWorkspace.swift:933-948` registers; this said "five of thirteen" until it was counted). `toggleNavigation`, `toggleMultiList`, `showInfoPane`, `hideInfoPane`, `rotateInfoPane`, `showBibleTab`, `showCommentaryTab` and `updateSelectedReference` have **no posters left**.
 
 ### Four workspaces (Wave 8)
 
@@ -219,6 +219,15 @@ before changing any of it:
     everything back to the *previous* link. On device this underlined and tinted a
     whole H3899 definition as one link. Record `runs.count` when the anchor opens.
     `testEveryLexiconCrossLinkIsBoundToItsOwnAnchorText` checks all 14,989 corpus-wide.
+    - The bound is **re-applied at a `<br />` block boundary**, because `flushBlock()`
+      empties `runs` while an anchor may still be open. It tags the closing block's
+      runs before the copy and then bounds the continuation at 0, so a cross-link
+      spanning a line break keeps *both* halves; clearing the pending link instead
+      would silently drop a real link, and leaving `linkStartRun` pointing into the
+      new block was the H3899 defect relocated. Nothing shipped exercises it — 0 of
+      the 14,989 `href` anchors contain a break, and 0 are nested or unbalanced — so
+      `testCrossLinkSpanningALineBreakKeepsBothHalves` is synthetic on purpose and is
+      the only thing holding it.
   - **An `OpenURLAction` that returns `.handled` with no handler SWALLOWS the tap.**
     `EntryTextView`'s `openLink` is optional, and `openLink?(link)` + `return
     .handled` is a silent no-op — which is why every cross-link in the Strong's popup
@@ -238,6 +247,78 @@ before changing any of it:
   - **Applying a scroll in the same update as a document change silently does
     nothing** — the target resolves against the row set being replaced. `apply(_:)`
     defers it by one update for exactly this reason; do not "simplify" that away.
+    Note `restoreAfterSizeChange` now carries its own inlined copy of `apply`'s
+    `.verse` body, so the rotation suppression can be cleared *inside* the same
+    deferred hop; de-duplicating them back together reintroduces the zero-length
+    window described below.
+  - **`ScrollPosition.scrollTo(y:)` is INSET-RELATIVE, and the persisted offset
+    matches it on purpose. Do not "fix" this.** The reader persists
+    `geometry.contentOffset.y + geometry.contentInsets.top`, which reads like a bug
+    next to a raw `scrollTo(y:)` — a code review flagged it as exactly that. It is
+    correct: measured with a standalone SwiftUI harness on iOS 27, with a 62pt top
+    inset and 5,000pt of content, `scrollTo(y: 200)` lands at `contentOffset.y =
+    138` and `scrollTo(y: 1000)` at `938` — i.e. the argument equals
+    `contentOffset.y + contentInsets.top` — and at rest `contentOffset.y` is
+    `-contentInsets.top`, so the sum is 0. Confirmed independently in the app's own
+    instrumented log (`off=-168 insetTop=168`, `off=-116 insetTop=116`). The docs do
+    not say this: `scrollTo(y:)` only mentions choosing *x* from the content insets.
+    Two corollaries: the arithmetic round trip is exact, and `max(0, offset)` in
+    `scrollOffsetChanged` is benign because the resting value is 0 rather than
+    negative — it only clips rubber-band overscroll past the top.
+  - **The LAUNCH offset restore used to do nothing and then destroy the saved
+    offset. TWO defects, neither of them the arithmetic above.** Symptom: seeding
+    `bibleScrollPosition = 500` landed the reader on verse 1 and rewrote the key to
+    `0` — self-perpetuating, so every later launch had nothing left to restore. It is
+    tempting to blame the deferred `scrollTo(y:)` for running before the scroll view
+    exists; **that is wrong, and was measured to be wrong** — the hop runs ~448 ms
+    after `apply`, well after `ScrollView.onAppear`, with content laid out, and the
+    scroll *does* take effect. What actually happened:
+    1. **`ReaderScreen`'s rotation hook fires during LAUNCH.** The reader's size
+       settles in steps — `(402, 0) → (402, 623) → (402, 675)` as the nav bar and
+       floating tab bar come in — and `(402, 0)` is not `CGSize.zero`, so the
+       `old != .zero` guard does not stop it. `restoreAfterSizeChange()` then
+       re-anchored on `currentShownVerse`, still **1** because an offset restore
+       names no verse, and `rowID(containing: 1)` resolves to the *intro* row — so it
+       queued a `scrollTo(id: 0)` that landed 11 ms after the offset scroll and
+       dragged the reader to the absolute top. **This is precisely why `.verse`
+       restores always worked and `.offset` restores did not**: `apply(.verse(n))`
+       sets `currentShownVerse = n` first, so the re-anchor re-issues the *same*
+       scroll. Only the offset arm left no record of what was being restored.
+       `restoreAfterSizeChange` now prefers an outstanding offset restore.
+    2. **The first geometry publish is an unlaid-out scroll view and was persisted.**
+       It reports `contentOffset 0 / contentSize 0 / containerSize 0` *before* the
+       restore's hop runs; `abs(500 - 0) > 2` counted as a scroll and wrote `"0"`.
+       A scroll view with no content has not answered the question — its 0 is the
+       absence of a position, not the top of the chapter.
+    The fix is `ReaderScrollSample` (offset **plus** `contentHeight` and
+    `containerHeight`) and `outstandingOffsetRestore`, giving `scrollOffsetChanged` a
+    three-way gate: drop anything not `isLaidOut`; clear on landing within 2 pt; and
+    **give up at `maxOffset` (`contentHeight - containerHeight`, exact) when the
+    target is unreachable**, which is the bigger-font/shorter-chapter case and is
+    what stops the gate suppressing persistence for the rest of the session.
+    `userBeganScrolling()` (on `onScrollPhaseChange` `.tracking`/`.interacting`) is
+    the release valve, so this is a gate and not a timeout — no clock, no retry
+    (measured: an identical `scrollTo(y:)` is a no-op once the binding holds the
+    value, so a retry loop fires once at best). Observing the heights is also what
+    *drains* the restore deterministically as content settles.
+    `testUnlaidOutGeometryDoesNotOverwriteThePersistedScrollOffset` and
+    `testUnreachableOffsetRestoreGivesUpAtTheScrollViewsMaximum` pin it; the first is
+    red if the `isLaidOut` guard is removed (mutation-checked, not assumed).
+    - **Residual, not fixed:** on roughly 1 launch in 4 the toolbar keeps `…:1` after
+      a correct restore. `tracksTopmostVerse` reports on a Bool *edge*, and if that
+      edge lands while `isRestoringAfterTransition` is still set the report is
+      dropped and never repeats, so no `persistPosition` runs. Self-corrects on the
+      first scroll, and `bibleScrollPosition` is never wrong. Do not write an
+      XCUITest that asserts on the navigation-bar title here — measured 2 flakes in
+      8 launches; assert on reader content instead.
+  - **The prose row set is cached on `ReaderPaneModel.paragraphs`**, invalidated by
+    `document`'s `didSet`. `ChapterDocument.paragraphs` walks and reallocates every
+    verse (Psalm 119 is 176), so it must not be called from a view body —
+    `ChapterTextView`'s `ForEach` and `rowID(containing:)` were both doing it, the
+    former on every scroll-driven chrome invalidation. The cache lives on the model
+    and not on the value type deliberately: a stored property on `ChapterDocument`
+    would change its synthesized `Equatable` and its all-defaulted memberwise init,
+    both of which the parity tests build on.
 
 **Verse layout honours the verse-per-line pref, and this is not cosmetic.** With VPL
 OFF (the default) verses flow together as prose, breaking at the KJV's own pilcrow —
@@ -263,10 +344,16 @@ and the assembler always wrapped each commentary verse in its own `<p>`.
   Relatedly, the Dictionary must resolve a tapped row against the **filtered** list,
   never the full one — indexing the full key list while a search is narrowing it
   opens the wrong entry for every result. The SwiftUI surface gets this right
-  structurally: `LibraryModel.visibleDictionaryKeys` (`AppModels.swift:340-343`) is
+  structurally: `LibraryModel.visibleDictionaryKeys` (`AppModels.swift:371-374`) is
   what the view iterates, so a row carries its own key and there is no index to
   mis-apply. (This note used to name `PSDictionaryViewController`'s single
-  `searching`-branching `key(at:)`; that class was deleted in Wave 8.)
+  `searching`-branching `key(at:)`; that class was deleted in Wave 8.) The row is now
+  a `NavigationLink(value: key)` against a `.navigationDestination(for: String.self)`,
+  which reinforces that property — the key IS the navigation value. It is also a
+  performance fix, and a non-obvious one: the `NavigationLink { destination } label:`
+  form evaluates its destination view builder when the ROW is created, not when it is
+  tapped, so every realized row was running a `dictEntry` lookup plus a zlib inflate
+  plus an expander pass on the main actor. Scrolling Strong's Hebrew did 8,674 of them.
 > Historical, and do not resurrect it: the reader used to inject 4 KB of
 > chapter-navigation JavaScript (`PSChapterNavigationJS`, itself a port of
 > `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`) that built a
@@ -336,8 +423,10 @@ The `PSSearchEngineErrorDomain` + negative-sentinel-code contract was **not pres
 ### App-level module layer (`Classes/PSModule*`, `Classes/PS*ViewController` — Swift)
 
 - `PSModuleController` (singleton via `+defaultModuleController`) holds the **primary Bible / commentary / dictionary the user is currently reading, as `String?` names** (`primaryBibleName` / `primaryCommentaryName` / `primaryDictionaryName`) and the ref-string helpers (`+createRefString:`, `+createTitleRefString:`). The HTML shells (`+createHTMLString:`, `+createInfoHTMLString:`, `+createStrongsInfoHTMLString:`) and the chapter getters (`-getBibleChapter:withExtraJS:`, `-getCommentaryChapter:withExtraJS:`) are **deleted** in Wave 9. Note the `lastRef` write moved out of those getters into `ReaderPaneModel.render` — missing it was a real defect, since the toolbar title and relaunch restoration both read that key. It no longer unpacks anything, has no `swordManager`, and has no `reload()` / `removeModule` / `setPreferences` — see the historical block above for why each went.
-- `ReaderPaneModel` (`Classes/ReadingWorkspace.swift`) is one reading surface — what `PSModuleViewController` / `PSBibleViewController` / `PSCommentaryViewController` were. Two exist for the app's lifetime and **both stay in the view hierarchy**, with the inactive one at `opacity(0)`: `displayChapter` renders the polled pane and defers a `refToShow` / `pendingRestore` into the *other*, so the inactive pane has to exist to receive it. Rendering only the active pane would tear down its document and scroll position and lose the pending work. Tapped verses / Strong's lookups arrive as `pslink://` URLs through the reader's `OpenURLAction` and are routed to a `StudyPopupSheet`. (Pre-Wave-9 this bullet said `jsToShow`, `WebPage` and `ReaderWebPageModelDelegate`; all three are deleted — `jsToShow` became the typed `pendingRestore`.)
+- `ReaderPaneModel` (`Classes/ReadingWorkspace.swift`) is one reading surface — what `PSModuleViewController` / `PSBibleViewController` / `PSCommentaryViewController` were. Two exist for the app's lifetime and **both stay in the view hierarchy**, with the inactive one at `opacity(0)`: `displayChapter` renders the polled pane and defers a `refToShow` / `pendingRestore` into the *other*, so the inactive pane has to exist to receive it. Rendering only the active pane would tear down its document and scroll position and lose the pending work. Tapped verses / Strong's lookups arrive as `pslink://` URLs through the reader's `OpenURLAction` and are routed to a `StudyPopupSheet`. (Pre-Wave-9 this bullet said `jsToShow`, `WebPage` and `ReaderWebPageModelDelegate`; all three are deleted — `jsToShow` became the typed `pendingRestore`.) **`mode`'s `didSet` is the ONLY drain of that deferral**, and that is why a font/size change (`resetBibleAndCommentaryView` → `redisplayWithDefaults()`) polls the **active** pane rather than neither. The Obj-C original passed `NoViewPoll` and got away with it because the font UI was its own tab and each reader drained from `-viewWillAppear:` on the way back; both SwiftUI panes are permanent, there is no `viewWillAppear` equivalent, so the faithful port rendered nothing at all and a font change was invisible until the user switched Bible ⇄ commentary. Polling the active pane fixes that while leaving the inactive pane's deferral — the thing that stops every Bible chapter change from also rendering MHCC — untouched.
 - `LaunchCoordinator` performs first-run bootstrap, driven from `RootView`'s `.task`. **There is no seeding any more** — no zips, nothing written to `Documents/`. What it still does: `resetPreferences`, the insomnia pref, the `MMM` temp cleanup, and five one-shot migrations — `DefaultsModuleChoiceRetired`, `DefaultsGlobalFontOnly`, `DefaultsLastRefValidated`, `DefaultsDictKeyCaseFixed`, and `DefaultsSwordRetired`.
+- **`resetPreferences()` has two traps, both fixed, both of which were silent.** (1) It called `resetModuleSelections()`, which nils all three primaries, and nothing put the *reading* ones back — so a reset left the reader blank for the whole session, on both the launch and the foreground path. It now re-resolves via `reloadLastBible()` / `reloadLastCommentary()`; the lexicon is deliberately left nil, because "none selected" genuinely is the fresh-install state. (2) `.appStateDidReset` had **no production observer at all**, only a test, so the wipe happened under models that had already cached those keys: the Settings screen kept showing the pre-reset font *and re-persisted it on the next touch of any control*, the Library kept listing deleted history, and the idle timer stayed disabled. `AppSession.observeAppStateReset()` now reloads `SettingsModel` / `LibraryModel` / `ReadingModel`, re-applies the idle timer and rebuilds both panes' display-toggle rows. Two things there are load-bearing: it must go through `SettingsModel.reload()` (whose `isReloading` flag suppresses the five `didSet` writes — assigning the properties one by one would re-create exactly the keys the reset just deleted), and it must be registered `queue: .main`, because the launch path runs `resetPreferences()` off the main actor while everything it reloads is `@MainActor`.
+  - Two known asymmetries left alone deliberately: the reset removes the **local** `bibleHistory` but not the iCloud copy, so a later `NSUbiquitousKeyValueStore` sync can restore it (routing through `HistoryStore.clear()` would wipe history on every device — its own decision); and the key list is the legacy one, so `rotationLockPosition`, `fullscreenModePreference`, the three `lastSearch*`, the two scroll positions and the two verse positions all survive a "reset".
 - **`DefaultsSwordRetired` is the upgrade path**, and it is the only thing standing between an upgrading user and ~18.7 MB of orphaned files. It deletes `Documents/{mods.d,modules,locales.d,unused}` and `<Caches>/InstallMgr`. Measured on a planted pre-Phase-5 container: `Documents/` 13 MB → 4 KB, idempotent on relaunch. **`PSBookmarks.plist` is at `Documents/` root** (`PSBookmarks.swift:46`), outside all four — verified safe, and it is the one piece of irreplaceable user data down there, so do not widen the sweep to `Documents/` itself. Deleting `Documents/modules` is also what removes the legacy search index. The `<Caches>/cache-*` lexicon key caches are **not** swept here — `DefaultsDictKeyCaseFixed` already does it.
 
 ### Tabs enum (stable ordinals)
@@ -354,6 +443,11 @@ Display prefs are split by scope, and the split is **load-bearing**:
 - **Global** prefs — **font name + size** plus the device options — live in `SettingsView` (`SwiftUISupportingViews.swift`), the Settings workspace. There is exactly **one** font for the whole app. (This was `PSPreferencesController`, whose `LANG_SECTION = 44` was deliberately out of range and unreachable; it is deleted.)
 
 **Font is global, deliberately.** `ChapterTextRenderer.Style.current()` reads only the unsuffixed `fontNamePreference` / `fontSizePreference` — the same two keys `createHTMLString` read before Wave 9 deleted it; the per-module `"<fontpref>_<mod>"` override was removed when the picker moved into Settings. The `DefaultsGlobalFontOnly` migration deletes the orphaned per-module font/size/defaults keys so they can't sit in the plist looking authoritative.
+
+**`EntryTextView` honours those same two keys, and the absent-key default lives in ONE place.** Wave 9 hardcoded 17pt/13pt in the entry renderer, so footnote bodies, Strong's definitions and Dictionary entries silently stopped tracking the Settings size — every deleted entry shell went through `createHTMLString(_:usingPreferences: true, …)`, whose `body` rule was `font-size: <fontSizePreference>pt`. Three things about the fix are deliberate:
+  - **A legibility floor of `EntryTextView.minimumBodySize` (14).** Entry prose is dense reference text and the deleted shell's CSS `12pt` rendered at ~16 device points, so the raw preference at the bottom of the slider would show it smaller than it has ever been shown. Above the floor the preference wins outright; below it the floor holds — so the bottom of the slider range deliberately moves the chapter text and not the entry text.
+  - **The Strong's arm opts out of the user's FACE**, matching the shells: `createInfoHTMLString` inherited `font-family: <fontNamePreference>` while `createStrongsInfoHTMLString` overrode it to the system stack. That is what `usesSystemFace` carries.
+  - **`AppConstants.defaultFontSize` (12) is the single absent-key fallback.** `SettingsStore` used 12 and `ChapterTextRenderer.Style.current()` used 14, and the window where that showed was real: `resetPreferences()` removes `fontSizePreference` and nothing re-materialized it, so a post-reset launch rendered the chapter at 14 while the Settings slider read 12. It is Swift-only on purpose — `globals.h` has `PSDefaultFontName` but no font-size counterpart, so this is not a dual-maintenance violation.
 
 **The per-module content toggles stay per-module.** The original reason was mechanical: `-[SwordModule getChapter:]` called `-setPreferences`, which read the per-module keys off `self.name` and pushed them into SWORD as global options, so a toggle written to the global domain was silently clobbered on every render. `setPreferences` and SWORD are both gone, so that specific trap is too — but the *scope* is still right. The toggles are genuinely per-module (KJV has six, MHCC has none), and flattening them into global Preferences would mean one module's menu writing keys another module's render reads. Font is the deliberate exception, and always was.
 

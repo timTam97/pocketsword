@@ -103,18 +103,6 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
         configuration.delegateClass = PocketSwordSceneOrientationDelegate.self
         return configuration
     }
-
-    /// Runs an interrupted index build from the `.backgroundTask` scene modifier.
-    /// Bridges the manager's completion-handler seam — which the XCTests drive
-    /// directly — into the modifier's `async` shape.
-    func runPendingSearchIndexBuild() async {
-        let manager = searchIndexBackgroundManager
-        await withCheckedContinuation { continuation in
-            manager.performPendingBuild(cancellationRequested: { false }) { _, _ in
-                continuation.resume()
-            }
-        }
-    }
 }
 
 /// Reports the rotation-lock preference to the window scene.

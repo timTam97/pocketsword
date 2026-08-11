@@ -803,6 +803,56 @@ final class PSChapterDocumentParityTests: XCTestCase {
         XCTAssertFalse(text.contains("<"), "a tag survived into the rendered text")
     }
 
+    /// A cross-link that spans a `<br />` keeps its link on BOTH halves, and puts it
+    /// on neither the prose before the anchor nor the prose after it.
+    ///
+    /// `flushBlock()` copies `runs` into a block and starts a fresh array, so the
+    /// `</a>` that calls `applyPendingLink()` can no longer reach the runs the anchor
+    /// emitted before the break. It used to just restart the bound at 0 and call that
+    /// defence in depth; the effect was that the pre-break half of the link went dead
+    /// while looking like ordinary text — the H3899 over-jacketing defect's mirror
+    /// image, a silently DROPPED link rather than an over-applied one. Applying the
+    /// pending link on the way out of the block fixes it, and makes the 0 bound exact:
+    /// the anchor is still open, so it owns everything the next block emits until
+    /// `</a>`.
+    ///
+    /// Synthetic on purpose. Re-measured over all 14,989 `href` anchors of the three
+    /// lexicons and all 6,959 KJV note bodies, ZERO carry a `<br />` between an `<a
+    /// href>` and its `</a>` (and zero anchors are nested or unbalanced), so no store
+    /// entry can pin this — and the failure it guards is the silent kind: a tappable
+    /// number that renders as plain prose.
+    func testCrossLinkSpanningALineBreakKeepsBothHalves() throws {
+        let html = "From <a href=\"sword://StrongsRealHebrew/03898\">3898"
+            + "<br />(bis)</a>; food"
+        let target = EntryLink.lexicon(module: BundledModules.strongsHebrew,
+                                       key: "03898")
+
+        let document = PSEntryDocumentBuilder.build(html: html)
+
+        // The break still splits the anchor across two blocks — the fix must not
+        // "solve" this by keeping the anchor's content in one block.
+        XCTAssertEqual(document.blocks.count, 2,
+                       "the <br /> inside the anchor did not split the entry: "
+                           + "\(document.blocks.map { $0.runs.map(\.text).joined() })")
+
+        // Both halves of the anchor text are linked, in order.
+        let linkedText = document.blocks
+            .flatMap(\.runs)
+            .filter { $0.entryLink == target }
+            .map(\.text)
+            .joined()
+        XCTAssertEqual(linkedText, "3898(bis)",
+                       "a cross-link spanning a line break lost a half")
+
+        // And nothing outside the anchor is linked, in either block.
+        for run in document.blocks.flatMap(\.runs) where run.entryLink != nil {
+            XCTAssertFalse(run.text.contains("From"),
+                           "the prose before the anchor was jacketed: '\(run.text)'")
+            XCTAssertFalse(run.text.contains("food"),
+                           "the prose after the anchor was jacketed: '\(run.text)'")
+        }
+    }
+
     // MARK: - Search highlighting
 
     /// Every term in the list gets highlighted, not just the first, and a marker

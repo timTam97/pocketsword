@@ -141,8 +141,16 @@ final class ReferencePickerModel {
     }
 
     func openVerses(for bookID: String, chapter: Int) {
+        // `(1...n).contains(x)` is a TRAP when `n` is 0: the `...` operator
+        // precondition-fails ("Can't form Range with upperBound < lowerBound")
+        // while FORMING the range, before `contains` is ever called — and both
+        // `chapterCount` and `verseCount(chapter:)` return 0 for a book/chapter
+        // the versification does not have. The bounds are therefore compared
+        // directly here and in `select`, which is identical for every non-empty
+        // book.
         guard let book = book(id: bookID),
-              (1...book.chapterCount).contains(chapter) else {
+              chapter >= 1,
+              chapter <= book.chapterCount else {
             return
         }
         path.append(.verses(bookID: bookID, chapter: chapter))
@@ -150,8 +158,10 @@ final class ReferencePickerModel {
 
     func select(bookID: String, chapter: Int, verse: Int) {
         guard let book = book(id: bookID),
-              (1...book.chapterCount).contains(chapter),
-              (1...book.verseCount(chapter: chapter)).contains(verse) else {
+              chapter >= 1,
+              chapter <= book.chapterCount,
+              verse >= 1,
+              verse <= book.verseCount(chapter: chapter) else {
             return
         }
         onSelection?(
@@ -353,7 +363,10 @@ private struct ReferenceChapterList: View {
 
     var body: some View {
         List {
-            ForEach(1...book.chapterCount, id: \.self) { chapter in
+            // Half-open deliberately: `1...count` traps at runtime when `count`
+            // is 0, and a book with no chapters must degrade to an empty list
+            // rather than crash the picker.
+            ForEach(1..<(book.chapterCount + 1), id: \.self) { chapter in
                 ReferenceChapterRow(
                     bookID: book.id,
                     chapter: chapter,
@@ -431,8 +444,12 @@ private struct ReferenceVerseList: View {
 
     var body: some View {
         List {
+            // Half-open for the same reason as `ReferenceChapterList`:
+            // `verseCount(chapter:)` returns 0 for a chapter this book does not
+            // have, and `1...0` traps. An empty list is the right degradation for
+            // a destination that did not come through `openVerses`.
             ForEach(
-                1...book.verseCount(chapter: chapter),
+                1..<(book.verseCount(chapter: chapter) + 1),
                 id: \.self
             ) { verse in
                 Button {

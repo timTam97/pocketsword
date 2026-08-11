@@ -48,6 +48,30 @@ final class LaunchCoordinator {
             moduleController.primaryBibleName = nil
             moduleController.primaryCommentaryName = nil
             moduleController.primaryDictionaryName = nil
+            // Re-resolve the two READING primaries straight away.
+            //
+            // Clearing them is the whole of "forget the module choices", but nothing
+            // used to put them back: `PSModuleController` only resolves them in
+            // `init` (through `reloadLast*`), and the singleton already exists by the
+            // time a reset runs — `moduleControllerAvailable()`, the guard at the top
+            // of both `prepare()` and `resetPreferences()`, is what builds it. So
+            // `ReaderPaneModel.render` found `moduleName == nil`, bailed to an empty
+            // `ChapterDocument`, and the reader stayed BLANK for the rest of the
+            // session; the display menu lost every row, `searchModuleChoices` went
+            // empty and `HistoryStore.addEntry` recorded nothing, all for the same
+            // reason.
+            //
+            // `reloadLast*` rather than assigning `BundledModules.bible` here:
+            // `lastBible` / `lastCommentary` were removed a few lines above, so this
+            // lands on the bundled defaults through the one function that owns that
+            // fallback rule — the same state the next launch would have produced.
+            //
+            // `primaryDictionaryName` is deliberately left nil. `lastDictionary` is
+            // gone too, and "no lexicon selected" IS the fresh-install state: the
+            // Library's Dictionary section shows `DictionaryNoneLoaded` until one is
+            // picked.
+            moduleController.reloadLastBible()
+            moduleController.reloadLastCommentary()
         },
         currentReference: @escaping () -> String = {
             PSModuleController.getCurrentBibleRef() ?? ""

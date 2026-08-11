@@ -68,12 +68,20 @@ struct StudyPopupSheet: View {
                 StudyPopupHeader(content: current)
             }
             EntryTextView(
-                document: PSEntryDocumentBuilder.build(html: current.entryHTML),
+                // Parsed ONCE, on the content object that owns the HTML. Building it
+                // here re-ran the whole scanner on every body evaluation — dragging
+                // the detent or tapping Back re-parsed the entry.
+                document: current.entryDocument,
                 openLink: follow,
                 // A non-Strong's entry gets top padding because it has no header
                 // to sit under; the old code set the same 20pt as a scroll-view
                 // content inset.
-                topInset: current.isStrongsEntry ? 0 : 20
+                topInset: current.isStrongsEntry ? 0 : 20,
+                // `createStrongsInfoHTMLString` overrode the definition's
+                // font-family to `-apple-system`; a footnote or a morph entry came
+                // through `createInfoHTMLString`, which kept the user's chosen
+                // font. Same split, so neither surface changes for the wrong reason.
+                usesSystemFace: current.isStrongsEntry
             )
             // `current` changes identity when a cross-link is followed, which resets
             // the entry's scroll offset. Without this the new definition opens

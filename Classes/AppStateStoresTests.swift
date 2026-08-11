@@ -835,6 +835,147 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(redisplayNotifications, 1)
     }
 
+    /// A reset has to TAKE in the live models, not just in the defaults plist.
+    ///
+    /// `.appStateDidReset` had no production observer, so `resetPreferences()`
+    /// removed `fontNamePreference` / `fontSizePreference` / `insomniaPreference` /
+    /// `bibleHistory` out from under models that had already cached them — and at
+    /// launch it does so AFTER `AppSession.start()` has run, because
+    /// `didFinishLaunching` precedes `RootView`'s `.task`. The Settings screen went
+    /// on showing the pre-reset font and size and the Library went on listing
+    /// deleted history rows.
+    ///
+    /// It also pins the half of the fix that is easy to get wrong: the reload must
+    /// NOT write the cached values back. `SettingsModel`'s properties persist
+    /// themselves from `didSet`, so a reload that assigned them individually would
+    /// re-create the very keys the reset deleted.
+    @MainActor
+    func testAppStateResetReloadsTheModelsThatCachedRemovedPreferences() {
+        defaults.set("John 3", forKey: Defaults.lastRef)
+        defaults.set("Gentium Plus", forKey: Defaults.fontNamePreference)
+        defaults.set(18, forKey: Defaults.fontSizePreference)
+        defaults.set(true, forKey: Defaults.insomniaPreference)
+        defaults.set(
+            [[
+                "John 3:16",
+                "0",
+                BundledModules.bible,
+                Date(timeIntervalSince1970: 1),
+            ]],
+            forKey: AppConstants.historyName
+        )
+
+        let settings = SettingsModel(store: SettingsStore(defaults: defaults))
+        let library = LibraryModel(
+            bookmarkStore: BookmarkStore(
+                rootProvider: { PSBookmarkFolder() },
+                save: { true },
+                notificationCenter: NotificationCenter()
+            ),
+            historyStore: HistoryStore(
+                defaults: defaults,
+                cloudStore: HistoryCloudStoreStub(),
+                notificationCenter: NotificationCenter()
+            ),
+            dictionaryStore: DictionaryStore(
+                defaults: defaults,
+                moduleProvider: { nil },
+                moduleLoader: { _ in },
+                moduleTypeProvider: { _ in nil },
+                keysProvider: { _ in [] },
+                entryProvider: { _, _ in nil }
+            ),
+            notificationCenter: NotificationCenter()
+        )
+        let session = AppSession(
+            settings: settings,
+            library: library,
+            readingStore: ReadingStateStore(defaults: defaults)
+        )
+        session.start()
+
+        XCTAssertEqual(settings.fontName, "Gentium Plus")
+        XCTAssertEqual(settings.fontSize, 18)
+        XCTAssertTrue(settings.keepScreenAwake)
+        XCTAssertEqual(library.history.count, 1)
+        XCTAssertEqual(session.reading.reference?.chapterRef, "John 3")
+
+        // The handler is delivered on `OperationQueue.main`, so the test has to wait
+        // for it. This probe is registered on the same center AFTER `start()`:
+        // NotificationCenter delivers to observers in registration order and both
+        // blocks land on the same serial queue, so by the time it fulfils the
+        // session's handler has finished. (Deliberately NOT an
+        // `XCTNSPredicateExpectation` — XCTest does not promise to evaluate the
+        // predicate on the main thread, and reading these `@MainActor` models from
+        // it would need `MainActor.assumeIsolated`, which traps rather than fails.)
+        let handled = expectation(description: "appStateDidReset handled")
+        let probe = NotificationCenter.default.addObserver(
+            forName: .appStateDidReset,
+            object: nil,
+            queue: .main
+        ) { _ in handled.fulfill() }
+        defer { NotificationCenter.default.removeObserver(probe) }
+
+        // The real coordinator, on the real center — the observer is registered
+        // there — with only `defaults` and the module-controller seams stubbed.
+        let coordinator = LaunchCoordinator(
+            defaults: defaults,
+            moduleControllerAvailable: { true },
+            resetModuleSelections: {}
+        )
+        XCTAssertTrue(coordinator.resetPreferences())
+        wait(for: [handled], timeout: 5)
+
+        XCTAssertEqual(settings.fontName, AppConstants.defaultFontName)
+        XCTAssertEqual(settings.fontSize, 12)
+        XCTAssertFalse(settings.keepScreenAwake)
+        XCTAssertTrue(library.history.isEmpty)
+        XCTAssertEqual(session.reading.reference?.chapterRef, "Genesis 1")
+        // The reload read the defaults; it must not have written them back.
+        XCTAssertNil(defaults.object(forKey: Defaults.fontNamePreference))
+        XCTAssertNil(defaults.object(forKey: Defaults.insomniaPreference))
+    }
+
+    /// The reset must leave a USABLE module selection behind.
+    ///
+    /// `resetModuleSelections` clears all three primaries, and nothing put the two
+    /// reading ones back: `PSModuleController` resolves them in `init`, and the
+    /// singleton already exists by the time a reset runs (the
+    /// `moduleControllerAvailable()` guard is what builds it).
+    /// `ReaderPaneModel.render` then found `moduleName == nil` and assigned an empty
+    /// `ChapterDocument`, so the reader was blank until the next launch — on both
+    /// reset paths.
+    ///
+    /// Uses a private center so the reset's posts cannot reach an `AppSession`
+    /// another test started. `reloadLast*` resolves against
+    /// `UserDefaults.standard` (the singleton has no injectable defaults), so the
+    /// two keys are cleared there first — the same two writes the app itself makes
+    /// at every launch, which is what makes the bundled-default fallback
+    /// deterministic here.
+    @MainActor
+    func testResetRestoresThePrimaryReadingModules() {
+        let controller: PSModuleController = PSModuleController.default()
+        let previousDictionary = controller.primaryDictionaryName
+        defer { controller.primaryDictionaryName = previousDictionary }
+        UserDefaults.standard.removeObject(forKey: Defaults.lastBible)
+        UserDefaults.standard.removeObject(forKey: Defaults.lastCommentary)
+        let coordinator = LaunchCoordinator(
+            defaults: defaults,
+            notificationCenter: NotificationCenter()
+        )
+
+        XCTAssertTrue(coordinator.resetPreferences())
+
+        XCTAssertEqual(controller.primaryBibleName, BundledModules.bible)
+        XCTAssertEqual(
+            controller.primaryCommentaryName,
+            BundledModules.commentary
+        )
+        // The lexicon is deliberately NOT restored: `lastDictionary` is gone, and
+        // "none selected" is the fresh-install state.
+        XCTAssertNil(controller.primaryDictionaryName)
+    }
+
     func testSearchOptionsStorePreservesLegacyKeysAndEnumOrdinals() {
         let store = SearchOptionsStore(defaults: defaults)
         store.save(
@@ -1559,5 +1700,125 @@ final class AppStateStoresTests: XCTestCase {
             defaults.array(forKey: AppConstants.historyName)?.count,
             1
         )
+    }
+
+    // MARK: Launch scroll restore
+
+    /// Saves and restores the two `UserDefaults.standard` keys the reader pane
+    /// persists. `ReaderPaneModel` reads `.standard` directly (it has no injectable
+    /// defaults), so a test that writes them has to put them back.
+    @MainActor
+    private func withPreservedPanePositionKeys(_ body: (UserDefaults, String) -> Void) {
+        let standard = UserDefaults.standard
+        let scrollKey = "bibleScrollPosition"
+        let verseKey = Defaults.bibleVersePosition
+        let previousScroll = standard.string(forKey: scrollKey)
+        let previousVerse = standard.string(forKey: verseKey)
+        defer {
+            if let previousScroll {
+                standard.set(previousScroll, forKey: scrollKey)
+            } else {
+                standard.removeObject(forKey: scrollKey)
+            }
+            if let previousVerse {
+                standard.set(previousVerse, forKey: verseKey)
+            } else {
+                standard.removeObject(forKey: verseKey)
+            }
+        }
+        body(standard, scrollKey)
+    }
+
+    /// **An unlaid-out scroll view's zero is not a position, and persisting it
+    /// destroyed the saved scroll offset on every launch.**
+    ///
+    /// Replays the geometry sequence measured on device with an instrumented build.
+    /// `ChapterTextView`'s first `onScrollGeometryChange` publish is all zeros — no
+    /// content, no container, no insets — and it arrives ~130 ms BEFORE the restore's
+    /// deferred hop runs. The old code read `abs(500 - 0) > 2` as a scroll and wrote
+    /// `"0"` over the key, so the next launch had nothing left to restore:
+    /// self-perpetuating, and the whole reason a relaunch always opened at the top of
+    /// the chapter.
+    ///
+    /// Step 1 is red on the pre-fix code; steps 2-4 pin the gate's three exits so it
+    /// cannot suppress persistence for the rest of the session.
+    @MainActor
+    func testUnlaidOutGeometryDoesNotOverwriteThePersistedScrollOffset() {
+        withPreservedPanePositionKeys { standard, scrollKey in
+            standard.set("500", forKey: scrollKey)
+            let pane = ReaderPaneModel(mode: .bible)
+            pane.pendingRestore = .offset(500)
+            pane.applyPendingWork()
+
+            pane.scrollOffsetChanged(
+                ReaderScrollSample(offset: 0, contentHeight: 0, containerHeight: 0)
+            )
+            XCTAssertEqual(
+                standard.string(forKey: scrollKey), "500",
+                "A scroll view with no content has not reported a position; "
+                    + "persisting its zero is what destroyed the saved offset."
+            )
+
+            pane.scrollOffsetChanged(
+                ReaderScrollSample(offset: 0, contentHeight: 2138, containerHeight: 675)
+            )
+            XCTAssertEqual(
+                standard.string(forKey: scrollKey), "500",
+                "Laid out, but the restore has not landed — every offset published "
+                    + "between the request and the landing is where the view WAS."
+            )
+
+            pane.scrollOffsetChanged(
+                ReaderScrollSample(offset: 500, contentHeight: 2138, containerHeight: 675)
+            )
+            XCTAssertEqual(
+                standard.string(forKey: scrollKey), "500",
+                "Landed: the key already holds the target, so there is nothing to write."
+            )
+
+            pane.scrollOffsetChanged(
+                ReaderScrollSample(offset: 700, contentHeight: 2138, containerHeight: 675)
+            )
+            XCTAssertEqual(
+                standard.string(forKey: scrollKey), "700",
+                "The gate must OPEN once the restore has landed, or the reader stops "
+                    + "saving the user's position for the rest of the session."
+            )
+        }
+    }
+
+    /// A restore the chapter can no longer honour must give up at the scroll view's
+    /// maximum rather than suppressing persistence forever.
+    ///
+    /// This is the bigger-font / fewer-rows case: the offset was saved against a
+    /// taller chapter. The reachable maximum in the persisted space is
+    /// `contentSize.height - containerSize.height` exactly — measured both in a
+    /// standalone probe (4376 = 5000 - 624) and in the app (1199 = 1874 - 675) — so
+    /// pinning there IS the position now, and it is what stops the gate wedging.
+    @MainActor
+    func testUnreachableOffsetRestoreGivesUpAtTheScrollViewsMaximum() {
+        withPreservedPanePositionKeys { standard, scrollKey in
+            standard.set("100000", forKey: scrollKey)
+            let pane = ReaderPaneModel(mode: .bible)
+            pane.pendingRestore = .offset(100_000)
+            pane.applyPendingWork()
+
+            pane.scrollOffsetChanged(
+                ReaderScrollSample(offset: 1463, contentHeight: 2138, containerHeight: 675)
+            )
+            XCTAssertEqual(
+                standard.string(forKey: scrollKey), "1463",
+                "Pinned at contentHeight - containerHeight: the target is unreachable, "
+                    + "so the truth is what should be persisted."
+            )
+
+            pane.scrollOffsetChanged(
+                ReaderScrollSample(offset: 1200, contentHeight: 2138, containerHeight: 675)
+            )
+            XCTAssertEqual(
+                standard.string(forKey: scrollKey), "1200",
+                "Having given up on the target, normal persistence must resume."
+            )
+        }
     }
 }

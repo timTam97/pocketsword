@@ -147,6 +147,12 @@ enum PSEntryDocumentBuilder {
 
         func flushBlock() {
             flushText()
+            // An anchor that spans a `<br />` owns runs in BOTH blocks, so tag the
+            // ones in the block being CLOSED while they are still reachable.
+            // `applyPendingLink()` can only see runs in the current `runs` array, and
+            // the `</a>` arrives after this copy — so without this the pre-break half
+            // of the link goes dead while looking like ordinary prose.
+            if linkDepth > 0 { applyPendingLink() }
             // A `<br />` run of two produces an empty block; keep it, because the
             // lexicons use consecutive breaks as paragraph spacing.
             document.blocks.append(
@@ -154,14 +160,24 @@ enum PSEntryDocumentBuilder {
             )
             blockIndex += 1
             runs = []
-            // `runs` is a fresh array, so a still-open anchor's start index has to
-            // move with it or `applyPendingLink` would bound against a stale offset.
-            // No shipped entry breaks a line inside an anchor (measured: 0 of 14,989),
-            // so this is defence in depth rather than a live case.
+            // The anchor is still open, so every run the NEXT block emits before its
+            // `</a>` is its own too — 0 is the exact bound for the continuation, not a
+            // guess. Clearing `pendingLink` here instead would silently DROP a real
+            // cross-link, which is why the link is carried across the boundary.
+            //
+            // No shipped content exercises this: across all 14,989 `href` anchors of
+            // the three lexicons and all 6,959 KJV note bodies, ZERO carry a `<br />`
+            // between an `<a href>` and its `</a>`, and zero anchors are nested or
+            // unbalanced — so `testCrossLinkSpanningALineBreakKeepsBothHalves` is
+            // synthetic on purpose, and it is the only thing holding this.
             linkStartRun = 0
         }
 
-        /// Tag the runs the just-closed anchor emitted with its link.
+        /// Tag the runs the anchor has emitted INTO `runs` with its link.
+        ///
+        /// Called from `</a>`, and from `flushBlock()` for an anchor still open when a
+        /// `<br />` splits it — in that case it runs twice, once per block, each time
+        /// bounding at the runs that block actually holds.
         ///
         /// **Bounded at `linkStartRun`, which is the whole point.** This used to walk
         /// `runs` backwards from the end and stop at the first already-linked run,

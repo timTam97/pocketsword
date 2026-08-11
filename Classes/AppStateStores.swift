@@ -26,7 +26,9 @@ final class SettingsStore {
         return SettingsSnapshot(
             fontName: defaults.string(forKey: Defaults.fontNamePreference)
                 ?? AppConstants.defaultFontName,
-            fontSize: savedFontSize == 0 ? 12 : savedFontSize,
+            fontSize: savedFontSize == 0
+                ? AppConstants.defaultFontSize
+                : savedFontSize,
             keepScreenAwake: defaults.bool(forKey: Defaults.insomniaPreference),
             rotationLock: RotationLock(
                 rawValue: defaults.integer(forKey: Defaults.rotationLockPosition)
@@ -41,7 +43,10 @@ final class SettingsStore {
         guard defaults.integer(forKey: Defaults.fontSizePreference) == 0 else {
             return
         }
-        defaults.set(12, forKey: Defaults.fontSizePreference)
+        defaults.set(
+            AppConstants.defaultFontSize,
+            forKey: Defaults.fontSizePreference
+        )
     }
 
     func saveFontName(_ value: String) {

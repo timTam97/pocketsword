@@ -267,7 +267,12 @@ private struct SearchWorkspace: View {
             moduleChoices: reading.searchModuleChoices,
             preferredModule: reading.preferredSearchModule,
             currentBookName: reading.currentSearchBookName,
-            restoredHistoryItem: reading.searchHistoryItemToRestore(),
+            // A closure, so the value is consumed by `configure(...)` and not by a
+            // body pass: `searchHistoryItemToRestore()` nils the saved item on its
+            // query-only arm, and this body re-evaluates on any observed change
+            // (it reads `reading.mode`) long after `SearchView`'s one-shot `.task`
+            // has run.
+            restoredHistoryItem: { reading.searchHistoryItemToRestore() },
             openResult: { reference, module in
                 reading.savedSearchHistoryItem = session.search.historyItem()
                 reading.savedSearchResultsMode = session.search.moduleKind

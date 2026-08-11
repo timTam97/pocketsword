@@ -205,6 +205,37 @@ struct BookmarkDraft: Identifiable, Equatable {
 /// **`jsToShow` became `pendingRestore`.** The deferral itself is unchanged and
 /// still load-bearing (see `displayChapter`), but what is deferred is now a typed
 /// restore instruction rather than a string of JavaScript.
+/// One geometry sample from the reading scroll view.
+///
+/// `offset` is `contentOffset.y + contentInsets.top` — the value that has always
+/// been persisted, unchanged. The two heights ride along because the MODEL cannot
+/// otherwise tell three cases apart, and telling them apart is the whole of the
+/// launch-restore fix:
+///
+///  * a scroll view that has **not been laid out yet** publishes all-zero geometry.
+///    Its `offset` of 0 is not where the reader is, it is the absence of an answer.
+///    Measured at launch: the first publish is `off=0 size=0 container=0`, it arrives
+///    ~130 ms BEFORE the restore's hop runs, and `scrollOffsetChanged` persisted it —
+///    so the reader wrote 0 over `bibleScrollPosition` and then restored the 0 it had
+///    just written. Self-perpetuating: once the key is 0, so is every later launch.
+///  * an offset restore that has **landed** reports the value that was asked for.
+///  * an offset restore that **cannot** land — the chapter is shorter than the offset
+///    it was left at, because the font grew — reports the largest offset the geometry
+///    allows, which is `contentSize.height - containerSize.height` exactly, in this
+///    same space. (Measured on KJV Genesis 1: content 1874, container 675, and the
+///    scroll view pins at 1199.)
+struct ReaderScrollSample: Equatable {
+    var offset: CGFloat
+    var contentHeight: CGFloat
+    var containerHeight: CGFloat
+
+    /// The largest `offset` this geometry can reach.
+    var maxOffset: CGFloat { max(0, contentHeight - containerHeight) }
+
+    /// Whether this sample is an answer at all.
+    var isLaidOut: Bool { contentHeight > 0 && containerHeight > 0 }
+}
+
 @MainActor
 @Observable
 final class ReaderPaneModel {
@@ -212,7 +243,24 @@ final class ReaderPaneModel {
     @ObservationIgnored let chrome: ReaderChromeModel
 
     /// The rendered chapter. Replaces the HTML string handed to a `WebPage`.
-    var document = ChapterDocument()
+    ///
+    /// It is only ever replaced WHOLESALE, which is what makes the paragraph cache
+    /// below safe: assigning it regroups the rows exactly once.
+    var document = ChapterDocument() {
+        didSet { paragraphs = document.paragraphs }
+    }
+
+    /// `document.verses` regrouped into flowing paragraphs — the prose layout's row
+    /// set — derived once per document instead of once per body evaluation.
+    ///
+    /// `ChapterDocument.paragraphs` walks and reallocates every verse on each call,
+    /// and it had two hot callers: `ChapterTextView.body`'s `ForEach` (re-evaluated
+    /// on every scroll-driven invalidation, over 176 verses in Psalm 119) and
+    /// `rowID(containing:)` on every scroll-to-verse. Cached HERE rather than stored
+    /// on `ChapterDocument` so the value type keeps its synthesized conformances —
+    /// the parity tests build on those — and so the cache cannot go stale: the only
+    /// way to change the rows is to assign `document`.
+    private(set) var paragraphs: [ChapterParagraph] = []
 
     /// Where the scroll view is. `ScrollPosition` addresses a verse by IDENTITY,
     /// which is what lets the `versepos` pixel table and its rotation re-measure go.
@@ -266,7 +314,18 @@ final class ReaderPaneModel {
     /// finding, still needed: a rotation republishes geometry before the content
     /// settles.
     @ObservationIgnored private var isRestoringAfterTransition = false
+    /// Which size change the suppression above belongs to. `restoreAfterSizeChange`
+    /// clears the flag from a deferred hop, and only if no newer transition has
+    /// started — so two rotations in quick succession cannot have the first one's
+    /// hop re-enable persisting while the second is still settling.
+    @ObservationIgnored private var sizeChangeGeneration = 0
+    /// The last scroll offset seen, clamped at 0 (see `scrollOffsetChanged`).
     @ObservationIgnored private var lastScrollOffset: CGFloat = 0
+    /// An offset restore that has been requested but not yet observed to have landed.
+    /// Two things read it, and both are load-bearing: `scrollOffsetChanged` (do not
+    /// persist a position from before the restore lands) and `restoreAfterSizeChange`
+    /// (do not re-anchor on a verse while an offset restore is still in flight).
+    @ObservationIgnored private var outstandingOffsetRestore: CGFloat?
 
     @ObservationIgnored weak var workspace: ReadingWorkspaceModel?
 
@@ -367,6 +426,8 @@ final class ReaderPaneModel {
         switch restore {
         case .verse(let verse):
             guard verse > 0 else { return }
+            // A newer instruction supersedes an offset restore that has not landed.
+            outstandingOffsetRestore = nil
             currentShownVerse = verse
             verseToShow = 0
             let target = rowID(containing: verse)
@@ -374,14 +435,24 @@ final class ReaderPaneModel {
                 self?.scrollPosition.scrollTo(id: target, anchor: .top)
             }
         case .offset(let offset):
-            guard offset > 0 else { return }
+            guard offset > 0 else {
+                outstandingOffsetRestore = nil
+                return
+            }
             lastScrollOffset = offset
+            // Recorded BEFORE the hop, because the window it protects opens
+            // immediately: the scroll view publishes geometry — and
+            // `scrollOffsetChanged` persisted it — long before the hop runs. Measured
+            // at launch: 130 ms before, the first publish reporting a scroll view
+            // that has no content at all.
+            outstandingOffsetRestore = offset
             Task { @MainActor [weak self] in
                 self?.scrollPosition.scrollTo(y: offset)
             }
         case .none:
             // A chapter change lands at the top, which is what
             // `RestoreNoPosition` meant.
+            outstandingOffsetRestore = nil
             lastScrollOffset = 0
             currentShownVerse = 1
             Task { @MainActor [weak self] in
@@ -428,7 +499,7 @@ final class ReaderPaneModel {
     private func rowID(containing verse: Int) -> Int {
         if versePerLine { return verse }
         var candidate = verse
-        for paragraph in document.paragraphs {
+        for paragraph in paragraphs {
             guard let first = paragraph.verses.first?.number,
                   let last = paragraph.verses.last?.number else { continue }
             if verse >= first && verse <= last {
@@ -447,15 +518,58 @@ final class ReaderPaneModel {
     /// scroll view reports. `ScrollPosition` does not expose "which id is at the
     /// top", so the offset is kept and the verse is only advanced when the reader
     /// actually moves — which is all the title needs.
-    func scrollOffsetChanged(_ offset: CGFloat) {
+    func scrollOffsetChanged(_ sample: ReaderScrollSample) {
         guard !isRestoringAfterTransition else { return }
-        let normalized = max(0, offset)
+        // ── A scroll view with no content has not answered the question. ──
+        //
+        // Its `offset` of 0 is the absence of a position, not the top of the chapter,
+        // and persisting it is half of what killed the launch scroll restore: the
+        // first publish arrives before the restore's hop runs, so the reader wrote 0
+        // over the key and then restored the 0 it had just written.
+        guard sample.isLaidOut else { return }
+        let normalized = max(0, sample.offset)
+        if let target = outstandingOffsetRestore {
+            if abs(normalized - target) <= Self.scrollThreshold {
+                // Landed. `lastScrollOffset` and the persisted key both already hold
+                // the target, so there is nothing to write.
+                outstandingOffsetRestore = nil
+                return
+            }
+            if target > sample.maxOffset,
+               normalized >= sample.maxOffset - Self.scrollThreshold {
+                // **Unreachable, and pinned as close as it can get.** The chapter is
+                // shorter than the offset it was left at — a bigger font, or a
+                // re-render with fewer rows. That IS the position now, so give up on
+                // the target and persist the truth; suppressing forever would stop
+                // saving the user's scrolls for the rest of the session.
+                outstandingOffsetRestore = nil
+            } else {
+                // Still in flight. Every offset published between the request and the
+                // landing is the scroll view saying where it WAS, and persisting one
+                // of them overwrites the value being restored.
+                return
+            }
+        }
         // The two-point threshold is the legacy one, and it matters: without it a
         // sub-pixel geometry republish counts as a scroll and rewrites the persisted
         // position on every layout pass.
-        guard abs(lastScrollOffset - normalized) > 2 else { return }
+        guard abs(lastScrollOffset - normalized) > Self.scrollThreshold else { return }
         lastScrollOffset = normalized
         persistPosition(verse: currentShownVerse, scrollOffset: normalized)
+    }
+
+    /// The legacy two-point dead zone, named because the restore gate above compares
+    /// against it too — a restore counts as landed to the same tolerance a scroll
+    /// counts as moved.
+    private static let scrollThreshold: CGFloat = 2
+
+    /// A finger landed on the reader: abandon any restore still in flight.
+    ///
+    /// This is what makes `outstandingOffsetRestore` a gate rather than a timeout. If
+    /// a restore ever neither lands nor pins, the user's first touch resumes normal
+    /// persistence instead of suppressing it for the rest of the session.
+    func userBeganScrolling() {
+        outstandingOffsetRestore = nil
     }
 
     /// The topmost visible verse changed, as reported by the view.
@@ -522,8 +636,21 @@ final class ReaderPaneModel {
     /// exactly as the old segmented control's middle segment was. The un-munged
     /// form becomes the accessibility label.
     func setTitle(_ title: String?) {
-        chrome.title = PSModuleController.createTitleRefString(title) ?? ""
-        chrome.accessibilityReference = PSModuleController.getCurrentBibleRef() ?? ""
+        // Assigned only on an actual change. `persistPosition` calls this on every
+        // ~2pt of scroll, and an `@Observable` setter runs `withMutation` regardless
+        // of whether the value differs — so re-assigning an identical title
+        // invalidated the `.principal` toolbar item and `ReaderReferenceControl`
+        // dozens of times per swipe. The guard is value-based rather than
+        // event-based on purpose: it cannot leave the title stale, because every
+        // real change still gets through.
+        let munged = PSModuleController.createTitleRefString(title) ?? ""
+        if chrome.title != munged {
+            chrome.title = munged
+        }
+        let reference = PSModuleController.getCurrentBibleRef() ?? ""
+        if chrome.accessibilityReference != reference {
+            chrome.accessibilityReference = reference
+        }
     }
 
     /// The active module for this pane, by name — the primary Bible on the Bible
@@ -569,13 +696,71 @@ final class ReaderPaneModel {
     /// itself produces — otherwise a mid-rotation offset is mistaken for a user
     /// scroll and overwrites the persisted position.
     func prepareForSizeChange() {
+        sizeChangeGeneration += 1
         isRestoringAfterTransition = true
     }
 
+    /// **The suppression has to outlive this call, which is why the scroll is not
+    /// delegated to `apply`.** `ReaderScreen` calls `prepareForSizeChange()` and
+    /// `restoreAfterSizeChange()` back to back in one `onGeometryChange` action, and
+    /// `apply` only SCHEDULES its scroll — so clearing the flag on the way out left
+    /// a zero-length window and the whole mechanism inert: every transient callback
+    /// the rotation emitted still reached `persistPosition` and overwrote the saved
+    /// position with a mid-transition value.
+    ///
+    /// The scroll is inlined rather than delegated to `apply`, so the clear happens
+    /// inside the same deferred hop, immediately after the scroll it is waiting for —
+    /// one `Task` rather than two, so the ordering is structural instead of relying on
+    /// main-actor FIFO. The generation check is what stops a second size change's
+    /// suppression being cleared by the first one's hop; because
+    /// `prepareForSizeChange` bumps it, the newest restore always matches, so the flag
+    /// cannot wedge on.
     func restoreAfterSizeChange() {
-        let verse = max(1, currentShownVerse)
-        scrollToVerse(verse)
-        isRestoringAfterTransition = false
+        let generation = sizeChangeGeneration
+        // ── An OFFSET restore still in flight wins over `currentShownVerse`, and
+        // that is the other half of the dead launch scroll. ──
+        //
+        // The reader's size settles in STEPS at launch — measured (402, 0) →
+        // (402, 623) → (402, 675) as the navigation bar and the floating tab bar come
+        // in, and `(402, 0)` is not `CGSize.zero`, so `ReaderScreen`'s `old != .zero`
+        // guard does not stop it. The rotation hook therefore fires during LAUNCH,
+        // after `displayChapter(restore: .scroll)` has asked for `.offset(500)` and
+        // before that request's hop has run. Re-anchoring on `currentShownVerse`
+        // (still 1, because an offset restore names no verse) queued a
+        // `scrollTo(id:)` that landed 11 ms AFTER the offset scroll and dragged the
+        // reader back — and because `rowID(containing: 1)` resolves to the intro row,
+        // "back" was the absolute top. The two scrolls are one line apart in the log.
+        //
+        // A `.verse` restore never showed this, which is exactly why verse restores
+        // worked and offset restores did not: `apply(.verse(n))` sets
+        // `currentShownVerse = n` first, so re-anchoring re-issues the SAME scroll.
+        // Only the offset arm left no record of what was being restored.
+        //
+        // The re-issue below is belt-and-braces, NOT the mechanism: an identical
+        // `scrollTo(y:)` is a no-op once the binding already holds that value, and at
+        // launch `apply`'s hop has already run. What fixes the dead scroll is not
+        // issuing the `scrollTo(id:)` at all. Do not "simplify" the wrong half.
+        let pendingOffset = outstandingOffsetRestore
+        // Cleared unconditionally, exactly as before: `verseToShow` is consumed by
+        // `applyPendingWork`'s third branch, and leaving a stale one set would let a
+        // later appearance scroll to a verse the user never asked for.
+        verseToShow = 0
+        var verseTarget: Int?
+        if pendingOffset == nil {
+            let verse = max(1, currentShownVerse)
+            currentShownVerse = verse
+            verseTarget = rowID(containing: verse)
+        }
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            if let pendingOffset {
+                self.scrollPosition.scrollTo(y: pendingOffset)
+            } else if let verseTarget {
+                self.scrollPosition.scrollTo(id: verseTarget, anchor: .top)
+            }
+            guard self.sizeChangeGeneration == generation else { return }
+            self.isRestoringAfterTransition = false
+        }
     }
 
     // MARK: Bookmark highlighting
@@ -1088,12 +1273,21 @@ final class ReadingWorkspaceModel {
         )
     }
 
+    /// A font or font-size change (`resetBibleAndCommentaryView`, posted by
+    /// `SettingsModel.onReadingAppearanceChanged`): re-render the pane the user is
+    /// on, and leave the other one's deferral alone.
+    ///
+    /// **`polling: .none` was a faithful port that stopped being correct.** The
+    /// Obj-C original passed `NoViewPoll`, and that worked because the font UI was
+    /// its own TAB: neither reader was on screen, and each drained its deferral from
+    /// `-viewWillAppear:` on the way back. Both SwiftUI panes stay in the view
+    /// hierarchy for the app's lifetime, so the only drain left is `mode`'s `didSet`
+    /// — a font change therefore changed nothing visible until the user switched
+    /// Bible ⇄ commentary. Polling the active pane renders it now; `displayChapter`
+    /// still hands the inactive pane `refToShow` + `pendingRestore`, so the deferral
+    /// that stops every appearance change from also rendering MHCC is unchanged.
     private func redisplayWithDefaults() {
-        displayChapter(
-            PSModuleController.getCurrentBibleRef(),
-            polling: .none,
-            restore: .verse
-        )
+        redisplay(pane: mode, restore: .verse)
     }
 
     /// A bookmark change re-renders the Bible pane at its current SCROLL offset,
@@ -1205,25 +1399,6 @@ final class ReadingWorkspaceModel {
             restore: .verse
         )
         session?.library.recordHistory(mode: mode)
-    }
-
-    /// A `bible://` link tapped in the chapter text: switch to the Bible pane and
-    /// go, honouring a `:verse` suffix if the link carries one.
-    func openBibleReference(_ reference: String) {
-        mode = .bible
-        session?.selectedWorkspace = .read
-
-        let parts = reference.components(separatedBy: ":")
-        if parts.count > 1 {
-            UserDefaults.standard.set(
-                parts[1],
-                forKey: Defaults.bibleVersePosition
-            )
-            displayChapter(parts[0], polling: .bible, restore: .verse)
-        } else {
-            displayChapter(reference, polling: .bible, restore: .none)
-        }
-        session?.library.recordHistory(mode: .bible)
     }
 
     /// Opens a reference chosen in the Library or Search workspace. Routed

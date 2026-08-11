@@ -42,6 +42,23 @@ final class PSInfoPopupContent: NSObject {
     /// The transliteration (e.g. "ho"), parsed from the first `{…}` token.
     let transliteration: String?
 
+    /// The parsed entry, built ONCE per content object.
+    ///
+    /// `StudyPopupSheet.body` used to call `PSEntryDocumentBuilder.build(html:)`
+    /// inline, so every body evaluation — dragging the detent, tapping Back,
+    /// following a cross-link — re-scanned the whole entry. This is a class whose
+    /// `entryHTML` is a `let`, so the parse is memoized here rather than mirrored
+    /// into view state: one entry, one document, nothing to keep in sync. Main-actor
+    /// use only, like the rest of this type.
+    private var parsedDocument: EntryDocument?
+
+    var entryDocument: EntryDocument {
+        if let parsedDocument { return parsedDocument }
+        let document = PSEntryDocumentBuilder.build(html: entryHTML)
+        parsedDocument = document
+        return document
+    }
+
     var isStrongsEntry: Bool {
         reference != nil
     }

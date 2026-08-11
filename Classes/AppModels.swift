@@ -14,6 +14,31 @@ enum ReadingMode: String, CaseIterable, Equatable {
     case commentary
 }
 
+/// The session's mirror of the reading position: the reference, the two module
+/// names and the two verse positions.
+///
+/// **Nothing in the app reads it.** The reader takes its position from
+/// `UserDefaults` — `PSModuleController.getCurrentBibleRef()` and the
+/// `Defaults{Bible,Commentary}VersePosition` keys, through `ReaderPaneModel` —
+/// and the pane switch is `ReadingWorkspaceModel.mode`, which mirrors INTO this
+/// object rather than out of it. What this type is for is being the assertable
+/// statement of what a launch restore and an accepted `sword://` route did:
+/// `URLRouterTests.testAppSessionMirrorsAcceptedRoute` and
+/// `AppStateStoresTests.testSessionStartRestoresReadingStateAndWiresSettingsEffects`
+/// and
+/// `AppStateStoresTests.testAppStateResetReloadsTheModelsThatCachedRemovedPreferences`
+/// are its only readers.
+///
+/// `AppSession.handleAppStateReset()` also re-applies the store snapshot into it
+/// after a preferences reset — a WRITE, not a read. That write can interleave
+/// with the rest of `LaunchCoordinator.prepare()` at launch, and it is harmless
+/// only because nothing in the app reads this object. Giving it a production
+/// reader would turn that interleave into a real race.
+///
+/// So keep it a faithful mirror of `ReadingStateStore` — including the arm
+/// asymmetry in `apply(_ route:)` below, which looks like a bug and is not — and
+/// do not give it a production reader without first deciding which of it and
+/// `UserDefaults` is authoritative.
 @MainActor
 @Observable
 final class ReadingModel {
@@ -47,6 +72,12 @@ final class ReadingModel {
         switch route.destination {
         case .bible(let module):
             mode = .bible
+            // Only the Bible verse. The asymmetry with the `.commentary` arm below
+            // is deliberate and mirrors `ReadingStateStore.persist(_:)`, which
+            // writes `bibleVersePosition` for every route but
+            // `commentaryVersePosition` only for a commentary destination: a
+            // bible route leaves the commentary's own verse position alone, in
+            // the defaults and therefore here.
             bibleVerse = verse
             if let module {
                 bibleModule = module
@@ -545,6 +576,19 @@ final class SearchModel {
     @ObservationIgnored private let indexBuildFinished: (String) -> Void
     @ObservationIgnored private var debounceTimer: Timer?
     @ObservationIgnored private var queryGeneration: UInt = 0
+    /// Announced when a search settles on a new result set, or clears it.
+    ///
+    /// **Deliberately unwired in production, and that is a decision rather than an
+    /// omission.** Wave 7 hooked this up from `PSTabBarControllerDelegate` to keep
+    /// the reader's `savedSearchHistoryItem` fresh, which mattered because the
+    /// UIKit search UI was rebuilt on every present and therefore re-ran
+    /// `configure(...)` every time. The SwiftUI Search workspace is persistent:
+    /// this model keeps its own query and results, and `SearchView` calls
+    /// `configure(...)` once per launch behind `@State configured`, so refreshing
+    /// the reader's copy could not change anything the user sees. The seam is kept
+    /// because `AppStateStoresTests.testSearchModelRejectsAStaleCompletion` uses
+    /// it as its completion signal for the stale-query race. Wire it only
+    /// alongside a consumer that actually reads the result.
     @ObservationIgnored var onHistoryChange: (
         @MainActor (PSSearchHistoryItem?) -> Void
     )?
@@ -1023,6 +1067,9 @@ final class AppSession {
     /// chapter that the `DefaultsLastRefValidated` migration is about to rewrite.
     @ObservationIgnored private var pendingURL: URL?
     @ObservationIgnored private var isReady = false
+    /// The `.appStateDidReset` observer. Held so it can be removed, and so a
+    /// second `start()` cannot register a second handler.
+    @ObservationIgnored private var resetObserver: NSObjectProtocol?
 
     init(
         selectedWorkspace: Workspace = .read,
@@ -1040,6 +1087,12 @@ final class AppSession {
         self.library = library ?? LibraryModel()
         self.search = search ?? SearchModel()
         self.readingStore = readingStore
+    }
+
+    deinit {
+        if let resetObserver {
+            NotificationCenter.default.removeObserver(resetObserver)
+        }
     }
 
     /// Wires the side effects that `LegacyStateBridge` used to mirror through
@@ -1068,6 +1121,86 @@ final class AppSession {
         settings.ensureFontSizeDefault()
         library.startObservingChanges()
         reading.apply(readingStore.snapshot())
+        observeAppStateReset()
+    }
+
+    /// Starts listening for `LaunchCoordinator.resetPreferences()`.
+    ///
+    /// `.appStateDidReset` had **no production observer at all** — only a test — so
+    /// a reset flipped in the iOS Settings bundle removed `fontNamePreference`,
+    /// `fontSizePreference`, `insomniaPreference` and `bibleHistory` out from under
+    /// models that had already cached them, and nothing told them. The Settings
+    /// screen went on showing the pre-reset font and size, the Library went on
+    /// listing history rows that no longer existed, and the idle timer stayed
+    /// disabled for the rest of the session.
+    ///
+    /// Two things about the wiring are load-bearing:
+    ///
+    ///  - **The `.appStateDidReset` post comes after every removal** in
+    ///    `resetPreferences()` and after the module selections are re-resolved (only
+    ///    the `.redisplayPrimaryBible` post follows it), so this handler reads
+    ///    post-reset state and needs no ordering of its own. At launch the
+    ///    *remaining* migrations in `prepare()` still run alongside it on the
+    ///    detached task; none of them touches what this re-reads, and `lastRef`
+    ///    resolves to "Genesis 1" either way.
+    ///  - **`queue: .main`.** The launch path runs `prepare()` — and therefore
+    ///    `resetPreferences()` — off the main actor in a detached task, while
+    ///    everything reloaded here is `@MainActor`. `queue: nil` would run the block
+    ///    synchronously on that background thread, where none of this is legal.
+    ///
+    /// `start()` runs from `didFinishLaunching`, which precedes `RootView`'s
+    /// `.task`, so the observer is always in place before a reset can post.
+    private func observeAppStateReset() {
+        guard resetObserver == nil else { return }
+        resetObserver = NotificationCenter.default.addObserver(
+            forName: .appStateDidReset,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.handleAppStateReset()
+            }
+        }
+    }
+
+    /// Re-reads every cached preference the reset cleared.
+    ///
+    /// **`SettingsModel.reload()` rather than five assignments, and that is what
+    /// keeps this from undoing the reset.** Each of those properties persists itself
+    /// from `didSet`; `reload()` brackets the writes with `isReloading` so none of
+    /// them writes back. Assigning them one by one would re-create exactly the keys
+    /// the reset had just deleted.
+    ///
+    /// The corollary is that `onKeepScreenAwakeChanged` is suppressed along with the
+    /// saves, so the idle timer is applied here explicitly — otherwise a user who
+    /// had "keep the screen awake" on keeps a screen that never sleeps, with the
+    /// preference gone and the toggle reading off.
+    func handleAppStateReset() {
+        // Re-materializes the font-size default exactly as `start()` does, so the
+        // post-reset state equals the fresh-install state rather than "no key at
+        // all". Both readers now resolve an absent key to
+        // `AppConstants.defaultFontSize` — they used to disagree, 12 in the store
+        // against 14 in the renderer — so this is about the Settings slider having
+        // a value to sit at rather than about the two sides agreeing.
+        settings.ensureFontSizeDefault()
+        settings.reload()
+        UIApplication.shared.isIdleTimerDisabled = settings.keepScreenAwake
+
+        // `bibleHistory` was removed and nothing posts `historyChanged` for it;
+        // `lastDictionary` was removed and the primary dictionary cleared; `lastRef`
+        // / `lastBible` / `lastCommentary` were removed under `reading`.
+        library.reloadHistory()
+        library.reloadDictionary()
+        reading.apply(readingStore.snapshot())
+
+        // The per-module display toggles went too, and the chrome MIRRORS their
+        // values (`ReaderChromeModel.displayToggleValues`) rather than reading them
+        // live, so the overflow menu would keep showing checkmarks for prefs that no
+        // longer exist. `redisplayPrimaryBible` — which `resetPreferences()` also
+        // posts — re-renders the text but does not rebuild the rows.
+        readingWorkspace?.bible.refreshForModuleChange()
+        readingWorkspace?.commentary.refreshForModuleChange()
     }
 
     /// Routes an incoming `sword://` URL, or defers it if launch is still running.
