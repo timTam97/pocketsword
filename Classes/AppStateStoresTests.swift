@@ -882,6 +882,62 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(model.results.first?.strongsHighlightWords, ["loved"])
     }
 
+    /// What a long press on a result row copies.
+    ///
+    /// The whitespace collapse is the part worth pinning: `text_plain` carries the
+    /// module's own line breaks, and substituting `\n` for a space (which is all
+    /// the row's *display* path needs) leaves a double space wherever a break
+    /// followed one — visible the moment it is pasted somewhere plain.
+    func testSearchResultRowBuildsItsClipboardText() {
+        let row = SearchResultRow(
+            reference: "John 3:16",
+            text: "For God so loved \n the world,\nthat he gave",
+            strongsHighlightWords: []
+        )
+
+        XCTAssertEqual(
+            row.clipboardText(module: "KJV"),
+            "John 3:16 (KJV)\nFor God so loved the world, that he gave"
+        )
+        // No module resolved yet: the reference still has to be usable.
+        XCTAssertEqual(
+            row.clipboardText(module: nil),
+            "John 3:16\nFor God so loved the world, that he gave"
+        )
+        // An empty body must not leave a trailing newline on the reference.
+        XCTAssertEqual(
+            SearchResultRow(
+                reference: "Jude 1:1",
+                text: nil,
+                strongsHighlightWords: []
+            ).clipboardText(module: "KJV"),
+            "Jude 1:1 (KJV)"
+        )
+    }
+
+    /// Tapping the Search tab while Search is already selected must be observable
+    /// **every** time, so the field can be re-focused on the second tap and the
+    /// tenth.
+    ///
+    /// This is why the request is a counter and not a `Bool`: a flag that is
+    /// already `true` produces no `onChange` in `SearchView`, so every tap after
+    /// the first would be silently swallowed.
+    @MainActor
+    func testSearchFieldFocusRequestsAreCountedNotLatched() {
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            )
+        )
+
+        XCTAssertEqual(model.searchFieldFocusRequests, 0)
+        model.requestSearchFieldFocus()
+        model.requestSearchFieldFocus()
+        XCTAssertEqual(model.searchFieldFocusRequests, 2)
+    }
+
     /// A SECOND "Find all occurrences" must run the new term, not re-show the
     /// previous one's results.
     ///

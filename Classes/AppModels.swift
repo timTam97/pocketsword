@@ -368,6 +368,28 @@ struct SearchResultRow: Identifiable, Equatable {
     let reference: String
     let text: String?
     let strongsHighlightWords: [String]
+
+    /// What a long press on this row copies to the clipboard.
+    ///
+    /// Reference first, then the verse, matching the row's own visual order so
+    /// the paste reads like the thing that was long-pressed. The module is named
+    /// because a bare verse pasted into a note is ambiguous about translation and
+    /// search runs against either bundled module.
+    ///
+    /// Whitespace is **collapsed**, not merely newline-substituted: `text_plain`
+    /// carries the module's own line breaks, and a naive `\n` → space leaves
+    /// double spaces wherever a break followed one. `SearchResultRowView` does the
+    /// same collapse for display, so the copy matches what is on screen.
+    func clipboardText(module: String?) -> String {
+        var heading = reference
+        if let module, !module.isEmpty {
+            heading += " (\(module))"
+        }
+        let body = (text ?? "")
+            .split(whereSeparator: \.isWhitespace)
+            .joined(separator: " ")
+        return body.isEmpty ? heading : "\(heading)\n\(body)"
+    }
 }
 
 struct SearchModuleChoice: Identifiable, Equatable {
@@ -536,6 +558,16 @@ final class SearchModel {
     private(set) var isSearching = false
     private(set) var highlightTerms: [String] = []
 
+    /// Bumped when something outside the view wants the search field focused —
+    /// the tab bar's Search button, tapped while Search is *already* the selected
+    /// workspace (`WorkspaceTabs`).
+    ///
+    /// A counter rather than a `Bool`, because the request has to be observable
+    /// every time: a flag that is already `true` produces no `onChange`, so the
+    /// second tap would be silently swallowed. Same shape, and the same reason, as
+    /// the generation counter `scheduleSearch` uses.
+    private(set) var searchFieldFocusRequests: UInt = 0
+
     @ObservationIgnored private let optionsStore: SearchOptionsStore
     @ObservationIgnored let indexCoordinator: SearchIndexCoordinator
     @ObservationIgnored private let queryOperation: QueryOperation
@@ -673,6 +705,15 @@ final class SearchModel {
 
     func queryDidChange() {
         scheduleSearch()
+    }
+
+    /// Asks the view to put the cursor back in the search field.
+    ///
+    /// The one caller is the Search tab being tapped while it is already the
+    /// selected workspace. `&+=` because wrapping after 2^64 taps is a defined
+    /// no-op rather than a trap, and the value is only ever compared for change.
+    func requestSearchFieldFocus() {
+        searchFieldFocusRequests &+= 1
     }
 
     func optionsDidChange(currentBookName: String?) {

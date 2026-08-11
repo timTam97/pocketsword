@@ -133,7 +133,29 @@ final class PocketSwordUITests: XCTestCase {
             app.navigationBars["Select Book"].waitForExistence(timeout: 5)
         )
         let genesis = app.buttons["reference.book.Gen"]
+        // The list opens scrolled to the CURRENT book (`ReferenceBookList`'s
+        // `proxy.scrollTo`), and a `List` instantiates only its visible rows — so
+        // Genesis is in the hierarchy only when the last-read reference happens to
+        // be near it. That made this test depend on where the previous test left
+        // the reader: it failed outright with `lastRef` in Matthew. Scroll to the
+        // top instead of assuming.
+        //
+        // The predicate is `isHittable`, not `exists`: a `List` keeps cells
+        // instantiated a little beyond the viewport, so Genesis can EXIST while
+        // clipped above the visible area — and tapping it then lands on the
+        // navigation bar and pushes nothing.
+        if !genesis.isHittable {
+            let books = app.collectionViews.firstMatch
+            XCTAssertTrue(books.waitForExistence(timeout: 5))
+            var swipes = 0
+            while !genesis.isHittable, swipes < 15 {
+                books.swipeDown(velocity: .fast)
+                swipes += 1
+            }
+        }
         XCTAssertTrue(genesis.waitForExistence(timeout: 5))
+        waitForScrollToSettle(genesis)
+        XCTAssertTrue(genesis.isHittable, "The Genesis row never became tappable.")
         genesis.tap()
 
         XCTAssertTrue(app.navigationBars["Genesis"].waitForExistence(timeout: 5))
@@ -424,7 +446,210 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertLessThan(second.frame.minY, first.frame.minY)
     }
 
+    /// Tapping the Search tab while Search is ALREADY selected re-focuses the
+    /// field.
+    ///
+    /// This is the only assertion available for `WorkspaceTabs.workspaceSelection`,
+    /// and it is worth having: SwiftUI has no tab-reselection callback, so the hook
+    /// depends on the selection binding being written again with the value it
+    /// already holds. If a future iOS stops doing that, the feature disappears
+    /// silently — nothing else in the app would notice.
+    ///
+    /// Deliberately independent of the search index: `.searchable` is on the
+    /// workspace content, so the field exists whatever the index state is.
+    @MainActor
+    func testSearchTabReselectionFocusesTheField() throws {
+        selectWorkspace("Search")
+        let field = app.searchFields["Search"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+
+        // Leave and come back, so the keyboard is definitely down and the second
+        // tap on Search is a genuine re-selection rather than a first arrival.
+        selectWorkspace("Read")
+        selectWorkspace("Search")
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        XCTAssertFalse(
+            app.keyboards.element.exists,
+            "Arriving at Search should NOT raise the keyboard — only re-tapping "
+                + "the tab should."
+        )
+
+        app.tabBars.buttons["Search"].tap()
+
+        XCTAssertTrue(
+            app.keyboards.element.waitForExistence(timeout: 5),
+            "Re-tapping the Search tab did not focus the search field."
+        )
+    }
+
+    /// The two result-list behaviours: scrolling puts the keyboard away, and a long
+    /// press offers Copy Verse.
+    ///
+    /// One test rather than two because the search index build it needs is the
+    /// expensive part (~31k rows), and paying for it once is the whole saving.
+    @MainActor
+    func testSearchResultsDismissKeyboardOnScrollAndOfferCopy() throws {
+        selectWorkspace("Search")
+        prepareSearchIndex()
+
+        let field = app.searchFields["Search"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        // A GENESIS term, deliberately. Step 3 taps a result, which navigates the
+        // reader and persists `lastRef` — so a Matthew term would strand the whole
+        // suite (and the next run) 40 books away from where the reference-picker
+        // test looks. "firmament" is 17 KJV verses, the first being Genesis 1:6,
+        // and results come back in canonical order.
+        field.typeText("firmament")
+        XCTAssertTrue(
+            app.keyboards.element.waitForExistence(timeout: 5),
+            "Typing in the search field did not raise the keyboard."
+        )
+
+        let firstResult = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH 'search.result.'")
+        ).firstMatch
+        XCTAssertTrue(
+            firstResult.waitForExistence(timeout: 20),
+            "No results for a term the KJV certainly contains — the index or the "
+                + "query path is broken, not the behaviour under test."
+        )
+
+        // 1. Scrolling the results collapses the keyboard.
+        firstResult.swipeUp()
+        XCTAssertTrue(
+            app.keyboards.element.waitForNonExistence(timeout: 5),
+            "Scrolling the results did not dismiss the keyboard."
+        )
+
+        // 2. A long press offers Copy Verse. Matched by LABEL: a SwiftUI menu row
+        //    exposes its title and drops the accessibility identifier (CLAUDE.md's
+        //    note on menus), so there is nothing else to match on.
+        //
+        //    The row comes from `firstReachableResultRow()`, not `firstMatch` —
+        //    see that helper for why the obvious choice presses the navigation bar.
+        let row = firstReachableResultRow()
+        XCTAssertNotNil(row, "No reachable result row to long-press.")
+        guard let row else { return }
+        waitForScrollToSettle(row)
+        row.press(forDuration: 1.2)
+
+        let copy = app.buttons["Copy Verse"].firstMatch
+        XCTAssertTrue(
+            copy.waitForExistence(timeout: 5),
+            "Long-pressing a result did not offer Copy Verse."
+        )
+        copy.tap()
+
+        // NOTE: the clipboard's *contents* cannot be asserted from here. A UI test
+        // runner reading `UIPasteboard.general` is a cross-app read, which iOS
+        // refuses outright — `PBErrorDomain Code=13 "Operation not authorized."`,
+        // and `string` comes back nil rather than prompting. The format is pinned
+        // in `AppStateStoresTests.testSearchResultRowBuildsItsClipboardText`, and
+        // the write was verified out-of-band with `xcrun simctl pbpaste`.
+
+        // The menu is gone and the list is still there — i.e. the copy did not
+        // navigate to the verse, which is what a context-menu button competing
+        // with the row's own tap handler would have done.
+        XCTAssertTrue(copy.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.searchFields["Search"].exists)
+
+        // 3. Tapping a result still opens it. The regression guard for the row no
+        //    longer being a `Button`: the tap is an `onTapGesture` now, because a
+        //    button's gesture swallowed the long press that step 2 needs.
+        let target = firstReachableResultRow()
+        XCTAssertNotNil(target, "No reachable result row to tap.")
+        guard let target else { return }
+        target.tap()
+        XCTAssertTrue(
+            app.buttons["reading.reference-picker"].waitForExistence(timeout: 10),
+            "Tapping a search result did not open the Read workspace."
+        )
+        XCTAssertTrue(app.tabBars.buttons["Read"].isSelected)
+    }
+
     // MARK: - Helpers
+
+    /// The first search-result row that a touch will actually reach.
+    ///
+    /// Not `firstMatch`, and not merely `isHittable`. A `List` keeps cells
+    /// instantiated beyond its viewport, so after a scroll the first row in
+    /// hierarchy order is the one clipped ABOVE the visible area — measured by
+    /// driving the simulator directly (Xcode MCP device interaction): one swipe put
+    /// the first row at y = -33 and the second at y = 116, underneath the search
+    /// field. `isHittable` is TRUE for both, because their centres are inside the
+    /// window, so XCUITest cheerfully synthesizes a press that lands on the
+    /// navigation chrome and does nothing at all.
+    ///
+    /// So bound the row by the chrome it has to clear: below the scope picker and
+    /// above the floating tab bar. Read from the elements themselves rather than
+    /// hardcoded insets, so this survives a different device size.
+    @MainActor
+    private func firstReachableResultRow() -> XCUIElement? {
+        let rows = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH 'search.result.'")
+        )
+        guard rows.firstMatch.waitForExistence(timeout: 10) else { return nil }
+        let top = app.segmentedControls["search.scope"].frame.maxY
+        let bottom = app.tabBars.firstMatch.frame.minY
+        for index in 0..<rows.count {
+            let row = rows.element(boundBy: index)
+            guard row.exists, row.isHittable else { continue }
+            let frame = row.frame
+            if frame.minY >= top, frame.maxY <= bottom {
+                return row
+            }
+        }
+        return nil
+    }
+
+    /// Waits for a flung scroll view to stop moving.
+    ///
+    /// `swipeUp` / `swipeDown` are **flings**, and the first tap or press after one
+    /// is consumed stopping the deceleration rather than reaching the row. Both of
+    /// this file's swipe-then-interact sequences failed that way — the book list's
+    /// Genesis row activated nothing, and a long press on a result opened no
+    /// context menu — with the widths of the two flings deciding it, which is why
+    /// it looked like flakiness. Polling the element's own frame is the direct
+    /// test: when it stops changing, the scroll has settled.
+    @MainActor
+    private func waitForScrollToSettle(
+        _ element: XCUIElement,
+        timeout: TimeInterval = 3
+    ) {
+        var previous = element.frame.origin.y
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.2)
+            let current = element.frame.origin.y
+            if abs(current - previous) < 0.5 {
+                return
+            }
+            previous = current
+        }
+    }
+
+    /// Builds the module's search index if the workspace says there isn't one.
+    ///
+    /// Deliberately **not** an `XCTSkip`: a freshly erased simulator has no index,
+    /// which is exactly the state in which a skip would report green having
+    /// asserted nothing — the trap CLAUDE.md documents for the two lexicon tests.
+    /// So this pays the build cost instead, and fails if the build does not finish.
+    @MainActor
+    private func prepareSearchIndex() {
+        let build = app.buttons["search.index-build"]
+        guard build.waitForExistence(timeout: 5) else { return }
+        build.tap()
+
+        // KJV is 31,102 rows and the build runs on a background queue; on a
+        // simulator under test-run load this is tens of seconds, not seconds.
+        let ready = app.searchFields["Search"]
+        XCTAssertTrue(ready.waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.buttons["search.index-build"].waitForNonExistence(timeout: 300),
+            "The search index build never finished."
+        )
+    }
 
     /// Opens the reading toolbar's iOS 27 overflow menu.
     ///

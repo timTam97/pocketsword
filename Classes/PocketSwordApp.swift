@@ -185,8 +185,6 @@ struct WorkspaceTabs: View {
     let reading: ReadingWorkspaceModel
 
     var body: some View {
-        @Bindable var session = session
-
         // NOTE: no `accessibilityIdentifier` on the `Tab`s. It does not reach the
         // tab-bar button — verified in the iOS 27 hierarchy, where the four
         // buttons expose only their localized labels ("Read", "Library",
@@ -196,7 +194,7 @@ struct WorkspaceTabs: View {
         // is declared second but `TabRole.search` moves it to the trailing
         // position, which is the system's convention for a search tab and is why
         // the role exists.
-        TabView(selection: $session.selectedWorkspace) {
+        TabView(selection: workspaceSelection) {
             Tab(
                 "WorkspaceRead",
                 systemImage: "book",
@@ -241,6 +239,31 @@ struct WorkspaceTabs: View {
         // `TabView` — applied here it silently does nothing, verified on device
         // (the Focus control flipped to "exit" with the tab bar still visible).
         // It lives on `ReaderScreen`'s `NavigationStack` instead.
+    }
+
+    /// The tab selection, with a re-tap hook on the Search tab.
+    ///
+    /// SwiftUI exposes no "tab was re-selected" callback, but it *does* write the
+    /// selection binding again when the user taps the tab that is already
+    /// selected — the same value arriving twice is the only signal there is. So
+    /// the setter compares before assigning: an incoming `.search` while `.search`
+    /// is already current means the user tapped the Search button expecting the
+    /// field, which is the system convention for a search tab.
+    ///
+    /// Deliberately NOT `tabViewSearchActivation(.searchTabSelection)`, which
+    /// activates the field on *every* selection of the tab — including the return
+    /// trip after opening a result, where it would drop the keyboard over the
+    /// results list the user came back to read.
+    private var workspaceSelection: Binding<Workspace> {
+        Binding(
+            get: { session.selectedWorkspace },
+            set: { newValue in
+                if newValue == .search, session.selectedWorkspace == .search {
+                    session.search.requestSearchFieldFocus()
+                }
+                session.selectedWorkspace = newValue
+            }
+        )
     }
 }
 

@@ -10,6 +10,9 @@ struct SearchView: View {
     let openResult: (_ reference: String, _ module: String) -> Void
 
     @State private var configured = false
+    /// The search field's focus, so the tab bar can put the cursor back in it —
+    /// see `search.searchFieldFocusRequests`.
+    @FocusState private var searchFieldFocused: Bool
 
     var body: some View {
         @Bindable var search = search
@@ -34,9 +37,13 @@ struct SearchView: View {
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: Text("SearchTitle")
             )
+            .searchFocused($searchFieldFocused)
             .safeAreaInset(edge: .top, spacing: 0) {
                 SearchScopePicker(search: search)
             }
+        }
+        .onChange(of: search.searchFieldFocusRequests) {
+            searchFieldFocused = true
         }
         .onChange(of: search.query) {
             search.queryDidChange()
@@ -325,21 +332,46 @@ private struct SearchResultList: View {
         List {
             Section {
                 ForEach(results) { result in
-                    Button {
+                    SearchResultRowView(
+                        reference: result.reference,
+                        text: result.text ?? "",
+                        highlightTerms: strongs
+                            ? result.strongsHighlightWords
+                            : highlightTerms,
+                        fuzzy: strongs ? false : fuzzy
+                    )
+                    .contentShape(Rectangle())
+                    // NOT a `Button`, deliberately. A button's own gesture
+                    // swallows the long press, so `contextMenu` never opened —
+                    // verified on device: the press just highlighted the row and
+                    // no menu appeared, with nothing in the accessibility
+                    // hierarchy to show for it. `onTapGesture` leaves the long
+                    // press for the menu's interaction to claim.
+                    //
+                    // The button *semantics* are therefore restored by hand below,
+                    // so VoiceOver still announces one element per result and the
+                    // XCUITests still match `search.result.<ref>` as a button.
+                    .onTapGesture {
                         guard let module else { return }
                         openResult(result.reference, module)
-                    } label: {
-                        SearchResultRowView(
-                            reference: result.reference,
-                            text: result.text ?? "",
-                            highlightTerms: strongs
-                                ? result.strongsHighlightWords
-                                : highlightTerms,
-                            fuzzy: strongs ? false : fuzzy
-                        )
-                        .contentShape(Rectangle())
                     }
-                    .buttonStyle(.plain)
+                    .contextMenu {
+                        Button {
+                            UIPasteboard.general.string =
+                                result.clipboardText(module: module)
+                        } label: {
+                            Label(
+                                "SearchResultCopyButton",
+                                systemImage: "doc.on.doc"
+                            )
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityAction {
+                        guard let module else { return }
+                        openResult(result.reference, module)
+                    }
                     .accessibilityIdentifier(
                         "search.result.\(result.reference)"
                     )
@@ -355,6 +387,13 @@ private struct SearchResultList: View {
             }
         }
         .listStyle(.plain)
+        // Scrolling the results puts the keyboard away. `.immediately` rather
+        // than `.interactively`: the results are a destination, not something you
+        // read while still typing, and the interactive mode leaves the keyboard
+        // half-dismissed if the drag stops short. The default here is
+        // `.automatic`, which for a `List` under a search field keeps the
+        // keyboard up entirely — that is the behaviour being fixed.
+        .scrollDismissesKeyboard(.immediately)
         .overlay(alignment: .topTrailing) {
             if isSearching {
                 ProgressView()

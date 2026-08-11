@@ -321,3 +321,6 @@
 "WorkspaceSettings" = "Settings";
 "LaunchFailedTitle" = "PocketSword could not start";
 "LaunchFailedMessage" = "The bundled Bible content could not be opened. Reinstalling PocketSword should fix this.";
+
+// Search results: long-press a result row.
+"SearchResultCopyButton" = "Copy Verse";
