@@ -295,8 +295,6 @@ struct ChapterDocument: Equatable {
     /// engine's own fallback showed.
     var emptyMessage: String?
 
-    var isEmpty: Bool { verses.isEmpty }
-
     /// `verses` regrouped into flowing paragraphs, for the prose layout.
     ///
     /// Breaks where a verse carries the KJV's own pilcrow (and always before the

@@ -366,6 +366,62 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
+    /// `updateFolder` throws having changed NOTHING when the id is not a folder.
+    ///
+    /// It used to call `renameObject` first and validate afterwards, so a
+    /// `.missingNode` throw left the live `PSBookmarks` tree carrying the new name with
+    /// no `commit()` behind it: the Library kept showing the old name (its caller does
+    /// not reload on throw) and the next unrelated `commit()` would have persisted the
+    /// phantom rename. Mutation-checked — swapping the guard back below `renameObject`
+    /// turns this red on the name assertion.
+    func testUpdateFolderOnANonFolderChangesNothing() throws {
+        let bookmark = PSBookmark(
+            name: "First",
+            dateAdded: Date(timeIntervalSince1970: 10),
+            dateLastAccessed: Date(timeIntervalSince1970: 20),
+            bibleReference: "John 1:1"
+        )
+        let root = PSBookmarkFolder(
+            name: "Bookmarks",
+            dateAdded: nil,
+            dateLastAccessed: nil,
+            rgbHexString: nil,
+            children: [bookmark]
+        )
+        var saveCount = 0
+        let store = BookmarkStore(
+            rootProvider: { root },
+            save: {
+                saveCount += 1
+                return true
+            },
+            notificationCenter: NotificationCenter()
+        )
+
+        let accessedBefore = bookmark.dateLastAccessed
+
+        // A bookmark id, not a folder id.
+        XCTAssertThrowsError(
+            try store.updateFolder(
+                id: bookmark.id,
+                name: "Renamed",
+                color: BookmarkColor(hexString: "#12ABEF")
+            )
+        ) { error in
+            XCTAssertEqual(error as? BookmarkMutationError, .missingNode)
+        }
+
+        XCTAssertEqual(
+            bookmark.name, "First",
+            "the rename must not have been applied to the live tree"
+        )
+        XCTAssertEqual(
+            bookmark.dateLastAccessed, accessedBefore,
+            "dateLastAccessed must not have been bumped either"
+        )
+        XCTAssertEqual(saveCount, 0, "nothing may be committed on the throwing path")
+    }
+
     func testBookmarkStoreMutatesNestedTreeAndPreservesObjectIdentity() throws {
         let first = PSBookmark(
             name: "First",
@@ -732,8 +788,7 @@ final class AppStateStoresTests: XCTestCase {
             moduleControllerAvailable: { true },
             resetModuleSelections: { resetCount += 1 },
             currentReference: { "Nonsense 9" },
-            referenceResolves: { _ in false },
-            moduleVersion: { _ in "1.0" }
+            referenceResolves: { _ in false }
         )
 
         let result = coordinator.prepare()
@@ -1136,10 +1191,109 @@ final class AppStateStoresTests: XCTestCase {
 
         // And `optionsDidChange`, which SearchView fires from
         // `.onChange(of: search.strongsSearch)`, must not undo it.
+        //
+        // `fuzzySearch` is flipped first ON PURPOSE: it makes this a genuine user edit
+        // rather than an echo of `startStrongsQuery`'s own write, so `optionsDidChange`
+        // runs its body instead of returning at the `inputsMatchScheduled` guard.
+        // Without it this test would pass even if the `module != nil` guard were
+        // deleted.
+        model.fuzzySearch = true
         model.optionsDidChange(currentBookName: nil)
         XCTAssertTrue(
             model.strongsSearch,
             "optionsDidChange must not clear the mode before a module is resolved."
+        )
+    }
+
+    /// The `.onChange` echoes of the model's OWN writes must not re-run the search.
+    ///
+    /// `startStrongsQuery` writes `query` and `strongsSearch` and then runs the search
+    /// itself, but SwiftUI delivers `.onChange(of: search.query)` and
+    /// `.onChange(of: search.strongsSearch)` for those writes exactly as it does for
+    /// the user's. Each echo called `scheduleSearch()`, bumping `queryGeneration` — so
+    /// the generation guard discarded the results of the very search the echo was
+    /// caused by, and the user saw an empty pane until the debounced duplicate landed.
+    /// Mutation-checked: removing the `queryDidChange` guard alone takes the collector
+    /// to 2, and removing both guards takes it to 3; with both in place it is 1.
+    @MainActor
+    func testSeededStrongsQueryIsNotRerunByItsOwnOnChangeEchoes() async {
+        let collector = ExpressionCollector()
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            ),
+            debounceInterval: 0,
+            featureProvider: { _, _ in true },
+            queryOperation: { _, expression, _, _, _ in
+                collector.record(expression)
+                return []
+            }
+        )
+        model.configure(
+            modules: [SearchModuleChoice(id: "KJV", kind: .bible)],
+            preferredModule: "KJV",
+            currentBookName: "Genesis",
+            restoring: nil
+        )
+
+        model.startStrongsQuery("H430", currentBookName: "Genesis")
+        await collector.wait(forCount: 1, in: self)
+
+        // Exactly what SwiftUI delivers after those two observable writes.
+        model.queryDidChange()
+        model.optionsDidChange(currentBookName: "Genesis")
+        try? await Task.sleep(for: .milliseconds(150))
+
+        XCTAssertEqual(
+            collector.snapshot().count, 1,
+            "the seeded query must run once; the onChange echoes are not user edits"
+        )
+        XCTAssertTrue(model.strongsSearch)
+        XCTAssertEqual(model.query, "H430")
+    }
+
+    /// A genuine user edit still schedules a search after an echo was suppressed.
+    ///
+    /// The echo guard compares against the last SCHEDULED inputs, so it must not
+    /// swallow a real change that follows one. This is the property that makes the
+    /// snapshot design safe where a bare "seeding" boolean would not have been.
+    @MainActor
+    func testUserEditAfterASuppressedEchoStillRunsASearch() async {
+        let collector = ExpressionCollector()
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            ),
+            debounceInterval: 0,
+            featureProvider: { _, _ in true },
+            queryOperation: { _, expression, _, _, _ in
+                collector.record(expression)
+                return []
+            }
+        )
+        model.configure(
+            modules: [SearchModuleChoice(id: "KJV", kind: .bible)],
+            preferredModule: "KJV",
+            currentBookName: "Genesis",
+            restoring: nil
+        )
+
+        model.startStrongsQuery("H430", currentBookName: "Genesis")
+        await collector.wait(forCount: 1, in: self)
+        model.queryDidChange()
+
+        // The user now types over it.
+        model.query = "light"
+        model.queryDidChange()
+        await collector.wait(forCount: 2, in: self)
+
+        XCTAssertEqual(
+            collector.snapshot().count, 2,
+            "a real edit after a suppressed echo must still search"
         )
     }
 
@@ -1390,6 +1544,156 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(builtModules, ["KJV"])
         XCTAssertNil(
             defaults.string(forKey: Defaults.pendingSearchIndexModule)
+        )
+    }
+
+    /// A FAILED background build keeps its recovery record and asks for a retry, then
+    /// gives up at `maxBuildAttempts`.
+    ///
+    /// Before this, one failure deleted the record AND reported `shouldRetry: false`,
+    /// so both recovery mechanisms died at once: `resumePendingBuildIfNeeded()` found
+    /// nothing on the next launch and `handle` did not reschedule. The user was left
+    /// with no search index, no retry, and one log line. The bound matters as much as
+    /// the retry — an unbounded one would re-run a ~30 s build on every cold launch
+    /// forever for a deterministic failure.
+    func testFailedBackgroundIndexBuildRetriesThenGivesUp() {
+        defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
+        let manager = SearchIndexBackgroundManager(
+            defaults: defaults,
+            taskIdentifier: "test.search-index",
+            scheduler: SearchIndexBackgroundManager.Scheduler(
+                register: { _, _ in true },
+                submit: { _, completion in completion(nil) },
+                cancel: { _ in }
+            ),
+            buildOperation: { _, _ in
+                throw PSSearchEngineError.sqlite("disk I/O error")
+            }
+        )
+
+        for attempt in 1..<SearchIndexBackgroundManager.maxBuildAttempts {
+            let done = expectation(description: "attempt \(attempt)")
+            manager.performPendingBuild(cancellationRequested: { false }) {
+                success, shouldRetry in
+                XCTAssertFalse(success)
+                XCTAssertTrue(
+                    shouldRetry,
+                    "attempt \(attempt) must ask for another background slot"
+                )
+                done.fulfill()
+            }
+            wait(for: [done], timeout: 5)
+            XCTAssertEqual(
+                defaults.string(forKey: Defaults.pendingSearchIndexModule),
+                "KJV",
+                "the recovery record must survive a retryable failure"
+            )
+        }
+
+        let exhausted = expectation(description: "retry budget exhausted")
+        manager.performPendingBuild(cancellationRequested: { false }) {
+            success, shouldRetry in
+            XCTAssertFalse(success)
+            XCTAssertFalse(shouldRetry)
+            exhausted.fulfill()
+        }
+        wait(for: [exhausted], timeout: 5)
+
+        XCTAssertNil(
+            defaults.string(forKey: Defaults.pendingSearchIndexModule),
+            "the record must be dropped once the budget is spent"
+        )
+        XCTAssertEqual(
+            defaults.integer(forKey: Defaults.pendingSearchIndexAttempts), 0,
+            "the counter is meaningless without its module and must be cleared too"
+        )
+    }
+
+    /// A background failure must not RESURRECT a record someone else has cleared.
+    ///
+    /// The dangerous interleaving: the user's own foreground build of the same module
+    /// finishes (clearing the record) while a background build is still running, and the
+    /// background build then fails. Re-persisting a retry there schedules a recovery
+    /// build for a module whose index is already complete — and `PSSearchEngine.build`
+    /// opens with `dropIndex()`, so that recovery would DESTROY the index the user just
+    /// waited for. Mutation-checked: without the `stillPending` check this reports
+    /// `shouldRetry: true` and writes the attempts counter.
+    func testBackgroundFailureDoesNotResurrectAClearedRecoveryRecord() {
+        defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
+        // Bound to a non-optional local: `defaults` is an implicitly-unwrapped
+        // optional, and a capture list re-wraps it as `UserDefaults?`.
+        let suite: UserDefaults = defaults
+        let manager = SearchIndexBackgroundManager(
+            defaults: suite,
+            taskIdentifier: "test.search-index",
+            scheduler: SearchIndexBackgroundManager.Scheduler(
+                register: { _, _ in true },
+                submit: { _, completion in completion(nil) },
+                cancel: { _ in }
+            ),
+            buildOperation: { _, _ in
+                // The foreground build lands mid-flight and clears the record.
+                suite.removeObject(forKey: Defaults.pendingSearchIndexModule)
+                throw PSSearchEngineError.sqlite("late failure")
+            }
+        )
+
+        let done = expectation(description: "late failure")
+        manager.performPendingBuild(cancellationRequested: { false }) {
+            success, shouldRetry in
+            XCTAssertFalse(success)
+            XCTAssertFalse(
+                shouldRetry,
+                "a cleared record means someone else owns this module now"
+            )
+            done.fulfill()
+        }
+        wait(for: [done], timeout: 5)
+
+        XCTAssertNil(
+            defaults.string(forKey: Defaults.pendingSearchIndexModule),
+            "the record must NOT be resurrected"
+        )
+        XCTAssertEqual(
+            defaults.integer(forKey: Defaults.pendingSearchIndexAttempts), 0,
+            "no budget may be spent on a module this manager no longer owns"
+        )
+    }
+
+    /// An EXPIRED background build is not billed as a failure.
+    ///
+    /// `PSSearchEngine.build` throws `.cancelled` on expiry, so an expired run arrives
+    /// with both an error and the cancellation flag set. Testing the error first would
+    /// spend retry budget on work that was merely interrupted — which is why the expiry
+    /// arm comes first and reports `shouldRetry: true` with the record intact.
+    func testExpiredBackgroundIndexBuildKeepsItsRecordWithoutSpendingBudget() {
+        defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
+        let manager = SearchIndexBackgroundManager(
+            defaults: defaults,
+            taskIdentifier: "test.search-index",
+            scheduler: SearchIndexBackgroundManager.Scheduler(
+                register: { _, _ in true },
+                submit: { _, completion in completion(nil) },
+                cancel: { _ in }
+            ),
+            buildOperation: { _, _ in throw PSSearchEngineError.cancelled }
+        )
+
+        let done = expectation(description: "expired build")
+        manager.performPendingBuild(cancellationRequested: { true }) {
+            success, shouldRetry in
+            XCTAssertFalse(success)
+            XCTAssertTrue(shouldRetry, "expired work must be resubmitted")
+            done.fulfill()
+        }
+        wait(for: [done], timeout: 5)
+
+        XCTAssertEqual(
+            defaults.string(forKey: Defaults.pendingSearchIndexModule), "KJV"
+        )
+        XCTAssertEqual(
+            defaults.integer(forKey: Defaults.pendingSearchIndexAttempts), 0,
+            "an expiration must not spend retry budget"
         )
     }
 

@@ -376,6 +376,15 @@ final class LibraryModel {
         }
     }
 
+    /// The `[BookmarkNode]` twin of `BookmarkStore.findObject(id:in:)`.
+    ///
+    /// Deliberately NOT shared. This walks the immutable `BookmarkNode` PROJECTION
+    /// this model already published, so a view resolves an id against exactly the tree
+    /// it is rendering; the store's walks the live `PSBookmarkFolder` object graph it
+    /// is about to mutate. Routing this through the store would re-read
+    /// `PSBookmarks.default()` mid-render and could answer from a tree the view has not
+    /// seen yet. The two representations cannot share code without one of them
+    /// changing — and the store's is the byte-locked persisted chain.
     private func findBookmark(
         id: UUID,
         in nodes: [BookmarkNode]
@@ -716,10 +725,23 @@ final class SearchModel {
     }
 
     func queryDidChange() {
+        // SwiftUI delivers this for the model's own writes too. `startStrongsQuery`
+        // sets `query` and runs the search itself; the echo that follows must not
+        // bump `queryGeneration` and discard that search. See `SearchInputs`.
+        guard !inputsMatchScheduled else { return }
         scheduleSearch()
     }
 
     func optionsDidChange(currentBookName: String?) {
+        // Same echo guard as `queryDidChange`, and nothing below it is lost on an
+        // echo: by definition no input changed, so the capability check has already
+        // run on the write that produced these values (or will run in `applyModule`),
+        // `persistOptions` would rewrite byte-identical values — `SearchOptionsSnapshot`
+        // carries only fuzzy/matchType/range, none of which this class writes without
+        // persisting — and `scheduleSearch` would throw away the search these values
+        // were scheduled for.
+        guard !inputsMatchScheduled else { return }
+
         // `module != nil` is load-bearing, for the same reason it is in
         // `startStrongsQuery`: `strongsAvailable` is only resolved once
         // `applyModule` has run, so before then it is `false` and this would clear
@@ -878,6 +900,10 @@ final class SearchModel {
             || featureProvider(choice.id, "StrongsNumbers")
         if !strongsAvailable {
             strongsSearch = false
+            // Ours, not the user's: absorb the echo. `selectModule` may skip
+            // `scheduleSearch` (empty query, or an index that is not ready), so the
+            // sync cannot be left to it.
+            syncScheduledInputs()
         }
         if clearExistingResults {
             clearResults()
@@ -923,6 +949,12 @@ final class SearchModel {
             strongs: strongsSearch
         )
         persistOptions()
+        // `restore` writes all five inputs at once and may NOT schedule (an index
+        // that is not fresh), so it absorbs its own echoes here. This also stops the
+        // `.onChange(of: search.range)` echo from calling `updateBookName` and
+        // replacing the restored item's own book scope with whatever book the reader
+        // happens to be on — a restored BookRange search now keeps its book.
+        syncScheduledInputs()
 
         if !query.isEmpty, indexCoordinator.state == .ready {
             scheduleSearch(immediate: true)
@@ -933,7 +965,78 @@ final class SearchModel {
         bookName = range == .BookRange ? currentBookName : nil
     }
 
+    // MARK: - onChange echo suppression
+
+    /// The five observable inputs a scheduled search was built from.
+    ///
+    /// `SearchView` schedules a search from `.onChange(of: search.query)` and from
+    /// four more hooks on the options, and SwiftUI delivers those for **this model's
+    /// own writes** exactly as it does for the user's. Three writes here are the
+    /// model's own: `startStrongsQuery` seeds `query` + `strongsSearch` and then runs
+    /// the search itself, `runSearch` clears sticky Strong's mode when the text
+    /// stopped looking like a lemma, and `applyModule` clears it for a module that
+    /// has no lemmas. Each echoed back as another `scheduleSearch()`, which bumps
+    /// `queryGeneration` and therefore threw away the very search that caused it: the
+    /// FTS query ran twice per action and the results only landed on the second,
+    /// debounced one.
+    ///
+    /// Recording what was last scheduled makes the echo recognisable without a
+    /// "seeding" flag whose lifetime would depend on how many deliveries SwiftUI makes.
+    /// An echo always matches the snapshot; a user edit normally does not, because the
+    /// field the user changed differs from the last scheduled tuple.
+    ///
+    /// **The recognition is by VALUE, not by provenance, and that bounds what this can
+    /// promise.** If one of this class's own syncs lands between a user's binding write
+    /// and SwiftUI's delivery of the matching `.onChange`, that delivery is
+    /// indistinguishable from an echo and is absorbed — skipping `persistOptions()` and
+    /// `updateBookName()` along with the search. Both known routes to that are narrow
+    /// (they need a debounced `runSearch` to clear sticky Strong's mode in the same
+    /// window) and neither loses persisted state permanently, since the next genuine
+    /// option change rewrites it. Provenance-tagging the writes would remove the hole
+    /// and needs a different design than a value snapshot.
+    ///
+    /// **Invariant, and the whole guard rests on it:** every write to one of these five
+    /// properties from inside this class must be followed by `syncScheduledInputs()`, or
+    /// by `scheduleSearch(...)` which syncs first. Break it and a user edit that happens
+    /// to restore the last scheduled tuple is swallowed. `init` is the one deliberate
+    /// exception — it seeds three of the five from the persisted options while
+    /// `scheduledInputs` is still nil, and nil matches nothing, so the first real change
+    /// always schedules. Do NOT "fix" `init` by adding a sync there: that would make the
+    /// user's first option change look like an echo and drop it.
+    private struct SearchInputs: Equatable {
+        let query: String
+        let strongsSearch: Bool
+        let fuzzySearch: Bool
+        let matchType: PSSearchType
+        let range: PSSearchRange
+    }
+
+    @ObservationIgnored private var scheduledInputs: SearchInputs?
+
+    private var currentInputs: SearchInputs {
+        SearchInputs(
+            query: query,
+            strongsSearch: strongsSearch,
+            fuzzySearch: fuzzySearch,
+            matchType: matchType,
+            range: range
+        )
+    }
+
+    /// True when the inputs are exactly what the last scheduled search was built
+    /// from — i.e. this callback is an echo of one of this model's own writes.
+    private var inputsMatchScheduled: Bool {
+        scheduledInputs == currentInputs
+    }
+
+    private func syncScheduledInputs() {
+        scheduledInputs = currentInputs
+    }
+
     private func scheduleSearch(immediate: Bool = false) {
+        // Record the inputs this search is being scheduled for BEFORE the guards
+        // below can return: the echo arrives whether or not a query actually ran.
+        syncScheduledInputs()
         debounceTimer?.invalidate()
         debounceTimer = nil
         queryGeneration &+= 1
@@ -973,8 +1076,15 @@ final class SearchModel {
             return
         }
 
+        // Sticky Strong's mode, cleared when the text stopped looking like a lemma
+        // (ported from `PSModuleSearchController.runSearchForCurrentText`: a plain
+        // word searched with the mode on hits the lemmas column and returns zero
+        // rows). This is OUR write, not the user's, so absorb the `.onChange` echo —
+        // otherwise it bumps `queryGeneration` and discards the query this very call
+        // is about to dispatch.
         if strongsSearch && !Self.inputLooksLikeStrongs(query) {
             strongsSearch = false
+            syncScheduledInputs()
         }
         guard let expression = PSSearchQuery.fts5Expression(
             fromUserInput: query,
@@ -1046,6 +1156,16 @@ final class SearchModel {
 @Observable
 final class AppSession {
     var selectedWorkspace: Workspace
+    /// The last `sword://` URL this session accepted.
+    ///
+    /// **Write-only in production, and kept deliberately.** `ReadingWorkspaceModel.start()`
+    /// used to branch on it to choose a verse restore over a scroll restore, but that
+    /// branch could never fire — `start()` runs before `replayPendingURL()`, and
+    /// `open(_:)` returns at `guard isReady` before assigning this — so it was deleted
+    /// along with the `= nil` that reset it. What remains is the assertable record of
+    /// what a route did, which is what `URLRouterTests.testAppSessionMirrorsAcceptedRoute`
+    /// reads. It therefore LATCHES the most recent URL for the rest of the session; do
+    /// not give it a production reader without first deciding when it should be cleared.
     var lastOpenedURL: URL?
     @ObservationIgnored let reading: ReadingModel
     @ObservationIgnored let settings: SettingsModel
@@ -1213,9 +1333,14 @@ final class AppSession {
     ///    navigation, no history entry, one `alog` line from `URLRouter`. This is
     ///    the only reference the app does not itself generate, which is why
     ///    `PSRefParser` exists.
-    ///  - **The persist happens before the redisplay.** `readingStore.persist`
-    ///    writes `lastRef` and the verse position; the reader then renders from
-    ///    those. Reversing the order renders the previous chapter.
+    ///  - **The persist happens before the redisplay, and the pane switch drops the
+    ///    target pane's stale deferral.** `readingStore.persist` writes `lastRef` and
+    ///    the verse position; `redisplayPrimary*` renders from them and
+    ///    `HistoryStore.addEntry` reads `lastRef` back. Reversing the order renders
+    ///    the previous chapter — and so does a bare `mode` flip, because `mode`'s
+    ///    `didSet` drains the target pane's `refToShow` and `ReaderPaneModel.render`
+    ///    rewrites `lastRef` from it. That is what `showRoutedMode(_:)` prevents; do
+    ///    not shorten it back to `mode = …`.
     @discardableResult
     func open(_ url: URL?) -> Bool {
         guard isReady else {
@@ -1236,7 +1361,7 @@ final class AppSession {
             if let module {
                 PSModuleController.default()?.loadPrimaryBible(module)
             }
-            readingWorkspace?.mode = .bible
+            readingWorkspace?.showRoutedMode(.bible)
             NotificationCenter.default.post(
                 name: .redisplayPrimaryBible,
                 object: nil
@@ -1246,7 +1371,7 @@ final class AppSession {
             if let module {
                 PSModuleController.default()?.loadPrimaryCommentary(module)
             }
-            readingWorkspace?.mode = .commentary
+            readingWorkspace?.showRoutedMode(.commentary)
             NotificationCenter.default.post(
                 name: .redisplayPrimaryCommentary,
                 object: nil

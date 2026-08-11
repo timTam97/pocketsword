@@ -259,15 +259,25 @@ final class BookmarkStore {
         commit()
     }
 
+    /// Renames a folder and sets its colour, or throws having changed NOTHING.
+    ///
+    /// The type check runs BEFORE `renameObject`, deliberately. `renameObject`
+    /// mutates the live `PSBookmarks.default()` tree (`name` plus
+    /// `dateLastAccessed`) and only `commit()` writes it out, so validating
+    /// afterwards left a non-folder node renamed in memory with nothing saved — the
+    /// Library still showed the old name (`LibraryModel.updateBookmarkFolder` does
+    /// not `reloadBookmarks()` on throw) and the next unrelated `commit()` would have
+    /// persisted the phantom rename. `renameObject`'s own guards all precede its
+    /// mutations, which is why `rename(id:to:)` needs no equivalent change.
     func updateFolder(
         id: UUID,
         name: String,
         color: BookmarkColor?
     ) throws {
-        try renameObject(id: id, to: name)
         guard let folder = object(id: id) as? PSBookmarkFolder else {
             throw BookmarkMutationError.missingNode
         }
+        try renameObject(id: id, to: name)
         folder.rgbHexString = color?.hexString
         commit()
     }

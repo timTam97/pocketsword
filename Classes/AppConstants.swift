@@ -36,6 +36,10 @@ enum Defaults {
     static let lastSearchType              = "DefaultsLastSearchType"
     static let lastSearchRange             = "DefaultsLastSearchRange"
     static let pendingSearchIndexModule    = "PendingSearchIndexModule"
+    /// Consecutive FAILED background search-index build attempts for
+    /// `pendingSearchIndexModule`, bounding the BGProcessingTask retry. Swift-only —
+    /// no globals.h macro, because no Obj-C reads it (nor does its sibling above).
+    static let pendingSearchIndexAttempts  = "PendingSearchIndexAttempts"
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
     static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"

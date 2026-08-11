@@ -83,10 +83,6 @@ enum ChapterTextRenderer {
         var fontSize: CGFloat
         /// `createHTMLString`'s `line-height`: 1.4 on iPhone, 1.6 on iPad.
         var lineSpacingMultiple: CGFloat
-        /// Whether Strong's / morph / footnote markers are shown at all. The
-        /// per-module toggles already gate them out of the document; this is the
-        /// view-level switch the search highlighter uses.
-        var showsMarkers = true
 
         /// The terms to highlight, case-insensitively — what `SearchWebView.js`
         /// walked the DOM to do. Empty for a Strong's search, where the match is a
@@ -148,9 +144,30 @@ enum ChapterTextRenderer {
         return label
     }
 
-    /// One verse's text.
+    /// One verse's text: its runs, its bookmark highlight, and any search jacket.
+    ///
+    /// **The order is load-bearing. The bookmark colour goes on FIRST and the search
+    /// jacket over the top of it**, because that is what the WebView did:
+    /// `PSChapterAssembler.highlight(verse:cssClass:)` wrapped the verse in
+    /// `<span class="highlightedVerse" style="background-color:rgba(…);color:black">`
+    /// server-side, and `SearchWebView.js`'s `PS_HighlightAllOccurencesOfString` then
+    /// inserted its own `background-color: yellow; color: black` span *inside* that
+    /// subtree at runtime — so yellow painted over the bookmark colour on the
+    /// matching words only. Painting the bookmark colour over the finished string,
+    /// which is what `ParagraphRow.flowed` and `VerseRow.labelled` used to do,
+    /// repaints the whole verse and erases every match. It lives here rather than in
+    /// the two row views so there is one copy and one order.
     static func text(for verse: ChapterVerse, style: Style) -> AttributedString {
         var out = attributed(runs: verse.runs, style: style)
+        if let colour = verse.highlightColour,
+           let background = Color(bookmarkRGBAString: colour) {
+            // The HTML wrapped a highlighted verse in a span per block element
+            // (64 spans for Ps 23's three verses, faithfully); an `AttributedString`
+            // background runs the length of the range, which is the same visible
+            // result without the span gymnastics.
+            out.backgroundColor = background
+            out.foregroundColor = .black
+        }
         for term in style.highlightTerms where !term.isEmpty {
             applyHighlight(term, to: &out)
         }
@@ -193,7 +210,6 @@ enum ChapterTextRenderer {
     static func attributed(runs: [InlineRun], style: Style) -> AttributedString {
         var out = AttributedString()
         for run in runs {
-            if run.isMarker && !style.showsMarkers { continue }
             guard !run.text.isEmpty else { continue }
             var piece = AttributedString(run.text)
 
@@ -284,8 +300,6 @@ extension Color {
 /// come from `ReaderPaneModel`, exactly as the WebView's did.
 struct ChapterTextView: View {
     let pane: ReaderPaneModel
-
-    @Environment(\.self) private var environment
 
     var body: some View {
         @Bindable var pane = pane
@@ -444,17 +458,9 @@ private struct ParagraphRow: View {
                     tappable: pane.mode == .bible
                 )
             }
-            var body = ChapterTextRenderer.text(for: verse, style: style)
-            if let colour = verse.highlightColour,
-               let background = Color(bookmarkRGBAString: colour) {
-                // The HTML wrapped a highlighted verse in a span per block element
-                // (64 spans for Ps 23's three verses, faithfully); an
-                // `AttributedString` background runs the length of the range, which
-                // is the same visible result without the span gymnastics.
-                body.backgroundColor = background
-                body.foregroundColor = .black
-            }
-            out += body
+            // The bookmark highlight is applied by the renderer, UNDER the search
+            // jacket — see `ChapterTextRenderer.text(for:style:)`.
+            out += ChapterTextRenderer.text(for: verse, style: style)
         }
         return out
     }
@@ -487,13 +493,7 @@ private struct VerseRow: View {
             )
             out += AttributedString(" ")
         }
-        var body = ChapterTextRenderer.text(for: verse, style: style)
-        if let colour = verse.highlightColour,
-           let background = Color(bookmarkRGBAString: colour) {
-            body.backgroundColor = background
-            body.foregroundColor = .black
-        }
-        out += body
+        out += ChapterTextRenderer.text(for: verse, style: style)
         return out
     }
 }

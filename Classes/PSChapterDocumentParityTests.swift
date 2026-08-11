@@ -939,6 +939,65 @@ final class PSChapterDocumentParityTests: XCTestCase {
         )
     }
 
+    /// A bookmarked verse keeps the search jacket on its matching words.
+    ///
+    /// The bookmark colour is painted UNDER the jacket, matching the WebView: the
+    /// assembler's `span.highlightedVerse` wrapped the verse and `SearchWebView.js`
+    /// inserted its yellow span *inside* it, so yellow won the matched words only.
+    /// The two row views used to paint the bookmark colour over the FINISHED string,
+    /// which erased every match — invisible to every other test, because it shows only
+    /// when a verse is both bookmarked and searched.
+    ///
+    /// Deliberately compares colours against each other rather than naming
+    /// `Color.yellow`, so this file needs no `import SwiftUI`.
+    @MainActor
+    func testBookmarkHighlightDoesNotEraseTheSearchJacket() throws {
+        var style = ChapterTextRenderer.Style.current()
+        style.highlightTerms = ["light"]
+
+        let verse = ChapterVerse(
+            number: 3,
+            runs: [InlineRun(text: "And God said, Let there be light: and it was so.")],
+            highlightColour: "rgba(255,204,0,0.8)"
+        )
+
+        let text = ChapterTextRenderer.text(for: verse, style: style)
+        let allRuns = Array(text.runs)
+
+        // The bookmark colour, taken from a run the search term does not cover.
+        //
+        // If the bookmark colour is painted OVER the finished string instead of under
+        // it, every run ends up with one uniform background and the whole verse
+        // coalesces into a single run that contains the term — so this guard is the
+        // first thing that trips, not the jacket assertion below.
+        guard let bookmarked = allRuns.first(where: {
+            !String(text[$0.range].characters).contains("light")
+        })?.backgroundColor else {
+            return XCTFail(
+                "no run outside the search term carries its own background, in "
+                    + "\(allRuns.count) run(s): either the bookmark colour was never "
+                    + "applied, or it was painted over the jacket and erased it"
+            )
+        }
+
+        var jacketed: [String] = []
+        for run in allRuns {
+            let piece = String(text[run.range].characters)
+            XCTAssertNotNil(
+                run.backgroundColor,
+                "the bookmark background missed '\(piece)'"
+            )
+            if run.backgroundColor != bookmarked {
+                jacketed.append(piece)
+            }
+        }
+
+        XCTAssertEqual(
+            jacketed, ["light"],
+            "the bookmark background overwrote the search jacket"
+        )
+    }
+
     /// Tag NAMES (lowercased, attributes dropped) appearing literally in a record.
     private static func rawTags(in record: String) -> [String] {
         var out: [String] = []

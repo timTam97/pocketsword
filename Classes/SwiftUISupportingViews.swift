@@ -94,24 +94,6 @@ final class ReferencePickerModel {
         updateCurrentReference(currentReference)
     }
 
-    func reload(
-        books: [ReferencePickerBook],
-        currentReference: String?
-    ) {
-        self.books = books
-        indexEntries = Self.makeIndexEntries(books: books)
-        path = []
-        updateCurrentReference(currentReference)
-    }
-
-    func clearBooks() {
-        books = []
-        indexEntries = []
-        currentBookID = nil
-        currentChapter = nil
-        path = []
-    }
-
     func updateCurrentReference(_ reference: String?) {
         guard let chapterReference = reference?
             .components(separatedBy: ":")

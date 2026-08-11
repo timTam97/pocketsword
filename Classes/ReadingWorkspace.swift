@@ -361,8 +361,59 @@ final class ReaderPaneModel {
     /// bookmark highlight colours, verse anchors, link targets — is already in the
     /// value, so there is nothing to inject afterwards.
     func render(ref: String?, restore: PaneRestore) {
-        guard let module = moduleName, let ref else {
+        guard let ref else {
             document = ChapterDocument()
+            return
+        }
+        // ── A nil primary is RESOLVED here, not shown as a blank pane. ──
+        //
+        // `-getBibleChapter:withExtraJS:` / `-getCommentaryChapter:withExtraJS:`
+        // opened with exactly three arms: if the primary was nil call `reloadLast*`
+        // (which resolves it from `lastBible`/`lastCommentary`, falling back to the
+        // bundled module), post `newPrimary*` so the display-toggle rows are rebuilt,
+        // and only if it was STILL nil return the one user-visible statement of "no
+        // content at all". Wave 9 deleted the getters and this guard replaced all
+        // three with an empty document — a blank pane, no message, no recovery, which
+        // is exactly what `resetModuleSelections()` left behind for a whole session
+        // before `resetPreferences()` learned to re-resolve.
+        //
+        // Safe to call from here, and the argument does NOT rest on the notification
+        // being deferred — `addObserver(forName:object:queue:using:)` promises no such
+        // thing, so assume the observer may run synchronously. It is safe because of
+        // what the observer DOES: the only `.newPrimary*` handlers are
+        // `refreshForModuleChange()`, which rebuilds the display-toggle rows and resets
+        // the commentary title and touches neither `document` nor `render`. Nothing on
+        // that path re-enters here. If a future observer of `newPrimary*` ever calls
+        // `displayChapter`/`render`, this becomes a render loop.
+        //
+        // `reloadLast*` posts nothing itself (it has no `didSet` and no KVO observer to
+        // trigger), but it is not read-only: it reads `Defaults.lastBible` /
+        // `lastCommentary` AND the content store's module metadata, and on the
+        // fallback path it WRITES that last-module key and calls `synchronize()`. So
+        // this makes `render` a writer of one more default. Harmless — the value it
+        // writes is the bundled module the app resolves to anyway — but worth knowing.
+        var resolved = moduleName
+        if resolved == nil {
+            let controller = PSModuleController.default()
+            switch mode {
+            case .bible: controller?.reloadLastBible()
+            case .commentary: controller?.reloadLastCommentary()
+            }
+            resolved = moduleName
+            if resolved != nil {
+                NotificationCenter.default.post(
+                    name: mode == .bible ? .newPrimaryBible : .newPrimaryCommentary,
+                    object: nil
+                )
+            }
+        }
+        guard let module = resolved else {
+            var empty = ChapterDocument()
+            empty.emptyMessage = NSLocalizedString(
+                "NoModulesInstalled",
+                comment: "Shown in the reader when no module could be resolved."
+            )
+            document = empty
             return
         }
         // ── `lastRef` is persisted HERE, and it has to be. ──
@@ -497,17 +548,38 @@ final class ReaderPaneModel {
     /// one place the prose layout costs something: the scroll lands at the top of
     /// the verse's paragraph rather than exactly on the verse.
     private func rowID(containing verse: Int) -> Int {
-        if versePerLine { return verse }
-        var candidate = verse
+        if versePerLine {
+            // Every verse is its own row — but only among rows the document actually
+            // HAS, which is not the same thing on a commentary. See below.
+            if document.verses.contains(where: { $0.number == verse }) { return verse }
+            return document.verses.map(\.number).filter { $0 <= verse }.max() ?? verse
+        }
+        var nearestPreceding: Int?
         for paragraph in paragraphs {
             guard let first = paragraph.verses.first?.number,
                   let last = paragraph.verses.last?.number else { continue }
             if verse >= first && verse <= last {
-                candidate = first
-                break
+                return first
+            }
+            // Remember the closest row that STARTS at or before the target, for the
+            // fall-through below.
+            if first <= verse {
+                nearestPreceding = max(nearestPreceding ?? first, first)
             }
         }
-        return candidate
+        // ── Falling back to the nearest PRECEDING row, not to `verse` itself. ──
+        //
+        // A commentary record covers a RANGE of verses and the document carries a row
+        // only where one begins: MHCC John 3 has rows 1 and 22 and nothing between,
+        // because `PSChapterDocumentBuilder` drops consecutive duplicate body ids
+        // (24,327 of MHCC's 27,715 rows repeat their predecessor). Returning `verse`
+        // for anything inside a range therefore addressed a row id that does not
+        // exist, and `scrollTo(id:)` silently does nothing for an unknown id — so
+        // "Show in commentary" on John 3:16, and every `.verse` restore on the
+        // commentary pane, sat at the top of the comment while `currentShownVerse`
+        // claimed 16. The covering record is the right answer: it is the text that
+        // discusses that verse.
+        return nearestPreceding ?? verse
     }
 
     /// A scroll came to rest at `offset`: work out which verse that is and persist
@@ -763,25 +835,6 @@ final class ReaderPaneModel {
         }
     }
 
-    // MARK: Bookmark highlighting
-
-    /// Re-render so bookmark colours are picked up.
-    ///
-    /// `HighlightBookmarks.js` used to reach into the live DOM and set
-    /// `style.backgroundColor` on each `vvv{n}` span, with a matching
-    /// `PS_RemoveHighlights` loop to clear them. Both are gone: the highlight is a
-    /// property of the document (`ChapterVerse.highlightColour`, filled by
-    /// `PSContentReader` from the same `PSBookmarks` lookup), so re-rendering is
-    /// both the add and the remove — and it cannot drift out of step with the text
-    /// the way a DOM mutation could.
-    ///
-    /// Position is preserved by rendering at the current offset, which is what the
-    /// `bookmarksChanged` path always wanted: the user recoloured a verse, they did
-    /// not navigate.
-    func redoBookmarkHighlights() {
-        let offset = lastScrollOffset
-        render(ref: PSModuleController.getCurrentBibleRef(), restore: .offset(offset))
-    }
 }
 
 // MARK: - Link routing
@@ -1034,12 +1087,16 @@ final class ReadingWorkspaceModel {
     /// Renders the persisted chapter and starts observing the notifications that
     /// still have posters outside this file.
     ///
-    /// Five of the coordinator's thirteen observers survive, and only because
-    /// something else posts them: `resetBibleAndCommentaryView` (a font/size
-    /// change, via `SettingsModel`), `redisplayPrimary{Bible,Commentary}` (a
-    /// display-toggle flip and the `sword://` router), `bookmarksChanged` (the
-    /// bookmark store), and `newPrimary{Bible,Commentary}` (module load). The
-    /// other eight were the reader talking to itself and are now method calls.
+    /// Six notifications still have observers here — four names, six once the braces
+    /// are expanded — and each survives only because something outside the reader posts
+    /// it: `resetBibleAndCommentaryView` (a font/size change, via `SettingsModel`),
+    /// `redisplayPrimary{Bible,Commentary}` (a display-toggle flip and the `sword://`
+    /// router), `bookmarksChanged` (the bookmark store and the reader's own bookmark
+    /// editor), and `newPrimary{Bible,Commentary}` (module load, including `render`'s
+    /// own nil-primary recovery). The rest of the coordinator's original set were the
+    /// reader talking to itself and are now direct method calls. (Deliberately no
+    /// total here: the "N of thirteen" phrasing this used to carry has been miscounted
+    /// twice, and CLAUDE.md records the surviving figure as six.)
     func start() {
         _ = PSModuleController.default()
 
@@ -1094,12 +1151,18 @@ final class ReadingWorkspaceModel {
         commentary.refreshForModuleChange()
 
         let lastRef = PSModuleController.getCurrentBibleRef()
-        // A launch that is *replaying* a sword:// URL restores the verse it names;
-        // an ordinary launch restores the scroll offset it left off at.
-        let restore: RestorePositionType =
-            session?.lastOpenedURL == nil ? .scroll : .verse
-        session?.lastOpenedURL = nil
-        displayChapter(lastRef, polling: .bible, restore: restore)
+        // Always the scroll offset, and a `sword://` launch needs nothing else here.
+        //
+        // `RootView`'s `.task` runs `reading.start()` and THEN
+        // `session.replayPendingURL()`, whose `open(_:)` persists the URL's ref and
+        // verse and posts `.redisplayPrimaryBible` — i.e. a `.verse` re-render lands
+        // immediately after this one. Branching on `session?.lastOpenedURL` here (as
+        // this used to) could never have worked anyway: `open(_:)` returns at
+        // `guard isReady` before setting it, and `isReady` is only set INSIDE
+        // `replayPendingURL()`, so it is always nil at this point — and the verse/ref
+        // keys it would read are still the previous session's until `open(_:)` writes
+        // them.
+        displayChapter(lastRef, polling: .bible, restore: .scroll)
     }
 
     private func observe(
@@ -1164,14 +1227,25 @@ final class ReadingWorkspaceModel {
     /// things here are deliberate:
     ///
     ///  1. **Only the polled pane renders.** The other is handed `refToShow` +
-    ///     `jsToShow` and renders on next appearance, which is what stops every
-    ///     Bible chapter change from also rendering MHCC.
+    ///     `pendingRestore` and renders when it next becomes active, which is what
+    ///     stops every Bible chapter change from also rendering MHCC. An inbound
+    ///     `sword://` route is the one case that must DISCARD that deferral rather
+    ///     than drain it — see `showRoutedMode(_:)`.
     ///  2. **The two panes' JS is built separately** from their own verse-position
     ///     prefs, because they track position independently.
-    ///  3. **The title's verse defaults differ by restore type.** `.scroll` reads
-    ///     the commentary's own persisted verse for the commentary title;
-    ///     `.none` forces both to "1". Collapsing them retitles one pane wrongly
-    ///     on a chapter page.
+    ///  3. **Each pane's title verse comes from that pane's OWN verse-position pref,
+    ///     and this deliberately diverges from the Obj-C original.**
+    ///     `-displayChapter:withPollingType:restoreType:` used ONE local for both
+    ///     titles and its `.verse` arm reassigned that local to
+    ///     `DefaultsCommentaryVersePosition` before building either title — so a
+    ///     `.verse` restore titled the BIBLE pane with the COMMENTARY's persisted
+    ///     verse. That is reachable: `ReadingStateStore.persist` writes
+    ///     `commentaryVersePosition` only for a commentary destination, so opening a
+    ///     bookmark / history row / search result at John 3:16 (which posts
+    ///     `.redisplayPrimaryBible` → `redisplay(restore: .verse)`) titled the pane
+    ///     "John 3:4" from a stale commentary verse while the text scrolled to 16.
+    ///     `.scroll` still reads each key separately and `.none` still forces both to
+    ///     "1"; collapsing those two would retitle one pane wrongly on a chapter page.
     func displayChapter(
         _ ref: String?,
         polling: PollingType,
@@ -1184,7 +1258,11 @@ final class ReadingWorkspaceModel {
         // same per-pane independence, no code generation.
         var bibleRestore = ReaderPaneModel.PaneRestore.none
         var commentaryRestore = ReaderPaneModel.PaneRestore.none
-        var versePosition = defaults.string(forKey: Defaults.bibleVersePosition)
+        // Each pane's title verse comes from that pane's OWN key. The `.verse` arm
+        // below reassigns `versePosition` to the commentary's key, so the Bible
+        // title's value has to be captured before that happens — see (3) above.
+        let bibleVersePosition = defaults.string(forKey: Defaults.bibleVersePosition)
+        var versePosition = bibleVersePosition
 
         switch position {
         case .scroll:
@@ -1224,7 +1302,7 @@ final class ReadingWorkspaceModel {
             commentary.pendingRestore = commentaryRestore
         }
 
-        var bibleVerse = versePosition ?? "1"
+        var bibleVerse = bibleVersePosition ?? "1"
         var commentaryVerse = versePosition ?? "1"
         switch position {
         case .scroll:
@@ -1273,6 +1351,50 @@ final class ReadingWorkspaceModel {
         )
     }
 
+    /// Switches which pane is showing for an inbound `sword://` route, dropping
+    /// whatever that pane had deferred first.
+    ///
+    /// **`mode`'s `didSet` drains the target pane's deferral, and for a routed switch
+    /// that deferral is stale by construction.** `displayChapter` hands the pane it
+    /// did NOT poll a `refToShow` — the chapter the user was already on — and
+    /// `ReaderPaneModel.render` writes `lastRef`. So flipping `mode` straight after
+    /// `ReadingStateStore.persist` rendered the PREVIOUS chapter and rewrote `lastRef`
+    /// back to it, under both `HistoryStore.addEntry` (which builds its row from that
+    /// key) and the `redisplayPrimary*` observer (which re-reads it through
+    /// `getCurrentBibleRef()`). Nothing is lost by dropping it: the redisplay that
+    /// follows goes through `redisplay(pane:restore:)`, which clears the same two
+    /// fields and re-renders the persisted ref anyway.
+    ///
+    /// `verseToShow` goes too, for the same reason `page(forward:)` clears it: with
+    /// the deferral gone, `applyPendingWork`'s third branch would otherwise scroll the
+    /// OUTGOING document, and a scroll callback landing before the redisplay persists
+    /// a verse from the wrong chapter over the one the URL just named.
+    ///
+    /// The user's own Bible/commentary picker still writes `mode` directly and still
+    /// wants that drain — which is why this clears at the CALL SITE and not in
+    /// `didSet`.
+    func showRoutedMode(_ newMode: ReadingMode) {
+        let pane = newMode == .bible ? bible : commentary
+        pane.refToShow = nil
+        pane.pendingRestore = nil
+        pane.setVerseToShow(0)
+        mode = newMode
+        // A pane that has never rendered would otherwise be shown EMPTY until the
+        // `.redisplayPrimary*` observer drains off the main queue one runloop turn
+        // later — `ChapterTextView` draws an empty `ChapterDocument` as nothing at all,
+        // with no `emptyMessage` to explain it. Only the commentary pane can be in that
+        // state (`start()` renders the Bible pane and merely defers the other), and only
+        // until the user has visited it once. Rendering the already-persisted ref here
+        // is safe precisely because `ReadingStateStore.persist` has run: this is the
+        // route's own chapter, not the stale one this method exists to discard.
+        if pane.document.verses.isEmpty {
+            pane.render(
+                ref: PSModuleController.getCurrentBibleRef(),
+                restore: .none
+            )
+        }
+    }
+
     /// A font or font-size change (`resetBibleAndCommentaryView`, posted by
     /// `SettingsModel.onReadingAppearanceChanged`): re-render the pane the user is
     /// on, and leave the other one's deferral alone.
@@ -1292,6 +1414,20 @@ final class ReadingWorkspaceModel {
 
     /// A bookmark change re-renders the Bible pane at its current SCROLL offset,
     /// not its verse — the user has not navigated, only recoloured.
+    ///
+    /// `HighlightBookmarks.js` used to reach into the live DOM and set
+    /// `style.backgroundColor` on each `vvv{n}` span, with a matching
+    /// `PS_RemoveHighlights` loop to clear them. Both are gone: the highlight is a
+    /// property of the document (`ChapterVerse.highlightColour`, filled by
+    /// `PSContentReader` from the same `PSBookmarks` lookup), so re-rendering is both
+    /// the add and the remove — and it cannot drift out of step with the text the way
+    /// a DOM mutation could.
+    ///
+    /// This is the ONLY `bookmarksChanged` re-render. `ReaderPaneModel` used to carry
+    /// a second, never-called `redoBookmarkHighlights()` that rendered one pane at its
+    /// in-memory offset; it was deleted rather than wired, because it skipped the
+    /// commentary's deferral and the title / chapter-button update `displayChapter`
+    /// does.
     private func redisplayAfterBookmarksChange() {
         bible.refToShow = nil
         bible.pendingRestore = nil
@@ -1430,11 +1566,6 @@ final class ReadingWorkspaceModel {
         toggleFocusMode()
     }
 
-    func exitFocusMode() {
-        guard isFocused else { return }
-        toggleFocusMode()
-    }
-
     // MARK: Study surfaces
 
     func showStudyPopup(_ content: PSInfoPopupContent) {
@@ -1457,8 +1588,29 @@ final class ReadingWorkspaceModel {
 
     /// The verse menu's "show in commentary" action: carry the verse across,
     /// switch panes, and keep Focus mode if it was on.
+    ///
+    /// **The verse is carried in `pendingRestore`, not only in `verseToShow`.**
+    /// `applyPendingWork`'s branch order — ref beats restore beats verse — is
+    /// deliberate, but the commentary pane's `refToShow` is non-nil by construction
+    /// here: the verse menu is Bible-only, and every `displayChapter(polling: .bible)`
+    /// hands the commentary the chapter it did not render. So the third branch never
+    /// ran and the tapped verse was silently dropped.
+    ///
+    /// The UIKit original had the same gap in `viewWillAppear` and got away with it
+    /// through a SECOND drain the native reader does not have: `verseToShow` was
+    /// deliberately left set (`//verseToShow = 0;`) so that
+    /// `webView:didFinishNavigation:` could re-apply it once the reload finished.
+    /// Wave 9 deleted that hook with the WebView, and there is no load-finished
+    /// callback to replace it — so the verse has to travel in the payload of the branch
+    /// that actually runs. That keeps the order intact: branch 1 re-renders the same
+    /// chapter and applies `.verse(verse)`; branch 2 (nothing deferred) scrolls without
+    /// re-rendering.
+    ///
+    /// `setVerseToShow` is NOT also called: the line below arms branch 2, which
+    /// outranks branch 3 unconditionally, so it would be dead. Branch 3 itself is kept
+    /// — see `applyPendingWork`.
     func showInCommentary(verse: Int) {
-        commentary.setVerseToShow(verse)
+        commentary.pendingRestore = .verse(verse)
         mode = .commentary
         session?.selectedWorkspace = .read
     }

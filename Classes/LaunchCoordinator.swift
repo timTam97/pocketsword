@@ -31,7 +31,6 @@ final class LaunchCoordinator {
     private let resetModuleSelections: () -> Void
     private let currentReference: () -> String
     private let referenceResolves: (String) -> Bool
-    private let moduleVersion: (String) -> String
 
     init(
         defaults: UserDefaults = .standard,
@@ -78,9 +77,6 @@ final class LaunchCoordinator {
         },
         referenceResolves: @escaping (String) -> Bool = {
             PSBookOSISResolver.shared?.resolve(ref: $0) != nil
-        },
-        moduleVersion: @escaping (String) -> String = {
-            PSContentStore.shared?.moduleVersion($0) ?? "0.0"
         }
     ) {
         self.defaults = defaults
@@ -91,7 +87,6 @@ final class LaunchCoordinator {
         self.resetModuleSelections = resetModuleSelections
         self.currentReference = currentReference
         self.referenceResolves = referenceResolves
-        self.moduleVersion = moduleVersion
     }
 
     func prepare() -> LaunchResult? {
@@ -229,21 +224,17 @@ final class LaunchCoordinator {
             return
         }
 
+        // Swept by `cache-` PREFIX, not by name.
+        //
+        // There used to be a loop above this one that rebuilt each of the three
+        // lexicons' `cache-<module>-<version>` filenames from `content_meta` and
+        // removed them individually. It was redundant — the sweep below is a strict
+        // superset — and it was also the NARROWER of the two: it derived the version
+        // from the store the current build opens, so a cache written by a
+        // pre-Phase-5 build under SWORD's own version string was never matched by it
+        // and only ever caught here. Removing it also took a `moduleVersion` seam,
+        // i.e. three SQLite reads, off the launch path.
         var deleted: [String] = []
-        for module in [
-            BundledModules.morphGreek,
-            BundledModules.strongsGreek,
-            BundledModules.strongsHebrew,
-        ] {
-            let filename = "cache-\(module)-\(moduleVersion(module))"
-            let path = (paths.appSupportRoot as NSString)
-                .appendingPathComponent(filename)
-            if fileManager.fileExists(atPath: path) {
-                try? fileManager.removeItem(atPath: path)
-                deleted.append(filename)
-            }
-        }
-
         if let entries = try? fileManager.contentsOfDirectory(
             atPath: paths.appSupportRoot
         ) {

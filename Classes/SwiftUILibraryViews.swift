@@ -131,23 +131,65 @@ private struct DictionaryModuleChoice: Identifiable {
 }
 
 private struct DictionaryEntryView: View {
-    let initialEntry: DictionaryEntryDocument
     let library: LibraryModel
 
-    @State private var linkedEntry: DictionaryEntryDocument? = nil
+    /// Caches the parse of the entry currently on screen, keyed by its identity.
+    ///
+    /// A reference type held in `@State`, and both halves of that are deliberate.
+    ///
+    /// `PSInfoPopupContent.entryDocument` memoizes the same parse on the object that
+    /// owns the HTML; a `DictionaryEntryDocument` is a value type whose synthesized
+    /// `Equatable` must not grow a non-equatable memo, so the memo cannot live there.
+    /// It cannot live in `body` either — building it there re-ran the whole tag scanner
+    /// on every update, a multi-KB Strong's definition on the main actor for every
+    /// scroll, rotation or environment change.
+    ///
+    /// **And it cannot be `@State private var parsed = Parsed(entry)`.**
+    /// `State(initialValue:)` (and `= expr`) is an EAGER parameter, not an autoclosure:
+    /// SwiftUI re-creates the view struct — and therefore re-evaluates that
+    /// expression — on every parent update, discarding the result whenever the state
+    /// already exists. That moves the cost from `body` to `init` and fixes nothing. A
+    /// class costs one throwaway empty allocation per init instead, and the parse
+    /// happens only when `document(for:)` is asked for an entry it has not seen.
+    ///
+    /// Mutating it from `body` is safe precisely because it is NOT observable: no
+    /// `@Published`, no `@Observable`, so filling the cache cannot invalidate the view
+    /// that is reading it. This is the same shape as `PSInfoPopupContent`'s lazy getter.
+    private final class EntryDocumentCache {
+        private var key: DictionaryEntryDocument.ID?
+        private var document: EntryDocument?
+
+        func document(for entry: DictionaryEntryDocument) -> EntryDocument {
+            if key == entry.id, let document { return document }
+            let built = PSEntryDocumentBuilder.build(html: entry.html)
+            key = entry.id
+            document = built
+            return built
+        }
+    }
+
+    @State private var shown: DictionaryEntryDocument
+    @State private var cache = EntryDocumentCache()
+
+    init(initialEntry: DictionaryEntryDocument, library: LibraryModel) {
+        self.library = library
+        _shown = State(initialValue: initialEntry)
+    }
 
     var body: some View {
-        let entry = linkedEntry ?? initialEntry
-
         EntryTextView(
-            document: PSEntryDocumentBuilder.build(html: entry.html),
+            document: cache.document(for: shown),
             openLink: { link in
                 guard case .lexicon(let module, let key) = link else { return }
-                linkedEntry = library.dictionaryEntry(module: module, key: key)
+                shown = library.dictionaryEntry(module: module, key: key)
             },
             topInset: 8
         )
-        .navigationTitle(entry.key)
+        // Following a cross-link swaps the entry in place, so the scroll offset has
+        // to reset with it — the same reason `StudyPopupSheet` puts an `.id` on its
+        // `EntryTextView`.
+        .id(shown.id)
+        .navigationTitle(shown.key)
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("dictionary.entry")
     }

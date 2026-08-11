@@ -306,13 +306,30 @@ struct BookmarkEditorView: View {
         }
     }
 
-    /// Persists the bookmark and refreshes any highlight it introduces.
+    /// Persists the bookmark and announces the change.
     ///
-    /// Two behaviours are preserved from `saveButtonPressed`: an empty description
-    /// falls back to the reference itself, and the `bookmarksChanged` post is
-    /// **conditional** on the bookmark being in the chapter currently on screen —
-    /// a bookmark added for another chapter must not trigger a re-render of this
-    /// one. `PSBookmarks.addBookmark` posts nothing itself.
+    /// One behaviour comes from `saveButtonPressed`: an empty description falls back
+    /// to the reference itself. `PSBookmarks.addBookmark` posts nothing itself, so
+    /// the post has to happen here.
+    ///
+    /// **The post is deliberately UNCONDITIONAL, where the UIKit original gated it
+    /// on `createRefString(getCurrentBibleRef()) == bookAndChapterRef`.** That gate
+    /// was safe only because `bookmarksChanged` had exactly ONE consumer — the
+    /// reader's highlight re-render — and the bookmarks *list* was a
+    /// `UITableViewController` that reloaded from `-viewWillAppear:`. It now has a
+    /// second consumer with no reload of its own: `LibraryModel` refreshes `bookmarks`
+    /// only off this notification, and the Bookmarks section has no `.task`/`onAppear`
+    /// reload, so a gated post could leave the Library listing a stale tree until some
+    /// unrelated mutation happened to call `BookmarkStore.commit()`.
+    ///
+    /// In fairness the gate was almost always true — `presentVerseMenu` snapshots
+    /// `draft.chapterRef` from the very expression `save()` re-evaluated, so they
+    /// diverge only if `lastRef` changes while the sheet is up (an inbound `sword://`
+    /// URL, or an absent `lastRef`). So this is closing a contract hole rather than a
+    /// defect users were hitting. It is worth closing anyway: two consumers now share
+    /// one notification and the condition was written for only one of them. The
+    /// reader's handler re-renders its pane at the persisted scroll offset, which in the
+    /// ordinary same-chapter case is what already happened.
     private func save() {
         let description = name.isEmpty ? draft.reference : name
         _ = PSBookmarks.addBookmark(
@@ -320,12 +337,7 @@ struct BookmarkEditorView: View {
             name: description,
             folderString: folderPath
         )
-        let currentChapter = PSModuleController.createRefString(
-            PSModuleController.getCurrentBibleRef()
-        )
-        if currentChapter == draft.chapterRef {
-            NotificationCenter.default.post(name: .bookmarksChanged, object: nil)
-        }
+        NotificationCenter.default.post(name: .bookmarksChanged, object: nil)
         dismiss()
     }
 }

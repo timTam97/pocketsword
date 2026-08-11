@@ -228,8 +228,14 @@ stashed, and is now worked around in `startStrongsSearch`.
 - Search index builds persist an interrupted module and submit a
   `BGProcessingTaskRequest`. The launch-registered background manager restarts
   the same transactional `PSSearchEngine` build, cancels cleanly on expiration,
-  retries expired work, and clears the pending marker only after success or a
-  terminal failure.
+  retries expired work, and clears the pending marker after success, after the
+  bounded retry budget (`maxBuildAttempts`) is spent, or when the user's own
+  foreground build finishes. A *failed* background build keeps its marker and asks
+  for another slot — it used to clear the marker AND report no retry, which killed
+  both recovery mechanisms at once and left the user with no index; an expiration
+  is handled first and deliberately spends no budget, because
+  `PSSearchEngine.build` throws `.cancelled` on expiry and would otherwise be
+  billed as a failure.
 - The SwiftUI reference picker preserves the existing notification payload,
   direct chapter/verse-one jumps, current-reference highlighting, and the
   64-entry first-match short-book index contract.

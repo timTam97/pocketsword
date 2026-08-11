@@ -90,7 +90,6 @@ struct EntryBlock: Identifiable, Equatable {
 /// A rendered lexicon entry or footnote.
 struct EntryDocument: Equatable {
     var blocks: [EntryBlock] = []
-    var isEmpty: Bool { blocks.allSatisfy { $0.runs.allSatisfy { $0.text.isEmpty } } }
 }
 
 /// Builds `EntryDocument`s from stored lexicon / note HTML.
