@@ -252,6 +252,39 @@ final class PocketSwordUITests: XCTestCase {
         }
     }
 
+    /// Flowing prose still tracks the exact inline verse at the viewport top.
+    ///
+    /// Genesis 1's first paragraph contains verses 1-5 in one `Text`. A small drag
+    /// stays inside that paragraph, so a row-level tracker remains stuck at verse 1;
+    /// the per-verse text-layout tracker must advance the reference value.
+    @MainActor
+    func testFlowingReaderTracksTheVisibleVerseWithinAParagraph() throws {
+        let reader = app.descendants(matching: .any)
+            .matching(identifier: "reading.chapter-content")
+            .firstMatch
+        let reference = app.buttons["reading.reference-picker"]
+        XCTAssertTrue(reader.waitForExistence(timeout: 10))
+        XCTAssertTrue(reference.waitForExistence(timeout: 5))
+        let initialValue = try XCTUnwrap(reference.value as? String)
+
+        let start = reader.coordinate(
+            withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55)
+        )
+        let end = reader.coordinate(
+            withNormalizedOffset: CGVector(dx: 0.5, dy: 0.38)
+        )
+        start.press(forDuration: 0.05, thenDragTo: end)
+
+        let advanced = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                (reference.value as? String) != initialValue
+            },
+            object: nil
+        )
+        wait(for: [advanced], timeout: 10)
+        XCTAssertNotEqual(reference.value as? String, initialValue)
+    }
+
     /// A Strong's number in the chapter text opens its lexicon entry.
     ///
     /// Wave 9 made this assertable for the first time: in the WebView the verse text

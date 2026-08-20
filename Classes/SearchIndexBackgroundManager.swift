@@ -1,6 +1,18 @@
 import BackgroundTasks
 import Foundation
 
+final class SearchIndexBuildGate: @unchecked Sendable {
+    static let shared = SearchIndexBuildGate()
+
+    private let lock = NSLock()
+
+    func perform(_ operation: () throws -> Void) rethrows {
+        lock.lock()
+        defer { lock.unlock() }
+        try operation()
+    }
+}
+
 final class SearchIndexBackgroundManager {
     struct Scheduler {
         let register: (
@@ -67,6 +79,7 @@ final class SearchIndexBackgroundManager {
     private let defaults: UserDefaults
     private let scheduler: Scheduler
     private let buildOperation: BuildOperation
+    private let buildGate: SearchIndexBuildGate
     private let lock = NSLock()
     private var didRegister = false
     private var foregroundModule: String?
@@ -83,6 +96,7 @@ final class SearchIndexBackgroundManager {
         defaults: UserDefaults = .standard,
         taskIdentifier: String? = nil,
         scheduler: Scheduler = .live,
+        buildGate: SearchIndexBuildGate = .shared,
         buildOperation: @escaping BuildOperation = { module, progress in
             try PSSearchEngine.engine(forModuleName: module)
                 .build(progress: progress)
@@ -90,6 +104,7 @@ final class SearchIndexBackgroundManager {
     ) {
         self.defaults = defaults
         self.scheduler = scheduler
+        self.buildGate = buildGate
         self.buildOperation = buildOperation
         let bundleIdentifier = Bundle.main.bundleIdentifier
             ?? "org.crosswire.PocketSword"
@@ -126,6 +141,7 @@ final class SearchIndexBackgroundManager {
     func beginForegroundBuild(module: String) {
         lock.lock()
         foregroundModule = module
+        let cancellation = backgroundCancellation
         // A fresh user-initiated build resets the background retry budget: the last
         // module's exhausted attempts must not deny this one its retries. Written under
         // the lock, with the record, because `registerFailedAttempt` reads both together
@@ -133,6 +149,7 @@ final class SearchIndexBackgroundManager {
         defaults.removeObject(forKey: Defaults.pendingSearchIndexAttempts)
         defaults.set(module, forKey: Defaults.pendingSearchIndexModule)
         lock.unlock()
+        cancellation?.cancel()
         scheduleRecovery(for: module)
     }
 
@@ -171,17 +188,14 @@ final class SearchIndexBackgroundManager {
             return
         }
 
+        let cancellation = Cancellation()
         lock.lock()
-        let isForegroundBuildActive = foregroundModule == module
-        lock.unlock()
-        if isForegroundBuildActive {
+        guard foregroundModule == nil else {
+            lock.unlock()
             scheduleRecovery(for: module)
             task.setTaskCompleted(success: false)
             return
         }
-
-        let cancellation = Cancellation()
-        lock.lock()
         backgroundCancellation = cancellation
         lock.unlock()
         task.expirationHandler = {
@@ -196,7 +210,9 @@ final class SearchIndexBackgroundManager {
                 return
             }
             self.lock.lock()
-            self.backgroundCancellation = nil
+            if self.backgroundCancellation === cancellation {
+                self.backgroundCancellation = nil
+            }
             self.lock.unlock()
 
             if shouldRetry {
@@ -227,8 +243,10 @@ final class SearchIndexBackgroundManager {
 
             var buildError: Error?
             do {
-                try operation(module) { _, cancel in
-                    cancel = cancellationRequested()
+                try self.buildGate.perform {
+                    try operation(module) { _, cancel in
+                        cancel = cancellationRequested()
+                    }
                 }
             } catch {
                 buildError = error

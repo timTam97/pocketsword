@@ -143,6 +143,25 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
+    func testRotationLockUsesInterfaceOrientationRatherThanWindowShape() {
+        XCTAssertEqual(
+            RotationLock(interfaceOrientation: .landscapeLeft),
+            .landscape
+        )
+        XCTAssertEqual(
+            RotationLock(interfaceOrientation: .landscapeRight),
+            .landscape
+        )
+        XCTAssertEqual(
+            RotationLock(interfaceOrientation: .portrait),
+            .portrait
+        )
+        XCTAssertEqual(
+            RotationLock(interfaceOrientation: .portraitUpsideDown),
+            .portrait
+        )
+    }
+
     func testAboutFeedbackUsesMailtoWithoutMessageUI() throws {
         let information = AboutInformation.current()
         let components = try XCTUnwrap(
@@ -1189,34 +1208,21 @@ final class AppStateStoresTests: XCTestCase {
                 + "mode off the query searches for the literal text \"H430\"."
         )
 
-        // And `optionsDidChange`, which SearchView fires from
-        // `.onChange(of: search.strongsSearch)`, must not undo it.
-        //
-        // `fuzzySearch` is flipped first ON PURPOSE: it makes this a genuine user edit
-        // rather than an echo of `startStrongsQuery`'s own write, so `optionsDidChange`
-        // runs its body instead of returning at the `inputsMatchScheduled` guard.
-        // Without it this test would pass even if the `module != nil` guard were
-        // deleted.
+        // A genuine user edit still runs its side effects immediately, and must not
+        // undo the seeded mode before a module has been resolved.
         model.fuzzySearch = true
-        model.optionsDidChange(currentBookName: nil)
         XCTAssertTrue(
             model.strongsSearch,
-            "optionsDidChange must not clear the mode before a module is resolved."
+            "an option mutation must not clear the mode before a module is resolved."
         )
     }
 
-    /// The `.onChange` echoes of the model's OWN writes must not re-run the search.
+    /// A model-originated seed must run exactly one search.
     ///
-    /// `startStrongsQuery` writes `query` and `strongsSearch` and then runs the search
-    /// itself, but SwiftUI delivers `.onChange(of: search.query)` and
-    /// `.onChange(of: search.strongsSearch)` for those writes exactly as it does for
-    /// the user's. Each echo called `scheduleSearch()`, bumping `queryGeneration` — so
-    /// the generation guard discarded the results of the very search the echo was
-    /// caused by, and the user saw an empty pane until the debounced duplicate landed.
-    /// Mutation-checked: removing the `queryDidChange` guard alone takes the collector
-    /// to 2, and removing both guards takes it to 3; with both in place it is 1.
+    /// Search input side effects now run in the properties' `didSet` observers, while
+    /// `startStrongsQuery` marks its writes as internal and schedules once explicitly.
     @MainActor
-    func testSeededStrongsQueryIsNotRerunByItsOwnOnChangeEchoes() async {
+    func testSeededStrongsQueryRunsExactlyOnce() async {
         let collector = ExpressionCollector()
         let model = SearchModel(
             optionsStore: SearchOptionsStore(defaults: defaults),
@@ -1240,10 +1246,6 @@ final class AppStateStoresTests: XCTestCase {
 
         model.startStrongsQuery("H430", currentBookName: "Genesis")
         await collector.wait(forCount: 1, in: self)
-
-        // Exactly what SwiftUI delivers after those two observable writes.
-        model.queryDidChange()
-        model.optionsDidChange(currentBookName: "Genesis")
         try? await Task.sleep(for: .milliseconds(150))
 
         XCTAssertEqual(
@@ -1254,13 +1256,12 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(model.query, "H430")
     }
 
-    /// A genuine user edit still schedules a search after an echo was suppressed.
+    /// A genuine user edit still schedules after a model-originated mutation.
     ///
-    /// The echo guard compares against the last SCHEDULED inputs, so it must not
-    /// swallow a real change that follows one. This is the property that makes the
-    /// snapshot design safe where a bare "seeding" boolean would not have been.
+    /// The user write is handled synchronously by the property's observer, so a later
+    /// internal write cannot erase its provenance before an `.onChange` callback.
     @MainActor
-    func testUserEditAfterASuppressedEchoStillRunsASearch() async {
+    func testUserEditAfterAnInternalMutationStillRunsASearch() async {
         let collector = ExpressionCollector()
         let model = SearchModel(
             optionsStore: SearchOptionsStore(defaults: defaults),
@@ -1284,11 +1285,9 @@ final class AppStateStoresTests: XCTestCase {
 
         model.startStrongsQuery("H430", currentBookName: "Genesis")
         await collector.wait(forCount: 1, in: self)
-        model.queryDidChange()
 
         // The user now types over it.
         model.query = "light"
-        model.queryDidChange()
         await collector.wait(forCount: 2, in: self)
 
         XCTAssertEqual(
@@ -1329,6 +1328,83 @@ final class AppStateStoresTests: XCTestCase {
             model.strongsSearch,
             "MHCC advertises no Strong's, so the mode must stay off."
         )
+    }
+
+    @MainActor
+    func testUserOptionMutationPersistsAndScopesImmediately() {
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: SearchIndexCoordinator(
+                freshnessProvider: { _ in true },
+                buildOperation: { _, _ in }
+            )
+        )
+        model.configure(
+            modules: [SearchModuleChoice(id: "KJV", kind: .bible)],
+            preferredModule: "KJV",
+            currentBookName: "Genesis",
+            restoring: nil
+        )
+
+        model.range = .BookRange
+
+        XCTAssertEqual(model.bookName, "Genesis")
+        XCTAssertEqual(
+            defaults.integer(forKey: Defaults.lastSearchRange),
+            PSSearchRange.BookRange.rawValue
+        )
+    }
+
+    @MainActor
+    func testModuleCannotChangeWhileItsIndexBuildIsRunning() async {
+        let buildStarted = expectation(description: "Index build started")
+        let buildFinished = expectation(description: "Index build finished")
+        let releaseBuild = DispatchSemaphore(value: 0)
+        let coordinator = SearchIndexCoordinator(
+            freshnessProvider: { _ in false },
+            buildGate: SearchIndexBuildGate(),
+            buildOperation: { module, _ in
+                XCTAssertEqual(module, "KJV")
+                buildStarted.fulfill()
+                releaseBuild.wait()
+            }
+        )
+        var startedModules: [String] = []
+        var finishedModules: [String] = []
+        let model = SearchModel(
+            optionsStore: SearchOptionsStore(defaults: defaults),
+            indexCoordinator: coordinator,
+            indexBuildStarted: {
+                startedModules.append($0)
+            },
+            indexBuildFinished: {
+                finishedModules.append($0)
+                buildFinished.fulfill()
+            }
+        )
+        let kjv = SearchModuleChoice(id: "KJV", kind: .bible)
+        let mhcc = SearchModuleChoice(id: "MHCC", kind: .commentary)
+        model.configure(
+            modules: [kjv, mhcc],
+            preferredModule: "KJV",
+            currentBookName: "Genesis",
+            restoring: nil
+        )
+
+        model.startIndexBuild()
+        await fulfillment(of: [buildStarted], timeout: 2)
+        model.selectModule(mhcc)
+        coordinator.refresh(module: "MHCC")
+
+        XCTAssertEqual(model.module, "KJV")
+        XCTAssertEqual(coordinator.state, .building(progress: 0))
+        XCTAssertEqual(startedModules, ["KJV"])
+
+        releaseBuild.signal()
+        await fulfillment(of: [buildFinished], timeout: 2)
+
+        XCTAssertEqual(finishedModules, ["KJV"])
+        XCTAssertEqual(coordinator.state, .ready)
     }
 
     @MainActor
@@ -1409,9 +1485,7 @@ final class AppStateStoresTests: XCTestCase {
         )
 
         model.query = "first"
-        model.queryDidChange()
         model.query = "second"
-        model.queryDidChange()
 
         await fulfillment(of: [newestSearchCompleted], timeout: 2)
         try? await Task.sleep(for: .milliseconds(250))
@@ -1545,6 +1619,97 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertNil(
             defaults.string(forKey: Defaults.pendingSearchIndexModule)
         )
+    }
+
+    @MainActor
+    func testForegroundAndBackgroundIndexBuildsAreSerialized() async {
+        defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
+        let buildGate = SearchIndexBuildGate()
+        let backgroundStarted = expectation(description: "Background build started")
+        let backgroundFinished = expectation(description: "Background build finished")
+        let foregroundStarted = expectation(description: "Foreground build started")
+        let foregroundFinished = expectation(description: "Foreground build finished")
+        let releaseBackground = DispatchSemaphore(value: 0)
+        let stateLock = NSLock()
+        var activeBuilds = 0
+        var maximumActiveBuilds = 0
+        var didStartForeground = false
+
+        func enterBuild() {
+            stateLock.lock()
+            activeBuilds += 1
+            maximumActiveBuilds = max(maximumActiveBuilds, activeBuilds)
+            stateLock.unlock()
+        }
+
+        func leaveBuild() {
+            stateLock.lock()
+            activeBuilds -= 1
+            stateLock.unlock()
+        }
+
+        let manager = SearchIndexBackgroundManager(
+            defaults: defaults,
+            taskIdentifier: "test.search-index",
+            scheduler: SearchIndexBackgroundManager.Scheduler(
+                register: { _, _ in true },
+                submit: { _, completion in completion(nil) },
+                cancel: { _ in }
+            ),
+            buildGate: buildGate,
+            buildOperation: { _, _ in
+                enterBuild()
+                backgroundStarted.fulfill()
+                releaseBackground.wait()
+                leaveBuild()
+            }
+        )
+        let coordinator = SearchIndexCoordinator(
+            freshnessProvider: { _ in false },
+            buildGate: buildGate,
+            buildOperation: { _, _ in
+                enterBuild()
+                stateLock.lock()
+                didStartForeground = true
+                stateLock.unlock()
+                foregroundStarted.fulfill()
+                leaveBuild()
+            }
+        )
+        coordinator.onCompletion = { success, cancelled in
+            XCTAssertTrue(success)
+            XCTAssertFalse(cancelled)
+            foregroundFinished.fulfill()
+        }
+
+        manager.performPendingBuild(cancellationRequested: { false }) {
+            success, shouldRetry in
+            XCTAssertTrue(success)
+            XCTAssertFalse(shouldRetry)
+            backgroundFinished.fulfill()
+        }
+        await fulfillment(of: [backgroundStarted], timeout: 2)
+
+        coordinator.build(module: "KJV")
+        try? await Task.sleep(for: .milliseconds(100))
+
+        stateLock.lock()
+        let startedBeforeRelease = didStartForeground
+        let activeBeforeRelease = maximumActiveBuilds
+        stateLock.unlock()
+        XCTAssertFalse(startedBeforeRelease)
+        XCTAssertEqual(activeBeforeRelease, 1)
+
+        releaseBackground.signal()
+        await fulfillment(
+            of: [backgroundFinished, foregroundStarted, foregroundFinished],
+            timeout: 2
+        )
+
+        stateLock.lock()
+        let finalMaximum = maximumActiveBuilds
+        stateLock.unlock()
+        XCTAssertEqual(finalMaximum, 1)
     }
 
     /// A FAILED background build keeps its recovery record and asks for a retry, then
@@ -2004,6 +2169,39 @@ final class AppStateStoresTests: XCTestCase {
             defaults.array(forKey: AppConstants.historyName)?.count,
             1
         )
+    }
+
+    func testVerseLayoutStoreTracksTheInlineVerseAtTheViewportTop() {
+        let store = VerseLayoutStore()
+        store.replace(
+            with: [
+                VerseLayoutFragment(
+                    verse: 1,
+                    rect: CGRect(x: 0, y: 0, width: 180, height: 20),
+                    order: 0
+                ),
+                VerseLayoutFragment(
+                    verse: 2,
+                    rect: CGRect(x: 180, y: 0, width: 80, height: 20),
+                    order: 1
+                ),
+                VerseLayoutFragment(
+                    verse: 2,
+                    rect: CGRect(x: 0, y: 20, width: 260, height: 20),
+                    order: 2
+                ),
+                VerseLayoutFragment(
+                    verse: 3,
+                    rect: CGRect(x: 0, y: 40, width: 260, height: 20),
+                    order: 3
+                ),
+            ]
+        )
+
+        XCTAssertEqual(store.verse(at: 10, fallback: 1), 1)
+        XCTAssertEqual(store.verse(at: 25, fallback: 1), 2)
+        XCTAssertEqual(store.verse(at: 45, fallback: 1), 3)
+        XCTAssertEqual(store.verse(at: 100, fallback: 1), 3)
     }
 
     // MARK: Launch scroll restore

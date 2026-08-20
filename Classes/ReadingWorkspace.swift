@@ -479,6 +479,10 @@ final class ReaderPaneModel {
             guard verse > 0 else { return }
             // A newer instruction supersedes an offset restore that has not landed.
             outstandingOffsetRestore = nil
+            // Until the target lands, the previous chapter/position's offset is not
+            // evidence for this restore. A size change in that window must reissue the
+            // verse target rather than replaying stale pixels.
+            lastScrollOffset = 0
             currentShownVerse = verse
             verseToShow = 0
             let target = rowID(containing: verse)
@@ -772,21 +776,17 @@ final class ReaderPaneModel {
         isRestoringAfterTransition = true
     }
 
-    /// **The suppression has to outlive this call, which is why the scroll is not
-    /// delegated to `apply`.** `ReaderScreen` calls `prepareForSizeChange()` and
-    /// `restoreAfterSizeChange()` back to back in one `onGeometryChange` action, and
-    /// `apply` only SCHEDULES its scroll — so clearing the flag on the way out left
-    /// a zero-length window and the whole mechanism inert: every transient callback
-    /// the rotation emitted still reached `persistPosition` and overwrote the saved
-    /// position with a mid-transition value.
+    /// **The suppression has to outlive this call.** `ReaderScreen` calls
+    /// `prepareForSizeChange()` and `restoreAfterSizeChange()` back to back in one
+    /// `onGeometryChange` action, so clearing the flag synchronously would let every
+    /// transient rotation callback overwrite the saved position.
     ///
-    /// The scroll is inlined rather than delegated to `apply`, so the clear happens
-    /// inside the same deferred hop, immediately after the scroll it is waiting for —
-    /// one `Task` rather than two, so the ordering is structural instead of relying on
-    /// main-actor FIFO. The generation check is what stops a second size change's
-    /// suppression being cleared by the first one's hop; because
-    /// `prepareForSizeChange` bumps it, the newest restore always matches, so the flag
-    /// cannot wedge on.
+    /// A prose paragraph is one flowing `Text`, not one scroll target per verse.
+    /// Re-anchoring to `rowID(containing:)` therefore jumps to the paragraph's first
+    /// verse even when the reader is several verses into it. Preserve the actual
+    /// scroll offset across the size change instead. The per-verse text layout tracker
+    /// updates the title independently, so position and verse no longer have to share
+    /// the paragraph's coarse row identity.
     func restoreAfterSizeChange() {
         let generation = sizeChangeGeneration
         // ── An OFFSET restore still in flight wins over `currentShownVerse`, and
@@ -808,25 +808,23 @@ final class ReaderPaneModel {
         // `currentShownVerse = n` first, so re-anchoring re-issues the SAME scroll.
         // Only the offset arm left no record of what was being restored.
         //
-        // The re-issue below is belt-and-braces, NOT the mechanism: an identical
-        // `scrollTo(y:)` is a no-op once the binding already holds that value, and at
-        // launch `apply`'s hop has already run. What fixes the dead scroll is not
-        // issuing the `scrollTo(id:)` at all. Do not "simplify" the wrong half.
-        let pendingOffset = outstandingOffsetRestore
+        // A positive offset is a settled, measured reader position and is preserved
+        // exactly. Zero is different: `scrollTo(y: 0)` bypasses the top content margin
+        // and paints verse 1 under the navigation bar, so an unknown/top position uses
+        // the verse target and lets the scroll view honour its inset.
+        let restoreOffset = outstandingOffsetRestore
+            ?? (lastScrollOffset > 0 ? lastScrollOffset : nil)
+        let verseTarget = restoreOffset == nil
+            ? rowID(containing: max(1, currentShownVerse))
+            : nil
         // Cleared unconditionally, exactly as before: `verseToShow` is consumed by
         // `applyPendingWork`'s third branch, and leaving a stale one set would let a
         // later appearance scroll to a verse the user never asked for.
         verseToShow = 0
-        var verseTarget: Int?
-        if pendingOffset == nil {
-            let verse = max(1, currentShownVerse)
-            currentShownVerse = verse
-            verseTarget = rowID(containing: verse)
-        }
         Task { @MainActor [weak self] in
             guard let self else { return }
-            if let pendingOffset {
-                self.scrollPosition.scrollTo(y: pendingOffset)
+            if let restoreOffset {
+                self.scrollPosition.scrollTo(y: restoreOffset)
             } else if let verseTarget {
                 self.scrollPosition.scrollTo(id: verseTarget, anchor: .top)
             }

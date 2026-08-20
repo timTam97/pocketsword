@@ -599,6 +599,7 @@ private struct ReaderReferenceControl: View {
             }
             .buttonStyle(.borderless)
             .accessibilityLabel(Text(chrome.accessibilityReference))
+            .accessibilityValue(Text(chrome.title))
             .accessibilityIdentifier("reading.reference-picker")
             // Anchored on the button itself, so the popover's arrow points at the
             // reference it is changing. Attaching it to the NavigationStack

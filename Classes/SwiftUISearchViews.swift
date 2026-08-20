@@ -50,21 +50,6 @@ struct SearchView: View {
                 SearchScopePicker(search: search)
             }
         }
-        .onChange(of: search.query) {
-            search.queryDidChange()
-        }
-        .onChange(of: search.fuzzySearch) {
-            search.optionsDidChange(currentBookName: currentBookName)
-        }
-        .onChange(of: search.matchType) {
-            search.optionsDidChange(currentBookName: currentBookName)
-        }
-        .onChange(of: search.range) {
-            search.optionsDidChange(currentBookName: currentBookName)
-        }
-        .onChange(of: search.strongsSearch) {
-            search.optionsDidChange(currentBookName: currentBookName)
-        }
         .onSubmit(of: .search) {
             search.searchNow()
         }
@@ -132,6 +117,7 @@ private struct SearchModuleMenu: View {
         }
         .accessibilityLabel(Text("SearchModuleButtonLabel"))
         .accessibilityIdentifier("search.module-menu")
+        .disabled(search.indexCoordinator.isOperationActive)
     }
 }
 

@@ -1,9 +1,14 @@
 import Foundation
+import UIKit
 
 enum RotationLock: Int, Equatable {
     case unlocked = 0
     case portrait = 1
     case landscape = 2
+
+    init(interfaceOrientation: UIInterfaceOrientation) {
+        self = interfaceOrientation.isLandscape ? .landscape : .portrait
+    }
 }
 
 struct SettingsSnapshot: Equatable {

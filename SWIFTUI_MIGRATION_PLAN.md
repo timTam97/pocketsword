@@ -154,9 +154,10 @@ stashed, and is now worked around in `startStrongsSearch`.
 - UIKit types still appear where SwiftUI has no equivalent and the type is a
   *value or a leaf*: `UIDevice.current.userInterfaceIdiom` for the iPad checks and
   `UIFont`/`UIColor`/`UIImage`/`UIApplication` inside the search highlighter, the
-  study palette and the About screen. None of them is a view controller, and
-  **there is no `UIViewRepresentable` left at all** — Wave 9 deleted both WebView
-  wrappers (the study popup and the dictionary entry) along with WebKit. Four files
+  study palette and the About screen. None of them is a view controller. One
+  zero-size `UIViewRepresentable` reports the hosting scene's interface orientation
+  to Settings; Wave 9 deleted both WebView wrappers (the study popup and the
+  dictionary entry) along with WebKit. Four files
   (`PSBookmarkObject`, `PSModuleController`, `PSChapterDocument`, `PSRefParser`)
   still carry an `import UIKit` that nothing in them uses; harmless, and left alone
   rather than churned.
@@ -1088,8 +1089,10 @@ prior visit to Search:** 1,000 results for "God", and the options menu shows
 beta) succeeds with **`CompileC` 0** and `SwiftCompile` 52. **All three
 configurations build** for a generic device — Debug, Release and Distribution.
 `grep` over `Classes/*.swift` finds **zero** non-comment occurrences of
-`import WebKit`, `WKWebView`, `WKNavigation`, `WebPage` or `UIViewRepresentable`, and
-zero `UIViewController` / `UITableViewController` / `UIHostingController` subclasses.
+`import WebKit`, `WKWebView`, `WKNavigation` or `WebPage`, and zero
+`UIViewController` / `UITableViewController` / `UIHostingController` subclasses.
+The one `UIViewRepresentable` is the later PR #7 follow-up's zero-size scene
+orientation reader, not a content or navigation host.
 `Resources/` contains no `.js`. The only non-Swift file in `Classes/` is still
 `globals.h`. Every `UITabBarController` / `UINavigationController` /
 `UIVisualEffectView` / `UIStackView` / `UISegmentedControl` / `UIAction` mention that
@@ -1342,6 +1345,31 @@ session; and a workspace session binds to the run destination that was active wh
 it was *created*, so switch destinations first (`XcodeSwitchRunDestination`) and
 start the session after.
 
+### PR #7 code-review follow-up — 2026-08-20
+
+The five review findings were fixed as one post-migration hardening pass:
+
+1. Search module selection is disabled and rejected while an index build is active;
+   coordinator refreshes cannot overwrite an in-flight build's state.
+2. Foreground and background index builds share one serial gate, and a foreground
+   takeover cancels the registered background operation before waiting for the gate.
+3. Flowing prose now marks each verse with a SwiftUI `TextAttribute`; a
+   `TextRenderer` records the laid-out run fragments so the toolbar and persistence
+   follow the actual inline verse. Size changes preserve a settled nonzero offset
+   instead of jumping to the paragraph's first verse.
+4. Search input side effects moved from value-matched `.onChange` callbacks into the
+   model properties, with explicit internal-mutation provenance. A user write now
+   persists and schedules synchronously and cannot be swallowed by a later model sync.
+5. Rotation lock reads the hosting `UIWindowScene.effectiveGeometry.interfaceOrientation`
+   through a local representable rather than inferring orientation from window shape.
+
+Verification on iPhone 17 Pro / iOS 27: the Debug app build passed; the full unit
+tier ran **151 tests, 148 passed, 3 expected exhaustive-tier skips, 0 failures**;
+the final focused state/concurrency rerun passed **50/50**; and the final UI suite
+passed **13/13**, including a new small-scroll test that advances the visible verse
+inside Genesis 1's first multi-verse paragraph. The review pass changed no persisted
+wire formats.
+
 ### Static audit
 
 Seven independent read-only audit lenses over the tree, each finding adversarially
@@ -1360,8 +1388,9 @@ Positive results worth recording, all re-derived rather than trusted:
   import `globals.h` and nothing else.
 - **Zero non-comment WebKit occurrences** across `Classes/*.swift` — all 47 hits are
   comments — and zero `UIViewController` / `UITableViewController` /
-  `UIHostingController` / `UIViewRepresentable` declarations. One `#selector`
-  remains, the `AVAudioSession` observer.
+  `UIHostingController` declarations. The sole `UIViewRepresentable` is the local
+  scene orientation reader added by the PR #7 follow-up. One `#selector` remains,
+  the `AVAudioSession` observer.
 - **All 12 load-bearing reader/search invariants hold**, each with a file:line
   citation: the two emitters never call each other and share one gating table;
   `PSContentStore` is `SQLITE_OPEN_READONLY` behind a serial queue with `import

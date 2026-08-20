@@ -313,14 +313,13 @@ struct ChapterTextView: View {
                         ForEach(pane.document.verses) { verse in
                             VerseRow(verse: verse, pane: pane, style: pane.textStyle)
                                 .id(verse.number)
-                                .tracksTopmostVerse([verse], pane: pane)
+                                .tracksTopmostVerse(verse.number, pane: pane)
                         }
                     } else {
                         ForEach(pane.paragraphs) { paragraph in
                             ParagraphRow(paragraph: paragraph, pane: pane,
                                          style: pane.textStyle)
                                 .id(paragraph.id)
-                                .tracksTopmostVerse(paragraph.verses, pane: pane)
                         }
                     }
                 }
@@ -399,32 +398,125 @@ struct ChapterTextView: View {
 }
 
 private extension View {
-    /// Reports this row's verse to the pane while it is the topmost visible one.
+    /// Reports a single-row verse while it is the topmost visible one.
     ///
     /// This is the replacement for the JS `currentVerse()` scan, and it is the piece
     /// that has to live in the VIEW rather than the model: only the view knows where
     /// a row actually sits, because the whole point of Wave 9 is that the model no
     /// longer holds measured offsets.
     ///
-    /// `currentVerse()` walked the `versepos` table for the first entry past
-    /// `window.pageYOffset` and clamped at both ends. The native equivalent asks each
-    /// row whether it straddles the top of the viewport, which needs no table and
-    /// stays correct across a rotation for free.
-    ///
     /// Found on device: without this, `scrollOffsetChanged` persisted the OFFSET but
     /// re-persisted the old verse, so `bibleVersePosition` stuck at 1 while the
     /// reader sat at verse 11 — and the toolbar title went with it. That also breaks
     /// relaunch restoration, since `.verse` restores read that key.
-    func tracksTopmostVerse(_ verses: [ChapterVerse], pane: ReaderPaneModel) -> some View {
+    func tracksTopmostVerse(_ verse: Int, pane: ReaderPaneModel) -> some View {
         onGeometryChange(for: Bool.self) { proxy in
             // The row covers the top of the reading area (in the scroll view's own
             // space, where 0 is the top of the visible content).
             let frame = proxy.frame(in: .scrollView)
             return frame.minY <= 1 && frame.maxY > 1
         } action: { _, isTopmost in
-            guard isTopmost, let first = verses.first else { return }
-            pane.topmostVerseChanged(first.number)
+            guard isTopmost else { return }
+            pane.topmostVerseChanged(verse)
         }
+    }
+
+    /// Reports the exact inline verse crossing the top of a flowing paragraph.
+    func tracksTopmostVerse(
+        fallbackVerse: Int,
+        layoutStore: VerseLayoutStore,
+        pane: ReaderPaneModel
+    ) -> some View {
+        onGeometryChange(for: CGFloat?.self) { proxy in
+            let frame = proxy.frame(in: .scrollView)
+            guard frame.minY <= 1, frame.maxY > 1 else { return nil }
+            return 1 - frame.minY
+        } action: { _, offset in
+            guard let offset else { return }
+            pane.topmostVerseChanged(
+                layoutStore.verse(at: offset, fallback: fallbackVerse)
+            )
+        }
+    }
+}
+
+struct VerseTextAttribute: TextAttribute {
+    let verse: Int
+}
+
+struct VerseLayoutFragment: Equatable {
+    let verse: Int
+    let rect: CGRect
+    let order: Int
+}
+
+final class VerseLayoutStore: @unchecked Sendable {
+    private let lock = NSLock()
+    private var fragments: [VerseLayoutFragment] = []
+
+    func replace(with fragments: [VerseLayoutFragment]) {
+        lock.lock()
+        self.fragments = fragments
+        lock.unlock()
+    }
+
+    func verse(at verticalOffset: CGFloat, fallback: Int) -> Int {
+        lock.lock()
+        let snapshot = fragments
+        lock.unlock()
+
+        let intersecting = snapshot.filter {
+            $0.rect.minY <= verticalOffset && $0.rect.maxY > verticalOffset
+        }
+        if let first = intersecting.min(by: { $0.order < $1.order }) {
+            return max(1, first.verse)
+        }
+
+        let following = snapshot.filter { $0.rect.minY > verticalOffset }
+        if let first = following.min(by: {
+            if $0.rect.minY == $1.rect.minY {
+                return $0.order < $1.order
+            }
+            return $0.rect.minY < $1.rect.minY
+        }) {
+            return max(1, first.verse)
+        }
+
+        return max(1, snapshot.max(by: { $0.order < $1.order })?.verse ?? fallback)
+    }
+}
+
+private struct VerseTrackingTextRenderer: TextRenderer {
+    let layoutStore: VerseLayoutStore?
+
+    var animatableData: EmptyAnimatableData {
+        get { EmptyAnimatableData() }
+        set {}
+    }
+
+    func draw(layout: Text.Layout, in context: inout GraphicsContext) {
+        var fragments: [VerseLayoutFragment] = []
+        var order = 0
+
+        for line in layout {
+            for run in line {
+                if let verse = run[VerseTextAttribute.self]?.verse {
+                    var rect = run.typographicBounds.rect
+                    rect.origin.x += line.origin.x
+                    rect.origin.y += line.origin.y
+                    fragments.append(
+                        VerseLayoutFragment(
+                            verse: verse,
+                            rect: rect,
+                            order: order
+                        )
+                    )
+                    order += 1
+                }
+            }
+            context.draw(line)
+        }
+        layoutStore?.replace(with: fragments)
     }
 }
 
@@ -434,12 +526,24 @@ private struct ParagraphRow: View {
     let pane: ReaderPaneModel
     let style: ChapterTextRenderer.Style
 
+    @State private var verseLayoutStore = VerseLayoutStore()
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ForEach(Array(paragraph.headings.enumerated()), id: \.offset) { _, heading in
                 HeadingRow(heading: heading, style: style)
             }
-            ChapterRunsText(text: flowed, pane: pane, style: style)
+            ChapterRunsText(
+                text: flowed,
+                pane: pane,
+                style: style,
+                verseLayoutStore: verseLayoutStore
+            )
+                .tracksTopmostVerse(
+                    fallbackVerse: paragraph.verses.first?.number ?? 1,
+                    layoutStore: verseLayoutStore,
+                    pane: pane
+                )
                 .padding(.bottom, style.fontSize * 0.55)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -448,11 +552,12 @@ private struct ParagraphRow: View {
     /// The verses of this paragraph, run together with their superscript numbers —
     /// which is exactly what the HTML did with verse 1 of a chapter and every verse
     /// after it that did not open a paragraph.
-    private var flowed: AttributedString {
-        var out = AttributedString()
+    private var flowed: Text {
+        var out = Text("")
         for verse in paragraph.verses {
+            var attributed = AttributedString()
             if !verse.isIntro {
-                out += ChapterTextRenderer.verseLabel(
+                attributed += ChapterTextRenderer.verseLabel(
                     verse.number,
                     style: style,
                     tappable: pane.mode == .bible
@@ -460,7 +565,10 @@ private struct ParagraphRow: View {
             }
             // The bookmark highlight is applied by the renderer, UNDER the search
             // jacket — see `ChapterTextRenderer.text(for:style:)`.
-            out += ChapterTextRenderer.text(for: verse, style: style)
+            attributed += ChapterTextRenderer.text(for: verse, style: style)
+            out = out + Text(attributed).customAttribute(
+                VerseTextAttribute(verse: verse.number)
+            )
         }
         return out
     }
@@ -477,7 +585,7 @@ private struct VerseRow: View {
             ForEach(Array(verse.headings.enumerated()), id: \.offset) { _, heading in
                 HeadingRow(heading: heading, style: style)
             }
-            ChapterRunsText(text: labelled, pane: pane, style: style)
+            ChapterRunsText(text: Text(labelled), pane: pane, style: style)
                 .padding(.bottom, style.fontSize * 0.35)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -519,13 +627,17 @@ private struct HeadingRow: View {
 /// rather than `onOpenURL`: the latter is for URLs arriving from outside the app,
 /// and would send a Strong's tap out through `AppSession`'s `sword://` router.
 private struct ChapterRunsText: View {
-    let text: AttributedString
+    let text: Text
     let pane: ReaderPaneModel
     let style: ChapterTextRenderer.Style
+    var verseLayoutStore: VerseLayoutStore?
 
     var body: some View {
-        Text(text)
+        text
             .lineSpacing(style.fontSize * (style.lineSpacingMultiple - 1))
+            .textRenderer(
+                VerseTrackingTextRenderer(layoutStore: verseLayoutStore)
+            )
             .textSelection(.enabled)
             .frame(maxWidth: .infinity, alignment: .leading)
             .environment(\.openURL, OpenURLAction { url in

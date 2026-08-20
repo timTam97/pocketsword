@@ -664,29 +664,79 @@ struct SettingsView: View {
     let maximumFontSize: Double
 
     @State private var showingFontPicker = false
+    @State private var currentOrientation = RotationLock.portrait
 
     var body: some View {
-        GeometryReader { geometry in
-            List {
-                ReadingSettingsSection(
-                    settings: settings,
-                    maximumFontSize: maximumFontSize,
-                    showFontPicker: { showingFontPicker = true }
-                )
-                DeviceSettingsSection(
-                    settings: settings,
-                    currentOrientation: geometry.size.width > geometry.size.height
-                        ? .landscape
-                        : .portrait
-                )
-            }
-            .listStyle(.insetGrouped)
+        List {
+            ReadingSettingsSection(
+                settings: settings,
+                maximumFontSize: maximumFontSize,
+                showFontPicker: { showingFontPicker = true }
+            )
+            DeviceSettingsSection(
+                settings: settings,
+                currentOrientation: currentOrientation
+            )
         }
+        .background {
+            SceneOrientationReader { interfaceOrientation in
+                let orientation = RotationLock(
+                    interfaceOrientation: interfaceOrientation
+                )
+                guard orientation != currentOrientation else { return }
+                currentOrientation = orientation
+            }
+            .frame(width: 0, height: 0)
+            .accessibilityHidden(true)
+        }
+        .listStyle(.insetGrouped)
         .sheet(isPresented: $showingFontPicker) {
             NavigationStack {
                 FontPickerView(settings: settings)
             }
         }
+    }
+}
+
+private struct SceneOrientationReader: UIViewRepresentable {
+    let onChange: (UIInterfaceOrientation) -> Void
+
+    func makeUIView(context: Context) -> SceneOrientationView {
+        let view = SceneOrientationView()
+        view.onChange = onChange
+        return view
+    }
+
+    func updateUIView(_ uiView: SceneOrientationView, context: Context) {
+        uiView.onChange = onChange
+        uiView.reportOrientation()
+    }
+}
+
+private final class SceneOrientationView: UIView {
+    var onChange: ((UIInterfaceOrientation) -> Void)?
+
+    private var lastOrientation: UIInterfaceOrientation?
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        reportOrientation()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        reportOrientation()
+    }
+
+    func reportOrientation() {
+        guard let orientation = window?.windowScene?
+            .effectiveGeometry.interfaceOrientation,
+              orientation != .unknown,
+              orientation != lastOrientation else {
+            return
+        }
+        lastOrientation = orientation
+        onChange?(orientation)
     }
 }
 

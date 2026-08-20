@@ -456,6 +456,7 @@ final class SearchIndexCoordinator {
 
     @ObservationIgnored private let freshnessProvider: FreshnessProvider
     @ObservationIgnored private let buildOperation: BuildOperation
+    @ObservationIgnored private let buildGate: SearchIndexBuildGate
     @ObservationIgnored private var cancellation: SearchIndexCancellation?
     @ObservationIgnored private var operationID: UUID?
     @ObservationIgnored var onStateChange: (@MainActor (SearchIndexState) -> Void)?
@@ -465,15 +466,27 @@ final class SearchIndexCoordinator {
         freshnessProvider: @escaping FreshnessProvider = {
             PSSearchEngine.engine(forModuleName: $0).indexIsFresh()
         },
+        buildGate: SearchIndexBuildGate = .shared,
         buildOperation: @escaping BuildOperation = { module, progress in
             try PSSearchEngine.engine(forModuleName: module).build(progress: progress)
         }
     ) {
         self.freshnessProvider = freshnessProvider
+        self.buildGate = buildGate
         self.buildOperation = buildOperation
     }
 
+    var isOperationActive: Bool {
+        switch state {
+        case .building, .cancelling:
+            true
+        case .unavailable, .ready, .cancelled, .failed:
+            false
+        }
+    }
+
     func refresh(module: String?) {
+        guard !isOperationActive else { return }
         guard let module else {
             state = .unavailable
             return
@@ -481,11 +494,13 @@ final class SearchIndexCoordinator {
         state = freshnessProvider(module) ? .ready : .unavailable
     }
 
-    func build(module: String) {
-        guard operationID == nil else { return }
+    @discardableResult
+    func build(module: String) -> Bool {
+        guard operationID == nil else { return false }
         let id = UUID()
         let cancellation = SearchIndexCancellation()
         let operation = buildOperation
+        let buildGate = buildGate
         operationID = id
         self.cancellation = cancellation
         state = .building(progress: 0)
@@ -493,10 +508,12 @@ final class SearchIndexCoordinator {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             var buildError: Error?
             do {
-                try operation(module) { fraction, cancel in
-                    cancel = cancellation.isCancelled
-                    DispatchQueue.main.async { [weak self] in
-                        self?.updateProgress(fraction, operationID: id)
+                try buildGate.perform {
+                    try operation(module) { fraction, cancel in
+                        cancel = cancellation.isCancelled
+                        DispatchQueue.main.async { [weak self] in
+                            self?.updateProgress(fraction, operationID: id)
+                        }
                     }
                 }
             } catch {
@@ -512,6 +529,7 @@ final class SearchIndexCoordinator {
                 )
             }
         }
+        return true
     }
 
     func cancel() {
@@ -561,13 +579,44 @@ final class SearchModel {
         _ strongsTokens: [String]?
     ) -> [PSSearchResult]
 
-    var query = ""
+    var query = "" {
+        didSet {
+            guard query != oldValue, !isApplyingInternalInputs else { return }
+            scheduleSearch()
+        }
+    }
     var expression: String?
-    var module: String?
-    var strongsSearch = false
-    var fuzzySearch: Bool
-    var matchType: PSSearchType
-    var range: PSSearchRange
+    private(set) var module: String?
+    var strongsSearch = false {
+        didSet {
+            guard strongsSearch != oldValue, !isApplyingInternalInputs else {
+                return
+            }
+            userOptionsDidChange()
+        }
+    }
+    var fuzzySearch: Bool {
+        didSet {
+            guard fuzzySearch != oldValue, !isApplyingInternalInputs else {
+                return
+            }
+            userOptionsDidChange()
+        }
+    }
+    var matchType: PSSearchType {
+        didSet {
+            guard matchType != oldValue, !isApplyingInternalInputs else {
+                return
+            }
+            userOptionsDidChange()
+        }
+    }
+    var range: PSSearchRange {
+        didSet {
+            guard range != oldValue, !isApplyingInternalInputs else { return }
+            userOptionsDidChange()
+        }
+    }
     var bookName: String?
     var results: [SearchResultRow] = []
     private(set) var modules: [SearchModuleChoice] = []
@@ -585,6 +634,8 @@ final class SearchModel {
     @ObservationIgnored private let indexBuildFinished: (String) -> Void
     @ObservationIgnored private var debounceTimer: Timer?
     @ObservationIgnored private var queryGeneration: UInt = 0
+    @ObservationIgnored private var isApplyingInternalInputs = false
+    @ObservationIgnored private var currentBookName: String?
     /// Announced when a search settles on a new result set, or clears it.
     ///
     /// **Deliberately unwired in production, and that is a decision rather than an
@@ -646,6 +697,7 @@ final class SearchModel {
         restoring historyItem: PSSearchHistoryItem?
     ) {
         self.modules = modules
+        self.currentBookName = currentBookName
 
         let selected = modules.first(where: { $0.id == module })
             ?? modules.first(where: { $0.id == preferredModule })
@@ -685,29 +737,29 @@ final class SearchModel {
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        query = trimmed
+        withInternalInputMutation {
+            query = trimmed
 
-        // Strong's mode is ON by definition: the term IS a Strong's number, and
-        // with the mode off the query searches for the literal text "H430" and
-        // finds nothing.
-        //
-        // Do NOT gate this on `strongsAvailable`. That flag is only resolved by
-        // `applyModule`, which runs from `configure(...)` — and the reader can call
-        // this BEFORE the Search workspace has ever appeared, when the flag is
-        // still its `false` default. Reading it then turns the mode off and the
-        // search silently returns nothing, which is exactly what a device report
-        // showed: the field filled in with `H430`, Strong's Numbers unchecked, "No
-        // Results".
-        //
-        // The module's real capability is still honoured, from whichever side knows
-        // it: if the module is already resolved we check it here, and if it is not,
-        // `applyModule`'s own `if !strongsAvailable { strongsSearch = false }`
-        // clears the mode during `configure(...)` before the search runs.
-        strongsSearch = true
-        if module != nil, !strongsAvailable {
-            strongsSearch = false
+            // Strong's mode is ON by definition: the term IS a Strong's number, and
+            // with the mode off the query searches for the literal text "H430" and
+            // finds nothing.
+            //
+            // Do NOT gate this on `strongsAvailable`. That flag is only resolved by
+            // `applyModule`, which runs from `configure(...)` — and the reader can call
+            // this BEFORE the Search workspace has ever appeared, when the flag is
+            // still its `false` default. Reading it then turns the mode off and the
+            // search silently returns nothing, which is exactly what a device report
+            // showed: the field filled in with `H430`, Strong's Numbers unchecked, "No
+            // Results".
+            //
+            // The module's real capability is still honoured, from whichever side knows
+            // it: if the module is already resolved we check it here, and if it is not,
+            // `applyModule` clears the mode during `configure(...)` before the search
+            // runs.
+            strongsSearch = module == nil || strongsAvailable
         }
 
+        self.currentBookName = currentBookName
         updateBookName(currentBookName)
         // Re-check freshness: the index may have been built (or dropped) since the
         // last time this model looked, and `scheduleSearch` refuses to run unless
@@ -717,38 +769,23 @@ final class SearchModel {
     }
 
     func selectModule(_ choice: SearchModuleChoice) {
-        guard module != choice.id else { return }
+        guard module != choice.id, !indexCoordinator.isOperationActive else {
+            return
+        }
         applyModule(choice, clearExistingResults: true)
         if !query.isEmpty, indexCoordinator.state == .ready {
             scheduleSearch(immediate: true)
         }
     }
 
-    func queryDidChange() {
-        // SwiftUI delivers this for the model's own writes too. `startStrongsQuery`
-        // sets `query` and runs the search itself; the echo that follows must not
-        // bump `queryGeneration` and discard that search. See `SearchInputs`.
-        guard !inputsMatchScheduled else { return }
-        scheduleSearch()
-    }
-
-    func optionsDidChange(currentBookName: String?) {
-        // Same echo guard as `queryDidChange`, and nothing below it is lost on an
-        // echo: by definition no input changed, so the capability check has already
-        // run on the write that produced these values (or will run in `applyModule`),
-        // `persistOptions` would rewrite byte-identical values — `SearchOptionsSnapshot`
-        // carries only fuzzy/matchType/range, none of which this class writes without
-        // persisting — and `scheduleSearch` would throw away the search these values
-        // were scheduled for.
-        guard !inputsMatchScheduled else { return }
-
-        // `module != nil` is load-bearing, for the same reason it is in
-        // `startStrongsQuery`: `strongsAvailable` is only resolved once
-        // `applyModule` has run, so before then it is `false` and this would clear
-        // a mode the caller just deliberately set. `SearchView` calls this from
-        // `.onChange(of: search.strongsSearch)`, so it fires on exactly that write.
+    private func userOptionsDidChange() {
+        // `module != nil` is load-bearing: `strongsAvailable` is only resolved once
+        // `applyModule` has run, so before then it is `false` and this must not clear
+        // a mode the caller deliberately seeded.
         if strongsSearch, module != nil, !strongsAvailable {
-            strongsSearch = false
+            withInternalInputMutation {
+                strongsSearch = false
+            }
         }
         updateBookName(currentBookName)
         persistOptions()
@@ -792,16 +829,22 @@ final class SearchModel {
     }
 
     func startIndexBuild() {
-        guard let module else { return }
+        guard let module, !indexCoordinator.isOperationActive else { return }
         indexBuildStarted(module)
         indexCoordinator.onCompletion = { [weak self] success, _ in
             guard let self else { return }
             self.indexBuildFinished(module)
+            guard self.module == module else {
+                self.indexCoordinator.refresh(module: self.module)
+                return
+            }
             if success {
                 self.scheduleSearch(immediate: true)
             }
         }
-        indexCoordinator.build(module: module)
+        if !indexCoordinator.build(module: module) {
+            indexBuildFinished(module)
+        }
     }
 
     func cancelIndexBuild() {
@@ -899,11 +942,9 @@ final class SearchModel {
         strongsAvailable = featureProvider(choice.id, "Strongs")
             || featureProvider(choice.id, "StrongsNumbers")
         if !strongsAvailable {
-            strongsSearch = false
-            // Ours, not the user's: absorb the echo. `selectModule` may skip
-            // `scheduleSearch` (empty query, or an index that is not ready), so the
-            // sync cannot be left to it.
-            syncScheduledInputs()
+            withInternalInputMutation {
+                strongsSearch = false
+            }
         }
         if clearExistingResults {
             clearResults()
@@ -915,11 +956,13 @@ final class SearchModel {
         _ historyItem: PSSearchHistoryItem,
         currentBookName: String?
     ) {
-        query = historyItem.cleanedDisplayTerm()
-        fuzzySearch = historyItem.fuzzySearch
-        matchType = historyItem.searchType
-        range = historyItem.searchRange
-        strongsSearch = historyItem.strongsSearch && strongsAvailable
+        withInternalInputMutation {
+            query = historyItem.cleanedDisplayTerm()
+            fuzzySearch = historyItem.fuzzySearch
+            matchType = historyItem.searchType
+            range = historyItem.searchRange
+            strongsSearch = historyItem.strongsSearch && strongsAvailable
+        }
         bookName = range == .BookRange
             ? (historyItem.bookName ?? currentBookName)
             : nil
@@ -949,12 +992,6 @@ final class SearchModel {
             strongs: strongsSearch
         )
         persistOptions()
-        // `restore` writes all five inputs at once and may NOT schedule (an index
-        // that is not fresh), so it absorbs its own echoes here. This also stops the
-        // `.onChange(of: search.range)` echo from calling `updateBookName` and
-        // replacing the restored item's own book scope with whatever book the reader
-        // happens to be on — a restored BookRange search now keeps its book.
-        syncScheduledInputs()
 
         if !query.isEmpty, indexCoordinator.state == .ready {
             scheduleSearch(immediate: true)
@@ -965,78 +1002,20 @@ final class SearchModel {
         bookName = range == .BookRange ? currentBookName : nil
     }
 
-    // MARK: - onChange echo suppression
+    // MARK: - Input provenance
 
-    /// The five observable inputs a scheduled search was built from.
-    ///
-    /// `SearchView` schedules a search from `.onChange(of: search.query)` and from
-    /// four more hooks on the options, and SwiftUI delivers those for **this model's
-    /// own writes** exactly as it does for the user's. Three writes here are the
-    /// model's own: `startStrongsQuery` seeds `query` + `strongsSearch` and then runs
-    /// the search itself, `runSearch` clears sticky Strong's mode when the text
-    /// stopped looking like a lemma, and `applyModule` clears it for a module that
-    /// has no lemmas. Each echoed back as another `scheduleSearch()`, which bumps
-    /// `queryGeneration` and therefore threw away the very search that caused it: the
-    /// FTS query ran twice per action and the results only landed on the second,
-    /// debounced one.
-    ///
-    /// Recording what was last scheduled makes the echo recognisable without a
-    /// "seeding" flag whose lifetime would depend on how many deliveries SwiftUI makes.
-    /// An echo always matches the snapshot; a user edit normally does not, because the
-    /// field the user changed differs from the last scheduled tuple.
-    ///
-    /// **The recognition is by VALUE, not by provenance, and that bounds what this can
-    /// promise.** If one of this class's own syncs lands between a user's binding write
-    /// and SwiftUI's delivery of the matching `.onChange`, that delivery is
-    /// indistinguishable from an echo and is absorbed — skipping `persistOptions()` and
-    /// `updateBookName()` along with the search. Both known routes to that are narrow
-    /// (they need a debounced `runSearch` to clear sticky Strong's mode in the same
-    /// window) and neither loses persisted state permanently, since the next genuine
-    /// option change rewrites it. Provenance-tagging the writes would remove the hole
-    /// and needs a different design than a value snapshot.
-    ///
-    /// **Invariant, and the whole guard rests on it:** every write to one of these five
-    /// properties from inside this class must be followed by `syncScheduledInputs()`, or
-    /// by `scheduleSearch(...)` which syncs first. Break it and a user edit that happens
-    /// to restore the last scheduled tuple is swallowed. `init` is the one deliberate
-    /// exception — it seeds three of the five from the persisted options while
-    /// `scheduledInputs` is still nil, and nil matches nothing, so the first real change
-    /// always schedules. Do NOT "fix" `init` by adding a sync there: that would make the
-    /// user's first option change look like an echo and drop it.
-    private struct SearchInputs: Equatable {
-        let query: String
-        let strongsSearch: Bool
-        let fuzzySearch: Bool
-        let matchType: PSSearchType
-        let range: PSSearchRange
-    }
-
-    @ObservationIgnored private var scheduledInputs: SearchInputs?
-
-    private var currentInputs: SearchInputs {
-        SearchInputs(
-            query: query,
-            strongsSearch: strongsSearch,
-            fuzzySearch: fuzzySearch,
-            matchType: matchType,
-            range: range
-        )
-    }
-
-    /// True when the inputs are exactly what the last scheduled search was built
-    /// from — i.e. this callback is an echo of one of this model's own writes.
-    private var inputsMatchScheduled: Bool {
-        scheduledInputs == currentInputs
-    }
-
-    private func syncScheduledInputs() {
-        scheduledInputs = currentInputs
+    /// Model-originated writes are grouped explicitly so their property observers do
+    /// not look like user edits. User binding writes run their side effects
+    /// synchronously in `didSet`, eliminating the delivery window where a later model
+    /// sync could previously make a real change look like an `.onChange` echo.
+    private func withInternalInputMutation(_ mutation: () -> Void) {
+        let wasApplyingInternalInputs = isApplyingInternalInputs
+        isApplyingInternalInputs = true
+        mutation()
+        isApplyingInternalInputs = wasApplyingInternalInputs
     }
 
     private func scheduleSearch(immediate: Bool = false) {
-        // Record the inputs this search is being scheduled for BEFORE the guards
-        // below can return: the echo arrives whether or not a query actually ran.
-        syncScheduledInputs()
         debounceTimer?.invalidate()
         debounceTimer = nil
         queryGeneration &+= 1
@@ -1079,12 +1058,12 @@ final class SearchModel {
         // Sticky Strong's mode, cleared when the text stopped looking like a lemma
         // (ported from `PSModuleSearchController.runSearchForCurrentText`: a plain
         // word searched with the mode on hits the lemmas column and returns zero
-        // rows). This is OUR write, not the user's, so absorb the `.onChange` echo —
-        // otherwise it bumps `queryGeneration` and discards the query this very call
-        // is about to dispatch.
+        // rows). This is a model-originated write, so it is marked as such instead
+        // of relying on a later value comparison to distinguish it from the user.
         if strongsSearch && !Self.inputLooksLikeStrongs(query) {
-            strongsSearch = false
-            syncScheduledInputs()
+            withInternalInputMutation {
+                strongsSearch = false
+            }
         }
         guard let expression = PSSearchQuery.fts5Expression(
             fromUserInput: query,
