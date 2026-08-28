@@ -129,6 +129,11 @@ Rules:
 
 ### Search (`PSSearchEngine.swift`, `PSSearchQuery.swift`)
 
+Search results expose a long-press **Copy Verse** action (reference plus normalized
+verse text). Scrolling results dismisses the keyboard; reselecting the Search tab
+focuses the existing search field. Preserve the query, results, module and
+persisted options during these interactions.
+
 Each of these fails **silently** if "simplified":
 
 1. `SQLITE_TRANSIENT` on every `sqlite3_bind_text`; SQL passed to `prepare_v2` / `exec` via `withCString`. Otherwise every query matches nothing.
