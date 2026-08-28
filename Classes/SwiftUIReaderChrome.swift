@@ -18,9 +18,8 @@
 //    `visibilityPriority(.high)`, so a constrained width sheds the study actions
 //    before it sheds the ability to move between chapters. This is the one
 //    control the reader cannot do without.
-//  - Focus mode is pinned with `.topBarPinnedTrailing`, which keeps it reachable
-//    while the bar is minimized — it is the control that *un*-minimizes reading,
-//    so it must not itself be collapsible.
+//  - Focus mode is entered and exited by tapping the reading surface, so the
+//    toolbar stays dedicated to navigation and study actions.
 //  - Secondary study actions (the per-module display toggles, History & Search,
 //    and voice reference) go in a `ToolbarOverflowMenu`.
 //  - `toolbarMinimizationBehavior(.onScrollDown, for: .navigationBar)` quiets the
@@ -181,9 +180,6 @@ final class ReaderChromeModel {
     var accessibilityReference: String = ""
     var isNextEnabled: Bool = true
     var isPreviousEnabled: Bool = true
-    /// Focus mode (the old "fullscreen"): hides the navigation bar and the tab
-    /// bar so only the chapter remains.
-    var isFocused: Bool = false
     /// Empty when the active module advertises nothing, which hides the control.
     var displayToggles: [ReaderDisplayToggle] = []
     /// Mirrors each toggle's current per-module value, keyed by
@@ -205,7 +201,6 @@ final class ReaderChromeModel {
     @ObservationIgnored var onNextChapter: (@MainActor () -> Void)?
     @ObservationIgnored var onHistoryAndSearch: (@MainActor () -> Void)?
     @ObservationIgnored var onVoiceReference: (@MainActor () -> Void)?
-    @ObservationIgnored var onToggleFocus: (@MainActor () -> Void)?
     /// Applies a display-toggle flip: write the per-module pref, then redisplay.
     @ObservationIgnored var onDisplayToggle: (@MainActor (ReaderDisplayToggle) -> Void)?
 
@@ -265,26 +260,6 @@ struct ReaderScreen: View {
                     }
                     .visibilityPriority(.high)
 
-                    ToolbarItem(placement: .topBarPinnedTrailing) {
-                        Button {
-                            chrome.onToggleFocus?()
-                        } label: {
-                            Image(
-                                systemName: chrome.isFocused
-                                    ? "arrow.down.right.and.arrow.up.left"
-                                    : "arrow.up.left.and.arrow.down.right"
-                            )
-                        }
-                        .accessibilityLabel(
-                            Text(
-                                chrome.isFocused
-                                    ? "VoiceOverExitFocusModeButton"
-                                    : "VoiceOverFocusModeButton"
-                            )
-                        )
-                        .accessibilityIdentifier("reading.focus-mode")
-                    }
-
                     // The Bible/commentary switch, at the bar's LEADING edge.
                     //
                     // It was `.bottomBar` first, and that was wrong on iOS 27:
@@ -340,18 +315,12 @@ struct ReaderScreen: View {
                     .onScrollDown,
                     for: .navigationBar
                 )
-                // Focus mode deliberately KEEPS the navigation bar. It hides the
-                // tab bar (in `WorkspaceTabs`, via `toolbarVisibility`) and the
-                // status bar, which is what actually buys the screen back.
-                //
-                // Do NOT add `toolbarVisibility(.hidden)` here. It was tried and
-                // hides the whole bar INCLUDING the `.topBarPinnedTrailing` Focus
-                // control, which is the only way back out — verified on device:
-                // the hierarchy contained zero buttons and the reader was a trap.
-                // Pinning that item is pointless if the bar it is pinned to is
-                // hidden. The bar also still minimizes on scroll down, so ordinary
-                // reading in Focus mode is uninterrupted either way.
+                // The chapter already scrolls beneath the bar. Hiding the bar's
+                // background lets iOS render these toolbar controls as native
+                // floating Liquid Glass instead of placing an opaque strip behind
+                // them, in both normal and Focus mode.
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
                 .statusBarHidden(reading.isFocused)
                 // Focus mode hides the TAB bar (not this one), which is what
                 // actually buys the screen back. Wave 7 did this with
@@ -359,11 +328,15 @@ struct ReaderScreen: View {
                 //
                 // It must be applied HERE, to content inside the tab — putting it
                 // on the `TabView` itself does nothing at all, which cost a
-                // round-trip to discover: the Focus control flipped to "exit"
-                // while the tab bar stayed put.
+                // round-trip to discover: Focus mode changed state while the tab
+                // bar stayed put.
                 .toolbarVisibility(
                     reading.isFocused ? .hidden : .automatic,
                     for: .tabBar
+                )
+                .animation(
+                    .smooth(duration: 0.28),
+                    value: reading.isFocused
                 )
                 .sheet(item: $reading.studyPopup) { popup in
                     StudyPopupSheet(
@@ -418,12 +391,25 @@ struct ReaderScreen: View {
     /// at this level would inset nothing and reintroduce the overlap.
     private var readerPanes: some View {
         ZStack {
-            ChapterTextView(pane: reading.bible)
+            ChapterTextView(
+                pane: reading.bible,
+                onTap: reading.toggleFocusMode
+            )
                 .opacity(reading.mode == .bible ? 1 : 0)
                 .accessibilityHidden(reading.mode != .bible)
-            ChapterTextView(pane: reading.commentary)
+            ChapterTextView(
+                pane: reading.commentary,
+                onTap: reading.toggleFocusMode
+            )
                 .opacity(reading.mode == .commentary ? 1 : 0)
                 .accessibilityHidden(reading.mode != .commentary)
+        }
+        // The tab bar owns the Focus-mode animation. Its changing safe area also
+        // republishes the reader's content margins; allowing the outer animation
+        // into this subtree makes every line interpolate diagonally before the
+        // scroll view settles back on its original anchor.
+        .transaction { transaction in
+            transaction.animation = nil
         }
         .overlay(alignment: .top) {
             ChapterToast(text: reading.chapterToast)

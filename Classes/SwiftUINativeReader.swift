@@ -300,6 +300,7 @@ extension Color {
 /// come from `ReaderPaneModel`, exactly as the WebView's did.
 struct ChapterTextView: View {
     let pane: ReaderPaneModel
+    let onTap: @MainActor () -> Void
 
     var body: some View {
         @Bindable var pane = pane
@@ -387,6 +388,8 @@ struct ChapterTextView: View {
         // WebView container; kept as a distinct name so a test cannot accidentally
         // pass against a surface that no longer exists.
         .accessibilityIdentifier("reading.chapter-content")
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onTap)
     }
 
     /// `createHTMLString` gave the iPad body a 10pt padding and the iPhone none;

@@ -46,7 +46,7 @@ final class PocketSwordUITests: XCTestCase {
         )
         XCTAssertTrue(app.buttons["reading.previous-chapter"].exists)
         XCTAssertTrue(app.buttons["reading.next-chapter"].exists)
-        XCTAssertTrue(app.buttons["reading.focus-mode"].exists)
+        XCTAssertFalse(app.buttons["reading.focus-mode"].exists)
 
         selectWorkspace("Search")
         XCTAssertTrue(app.navigationBars["Search"].waitForExistence(timeout: 5))
@@ -416,27 +416,40 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     @MainActor
-    func testFocusModeHidesAndRestoresTheTabBar() throws {
+    func testTappingReaderHidesAndRestoresTheTabBar() throws {
         selectWorkspace("Read")
 
-        let focus = app.buttons["reading.focus-mode"]
-        XCTAssertTrue(focus.waitForExistence(timeout: 5))
+        let reader = app.descendants(matching: .any)
+            .matching(identifier: "reading.chapter-content")
+            .firstMatch
+        XCTAssertTrue(reader.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["reading.focus-mode"].exists)
+
         let readTab = app.tabBars.buttons["Read"]
         XCTAssertTrue(readTab.exists)
+        let firstVerse = app.links["pslink://versemenu/1"]
+        XCTAssertTrue(firstVerse.waitForExistence(timeout: 5))
+        let initialVerseFrame = firstVerse.frame
 
-        focus.tap()
-        // Focus mode hides the tab bar (via `toolbarVisibility(for: .tabBar)`) and
-        // the status bar, leaving only the chapter. The pinned Focus control must
-        // survive, since it is the way back out.
+        reader.coordinate(
+            withNormalizedOffset: CGVector(dx: 0.04, dy: 0.55)
+        ).tap()
+        // The tab and status bars animate away while the native glass navigation
+        // controls remain available over the chapter.
         XCTAssertTrue(readTab.waitForNonExistence(timeout: 5))
         XCTAssertTrue(
             app.descendants(matching: .any)["reading.chapter-content"].exists
         )
+        XCTAssertTrue(app.buttons["reading.reference-picker"].exists)
+        XCTAssertEqual(firstVerse.frame.minX, initialVerseFrame.minX, accuracy: 1)
+        XCTAssertEqual(firstVerse.frame.minY, initialVerseFrame.minY, accuracy: 1)
 
-        let exitFocus = app.buttons["reading.focus-mode"]
-        XCTAssertTrue(exitFocus.waitForExistence(timeout: 5))
-        exitFocus.tap()
+        reader.coordinate(
+            withNormalizedOffset: CGVector(dx: 0.04, dy: 0.55)
+        ).tap()
         XCTAssertTrue(readTab.waitForExistence(timeout: 5))
+        XCTAssertEqual(firstVerse.frame.minX, initialVerseFrame.minX, accuracy: 1)
+        XCTAssertEqual(firstVerse.frame.minY, initialVerseFrame.minY, accuracy: 1)
     }
 
     @MainActor

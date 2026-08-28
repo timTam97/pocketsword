@@ -239,7 +239,7 @@ struct WorkspaceTabs: View {
         // NOTE: Focus mode's tab-bar hiding is NOT here. `toolbarVisibility(_:for:
         // .tabBar)` has to be applied to the content *inside* a tab, not to the
         // `TabView` — applied here it silently does nothing, verified on device
-        // (the Focus control flipped to "exit" with the tab bar still visible).
+        // (Focus mode changed state with the tab bar still visible).
         // It lives on `ReaderScreen`'s `NavigationStack` instead.
     }
 }
