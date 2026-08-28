@@ -267,6 +267,7 @@ private struct SearchWorkspace: View {
             moduleChoices: reading.searchModuleChoices,
             preferredModule: reading.preferredSearchModule,
             currentBookName: reading.currentSearchBookName,
+            focusRequest: session.searchFocusRequest,
             // A closure, so the value is consumed by `configure(...)` and not by a
             // body pass: `searchHistoryItemToRestore()` nils the saved item on its
             // query-only arm, and this body re-evaluates on any observed change

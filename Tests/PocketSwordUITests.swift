@@ -181,6 +181,58 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     @MainActor
+    func testSearchResultKeyboardAndCopyInteractions() throws {
+        selectWorkspace("Search")
+
+        let field = app.searchFields["Search"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("beginning")
+
+        let results = app.buttons.matching(
+            NSPredicate(
+                format: "identifier BEGINSWITH %@",
+                "search.result."
+            )
+        )
+        let firstResult = results.firstMatch
+        XCTAssertTrue(
+            firstResult.waitForExistence(timeout: 10),
+            "Search did not produce a result for 'beginning'."
+        )
+        XCTAssertTrue(app.keyboards.firstMatch.exists)
+
+        firstResult.swipeUp()
+        XCTAssertTrue(
+            app.keyboards.firstMatch.waitForNonExistence(timeout: 5),
+            "Scrolling the search results did not dismiss the keyboard."
+        )
+
+        app.tabBars.buttons["Search"].tap()
+        XCTAssertTrue(
+            app.keyboards.firstMatch.waitForExistence(timeout: 5),
+            "Reselecting the Search workspace did not focus the search field."
+        )
+
+        guard let visibleResult = results.allElementsBoundByIndex.first(
+            where: \.isHittable
+        ) else {
+            XCTFail("No visible search result was available to long-press.")
+            return
+        }
+
+        visibleResult.press(forDuration: 1)
+
+        let copyVerse = app.buttons["Copy Verse"]
+        XCTAssertTrue(
+            copyVerse.waitForExistence(timeout: 5),
+            "Long-pressing a search result did not show Copy Verse."
+        )
+        copyVerse.tap()
+        XCTAssertTrue(copyVerse.waitForNonExistence(timeout: 5))
+    }
+
+    @MainActor
     func testLibrarySectionsSwitch() throws {
         selectWorkspace("Library")
         XCTAssertTrue(app.buttons["bookmarks.add-folder"].waitForExistence(timeout: 5))

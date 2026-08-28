@@ -2,7 +2,7 @@
 
 ## Execution Status
 
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-28
 
 **Overall state:** **Complete.** All nine waves plus the final
 all-configuration/verification/static-audit pass are done. **WebKit is gone from
@@ -1369,6 +1369,23 @@ the final focused state/concurrency rerun passed **50/50**; and the final UI sui
 passed **13/13**, including a new small-scroll test that advances the visible verse
 inside Genesis 1's first multi-verse paragraph. The review pass changed no persisted
 wire formats.
+
+### Search interaction follow-up — 2026-08-28
+
+Search results now expose a long-press **Copy Verse** action that writes the
+reference plus normalized verse text to the system pasteboard. Scrolling the
+results list dismisses the keyboard immediately, and tapping the already-selected
+Search tab requests focus for the existing search field instead of doing nothing.
+The query, result set, module, and persisted search-option behavior are unchanged.
+
+Verification on iPhone 17 Pro / iOS 27: the app and both test bundles built
+successfully; focused pasteboard/reselection tests passed **2/2**; the focused
+interaction XCUITest passed **1/1** and directly observed scroll dismissal,
+same-tab keyboard restoration, the result context menu, and Copy Verse invocation;
+the full unit tier passed **150 tests** with the 3 expected exhaustive-tier skips
+(153 executed, 0 failures); and the full UI suite passed **14/14**. `git diff
+--check` and the localization plist lint also pass. No persisted wire format or
+defaults key changed.
 
 ### Static audit
 

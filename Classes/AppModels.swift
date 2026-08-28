@@ -1134,7 +1134,17 @@ final class SearchModel {
 @MainActor
 @Observable
 final class AppSession {
-    var selectedWorkspace: Workspace
+    private var workspaceSelection: Workspace
+    var selectedWorkspace: Workspace {
+        get { workspaceSelection }
+        set {
+            if workspaceSelection == .search, newValue == .search {
+                searchFocusRequest &+= 1
+            }
+            workspaceSelection = newValue
+        }
+    }
+    private(set) var searchFocusRequest: UInt = 0
     /// The last `sword://` URL this session accepted.
     ///
     /// **Write-only in production, and kept deliberately.** `ReadingWorkspaceModel.start()`
@@ -1179,7 +1189,7 @@ final class AppSession {
         search: SearchModel? = nil,
         readingStore: ReadingStateStore = ReadingStateStore()
     ) {
-        self.selectedWorkspace = selectedWorkspace
+        self.workspaceSelection = selectedWorkspace
         self.lastOpenedURL = lastOpenedURL
         self.reading = reading ?? ReadingModel()
         self.settings = settings ?? SettingsModel()

@@ -1076,6 +1076,55 @@ final class AppStateStoresTests: XCTestCase {
     }
 
     @MainActor
+    func testSearchWorkspaceReselectionRequestsKeyboardFocus() {
+        let session = AppSession(selectedWorkspace: .search)
+
+        XCTAssertEqual(session.searchFocusRequest, 0)
+
+        session.selectedWorkspace = .search
+        XCTAssertEqual(session.searchFocusRequest, 1)
+
+        session.selectedWorkspace = .read
+        session.selectedWorkspace = .search
+        XCTAssertEqual(
+            session.searchFocusRequest,
+            1,
+            "Entering Search from another workspace is not a reselection."
+        )
+    }
+
+    @MainActor
+    func testSearchResultClipboardCopiesReferenceAndNormalizedText() {
+        XCTAssertEqual(
+            SearchResultClipboardText.make(
+                reference: "John 3:16",
+                text: "For God so loved\n  the world"
+            ),
+            "John 3:16 For God so loved the world"
+        )
+        XCTAssertEqual(
+            SearchResultClipboardText.make(
+                reference: "John 3:16",
+                text: nil
+            ),
+            "John 3:16"
+        )
+
+        let pasteboard = UIPasteboard.general
+        defer { pasteboard.string = nil }
+
+        SearchResultClipboard.copy(
+            reference: "John 3:16",
+            text: "For God so loved\n  the world",
+            to: pasteboard
+        )
+        XCTAssertEqual(
+            pasteboard.string,
+            "John 3:16 For God so loved the world"
+        )
+    }
+
+    @MainActor
     func testSearchModelUsesNaturalResultIdentity() {
         let model = SearchModel(
             optionsStore: SearchOptionsStore(defaults: defaults),

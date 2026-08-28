@@ -6,6 +6,7 @@ struct SearchView: View {
     let moduleChoices: [SearchModuleChoice]
     let preferredModule: String?
     let currentBookName: String?
+    let focusRequest: UInt
     /// Pulled inside `.task`, NOT passed as a value, and that is load-bearing.
     ///
     /// `ReadingWorkspaceModel.searchHistoryItemToRestore()` **consumes** the
@@ -22,6 +23,7 @@ struct SearchView: View {
     let openResult: (_ reference: String, _ module: String) -> Void
 
     @State private var configured = false
+    @FocusState private var isSearchFocused: Bool
 
     var body: some View {
         @Bindable var search = search
@@ -46,12 +48,16 @@ struct SearchView: View {
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: Text("SearchTitle")
             )
+            .searchFocused($isSearchFocused)
             .safeAreaInset(edge: .top, spacing: 0) {
                 SearchScopePicker(search: search)
             }
         }
         .onSubmit(of: .search) {
             search.searchNow()
+        }
+        .onChange(of: focusRequest) {
+            isSearchFocused = true
         }
         .task {
             guard !configured else { return }
@@ -341,6 +347,19 @@ private struct SearchResultList: View {
                     .accessibilityIdentifier(
                         "search.result.\(result.reference)"
                     )
+                    .contextMenu {
+                        Button {
+                            SearchResultClipboard.copy(
+                                reference: result.reference,
+                                text: result.text
+                            )
+                        } label: {
+                            Label(
+                                "SearchCopyVerseButton",
+                                systemImage: "doc.on.doc"
+                            )
+                        }
+                    }
                 }
             } header: {
                 Text(
@@ -353,6 +372,7 @@ private struct SearchResultList: View {
             }
         }
         .listStyle(.plain)
+        .scrollDismissesKeyboard(.immediately)
         .overlay(alignment: .topTrailing) {
             if isSearching {
                 ProgressView()
@@ -384,6 +404,30 @@ private struct SearchResultRowView: View {
             .foregroundStyle(.primary)
         }
         .padding(.vertical, 4)
+    }
+}
+
+@MainActor
+enum SearchResultClipboard {
+    static func copy(
+        reference: String,
+        text: String?,
+        to pasteboard: UIPasteboard = .general
+    ) {
+        pasteboard.string = SearchResultClipboardText.make(
+            reference: reference,
+            text: text
+        )
+    }
+}
+
+enum SearchResultClipboardText {
+    static func make(reference: String, text: String?) -> String {
+        let verse = (text ?? "")
+            .split(whereSeparator: \.isWhitespace)
+            .joined(separator: " ")
+        guard !verse.isEmpty else { return reference }
+        return "\(reference) \(verse)"
     }
 }
 
