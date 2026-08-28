@@ -290,8 +290,7 @@ final class PersistedFormatTests: XCTestCase {
         XCTAssertEqual(swift, "a_b_c_d")
     }
 
-    // MARK: - PSHistoryController iCloud merge / cap / dedup
-    //         (Classes/PSHistoryController.swift, ported from PSHistoryController.mm)
+    // MARK: - HistoryStore iCloud merge / cap / dedup
     //
     // R1 lock: the cloud<->local recursive merge, the 100-entry cap
     // (PSHistoryMaxEntries == 100, applied with a `while count >= 100` trim), and
@@ -325,7 +324,9 @@ final class PersistedFormatTests: XCTestCase {
             makeHistoryItem("Num 4:4", "KJV", secondsSinceEpoch: 50),
         ])
 
-        let merged = try XCTUnwrap(PSHistoryController.synchronizeHistoryArray(cloud, with: local))
+        let merged = try XCTUnwrap(
+            HistoryStore.synchronizeHistoryArray(cloud, with: local)
+        )
         let refs = merged.compactMap { ($0 as? PSHistoryItem)?.bibleReference }
         XCTAssertEqual(refs, ["Gen 1:1", "Lev 3:3", "Exo 2:2"],
                        "interleave is newest-first; the oldest tail (Num 4:4 @50) is DROPPED "
@@ -341,7 +342,9 @@ final class PersistedFormatTests: XCTestCase {
             shared,
             makeHistoryItem("Ps 24:1", "KJV", secondsSinceEpoch: 800),
         ])
-        let merged = try XCTUnwrap(PSHistoryController.synchronizeHistoryArray(cloud, with: local))
+        let merged = try XCTUnwrap(
+            HistoryStore.synchronizeHistoryArray(cloud, with: local)
+        )
         let refs = merged.compactMap { ($0 as? PSHistoryItem)?.bibleReference }
         XCTAssertEqual(refs, ["Ps 23:1"],
                        "equal newest -> return the shorter list (cloud) unchanged")
@@ -368,7 +371,10 @@ final class PersistedFormatTests: XCTestCase {
             makeHistoryItem("John 3:16", "KJV", secondsSinceEpoch: 500),
         ]
 
-        PSHistoryController.initialSynchronize(withCloud: cloud, withLocalHistory: local)
+        HistoryStore().initialSynchronize(
+            withCloud: cloud,
+            withLocalHistory: local
+        )
 
         let written = try XCTUnwrap(defaults.array(forKey: key))
         // dedup removes the duplicate John 3:16/KJV -> 2 unique entries.
@@ -402,7 +408,10 @@ final class PersistedFormatTests: XCTestCase {
         for i in 0..<120 {
             local.append(makeHistoryItem("Ref \(i):1", "KJV", secondsSinceEpoch: TimeInterval(10_000 - i)))
         }
-        PSHistoryController.initialSynchronize(withCloud: [], withLocalHistory: local)
+        HistoryStore().initialSynchronize(
+            withCloud: [],
+            withLocalHistory: local
+        )
 
         let written = try XCTUnwrap(defaults.array(forKey: key))
         XCTAssertEqual(written.count, 99,

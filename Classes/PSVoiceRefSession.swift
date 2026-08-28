@@ -157,7 +157,7 @@ final class PSVoiceRefSession {
         inputContinuation?.finish()
         if observingAudioInterruptions {
             NotificationCenter.default.removeObserver(self,
-                                                      name: AVAudioSession.interruptionNotification,
+                                                      name: AVAudioSession.didBecomeInactiveNotification,
                                                       object: nil)
         }
         try? AVAudioSession.sharedInstance().setActive(false,
@@ -248,8 +248,8 @@ final class PSVoiceRefSession {
             try session.setActive(true)
             NotificationCenter.default.addObserver(
                 self,
-                selector: #selector(audioSessionInterrupted(_:)),
-                name: AVAudioSession.interruptionNotification,
+                selector: #selector(audioSessionDidBecomeInactive(_:)),
+                name: AVAudioSession.didBecomeInactiveNotification,
                 object: session
             )
             observingAudioInterruptions = true
@@ -316,6 +316,21 @@ final class PSVoiceRefSession {
             }
         }
 
+        // Deliberately still the deprecated non-throwing `installTap`.
+        //
+        // iOS 27 deprecates it in favour of `installTapOnBus:…:error:block:`, but
+        // that method is declared `NS_REFINED_FOR_SWIFT` and **the Xcode 27 beta 4
+        // SDK ships no refinement for it**. The hidden declaration is all Swift can
+        // see, so the only callable spelling is
+        // `try inputNode.__installTap(onBus:bufferSize:format:error: ()) { … }` —
+        // a double-underscore private name plus a spurious `()` where the
+        // `NSError**` should have been consumed by `throws`. Verified against the
+        // SDK: every other spelling fails to type-check.
+        //
+        // Taking a private-name symbol with a placeholder argument to silence one
+        // deprecation warning is the worse trade: it would break when the
+        // refinement lands, and it reads as a typo. Revisit when the SDK exposes
+        // the refined `installTap(onBus:bufferSize:format:)` as throwing.
         inputNode.installTap(onBus: 0,
                              bufferSize: 4096,
                              format: inputFormat) { [weak self] buffer, _ in
@@ -487,7 +502,7 @@ final class PSVoiceRefSession {
         if observingAudioInterruptions {
             NotificationCenter.default.removeObserver(
                 self,
-                name: AVAudioSession.interruptionNotification,
+                name: AVAudioSession.didBecomeInactiveNotification,
                 object: nil
             )
             observingAudioInterruptions = false
@@ -526,9 +541,26 @@ final class PSVoiceRefSession {
         delegate?.voiceRefSession(self, didChangeState: state)
     }
 
-    @objc private func audioSessionInterrupted(_ notification: Notification) {
-        guard let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
-              AVAudioSession.InterruptionType(rawValue: rawType) == .began else {
+    /// Aborts the dictation when the **system** takes the audio session away.
+    ///
+    /// This replaces `AVAudioSession.interruptionNotification` +
+    /// `InterruptionType.began`, both deprecated in iOS 27.
+    ///
+    /// The `source` check is not defensive padding — it is what makes the port
+    /// faithful. The old notification fired *only* for an interruption, never for
+    /// the app's own `setActive(false)`. `didBecomeInactiveNotification` fires for
+    /// both, distinguished by `DeactivationSource` (`.app` = we asked, `.system` =
+    /// something took it). Reacting to every deactivation would make
+    /// `deactivateAudioSession()` report `.audioInterrupted` on its own teardown,
+    /// turning an ordinary finish into a spurious failure shown to the user.
+    ///
+    /// Ordering already guards this too — `deactivateAudioSession()` removes the
+    /// observer before it deactivates — but the guard belongs here rather than in
+    /// the caller's statement order, which a later edit could silently reverse.
+    @objc private func audioSessionDidBecomeInactive(_ notification: Notification) {
+        guard let context = notification.userInfo?[AVAudioSession.deactivationContextKey]
+                as? AVAudioSession.DeactivationContext,
+              context.source == .system else {
             return
         }
         fail(.audioInterrupted)

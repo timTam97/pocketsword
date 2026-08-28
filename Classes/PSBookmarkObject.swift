@@ -16,8 +16,9 @@ import Foundation
 import UIKit
 
 @objc(PSBookmarkObject)
-class PSBookmarkObject: NSObject {
+class PSBookmarkObject: NSObject, Identifiable {
 
+    let id = UUID()
     @objc var name: String?
     @objc var dateAdded: Date?
     @objc var dateLastAccessed: Date?

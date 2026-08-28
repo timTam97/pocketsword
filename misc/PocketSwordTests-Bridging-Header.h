@@ -40,8 +40,11 @@
 // the test bundle sees through `@testable import`.
 //
 // **globals.h is therefore the ONLY thing either bridging header imports from this
-// project**, and the app target contains no Obj-C other than it and the vendored
-// MBProgressHUD.
+// project**, and it is the only non-Swift file in the app target at all. The
+// sentence here used to end "...other than it and the vendored MBProgressHUD",
+// which was true when written and stopped being true in Wave 8: that library was
+// deleted with its only consumer, `externals/` is empty, and a clean build reports
+// `CompileC` 0 — there is no longer any Obj-C implementation to speak of.
 // PSHistoryItem is Swift as of migration step 1.2 — its type is visible to the
 // test bundle via `@testable import PocketSword`, so it is NOT imported here.
 // PSSearchHistoryItem is Swift as of migration step 1.2 — its type is visible to

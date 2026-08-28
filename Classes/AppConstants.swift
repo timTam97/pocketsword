@@ -35,6 +35,11 @@ enum Defaults {
     static let lastSearchFuzzy             = "DefaultsLastSearchFuzzy"
     static let lastSearchType              = "DefaultsLastSearchType"
     static let lastSearchRange             = "DefaultsLastSearchRange"
+    static let pendingSearchIndexModule    = "PendingSearchIndexModule"
+    /// Consecutive FAILED background search-index build attempts for
+    /// `pendingSearchIndexModule`, bounding the BGProcessingTask retry. Swift-only —
+    /// no globals.h macro, because no Obj-C reads it (nor does its sibling above).
+    static let pendingSearchIndexAttempts  = "PendingSearchIndexAttempts"
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
     static let moduleChoiceRetired         = "DefaultsModuleChoiceRetired"
@@ -149,6 +154,13 @@ enum AppConstants {
     static let greekStrongsFontName   = "Gentium Plus"      // macro PSGreekStrongsFontName
     static let hebrewStrongsFontName  = "Ezra SIL"          // macro PSHebrewStrongsFontName
     static let defaultFontName        = "Helvetica Neue"    // macro PSDefaultFontName
+    /// The reading font size used when `fontSizePreference` is absent. Swift-only:
+    /// there is no `globals.h` macro and it is not a wire string. ONE constant on
+    /// purpose — `SettingsStore` said 12 (and materializes it for the Settings
+    /// slider) while `ChapterTextRenderer.Style.current()` said 14, the deleted HTML
+    /// shell's own fallback, so after `LaunchCoordinator.resetPreferences()` removed
+    /// the key the chapter rendered at 14pt while the slider read 12.
+    static let defaultFontSize        = 12
     static let folderSeparatorString  = ":::"               // macro PSFolderSeparatorString
     static let historyMaxEntries      = 100                 // macro PSHistoryMaxEntries (Int)
     static let historyName            = "bibleHistory"      // macro PSHistoryName
@@ -200,6 +212,10 @@ extension Notification.Name {
     static let addBookmarkInFolder          = Notification.Name("NotificationAddBookmarkInFolder")
 
     static let updateSelectedReference      = Notification.Name("NotificationUpdateSelectedReference")
+
+    // SwiftUI migration bridge only. Posted after the legacy reset routine clears
+    // defaults so observable models can reload without re-persisting old values.
+    static let appStateDidReset             = Notification.Name("PocketSwordAppStateDidReset")
 }
 
 // MARK: - Per-module preference accessors

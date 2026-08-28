@@ -248,65 +248,95 @@ final class PSContentReader: NSObject {
         return (result.body, result.entryCount)
     }
 
-    /// The full page — body + bottom padding + navigation JS + the HTML shell —
-    /// i.e. the equivalent of `-[SwordModule getChapter:withExtraJS:]`, which is
-    /// what `PSModuleController.getBibleChapter(_:withExtraJS:)` returns.
-    func chapterPage(module: String,
-                     ref: String,
-                     kind: PSChapterAssembler.ModuleKind,
-                     extraJS: String) -> String? {
-        guard let rendered = chapterBody(module: module, ref: ref, kind: kind,
-                                         applyBookmarkHighlights: true) else {
+    /// The typed chapter document the native SwiftUI reader renders — Wave 9's
+    /// replacement for `chapterPage`.
+    ///
+    /// Same inputs, same option prefs, same bookmark-highlight lookup as
+    /// `chapterBody`; the difference is that it emits `ChapterDocument` values
+    /// instead of HTML, so there is no shell, no CSS, no navigation JS and no six
+    /// `&nbsp;` pads. See `PSChapterDocument.swift` for why the token stream gets a
+    /// second emitter rather than the HTML being parsed.
+    ///
+    /// `PSChapterDocumentParityTests` asserts this agrees with `chapterBody` on
+    /// text, verse identity, `entryCount` and every link target, for all 1,189
+    /// chapters × both modules × both option endpoints.
+    func chapterDocument(module: String,
+                         ref: String,
+                         kind: PSChapterAssembler.ModuleKind,
+                         options: PSChapterExpander.Options? = nil,
+                         applyBookmarkHighlights: Bool = true,
+                         reportFailures: Bool = true) -> ChapterDocument? {
+        guard let store, let resolver else {
+            PSContentStore.fail("reader is unavailable", report: reportFailures)
             return nil
         }
-        // Identical to -getChapter:'s own six pads, then the pre-paint boot block.
-        //
-        // `bootScript` MUST be last in the body: it is what performs the initial
-        // scroll, and a script at the end of <body> runs after parse but before the
-        // first paint, so the chapter appears already scrolled to the target verse
-        // instead of painting at the top and then jumping. It carries the `extraJS`
-        // that used to be spliced into `window.onload` (which fires post-paint —
-        // that was the jerkiness). See PSChapterNavigationJS's header.
-        let body = rendered.body
-            + "<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>"
-            + PSChapterNavigationJS.bootScript(extraJS: extraJS)
-
-        // The navigation JS now comes from the Swift `PSChapterNavigationJS`
-        // (SWORD_REMOVAL_PLAN.md Phase 5 step 3), which was generated from
-        // `+[SwordModule chapterNavigationJSWithEntryCount:extraJS:]`'s own bytes
-        // rather than retyped. `PSChapterNavigationJSTests` asserted the two were
-        // byte-identical for as long as both existed; the Obj-C copy died with the
-        // bridge in step 7, and the assertion with it.
-        let js = PSChapterNavigationJS.script(entryCount: rendered.entryCount)
-
-        guard var text = PSModuleController.createHTMLString(body,
-                                                            usingPreferences: true,
-                                                            withJS: js,
-                                                            usingModuleForPreferences: module,
-                                                            fixedWidth: true) else {
-            PSContentStore.fail("createHTMLString returned nil for \(module) \(ref)")
+        guard let (book, chapter) = resolver.resolve(ref: ref) else {
+            PSContentStore.fail("cannot resolve ref '\(ref)'", report: reportFailures)
             return nil
         }
+        let opts = options ?? self.options(forModule: module)
 
-        // Language + direction, as -getChapter: did at SwordModule.mm:1346-1350.
-        //
-        // Phase 5 step 5: from `content_meta` (`module.<name>.{direction,lang}`)
-        // rather than a live module. All five shipped modules are Lang=en with no
-        // Direction=, so both substitutions are no-ops today — but the values are
-        // READ rather than assumed, because that is a property of the content and not
-        // of this code. PSDifferentialTests.testBakedFeatureSetMatchesTheEngine
-        // checked the baked answers against the engine while it was still here.
-        if let store {
-            if store.moduleIsRTL(module) {
-                text = text.replacingOccurrences(of: "dir=\"ltr\"", with: "dir=\"rtl\"")
-            }
-            if let lang = store.moduleLang(module) {
-                text = text.replacingOccurrences(of: "xml:lang=\"en\"",
-                                                 with: "xml:lang=\"\(lang)\" lang=\"\(lang)\"")
-            }
+        guard let records = store.chapterRecords(module: module,
+                                                 bookOsis: book.osisName,
+                                                 chapter: chapter) else {
+            // Not a failure: the converter omits wholly-empty chapters. Same
+            // message the engine rendered, now as a document field.
+            var document = ChapterDocument()
+            document.emptyMessage = emptyChapterMessage(bookName: book.name,
+                                                        chapter: chapter)
+            return document
         }
-        return text
+        // Headings are keyed by the module's own key text, which uses the LONG
+        // (roman-numeral) book name — see `chapterBody`.
+        let headings = store.headings(module: module,
+                                      bookName: book.longName,
+                                      chapter: chapter)
+
+        var config = PSChapterDocumentBuilder.Config()
+        config.kind = kind
+        config.headingsOn = opts.headings
+
+        // The highlight lookup takes the CALLER's ref through createRefString, not
+        // SWORD's abbreviation — passing "Ps 23" renders identical text but matches
+        // no bookmark. Identical to `chapterBody`; not interchangeable.
+        let highlightRef = applyBookmarkHighlights
+            ? PSRefHelper.createRefString(ref)
+            : nil
+
+        return PSChapterDocumentBuilder.build(
+            records: records.records,
+            headings: headings,
+            config: config,
+            options: opts,
+            highlightColour: { verse in
+                guard let highlightRef else { return nil }
+                return PSBookmarks.getHighlightRGBColourString(
+                    forBookAndChapterRef: highlightRef,
+                    withVerse: verse
+                )
+            },
+            emptyChapterMessage: self.emptyChapterMessage(bookName: book.name,
+                                                          chapter: chapter),
+            reportFailures: reportFailures)
     }
+
+    // `chapterPage` is DELETED (Wave 9). It assembled the full HTML document the
+    // WebView loaded: the rendered body, six hardcoded `<p>&nbsp;</p>` pads (a
+    // faithful port of `-getChapter:`'s own six), `PSChapterNavigationJS`'s two
+    // script blocks, the `createHTMLString` shell, and the RTL/lang substitutions.
+    // Every part of it existed to serve a WebView:
+    //
+    //  * the pads are `contentMargins` now, scaled to the real bar height rather
+    //    than to six line heights of a font size they did not know;
+    //  * the JS is gone entirely — see `ReaderPaneModel`'s table;
+    //  * the shell's CSS is resolved type and colour in `ChapterTextRenderer`;
+    //  * the RTL/lang substitutions were **no-ops for all five shipped modules**
+    //    (every one is `Lang=en` with no `Direction=`), and direction is now the
+    //    view's own concern.
+    //
+    // `chapterBody` is KEPT, and deliberately: it is the fixture-pinned oracle that
+    // `PSChapterDocumentParityTests` compares the native document against, and those
+    // fixtures were captured from a SWORD engine that no longer exists.
 
     /// The engine's own empty-chapter fallback (SwordModule.mm:1181), including
     /// that the parenthesised ref is SWORD's `ch` — the chapter part of the key
@@ -314,6 +344,16 @@ final class PSContentReader: NSObject {
     private func emptyChapterBody(bookName: String, chapter: Int) -> String {
         let message = NSLocalizedString("EmptyChapterWarning", comment: "This chapter is empty for this module.")
         return "<p style=\"color:grey;text-align:center;font-style:italic;\">\(message) (\(bookName) \(chapter))</p>"
+    }
+
+    /// The same message as plain text, for the native reader.
+    ///
+    /// `emptyChapterBody` wraps it in the `<p style="…">` the engine emitted; the
+    /// native reader styles the notice itself, so it wants the string alone. Both
+    /// read the one localisation key, so the two cannot drift.
+    private func emptyChapterMessage(bookName: String, chapter: Int) -> String {
+        let message = NSLocalizedString("EmptyChapterWarning", comment: "This chapter is empty for this module.")
+        return "\(message) (\(bookName) \(chapter))"
     }
 
     // MARK: - Lexicons

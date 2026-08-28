@@ -30,6 +30,11 @@
 "Ok" = "Ok";
 "Cancel" = "Cancel";
 "Error" = "Error";
+"Delete" = "Delete";
+"Rename" = "Rename";
+"Save" = "Save";
+"LibraryUpdateFailedTitle" = "Couldn’t Update Library";
+"LibraryUpdateFailedMessage" = "The library changed before this action could be completed. Please try again.";
 
 // Module About
 "AboutModuleName" = "Module name: ";
@@ -88,7 +93,8 @@
 
 "None" = "None";
 "CloseButtonTitle" = "Close";
-"NoSearchIndexMsg" = "You don't have a search index installed for this module.  Do you wish to check for available search indices now?";
+"CancelButtonTitle" = "Cancel";
+"LaunchProgressLabel" = "Opening PocketSword";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email Us";
 "NoSearchIndexInstalled" = "No Search Index Installed";
@@ -114,6 +120,16 @@
 
 
 "MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+
+/* Shown as the study popup's body when a marker's entry is not in the bundled
+   lexicon. These used to say a module was "not installed", which no longer means
+   anything: all five modules ship inside PSContent.sqlite and there is no way to
+   add or remove one, so a miss is a gap in the lexicon rather than a missing
+   download. The morph one is genuinely reachable — 20 real KJV morph tags have no
+   Robinson entry. */
+"NoMorphGreekModuleInstalled" = "No morphological analysis is available for this word.";
+"NoHebrewStrongsNumbersModuleInstalled" = "No Hebrew lexicon entry is available for this number.";
+"NoGreekStrongsNumbersModuleInstalled" = "No Greek lexicon entry is available for this number.";
 
 "AboutModuleFeaturesTitle" = "Module Features";
 "AboutModuleContainsStrongsNumbers" = "Contains Strong's Numbers";
@@ -235,6 +251,13 @@
 "SearchBuildingIndexTitle" = "Building search index…";
 "SearchBuildingCancellingLabel" = "Cancelling…";
 "NoSearchIndexMsg" = "No search index is built for this module. Build one now?";
+"SearchBuildIndexButton" = "Build Index";
+"SearchIndexCancelledTitle" = "Index Build Cancelled";
+"SearchIndexFailedTitle" = "Index Build Failed";
+"SearchEmptyPromptTitle" = "Search Scripture";
+"SearchEmptyPromptMessage" = "Enter a word, phrase, or Strong's number.";
+"SearchModuleButtonLabel" = "Search Module";
+"SearchResultCountFormat" = "%lld Results";
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
@@ -271,3 +294,30 @@
 "VoiceRefOpenSettings" = "Open Settings";
 "VoiceRefUnavailable" = "Voice input isn’t available for this language.";
 "VoiceOverVoiceRefButton" = "Speak a Bible reference";
+
+// SwiftUI supporting screens
+"SettingsReadingPreview" = "In the beginning God created the heaven and the earth.";
+"SettingsReadingPreviewReference" = "Genesis 1:1";
+"AboutCommunityTitle" = "PocketSword and CrossWire";
+"AboutProjectLink" = "PocketSword Project";
+"AboutCrossWireLink" = "CrossWire Bible Society";
+"AboutUserForumsLink" = "User Forums";
+"AboutCompanionAppsTitle" = "Companion Scripture Apps";
+"AboutCreditsTitle" = "Credits";
+"AboutDevelopedByText" = "Developed by Nic Carter and the CrossWire Bible Society.";
+"AboutContributorsText" = "With help from David Bell, Manfred Bergmann, Christoffer Björkskog, Jan Bubík, Vincenzo Carrubba, Cheree Lynley Designs, Dominique Corbex, Bruno Gätjens González, Grace Community Church (HK), Yiguang Hu, John Huss, Nakamaru Kunio, Laurence Rezkalla, Timothy Shen, Vitaliy, Ian Wagner, Henko van de Weerd, and PocketSword beta testers.";
+"AboutOpenSourceTitle" = "Open Source";
+"AboutFontLicenseText" = "Ezra SIL and Gentium Plus are distributed under the SIL Open Font License.";
+"AboutFeedbackTitle" = "Feedback and Translation";
+
+// SwiftUI reading chrome (Wave 7)
+"VoiceOverFocusModeButton" = "Enter Focus Mode";
+"VoiceOverExitFocusModeButton" = "Exit Focus Mode";
+
+// SwiftUI app lifecycle and the four workspaces (Wave 8)
+"WorkspaceRead" = "Read";
+"WorkspaceSearch" = "Search";
+"WorkspaceLibrary" = "Library";
+"WorkspaceSettings" = "Settings";
+"LaunchFailedTitle" = "PocketSword could not start";
+"LaunchFailedMessage" = "The bundled Bible content could not be opened. Reinstalling PocketSword should fix this.";

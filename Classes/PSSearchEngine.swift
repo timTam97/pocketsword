@@ -51,10 +51,12 @@
 //     algorithm, kept in sync only by a test asserting they agreed. There is one
 //     copy now, and the duplication that both files warned about ends here.
 //   * **The `PSSearchEngineErrorDomain` + negative-sentinel-code contract.** No
-//     caller ever read it: `PSSearchIndexBuilder` catches the error generically and
-//     reports cancellation from its own `cancelRequested` flag, not from a code. It
-//     is replaced by a plain Swift error enum whose cases are descriptive rather
-//     than numbered. `PSSearchHighlightOpen` / `PSSearchHighlightClose` are gone
+//     caller ever read it: the build's only caller catches the error generically and
+//     reports cancellation from its own cancellation flag, not from a code. (That
+//     caller was `PSSearchIndexBuilder`, a modal progress sheet; it is now
+//     `SearchIndexCoordinator`, whose state machine drives `SearchView`'s inline
+//     progress. Same treatment of the error.) It is replaced by a plain Swift error
+//     enum whose cases are descriptive rather than numbered. `PSSearchHighlightOpen` / `PSSearchHighlightClose` are gone
 //     for the same reason — they were the FTS5 `snippet()` delimiters, and this
 //     engine returns the full `text_plain` and lets the UI highlight (see
 //     `runQuery`), so nothing had referenced them since that decision.
