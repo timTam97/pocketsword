@@ -229,6 +229,7 @@ extension Color {
 /// position and the tap routing come from `ReaderPaneModel`.
 struct ChapterTextView: View {
     let pane: ReaderPaneModel
+    let onTap: @MainActor () -> Void
 
     var body: some View {
         @Bindable var pane = pane
@@ -306,6 +307,8 @@ struct ChapterTextView: View {
         }
         // The identifier the XCUITests match on.
         .accessibilityIdentifier("reading.chapter-content")
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onTap)
     }
 
     /// Horizontal gutter: text pinned to the physical edge is unreadable in a

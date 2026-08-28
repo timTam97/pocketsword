@@ -754,13 +754,7 @@ final class ReadingWorkspaceModel {
 
     /// Focus mode: the chapter alone, with the tab bar and status bar hidden.
     /// Both panes follow the one flag, so switching panes stays in Focus mode.
-    var isFocused = false {
-        didSet {
-            guard isFocused != oldValue else { return }
-            bible.chrome.isFocused = isFocused
-            commentary.chrome.isFocused = isFocused
-        }
-    }
+    var isFocused = false
 
     /// A brief reference toast, shown on a chapter change while in Focus mode.
     var chapterToast: String?
@@ -890,9 +884,6 @@ final class ReadingWorkspaceModel {
         }
         chrome.onVoiceReference = { [weak self] in
             self?.presentVoiceReference()
-        }
-        chrome.onToggleFocus = { [weak self] in
-            self?.toggleFocusMode()
         }
         chrome.onDisplayToggle = { [weak self, weak pane] toggle in
             guard let self, let pane else { return }
