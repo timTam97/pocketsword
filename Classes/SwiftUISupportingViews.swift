@@ -886,21 +886,8 @@ private struct DeviceSettingsSection: View {
                 }
             )
             .accessibilityIdentifier("settings.rotation-lock")
-            Toggle(
-                isOn: $settings.automaticFullscreen,
-                label: {
-                    SettingsIconLabel(
-                        title: "PreferencesFullscreenModeTitle",
-                        systemImage: "arrow.up.left.and.arrow.down.right",
-                        tint: .indigo
-                    )
-                }
-            )
-            .accessibilityIdentifier("settings.automatic-fullscreen")
         } header: {
             Text("PreferencesDevicePreferencesTitle")
-        } footer: {
-            Text("PreferencesFullscreenNote")
         }
     }
 }

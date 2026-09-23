@@ -7,23 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B20000000000000000000002 /* PocketSwordUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* PocketSwordUITests.swift */; };
-		B21000000000000000000011 /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000001 /* AppModels.swift */; };
-		B21000000000000000000012 /* URLRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000002 /* URLRouter.swift */; };
-		B21000000000000000000013 /* URLRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000003 /* URLRouterTests.swift */; };
-		B22000000000000000000011 /* AppStateStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000001 /* AppStateStores.swift */; };
-		B22000000000000000000013 /* AppStateStoresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000003 /* AppStateStoresTests.swift */; };
-		B23000000000000000000011 /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* LaunchCoordinator.swift */; };
-		B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24000000000000000000001 /* SwiftUISupportingViews.swift */; };
-		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
-		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
-		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
-		B27000000000000000000012 /* SwiftUIReaderChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000002 /* SwiftUIReaderChrome.swift */; };
-		B280000000000000000000011 /* PocketSwordApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000001 /* PocketSwordApp.swift */; };
-		B280000000000000000000021 /* ReadingWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000002 /* ReadingWorkspace.swift */; };
-		B280000000000000000000031 /* SwiftUIStudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000003 /* SwiftUIStudyViews.swift */; };
-		B280000000000000000000041 /* PSInfoPopupContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000004 /* PSInfoPopupContent.swift */; };
-		B280000000000000000000051 /* VoiceReferenceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000005 /* VoiceReferenceModel.swift */; };
 		050CB77D19D16A1200415A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77C19D16A1200415A27 /* Images.xcassets */; };
 		050CB78019D1789A00415A27 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77E19D1789A00415A27 /* Default-736h@3x.png */; };
 		050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 050CB77F19D1789A00415A27 /* Default-667h@2x.png */; };
@@ -81,7 +64,6 @@
 		5A1F70B0000000000000CA02 /* PSContent.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CA01 /* PSContent.sqlite */; };
 		5A1F70B0000000000000CB02 /* Versification-KJV.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CB01 /* Versification-KJV.json */; };
 		5A1F70B0000000000000CS02 /* PSContentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */; };
-		5A1F70B0000000000000WAVE9T2 /* PSChapterDocumentParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000WAVE9T1 /* PSChapterDocumentParityTests.swift */; };
 		5A1F70B0000000000000F002 /* PersistedFormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000F001 /* PersistedFormatTests.swift */; };
 		5A1F70B0000000000000FF02 /* PSFeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000FF01 /* PSFeatureFlags.swift */; };
 		5A1F70B0000000000000G002 /* PSBookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000G001 /* PSBookmarkObject.swift */; };
@@ -98,21 +80,39 @@
 		5A1F70B0000000000000VA02 /* PSVoiceRefParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VA01 /* PSVoiceRefParser.swift */; };
 		5A1F70B0000000000000VB02 /* PSVoiceRefSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */; };
 		5A1F70B0000000000000VD02 /* PSVoiceRefParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */; };
+		5A1F70B0000000000000WAVE9T2 /* PSChapterDocumentParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B0000000000000WAVE9T1 /* PSChapterDocumentParityTests.swift */; };
 		5A1F70B000000000000SPT02 /* PSSearchIndexParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */; };
 		5A1F70B00000000000CTR102 /* PSContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR101 /* PSContentStore.swift */; };
 		5A1F70B00000000000CTR202 /* PSBookOSISResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */; };
 		5A1F70B00000000000CTR302 /* PSChapterExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR301 /* PSChapterExpander.swift */; };
 		5A1F70B00000000000CTR402 /* PSChapterAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */; };
+		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
+		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
 		5A1F70B00000000000WAVE902 /* PSChapterDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */; };
 		5A1F70B00000000000WAVE912 /* SwiftUINativeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */; };
 		5A1F70B00000000000WAVE922 /* PSEntryDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000WAVE921 /* PSEntryDocument.swift */; };
-		5A1F70B00000000000CTR502 /* PSContentReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000CTR501 /* PSContentReader.swift */; };
-		5A1F70B00000000000VTE02 /* PSVerseTextEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */; };
 		5A1F70B00000000000ZK002 /* PSModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZK001 /* PSModuleController.swift */; };
 		5A1F70B00000000000ZS002 /* PocketSwordAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */; };
 		A100000000000000000001F3 /* PSSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F3 /* PSSearchEngine.swift */; };
 		A100000000000000000001F9 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000000000000000000F9 /* libsqlite3.tbd */; };
 		A9C105E31C4D6E9C006C755A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C105E21C4D6E9C006C755A /* Security.framework */; };
+		B20000000000000000000002 /* PocketSwordUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* PocketSwordUITests.swift */; };
+		B21000000000000000000011 /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000001 /* AppModels.swift */; };
+		B21000000000000000000012 /* URLRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000002 /* URLRouter.swift */; };
+		B21000000000000000000013 /* URLRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21000000000000000000003 /* URLRouterTests.swift */; };
+		B22000000000000000000011 /* AppStateStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000001 /* AppStateStores.swift */; };
+		B22000000000000000000013 /* AppStateStoresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000003 /* AppStateStoresTests.swift */; };
+		B23000000000000000000011 /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* LaunchCoordinator.swift */; };
+		B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24000000000000000000001 /* SwiftUISupportingViews.swift */; };
+		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
+		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
+		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
+		B27000000000000000000012 /* SwiftUIReaderChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27000000000000000000002 /* SwiftUIReaderChrome.swift */; };
+		B280000000000000000000011 /* PocketSwordApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000001 /* PocketSwordApp.swift */; };
+		B280000000000000000000021 /* ReadingWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000002 /* ReadingWorkspace.swift */; };
+		B280000000000000000000031 /* SwiftUIStudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000003 /* SwiftUIStudyViews.swift */; };
+		B280000000000000000000041 /* PSInfoPopupContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000004 /* PSInfoPopupContent.swift */; };
+		B280000000000000000000051 /* VoiceReferenceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000005 /* VoiceReferenceModel.swift */; };
 		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
 		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
 		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
@@ -121,14 +121,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B20000000000000000000040 /* PBXContainerItemProxy */ = {
+		5A1F70B0000000000000F040 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
 			remoteInfo = PocketSword;
 		};
-		5A1F70B0000000000000F040 /* PBXContainerItemProxy */ = {
+		B20000000000000000000040 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
@@ -138,24 +138,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B20000000000000000000001 /* PocketSwordUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordUITests.swift; path = Tests/PocketSwordUITests.swift; sourceTree = "<group>"; };
-		B20000000000000000000003 /* PocketSwordUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B21000000000000000000001 /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
-		B21000000000000000000002 /* URLRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRouter.swift; sourceTree = "<group>"; };
-		B21000000000000000000003 /* URLRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = URLRouterTests.swift; path = Classes/URLRouterTests.swift; sourceTree = "<group>"; };
-		B22000000000000000000001 /* AppStateStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStores.swift; sourceTree = "<group>"; };
-		B22000000000000000000003 /* AppStateStoresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppStateStoresTests.swift; path = Classes/AppStateStoresTests.swift; sourceTree = "<group>"; };
-		B23000000000000000000001 /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
-		B24000000000000000000001 /* SwiftUISupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISupportingViews.swift; sourceTree = "<group>"; };
-		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
-		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
-		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
-		B27000000000000000000002 /* SwiftUIReaderChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderChrome.swift; sourceTree = "<group>"; };
-		B28000000000000000000001 /* PocketSwordApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketSwordApp.swift; sourceTree = "<group>"; };
-		B28000000000000000000002 /* ReadingWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingWorkspace.swift; sourceTree = "<group>"; };
-		B28000000000000000000003 /* SwiftUIStudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIStudyViews.swift; sourceTree = "<group>"; };
-		B28000000000000000000004 /* PSInfoPopupContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSInfoPopupContent.swift; sourceTree = "<group>"; };
-		B28000000000000000000005 /* VoiceReferenceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceReferenceModel.swift; sourceTree = "<group>"; };
 		050CB77C19D16A1200415A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketSword/Images.xcassets; sourceTree = "<group>"; };
 		050CB77E19D1789A00415A27 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-736h@3x.png"; path = "Resources/Default-736h@3x.png"; sourceTree = "<group>"; };
 		050CB77F19D1789A00415A27 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-667h@2x.png"; path = "Resources/Default-667h@2x.png"; sourceTree = "<group>"; };
@@ -227,7 +209,6 @@
 		5A1F70B0000000000000CA01 /* PSContent.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = PSContent.sqlite; path = Resources/PSContent.sqlite; sourceTree = "<group>"; };
 		5A1F70B0000000000000CB01 /* Versification-KJV.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "Versification-KJV.json"; path = "Resources/Versification-KJV.json"; sourceTree = "<group>"; };
 		5A1F70B0000000000000CS01 /* PSContentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSContentStoreTests.swift; path = Classes/PSContentStoreTests.swift; sourceTree = "<group>"; };
-		5A1F70B0000000000000WAVE9T1 /* PSChapterDocumentParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSChapterDocumentParityTests.swift; path = Classes/PSChapterDocumentParityTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F001 /* PersistedFormatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistedFormatTests.swift; path = Classes/PersistedFormatTests.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000F003 /* PocketSwordTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PocketSwordTests-Bridging-Header.h"; path = "misc/PocketSwordTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		5A1F70B0000000000000F010 /* PocketSwordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,16 +227,17 @@
 		5A1F70B0000000000000VA01 /* PSVoiceRefParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParser.swift; path = Classes/PSVoiceRefParser.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000VB01 /* PSVoiceRefSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSVoiceRefSession.swift; path = Classes/PSVoiceRefSession.swift; sourceTree = "<group>"; };
 		5A1F70B0000000000000VD01 /* PSVoiceRefParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSVoiceRefParserTests.swift; path = Classes/PSVoiceRefParserTests.swift; sourceTree = "<group>"; };
+		5A1F70B0000000000000WAVE9T1 /* PSChapterDocumentParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSChapterDocumentParityTests.swift; path = Classes/PSChapterDocumentParityTests.swift; sourceTree = "<group>"; };
 		5A1F70B000000000000SPT01 /* PSSearchIndexParityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PSSearchIndexParityTests.swift; path = Classes/PSSearchIndexParityTests.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR101 /* PSContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentStore.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR201 /* PSBookOSISResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSBookOSISResolver.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR301 /* PSChapterExpander.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterExpander.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000CTR401 /* PSChapterAssembler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterAssembler.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
+		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000WAVE901 /* PSChapterDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSChapterDocument.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000WAVE911 /* SwiftUINativeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUINativeReader.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000WAVE921 /* PSEntryDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSEntryDocument.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000CTR501 /* PSContentReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSContentReader.swift; sourceTree = "<group>"; };
-		5A1F70B00000000000VTE01 /* PSVerseTextEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSVerseTextEntry.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZK001 /* PSModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PSModuleController.swift; path = Classes/PSModuleController.swift; sourceTree = "<group>"; };
 		5A1F70B00000000000ZS001 /* PocketSwordAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordAppDelegate.swift; path = Classes/PocketSwordAppDelegate.swift; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = misc/Info.plist; sourceTree = "<group>"; };
@@ -263,6 +245,24 @@
 		A100000000000000000000F9 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A98A6E6C1C64A6860083ECB8 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		A9C105E21C4D6E9C006C755A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		B20000000000000000000001 /* PocketSwordUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PocketSwordUITests.swift; path = Tests/PocketSwordUITests.swift; sourceTree = "<group>"; };
+		B20000000000000000000003 /* PocketSwordUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketSwordUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B21000000000000000000001 /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
+		B21000000000000000000002 /* URLRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRouter.swift; sourceTree = "<group>"; };
+		B21000000000000000000003 /* URLRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = URLRouterTests.swift; path = Classes/URLRouterTests.swift; sourceTree = "<group>"; };
+		B22000000000000000000001 /* AppStateStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateStores.swift; sourceTree = "<group>"; };
+		B22000000000000000000003 /* AppStateStoresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppStateStoresTests.swift; path = Classes/AppStateStoresTests.swift; sourceTree = "<group>"; };
+		B23000000000000000000001 /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
+		B24000000000000000000001 /* SwiftUISupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISupportingViews.swift; sourceTree = "<group>"; };
+		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
+		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
+		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
+		B27000000000000000000002 /* SwiftUIReaderChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIReaderChrome.swift; sourceTree = "<group>"; };
+		B28000000000000000000001 /* PocketSwordApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketSwordApp.swift; sourceTree = "<group>"; };
+		B28000000000000000000002 /* ReadingWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingWorkspace.swift; sourceTree = "<group>"; };
+		B28000000000000000000003 /* SwiftUIStudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIStudyViews.swift; sourceTree = "<group>"; };
+		B28000000000000000000004 /* PSInfoPopupContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSInfoPopupContent.swift; sourceTree = "<group>"; };
+		B28000000000000000000005 /* VoiceReferenceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceReferenceModel.swift; sourceTree = "<group>"; };
 		D2BFDF4425E47C8C00E04366 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D2BFE5F825E9C43D00E04366 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -276,13 +276,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		B20000000000000000000031 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -305,6 +298,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5A1F70B0000000000000F031 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B20000000000000000000031 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -742,7 +742,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2640;
+				LastUpgradeCheck = 2700;
 				ORGANIZATIONNAME = "CrossWire Bible Society";
 				TargetAttributes = {
 					5A1F70B0000000000000F020 = {
@@ -994,7 +994,6 @@
 		5A1F70B0000000000000F051 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1017,7 +1016,6 @@
 		5A1F70B0000000000000F052 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1040,7 +1038,6 @@
 		5A1F70B0000000000000F053 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1060,10 +1057,63 @@
 			};
 			name = Distribution;
 		};
+		B20000000000000000000051 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PocketSword;
+			};
+			name = Debug;
+		};
+		B20000000000000000000052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PocketSword;
+			};
+			name = Release;
+		};
+		B20000000000000000000053 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PocketSword;
+			};
+			name = Distribution;
+		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -1105,6 +1155,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1117,7 +1168,6 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -1156,6 +1206,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1169,7 +1220,6 @@
 		E982FA650ED9D6100028DFEC /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -1210,6 +1260,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				PRODUCT_NAME = PocketSword;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "misc/PocketSword-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1238,57 +1289,6 @@
 					"$(SRCROOT)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.Crosswire.PocketSword;
-			};
-			name = Distribution;
-		};
-		B20000000000000000000051 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PocketSword;
-			};
-			name = Debug;
-		};
-		B20000000000000000000052 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PocketSword;
-			};
-			name = Release;
-		};
-		B20000000000000000000053 /* Distribution */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.timsams.PocketSwordUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PocketSword;
 			};
 			name = Distribution;
 		};

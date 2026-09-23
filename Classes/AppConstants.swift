@@ -73,7 +73,6 @@ enum Defaults {
     /// The four retired lexicon-role keys, for the one-shot migration.
     static let retiredLexiconKeys = [strongsHebrewModule, strongsGreekModule,
                                      morphHebrewModule, morphGreekModule]
-    static let fullscreenModePreference    = "fullscreenModePreference"      // macro DefaultsFullscreenModePreference
     static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
 
     // Feature flags (see PSFeatureFlags) - absent means off

@@ -229,7 +229,6 @@ extension Color {
 /// position and the tap routing come from `ReaderPaneModel`.
 struct ChapterTextView: View {
     let pane: ReaderPaneModel
-    let onTap: @MainActor () -> Void
 
     var body: some View {
         @Bindable var pane = pane
@@ -294,21 +293,16 @@ struct ChapterTextView: View {
             } action: { _, sample in
                 pane.scrollOffsetChanged(sample)
             }
-            .onScrollPhaseChange { oldPhase, newPhase in
+            .onScrollPhaseChange { _, newPhase in
                 // A finger on the reader abandons any restore still in flight, which
                 // is what lets the restore gate be a gate rather than a timeout.
                 if newPhase == .tracking || newPhase == .interacting {
                     pane.userBeganScrolling()
                 }
-                if oldPhase != .animating, oldPhase.isScrolling, newPhase == .idle {
-                    pane.userScrollEnded()
-                }
             }
         }
         // The identifier the XCUITests match on.
         .accessibilityIdentifier("reading.chapter-content")
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onTap)
     }
 
     /// Horizontal gutter: text pinned to the physical edge is unreadable in a

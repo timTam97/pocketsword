@@ -204,13 +204,7 @@ struct WorkspaceTabs: View {
                 SettingsWorkspace(session: session)
             }
         }
-        // Quiet the tab bar while reading, matching the navigation bar's
-        // `toolbarMinimizationBehavior(.onScrollDown)`.
-        .tabBarMinimizeBehavior(.onScrollDown)
-        // NOTE: Focus mode's tab-bar hiding is NOT here. `toolbarVisibility(_:for:
-        // .tabBar)` has to be applied to the content *inside* a tab — on the
-        // `TabView` it silently does nothing. It lives on `ReaderScreen`'s
-        // `NavigationStack`.
+        .tabBarMinimizeBehavior(.never)
     }
 }
 

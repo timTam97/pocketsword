@@ -131,12 +131,6 @@ final class SettingsModel {
             store.saveRotationLock(rotationLock)
         }
     }
-    var automaticFullscreen: Bool {
-        didSet {
-            guard !isReloading, automaticFullscreen != oldValue else { return }
-            store.saveAutomaticFullscreen(automaticFullscreen)
-        }
-    }
     var fontSizeValue: Double {
         get { Double(fontSize) }
         set { fontSize = Int(newValue) }
@@ -161,7 +155,6 @@ final class SettingsModel {
         self.fontSize = snapshot.fontSize
         self.keepScreenAwake = snapshot.keepScreenAwake
         self.rotationLock = snapshot.rotationLock
-        self.automaticFullscreen = snapshot.automaticFullscreen
     }
 
     func ensureFontSizeDefault() {
@@ -175,7 +168,6 @@ final class SettingsModel {
         fontSize = snapshot.fontSize
         keepScreenAwake = snapshot.keepScreenAwake
         rotationLock = snapshot.rotationLock
-        automaticFullscreen = snapshot.automaticFullscreen
         isReloading = false
     }
 }

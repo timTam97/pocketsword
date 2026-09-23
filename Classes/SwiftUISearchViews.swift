@@ -37,6 +37,7 @@ struct SearchView: View {
             // space at rest). `DictionaryView` pins its title inline for the same
             // reason.
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarMinimizationBehavior(.never, for: .navigationBar)
             .searchable(
                 text: $search.query,
                 placement: .navigationBarDrawer(displayMode: .always),

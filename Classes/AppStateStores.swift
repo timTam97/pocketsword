@@ -16,7 +16,6 @@ struct SettingsSnapshot: Equatable {
     let fontSize: Int
     let keepScreenAwake: Bool
     let rotationLock: RotationLock
-    let automaticFullscreen: Bool
 }
 
 final class SettingsStore {
@@ -37,10 +36,7 @@ final class SettingsStore {
             keepScreenAwake: defaults.bool(forKey: Defaults.insomniaPreference),
             rotationLock: RotationLock(
                 rawValue: defaults.integer(forKey: Defaults.rotationLockPosition)
-            ) ?? .unlocked,
-            automaticFullscreen: defaults.bool(
-                forKey: Defaults.fullscreenModePreference
-            )
+            ) ?? .unlocked
         )
     }
 
@@ -74,11 +70,6 @@ final class SettingsStore {
             NSNumber(value: Int32(value.rawValue)),
             forKey: Defaults.rotationLockPosition
         )
-        defaults.synchronize()
-    }
-
-    func saveAutomaticFullscreen(_ value: Bool) {
-        defaults.set(value, forKey: Defaults.fullscreenModePreference)
         defaults.synchronize()
     }
 }

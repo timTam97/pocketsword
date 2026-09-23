@@ -9,13 +9,9 @@
 //    `visibilityPriority(.high)`, so a constrained width sheds the study actions
 //    before it sheds the ability to move between chapters. This is the one
 //    control the reader cannot do without.
-//  - Focus mode is entered and exited by tapping the reading surface, so the
-//    toolbar stays dedicated to navigation and study actions.
-//  - Secondary study actions (the per-module display toggles, History & Search,
-//    and voice reference) go in a `ToolbarOverflowMenu`.
-//  - `toolbarMinimizationBehavior(.onScrollDown, for: .navigationBar)` quiets the
-//    chrome during reading. Note the spelling: `toolbarMinimizeBehavior` is the
-//    *tab bar* API.
+//  - Secondary study actions (the per-module display toggles and voice reference)
+//    go in a `ToolbarOverflowMenu`.
+//  - Navigation and workspace controls stay visible while reading.
 //
 //  The display toggles are PER-MODULE and gated on the BAKED feature set — see
 //  `ReaderDisplayToggle.toggles(forModule:store:)`, a pure function so the
@@ -171,7 +167,6 @@ final class ReaderChromeModel {
 
     @ObservationIgnored var onPreviousChapter: (@MainActor () -> Void)?
     @ObservationIgnored var onNextChapter: (@MainActor () -> Void)?
-    @ObservationIgnored var onHistoryAndSearch: (@MainActor () -> Void)?
     @ObservationIgnored var onVoiceReference: (@MainActor () -> Void)?
     /// Applies a display-toggle flip: write the per-module pref, then redisplay.
     @ObservationIgnored var onDisplayToggle: (@MainActor (ReaderDisplayToggle) -> Void)?
@@ -204,7 +199,7 @@ final class ReaderChromeModel {
 
 /// The Read workspace: the active pane, its chrome, the Bible/commentary
 /// switch, and the study surfaces the reader raises (study popup, verse menu,
-/// bookmark editor, voice sheet, Focus-mode chapter toast).
+/// bookmark editor, voice sheet).
 struct ReaderScreen: View {
     let reading: ReadingWorkspaceModel
 
@@ -237,16 +232,6 @@ struct ReaderScreen: View {
                     }
                 }
                 .toolbarOverflowMenu {
-                    Button {
-                        chrome.onHistoryAndSearch?()
-                    } label: {
-                        Label(
-                            "VoiceOverHistoryAndSearchButton",
-                            systemImage: "magnifyingglass"
-                        )
-                    }
-                    .accessibilityIdentifier("reading.history-search")
-
                     if chrome.isBibleTab && chrome.isVoiceAvailable {
                         Button {
                             chrome.onVoiceReference?()
@@ -270,28 +255,13 @@ struct ReaderScreen: View {
                         }
                     }
                 }
-                // Quiet the chrome while reading; it comes back on a scroll up.
-                .toolbarMinimizationBehavior(
-                    .onScrollDown,
-                    for: .navigationBar
-                )
+                .toolbarMinimizationBehavior(.never, for: .navigationBar)
                 // The chapter already scrolls beneath the bar. Hiding the bar's
                 // background lets iOS render these toolbar controls as native
                 // floating Liquid Glass instead of placing an opaque strip behind
-                // them, in both normal and Focus mode.
+                // them.
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
-                .statusBarHidden(reading.isFocused)
-                // Focus mode hides the TAB bar. This must be applied HERE, to content
-                // inside the tab — on the `TabView` itself it silently does nothing.
-                .toolbarVisibility(
-                    reading.isFocused ? .hidden : .automatic,
-                    for: .tabBar
-                )
-                .animation(
-                    .smooth(duration: 0.28),
-                    value: reading.isFocused
-                )
                 .sheet(item: $reading.studyPopup) { popup in
                     StudyPopupSheet(
                         content: popup.content,
@@ -335,28 +305,12 @@ struct ReaderScreen: View {
     /// level would inset nothing and reintroduce the tab-bar overlap.
     private var readerPanes: some View {
         ZStack {
-            ChapterTextView(
-                pane: reading.bible,
-                onTap: reading.toggleFocusMode
-            )
+            ChapterTextView(pane: reading.bible)
                 .opacity(reading.mode == .bible ? 1 : 0)
                 .accessibilityHidden(reading.mode != .bible)
-            ChapterTextView(
-                pane: reading.commentary,
-                onTap: reading.toggleFocusMode
-            )
+            ChapterTextView(pane: reading.commentary)
                 .opacity(reading.mode == .commentary ? 1 : 0)
                 .accessibilityHidden(reading.mode != .commentary)
-        }
-        // The tab bar owns the Focus-mode animation. Its changing safe area also
-        // republishes the reader's content margins; allowing the outer animation
-        // into this subtree makes every line interpolate diagonally before the
-        // scroll view settles back on its original anchor.
-        .transaction { transaction in
-            transaction.animation = nil
-        }
-        .overlay(alignment: .top) {
-            ChapterToast(text: reading.chapterToast)
         }
         .onGeometryChange(for: CGSize.self, of: \.size) { old, new in
             // Rotation, or an iPad split-view resize: re-anchor each pane and SUPPRESS
@@ -448,30 +402,6 @@ private struct ReadingModePicker: View {
         .accessibilityIdentifier("reading.mode")
     }
 }
-
-/// The Focus-mode chapter toast: shows the reference for 0.75 s when the
-/// chapter changes in Focus mode, where no reference is otherwise visible.
-private struct ChapterToast: View {
-    let text: String?
-
-    var body: some View {
-        ZStack {
-            if let text {
-                Text(text)
-                    .font(.headline)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 12)
-                    .background(.regularMaterial, in: .capsule)
-                    .transition(.opacity)
-                    .accessibilityIdentifier("reading.chapter-toast")
-            }
-        }
-        .animation(.easeInOut(duration: 0.2), value: text)
-        .padding(.top, 8)
-        .allowsHitTesting(false)
-    }
-}
-
 
 /// [‹ | Gen 23:23 | ›]: chapter back, the reference (opens the picker), chapter
 /// forward. Each button carries its own accessibility label.

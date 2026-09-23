@@ -159,7 +159,6 @@ typedef enum {
 #define DefaultsStrongsGreekModule                  @"DefaultsStrongsGreekModule"
 #define DefaultsMorphHebrewModule                   @"DefaultsMorphHebrewModule"
 #define DefaultsMorphGreekModule                    @"DefaultsMorphGreekModule"
-#define DefaultsFullscreenModePreference			@"fullscreenModePreference"
 #define DefaultsInsomniaPreference					@"insomniaPreference"
 
 // Feature flags (see PSFeatureFlags.swift) - absent means off
@@ -246,5 +245,4 @@ typedef NS_ENUM(NSInteger, RotationPosition) {
 	RotationLockedInPortrait,
 	RotationLockedInLandscape
 };
-
 

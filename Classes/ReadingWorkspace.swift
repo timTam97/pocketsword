@@ -6,7 +6,7 @@
 //
 //  `ReadingWorkspaceModel` is the coordinator. It owns the two `ReaderPaneModel`s
 //  (Bible and commentary), the chapter-load fan-out (`displayChapter`), study-popup
-//  routing, and the Focus-mode / verse-menu / bookmark-highlight state.
+//  routing, and the verse-menu / bookmark-highlight state.
 //  `ReadingModeSwitcher` in `PocketSwordApp.swift` renders whichever pane is active.
 //
 //  `ReaderPaneModel` is one reading surface: the chapter document, its
@@ -471,18 +471,6 @@ final class ReaderPaneModel {
         persistPosition(verse: clamped, scrollOffset: lastScrollOffset)
     }
 
-    /// Automatic Focus mode: a user scroll that comes to rest enters Focus mode if
-    /// the preference is on. Gated on the END of a scroll, not on each callback, so
-    /// a slow drag does not toggle repeatedly.
-    func userScrollEnded() {
-        guard UserDefaults.standard.bool(
-            forKey: Defaults.fullscreenModePreference
-        ) else {
-            return
-        }
-        workspace?.enterFocusMode()
-    }
-
     /// Called by the view when a link in the chapter text is tapped.
     func handle(link: InlineLink) {
         route(link)
@@ -752,13 +740,6 @@ final class ReadingWorkspaceModel {
         }
     }
 
-    /// Focus mode: the chapter alone, with the tab bar and status bar hidden.
-    /// Both panes follow the one flag, so switching panes stays in Focus mode.
-    var isFocused = false
-
-    /// A brief reference toast, shown on a chapter change while in Focus mode.
-    var chapterToast: String?
-
     /// The study popup (Strong's / morph / footnote / lexicon), presented as a
     /// sheet by the reader rather than posted through `NotificationShowInfoPane`.
     var studyPopup: StudyPopup?
@@ -878,9 +859,6 @@ final class ReadingWorkspaceModel {
         }
         chrome.onNextChapter = { [weak self] in
             self?.nextChapter()
-        }
-        chrome.onHistoryAndSearch = { [weak self] in
-            self?.session?.selectedWorkspace = .search
         }
         chrome.onVoiceReference = { [weak self] in
             self?.presentVoiceReference()
@@ -1115,27 +1093,12 @@ final class ReadingWorkspaceModel {
             return
         }
 
-        if isFocused {
-            showChapterToast(ref)
-        }
         displayChapter(
             ref,
             polling: mode == .bible ? .bible : .commentary,
             restore: .none
         )
         session?.library.recordHistory(mode: mode)
-    }
-
-    /// The 0.75 s reference toast. Each show cancels the previous one's dismissal
-    /// by identity, so paging quickly does not clear the toast early.
-    private func showChapterToast(_ ref: String?) {
-        let title = PSModuleController.createRefString(ref)
-        chapterToast = title
-        Task { [weak self] in
-            try? await Task.sleep(for: .milliseconds(750))
-            guard let self, self.chapterToast == title else { return }
-            self.chapterToast = nil
-        }
     }
 
     // MARK: Reference selection
@@ -1186,18 +1149,6 @@ final class ReadingWorkspaceModel {
         session?.open(url)
     }
 
-    // MARK: Focus mode
-
-    /// Focus mode toggles the chrome only; SwiftUI handles the safe-area change.
-    func toggleFocusMode() {
-        isFocused.toggle()
-    }
-
-    func enterFocusMode() {
-        guard !isFocused else { return }
-        toggleFocusMode()
-    }
-
     // MARK: Study surfaces
 
     func showStudyPopup(_ content: PSInfoPopupContent) {
@@ -1218,8 +1169,8 @@ final class ReadingWorkspaceModel {
         )
     }
 
-    /// The verse menu's "show in commentary" action: carry the verse across,
-    /// switch panes, and keep Focus mode if it was on.
+    /// The verse menu's "show in commentary" action: carry the verse across and
+    /// switch panes.
     ///
     /// **The verse is carried in `pendingRestore`, not only in `verseToShow`.** The
     /// commentary pane's `refToShow` is always set here (every Bible-polled
