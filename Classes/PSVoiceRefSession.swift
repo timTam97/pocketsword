@@ -543,20 +543,13 @@ final class PSVoiceRefSession {
 
     /// Aborts the dictation when the **system** takes the audio session away.
     ///
-    /// This replaces `AVAudioSession.interruptionNotification` +
-    /// `InterruptionType.began`, both deprecated in iOS 27.
-    ///
-    /// The `source` check is not defensive padding — it is what makes the port
-    /// faithful. The old notification fired *only* for an interruption, never for
-    /// the app's own `setActive(false)`. `didBecomeInactiveNotification` fires for
-    /// both, distinguished by `DeactivationSource` (`.app` = we asked, `.system` =
-    /// something took it). Reacting to every deactivation would make
-    /// `deactivateAudioSession()` report `.audioInterrupted` on its own teardown,
-    /// turning an ordinary finish into a spurious failure shown to the user.
-    ///
-    /// Ordering already guards this too — `deactivateAudioSession()` removes the
-    /// observer before it deactivates — but the guard belongs here rather than in
-    /// the caller's statement order, which a later edit could silently reverse.
+    /// `didBecomeInactiveNotification` fires both for our own `setActive(false)`
+    /// (`DeactivationSource.app`) and for an interruption (`.system`). Reacting to
+    /// every deactivation would make `deactivateAudioSession()` report
+    /// `.audioInterrupted` on its own teardown, turning an ordinary finish into a
+    /// spurious failure. `deactivateAudioSession()` also removes the observer before
+    /// deactivating, but the guard belongs here rather than in statement order a
+    /// later edit could reverse.
     @objc private func audioSessionDidBecomeInactive(_ notification: Notification) {
         guard let context = notification.userInfo?[AVAudioSession.deactivationContextKey]
                 as? AVAudioSession.DeactivationContext,

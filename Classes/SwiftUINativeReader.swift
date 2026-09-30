@@ -2,67 +2,34 @@
 //  SwiftUINativeReader.swift
 //  PocketSword
 //
-//  Wave 9: the native reading surface. This is what replaces the WebView.
+//  The native reading surface. `ChapterTextView` renders a `ChapterDocument`
+//  (see `PSChapterDocument.swift`) into a `ScrollView` + `LazyVStack` of `Text`
+//  views built from `AttributedString`.
 //
-//  `ChapterTextView` renders a `ChapterDocument` (see `PSChapterDocument.swift`)
-//  into a `ScrollView` + `LazyVStack` of `Text` views built from
-//  `AttributedString`. No WebKit, no HTML, no JavaScript, and no measured pixel
-//  offsets.
+//  ── Edge-to-edge ──────────────────────────────────────────────────────────
 //
-//  ── Edge-to-edge, which is Wave 9's acceptance criterion ───────────────────
-//
-//  The chapter must SCROLL UNDER the chrome, not stop at it. Both halves of that
-//  tradeoff have already been got wrong once each, so neither is acceptable:
-//
-//   * Wave 6 let the WebView extend under the floating tab bar with no content
-//     inset, and lines painted permanently behind it.
-//   * Wave 7 kept the WebView inside the safe area, which fixed the overlap and
-//     produced letterboxing — black bands top and bottom.
-//
-//  The answer is both at once, and in a native scroll view it is two modifiers
-//  rather than a change to the render path:
+//  The chapter must SCROLL UNDER the chrome, not stop at it, without any line
+//  being hidden at rest:
 //
 //      .contentMargins(.vertical, insets, for: .scrollContent)   // content inset
 //      .ignoresSafeArea(edges: .vertical)                        // full-height view
 //
-//  The scroll VIEW is full-height, so text flows to the physical edges and passes
-//  beneath the translucent bars; the scroll CONTENT carries the safe-area insets, so
-//  no line is ever obscured at rest. This is the one-call fix the Wave 7 comment
-//  promised, and it is why the insets were never worth moving into the HTML for a
-//  view this wave deletes.
-//
-//  ── Why the six `<p>&nbsp;</p>` pads are gone ─────────────────────────────
-//
-//  `PSContentReader.chapterPage` appended six hardcoded non-breaking-space
-//  paragraphs — a faithful port of `-getChapter:`'s own six — to buy scroll room
-//  past the bottom chrome. `contentMargins` is that, expressed once and correctly:
-//  it scales with the actual bar height instead of six line heights of a font size
-//  the pads did not know.
+//  The scroll VIEW is full-height, so text flows beneath the translucent bars;
+//  the scroll CONTENT carries the safe-area insets. Dropping either one either
+//  hides text behind the floating tab bar or letterboxes the reader.
+//  `contentMargins` also provides the scroll room past the bottom chrome.
 //
 //  ── Prose vs verse-per-line ───────────────────────────────────────────────
 //
-//  With the per-module verse-per-line pref OFF (the default, and how the app has
-//  always read) verses flow together as continuous prose with superscript numbers
-//  inline, breaking at the KJV's own pilcrows. With it ON, each verse is its own
-//  row. Both are preserved — see `ChapterParagraph`'s doc comment for why that
-//  mattered enough to shape the document type.
+//  With the per-module verse-per-line pref OFF (the default) verses flow
+//  together as prose with superscript numbers inline, breaking at the KJV's
+//  pilcrows. With it ON, each verse is its own row. See `ChapterParagraph`.
 //
 //  ── Scroll position: identity, not pixels ─────────────────────────────────
 //
-//  The WebView reported a `versepos` table of measured `offsetTop` values through an
-//  `arraydump:` URL, and scroll-to-verse looked up a pixel offset in it. That whole
-//  mechanism is gone: `ScrollPosition(id:)` addresses a verse by identity, and
-//  `onScrollGeometryChange` reports where the reader is. Two consequences worth
-//  stating, because they delete code rather than move it:
-//
-//   * **Rotation needs no re-measure.** Wave 6's `resetArrays()` +
-//     `scrollToVerse()` dance existed because offsets are width-dependent. Identity
-//     is not, so the scroll view keeps its anchor across a size change for free.
-//   * **There is no poll.** `startDetLocPoll` / `stopDetLocPoll` bracketed a
-//     `setInterval` that was **already commented out** in the shipped JS, so the
-//     `pocketsword:currentverse:` bridge never actually fired; verse tracking ran
-//     entirely off `arraydump` offsets plus scroll callbacks. The native reader
-//     tracks the visible verse directly.
+//  `ScrollPosition(id:)` addresses a verse by identity and
+//  `onScrollGeometryChange` reports where the reader is. Rotation needs no
+//  re-measure, and there is no polling; the visible verse is tracked directly.
 //
 
 import SwiftUI
@@ -75,18 +42,16 @@ import SwiftUI
 /// presentation is one place, and so it can be exercised without a view host.
 enum ChapterTextRenderer {
 
-    /// Styling inputs the reader supplies. These are the same preferences the HTML
-    /// shell read out of `UserDefaults` — one global font and size — resolved once
-    /// per render rather than baked into a `<style>` block.
+    /// Styling inputs the reader supplies: one global font and size, resolved once
+    /// per render.
     struct Style {
         var fontName: String
         var fontSize: CGFloat
         /// `createHTMLString`'s `line-height`: 1.4 on iPhone, 1.6 on iPad.
         var lineSpacingMultiple: CGFloat
 
-        /// The terms to highlight, case-insensitively — what `SearchWebView.js`
-        /// walked the DOM to do. Empty for a Strong's search, where the match is a
-        /// lemma the marker points at rather than text present in the verse.
+        /// The terms to highlight, case-insensitively. Empty for a Strong's search,
+        /// where the match is a lemma rather than text present in the verse.
         var highlightTerms: [String] = []
 
         /// Resolve from the same defaults keys the HTML shell used, so a font
@@ -100,14 +65,9 @@ enum ChapterTextRenderer {
             return Style(
                 fontName: name,
                 // The absent-key fallback is ONE constant, shared with
-                // `SettingsStore.snapshot()` / `ensureFontSizeDefault()` — the value
-                // the Settings slider reads and writes. It used to be a literal 14
-                // here (the deleted HTML shell's own fallback) against the store's
-                // 12: normally invisible, because `AppSession.start()` materializes
-                // the default before the first render, but
-                // `LaunchCoordinator.resetPreferences()` REMOVES the key and nothing
-                // re-runs `ensureFontSizeDefault()`, so after a Settings-bundle
-                // reset the chapter rendered at 14pt while the slider read 12.
+                // `SettingsStore.snapshot()` / `ensureFontSizeDefault()` (the Settings
+                // slider's value). `LaunchCoordinator.resetPreferences()` removes the key
+                // and nothing re-materializes it, so separate fallbacks would disagree.
                 fontSize: CGFloat(size == 0 ? AppConstants.defaultFontSize : size),
                 lineSpacingMultiple: UIDevice.current.userInterfaceIdiom == .phone
                     ? 1.4
@@ -116,24 +76,18 @@ enum ChapterTextRenderer {
         }
     }
 
-    /// The verse number, as the superscript label the `a.verse` CSS produced
-    /// (70% size, superscript, body colour).
+    /// The verse number as a superscript label (70% size, body colour).
     ///
-    /// `tappable` carries the verse-menu link. It is false on a commentary, matching
-    /// the deliberate quirk the assembler preserved: a commentary's verse anchor was
-    /// `href="#verse%ld"`, not `pocketsword:versemenu:`, so tapping a commentary
-    /// verse has never done anything (SwordModule.mm:1116).
+    /// `tappable` carries the verse-menu link. It is false on a commentary:
+    /// tapping a commentary verse number has never done anything.
     static func verseLabel(_ number: Int, style: Style,
                            tappable: Bool = false) -> AttributedString {
         // A trailing hair space so the number never touches the first word.
         var label = AttributedString("\(number)\u{200A}")
-        // 0.75 rather than the CSS's 0.7, and SEMIBOLD. In the WebView a verse
-        // number was distinguishable from a Strong's marker by colour alone — both
-        // were 70% superscripts, the number in body colour and the marker in grey.
-        // Measured on device, that is not enough at 12pt in flowing prose: the
-        // numbers disappeared into the markers and the chapter read as one run of
-        // superscripts. Weight separates them structurally rather than by hue, which
-        // also survives a user who cannot distinguish the two greys.
+        // 0.75 and SEMIBOLD (not 0.7 regular): at 12pt in flowing prose, colour
+        // alone does not distinguish a verse number from a grey Strong's marker, and
+        // the chapter reads as one run of superscripts. Weight separates them
+        // structurally, which also works for users who cannot tell the greys apart.
         label.font = .custom(style.fontName, size: style.fontSize * 0.75)
             .weight(.semibold)
         label.baselineOffset = style.fontSize * 0.32
@@ -146,25 +100,17 @@ enum ChapterTextRenderer {
 
     /// One verse's text: its runs, its bookmark highlight, and any search jacket.
     ///
-    /// **The order is load-bearing. The bookmark colour goes on FIRST and the search
-    /// jacket over the top of it**, because that is what the WebView did:
-    /// `PSChapterAssembler.highlight(verse:cssClass:)` wrapped the verse in
-    /// `<span class="highlightedVerse" style="background-color:rgba(…);color:black">`
-    /// server-side, and `SearchWebView.js`'s `PS_HighlightAllOccurencesOfString` then
-    /// inserted its own `background-color: yellow; color: black` span *inside* that
-    /// subtree at runtime — so yellow painted over the bookmark colour on the
-    /// matching words only. Painting the bookmark colour over the finished string,
-    /// which is what `ParagraphRow.flowed` and `VerseRow.labelled` used to do,
-    /// repaints the whole verse and erases every match. It lives here rather than in
-    /// the two row views so there is one copy and one order.
+    /// **The order is load-bearing: bookmark colour FIRST, search jacket over the
+    /// top**, so yellow paints over the bookmark colour on the matching words only.
+    /// Painting the bookmark colour over the finished string would repaint the whole
+    /// verse and erase every match. It lives here rather than in the two row views
+    /// so there is one copy and one order.
     static func text(for verse: ChapterVerse, style: Style) -> AttributedString {
         var out = attributed(runs: verse.runs, style: style)
         if let colour = verse.highlightColour,
            let background = Color(bookmarkRGBAString: colour) {
-            // The HTML wrapped a highlighted verse in a span per block element
-            // (64 spans for Ps 23's three verses, faithfully); an `AttributedString`
-            // background runs the length of the range, which is the same visible
-            // result without the span gymnastics.
+            // One background over the whole range — the same visible result as the
+            // HTML's span per block element.
             out.backgroundColor = background
             out.foregroundColor = .black
         }
@@ -174,17 +120,7 @@ enum ChapterTextRenderer {
         return out
     }
 
-    /// Jacket every case-insensitive occurrence of `term` in yellow.
-    ///
-    /// This is `PS_HighlightAllOccurencesOfString`'s effect. That function
-    /// recursively split text nodes and inserted a
-    /// `<span class="PocketSwordHighlight">` with `background-color: yellow;
-    /// color: black`, skipping `display:none` elements and `<select>`. An
-    /// `AttributedString` range carries the same two properties with none of the DOM
-    /// followed by `PS_RemoveAllHighlights`'s unwrap-and-normalise to undo it.
-    ///
-    /// Matching is case-insensitive and diacritic-jacket-free, exactly as the JS was
-    /// (`value.toLowerCase().indexOf(keyword)` against an already-lowercased term).
+    /// Jacket every case-insensitive occurrence of `term` in yellow (black text).
     private static func applyHighlight(_ term: String, to text: inout AttributedString) {
         let jacket = AttributeContainer()
             .backgroundColor(.yellow)
@@ -216,10 +152,8 @@ enum ChapterTextRenderer {
             // Size and weight.
             var size = style.fontSize
             if run.style.contains(.smaller) {
-                // `a.strongs` / `a.morph` / `a.n` were all `font-size: 70%`, and
-                // `font size="-1"` became two points smaller. 70% is the dominant
-                // case by three orders of magnitude, so it is the default here and
-                // the two-point form is not separately modelled.
+                // Strong's / morph / note markers are 70% size. `font size="-1"` (two points
+                // smaller) is rare enough in chapters that it is not modelled separately.
                 size = style.fontSize * 0.7
             }
             var font = Font.custom(style.fontName, size: size)
@@ -229,9 +163,8 @@ enum ChapterTextRenderer {
             }
             piece.font = font
 
-            // Colour. Order matters: red-letter wins over the grey of a marker,
-            // because a Strong's number inside a WordOfChrist span rendered red in
-            // the HTML too (the span set `color` on its subtree).
+            // Colour. Order matters: red-letter wins over the grey of a marker, so a
+            // Strong's number inside a WordOfChrist span renders red.
             if run.style.contains(.transChangeAdded) {
                 piece.foregroundColor = .secondary          // i.transChangeAdded { color: gray }
             }
@@ -245,8 +178,8 @@ enum ChapterTextRenderer {
 
             // `AttributedString.link` is the ONLY way to make a span of `Text`
             // tappable in SwiftUI, so the typed link is carried as a `pslink://`
-            // URL and turned back into an `InlineLink` by the tap handler. The
-            // underline is suppressed to match `a { text-decoration: none }`.
+            // URL and turned back into an `InlineLink` by the tap handler. No
+            // underline.
             if let link = run.link, let url = link.url {
                 piece.link = url
                 piece.underlineStyle = nil
@@ -268,10 +201,8 @@ extension Color {
         }
     )
 
-    /// Parse the `rgba(r,g,b,a)` string the bookmark store produces.
-    ///
-    /// That format is `PSBookmarkFolder.rgbString(fromHexString:)`'s output and is
-    /// persisted-adjacent, so it is parsed rather than reimplemented.
+    /// Parse the `rgba(r,g,b,a)` string the bookmark store produces
+    /// (`PSBookmarkFolder.rgbString(fromHexString:)`).
     init?(bookmarkRGBAString string: String) {
         guard string.hasPrefix("rgba(") || string.hasPrefix("rgb(") else { return nil }
         let body = string
@@ -294,10 +225,8 @@ extension Color {
 
 // MARK: - The reading surface
 
-/// The native chapter view.
-///
-/// Owns only presentation: the document, the scroll position and the tap routing
-/// come from `ReaderPaneModel`, exactly as the WebView's did.
+/// The native chapter view. Owns only presentation: the document, the scroll
+/// position and the tap routing come from `ReaderPaneModel`.
 struct ChapterTextView: View {
     let pane: ReaderPaneModel
 
@@ -328,18 +257,12 @@ struct ChapterTextView: View {
                 .scrollTargetLayout()
             }
             .scrollPosition($pane.scrollPosition)
-            // ── Wave 9's acceptance criterion, in two lines. ──
+            // Edge-to-edge (see the file header): the scroll view fills the window
+            // (`ignoresSafeArea`) and the CONTENT carries the safe-area insets
+            // (`contentMargins`), so no line is obscured at rest.
             //
-            // The scroll view fills the window (`ignoresSafeArea`) so text reaches
-            // the physical edges and flows under the translucent navigation bar and
-            // floating tab bar; the CONTENT carries the safe-area insets
-            // (`contentMargins`) so no line is ever obscured at rest. Wave 6 had the
-            // first without the second (text hidden behind the tab bar); Wave 7 had
-            // the second without the first (letterboxed with black bands).
-            //
-            // `for: .scrollContent` is the placement that insets the content rather
-            // than the indicators — using the default would also pull the scroll
-            // indicator inward and leave it floating.
+            // `for: .scrollContent` insets the content rather than the indicators —
+            // the default would also pull the scroll indicator inward.
             .contentMargins(
                 .vertical,
                 EdgeInsets(top: proxy.safeAreaInsets.top,
@@ -350,20 +273,18 @@ struct ChapterTextView: View {
             )
             .ignoresSafeArea(edges: .vertical)
             .onScrollGeometryChange(for: ReaderScrollSample.self) { geometry in
-                // The offset is unchanged — `contentOffset.y + contentInsets.top` is
-                // the persisted value, and it is the space `ScrollPosition
-                // .scrollTo(y:)` consumes. MEASURED, because it reads like a bug and
-                // a code review flagged it as one: with a 200pt content margin in a
-                // context whose safe area is 0, `scrollTo(y: 300)` lands at
-                // `contentOffset.y == 100`, and the reachable maximum in this space is
-                // `contentSize.height - containerSize.height` exactly. Changing this
-                // to a plain `contentOffset.y` would introduce a safe-area-sized
-                // upward drift on every launch. The two heights ride along because the model
-                // cannot otherwise tell an unlaid-out scroll view's zero from a real
-                // position, nor a landed restore from one the chapter is too short to
-                // honour. Observing the heights as well means the action also fires
-                // as the content settles, which is what DRAINS a pending restore
-                // deterministically instead of on a timer.
+                // The offset is `contentOffset.y + contentInsets.top` on purpose: that is
+                // the persisted value and the space `ScrollPosition.scrollTo(y:)`
+                // consumes. MEASURED (it reads like a bug): with a 200pt content margin
+                // and a zero safe area, `scrollTo(y: 300)` lands at `contentOffset.y ==
+                // 100`, and the reachable maximum is `contentSize.height -
+                // containerSize.height` exactly. A plain `contentOffset.y` would drift
+                // upward by the inset on every launch.
+                //
+                // The two heights let the model tell an unlaid-out scroll view's zero from
+                // a real position, and a landed restore from one the chapter is too short
+                // to honour. Observing them also fires the action as content settles,
+                // which drains a pending restore deterministically instead of on a timer.
                 ReaderScrollSample(
                     offset: geometry.contentOffset.y + geometry.contentInsets.top,
                     contentHeight: geometry.contentSize.height,
@@ -383,15 +304,12 @@ struct ChapterTextView: View {
                 }
             }
         }
-        // The identifier the XCUITests match on. It was `reading.web-content` on the
-        // WebView container; kept as a distinct name so a test cannot accidentally
-        // pass against a surface that no longer exists.
+        // The identifier the XCUITests match on.
         .accessibilityIdentifier("reading.chapter-content")
     }
 
-    /// `createHTMLString` gave the iPad body a 10pt padding and the iPhone none;
-    /// text pinned to the physical edge is unreadable now that the view is
-    /// full-width, so the phone gets a modest gutter too.
+    /// Horizontal gutter: text pinned to the physical edge is unreadable in a
+    /// full-width view.
     private var horizontalPadding: CGFloat {
         UIDevice.current.userInterfaceIdiom == .phone ? 16 : 20
     }
@@ -400,15 +318,9 @@ struct ChapterTextView: View {
 private extension View {
     /// Reports a single-row verse while it is the topmost visible one.
     ///
-    /// This is the replacement for the JS `currentVerse()` scan, and it is the piece
-    /// that has to live in the VIEW rather than the model: only the view knows where
-    /// a row actually sits, because the whole point of Wave 9 is that the model no
-    /// longer holds measured offsets.
-    ///
-    /// Found on device: without this, `scrollOffsetChanged` persisted the OFFSET but
-    /// re-persisted the old verse, so `bibleVersePosition` stuck at 1 while the
-    /// reader sat at verse 11 — and the toolbar title went with it. That also breaks
-    /// relaunch restoration, since `.verse` restores read that key.
+    /// Lives in the VIEW because only the view knows where a row sits. Without
+    /// it `bibleVersePosition` would stay stale while the reader scrolls, taking
+    /// the toolbar title and `.verse` relaunch restoration with it.
     func tracksTopmostVerse(_ verse: Int, pane: ReaderPaneModel) -> some View {
         onGeometryChange(for: Bool.self) { proxy in
             // The row covers the top of the reading area (in the scroll view's own
@@ -549,9 +461,7 @@ private struct ParagraphRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    /// The verses of this paragraph, run together with their superscript numbers —
-    /// which is exactly what the HTML did with verse 1 of a chapter and every verse
-    /// after it that did not open a paragraph.
+    /// The verses of this paragraph, run together with their superscript numbers.
     private var flowed: Text {
         var out = Text("")
         for verse in paragraph.verses {
@@ -621,11 +531,10 @@ private struct HeadingRow: View {
 
 /// A `Text` that routes taps on its links.
 ///
-/// Links reach the string as `pslink://` URLs (the only way SwiftUI makes a span of
-/// `Text` tappable), and this is where they are turned back into typed
-/// `InlineLink`s and handed to the pane. An `openURL` environment override is used
-/// rather than `onOpenURL`: the latter is for URLs arriving from outside the app,
-/// and would send a Strong's tap out through `AppSession`'s `sword://` router.
+/// Links reach the string as `pslink://` URLs and are turned back into typed
+/// `InlineLink`s here. An `openURL` environment override is used rather than
+/// `onOpenURL`: the latter is for URLs from outside the app, and would send a
+/// Strong's tap out through `AppSession`'s `sword://` router.
 private struct ChapterRunsText: View {
     let text: Text
     let pane: ReaderPaneModel
@@ -654,14 +563,8 @@ private struct ChapterRunsText: View {
 
 // MARK: - Lexicon entries and footnotes
 
-/// The native renderer for a lexicon entry or a footnote — Wave 9's replacement for
-/// `StudyPopupWebView` and `DictionaryEntryWebView`.
-///
-/// A `ScrollView` of `Text`, one per `EntryBlock`. It inherits the sheet's material
-/// for free, which is what `createInfoHTMLString`'s injected
-/// `html, body { background-color: transparent; }` was working around, and it needs
-/// none of the 60 lines of CSS `createStrongsInfoHTMLString` pushed into the page to
-/// make a WebView resemble the sheet it sat in.
+/// The native renderer for a lexicon entry or a footnote: a `ScrollView` of
+/// `Text`, one per `EntryBlock`, inheriting the sheet's material.
 struct EntryTextView: View {
     let document: EntryDocument
     /// Tapping a cross-link.
@@ -672,34 +575,19 @@ struct EntryTextView: View {
     var openLink: ((EntryLink) -> Void)?
     var topInset: CGFloat = 0
     /// Typography, resolved from the same two GLOBAL font preferences the chapter
-    /// reader uses — `ChapterTextRenderer.Style.current()`, not a second reader of
-    /// those keys.
-    ///
-    /// Wave 9 hardcoded 17pt/13pt here, which silently stopped honouring the size
-    /// the user chose: every deleted entry shell went through
-    /// `createHTMLString(_:usingPreferences: true, …)`, whose `body` rule was
-    /// `font-size: <fontSizePreference>pt`. A footnote body and a dictionary
-    /// definition have always been read at the Settings size, and are again.
+    /// reader uses (`ChapterTextRenderer.Style.current()`), so footnotes and
+    /// definitions follow the Settings size.
     var style: ChapterTextRenderer.Style = .current()
     /// Whether the body renders in the SYSTEM face instead of the user's font.
-    ///
-    /// The two deleted shells differed here deliberately, and the difference is
-    /// preserved: `createInfoHTMLString` (footnotes, morph entries, the Dictionary
-    /// tab) inherited `font-family: <fontNamePreference>`, while
-    /// `createStrongsInfoHTMLString` overrode it to `-apple-system,
-    /// BlinkMacSystemFont, "Helvetica Neue", sans-serif` for the Strong's
-    /// definition. So the user's font is the default and the Strong's arm opts out.
+    /// Footnotes, morph entries and the Dictionary use the user's font; the
+    /// Strong's definition deliberately uses the system face.
     var usesSystemFace = false
     /// The legibility floor for entry body text.
     ///
-    /// A definition is dense reference prose — abbreviations, transliterations,
-    /// parenthetical glosses — and the deleted shell's CSS `12pt` rendered at
-    /// about 16 device points, so resolving the raw preference at the bottom of
-    /// the slider would show this text smaller than it has ever been shown. Above
-    /// the floor the preference wins outright; below it, legibility does. The
-    /// chapter text has no floor — it is the thing the slider is calibrated
-    /// against — so the bottom of the range deliberately moves one and not the
-    /// other.
+    /// A definition is dense reference prose, so at the bottom of the slider the
+    /// raw preference would be too small. Above the floor the preference wins
+    /// outright. The chapter text has no floor, so the bottom of the range
+    /// deliberately moves one and not the other.
     static let minimumBodySize: CGFloat = 14
 
     var body: some View {
@@ -716,16 +604,10 @@ struct EntryTextView: View {
             .padding(.bottom, 28)
         }
         .environment(\.openURL, OpenURLAction { url in
-            // `.handled` is claimed ONLY when there is a handler to claim it for.
-            //
-            // The bug this guards was upstream — `StudyPopupSheet` simply passed no
-            // `openLink`, so `openLink?(link)` was a no-op on a link that looked live
-            // and highlighted on press. Both call sites now pass one, so this arm is
-            // unreachable in the shipping app; it is kept so that a future surface
-            // which forgets to wire `openLink` degrades to the system's handling
-            // instead of silently eating the tap. Verified by reverting the sheet:
-            // `testLexiconCrossLinkNavigatesWithinThePopup` goes red, and reverting
-            // this guard alone does NOT reproduce the defect.
+            // `.handled` is claimed ONLY when there is a handler: returning `.handled`
+            // with no handler silently eats the tap on a link that looks live. Both
+            // call sites pass `openLink`; this keeps a future surface that forgets to
+            // degrade to the system's handling.
             guard let link = EntryLink(url: url), let openLink else {
                 return .systemAction
             }
@@ -748,11 +630,8 @@ struct EntryTextView: View {
         for run in block.runs where !run.text.isEmpty {
             var piece = AttributedString(run.text)
             // `.smaller` in an ENTRY is `<font size="-1">` (plus the Hebrew vowel
-            // `<sup>`), and `createHTMLString` rewrote that tag to a literal
-            // `font-size: <fs - 2>pt`. Two points, NOT the chapter renderer's 0.7:
-            // that factor is the `a.strongs` / `a.morph` marker size, which
-            // dominates a chapter by three orders of magnitude and does not occur in
-            // an entry at all.
+            // `<sup>`): two points smaller, NOT the chapter renderer's 0.7 (that is
+            // the marker size, which does not occur in entries).
             //
             // The body size is the preference against a legibility FLOOR (see
             // `minimumBodySize`), so the bottom of the slider range is inert here
@@ -770,11 +649,8 @@ struct EntryTextView: View {
                 font = font.italic()
             }
             piece.font = font
-            // The flat 5pt / -3pt raise, expressed as a RATIO of the resolved size:
-            // 5/13 and -3/13 were the raises at the old hardcoded 13pt smaller size,
-            // so the raise-to-size relationship is preserved while the raise itself
-            // now tracks the preference — which is what `PSEntryDocumentBuilder`'s
-            // `sup`/`sub` comment already claims happens here.
+            // The raise is a RATIO of the resolved size (5/13 and -3/13), so it tracks
+            // the font preference.
             if run.style.contains(.superscript) {
                 piece.baselineOffset = size * 0.38
             }

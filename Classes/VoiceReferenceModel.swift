@@ -6,12 +6,6 @@
 //  `PSVoiceRefSession`'s states onto what the view shows, and parses each
 //  candidate transcript through `PSVoiceRefParser`.
 //
-//  Wave 8 renamed this file out of `PSVoiceRefViewController.swift` and deleted the
-//  `UIHostingController` subclass that shared it. That subclass did two things —
-//  set a 320pt `pageSheet` detent and forward two closures — both of which are
-//  modifiers on the `.sheet` in `VoiceReferenceSheet` (SwiftUIStudyViews.swift).
-//  The session and the parser are untouched.
-//
 
 import Foundation
 import Observation

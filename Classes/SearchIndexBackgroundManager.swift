@@ -271,22 +271,17 @@ final class SearchIndexBackgroundManager {
                 return
             }
 
-            // A build error is NOT automatically terminal, and treating it as one is
-            // what made this whole class inert on the path it exists for: clearing
-            // the record meant `resumePendingBuildIfNeeded()` found nothing on the
-            // next launch, and reporting `shouldRetry: false` meant `handle` did not
-            // reschedule either — so one transient failure left the user with no
-            // index, no retry, and one log line.
+            // A build error is NOT automatically terminal. A full disk, an sqlite busy
+            // timeout, or a process killed mid-write all throw and succeed on a later
+            // attempt, and `build` drops any partial index, so a retry cannot compound.
+            // Clearing the record here would leave the user with no index and no
+            // retry.
             //
-            // A full disk, an sqlite busy timeout, or a process killed mid-write all
-            // throw and all succeed on a later attempt, and `build` drops any partial
-            // index at entry and again in its catch, so a retry can never compound.
             // But it has to be BOUNDED: `resumePendingBuildIfNeeded()` runs from
-            // `didFinishLaunching`, so a deterministic failure (an unreadable content
-            // store) would otherwise re-run a ~30 s background build on every cold
-            // launch, forever, invisibly. Exhausting the budget clears the record and
-            // nothing user-visible is lost — the Search tab's own build button is
-            // driven by `indexIsFresh()` and has never consulted this record.
+            // `didFinishLaunching`, so a deterministic failure would otherwise re-run a
+            // ~30 s background build on every cold launch, forever, invisibly.
+            // Exhausting the budget clears the record; the Search tab's own build
+            // button is driven by `indexIsFresh()` and never consults it.
             let willRetry = self.registerFailedAttempt(for: module)
             alog(
                 "Background search index build failed for "
@@ -301,24 +296,20 @@ final class SearchIndexBackgroundManager {
 
     /// Records one failed background attempt; returns whether a retry is left.
     ///
-    /// Only a *build error* spends budget. An expiration is work interrupted rather
-    /// than work that failed, and is handled before this is reached.
+    /// Only a *build error* spends budget; an expiration is handled before this.
     ///
-    /// **It must NOT resurrect a record that is no longer there, and that check is the
-    /// dangerous half.** A background build can fail *after* the user's own foreground
-    /// build of the same module has finished and called `finishForegroundBuild` →
-    /// `clearPendingModule`. Re-persisting a retry then schedules a recovery build for
-    /// a module whose index is already complete and fresh — and because
-    /// `PSSearchEngine.build` opens with `dropIndex()`, that recovery would DESTROY the
-    /// index the user just waited for and rebuild it from scratch in the background.
-    /// So a missing (or reassigned) record means "someone else has taken this over":
-    /// spend nothing, ask for nothing.
+    /// **It must NOT resurrect a record that is no longer there.** A background
+    /// build can fail *after* the user's own foreground build of the same module
+    /// finished and cleared the record. Re-persisting a retry then would schedule a
+    /// recovery build that — because `PSSearchEngine.build` opens with
+    /// `dropIndex()` — DESTROYS the index the user just waited for. A missing (or
+    /// reassigned) record means someone else has taken over: spend nothing.
     ///
-    /// The read-modify-write runs under `lock` because it is not atomic —
-    /// `UserDefaults` is safe per access, not across a read and a write — and this runs
-    /// on a global utility queue while `beginForegroundBuild` clears the same counter
-    /// from the main actor. `clearPendingModule` takes the same lock, so it is called
-    /// only after this one is released — `NSLock` is not recursive.
+    /// The read-modify-write runs under `lock` because `UserDefaults` is atomic per
+    /// access, not across a read and a write, and this runs on a utility queue while
+    /// `beginForegroundBuild` clears the counter from the main actor.
+    /// `clearPendingModule` takes the same lock, so it is called only after this
+    /// one is released — `NSLock` is not recursive.
     private func registerFailedAttempt(for module: String) -> Bool {
         lock.lock()
         let stillPending =

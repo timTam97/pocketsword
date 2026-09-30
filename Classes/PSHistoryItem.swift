@@ -5,34 +5,23 @@
 //  Created by Nic Carter on 22/01/13.
 //  Copyright (c) 2013 CrossWire Bible Society. All rights reserved.
 //
-//  Migrated from PSHistoryItem.{h,mm} (Swift migration PR 1.2).
+//  PERSISTED value type: `array` / `init(array:)` define the positional layout
+//  stored under PSHistoryName == "bibleHistory" in BOTH UserDefaults and
+//  NSUbiquitousKeyValueStore, locked byte-for-byte by PersistedFormatTests.
+//  The read/write asymmetries are deliberate — do NOT "fix" them:
 //
-//  This is a PERSISTED value leaf: -array / -initWithArray: define a positional
-//  array layout that is stored under PSHistoryName == "bibleHistory" in BOTH
-//  NSUserDefaults and NSUbiquitousKeyValueStore, and that PersistedFormatTests
-//  locks byte-for-byte (risk R1). The Swift port reproduces that layout EXACTLY,
-//  including the long-standing read/write asymmetries (do NOT "fix" them):
-//
-//    WRITE -array order (idx 0..3):
-//      [bibleReference, "0" (scroll HARDCODED literal — the live scrollAmount is
+//    WRITE order (idx 0..3):
+//      [bibleReference, "0" (scroll HARDCODED — the live scrollAmount is
 //       intentionally NOT persisted), moduleName, dateAdded (NSDate)]
 //
-//    READ -initWithArray: tolerances:
+//    READ tolerances:
 //      count >= 2 : bibleReference <- idx0, scrollAmount <- idx1;
 //                   count <  3 -> moduleName <- DefaultsLastBible pref, else idx2;
 //                   count <  4 -> dateAdded  <- NSDate.distantPast,      else idx3.
 //      count <  2 : seed from PSModuleController.getFirstRefAvailable / scroll "0"
-//                   / DefaultsLastBible / distantPast (the legacy empty-array path).
+//                   / DefaultsLastBible / distantPast.
 //
-//  The 100-entry cap (PSHistoryMaxEntries) lives in PSHistoryController, NOT here.
-//
-//  This file was Obj-C++ (.mm) only as an accident of history — it contains no
-//  sword:: usage and is a pure Foundation DTO, so it ports cleanly to Swift.
-//
-//  Exposed to the still-Obj-C++ caller (PSHistoryController.mm) via @objc; the
-//  property / method / class-method surface matches the former Obj-C class
-//  byte-for-byte. The two Obj-C initializers returned `id`, so they import as
-//  failable init?.
+//  The 100-entry cap lives in HistoryStore, not here.
 //
 
 import Foundation
@@ -91,8 +80,7 @@ final class PSHistoryItem: NSObject {
 
     @objc func array() -> [Any] {
         // WRITE order: [bibleReference, "0" (scroll hardcoded), moduleName, dateAdded].
-        // The original -[NSArray arrayWithObjects:...] truncated the tail at the
-        // first nil, so reproduce that truncation-at-nil semantics byte-for-byte.
+        // Truncates the tail at the first nil (NSArray arrayWithObjects: semantics).
         var arr: [Any] = []
         let ordered: [Any?] = [bibleReference, "0" /*scroll*/, moduleName, dateAdded]
         for element in ordered {
@@ -102,11 +90,10 @@ final class PSHistoryItem: NSObject {
         return arr
     }
 
-    // Mirror Obj-C -isEqualToString: / -isEqualToDate: nil semantics: a message
-    // to a nil receiver, or comparing against nil, returns NO. Swift's `==` on
-    // Optionals instead makes `nil == nil` TRUE, which would make two legacy
-    // history items with a nil moduleName compare EQUAL where the Obj-C++ merge
-    // treated them as unequal — silently dropping history on iCloud reconcile.
+    // NSString/NSDate isEqual nil semantics: comparing with nil is always false.
+    // Swift's Optional `==` makes nil == nil true, which would make two items
+    // with a nil moduleName compare EQUAL and silently drop history on iCloud
+    // reconcile.
     private static func objcEqual(_ a: String?, _ b: String?) -> Bool {
         guard let a = a, let b = b else { return false }
         return a == b
@@ -190,8 +177,7 @@ final class PSHistoryItem: NSObject {
                   let secondHI = secondArray[i] as? PSHistoryItem else {
                 return false
             }
-            // Obj-C returned NO on ![... isEqualToString:...]; reuse the same nil
-            // semantics so a nil ref/module doesn't spuriously read as "equal".
+            // Same nil semantics, so a nil ref/module never reads as "equal".
             if !PSHistoryItem.objcEqual(firstHI.bibleReference, secondHI.bibleReference)
                 || !PSHistoryItem.objcEqual(firstHI.moduleName, secondHI.moduleName) {
                 return false

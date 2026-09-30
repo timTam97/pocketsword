@@ -47,28 +47,17 @@ final class LaunchCoordinator {
             moduleController.primaryBibleName = nil
             moduleController.primaryCommentaryName = nil
             moduleController.primaryDictionaryName = nil
-            // Re-resolve the two READING primaries straight away.
+            // Re-resolve the two READING primaries straight away. The singleton
+            // already exists by the time a reset runs, and it only resolves them in
+            // `init`, so without this the reader stays BLANK for the rest of the
+            // session (and the display menu, search module choices and history all
+            // go empty with it).
             //
-            // Clearing them is the whole of "forget the module choices", but nothing
-            // used to put them back: `PSModuleController` only resolves them in
-            // `init` (through `reloadLast*`), and the singleton already exists by the
-            // time a reset runs — `moduleControllerAvailable()`, the guard at the top
-            // of both `prepare()` and `resetPreferences()`, is what builds it. So
-            // `ReaderPaneModel.render` found `moduleName == nil`, bailed to an empty
-            // `ChapterDocument`, and the reader stayed BLANK for the rest of the
-            // session; the display menu lost every row, `searchModuleChoices` went
-            // empty and `HistoryStore.addEntry` recorded nothing, all for the same
-            // reason.
+            // `reloadLast*` rather than assigning `BundledModules.bible`: it owns the
+            // fallback rule, and lands on the same state the next launch would.
             //
-            // `reloadLast*` rather than assigning `BundledModules.bible` here:
-            // `lastBible` / `lastCommentary` were removed a few lines above, so this
-            // lands on the bundled defaults through the one function that owns that
-            // fallback rule — the same state the next launch would have produced.
-            //
-            // `primaryDictionaryName` is deliberately left nil. `lastDictionary` is
-            // gone too, and "no lexicon selected" IS the fresh-install state: the
-            // Library's Dictionary section shows `DictionaryNoneLoaded` until one is
-            // picked.
+            // `primaryDictionaryName` is deliberately left nil: "no lexicon selected"
+            // IS the fresh-install state.
             moduleController.reloadLastBible()
             moduleController.reloadLastCommentary()
         },
@@ -224,16 +213,8 @@ final class LaunchCoordinator {
             return
         }
 
-        // Swept by `cache-` PREFIX, not by name.
-        //
-        // There used to be a loop above this one that rebuilt each of the three
-        // lexicons' `cache-<module>-<version>` filenames from `content_meta` and
-        // removed them individually. It was redundant — the sweep below is a strict
-        // superset — and it was also the NARROWER of the two: it derived the version
-        // from the store the current build opens, so a cache written by a
-        // pre-Phase-5 build under SWORD's own version string was never matched by it
-        // and only ever caught here. Removing it also took a `moduleVersion` seam,
-        // i.e. three SQLite reads, off the launch path.
+        // Swept by `cache-` PREFIX, not by name, so a cache written under any
+        // older module version string is caught too.
         var deleted: [String] = []
         if let entries = try? fileManager.contentsOfDirectory(
             atPath: paths.appSupportRoot

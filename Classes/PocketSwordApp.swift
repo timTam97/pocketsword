@@ -2,56 +2,33 @@
 //  PocketSwordApp.swift
 //  PocketSword
 //
-//  Wave 8: the SwiftUI application. This file is the app's entry point and its
-//  navigation, replacing `PocketSwordAppDelegate` + `PocketSwordSceneDelegate` +
-//  `PSLaunchViewController` + `PSTabBarControllerDelegate`'s tab construction.
+//  The app's entry point and top-level navigation.
 //
-//  ── Four workspaces, not six tabs ─────────────────────────────────────────
+//  ── Four workspaces ───────────────────────────────────────────────────────
 //
-//  The UIKit app had six tabs — Bible, Commentary, Dictionary, Bookmarks,
-//  Preferences, About — of which the last two only appeared under a system
-//  "More" list, and History and Search were not tabs at all but a modally
-//  presented `UITabBarController`. That shape came from the tab bar being the
-//  only navigation the app had.
-//
-//  This is **Read / Search / Library / Settings**:
-//
-//  - **Read** merges the Bible and Commentary tabs into one workspace with a mode
-//    switch, because they are two views of the same reference — the old pair kept
-//    separate scroll positions and separate chapter buttons for what the user
-//    experiences as one act of reading. Both panes stay alive (see
+//  - **Read**: Bible and commentary as one workspace with a mode switch — two
+//    views of the same reference. Both panes stay alive (see
 //    `ReadingWorkspace.swift`); only which one is on screen changes.
-//  - **Search** is a real workspace with `TabRole.search`, so the system gives it
-//    its iOS 26+ search-tab treatment. It was a modal sheet.
-//  - **Library** collects Dictionary, Bookmarks and History — three lists of
-//    things you look up rather than read.
-//  - **Settings** collects Preferences and About, which were two "More" rows.
+//  - **Search**: a workspace with `TabRole.search`.
+//  - **Library**: Dictionary, Bookmarks and History — lists you consult rather
+//    than read.
+//  - **Settings**: preferences and About.
 //
 //  ── Launch ─────────────────────────────────────────────────────────────────
 //
-//  `PSLaunchViewController`'s job was to be the root view controller while
-//  `LaunchCoordinator.prepare()` ran on a background thread, then hand over via
-//  the `@objc PSLaunchDelegate` handshake so the scene delegate could swap the
-//  window's root. That whole dance is a `switch` on `LaunchPhase` here: the same
-//  coordinator runs in a `Task`, and the view goes from `LaunchView` to the tab
-//  bar when it finishes. `PSLaunchDelegate` and the handshake are deleted.
-//
-//  The **order** is still load-bearing: nothing may touch `PSModuleController`,
-//  the content store or the reader until `prepare()` has returned, because the
-//  one-shot migrations it runs (`DefaultsLastRefValidated` in particular) can
-//  rewrite `lastRef` out from under a render. `ReadingWorkspaceModel.start()` is
-//  therefore called from the `.ready` transition, not from `init`.
+//  `LaunchCoordinator.prepare()` runs in a `Task`; the view switches on
+//  `LaunchPhase` from `LaunchView` to the tab bar when it finishes. The ORDER is
+//  load-bearing: nothing may touch `PSModuleController`, the content store or the
+//  reader until `prepare()` has returned, because its one-shot migrations
+//  (`DefaultsLastRefValidated` in particular) can rewrite `lastRef` out from under
+//  a render. `ReadingWorkspaceModel.start()` is therefore called from the `.ready`
+//  transition, not from `init`.
 //
 //  ── Orientation ────────────────────────────────────────────────────────────
 //
-//  The rotation-lock preference used to be enforced by overriding
-//  `-supportedInterfaceOrientations` on `UITabBarController` and
-//  `UINavigationController` through Obj-C categories (preserved as Swift
-//  `extension … open override`, which is legal but is still swizzling-by-subclass
-//  applied to classes the app does not own). SwiftUI owns those controllers now,
-//  so that hook is gone; iOS 27's
-//  `UIWindowSceneDelegate.supportedInterfaceOrientations(for:)` is the supported
-//  replacement and is what `PocketSwordSceneOrientationDelegate` implements.
+//  The rotation-lock preference is enforced by
+//  `UIWindowSceneDelegate.supportedInterfaceOrientations(for:)`, implemented by
+//  `PocketSwordSceneOrientationDelegate`.
 //
 
 import BackgroundTasks
@@ -69,7 +46,7 @@ enum LaunchPhase: Equatable {
 
 @main
 struct PocketSwordApp: App {
-    /// The app delegate survives for exactly two things UIKit still owns: the
+    /// The app delegate exists for two things UIKit still owns: the
     /// `BGTaskScheduler` registration (which must happen before
     /// `didFinishLaunching` returns) and the scene-orientation hook. It holds no
     /// app state — that is all in `AppSession`.
@@ -92,14 +69,12 @@ struct PocketSwordApp: App {
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .background, .inactive:
-                // The old `sceneWillResignActive` did exactly this. Everything
-                // that writes a pref already synchronizes; this is the belt to
-                // that braces, for a background kill.
+                // Everything that writes a pref already synchronizes; this is belt and
+                // braces for a background kill.
                 UserDefaults.standard.synchronize()
             case .active:
-                // `sceneWillEnterForeground`'s reset check. `reset_PocketSword`
-                // is set from the Settings bundle, so it can arrive while the app
-                // is suspended.
+                // `reset_PocketSword` is set from the Settings bundle, so it can arrive
+                // while the app is suspended.
                 if UserDefaults.standard.bool(forKey: "reset_PocketSword") {
                     appDelegate.launchCoordinator.resetPreferences()
                 }
@@ -141,9 +116,8 @@ private struct RootView: View {
         }
     }
 
-    /// Runs the launch coordinator off the main actor, as
-    /// `-performSelectorInBackground:` did. It touches the file system and the
-    /// defaults plist and takes long enough to be worth not blocking on.
+    /// Runs the launch coordinator off the main actor: it touches the file system
+    /// and the defaults plist and takes long enough to be worth not blocking on.
     private func prepare() async -> LaunchPhase {
         let coordinator = launchCoordinator
         let result = await Task.detached(priority: .userInitiated) {
@@ -155,9 +129,8 @@ private struct RootView: View {
             return .failed
         }
         if result.shouldDisableIdleTimer {
-            // A UIKit side effect that must be on the main thread — a Wave 1
-            // Main Thread Checker termination came from doing this on the
-            // bootstrap thread.
+            // A UIKit side effect that must be on the main thread (the Main Thread
+            // Checker terminates otherwise).
             UIApplication.shared.isIdleTimerDisabled = true
         }
         return .ready
@@ -165,8 +138,7 @@ private struct RootView: View {
 }
 
 /// Shown when the baked content store cannot be opened. There is no fallback
-/// render path (SWORD_REMOVAL_PLAN.md Phase 5 step 1), so this is a dead end by
-/// design — better than a blank reader.
+/// render path, so this is a dead end by design — better than a blank reader.
 private struct LaunchFailureView: View {
     var body: some View {
         ContentUnavailableView {
@@ -233,14 +205,12 @@ struct WorkspaceTabs: View {
             }
         }
         // Quiet the tab bar while reading, matching the navigation bar's
-        // `toolbarMinimizationBehavior(.onScrollDown)`. Wave 7 set this on the
-        // `UITabBarController`; it is the same behaviour, now on `TabView`.
+        // `toolbarMinimizationBehavior(.onScrollDown)`.
         .tabBarMinimizeBehavior(.onScrollDown)
         // NOTE: Focus mode's tab-bar hiding is NOT here. `toolbarVisibility(_:for:
-        // .tabBar)` has to be applied to the content *inside* a tab, not to the
-        // `TabView` — applied here it silently does nothing, verified on device
-        // (the Focus control flipped to "exit" with the tab bar still visible).
-        // It lives on `ReaderScreen`'s `NavigationStack` instead.
+        // .tabBar)` has to be applied to the content *inside* a tab — on the
+        // `TabView` it silently does nothing. It lives on `ReaderScreen`'s
+        // `NavigationStack`.
     }
 }
 
@@ -294,21 +264,13 @@ private struct SearchWorkspace: View {
 
 /// Dictionary, Bookmarks and History, as one workspace.
 ///
-/// These were three separate destinations: two tabs (Dictionary, Bookmarks) and
-/// one half of the modal multi-list (History). They are grouped because all three
-/// are lists you consult rather than read, and because a four-workspace tab bar
-/// has no room to spend three slots on them.
+/// The section switch sits at `.principal`, replacing the per-section title (the
+/// shape Mail uses for its mailbox switcher). Each section keeps its own
+/// `NavigationStack` — Bookmarks needs a `path`-driven stack for folder descent
+/// and Dictionary one for entry push — so the picker is declared inside each.
 ///
-/// The section switch sits at `.principal`, replacing the per-section title — the
-/// same shape Mail uses for its mailbox switcher, and the reason each section view
-/// keeps its own `NavigationStack`: Bookmarks needs a `path`-driven stack for
-/// folder descent and Dictionary needs one for entry push, so the picker has to be
-/// declared inside each of them rather than around all three.
-///
-/// It was a `tabViewBottomAccessory` first, which did not work and could not:
-/// that modifier declares ONE accessory for the whole `TabView` (the shape the
-/// Music mini-player uses), so a per-section control has no business there.
-/// Verified on device — it rendered nothing at all.
+/// Not a `tabViewBottomAccessory`: that declares ONE accessory for the whole
+/// `TabView`, and a per-section control there renders nothing.
 private struct LibraryWorkspace: View {
     let session: AppSession
     let reading: ReadingWorkspaceModel
@@ -377,10 +339,9 @@ enum LibrarySection: String, CaseIterable, Identifiable {
 
 /// The Library's section switch, for the `.principal` toolbar slot.
 ///
-/// A `Menu` rather than a segmented `Picker`: three segments of icon-only labels
-/// read as a mystery-meat toolbar, and the current section is worth naming. This
-/// shows the active section's title and swaps between them, which is also what
-/// makes the section discoverable by its name in the accessibility hierarchy.
+/// A `Menu` rather than a segmented `Picker`: icon-only segments are opaque, and
+/// the menu names the active section, which also makes it discoverable by name
+/// in the accessibility hierarchy.
 struct LibrarySectionPicker: View {
     @Binding var section: LibrarySection
 

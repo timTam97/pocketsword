@@ -3,43 +3,31 @@
 //  PocketSword
 //
 //  Expands the content store's token sentinels back into the exact HTML the SWORD
-//  markup-filter chain emitted. Phase 3 of SWORD_REMOVAL_PLAN.md.
-//
-//  This is a transliteration of `tools/swordbake/crosscheck.py`'s `expand()`,
-//  which is itself an independent reimplementation of `main.mm`'s
-//  `expandEntry()`. Three implementations of one grammar sounds like duplication,
-//  and it is on purpose: the converter's own round-trip check is self-referential
-//  (it would pass even if the wrong entries had been captured), so the value comes
-//  from the sides not sharing code. If this file drifts from the grammar,
-//  PSContentReaderTests fails against the committed live-SWORD fixtures.
+//  markup-filter chain emitted. Pinned byte-for-byte by fixtures captured from
+//  the live engine (PSContentStoreTests), and kept independent of
+//  `PSChapterDocumentBuilder` so the parity test between them means something.
 //
 //  === Option gating ===
 //
 //  A disabled toggle SKIPS its token; it does not post-process the HTML. That is
-//  byte-exact rather than approximate, confirmed in the engine source:
-//  with Strong's off, osisstrongs.cpp:242-256 strips the `lemma` attribute before
-//  osishtmlhref.cpp's processLemma (:209) runs, so the anchor is never emitted and
-//  the surrounding text is untouched. Same shape for morph and footnotes.
+//  byte-exact: with Strong's off, the engine stripped the `lemma` attribute before
+//  the HTML filter ran, so the anchor was never emitted and the surrounding text
+//  was untouched. Same shape for morph and footnotes.
 //
-//  Red-letter is the exception and the one that matters: with the option off,
-//  osisredletterwords.cpp strips who="Jesus" from the <q> tag, so
-//  osishtmlhref.cpp:581/615 never emit the span — but the quote marks and THE
-//  ENCLOSED TEXT still render. Measured, all 2,038 spans in the corpus contain
-//  nested Strong's/morph tokens, so the payload must be recursively expanded, not
-//  dropped. A CSS-only "hide the span" shortcut cannot reproduce this: SWORD omits
-//  the element, so the DOM differs and byte parity is impossible.
+//  Red-letter is the exception: with the option off the span is not emitted, but
+//  the quote marks and THE ENCLOSED TEXT still render. All 2,038 spans in the
+//  corpus contain nested Strong's/morph tokens, so the payload must be
+//  recursively expanded, not dropped.
 //
 //  === Titles are gated differently in a body and in a heading ===
 //
 //  TOK_TITLE is headings-gated inside a CHAPTER RECORD but unconditional inside a
 //  stored HEADING:
 //
-//   * In a record, every title token is a non-canonical (Interverse) title,
-//     because osisheadings.cpp:132 keeps canonical preverse titles out of the body
-//     entirely while processEntryAttributes is on. So `option || canonical`
-//     reduces to `option`.
-//   * In a heading, the app renders the stored buffer through `renderText(buf)`,
-//     which turns processEntryAttributes OFF — so
+//   * In a record, every title token is a non-canonical (Interverse) title
+//     (canonical preverse titles never reach the body), so
+//     `option || canonical` reduces to `option`.
+//   * A stored heading was rendered with entry-attribute processing OFF, so
 //     `(!preverse || !processEntryAttributes) && (option || canonical)` emits the
 //     wrapper for a canonical heading whatever the option says.
 //
@@ -51,7 +39,7 @@ import Foundation
 
 enum PSChapterExpander {
 
-    // MARK: - Token grammar (must match tools/swordbake/main.mm)
+    // MARK: - Token grammar (must match PSChapterDocumentBuilder's copy)
 
     private static let strongsOpen: Character   = "\u{0001}"
     private static let strongsClose: Character  = "\u{0002}"
@@ -68,20 +56,17 @@ enum PSChapterExpander {
     private static let redLetterOpen: Character  = "\u{0011}"
     private static let redLetterClose: Character = "\u{0012}"
 
-    /// The exact strings osishtmlhref.cpp's MyUserData ctor installs (:118-119).
-    /// The trailing space is part of the construct — with the option off SWORD
-    /// emits neither string, so the space goes too.
+    /// The exact span strings the engine emitted. The trailing space is part of
+    /// the construct — with the option off neither string is emitted, so the space
+    /// goes too.
     private static let wocOpenHTML = "<span class=\"WordOfChrist\"> "
     private static let wocCloseHTML = "</span> "
 
     // MARK: - Options
 
-    /// The render axes that gate a token. These are the seven user-facing toggles'
-    /// subset that actually affects the token stream; the other four options
-    /// `setPreferences` pushes (glosses, variants, greekAccents, hebrewPoints,
-    /// hebrewCantillation) act on source text the converter already baked, so they
-    /// have no token to gate — see PSContentReader for why that is safe for the
-    /// five shipped modules.
+    /// The render axes that gate a token: the subset of the user-facing toggles
+    /// that affects the token stream. Options that act on source text have no
+    /// token to gate — see `PSContentReader.options(forModule:)`.
     struct Options {
         var strongs = true
         var morphs = true
@@ -119,9 +104,8 @@ enum PSChapterExpander {
             + "&amp;module=\(module)&amp;passage=\(passage)\" class=\"\(ch)\">*\(ch)</a>"
     }
 
-    /// osishtmlhref.cpp:327. Note the RAW `&` separators (not `&amp;`) and that
-    /// only the opening tag is emitted — the matching `</a>` comes from the tag's
-    /// own end-tag branch at :341, which is part of the surrounding text.
+    /// Note the RAW `&` separators (not `&amp;`) and that only the opening tag is
+    /// emitted — the matching `</a>` is part of the surrounding text.
     private static func scripRefAnchor(_ value: String) -> String {
         "<a href=\"passagestudy.jsp?action=showRef&type=scripRef&value=\(value)&module=\">"
     }
@@ -132,8 +116,7 @@ enum PSChapterExpander {
     ///
     /// Returns nil on a malformed token stream (an unterminated token, a payload
     /// with the wrong field count, an unknown Strong's flag). That is a corrupt
-    /// store, and the caller falls back to SWORD rather than rendering a partial
-    /// verse.
+    /// store; the caller reports it rather than rendering a partial verse.
     static func expand(_ input: String, options: Options = .allOn,
                        reportFailures: Bool = true) -> String? {
         var out = ""
@@ -234,8 +217,7 @@ enum PSChapterExpander {
     /// A token's payload may contain other tokens (anchors inside a heading,
     /// Strong's inside a WoC span), so scan for THIS token's own close rather than
     /// the first close byte of any kind. Neither the title nor the red-letter token
-    /// nests inside itself — the converter refuses to build a nested one — so no
-    /// depth counter is needed.
+    /// nests inside itself, so no depth counter is needed.
     private static func nextIndex(of target: Character, in chars: [Character], from start: Int) -> Int? {
         var i = start
         while i < chars.count {
@@ -282,8 +264,7 @@ enum PSChapterExpander {
     /// Two derivations are reconstructed here rather than stored:
     ///  * an empty `type` field means `type == "strongMorph%3A" + value`
     ///    (71,016 of 216,395 cases);
-    ///  * `shown` is `value` with a leading "TH"/"TG" dropped when a digit follows
-    ///    (osishtmlhref.cpp:92-93).
+    ///  * `shown` is `value` with a leading "TH"/"TG" dropped when a digit follows.
     private static func expandMorph(_ payload: String, _ report: Bool) -> String? {
         if payload.hasPrefix("*") {
             let fields = String(payload.dropFirst()).components(separatedBy: "|")

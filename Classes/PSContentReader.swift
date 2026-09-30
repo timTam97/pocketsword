@@ -2,41 +2,27 @@
 //  PSContentReader.swift
 //  PocketSword
 //
-//  The coordinating layer over the pure-Swift content reader: the single thing
-//  the view controllers talk to. Phase 3 of SWORD_REMOVAL_PLAN.md.
+//  The coordinating layer over the content reader: the single thing the UI
+//  talks to. Composes PSContentStore (rows) + PSBookOSISResolver (name -> OSIS)
+//  + PSChapterExpander (tokens -> HTML) + PSChapterAssembler (the accumulator
+//  loop), and adds module selection, the per-module option prefs and the
+//  bookmark-highlight lookup.
 //
-//  Composes PSContentStore (rows) + PSBookOSISResolver (name -> OSIS) +
-//  PSChapterExpander (tokens -> HTML) + PSChapterAssembler (the accumulator loop),
-//  and adds the things those four deliberately do not know about: which module is
-//  being read, the per-module option prefs, the bookmark highlight lookup, the
-//  bottom padding, the navigation JS, the HTML shell, and language/direction.
+//  === FAILURE POLICY ===
 //
-//  === FAILURE POLICY (Phase 5 step 1: no engine to fall back to) ===
-//
-//  Through Phase 4 every failure took one path — report through
-//  `PSContentStore.fail` and return nil, so the caller fell back to SWORD. There
-//  is no SWORD any more, so "return nil" now means "show the user nothing". The
-//  ten conditions are therefore **split by whether the app can still function**:
-//
-//  FATAL (the store itself is unusable — every read would fail, so the app cannot
-//  do its job at all). These call `PSContentStore.fatal`, which traps. A crash
-//  report naming the broken invariant beats a permanently blank app that looks
-//  like it merely lost its data:
+//  FATAL — the store itself is unusable, so the app cannot do its job. These
+//  call `PSContentStore.fatal`, which traps: a crash report naming the broken
+//  invariant beats a permanently blank app. All are build-integrity failures
+//  (bundled resources, validated by PSContentStoreTests):
 //
 //    1. Resources/PSContent.sqlite absent from the bundle, or unopenable.
 //    2. content_meta schemaVersion != 2 or tokenGrammar != "v2".
 //    3. content_meta missing the chunkRows.* sizes.
 //    4. Resources/Versification-KJV.json absent, unparseable, or not 66 books.
 //
-//  All four are build-integrity failures: the store and the versification JSON are
-//  bundled resources, validated by PSContentStoreTests, and cannot vary at
-//  runtime. If one of them is wrong, every install of that build is wrong — which
-//  is exactly the class of bug that must not ship quietly.
-//
-//  LOUD-AND-NIL (one datum is bad; the rest of the store is fine). These keep
-//  reporting through `PSContentStore.fail` — assertionFailure in debug, alog in
-//  release — and return nil. One malformed chapter must not brick the app; the
-//  user sees that one chapter fail and can navigate away:
+//  LOUD-AND-NIL — one datum is bad; the rest of the store is fine. These report
+//  through `PSContentStore.fail` (assertionFailure in debug, alog in release)
+//  and return nil. One malformed chapter must not brick the app:
 //
 //    5. A chunk that fails to inflate, or whose row_count / raw_size disagrees
 //       with its blob.
@@ -47,10 +33,9 @@
 //    9. An unresolvable book name, or a chapter outside the book.
 //   10. A dict_keys / notes_index row pointing at a slot its chunk does not have.
 //
-//  Note what is in NEITHER list, because it is normal rather than a failure:
-//  a chapter absent from `chapters` (the converter omits wholly-empty ones, and
-//  the reader renders the same "empty chapter" message the engine did), and a
-//  dictionary or note lookup that simply misses (nil is the right answer).
+//  NOT failures: a chapter absent from `chapters` (wholly-empty chapters are
+//  omitted; the reader shows the "empty chapter" message), and a dictionary or
+//  note lookup that misses (nil is the right answer).
 //
 
 import Foundation
@@ -72,23 +57,12 @@ final class PSContentReader: NSObject {
         super.init()
     }
 
-    /// Whether the reader is usable at all.
-    ///
-    /// Phase 5 retired `isActive` (the feature flag's *intent* half) and collapsed
-    /// every caller onto this. In practice it is always true in production: the two
-    /// things it checks are the store and the versification dump, and both are now
-    /// fatal if absent. It stays because the tests construct readers over broken
-    /// stores, and because `false` is a more useful thing for a test to assert than
-    /// a trap.
+    /// Whether the reader is usable at all. Always true in production (both
+    /// dependencies are fatal if absent); exists so tests over broken stores can
+    /// assert `false` instead of trapping.
     @objc var isAvailable: Bool { store != nil && resolver != nil }
 
     // MARK: - Lexicon lookups
-    //
-    // The lexicon call sites (`PSDictionaryViewController`,
-    // `PSDictionaryEntryViewController`, `PSModuleViewController`,
-    // `PSTabBarControllerDelegate`) used to hold a `SwordDictionary` and pass it as
-    // an `or:` fallback. Phase 5 step 1 drops that parameter everywhere: a miss is
-    // now simply a miss, and nil is the right answer for one.
 
     /// A lexicon entry for `key`, or nil if the lexicon does not have it.
     @objc(entryForModule:key:)
@@ -109,14 +83,9 @@ final class PSContentReader: NSObject {
         shared.dictionaryEntryCount(module: module)
     }
 
-    /// The **`n` branch only** of `-[SwordModule attributeValueForEntryData:]` —
-    /// which, as of Phase 4 step 8, is the only branch of it that renders content.
-    ///
-    /// The `x` (cross-reference) and `scriptRef` branches are **deleted**: both were
-    /// proven unreachable for the shipped content (no `x` anchor is ever emitted and
-    /// all 6,959 notes are type='study' with an empty refList; no `action=showRef`
-    /// appears in any chapter record or stored heading, and every one of the 14,989
-    /// baked `sword://` links routes to the dictionary arm). See PSRefSemanticsTests.
+    /// The footnote (`n`) branch of the passagestudy attribute lookup — the only
+    /// branch that renders content. The `x` and `scriptRef` branches are provably
+    /// unreachable for the shipped content (see PSRefSemanticsTests).
     @objc(footnoteBodyForModule:data:)
     static func footnoteBody(module: String?, data: [AnyHashable: Any]) -> String? {
         guard let module,
@@ -129,31 +98,18 @@ final class PSContentReader: NSObject {
 
     // MARK: - Options
 
-    /// Load the render options for a module from the **per-module** prefs.
+    /// Load the render options for a module from the **per-module** prefs
+    /// (`"<pref>_<ModuleName>"`).
     ///
-    /// The keys are `"<pref>_<ModuleName>"`, matching `-[SwordModule setPreferences]`
-    /// (SwordModule.mm:188-213) exactly — and matching it is load-bearing, because
-    /// `setPreferences` reads those same per-module keys and pushes them into SWORD
-    /// as *global* options on every render. A reader reading the unsuffixed global
-    /// keys instead would disagree with SWORD for any user who had touched the
-    /// per-tab `▾` menu.
-    ///
-    /// `setPreferences` pushes eleven options; only five have a token to gate:
+    /// Only some options have a token to gate:
     ///
     ///  * scriptRefs / strongs / morphs / headings / footnotes / redLetter — gated
-    ///    here (scriptRefs shares `footnotes`' tokens: the note anchors carry
-    ///    type='n' and type='x', and the x-branch is the cross-reference one).
-    ///  * variants — SWORD is pinned to "Primary Reading" unconditionally, so
-    ///    there is nothing to vary.
-    ///  * glosses, greekAccents, hebrewPoints, hebrewCantillation — these act on
-    ///    *source text* during rendering, not on emitted markup, so they have no
-    ///    token. For the five shipped modules that is a no-op: KJV/MHCC declare
-    ///    none of OSISGlosses / UTF8GreekAccents / UTF8HebrewPoints /
-    ///    UTF8Cantillation in GlobalOptionFilter, so the filters are not even in
-    ///    their chains and the option cannot change a byte. The baked store was
-    ///    captured with all four Off, which is also their default. A module that
-    ///    DID declare one would need its own axis — recorded here because it is
-    ///    the one place the reader is narrower than the engine.
+    ///    here (scriptRefs shares `footnotes`' note tokens).
+    ///  * variants — pinned to "Primary Reading"; nothing to vary.
+    ///  * glosses, greekAccents, hebrewPoints, hebrewCantillation — act on source
+    ///    text, not emitted markup, so they have no token. None of the shipped
+    ///    modules declares them, and the store was baked with all four Off. A
+    ///    module that did would need its own axis.
     func options(forModule module: String) -> PSChapterExpander.Options {
         let defaults = UserDefaults.standard
         var options = PSChapterExpander.Options()
@@ -161,24 +117,22 @@ final class PSContentReader: NSObject {
         options.morphs = defaults.psBool(Defaults.morphPreference, forModule: module)
         options.headings = defaults.psBool(Defaults.headingsPreference, forModule: module)
         options.redLetter = defaults.psBool(Defaults.redLetterPreference, forModule: module)
-        // Footnotes and cross-references are separate toggles in the UI but share
-        // the note token family: 'n' is a footnote, 'x' a cross-reference. All
-        // 6,959 of KJV's notes are type='study' with an empty refList (the module
-        // emits no type="crossReference" notes at all), so no `x` token exists in
-        // the shipped content and the two axes are indistinguishable on it. Gate on
-        // footnotes, which is the one that has any effect.
+        // Footnotes and cross-references are separate UI toggles but share the note
+        // token family ('n' footnote, 'x' cross-reference). No `x` token exists in
+        // the shipped content, so gate on footnotes, the one with any effect.
         options.footnotes = defaults.psBool(Defaults.footnotesPreference, forModule: module)
         return options
     }
 
     // MARK: - Chapter rendering
 
-    /// The body only — the equivalent of `-[SwordModule chapterBodyHTML:…]`, and
-    /// what the differential test compares.
+    /// The chapter body as HTML — the fixture-pinned oracle
+    /// `PSChapterDocumentParityTests` compares the native document against. Not
+    /// a render path.
     ///
     /// `ref` is the caller's ref string ("Genesis 1" / "Gen 1"), used both for
     /// resolution and — unchanged — for the bookmark-highlight lookup, which keys
-    /// on `createRefString(ref)` rather than on SWORD's canonical key text.
+    /// on `createRefString(ref)`.
     func chapterBody(module: String,
                      ref: String,
                      kind: PSChapterAssembler.ModuleKind,
@@ -225,10 +179,9 @@ final class PSContentReader: NSObject {
         config.versePerLine = UserDefaults.standard.psBool(Defaults.vplPreference, forModule: module)
         config.headingsOn = opts.headings
 
-        // The highlight lookup takes the CALLER's ref through createRefString, the
-        // same as SwordModule.mm:1157 — "Psalms 23", not SWORD's "Ps 23". Passing
-        // the abbreviation renders identical bytes but silently matches no
-        // bookmark, so this is not interchangeable.
+        // The highlight lookup takes the CALLER's ref through createRefString
+        // ("Psalms 23", not "Ps 23"). The abbreviation renders identical bytes but
+        // silently matches no bookmark, so they are not interchangeable.
         let highlightRef = applyBookmarkHighlights ? PSRefHelper.createRefString(ref) : nil
 
         guard let result = PSChapterAssembler.assemble(
@@ -248,18 +201,14 @@ final class PSContentReader: NSObject {
         return (result.body, result.entryCount)
     }
 
-    /// The typed chapter document the native SwiftUI reader renders — Wave 9's
-    /// replacement for `chapterPage`.
+    /// The typed chapter document the native reader renders — the render path.
     ///
-    /// Same inputs, same option prefs, same bookmark-highlight lookup as
-    /// `chapterBody`; the difference is that it emits `ChapterDocument` values
-    /// instead of HTML, so there is no shell, no CSS, no navigation JS and no six
-    /// `&nbsp;` pads. See `PSChapterDocument.swift` for why the token stream gets a
-    /// second emitter rather than the HTML being parsed.
+    /// Same inputs, option prefs and bookmark-highlight lookup as `chapterBody`,
+    /// but emits `ChapterDocument` values instead of HTML. See
+    /// `PSChapterDocument.swift` for why the token stream has a second emitter.
     ///
     /// `PSChapterDocumentParityTests` asserts this agrees with `chapterBody` on
-    /// text, verse identity, `entryCount` and every link target, for all 1,189
-    /// chapters × both modules × both option endpoints.
+    /// text, verse identity, `entryCount` and every link target.
     func chapterDocument(module: String,
                          ref: String,
                          kind: PSChapterAssembler.ModuleKind,
@@ -279,8 +228,7 @@ final class PSContentReader: NSObject {
         guard let records = store.chapterRecords(module: module,
                                                  bookOsis: book.osisName,
                                                  chapter: chapter) else {
-            // Not a failure: the converter omits wholly-empty chapters. Same
-            // message the engine rendered, now as a document field.
+            // Not a failure: wholly-empty chapters are omitted from the store.
             var document = ChapterDocument()
             document.emptyMessage = emptyChapterMessage(bookName: book.name,
                                                         chapter: chapter)
@@ -296,9 +244,7 @@ final class PSContentReader: NSObject {
         config.kind = kind
         config.headingsOn = opts.headings
 
-        // The highlight lookup takes the CALLER's ref through createRefString, not
-        // SWORD's abbreviation — passing "Ps 23" renders identical text but matches
-        // no bookmark. Identical to `chapterBody`; not interchangeable.
+        // The CALLER's ref through createRefString, as in `chapterBody`.
         let highlightRef = applyBookmarkHighlights
             ? PSRefHelper.createRefString(ref)
             : nil
@@ -320,37 +266,15 @@ final class PSContentReader: NSObject {
             reportFailures: reportFailures)
     }
 
-    // `chapterPage` is DELETED (Wave 9). It assembled the full HTML document the
-    // WebView loaded: the rendered body, six hardcoded `<p>&nbsp;</p>` pads (a
-    // faithful port of `-getChapter:`'s own six), `PSChapterNavigationJS`'s two
-    // script blocks, the `createHTMLString` shell, and the RTL/lang substitutions.
-    // Every part of it existed to serve a WebView:
-    //
-    //  * the pads are `contentMargins` now, scaled to the real bar height rather
-    //    than to six line heights of a font size they did not know;
-    //  * the JS is gone entirely — see `ReaderPaneModel`'s table;
-    //  * the shell's CSS is resolved type and colour in `ChapterTextRenderer`;
-    //  * the RTL/lang substitutions were **no-ops for all five shipped modules**
-    //    (every one is `Lang=en` with no `Direction=`), and direction is now the
-    //    view's own concern.
-    //
-    // `chapterBody` is KEPT, and deliberately: it is the fixture-pinned oracle that
-    // `PSChapterDocumentParityTests` compares the native document against, and those
-    // fixtures were captured from a SWORD engine that no longer exists.
-
-    /// The engine's own empty-chapter fallback (SwordModule.mm:1181), including
-    /// that the parenthesised ref is SWORD's `ch` — the chapter part of the key
-    /// text, e.g. "Genesis 1".
+    /// The empty-chapter fallback, byte-identical to the engine's. The
+    /// parenthesised ref is the chapter part of the key text, e.g. "Genesis 1".
     private func emptyChapterBody(bookName: String, chapter: Int) -> String {
         let message = NSLocalizedString("EmptyChapterWarning", comment: "This chapter is empty for this module.")
         return "<p style=\"color:grey;text-align:center;font-style:italic;\">\(message) (\(bookName) \(chapter))</p>"
     }
 
-    /// The same message as plain text, for the native reader.
-    ///
-    /// `emptyChapterBody` wraps it in the `<p style="…">` the engine emitted; the
-    /// native reader styles the notice itself, so it wants the string alone. Both
-    /// read the one localisation key, so the two cannot drift.
+    /// The same message as plain text, for the native reader. Shares the
+    /// localisation key with `emptyChapterBody`, so the two cannot drift.
     private func emptyChapterMessage(bookName: String, chapter: Int) -> String {
         let message = NSLocalizedString("EmptyChapterWarning", comment: "This chapter is empty for this module.")
         return "\(message) (\(bookName) \(chapter))"
@@ -359,54 +283,29 @@ final class PSContentReader: NSObject {
     // MARK: - Lexicons
 
     /// A lexicon entry for the key the UI holds. See PSContentStore.dictEntry for
-    /// the casing and zero-padding rules, and step 4b's tests for why they matter.
+    /// the casing and zero-padding rules.
     @objc(dictionaryEntryForModule:key:)
     func dictionaryEntry(module: String, key: String) -> String? {
         store?.dictEntry(module: module, key: key)
     }
 
     /// Every key of a lexicon, in the module's own `.idx` order and in its **true
-    /// casing**.
-    ///
-    /// SWORD_REMOVAL_PLAN.md Phase 4 step 9: the `capitalizedString` this used to
-    /// apply is **gone**. It existed only because `-[SwordDictionary readKeys]`
-    /// applied it (SwordDictionary.mm), and the Dictionary tab both displayed and
-    /// re-looked-up that string — so it mangled 1,375 of Robinson's 1,526 keys
-    /// (`V-PAI-3S` -> `V-Pai-3S`) and the app got away with it only because SWORD
-    /// uppercases both sides for a module without `CaseSensitiveKeys`. Phase 3
-    /// preserved the mangling to keep the differential comparison a plain equality;
-    /// this step fixes it, at the same time as the engine side and the key-cache
-    /// invalidation, because doing any one alone leaves a broken state (see the
-    /// DefaultsDictKeyCaseFixed migration in PSLaunchViewController).
-    ///
-    /// `PSContentStore.dictKeys` already returns the true casing, so this is now a
-    /// pass-through. `dict_keys.key` stays `COLLATE NOCASE` as defence in depth: it
-    /// is what let the mangled keys resolve at all, and keeping it means a stale
-    /// cache that somehow survives the migration still finds its entry rather than
-    /// showing the user a blank definition.
+    /// casing**. Do not capitalise: the keys are case-significant (`V-PAI-3S`).
     @objc(dictionaryKeysForModule:)
     func dictionaryKeys(module: String) -> [String] {
         if let cached = Self.keyCache[module] { return cached }
         let keys = store?.dictKeys(module: module) ?? []
-        // Memoise. `dictKeys` is a full table query and the Dictionary tab used to
-        // call this once *per cell* (and again per keystroke while filtering); the
-        // store is immutable and read-only, so the answer cannot change within a
-        // process.
+        // Memoise: `dictKeys` is a full table query and the store is immutable.
         if !keys.isEmpty { Self.keyCache[module] = keys }
         return keys
     }
 
-    /// Memoised `dictionaryKeys` results. Keyed by module; never invalidated,
+    /// Memoised `dictionaryKeys` results, keyed by module; never invalidated
     /// because the bundled store is read-only.
     ///
-    /// **MAIN-THREAD ONLY, and deliberately unsynchronised.** Every caller is a
-    /// UIKit data-source path on the Dictionary tab (`key(at:)`, `rowCount`,
-    /// `searchDictionaryEntries`), so there is no contention to protect against and a
-    /// lock would be dead weight on a per-cell call. That is an invariant, not an
-    /// accident: `PSContentStore` funnels through a serial queue and `PSSearchEngine`
-    /// runs FULLMUTEX precisely because they are reached off the main thread, and
-    /// this is not. A background caller must add synchronisation here first — an
-    /// unguarded dictionary write racing a read is a crash, not a stale answer.
+    /// **MAIN-THREAD ONLY, deliberately unsynchronised.** A background caller must
+    /// add synchronisation first — an unguarded dictionary write racing a read is
+    /// a crash, not a stale answer.
     private static var keyCache: [String: [String]] = [:]
 
     @objc(dictionaryEntryCountForModule:)
@@ -416,31 +315,19 @@ final class PSContentReader: NSObject {
 
     // MARK: - Notes
 
-    /// A footnote body, expanded, for the `n` branch of
-    /// `-[SwordModule attributeValueForEntryData:]`.
-    ///
-    /// The scriptRef branch is **gone** (Phase 4 step 8): it was unreachable for the
-    /// shipped content, and `testCaptureScriptRefAttributes` — which pins
-    /// "Ps 23:1-3" yielding three elements — was retargeted at
-    /// `PSRefParser` + `PSChapterExpander`, fixture byte-unchanged.
+    /// A footnote body, expanded.
     @objc(noteBodyForModule:osisRef:marker:)
     func noteBody(module: String, osisRef: String, marker: String) -> String? {
         guard let store else { return nil }
-        // The passage arrives URL-encoded, straight off the anchor: the emitted
-        // href is `passage=Genesis+4%3A1` and `+[PSModuleController data(forLink:)]`
-        // splits the query on '&'/'=' WITHOUT decoding it (unlike its own sword://
-        // branch, which does both). The engine's `n` branch then hands that string
-        // to VerseKey::setText, which tolerates it; a SQL lookup does not, because
-        // notes_index holds "Genesis 4:1". Decode here, and accept an
-        // already-clean ref too so a caller that decoded first still works.
+        // The passage arrives URL-encoded straight off the anchor
+        // (`passage=Genesis+4%3A1`, not decoded by `data(forLink:)`), but
+        // notes_index holds "Genesis 4:1". Decode here, and accept an already-clean
+        // ref too.
         let decoded = Self.decodePassage(osisRef)
         guard let note = store.note(module: module, osisRef: decoded, marker: marker) else {
             return nil
         }
-        // Notes are captured through renderText(buf), which sets
-        // processEntryAttributes=false — the same call shape the app makes at
-        // SwordModule.mm:567 — so the stored body already reflects that path. The
-        // note text itself is not option-gated: the anchor that leads here is.
+        // The stored note body is not option-gated; the anchor that leads here is.
         guard let html = PSChapterExpander.expand(note.body, options: .allOn) else { return nil }
         return html
     }

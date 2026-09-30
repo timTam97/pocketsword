@@ -2,25 +2,14 @@
 //  PSChapterDocumentParityTests.swift
 //  PocketSwordTests
 //
-//  Wave 9's acceptance criterion for the native reader's DATA, as distinct from
-//  its layout: `PSChapterDocumentBuilder` must agree with the byte-locked HTML
-//  emitter about what a chapter says.
+//  The native reader's DATA gate: `PSChapterDocumentBuilder` must agree with the
+//  byte-locked HTML emitter about what a chapter says.
 //
-//  ── Why this test carries the whole safety argument ────────────────────────
-//
-//  Wave 9 replaced the WebView with a `LazyVStack` over `ChapterDocument`, built
-//  by a SECOND emitter over the same v2 token stream (see
-//  `PSChapterDocument.swift`'s header for why that beats parsing the HTML). Two
-//  emitters over one grammar is only safe if something holds them together, and
-//  this is that something.
-//
-//  The HTML side is a genuine oracle rather than a co-drifting sibling: it is
-//  pinned byte-for-byte by `PSContentStoreTests`' chapter-body fixtures — captured
-//  from the live SWORD engine, which no longer exists and cannot be re-run — plus
-//  `chapter-loop-counters.tsv`. So when these two agree, the native reader agrees
-//  with the engine transitively.
-//
-//  ── What is compared, and what deliberately is not ────────────────────────
+//  Two emitters over one grammar are only safe if something holds them together,
+//  and this is it. The HTML side is a genuine oracle: it is pinned byte-for-byte
+//  by `PSContentStoreTests`' chapter-body fixtures (captured from the SWORD engine,
+//  which cannot be re-run) plus `chapter-loop-counters.tsv`. When these two agree,
+//  the native reader agrees with the engine transitively.
 //
 //  COMPARED (per chapter):
 //    * the plain text of every verse, after stripping tags from the HTML side;
@@ -29,22 +18,12 @@
 //    * every link target, in document order (Strong's type+value, morph
 //      type+value, note kind/value/module/passage).
 //
-//  NOT COMPARED: CSS, font sizes, the `<p>`/`<br />` structure, the six bottom
-//  pads, and the JS block. Those are presentation the native reader owns
-//  differently by design — the plan states the native reader requires workflow and
-//  feature parity, not pixel-identical WebKit output.
+//  NOT COMPARED: CSS, font sizes, the `<p>`/`<br />` structure — presentation the
+//  native reader owns differently by design.
 //
-//  ── Tiering ───────────────────────────────────────────────────────────────
-//
-//  The default tier covers a fixed sample chosen to hit every structural feature
-//  the corpus has (see `sampleRefs`) at BOTH option endpoints. The exhaustive tier
-//  — `PSDOC_EXHAUSTIVE=1` — walks all 1,189 chapters × 2 modules × 2 endpoints,
-//  i.e. 4,756 chapter builds. That is minutes, not seconds, which is why it is
-//  opt-in; the sample tier is what guards every commit.
-//
-//  Getting an env var into a *test* run needs a temporary `<EnvironmentVariables>`
-//  block in the shared scheme's `TestAction` plus `shouldUseLaunchSchemeArgsEnv =
-//  "NO"` — see CLAUDE.md. Back the scheme up and restore it.
+//  Tiering: the default tier covers a fixed sample chosen to hit every structural
+//  feature (see `sampleRefs`) at BOTH option endpoints. `PSDOC_EXHAUSTIVE=1` walks
+//  all 1,189 chapters × 2 modules × 2 endpoints (4,756 builds, ~30 s).
 //
 
 import XCTest
@@ -153,24 +132,14 @@ final class PSChapterDocumentParityTests: XCTestCase {
     /// the two sides cannot disagree about `&#182;`), and whitespace collapsed. The
     /// verse-number anchors are removed first: the HTML carries the number as
     /// content (`<a …>12</a>`) whereas the native document carries it as
-    /// `ChapterVerse.number`, so leaving them in would compare a label against
-    /// nothing.
+    /// `ChapterVerse.number`.
     ///
-    /// **Block boundaries become whitespace, on both sides.** The first version of
-    /// this method stripped every tag uniformly, which silently glued the last word
-    /// of one block to the first word of the next: `<p><b>CHAPTER 1.</b></p>In the
-    /// beginning` collapsed to `CHAPTER 1.In the beginning`, while the document side
-    /// — which holds the heading and the verse as separate values — naturally reads
-    /// `CHAPTER 1. In the beginning`. That produced four failures whose only content
-    /// was a missing space, i.e. a defect in this comparison rather than in either
-    /// emitter.
-    ///
-    /// Inter-word spacing across a block boundary is not a property the two
-    /// representations can meaningfully agree on: in HTML it is implied by the block
-    /// element, and in the document it is implied by the array structure. So both
-    /// sides normalise it to one space and the comparison stays about the *text*.
-    /// Note this weakens nothing that matters — a genuinely dropped or duplicated
-    /// word still fails, as does any difference inside a block.
+    /// **Block boundaries become whitespace, on both sides.** Stripping tags
+    /// uniformly would glue `<p><b>CHAPTER 1.</b></p>In the beginning` into
+    /// `CHAPTER 1.In the beginning`, while the document holds the heading and verse
+    /// separately. Spacing across a block boundary is implied by structure in both
+    /// representations, so both normalise it to one space. A dropped or duplicated
+    /// word, or any difference inside a block, still fails.
     private func plainText(fromHTML html: String) -> String {
         var text = html
         // Verse-number anchors, both flavours the assembler emits.
@@ -267,12 +236,9 @@ final class PSChapterDocumentParityTests: XCTestCase {
             // an opening anchor with no class, so there is nothing to pair it with.
             return nil
         case .verseMenu:
-            // Not produced by the token grammar: the RENDERER attaches it to the
-            // superscript verse label, the way the assembler synthesised
-            // `pocketsword:versemenu:` around each verse. The comparison already
-            // strips those anchors from the HTML side (see `plainText(fromHTML:)`)
-            // and checks verse identity separately, so counting it here would
-            // compare a label against nothing.
+            // Not produced by the token grammar: the renderer attaches it to the
+            // superscript verse label. The HTML side's verse anchors are stripped and
+            // verse identity is checked separately, so it is not counted here.
             return nil
         case nil:
             return nil
@@ -396,8 +362,8 @@ final class PSChapterDocumentParityTests: XCTestCase {
     }
 
     /// The commentary path, which differs structurally: MHCC's verse anchor is
-    /// `href="#verse%ld"` rather than `pocketsword:versemenu:`, and its records
-    /// arrive through the `bodyref` indirection.
+    /// `href="#verse%ld"` rather than a verse-menu link, and its records arrive
+    /// through the `bodyref` indirection.
     func testNativeDocumentMatchesHTMLForCommentary() throws {
         for ref in ["Genesis 1", "Psalms 23", "Matthew 1"] {
             guard try assertParity(module: "MHCC", ref: ref, options: .allOn,
@@ -437,10 +403,9 @@ final class PSChapterDocumentParityTests: XCTestCase {
 
     // MARK: - Exhaustive tier (PSDOC_EXHAUSTIVE=1)
 
-    /// All 1,189 chapters × both modules × both endpoints — 4,756 builds.
-    ///
-    /// This is the one that would catch a chapter whose shape nothing in the sample
-    /// represents. It is opt-in because it takes minutes.
+    /// All 1,189 chapters × both modules × both endpoints — 4,756 builds. Catches a
+    /// chapter whose shape nothing in the sample represents. Opt-in
+    /// (`PSDOC_EXHAUSTIVE=1`).
     func testNativeDocumentMatchesHTMLForEveryChapter() throws {
         try XCTSkipUnless(Self.isExhaustive,
                           "set PSDOC_EXHAUSTIVE=1 to run the exhaustive tier")
@@ -506,14 +471,13 @@ final class PSChapterDocumentParityTests: XCTestCase {
         }
     }
 
-    /// The corpus vocabulary claim this whole design rests on: chapter records
-    /// contain only `i.transChangeAdded` and `font size="-1"` as raw markup.
+    /// The corpus vocabulary claim this design rests on: chapter records contain
+    /// only `i.transChangeAdded` and `font size="-1"` as raw markup.
     ///
     /// If a future store carried a `blockquote`, `div` or `br`, the native reader
     /// would silently drop it — so the claim is re-derived from the store on every
-    /// run rather than trusted as a comment. Sampled across the books that
-    /// historically carried odd markup rather than the whole corpus, so it stays
-    /// fast; the exhaustive tier covers the rest by comparing text.
+    /// run. Sampled for speed; the exhaustive tier covers the rest by comparing
+    /// text.
     func testChapterRecordsCarryOnlyTheModelledRawTags() throws {
         let store = try store()
         let resolver = try resolver()
@@ -544,23 +508,20 @@ final class PSChapterDocumentParityTests: XCTestCase {
                       + "reader will drop them silently.")
     }
 
-    // MARK: - Lexicon entries (Wave 9's other native surface)
+    // MARK: - Lexicon entries
 
     /// A lexicon entry renders its definition, its cross-links, and NOT its own key.
     ///
-    /// Three separate device-found defects live in this one test, all in the same
-    /// six-character preamble every entry opens with —
+    /// Pins three things about the preamble every entry opens with —
     /// `<a name="04399"><b>4399</b></a><br />`:
     ///
-    ///  * the key number must not render (the popup header already shows it, and the
-    ///    WebView hid it with `a[name]:first-child { display: none }` — CSS this wave
-    ///    deleted);
+    ///  * the key number must not render (the popup header already shows it);
     ///  * clearing the pending text is not enough, because `<b>` flushes and the
     ///    number is already a run by the time `</a>` arrives;
     ///  * `.bold` must be reset, or it leaks into the Hebrew lemma that follows.
     ///
-    /// It also pins the cross-link, which is the whole reason a lexicon entry is
-    /// worth rendering natively rather than as static text: all 14,989 of them.
+    /// It also pins the cross-link, which is why a lexicon entry is rendered
+    /// natively rather than as static text.
     func testLexiconEntryDropsItsKeyAnchorAndKeepsCrossLinks() throws {
         let store = try store()
         // H4399 — the entry that exposed the `<b>`-inside-anchor case on device.
@@ -607,15 +568,12 @@ final class PSChapterDocumentParityTests: XCTestCase {
 
     /// A cross-link jackets ONLY its own anchor text, not the prose leading up to it.
     ///
-    /// Device-reported on H3899 ("lechem"): tapping the "3898" of "From 3898" showed
-    /// the ENTIRE definition underlined and tinted as one link — "From 3898; food
-    /// (for man or {beast}) … See also 1036". The `</a>` handler walked `runs`
-    /// backwards from the end with no lower bound, stopping only at the previous
-    /// already-linked run, so every unlinked run between two cross-links was swept
-    /// into the second one.
+    /// Regression: on H3899 ("lechem"), tapping the "3898" of "From 3898" once
+    /// showed the ENTIRE definition as one link, because the `</a>` handler walked
+    /// `runs` backwards with no lower bound.
     ///
-    /// All 14,989 baked cross-link anchors wrap a bare number (measured: 0 non-digit
-    /// inner texts), which is what makes this assertable corpus-wide — see
+    /// All 14,989 baked cross-link anchors wrap a bare number (0 non-digit inner
+    /// texts), which makes this assertable corpus-wide — see
     /// `testEveryLexiconCrossLinkIsBoundToItsOwnAnchorText`.
     func testCrossLinkDoesNotSwallowTheProseBeforeIt() throws {
         let store = try store()
@@ -654,13 +612,10 @@ final class PSChapterDocumentParityTests: XCTestCase {
 
     /// The Greek lexicon's lemma line survives the key-anchor preamble.
     ///
-    /// The two Strong's lexicons shape that preamble differently, and only one shape
-    /// was accounted for. All 8,674 StrongsRealHebrew entries put the `<br />`
-    /// immediately after the key anchor; all 5,624 StrongsRealGreek entries carry a
-    /// whole lemma line first — `<a name="03588">3588</a> <b>ὁ</b> [O(] {ho}
-    /// \<i>ho</i>\<br/>`. The unconditional `skipNextBreak` therefore consumed the
-    /// GREEK LEMMA'S own break, running "…{ho} \ho\" into "including the feminine…"
-    /// and losing the trailing backslash with it.
+    /// All 8,674 StrongsRealHebrew entries put the `<br />` immediately after the
+    /// key anchor; all 5,624 StrongsRealGreek entries carry a whole lemma line first
+    /// — `<a name="03588">3588</a> <b>ὁ</b> [O(] {ho} \<i>ho</i>\<br/>`. An
+    /// unconditional `skipNextBreak` would consume the Greek lemma's own break.
     func testGreekLexiconKeepsItsLemmaLineBreak() throws {
         let store = try store()
         let html = try XCTUnwrap(
@@ -694,13 +649,8 @@ final class PSChapterDocumentParityTests: XCTestCase {
     }
 
     /// Corpus-wide: no cross-link anywhere jackets anything but its own number, and
-    /// every one of them resolves to a real target.
-    ///
-    /// This is the sweep the two entry-specific tests above generalise. It walks all
-    /// three lexicons' 15,824 entries, so it is the exhaustive tier's business —
-    /// except that it is fast enough (a few seconds) to keep in the default suite,
-    /// and the failure it guards is the silent kind: a link that looks live and
-    /// selects the wrong text.
+    /// every one of them resolves to a real target. Walks all 15,824 entries; fast
+    /// enough to keep in the default suite, and the failure it guards is silent.
     func testEveryLexiconCrossLinkIsBoundToItsOwnAnchorText() throws {
         let store = try store()
         var anchors = 0
@@ -720,9 +670,8 @@ final class PSChapterDocumentParityTests: XCTestCase {
                         !text.isEmpty && text.allSatisfy(\.isNumber),
                         "\(module) \(key): a link jackets non-anchor text '\(run.text)'"
                     )
-                    // The target exists. A cross-link to a missing entry would open a
-                    // blank sheet, which is what `lexiconEntry` returning nil avoids —
-                    // but it should never arise for the shipped corpus.
+                    // The target exists. A cross-link to a missing entry would open a blank
+                    // sheet; it should never arise for the shipped corpus.
                     guard case .lexicon(let targetModule, let targetKey) = link else {
                         return XCTFail("\(module) \(key): unexpected link kind")
                     }
@@ -806,21 +755,12 @@ final class PSChapterDocumentParityTests: XCTestCase {
     /// A cross-link that spans a `<br />` keeps its link on BOTH halves, and puts it
     /// on neither the prose before the anchor nor the prose after it.
     ///
-    /// `flushBlock()` copies `runs` into a block and starts a fresh array, so the
-    /// `</a>` that calls `applyPendingLink()` can no longer reach the runs the anchor
-    /// emitted before the break. It used to just restart the bound at 0 and call that
-    /// defence in depth; the effect was that the pre-break half of the link went dead
-    /// while looking like ordinary text — the H3899 over-jacketing defect's mirror
-    /// image, a silently DROPPED link rather than an over-applied one. Applying the
-    /// pending link on the way out of the block fixes it, and makes the 0 bound exact:
-    /// the anchor is still open, so it owns everything the next block emits until
-    /// `</a>`.
+    /// `flushBlock()` starts a fresh `runs` array, so the `</a>` can no longer reach
+    /// the runs emitted before the break; the pending link must be applied on the
+    /// way out of the block, or the pre-break half silently goes dead.
     ///
-    /// Synthetic on purpose. Re-measured over all 14,989 `href` anchors of the three
-    /// lexicons and all 6,959 KJV note bodies, ZERO carry a `<br />` between an `<a
-    /// href>` and its `</a>` (and zero anchors are nested or unbalanced), so no store
-    /// entry can pin this — and the failure it guards is the silent kind: a tappable
-    /// number that renders as plain prose.
+    /// Synthetic on purpose: zero shipped `href` anchors span a `<br />`, so no
+    /// store entry can pin this.
     func testCrossLinkSpanningALineBreakKeepsBothHalves() throws {
         let html = "From <a href=\"sword://StrongsRealHebrew/03898\">3898"
             + "<br />(bis)</a>; food"
@@ -856,17 +796,8 @@ final class PSChapterDocumentParityTests: XCTestCase {
     // MARK: - Search highlighting
 
     /// Every term in the list gets highlighted, not just the first, and a marker
-    /// run is left alone.
-    ///
-    /// This exists because the highlighter shipped with **no caller at all**. The
-    /// renderer and the pane state were both built in Wave 9, but nothing ever set
-    /// the term — and tracing it back, the only caller it ever had in any era was a
-    /// commented-out debug line in the Obj-C original. So a green suite, a clean
-    /// build and a live device all agreed the feature was fine while it had never
-    /// once run. A unit test on the pure renderer is what makes that impossible to
-    /// repeat: it fails if the multi-term loop regresses to a single term, and the
-    /// XCUITest cannot cover it because the highlight is an attribute rather than
-    /// an accessibility value.
+    /// run is left alone. The XCUITest cannot cover this because the highlight is
+    /// an attribute rather than an accessibility value.
     @MainActor
     func testEveryHighlightTermIsAppliedAndMarkersAreSkipped() throws {
         var style = ChapterTextRenderer.Style.current()
@@ -904,13 +835,9 @@ final class PSChapterDocumentParityTests: XCTestCase {
         )
     }
 
-    /// An empty term list highlights nothing — the state a Strong's search leaves,
-    /// and the state chapter paging restores.
-    ///
-    /// `SearchModel.highlightTerms` returns `[]` for a Strong's query on purpose:
-    /// the match is a lemma the marker points at, not text present in the verse, so
-    /// highlighting the raw "H430" would mark nothing and highlighting the lemma
-    /// would mark the wrong thing.
+    /// An empty term list highlights nothing — the state a Strong's search leaves
+    /// (the match is a lemma, not text in the verse), and the state chapter paging
+    /// restores.
     @MainActor
     func testNoHighlightTermsLeavesTheVerseUnmarked() throws {
         var style = ChapterTextRenderer.Style.current()
@@ -941,15 +868,12 @@ final class PSChapterDocumentParityTests: XCTestCase {
 
     /// A bookmarked verse keeps the search jacket on its matching words.
     ///
-    /// The bookmark colour is painted UNDER the jacket, matching the WebView: the
-    /// assembler's `span.highlightedVerse` wrapped the verse and `SearchWebView.js`
-    /// inserted its yellow span *inside* it, so yellow won the matched words only.
-    /// The two row views used to paint the bookmark colour over the FINISHED string,
-    /// which erased every match — invisible to every other test, because it shows only
-    /// when a verse is both bookmarked and searched.
+    /// The bookmark colour is painted UNDER the jacket. Painting it over the
+    /// finished string erases every match, which shows only when a verse is both
+    /// bookmarked and searched.
     ///
-    /// Deliberately compares colours against each other rather than naming
-    /// `Color.yellow`, so this file needs no `import SwiftUI`.
+    /// Compares colours against each other rather than naming `Color.yellow`, so
+    /// this file needs no `import SwiftUI`.
     @MainActor
     func testBookmarkHighlightDoesNotEraseTheSearchJacket() throws {
         var style = ChapterTextRenderer.Style.current()

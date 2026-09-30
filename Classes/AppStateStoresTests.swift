@@ -387,12 +387,10 @@ final class AppStateStoresTests: XCTestCase {
 
     /// `updateFolder` throws having changed NOTHING when the id is not a folder.
     ///
-    /// It used to call `renameObject` first and validate afterwards, so a
-    /// `.missingNode` throw left the live `PSBookmarks` tree carrying the new name with
-    /// no `commit()` behind it: the Library kept showing the old name (its caller does
-    /// not reload on throw) and the next unrelated `commit()` would have persisted the
-    /// phantom rename. Mutation-checked — swapping the guard back below `renameObject`
-    /// turns this red on the name assertion.
+    /// Validating after `renameObject` would leave the live `PSBookmarks` tree
+    /// carrying the new name with no `commit()` behind it, for the next unrelated
+    /// `commit()` to persist. Mutation-checked: moving the guard below
+    /// `renameObject` turns this red on the name assertion.
     func testUpdateFolderOnANonFolderChangesNothing() throws {
         let bookmark = PSBookmark(
             name: "First",
@@ -911,18 +909,14 @@ final class AppStateStoresTests: XCTestCase {
 
     /// A reset has to TAKE in the live models, not just in the defaults plist.
     ///
-    /// `.appStateDidReset` had no production observer, so `resetPreferences()`
-    /// removed `fontNamePreference` / `fontSizePreference` / `insomniaPreference` /
-    /// `bibleHistory` out from under models that had already cached them — and at
-    /// launch it does so AFTER `AppSession.start()` has run, because
-    /// `didFinishLaunching` precedes `RootView`'s `.task`. The Settings screen went
-    /// on showing the pre-reset font and size and the Library went on listing
-    /// deleted history rows.
+    /// `resetPreferences()` removes `fontNamePreference` / `fontSizePreference` /
+    /// `insomniaPreference` / `bibleHistory` from under models that have cached them
+    /// — at launch, AFTER `AppSession.start()` has run, because `didFinishLaunching`
+    /// precedes `RootView`'s `.task`.
     ///
-    /// It also pins the half of the fix that is easy to get wrong: the reload must
-    /// NOT write the cached values back. `SettingsModel`'s properties persist
-    /// themselves from `didSet`, so a reload that assigned them individually would
-    /// re-create the very keys the reset deleted.
+    /// Also pins the half that is easy to get wrong: the reload must NOT write the
+    /// cached values back. `SettingsModel`'s properties persist themselves from
+    /// `didSet`, so assigning them individually would re-create the deleted keys.
     @MainActor
     func testAppStateResetReloadsTheModelsThatCachedRemovedPreferences() {
         defaults.set("John 3", forKey: Defaults.lastRef)
@@ -1012,20 +1006,15 @@ final class AppStateStoresTests: XCTestCase {
 
     /// The reset must leave a USABLE module selection behind.
     ///
-    /// `resetModuleSelections` clears all three primaries, and nothing put the two
-    /// reading ones back: `PSModuleController` resolves them in `init`, and the
-    /// singleton already exists by the time a reset runs (the
-    /// `moduleControllerAvailable()` guard is what builds it).
-    /// `ReaderPaneModel.render` then found `moduleName == nil` and assigned an empty
-    /// `ChapterDocument`, so the reader was blank until the next launch — on both
-    /// reset paths.
+    /// `resetModuleSelections` clears all three primaries, and the singleton only
+    /// resolves them in `init`, so without re-resolving the reading ones the reader
+    /// is blank until the next launch.
     ///
     /// Uses a private center so the reset's posts cannot reach an `AppSession`
     /// another test started. `reloadLast*` resolves against
     /// `UserDefaults.standard` (the singleton has no injectable defaults), so the
-    /// two keys are cleared there first — the same two writes the app itself makes
-    /// at every launch, which is what makes the bundled-default fallback
-    /// deterministic here.
+    /// two keys are cleared there first — the same writes the app makes at every
+    /// launch, which makes the bundled-default fallback deterministic.
     @MainActor
     func testResetRestoresThePrimaryReadingModules() {
         let controller: PSModuleController = PSModuleController.default()
@@ -1100,11 +1089,9 @@ final class AppStateStoresTests: XCTestCase {
     /// A SECOND "Find all occurrences" must run the new term, not re-show the
     /// previous one's results.
     ///
-    /// This is the regression test for a device-reported bug: the reader parked a
-    /// `PSSearchHistoryItem` for `SearchView` to pick up in `configure(...)`, but
-    /// that runs once per launch behind a `@State` guard, so every Strong's search
-    /// after the first silently displayed the earlier term. Tapping H1254 showed
-    /// H430's 1,000 rows. `startStrongsQuery` drives the model directly instead.
+    /// `SearchView.configure(...)` runs once per launch behind a `@State` guard, so
+    /// seeding it would only work for the first Strong's search (tapping H1254
+    /// showed H430's results). `startStrongsQuery` drives the model directly.
     @MainActor
     func testRepeatedStrongsQueriesEachRunTheirOwnTerm() async {
         // The query runs on a global queue, so the expressions are collected
@@ -1140,7 +1127,7 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertTrue(model.strongsSearch)
         await collector.wait(forCount: 1, in: self)
 
-        // The second lookup is the one that used to fail.
+        // The second lookup is the one that matters.
         model.startStrongsQuery("H1254", currentBookName: "Genesis")
         XCTAssertEqual(
             model.query,
@@ -1169,13 +1156,10 @@ final class AppStateStoresTests: XCTestCase {
     /// A Strong's lookup made BEFORE the Search workspace has ever appeared must
     /// still turn Strong's mode on.
     ///
-    /// Second device report on this path: the query filled in as `H430` but
-    /// "Strong's Numbers" was unchecked, so the engine searched for the literal
-    /// text and returned "No Results for H430". The cause was
-    /// `strongsSearch = strongsAvailable`, and `strongsAvailable` is only resolved
-    /// by `applyModule` during `configure(...)` — which has not run if the user
-    /// went straight from the reader to a Strong's link on a fresh launch. It read
-    /// its `false` default and switched the mode off.
+    /// `strongsAvailable` is only resolved by `applyModule` during `configure(...)`,
+    /// which has not run if the user went straight from the reader to a Strong's
+    /// link on a fresh launch. Reading its `false` default would switch the mode
+    /// off and search for the literal text "H430".
     ///
     /// So this test deliberately does NOT call `configure(...)` first. That absence
     /// is the whole point.
@@ -1219,8 +1203,9 @@ final class AppStateStoresTests: XCTestCase {
 
     /// A model-originated seed must run exactly one search.
     ///
-    /// Search input side effects now run in the properties' `didSet` observers, while
-    /// `startStrongsQuery` marks its writes as internal and schedules once explicitly.
+    /// Search input side effects run in the properties' `didSet` observers, while
+    /// `startStrongsQuery` marks its writes as internal and schedules once
+    /// explicitly.
     @MainActor
     func testSeededStrongsQueryRunsExactlyOnce() async {
         let collector = ExpressionCollector()
@@ -1296,11 +1281,8 @@ final class AppStateStoresTests: XCTestCase {
         )
     }
 
-    /// A module that genuinely has no Strong's index still clears the mode.
-    ///
-    /// The guard above keys on `module != nil` rather than removing the capability
-    /// check outright, so this is the other half: once a module IS resolved and it
-    /// does not advertise Strong's, the mode goes off as it always did.
+    /// A module that genuinely has no Strong's index still clears the mode: once a
+    /// module IS resolved and does not advertise Strong's, the mode goes off.
     @MainActor
     func testStrongsQueryRespectsAModuleWithoutStrongs() {
         let model = SearchModel(
@@ -1715,12 +1697,9 @@ final class AppStateStoresTests: XCTestCase {
     /// A FAILED background build keeps its recovery record and asks for a retry, then
     /// gives up at `maxBuildAttempts`.
     ///
-    /// Before this, one failure deleted the record AND reported `shouldRetry: false`,
-    /// so both recovery mechanisms died at once: `resumePendingBuildIfNeeded()` found
-    /// nothing on the next launch and `handle` did not reschedule. The user was left
-    /// with no search index, no retry, and one log line. The bound matters as much as
-    /// the retry — an unbounded one would re-run a ~30 s build on every cold launch
-    /// forever for a deterministic failure.
+    /// Dropping the record on the first failure would leave the user with no index
+    /// and no retry. The bound matters as much as the retry — unbounded, a
+    /// deterministic failure would re-run a ~30 s build on every cold launch.
     func testFailedBackgroundIndexBuildRetriesThenGivesUp() {
         defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
         let manager = SearchIndexBackgroundManager(
@@ -1776,13 +1755,12 @@ final class AppStateStoresTests: XCTestCase {
 
     /// A background failure must not RESURRECT a record someone else has cleared.
     ///
-    /// The dangerous interleaving: the user's own foreground build of the same module
-    /// finishes (clearing the record) while a background build is still running, and the
-    /// background build then fails. Re-persisting a retry there schedules a recovery
-    /// build for a module whose index is already complete — and `PSSearchEngine.build`
-    /// opens with `dropIndex()`, so that recovery would DESTROY the index the user just
-    /// waited for. Mutation-checked: without the `stillPending` check this reports
-    /// `shouldRetry: true` and writes the attempts counter.
+    /// The interleaving: the user's own foreground build of the same module finishes
+    /// (clearing the record) while a background build is still running, and the
+    /// background build then fails. A resurrected retry would call
+    /// `PSSearchEngine.build`, which opens with `dropIndex()`, DESTROYING the index
+    /// the user just waited for. Mutation-checked: without the `stillPending` check
+    /// this reports `shouldRetry: true` and writes the attempts counter.
     func testBackgroundFailureDoesNotResurrectAClearedRecoveryRecord() {
         defaults.set("KJV", forKey: Defaults.pendingSearchIndexModule)
         // Bound to a non-optional local: `defaults` is an implicitly-unwrapped
@@ -1864,18 +1842,9 @@ final class AppStateStoresTests: XCTestCase {
 
     /// Every chapter link survives the round trip to the URL the text carries.
     ///
-    /// **This replaces `testReaderBridgeEventsPreserveNavigationPayloads`** (Wave 6),
-    /// which pinned the `pocketsword:currentverse:` / `pocketsword:versemenu:` /
-    /// `arraydump:` shapes the JavaScript bridge used. Wave 9 deleted that bridge
-    /// with the WebView: verse position is the pane's own state, and there is no
-    /// offset table to dump. The *claim* is carried forward unchanged though — a link
-    /// tapped in the chapter text must reach its handler with its payload intact —
-    /// and the round trip is the new place that can silently break.
-    ///
-    /// It matters because `AttributedString.link` is the only way SwiftUI makes a
-    /// span of `Text` tappable, so a typed `InlineLink` has to become a URL and come
-    /// back. A lossy encoding would not fail to build; it would open the wrong
-    /// lexicon entry.
+    /// `AttributedString.link` is the only way SwiftUI makes a span of `Text`
+    /// tappable, so a typed `InlineLink` has to become a URL and come back. A lossy
+    /// encoding would not fail to build; it would open the wrong lexicon entry.
     func testChapterLinksSurviveTheURLRoundTrip() throws {
         let cases: [InlineLink] = [
             .strongs(type: "Hebrew", value: "0430"),
@@ -1912,20 +1881,10 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertNil(InlineLink(url: try XCTUnwrap(URL(string: "pslink://nonsense/1"))))
     }
 
-    // `testReaderFrameStopsAtOverlappingTabBar` is GONE (Wave 7). It pinned
-    // `PSModuleViewController.readerFrame`, the manual clamp that capped the Wave 6
-    // reader host at the floating tab bar's top because a bare SwiftUI `WebView`
-    // could not inset itself. `ReaderScreen`'s `NavigationStack` participates in the
-    // safe area properly, so the host now fills the controller's view and both the
-    // clamp and its test are deleted rather than adjusted.
-
-    /// The per-module display toggles a module's BAKED feature set earns it.
-    ///
-    /// This is the Wave 7 home of a contract that was previously only observable by
-    /// counting rows in a live `UIMenu`: **KJV yields exactly six rows, and
-    /// Cross-references is not among them** (it has no `OSISScripref` filter and no
-    /// `Feature=Scripref`), while **MHCC yields zero**, which is what makes the
-    /// control hide itself instead of presenting an empty menu.
+    /// The per-module display toggles a module's BAKED feature set earns it:
+    /// **KJV yields exactly six rows, and Cross-references is not among them** (no
+    /// `OSISScripref` filter, no `Feature=Scripref`), while **MHCC yields zero**,
+    /// which hides the control instead of presenting an empty menu.
     func testDisplayTogglesMatchBakedFeatureSets() throws {
         let store = try XCTUnwrap(
             PSContentStore.shared,
@@ -2027,15 +1986,8 @@ final class AppStateStoresTests: XCTestCase {
     }
 
     /// `AppSession.start()` restores the persisted reading position and wires the
-    /// settings side effects.
-    ///
-    /// Wave 8 retargeted this off `LegacyStateBridge`, which is deleted. The bridge
-    /// existed to mirror UIKit notification state into `AppSession` during the mixed
-    /// migration; both ends are SwiftUI now, so `start()` does the two things that
-    /// actually mattered — seed `reading` from `ReadingStateStore`, and post the
-    /// redisplay a font change needs — directly. The **claims** are the bridge's:
-    /// the restored snapshot must carry both verse positions independently, and a
-    /// font change must reach the reader.
+    /// settings side effects: the restored snapshot must carry both verse positions
+    /// independently, and a font change must reach the reader.
     @MainActor
     func testSessionStartRestoresReadingStateAndWiresSettingsEffects() {
         defaults.set("John 3", forKey: Defaults.lastRef)
@@ -2068,11 +2020,7 @@ final class AppStateStoresTests: XCTestCase {
     }
 
     /// `LibraryModel` refreshes its snapshots off `bookmarksChanged` /
-    /// `historyChanged`.
-    ///
-    /// Also a retargeted bridge test: the observers moved from `LegacyStateBridge`
-    /// onto the model that owns the data, so this drives them where they now live.
-    /// The claim is unchanged — a mutation behind the store's back, announced by
+    /// `historyChanged`: a mutation behind the store's back, announced by
     /// notification, must reach the published arrays, because that is what makes the
     /// SwiftUI lists update.
     @MainActor
@@ -2124,14 +2072,9 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(library.history.count, 1)
     }
 
-    /// `HistoryStore.addEntry` writes the byte-exact persisted row shape.
-    ///
-    /// Wave 8 moved this off `PSHistoryController` (a deleted
-    /// `UITableViewController`) onto the store. The persisted format is
-    /// `[ref, "0", module, NSDate]` — positional, with `"0"` a literal string — and
-    /// `PersistedFormatTests` locks the reader side of it. This locks the writer,
-    /// which had no direct coverage before: it was only reachable through a view
-    /// controller.
+    /// `HistoryStore.addEntry` writes the byte-exact persisted row shape
+    /// `[ref, "0", module, NSDate]` — positional, with `"0"` a literal string.
+    /// `PersistedFormatTests` locks the reader side; this locks the writer.
     @MainActor
     func testHistoryStoreAddEntryWritesThePersistedRowShape() throws {
         defaults.set("Genesis 5", forKey: Defaults.lastRef)
@@ -2232,18 +2175,15 @@ final class AppStateStoresTests: XCTestCase {
     }
 
     /// **An unlaid-out scroll view's zero is not a position, and persisting it
-    /// destroyed the saved scroll offset on every launch.**
+    /// destroys the saved scroll offset.**
     ///
-    /// Replays the geometry sequence measured on device with an instrumented build.
-    /// `ChapterTextView`'s first `onScrollGeometryChange` publish is all zeros — no
-    /// content, no container, no insets — and it arrives ~130 ms BEFORE the restore's
-    /// deferred hop runs. The old code read `abs(500 - 0) > 2` as a scroll and wrote
-    /// `"0"` over the key, so the next launch had nothing left to restore:
-    /// self-perpetuating, and the whole reason a relaunch always opened at the top of
-    /// the chapter.
+    /// Replays the geometry sequence measured on device. `ChapterTextView`'s first
+    /// `onScrollGeometryChange` publish is all zeros and arrives ~130 ms BEFORE the
+    /// restore's deferred hop runs. Treating it as a scroll writes `"0"` over the
+    /// key, so every later launch opens at the top of the chapter.
     ///
-    /// Step 1 is red on the pre-fix code; steps 2-4 pin the gate's three exits so it
-    /// cannot suppress persistence for the rest of the session.
+    /// Step 1 is red if the `isLaidOut` guard is removed; steps 2-4 pin the gate's
+    /// three exits so it cannot suppress persistence for the rest of the session.
     @MainActor
     func testUnlaidOutGeometryDoesNotOverwriteThePersistedScrollOffset() {
         withPreservedPanePositionKeys { standard, scrollKey in
@@ -2292,11 +2232,10 @@ final class AppStateStoresTests: XCTestCase {
     /// A restore the chapter can no longer honour must give up at the scroll view's
     /// maximum rather than suppressing persistence forever.
     ///
-    /// This is the bigger-font / fewer-rows case: the offset was saved against a
-    /// taller chapter. The reachable maximum in the persisted space is
-    /// `contentSize.height - containerSize.height` exactly — measured both in a
-    /// standalone probe (4376 = 5000 - 624) and in the app (1199 = 1874 - 675) — so
-    /// pinning there IS the position now, and it is what stops the gate wedging.
+    /// The bigger-font / fewer-rows case: the offset was saved against a taller
+    /// chapter. The reachable maximum in the persisted space is
+    /// `contentSize.height - containerSize.height` exactly (measured: 1199 = 1874 -
+    /// 675), so pinning there IS the position now.
     @MainActor
     func testUnreachableOffsetRestoreGivesUpAtTheScrollViewsMaximum() {
         withPreservedPanePositionKeys { standard, scrollKey in

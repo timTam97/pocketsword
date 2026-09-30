@@ -266,14 +266,10 @@ final class BookmarkStore {
 
     /// Renames a folder and sets its colour, or throws having changed NOTHING.
     ///
-    /// The type check runs BEFORE `renameObject`, deliberately. `renameObject`
-    /// mutates the live `PSBookmarks.default()` tree (`name` plus
-    /// `dateLastAccessed`) and only `commit()` writes it out, so validating
-    /// afterwards left a non-folder node renamed in memory with nothing saved — the
-    /// Library still showed the old name (`LibraryModel.updateBookmarkFolder` does
-    /// not `reloadBookmarks()` on throw) and the next unrelated `commit()` would have
-    /// persisted the phantom rename. `renameObject`'s own guards all precede its
-    /// mutations, which is why `rename(id:to:)` needs no equivalent change.
+    /// The type check runs BEFORE `renameObject`, deliberately: `renameObject`
+    /// mutates the live `PSBookmarks.default()` tree and only `commit()` writes it
+    /// out, so validating afterwards would leave a phantom rename in memory for the
+    /// next unrelated `commit()` to persist.
     func updateFolder(
         id: UUID,
         name: String,
@@ -524,10 +520,8 @@ final class DictionaryStore {
         entryProvider: @escaping EntryProvider = {
             PSContentReader.entry(module: $0, key: $1)
         },
-        // Wave 9: the entry's own HTML, not a shelled page.
-        // `createInfoHTMLString` is deleted — `EntryTextView` renders the body
-        // natively — so this is an identity pass. The seam is KEPT rather than
-        // removed because the tests inject through it.
+        // The entry's own HTML (`EntryTextView` renders it natively), so this is
+        // an identity pass. The seam exists because the tests inject through it.
         htmlBuilder: @escaping HTMLBuilder = { body, _ in body }
     ) {
         self.defaults = defaults
@@ -675,12 +669,9 @@ final class HistoryStore {
 
     /// Records the reference currently being read.
     ///
-    /// Wave 8 moved this off `PSHistoryController` (a `UITableViewController`,
-    /// deleted with the rest of the UIKit list layer) onto the store that already
-    /// owns every other write to this key. The **serialized shape is unchanged and
-    /// must stay so** — `[ref, "0", mod, NSDate]`, positional, with `"0"` a
-    /// literal string standing in for a scroll amount that has never been
-    /// written. `PersistedFormatTests` locks it.
+    /// The **serialized shape must not change** — `[ref, "0", mod, NSDate]`,
+    /// positional, with `"0"` a literal string standing in for a scroll amount
+    /// that has never been written. `PersistedFormatTests` locks it.
     ///
     /// Three quirks are preserved deliberately:
     ///
@@ -691,12 +682,7 @@ final class HistoryStore {
     ///  2. **The cap uses `>=`**, so the list settles at 99 entries rather than
     ///     `historyMaxEntries` = 100. Off by one, and persisted; changing it would
     ///     make one extra row appear for every user on upgrade.
-    ///  3. **No entry is written at all when the relevant module is absent.** The
-    ///     `valid` flag gates the whole body, so a commentary-mode navigation with
-    ///     no commentary installed records nothing.
-    ///
-    /// The parameter was a `ShownTab`; it is a `ReadingMode` now, which is the
-    /// same two-way distinction the callers actually had.
+    ///  3. **No entry is written at all when the relevant module is absent.**
     func addEntry(mode: ReadingMode) {
         var history = defaults.array(forKey: AppConstants.historyName)
             .map { NSMutableArray(array: $0) }
@@ -714,12 +700,8 @@ final class HistoryStore {
         guard let module else { return }
 
         // The chapter reference comes from THIS store's `defaults`, not from
-        // `PSModuleController.getCurrentBibleRef()`, which always reads
-        // `UserDefaults.standard`. Both read the same `lastRef` key and apply the
-        // same munging, so behaviour is identical in the app — but going through
-        // the global made the injected `defaults` a half-truth, and a test that
-        // seeded a suite got the *device's* current chapter written into its
-        // history row.
+        // `PSModuleController.getCurrentBibleRef()` (which always reads
+        // `UserDefaults.standard`), so an injected test suite is honoured.
         let chapterRef = PSRefHelper.createRefString(
             defaults.string(forKey: Defaults.lastRef) ?? "Genesis 1"
         )
@@ -728,9 +710,9 @@ final class HistoryStore {
 
         if history == nil {
             history = NSMutableArray()
-            // Seeding the persistent domain is what the original did to make the
-            // key exist before the first `set`. Kept: `setPersistentDomain` also
-            // flushes, and removing it changes when the file first appears.
+            // Seeding the persistent domain makes the key exist before the first
+            // `set`. Kept: `setPersistentDomain` also flushes, and removing it
+            // changes when the file first appears.
             let bundleId = Bundle.main.bundleIdentifier ?? ""
             var preferences = defaults.persistentDomain(forName: bundleId) ?? [:]
             preferences[AppConstants.historyName] = history

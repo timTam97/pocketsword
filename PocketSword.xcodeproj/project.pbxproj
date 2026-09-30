@@ -172,13 +172,9 @@
 		052B52841101A32900FFDF01 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		052EC8FE13DD45CF001B66DC /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "Resources/Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		052EC8FF13DD45CF001B66DC /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "Resources/Default-Portrait~ipad.png"; sourceTree = "<group>"; };
-		053C59DA1150B3630024192C /* S_M_85032342_20091130_20091227.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20091130_20091227.txt; path = Resources/doc/S_M_85032342_20091130_20091227.txt; sourceTree = "<group>"; };
-		053C59DB1150B3630024192C /* S_M_85032342_20091228_20100131.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20091228_20100131.txt; path = Resources/doc/S_M_85032342_20091228_20100131.txt; sourceTree = "<group>"; };
-		053C59DC1150B3630024192C /* S_M_85032342_20100201_20100228.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20100201_20100228.txt; path = Resources/doc/S_M_85032342_20100201_20100228.txt; sourceTree = "<group>"; };
 		054509C519A5DAA900E0A702 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = ../iPhoneOS.sdk/usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 		054509C719A5DAFA00E0A702 /* liblzma.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.5.tbd; path = ../iPhoneOS.sdk/usr/lib/liblzma.5.tbd; sourceTree = SDKROOT; };
 		0545E29A1063A09500DD7F06 /* globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
-		0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "SWORD-HOWTO.txt"; path = "Resources/doc/SWORD-HOWTO.txt"; sourceTree = "<group>"; };
 		0550A0C310A8407C00363295 /* CharisSILR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = CharisSILR.ttf; path = Resources/fonts/CharisSILR.ttf; sourceTree = "<group>"; };
 		0552D12D1295230300A4994B /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
 		0552D12E1295230300A4994B /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "Resources/Icon-Small.png"; sourceTree = "<group>"; };
@@ -189,11 +185,7 @@
 		056BC73812F0E8E00029F3A2 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folder.png; path = Resources/folder.png; sourceTree = "<group>"; };
 		056BC73912F0E8E00029F3A2 /* folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "folder@2x.png"; path = "Resources/folder@2x.png"; sourceTree = "<group>"; };
 		056CD38516BB6D6200AA0674 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = ../iPhoneOS.sdk/usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
-		056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "UserComments-Requests.txt"; path = "Resources/doc/UserComments-Requests.txt"; sourceTree = "<group>"; };
-		057CC44E127FE5BB00953EEC /* changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = changelog.txt; path = Resources/doc/changelog.txt; sourceTree = "<group>"; };
-		058E2C7210F49E21006E4447 /* search.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = search.txt; path = Resources/doc/search.txt; sourceTree = "<group>"; };
 		059A6CC011B79ABD00B33E54 /* notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notes.png; path = Resources/notes.png; sourceTree = "<group>"; };
-		05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = S_M_85032342_20100301_20100328.txt; path = Resources/doc/S_M_85032342_20100301_20100328.txt; sourceTree = "<group>"; };
 		05A8A1C911717AB4005B6411 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		05B3D61610BB7A92000F8A48 /* MMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MMM.png; path = Resources/MMM.png; sourceTree = "<group>"; };
 		05BCB3FD1147711B00984097 /* popup-top-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-top-bar.png"; path = "Resources/popup-top-bar.png"; sourceTree = "<group>"; };
@@ -445,15 +437,7 @@
 		0542F70F10BE7C0B0088A721 /* doc */ = {
 			isa = PBXGroup;
 			children = (
-				056CECF712FA349F00A7DA37 /* UserComments-Requests.txt */,
-				057CC44E127FE5BB00953EEC /* changelog.txt */,
-				05A8A06C11709E9F005B6411 /* S_M_85032342_20100301_20100328.txt */,
-				053C59DA1150B3630024192C /* S_M_85032342_20091130_20091227.txt */,
-				053C59DB1150B3630024192C /* S_M_85032342_20091228_20100131.txt */,
-				053C59DC1150B3630024192C /* S_M_85032342_20100201_20100228.txt */,
-				0546D59C10CF725F00799DCB /* SWORD-HOWTO.txt */,
 				E9BD1D530ED34003006A60E9 /* LICENSE.txt */,
-				058E2C7210F49E21006E4447 /* search.txt */,
 			);
 			name = doc;
 			sourceTree = "<group>";

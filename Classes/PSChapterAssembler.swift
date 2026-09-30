@@ -2,29 +2,23 @@
 //  PSChapterAssembler.swift
 //  PocketSword
 //
-//  Replays `-[SwordModule chapterBodyHTML:applyBookmarkHighlights:entryCount:]`'s
-//  accumulator loop over the content store's expanded records. Phase 3 of
-//  SWORD_REMOVAL_PLAN.md.
-//
-//  A faithful transliteration, quirks included. The loop's own comments in
-//  SwordModule.mm:1050-1190 explain the paragraphing hacks; this file preserves
-//  them rather than tidying them, because the fixtures are byte-exact and any
-//  "improvement" is a divergence.
+//  Replays the SWORD engine's chapter accumulator loop over the content store's
+//  expanded records. A faithful transliteration, quirks and paragraphing hacks
+//  included: the fixtures are byte-exact, so any "improvement" is a divergence.
 //
 //  THE COUNTER IS NOT A VERSE NUMBER. `i` advances at the bottom of every
 //  iteration, including for slots the loop skips as empty or duplicate, and
 //  including the final one that steps out of the chapter — so Gen 1's 31 verses
-//  produce 32. It drives the `id="vv{i}"` anchors, the `pocketsword:versemenu:i`
-//  links, the bookmark-highlight lookup and the JS `versepos` array bounds, so the
-//  store persists the loop's INPUT sequence (empties preserved) and this replays
-//  it, rather than either side recomputing the number.
+//  produce 32. It drives the `id="vv{i}"` anchors, the verse-menu links and the
+//  bookmark-highlight lookup, so the store persists the loop's INPUT sequence
+//  (empties preserved) and this replays it, rather than either side recomputing
+//  the number.
 //
-//  Three branches here are unreachable for the five shipped modules and are ported
-//  anyway, because they are cheap and their absence would be a silent behaviour
-//  change if a module ever did emit them (measured over the whole baked corpus:
-//  zero occurrences of `<blockquote class="lg">`, `indentedLineOfWidth-` or `<!P>`):
-//  the `lg` blockquote anchor move, `hackChapterToAccommodateBrokenLG`, and the
-//  post-loop blockquote close.
+//  Three branches are unreachable for the five shipped modules (zero occurrences
+//  of `<blockquote class="lg">`, `indentedLineOfWidth-` or `<!P>` in the corpus)
+//  and are kept anyway, because their absence would be a silent behaviour change
+//  if a module ever emitted them: the `lg` blockquote anchor move,
+//  `hackChapterToAccommodateBrokenLG`, and the post-loop blockquote close.
 //
 
 import Foundation
@@ -38,9 +32,8 @@ enum PSChapterAssembler {
     }
 
     /// How to format the verse rows. Bibles and commentaries differ in more than
-    /// styling: a commentary's anchor is `href="#verse%ld"`, NOT
-    /// `pocketsword:versemenu:` (SwordModule.mm:1116), so a commentary verse tap
-    /// does nothing today. Preserved deliberately.
+    /// styling: a commentary's anchor is `href="#verse%ld"`, not a verse-menu link,
+    /// so tapping a commentary verse does nothing. Deliberate.
     enum ModuleKind {
         case bible
         case commentary
@@ -56,11 +49,10 @@ enum PSChapterAssembler {
         /// filter's interverse emission — hence `headings || canonical`.
         var headingsOn = true
         // No `bookmarkRef` here: highlighting is driven entirely by the
-        // `highlightColour` closure `assemble` takes, and the caller decides what ref
-        // that closure keys on — PSContentReader passes the CALLER's ref through
-        // createRefString ("Psalms 23"), not SWORD's canonical key text ("Ps 23"),
-        // because the abbreviation renders identical bytes but matches no bookmark.
-        // A ref on Config would be a second, unread way to say the same thing.
+        // `highlightColour` closure, and the caller decides what ref that keys on —
+        // PSContentReader passes the CALLER's ref through createRefString
+        // ("Psalms 23", not "Ps 23"), because the abbreviation renders identical
+        // bytes but matches no bookmark.
     }
 
     // MARK: - Assembly
@@ -87,10 +79,8 @@ enum PSChapterAssembler {
             // *x / *n -> x / n, for xrefs and footnotes.
             thisEntry = thisEntry.replacingOccurrences(of: "*x", with: "x")
             thisEntry = thisEntry.replacingOccurrences(of: "*n", with: "n")
-            // Strip a leading whitespace run. The Obj-C does this via
-            // rangeOfCharacterFromSet on the inverted whitespace set, so an entry
-            // that is ENTIRELY whitespace (location == NSNotFound) is left alone —
-            // it then fails the isEqualToString:@"" test and IS emitted. Preserved.
+            // Strip a leading whitespace run. An entry that is ENTIRELY whitespace is
+            // left alone — it then fails the empty test and IS emitted. Deliberate.
             if let firstNonWS = thisEntry.rangeOfCharacter(from: CharacterSet.whitespacesAndNewlines.inverted),
                firstNonWS.lowerBound != thisEntry.startIndex {
                 thisEntry = String(thisEntry[firstNonWS.lowerBound...])
@@ -169,7 +159,7 @@ enum PSChapterAssembler {
         return Result(body: verses, entryCount: i)
     }
 
-    // MARK: - Bookmark highlighting (SwordModule.mm:995-1040)
+    // MARK: - Bookmark highlighting
 
     /// Wrap a verse in the highlight span, re-opening it around every block
     /// element. Not a simple wrap: `findNextBlockElement` treats ANY
@@ -179,10 +169,9 @@ enum PSChapterAssembler {
     static func highlight(verse verseHTML: String, cssClass: String) -> String {
         let spanOpen = "<span class=\"highlightedVerse\" style=\"background-color:\(cssClass);color:black;\">"
         let spanClose = "</span>"
-        // NSMutableString, because the algorithm is index-based insertion and the
-        // Obj-C original's offsets are UTF-16 code units. Reimplementing it over
-        // String.Index would be a different algorithm with different behaviour on
-        // any entry containing non-BMP scalars.
+        // NSMutableString, because the algorithm is index-based insertion at UTF-16
+        // offsets. Reimplementing it over String.Index would be a different
+        // algorithm with different behaviour on non-BMP scalars.
         let currentVerse = NSMutableString(string: verseHTML)
 
         var currentBlockRange = findNextBlockElement(currentVerse, NSRange(location: 0, length: currentVerse.length))
@@ -221,12 +210,9 @@ enum PSChapterAssembler {
         return currentVerse as String
     }
 
-    /// Port of `-findNextBlockElement:range:` (SwordModule.mm:912-936). Returns the
-    /// range of the next tag that is not self-closing, or NSNotFound.
-    ///
-    /// The Obj-C recurses past a self-closing tag; this loops, which is the same
-    /// result without the stack depth (a verse with many `<br />`s would otherwise
-    /// recurse once per tag).
+    /// Returns the range of the next tag that is not self-closing, or NSNotFound.
+    /// Loops past self-closing tags rather than recursing (a verse with many
+    /// `<br />`s would otherwise recurse once per tag).
     private static func findNextBlockElement(_ searchString: NSString, _ range: NSRange) -> NSRange {
         var searchRange = range
         while true {
@@ -248,20 +234,18 @@ enum PSChapterAssembler {
         }
     }
 
-    // MARK: - The broken-lg hack (SwordModule.mm:938-993)
+    // MARK: - The broken-lg hack
 
-    /// Port of `-hackChapterToAccommodateBrokenLG:`. Moves a `<blockquote class="lg">`
-    /// to the start of the verse when an `indentedLineOfWidth-` div opens outside
-    /// one (a WEB-module shape). Unreachable for the five shipped modules — zero
-    /// occurrences in the baked corpus — ported so the behaviour does not silently
-    /// change if that ever stops being true.
+    /// Moves a `<blockquote class="lg">` to the start of the verse when an
+    /// `indentedLineOfWidth-` div opens outside one (a WEB-module shape).
+    /// Unreachable for the shipped modules; kept so behaviour cannot silently
+    /// change if that stops being true.
     private static func hackChapterToAccommodateBrokenLG(_ chapterString: String) -> String {
         let returnChapter = NSMutableString(string: chapterString)
         var inLG = false
         var currentTagRange = findNextBlockElement(returnChapter, NSRange(location: 0, length: returnChapter.length))
 
-        // A 6-deep sliding window of previous tags and their offsets, exactly as
-        // the original keeps (one..six).
+        // A 6-deep sliding window of previous tags and their offsets.
         var tags: [String?] = Array(repeating: nil, count: 6)
         var offsets = [Int](repeating: 0, count: 6)
         let lgOpen = "<blockquote class=\"lg\">"

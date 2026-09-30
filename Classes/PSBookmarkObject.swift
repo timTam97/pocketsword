@@ -2,14 +2,8 @@
 //  PSBookmarkObject.swift
 //  PocketSword
 //
-//  Swift migration step 1.1 — bookmark inheritance chain (ATOMIC, §2A Rule 3).
-//  Port of PSBookmarkObject.{h,m}. The four-class chain
-//  (PSBookmarkObject <- PSBookmark / PSBookmarkFolder <- PSBookmarks) migrates
-//  together in one PR because a Swift base with Obj-C subclass headers cannot
-//  compile.
-//
-//  Exposes @objc members wherever Obj-C callers (the .mm view controllers, the
-//  XCTest persisted-format guard) reference them.
+//  Base of the bookmark chain:
+//  PSBookmarkObject <- PSBookmark / PSBookmarkFolder <- PSBookmarks.
 //
 
 import Foundation
@@ -23,8 +17,7 @@ class PSBookmarkObject: NSObject, Identifiable {
     @objc var dateAdded: Date?
     @objc var dateLastAccessed: Date?
 
-    // `folder` is read-only to Obj-C (the original @property (readonly) BOOL folder),
-    // set internally by the subclass initializers / the original -init.
+    // Read-only outside the chain; set by the subclass initializers.
     @objc private(set) var folder: Bool = false
 
     // rgbHexString is only used for a folder. Bookmarks inherit it from their
@@ -32,7 +25,6 @@ class PSBookmarkObject: NSObject, Identifiable {
     @objc var rgbHexString: String?
 
     @objc override init() {
-        // Mirrors the Obj-C -init: folder defaults to NO.
         self.folder = false
         super.init()
     }
@@ -44,8 +36,7 @@ class PSBookmarkObject: NSObject, Identifiable {
         self.dateLastAccessed = dla
     }
 
-    // Internal hook so subclasses (PSBookmarkFolder) can flip the read-only flag,
-    // matching the original `folder = YES;` assignments inside the subclass -init.
+    // Lets subclasses (PSBookmarkFolder) flip the read-only flag.
     func setFolderFlag(_ value: Bool) {
         self.folder = value
     }

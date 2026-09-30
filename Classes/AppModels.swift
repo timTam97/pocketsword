@@ -225,11 +225,6 @@ final class LibraryModel {
     /// from outside it: `bookmarksChanged` (the bookmark editor, and the store's
     /// own mutations) and `historyChanged` (a new entry, a clear, or an iCloud
     /// merge).
-    ///
-    /// `LegacyStateBridge` used to do this, as part of mirroring UIKit state into
-    /// `AppSession`. That was the right place while a UIKit controller owned the
-    /// lists; now that the lists are SwiftUI reading straight off this model, the
-    /// model is the right place, and the bridge is deleted.
     func startObservingChanges() {
         guard observers.isEmpty else { return }
         for (name, handler) in [
@@ -638,17 +633,11 @@ final class SearchModel {
     @ObservationIgnored private var currentBookName: String?
     /// Announced when a search settles on a new result set, or clears it.
     ///
-    /// **Deliberately unwired in production, and that is a decision rather than an
-    /// omission.** Wave 7 hooked this up from `PSTabBarControllerDelegate` to keep
-    /// the reader's `savedSearchHistoryItem` fresh, which mattered because the
-    /// UIKit search UI was rebuilt on every present and therefore re-ran
-    /// `configure(...)` every time. The SwiftUI Search workspace is persistent:
-    /// this model keeps its own query and results, and `SearchView` calls
-    /// `configure(...)` once per launch behind `@State configured`, so refreshing
-    /// the reader's copy could not change anything the user sees. The seam is kept
-    /// because `AppStateStoresTests.testSearchModelRejectsAStaleCompletion` uses
-    /// it as its completion signal for the stale-query race. Wire it only
-    /// alongside a consumer that actually reads the result.
+    /// **Deliberately unwired in production.** The Search workspace is persistent
+    /// and keeps its own query and results, so refreshing the reader's copy could
+    /// not change anything the user sees. Kept because
+    /// `AppStateStoresTests.testSearchModelRejectsAStaleCompletion` uses it as its
+    /// completion signal. Wire it only alongside a consumer that reads the result.
     @ObservationIgnored var onHistoryChange: (
         @MainActor (PSSearchHistoryItem?) -> Void
     )?
@@ -719,20 +708,16 @@ final class SearchModel {
         }
     }
 
-    /// Seeds a Strong's query from outside the search UI and runs it.
+    /// Seeds a Strong's query from outside the search UI and runs it — the "Find
+    /// all occurrences" path.
     ///
-    /// This is the "Find all occurrences" path, and it exists because
-    /// `configure(...)` is **not** re-entrant in practice: `SearchView` runs it once
-    /// behind a `@State` guard, so on the second and subsequent Strong's searches
-    /// the seeded history item was never applied and the workspace kept showing the
-    /// *previous* term's results. Tapping H1254 showed H430's 1,000 rows —
-    /// reproduced on iOS 27 and reported from a device.
+    /// Needed because `SearchView` runs `configure(...)` only once per launch, so a
+    /// seeded history item would only apply to the first Strong's search.
     ///
-    /// Unlike `restore(_:)` this deliberately does NOT read persisted match/fuzzy
-    /// options: a Strong's lookup is an exact lemma query, and inheriting a stale
-    /// "any word" or fuzzy setting from the user's last free-text search is what
-    /// makes a lemma query return the wrong thing. It sets the three options the
-    /// query needs and leaves the rest alone.
+    /// Deliberately does NOT read persisted match/fuzzy options: a Strong's lookup
+    /// is an exact lemma query, and inheriting a stale "any word" or fuzzy setting
+    /// makes it return the wrong thing. It sets the three options the query needs
+    /// and leaves the rest alone.
     func startStrongsQuery(_ term: String, currentBookName: String?) {
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
@@ -740,20 +725,13 @@ final class SearchModel {
         withInternalInputMutation {
             query = trimmed
 
-            // Strong's mode is ON by definition: the term IS a Strong's number, and
-            // with the mode off the query searches for the literal text "H430" and
-            // finds nothing.
+            // Strong's mode is ON by definition: the term IS a Strong's number; with
+            // the mode off the query searches for the literal text "H430".
             //
-            // Do NOT gate this on `strongsAvailable`. That flag is only resolved by
-            // `applyModule`, which runs from `configure(...)` — and the reader can call
-            // this BEFORE the Search workspace has ever appeared, when the flag is
-            // still its `false` default. Reading it then turns the mode off and the
-            // search silently returns nothing, which is exactly what a device report
-            // showed: the field filled in with `H430`, Strong's Numbers unchecked, "No
-            // Results".
-            //
-            // The module's real capability is still honoured, from whichever side knows
-            // it: if the module is already resolved we check it here, and if it is not,
+            // Do NOT gate this on `strongsAvailable` alone: it is only resolved by
+            // `applyModule` (from `configure(...)`), and this can run before the Search
+            // workspace has ever appeared, when the flag is still `false`. If the
+            // module is already resolved its capability is checked here; if not,
             // `applyModule` clears the mode during `configure(...)` before the search
             // runs.
             strongsSearch = module == nil || strongsAvailable
@@ -1006,8 +984,8 @@ final class SearchModel {
 
     /// Model-originated writes are grouped explicitly so their property observers do
     /// not look like user edits. User binding writes run their side effects
-    /// synchronously in `didSet`, eliminating the delivery window where a later model
-    /// sync could previously make a real change look like an `.onChange` echo.
+    /// synchronously in `didSet`, so a later model sync cannot make a real change
+    /// look like an `.onChange` echo.
     private func withInternalInputMutation(_ mutation: () -> Void) {
         let wasApplyingInternalInputs = isApplyingInternalInputs
         isApplyingInternalInputs = true
@@ -1055,11 +1033,9 @@ final class SearchModel {
             return
         }
 
-        // Sticky Strong's mode, cleared when the text stopped looking like a lemma
-        // (ported from `PSModuleSearchController.runSearchForCurrentText`: a plain
-        // word searched with the mode on hits the lemmas column and returns zero
-        // rows). This is a model-originated write, so it is marked as such instead
-        // of relying on a later value comparison to distinguish it from the user.
+        // Sticky Strong's mode, cleared when the text stops looking like a lemma
+        // (a plain word searched with the mode on hits the lemmas column and
+        // returns zero rows). A model-originated write, marked as such.
         if strongsSearch && !Self.inputLooksLikeStrongs(query) {
             withInternalInputMutation {
                 strongsSearch = false
@@ -1137,14 +1113,10 @@ final class AppSession {
     var selectedWorkspace: Workspace
     /// The last `sword://` URL this session accepted.
     ///
-    /// **Write-only in production, and kept deliberately.** `ReadingWorkspaceModel.start()`
-    /// used to branch on it to choose a verse restore over a scroll restore, but that
-    /// branch could never fire — `start()` runs before `replayPendingURL()`, and
-    /// `open(_:)` returns at `guard isReady` before assigning this — so it was deleted
-    /// along with the `= nil` that reset it. What remains is the assertable record of
-    /// what a route did, which is what `URLRouterTests.testAppSessionMirrorsAcceptedRoute`
-    /// reads. It therefore LATCHES the most recent URL for the rest of the session; do
-    /// not give it a production reader without first deciding when it should be cleared.
+    /// **Write-only in production, deliberately**: the assertable record of what a
+    /// route did, read by `URLRouterTests.testAppSessionMirrorsAcceptedRoute`. It
+    /// LATCHES the most recent URL for the rest of the session; do not give it a
+    /// production reader without first deciding when it should be cleared.
     var lastOpenedURL: URL?
     @ObservationIgnored let reading: ReadingModel
     @ObservationIgnored let settings: SettingsModel
@@ -1159,11 +1131,9 @@ final class AppSession {
     /// A `sword://` URL that arrived before launch preparation finished, replayed
     /// from `replayPendingURL()`.
     ///
-    /// The old scene delegate cached this in `_pendingLaunchURL` for the same
-    /// reason: a URL can be delivered with the scene-connection options, before
-    /// the reader exists to navigate. `onOpenURL` can likewise fire while
-    /// `LaunchPhase` is still `.preparing`, and routing then would render a
-    /// chapter that the `DefaultsLastRefValidated` migration is about to rewrite.
+    /// `onOpenURL` can fire while `LaunchPhase` is still `.preparing`, and routing
+    /// then would render a chapter the `DefaultsLastRefValidated` migration is
+    /// about to rewrite.
     @ObservationIgnored private var pendingURL: URL?
     @ObservationIgnored private var isReady = false
     /// The `.appStateDidReset` observer. Held so it can be removed, and so a
@@ -1194,15 +1164,8 @@ final class AppSession {
         }
     }
 
-    /// Wires the side effects that `LegacyStateBridge` used to mirror through
-    /// `NotificationCenter`.
-    ///
-    /// The bridge existed so a SwiftUI settings change could reach the UIKit
-    /// render path it did not know about. Both ends are SwiftUI now, so these are
-    /// direct: a font/size change posts the redisplay the reader observes, and the
-    /// keep-awake toggle sets the idle timer. `LegacyStateBridge` itself is
-    /// deleted — its notification *observers* were mirroring UIKit state into
-    /// `AppSession`, and there is no UIKit state left to mirror.
+    /// Wires the settings side effects: a font/size change posts the redisplay
+    /// the reader observes, and the keep-awake toggle sets the idle timer.
     func start() {
         settings.onReadingAppearanceChanged = {
             NotificationCenter.default.post(
@@ -1214,24 +1177,16 @@ final class AppSession {
             UIApplication.shared.isIdleTimerDisabled = value
         }
         // Materializes the font-size default (12) so the Settings slider has a
-        // value to sit at rather than snapping from 0 on first drag. The deleted
-        // `PSPreferencesController` did this lazily from its cell builder, which
-        // meant the key only appeared once the user visited Preferences.
+        // value to sit at rather than snapping from 0 on first drag.
         settings.ensureFontSizeDefault()
         library.startObservingChanges()
         reading.apply(readingStore.snapshot())
         observeAppStateReset()
     }
 
-    /// Starts listening for `LaunchCoordinator.resetPreferences()`.
-    ///
-    /// `.appStateDidReset` had **no production observer at all** — only a test — so
-    /// a reset flipped in the iOS Settings bundle removed `fontNamePreference`,
-    /// `fontSizePreference`, `insomniaPreference` and `bibleHistory` out from under
-    /// models that had already cached them, and nothing told them. The Settings
-    /// screen went on showing the pre-reset font and size, the Library went on
-    /// listing history rows that no longer existed, and the idle timer stayed
-    /// disabled for the rest of the session.
+    /// Starts listening for `LaunchCoordinator.resetPreferences()`, which removes
+    /// `fontNamePreference`, `fontSizePreference`, `insomniaPreference`,
+    /// `bibleHistory` and more out from under models that have cached them.
     ///
     /// Two things about the wiring are load-bearing:
     ///
@@ -1240,12 +1195,11 @@ final class AppSession {
     ///    the `.redisplayPrimaryBible` post follows it), so this handler reads
     ///    post-reset state and needs no ordering of its own. At launch the
     ///    *remaining* migrations in `prepare()` still run alongside it on the
-    ///    detached task; none of them touches what this re-reads, and `lastRef`
-    ///    resolves to "Genesis 1" either way.
+    ///    detached task; none of them touches what this re-reads.
     ///  - **`queue: .main`.** The launch path runs `prepare()` — and therefore
-    ///    `resetPreferences()` — off the main actor in a detached task, while
-    ///    everything reloaded here is `@MainActor`. `queue: nil` would run the block
-    ///    synchronously on that background thread, where none of this is legal.
+    ///    `resetPreferences()` — off the main actor, while everything reloaded here
+    ///    is `@MainActor`. `queue: nil` would run the block synchronously on that
+    ///    background thread.
     ///
     /// `start()` runs from `didFinishLaunching`, which precedes `RootView`'s
     /// `.task`, so the observer is always in place before a reset can post.
@@ -1265,23 +1219,17 @@ final class AppSession {
 
     /// Re-reads every cached preference the reset cleared.
     ///
-    /// **`SettingsModel.reload()` rather than five assignments, and that is what
-    /// keeps this from undoing the reset.** Each of those properties persists itself
-    /// from `didSet`; `reload()` brackets the writes with `isReloading` so none of
-    /// them writes back. Assigning them one by one would re-create exactly the keys
-    /// the reset had just deleted.
+    /// **`SettingsModel.reload()` rather than five assignments.** Each of those
+    /// properties persists itself from `didSet`; `reload()` brackets the writes with
+    /// `isReloading` so none of them writes back. Assigning them one by one would
+    /// re-create exactly the keys the reset had just deleted.
     ///
-    /// The corollary is that `onKeepScreenAwakeChanged` is suppressed along with the
-    /// saves, so the idle timer is applied here explicitly — otherwise a user who
-    /// had "keep the screen awake" on keeps a screen that never sleeps, with the
-    /// preference gone and the toggle reading off.
+    /// `onKeepScreenAwakeChanged` is suppressed along with the saves, so the idle
+    /// timer is applied here explicitly.
     func handleAppStateReset() {
         // Re-materializes the font-size default exactly as `start()` does, so the
-        // post-reset state equals the fresh-install state rather than "no key at
-        // all". Both readers now resolve an absent key to
-        // `AppConstants.defaultFontSize` — they used to disagree, 12 in the store
-        // against 14 in the renderer — so this is about the Settings slider having
-        // a value to sit at rather than about the two sides agreeing.
+        // post-reset state equals the fresh-install state and the Settings slider
+        // has a value to sit at.
         settings.ensureFontSizeDefault()
         settings.reload()
         UIApplication.shared.isIdleTimerDisabled = settings.keepScreenAwake
@@ -1304,14 +1252,10 @@ final class AppSession {
 
     /// Routes an incoming `sword://` URL, or defers it if launch is still running.
     ///
-    /// This is `-application:handleOpenURL:options:` minus the delegate. The
-    /// behaviour is unchanged, including the two things that look incidental and
-    /// are not:
+    /// Two things look incidental and are not:
     ///
     ///  - **A URL the parser cannot resolve is ignored**, not guessed at: no
-    ///    navigation, no history entry, one `alog` line from `URLRouter`. This is
-    ///    the only reference the app does not itself generate, which is why
-    ///    `PSRefParser` exists.
+    ///    navigation, no history entry, one `alog` line from `URLRouter`.
     ///  - **The persist happens before the redisplay, and the pane switch drops the
     ///    target pane's stale deferral.** `readingStore.persist` writes `lastRef` and
     ///    the verse position; `redisplayPrimary*` renders from them and

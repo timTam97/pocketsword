@@ -2,35 +2,12 @@
 //  PocketSwordAppDelegate.swift
 //  PocketSword
 //
-//  Wave 8: reduced to the two things UIKit still owns, plus ownership of the
-//  long-lived models.
-//
-//  It is **no longer the entry point** — `@main` is on `PocketSwordApp`
-//  (PocketSwordApp.swift), and this class is reached through
-//  `@UIApplicationDelegateAdaptor`. What used to be here and is gone:
-//
-//  - `configurationForConnecting…` and `PocketSwordSceneDelegate` (deleted):
-//    `WindowGroup` configures the scene. The `UISceneDelegateClassName` entry in
-//    `misc/Info.plist` went with it — a stale entry there would name a class that
-//    no longer exists.
-//  - `application(_:handleOpen:options:)`: `onOpenURL` delivers URLs now. The
-//    routing itself moved to `AppSession.open(_:)`, which is where it belonged —
-//    it was never delegate work, only delivery was.
-//  - The `UITabBarController` / `UINavigationController`
-//    `supportedInterfaceOrientations` category overrides: replaced by
-//    `supportedInterfaceOrientations(for:)` on the scene delegate below, which is
-//    iOS 27's supported hook. Overriding a system class's property in an
-//    extension worked, but it applied to every such controller in the process
-//    including ones SwiftUI creates for its own use.
-//  - `applicationWillTerminate` / `applicationDidReceiveMemoryWarning`: the
-//    former synchronized defaults and released the module controller, both of
-//    which the `scenePhase` handler and process teardown already cover; the
-//    latter called a method that has been a documented no-op since
-//    SWORD_REMOVAL_PLAN.md Phase 5 step 5.
-//
-//  What is left is genuinely delegate-shaped: `BGTaskScheduler.register` must be
-//  called before `didFinishLaunching` returns, and iCloud history sync wants to
-//  start once per process.
+//  Reached through `@UIApplicationDelegateAdaptor`; `@main` is on
+//  `PocketSwordApp`. It owns what is genuinely delegate-shaped:
+//  `BGTaskScheduler.register` (must be called before `didFinishLaunching`
+//  returns), starting iCloud history sync once per process, the long-lived
+//  models, and the scene-orientation hook. URLs arrive via `onOpenURL` and are
+//  routed by `AppSession.open(_:)`.
 //
 //  Copyright (C) 2008-2010 CrossWire Bible Society
 //
@@ -107,17 +84,13 @@ final class PocketSwordAppDelegate: NSObject, UIApplicationDelegate {
 
 /// Reports the rotation-lock preference to the window scene.
 ///
-/// This replaces the pair of Obj-C category overrides on `UITabBarController` and
-/// `UINavigationController` that the app carried since long before the SwiftUI
-/// migration. `supportedInterfaceOrientations(for:)` is new in iOS 27 and is the
-/// scene-scoped replacement for the deprecated
-/// `application(_:supportedInterfaceOrientationsFor:)`; returning a mask here
-/// overrides the `UISupportedInterfaceOrientations` Info.plist value for this
-/// scene, which is exactly what the preference needs to do.
+/// `supportedInterfaceOrientations(for:)` (iOS 27) is the scene-scoped
+/// replacement for the deprecated
+/// `application(_:supportedInterfaceOrientationsFor:)`; the returned mask
+/// overrides the Info.plist `UISupportedInterfaceOrientations` for this scene.
 ///
-/// The mask itself comes from `RotationLock`, so the three states are unchanged:
-/// unlocked allows all but upside-down on iPhone (all on iPad), and the two locked
-/// states pin to their orientation.
+/// The mask comes from `RotationLock`: unlocked allows all but upside-down on
+/// iPhone (all on iPad), and the two locked states pin to their orientation.
 final class PocketSwordSceneOrientationDelegate: UIResponder,
                                                  UIWindowSceneDelegate {
     func supportedInterfaceOrientations(

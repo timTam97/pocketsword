@@ -63,15 +63,12 @@ private struct DictionaryKeyList: View {
                     .listRowBackground(Color.clear)
             } else {
                 ForEach(library.visibleDictionaryKeys, id: \.self) { key in
-                    // `NavigationLink(value:)`, NOT the destination-closure
-                    // form: a `@ViewBuilder` destination is built when the ROW
-                    // is realized, so that form ran one `dictEntry` lookup —
-                    // SQLite read + zlib inflate, on the main actor, through
-                    // the store's serial queue — for every row scrolled past
-                    // (8,674 of them in Strong's Hebrew). The row still carries
-                    // its own KEY, never an index into a list the search field
-                    // is narrowing; `DictionaryView`'s `navigationDestination`
-                    // resolves it on push.
+                    // `NavigationLink(value:)`, NOT the destination-closure form: a
+                    // `@ViewBuilder` destination is built when the ROW is realized, which
+                    // would run a `dictEntry` lookup (SQLite read + zlib inflate, on the
+                    // main actor) for every row scrolled past — 8,674 in Strong's Hebrew.
+                    // The row carries its own KEY, never an index into a list the search
+                    // field is narrowing; `navigationDestination` resolves it on push.
                     NavigationLink(value: key) {
                         Text(key)
                     }
@@ -135,26 +132,19 @@ private struct DictionaryEntryView: View {
 
     /// Caches the parse of the entry currently on screen, keyed by its identity.
     ///
-    /// A reference type held in `@State`, and both halves of that are deliberate.
+    /// A reference type held in `@State`, deliberately:
     ///
-    /// `PSInfoPopupContent.entryDocument` memoizes the same parse on the object that
-    /// owns the HTML; a `DictionaryEntryDocument` is a value type whose synthesized
-    /// `Equatable` must not grow a non-equatable memo, so the memo cannot live there.
-    /// It cannot live in `body` either — building it there re-ran the whole tag scanner
-    /// on every update, a multi-KB Strong's definition on the main actor for every
-    /// scroll, rotation or environment change.
+    /// - Not on `DictionaryEntryDocument`: it is a value type whose synthesized
+    ///   `Equatable` must not grow a non-equatable memo.
+    /// - Not in `body`: that re-runs the tag scanner on every update.
+    /// - **Not `@State private var parsed = Parsed(entry)`**: `State(initialValue:)`
+    ///   is an EAGER parameter, re-evaluated every time SwiftUI re-creates the view
+    ///   struct, so it would only move the cost from `body` to `init`. A class costs
+    ///   one throwaway empty allocation per init, and parses only for an entry it
+    ///   has not seen.
     ///
-    /// **And it cannot be `@State private var parsed = Parsed(entry)`.**
-    /// `State(initialValue:)` (and `= expr`) is an EAGER parameter, not an autoclosure:
-    /// SwiftUI re-creates the view struct — and therefore re-evaluates that
-    /// expression — on every parent update, discarding the result whenever the state
-    /// already exists. That moves the cost from `body` to `init` and fixes nothing. A
-    /// class costs one throwaway empty allocation per init instead, and the parse
-    /// happens only when `document(for:)` is asked for an entry it has not seen.
-    ///
-    /// Mutating it from `body` is safe precisely because it is NOT observable: no
-    /// `@Published`, no `@Observable`, so filling the cache cannot invalidate the view
-    /// that is reading it. This is the same shape as `PSInfoPopupContent`'s lazy getter.
+    /// Mutating it from `body` is safe because it is NOT observable: filling the
+    /// cache cannot invalidate the view reading it.
     private final class EntryDocumentCache {
         private var key: DictionaryEntryDocument.ID?
         private var document: EntryDocument?
@@ -194,14 +184,6 @@ private struct DictionaryEntryView: View {
         .accessibilityIdentifier("dictionary.entry")
     }
 }
-
-// `DictionaryEntryWebView` is DELETED (Wave 9). It was a `UIViewRepresentable`
-// `WKWebView` plus a `WKNavigationDelegate` coordinator whose only job was to
-// intercept `sword://` cross-links and re-route them through
-// `+[PSModuleController data(forLink:)]`. `EntryTextView` renders the entry
-// natively and `PSEntryDocumentBuilder` resolves those cross-links while parsing,
-// so the entry is now real selectable text with real accessibility elements — all
-// 14,989 lexicon-to-lexicon links included.
 
 struct BookmarksView: View {
     let library: LibraryModel
@@ -667,11 +649,9 @@ struct HistoryView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    // A STABLE identifier. `entry.id.hashValue` was reseeded
-                    // every launch — Swift hashes String and Date with a
-                    // per-process seed — so an out-of-process XCUITest could
-                    // never compute it. Reference plus module is the row's own
-                    // key, and needs no change to the byte-locked persisted row.
+                    // A STABLE identifier: `hashValue` is reseeded every launch, so an
+                    // out-of-process XCUITest could never compute it. Reference plus module
+                    // is the row's own key and needs no change to the persisted row.
                     .accessibilityIdentifier(
                         "history.item.\(entry.reference ?? "")"
                             + "|\(entry.moduleName ?? "")"
@@ -689,9 +669,7 @@ struct HistoryView: View {
             .swipeActionsContainer()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                // No Close button: History was half of a presented modal through
-                // Wave 7, and its Close dismissed that modal. As a workspace
-                // section there is nothing to close.
+                // No Close button: as a workspace section there is nothing to close.
                 ToolbarItem(placement: .principal) {
                     LibrarySectionPicker(section: $section)
                 }

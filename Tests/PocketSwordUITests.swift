@@ -1,18 +1,11 @@
 import XCTest
 
-/// Wave 8 rewrote the navigation these tests drive.
+/// UI tests over the four workspaces — Read, Search, Library, Settings:
 ///
-/// The app had six tabs plus a modally-presented History/Search pair; it now has
-/// four workspaces — Read, Search, Library, Settings — so "select a tab" means
-/// something different, and several destinations moved:
-///
-/// - Bible and Commentary were two tabs; they are two modes of the Read workspace,
-///   switched by `reading.mode` rather than by the tab bar.
-/// - Search was half of a modal; it is a workspace with `TabRole.search`.
-/// - History was the other half; it is a Library section.
-/// - Dictionary and Bookmarks were tabs; they are Library sections.
-/// - Preferences and About were rows under the system "More" list; Settings is a
-///   workspace, with About pushed from its toolbar.
+/// - Bible and Commentary are two modes of the Read workspace (`reading.mode`).
+/// - Search is a workspace with `TabRole.search`.
+/// - Dictionary, Bookmarks and History are Library sections.
+/// - Settings is a workspace, with About pushed from its toolbar.
 final class PocketSwordUITests: XCTestCase {
     private var app: XCUIApplication!
 
@@ -111,8 +104,6 @@ final class PocketSwordUITests: XCTestCase {
             app.navigationBars["Preferences"].waitForExistence(timeout: 5)
         )
 
-        // Wave 8: About is pushed from the Settings toolbar rather than being a
-        // second "More" row.
         app.buttons["workspace.settings.about"].tap()
         XCTAssertTrue(app.navigationBars["About"].waitForExistence(timeout: 5))
         XCTAssertTrue(
@@ -154,17 +145,7 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     /// The reader's overflow-menu "History and Search" action switches to the
-    /// Search workspace.
-    ///
-    /// This replaces `testHistoryAndSearchAreReachableFromReading`, whose subject
-    /// — a modally-presented `UITabBarController` — no longer exists. The action
-    /// itself survives because the reader is still where you are when you decide to
-    /// search; it changes the tab selection now instead of presenting a sheet.
-    ///
-    /// That change is also what retires the `suppressMultiListPresentAnimation`
-    /// workaround: the Wave 7 crash this path used to hit needed a UIKit sheet
-    /// dismissing while another UIKit sheet was presented, and a tab selection is
-    /// neither.
+    /// Search workspace (a tab selection, not a sheet presentation).
     @MainActor
     func testReadingOverflowMenuOpensTheSearchWorkspace() throws {
         selectWorkspace("Read")
@@ -187,8 +168,7 @@ final class PocketSwordUITests: XCTestCase {
 
         selectLibrarySection("History")
         XCTAssertTrue(app.buttons["history.clear"].waitForExistence(timeout: 5))
-        // Wave 8: History is a workspace section, so there is nothing to close and
-        // the Close button is deliberately absent.
+        // History is a workspace section, so there is no Close button.
         XCTAssertFalse(app.buttons["history.close"].exists)
 
         selectLibrarySection("Dictionary")
@@ -203,19 +183,13 @@ final class PocketSwordUITests: XCTestCase {
         )
     }
 
-    /// Wave 9's acceptance criterion: the chapter is EDGE-TO-EDGE.
+    /// The chapter is EDGE-TO-EDGE: a full-height scroll view whose content is
+    /// inset, so text flows to the physical edges and scrolls beneath the
+    /// translucent bars with no line obscured at rest. Both halves are asserted —
+    /// dropping either paints text under the tab bar or letterboxes the chapter.
     ///
-    /// The reader must be a full-height scroll view whose content is inset, so text
-    /// flows to the physical edges and scrolls beneath the translucent bars with no
-    /// line obscured at rest. Both halves of that tradeoff were wrong once each
-    /// before — Wave 6 let the WebView paint under the floating tab bar, Wave 7 kept
-    /// it inside the safe area and letterboxed the chapter — so both are asserted.
-    ///
-    /// Note what this can and cannot see. The old `reading.web-content` identifier
-    /// sat on a *container* and reported full-window in both the broken and the
-    /// correct case, which is why CLAUDE.md says a hierarchy dump does not catch
-    /// letterboxing. The native reader's identifier is on the `ScrollView` ITSELF, so
-    /// its frame is now meaningful — that is what makes this assertable at all.
+    /// The `reading.chapter-content` identifier is on the `ScrollView` ITSELF, so
+    /// its frame is meaningful.
     @MainActor
     func testChapterScrollsUnderTheChromeEdgeToEdge() throws {
         // `.firstMatch` is required, not incidental: BOTH panes carry this
@@ -232,16 +206,15 @@ final class PocketSwordUITests: XCTestCase {
         let window = app.windows.firstMatch.frame
 
         // The scroll view fills the window vertically. Letterboxing shows up here as
-        // a frame that stops at the chrome — Wave 7's reader was
-        // {{0,116},{402,675}} against a 874-point window.
+        // a frame that stops at the chrome.
         XCTAssertEqual(readerFrame.minY, window.minY, accuracy: 1,
                        "the reader does not reach the top edge — letterboxed")
         XCTAssertEqual(readerFrame.maxY, window.maxY, accuracy: 1,
                        "the reader does not reach the bottom edge — letterboxed")
 
         // ...and the CONTENT is inset, so the first verse is not hidden behind the
-        // navigation bar. This is the other half: a full-height scroll view with no
-        // content inset is the Wave 6 defect.
+        // navigation bar. A full-height scroll view with no content inset is the
+        // other failure.
         let navigationBarBottom = app.navigationBars.firstMatch.frame.maxY
         let firstVerse = app.links["pslink://versemenu/1"]
         if firstVerse.waitForExistence(timeout: 5) {
@@ -285,13 +258,9 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertNotEqual(reference.value as? String, initialValue)
     }
 
-    /// A Strong's number in the chapter text opens its lexicon entry.
-    ///
-    /// Wave 9 made this assertable for the first time: in the WebView the verse text
-    /// and its links were invisible to XCUITest (only the container had an
-    /// identifier, which is why CLAUDE.md says to read the screenshot). The native
-    /// reader's links are real accessibility elements carrying their `pslink://`
-    /// target, so the whole tap path can be driven from a test.
+    /// A Strong's number in the chapter text opens its lexicon entry. The reader's
+    /// links are real accessibility elements carrying their `pslink://` target,
+    /// so the whole tap path is driven from the test.
     @MainActor
     func testStrongsLinkOpensItsLexiconEntry() throws {
         XCTAssertTrue(
@@ -312,16 +281,12 @@ final class PocketSwordUITests: XCTestCase {
 
     /// A cross-link INSIDE a lexicon entry navigates to the entry it names.
     ///
-    /// Three device-reported defects met here, all in `PSEntryDocument` /
-    /// `EntryTextView`, and all invisible to a unit test because they are about
-    /// whether a tap does anything:
+    /// Covers what a unit test cannot — whether a tap does anything:
     ///
-    ///  * the popup passed no `openLink` while its `OpenURLAction` still returned
-    ///    `.handled`, so every cross-link was swallowed — the link highlighted on
-    ///    press and went nowhere;
-    ///  * the link's run range was inferred at `</a>` by walking backwards, so it
-    ///    jacketed the prose back to the previous link instead of its own number;
-    ///  * the entry it opens is reached in place, with a Back button, rather than by
+    ///  * the popup must pass `openLink`, or an `OpenURLAction` returning
+    ///    `.handled` swallows every cross-link;
+    ///  * the link's run range must be bounded at its own anchor;
+    ///  * the target entry opens in place, with a Back button, rather than by
     ///    stacking a second sheet.
     ///
     /// H07225's entry ("In the beginning") cross-links to H07218 (rosh). The link's
@@ -449,10 +414,8 @@ final class PocketSwordUITests: XCTestCase {
             },
             object: nil
         )
-        // 15s, not 5s: the long-press-then-drag that drives iOS 27's
-        // `.reorderable()` is timing-sensitive, and this occasionally missed the
-        // window under the load of a full-suite run while passing in isolation.
-        // The assertion is unchanged — only the patience for the animation is.
+        // 15s, not 5s: the long-press-then-drag that drives iOS 27's `.reorderable()`
+        // is timing-sensitive under the load of a full-suite run.
         wait(for: [reordered], timeout: 15)
         XCTAssertLessThan(second.frame.minY, first.frame.minY)
     }
@@ -549,24 +512,13 @@ final class PocketSwordUITests: XCTestCase {
 
         // Commit the field before tapping Save, and verify the commit landed.
         //
-        // This is not defensive padding — without it the folder is created under
-        // a TRUNCATED name. Measured on the iOS 27 simulator: typing "UI Drag B"
-        // and tapping Save persisted "UI Drag ", losing exactly the last
-        // character, on every run rather than intermittently.
-        //
-        // The cause is that a SwiftUI `TextField`'s binding is not necessarily
-        // current for the final keystroke until the field commits, and tapping
-        // Save takes focus away in the same beat. `XCUIElement.value` is NOT a
-        // usable check for this: it reported the full "UI Drag B" while the
-        // draft the app saved held only the prefix, so asserting on it passes
-        // while the bug is live. Typing the newline commits the field the way a
-        // user pressing Return does, and the row assertion below — which reads
-        // the name back out of the app's own list — is what actually proves it.
-        //
-        // Getting this wrong is worse than a red test: the truncated folder was
-        // invisible to the old exact-name cleanup, so it accumulated in
-        // PSBookmarks.plist and later tripped the store's duplicate-name guard
-        // with a failure that pointed nowhere near the cause.
+        // Without it the folder is created under a TRUNCATED name (typing
+        // "UI Drag B" persisted "UI Drag ", on every run): a SwiftUI `TextField`'s
+        // binding is not necessarily current for the final keystroke until the
+        // field commits, and tapping Save takes focus in the same beat.
+        // `XCUIElement.value` is NOT a usable check — it reported the full text
+        // while the app saved the prefix. Typing the newline commits the field;
+        // the row assertion below reads the name back from the app's own list.
         field.typeText("\n")
 
         app.buttons["bookmarks.folder-save"].tap()
@@ -578,14 +530,8 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     /// Deletes leftover test folders, matched by **prefix** rather than by exact
-    /// name.
-    ///
-    /// Exact-name cleanup is not self-healing: a folder that ever lands under a
-    /// slightly different name than intended is invisible to the next run and
-    /// accumulates in `PSBookmarks.plist` forever, where the store's
-    /// duplicate-name guard eventually fails a create for a reason that looks
-    /// nothing like the cause. Sweeping the prefix means the suite repairs the
-    /// device instead of degrading it.
+    /// name, so a folder saved under a slightly different name cannot accumulate in
+    /// `PSBookmarks.plist` and later trip the store's duplicate-name guard.
     @MainActor
     private func deleteFoldersIfPresent(withPrefix prefix: String) {
         let matches = app.buttons.matching(

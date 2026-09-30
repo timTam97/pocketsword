@@ -9,15 +9,11 @@ struct SearchView: View {
     /// Pulled inside `.task`, NOT passed as a value, and that is load-bearing.
     ///
     /// `ReadingWorkspaceModel.searchHistoryItemToRestore()` **consumes** the
-    /// reader's saved item on its query-only arm — it nils
-    /// `savedSearchHistoryItem` before returning. This is a persistent workspace:
-    /// the enclosing `SearchWorkspace.body` re-evaluates on any observed change
-    /// (it reads `reading.mode` through `preferredSearchModule`), while
-    /// `configure(...)` runs once per launch behind `@State configured`.
-    /// Evaluating the argument in `body` therefore consumed the value on passes
-    /// that never reached `configure`, silently discarding the reader's memory of
-    /// the last search. As a closure the consume happens on the one path that
-    /// uses the result.
+    /// reader's saved item on its query-only arm. `SearchWorkspace.body`
+    /// re-evaluates on any observed change, while `configure(...)` runs once per
+    /// launch behind `@State configured`, so evaluating it in `body` would consume
+    /// the value on passes that never reach `configure`. As a closure the consume
+    /// happens on the one path that uses the result.
     let restoredHistoryItem: () -> PSSearchHistoryItem?
     let openResult: (_ reference: String, _ module: String) -> Void
 
@@ -32,14 +28,12 @@ struct SearchView: View {
                 openResult: openResult
             )
             .navigationTitle("SearchTitle")
-            // Inline, deliberately, and it is not cosmetic: the scope picker
-            // below is pinned with `safeAreaInset(edge: .top)`, which sits at
-            // the top of the safe area — *under* the navigation bar's
-            // large-title region. With a large title, overscrolling the results
-            // revealed the title and the search drawer BELOW that opaque bar
-            // (and left ~200pt of empty large-title space at rest). Inline has
-            // no expanding region to reveal, so the drawer and the picker stay
-            // put. `DictionaryView` pins its title inline for the same reason.
+            // Inline, deliberately: the scope picker below is pinned with
+            // `safeAreaInset(edge: .top)`, which sits *under* the navigation bar's
+            // large-title region. With a large title, overscrolling revealed the
+            // title and search drawer below the opaque bar (and left ~200pt of empty
+            // space at rest). `DictionaryView` pins its title inline for the same
+            // reason.
             .navigationBarTitleDisplayMode(.inline)
             .searchable(
                 text: $search.query,

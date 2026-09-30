@@ -49,38 +49,11 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 
 #pragma mark - Constants migrated out of the SWORD headers (Phase 5 step 2)
 
-// SWORD_REMOVAL_PLAN.md Phase 5 step 2. These lived in SwordModule.h /
-// SwordManager.h, which step 7 deletes — but SURVIVING files read them, so they
-// have to be somewhere Swift can still see afterwards. globals.h is that place:
-// both bridging headers already import it, so test and app code follow
-// automatically with no other change.
-//
-// This commit adds them here and does NOT remove the originals, because the
-// SWORD headers are still in the tree and a duplicate `#define` of an identical
-// string is a warning at best. The `#ifndef` guards make the two definitions
-// coexist for exactly as long as step 7 takes: while SwordModule.h is present it
-// wins (it is imported first via the bridging header chain), and once it is gone
-// these take over unchanged. The bodies are byte-identical to the originals —
-// verified against SwordModule.h:23-32,36-48 and SwordManager.h:85-92 — which is
-// what makes the handover a no-op rather than a behaviour change.
-//
-// What deliberately did NOT move, having no surviving consumer:
-//   * ATTRTYPE_NOTENUMBER — zero references anywhere in the tree.
-//   * ModuleCategory — only ever read by SwordManager.mm's own
-//     +moduleCategoryAllowed:, which dies with it.
-//   * TextPullType — its one Swift caller (PSModuleSearchController:816) is
-//     replaced by the store reader in step 5, so it dies with the bridge rather
-//     than needing a home. Moving it would have been carrying a corpse.
-//   * SWMOD_CONFENTRY_* / SWMOD_CATEGORY_* / SW_OPTION_* — no *surviving* Swift
-//     file reads them as macros. The two Swift files that need those values
-//     already mirror them as Swift literals (`PSModuleController`'s private
-//     `SW` enum and `PSRefLinkRouter`'s type strings), which is the pattern the
-//     plan prefers for a Swift-only consumer, and `SwordOracleCaptureTests` —
-//     the only reader of the SW_OPTION_* macros — is deleted in step 12.
+// Values formerly declared by the SWORD bridge headers, still used by Swift.
+// The `#ifndef` guards are harmless leftovers; the values are wire strings and
+// must not change.
 
-// Keys in the dictionary -[SwordModule attributeValueForEntryData:] takes, and
-// the ones it returns for a reference list. Read by PSContentReader,
-// PSDictionaryEntryViewController, PSTabBarControllerDelegate and PSRefLinkRouter.
+// Keys for passagestudy link data and reference-list output.
 #ifndef SW_OUTPUT_TEXT_KEY
 #define SW_OUTPUT_TEXT_KEY  @"OutputTextKey"
 #endif
@@ -104,9 +77,8 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define ATTRTYPE_VALUE      @"value"
 #endif
 
-// Feature strings -[SwordModule hasFeature:] answers on. Step 5 moves the
-// *answers* into content_meta, but the strings themselves stay: they are the keys
-// the baked feature set is queried with.
+// Module feature strings: the keys the baked feature set in content_meta is
+// queried with.
 #ifndef SWMOD_CONF_FEATURE_STRONGS
 #define SWMOD_CONF_FEATURE_STRONGS       @"StrongsNumbers"
 #endif
@@ -123,22 +95,8 @@ typedef NS_ENUM(NSInteger, PSSearchRange) {
 #define SWMOD_CONF_FEATURE_IMAGES        @"Images"
 #endif
 
-// `ModuleType` stays an Obj-C enum rather than becoming a Swift one.
-//
-// Two Swift files use its bare cases — PSModuleViewController:434's
-// `module.type == bible` (the verse-per-line gate) and PSLaunchViewController:256's
-// seed table — and converting those to a Swift enum means changing the
-// `-[SwordModule type]` signature they read it from, which is a bigger change than
-// this phase needs and would land in the same commit as a header deletion. The
-// values and case names below are the ORIGINAL enum's, so it is the same type by
-// any observable measure.
-//
-// Unlike the string macros above this canNOT lean on `#ifndef <its own name>`: an
-// identical object-like macro redefinition is legal C, but a duplicate
-// `typedef enum` re-declaring the same enumerators is a hard error. So both this
-// header and SwordModule.h wrap their copy in `PS_MODULETYPE_DEFINED` and set it —
-// whichever the translation unit sees first defines the type and the other skips.
-// When step 7 deletes SwordModule.h, this becomes the only copy with no edit here.
+// `ModuleType`, used by its bare cases from Swift. Case names and values are
+// fixed.
 #ifndef PS_MODULETYPE_DEFINED
 #define PS_MODULETYPE_DEFINED
 typedef enum {
@@ -184,11 +142,9 @@ typedef enum {
 #define userDefaults [NSUserDefaults standardUserDefaults]
 
 // Default Modules
-// RETIRED: these "the user deleted this bundled module, don't re-seed it" flags are
-// no longer written — there is no removal UI, so a set flag could never be cleared
-// and would suppress a bundled module forever. The DefaultsModuleChoiceRetired
-// migration clears any that are already set. Declarations kept so the names are not
-// reused.
+// RETIRED: never written or read. A set flag would suppress a bundled module
+// forever, so the DefaultsModuleChoiceRetired migration clears any that are set.
+// Kept declared so the names are not reused.
 #define DefaultsKJVRemoved							@"DefaultsKJVRemoved"
 #define DefaultsMHCCRemoved							@"DefaultsMHCCRemoved"
 #define DefaultsStrongsRealHebrewRemoved			@"DefaultsStrongsRealHebrewRemoved"
@@ -196,10 +152,9 @@ typedef enum {
 #define DefaultsStrongsRealGreekRemoved				@"DefaultsStrongsRealGreekRemoved"
 
 // Preferences - general
-// RETIRED, NOT REUSABLE: the three lexicon-role keys are no longer read or written —
-// the roles are hardcoded (BundledModules in AppConstants.swift). A persisted value
-// can legitimately be the localized string "None", so honouring a stale one would
-// break Strong's / morph lookups.
+// RETIRED, NOT REUSABLE: the lexicon-role keys are never read or written — the
+// roles are hardcoded (BundledModules in AppConstants.swift). A stale value can be
+// the localized string "None", so honouring one would break Strong's / morph lookups.
 #define DefaultsStrongsHebrewModule                 @"DefaultsStrongsHebrewModule"
 #define DefaultsStrongsGreekModule                  @"DefaultsStrongsGreekModule"
 #define DefaultsMorphHebrewModule                   @"DefaultsMorphHebrewModule"

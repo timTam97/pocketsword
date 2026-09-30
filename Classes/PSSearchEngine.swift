@@ -6,60 +6,32 @@
 //  instance per module, keyed by module name; the underlying sqlite3 handle is
 //  shared across threads (SQLITE_OPEN_FULLMUTEX).
 //
-//  **Ported from PSSearchEngine.{h,mm} by SWORD_REMOVAL_PLAN.md Phase 5 step 8**,
-//  which is the commit that makes the app target pure Swift: this was the last
-//  Objective-C(++) translation unit under `Classes/`. The port is a translation,
-//  not a redesign — step 7 had already stripped the engine's SWORD half (the
-//  VerseKey walk, `stripText()`, `PSLemmasForCurrentVerse` /
-//  `PSWordMapForCurrentVerse`), so what arrived here was already SQLite-only and
-//  already driven by `PSContentStore`.
-//
-//  Five things here are load-bearing and a plausible-looking "simplification"
+//  Five things here are load-bearing, and a plausible-looking "simplification"
 //  breaks each of them silently rather than loudly:
 //
 //   1. **`SQLITE_TRANSIENT` on every `sqlite3_bind_text`.** Bridging a Swift
 //      `String` to `const char *` yields a buffer valid only for the duration of
-//      the call, so the default `SQLITE_STATIC` ("the pointer stays valid") leaves
-//      SQLite holding a dangling pointer by the time `sqlite3_step` runs. The
-//      symptom is not a crash — every query silently matches nothing. Same hazard
-//      for the SQL text handed to `prepare_v2` / `exec`, which is why both go
-//      through `withCString`.
+//      the call, so the default `SQLITE_STATIC` leaves SQLite holding a dangling
+//      pointer by the time `sqlite3_step` runs. The symptom is not a crash —
+//      every query silently matches nothing. Same hazard for the SQL text handed
+//      to `prepare_v2` / `exec`, which is why both go through `withCString`.
 //   2. **`SQLITE_OPEN_FULLMUTEX` + `sqlite3_busy_timeout(2000)`, and NO serial
-//      queue.** `PSContentStore` funnels everything through a serial queue; this
-//      class deliberately does not. A ~30-second index build runs on one global
-//      queue while queries run on another, and FULLMUTEX serialises per *call*
-//      rather than per transaction — a serial queue would serialise the whole
-//      build against every keystroke. (In practice the build is a modal sheet with
-//      `isModalInPresentation = true`, so the user cannot query during it, but
-//      matching the shipped concurrency is the zero-risk choice.)
-//   3. **The FTS5 schema, its seven columns and their order are unchanged**, as is
-//      `ORDER BY rowid` — see `runQuery` for why that is not `ORDER BY ordinal`.
+//      queue.** A ~30-second index build runs on one global queue while queries
+//      run on another, and FULLMUTEX serialises per *call* rather than per
+//      transaction — a serial queue would serialise the whole build against
+//      every keystroke.
+//   3. **The FTS5 schema, its seven columns and their order are fixed**, as is
+//      `ORDER BY rowid` — see `runQuery`.
 //   4. **`PSSearchQuery.cleanDisplayText` is applied BEFORE the emptiness test**
-//      in the build loop, so it decides which rows exist at all, not merely how
-//      they read.
-//   5. **`dropIndex` must NOT remove the enclosing directory.** As of step 6 every
-//      module's index lives at `<Caches>/search/<module>.db`, so KJV and MHCC SHARE
-//      that directory — removing it on one module's drop would delete the other's
-//      index, or leave an engine holding it open writing to an unlinked file. It
-//      used to remove the directory, safely, back when the directory held exactly
-//      one module's `fts.db`.
+//      in the build loop, so it decides which rows exist at all.
+//   5. **`dropIndex` must NOT remove the enclosing directory.** Every module's
+//      index lives at `<Caches>/search/<module>.db`, so KJV and MHCC SHARE it —
+//      removing it would delete the other's index, or leave an engine holding it
+//      open writing to an unlinked file.
 //
-//  Two things the Obj-C version carried that are deliberately NOT reproduced:
-//
-//   * **`PSFoldForIndex` is gone, not ported.** `PSSearchQuery.foldForIndex` was a
-//     byte-for-byte duplicate of it — the query half and the index half of one
-//     algorithm, kept in sync only by a test asserting they agreed. There is one
-//     copy now, and the duplication that both files warned about ends here.
-//   * **The `PSSearchEngineErrorDomain` + negative-sentinel-code contract.** No
-//     caller ever read it: the build's only caller catches the error generically and
-//     reports cancellation from its own cancellation flag, not from a code. (That
-//     caller was `PSSearchIndexBuilder`, a modal progress sheet; it is now
-//     `SearchIndexCoordinator`, whose state machine drives `SearchView`'s inline
-//     progress. Same treatment of the error.) It is replaced by a plain Swift error
-//     enum whose cases are descriptive rather than numbered. `PSSearchHighlightOpen` / `PSSearchHighlightClose` are gone
-//     for the same reason — they were the FTS5 `snippet()` delimiters, and this
-//     engine returns the full `text_plain` and lets the UI highlight (see
-//     `runQuery`), so nothing had referenced them since that decision.
+//  Errors are a plain Swift enum; callers catch generically, and cancellation
+//  is reported by `SearchIndexCoordinator`. Queries return the full
+//  `text_plain` and the UI highlights (see `runQuery`).
 //
 
 import Foundation
@@ -91,17 +63,9 @@ enum PSSearchEngineError: LocalizedError {
 
 final class PSSearchEngine {
 
-    /// Bumped when the on-disk schema changes in any incompatible way. An index
-    /// built with a different version is treated as stale and rebuilt.
-    ///
-    /// Bumped 4 -> 5 by Phase 5 step 6, which MOVED the index from
-    /// `<AbsoluteDataPath>/search/fts.db` to `<Caches>/search/<module>.db`. The bump
-    /// is what forces the one-time rebuild for an upgrading user: `indexIsFresh`
-    /// compares the stored `schema_version`, so an index at the old path is never
-    /// even looked for and a freshly-created one at the new path is stale until
-    /// built. No migration — moving the file would buy nothing over a rebuild the
-    /// existing prompt already handles, and the old tree is swept by step 9's
-    /// `DefaultsSwordRetired` one-shot.
+    /// Bumped when the on-disk schema or index location changes incompatibly. An
+    /// index with a different version is stale and rebuilt via the existing
+    /// "build a search index?" prompt — there are no migrations.
     static let schemaVersion = 5
 
     private let moduleName: String
@@ -114,22 +78,12 @@ final class PSSearchEngine {
 
     // MARK: - Instance cache
 
-    /// Keyed by NAME. It always was, in effect — the pre-step-6 `+engineForModule:`
-    /// used `mod.name` as the cache key — but the engine no longer holds a module at
-    /// all, so there is nothing to re-attach on a cache hit.
-    ///
-    /// A dictionary behind a lock, where the Obj-C original used a strong-to-strong
-    /// `NSMapTable` under `@synchronized`. Equivalent: entries are never evicted
-    /// either way.
+    /// Keyed by module NAME. Entries are never evicted.
     private static let cacheLock = NSLock()
     private static var cache: [String: PSSearchEngine] = [:]
 
-    /// The cached engine for the named module.
-    ///
-    /// Spelled as a factory rather than an initialiser because it returns a shared
-    /// instance. (The Obj-C `+engineForModuleName:` was imported into Swift as
-    /// `init(forModuleName:)` by the factory-method rule, which read like it made a
-    /// new one each time and did not.)
+    /// The cached (shared) engine for the named module — a factory, not an
+    /// initialiser, because it does not create a new instance.
     static func engine(forModuleName name: String) -> PSSearchEngine {
         cacheLock.lock()
         defer { cacheLock.unlock() }
@@ -139,22 +93,13 @@ final class PSSearchEngine {
         return engine
     }
 
-    // There is deliberately no `invalidate(forModuleName:)`.
+    // There is deliberately no `invalidate(forModuleName:)`: nothing needs it.
+    // `dropIndex()` closes the handle before unlinking the file, and a cached
+    // engine whose file is gone reopens on demand (`indexIsFresh` is false while
+    // it is missing), so the cache never hands back a handle to a deleted index.
     //
-    // The Obj-C original had one — it closed the handle and dropped the cache entry —
-    // and its only caller was the KJV re-seed path's `-deleteSearchIndex`, which went
-    // with the seeding in Phase 5 step 9. It is not ported for the same reason the
-    // `PSSearchEngineErrorDomain` contract was not: nothing read it.
-    //
-    // Nothing is lost by its absence, which is the part worth stating. `dropIndex()`
-    // already closes the handle before unlinking the file, and a cached engine whose
-    // file has been dropped is not stale — the next `runQuery` / `indexIsFresh`
-    // reopens on demand, and `indexIsFresh` returns false while the file is missing.
-    // So the cache never hands back a handle to a deleted index.
-    //
-    // If a future caller does need to evict, note the ordering the original had:
-    // close the handle FIRST, then remove the entry, or the handle leaks with the
-    // last reference.
+    // If a future caller does need to evict: close the handle FIRST, then remove
+    // the entry, or the handle leaks with the last reference.
 
     // MARK: - Init / paths
 
@@ -307,10 +252,7 @@ final class PSSearchEngine {
         }
         defer { sqlite3_finalize(st) }
 
-        // The module's `Version=` conf value, from `content_meta` rather than from a
-        // live module. Same string either way — the converter captured it from the
-        // same conf entry — so an index built before Phase 5 still compares equal on
-        // version. What forces the rebuild is the `schemaVersion` bump, not this.
+        // The module's `Version=` conf value, from `content_meta`.
         let currentVersion = PSContentStore.shared?.moduleVersion(moduleName)
         bind(st, 1, moduleName)
 
@@ -332,19 +274,9 @@ final class PSSearchEngine {
         try openDB(creatingIfNeeded: true)
         try createSchemaIfNeeded()
 
-        // The baked store is the ONLY source (Phase 5 step 7).
-        //
-        // What used to follow this was a ~145-line SWORD fallback walk: a VerseKey
-        // iteration from TOP, `stripText()` per verse, and the
-        // `PSLemmasForCurrentVerse` / `PSWordMapForCurrentVerse` entry-attribute
-        // readers. It went with the engine. What it produced is not lost —
-        // `Tests/Fixtures/search-index-KJV.digest` records all 31,102 of its rows,
-        // and `PSSearchIndexParityTests` compares this path against that digest on
-        // every run.
-        //
-        // The `NSUserCancelledError` re-entry guard went with it too: it existed only
-        // to stop a user cancellation silently restarting the build against SWORD. A
-        // cancellation now simply propagates, like any other failure.
+        // The baked store is the only source. Its output is pinned row-for-row by
+        // `Tests/Fixtures/search-index-KJV.digest` via `PSSearchIndexParityTests`.
+        // A cancellation simply propagates, like any other failure.
         do {
             try buildFromContentStore(progress: progress)
         } catch {
@@ -360,35 +292,23 @@ final class PSSearchEngine {
         }
     }
 
-    /// Build the index from the baked content store (Phase 3 step 7 introduced this
-    /// path; Phase 5 step 7 made it the only one).
+    /// Build the index from the baked content store.
     ///
-    /// Everything about the index itself is deliberately unchanged from the SWORD
-    /// walk it replaced: the same FTS5 schema, the same seven columns in the same
-    /// order, the same cleaning and folding applied at the same points, and —
-    /// critically — the SAME emptiness test AFTER cleaning, because that test is
-    /// what decides which rows exist at all. Only the source of
-    /// `(reference, book_osis, testament, text_plain, lemmas, word_map)` changed: it
-    /// comes from `PSContentStore`'s row cursor rather than from `stripText()` +
-    /// `getEntryAttributes()`.
+    /// The emptiness test runs AFTER cleaning, because it decides which rows exist
+    /// at all. The row cursor is used (rather than a direct join against
+    /// `plain_texts`) because that table is chunk-compressed and framing is the
+    /// store's business.
     ///
-    /// The cursor is used rather than a direct join against `plain_texts` because
-    /// that table is chunk-compressed as of schema v2 — the framing is the store's
-    /// business, not the index builder's.
-    ///
-    /// `PSSearchQuery.cleanDisplayText` stays in the path even though `text_plain`
-    /// in the store carries ZERO rows with `<H…>` markers (the converter already
-    /// applied it), so it is a no-op on this input. Leaving it in means the two
-    /// build paths cannot drift on that axis, and costs one regex pass per row.
+    /// `PSSearchQuery.cleanDisplayText` stays in the path even though the store's
+    /// `text_plain` has no `<H…>` markers (a no-op on this input): it keeps the
+    /// digest-pinned output independent of that fact, for one regex pass per row.
     private func buildFromContentStore(progress: PSSearchProgressBlock?) throws {
         guard let store = PSContentStore.shared else {
             throw PSSearchEngineError.noContentStore
         }
 
         let cursor = store.verseCursor(module: moduleName)
-        // The real row count, known up front — so the progress fraction is exact
-        // rather than divided by an estimate (the old loop's kExpected was 32000
-        // against an actual 31,102 for KJV, so it never reached ~97%).
+        // The real row count, known up front, so the progress fraction is exact.
         let total = cursor.count
         guard total > 0 else {
             throw PSSearchEngineError.noRowsForModule(moduleName)
@@ -409,10 +329,8 @@ final class PSSearchEngine {
         var cancelled = false
         var failure: Error?
         var count = 0
-        // Rows arrive in `ordinal` order, which for KJV is also the order the old
-        // loop inserted them in (`verses_plain.ordinal` is strictly increasing and
-        // unique across all 31,102 rows) — so `ORDER BY rowid` in `runQuery` keeps
-        // giving biblical order.
+        // Rows arrive in `ordinal` order (strictly increasing and unique across all
+        // 31,102 KJV rows), so `ORDER BY rowid` in `runQuery` gives biblical order.
         while let row = cursor.next() {
             let plain = PSSearchQuery.cleanDisplayText(row.textPlain)
             if !plain.isEmpty {
@@ -476,9 +394,9 @@ final class PSSearchEngine {
 
     // MARK: - Drop
 
-    /// Removes the on-disk index. Does NOT remove the enclosing directory: as of
-    /// step 6 every module's index shares `<Caches>/search`, so dropping KJV's must
-    /// not delete MHCC's.
+    /// Removes the on-disk index. Does NOT remove the enclosing directory: every
+    /// module's index shares `<Caches>/search`, so dropping KJV's must not delete
+    /// MHCC's.
     func dropIndex() {
         closeDB()
         let fm = FileManager.default
@@ -488,17 +406,9 @@ final class PSSearchEngine {
         } catch {
             alog("PSSearchEngine: failed to remove \(dbFilePath): \(error)")
         }
-        // The enclosing directory is deliberately LEFT IN PLACE (Phase 5 step 6).
-        //
-        // This used to remove `<AbsoluteDataPath>/search` when it was empty, which
-        // was safe because that directory held exactly one module's `fts.db`. The
-        // index now lives at `<Caches>/search/<module>.db`, so KJV and MHCC SHARE the
-        // directory and removing it on one module's drop would delete the other's
-        // index — or, if the other engine had it open, leave it writing to an
-        // unlinked file.
-        //
-        // Not removing it costs an empty directory in Caches, which the OS may purge
-        // anyway and `ensureDirectoryExists` recreates on demand.
+        // The enclosing directory is deliberately LEFT IN PLACE (see `dropIndex`'s
+        // doc). An empty directory in Caches costs nothing; `ensureDirectoryExists`
+        // recreates it on demand.
     }
 
     // MARK: - Query
@@ -509,11 +419,9 @@ final class PSSearchEngine {
     /// `strongsHighlightWords` populated with the English surface form(s) in that
     /// verse that map to any of the given Strong's tokens.
     ///
-    /// The Obj-C signature ended in a `volatile BOOL *cancelFlag` that both call
-    /// sites passed nil for, so it is not reproduced. Nothing regressed by dropping
-    /// it: `PSModuleSearchController` runs this on a global queue under a generation
-    /// counter and discards a superseded result on the main thread, so a cancel flag
-    /// could only have saved CPU on a `LIMIT 1000` query, never correctness.
+    /// No cancel flag: callers run this off the main thread under a generation
+    /// counter and discard superseded results, so cancelling could only save CPU
+    /// on a `LIMIT 1000` query.
     func runQuery(_ fts5Expression: String,
                   scope: PSSearchRange,
                   bookName: String?,
@@ -549,16 +457,9 @@ final class PSSearchEngine {
 
         var bookOsis: String?
         if scope == .BookRange, let bookName, !bookName.isEmpty {
-            // Phase 4: name -> OSIS comes from the baked versification table rather
-            // than from a live `sword::VerseKey`. Verified equivalent for all 66
-            // books; the deleted shim's whole body was `setText()` +
-            // `getOSISBookName()`, and the "localised" in its name was aspirational
-            // (`translateBookName:` is identity on every device — there is no `en`
-            // locale conf).
-            //
-            // A nil resolver (bundled table missing) simply leaves the scope filter
-            // off, which is the same outcome the shim's `popError()` path produced: an
-            // unrecognised book name searches the whole Bible rather than nothing.
+            // Name -> OSIS from the baked versification table. A nil resolver or an
+            // unrecognised book name leaves the scope filter off, so the search covers
+            // the whole Bible rather than nothing.
             if let osis = PSBookOSISResolver.shared?.book(named: bookName)?.osisName,
                !osis.isEmpty {
                 bookOsis = osis
@@ -566,16 +467,10 @@ final class PSSearchEngine {
             }
         }
 
-        // Rows are inserted during build in canonical iteration order (Genesis 1:1
-        // upward), so rowid gives us biblical order directly.
-        //
-        // This stays `rowid` rather than becoming `ORDER BY ordinal` now that the
-        // store drives the build, and the equivalence was verified rather than
-        // assumed: `verses_plain.ordinal` is strictly increasing and unique across all
-        // 31,102 KJV rows, and the cursor walks it in that order — so rowid order IS
-        // ordinal order. Switching would also mean adding an `ordinal` column to the
-        // FTS table (bumping `schemaVersion` and forcing every user to rebuild) to buy
-        // nothing.
+        // Rows are inserted in canonical order (Genesis 1:1 upward), so rowid gives
+        // biblical order directly. Deliberately not `ORDER BY ordinal`: rowid order
+        // IS ordinal order, and switching would need an extra FTS column, a
+        // `schemaVersion` bump and a forced rebuild for every user, for nothing.
         sql += " ORDER BY rowid"
         if limit > 0 { sql += " LIMIT \(limit)" }
 
