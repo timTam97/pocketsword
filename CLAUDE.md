@@ -157,6 +157,7 @@ The split by scope is load-bearing:
   - **MHCC has no rows**; the section is omitted. Both asserted by `AppStateStoresTests.testDisplayTogglesMatchBakedFeatureSets`.
 - **Global**: font name + size and device options, in `SettingsView` (`SwiftUISupportingViews.swift`). **One font for the whole app**: `ChapterTextRenderer.Style.current()` reads only unsuffixed `fontNamePreference` / `fontSizePreference`.
 - `EntryTextView` honours the same keys, with a legibility floor `EntryTextView.minimumBodySize` (14). The Strong's arm uses the system face (`usesSystemFace`). `AppConstants.defaultFontSize` (12) is the single absent-key fallback (Swift-only; `globals.h` has no counterpart).
+- Code2000 is no longer bundled or offered. Existing saved font preferences are not migrated.
 
 ### Constants: `globals.h` ↔ `AppConstants.swift`
 

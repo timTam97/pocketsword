@@ -17,7 +17,6 @@
 		051F22B9173758AD00DDFF13 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 051F22B8173758AD00DDFF13 /* OFL.txt */; };
 		0528519212265EB000A99ECD /* popup-down-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0528519012265EB000A99ECD /* popup-down-button@2x.png */; };
 		052851BE1226619F00A99ECD /* popup-top-bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 052851BC1226619F00A99ECD /* popup-top-bar@2x.png */; };
-		0528685213E012660044A388 /* code2000.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0528685113E012660044A388 /* code2000.ttf */; };
 		052B52851101A32900FFDF01 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 052B52841101A32900FFDF01 /* Settings.bundle */; };
 		052EC90013DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 052EC8FE13DD45CF001B66DC /* Default-Landscape~ipad.png */; };
 		052EC90213DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 052EC8FF13DD45CF001B66DC /* Default-Portrait~ipad.png */; };
@@ -150,7 +149,6 @@
 		0528519012265EB000A99ECD /* popup-down-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-down-button@2x.png"; path = "Resources/popup-down-button@2x.png"; sourceTree = "<group>"; };
 		052851BC1226619F00A99ECD /* popup-top-bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popup-top-bar@2x.png"; path = "Resources/popup-top-bar@2x.png"; sourceTree = "<group>"; };
 		0528684E13E00D300044A388 /* Padauk.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Padauk.ttf; path = Resources/Padauk.ttf; sourceTree = "<group>"; };
-		0528685113E012660044A388 /* code2000.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = code2000.ttf; path = Resources/fonts/code2000.ttf; sourceTree = "<group>"; };
 		052B52841101A32900FFDF01 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		052EC8FE13DD45CF001B66DC /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "Resources/Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		052EC8FF13DD45CF001B66DC /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "Resources/Default-Portrait~ipad.png"; sourceTree = "<group>"; };
@@ -361,7 +359,6 @@
 				051F22B41737549600DDFF13 /* GentiumPlus-R.ttf */,
 				051F22B51737549600DDFF13 /* SILEOT.ttf */,
 				0550A0C310A8407C00363295 /* CharisSILR.ttf */,
-				0528685113E012660044A388 /* code2000.ttf */,
 			);
 			name = fonts;
 			sourceTree = "<group>";
@@ -814,7 +811,6 @@
 				05DA77A713CD8E51000A4B97 /* blueArrow@2x.png in Resources */,
 				052EC90013DD45CF001B66DC /* Default-Landscape~ipad.png in Resources */,
 				052EC90213DD45CF001B66DC /* Default-Portrait~ipad.png in Resources */,
-				0528685213E012660044A388 /* code2000.ttf in Resources */,
 				050CB78119D1789A00415A27 /* Default-667h@2x.png in Resources */,
 				05E6A75C17FAE06D0063B18C /* Icon-76.png in Resources */,
 				05F4D226160189940072620A /* Default-568h@2x.png in Resources */,

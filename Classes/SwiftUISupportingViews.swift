@@ -738,7 +738,6 @@ enum StudyFonts {
         "Helvetica Neue",
         "HelveticaNeue-Light",
         "Times New Roman",
-        "Code2000",
         "Gentium Plus",
         "Ezra SIL",
         "AppleGothic",

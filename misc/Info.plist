@@ -64,7 +64,6 @@
 	<string>PocketSword uses the microphone so you can speak a Bible reference and jump straight to it.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>code2000.ttf</string>
 		<string>GentiumPlus-R.ttf</string>
 		<string>SILEOT.ttf</string>
 	</array>
