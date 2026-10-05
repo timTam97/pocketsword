@@ -255,6 +255,10 @@ struct ChapterTextView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, horizontalPadding)
                 .scrollTargetLayout()
+                // Paragraphs and individual verses reuse the same numeric IDs.
+                // Replace the lazy row stack when switching layouts so cached
+                // paragraphs cannot remain alongside the new verse rows.
+                .id(pane.versePerLine)
             }
             .scrollPosition($pane.scrollPosition)
             // Edge-to-edge (see the file header): the scroll view fills the window

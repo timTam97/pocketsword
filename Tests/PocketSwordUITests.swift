@@ -196,6 +196,145 @@ final class PocketSwordUITests: XCTestCase {
         )
     }
 
+    /// Chapter-local verse IDs repeat. Paging must replace every old paragraph,
+    /// including rows already realized by the lazy stack.
+    @MainActor
+    func testChapterPagingReplacesAllProseRows() throws {
+        try assertChapterPagingReplacesRows(versePerLine: false)
+    }
+
+    @MainActor
+    func testChapterPagingReplacesAllVerseRows() throws {
+        try assertChapterPagingReplacesRows(versePerLine: true)
+    }
+
+    @MainActor
+    func testChapterPagingAfterChangingVerseLayout() throws {
+        try assertChapterPagingReplacesRows(
+            versePerLine: true, changeLayoutBeforePaging: true
+        )
+    }
+
+    @MainActor
+    private func assertChapterPagingReplacesRows(
+        versePerLine: Bool, changeLayoutBeforePaging: Bool = false
+    ) throws {
+        app.terminate()
+        app.launchArguments += [
+            "-strongsPreference_KJV", "NO",
+            "-morphPreference_KJV", "NO",
+            "-footnotesPreference_KJV", "NO",
+            "-fontSizePreference", "18",
+        ]
+        if !changeLayoutBeforePaging {
+            app.launchArguments += ["-vplPreference_KJV", versePerLine ? "YES" : "NO"]
+        }
+        app.launch()
+        selectWorkspace("Read")
+        selectReadingMode("Bible")
+        selectGenesisChapter(1)
+        if changeLayoutBeforePaging {
+            setVersePerLine(false)
+        }
+
+        let reader = app.descendants(matching: .any)
+            .matching(identifier: "reading.chapter-content").firstMatch
+        XCTAssertTrue(reader.waitForExistence(timeout: 5))
+        let openings = [
+            1: "In the beginning God created",
+            2: "Thus the heavens and the earth",
+            3: "Now the serpent was more subtil",
+        ]
+        var currentVersePerLine = changeLayoutBeforePaging ? false : versePerLine
+
+        func assertChapter(_ chapter: Int) {
+            // A layout switch can reorder the two pane containers in the
+            // accessibility tree. The inactive commentary is empty in this run;
+            // query the chapter text rather than a stale first pane match.
+            let opening = app.staticTexts.containing(
+                NSPredicate(format: "label CONTAINS %@", openings[chapter]!)
+            ).firstMatch
+            XCTAssertTrue(opening.waitForExistence(timeout: 5))
+            let attachment = XCTAttachment(screenshot: app.screenshot())
+            attachment.name = "Genesis \(chapter), VPL \(currentVersePerLine)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+            for (other, text) in openings where other != chapter {
+                XCTAssertFalse(
+                    app.staticTexts.containing(
+                        NSPredicate(format: "label CONTAINS %@", text)
+                    ).firstMatch.exists,
+                    "Genesis \(other) text survived navigation to Genesis \(chapter)."
+                )
+            }
+            XCTAssertEqual(app.links.matching(identifier: "pslink://versemenu/1").count, 1,
+                           "The chapter contains stale or duplicate verse rows.")
+        }
+
+        assertChapter(1)
+        if changeLayoutBeforePaging {
+            setVersePerLine(true)
+            currentVersePerLine = true
+            assertChapter(1)
+        }
+        for chapter in [2, 3] {
+            app.buttons["reading.next-chapter"].tap()
+            assertChapter(chapter)
+        }
+        for chapter in [2, 1] {
+            app.buttons["reading.previous-chapter"].tap()
+            assertChapter(chapter)
+        }
+        selectGenesisChapter(3)
+        assertChapter(3)
+        if changeLayoutBeforePaging {
+            // Replacing the row stack must preserve verse-ID scrolling.
+            selectGenesisChapter(3, verse: 10)
+            let verse = app.links["pslink://versemenu/10"]
+            XCTAssertTrue(verse.waitForExistence(timeout: 5))
+            XCTAssertTrue(verse.isHittable)
+            selectGenesisChapter(3)
+            setVersePerLine(false)
+            currentVersePerLine = false
+            assertChapter(3)
+        }
+    }
+
+    @MainActor
+    private func setVersePerLine(_ enabled: Bool) {
+        // Genesis 1 and 3 put verses 1 and 2 in the same prose paragraph.
+        // Inspect that rendered structure: native menu checkmarks do not expose
+        // a reliable `isSelected` value.
+        let firstVerse = app.staticTexts.containing(
+            .link, identifier: "pslink://versemenu/1"
+        ).firstMatch
+        XCTAssertTrue(firstVerse.waitForExistence(timeout: 5))
+        let isVersePerLine = !firstVerse.links["pslink://versemenu/2"].exists
+        if isVersePerLine != enabled {
+            openReadingOverflowMenu()
+            let toggle = app.buttons["Verse Per Line"]
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+            toggle.tap()
+        }
+        XCTAssertTrue(firstVerse.waitForExistence(timeout: 5))
+        XCTAssertEqual(!firstVerse.links["pslink://versemenu/2"].exists, enabled)
+    }
+
+    @MainActor
+    private func selectGenesisChapter(_ chapter: Int, verse verseNumber: Int = 1) {
+        app.buttons["reading.reference-picker"].tap()
+        let genesis = app.buttons["reference.book.Gen"]
+        XCTAssertTrue(genesis.waitForExistence(timeout: 5))
+        genesis.tap()
+        let chapterButton = app.buttons["reference.chapter.\(chapter)"]
+        XCTAssertTrue(chapterButton.waitForExistence(timeout: 5))
+        chapterButton.tap()
+        let verse = app.buttons["reference.verse.\(verseNumber)"]
+        XCTAssertTrue(verse.waitForExistence(timeout: 5))
+        verse.tap()
+        XCTAssertTrue(app.navigationBars["Select Book"].waitForNonExistence(timeout: 5))
+    }
+
     /// The reader's overflow-menu "History and Search" action switches to the
     /// Search workspace (a tab selection, not a sheet presentation).
     @MainActor
@@ -334,6 +473,12 @@ final class PocketSwordUITests: XCTestCase {
     /// its frame is meaningful.
     @MainActor
     func testChapterScrollsUnderTheChromeEdgeToEdge() throws {
+        // This checks the chapter at its start, not a saved scroll position
+        // restored from an earlier test or an interactive reading session.
+        selectWorkspace("Read")
+        selectReadingMode("Bible")
+        selectGenesisChapter(1)
+
         // `.firstMatch` is required, not incidental: BOTH panes carry this
         // identifier because both stay in the hierarchy for the app's lifetime (the
         // inactive one at `opacity(0)`), which is what lets `displayChapter` defer a
