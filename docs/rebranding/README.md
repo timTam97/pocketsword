@@ -7,7 +7,8 @@ The user requested help choosing the name and style, then proposed
 **SimpleScripture**. On 5 October 2026, the user chose SimpleScripture and
 Gilded Folio for the redesigned About page. Its icon is now included in the
 application bundle. The display name and visible application messages now use
-SimpleScripture; app icon and identifier integration are in progress.
+SimpleScripture. Gilded Folio is also installed as the app icon; identifier
+integration is in progress.
 
 ## Selected About direction: SimpleScripture
 
@@ -50,8 +51,14 @@ was widened to fill the square while preserving the cross and oval proportions.
 Book and background are separate groups; the book contains editable component
 groups. The updated PNG was checked at 60, 120, and 256 px, and the cross's
 interior was verified to contain one RGB colour. The PNG is now installed as
-the `SimpleScriptureAbout` image set. The Home Screen app icon still awaits
-the wider branding update.
+the `SimpleScriptureAbout` image set and the universal 1024 px iOS `AppIcon`
+source. Xcode generates the required device icon sizes from the approved PNG.
+
+The obsolete icon sets, launch images, screenshots, `.acorn` artwork and unused
+bitmap controls have been removed from the current checkout and Xcode resources
+(170 files, 17,240,098 bytes). The SwiftUI UI uses SF Symbols plus the new About
+image; the launch storyboard is a plain background. Copyright/contributor
+notices and Git history are preserved.
 
 On 5 October 2026, the primary website at
 `https://www.simplescripture.co.za/` was checked. It uses “Simple Scripture” for
