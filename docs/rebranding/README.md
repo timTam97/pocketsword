@@ -29,7 +29,7 @@ vector shapes, not final application assets.
 On 5 October 2026, the user requested a maximalist, skeuomorphic direction
 inspired by the tactile character of the original PocketSword icon.
 `simplescripture-heritage.af` is the editable Affinity master. The revised
-pine-leather Bible is upright and fills the square icon, with a solid gold cross
+pine-leather Bible is upright and inset within the square icon, with a solid gold cross
 (`#E3BC67`), a plain embossed oval, gilt page edges, index tabs, and an oxblood
 satin bookmark. The cross has a fine bronze outline and a soft shadow; its face
 remains one colour. Botanical ornaments, the oval's inward rays and lower
@@ -39,7 +39,7 @@ been removed at the user's request.
 - `simplescripture-heritage.png`: exported from Affinity and verified as
   1024 × 1024, RGB, sRGB IEC61966-2.1, without an alpha channel.
 - `simplescripture-heritage-preview.png`: a 640 px preview for review.
-- `simplescripture-heritage.svg`: original vector source with embedded,
+- `simplescripture-heritage.svg`: matching Affinity vector export with embedded,
   procedurally generated material textures. No inherited icon pixels or font
   files are included.
 
@@ -53,6 +53,17 @@ groups. The updated PNG was checked at 60, 120, and 256 px, and the cross's
 interior was verified to contain one RGB colour. The PNG is now installed as
 the `SimpleScriptureAbout` image set and the universal 1024 px iOS `AppIcon`
 source. Xcode generates the required device icon sizes from the approved PNG.
+
+The rounded-corner adaptation on 5 October 2026 was edited directly in Affinity.
+The book group is scaled uniformly to 87.5%, with its bounds at X 64, Y 61 and
+width 896 on the 1024 px canvas. The pine background still covers the full square.
+This gives the corner fittings, page edges and bookmark room inside the rounded
+mask. The native master, SVG, PNG, 640 px preview and both application asset
+copies are updated. Rounded previews using the silhouette from the user's
+About screenshot were visually checked at 60, 120 and 320 px. The new export
+is 1024 × 1024, opaque RGB with its sRGB profile, and both application copies
+match it byte for byte. The application has not been rebuilt or checked on a
+device after this artwork-only change.
 
 The obsolete icon sets, launch images, screenshots, `.acorn` artwork and unused
 bitmap controls have been removed from the current checkout and Xcode resources
