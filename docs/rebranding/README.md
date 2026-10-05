@@ -6,7 +6,8 @@ The app will receive a new name and original visual assets before publication.
 The user requested help choosing the name and style, then proposed
 **SimpleScripture**. On 5 October 2026, the user chose SimpleScripture and
 Gilded Folio for the redesigned About page. Its icon is now included in the
-application bundle; the wider app metadata and Home Screen rename are pending.
+application bundle. The display name and visible application messages now use
+SimpleScripture; app icon and identifier integration are in progress.
 
 ## Selected About direction: SimpleScripture
 
