@@ -285,17 +285,6 @@
 // screen rendered the raw key.
 "NoSearchIndexTitle" = "No Search Index";
 
-// Voice reference
-"VoiceRefListening" = "Listening…";
-"VoiceRefPrompt" = "Say a reference, e.g. “John 3 16”";
-"VoiceRefDownloadingModel" = "Downloading speech model…";
-"VoiceRefNoMatch" = "Couldn’t find that reference";
-"VoiceRefTryAgain" = "Try Again";
-"VoiceRefMicDenied" = "Microphone access is off for SimpleScripture. Turn it on in Settings.";
-"VoiceRefOpenSettings" = "Open Settings";
-"VoiceRefUnavailable" = "Voice input isn’t available for this language.";
-"VoiceOverVoiceRefButton" = "Speak a Bible reference";
-
 // SwiftUI supporting screens
 "SettingsReadingPreview" = "In the beginning God created the heaven and the earth.";
 "SettingsReadingPreviewReference" = "Genesis 1:1";

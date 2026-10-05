@@ -9,8 +9,7 @@
 //    `visibilityPriority(.high)`, so a constrained width sheds the study actions
 //    before it sheds the ability to move between chapters. This is the one
 //    control the reader cannot do without.
-//  - Secondary study actions (the per-module display toggles and voice reference)
-//    go in a `ToolbarOverflowMenu`.
+//  - Per-module display toggles go in a `ToolbarOverflowMenu`.
 //  - Navigation and workspace controls stay visible while reading.
 //
 //  The display toggles are PER-MODULE and gated on the BAKED feature set — see
@@ -156,18 +155,13 @@ final class ReaderChromeModel {
     /// `ReaderDisplayToggle.id`. Held in the model rather than read live inside
     /// the view body so a write goes through Observation and refreshes the menu.
     var displayToggleValues: [String: Bool] = [:]
-    /// Whether the voice-reference action is offered. Gated on both the feature
-    /// flag and on-device speech availability.
-    var isVoiceAvailable: Bool = false
     /// Drives the reference picker popover/sheet.
     var isPresentingReferencePicker: Bool = false
-    /// The Bible pane shows voice reference; the commentary pane does not. Also
-    /// the accessibility-identifier prefix ("bible."/"commentary.").
+    /// Selects the accessibility-identifier prefix ("bible."/"commentary.").
     var isBibleTab: Bool = true
 
     @ObservationIgnored var onPreviousChapter: (@MainActor () -> Void)?
     @ObservationIgnored var onNextChapter: (@MainActor () -> Void)?
-    @ObservationIgnored var onVoiceReference: (@MainActor () -> Void)?
     /// Applies a display-toggle flip: write the per-module pref, then redisplay.
     @ObservationIgnored var onDisplayToggle: (@MainActor (ReaderDisplayToggle) -> Void)?
 
@@ -199,7 +193,7 @@ final class ReaderChromeModel {
 
 /// The Read workspace: the active pane, its chrome, the Bible/commentary
 /// switch, and the study surfaces the reader raises (study popup, verse menu,
-/// bookmark editor, voice sheet).
+/// bookmark editor).
 struct ReaderScreen: View {
     let reading: ReadingWorkspaceModel
 
@@ -232,18 +226,6 @@ struct ReaderScreen: View {
                     }
                 }
                 .toolbarOverflowMenu {
-                    if chrome.isBibleTab && chrome.isVoiceAvailable {
-                        Button {
-                            chrome.onVoiceReference?()
-                        } label: {
-                            Label(
-                                "VoiceOverVoiceRefButton",
-                                systemImage: "microphone"
-                            )
-                        }
-                        .accessibilityIdentifier("reading.voice-reference")
-                    }
-
                     if !chrome.displayToggles.isEmpty {
                         Section {
                             ForEach(chrome.displayToggles) { toggle in
@@ -272,9 +254,6 @@ struct ReaderScreen: View {
                     NavigationStack {
                         BookmarkEditorView(draft: draft)
                     }
-                }
-                .sheet(isPresented: $reading.isPresentingVoiceReference) {
-                    VoiceReferenceSheet(reading: reading)
                 }
                 .confirmationDialog(
                     verseMenuTitle,

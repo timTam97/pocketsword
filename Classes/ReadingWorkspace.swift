@@ -745,7 +745,6 @@ final class ReadingWorkspaceModel {
     var studyPopup: StudyPopup?
     var verseMenuTarget: VerseMenuTarget?
     var bookmarkDraft: BookmarkDraft?
-    var isPresentingVoiceReference = false
 
     let bible = ReaderPaneModel(mode: .bible)
     let commentary = ReaderPaneModel(mode: .commentary)
@@ -812,17 +811,6 @@ final class ReadingWorkspaceModel {
             self?.commentary.refreshForModuleChange()
         }
 
-        // The mic action is gated on BOTH the feature flag and on-device speech
-        // availability. Bible pane only — `ReaderScreen` also checks `isBibleTab`,
-        // but setting it on both keeps the two chrome models honest.
-        if PSFeatureFlags.voiceReferenceEnabled {
-            Task { [weak self] in
-                if case .available = await PSVoiceRefSession.availability() {
-                    self?.bible.chrome.isVoiceAvailable = true
-                }
-            }
-        }
-
         // The post covers a module *change*; priming directly covers the first
         // render, where nothing has changed yet.
         NotificationCenter.default.post(name: .newPrimaryBible, object: nil)
@@ -859,9 +847,6 @@ final class ReadingWorkspaceModel {
         }
         chrome.onNextChapter = { [weak self] in
             self?.nextChapter()
-        }
-        chrome.onVoiceReference = { [weak self] in
-            self?.presentVoiceReference()
         }
         chrome.onDisplayToggle = { [weak self, weak pane] toggle in
             guard let self, let pane else { return }
@@ -1103,8 +1088,7 @@ final class ReadingWorkspaceModel {
 
     // MARK: Reference selection
 
-    /// Applies a book/chapter/verse selection from the reference picker or the
-    /// voice sheet.
+    /// Applies a book/chapter/verse selection from the reference picker.
     ///
     /// The same-chapter fast path is preserved: selecting a verse in the chapter
     /// already on screen scrolls both panes rather than re-rendering, which is
@@ -1185,14 +1169,6 @@ final class ReadingWorkspaceModel {
         commentary.pendingRestore = .verse(verse)
         mode = .commentary
         session?.selectedWorkspace = .read
-    }
-
-    func presentVoiceReference() {
-        guard PSFeatureFlags.voiceReferenceEnabled,
-              PSModuleController.default()?.primaryBibleName != nil else {
-            return
-        }
-        isPresentingVoiceReference = true
     }
 
     /// "Find all occurrences" from a Strong's popup: dismiss the popup, seed the

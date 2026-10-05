@@ -8,8 +8,7 @@
 //  The app's refs carry book NAMES ("Genesis 1") while the content store is
 //  keyed on OSIS (`book_osis='Gen'`). This is deliberately NOT a free-text
 //  parser: it resolves "<book> <chapter>" for the 66 books' known spellings and
-//  nothing else. Free-text parsing is `PSRefParser` (on top of this table);
-//  `PSVoiceRefParser` keeps its own fuzzier grammar for voice input.
+//  nothing else. Free-text parsing is `PSRefParser` (on top of this table).
 //
 //  The lookup surface (`init?`, `resolve(ref:)`, `book(named:)`, `book(osis:)`)
 //  is on the reader's hot path and pinned by PSContentStoreTests.

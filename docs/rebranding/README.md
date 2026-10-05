@@ -128,8 +128,10 @@ remain square. They are provisional artwork, not final App Store exports.
 Completed on 5 October 2026:
 
 - Home Screen/display name, bundle name, launch progress and failure messages,
-  microphone permission and denied-access text, the morphology help message,
-  and system Settings labels use SimpleScripture.
+  the morphology help message, and system Settings labels use SimpleScripture.
+- Voice reference entry has been removed, including its reader action, sheet,
+  speech recognition and model downloads, parser, feature flag, preference key,
+  strings and tests. The app has no microphone permission description.
 - The approved Gilded Folio PNG supplies both the app icon and About image.
   Legacy icon plist keys, inherited launch-image assets, unused bitmap controls,
   artwork sources and old screenshots have been removed from the current tree.
@@ -192,6 +194,14 @@ Verification to date:
   identifiers and development debugging entitlement, with no iCloud
   entitlement. Device launch, Distribution signing, App Store registration
   and live iCloud sync remain unverified.
+- After removing voice reference entry, Xcode MCP build-for-testing passed on
+  iPhone 18 Pro / iOS 27. All ten focused tests passed with zero skips: seven
+  unit tests covering the reference picker, reader controls, session startup
+  and URL routing, plus three UI tests covering Bible/commentary switching,
+  manual verse selection, and the display menu with chapter paging. The built
+  simulator app has no voice symbols, voice localization keys, microphone or
+  speech permission descriptions, or direct Speech/AVFoundation/AVFAudio
+  framework dependencies.
 
 The root README/public listing, name availability checks and broader visual
 validation remain separate follow-up work. Release permission/source/data

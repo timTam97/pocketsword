@@ -29,8 +29,7 @@
 //    - `ff` / trailing-letter suffixes ("Gen 1:1ff", "Gen 1:12a").
 //    - `inscriptio` / `subscriptio`. No bundled module uses them.
 //    - Localised book names. The app is English-only.
-//    - Fuzzy / spoken input. `PSVoiceRefParser` owns that with its own grammar
-//      and deliberately discards ranges. Do not merge them.
+//    - Fuzzy or natural-language input.
 //
 //  `PSRefSemanticsTests`' exhaustive tier prints the abbreviation forms this
 //  parser rejects but SWORD accepted, so that delta stays visible.
@@ -109,8 +108,7 @@ struct PSRefParser {
     ///   clamped or guessed result: a wrong ref renders plausible-but-wrong text,
     ///   which is worse than declining.
     func parse(_ input: String, relativeTo contextBook: PSVersificationBook? = nil) -> PSParsedReference? {
-        // Normalise the separators the app's own producers use. NBSP appears in
-        // pasted refs; the en/em dashes in typed and voice-transcribed ones.
+        // Normalise nonbreaking spaces and en/em dashes in pasted or typed refs.
         let normalised = input
             .replacingOccurrences(of: "\u{00A0}", with: " ")
             .replacingOccurrences(of: "\u{2013}", with: "-")

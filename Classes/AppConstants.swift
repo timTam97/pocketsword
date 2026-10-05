@@ -75,8 +75,6 @@ enum Defaults {
                                      morphHebrewModule, morphGreekModule]
     static let insomniaPreference          = "insomniaPreference"            // macro DefaultsInsomniaPreference
 
-    // Feature flags (see PSFeatureFlags) - absent means off
-    static let voiceRefEnabledPreference   = "voiceRefEnabled"          // macro DefaultsVoiceRefEnabledPreference
     // RETIRED: never read. Kept declared so the key is not reused.
     static let swiftContentReaderPreference = "swiftContentReader"
 
