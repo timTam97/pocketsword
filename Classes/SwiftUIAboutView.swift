@@ -144,7 +144,6 @@ private struct AboutHeader: View {
         }
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .accessibilityElement(children: .combine)
@@ -166,7 +165,7 @@ private struct AboutProjectSection: View {
             Link(destination: AboutInformation.projectURL) {
                 Label {
                     Text("AboutProjectSourceLink")
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color.primary)
                 } icon: {
                     Image(systemName: "chevron.left.forwardslash.chevron.right")
                 }
@@ -175,7 +174,7 @@ private struct AboutProjectSection: View {
             Link(destination: feedbackURL) {
                 Label {
                     Text("AboutReportIssueLink")
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color.primary)
                 } icon: {
                     Image(systemName: "bubble.left")
                 }
