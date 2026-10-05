@@ -66,8 +66,6 @@
 		B22000000000000000000013 /* AppStateStoresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22000000000000000000003 /* AppStateStoresTests.swift */; };
 		B23000000000000000000011 /* LaunchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* LaunchCoordinator.swift */; };
 		B24000000000000000000011 /* SwiftUISupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24000000000000000000001 /* SwiftUISupportingViews.swift */; };
-		B29000000000000000000011 /* SwiftUIAboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29000000000000000000001 /* SwiftUIAboutView.swift */; };
-		B29000000000000000000012 /* Notices in Resources */ = {isa = PBXBuildFile; fileRef = B29000000000000000000002 /* Notices */; };
 		B25000000000000000000011 /* SwiftUILibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25000000000000000000001 /* SwiftUILibraryViews.swift */; };
 		B26000000000000000000011 /* SwiftUISearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000001 /* SwiftUISearchViews.swift */; };
 		B26000000000000000000012 /* SearchIndexBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26000000000000000000002 /* SearchIndexBackgroundManager.swift */; };
@@ -77,6 +75,8 @@
 		B280000000000000000000031 /* SwiftUIStudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000003 /* SwiftUIStudyViews.swift */; };
 		B280000000000000000000041 /* PSInfoPopupContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000004 /* PSInfoPopupContent.swift */; };
 		B280000000000000000000051 /* VoiceReferenceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28000000000000000000005 /* VoiceReferenceModel.swift */; };
+		B29000000000000000000011 /* SwiftUIAboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29000000000000000000001 /* SwiftUIAboutView.swift */; };
+		B29000000000000000000012 /* Notices in Resources */ = {isa = PBXBuildFile; fileRef = B29000000000000000000002 /* Notices */; };
 		D2BFE5F925E9C43D00E04366 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5F825E9C43D00E04366 /* libiconv.tbd */; };
 		D2BFE5FF25E9C52100E04366 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BFE5FE25E9C52100E04366 /* CoreServices.framework */; };
 		D2CF000126D100000000A001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2CF000026D100000000A001 /* LaunchScreen.storyboard */; };
@@ -174,8 +174,6 @@
 		B22000000000000000000003 /* AppStateStoresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppStateStoresTests.swift; path = Classes/AppStateStoresTests.swift; sourceTree = "<group>"; };
 		B23000000000000000000001 /* LaunchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCoordinator.swift; sourceTree = "<group>"; };
 		B24000000000000000000001 /* SwiftUISupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISupportingViews.swift; sourceTree = "<group>"; };
-		B29000000000000000000001 /* SwiftUIAboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAboutView.swift; sourceTree = "<group>"; };
-		B29000000000000000000002 /* Notices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Notices; path = Resources/Notices; sourceTree = "<group>"; };
 		B25000000000000000000001 /* SwiftUILibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUILibraryViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000001 /* SwiftUISearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUISearchViews.swift; sourceTree = "<group>"; };
 		B26000000000000000000002 /* SearchIndexBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexBackgroundManager.swift; sourceTree = "<group>"; };
@@ -185,6 +183,8 @@
 		B28000000000000000000003 /* SwiftUIStudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIStudyViews.swift; sourceTree = "<group>"; };
 		B28000000000000000000004 /* PSInfoPopupContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSInfoPopupContent.swift; sourceTree = "<group>"; };
 		B28000000000000000000005 /* VoiceReferenceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceReferenceModel.swift; sourceTree = "<group>"; };
+		B29000000000000000000001 /* SwiftUIAboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAboutView.swift; sourceTree = "<group>"; };
+		B29000000000000000000002 /* Notices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Notices; path = Resources/Notices; sourceTree = "<group>"; };
 		D2BFDF4425E47C8C00E04366 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D2BFE5F825E9C43D00E04366 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		D2BFE5FB25E9C4FD00E04366 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -787,8 +787,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_STYLE = Automatic;
 				CODE_SIGN_ENTITLEMENTS = SimpleScripture.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -815,8 +815,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_STYLE = Automatic;
 				CODE_SIGN_ENTITLEMENTS = SimpleScripture.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1116,8 +1116,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_STYLE = Automatic;
 				CODE_SIGN_ENTITLEMENTS = "SimpleScripture-Distribution.entitlements";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7SZUJ26BQ2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
