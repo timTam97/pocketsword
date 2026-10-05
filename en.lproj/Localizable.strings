@@ -328,7 +328,6 @@
 "AboutEzraTitle" = "Ezra SIL";
 "AboutOFLSubtitle" = "SIL Open Font License 1.1";
 "AboutEzraSubtitle" = "SIL Open Font License 1.1 & MIT/X11";
-"AboutOfflineNotices" = "These notices and complete license texts are included with the app and can be read offline.";
 "About component version %@" = "Bundled version %@";
 "AboutReadCCLicense" = "Read the complete CC BY-SA 3.0 license";
 "AboutNoticeUnavailable" = "Notice could not be opened";

@@ -164,11 +164,21 @@ private struct AboutProjectSection: View {
             }
             .accessibilityIdentifier("about.acknowledgements")
             Link(destination: AboutInformation.projectURL) {
-                Label("AboutProjectSourceLink", systemImage: "chevron.left.forwardslash.chevron.right")
+                Label {
+                    Text("AboutProjectSourceLink")
+                        .foregroundStyle(.primary)
+                } icon: {
+                    Image(systemName: "chevron.left.forwardslash.chevron.right")
+                }
             }
             .accessibilityIdentifier("about.source")
             Link(destination: feedbackURL) {
-                Label("AboutReportIssueLink", systemImage: "bubble.left")
+                Label {
+                    Text("AboutReportIssueLink")
+                        .foregroundStyle(.primary)
+                } icon: {
+                    Image(systemName: "bubble.left")
+                }
             }
             .accessibilityIdentifier("about.feedback")
         }
@@ -203,8 +213,6 @@ private struct AboutAcknowledgementsView: View {
             AboutComponentSection(title: "AboutFontsSection", notices: AboutNotice.fonts)
             Section {
                 AboutNoticeRow(notice: .creativeCommons)
-            } footer: {
-                Text("AboutOfflineNotices")
             }
         }
         .listStyle(.insetGrouped)
@@ -237,14 +245,9 @@ private struct AboutNoticeRow: View {
         NavigationLink {
             AboutNoticeView(notice: notice)
         } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(notice.title)
-                    .foregroundStyle(.primary)
-                Text(notice.subtitle)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.vertical, 3)
+            Text(notice.title)
+                .foregroundStyle(.primary)
+                .padding(.vertical, 3)
         }
         .accessibilityIdentifier("about.notice.\(notice.id)")
     }
