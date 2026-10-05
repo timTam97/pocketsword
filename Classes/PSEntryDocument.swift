@@ -2,8 +2,7 @@
 //  PSEntryDocument.swift
 //  PocketSword
 //
-//  Wave 9: the native renderer for LEXICON ENTRIES and FOOTNOTES — the two study
-//  surfaces that were still `WKWebView`s after the chapter reader went native.
+//  The native renderer for LEXICON ENTRIES and FOOTNOTES.
 //
 //  ── Why this is separate from the chapter renderer ─────────────────────────
 //
@@ -26,28 +25,17 @@
 //  Footnotes are narrower still — 13,918 fields containing only `i` and `font`.
 //
 //  So `br` matters here and does not exist in a chapter; `a name=` anchors have to
-//  be dropped rather than rendered; and the six stray tags are real content that a
-//  chapter-shaped renderer would not model.
+//  be dropped rather than rendered; and the stray tags are real content.
 //
 //  ── The links ─────────────────────────────────────────────────────────────
 //
-//  All 14,989 `href`s are lexicon→lexicon `sword://` links, and they are what makes
-//  a definition navigable ("Plural of 433"). They are carried as
-//  `EntryLink.lexicon(module:key:)` and re-encoded as `pslink://` for the same
-//  reason the chapter's are: `AttributedString.link` is the only way SwiftUI makes a
-//  span of `Text` tappable.
+//  All 14,989 `href`s are lexicon→lexicon `sword://` links ("Plural of 433"),
+//  carried as `EntryLink.lexicon(module:key:)` and re-encoded as `pslink://`
+//  because `AttributedString.link` is the only way SwiftUI makes a span of `Text`
+//  tappable.
 //
-//  ── What this replaces ────────────────────────────────────────────────────
-//
-//  `StudyPopupWebView` and `DictionaryEntryWebView`, plus the three HTML shells
-//  those needed — `createHTMLString`, `createInfoHTMLString` and
-//  `createStrongsInfoHTMLString`, the last of which carried 60 lines of injected CSS
-//  purely so a `WKWebView` could look like the sheet it sat in. A `Text` inherits
-//  the sheet's material for free, which is what the `background-color: transparent`
-//  injection was working around.
-//
-//  `PSInfoPopupContent`'s lemma/transliteration parser is UNTOUCHED and still reads
-//  the raw entry. It is content, not presentation.
+//  `PSInfoPopupContent`'s lemma/transliteration parser reads the raw entry; it is
+//  content, not presentation.
 //
 
 import Foundation
@@ -118,15 +106,13 @@ enum PSEntryDocumentBuilder {
         /// Swallow the `<br />` that IMMEDIATELY follows that anchor, so the dropped
         /// key does not leave an empty first line.
         ///
-        /// "Immediately" is load-bearing and was missing. The two Strong's lexicons
-        /// shape their preamble differently — measured over all 14,298 key anchors:
-        /// all 8,674 Hebrew entries are `<a name="03899"><b>3899</b></a><br />`, with
-        /// the break adjacent, but all 5,624 **Greek** entries are
-        /// `<a name="03588">3588</a> <b>ὁ</b> [O(] {ho} \<i>ho</i>\<br/>` — a whole
-        /// lemma line before the first break. An unconditional flag therefore fired on
-        /// the Greek lemma's OWN break, discarding the trailing `\` and running the
-        /// lemma line into "including the feminine …". So the flag is cleared as soon
-        /// as any content is emitted.
+        /// "Immediately" is load-bearing. The two Strong's lexicons shape their
+        /// preamble differently: all 8,674 Hebrew entries are
+        /// `<a name="03899"><b>3899</b></a><br />`, break adjacent, but all 5,624
+        /// **Greek** entries are `<a name="03588">3588</a> <b>ὁ</b> [O(] {ho} \<i>ho</i>\<br/>`
+        /// — a whole lemma line before the first break. An unconditional flag would
+        /// eat the Greek lemma's OWN break. So the flag is cleared as soon as any
+        /// content is emitted.
         var skipNextBreak = false
 
         func flushText() {
@@ -160,15 +146,13 @@ enum PSEntryDocumentBuilder {
             blockIndex += 1
             runs = []
             // The anchor is still open, so every run the NEXT block emits before its
-            // `</a>` is its own too — 0 is the exact bound for the continuation, not a
-            // guess. Clearing `pendingLink` here instead would silently DROP a real
-            // cross-link, which is why the link is carried across the boundary.
+            // `</a>` is its own too — 0 is the exact bound for the continuation.
+            // Clearing `pendingLink` instead would silently DROP a real cross-link.
             //
-            // No shipped content exercises this: across all 14,989 `href` anchors of
-            // the three lexicons and all 6,959 KJV note bodies, ZERO carry a `<br />`
-            // between an `<a href>` and its `</a>`, and zero anchors are nested or
-            // unbalanced — so `testCrossLinkSpanningALineBreakKeepsBothHalves` is
-            // synthetic on purpose, and it is the only thing holding this.
+            // No shipped content exercises this (zero `href` anchors span a `<br />`,
+            // and none are nested or unbalanced), so
+            // `testCrossLinkSpanningALineBreakKeepsBothHalves` is synthetic on purpose
+            // and is the only thing holding this.
             linkStartRun = 0
         }
 
@@ -178,21 +162,12 @@ enum PSEntryDocumentBuilder {
         /// `<br />` splits it — in that case it runs twice, once per block, each time
         /// bounding at the runs that block actually holds.
         ///
-        /// **Bounded at `linkStartRun`, which is the whole point.** This used to walk
-        /// `runs` backwards from the end and stop at the first already-linked run,
-        /// on the theory that that was where the previous cross-link ended. It is
-        /// not: a lexicon entry is one long block of prose with a cross-link every
-        /// few words ("From 3898; food (for man or {beast}) …"), and the runs between
-        /// two links are ordinary text carrying no link at all. So the backwards walk
-        /// ran past the anchor it was closing, through the definition text, and
-        /// stopped only at the *previous* link — jacketing the entire span between
-        /// them. Reported from a device on H3899, where tapping "3898" underlined and
-        /// coloured the whole of "From 3898; food (for man or {beast}) especially
-        /// {bread} or grain (for making it): - ([shew-]) {bread} X {eat} {food}
-        /// {fruit} {loaf} {meat} victuals. See also 1036".
-        ///
-        /// Recording where the anchor OPENED is exact, needs no heuristic, and is
-        /// what makes two adjacent cross-links stay separate.
+        /// **Bounded at `linkStartRun`, which is the whole point.** A lexicon entry is
+        /// one long block of prose with a cross-link every few words, and the text
+        /// between links carries no link. Inferring the start by walking backwards to
+        /// the previous linked run would jacket the whole span between two links (e.g.
+        /// all of H3899's definition as one link). Recording where the anchor OPENED
+        /// is exact and keeps adjacent cross-links separate.
         func applyPendingLink() {
             guard let link = pendingLink, linkStartRun < runs.count else { return }
             for index in linkStartRun..<runs.count {
@@ -273,28 +248,20 @@ enum PSEntryDocumentBuilder {
                     }
                 } else if runs.isEmpty, document.blocks.isEmpty,
                           attribute("name", in: tag) != nil {
-                    // The ENTRY'S OWN key anchor, which every lexicon entry opens
-                    // with: `<a name="00776"><b>776</b></a>`. Its text is the padded
-                    // Strong's number, which the popup already shows as its
-                    // reference — so rendering it repeats the number and pushes the
-                    // real definition down. The WebView never showed it either: it
-                    // was hidden by `createStrongsInfoHTMLString`'s
-                    // `a[name]:first-child { display: none }` rule (and the `+ br`
-                    // rule after it), which is precisely the CSS this wave deleted.
+                    // The ENTRY'S OWN key anchor, which every lexicon entry opens with:
+                    // `<a name="00776"><b>776</b></a>`. Its text is the padded Strong's number
+                    // the popup already shows as its reference, so rendering it repeats the
+                    // number and pushes the definition down.
                     //
-                    // Gated on being the FIRST thing in the entry, so a mid-entry
-                    // `name=` anchor — which is a legitimate target for a
-                    // cross-link — keeps its text.
+                    // Gated on being the FIRST thing in the entry, so a mid-entry `name=`
+                    // anchor — a legitimate cross-link target — keeps its text.
                     suppressingKeyAnchor = true
                 }
             case lower == "/a":
                 if suppressingKeyAnchor {
-                    // Drop everything the anchor emitted, not just the pending text.
-                    // The key anchor wraps its number in `<b>`
-                    // (`<a name="04399"><b>4399</b></a>`), and `<b>` flushes — so
-                    // clearing `text` alone left the number already appended as a
-                    // run. Found on device: H4399 showed "4399 מלאכה" with the number
-                    // repeated from the popup's own header.
+                    // Drop everything the anchor emitted, not just the pending text: the key
+                    // anchor wraps its number in `<b>`, which flushes, so the number is
+                    // already a run.
                     runs.removeAll()
                     text = ""
                     // The `</b>` inside the anchor has not been seen yet, so `.bold`
@@ -321,8 +288,7 @@ enum PSEntryDocumentBuilder {
         flushBlock()
 
         // Trim the leading/trailing empty blocks the `a name=` + `br` preamble
-        // leaves, which is what the injected CSS's `a[name]:first-child { display:
-        // none }` rule was hiding.
+        // leaves.
         while let first = document.blocks.first,
               first.runs.allSatisfy({ $0.text.trimmingCharacters(in: .whitespaces).isEmpty }) {
             document.blocks.removeFirst()
@@ -334,11 +300,8 @@ enum PSEntryDocumentBuilder {
         return document
     }
 
-    /// `sword://StrongsRealGreek/G3588` -> `.lexicon(module:key:)`.
-    ///
-    /// Also accepts the `passagestudy.jsp?action=showRef&…` form, which is what the
-    /// dictionary's own WebView coordinator used to parse through
-    /// `+[PSModuleController data(forLink:)]`.
+    /// `sword://StrongsRealGreek/G3588` -> `.lexicon(module:key:)`. Also accepts
+    /// the `passagestudy.jsp?action=showRef&…` form.
     private static func lexiconLink(from href: String) -> EntryLink? {
         guard let url = URL(string: href) else { return nil }
         if url.scheme == "sword" {

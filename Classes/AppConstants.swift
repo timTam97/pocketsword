@@ -2,27 +2,18 @@
 //  AppConstants.swift
 //  PocketSword
 //
-//  Swift mirror of Classes/globals.h (migration step 0b).
-//
-//  IMPORTANT: globals.h remains the Obj-C source of truth during the mixed
-//  migration phase. This file mirrors every wire string / format BYTE-FOR-BYTE
-//  for Swift ergonomics and interop. The persisted key string frequently
-//  differs from the Obj-C macro name (e.g. DefaultsLastRef -> "lastRef"), so do
-//  NOT "fix" these to match the Swift symbol names — they are load-bearing
+//  Swift mirror of Classes/globals.h. Dual-maintained: every wire string here
+//  must match globals.h BYTE-FOR-BYTE. The persisted key often differs from the
+//  macro name (e.g. DefaultsLastRef -> "lastRef") — do NOT "fix" these; they are
 //  persisted keys and changing them corrupts user data.
-//
-//  This is intentional dual-maintenance: when an Obj-C @"literal" or macro value
-//  here changes in globals.h, mirror it here too (and vice versa) until Obj-C
-//  is fully gone.
 //
 
 import Foundation
 
-// MARK: - Defaults keys (mirror of the Defaults*/* @"literal" #defines)
+// MARK: - Defaults keys
 //
-// Caseless namespace of static-let String constants. RIGHT-hand value is the
-// PERSISTED wire string (== the @"..." literal in globals.h), which is often
-// NOT the same as the macro name on the LEFT.
+// The right-hand value is the PERSISTED wire string, often not the same as the
+// symbol name on the left.
 
 enum Defaults {
     static let moduleCipherKeysKey         = "DefaultsModuleCipherKeysKey"
@@ -37,8 +28,7 @@ enum Defaults {
     static let lastSearchRange             = "DefaultsLastSearchRange"
     static let pendingSearchIndexModule    = "PendingSearchIndexModule"
     /// Consecutive FAILED background search-index build attempts for
-    /// `pendingSearchIndexModule`, bounding the BGProcessingTask retry. Swift-only —
-    /// no globals.h macro, because no Obj-C reads it (nor does its sibling above).
+    /// `pendingSearchIndexModule`, bounding the BGProcessingTask retry. Swift-only.
     static let pendingSearchIndexAttempts  = "PendingSearchIndexAttempts"
     static let luceneSwept                 = "DefaultsLuceneSwept"
     static let simplifiedCleanupDone       = "DefaultsSimplifiedCleanupDone"
@@ -46,10 +36,8 @@ enum Defaults {
     static let globalFontOnly              = "DefaultsGlobalFontOnly"
     static let lastRefValidated            = "DefaultsLastRefValidated"
     static let dictKeyCaseFixed            = "DefaultsDictKeyCaseFixed"
-    /// One-shot: delete the Documents/ trees the SWORD era left behind
-    /// (mods.d / modules / locales.d / unused) plus <Caches>/InstallMgr.
-    /// SWORD_REMOVAL_PLAN.md Phase 5 step 9. Swift-only — no globals.h macro,
-    /// because no Obj-C reads it.
+    /// One-shot: delete the Documents/ trees the SWORD engine left behind
+    /// (mods.d / modules / locales.d / unused) plus <Caches>/InstallMgr. Swift-only.
     static let swordRetired = "DefaultsSwordRetired"
 
     static let bibleVersePosition          = "bibleVersePosition"      // macro DefaultsBibleVersePosition
@@ -57,10 +45,9 @@ enum Defaults {
 
     // Default modules
     //
-    // RETIRED: these "the user deleted this bundled module, don't re-seed it" flags
-    // are no longer written — there is no removal UI, so a set flag could never be
-    // cleared and would suppress a bundled module forever. The `moduleChoiceRetired`
-    // migration clears any that are already set. Kept so the names are not reused.
+    // RETIRED: never written or read. A set flag would suppress a bundled module
+    // forever, so `moduleChoiceRetired` clears any that are set. Kept declared so
+    // the names are not reused.
     static let kjvRemoved                  = "DefaultsKJVRemoved"
     static let mhccRemoved                 = "DefaultsMHCCRemoved"
     static let strongsRealHebrewRemoved    = "DefaultsStrongsRealHebrewRemoved"
@@ -75,10 +62,9 @@ enum Defaults {
 
     // Preferences - general
     //
-    // RETIRED, NOT REUSABLE: the three lexicon-role keys are no longer read or
-    // written — the roles are hardcoded (see `BundledModules`). A persisted value can
-    // legitimately be the localized string "None" (written by the old
-    // removeModule), so honouring a stale one would break Strong's / morph lookups.
+    // RETIRED, NOT REUSABLE: the lexicon-role keys are never read or written — the
+    // roles are hardcoded in `BundledModules`. A stale value can be the localized
+    // string "None", so honouring one would break Strong's / morph lookups.
     static let strongsHebrewModule         = "DefaultsStrongsHebrewModule"
     static let strongsGreekModule          = "DefaultsStrongsGreekModule"
     static let morphHebrewModule           = "DefaultsMorphHebrewModule"
@@ -92,12 +78,7 @@ enum Defaults {
 
     // Feature flags (see PSFeatureFlags) - absent means off
     static let voiceRefEnabledPreference   = "voiceRefEnabled"          // macro DefaultsVoiceRefEnabledPreference
-    // **RETIRED** (Phase 5 step 1). Was the Phase-3 kill switch for reading through
-    // PSContentReader instead of the SWORD engine. The engine is gone, so the flag
-    // is gone with it; the key stays declared and unread so it is not reused, and a
-    // device still holding `swiftContentReader = NO` from the Phase-3/4 era is
-    // unaffected because nothing consults it. Swift-only: there was never a
-    // globals.h macro, because no Obj-C read it.
+    // RETIRED: never read. Kept declared so the key is not reused.
     static let swiftContentReaderPreference = "swiftContentReader"
 
     // from createHTMLString:
@@ -123,15 +104,10 @@ enum Defaults {
 
 // MARK: - Bundled modules
 //
-// The app ships exactly these five modules (unpacked from the zips in Resources/
-// on first launch) and there is no UI to add, remove, or pick a different one.
-// The three lexicon ROLES are fixed by their .conf features and are NOT
-// interchangeable: StrongsRealGreek is `Feature=GreekDef`, StrongsRealHebrew is
-// `HebrewDef`, Robinson is `GreekParse`.
-//
-// These replace the former DefaultsStrongsGreekModule / DefaultsStrongsHebrew
-// Module / DefaultsMorphGreekModule persisted keys, which are retired (see the
-// note next to their declarations above).
+// The app ships exactly these five modules and has no UI to add, remove, or
+// pick another. The three lexicon ROLES are fixed and NOT interchangeable:
+// StrongsRealGreek is `Feature=GreekDef`, StrongsRealHebrew is `HebrewDef`,
+// Robinson is `GreekParse`.
 
 enum BundledModules {
     static let bible = "KJV"
@@ -154,12 +130,9 @@ enum AppConstants {
     static let greekStrongsFontName   = "Gentium Plus"      // macro PSGreekStrongsFontName
     static let hebrewStrongsFontName  = "Ezra SIL"          // macro PSHebrewStrongsFontName
     static let defaultFontName        = "Helvetica Neue"    // macro PSDefaultFontName
-    /// The reading font size used when `fontSizePreference` is absent. Swift-only:
-    /// there is no `globals.h` macro and it is not a wire string. ONE constant on
-    /// purpose — `SettingsStore` said 12 (and materializes it for the Settings
-    /// slider) while `ChapterTextRenderer.Style.current()` said 14, the deleted HTML
-    /// shell's own fallback, so after `LaunchCoordinator.resetPreferences()` removed
-    /// the key the chapter rendered at 14pt while the slider read 12.
+    /// The reading font size used when `fontSizePreference` is absent — the single
+    /// fallback for both Settings and the renderers, so they cannot disagree after
+    /// `LaunchCoordinator.resetPreferences()` removes the key. Swift-only.
     static let defaultFontSize        = 12
     static let folderSeparatorString  = ":::"               // macro PSFolderSeparatorString
     static let historyMaxEntries      = 100                 // macro PSHistoryMaxEntries (Int)
@@ -175,11 +148,7 @@ enum AppConstants {
 
 // MARK: - Notification names
 //
-// rawValue MUST equal the existing @"..." literal in globals.h so that Obj-C and
-// Swift observers/posters interoperate during the mixed phase. All of these match
-// their macro name. (The one former wire-string mismatch,
-// moduleMaintainerModeChanged -> "ModuleMaintainerModeChanged", went away with
-// Module Maintainer Mode.)
+// rawValue MUST equal the literal in globals.h.
 
 extension Notification.Name {
     static let bibleSwipeRight              = Notification.Name("NotificationBibleSwipeRight")
@@ -213,19 +182,16 @@ extension Notification.Name {
 
     static let updateSelectedReference      = Notification.Name("NotificationUpdateSelectedReference")
 
-    // SwiftUI migration bridge only. Posted after the legacy reset routine clears
-    // defaults so observable models can reload without re-persisting old values.
+    // Posted after the reset routine clears defaults so observable models can
+    // reload without re-persisting old values.
     static let appStateDidReset             = Notification.Name("PocketSwordAppStateDidReset")
 }
 
 // MARK: - Per-module preference accessors
 //
-// ONE canonical implementation of the composite-key format used by the 7 Obj-C
-// function-like macros (GetBool/GetString/GetInteger/SetBool/SetObject/
-// SetInteger/RemovePrefForMod). The key is built via
-//   [NSString stringWithFormat:@"%@_%@", Pref, Mod]
-// i.e. pref first, mod second, joined by a single underscore. This MUST stay
-// byte-identical to the Obj-C macros or per-module prefs silently break / leak.
+// The one implementation of the per-module key format: "<Pref>_<Mod>" (pref
+// first, single underscore). Persisted — must stay byte-identical or
+// per-module prefs silently break.
 
 extension UserDefaults {
     /// Composite key "<pref>_<mod>" — exact reproduction of "%@_%@" (pref, mod).
@@ -262,15 +228,9 @@ extension UserDefaults {
 
 // MARK: - Application paths
 //
-// Mirror of the DEFAULT_*_PATH expression macros. These re-run
-// NSSearchPathForDirectoriesInDomains on EVERY expansion, so they are exposed
-// as COMPUTED static vars (never captured `let`s).
-//
-// The domain split is load-bearing — Documents (module/builtin/bookmarks) vs
-// Caches (old/appsupport/installer) vs Temporary (MMM) drives the one-time
-// module migration and the iCloud-backup-skip attribute. The first six macros
-// concatenate a literal "/" (stringByAppendingString:); MMM uses path-component
-// append (stringByAppendingPathComponent:) with NO trailing slash.
+// Computed on every access (never captured `let`s), matching the DEFAULT_*_PATH
+// macros. Most paths concatenate a literal "/"; MMM uses path-component append
+// with NO trailing slash. Bookmarks live in Documents; derived data in Caches.
 
 enum AppPaths {
     private static func documentsDirectory() -> String {
@@ -304,16 +264,8 @@ enum AppPaths {
 
     /// The FTS search index for a module: `<Caches>/search/<module>.db`.
     ///
-    /// SWORD_REMOVAL_PLAN.md Phase 5 step 6. The index used to live at
-    /// `<AbsoluteDataPath>/search/fts.db`, a path that came out of SWORD's own conf
-    /// munging (`swmgr.cpp:1110` strips the trailing component for RawLD / RawLD4 /
-    /// zLD) and therefore cannot survive the module zips going away. Derived data
-    /// belongs in Caches regardless: it is rebuildable, and Caches is the directory
-    /// the OS is allowed to purge.
-    ///
-    /// Keyed by module **name** rather than one file per directory, so two modules
-    /// can share the directory — only KJV and MHCC are ever indexed, but nothing
-    /// here assumes that.
+    /// Derived data, so it lives in the OS-purgeable Caches. Keyed by module name
+    /// so modules share one directory.
     static func searchIndexPath(for module: String) -> String {
         (searchIndexDirectory as NSString).appendingPathComponent("\(module).db")
     }
@@ -324,41 +276,25 @@ enum AppPaths {
     }
 }
 
-// The `@objc(PSPaths)` shim that used to sit here is DELETED (SWORD_REMOVAL_PLAN.md
-// Phase 5 step 8). `AppPaths` is an `enum` namespace and `@objc` cannot be applied
-// to an enum's members, so the two search-index paths were re-exposed on a class for
-// the one commit-range where `PSSearchEngine` was still Obj-C. The engine is Swift
-// now and calls `AppPaths` directly.
-
 // MARK: - Logging shims
 //
-// DLog/ALog live in misc/PocketSword_Prefix.pch and are invisible to Swift
-// (Swift ignores GCC_PREFIX_HEADER). DLog is a DEBUG-only NSLog wrapper; ALog
-// always fires. These Swift shims mirror that behaviour.
+// `dlog` fires only in DEBUG; `alog` always fires.
 
-/// DEBUG-only logging shim mirroring the Obj-C `DLog` macro.
+/// DEBUG-only logging.
 func dlog(_ message: String, file: String = #file, line: Int = #line) {
     #if DEBUG
     NSLog("%@ [Line %d] %@", (file as NSString).lastPathComponent, line, message)
     #endif
 }
 
-/// Always-on logging shim mirroring the Obj-C `ALog` macro.
+/// Always-on logging.
 func alog(_ message: String, file: String = #file, line: Int = #line) {
     NSLog("%@ [Line %d] %@", (file as NSString).lastPathComponent, line, message)
 }
 
 // MARK: - Reference-string helpers
 //
-// Migration step 1.1 extracts the two thin Foundation-only SWORD seams that the
-// bookmark store (PSBookmarks.swift) depends on out of PSModuleController, per
-// the plan's "eliminate thin SWORD seams" guidance (§3 PR 1.1). Both are pure
-// string / NSUserDefaults logic — no sword:: / C++ — so they live in the Swift
-// helper layer rather than reaching back into the (SwordModule.h-importing)
-// PSModuleController header. Behaviour is byte-for-byte identical to the Obj-C
-// originals in PSModuleController.mm (+createRefString: / +getCurrentBibleRef);
-// those Obj-C methods remain for the many other Obj-C callers during the mixed
-// phase.
+// Pure string / UserDefaults helpers used by the bookmark store.
 
 enum PSRefHelper {
 

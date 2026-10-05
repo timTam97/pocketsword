@@ -2,9 +2,6 @@
 //  PSBookmark.swift
 //  PocketSword
 //
-//  Swift migration step 1.1 — bookmark inheritance chain (ATOMIC, §2A Rule 3).
-//  Port of PSBookmark.{h,m}.
-//
 
 import Foundation
 

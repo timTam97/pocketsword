@@ -2,15 +2,11 @@
 //  PSContentStore.swift
 //  PocketSword
 //
-//  Read-only access to the baked content store (Resources/PSContent.sqlite),
-//  the pure-Swift replacement for the SWORD engine's data access. Phase 3 of
-//  SWORD_REMOVAL_PLAN.md.
-//
+//  Read-only access to the baked content store (Resources/PSContent.sqlite).
 //  This layer knows about SQLite and chunk framing and nothing else: no HTML, no
 //  option gating, no assembly. Callers see rows.
 //
-//  Schema v2 (tools/swordbake/main.mm is the writer, and the two must be changed
-//  together):
+//  Schema v2 (the store cannot be regenerated in this repo):
 //
 //    chapters(module, book_osis, chapter, ordinal, entry_count, raw_size,
 //             blob_kind, blob)      -- blob = zlib(records joined by \0)
@@ -23,20 +19,16 @@
 //
 //  Chunk framing: inflate the blob, split rows on \x1E, fields on \x1F. Both
 //  `row_count` and `raw_size` are stored per chunk and are CHECKED here rather
-//  than trusted — the converter proves them at bake time by re-inflating every
-//  chunk, and this is the reader-side half of the same assertion.
+//  than trusted.
 //
 //  DECOMPRESSION USES zlib, NOT Compression.framework. The blobs are
-//  zlib-with-header (`78 da`, from compress2 at level 9), `raw_size` gives the
-//  exact output length, and the iOS SDK ships a `zlib` Clang module
-//  (usr/include/zlib.modulemap), so `uncompress()` is directly callable.
-//  Compression.framework's COMPRESSION_ZLIB is *raw* deflate and would need the
-//  2-byte header stripped and the Adler-32 trailer ignored.
+//  zlib-with-header (`78 da`, compress2 level 9), `raw_size` gives the exact
+//  output length, and the iOS SDK ships a `zlib` Clang module, so `uncompress()`
+//  is directly callable. Compression.framework's COMPRESSION_ZLIB is *raw*
+//  deflate and would need the header stripped and the Adler-32 trailer ignored.
 //
-//  FAILURE POLICY: every method that can fail returns nil and reports through
-//  `PSContentStore.fail(_:)`. See PSContentReader.swift's header for the policy
-//  and for the list of conditions Phase 5 has to convert into hard failures once
-//  there is no SWORD to fall back to.
+//  FAILURE POLICY: see PSContentReader.swift's header. `fail(_:)` is
+//  loud-and-nil; `fatal(_:)` traps.
 //
 
 import Foundation
@@ -44,15 +36,7 @@ import SQLite3
 import zlib
 
 /// One row of `plain_texts` joined with its `verses_plain` skeleton — the FTS
-/// build source.
-///
-/// The `@objc` here (and on `Cursor`, `moduleMeta` and `moduleVersion` below) is
-/// **vestigial as of Phase 5 step 8**: it existed so `PSSearchEngine.mm` could
-/// consume these across the bridge, following `SwordModuleTextEntry` as the
-/// precedent for a DTO that crossed the boundary. The engine is Swift now and there
-/// is no boundary. The annotations are kept because they cost nothing and removing
-/// them would be a no-op churn across a file 32 tests read; do not take them as
-/// evidence that an Obj-C caller still exists.
+/// build source. (`@objc` here and below is inert.)
 @objc(PSContentVerseRow)
 final class PSContentVerseRow: NSObject {
     @objc let ordinal: Int
@@ -76,10 +60,9 @@ final class PSContentVerseRow: NSObject {
     }
 }
 
-/// One record slot of a chapter, in the order `-[SwordModule chapterBodyHTML:]`'s
-/// loop visits them: verse 0 (the intro slot) upward, **empties preserved**. The
-/// loop counter is not a verse number, so dropping an empty slot would shift
-/// every `vv{i}` anchor after it.
+/// One record slot of a chapter, in loop order: verse 0 (the intro slot)
+/// upward, **empties preserved**. The loop counter is not a verse number, so
+/// dropping an empty slot would shift every `vv{i}` anchor after it.
 struct PSChapterRecords {
     let entryCount: Int
     /// Tokenised entry bodies. An empty string is a slot the loop skips.
@@ -112,10 +95,9 @@ final class PSContentStore: NSObject {
     static let expectedSchemaVersion = 2
     static let expectedTokenGrammar = "v2"
 
-    /// Rows per chunk, per table. Read back out of `content_meta` at open time
-    /// rather than hardcoded here, so a converter change cannot silently skew the
-    /// reader's arithmetic — a mismatch would address the wrong slot and return
-    /// *plausible but wrong* text, which is the worst failure mode available.
+    /// Rows per chunk, per table. Read out of `content_meta` at open time rather
+    /// than hardcoded: a mismatch would address the wrong slot and return
+    /// *plausible but wrong* text, the worst failure mode available.
     private var chunkRowsPlain = 256
     private var chunkRowsDict = 64
     private var chunkRowsNotes = 256
@@ -127,15 +109,11 @@ final class PSContentStore: NSObject {
 
     /// **Loud-and-nil.** Loud in debug, logged in release, and always nil-returning
     /// at the call site. One bad datum — a malformed token stream, an unresolvable
-    /// book, a chunk slot that does not exist — must not brick the app: the user
-    /// sees that one chapter or lookup fail and can navigate away.
+    /// book, a chunk slot that does not exist — must not brick the app.
     ///
-    /// `report: false` logs but does not assert. That exists for exactly one
-    /// caller: the tests that deliberately feed the reader a broken store or a
-    /// malformed token stream to prove it refuses rather than crashes. The
-    /// assertion is the point in every other case, so the flag is threaded
-    /// explicitly through those paths rather than being a global that could be
-    /// left switched off.
+    /// `report: false` logs but does not assert. Only the negative tests use it,
+    /// to prove the reader refuses a broken store rather than crashing; it is
+    /// threaded explicitly rather than being a global that could be left off.
     static func fail(_ message: String, report: Bool = true,
                      file: StaticString = #fileID, line: UInt = #line) {
         alog("PSContentStore: \(message)")
@@ -144,29 +122,21 @@ final class PSContentStore: NSObject {
         }
     }
 
-    /// **Fatal.** The store itself is unusable, so every read would fail and the
-    /// app cannot do its job at all.
+    /// **Fatal.** The store itself is unusable, so the app cannot do its job.
     ///
-    /// SWORD_REMOVAL_PLAN.md Phase 5 step 1: through Phase 4 these conditions were
-    /// `fail` too, because the caller fell back to SWORD. There is no fallback now,
-    /// so returning nil would mean a permanently blank app that looks to the user
-    /// like it lost their data, and to us like nothing happened. All four callers
-    /// are build-integrity failures — the store and the versification JSON are
-    /// bundled resources validated by PSContentStoreTests and cannot vary at
-    /// runtime — so if one trips, every install of that build is broken and a crash
-    /// report naming the invariant is the outcome we want.
+    /// All callers are build-integrity failures (bundled resources validated by
+    /// PSContentStoreTests), so if one trips, every install of that build is
+    /// broken and a crash report naming the invariant is what we want — not a
+    /// blank app that looks like lost data.
     ///
-    /// This traps in **release as well as debug**, unlike `fail`. That is the whole
-    /// point: `assertionFailure` compiles out of a release build, which is exactly
-    /// where a blank app would otherwise ship silently.
+    /// Traps in **release as well as debug**, unlike `fail`: `assertionFailure`
+    /// compiles out of release, which is exactly where a blank app would ship.
     ///
-    /// `report: false` degrades to `fail`'s behaviour — log and let the caller
-    /// return nil. Same single purpose: the negative tests
+    /// `report: false` degrades to `fail`'s behaviour, for the negative tests
     /// (`testAbsentStoreFailsRatherThanCrashing`, `testWrongSchemaVersionIsRefused`,
     /// `testWrongTokenGrammarIsRefused`, `testMissingChunkSizesAreRefused`,
-    /// `testMalformedVersificationIsRefused`) construct a deliberately-broken store
-    /// and assert the initialiser returns nil. Those tests are the executable proof
-    /// that the *detection* is right; trapping is what production does with it.
+    /// `testMalformedVersificationIsRefused`) that assert the initialiser returns
+    /// nil.
     static func fatal(_ message: String, report: Bool = true,
                       file: StaticString = #fileID, line: UInt = #line) {
         alog("PSContentStore: FATAL: \(message)")
@@ -184,12 +154,9 @@ final class PSContentStore: NSObject {
     private let queue = DispatchQueue(label: "org.timsams.PocketSword.contentstore")
     private var statements: [String: OpaquePointer] = [:]
 
-    /// The shared instance over the bundled store.
-    ///
-    /// Phase 5: a missing or invalid store is **fatal** — there is no engine to fall
-    /// back to, so the type stays Optional only for the tests' benefit (they build
-    /// deliberately-broken stores with `reportFailures: false`). In production this
-    /// either returns a usable store or traps.
+    /// The shared instance over the bundled store. A missing or invalid store is
+    /// **fatal**; Optional only so tests can build broken stores with
+    /// `reportFailures: false`.
     @objc(sharedStore)
     static let shared: PSContentStore? = {
         guard let url = Bundle.main.url(forResource: "PSContent", withExtension: "sqlite") else {
@@ -256,9 +223,8 @@ final class PSContentStore: NSObject {
             PSContentStore.fatal("tokenGrammar is \(meta["tokenGrammar"] ?? "absent"), expected \(Self.expectedTokenGrammar)", report: reportFailures)
             return false
         }
-        // Absent chunk-size keys are a v2 store written before they were added;
-        // there is no such artifact, so treat it as a mismatch rather than
-        // silently defaulting and mis-addressing every chunk.
+        // Absent chunk-size keys are treated as a mismatch rather than silently
+        // defaulting and mis-addressing every chunk.
         guard let plain = Int(meta["chunkRows.plain_texts"] ?? ""),
               let dict = Int(meta["chunkRows.dict"] ?? ""),
               let notes = Int(meta["chunkRows.notes"] ?? ""),
@@ -377,8 +343,8 @@ final class PSContentStore: NSObject {
     // MARK: - Chapters
 
     /// The ordered entry slots of one chapter, or nil if the store has no such
-    /// chapter (which the converter does for wholly-empty ones — the caller then
-    /// renders the same "empty chapter" message the engine does).
+    /// chapter (wholly-empty chapters are omitted; the caller renders the "empty
+    /// chapter" message).
     func chapterRecords(module: String, bookOsis: String, chapter: Int) -> PSChapterRecords? {
         queue.sync {
             guard let st = statement(
@@ -506,11 +472,8 @@ final class PSContentStore: NSObject {
             var out: [Int: [PSHeading]] = [:]
             while sqlite3_step(st) == SQLITE_ROW {
                 let ref = Self.text(st, 0)
-                // LIKE 'Ps 11:%' would also match 'Ps 11:1' for chapter 11 only,
-                // but 'Ps 1:%' must not match 'Ps 1:1' of a *different* chapter —
-                // the prefix already pins the chapter, so only the verse tail is
-                // parsed here. Re-parse rather than trust: a ref that does not fit
-                // the shape is skipped, exactly as crosscheck.py does.
+                // The prefix already pins the chapter, so only the verse tail is parsed.
+                // A ref that does not fit the shape is skipped.
                 guard let colon = ref.lastIndex(of: ":"),
                       let verse = Int(ref[ref.index(after: colon)...]) else { continue }
                 let heading = PSHeading(verse: verse,
@@ -552,9 +515,8 @@ final class PSContentStore: NSObject {
         }
     }
 
-    /// Every (osisRef, marker) pair a module has a note for, in stored order.
-    /// Exists for the differential test: it is the exact set of notes the app can
-    /// ask for, so a sampled subset would leave the rest unchecked.
+    /// Every (osisRef, marker) pair a module has a note for, in stored order —
+    /// the exact set of notes the app can ask for, so tests can check all of them.
     func allNoteKeys(module: String) -> [(osisRef: String, marker: String)] {
         queue.sync {
             guard let st = statement(
@@ -574,20 +536,17 @@ final class PSContentStore: NSObject {
 
     /// A lexicon entry, or nil on a miss.
     ///
-    /// Matching mirrors the engine, not the schema:
-    ///   1. `COLLATE NOCASE` on the key column, because SWORD compares
-    ///      uppercase-both-sides for a module without CaseSensitiveKeys
-    ///      (rawstr.cpp:188) and the UI hands back `capitalizedString`.
-    ///   2. for an all-digit key, retry zero-padded to 5, which is what
-    ///      `SWLD::strongsPad` does for the bare numbers `osishtmlhref.cpp` emits.
+    /// Matching:
+    ///   1. `COLLATE NOCASE` on the key column (defence in depth; callers pass the
+    ///      true casing).
+    ///   2. for an all-digit key, retry zero-padded to 5 (the bare numbers the
+    ///      chapter markup emits).
     ///   3. otherwise **nil**.
     ///
-    /// Step 3 is the deliberate behaviour change. `SWLD::strongsPad` drops a
-    /// leading `G`/`H` without re-prepending it (swld.cpp:134), so "H430" pads to
-    /// "0430" and `rawstr4.cpp:234-241` then snaps to a *neighbouring* entry with
-    /// no error set — silently showing the wrong definition. Returning nil is the
-    /// fix; `Tests/Fixtures/strongsPad-prefixed-key-bug.txt` records the engine's
-    /// behaviour so the change is not later mistaken for a regression.
+    /// Step 3 is deliberate. The SWORD engine padded "H430" to "0430" (dropping the
+    /// prefix) and silently snapped to a *neighbouring* entry — the wrong
+    /// definition. `Tests/Fixtures/strongsPad-prefixed-key-bug.txt` records that
+    /// behaviour so returning nil is not later mistaken for a regression.
     func dictEntry(module: String, key: String) -> String? {
         queue.sync {
             if let html = dictEntryLocked(module: module, key: key) { return html }
@@ -622,13 +581,8 @@ final class PSContentStore: NSObject {
         return html
     }
 
-    /// Every key of a lexicon, in stored order.
-    ///
-    /// Stored order is the module's own `.idx` order, which is what the
-    /// Dictionary tab shows today: `-[SwordDictionary allKeys]` walks the module
-    /// from TOP. The caller applies `capitalizedString` for display — see
-    /// PSContentReader for why that (wrong) display casing is preserved this
-    /// phase rather than fixed.
+    /// Every key of a lexicon, in stored order (the module's own `.idx` order), in
+    /// true casing.
     func dictKeys(module: String) -> [String] {
         queue.sync {
             guard let st = statement(
@@ -655,12 +609,11 @@ final class PSContentStore: NSObject {
     // MARK: - FTS build source
 
     /// Row-oriented cursor over `verses_plain` joined with its chunked text, so
-    /// callers never see chunk framing. Driven by `PSSearchEngine`'s index build —
-    /// which was Obj-C++ when this was written, hence the vestigial `@objc`.
+    /// callers never see chunk framing. Drives `PSSearchEngine`'s index build.
     ///
     /// Rows come out in `ordinal` order, which for KJV is also `rowid` order —
     /// `verses_plain.ordinal` is strictly increasing and unique across all 31,102
-    /// rows, so this reproduces today's insert order exactly.
+    /// rows.
     @objc(PSContentVerseCursor)
     final class Cursor: NSObject {
         private let store: PSContentStore
@@ -743,17 +696,11 @@ final class PSContentStore: NSObject {
 
     // MARK: - Verse text by reference
 
-    /// One `plain_texts` row, looked up by its `osis_ref` rather than walked.
-    ///
-    /// SWORD_REMOVAL_PLAN.md Phase 5 step 4. The store exposed only the sequential
-    /// `Cursor` above (for the index build); there was no way to ask for a single
-    /// verse. `PSModuleSearchController` needs one, for a narrow case: a search-history
-    /// entry cached by an older build with a nil `text`, which it used to re-pull
-    /// through `-[SwordModule textEntryForKey:textType:]`.
+    /// One `plain_texts` row, looked up by its `osis_ref`. Used to fill the text of
+    /// a search-history entry cached by an older build with a nil `text`.
     ///
     /// Returns nil for a ref the module does not have, which is a legitimate miss
-    /// (the caller then shows the reference with no preview, exactly as it did when
-    /// the engine returned nil).
+    /// (the caller shows the reference with no preview).
     func plainText(module: String, osisRef: String) -> String? {
         queue.sync {
             guard let st = statement(
@@ -769,9 +716,8 @@ final class PSContentStore: NSObject {
             let textID = Int(sqlite3_column_int64(st, 0))
             sqlite3_reset(st)
 
-            // Same chunk arithmetic the Cursor does, with the chunk size read from
-            // content_meta rather than hardcoded — a skew would address the wrong
-            // slot and return plausible but wrong text.
+            // Same chunk arithmetic as the Cursor, with the chunk size from
+            // content_meta.
             let chunk = textID / chunkRowsPlain
             let slot = textID % chunkRowsPlain
             guard let fields = chunkRows(table: "plain_texts_chunks", module: module, chunkID: chunk) else {
@@ -789,11 +735,6 @@ final class PSContentStore: NSObject {
 
     /// `content_meta`'s per-module values (`module.<name>.type` / `.version` /
     /// `.lang` / `.direction` / `.features`).
-    ///
-    /// Made `@objc` by Phase 5 step 4 so `PSSearchEngine.mm` could read a module's
-    /// version while it was still Obj-C — `indexIsFresh` and `stampMetaForModule`
-    /// both did that through `[mod version]`, and step 7 deleted `SwordModule`. Step 8
-    /// made the engine Swift, so the annotation is now vestigial.
     @objc(moduleMetaForModule:key:)
     func moduleMeta(_ name: String, key: String) -> String? {
         queue.sync {
@@ -809,17 +750,12 @@ final class PSContentStore: NSObject {
         }
     }
 
-    /// A bundled module's `Version=` conf value, as captured at bake time.
+    /// A bundled module's `Version=` conf value, as captured at bake time
+    /// (Robinson 2.0, StrongsRealGreek 1.5-150704, StrongsRealHebrew 1.090107).
     ///
-    /// Exists for the Phase-4 `DefaultsDictKeyCaseFixed` migration, which has to
-    /// delete `<AppSupport>/cache-<name>-<version>` — the file name embeds the
-    /// version, and reading it here means the migration needs neither a live
-    /// `SwordDictionary` nor any SWORD call, so it survives Phase 5. Verified
-    /// byte-identical to the conf entries: Robinson 2.0, StrongsRealGreek
-    /// 1.5-150704, StrongsRealHebrew 1.090107.
-    ///
-    /// Also read by `PSSearchEngine`'s freshness check and meta stamp, which is why
-    /// step 4 made it `@objc` — see `moduleMeta` above for why that no longer matters.
+    /// Read by the `DefaultsDictKeyCaseFixed` migration (the `cache-<name>-<version>`
+    /// key-cache file names embed it) and by `PSSearchEngine`'s freshness check and
+    /// meta stamp.
     @objc(moduleVersionForModule:)
     func moduleVersion(_ name: String) -> String? {
         moduleMeta(name, key: "version")
@@ -831,33 +767,26 @@ final class PSContentStore: NSObject {
         return (lang?.isEmpty ?? true) ? nil : lang
     }
 
-    /// Whether a module renders right-to-left, i.e. what `-[SwordModule isRTL]`
-    /// answered: its `Direction=` conf entry equals `"RtoL"`.
-    ///
-    /// The *comparison* lives here rather than in the converter so what is baked is
-    /// the raw conf value, not a verdict — a future module with `Direction=BiDi`
-    /// would then still be readable without a re-bake. No shipped module declares
-    /// `Direction=` at all, so this is false for all five.
+    /// Whether a module renders right-to-left: its `Direction=` conf entry equals
+    /// `"RtoL"`. The raw conf value is baked, not a verdict, so a future
+    /// `Direction=BiDi` module is still readable. False for all five shipped
+    /// modules.
     func moduleIsRTL(_ name: String) -> Bool {
         moduleMeta(name, key: "direction") == "RtoL"
     }
 
-    /// Whether `-[SwordModule hasFeature:]` would have answered YES for `feature`.
+    /// Whether a module has `feature`.
     ///
     /// The answer is baked (`module.<name>.features`, '|' delimited) rather than
-    /// recomputed, because `hasFeature:` is not a `Feature=` lookup: it also matches
-    /// a `GlobalOptionFilter=` entry bare or prefixed GBF / ThML / UTF8 / OSIS. See
-    /// the converter's `-featureListForModule:` for the rule and why reproducing it
-    /// on the reader side would have been a second untested copy.
+    /// recomputed, because it is not a `Feature=` lookup: it also matches a
+    /// `GlobalOptionFilter=` entry bare or prefixed GBF / ThML / UTF8 / OSIS.
     ///
-    /// Consequences worth knowing, both measured from the bake:
-    ///  * KJV answers YES for Strongs, StrongsNumbers, Morph, Headings, Footnotes,
-    ///    RedLetterWords and Lemma — six of those from its `GlobalOptionFilter=OSIS*`
-    ///    lines, not from `Feature=`. It does NOT answer YES for `Scripref`: there is
-    ///    no `OSISScripref` filter in its conf, so the cross-references row was never
-    ///    in KJV's `▾` menu.
-    ///  * MHCC answers NO to everything (it declares neither kind), so its menu has
-    ///    no rows and the button hides itself.
+    /// Measured consequences:
+    ///  * KJV has Strongs, StrongsNumbers, Morph, Headings, Footnotes,
+    ///    RedLetterWords and Lemma — six from its `GlobalOptionFilter=OSIS*` lines.
+    ///    It does NOT have `Scripref` (no `OSISScripref` filter), so there is no
+    ///    cross-references toggle for KJV.
+    ///  * MHCC has none, so its display menu has no rows.
     func moduleHasFeature(_ name: String, _ feature: String) -> Bool {
         guard let list = moduleMeta(name, key: "features"), !list.isEmpty else { return false }
         return list.split(separator: "|").contains { $0 == feature }

@@ -2,18 +2,13 @@
 //  PSBookmarks.swift
 //  PocketSword
 //
-//  Swift migration step 1.1 — bookmark inheritance chain (ATOMIC, §2A Rule 3).
-//  Port of PSBookmarks.{h,mm} (was Obj-C++ only because it imported
-//  PSModuleController.h for two thin Foundation seams; those are now extracted
-//  to PSRefHelper in AppConstants.swift, so this file carries no C++).
-//
-//  CRITICAL — the on-disk PSBookmarks.plist positional-array schema is preserved
-//  BYTE-FOR-BYTE (locked by PocketSwordTests / PersistedFormatTests):
-//    WRITE  +parseBookmarkObject:
+//  CRITICAL — the on-disk PSBookmarks.plist positional-array schema is locked
+//  BYTE-FOR-BYTE by PersistedFormatTests:
+//    WRITE  parseBookmarkObject:
 //             folder   -> [name, dateAdded, dateLastAccessed, "YES", rgb-or-"", children] (6)
 //             bookmark -> [name, dateAdded, dateLastAccessed, "NO", ref] (5)
-//    READ   -parseArray:
-//             idx3 via -boolValue selects folder/bookmark;
+//    READ   parseArray:
+//             idx3 via boolValue selects folder/bookmark;
 //             folder reads rgb@4 (""->nil) + children@5; bookmark reads ref@4.
 //  The "YES"/"NO" are LITERAL STRINGS (not booleans). Do NOT tidy the asymmetry.
 //
@@ -27,8 +22,7 @@ class PSBookmarks: PSBookmarkFolder {
 
     private static var psDefaultBookmarks: PSBookmarks?
 
-    /// The singleton instance. Obj-C calls `[PSBookmarks defaultBookmarks]`;
-    /// Swift (incl. the XCTest guard) calls `PSBookmarks.default()`.
+    /// The singleton instance (`PSBookmarks.default()`).
     @objc(defaultBookmarks)
     class func `default`() -> PSBookmarks {
         if psDefaultBookmarks == nil {
@@ -233,8 +227,8 @@ class PSBookmarks: PSBookmarkFolder {
     // MARK: - lastModified
 
     class func lastModified(_ bookmarkObject: PSBookmarkObject) -> Date? {
-        // Mirrors the Obj-C quirk: compares the recursive childDate but assigns
-        // child.dateLastAccessed (not childDate). Preserved verbatim.
+        // Deliberate quirk: compares the recursive childDate but assigns
+        // child.dateLastAccessed (not childDate).
         var returnDate = bookmarkObject.dateLastAccessed
         if bookmarkObject.folder, let folder = bookmarkObject as? PSBookmarkFolder {
             for case let child as PSBookmarkObject in (folder.children ?? []) {

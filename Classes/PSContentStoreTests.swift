@@ -2,14 +2,10 @@
 //  PSContentStoreTests.swift
 //  PocketSwordTests
 //
-//  Tests for the baked content store (Resources/PSContent.sqlite) and the
-//  pure-Swift reader that Phase 3 of the SWORD-removal plan builds on top of it.
-//
-//  This file starts with the one thing the rest of Phase 3 depends on: the
-//  artifacts are actually in the app bundle. They are bundled by path, so a
-//  converter re-run replaces them in place without touching the pbxproj — but a
-//  missing Copy-Resources entry would make every later reader test fail for a
-//  reason that has nothing to do with the reader.
+//  Tests for the baked content store (Resources/PSContent.sqlite) and the reader
+//  on top of it. Fixtures in Tests/Fixtures were captured from the live SWORD
+//  engine and cannot be regenerated: a red fixture test is a real behaviour
+//  change — fix the code, never recapture.
 //
 
 import XCTest
@@ -20,8 +16,8 @@ final class PSContentStoreTests: XCTestCase {
 
     // MARK: - Fixture plumbing
 
-    /// Same derivation as SwordOracleCaptureTests: from #filePath, so the tests
-    /// read the committed fixtures rather than anything in the simulator sandbox.
+    /// Derived from #filePath, so the tests read the committed fixtures rather than
+    /// anything in the simulator sandbox.
     private static func fixtureDir() -> URL {
         let thisFile = URL(fileURLWithPath: #filePath)
         let repoRoot = thisFile.deletingLastPathComponent().deletingLastPathComponent()
@@ -65,9 +61,8 @@ final class PSContentStoreTests: XCTestCase {
         return resolver
     }
 
-    /// The reader's equivalent of `-chapterBodyHTML:`: store -> expander ->
-    /// assembler. Deliberately assembled here from the pieces rather than through
-    /// PSContentReader, so a failure localises to one of the four core files.
+    /// Store -> expander -> assembler, assembled here from the pieces rather than
+    /// through PSContentReader, so a failure localises to one of the core files.
     private func renderBody(module: String,
                            ref: String,
                            options: PSChapterExpander.Options,
@@ -144,8 +139,8 @@ final class PSContentStoreTests: XCTestCase {
 
     func testStoreOpensAndMatchesTheExpectedSchema() throws {
         let store = try store()
-        // The counts the converter validated against live SWORD at bake time. If
-        // these drift, the store was rebuilt from different modules.
+        // The counts the store was validated against at bake time. If these drift,
+        // the store was rebuilt from different modules.
         XCTAssertEqual(store.dictEntryCount(module: "Robinson"), 1526)
         XCTAssertEqual(store.dictEntryCount(module: "StrongsRealGreek"), 5624)
         XCTAssertEqual(store.dictEntryCount(module: "StrongsRealHebrew"), 8674)
@@ -153,19 +148,16 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertEqual(store.moduleMeta("MHCC", key: "type"), "Commentaries")
     }
 
-    /// The three per-module keys Phase 5 step 4 added to `content_meta`, which
-    /// step 5 uses to replace live `hasFeature:` / `isRTL` / `lang` calls.
+    /// The per-module `content_meta` keys (features / lang / direction).
     ///
-    /// These are asserted as exact expected values rather than "non-nil", because
-    /// the whole point of baking them is that they are a fixed property of the
-    /// shipped content — a changed answer here means the `▾` menu, the RTL
-    /// substitution or the lexicon routing silently changed.
+    /// Asserted as exact values because they are a fixed property of the shipped
+    /// content — a changed answer means the display menu or lexicon routing
+    /// silently changed.
     func testBakedModuleMetadataMatchesTheModuleConfs() throws {
         let store = try store()
 
         // lang / direction. All five are Lang=en with no Direction=, so RTL is
-        // false everywhere. Asserted rather than assumed: it is what licenses
-        // step 5's claim that the substitution is a no-op today.
+        // false everywhere.
         for module in ["KJV", "MHCC", "Robinson", "StrongsRealGreek", "StrongsRealHebrew"] {
             XCTAssertEqual(store.moduleLang(module), "en", "\(module) Lang=")
             XCTAssertFalse(store.moduleIsRTL(module), "\(module) should not be RTL")
@@ -173,14 +165,11 @@ final class PSContentStoreTests: XCTestCase {
                            "\(module) declares no Direction=")
         }
 
-        // The feature answers, exactly as -[SwordModule hasFeature:] gave them.
-        //
-        // KJV's list is the interesting one: it declares only
-        // `Feature=StrongsNumbers` and `Feature=NoParagraphs`, but hasFeature: also
-        // matches OSIS-prefixed GlobalOptionFilter entries, so six more come from
-        // its `GlobalOptionFilter=OSIS*` lines. Note `Scripref` is NOT among them —
-        // there is no OSISScripref filter — so the cross-references row was never in
-        // KJV's menu, which is a fact worth pinning before step 5 rewires the gate.
+        // The feature answers. KJV declares only `Feature=StrongsNumbers` and
+        // `Feature=NoParagraphs`, but OSIS-prefixed GlobalOptionFilter entries also
+        // count, so six more come from its `GlobalOptionFilter=OSIS*` lines.
+        // `Scripref` is NOT among them — there is no OSISScripref filter — so KJV
+        // has no cross-references toggle.
         let expected: [String: Set<String>] = [
             "KJV": ["Strongs", "StrongsNumbers", "Morph", "Headings",
                     "Footnotes", "RedLetterWords", "Lemma"],
@@ -202,9 +191,8 @@ final class PSContentStoreTests: XCTestCase {
             }
         }
 
-        // MHCC declaring nothing is what makes its `▾` button hide itself, and no
-        // bundled lexicon declares Images, so the dictionary entry view always
-        // takes setScalesPageToFit(false).
+        // MHCC declaring nothing is what hides its display menu, and no bundled
+        // lexicon declares Images.
         XCTAssertEqual(store.moduleMeta("MHCC", key: "features"), "",
                        "MHCC must have an EMPTY feature list — its ▾ button hides on this")
         for lexicon in ["Robinson", "StrongsRealGreek", "StrongsRealHebrew"] {
@@ -212,24 +200,15 @@ final class PSContentStoreTests: XCTestCase {
         }
     }
 
-    /// **MOVED here from `SwordOracleCaptureTests` by Phase 5 step 12.**
-    ///
-    /// Headings are the subtlest axis in the whole conversion, so assert the two
-    /// distinct mechanisms are both actually present in the rendered bodies rather
-    /// than trusting the byte comparison against the fixtures alone. A body that lost
-    /// all its headings would still match a fixture if the fixture were ever
-    /// recaptured wrong; this says what must be *in* it.
+    /// Both heading mechanisms are present in the rendered bodies — asserted
+    /// directly rather than trusting the fixture comparison alone.
     ///
     ///  * Non-canonical titles (1,250 of KJV's 1,388) sit in intro-only entry slots
     ///    and reach the body only because Headings is On. Genesis 1 carries
     ///    `<title type="main">` and `<title type="chapter">CHAPTER 1.</title>`,
-    ///    emitted unclassed as `<p><b>…</b></p>` by osishtmlhref.cpp:439.
-    ///  * Canonical Psalm titles (138) are routed to
-    ///    EntryAttributes["Heading"]["Preverse"] and are injected by the accumulator
-    ///    loop's own glue, not by the markup filter. Psalm 3 is one.
-    ///
-    /// It used to drive `-[SwordModule chapterBodyHTML:]`; it now drives the reader,
-    /// which is the thing that has to keep being right.
+    ///    emitted unclassed as `<p><b>…</b></p>`.
+    ///  * Canonical Psalm titles (138) are injected by the accumulator loop itself,
+    ///    not by the markup filter. Psalm 3 is one.
     func testBothHeadingMechanismsSurviveIntoTheRenderedBody() throws {
         let gen1 = try renderBody(module: "KJV", ref: "Gen 1", options: .allOn).body
         XCTAssertTrue(gen1.contains("<p><b>"),
@@ -241,9 +220,9 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertTrue(ps3.contains("<p><b>"),
                       "Ps 3 body lost its canonical preverse title")
 
-        // And the negative half, which the original did not assert: with headings
-        // OFF, Gen 1's non-canonical intro titles must be GONE, while Ps 3's
-        // canonical one must survive (the injection is gated `headings || canonical`).
+        // The negative half: with headings OFF, Gen 1's non-canonical intro titles
+        // must be GONE, while Ps 3's canonical one must survive (the injection is
+        // gated `headings || canonical`).
         let gen1Off = try renderBody(module: "KJV", ref: "Gen 1", options: .allOff).body
         XCTAssertFalse(gen1Off.uppercased().contains("CHAPTER 1"),
                        "Gen 1's non-canonical chapter title must vanish with headings off")
@@ -252,18 +231,12 @@ final class PSContentStoreTests: XCTestCase {
                       "Ps 3's title is canonical, so it must survive headings being off")
     }
 
-    /// **MOVED here from `SwordOracleCaptureTests` by Phase 5 step 12.**
-    ///
-    /// The loop counter for all 2,378 chapters, against the fixture captured from the
-    /// live engine in the Phase 5 pre-work. The old version pinned exactly one value
-    /// (Gen 1 == 32); `testEntryCountsMatchTheCapturedLoopCounter` above pins eight.
-    /// This pins every one.
+    /// The loop counter for all 2,378 chapters, against the captured fixture.
     ///
     /// The counter is not a verse count — it advances for entries the loop skips and
     /// for the final iteration that steps out of the chapter — and it drives the
-    /// `vv{i}` anchors, the `pocketsword:versemenu:` links, the bookmark-highlight
-    /// lookup and the JS `versepos` bounds, so an off-by-one here is a user-visible
-    /// mis-scroll.
+    /// `vv{i}` anchors, the verse-menu links and the bookmark-highlight lookup, so an
+    /// off-by-one here is a user-visible mis-scroll.
     func testAllChapterLoopCountersMatchTheCapturedFixture() throws {
         let text = try fixture("chapter-loop-counters.tsv")
         var compared = 0
@@ -283,8 +256,7 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertEqual(compared, 2378, "1,189 chapters x 2 modules")
     }
 
-    /// The `plain_texts`-by-ref reader step 4 added, which step 5 uses in place of
-    /// `-[SwordModule textEntryForKey:textType:]`.
+    /// Single-verse `plain_texts` lookup by ref.
     func testPlainTextByRefLookup() throws {
         let store = try store()
 
@@ -357,9 +329,8 @@ final class PSContentStoreTests: XCTestCase {
         }
     }
 
-    /// The production render path: -getChapter: passes
-    /// applyBookmarkHighlights:YES, and -highlightVerse: re-opens its span around
-    /// every block element, so this is the subtlest thing in the assembler.
+    /// The bookmark-highlighted body: the highlight re-opens its span around every
+    /// block element, the subtlest thing in the assembler.
     func testBookmarkHighlightedBodyMatchesFixture() throws {
         let colour = "rgba(255,204,0,0.8)"
         let highlighted: Set<Int> = [1, 3, 6]
@@ -369,8 +340,8 @@ final class PSContentStoreTests: XCTestCase {
     }
 
     /// The counter is a loop counter, not a verse count: Gen 1's 31 verses yield
-    /// 32. It drives the vv{i} anchors, the versemenu links, the bookmark lookup
-    /// and the JS versepos bounds, so it has to come out identical.
+    /// 32. It drives the vv{i} anchors, the verse-menu links and the bookmark
+    /// lookup, so it has to come out identical.
     func testEntryCountsMatchTheCapturedLoopCounter() throws {
         let expected = ["Gen 1": 32, "Ps 3": 9, "Ps 119": 177, "Matt 1": 26,
                         "John 3": 37, "Gen 4": 27, "Ps 23": 7, "Rev 22": 22]
@@ -382,9 +353,9 @@ final class PSContentStoreTests: XCTestCase {
 
     // MARK: - Book resolution
 
-    /// The gap SWORD currently absorbs: refs carry book NAMES while the store is
-    /// keyed on OSIS abbreviations. "Genesis 1" is what
-    /// PSModuleController.getCurrentBibleRef() actually returns on a fresh install.
+    /// Refs carry book NAMES while the store is keyed on OSIS abbreviations.
+    /// "Genesis 1" is what PSModuleController.getCurrentBibleRef() returns on a
+    /// fresh install.
     func testBookNamesTheAppActuallyPassesResolve() throws {
         let resolver = try resolver()
         let cases: [(String, String, Int)] = [
@@ -409,8 +380,7 @@ final class PSContentStoreTests: XCTestCase {
         }
     }
 
-    /// Out-of-range and nonsense must return nil, never a plausible wrong chapter:
-    /// the caller treats nil as "fall back to SWORD".
+    /// Out-of-range and nonsense must return nil, never a plausible wrong chapter.
     func testUnresolvableRefsReturnNil() throws {
         let resolver = try resolver()
         for ref in ["Genesis 51",        // 50 chapters
@@ -432,23 +402,14 @@ final class PSContentStoreTests: XCTestCase {
 
     // MARK: - Dictionary lookup parity (plan step 4b)
 
-    /// Every key the Dictionary tab can display resolves — in **both** casings.
+    /// Every key the Dictionary can display resolves — in **both** casings.
     ///
-    /// REWRITTEN in Phase 4 step 9, which fixed the casing rather than tolerating it.
-    /// The tab used to display and re-look-up `[keyText capitalizedString]`, mangling
-    /// 1,375 of Robinson's 1,526 keys ("V-PAI-3S" -> "V-Pai-3S"); it worked only
-    /// because Robinson.conf omits CaseSensitiveKeys, so SWMgr builds
-    /// RawLD(caseSensitive=false) (swmgr.cpp:1056) and RawStr::findOffset uppercases
-    /// both sides (rawstr.cpp:188).
-    ///
-    /// Both directions are asserted, and they check different things now:
-    ///  1. **True casing resolves.** This is the live path after step 9 — what the
-    ///     tab now displays and looks up.
-    ///  2. **Capitalised casing still resolves.** This is no longer a live path, so
-    ///     it is `dict_keys.key COLLATE NOCASE` as **defence in depth**: a key cache
-    ///     that somehow survives the DefaultsDictKeyCaseFixed migration still finds
-    ///     its entry rather than showing the user a blank definition. Dropping the
-    ///     collation would break exactly that fallback, silently.
+    ///  1. **True casing resolves.** The live path: what the Dictionary displays and
+    ///     looks up (Robinson keys like "V-PAI-3S" are case-significant).
+    ///  2. **Capitalised casing still resolves**, via `dict_keys.key COLLATE NOCASE`
+    ///     as defence in depth: a stale key cache still finds its entry rather than
+    ///     showing a blank definition. Dropping the collation would break that
+    ///     silently.
     func testEveryKeyTheDictionaryTabCanDisplayResolves() throws {
         let store = try store()
         var checked = 0, altered = 0
@@ -459,7 +420,7 @@ final class PSContentStoreTests: XCTestCase {
             var missingCapitalized: [(String, String)] = []
             for key in keys {
                 checked += 1
-                // 1. The live path: the key exactly as stored and now displayed.
+                // 1. The live path: the key exactly as stored and displayed.
                 if store.dictEntry(module: module, key: key) == nil {
                     missingTrue.append(key)
                 }
@@ -482,11 +443,8 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertEqual(altered, 1375, "the number of case-altered keys changed")
     }
 
-    /// The casing fix itself: `PSContentReader.dictionaryKeys` must now return the
-    /// **stored** casing, not a capitalised copy.
-    ///
-    /// This is the assertion that would have failed before step 9, and the one that
-    /// fails if the `capitalized` ever comes back.
+    /// `PSContentReader.dictionaryKeys` must return the **stored** casing, not a
+    /// capitalised copy. Fails if a `capitalized` ever comes back.
     func testDictionaryKeysAreReturnedInTrueCasing() throws {
         let store = try store()
         let reader = PSContentReader.shared
@@ -506,7 +464,7 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertFalse(robinson.contains("V-Pai-3S"),
                        "the capitalizedString mangling is back")
 
-        // And the true-cased key the tab now displays opens the right entry.
+        // And the true-cased key opens the right entry.
         XCTAssertNotNil(reader.dictionaryEntry(module: "Robinson", key: "V-PAI-3S"))
     }
 
@@ -528,14 +486,9 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertEqual(store.dictEntry(module: "StrongsRealHebrew", key: "0430"), bare,
                        "'430' and '0430' must resolve to the same entry")
 
-        // A miss returns nil. This is the deliberate FIX to the engine's behaviour:
-        // SWLD::strongsPad drops a leading G/H without re-prepending it
-        // (swld.cpp:134), so "H430" pads to "0430" -- 4 digits, not a key -- and
-        // rawstr4.cpp:234-241 then snaps to a NEIGHBOURING entry with no error set,
-        // silently showing the wrong definition. Tests/Fixtures/
-        // strongsPad-prefixed-key-bug.txt records the engine's behaviour; the
-        // oracle test that produced it is deliberately left alone, since it
-        // documents the engine, not the reader.
+        // A miss returns nil — a deliberate fix to the engine, which padded "H430"
+        // to "0430" and silently snapped to a NEIGHBOURING entry. See
+        // Tests/Fixtures/strongsPad-prefixed-key-bug.txt.
         XCTAssertNil(store.dictEntry(module: "StrongsRealHebrew", key: "H430"),
                      "'H430' must miss rather than snap to a neighbour")
         XCTAssertNil(store.dictEntry(module: "StrongsRealHebrew", key: "99999"),
@@ -575,12 +528,9 @@ final class PSContentStoreTests: XCTestCase {
 
     // MARK: - Footnote bodies (plan step 6, the `n` branch)
 
-    /// The reader's footnote lookup must match the captured
-    /// `attributeValueForEntryData:` output, AND must work on the passage string
-    /// the anchor actually carries — which is URL-encoded
-    /// (`passage=Genesis+4%3A1`). `data(forLink:)` splits the query without
-    /// decoding it, and the engine's `n` branch feeds that straight to
-    /// VerseKey::setText, which tolerates it; a SQL lookup does not.
+    /// The footnote lookup must match the captured output AND work on the passage
+    /// string the anchor actually carries, which is URL-encoded
+    /// (`passage=Genesis+4%3A1`); `data(forLink:)` does not decode it.
     func testFootnoteBodiesMatchFixturesInBothEncodings() throws {
         let reader = PSContentReader.shared
         try XCTSkipUnless(reader.isAvailable, "reader unavailable")
@@ -622,9 +572,9 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertNil(reader.noteBody(module: "KJV", osisRef: "Genesis+4%3A1", marker: "99"))
     }
 
-    /// The encoded form really is what the app decodes to, so the shim above is
-    /// not solving an invented problem: the anchor the store emits carries
-    /// `passage=Genesis+4%3A1`, and `data(forLink:)` passes it through verbatim.
+    /// The anchor the store emits really carries `passage=Genesis+4%3A1`, and
+    /// `data(forLink:)` passes it through verbatim — so the decoding above is
+    /// needed.
     func testTheEmittedFootnoteAnchorCarriesAnEncodedPassage() throws {
         let body = try renderBody(module: "KJV", ref: "Gen 4", options: .allOn).body
         XCTAssertTrue(body.contains("passage=Genesis+4%3A1"),
@@ -634,13 +584,12 @@ final class PSContentStoreTests: XCTestCase {
                        "an already-decoded passage must pass through unchanged")
     }
 
-    // MARK: - Toggle independence (plan step 6)
+    // MARK: - Toggle independence
     //
     // All-on and all-off endpoints do NOT prove the gates are wired to the right
     // axes: Strong's and morph could be swapped and both endpoint fixtures would
-    // still pass, because each flips together with the other. So flip exactly one
-    // axis up from all-off and assert that axis's markup appears while the others
-    // stay absent.
+    // still pass. So flip exactly one axis up from all-off and assert that axis's
+    // markup appears while the others stay absent.
 
     /// The markup each axis is responsible for, and a chapter that carries it.
     private static let axisMarkers: [(name: String,
@@ -697,17 +646,12 @@ final class PSContentStoreTests: XCTestCase {
                       "dropping the red-letter span lost its nested Strong's anchors")
 
         // Compare the two renders on their text with tags and all whitespace
-        // removed. Both normalisations are needed and neither weakens the claim
-        // being made (that no *text* was lost):
-        //  * tags, because Strong's anchors interleave the words
-        //    ("loved<a …>&lt;25&gt;</a> the world"), so no long phrase is
-        //    contiguous in the raw HTML;
-        //  * whitespace, because both WoC delimiters carry a trailing space
-        //    (osishtmlhref.cpp:118-119). Removing the span therefore removes two
-        //    spaces with it, which is a real and correct difference in the bytes —
-        //    "6 &lt;3588&gt;" becomes "6&lt;3588&gt;". The byte-exact check lives in
-        //    testChapterBodiesMatchFixturesAllOptionsOff, against the fixture the
-        //    engine itself produced; this test is about content, not bytes.
+        // removed. Neither normalisation weakens the claim (no *text* was lost):
+        //  * tags, because Strong's anchors interleave the words, so no long
+        //    phrase is contiguous in the raw HTML;
+        //  * whitespace, because both WoC delimiters carry a trailing space that
+        //    correctly disappears with the span. The byte-exact check is
+        //    testChapterBodiesMatchFixturesAllOptionsOff.
         let onText = Self.strippingWhitespace(Self.strippingTags(on))
         let offText = Self.strippingWhitespace(Self.strippingTags(off))
         XCTAssertEqual(onText, offText,
@@ -751,20 +695,16 @@ final class PSContentStoreTests: XCTestCase {
         XCTAssertTrue(vpl.contains("id=\"vv1\""), "the verse anchor itself is still emitted")
     }
 
-    // MARK: - Failure seam (plan step 5)
+    // MARK: - Failure seam
     //
     // Each of these injects one of the conditions PSContentReader's header lists
     // and asserts the reader REFUSES rather than crashing or rendering something
-    // plausible. They deliberately construct a store directly (not the shared one)
-    // so nothing is left broken for later tests.
+    // plausible. They construct a store directly (not the shared one) so nothing
+    // is left broken for later tests.
     //
-    // PSContentStore.fail() calls assertionFailure, which traps in a Debug build —
-    // so these tests exercise the paths through the *initialiser*, which reports
-    // and returns nil, plus the pure-Swift expander, which can be handed a
-    // malformed token stream without touching the store at all. The mid-read
-    // failures (a truncated chunk, a bad body id) are covered by the converter's
-    // own re-inflate validation and by crosscheck.py, which run outside a debug
-    // assertion context.
+    // PSContentStore.fail() calls assertionFailure, which traps in Debug, so these
+    // exercise the *initialiser* paths (report and return nil) plus the expander,
+    // which can be handed a malformed token stream without touching the store.
 
     /// A scratch copy of the bundled store that tests can corrupt.
     private func makeStoreCopy(_ mutate: (URL) throws -> Void) throws -> URL {
@@ -872,22 +812,19 @@ final class PSContentStoreTests: XCTestCase {
                                         applyBookmarkHighlights: false, reportFailures: false))
     }
 
-    /// A chapter absent from the store is NOT a failure: the converter omits
-    /// wholly-empty ones, and the reader must render the engine's own
+    /// A chapter absent from the store is NOT a failure: the reader must render the
     /// empty-chapter message rather than returning nil.
     ///
-    /// Both shipped modules turn out to cover all 1,189 chapters, so the branch is
-    /// unreachable through the bundled store — asserted here, because that is the
-    /// fact that makes it unreachable, and it would silently stop being true if a
-    /// module were ever updated. The fallback itself is then exercised directly
-    /// through the assembler, which is where it lives.
+    /// Both shipped modules cover all 1,189 chapters, so the branch is unreachable
+    /// through the bundled store — asserted here, since it would silently stop
+    /// being true if a module changed. The fallback is exercised directly through
+    /// the assembler.
     func testAbsentChapterRendersTheEmptyChapterMessage() throws {
         let store = try store()
         let resolver = try resolver()
 
         // Every chapter of both modules is present. Spot-check the boundaries
-        // rather than all 2,378 (the converter already asserts the totals, and
-        // testStoreOpensAndMatchesTheExpectedSchema pins them).
+        // (testStoreOpensAndMatchesTheExpectedSchema pins the totals).
         for module in ["KJV", "MHCC"] {
             for (osis, chapter) in [("Gen", 1), ("Gen", 50), ("Mal", 4), ("Matt", 1), ("Rev", 22)] {
                 XCTAssertNotNil(store.chapterRecords(module: module, bookOsis: osis, chapter: chapter),
@@ -926,9 +863,8 @@ final class PSContentStoreTests: XCTestCase {
         }
     }
 
-    /// `dictKeys` order is what the table shows, so it has to be the module's own
-    /// `.idx` order — the same order `-[SwordDictionary allKeys]` produces by
-    /// walking from TOP.
+    /// `dictKeys` order is what the Dictionary shows, so it must be the module's
+    /// own `.idx` order.
     func testDictionaryKeyOrderIsStoredOrder() throws {
         let store = try store()
         let greek = store.dictKeys(module: "StrongsRealGreek")

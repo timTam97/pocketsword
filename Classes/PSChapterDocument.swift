@@ -2,67 +2,51 @@
 //  PSChapterDocument.swift
 //  PocketSword
 //
-//  Wave 9: the typed chapter document the native SwiftUI reader renders.
-//
-//  This is the render path's replacement for a string of HTML. Where
-//  `PSChapterExpander` + `PSChapterAssembler` turn the store's token stream into
-//  the exact bytes the SWORD markup filters emitted, `PSChapterDocumentBuilder`
-//  (below) turns the SAME token stream into these values, and a `LazyVStack`
-//  renders them.
+//  The typed chapter document the native SwiftUI reader renders.
+//  `PSChapterDocumentBuilder` (below) turns the store's token stream into these
+//  values, and a `LazyVStack` renders them.
 //
 //  ── Why this is not "parse the HTML" ───────────────────────────────────────
 //
-//  SWIFTUI_MIGRATION_PLAN.md originally called for SwiftSoup over the assembled
-//  HTML. It was measured instead, and the measurement changed the design: across
-//  all 2,378 chapter rows — 61,190 non-empty expanded records plus all 1,322
-//  stored headings — the emitted chapter vocabulary is a CLOSED SET of six inline
+//  Measured across all 2,378 chapter rows (61,190 non-empty expanded records plus
+//  all 1,322 stored headings), the chapter vocabulary is a CLOSED SET of six inline
 //  tags (`a` with class strongs/morph/n, `i.transChangeAdded`, `font size="-1"`,
 //  the `<p><b>…</b></p>` title pair, `span.WordOfChrist`) with numeric-only
-//  entities. There is no `blockquote`, `div`, `table`, `ruby`, `br` or `<!P>` in
-//  any chapter record.
-//
-//  The token stream already IS a structured document; serialising it to HTML only
-//  to re-parse it would be a round trip through a format this app owns, and would
-//  buy a ~30k-LOC HTML5 parser to handle six known tags. So the grammar gets a
-//  SECOND emitter rather than a parser.
+//  entities — no `blockquote`, `div`, `table`, `ruby`, `br` or `<!P>`. The token
+//  stream is already a structured document, so the grammar gets a SECOND emitter
+//  rather than an HTML parser.
 //
 //  ── The two emitters, and what holds them together ────────────────────────
 //
-//      tokens ──PSChapterExpander────────▶ HTML             (kept: fixture-pinned)
+//      tokens ──PSChapterExpander────────▶ HTML             (fixture-pinned oracle)
 //      tokens ──PSChapterDocumentBuilder─▶ ChapterDocument  (the render path)
 //
 //  Both consume the same `PSChapterExpander.Options`, so a disabled toggle SKIPS
 //  its token here exactly as it does there — including red-letter's exception,
 //  where the option being off drops the span but KEEPS its recursively-expanded
 //  payload. `PSChapterDocumentParityTests` asserts the two agree, chapter by
-//  chapter, on plain text / verse anchors / entryCount / link targets. That test
-//  is the whole safety argument for this file: the HTML side is byte-locked to
-//  fixtures captured from the live engine, so it is a real oracle and not a
-//  co-drifting sibling.
+//  chapter, on plain text / verse anchors / entryCount / link targets. The HTML
+//  side is byte-locked to fixtures captured from the SWORD engine, so it is a
+//  real oracle and not a co-drifting sibling.
 //
 //  **Do not "simplify" either emitter into calling the other.** Their independence
-//  is what makes the parity test mean anything, which is the same reasoning
-//  `PSChapterExpander`'s own header gives for there having been three
-//  implementations of the grammar.
+//  is what makes the parity test mean anything.
 //
-//  ── The counter is still not a verse number ───────────────────────────────
+//  ── The counter is not a verse number ─────────────────────────────────────
 //
 //  `ChapterVerse.number` is `PSChapterAssembler`'s loop counter `i`, not a verse
 //  ordinal: it advances for slots the loop skips as empty or duplicate. It drives
 //  the verse label, the verse-menu target and the bookmark-highlight lookup, and
 //  it is what `chapter-loop-counters.tsv` pins. Deriving it from an array index
-//  here would silently renumber every chapter that has an empty slot.
+//  would silently renumber every chapter that has an empty slot.
 //
 
 import Foundation
 
 // MARK: - Inline runs
 
-/// What a span of verse text links to when tapped.
-///
-/// These are the four `a` classes the corpus actually contains, as a typed value
-/// instead of a `passagestudy.jsp?action=…` query string. The reader's link router
-/// switches on this rather than re-parsing a URL it just built.
+/// What a span of verse text links to when tapped: the four `a` classes the
+/// corpus contains, as a typed value the reader's link router switches on.
 enum InlineLink: Equatable, Hashable {
     /// `class="strongs"` — a Strong's number. `type` is "Hebrew", "Greek", or ""
     /// (the corpus contains only the first two); `value` is the raw number as the
@@ -70,30 +54,24 @@ enum InlineLink: Equatable, Hashable {
     case strongs(type: String, value: String)
     /// `class="morph"` — a morphological tag.
     case morph(type: String, value: String)
-    /// `class="n"` (or `"x"`) — a footnote / cross-reference marker. The fields are
-    /// the note anchor's, and `passage` arrives URL-encoded exactly as the HTML
-    /// href carried it, because `PSContentReader.noteBody` decodes it itself.
+    /// `class="n"` (or `"x"`) — a footnote / cross-reference marker. `passage`
+    /// arrives URL-encoded exactly as the anchor carried it;
+    /// `PSContentReader.noteBody` decodes it.
     case note(kind: String, value: String, module: String, passage: String)
     /// A `<reference>` tag's `action=showRef` anchor. Unreachable for the shipped
-    /// content (SWORD_REMOVAL_PLAN.md Phase 4 step 8 proved zero occurrences
-    /// across 122,380 record expansions), carried so a future module cannot
-    /// silently lose its links.
+    /// content (zero occurrences across 122,380 record expansions); carried so a
+    /// future module cannot silently lose its links.
     case scriptRef(value: String)
-    /// The verse NUMBER itself, which was `pocketsword:versemenu:<i>` on a Bible
-    /// and `#verse<i>` on a commentary. Not produced by the token grammar — the
-    /// assembler synthesised it around each verse — so the renderer attaches it to
-    /// the superscript label rather than the builder emitting it.
+    /// The verse NUMBER itself. Not produced by the token grammar — the renderer
+    /// attaches it to the superscript label.
     case verseMenu(verse: Int)
 
     /// A compact URL for this link.
     ///
     /// SwiftUI only makes a span of `Text` tappable through
     /// `AttributedString.link`, so the typed value has to reach the view as a URL.
-    /// This is deliberately NOT the old `passagestudy.jsp?action=…&type=…&value=…`
-    /// shape: that string was SWORD's, had to be split on `&`/`=` without decoding
-    /// (`+[PSModuleController data(forLink:)]`), and re-parsing it is the round trip
-    /// Wave 9 removed from the render path. `pslink://` is this app's own, one
-    /// component per field, percent-encoded once.
+    /// `pslink://` is this app's own scheme: one component per field,
+    /// percent-encoded once.
     var url: URL? {
         var components = URLComponents()
         components.scheme = "pslink"
@@ -164,12 +142,11 @@ enum InlineLink: Equatable, Hashable {
     }
 }
 
-/// The typographic axes a run can carry, as a set rather than a class name.
+/// The typographic axes a run can carry.
 ///
 /// `transChangeAdded` (21,609 occurrences) is the italic grey "words supplied by
 /// the translator"; `wordOfChrist` (2,038) is red-letter; `smallCaps` is
-/// `font size="-1"`, which the HTML shell rewrote to a two-points-smaller
-/// `font-size` — here it is a relative size, applied by the view.
+/// `font size="-1"`, applied by the view as a relative size.
 struct InlineStyle: OptionSet, Hashable {
     let rawValue: Int
 
@@ -215,7 +192,7 @@ struct InlineRun: Equatable, Hashable {
 
 // MARK: - Blocks
 
-/// A heading, i.e. what `<p><b>…</b></p>` was.
+/// A heading (`<p><b>…</b></p>` in the HTML).
 ///
 /// Both sources land here: the loop's own PREVERSE injection (gated on
 /// `headingsOn || canonical`) and a title token inside a record, which is always
@@ -230,10 +207,9 @@ struct ChapterHeading: Equatable, Hashable {
 
 /// One verse row: the unit the `LazyVStack` renders and scrolls to.
 ///
-/// `id` is `number`, so `ScrollPosition(id:)` addresses a verse directly. That is
-/// the whole reason the JS `versePositionArray` and its pixel offsets can go: a
-/// native scroll view resolves a verse by identity instead of by measured offset,
-/// which is also why rotation no longer needs to re-measure anything.
+/// `id` is `number`, so `ScrollPosition(id:)` addresses a verse by identity
+/// rather than by measured offset — which is also why rotation needs no
+/// re-measuring.
 struct ChapterVerse: Identifiable, Equatable, Hashable {
     /// `PSChapterAssembler`'s loop counter — NOT a verse ordinal. See the header.
     var number: Int
@@ -264,17 +240,11 @@ struct ChapterVerse: Identifiable, Equatable, Hashable {
 
 /// A run of verses that render as one flowing paragraph.
 ///
-/// This exists because of what the reader looked like BEFORE Wave 9, which is easy
-/// to get wrong from the plan's wording alone. With verse-per-line OFF — the
-/// default, and how the app has always read — the HTML ran verses together as
-/// continuous prose with superscript numbers inline; only with the toggle ON did
-/// each verse get its own line. A `LazyVStack` with one row per verse would have
-/// silently made every chapter verse-per-line and left the per-module VPL toggle
-/// with nothing to do.
-///
-/// So the document groups verses into paragraphs, and the view picks its unit:
-/// paragraphs in prose mode, verses in verse-per-line mode. Both of today's
-/// layouts survive and the toggle keeps meaning.
+/// With verse-per-line OFF (the default) verses run together as continuous
+/// prose with superscript numbers inline; only with it ON does each verse get
+/// its own line. One row per verse unconditionally would make every chapter
+/// verse-per-line and leave the toggle inert. So the document groups verses
+/// into paragraphs, and the view picks its unit.
 struct ChapterParagraph: Identifiable, Equatable {
     /// The first verse's number — stable, and what `ScrollPosition(id:)` targets in
     /// prose mode.
@@ -302,11 +272,10 @@ struct ChapterDocument: Equatable {
     /// paragraph, never inside one.
     ///
     /// **This DERIVES on every call — it walks and reallocates every verse — so it
-    /// must not be called from a SwiftUI view body.** It is left computed rather than
-    /// stored so this type keeps its synthesized `Equatable` and its all-defaulted
-    /// memberwise `init` (the parity tests build on both), and so no producer can
-    /// leave a stored copy stale by touching `verses`; the reader calls it once per
-    /// document and caches the result in `ReaderPaneModel.paragraphs`.
+    /// must not be called from a SwiftUI view body.** It stays computed so this type
+    /// keeps its synthesized `Equatable` and all-defaulted memberwise `init` (the
+    /// parity tests build on both); the reader caches the result in
+    /// `ReaderPaneModel.paragraphs`.
     var paragraphs: [ChapterParagraph] {
         var out: [ChapterParagraph] = []
         for verse in verses {
@@ -335,9 +304,8 @@ struct ChapterDocument: Equatable {
 enum PSChapterDocumentBuilder {
 
     // The v2 token grammar. Deliberately duplicated from `PSChapterExpander`
-    // rather than shared: these are the wire format of the baked store, and the
-    // two emitters are independent by design (see this file's header). A test
-    // asserts the two tables agree.
+    // rather than shared: the emitters are independent by design (see this
+    // file's header). A test asserts the two tables agree.
     private static let strongsOpen: Character    = "\u{0001}"
     private static let strongsClose: Character   = "\u{0002}"
     private static let morphOpen: Character      = "\u{0003}"
@@ -357,10 +325,8 @@ enum PSChapterDocumentBuilder {
     struct Config {
         var kind: PSChapterAssembler.ModuleKind = .bible
         var headingsOn = true
-        // No `versePerLine`: it was a *layout* choice expressed as markup (a
-        // `<br />` and a `<span id>` per verse). The native reader lays verses out
-        // as rows either way, so the toggle drives row layout in the view instead
-        // of the document. See `VerseRow` / `ParagraphRow`.
+        // No `versePerLine`: it is a layout choice, so the toggle drives row layout
+        // in the view instead of the document. See `VerseRow` / `ParagraphRow`.
     }
 
     /// Build a document from one chapter's expanded-in-place records.
@@ -380,41 +346,33 @@ enum PSChapterDocumentBuilder {
         var i = 0
 
         for (slot, raw) in records.enumerated() {
-            // ── Normalisation order is load-bearing, and getting it wrong here was
-            //    a real bug the parity test caught. ──
+            // Normalisation order is load-bearing (the parity test caught this).
             //
             // `PSChapterAssembler` runs its `*x`/`*n` replacement and its
-            // leading-whitespace strip over the ENTRY AS ALREADY EXPANDED TO HTML.
-            // This builder consumes the *token stream*, and the two are not
-            // interchangeable for either step:
+            // leading-whitespace strip over the entry AS EXPANDED TO HTML. This builder
+            // consumes the *token stream*, and neither step is interchangeable:
             //
-            //  * The v2 sentinels are U+0001…U+0012, and several of them —
-            //    U+000B (title open) and U+000C (title close) among them — ARE
-            //    whitespace to `CharacterSet.whitespacesAndNewlines`. Stripping
-            //    leading whitespace off the raw record therefore ate the title
-            //    token's opening sentinel on the 1,184 KJV records shaped
-            //    `" " + <title>CHAPTER n.</title>`, leaving an unbalanced stream
-            //    whose text survived into the body. Symptom: with headings OFF the
-            //    native reader still showed "CHAPTER 1.", because the token that
-            //    the `headings` axis gates had stopped looking like a token.
-            //  * `*x`/`*n` exist only in EXPANDED output (they are the note
-            //    anchors' `*n` label); the corpus scan confirms zero occurrences in
-            //    any raw record, so applying that replacement here is at best a
-            //    no-op and at worst corrupts a verse that legitimately contains an
-            //    asterisk followed by an n.
+            //  * The v2 sentinels are U+0001…U+0012, and several — U+000B (title open)
+            //    and U+000C (title close) among them — ARE whitespace to
+            //    `CharacterSet.whitespacesAndNewlines`. Stripping leading whitespace off
+            //    the raw record eats the title token's opening sentinel on the 1,184 KJV
+            //    records shaped `" " + <title>CHAPTER n.</title>`, so "CHAPTER 1." would
+            //    show even with headings OFF.
+            //  * `*x`/`*n` exist only in EXPANDED output (zero occurrences in any raw
+            //    record), so applying that replacement here could only corrupt a verse
+            //    that legitimately contains an asterisk followed by an n.
             //
-            // So: expand first, then normalise the runs, and run the
-            // duplicate/empty test over the joined post-expansion text — which is
-            // the same string the assembler compares, and what keeps the loop
-            // counter aligned with `chapter-loop-counters.tsv`.
+            // So: expand first, then normalise the runs, and run the duplicate/empty
+            // test over the joined post-expansion text — the same string the assembler
+            // compares, which keeps the loop counter aligned with
+            // `chapter-loop-counters.tsv`.
             guard var runs = runs(from: raw,
                                   options: options,
                                   reportFailures: reportFailures) else { return nil }
 
             // The assembler's leading-whitespace strip, over the expanded text.
-            // Deliberately preserving its quirk: an entry that is ENTIRELY
-            // whitespace is left alone (the Obj-C `rangeOfCharacterFromSet` returned
-            // NSNotFound), so it then fails the isEmpty test and IS emitted.
+            // Deliberate quirk: an entry that is ENTIRELY whitespace is left alone, so
+            // it then fails the isEmpty test and IS emitted.
             stripLeadingWhitespace(&runs)
 
             let thisEntry = runs.map(\.text).joined()
@@ -428,13 +386,10 @@ enum PSChapterDocumentBuilder {
                 for heading in headings[slot] ?? [] where heading.bucket == "Preverse" {
                     guard config.headingsOn || heading.canonical else { continue }
                     guard !heading.html.isEmpty else { continue }
-                    // A stored heading expands under `forHeading`, where the title
-                    // wrapper is unconditional. See PSChapterExpander's header.
-                    // Note the `*x`/`*n` replacement the assembler applies to a
-                    // heading is NOT applied to the token stream, for the same
-                    // reason as above: those strings exist only post-expansion.
-                    // `Self.runs(...)`: the local `runs` array shadows the static
-                    // method inside this loop body.
+                    // A stored heading expands under `forHeading`, where the title wrapper is
+                    // unconditional (see PSChapterExpander's header). The `*x`/`*n`
+                    // replacement is not applied, for the same reason as above.
+                    // `Self.runs(...)`: the local `runs` array shadows the static method here.
                     guard var headingRuns = Self.runs(from: heading.html,
                                                       options: options.forHeading,
                                                       reportFailures: reportFailures) else { return nil }
@@ -457,18 +412,13 @@ enum PSChapterDocumentBuilder {
 
                 verse.runs = runs
                 verse.highlightColour = highlightColour(i)
-                // The KJV's own paragraph marker. All 2,970 of them sit at the
-                // start of a verse's visible text (measured over the module), so a
-                // leading pilcrow is a reliable "new paragraph here". The glyph
-                // itself stays in the text, exactly as the HTML rendered it.
+                // The KJV's own paragraph marker. All 2,970 sit at the start of a verse's
+                // visible text, so a leading pilcrow is a reliable "new paragraph here".
+                // The glyph itself stays in the text.
                 //
-                // A COMMENTARY always breaks. MHCC carries no pilcrows at all
-                // (measured: zero across all 28,904 records), so flowing it as prose
-                // ran a whole chapter into one block — found on device, where
-                // Genesis 2 rendered as a single 2,000-point paragraph. That is not
-                // merely ugly: it is also wrong, because the assembler wrapped every
-                // commentary verse in its own `<p>`, so per-verse blocks are what
-                // the module has always rendered as.
+                // A COMMENTARY always breaks per verse: MHCC has no pilcrows (zero across
+                // 28,904 records), so flowing it as prose would run a chapter into one
+                // block, and the assembler wraps every commentary verse in its own `<p>`.
                 verse.startsParagraph = config.kind == .commentary
                     || Self.opensParagraph(runs)
 
@@ -496,8 +446,7 @@ enum PSChapterDocumentBuilder {
     ///
     /// Scans past leading whitespace and past marker runs: a paragraph-opening
     /// verse in a red-letter passage begins with the `WordOfChrist` space, and one
-    /// with Strong's on may lead with `<3588>`, so testing only the very first
-    /// character would miss both. Measured: John 3:16 is exactly this shape.
+    /// with Strong's on may lead with `<3588>` (John 3:16 is exactly this shape).
     private static func opensParagraph(_ runs: [InlineRun]) -> Bool {
         for run in runs {
             if run.isMarker { continue }
@@ -508,16 +457,12 @@ enum PSChapterDocumentBuilder {
         return false
     }
 
-    /// The assembler's leading-whitespace strip, applied across runs.
-    ///
-    /// `-chapterBodyHTML:` did this with `rangeOfCharacterFromSet:` over the
-    /// inverted whitespace set and `substringFromIndex:`, so:
+    /// The assembler's leading-whitespace strip, applied across runs:
     ///
     ///  * it removes the whole leading whitespace RUN, not one character;
-    ///  * an entry that is *entirely* whitespace is left untouched, because
-    ///    `NSNotFound` meant "no non-whitespace to cut back to". That entry then
-    ///    fails the `isEqualToString:@""` test and IS emitted, which is why a few
-    ///    chapters carry a blank row. Reproduced, not tidied.
+    ///  * an entry that is *entirely* whitespace is left untouched, so it then
+    ///    fails the empty test and IS emitted — which is why a few chapters carry a
+    ///    blank row. Reproduced deliberately.
     private static func stripLeadingWhitespace(_ runs: inout [InlineRun]) {
         // Nothing to cut back to → leave it exactly as it is.
         guard runs.contains(where: {
@@ -673,11 +618,10 @@ enum PSChapterDocumentBuilder {
                                         report: reportFailures)
                     return nil
                 }
-                // The HTML emitter writes only the OPENING anchor here: the
-                // matching `</a>` comes from the surrounding text's own end tag,
-                // so the link's extent is not knowable from this token alone.
-                // Unreachable for the shipped content; recorded as a zero-width
-                // run so a future module's link is not silently dropped.
+                // The HTML emitter writes only the OPENING anchor here (the `</a>` comes
+                // from the surrounding text), so the link's extent is unknowable from this
+                // token. Unreachable for the shipped content; recorded as a zero-width run
+                // so a future module's link is not silently dropped.
                 out.append(
                     InlineRun(text: "", link: .scriptRef(value: payload))
                 )

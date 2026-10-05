@@ -2,10 +2,7 @@
 //  PSBookmarkFolder.swift
 //  PocketSword
 //
-//  Swift migration step 1.1 — bookmark inheritance chain (ATOMIC, §2A Rule 3).
-//  Port of PSBookmarkFolder.{h,m}. Behaviour preserved byte-for-byte, including
-//  the hex/rgb string formatting and the children traversal used by the bible
-//  view's verse-highlight path.
+//  The hex/rgb colour string formatting is persisted; keep it byte-identical.
 //
 
 import Foundation
@@ -16,7 +13,7 @@ class PSBookmarkFolder: PSBookmarkObject {
 
     @objc var children: [Any]?
 
-    // MARK: - Colour helpers (class methods, called from .mm callers + self)
+    // MARK: - Colour helpers
 
     @objc(hexStringFromColor:)
     class func hexString(from color: UIColor) -> String {
@@ -125,8 +122,7 @@ class PSBookmarkFolder: PSBookmarkObject {
             for case let bookmark as PSBookmark in possibleBookmarks {
                 if bookmark.rgbHexString != nil {
                     let components = (bookmark.ref ?? "").components(separatedBy: ":")
-                    // Mirrors the original objectAtIndex:1 — out-of-range would crash
-                    // in Obj-C; the data always carries a "book chap:verse" ref here.
+                    // The data always carries a "book chap:verse" ref here.
                     let v = components[1]
                     if v == verse {
                         return PSBookmarkFolder.rgbString(fromHexString: bookmark.rgbHexString)

@@ -5,26 +5,17 @@
 //  Created by Nic Carter on 1/02/11.
 //  Copyright 2011 CrossWire Bible Society. All rights reserved.
 //
-//  Migrated from PSSearchHistoryItem.{h,m} (Swift migration PR 1.2).
+//  PERSISTED value type: `searchHistoryItemArray` / `init(array:)` define the
+//  positional layout in UserDefaults, locked byte-for-byte by
+//  PersistedFormatTests, including the read SKEW:
 //
-//  This is a PERSISTED value leaf: -searchHistoryItemArray / -initWithArray:
-//  define a positional array layout that older builds wrote into NSUserDefaults
-//  and that PersistedFormatTests locks byte-for-byte (risk R1). The Swift port
-//  reproduces that layout EXACTLY, including the long-standing read SKEW in
-//  -initWithArray::
-//
-//    WRITE -searchHistoryItemArray order (idx 0..5):
+//    WRITE order (idx 0..5):
 //      [searchTermToDisplay, strongs("Y"/"N"), fuzzy("Y"/"N"),
 //       searchType(%d), searchRange(%d), bookName]
 //
-//    READ -initWithArray: (DELIBERATELY ASYMMETRIC — do NOT "fix"):
+//    READ (DELIBERATELY ASYMMETRIC — do NOT "fix"):
 //      strongsSearch <- idx1, fuzzySearch <- idx1 (BOTH from index 1),
 //      searchType    <- idx2, searchRange  <- idx3, bookName <- idx4.
-//
-//  Exposed to the still-Obj-C++ callers (PSModuleSearchController.mm,
-//  PSTabBarControllerDelegate.{h,mm}) via @objc; the property / initializer
-//  surface matches the former Obj-C class byte-for-byte. The two Obj-C
-//  initializers returned `id`, so they import as failable init?.
 //
 
 import Foundation
@@ -112,9 +103,8 @@ final class PSSearchHistoryItem: NSObject {
         let fuzzy = fuzzySearch ? "Y" : "N"
         let sType = String(format: "%d", searchType.rawValue)
         let sRange = String(format: "%d", searchRange.rawValue)
-        // NOTE: bookName may be nil; NSArray drops the tail at the first nil, so
-        // the original -arrayWithObjects: produced a SHORTER array when bookName
-        // was nil. Reproduce that truncation-at-nil semantics byte-for-byte.
+        // bookName may be nil; the array is truncated at the first nil
+        // (NSArray arrayWithObjects: semantics), producing a SHORTER array.
         var arr: [Any] = []
         let ordered: [Any?] = [searchTermToDisplay, strongs, fuzzy, sType, sRange, bookName]
         for element in ordered {
@@ -124,10 +114,9 @@ final class PSSearchHistoryItem: NSObject {
         return arr
     }
 
-    /// Returns searchTermToDisplay with legacy CLucene-era operators stripped
-    /// (lemma: prefix, && / || boolean operators). Entries saved by older
-    /// versions occasionally leaked those tokens into the user-visible field;
-    /// this lets the search bar show a clean term on replay.
+    /// Returns searchTermToDisplay with CLucene-era operators stripped (lemma:
+    /// prefix, && / || boolean operators), which entries saved by old versions can
+    /// carry.
     @objc func cleanedDisplayTerm() -> String {
         guard let searchTermToDisplay = searchTermToDisplay, !searchTermToDisplay.isEmpty else {
             return ""
@@ -146,12 +135,11 @@ final class PSSearchHistoryItem: NSObject {
     }
 }
 
-// MARK: - Obj-C -boolValue / -intValue parity helpers
+// MARK: - Lenient NSString boolValue / intValue parsing
 //
-// The original Obj-C read path did [(NSString*)x boolValue] / [(NSString*)x
-// intValue]. Swift's Bool(_:) / Int(_:) are stricter (they reject "Y"/"YES" and
-// trailing junk), so we reproduce NSString's lenient semantics exactly to keep
-// the persisted-format round-trip byte-for-byte.
+// Swift's Bool(_:) / Int(_:) are stricter (they reject "Y"/"YES" and trailing
+// junk), so reproduce NSString's lenient semantics to keep the persisted-format
+// round-trip byte-for-byte.
 
 private extension String {
     /// Mirrors -[NSString boolValue]: leading whitespace + optional sign, then

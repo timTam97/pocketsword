@@ -5,27 +5,15 @@
 //  Translates user-typed search input into an FTS5 MATCH expression. Handles:
 //    * quoted "phrases"
 //    * All (AND) / Any (OR) / Exact (whole-input phrase) match types
-//    * Fuzzy toggle (suffix '*' on each non-phrase token)
+//    * Fuzzy toggle (suffix '*' on each non-phrase term)
 //    * Strong's toggle (H0xxx / Hxxx equivalence under a lemmas: column filter)
 //    * Diacritic folding so accented input matches unaccented storage
 //
-//  Also, as of SWORD_REMOVAL_PLAN.md Phase 5 step 8, the two **index-side** text
-//  rules that used to be C-linkage free functions in PSSearchEngine.mm:
-//  `foldForIndex` (which was duplicated there byte-for-byte as `PSFoldForIndex`)
-//  and `cleanDisplayText` (which was `PSSearchCleanDisplayText`). Both are now
-//  single copies called by both halves — the index build in PSSearchEngine.swift
-//  and the query/display path here — so the drift those duplicates risked, and the
-//  test that existed to catch it, are gone.
-//
-//  Migrated from PSSearchQuery.{h,mm} (Swift migration PR 1.2). This file is a
-//  pure-Foundation value leaf — the former .mm contained NO sword:: usage. The
-//  diacritic-folding sequence (NFD -> drop combining-mark ranges -> NFC ->
-//  lowercase) is reproduced BYTE-FOR-BYTE from that .mm because it must stay
-//  compatible with the stored `text_norm` FTS5 column of every index already built
-//  on a user's device; any drift silently corrupts search matching (Risk R1). The
-//  `@objc` annotations are vestigial — nothing in Obj-C calls this any more — and
-//  are kept only because the selector names are part of no persisted format and
-//  removing them buys nothing.
+//  Also home to the two index-side text rules, `foldForIndex` and
+//  `cleanDisplayText`, shared by the index build (PSSearchEngine.swift) and the
+//  query/display path. Both must stay compatible with the `text_norm` column of
+//  every index already built on a user's device; any drift silently breaks
+//  search matching. Pinned by PSSearchIndexParityTests.
 //
 
 import Foundation
@@ -35,17 +23,9 @@ final class PSSearchQuery: NSObject {
 
     // MARK: - Folding
 
-    /// Fold diacritics for storage/query normalisation. The engine's stored
-    /// `text_norm` column and the parser use the same rules **because they call this
-    /// same function** — as of SWORD_REMOVAL_PLAN.md Phase 5 step 8 this is the only
-    /// copy.
-    ///
-    /// It used to be one of two: the index half was the C-linkage `PSFoldForIndex` in
-    /// `PSSearchEngine.mm`, a byte-for-byte duplicate of this, and the two were held
-    /// in sync only by a test asserting they agreed. Step 8 ported the engine to
-    /// Swift, so `PSFoldForIndex` is deleted rather than translated and the
-    /// duplication both files warned about is over. The known-vector coverage that
-    /// cross-check carried lives on in
+    /// Fold diacritics for storage/query normalisation: NFD -> drop combining-mark
+    /// ranges -> NFC -> lowercase. The single copy used by both the stored
+    /// `text_norm` column and the query parser. Pinned by
     /// `PSSearchIndexParityTests.testFoldForIndexHandlesEveryTargetedRange`.
     @objc(foldForIndex:)
     class func foldForIndex(_ s: String) -> String {
@@ -87,42 +67,26 @@ final class PSSearchQuery: NSObject {
 
     // MARK: - Display cleaning
 
-    // Compiled once. Swift's lazy `static let` gives the same once-only,
-    // thread-safe initialisation the Obj-C `dispatch_once` block did. Each is
-    // Optional and each use is guarded, exactly as the original guarded its
-    // `regularExpressionWithPattern:…error:NULL` results — the patterns are
-    // constants and always compile, so the guards never fire, but skipping a step
-    // beats trapping if one ever stops compiling.
+    // Compiled once. The patterns are constants and always compile; the guards
+    // at each use only mean a broken pattern skips a step instead of trapping.
     private static let markerRe = try? NSRegularExpression(
         pattern: "<[A-Z][A-Z0-9]*\\d[A-Z0-9-]*>", options: [])
     private static let wsRe = try? NSRegularExpression(pattern: "\\s+", options: [])
     private static let wsBeforePunctRe = try? NSRegularExpression(
         pattern: "\\s+([,.;:!?\\)\\]])", options: [])
 
-    /// Strip SWORD's inline Strong's / morph markers (e.g. `<H0430>`, `<TH8799>`)
-    /// and the `" [] "` empty-tag marker from a `stripText()` result, collapsing any
+    /// Strip the inline Strong's / morph markers (e.g. `<H0430>`, `<TH8799>`) and
+    /// the `" [] "` empty-tag marker from stored plain text, collapsing any
     /// whitespace the removal left behind — including a space stranded just before
     /// punctuation (e.g. `"field ,"`).
     ///
-    /// When SWORD's global Strong's-display option was ON, `stripText()` returned
-    /// verse text with markers interleaved inline — e.g. `"And God <H0430> divided
-    /// <H0996> <H0914> the light"`. Those are unreadable in search results, so any
-    /// `<[A-Z]+\d+[A-Z0-9-]*>` token goes (Strong's: H0430, G3056; morph: TH8799,
-    /// TG5707).
+    /// **Load-bearing beyond display.** `PSSearchEngine`'s build loop applies it
+    /// *before* the emptiness test, so it decides which rows exist in the index.
+    /// The three regexes, their order and the trim must not change.
     ///
-    /// **This is load-bearing beyond display.** `PSSearchEngine`'s build loop applies
-    /// it *before* the emptiness test, so it decides which rows exist in the index at
-    /// all, not merely how they read. The three regexes, their order, and the trim
-    /// are therefore reproduced exactly.
-    ///
-    /// Ported from the C-linkage `PSSearchCleanDisplayText` in `PSSearchEngine.mm` by
-    /// SWORD_REMOVAL_PLAN.md Phase 5 step 8. It lives here rather than on the engine
-    /// because its other caller is `PSModuleSearchController`'s lazy text fill, and
-    /// this class is already the home of the query/index text rules. It operates on
-    /// `NSMutableString` rather than `String` for the same reason
-    /// `PSChapterAssembler.highlightVerse` does: `NSRegularExpression`'s
-    /// replace-in-place API works in UTF-16 offsets, and redoing it over
-    /// `String.Index` would be a different algorithm.
+    /// Uses `NSMutableString` deliberately: `NSRegularExpression`'s replace-in-place
+    /// API works in UTF-16 offsets, and redoing it over `String.Index` would be a
+    /// different algorithm.
     class func cleanDisplayText(_ plain: String) -> String {
         if plain.isEmpty { return "" }
         let out = NSMutableString(string: plain)
@@ -317,11 +281,9 @@ final class PSSearchQuery: NSObject {
     }
 
     /// Extract the canonicalised Strong's numbers from raw user input. Each valid
-    /// H/G token is upper-cased and included; H-numbers also include their alternate
-    /// form (H0430 ↔ H430). Non-Strong's tokens are ignored. Returns an empty array
-    /// if the input contains no Strong's numbers. The returned set matches the
-    /// tokens `fts5ExpressionFromUserInput:…strongs:YES` injects into the query,
-    /// so they can be used to filter the stored word_map.
+    /// H/G entry is upper-cased and included; H-numbers also include their alternate
+    /// form (H0430 ↔ H430). Other input is ignored. The result matches what the
+    /// Strong's-mode query injects, so it can filter the stored word_map.
     @objc(strongsTokensFromUserInput:)
     class func strongsTokens(fromUserInput raw: String) -> [String] {
         if raw.isEmpty { return [] }
@@ -347,11 +309,9 @@ final class PSSearchQuery: NSObject {
     // any character that isn't a unicode letter or digit; if the result is
     // empty we fall back to a quoted phrase.
     private static func barewordForPrefix(_ s: String) -> String {
-        // Reproduce the former Obj-C loop byte-for-byte: it iterates UTF-16 code
-        // units and tests each against -[NSCharacterSet characterIsMember:]
-        // (which takes a single unichar), so surrogate halves of a non-BMP char
-        // are individually rejected. CharacterSet.contains(_:UnicodeScalar) would
-        // differ for non-BMP scalars, so test per UTF-16 unit here too.
+        // Deliberately per UTF-16 unit: surrogate halves of a non-BMP char are
+        // individually rejected. CharacterSet.contains(_:UnicodeScalar) would differ
+        // for non-BMP scalars.
         let ok = NSCharacterSet.alphanumerics as NSCharacterSet
         var out: [UInt16] = []
         for c in s.utf16 {

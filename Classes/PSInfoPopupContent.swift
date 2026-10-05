@@ -2,22 +2,14 @@
 //  PSInfoPopupContent.swift
 //  PocketSword
 //
-//  The parsed content of a study popup — the HTML plus the Greek/Hebrew lemma and
-//  transliteration pulled out of a rendered lexicon entry.
+//  The parsed content of a study popup — the entry HTML plus the Greek/Hebrew
+//  lemma and transliteration pulled out of a rendered lexicon entry.
 //
-//  Wave 8 split this out of `PSInfoPopupViewController.{h,mm}` -> `.swift`, whose
-//  presentation half (467 lines of UIVisualEffectView / UIStackView /
-//  NSLayoutConstraint) is replaced by `StudyPopupSheet` in SwiftUIStudyViews.swift.
-//  This half is unchanged and deliberately so: the lexeme parsing below is the
-//  product of working through what the bundled strongsrealgreek /
-//  strongsrealhebrew modules actually render — nested beta-code brackets, the ~114
-//  Hebrew entries whose inline <sup> vowel survives a tag strip as a spurious
-//  ASCII letter, numeric character references that must be decoded before the
-//  script can be recognised at all. It is content, not chrome.
-//
-//  The class stays an `NSObject` subclass. Nothing requires that any more, but it
-//  costs nothing and `PSSearchHistoryItem` / `PSVerseTextEntry` alongside it are
-//  the same shape.
+//  The lexeme parsing below reflects what the bundled strongsrealgreek /
+//  strongsrealhebrew modules actually render: nested beta-code brackets, the
+//  ~114 Hebrew entries whose inline <sup> vowel survives a tag strip as a
+//  spurious ASCII letter, and numeric character references that must be decoded
+//  before the script can be recognised.
 //
 
 import UIKit
@@ -25,13 +17,6 @@ import UIKit
 final class PSInfoPopupContent: NSObject {
     /// The entry's own HTML — the lexicon/footnote body as the store yields it,
     /// **not** a full page.
-    ///
-    /// Wave 9: this used to be the output of `createInfoHTMLString` /
-    /// `createStrongsInfoHTMLString`, i.e. an XHTML document with a `<head>`, a
-    /// `<style>` block, a viewport meta and (for a Strong's entry) 60 further lines
-    /// of injected CSS whose whole job was to make a `WKWebView` look like the sheet
-    /// it sat in. `EntryTextView` renders the body natively and inherits the sheet's
-    /// material, so the shells are gone and this is the raw body again.
     let entryHTML: String
     let contextTitle: String?
     let reference: String?
@@ -42,13 +27,8 @@ final class PSInfoPopupContent: NSObject {
     /// The transliteration (e.g. "ho"), parsed from the first `{…}` token.
     let transliteration: String?
 
-    /// The parsed entry, built ONCE per content object.
-    ///
-    /// `StudyPopupSheet.body` used to call `PSEntryDocumentBuilder.build(html:)`
-    /// inline, so every body evaluation — dragging the detent, tapping Back,
-    /// following a cross-link — re-scanned the whole entry. This is a class whose
-    /// `entryHTML` is a `let`, so the parse is memoized here rather than mirrored
-    /// into view state: one entry, one document, nothing to keep in sync. Main-actor
+    /// The parsed entry, built ONCE per content object (memoized here rather than
+    /// in view state, so a body evaluation never re-scans the entry). Main-actor
     /// use only, like the rest of this type.
     private var parsedDocument: EntryDocument?
 

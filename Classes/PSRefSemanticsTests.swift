@@ -2,36 +2,16 @@
 //  PSRefSemanticsTests.swift
 //  PocketSwordTests
 //
-//  The acceptance criterion for the pure-Swift versification + reference layer: it
-//  must reproduce `SwordBook` and `sword::VerseKey`'s reference semantics exactly,
-//  and the `x` / `scriptRef` branches must be provably unreachable for the shipped
-//  content.
+//  The acceptance criterion for the versification + reference layer: it must
+//  reproduce the SWORD engine's reference semantics exactly, and the `x` /
+//  `scriptRef` branches must be provably unreachable for the shipped content.
 //
-//  === RETARGETED (SWORD_REMOVAL_PLAN.md Phase 5 step 12) ===
-//
-//  Phase 4 wrote this as a *differential* file: it drove the live engine and the
-//  Swift table side by side. That half is now **deleted** — eleven tests plus the
-//  `module(_:)` / `moduleForNavigation(_:)` helpers — because Phase 5 removes the
-//  engine and a comparison against nothing is not a test.
-//
-//  Nothing is lost, and that is a measured claim rather than a hope.
 //  `Tests/Fixtures/versification-KJV-oracle.txt` was captured from the live engine
-//  in Phase 4 and holds **66 books x 5 members, all 1,189 verse maxima, and all
-//  2,376 transitions** — i.e. a superset of what the deleted comparisons checked.
-//  `testAllTransitionsMatchTheCommittedFixture` reads all of it, so the gate is the
-//  same gate with a recorded oracle instead of a live one. Do NOT recapture that
-//  fixture to make a red test pass.
-//
-//  The two deletions that are NOT covered by the fixture, and why that is right:
-//   * `testBoundariesClampInSwordAndReturnNilInSwift` asserted the deliberate
-//     difference at Genesis 1 / Revelation 22 (VerseKey clamps, Swift returns nil).
-//     The Swift half of that claim is what matters and is still asserted by
-//     `testAllTransitionsMatchTheCommittedFixture`, whose fixture records `<nil>`
-//     at both boundaries.
-//   * `testTranslateBookNameIsIdentityForAll66` proved a SWORD round-trip was the
-//     identity for all 66 books. Phase 4 already removed both of its production
-//     callers on the strength of that proof; with the engine gone there is no
-//     round-trip left to be non-identity.
+//  and holds **66 books x 5 members, all 1,189 verse maxima, and all 2,376
+//  transitions**. It is the whole versification gate and cannot be regenerated —
+//  do NOT recapture it to make a red test pass. At Genesis 1 / Revelation 22 it
+//  records the engine's clamp (the ref unchanged), where Swift deliberately
+//  returns nil.
 //
 //  === Two tiers ===
 //
@@ -39,10 +19,8 @@
 //    66 books x 5 members and 1,189 maxima against the committed fixture, the
 //    parser grammar fixture, `displayRef` munging, and the four-part
 //    unreachability proof (re-derived from the store, not trusted as prose).
-//  * EXHAUSTIVE — set `PSREF_EXHAUSTIVE=1`. All 31,102 parser round-trips, 1,189
-//    parser-vs-resolver agreement checks. (The two engine-driven exhaustive tests —
-//    `displayRef` vs a live VerseKey, and the `builtin_abbrevs` inclusion
-//    direction — went with the engine.)
+//  * EXHAUSTIVE — set `PSREF_EXHAUSTIVE=1`. All 31,102 parser round-trips and
+//    1,189 parser-vs-resolver agreement checks.
 //
 //  Both tiers print their coverage: a silently-sampled gate reads as "covered
 //  everything" when it did not.
@@ -63,8 +41,8 @@ final class PSRefSemanticsTests: XCTestCase {
         ProcessInfo.processInfo.environment["PSORACLE_CAPTURE"] != nil
     }
 
-    /// Same derivation as SwordOracleCaptureTests: from `#filePath`, so capture
-    /// writes into the source tree rather than the simulator sandbox.
+    /// Derived from `#filePath`, so the tests read the committed fixtures rather
+    /// than the simulator sandbox.
     private static func fixtureDir() -> URL {
         if let override = ProcessInfo.processInfo.environment["PSORACLE_FIXTURE_DIR"] {
             return URL(fileURLWithPath: override, isDirectory: true)
@@ -121,15 +99,8 @@ final class PSRefSemanticsTests: XCTestCase {
 
     // MARK: - The oracle
     //
-    // `Tests/Fixtures/versification-KJV-oracle.txt`, captured from the live engine in
-    // Phase 4 while it was still in the tree. As of Phase 5 step 12 it is the ONLY
-    // oracle: the book shape, the 1,189 verse maxima AND all 2,376 next/prev
-    // transitions are compared against it, because the engine those were originally
-    // compared against no longer exists.
-    //
-    // That is the entire reason the fixture was captured a phase early — so this
-    // deletion could not force a test to be weakened into a skip. It records SWORD's
-    // raw answers, clamps included, so the comparisons below are byte-level.
+    // `Tests/Fixtures/versification-KJV-oracle.txt`: SWORD's raw answers, clamps
+    // included, so the comparisons below are byte-level.
 
     /// One book, as the fixture records the live engine's answer.
     private struct OracleBook {
@@ -141,8 +112,8 @@ final class PSRefSemanticsTests: XCTestCase {
     }
 
     /// Parsed `versification-KJV-oracle.txt`. Throws (rather than skips) if it is
-    /// missing or malformed: after Phase 4 step 10 this file IS the oracle, so an
-    /// absent one means the gate is not running, not that it is inapplicable.
+    /// missing or malformed: this file IS the oracle, so an absent one means the
+    /// gate is not running.
     private func oracle() throws -> (books: [OracleBook], transitions: [String: (next: String, prev: String)]) {
         let url = Self.fixtureDir().appendingPathComponent("versification-KJV-oracle.txt")
         guard let text = try? String(contentsOf: url, encoding: .utf8) else {
@@ -218,13 +189,8 @@ final class PSRefSemanticsTests: XCTestCase {
 
 
 
-    /// All 2,376 transitions against the committed fixture.
-    ///
-    /// **This is the whole navigation gate** as of Phase 5 step 12. The two
-    /// engine-driven transition tests that used to sit above it
-    /// (`testAll{Forward,Backward}TransitionsMatchSwordModule`) are deleted, and this
-    /// covers the same 2,376 comparisons from the recorded oracle — so the fixture's
-    /// transition half is load-bearing rather than merely recorded.
+    /// All 2,376 transitions against the committed fixture — the whole navigation
+    /// gate.
     ///
     /// The fixture stores SWORD's raw answers, including the two clamps
     /// ("Revelation 22 -> next=Revelation of John 22", "Genesis 1 -> prev=Genesis 1"),
@@ -274,7 +240,7 @@ final class PSRefSemanticsTests: XCTestCase {
 
     /// `displayRef` returns the **longName** form, and every call site's downstream
     /// munge turns that into the `name` form. 66/66, which is what makes returning
-    /// longName safe (plan trap 1).
+    /// longName safe.
     func testDisplayRefLongNameMungesToTheNameForm() throws {
         let resolver = try resolver()
         var differing = 0
@@ -292,14 +258,11 @@ final class PSRefSemanticsTests: XCTestCase {
     /// The ref-selector's section-index strip, and the two intentional collisions
     /// in it.
     ///
-    /// `PSRefSelectorController` builds the strip by adding a `shortName` only if no
-    /// EARLIER book already used it, and resolves a tap with a first-match scan. So
-    /// 66 books dedup to 64 titles and two books become unreachable from the strip:
-    /// "Jud" scrolls to **Judges** (not Jude) and "Phi" to **Philippians** (not
-    /// Philemon). That is today's visible behaviour and Phase 4 deliberately keeps
-    /// it, so it is pinned here rather than left to be "fixed" by accident — this is
-    /// the one place the collisions are asserted as UI behaviour rather than as
-    /// abbreviation lookup.
+    /// The strip adds a `shortName` only if no EARLIER book already used it, and
+    /// resolves a tap with a first-match scan. So 66 books dedup to 64 titles and
+    /// two books are unreachable from the strip: "Jud" scrolls to **Judges** (not
+    /// Jude) and "Phi" to **Philippians** (not Philemon). Deliberate, pinned here so
+    /// it is not "fixed" by accident.
     func testRefSelectorIndexStripKeepsItsTwoIntentionalCollisions() throws {
         let resolver = try resolver()
 
@@ -340,11 +303,9 @@ final class PSRefSemanticsTests: XCTestCase {
 
 
 
-    /// The first/last available refs, which step 6 re-derived from the table
-    /// instead of round-tripping "Genesis" / "Revelation of John" through the locale
-    /// manager. They must still be byte-identical to the static defaults the app has
-    /// always shipped, because the ref selector's bounds and the chapter-navigation
-    /// gate both compare against them.
+    /// The first/last available refs, derived from the table. They must be
+    /// byte-identical to the static defaults, because the ref selector's bounds and
+    /// the chapter-navigation gate both compare against them.
     func testTableDerivedFirstAndLastRefsMatchTheShippedDefaults() throws {
         let resolver = try resolver()
         guard let first = resolver.books.first, let last = resolver.books.last else {
@@ -392,20 +353,19 @@ final class PSRefSemanticsTests: XCTestCase {
         XCTAssertNil(resolver.resolve(ref: ""))
     }
 
-    /// **The sword:// path's persistence contract.** Whatever that path decides to
-    /// write to `lastRef` must be a ref the *reader* can resolve — accepting it at
-    /// the gate is not enough.
+    /// **The sword:// path's persistence contract.** Whatever that path writes to
+    /// `lastRef` must be a ref the *reader* can resolve — accepting it at the gate
+    /// is not enough.
     ///
-    /// This is a real gap the gate alone did not close: `PSRefParser` is
-    /// deliberately more permissive than `PSBookOSISResolver.resolve(ref:)`. The
-    /// parser adds a trailing-"." fallback and a despaced-numbered-abbreviation
-    /// fallback ("Gen.", "1 Cor") that the resolver's spelling index does not carry,
-    /// and widening that index is off-limits because PSContentStoreTests pins it. So
-    /// `sword://KJV/Gen.+1` parses, and — before the app delegate learned to fall
-    /// back to the parser's canonical form — persisted the unrenderable "Gen. 1".
+    /// `PSRefParser` is deliberately more permissive than
+    /// `PSBookOSISResolver.resolve(ref:)`: it adds a trailing-"." fallback and a
+    /// despaced-numbered-abbreviation fallback ("Gen.", "1 Cor") that the resolver's
+    /// spelling index does not carry (and must not, because PSContentStoreTests pins
+    /// it). So `sword://KJV/Gen.+1` parses, and the path must fall back to the
+    /// parser's canonical form rather than persist the unrenderable "Gen. 1".
     ///
     /// Asserted over every spelling of every book in all three shapes the parser
-    /// accepts, reproducing the delegate's exact choice of what to write.
+    /// accepts, reproducing `AppSession.open(_:)`'s choice of what to write.
     func testEveryParseableRefPersistsSomethingTheReaderCanResolve() throws {
         let resolver = try resolver()
         let parser = try parser()
@@ -422,7 +382,7 @@ final class PSRefSemanticsTests: XCTestCase {
                     guard let parsed = parser.parse(asGiven) else { continue }
                     checked += 1
 
-                    // PocketSwordAppDelegate's rule, verbatim.
+                    // `AppSession.open(_:)`'s rule, verbatim.
                     let resolvesAsGiven = parsed.hadExplicitChapter
                         && resolver.resolve(ref: asGiven) != nil
                     let persisted = resolvesAsGiven ? asGiven : parsed.chapterRef
@@ -552,25 +512,20 @@ final class PSRefSemanticsTests: XCTestCase {
         XCTAssertGreaterThan(resolved, 300)
     }
 
-    // MARK: - Fast tier: the unreachability proof (the gate for step 8)
+    // MARK: - Fast tier: the unreachability proof
     //
     // Four parts. Three are pure data assertions over the baked store; the fourth
-    // is the routing claim, which is why PSRefLinkRouter exists. Together they are
-    // what licenses deleting attributeValueForEntryData:'s `x` and `scriptRef`
-    // branches — this must be green BEFORE that deletion lands.
-    //
-    // These deliberately re-derive the finding from the store rather than trusting
-    // the plan's scan.
+    // is the routing claim, which is why PSRefLinkRouter exists. Together they
+    // license the absence of the `x` and `scriptRef` branches. They re-derive the
+    // finding from the store on every run rather than trusting it as prose.
 
     /// Part 1. Expand every record of all 1,189 chapters of both modules at both
     /// option endpoints, plus all 1,322 stored headings under `.forHeading`, and
     /// assert **zero** `action=showRef` anchors. `showRef` is the only action that
     /// reaches the `scriptRef` branch.
     ///
-    /// The headings pass matters and is easy to miss: `headings.html` is a *text*
-    /// column, not a blob, so a blob-shaped scan of the store silently skips all
-    /// 1,322 rows — which is exactly where the plan's Phase-2 finding claimed
-    /// canonical Psalm titles carried an un-option-gated `showRef` anchor.
+    /// The headings pass is easy to miss: `headings.html` is a *text* column, not a
+    /// blob, so a blob-shaped scan of the store would silently skip all 1,322 rows.
     func testNoShippedContentEmitsAShowRefAnchor() throws {
         let store = try store()
         let resolver = try resolver()
@@ -692,10 +647,8 @@ final class PSRefSemanticsTests: XCTestCase {
     }
 
     /// Part 4. **The routing claim.** Every baked `sword://` link must route to
-    /// `.dictionary`, never to the bible-ref arm that reaches `scriptRef`.
-    ///
-    /// Module type comes from `content_meta`, not from `SwordManager`, so this
-    /// assertion needs neither the engine nor a live manager and survives Phase 5.
+    /// `.dictionary`, never to the bible-ref arm that reaches `scriptRef`. Module
+    /// type comes from `content_meta`.
     func testEveryBakedSwordLinkRoutesToTheDictionaryArm() throws {
         let store = try store()
         var routed = 0
@@ -761,12 +714,8 @@ final class PSRefSemanticsTests: XCTestCase {
         return out
     }
 
-    // The capture that WROTE the fixture (`testCaptureVersificationTable`) lived here
-    // and is deleted by Phase 5 step 12 along with the rest of the engine-driven half:
-    // it drove `-[SwordModule setChapter:]` / `-setToNextChapter` for all 2,376
-    // transitions, which is exactly the API the engine takes with it. The fixture it
-    // produced is committed and is now the oracle above. Do not recreate this capture,
-    // and do not recapture the fixture — a red test means a real behaviour change.
+    // Do not recapture the versification fixture — a red test means a real
+    // behaviour change.
 
 
     // MARK: - Exhaustive tier (PSREF_EXHAUSTIVE=1)

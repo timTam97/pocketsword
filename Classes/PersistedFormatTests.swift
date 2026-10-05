@@ -2,19 +2,10 @@
 //  PersistedFormatTests.swift
 //  PocketSwordTests
 //
-//  Swift migration step 0c — XCTest guard that LOCKS the load-bearing persisted
-//  formats (risk R1) BEFORE any model is ported to Swift.
-//
-//  These tests encode the EXACT behaviour of the current Obj-C (de)serialization,
-//  including every pre-existing read/write asymmetry. They do NOT "correct" any
-//  quirk — a Swift port that changes a positional index, a hardcoded literal, or
-//  the per-module pref-key format must make one of these tests go red.
-//
-//  Sources verified against:
-//   - Classes/PSHistoryItem.mm        (-array / -initWithArray:)
-//   - Classes/PSBookmarks.mm          (+parseBookmarkObject: / -parseArray:)
-//   - Classes/PSSearchHistoryItem.m   (-searchHistoryItemArray / -initWithArray:)
-//   - Classes/AppConstants.swift      (UserDefaults.psModuleKey == "%@_%@")
+//  LOCKS the load-bearing persisted formats, including every pre-existing
+//  read/write asymmetry. They do NOT "correct" any quirk: a change to a positional
+//  index, a hardcoded literal, or the per-module pref-key format must make one of
+//  these tests go red, because it would corrupt user data.
 //
 
 import XCTest
@@ -22,11 +13,11 @@ import XCTest
 
 final class PersistedFormatTests: XCTestCase {
 
-    // MARK: - PSHistoryItem (Classes/PSHistoryItem.mm)
+    // MARK: - PSHistoryItem
     //
-    // -array writes EXACTLY [bibleReference, "0" (scroll hardcoded), moduleName,
+    // `array` writes EXACTLY [bibleReference, "0" (scroll hardcoded), moduleName,
     //  dateAdded]. The scroll slot is ALWAYS the literal string "0" — the live
-    //  scrollAmount property is intentionally NOT written. Lock that.
+    //  scrollAmount property is intentionally NOT written.
 
     func testHistoryItem_arrayWritesScrollAsHardcodedZero() {
         let date = Date(timeIntervalSince1970: 1234567890)
@@ -88,14 +79,13 @@ final class PersistedFormatTests: XCTestCase {
     }
 
     // MARK: - PSBookmark / PSBookmarkFolder positional plist schema
-    //         (Classes/PSBookmarks.mm: +parseBookmarkObject: write, -parseArray: read)
     //
-    // WRITE (+parseBookmarkObject:):
+    // WRITE (parseBookmarkObject):
     //   folder   => [name, dateAdded, dateLastAccessed, "YES" (literal STRING),
     //                rgbHex-or-"", childrenArray]              (6 elements)
     //   bookmark => [name, dateAdded, dateLastAccessed, "NO", ref] (5 elements)
-    // READ (-parseArray:):
-    //   idx3 via -boolValue selects folder vs bookmark;
+    // READ (parseArray):
+    //   idx3 via boolValue selects folder vs bookmark;
     //   folder reads rgb@4 ("" normalized to nil) + children@5;
     //   bookmark reads ref@4.
 
@@ -195,12 +185,12 @@ final class PersistedFormatTests: XCTestCase {
         XCTAssertEqual((children.first as? PSBookmark)?.ref, "Acts 2:1")
     }
 
-    // MARK: - PSSearchHistoryItem (Classes/PSSearchHistoryItem.m)
+    // MARK: - PSSearchHistoryItem
     //
-    // -searchHistoryItemArray WRITES 6 elements in order:
+    // `searchHistoryItemArray` WRITES 6 elements in order:
     //   [searchTermToDisplay, strongs("Y"/"N"), fuzzy("Y"/"N"),
     //    searchType(%d), searchRange(%d), bookName]
-    // -initWithArray: has a PRE-EXISTING READ SKEW that we lock verbatim:
+    // `init(array:)` has a READ SKEW, locked verbatim:
     //   strongs <- idx1, fuzzy <- idx1 (BOTH from index 1, NOT index 2),
     //   searchType <- idx2 (not idx3), searchRange <- idx3 (not idx4),
     //   bookName <- idx4 (not idx5).
@@ -227,8 +217,7 @@ final class PersistedFormatTests: XCTestCase {
 
     // Lock the asymmetric read: fuzzy is read from idx1 (same as strongs), so a
     // round-trip through write->read makes fuzzy MIRROR strongs, regardless of the
-    // value originally written at idx2. This is the existing (buggy-but-shipped)
-    // behaviour and MUST be preserved by any Swift port.
+    // value originally written at idx2. Buggy but shipped; MUST be preserved.
     func testSearchHistoryItem_readSkew_fuzzyMirrorsStrongsFromIndexOne() throws {
         // Write with strongs=YES, fuzzy=NO -> array idx1="Y", idx2="N".
         let writer = try XCTUnwrap(PSSearchHistoryItem(searchTermToDisplay: "faith",
@@ -267,10 +256,10 @@ final class PersistedFormatTests: XCTestCase {
         XCTAssertEqual(read?.bookName, "BookFromIdx4", "bookName <- idx4")
     }
 
-    // MARK: - %@_%@ per-module pref key (Classes/AppConstants.swift)
+    // MARK: - "%@_%@" per-module pref key
     //
-    // Pin the Swift mirror against the Obj-C macro byte-for-byte:
-    //   UserDefaults.psModuleKey(pref, mod) == [NSString stringWithFormat:@"%@_%@", pref, mod]
+    // UserDefaults.psModuleKey(pref, mod) == String(format: "%@_%@", pref, mod),
+    // byte-for-byte.
 
     func testModuleKey_matchesObjCStringWithFormatByteForByte() {
         let pref = "fontSizePreference"
@@ -292,13 +281,10 @@ final class PersistedFormatTests: XCTestCase {
 
     // MARK: - HistoryStore iCloud merge / cap / dedup
     //
-    // R1 lock: the cloud<->local recursive merge, the 100-entry cap
+    // Locks the cloud<->local recursive merge, the 100-entry cap
     // (PSHistoryMaxEntries == 100, applied with a `while count >= 100` trim), and
-    // the dedup-on-equal-ref+mod walk must stay byte-identical to the Obj-C++.
-    // PSHistoryName is the wire key "bibleHistory" in BOTH NSUserDefaults and
-    // NSUbiquitousKeyValueStore. These tests build PSHistoryItem lists, exercise
-    // the controller merge helpers, and assert the resulting [ref,scroll,mod,date]
-    // array-of-arrays schema survives the round-trip.
+    // the dedup-on-equal-ref+mod walk. PSHistoryName is the wire key
+    // "bibleHistory" in BOTH UserDefaults and NSUbiquitousKeyValueStore.
 
     private func makeHistoryItem(_ ref: String, _ mod: String, secondsSinceEpoch: TimeInterval) -> PSHistoryItem {
         return PSHistoryItem(reference: ref,
@@ -307,12 +293,10 @@ final class PersistedFormatTests: XCTestCase {
                              dateAdded: Date(timeIntervalSince1970: secondsSinceEpoch))!
     }
 
-    // The recursive synchronizeHistoryArray:with: interleaves two date-descending
-    // lists newest-first via a removeObjectAtIndex:0 walk that RETURNS NIL the
-    // moment either list empties. That nil-on-empty guard means the trailing
-    // element of the not-yet-empty list is DROPPED (a long-standing quirk of the
-    // Obj-C++ original). Both the newest-first interleave AND that lossy drop are
-    // locked here — a Swift port must reproduce them byte-for-byte, NOT "fix" them.
+    // The recursive merge interleaves two date-descending lists newest-first,
+    // and RETURNS NIL the moment either list empties — so the trailing element
+    // of the not-yet-empty list is DROPPED. Both the newest-first interleave AND
+    // that lossy drop are locked here; do NOT "fix" them.
     func testHistoryMerge_recursiveInterleavesNewestFirstAndDropsTrailingElement() throws {
         // first (cloud) newest @300, then @100 ; second (local) @200, then @50.
         let cloud = NSMutableArray(array: [
@@ -351,7 +335,7 @@ final class PersistedFormatTests: XCTestCase {
     }
 
     // initialSynchronize writes the combined, deduped, capped history to
-    // NSUserDefaults under "bibleHistory" as an array-of-[ref,scroll,mod,date]
+    // UserDefaults under "bibleHistory" as an array-of-[ref,scroll,mod,date]
     // arrays. Lock the schema + dedup-on-equal-ref+mod.
     func testHistoryInitialSynchronize_writesArraySchemaAndDedups() throws {
         let defaults = UserDefaults.standard

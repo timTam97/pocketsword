@@ -2,62 +2,43 @@
 //  PSRefParser.swift
 //  PocketSword
 //
-//  The pure-Swift reference parser, Phase 4 of SWORD_REMOVAL_PLAN.md. Replaces
-//  the reference-semantics half of `sword::VerseKey::setText` /
-//  `VerseKey::parseVerseList` for the one input the app does not itself generate.
-//
-//  ## Why this is a separate file from PSBookOSISResolver
-//
-//  It reads the same table — it takes a `PSBookOSISResolver` and never touches the
-//  JSON — but `PSBookOSISResolver` is on the content reader's hot path
-//  (`PSContentReader` calls `resolve(ref:)` on every page turn) and three test
-//  files pin its shape. The parser is a consumer, not part of that surface.
+//  Free-text reference parser for the one input the app does not generate
+//  itself (inbound `sword://` URLs). Reads the `PSBookOSISResolver` table but is
+//  kept separate from it: the resolver is on the reader's hot path and pinned by
+//  tests; the parser is a consumer.
 //
 //  ## Grammar
 //
 //      <book> [ <chapter> [ ":" <verse> [ "-" <verse> ] ] ]
 //
-//  `<book>` is any of the seven spellings per book that the resolver's index
-//  carries ("Genesis", "Gen", "1 Corinthians", "I Corinthians", "1Cor", "Jn", …),
-//  case-insensitively, with an optional trailing "." after an abbreviation. Verse
-//  and chapter default to 1 when absent. A range must be ascending and inside the
-//  chapter.
+//  `<book>` is any of the seven spellings per book the resolver indexes
+//  ("Genesis", "Gen", "1 Corinthians", "I Corinthians", "1Cor", "Jn", …),
+//  case-insensitively, with an optional trailing "." after an abbreviation.
+//  Verse and chapter default to 1 when absent. A range must be ascending and
+//  inside the chapter.
 //
 //  ## Deliberately out of scope
 //
-//  This is bounded by what the UI actually produces, not by what SWORD could
-//  parse. Anything wider would be the "scope creep back toward generality" the
-//  plan's risk register warns about, and would be untested production code —
-//  nothing in the app can emit any of it:
+//  Bounded by what the app can actually receive; anything wider would be
+//  untested production code:
 //
-//    - **Lists.** No comma or semicolon forms ("Gen 1:1,3", "Gen 1:1; 2:4") and no
-//      cross-book or cross-chapter ranges ("Gen 1:1 - Exod 2:2", "Gen 1:31-2:3").
-//      `parseVerseList` handles all of these; the app never emits one. The inbound
-//      `sword://` path truncates a list itself before this parser ever sees it
-//      (PocketSwordAppDelegate: "28-30" -> "28", "26,28;30" -> "26").
-//    - **Roman-numeral chapters** ("Gen ii"), which versekey.cpp:948 accepts.
-//    - **`ff` / trailing-letter suffixes** ("Gen 1:1ff", "Gen 1:12a"),
-//      versekey.cpp:885 and :925.
-//    - **`inscriptio` / `subscriptio`** (versekey.cpp:962-971), an INTF-only form
-//      for storing titles as book/chapter intros. No bundled module uses it.
-//    - **Localised book names.** There is no `en` locale conf and `SWLocale(0)`
-//      has no `[Text]` section, so `translateBookName:` is identity on every
-//      device; there has never been anything to translate. See the retirement in
-//      PSTabBarControllerDelegate / PSModuleController.
-//    - **Fuzzy / spoken input.** `PSVoiceRefParser` owns that, keeps its own
-//      grammar, and deliberately discards ranges (pinned by
-//      PSVoiceRefParserTests.testRangesKeepFirstVerse). Do not merge them.
+//    - Lists ("Gen 1:1,3", "Gen 1:1; 2:4") and cross-book / cross-chapter
+//      ranges. The `sword://` path truncates a list itself first
+//      ("28-30" -> "28", "26,28;30" -> "26").
+//    - Roman-numeral chapters ("Gen ii").
+//    - `ff` / trailing-letter suffixes ("Gen 1:1ff", "Gen 1:12a").
+//    - `inscriptio` / `subscriptio`. No bundled module uses them.
+//    - Localised book names. The app is English-only.
+//    - Fuzzy / spoken input. `PSVoiceRefParser` owns that with its own grammar
+//      and deliberately discards ranges. Do not merge them.
 //
-//  `PSRefSemanticsTests`' exhaustive tier *prints* the abbreviation forms this
-//  parser rejects but SWORD accepts, so that delta stays visible rather than
-//  assumed.
+//  `PSRefSemanticsTests`' exhaustive tier prints the abbreviation forms this
+//  parser rejects but SWORD accepted, so that delta stays visible.
 //
 //  ## The parse context is always explicit
 //
-//  `parse(_:relativeTo:)` takes the book to resolve a bare chapter/verse against;
-//  it never reads `getCurrentBibleRef()` itself. `SwordModule.mm:600` seeded
-//  `parseVerseList` from exactly that ambient global state, and the only thing
-//  that needed it is the `scriptRef` branch Phase 4 deletes.
+//  `parse(_:relativeTo:)` takes the book to resolve a bare chapter/verse
+//  against; it never reads ambient state such as `getCurrentBibleRef()`.
 //
 
 import Foundation
@@ -74,9 +55,8 @@ struct BibleReference: Equatable {
     /// True when the source string carried a chapter number at all. False for a
     /// bare book name ("John"), where `chapter` is the default 1.
     ///
-    /// The `sword://` URL path needs this: a chapter-less URL used to persist the
-    /// chapter-less string itself as `lastRef`, which `VerseKey` absorbed but the
-    /// Swift reader cannot resolve. Note it cannot be inferred by looking for a
+    /// The `sword://` path needs this so it never persists a chapter-less
+    /// `lastRef` the reader cannot resolve. It cannot be inferred by looking for a
     /// digit — "1 John" has one and still has no chapter.
     let hadExplicitChapter: Bool
 
@@ -152,8 +132,7 @@ struct PSRefParser {
             book = contextBook
         } else {
             // A trailing "." after an abbreviation ("Gen.", "1 Cor.") is not in
-            // the resolver's index; strip it and retry rather than adding 66 more
-            // spellings to a table three test files pin.
+            // the resolver's index; strip it and retry.
             guard let resolved = resolveBook(bookPart) else { return nil }
             book = resolved
         }
@@ -185,12 +164,9 @@ struct PSRefParser {
         }
 
         // 2. Spaced abbreviations of the numbered books: "1 Cor", "2 Kgs",
-        //    "1 Thess". The table carries only the unspaced `abbreviation` form
-        //    ("1Cor"), but SWORD accepts both — `canon_abbrevs.h` has spaced
-        //    entries ("1 CORINTHIANS", "1 C") and `getBookFromAbbrev` does a
-        //    *prefix* match over them, so "1 COR" resolves there. Despacing is
-        //    verified collision-free: across all 66 books x 7 spellings, no
-        //    despaced form resolves to a different book than its spaced form.
+        //    "1 Thess". The table carries only the unspaced form ("1Cor").
+        //    Despacing is verified collision-free across all 66 books x 7
+        //    spellings.
         let despaced = part.replacingOccurrences(of: " ", with: "")
         if despaced != part, !despaced.isEmpty, let book = resolver.book(named: despaced) {
             return book
@@ -272,10 +248,8 @@ struct PSRefParser {
                                  hadExplicitVerse: true)
     }
 
-    /// Digits only. `Int(_:)` already rejects "12a" and "1ff", but it accepts a
-    /// leading "+"/"-" and Unicode digits, so the character check is explicit —
-    /// "-3" must not parse as a chapter, and NSString's lenient `integerValue`
-    /// (which the notification path uses) must not leak in here.
+    /// Digits only. `Int(_:)` rejects "12a" and "1ff" but accepts a leading
+    /// "+"/"-" and Unicode digits, so the character check is explicit.
     private func strictInt(_ s: String) -> Int? {
         let trimmed = s.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty,

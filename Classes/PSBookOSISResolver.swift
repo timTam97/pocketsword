@@ -2,34 +2,22 @@
 //  PSBookOSISResolver.swift
 //  PocketSword
 //
-//  Narrow book-name -> OSIS-abbreviation lookup over the baked
-//  Resources/Versification-KJV.json. Phase 3 of SWORD_REMOVAL_PLAN.md.
+//  Book-name -> OSIS-abbreviation lookup and the app's whole versification
+//  layer, over the baked Resources/Versification-KJV.json.
 //
-//  This exists because of a mismatch the SWORD engine currently absorbs: the app
-//  passes book **names**, and the content store is keyed on OSIS abbreviations.
-//  `PSModuleController.getCurrentBibleRef()` seeds and returns "Genesis 1"
-//  (PSModuleController.swift:264-272), the ref selector and history both round-trip
-//  full names, and `chapters` is keyed `book_osis='Gen'`. Today `VerseKey::setText`
-//  parses whatever it is given; the reader has to do that one narrow part itself.
+//  The app's refs carry book NAMES ("Genesis 1") while the content store is
+//  keyed on OSIS (`book_osis='Gen'`). This is deliberately NOT a free-text
+//  parser: it resolves "<book> <chapter>" for the 66 books' known spellings and
+//  nothing else. Free-text parsing is `PSRefParser` (on top of this table);
+//  `PSVoiceRefParser` keeps its own fuzzier grammar for voice input.
 //
-//  This is deliberately NOT a free-text reference parser. It resolves a
-//  "<book> <chapter>" string where <book> is one of the 66 books' known spellings,
-//  and nothing else. Free-text parsing with verses and ranges is `PSRefParser`
-//  (Phase 4), which sits on top of this table rather than duplicating it;
-//  `PSVoiceRefParser` keeps its own deliberately fuzzier grammar for voice input.
-//
-//  Phase 4 additionally made this the app's whole versification layer, replacing
-//  `SwordBook` + `sword::VerseKey`'s chapter arithmetic: see the "Versification"
-//  section below (`book(at:)`, `verseMax(book:chapter:)`, `nextChapter`,
-//  `previousChapter`, `displayRef`). Those are purely additive — the Phase-3
-//  lookup surface (`init?`, `resolve(ref:)`, `book(named:)`, `book(osis:)`, the
-//  spelling index) is on the reader's hot path and is pinned by
-//  PSContentStoreTests / PSDifferentialTests, so it is deliberately untouched.
+//  The lookup surface (`init?`, `resolve(ref:)`, `book(named:)`, `book(osis:)`)
+//  is on the reader's hot path and pinned by PSContentStoreTests.
 //
 
 import Foundation
 
-/// One book of the versification, as `tools/swordbake`'s dump holds it.
+/// One book of the versification, as the baked dump holds it.
 struct PSVersificationBook {
     let osisName: String
     /// The app-munged display name ("1 Corinthians") — what refs actually carry.
@@ -46,9 +34,8 @@ struct PSVersificationBook {
     var chapterCount: Int { verseMax.count }
 }
 
-/// NSObject-derived only so `PSSearchEngine.mm` can reach the two @objc members in
-/// the extension at the bottom of this file. Nothing else about the class is
-/// Obj-C-visible, and `PSVersificationBook` stays a plain Swift struct.
+/// NSObject-derived only for the `@objc` members in the extension at the bottom
+/// of this file; `PSVersificationBook` stays a plain Swift struct.
 @objc(PSBookOSISResolver)
 final class PSBookOSISResolver: NSObject {
 
@@ -65,9 +52,9 @@ final class PSBookOSISResolver: NSObject {
 
     /// The shared instance over the bundled dump.
     ///
-    /// Phase 5: a missing or malformed dump is **fatal** — it is the app's whole
-    /// versification layer and there is no engine behind it. Optional only so the
-    /// tests can build broken copies with `reportFailures: false`.
+    /// A missing or malformed dump is **fatal** — it is the app's whole
+    /// versification layer. Optional only so tests can build broken copies with
+    /// `reportFailures: false`.
     static let shared: PSBookOSISResolver? = {
         guard let url = Bundle.main.url(forResource: "Versification-KJV", withExtension: "json") else {
             PSContentStore.fatal("Versification-KJV.json is not in the app bundle")
@@ -117,32 +104,25 @@ final class PSBookOSISResolver: NSObject {
             osisMap[book.osisName] = book
             // Every spelling the dump carries. `name` is the app-munged form the
             // app's own refs use; `longName`/`localisedName` are the roman-numeral
-            // forms SWORD emits in key text ("I Corinthians"), which is what the
-            // `headings` table and the note refs are keyed on.
+            // forms ("I Corinthians") the `headings` table and note refs are keyed on.
             for spelling in [book.osisName, book.name, book.longName, book.localisedName,
                              book.shortName, book.preferredAbbreviation, book.abbreviation] {
                 let key = spelling.lowercased()
                 guard !key.isEmpty else { continue }
                 // First writer wins: the books are in canonical order, so an
-                // ambiguous short form resolves to the earlier book, which is what
-                // SWORD's own abbreviation table does.
+                // ambiguous short form resolves to the earlier book.
                 if idx[key] == nil { idx[key] = i }
             }
-            // The `createRefString` normalisations (PSModuleController.swift:576-584):
-            // "III "->"3 ", "II "->"2 ", "I "->"1 ", " of John "->" ". A ref that
-            // has been through it arrives as "1 Corinthians" / "2 John", which
-            // `name` already covers — but a ref that has NOT been normalised
-            // arrives as "I Corinthians", which is `longName`. Both directions are
-            // therefore in the table, and neither depends on the caller having
-            // normalised first.
+            // The `createRefString` normalisations ("III "->"3 ", "II "->"2 ",
+            // "I "->"1 ", " of John "->" "). A normalised ref ("1 Corinthians") is
+            // covered by `name`; an unnormalised one ("I Corinthians") by `longName`.
+            // Both are in the table, so callers need not normalise first.
             let munged = PSRefHelper.createRefString(book.longName).lowercased()
             if idx[munged] == nil { idx[munged] = i }
         }
         index = idx
         byOsis = osisMap
-        // Last, per Swift's phase-1/phase-2 rule: every stored property above is
-        // assigned before the superclass initialiser runs. (NSObject base is new in
-        // Phase 4 — see the @objc extension at the bottom of this file.)
+        // Last: every stored property must be assigned before super.init().
         super.init()
     }
 
@@ -161,15 +141,14 @@ final class PSBookOSISResolver: NSObject {
 
     func book(osis: String) -> PSVersificationBook? { byOsis[osis] }
 
-    /// Split a "<book> <chapter>" ref — the shape `-getChapter:` is given.
+    /// Split a "<book> <chapter>" ref.
     ///
     /// The chapter is the trailing integer; everything before it is the book name,
     /// which may contain spaces ("1 Corinthians 13", "Song of Solomon 2"). A ref
-    /// with a verse ("Genesis 1:1") resolves to its chapter, because that is what
-    /// `VerseKey::setText` + `setVerse(0)` does today.
+    /// with a verse ("Genesis 1:1") resolves to its chapter.
     ///
-    /// Returns nil rather than guessing: an unresolvable book is a reader failure
-    /// that falls back to SWORD, never a silently wrong chapter.
+    /// Returns nil rather than guessing: an unresolvable book must never become a
+    /// silently wrong chapter.
     func resolve(ref: String) -> (book: PSVersificationBook, chapter: Int)? {
         let trimmed = ref.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let lastSpace = trimmed.lastIndex(of: " ") else { return nil }
@@ -187,26 +166,14 @@ final class PSBookOSISResolver: NSObject {
         return (book, chapter)
     }
 
-    // MARK: - Versification (Phase 4 — the SwordBook / sword::VerseKey replacement)
+    // MARK: - Versification
     //
-    // Everything below is additive. It replaces three things that used to route
-    // through the engine purely for reference semantics:
-    //   - `SwordBook` (-name/-shortName/-osisName/-chapters/-verses:), which is now
-    //     `PSVersificationBook` itself: the baked table reproduces every one of
-    //     `SwordBook`'s munges byte-exactly (verified 66/66 for `name` ==
-    //     munge(localisedName) and `shortName` == despace-then-first-3(name)), so
-    //     there is no adapter type and no re-munging.
-    //   - `-[SwordModule setToNextChapter]` / `-setToPreviousChapter` /
-    //     `-getVerseMax`, which were `sword::VerseKey::setChapter` + `normalize`.
-    //   - `-[SwordManager translateBookName:]`, which is identity on every device
-    //     (there is no `en` locale conf; `SWLocale(0)` has no `[Text]` section, so
-    //     `translate` returns its input — see the retirement in
-    //     PSTabBarControllerDelegate / PSModuleController).
+    // `PSVersificationBook` reproduces the engine's book-name munges byte-exactly
+    // (`name` == munge(localisedName), `shortName` == despace-then-first-3(name)),
+    // so no adapter type or re-munging is needed.
 
     /// A book by versification index (0 = Genesis, 65 = Revelation), or nil when
-    /// out of range. This is the flat 66-entry array — SWORD's `BMAX` testament
-    /// split does not apply, which is why the rollover below is so much simpler
-    /// than `VerseKey::normalize` looks.
+    /// out of range. A flat 66-entry array, so there is no testament split.
     func book(at index: Int) -> PSVersificationBook? {
         guard index >= 0 && index < books.count else { return nil }
         return books[index]
@@ -221,11 +188,8 @@ final class PSBookOSISResolver: NSObject {
 
     /// Verses in a chapter, 1-based, or nil when the chapter is out of range.
     ///
-    /// SWORD's `VersificationMgr::Book::getVerseMax` returns **-1** for an
-    /// out-of-range chapter rather than erroring; nil is the Swift equivalent and
-    /// forces callers to decide, instead of propagating a sentinel into a loop
-    /// bound. Note the store's own `entry_count` is this **+1** (slot 0 is the
-    /// verse-0 intro), verified for all 1,189 chapters.
+    /// Note the store's own `entry_count` is this **+1** (slot 0 is the verse-0
+    /// intro), verified for all 1,189 chapters.
     func verseMax(book: PSVersificationBook, chapter: Int) -> Int? {
         guard chapter >= 1 && chapter <= book.verseMax.count else { return nil }
         return book.verseMax[chapter - 1]
@@ -240,13 +204,8 @@ final class PSBookOSISResolver: NSObject {
     /// The chapter after `(book, chapter)`, rolling into the next book, or nil at
     /// Revelation 22.
     ///
-    /// **Returning nil at the end is deliberate and load-bearing.** SWORD does not
-    /// error here: `VerseKey::normalize` (versekey.cpp:1466-1493) *clamps* to the
-    /// upper bound and merely sets KEYERR_OUTOFBOUNDS, so
-    /// `-[SwordModule setToNextChapter]` at Rev 22 returned "Revelation of John 22"
-    /// — the same ref it was given. The callers' string-equality gate is what
-    /// turned that into a no-op. A structural replacement must return nil rather
-    /// than the clamped ref, or a no-op becomes a full re-render.
+    /// **Returning nil at the end is deliberate.** Returning the clamped ref
+    /// instead would turn a no-op into a full re-render.
     func nextChapter(book: PSVersificationBook, chapter: Int) -> (book: PSVersificationBook, chapter: Int)? {
         guard chapter >= 1 && chapter <= book.chapterCount else { return nil }
         if chapter < book.chapterCount {
@@ -257,8 +216,7 @@ final class PSBookOSISResolver: NSObject {
     }
 
     /// The chapter before `(book, chapter)`, rolling into the previous book's last
-    /// chapter, or nil at Genesis 1. Same clamp-vs-nil rationale as
-    /// `nextChapter(book:chapter:)`.
+    /// chapter, or nil at Genesis 1. Same rationale as `nextChapter(book:chapter:)`.
     func previousChapter(book: PSVersificationBook, chapter: Int) -> (book: PSVersificationBook, chapter: Int)? {
         guard chapter >= 1 && chapter <= book.chapterCount else { return nil }
         if chapter > 1 {
@@ -268,17 +226,12 @@ final class PSBookOSISResolver: NSObject {
         return (prev, prev.chapterCount)
     }
 
-    /// The ref string the app's chapter-navigation call sites expect back, in the
-    /// **un-munged `longName`** form ("Revelation of John 22", "I Corinthians 13").
+    /// The ref string chapter navigation expects back, in the **un-munged
+    /// `longName`** form ("Revelation of John 22", "I Corinthians 13").
     ///
-    /// That is not an oversight. `VerseKey::freshtext` (versekey.cpp:378) builds its
-    /// key text from `getBookName()`, which is `translate(getLongName())` = identity
-    /// here, so `-setToNextChapter` genuinely returned the long form and every
-    /// caller munges it downstream through `createRefString`. Returning `name`
-    /// instead would be an off-by-a-munge visible only on Revelation and the five
-    /// numbered books — 18 of the 66 have `name != longName`. Verified
-    /// `createRefString(longName + " N") == name + " N"` 66/66, so the existing
-    /// call sites keep working unchanged.
+    /// Deliberate: every caller munges it through `createRefString`, and
+    /// `createRefString(longName + " N") == name + " N"` for all 66 books. 18 of the
+    /// 66 have `name != longName`.
     func displayRef(book: PSVersificationBook, chapter: Int) -> String {
         return "\(book.longName) \(chapter)"
     }
@@ -289,19 +242,10 @@ final class PSBookOSISResolver: NSObject {
     }
 }
 
-// MARK: - Former Obj-C seam
+// MARK: - Name -> OSIS lookup
 //
-// `PSSearchEngine.mm`'s book-scope filter needed name -> OSIS, which had been its own
-// private `-osisBookNameForLocalisedBookName:` over a live `sword::VerseKey`. These
-// two members were the entire Obj-C surface of the resolver, and are why
-// `PSBookOSISResolver` derives from NSObject at all (which is why `init?` calls
-// `super.init()` — the stored properties are all assigned before that, as Swift
-// requires).
-//
-// **Phase 5 step 8 ported the engine to Swift**, so nothing in Obj-C calls either of
-// these now: the engine reaches `shared` and `book(named:)` directly. They are kept
-// because `PSRefSemanticsTests` exercises `osisName(forBookName:)` as the named entry
-// point for that lookup, and because they document what the deleted shim did.
+// `osisName(forBookName:)` is the named entry point PSRefSemanticsTests
+// exercises.
 extension PSBookOSISResolver {
 
     /// + [PSBookOSISResolver sharedResolver] — nil if the bundled table is missing
@@ -310,12 +254,6 @@ extension PSBookOSISResolver {
     static func sharedResolver() -> PSBookOSISResolver? { return shared }
 
     /// The OSIS abbreviation for any known spelling of a book, or nil.
-    ///
-    /// Replaces `-[PSSearchEngine osisBookNameForLocalisedBookName:]`. The engine
-    /// version built a `sword::VerseKey`, set its text to the name, and read
-    /// `getOSISBookName()`; this reads the same value out of the baked table. The
-    /// "localised" in the old name was aspirational — `translateBookName:` is
-    /// identity on every device, so the input was always an English spelling.
     @objc(osisNameForBookName:)
     func osisName(forBookName name: String?) -> String? {
         guard let name = name else { return nil }
