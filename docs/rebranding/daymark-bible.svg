@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Daymark Bible icon concept</title>
+  <desc id="desc">An open book under a rising amber light on a deep teal square.</desc>
+  <rect width="1024" height="1024" fill="#153E42"/>
+  <path d="M382 397 A130 130 0 0 1 642 397Z" fill="#FFBE55"/>
+  <rect x="280" y="424" width="464" height="20" rx="10" fill="#7FAAA7"/>
+  <path d="M512 552 C439 496 357 475 256 478 V701 C357 698 439 720 512 776Z" fill="#FFF6E6"/>
+  <path d="M512 552 C585 496 667 475 768 478 V701 C667 698 585 720 512 776Z" fill="#FFBE55"/>
+  <path d="M512 552 V776" fill="none" stroke="#153E42" stroke-width="24"/>
+</svg>

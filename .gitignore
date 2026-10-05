@@ -16,3 +16,6 @@ build_sim/*
 buildServer.json
 compile_commands.json
 Build PocketSword_*.txt
+
+# Affinity document session locks
+*.af~lock~

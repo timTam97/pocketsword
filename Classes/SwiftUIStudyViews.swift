@@ -3,7 +3,7 @@
 //  PocketSword
 //
 //  The study surfaces the reader raises: the Strong's / morph / footnote /
-//  lexicon popup, the bookmark editor, and the voice-reference sheet.
+//  lexicon popup and the bookmark editor.
 //
 //  `PSInfoPopupContent`'s Greek/Hebrew lemma and transliteration parsing (nested
 //  beta-code brackets, the ~114 Hebrew entries with a spurious `<sup>` vowel,
@@ -313,34 +313,5 @@ struct BookmarkFolderPath: Equatable {
         }
         walk(root, prefix: nil)
         return result
-    }
-}
-
-// MARK: - Voice reference
-
-/// The voice-reference sheet.
-struct VoiceReferenceSheet: View {
-    let reading: ReadingWorkspaceModel
-
-    @Environment(\.dismiss) private var dismiss
-    @State private var model = VoiceReferenceModel()
-
-    var body: some View {
-        VoiceReferenceView(model: model)
-            .presentationDetents([.height(320)])
-            .presentationDragIndicator(.visible)
-            .onAppear {
-                model.onCancel = {
-                    dismiss()
-                }
-                model.onReferenceResolved = { reference in
-                    dismiss()
-                    reading.selectReference(
-                        bookName: reference.displayBookName,
-                        chapter: reference.chapter,
-                        verse: reference.verse
-                    )
-                }
-            }
     }
 }

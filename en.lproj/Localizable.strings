@@ -1,4 +1,4 @@
-﻿/*
+/*
  * PocketSword - A frontend for viewing SWORD project modules on iOS
  *
  * Copyright 2008-2012 CrossWire Bible Society – http://www.crosswire.org
@@ -94,7 +94,7 @@
 "None" = "None";
 "CloseButtonTitle" = "Close";
 "CancelButtonTitle" = "Cancel";
-"LaunchProgressLabel" = "Opening PocketSword";
+"LaunchProgressLabel" = "Opening SimpleScripture";
 "FontPreferenceTitle" = "Font";
 "EmailUsButton" = "Email Us";
 "NoSearchIndexInstalled" = "No Search Index Installed";
@@ -119,7 +119,7 @@
 "PreferencesFootnotesTitle" = "Footnotes";
 
 
-"MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to PocketSword, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
+"MorphHebrewNotSupported" = "Unfortunately, Morphological Analysis Codes are only currently available for Greek words.  If you have the language ability and are willing to help bring this feature to SimpleScripture, please take a look at <br /> openscriptures.org<br />and join the discussion group there.";
 
 /* Shown as the study popup's body when a marker's entry is not in the bundled
    lexicon. These used to say a module was "not installed", which no longer means
@@ -285,31 +285,42 @@
 // screen rendered the raw key.
 "NoSearchIndexTitle" = "No Search Index";
 
-// Voice reference
-"VoiceRefListening" = "Listening…";
-"VoiceRefPrompt" = "Say a reference, e.g. “John 3 16”";
-"VoiceRefDownloadingModel" = "Downloading speech model…";
-"VoiceRefNoMatch" = "Couldn’t find that reference";
-"VoiceRefTryAgain" = "Try Again";
-"VoiceRefMicDenied" = "Microphone access is off for PocketSword. Turn it on in Settings.";
-"VoiceRefOpenSettings" = "Open Settings";
-"VoiceRefUnavailable" = "Voice input isn’t available for this language.";
-"VoiceOverVoiceRefButton" = "Speak a Bible reference";
-
 // SwiftUI supporting screens
 "SettingsReadingPreview" = "In the beginning God created the heaven and the earth.";
 "SettingsReadingPreviewReference" = "Genesis 1:1";
-"AboutCommunityTitle" = "PocketSword and CrossWire";
-"AboutProjectLink" = "PocketSword Project";
-"AboutCrossWireLink" = "CrossWire Bible Society";
-"AboutUserForumsLink" = "User Forums";
-"AboutCompanionAppsTitle" = "Companion Scripture Apps";
-"AboutCreditsTitle" = "Credits";
-"AboutDevelopedByText" = "Developed by Nic Carter and the CrossWire Bible Society.";
-"AboutContributorsText" = "With help from David Bell, Manfred Bergmann, Christoffer Björkskog, Jan Bubík, Vincenzo Carrubba, Cheree Lynley Designs, Dominique Corbex, Bruno Gätjens González, Grace Community Church (HK), Yiguang Hu, John Huss, Nakamaru Kunio, Laurence Rezkalla, Timothy Shen, Vitaliy, Ian Wagner, Henko van de Weerd, and PocketSword beta testers.";
-"AboutOpenSourceTitle" = "Open Source";
-"AboutFontLicenseText" = "Ezra SIL and Gentium Plus are distributed under the SIL Open Font License.";
-"AboutFeedbackTitle" = "Feedback and Translation";
+// About redesigned for SimpleScripture, 5 October 2026.
+// Original contributor credits are preserved in Resources/Notices/Application.txt.
+"AboutTagline" = "Read, search and study the Bible.";
+"AboutAcknowledgementsTitle" = "Credits & licenses";
+"AboutProjectSourceLink" = "Project & source code";
+"AboutReportIssueLink" = "Report an issue";
+"AboutHeritageTitle" = "Built on PocketSword";
+"AboutHeritageText" = "SimpleScripture is an independent continuation of PocketSword, originally developed by Nic Carter and the CrossWire Bible Society.";
+"AboutLicenseScope" = "App software: GNU GPL v2. Study texts and fonts retain their separate licenses.";
+"AboutApplicationSection" = "Application";
+"AboutTextsSection" = "Bible & study texts";
+"AboutFontsSection" = "Typefaces";
+"AboutUpstreamTitle" = "PocketSword & contributors";
+"AboutUpstreamSubtitle" = "Origins, copyright and acknowledgements";
+"AboutGPLTitle" = "GNU General Public License v2";
+"AboutGPLSubtitle" = "Complete application license";
+"AboutCCTitle" = "Creative Commons BY-SA 3.0";
+"AboutCCSubtitle" = "Attribution-ShareAlike 3.0 Unported";
+"AboutKJVTitle" = "King James Version";
+"AboutKJVSubtitle" = "CrossWire electronic text; Crown rights acknowledged";
+"AboutMHCCTitle" = "Matthew Henry’s Concise Commentary";
+"AboutGreekTitle" = "Strong’s Greek Dictionary";
+"AboutHebrewTitle" = "Strong’s Hebrew Dictionary";
+"AboutRobinsonTitle" = "Robinson’s Morphological Analysis Codes";
+"AboutPublicDomain" = "Public domain, as supplied by CrossWire";
+"AboutGentiumTitle" = "Gentium Plus";
+"AboutEzraTitle" = "Ezra SIL";
+"AboutOFLSubtitle" = "SIL Open Font License 1.1";
+"AboutEzraSubtitle" = "SIL Open Font License 1.1 & MIT/X11";
+"About component version %@" = "Bundled version %@";
+"AboutReadCCLicense" = "Read the complete CC BY-SA 3.0 license";
+"AboutNoticeUnavailable" = "Notice could not be opened";
+"AboutNoticeUnavailableMessage" = "The bundled notice is missing or unreadable. Reinstall the app to restore it, or report the issue from the About page.";
 
 // SwiftUI reading chrome (Wave 7)
 
@@ -318,5 +329,5 @@
 "WorkspaceSearch" = "Search";
 "WorkspaceLibrary" = "Library";
 "WorkspaceSettings" = "Settings";
-"LaunchFailedTitle" = "PocketSword could not start";
-"LaunchFailedMessage" = "The bundled Bible content could not be opened. Reinstalling PocketSword should fix this.";
+"LaunchFailedTitle" = "SimpleScripture could not start";
+"LaunchFailedMessage" = "The bundled Bible content could not be opened. Reinstalling SimpleScripture should fix this.";

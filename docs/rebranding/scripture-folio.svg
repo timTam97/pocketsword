@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Scripture Folio icon concept</title>
+  <desc id="desc">A pale folded page and a gold passage marker on a mulberry square.</desc>
+  <rect width="1024" height="1024" fill="#512D4C"/>
+  <path d="M314 282 H608 V798 H314 Q278 798 278 762 V318 Q278 282 314 282Z" fill="#A388A2"/>
+  <path d="M382 224 H608 L746 362 V736 Q746 776 706 776 H382 Q346 776 346 740 V260 Q346 224 382 224Z" fill="#FAF7FC"/>
+  <path d="M608 224 V330 Q608 362 640 362 H746Z" fill="#D9C3DD"/>
+  <rect x="414" y="426" width="224" height="26" rx="13" fill="#512D4C"/>
+  <rect x="414" y="508" width="224" height="26" rx="13" fill="#512D4C"/>
+  <rect x="414" y="590" width="152" height="26" rx="13" fill="#512D4C"/>
+  <rect x="365" y="485" width="20" height="72" rx="10" fill="#EDCA84"/>
+</svg>
