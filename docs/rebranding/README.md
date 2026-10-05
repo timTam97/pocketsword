@@ -157,6 +157,18 @@ Verification to date:
   `sword` scheme and `org.timsam.SimpleScripture.search-index` task identifier.
   Xcode expanded the simulated key-value-store entitlement to
   `7SZUJ26BQ2.org.timsam.SimpleScripture`.
+- A clean, unsigned Distribution archive succeeded at
+  `/tmp/simplescripture-rebrand.xcarchive`. Its compiled asset catalog contains
+  only `AppIcon`, `SimpleScriptureAbout` and `AboutAccent`; only Gentium Plus
+  and Ezra SIL fonts are included. Both content files, all nine notices and
+  GPLv2 match their source bytes. The Settings labels and reset key were checked
+  in the archived bundle. No `CompileC` tasks ran.
+- On iPhone 18 Pro Max / iOS 27, the Home Screen shows Gilded Folio and the
+  complete SimpleScripture label without truncation, alongside the separate
+  old PocketSword installation. Settings → Apps shows the new name/icon and
+  opens a SimpleScripture page with “Reset SimpleScripture?”; the toggle was
+  left off. Screenshots and hierarchy captures are saved under
+  `/Users/timsam/.codex/visualizations/2026/10/05/01a10b67-8f76-7ea1-92f4-81aeec954085/rebrand-runtime/`.
 - Signed-device provisioning, App Store registration and live iCloud sync
   have not been verified by the simulator build/tests.
 
