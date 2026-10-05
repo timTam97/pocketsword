@@ -293,14 +293,11 @@ struct ChapterTextView: View {
             } action: { _, sample in
                 pane.scrollOffsetChanged(sample)
             }
-            .onScrollPhaseChange { oldPhase, newPhase in
+            .onScrollPhaseChange { _, newPhase in
                 // A finger on the reader abandons any restore still in flight, which
                 // is what lets the restore gate be a gate rather than a timeout.
                 if newPhase == .tracking || newPhase == .interacting {
                     pane.userBeganScrolling()
-                }
-                if oldPhase != .animating, oldPhase.isScrolling, newPhase == .idle {
-                    pane.userScrollEnded()
                 }
             }
         }

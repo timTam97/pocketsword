@@ -225,5 +225,3 @@
 "ModuleTypesHeaderText" = "Vel modulslag:";
 "ModuleLanguagesHeaderText" = "Vel mál:";
 "PreferencesModulePreferencesTitle" = "Moduluppseting";
-"PreferencesFullscreenModeTitle" = "Sjálvvirkandi fullan skerm";
-"PreferencesFullscreenNote" = "Við sjálvvirkandi fullari skermmynd sligið frá, kanst tú framvegis skifta til og frá fullum skermi, við at sláa við tveimum fingrum á Bíbliu og Kommentar knøttarnar.";

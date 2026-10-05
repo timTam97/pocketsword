@@ -131,12 +131,6 @@ final class SettingsModel {
             store.saveRotationLock(rotationLock)
         }
     }
-    var automaticFullscreen: Bool {
-        didSet {
-            guard !isReloading, automaticFullscreen != oldValue else { return }
-            store.saveAutomaticFullscreen(automaticFullscreen)
-        }
-    }
     var fontSizeValue: Double {
         get { Double(fontSize) }
         set { fontSize = Int(newValue) }
@@ -161,7 +155,6 @@ final class SettingsModel {
         self.fontSize = snapshot.fontSize
         self.keepScreenAwake = snapshot.keepScreenAwake
         self.rotationLock = snapshot.rotationLock
-        self.automaticFullscreen = snapshot.automaticFullscreen
     }
 
     func ensureFontSizeDefault() {
@@ -175,7 +168,6 @@ final class SettingsModel {
         fontSize = snapshot.fontSize
         keepScreenAwake = snapshot.keepScreenAwake
         rotationLock = snapshot.rotationLock
-        automaticFullscreen = snapshot.automaticFullscreen
         isReloading = false
     }
 }
@@ -1110,7 +1102,17 @@ final class SearchModel {
 @MainActor
 @Observable
 final class AppSession {
-    var selectedWorkspace: Workspace
+    private var workspaceSelection: Workspace
+    var selectedWorkspace: Workspace {
+        get { workspaceSelection }
+        set {
+            if workspaceSelection == .search, newValue == .search {
+                searchFocusRequest &+= 1
+            }
+            workspaceSelection = newValue
+        }
+    }
+    private(set) var searchFocusRequest: UInt = 0
     /// The last `sword://` URL this session accepted.
     ///
     /// **Write-only in production, deliberately**: the assertable record of what a
@@ -1149,7 +1151,7 @@ final class AppSession {
         search: SearchModel? = nil,
         readingStore: ReadingStateStore = ReadingStateStore()
     ) {
-        self.selectedWorkspace = selectedWorkspace
+        self.workspaceSelection = selectedWorkspace
         self.lastOpenedURL = lastOpenedURL
         self.reading = reading ?? ReadingModel()
         self.settings = settings ?? SettingsModel()

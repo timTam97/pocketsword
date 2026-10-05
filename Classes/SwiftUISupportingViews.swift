@@ -174,7 +174,12 @@ final class ReferencePickerModel {
 }
 
 struct ReferencePickerView: View {
-    let model: ReferencePickerModel
+    @State private var model: ReferencePickerModel
+
+    init(model: ReferencePickerModel) {
+        // Keep the navigation path when the presentation is rebuilt on rotation.
+        self.model = model
+    }
 
     var body: some View {
         @Bindable var model = model
@@ -344,32 +349,31 @@ private struct ReferenceChapterList: View {
     let book: ReferencePickerBook
 
     var body: some View {
-        List {
-            // Half-open deliberately: `1...count` traps at runtime when `count`
-            // is 0, and a book with no chapters must degrade to an empty list
-            // rather than crash the picker.
-            ForEach(1..<(book.chapterCount + 1), id: \.self) { chapter in
-                ReferenceChapterRow(
-                    bookID: book.id,
-                    chapter: chapter,
-                    title: ReferencePickerText.chapter(chapter),
-                    isCurrent: model.currentBookID == book.id
-                        && model.currentChapter == chapter,
-                    open: {
-                        model.openVerses(
-                            for: book.id,
-                            chapter: chapter
-                        )
-                    },
-                    jumpToStart: {
-                        model.select(
-                            bookID: book.id,
-                            chapter: chapter,
-                            verse: 1
-                        )
-                    }
-                )
-            }
+        ReferenceNumberList(
+            count: book.chapterCount,
+            indexLabel: "RefSelectorChapterIndexLabel",
+            indexIdentifier: "reference.chapter-index"
+        ) { chapter in
+            ReferenceChapterRow(
+                bookID: book.id,
+                chapter: chapter,
+                title: ReferencePickerText.chapter(chapter),
+                isCurrent: model.currentBookID == book.id
+                    && model.currentChapter == chapter,
+                open: {
+                    model.openVerses(
+                        for: book.id,
+                        chapter: chapter
+                    )
+                },
+                jumpToStart: {
+                    model.select(
+                        bookID: book.id,
+                        chapter: chapter,
+                        verse: 1
+                    )
+                }
+            )
         }
         .navigationTitle(book.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -425,33 +429,149 @@ private struct ReferenceVerseList: View {
     let chapter: Int
 
     var body: some View {
-        List {
-            // Half-open for the same reason as `ReferenceChapterList`:
-            // `verseCount(chapter:)` returns 0 for a chapter this book does not
-            // have, and `1...0` traps. An empty list is the right degradation for
-            // a destination that did not come through `openVerses`.
-            ForEach(
-                1..<(book.verseCount(chapter: chapter) + 1),
-                id: \.self
-            ) { verse in
-                Button {
-                    model.select(
-                        bookID: book.id,
-                        chapter: chapter,
-                        verse: verse
-                    )
-                } label: {
-                    Text(ReferencePickerText.verse(verse))
-                        .foregroundStyle(.primary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("reference.verse.\(verse)")
+        ReferenceNumberList(
+            count: book.verseCount(chapter: chapter),
+            indexLabel: "RefSelectorVerseIndexLabel",
+            indexIdentifier: "reference.verse-index"
+        ) { verse in
+            Button {
+                model.select(
+                    bookID: book.id,
+                    chapter: chapter,
+                    verse: verse
+                )
+            } label: {
+                Text(ReferencePickerText.verse(verse))
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("reference.verse.\(verse)")
         }
         .navigationTitle("\(book.name) \(chapter)")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct ReferenceNumberList<Row: View>: View {
+    let count: Int
+    let indexLabel: LocalizedStringKey
+    let indexIdentifier: String
+    @ViewBuilder let row: (Int) -> Row
+
+    @State private var showsIndex = false
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            // Half-open so an empty versification produces an empty list.
+            List(1..<(max(count, 0) + 1), id: \.self) { number in
+                row(number)
+                    .id(number)
+            }
+            .onScrollGeometryChange(for: Bool.self) { geometry in
+                let visibleHeight = geometry.containerSize.height
+                    - geometry.contentInsets.top
+                    - geometry.contentInsets.bottom
+                return visibleHeight > 0
+                    && geometry.contentSize.height > visibleHeight + 1
+            } action: { _, overflows in
+                showsIndex = overflows
+            }
+            .scrollIndicators(.hidden)
+            .safeAreaInset(edge: .trailing, spacing: 0) {
+                if showsIndex && count > 1 {
+                    ReferenceNumberIndex(
+                        count: count,
+                        label: indexLabel,
+                        identifier: indexIdentifier
+                    ) { number in
+                        proxy.scrollTo(number, anchor: .center)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct ReferenceNumberIndex: View {
+    let count: Int
+    let label: LocalizedStringKey
+    let identifier: String
+    let scrollTo: (Int) -> Void
+
+    @ScaledMetric(relativeTo: .caption2) private var minimumLabelHeight = 16
+    @State private var lastDraggedNumber: Int?
+    @State private var selectedNumber = 1
+
+    var body: some View {
+        GeometryReader { geometry in
+            let labelCount = min(
+                count,
+                max(Int(geometry.size.height / minimumLabelHeight), 2)
+            )
+            let labelHeight = geometry.size.height / CGFloat(labelCount)
+            let travelHeight = max(geometry.size.height - labelHeight, 1)
+            let labels = (0..<labelCount).map { index in
+                1 + Int(
+                    (Double(index) * Double(count - 1)
+                        / Double(labelCount - 1)).rounded()
+                )
+            }
+
+            VStack(spacing: 0) {
+                ForEach(labels, id: \.self) { number in
+                    Text(number, format: .number.grouping(.never))
+                        .font(.caption2)
+                        .monospacedDigit()
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: labelHeight)
+                }
+            }
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        // Label centers and drag positions use the same scale.
+                        // Even when labels are sampled, every number is reachable.
+                        let fraction = min(
+                            max((value.location.y - labelHeight / 2) / travelHeight, 0),
+                            1
+                        )
+                        let number = 1 + Int(
+                            (fraction * CGFloat(count - 1)).rounded()
+                        )
+                        guard number != lastDraggedNumber else { return }
+                        lastDraggedNumber = number
+                        selectedNumber = number
+                        scrollTo(number)
+                    }
+                    .onEnded { _ in
+                        lastDraggedNumber = nil
+                    }
+            )
+        }
+        .frame(width: 32)
+        .padding(.vertical, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(label))
+        .accessibilityValue(Text(selectedNumber, format: .number))
+        .accessibilityIdentifier(identifier)
+        .accessibilityAdjustableAction { direction in
+            let number: Int
+            switch direction {
+            case .increment:
+                number = min(selectedNumber + 1, count)
+            case .decrement:
+                number = max(selectedNumber - 1, 1)
+            @unknown default:
+                return
+            }
+            selectedNumber = number
+            scrollTo(number)
+        }
     }
 }
 
@@ -886,21 +1006,8 @@ private struct DeviceSettingsSection: View {
                 }
             )
             .accessibilityIdentifier("settings.rotation-lock")
-            Toggle(
-                isOn: $settings.automaticFullscreen,
-                label: {
-                    SettingsIconLabel(
-                        title: "PreferencesFullscreenModeTitle",
-                        systemImage: "arrow.up.left.and.arrow.down.right",
-                        tint: .indigo
-                    )
-                }
-            )
-            .accessibilityIdentifier("settings.automatic-fullscreen")
         } header: {
             Text("PreferencesDevicePreferencesTitle")
-        } footer: {
-            Text("PreferencesFullscreenNote")
         }
     }
 }

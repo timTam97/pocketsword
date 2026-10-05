@@ -39,7 +39,7 @@ final class PocketSwordUITests: XCTestCase {
         )
         XCTAssertTrue(app.buttons["reading.previous-chapter"].exists)
         XCTAssertTrue(app.buttons["reading.next-chapter"].exists)
-        XCTAssertTrue(app.buttons["reading.focus-mode"].exists)
+        XCTAssertFalse(app.buttons["reading.focus-mode"].exists)
 
         selectWorkspace("Search")
         XCTAssertTrue(app.navigationBars["Search"].waitForExistence(timeout: 5))
@@ -63,7 +63,8 @@ final class PocketSwordUITests: XCTestCase {
         XCTAssertTrue(app.buttons["settings.font"].exists)
         XCTAssertTrue(app.switches["settings.keep-awake"].exists)
         XCTAssertTrue(app.switches["settings.rotation-lock"].exists)
-        XCTAssertTrue(app.switches["settings.automatic-fullscreen"].exists)
+        XCTAssertFalse(app.switches["settings.automatic-fullscreen"].exists)
+        XCTAssertFalse(app.staticTexts["Automatic Full Screen"].exists)
     }
 
     @MainActor
@@ -159,6 +160,96 @@ final class PocketSwordUITests: XCTestCase {
 
         XCTAssertTrue(app.navigationBars["Search"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.searchFields["Search"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testSearchResultKeyboardAndCopyInteractions() throws {
+        selectWorkspace("Search")
+
+        let buildIndex = app.buttons["search.index-build"]
+        if buildIndex.waitForExistence(timeout: 2) {
+            buildIndex.tap()
+            XCTAssertTrue(
+                app.staticTexts["Search Scripture"].waitForExistence(timeout: 60),
+                "The search index did not finish building."
+            )
+        }
+
+        let field = app.searchFields["Search"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("beginning")
+
+        let results = app.buttons.matching(
+            NSPredicate(
+                format: "identifier BEGINSWITH %@",
+                "search.result."
+            )
+        )
+        let firstResult = results.firstMatch
+        XCTAssertTrue(
+            firstResult.waitForExistence(timeout: 10),
+            "Search did not produce a result for 'beginning'."
+        )
+        XCTAssertTrue(app.keyboards.firstMatch.exists)
+
+        firstResult.swipeUp()
+        XCTAssertTrue(
+            app.keyboards.firstMatch.waitForNonExistence(timeout: 5),
+            "Scrolling the search results did not dismiss the keyboard."
+        )
+        assertWorkspaceTabsVisible()
+        XCTAssertTrue(app.searchFields["Search"].isHittable)
+
+        let tabBarFrame = app.tabBars.firstMatch.frame
+        let navigationBarFrame = app.navigationBars["Search"].frame
+        let scopeFrame = app.segmentedControls["search.scope"].frame
+        let visibleResult = try XCTUnwrap(
+            results.allElementsBoundByIndex.first(where: \.isHittable)
+        )
+        visibleResult.swipeUp()
+        assertWorkspaceTabsVisible()
+        XCTAssertEqual(app.tabBars.firstMatch.frame.height,
+                       tabBarFrame.height, accuracy: 1)
+        XCTAssertEqual(app.tabBars.firstMatch.frame.minY,
+                       tabBarFrame.minY, accuracy: 1)
+        XCTAssertEqual(app.navigationBars["Search"].frame.height,
+                       navigationBarFrame.height, accuracy: 1)
+        XCTAssertEqual(app.segmentedControls["search.scope"].frame, scopeFrame)
+
+        // Scrolled list rows remain in the accessibility tree beneath the inset,
+        // so isHittable can reject its menus. Exercise the visible menu directly.
+        app.buttons["search.module-menu"].coordinate(
+            withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)
+        ).tap()
+        XCTAssertTrue(
+            app.buttons["MHCC"].waitForExistence(timeout: 5),
+            "The Search module menu did not open after scrolling."
+        )
+        dismissMenu()
+
+        app.tabBars.buttons["Search"].tap()
+        XCTAssertTrue(
+            app.keyboards.firstMatch.waitForExistence(timeout: 5),
+            "Reselecting the Search workspace did not focus the search field."
+        )
+
+        guard let resultToCopy = results.allElementsBoundByIndex.first(
+            where: \.isHittable
+        ) else {
+            XCTFail("No visible search result was available to long-press.")
+            return
+        }
+
+        resultToCopy.press(forDuration: 1)
+
+        let copyVerse = app.buttons["Copy Verse"]
+        XCTAssertTrue(
+            copyVerse.waitForExistence(timeout: 5),
+            "Long-pressing a search result did not show Copy Verse."
+        )
+        copyVerse.tap()
+        XCTAssertTrue(copyVerse.waitForNonExistence(timeout: 5))
     }
 
     @MainActor
@@ -329,27 +420,69 @@ final class PocketSwordUITests: XCTestCase {
     }
 
     @MainActor
-    func testFocusModeHidesAndRestoresTheTabBar() throws {
+    func testReaderControlsStayVisibleAfterTapsAndScrolling() throws {
+        // A previously enabled preference must have no effect after upgrading.
+        app.terminate()
+        app.launchArguments += [
+            "-fullscreenModePreference", "YES",
+            "-lastRef", "Genesis 1",
+            "-bibleScrollPosition", "0",
+            "-commentaryScrollPosition", "0",
+            "-bibleVersePosition", "1",
+            "-commentaryVersePosition", "1",
+        ]
+        app.launch()
         selectWorkspace("Read")
 
-        let focus = app.buttons["reading.focus-mode"]
-        XCTAssertTrue(focus.waitForExistence(timeout: 5))
-        let readTab = app.tabBars.buttons["Read"]
-        XCTAssertTrue(readTab.exists)
+        let reader = app.descendants(matching: .any)
+            .matching(identifier: "reading.chapter-content")
+            .firstMatch
+        XCTAssertTrue(reader.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["reading.focus-mode"].exists)
+        defer { selectReadingMode("Bible") }
 
-        focus.tap()
-        // Focus mode hides the tab bar (via `toolbarVisibility(for: .tabBar)`) and
-        // the status bar, leaving only the chapter. The pinned Focus control must
-        // survive, since it is the way back out.
-        XCTAssertTrue(readTab.waitForNonExistence(timeout: 5))
-        XCTAssertTrue(
-            app.descendants(matching: .any)["reading.chapter-content"].exists
-        )
+        for mode in ["Bible", "Commentary"] {
+            selectReadingMode(mode)
+            assertWorkspaceTabsVisible()
+            let tabBarFrame = app.tabBars.firstMatch.frame
+            let navigationBarFrame = app.navigationBars.firstMatch.frame
+            let reference = app.buttons["reading.reference-picker"]
+            let initialReference = try XCTUnwrap(reference.value as? String)
 
-        let exitFocus = app.buttons["reading.focus-mode"]
-        XCTAssertTrue(exitFocus.waitForExistence(timeout: 5))
-        exitFocus.tap()
-        XCTAssertTrue(readTab.waitForExistence(timeout: 5))
+            for _ in 0..<2 {
+                reader.coordinate(
+                    withNormalizedOffset: CGVector(dx: 0.02, dy: 0.55)
+                ).tap()
+                assertWorkspaceTabsVisible()
+                XCTAssertTrue(reference.isHittable)
+                XCTAssertEqual(reference.value as? String, initialReference)
+            }
+
+            reader.swipeUp()
+            let advanced = XCTNSPredicateExpectation(
+                predicate: NSPredicate { _, _ in
+                    (reference.value as? String) != initialReference
+                },
+                object: nil
+            )
+            wait(for: [advanced], timeout: 10)
+            assertWorkspaceTabsVisible()
+            XCTAssertTrue(reference.isHittable)
+            XCTAssertTrue(app.buttons["reading.mode"].isHittable)
+            XCTAssertTrue(app.buttons["reading.previous-chapter"].isHittable)
+            XCTAssertTrue(app.buttons["reading.next-chapter"].isHittable)
+            XCTAssertEqual(app.tabBars.firstMatch.frame.height,
+                           tabBarFrame.height, accuracy: 1)
+            XCTAssertEqual(app.tabBars.firstMatch.frame.minY,
+                           tabBarFrame.minY, accuracy: 1)
+            XCTAssertEqual(app.navigationBars.firstMatch.frame.height,
+                           navigationBarFrame.height, accuracy: 1)
+            XCTAssertEqual(app.navigationBars.firstMatch.frame.minY,
+                           navigationBarFrame.minY, accuracy: 1)
+            XCTAssertFalse(
+                app.descendants(matching: .any)["reading.chapter-toast"].exists
+            )
+        }
     }
 
     @MainActor
@@ -464,6 +597,21 @@ final class PocketSwordUITests: XCTestCase {
         )
         tab.tap()
         XCTAssertTrue(tab.isSelected, "Workspace \(label) was not selected")
+    }
+
+    @MainActor
+    private func assertWorkspaceTabsVisible(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        for label in ["Read", "Library", "Settings", "Search"] {
+            XCTAssertTrue(
+                app.tabBars.buttons[label].isHittable,
+                "Workspace \(label) was hidden or minimised.",
+                file: file,
+                line: line
+            )
+        }
     }
 
     /// Switches the Read workspace between Bible and commentary, through the

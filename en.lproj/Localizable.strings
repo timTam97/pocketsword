@@ -161,6 +161,8 @@
 "RefSelectorBookTitle" = "Select Book";
 "RefSelectorChapterTitle" = "Chapter %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Verse %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorChapterIndexLabel" = "Chapter index";
+"RefSelectorVerseIndexLabel" = "Verse index";
 "RefSelectorBackButtonTitle" = "Back";
 
 // new v1.3.0 strings:
@@ -178,8 +180,6 @@
 "VoiceOverNextChapterButton" = "Next Chapter";
 "VoiceOverHistoryAndSearchButton" = "History and Search";
 "PreferencesModulePreferencesTitle" = "Module Preferences";
-"PreferencesFullscreenModeTitle" = "Automatic Full Screen";
-"PreferencesFullscreenNote" = "When off, use a two-finger tap in Bible or Commentary to enter or leave full screen.";
 
 // new v1.3.4 strings:
 "PreferencesRotationLock" = "Lock Rotation";
@@ -258,6 +258,7 @@
 "SearchEmptyPromptMessage" = "Enter a word, phrase, or Strong's number.";
 "SearchModuleButtonLabel" = "Search Module";
 "SearchResultCountFormat" = "%lld Results";
+"SearchCopyVerseButton" = "Copy Verse";
 "On" = "On";
 "Off" = "Off";
 "SearchStartSearchButton" = "Start Search";
@@ -311,8 +312,6 @@
 "AboutFeedbackTitle" = "Feedback and Translation";
 
 // SwiftUI reading chrome (Wave 7)
-"VoiceOverFocusModeButton" = "Enter Focus Mode";
-"VoiceOverExitFocusModeButton" = "Exit Focus Mode";
 
 // SwiftUI app lifecycle and the four workspaces (Wave 8)
 "WorkspaceRead" = "Read";

@@ -82,13 +82,13 @@ Rules:
 
 - `tabViewBottomAccessory` is one accessory for the whole `TabView`, not per tab.
 - There is no usable `.bottomBar` on iOS 27; items land on top of the floating tab bar.
-- `toolbarVisibility(_:for: .tabBar)` must be applied to content **inside** a tab (Focus mode does it from `ReaderScreen`'s `NavigationStack`); on the `TabView` it does nothing.
+- **Navigation stays visible.** Fullscreen/Focus mode and automatic fullscreen are removed. The tab bar and reader/Search navigation bars use `.never` minimisation; reader taps and scrolling do not hide controls. Chapter scrolling, verse tracking, study links and Search keyboard dismissal remain in place.
 - A `safeAreaInset(edge: .top)` bar does not combine with a large navigation title — the large-title region expands behind it. `SearchView` and `DictionaryView` pin `.inline` for this reason.
 - **Workspaces are persistent.** `SearchView.configure` runs once per launch, so anything seeding a workspace from outside must drive its model directly (`SearchModel.startStrongsQuery`), and must not assume anything `configure` computes (e.g. `strongsAvailable`) has been computed — both `startStrongsQuery` and `optionsDidChange` gate on `module != nil`.
 
 ### Reading coordinator (`ReadingWorkspace.swift`)
 
-- `ReadingWorkspaceModel` owns the two `ReaderPaneModel`s (Bible and commentary), the `displayChapter` fan-out, study-popup routing, and Focus mode. Cross-object coordination is method calls; the few remaining `NotificationCenter` observers exist only because something outside the reader posts them.
+- `ReadingWorkspaceModel` owns the two `ReaderPaneModel`s (Bible and commentary), the `displayChapter` fan-out, and study-popup routing. Cross-object coordination is method calls; the few remaining `NotificationCenter` observers exist only because something outside the reader posts them.
 - **Both panes stay in the hierarchy** (inactive at `opacity(0)`). `displayChapter` renders the polled pane and defers `refToShow` / `pendingRestore` into the other; that deferral is what avoids rendering MHCC on every Bible chapter change. **`mode`'s `didSet` is the only drain**, so a font change (`redisplayWithDefaults()`) polls the **active** pane.
 - `ReaderPaneModel.render` writes `lastRef` (toolbar title and relaunch restore both read it).
 - Links arrive as `pslink://` URLs through the reader's `OpenURLAction` and open a `StudyPopupSheet`.
@@ -128,6 +128,11 @@ Rules:
 - Rows iterate `LibraryModel.visibleDictionaryKeys` and are `NavigationLink(value: key)` + `.navigationDestination(for: String.self)`. Keep the value form: the `NavigationLink { destination } label:` form evaluates the destination (a lookup + inflate + expand) for every realized row.
 
 ### Search (`PSSearchEngine.swift`, `PSSearchQuery.swift`)
+
+Search results expose a long-press **Copy Verse** action (reference plus normalized
+verse text). Scrolling results dismisses the keyboard; reselecting the Search tab
+focuses the existing search field. Preserve the query, results, module and
+persisted options during these interactions.
 
 Each of these fails **silently** if "simplified":
 

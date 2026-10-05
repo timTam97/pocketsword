@@ -204,13 +204,7 @@ struct WorkspaceTabs: View {
                 SettingsWorkspace(session: session)
             }
         }
-        // Quiet the tab bar while reading, matching the navigation bar's
-        // `toolbarMinimizationBehavior(.onScrollDown)`.
-        .tabBarMinimizeBehavior(.onScrollDown)
-        // NOTE: Focus mode's tab-bar hiding is NOT here. `toolbarVisibility(_:for:
-        // .tabBar)` has to be applied to the content *inside* a tab — on the
-        // `TabView` it silently does nothing. It lives on `ReaderScreen`'s
-        // `NavigationStack`.
+        .tabBarMinimizeBehavior(.never)
     }
 }
 
@@ -237,6 +231,7 @@ private struct SearchWorkspace: View {
             moduleChoices: reading.searchModuleChoices,
             preferredModule: reading.preferredSearchModule,
             currentBookName: reading.currentSearchBookName,
+            focusRequest: session.searchFocusRequest,
             // A closure, so the value is consumed by `configure(...)` and not by a
             // body pass: `searchHistoryItemToRestore()` nils the saved item on its
             // query-only arm, and this body re-evaluates on any observed change

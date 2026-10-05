@@ -7,15 +7,11 @@
 //
 //  - Reference and chapter navigation sit at `.principal` with
 //    `visibilityPriority(.high)`, so a constrained width sheds the study actions
-//    before it sheds the ability to move between chapters.
-//  - Focus mode is pinned with `.topBarPinnedTrailing`, which keeps it reachable
-//    while the bar is minimized — it is the control that *un*-minimizes reading,
-//    so it must not itself be collapsible.
-//  - Secondary study actions (the per-module display toggles, History & Search,
-//    and voice reference) go in a `ToolbarOverflowMenu`.
-//  - `toolbarMinimizationBehavior(.onScrollDown, for: .navigationBar)` quiets the
-//    chrome during reading. Note the spelling: `toolbarMinimizeBehavior` is the
-//    *tab bar* API.
+//    before it sheds the ability to move between chapters. This is the one
+//    control the reader cannot do without.
+//  - Secondary study actions (the per-module display toggles and voice reference)
+//    go in a `ToolbarOverflowMenu`.
+//  - Navigation and workspace controls stay visible while reading.
 //
 //  The display toggles are PER-MODULE and gated on the BAKED feature set — see
 //  `ReaderDisplayToggle.toggles(forModule:store:)`, a pure function so the
@@ -154,9 +150,6 @@ final class ReaderChromeModel {
     var accessibilityReference: String = ""
     var isNextEnabled: Bool = true
     var isPreviousEnabled: Bool = true
-    /// Focus mode (the old "fullscreen"): hides the navigation bar and the tab
-    /// bar so only the chapter remains.
-    var isFocused: Bool = false
     /// Empty when the active module advertises nothing, which hides the control.
     var displayToggles: [ReaderDisplayToggle] = []
     /// Mirrors each toggle's current per-module value, keyed by
@@ -174,9 +167,7 @@ final class ReaderChromeModel {
 
     @ObservationIgnored var onPreviousChapter: (@MainActor () -> Void)?
     @ObservationIgnored var onNextChapter: (@MainActor () -> Void)?
-    @ObservationIgnored var onHistoryAndSearch: (@MainActor () -> Void)?
     @ObservationIgnored var onVoiceReference: (@MainActor () -> Void)?
-    @ObservationIgnored var onToggleFocus: (@MainActor () -> Void)?
     /// Applies a display-toggle flip: write the per-module pref, then redisplay.
     @ObservationIgnored var onDisplayToggle: (@MainActor (ReaderDisplayToggle) -> Void)?
 
@@ -208,7 +199,7 @@ final class ReaderChromeModel {
 
 /// The Read workspace: the active pane, its chrome, the Bible/commentary
 /// switch, and the study surfaces the reader raises (study popup, verse menu,
-/// bookmark editor, voice sheet, Focus-mode chapter toast).
+/// bookmark editor, voice sheet).
 struct ReaderScreen: View {
     let reading: ReadingWorkspaceModel
 
@@ -230,26 +221,6 @@ struct ReaderScreen: View {
                     }
                     .visibilityPriority(.high)
 
-                    ToolbarItem(placement: .topBarPinnedTrailing) {
-                        Button {
-                            chrome.onToggleFocus?()
-                        } label: {
-                            Image(
-                                systemName: chrome.isFocused
-                                    ? "arrow.down.right.and.arrow.up.left"
-                                    : "arrow.up.left.and.arrow.down.right"
-                            )
-                        }
-                        .accessibilityLabel(
-                            Text(
-                                chrome.isFocused
-                                    ? "VoiceOverExitFocusModeButton"
-                                    : "VoiceOverFocusModeButton"
-                            )
-                        )
-                        .accessibilityIdentifier("reading.focus-mode")
-                    }
-
                     // The Bible/commentary switch, at the bar's LEADING edge.
                     //
                     // Not `.bottomBar`: on iOS 27 the floating tab bar occupies the bottom, so
@@ -261,16 +232,6 @@ struct ReaderScreen: View {
                     }
                 }
                 .toolbarOverflowMenu {
-                    Button {
-                        chrome.onHistoryAndSearch?()
-                    } label: {
-                        Label(
-                            "VoiceOverHistoryAndSearchButton",
-                            systemImage: "magnifyingglass"
-                        )
-                    }
-                    .accessibilityIdentifier("reading.history-search")
-
                     if chrome.isBibleTab && chrome.isVoiceAvailable {
                         Button {
                             chrome.onVoiceReference?()
@@ -284,7 +245,7 @@ struct ReaderScreen: View {
                     }
 
                     if !chrome.displayToggles.isEmpty {
-                        Section("VoiceOverDisplaySettingsButton") {
+                        Section {
                             ForEach(chrome.displayToggles) { toggle in
                                 ReaderDisplayToggleButton(
                                     chrome: chrome,
@@ -294,25 +255,13 @@ struct ReaderScreen: View {
                         }
                     }
                 }
-                // Quiet the chrome while reading; it comes back on a scroll up.
-                .toolbarMinimizationBehavior(
-                    .onScrollDown,
-                    for: .navigationBar
-                )
-                // Focus mode deliberately KEEPS the navigation bar. It hides the tab bar
-                // and the status bar, which is what buys the screen back.
-                //
-                // Do NOT add `toolbarVisibility(.hidden)` here: it hides the whole bar
-                // INCLUDING the `.topBarPinnedTrailing` Focus control, the only way back
-                // out, trapping the user. The bar still minimizes on scroll down.
+                .toolbarMinimizationBehavior(.never, for: .navigationBar)
+                // The chapter already scrolls beneath the bar. Hiding the bar's
+                // background lets iOS render these toolbar controls as native
+                // floating Liquid Glass instead of placing an opaque strip behind
+                // them.
                 .navigationBarTitleDisplayMode(.inline)
-                .statusBarHidden(reading.isFocused)
-                // Focus mode hides the TAB bar. This must be applied HERE, to content
-                // inside the tab — on the `TabView` itself it silently does nothing.
-                .toolbarVisibility(
-                    reading.isFocused ? .hidden : .automatic,
-                    for: .tabBar
-                )
+                .toolbarBackgroundVisibility(.hidden, for: .navigationBar)
                 .sheet(item: $reading.studyPopup) { popup in
                     StudyPopupSheet(
                         content: popup.content,
@@ -362,9 +311,6 @@ struct ReaderScreen: View {
             ChapterTextView(pane: reading.commentary)
                 .opacity(reading.mode == .commentary ? 1 : 0)
                 .accessibilityHidden(reading.mode != .commentary)
-        }
-        .overlay(alignment: .top) {
-            ChapterToast(text: reading.chapterToast)
         }
         .onGeometryChange(for: CGSize.self, of: \.size) { old, new in
             // Rotation, or an iPad split-view resize: re-anchor each pane and SUPPRESS
@@ -457,30 +403,6 @@ private struct ReadingModePicker: View {
     }
 }
 
-/// The Focus-mode chapter toast: shows the reference for 0.75 s when the
-/// chapter changes in Focus mode, where no reference is otherwise visible.
-private struct ChapterToast: View {
-    let text: String?
-
-    var body: some View {
-        ZStack {
-            if let text {
-                Text(text)
-                    .font(.headline)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 12)
-                    .background(.regularMaterial, in: .capsule)
-                    .transition(.opacity)
-                    .accessibilityIdentifier("reading.chapter-toast")
-            }
-        }
-        .animation(.easeInOut(duration: 0.2), value: text)
-        .padding(.top, 8)
-        .allowsHitTesting(false)
-    }
-}
-
-
 /// [‹ | Gen 23:23 | ›]: chapter back, the reference (opens the picker), chapter
 /// forward. Each button carries its own accessibility label.
 private struct ReaderReferenceControl: View {
@@ -523,7 +445,11 @@ private struct ReaderReferenceControl: View {
             // (the system default, and intended); iPad gets a popover.
             .popover(isPresented: $chrome.isPresentingReferencePicker) {
                 makeReferencePicker()
-                    .frame(minWidth: 320, minHeight: 480)
+                    .frame(
+                        minWidth: 320,
+                        minHeight: UIDevice.current.userInterfaceIdiom == .pad
+                            ? 480 : nil
+                    )
             }
 
             Button {

@@ -78,7 +78,6 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(initial.fontSize, 12)
         XCTAssertFalse(initial.keepScreenAwake)
         XCTAssertEqual(initial.rotationLock, .unlocked)
-        XCTAssertFalse(initial.automaticFullscreen)
         XCTAssertNil(defaults.object(forKey: Defaults.fontSizePreference))
 
         store.ensureFontSizeDefault()
@@ -102,7 +101,6 @@ final class AppStateStoresTests: XCTestCase {
         model.fontSize = 18
         model.keepScreenAwake = true
         model.rotationLock = .landscape
-        model.automaticFullscreen = true
 
         XCTAssertEqual(
             defaults.string(forKey: Defaults.fontNamePreference),
@@ -114,7 +112,6 @@ final class AppStateStoresTests: XCTestCase {
             defaults.integer(forKey: Defaults.rotationLockPosition),
             RotationLock.landscape.rawValue
         )
-        XCTAssertTrue(defaults.bool(forKey: Defaults.fullscreenModePreference))
         XCTAssertEqual(appearanceChanges, 2)
         XCTAssertEqual(idleTimerValues, [true])
     }
@@ -1061,6 +1058,55 @@ final class AppStateStoresTests: XCTestCase {
         XCTAssertEqual(
             defaults.integer(forKey: Defaults.lastSearchRange),
             PSSearchRange.BookRange.rawValue
+        )
+    }
+
+    @MainActor
+    func testSearchWorkspaceReselectionRequestsKeyboardFocus() {
+        let session = AppSession(selectedWorkspace: .search)
+
+        XCTAssertEqual(session.searchFocusRequest, 0)
+
+        session.selectedWorkspace = .search
+        XCTAssertEqual(session.searchFocusRequest, 1)
+
+        session.selectedWorkspace = .read
+        session.selectedWorkspace = .search
+        XCTAssertEqual(
+            session.searchFocusRequest,
+            1,
+            "Entering Search from another workspace is not a reselection."
+        )
+    }
+
+    @MainActor
+    func testSearchResultClipboardCopiesReferenceAndNormalizedText() {
+        XCTAssertEqual(
+            SearchResultClipboardText.make(
+                reference: "John 3:16",
+                text: "For God so loved\n  the world"
+            ),
+            "John 3:16 For God so loved the world"
+        )
+        XCTAssertEqual(
+            SearchResultClipboardText.make(
+                reference: "John 3:16",
+                text: nil
+            ),
+            "John 3:16"
+        )
+
+        let pasteboard = UIPasteboard.general
+        defer { pasteboard.string = nil }
+
+        SearchResultClipboard.copy(
+            reference: "John 3:16",
+            text: "For God so loved\n  the world",
+            to: pasteboard
+        )
+        XCTAssertEqual(
+            pasteboard.string,
+            "John 3:16 For God so loved the world"
         )
     }
 
