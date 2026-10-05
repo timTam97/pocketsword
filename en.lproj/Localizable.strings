@@ -161,6 +161,8 @@
 "RefSelectorBookTitle" = "Select Book";
 "RefSelectorChapterTitle" = "Chapter %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
 "RefSelectorVerseTitle" = "Verse %d"; // keep the '%d' bit in there, as that is where the number will be inserted. So you may need to move it to the appropriate spot depending on how your language displays "chapter 1"
+"RefSelectorChapterIndexLabel" = "Chapter index";
+"RefSelectorVerseIndexLabel" = "Verse index";
 "RefSelectorBackButtonTitle" = "Back";
 
 // new v1.3.0 strings:

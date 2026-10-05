@@ -245,7 +245,7 @@ struct ReaderScreen: View {
                     }
 
                     if !chrome.displayToggles.isEmpty {
-                        Section("VoiceOverDisplaySettingsButton") {
+                        Section {
                             ForEach(chrome.displayToggles) { toggle in
                                 ReaderDisplayToggleButton(
                                     chrome: chrome,
@@ -445,7 +445,11 @@ private struct ReaderReferenceControl: View {
             // (the system default, and intended); iPad gets a popover.
             .popover(isPresented: $chrome.isPresentingReferencePicker) {
                 makeReferencePicker()
-                    .frame(minWidth: 320, minHeight: 480)
+                    .frame(
+                        minWidth: 320,
+                        minHeight: UIDevice.current.userInterfaceIdiom == .pad
+                            ? 480 : nil
+                    )
             }
 
             Button {
